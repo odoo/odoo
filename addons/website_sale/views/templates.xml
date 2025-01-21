@@ -2487,6 +2487,14 @@
                             </h6>
                         </div>
                         <div class="d-flex justify-content-md-end">
+                            <a
+                                t-if="not product.website_published"
+                                role="button"
+                                class="btn btn-sm btn-danger"
+                                title="This product is unpublished."
+                            >
+                                Unpublished
+                            </a>
                             <button
                                 role="button"
                                 class="js_add_suggested_products btn btn-primary text-nowrap"

@@ -7,7 +7,11 @@
                 <t t-set="record" t-value="data['_record']"/>
                 <t t-set="product_template_id" t-value="record.id if not record.is_product_variant else record.product_tmpl_id.id"/>
                 <t t-set="product_id" t-value="record.id if record.is_product_variant else record.product_variant_id.id"/>
-                <div class="o_carousel_product_card card h-100 w-100" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
+                <div
+                    class="o_carousel_product_card card h-100 w-100"
+                    t-att-data-add2cart-rerender="data.get('_add2cart_rerender')"
+                    t-att-data-publish="record.website_published and 'on' or 'off'"
+                >
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <a class="o_carousel_product_img_link o_dynamic_product_hovered overflow-hidden" t-att-href="record.website_url">
                         <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" t-att-src="data['image_512']"
@@ -27,6 +31,14 @@
                                 <t t-set="rating_avg" t-value="record.rating_avg"/>
                                 <t t-set="rating_count" t-value="record.rating_count"/>
                             </t>
+                            <a
+                                t-if="not record.website_published"
+                                role="button"
+                                class="btn btn-sm btn-danger"
+                                title="This product is unpublished."
+                            >
+                                Unpublished
+                            </a>
                         </div>
                         <div class="w-100 d-flex flex-wrap flex-md-column flex-lg-row align-items-center align-self-end justify-content-between">
                             <div class="py-2">
@@ -55,7 +67,11 @@
         <template id="dynamic_filter_template_product_product_view_detail" name="Classic Card - Detailed">
             <t t-foreach="records" t-as="data" data-number-of-elements="3" data-thumb="/website_sale/static/src/img/snippets_options/product_view_detail.svg">
                 <t t-set="record" t-value="data['_record']" data-arrow-position="bottom"/>
-                <div class="o_carousel_product_card card h-100 w-100" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
+                <div
+                    class="o_carousel_product_card card h-100 w-100"
+                    t-att-data-add2cart-rerender="data.get('_add2cart_rerender')"
+                    t-att-data-publish="record.website_published and 'on' or 'off'"
+                >
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <a class="o_carousel_product_img_link o_dynamic_product_hovered overflow-hidden" t-att-href="record.website_url">
                         <img class="card-img-top o_img_product_square o_img_product_cover h-auto" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
@@ -68,6 +84,14 @@
                                 <t t-set="rating_avg" t-value="record.rating_avg"/>
                                 <t t-set="rating_count" t-value="record.rating_count"/>
                             </t>
+                            <a
+                                t-if="not record.website_published"
+                                role="button"
+                                class="btn btn-sm btn-danger"
+                                title="This product is unpublished."
+                            >
+                                Unpublished
+                            </a>
                         </div>
                         <div class="d-flex justify-content-between flex-wrap flex-md-column flex-lg-row align-items-center align-self-end w-100 mt-2 pt-3 border-top">
                             <div class="pb-2">
@@ -85,7 +109,11 @@
         <template id="dynamic_filter_template_product_product_mini_image" name="Image only">
             <t t-foreach="records" t-as="data" data-number-of-elements="4" data-number-of-elements-sm="1" data-thumb="/website_sale/static/src/img/snippets_options/product_image_only.svg">
                 <t t-set="record" t-value="data['_record']"/>
-                <div class="card h-100 border-0 w-100 rounded-0 bg-transparent" t-att-data-url="record.website_url">
+                <div
+                    class="card h-100 border-0 w-100 rounded-0 bg-transparent"
+                    t-att-data-url="record.website_url"
+                    t-att-data-publish="record.website_published and 'on' or 'off'"
+                >
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <a class="o_carousel_product_img_link o_dynamic_product_hovered overflow-hidden" t-att-href="record.website_url">
                         <img class="card-img-top h-auto o_img_product_square o_img_product_cover rounded" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
@@ -97,7 +125,11 @@
         <template id="dynamic_filter_template_product_product_mini_price" name="Image with price">
             <t t-foreach="records" t-as="data" data-thumb="/website_sale/static/src/img/snippets_options/product_image_with_price.svg">
                 <t t-set="record" t-value="data['_record']"/>
-                <div class="card h-100 border-0 w-100 rounded-0 bg-transparent o_dynamic_product_hovered" t-att-data-url="record.website_url">
+                <div
+                    class="card h-100 border-0 w-100 rounded-0 bg-transparent o_dynamic_product_hovered"
+                    t-att-data-url="record.website_url"
+                    t-att-data-publish="record.website_published and 'on' or 'off'"
+                >
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <a class="o_carousel_product_img_link o_dynamic_product_hovered overflow-hidden" t-att-href="record.website_url">
                         <img class="card-img-top h-auto o_img_product_square o_img_product_cover rounded" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
@@ -109,6 +141,14 @@
                             <t t-set="rating_count" t-value="record.rating_count"/>
                         </t>
                         <div class="ms-auto">
+                            <a
+                                t-if="not record.website_published"
+                                role="button"
+                                class="btn btn-sm btn-danger"
+                                title="This product is unpublished."
+                            >
+                                Unpublished
+                            </a>
                             <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
                         </div>
                     </div>
@@ -119,7 +159,11 @@
         <template id="dynamic_filter_template_product_product_mini_name" name="Image with name">
             <t t-foreach="records" t-as="data" data-thumb="/website_sale/static/src/img/snippets_options/product_image_with_name.svg">
                 <t t-set="record" t-value="data['_record']"/>
-                <div class="card h-100 border-0 w-100 rounded-0 bg-transparent o_dynamic_product_hovered" t-att-data-url="record.website_url">
+                <div
+                    class="card h-100 border-0 w-100 rounded-0 bg-transparent o_dynamic_product_hovered"
+                    t-att-data-url="record.website_url"
+                    t-att-data-publish="record.website_published and 'on' or 'off'"
+                >
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <a class="o_carousel_product_img_link overflow-hidden" t-att-href="record.website_url">
                         <img class="card-img-top h-auto o_img_product_square o_img_product_cover rounded" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
@@ -130,6 +174,14 @@
                             <t t-set="rating_avg" t-value="record.rating_avg"/>
                             <t t-set="rating_count" t-value="record.rating_count"/>
                         </t>
+                            <a
+                                t-if="not record.website_published"
+                                role="button"
+                                class="btn btn-sm btn-danger"
+                                title="This product is unpublished."
+                            >
+                                Unpublished
+                            </a>
                     </div>
                 </div>
             </t>
@@ -138,7 +190,10 @@
         <template id="dynamic_filter_template_product_product_centered" name="Centered Product">
             <t t-foreach="records" t-as="data" data-arrow-position="bottom" data-thumb="/website_sale/static/src/img/snippets_options/product_centered.svg">
                 <t t-set="record" t-value="data['_record']"/>
-                <div class="o_carousel_product_card card w-100" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
+                <div
+                    class="o_carousel_product_card card w-100" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')"
+                    t-att-data-publish="record.website_published and 'on' or 'off'"
+                >
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <input type="hidden" name="product-id" t-att-data-product-id="record.id"/>
                     <a class="o_carousel_product_img_link position-absolute mx-auto" t-att-href="record.website_url">
@@ -158,6 +213,14 @@
                                     </t>
                                 </t>
                             </div>
+                            <a
+                                t-if="not record.website_published"
+                                role="button"
+                                class="btn btn-sm btn-danger"
+                                title="This product is unpublished."
+                            >
+                                Unpublished
+                            </a>
                         </div>
                     </div>
                     <div class="o_carousel_product_card_footer d-flex align-items-center justify-content-center pb-4">
@@ -172,7 +235,10 @@
         <template id="dynamic_filter_template_product_product_borderless_1" name="Borderless Product n°1">
             <t t-foreach="records" t-as="data" data-thumb="/website_sale/static/src/img/snippets_options/product_borderless_1.svg">
                 <t t-set="record" t-value="data['_record']"/>
-                <div class="o_carousel_product_card bg-transparent w-100 card border-0">
+                <div
+                    class="o_carousel_product_card bg-transparent w-100 card border-0"
+                    t-att-data-publish="record.website_published and 'on' or 'off'"
+                >
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <input type="hidden" name="product-id" t-att-data-product-id="record.id"/>
                     <a class="o_carousel_product_img_link o_dynamic_product_hovered stretched-link" t-att-href="record.website_url">
@@ -188,6 +254,14 @@
                                 <t t-set="rating_avg" t-value="record.rating_avg"/>
                                 <t t-set="rating_count" t-value="record.rating_count"/>
                             </t>
+                            <a
+                                t-if="not record.website_published"
+                                role="button"
+                                class="btn btn-sm btn-danger"
+                                title="This product is unpublished."
+                            >
+                                Unpublished
+                            </a>
                             <div class="mt-2">
                                 <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
                             </div>
@@ -200,7 +274,11 @@
         <template id="dynamic_filter_template_product_product_borderless_2" name="Borderless Product n°2">
             <t t-foreach="records" t-as="data" data-thumb="/website_sale/static/src/img/snippets_options/product_borderless_2.svg">
                 <t t-set="record" t-value="data['_record']"/>
-                <div class="o_carousel_product_card card w-100 border-0 bg-transparent" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
+                <div
+                    class="o_carousel_product_card card w-100 border-0 bg-transparent"
+                    t-att-data-add2cart-rerender="data.get('_add2cart_rerender')"
+                    t-att-data-publish="record.website_published and 'on' or 'off'"
+                >
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <a class="o_carousel_product_img_link o_dynamic_product_hovered" t-att-href="record.website_url">
                         <div class="overflow-hidden rounded">
@@ -222,6 +300,14 @@
                                     </t>
                                 </t>
                             </div>
+                            <a
+                                t-if="not record.website_published"
+                                role="button"
+                                class="btn btn-sm btn-danger"
+                                title="This product is unpublished."
+                            >
+                                Unpublished
+                            </a>
                         </div>
                         <div class="card-title h6 flex-grow-1 w-100 mt-2 mb-3" t-field="record.display_name"/>
                         <div class="text-end o_dynamic_snippet_btn_wrapper" t-if="record._website_show_quick_add()">
@@ -248,7 +334,11 @@
         <template id="dynamic_filter_template_product_product_banner" name="Large Banner">
             <t t-foreach="records" t-as="data" data-number-of-elements="1" data-number-of-elements-sm="1" data-thumb="/website_sale/static/src/img/snippets_options/product_banner.svg">
                 <t t-set="record" t-value="data['_record']"/>
-                <div class="o_carousel_product_card card w-100" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
+                <div
+                    class="o_carousel_product_card card w-100"
+                    t-att-data-add2cart-rerender="data.get('_add2cart_rerender')"
+                    t-att-data-publish="record.website_published and 'on' or 'off'"
+                >
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <div class="row flex-row-reverse">
                         <div class="col-lg-6 d-flex align-items-center justify-content-center justify-content-lg-end o_wrap_product_img position-relative">
@@ -266,6 +356,14 @@
                                         <t t-set="rating_count" t-value="record.rating_count"/>
                                     </t>
                                 </div>
+                                <a
+                                    t-if="not record.website_published"
+                                    role="button"
+                                    class="btn btn-sm btn-danger"
+                                    title="This product is unpublished."
+                                >
+                                    Unpublished
+                                </a>
                                 <div class="card-text text-muted" t-field="record.description_sale"/>
                                 <div class="mt-4">
                                     <t t-set="product_template_id" t-value="record.id if not record.is_product_variant else record.product_tmpl_id.id"/>
@@ -303,7 +401,11 @@
                 data-extra-classes="o_carousel_multiple_rows"
                 data-thumb="/website_sale/static/src/img/snippets_options/product_horizontal_card.svg">
                 <t t-set="record" t-value="data['_record']"/>
-                <div class="o_carousel_product_card card w-100 border-0 bg-light p-3" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
+                <div
+                    class="o_carousel_product_card card w-100 border-0 bg-light p-3"
+                    t-att-data-add2cart-rerender="data.get('_add2cart_rerender')"
+                    t-att-data-publish="record.website_published and 'on' or 'off'"
+                >
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <div class="row h-100 p-0">
                         <div class="col-lg-4 position-static">
@@ -321,6 +423,14 @@
                                         <t t-set="rating_avg" t-value="record.rating_avg"/>
                                         <t t-set="rating_count" t-value="record.rating_count"/>
                                     </t>
+                                <a
+                                    t-if="not record.website_published"
+                                    role="button"
+                                    class="btn btn-sm btn-danger"
+                                    title="This product is unpublished."
+                                >
+                                    Unpublished
+                                </a>
                                 </div>
                                 <div class="d-flex align-items-center flex-wrap">
                                     <div class="my-2">
@@ -358,7 +468,10 @@
                 data-extra-classes="o_carousel_multiple_rows"
                 data-thumb="/website_sale/static/src/img/snippets_options/product_horizontal_card_2.svg">
                 <t t-set="record" t-value="data['_record']"/>
-                <div class="o_carousel_product_card card w-100 border-0 o_dynamic_product_hovered o_cc o_cc5">
+                <div
+                    class="o_carousel_product_card card w-100 border-0 o_dynamic_product_hovered o_cc o_cc5"
+                    t-att-data-publish="record.website_published and 'on' or 'off'"
+                >
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <a class="stretched-link" t-att-href="record.website_url">
                         <img class="img img-fluid position-absolute w-100 h-100 o_img_product_cover" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
@@ -370,6 +483,14 @@
                                     <t t-set="rating_avg" t-value="record.rating_avg"/>
                                     <t t-set="rating_count" t-value="record.rating_count"/>
                                 </t>
+                            <a
+                                t-if="not record.website_published"
+                                role="button"
+                                class="btn btn-sm btn-danger"
+                                title="This product is unpublished."
+                            >
+                                Unpublished
+                            </a>
                         </div>
                         <div class="card-text h6 flex-grow-1" t-field="record.description_sale"/>
                         <div class="d-flex justify-content-between align-items-center flex-wrap mt-3">
@@ -407,13 +528,27 @@
                 data-extra-classes="o_card_group rounded"
                 data-thumb="/website_sale/static/src/img/snippets_options/product_card_group.svg">
                 <t t-set="record" t-value="data['_record']"/>
-                <div class="o_carousel_product_card card w-100 rounded-0 border-top-0 border-start-0" t-att-data-url="record.website_url">
+                <div
+                    class="o_carousel_product_card card w-100 rounded-0 border-top-0 border-start-0"
+                    t-att-data-url="record.website_url"
+                    t-att-data-publish="record.website_published and 'on' or 'off'"
+                >
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <input type="hidden" name="product-id" t-att-data-product-id="record.id"/>
                     <div class="o_carousel_product_card_body card-body justify-content-between h-100 p-3">
                         <div class="row h-100">
                             <div class="col-8 d-flex flex-column">
-                                <div class="card-title h5" t-field="record.display_name"/>
+                                <div class="d-flex card-title h5 justify-content-between">
+                                    <div t-field="record.display_name"/>
+                                    <a
+                                        t-if="not record.website_published"
+                                        role="button"
+                                        class="btn btn-sm btn-danger"
+                                        title="This product is unpublished."
+                                    >
+                                        Unpublished
+                                    </a>
+                                </div>
                                 <div class="card-text h6 text-muted" t-field="record.description_sale"/>
                                 <div class="d-flex justify-content-between align-items-center flex-wrap w-100 mt-auto">
                                     <div class="h5 text-primary mb-0 me-2">

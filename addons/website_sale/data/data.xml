@@ -71,7 +71,6 @@
             <field name="name">Newest Products</field>
             <field name="model_id">product.product</field>
             <field name="user_ids" eval="False" />
-            <field name="domain">[('website_published', '=', True)]</field>
             <field name="context">{'display_default_code': False, 'add2cart_rerender': False}</field>
             <field name="sort">["create_date desc"]</field>
             <field name="action_id" ref="website.action_website"/>

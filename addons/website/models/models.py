@@ -15,3 +15,6 @@ class Base(models.AbstractModel):
         ):
             return True
         return super()._can_return_content(field_name, access_token)
+
+    def _get_snippet_filter_domain(self):
+        return [('is_published', '=', True)]
