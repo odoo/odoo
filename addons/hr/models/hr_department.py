@@ -17,7 +17,7 @@ class HrDepartment(models.Model):
     complete_name = fields.Char('Complete Name', compute='_compute_complete_name', recursive=True, store=True)
     active = fields.Boolean('Active', default=True)
     company_id = fields.Many2one('res.company', string='Company', index=True, default=lambda self: self.env.company)
-    parent_id = fields.Many2one('hr.department', string='Parent Department', index=True, check_company=True)
+    parent_id = fields.Many2one('hr.department', string='Parent Department', index=True, check_company=True, domain="[('id', '!=', id)]")
     child_ids = fields.One2many('hr.department', 'parent_id', string='Child Departments')
     manager_id = fields.Many2one('hr.employee', string='Manager', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]")
     member_ids = fields.One2many('hr.employee', 'department_id', string='Members', readonly=True)
@@ -81,11 +81,6 @@ class HrDepartment(models.Model):
         for department in self:
             department.plans_count = plans_count.get(department.id, 0)
 
-    @api.constrains('parent_id')
-    def _check_parent_id(self):
-        if self._has_cycle():
-            raise ValidationError(_('You cannot create recursive departments.'))
-
     @api.model_create_multi
     def create(self, vals_list):
         # TDE note: auto-subscription of manager done by hand, because currently
@@ -119,6 +114,13 @@ class HrDepartment(models.Model):
             self.message_unsubscribe(partner_ids=list(manager_to_unsubscribe))
             # set the employees's parent to the new manager
             self._update_employee_manager(manager_id)
+        if 'parent_id' in vals:
+            parent_id = vals.get("parent_id")
+            if parent_id:
+                parent = self.env['hr.department'].browse(parent_id)
+                parent_names = [name.strip() for name in parent.complete_name.split('/')]
+                if self.name in parent_names:
+                    raise ValidationError(_("Oops! A department cannot be a child of its child.\nPick another one."))
         return super().write(vals)
 
     def _update_employee_manager(self, manager_id):

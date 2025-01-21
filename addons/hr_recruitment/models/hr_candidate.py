@@ -54,7 +54,7 @@ class HrCandidate(models.Model):
     availability = fields.Date("Availability", help="The date at which the applicant will be available to start working", tracking=True)
     categ_ids = fields.Many2many('hr.applicant.category', string="Tags")
     color = fields.Integer("Color Index", default=0)
-    priority = fields.Selection(AVAILABLE_PRIORITIES, string="Evaluation", compute="_compute_priority", store=True)
+    priority = fields.Selection(AVAILABLE_PRIORITIES, string="Evaluation", compute="_compute_priority", store=True, readonly=False)
     user_id = fields.Many2one(
         'res.users',
         string="Candidate Manager",
@@ -182,7 +182,7 @@ class HrCandidate(models.Model):
 
     def _compute_application_count(self):
         read_group_res = self.env['hr.applicant']._read_group(
-            [('candidate_id', 'in', self.ids)],
+            [('candidate_id', 'in', self.ids), ('active', 'in', [True, False])],
             ['candidate_id'], ['__count'])
         application_data = dict(read_group_res)
         for candidate in self:
@@ -361,6 +361,18 @@ class HrCandidate(models.Model):
             'phone': self.partner_phone
         }
 
+    def archive_not_interested(self):
+        self.ensure_one()
+        self._check_interviewer_access()
+
+        self.write({
+            'active': False
+        })
+        for application in self.applicant_ids:
+            application.write({
+                'active': False
+            })
+
     def _check_interviewer_access(self):
         if self.env.user.has_group('hr_recruitment.group_hr_recruitment_interviewer') and not self.env.user.has_group('hr_recruitment.group_hr_recruitment_user'):
             raise UserError(_('You are not allowed to perform this action.'))
@@ -395,3 +407,8 @@ class HrCandidate(models.Model):
                 'default_candidate_ids': self.ids,
             }
         }
+
+    def unlink(self):
+        for candidate in self:
+            candidate.applicant_ids.unlink()
+        return super().unlink()

@@ -9,8 +9,8 @@
                 <field name="email_normalized" invisible="1"/>
                 <field name="partner_phone_sanitized" invisible="1"/>
                 <header>
-                    <button string="Create Employee" name="create_employee_from_candidate" type="object" data-hotkey="q" groups="hr.group_hr_user"
-                            class="o_create_employee" invisible="employee_id or not active"/>
+                    <button string="Not interested" name="archive_not_interested" type="object" data-hotkey="q" groups="hr.group_hr_user"
+                            invisible="not active"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -56,7 +56,8 @@
                                     <widget name="hr_employee_chat" invisible="not context.get('chat_icon')"/>
                                 </div>
                                 <field name="partner_name" placeholder="Candidate's Name"
-                                    required="True" style="font-size: min(4vw, 2.6rem);"/>
+                                    required="True" style="font-size: min(4vw, 2.6rem);" class="w-auto"/>
+                                <field name="priority" widget="priority"/>
                             </h1>
                         </div>
                     </div>
@@ -70,9 +71,8 @@
                             <field name="type_id"/>
                         </group>
                         <group>
-                            <field name="user_id" string="Manager"/>
-                            <field name="priority" widget="priority"/>
-                            <field name="availability"/>
+                            <field name="user_id" string="Responsible" widget="many2one_avatar_user"/>
+                            <field name="availability" string="Availabile from" placeholder="Immediately"/>
                             <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             <field name="employee_id" invisible="1"/>
                             <field name="emp_is_active" invisible="1"/>
@@ -94,17 +94,16 @@
         <field name="arch" type="xml">
             <list string="Candidates" multi_edit="1" sample="1">
                 <field name="partner_name" string="Name"/>
+                <field name="priority" widget="priority" nolabel="1"/>
                 <field name="email_from"/>
                 <field name="partner_phone"/>
                 <field name="user_id" string="Manager" widget="many2one_avatar_user"/>
-                <field name="priority" widget="priority" optional="show"/>
                 <field name="availability" optional="show"/>
                 <field name="type_id" optional="hide"/>
                 <field name="linkedin_profile" optional="hide"/>
                 <field name="applications_count" optional="hide"/>
                 <field name="refused_applications_count" optional="hide"/>
                 <field name="accepted_applications_count" optional="hide"/>
-                <field name="partner_id" invisible="1"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hide"/>
             </list>
         </field>
@@ -138,7 +137,7 @@
                             <div class="d-flex ms-auto align-items-center">
                                 <a name="action_open_attachments" type="object">
                                     <i class='fa fa-paperclip' role="img" aria-label="Documents"/>
-                                    <field name="attachment_count"/>
+                                    <field name="attachment_count" class="me-1"/>
                                 </a>
                                 <field name="user_id" widget="many2one_avatar_user"/>
                             </div>
@@ -244,7 +243,7 @@
         <field name="name">Candidates</field>
         <field name="path">recruitment-candidates</field>
         <field name="res_model">hr.candidate</field>
-        <field name="view_mode">kanban,list,form,calendar,activity</field>
+        <field name="view_mode">list,kanban,form,calendar,activity</field>
         <field name="context">{}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">

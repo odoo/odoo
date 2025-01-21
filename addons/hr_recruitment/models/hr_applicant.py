@@ -36,7 +36,7 @@ class HrApplicant(models.Model):
 
     active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.", index=True)
 
-    candidate_id = fields.Many2one('hr.candidate', required=True, index=True)
+    candidate_id = fields.Many2one('hr.candidate', required=True, index=True, ondelete='cascade')
     partner_id = fields.Many2one(related="candidate_id.partner_id")
     partner_name = fields.Char(compute="_compute_partner_name", search="_search_partner_name", inverse="_inverse_name", compute_sudo=True)
     email_from = fields.Char(related="candidate_id.email_from", readonly=False)

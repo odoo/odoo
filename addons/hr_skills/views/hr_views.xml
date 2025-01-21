@@ -367,20 +367,22 @@
                             <field name="active" invisible="1"/>
                         </h1>
                     </div>
-                    <group string="Skills">
-                    </group>
-                    <field name="skill_ids" nolabel="1" context="{'default_skill_type_id': id}">
-                        <list editable="bottom">
-                            <field name="sequence" widget="handle" />
-                            <field name="name"/>
-                        </list>
-                    </field>
-                    <group string="Levels">
-                    </group>
-                    <field name="skill_level_ids" nolabel="1" widget="auto_save_skill_type" context="{'default_skill_type_id': id}"/>
-                    <group string="Display">
+                    <group>
                         <field name="color" widget="color_picker"/>
                     </group>
+                    <notebook>
+                        <page string="Skills">
+                            <field name="skill_ids" nolabel="1" context="{'default_skill_type_id': id}">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle" />
+                                    <field name="name"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Levels">
+                            <field name="skill_level_ids" nolabel="1" widget="auto_save_skill_type" context="{'default_skill_type_id': id}"/>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>

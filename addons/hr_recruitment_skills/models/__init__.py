@@ -5,3 +5,4 @@ from . import hr_applicant
 from . import hr_candidate
 from . import hr_candidate_skill
 from . import hr_job
+from . import hr_skill
