@@ -155,8 +155,11 @@
                 <t t-set-slot="default">
                     <t t-foreach="messageActions.actions.slice(quickActionCount)" t-as="action" t-key="action.id">
                         <DropdownItem class="'px-2 d-flex align-items-center rounded-0'" title="action.title" onSelected="action.onClick">
-                            <i class="fa fa-lg fa-fw pe-2" t-att-class="action.icon"/>
-                            <t t-esc="action.title"/>
+                            <t t-if="action.callComponent" t-component="action.callComponent" t-props="action.props"/>
+                            <t t-else="">
+                                <i class="fa fa-lg fa-fw pe-2" t-att-class="action.icon"/>
+                                <t t-esc="action.title"/>
+                            </t>
                         </DropdownItem>
                     </t>
                 </t>
