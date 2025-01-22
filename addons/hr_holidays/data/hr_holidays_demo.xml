@@ -39,28 +39,41 @@
     <!-- Accrual Plan -->
     <record id="hr_accrual_plan_1" model="hr.leave.accrual.plan">
         <field name="name">Seniority Plan</field>
+        <field name="can_be_carryover">True</field>
     </record>
 
     <record id="hr_accrual_level_1" model="hr.leave.accrual.level">
         <field name="accrual_plan_id" ref="hr_accrual_plan_1" />
+        <field name="milestone_date">after</field>
         <field name="start_count">1</field>
         <field name="start_type">day</field>
         <field name="added_value">1</field>
         <field name="frequency">yearly</field>
+        <field name="cap_accrued_time">True</field>
+        <field name="action_with_unused_accruals">all</field>
+        <field name="maximum_leave">100</field>
     </record>
     <record id="hr_accrual_level_2" model="hr.leave.accrual.level">
         <field name="accrual_plan_id" ref="hr_accrual_plan_1" />
+        <field name="milestone_date">after</field>
         <field name="start_count">4</field>
         <field name="start_type">year</field>
         <field name="added_value">2</field>
         <field name="frequency">yearly</field>
+        <field name="cap_accrued_time">True</field>
+        <field name="action_with_unused_accruals">all</field>
+        <field name="maximum_leave">100</field>
     </record>
     <record id="hr_accrual_level_3" model="hr.leave.accrual.level">
         <field name="accrual_plan_id" ref="hr_accrual_plan_1" />
+        <field name="milestone_date">after</field>
         <field name="start_count">8</field>
         <field name="start_type">year</field>
         <field name="added_value">3</field>
         <field name="frequency">yearly</field>
+        <field name="cap_accrued_time">True</field>
+        <field name="action_with_unused_accruals">all</field>
+        <field name="maximum_leave">100</field>
     </record>
 
     <!-- ++++++++++++++++++++++  Mitchell Admin  ++++++++++++++++++++++ -->

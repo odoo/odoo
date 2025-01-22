@@ -1,0 +1,128 @@
+@media (min-width: 576px) {
+  .o_accrual_plan_settings .o_accrual {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .o_accrual_level_form .o_accrual {
+    grid-template-columns: max-content 1fr !important;
+  }
+}
+
+.o_accrual {
+  .o_field_accrual, .o_field_selection, .o_field_day_selection, .o_field_filterable_selection {
+    width: fit-content !important;
+
+    &:not(.o_readonly_modifier) > *:first-child {
+      min-width: 50px;
+      border-bottom: solid $border-width $border-color;
+      max-width: fit-content;
+      field-sizing: content;
+    }
+
+    &:not(.o_field_selection, .o_field_day_selection, .o_field_filterable_selection) > *:first-child {
+      max-width: 8ch;
+    }
+  }
+
+  .o_form_label {
+    font-weight: $o-font-weight-normal;
+  }
+}
+
+.o_accrual_plan_summary {
+  & div {
+    display: flex !important;
+    justify-content: center;
+  }
+
+  & p {
+    width: 70%;
+    padding: 8px;
+    font-weight: $o-font-weight-normal;
+    border: solid $border-width $border-color;
+    border-radius: $border-radius;
+    background-color: $o-webclient-background-color;
+  }
+}
+
+.o_accrual_plan_form {
+  .o_form_sheet_bg {
+    max-width: 100% !important;
+    margin: 0;
+    padding-bottom: 8px;
+  }
+
+  .o_accrual_plan_settings {
+    .oe_title {
+      .o_inner_group {
+        grid-template-columns: max-content 1fr;
+      }
+    }
+  }
+
+  .o_accrual_plan_levels {
+    background-color: $o-webclient-background-color;
+
+    & > .o_accrual_levels_scrollable {
+      overflow-y: auto;
+      box-sizing: border-box;
+
+      &:has(.o_view_nocontent) {
+        justify-content: center;
+      }
+    }
+  }
+}
+
+.o_accrual_level {
+  .new-text {
+    top: -20px;
+    right: 5px;
+    color: $o-brand-primary;
+    pointer-events: none;
+  }
+
+  .circle {
+    background-color: $border-color;
+  }
+
+  .new {
+    background-color: $o-brand-primary;
+    border-color: $o-brand-primary;
+  }
+
+  .arrow {
+    border: solid $border-color;
+    border-width: 0 $border-width*2 $border-width*2 0;
+    padding: 5px;
+    margin-top: -10px - $border-width*2;
+    transform: rotate(45deg);
+  }
+
+  .o_accrual_bg {
+    background-color: $o-view-background-color;
+  }
+
+  .delete span:hover {
+      background-color: $o-danger;
+      color: $o-white;
+  }
+
+  &:has(.content:hover, .time > span:hover) {
+
+    .content {
+      border-color: $o-brand-primary !important;
+    }
+
+    .time > span {
+      border-color: $o-brand-primary !important;
+    }
+
+    .timeline > .circle {
+      border-color: $o-brand-primary !important;
+      background-color: $o-brand-primary;
+    }
+  }
+}
+
+
