@@ -8,6 +8,7 @@
     "auto_install": ["pos_restaurant"],
     "data": [
         "security/ir.model.access.csv",
+        "data/preset_data.xml",
         "views/pos_self_order.index.xml",
         "views/qr_code.xml",
         "views/pos_category_views.xml",
@@ -22,7 +23,6 @@
         "views/point_of_sale_dashboard.xml",
     ],
     "demo": [
-        "data/preset_data.xml",
         "data/kiosk_demo_data.xml",
     ],
     "assets": {
