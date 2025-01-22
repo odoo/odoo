@@ -683,6 +683,23 @@ class L10nEsEdiTbaiDocument(models.Model):
     # -------------------------------------------------------------------------
 
     @api.model
+    def _get_tbai_sequence_and_number_purchase(self):
+        ''' Get the numbers in the case of vendor bills of Bizkaia'''
+        self.ensure_one()
+        original_vendor_bill = self.env['account.move'].search([('l10n_es_tbai_post_document_id', '=', self.id)],
+                                                               limit=1)
+        if original_vendor_bill and self.is_cancel: # Normally it should be is_cancel in this case
+            vals = original_vendor_bill.l10n_es_tbai_post_document_id._get_values_from_xml({
+                'sequence': './/CabeceraFactura/SerieFactura',
+                'number': './/CabeceraFactura/NumFactura',
+            })
+            if vals['sequence'] and vals['number']:
+                return vals['sequence'], vals['number']
+
+        sequence = "TEST" if self.company_id.l10n_es_tbai_test_env else ""
+        return sequence, self.name
+
+    @api.model
     def _get_tbai_sequence_and_number(self):
         """Get the TicketBAI sequence a number values for this invoice."""
         self.ensure_one()
