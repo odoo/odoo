@@ -111,8 +111,6 @@ class PosConfig(models.Model):
 
     @api.model
     def load_onboarding_restaurant_scenario(self, with_demo_data=True):
-        if not self.env.ref('pos_restaurant.pos_resource_preset', raise_if_not_found=False):
-            convert.convert_file(self._env_with_clean_context(), 'pos_restaurant', 'data/scenarios/restaurant_preset.xml', idref=None, mode='init', noupdate=True)
         journal, payment_methods_ids = self._create_journal_and_payment_methods(cash_journal_vals={'name': _('Cash Restaurant'), 'show_on_dashboard': False})
         presets = self.get_record_by_ref([
             'pos_restaurant.pos_takein_preset',
