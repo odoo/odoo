@@ -14,6 +14,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 /** @typedef { import("@html_editor/core/user_command_plugin").UserCommand } UserCommand */
 /** @typedef { import("@web/core/l10n/translation.js")._t} _t */
 /** @typedef { ReturnType<_t> } TranslatedString */
+/** @typedef { (selection: EditorSelection, nodes: Node[]) => TranslatedString } TranslatedStringGetter */
 
 /**
  * @typedef {Object} ToolbarNamespace
@@ -36,7 +37,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  * @property {string} groupId Id of a toolbar group
  * @property {string} commandId
  * @property {Object} [commandParams] Passed to the command's `run` function
- * @property {TranslatedString} [title] * - becomes the button's title (and tooltip content)
+ * @property {TranslatedString | TranslatedStringGetter} [title] * - becomes the button's title (and tooltip content)
  * @property {string} [icon] *
  * @property {string} [text] Can be used with (or instead of) `icon`
  * @property {(selection: EditorSelection) => boolean} [isAvailable] ? *
@@ -47,7 +48,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  * Adds a custom component to the toolbar.
  * @property {string} id
  * @property {string} groupId
- * @property {TranslatedString} title
+ * @property {TranslatedString | TranslatedStringGetter} [title]
  * @property {Function} Component
  * @property {Object} props
  * @property {(selection: EditorSelection) => boolean} [isAvailable]
@@ -148,6 +149,7 @@ export class ToolbarPlugin extends Plugin {
             buttonsAvailableState: this.buttonGroups.flatMap((g) =>
                 g.buttons.map((b) => [b.id, true])
             ),
+            buttonsTitleState: this.buttonGroups.flatMap((g) => g.buttons.map((b) => [b.id, ""])),
             namespace: undefined,
         });
         this.updateSelection = null;
@@ -355,6 +357,10 @@ export class ToolbarPlugin extends Plugin {
                     );
                     this.state.buttonsAvailableState[button.id] =
                         button.isAvailable === undefined || button.isAvailable(selection);
+                    this.state.buttonsTitleState[button.id] =
+                        button.title instanceof Function
+                            ? button.title(selection, nodes)
+                            : button.title;
                 }
             }
         }
