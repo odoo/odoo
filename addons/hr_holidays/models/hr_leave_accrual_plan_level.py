@@ -24,34 +24,37 @@ class HrLeaveAccrualLevel(models.Model):
     sequence = fields.Integer(
         string='sequence', compute='_compute_sequence', store=True,
         help='Sequence is generated automatically by start time delta.')
-    accrual_plan_id = fields.Many2one('hr.leave.accrual.plan', "Accrual Plan", required=True, ondelete="cascade")
+    accrual_plan_id = fields.Many2one('hr.leave.accrual.plan', "Accrual Plan", required=True, ondelete="cascade", default=lambda self: self.env.context.get("active_id", None))
     accrued_gain_time = fields.Selection(related='accrual_plan_id.accrued_gain_time')
     start_count = fields.Integer(
         "Start after",
         help="The accrual starts after a defined period from the allocation start date. This field defines the number of days, months or years after which accrual is used.", default="1")
     start_type = fields.Selection(
-        [('day', 'Days'),
-         ('month', 'Months'),
-         ('year', 'Years')],
+        [('day', 'days'),
+         ('month', 'months'),
+         ('year', 'years')],
         default='day', string=" ", required=True,
         help="This field defines the unit of time after which the accrual starts.")
-
+    milestone_date = fields.Selection(
+        [('creation', 'at allocation creation'),
+         ('after', 'after')],
+        default='after', required=True
+    )
     # Accrue of
     added_value = fields.Float(
-        "Rate", digits=(16, 5), required=True, default=1,
-        help="The number of hours/days that will be incremented in the specified Time Off Type for every period")
+        "Rate", digits=(16, 5), required=True, default=1)
     added_value_type = fields.Selection([
-        ('day', 'Days'),
-        ('hour', 'Hours')
-    ], compute="_compute_added_value_type", store=True, required=True, readonly=False, default="day")
+        ('day', 'day(s)'),
+        ('hour', 'hour(s)')
+    ], compute="_compute_added_value_type", inverse="_inverse_added_value_type", store=True, required=True, readonly=False, default=lambda self: self.env.context.get("added_value_type","day"))
     frequency = fields.Selection([
-        ('hourly', 'Hourly'),
-        ('daily', 'Daily'),
-        ('weekly', 'Weekly'),
-        ('bimonthly', 'Twice a month'),
-        ('monthly', 'Monthly'),
-        ('biyearly', 'Twice a year'),
-        ('yearly', 'Yearly'),
+        ('hourly', 'hourly'),
+        ('daily', 'daily'),
+        ('weekly', 'weekly'),
+        ('bimonthly', 'twice a month'),
+        ('monthly', 'monthly'),
+        ('biyearly', 'twice a year'),
+        ('yearly', 'yearly'),
     ], default='daily', required=True, string="Frequency")
     week_day = fields.Selection([
         ('mon', 'Monday'),
@@ -61,7 +64,7 @@ class HrLeaveAccrualLevel(models.Model):
         ('fri', 'Friday'),
         ('sat', 'Saturday'),
         ('sun', 'Sunday'),
-    ], default='mon', required=True, string="Allocation on")
+    ], default="mon")
     first_day = fields.Integer(default=1)
     first_day_display = fields.Selection(
         _get_selection_days, compute='_compute_days_display', inverse='_inverse_first_day_display')
@@ -115,10 +118,11 @@ class HrLeaveAccrualLevel(models.Model):
     cap_accrued_time_yearly = fields.Boolean(string="Milestone cap",
         help="When the field is checked the total amount accrued each year will be capped at the specified amount")
     maximum_leave_yearly = fields.Float(string="Yearly limit to", digits=(16, 2))
+    is_carryover = fields.Boolean(related='accrual_plan_id.is_carryover', readonly=True)
     action_with_unused_accruals = fields.Selection(
-        [('lost', 'None. Accrued time reset to 0'),
-         ('all', 'All accrued time carried over'),
-         ('maximum', 'Carry over with a maximum')],
+        [('lost', 'lost.'),
+         ('all', 'carried over completely.'),
+         ('maximum', 'carried over with a maximum quantity')],
         string="Carry over",
         default='all', required=True,
         help="When the Carry-Over Time is reached, according to Plan's setting, select what you want "
@@ -126,14 +130,14 @@ class HrLeaveAccrualLevel(models.Model):
         "the next period; or Carryover with a maximum).")
     postpone_max_days = fields.Integer("Maximum amount of accruals to transfer",
         help="Set a maximum of accruals an allocation keeps at the end of the year.")
-    can_modify_value_type = fields.Boolean(compute="_compute_can_modify_value_type")
+    can_modify_value_type = fields.Boolean(compute="_compute_can_modify_value_type", default=lambda self: self.env.context.get("can_modify_value_type", None))
     accrual_validity = fields.Boolean(string="Accrual Validity")
     accrual_validity_count = fields.Integer(
         "Accrual Validity Count",
         help="You can define a period of time where the days carried over will be available", default="1")
     accrual_validity_type = fields.Selection(
-        [('day', 'Days'),
-         ('month', 'Months')],
+        [('day', 'days'),
+         ('month', 'months')],
         default='day', string="Accrual Validity Type", required=True,
         help="This field defines the unit of time after which the accrual ends.")
 
@@ -176,7 +180,11 @@ class HrLeaveAccrualLevel(models.Model):
         for level in self:
             level.can_modify_value_type = not level.accrual_plan_id.time_off_type_id and level.accrual_plan_id.level_ids and level.accrual_plan_id.level_ids[0] == level
 
-    @api.depends('accrual_plan_id', 'accrual_plan_id.level_ids', 'accrual_plan_id.time_off_type_id')
+    def _inverse_added_value_type(self):
+        for level in self.filtered(lambda l: l.accrual_plan_id.level_ids[0] == l):
+            level.accrual_plan_id.added_value_type = level.added_value_type
+
+    @api.depends('accrual_plan_id', 'accrual_plan_id.level_ids', 'accrual_plan_id.added_value_type', 'accrual_plan_id.time_off_type_id')
     def _compute_added_value_type(self):
         for level in self:
             if level.accrual_plan_id.time_off_type_id:
@@ -199,39 +207,47 @@ class HrLeaveAccrualLevel(models.Model):
         for level in self:
             level.maximum_leave = 100 if level.cap_accrued_time else 0
 
+    @api.constrains('milestone_date', 'start_count')
+    def _constrain_milestone_date(self):
+        for level in self:
+            if level.milestone_date == 'creation' and level.start_count > 0:
+                level.start_count = 0
+            elif level.start_count == 0 and level.milestone_date != 'creation':
+                level.milestone_date = 'creation'
+
     def _inverse_first_day_display(self):
         for level in self:
             if level.first_day_display == 'last':
                 level.first_day = 31
-            else:
+            elif int(level.first_day_display) in range(1,29):
                 level.first_day = DAY_SELECT_VALUES.index(level.first_day_display) + 1
 
     def _inverse_second_day_display(self):
         for level in self:
             if level.second_day_display == 'last':
                 level.second_day = 31
-            else:
+            elif int(level.second_day_display) in range(1,29):
                 level.second_day = DAY_SELECT_VALUES.index(level.second_day_display) + 1
 
     def _inverse_first_month_day_display(self):
         for level in self:
             if level.first_month_day_display == 'last':
                 level.first_month_day = 31
-            else:
+            elif int(level.first_month_day_display) in range(1,29):
                 level.first_month_day = DAY_SELECT_VALUES.index(level.first_month_day_display) + 1
 
     def _inverse_second_month_day_display(self):
         for level in self:
             if level.second_month_day_display == 'last':
                 level.second_month_day = 31
-            else:
+            elif int(level.second_month_day_display) in range(1,29):
                 level.second_month_day = DAY_SELECT_VALUES.index(level.second_month_day_display) + 1
 
     def _inverse_yearly_day_display(self):
         for level in self:
             if level.yearly_day_display == 'last':
                 level.yearly_day = 31
-            else:
+            elif int(level.yearly_day_display) in range(1,29):
                 level.yearly_day = DAY_SELECT_VALUES.index(level.yearly_day_display) + 1
 
     def _get_next_date(self, last_call):
@@ -337,3 +353,9 @@ class HrLeaveAccrualLevel(models.Model):
             return allocation_start + relativedelta(months=self.start_count)
         if self.start_type == 'year':
             return allocation_start + relativedelta(years=self.start_count)
+
+    def action_save_new(self):
+        action = self.env['ir.actions.act_window']._for_xml_id('hr_holidays.action_create_accrual_plan_level')
+        action['context'] = self._context.copy()
+        action['context']['can_modify_value_type'] = False
+        return action

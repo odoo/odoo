@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="hr_holidays.IntegerAutoWidth" t-inherit="web.IntegerField" >
+        <xpath expr="//input" position="attributes">
+            <attribute name="t-on-keydown">autoWidth</attribute>
+            <attribute name="t-on-keyup">autoWidth</attribute>
+        </xpath>
+    </t>
+</templates>
