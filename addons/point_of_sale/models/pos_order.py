@@ -746,6 +746,7 @@ class PosOrder(models.Model):
         vals = {
             'invoice_origin': self.name,
             'pos_refunded_invoice_ids': pos_refunded_invoice_ids,
+            'pos_order_ids': self.ids,
             'journal_id': self.session_id.config_id.invoice_journal_id.id,
             'move_type': 'out_invoice' if self.amount_total >= 0 else 'out_refund',
             'ref': self.name,
@@ -960,7 +961,7 @@ class PosOrder(models.Model):
             move_vals = order._prepare_invoice_vals()
             new_move = order._create_invoice(move_vals)
 
-            order.write({'account_move': new_move.id, 'state': 'done'})
+            order.state = 'done'
             new_move.sudo().with_company(order.company_id).with_context(skip_invoice_sync=True)._post()
 
             moves += new_move
