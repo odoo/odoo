@@ -670,8 +670,10 @@ class TestBoM(TestMrpCommon):
         })
 
         self.env['mrp.workcenter.capacity'].create({
-            'product_id': cheese_cake.id,
             'workcenter_id': workcenter_2.id,
+            'product_id': cheese_cake.id,
+            'product_uom_id': cheese_cake.uom_id.id,
+            'capacity': bom_cheese_cake.product_qty,
             'time_start': 12,
             'time_stop': 16,
         })
