@@ -77,7 +77,7 @@ class PaymentTransaction(models.Model):
         :rtype: dict
         """
         base_url = self.provider_id.get_base_url()
-        base_url = "https://8eaf-94-140-169-33.ngrok-free.app"
+        # base_url = "https://8103-178-51-240-182.ngrok-free.app"
         public_key = self.provider_id.paymob_public_key
         redirect_url = urls.url_join(base_url, PaymobController._return_url)
         webhook_url = urls.url_join(base_url, PaymobController._webhook_url)
@@ -141,27 +141,26 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'paymob':
             return
 
-        payment_data = notification_data
-
         # Update the payment method.
-        payment_method_type = payment_data.get('source_data.type', '')
+        payment_method_type = notification_data.get('source_data.type', '')
         payment_method = self.env['payment.method']._get_from_code(payment_method_type)
         self.payment_method_id = payment_method or self.payment_method_id
 
         # Update the payment state.
-        if payment_data.get('pending') == 'true':
+        if notification_data.get('pending') == 'true':
             self._set_pending()
-        elif payment_data.get('is_auth') == 'true' and payment_data.get('success') == 'true':
-            self._set_authorized()
-        elif payment_data.get('success') == 'true':
+        elif notification_data.get('success') == 'true':
             self._set_done()
-        elif payment_data.get('is_voided') == 'true':
+        elif notification_data.get('is_voided') == 'true':
             self._set_canceled("Paymob: " + _("Cancelled payment: 'is_voided' was set to true"))
-        else:
+        elif notification_data.get('success') == 'false':
             _logger.info(
-                "Received data with no valid payment status for transaction with reference %s",
+                "Received data with unsuccessful payment status for transaction with reference %s",
                 self.reference
             )
-            self._set_error(
-                "Paymob: " + _("Received data with no valid payment status")
-            )
+            message = notification_data.get('data.message')
+            self._set_error(_(
+                "Paymob: " +
+                "An error occurred during the processing of your payment (%s). Please try again.",
+                message,
+            ))

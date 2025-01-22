@@ -53,20 +53,20 @@ class PaymobController(http.Controller):
         :return: An empty string to acknowledge the notification
         :rtype: str
         """
-        _logger.info("notification received from Paymob with data:\n%s", pprint.pformat(data))
         notification_data = request.httprequest.json.get('obj')
+        _logger.info("notification received from Paymob with data:\n%s",
+                     pprint.pformat(notification_data))
         try:
             if notification_data:
-                # TODO LIEW no transaction found for webhook, response needs to be normalized
-                self._verify_notification_signature(notification_data)
+                normalized_data = self._normalize_response(notification_data, data.get('hmac'))
+                self._verify_notification_signature(normalized_data)
                 request.env['payment.transaction'].sudo()._handle_notification_data(
-                    'paymob', notification_data)
+                    'paymob', normalized_data)
         except ValidationError:  # Acknowledge the notification to avoid getting spammed
             _logger.exception("unable to handle the notification data; skipping to acknowledge")
         return ''  # Acknowledge the notification
 
-    @staticmethod
-    def _verify_notification_signature(notification_data):
+    def _verify_notification_signature(self, notification_data):
         """ Check that the received signature matches the expected one.
 
         :param dict notification_data: The notification payload containing the received signature
@@ -92,13 +92,12 @@ class PaymobController(http.Controller):
 
             # Compare the received signature with the expected signature computed from the payload
             hmac_key = tx_sudo.provider_id.paymob_hmac_key
-            expected_signature = PaymobController._compute_signature(notification_data, hmac_key)
+            expected_signature = self._compute_signature(notification_data, hmac_key)
             if not hmac.compare_digest(received_signature, expected_signature):
                 _logger.warning("received notification with invalid signature")
                 raise Forbidden()
 
-    @staticmethod
-    def _compute_signature(payload, hmac_key):
+    def _compute_signature(self, payload, hmac_key):
         """ Compute the signature from the payload.
 
         See https://developers.paymob.com/pak/manage-callback/hmac-calculation
@@ -110,13 +109,39 @@ class PaymobController(http.Controller):
         """
         # Concatenate relevant fields used to check for signature and if not found add "false"
         signing_string = ''.join(
-            [
-                payload[field] if payload[field] else 'false'
-                for field in const.PAYMOB_SIGNATURE_FIELDS
-            ]
+            [payload.get(field, 'false') for field in const.PAYMOB_SIGNATURE_FIELDS]
         ).encode('utf-8')
 
         # Calculate the signature using the hmac_key with SHA-512
         signed_hmac = hmac.new(hmac_key.encode("utf-8"), signing_string, hashlib.sha512)
         # Calculate the signature by encoding the result with base16
         return signed_hmac.hexdigest()
+
+    def _normalize_response(self, notification_data, hmac):
+        """
+        Webhook data returns a dict with parsed values, however redirect response returns a string
+        for all values and json-formatted booleans (i.e. 'false' for False).
+
+        :param dict notification_data: The notification data received
+        :param str hmac: The HMAC signature returned in the params
+        :return: The normalized response
+        :rtype: str
+        """
+        response = {
+            field: json.dumps(notification_data.get(field))
+            if isinstance(notification_data.get(field), bool)
+            else str(notification_data.get(field, 'false'))
+            for field in const.PAYMOB_SIGNATURE_FIELDS
+        }
+        order_data = notification_data.get('order', {})
+        response.update(
+            {
+                'data.message': notification_data.get('data').get('message'),
+                'hmac': hmac,
+                'order': str(order_data.get('id')),
+                'merchant_order_id': order_data.get('merchant_order_id'),
+                'source_data.pan': notification_data.get('source_data').get('pan'),
+                'source_data.sub_type': notification_data.get('source_data').get('sub_type'),
+                'source_data.type': notification_data.get('source_data').get('type'),
+            })
+        return response
