@@ -183,9 +183,13 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         const inputs = document.querySelectorAll(
             'input.js_variant_change:checked, select.js_variant_change option:checked'
         );
+        if (!inputs.length) {
+            return;
+        }
         let attributeIds = [];
         inputs.forEach((element) => attributeIds.push(element.dataset.attributeValueId));
-        window.location.hash = 'attribute_values=' + attributeIds.join(',');
+        // Avoid adding new entries in session history by replacing the current one
+        history.replaceState(null, '', '#attribute_values=' + attributeIds.join(','));
     },
     /**
      * Set the checked values active.
