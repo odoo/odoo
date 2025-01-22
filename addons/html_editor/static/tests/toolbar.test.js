@@ -112,11 +112,16 @@ test("toolbar buttons react to selection change", async () => {
 
     // check that bold button is not active
     expect(".btn[name='bold']").not.toHaveClass("active");
+    // check that remove format buton isdisabled and have correct title
+    expect(".btn[name='remove_format']").toHaveAttribute("disabled");
+    expect(".btn[name='remove_format']").toHaveAttribute("title", "Selection has no format");
 
     // click on toggle bold
     await contains(".btn[name='bold']").click();
     expect(getContent(el)).toBe("<p><strong>[test]</strong> some text</p>");
     expect(".btn[name='bold']").toHaveClass("active");
+    expect(".btn[name='remove_format']").not.toHaveAttribute("disabled");
+    expect(".btn[name='remove_format']").toHaveAttribute("title", "Remove Format");
 
     // set selection where text is not bold
     setContent(el, "<p><strong>test</strong> some [text]</p>");
@@ -585,11 +590,12 @@ test("toolbar buttons should have title attribute", async () => {
 test("toolbar buttons should have title attribute with translated text", async () => {
     // Retrieve toolbar buttons descriptions in English
     const { editor, plugins } = await setupEditor("");
+    // map function to get the title string value
+    const itemTitleString = (item) =>
+        item.title instanceof Function ? item.title().toString() : item.title.toString();
+
     // item.label could be a LazyTranslatedString so we ensure it is a string with toString()
-    const titles = plugins
-        .get("toolbar")
-        .getButtons()
-        .map((item) => item.title.toString());
+    const titles = plugins.get("toolbar").getButtons().map(itemTitleString);
     editor.destroy();
 
     // Patch translations to return "Translated" for these terms
@@ -604,7 +610,7 @@ test("toolbar buttons should have title attribute with translated text", async (
         .getButtons()
         .forEach((item) => {
             // item.label could be a LazyTranslatedString so we ensure it is a string with toString()
-            expect(item.title.toString()).toBe("Translated");
+            expect(itemTitleString(item)).toBe("Translated");
         });
 
     await waitFor(".o-we-toolbar");
