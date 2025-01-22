@@ -26,11 +26,7 @@ threadActionsRegistry
     })
     .add("rename-thread", {
         condition(component) {
-            return (
-                component.thread &&
-                component.props.chatWindow?.isOpen &&
-                (component.thread.is_editable || component.thread.channel_type === "chat")
-            );
+            return component.thread?.canBeRenamed && component.props.chatWindow?.isOpen;
         },
         icon: "fa fa-fw fa-pencil",
         name: _t("Rename Thread"),

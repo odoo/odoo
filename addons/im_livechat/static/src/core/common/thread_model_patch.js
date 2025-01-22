@@ -63,4 +63,8 @@ patch(Thread.prototype, {
         }
         return super.leaveNotificationMessage;
     },
+
+    get canBeRenamed() {
+        return super.canBeRenamed && this.channel_type != "livechat";
+    },
 });

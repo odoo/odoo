@@ -414,6 +414,10 @@ export class Thread extends Record {
         return {};
     }
 
+    get canBeRenamed() {
+        return this.is_editable || this.channel_type === "chat";
+    }
+
     executeCommand(command, body = "") {
         return this.store.env.services.orm.call(
             "discuss.channel",

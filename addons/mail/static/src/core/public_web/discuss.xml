@@ -30,7 +30,7 @@
                         </div>
                         <AutoresizeInput
                             className="'o-mail-Discuss-threadName fw-bolder flex-shrink-1 text-dark py-0'"
-                            enabled="thread.is_editable or thread.channel_type === 'chat'"
+                            enabled="thread.canBeRenamed"
                             onValidate.bind="renameThread"
                             value="thread.displayName"
                         />
@@ -39,7 +39,7 @@
                             <t t-set="autogrowDescriptionPlaceholder">Add a description</t>
                             <AutoresizeInput
                                 className="'o-mail-Discuss-threadDescription flex-shrink-1 text-muted small pt-1'"
-                                enabled="thread.is_editable"
+                                enabled="thread.canBeRenamed"
                                 onValidate.bind="updateThreadDescription"
                                 placeholder="thread.is_editable ? autogrowDescriptionPlaceholder : ''"
                                 value="thread.description or ''"
