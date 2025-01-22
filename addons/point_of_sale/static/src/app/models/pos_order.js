@@ -145,7 +145,6 @@ export class PosOrder extends Base {
         });
     }
 
-    // NOTE args added [unwatchedPrinter]
     async printChanges(skipped = false, orderPreparationCategories, cancelled, unwatchedPrinter) {
         const orderChange = changesToOrder(this, skipped, orderPreparationCategories, cancelled);
         const d = new Date();
@@ -168,6 +167,8 @@ export class PosOrder extends Base {
             return sequenceA - sequenceB;
         });
 
+        const allPrintingChanges = [];
+
         for (const printer of unwatchedPrinter) {
             const changes = this._getPrintingCategoriesChanges(
                 printer.config.product_categories_ids,
@@ -186,13 +187,17 @@ export class PosOrder extends Base {
                     },
                     tracking_number: this.tracking_number,
                 };
-                const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
-                    changes: printingChanges,
-                });
-                const result = await printer.printReceipt(receipt);
-                if (!result.successful) {
-                    isPrintSuccessful = false;
-                }
+                allPrintingChanges.push([printer, printingChanges]);
+            }
+        }
+
+        for (const [printer, printingChanges] of allPrintingChanges) {
+            const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
+                changes: printingChanges,
+            });
+            const result = await printer.printReceipt(receipt);
+            if (!result.successful) {
+                isPrintSuccessful = false;
             }
         }
 
