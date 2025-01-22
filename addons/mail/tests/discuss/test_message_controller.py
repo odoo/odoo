@@ -102,6 +102,7 @@ class TestMessageController(HttpCaseWithUserDemo):
                     {
                     "checksum": False,
                     "create_date": fields.Datetime.to_string(self.attachments[0].create_date),
+                    "file_size": 0,
                     "id": self.attachments[0].id,
                     "name": "File 1",
                     "res_name": "Test channel",
@@ -158,6 +159,7 @@ class TestMessageController(HttpCaseWithUserDemo):
                 {
                     "checksum": False,
                     "create_date": fields.Datetime.to_string(self.attachments[0].create_date),
+                    "file_size": 0,
                     "id": self.attachments[0].id,
                     "name": "File 1",
                     "res_name": "Test channel",
@@ -170,6 +172,7 @@ class TestMessageController(HttpCaseWithUserDemo):
                 {
                     "checksum": False,
                     "create_date": fields.Datetime.to_string(self.attachments[1].create_date),
+                    "file_size": 0,
                     "id": self.attachments[1].id,
                     "name": "File 2",
                     "res_name": "Test channel",
@@ -204,6 +207,7 @@ class TestMessageController(HttpCaseWithUserDemo):
                 {
                     "checksum": False,
                     "create_date": fields.Datetime.to_string(self.attachments[0].create_date),
+                    "file_size": 0,
                     "id": self.attachments[0].id,
                     "name": "File 1",
                     "res_name": "Test channel",
@@ -216,6 +220,7 @@ class TestMessageController(HttpCaseWithUserDemo):
                 {
                     "checksum": False,
                     "create_date": fields.Datetime.to_string(self.attachments[1].create_date),
+                    "file_size": 0,
                     "id": self.attachments[1].id,
                     "name": "File 2",
                     "res_name": "Test channel",
