@@ -242,8 +242,8 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
         // TODO remove in master and adapt XML.
         const contentAdditionEl = html.querySelector("#so_content_addition");
         if (contentAdditionEl) {
-            // Allows dropping "inner blocks" next to an image link.
-            contentAdditionEl.dataset.dropNear += ", div:not(.o_grid_item_image) > a:has(img)";
+            // Necessary to be able to drop "inner blocks" next to an image link.
+            contentAdditionEl.dataset.dropNear += ", div:not(.o_grid_item_image) > a";
         }
 
         const toFind = $html.find("we-fontfamilypicker[data-variable]").toArray();
