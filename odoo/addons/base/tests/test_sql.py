@@ -195,8 +195,9 @@ class TestSqlTools(TransactionCase):
         sql.add_index(self.env.cr, 'res_bank_test_name', 'res_bank', definition, unique=False)
 
         # check the definition
-        db_definition = sql.index_definition(self.env.cr, 'res_bank_test_name')
+        db_definition, db_comment = sql.index_definition(self.env.cr, 'res_bank_test_name')
         self.assertIn(definition, db_definition)
+        self.assertIs(db_comment, None)
 
     def test_add_index_escape(self):
         definition = "(id) WHERE name ~ '%'"
@@ -204,5 +205,6 @@ class TestSqlTools(TransactionCase):
         sql.add_index(self.env.cr, 'res_bank_test_percent_escape', 'res_bank', definition, unique=False, comment=comment)
 
         # ensure the definitions match (definition is the comment if it is set)
-        db_definition = sql.index_definition(self.env.cr, 'res_bank_test_percent_escape')
-        self.assertEqual(db_definition, comment)
+        db_definition, db_comment = sql.index_definition(self.env.cr, 'res_bank_test_percent_escape')
+        self.assertIn('WHERE', db_definition)  # the definition is rewritten by postgres
+        self.assertEqual(db_comment, comment)
