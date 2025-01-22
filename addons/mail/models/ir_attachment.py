@@ -81,6 +81,7 @@ class IrAttachment(models.Model):
         return [
             "checksum",
             "create_date",
+            "file_size",
             "mimetype",
             "name",
             Store.Attr("raw_access_token", lambda a: limited_field_access_token(a, "raw")),

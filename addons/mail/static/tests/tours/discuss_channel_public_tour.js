@@ -52,11 +52,11 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             },
         },
         {
-            trigger: ".o-mail-AttachmentCard:not(.o-isUploading)", // waiting the attachment to be uploaded
+            trigger: ".o-mail-AttachmentContainer:not(.o-isUploading)", // waiting the attachment to be uploaded
         },
         {
             content: "Check the text attachment is listed",
-            trigger: '.o-mail-AttachmentCard[title="text.txt"]',
+            trigger: '.o-mail-AttachmentContainer[title="text.txt"]',
         },
         {
             content: "Add an image file in composer",
@@ -78,11 +78,11 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             },
         },
         {
-            trigger: ".o-mail-AttachmentImage:not(.o-isUploading)",
+            trigger: ".o-mail-AttachmentContainer:not(.o-isUploading)",
         },
         {
             content: "Check the image attachment is listed",
-            trigger: '.o-mail-AttachmentImage[title="image.png"]',
+            trigger: '.o-mail-AttachmentContainer[title="image.png"]',
             async run() {
                 /** @type {import("models").Store} */
                 const store = odoo.__WOWL_DEBUG__.root.env.services["mail.store"];
@@ -109,7 +109,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         },
         {
             content: "Check message contains the attachment",
-            trigger: '.o-mail-Message .o-mail-AttachmentCard:contains("text.txt")',
+            trigger: '.o-mail-Message .o-mail-AttachmentContainer:contains("text.txt")',
         },
         {
             trigger: ".o-mail-Message-textContent:contains(cheese)",
@@ -174,11 +174,11 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             },
         },
         {
-            trigger: ".o-mail-Message .o-mail-Composer .o-mail-AttachmentCard:not(.o-isUploading)", // waiting the attachment to be uploaded
+            trigger: ".o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer:not(.o-isUploading)", // waiting the attachment to be uploaded
         },
         {
             content: "Check the earlier provided extra attachment is listed",
-            trigger: '.o-mail-Message .o-mail-Composer .o-mail-AttachmentCard[title="extra.txt"]',
+            trigger: '.o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer[title="extra.txt"]',
         },
         {
             content: "Save edited message",
@@ -191,17 +191,17 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         },
         {
             content: "Check edited message contains the first attachment",
-            trigger: '.o-mail-Message .o-mail-AttachmentCard:contains("text.txt")',
+            trigger: '.o-mail-Message .o-mail-AttachmentContainer:contains("text.txt")',
         },
         {
             content: "Check edited message contains the extra attachment",
-            trigger: '.o-mail-Message .o-mail-AttachmentCard:contains("extra.txt")',
+            trigger: '.o-mail-Message .o-mail-AttachmentContainer:contains("extra.txt")',
             async run() {
-                await click(".o-mail-AttachmentCard-unlink", {
-                    parent: [".o-mail-AttachmentCard", { text: "extra.txt" }],
+                await click(".o-mail-Attachment-unlink", {
+                    parent: [".o-mail-AttachmentContainer", { text: "extra.txt" }],
                 });
                 await click(".btn", { text: "Ok", parent: [".modal", { text: "Confirmation" }] });
-                await contains(".o-mail-AttachmentCard", { text: "extra.txt", count: 0 });
+                await contains(".o-mail-AttachmentContainer", { text: "extra.txt", count: 0 });
             },
         },
         {
@@ -222,7 +222,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         {
             content: "Check that searched message contains the attachment",
             trigger:
-                '.o-mail-SearchMessagesPanel .o-mail-Message .o-mail-AttachmentCard:contains("text.txt")',
+                '.o-mail-SearchMessagesPanel .o-mail-Message .o-mail-AttachmentContainer:contains("text.txt")',
         },
     ],
 });

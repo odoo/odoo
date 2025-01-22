@@ -2,6 +2,7 @@ import { Component } from "@odoo/owl";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { download } from "@web/core/network/download";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -10,15 +11,14 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 
-class ImageActions extends Component {
+class Actions extends Component {
     static components = { Dropdown, DropdownItem };
-    static props = ["actions", "imagesHeight"];
-    static template = "mail.ImageActions";
+    static props = ["actions"];
+    static template = "mail.Actions";
 
     setup() {
         super.setup();
         this.actionsMenuState = useDropdownState();
-        this.isMobileOS = isMobileOS();
     }
 }
 
@@ -26,20 +26,17 @@ class ImageActions extends Component {
  * @typedef {Object} Props
  * @property {import("models").Attachment[]} attachments
  * @property {function} unlinkAttachment
- * @property {number} imagesHeight
  * @property {ReturnType<import('@mail/core/common/message_search_hook').useMessageSearch>} [messageSearch]
  * @extends {Component<Props, Env>}
  */
 export class AttachmentList extends Component {
-    static components = { ImageActions };
-    static props = ["attachments", "unlinkAttachment", "imagesHeight", "messageSearch?"];
+    static components = { Actions };
+    static props = ["attachments", "unlinkAttachment", "messageSearch?"];
     static template = "mail.AttachmentList";
 
     setup() {
         super.setup();
         this.ui = useService("ui");
-        // Arbitrary high value, this is effectively a max-width.
-        this.imagesWidth = 1920;
         this.dialog = useService("dialog");
         this.fileViewer = useFileViewer();
         this.actionsMenuState = useDropdownState();
@@ -55,17 +52,7 @@ export class AttachmentList extends Component {
         }
         return url(attachment.urlRoute, {
             ...attachment.urlQueryParams,
-            width: this.imagesWidth * 2,
-            height: this.props.imagesHeight * 2,
         });
-    }
-
-    get images() {
-        return this.props.attachments.filter((a) => a.isImage);
-    }
-
-    get cards() {
-        return this.props.attachments.filter((a) => !a.isImage);
     }
 
     /**
@@ -79,13 +66,10 @@ export class AttachmentList extends Component {
      * @param {import("models").Attachment} attachment
      */
     onClickDownload(attachment) {
-        const downloadLink = document.createElement("a");
-        downloadLink.setAttribute("href", attachment.downloadUrl);
-        // Adding 'download' attribute into a link prevents open a new
-        // tab or change the current location of the window. This avoids
-        // interrupting the activity in the page such as rtc call.
-        downloadLink.setAttribute("download", "");
-        downloadLink.click();
+        download({
+            data: {},
+            url: attachment.downloadUrl,
+        });
     }
 
     /**
@@ -157,6 +141,17 @@ export class AttachmentList extends Component {
             !this.env.message ||
             this.env.message.hasTextContent ||
             (this.env.message && this.props.attachments.length > 1)
+        );
+    }
+
+    /**
+     * @param {import("models").Attachment} attachment
+     */
+    showUploaded(attachment) {
+        return (
+            !attachment.isImage &&
+            !attachment.uploading &&
+            this.env.inComposer
         );
     }
 }

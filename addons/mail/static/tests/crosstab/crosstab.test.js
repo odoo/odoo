@@ -131,7 +131,7 @@ test("Adding attachments", async () => {
         attachment_ids: [attachmentId],
         message_id: messageId,
     });
-    await contains(".o-mail-AttachmentCard", { target: env2, text: "test.txt" });
+    await contains(".o-mail-AttachmentContainer", { target: env2, text: "test.txt" });
 });
 
 test("Remove attachment from message", async () => {
@@ -153,7 +153,7 @@ test("Remove attachment from message", async () => {
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
     await contains(".o-mail-AttachmentCard", { target: env1, text: "test.txt" });
-    await click(".o-mail-AttachmentCard-unlink", { target: env2 });
+    await click(".o-mail-Attachment-unlink", { target: env2 });
     await click(".modal-footer .btn", { text: "Ok", target: env2 });
     await contains(".o-mail-AttachmentCard", { count: 0, target: env1, text: "test.txt" });
 });
