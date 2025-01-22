@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class ResPartner(models.Model):
@@ -26,3 +26,7 @@ class ResPartner(models.Model):
         formats_info = super()._get_ubl_cii_formats_info()
         formats_info['pint_my'] = {'countries': ['MY'], 'on_peppol': True}
         return formats_info
+
+    @api.model
+    def _commercial_fields(self):
+        return super()._commercial_fields() + ['sst_registration_number', 'ttx_registration_number']
