@@ -482,6 +482,11 @@ class AccountChartTemplate(models.Model):
         if not company:
             if request and hasattr(request, 'allowed_company_ids'):
                 company = self.env['res.company'].browse(request.allowed_company_ids[0])
+            elif self.country_id:
+                company = self.env.company
+                company_countries = company.country_id + company.account_fiscal_country_id
+                if company_countries and self.country_id not in company_countries:
+                    return
             else:
                 company = self.env.company
         # If we don't have any chart of account on this company, install this chart of account
