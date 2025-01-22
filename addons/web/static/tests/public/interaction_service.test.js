@@ -301,3 +301,25 @@ test("can start and stop interaction in specific el", async () => {
         `<span class="a test" data-start="true"></span> <span class="b test"></span>`
     );
 });
+
+test("does not start interaction in el if not attached", async () => {
+    let n = 0;
+    class Test extends Interaction {
+        static selector = ".test";
+        start() {
+            n++;
+        }
+        destroy() {
+            n--;
+        }
+    }
+
+    const { core } = await startInteraction(Test, `<p><span class="test"></span></p>`);
+    expect(n).toBe(1);
+    const span = queryOne("span.test");
+    core.stopInteractions(span);
+    expect(n).toBe(0);
+    span.remove();
+    await core.startInteractions(span);
+    expect(n).toBe(0);
+});
