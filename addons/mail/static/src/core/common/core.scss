@@ -1,5 +1,4 @@
-// $o-discuss-talkingColor: mix($white, darken($o-enterprise-action-color, 5%), 35%);
-$o-discuss-talkingColor: lighten($success, 5%);
+$o-discuss-talkingColor: lighten($success, 10%);
 
 .o-mail-discussSidebarBgColor {
     background-color: $white;
@@ -49,6 +48,15 @@ $o-discuss-talkingColor: lighten($success, 5%);
     min-width: 0;
 }
 
+.o-gap-0_5 {
+    gap: map-get($spacers, 1) / 2;
+}
+
+.o-py-0_5 {
+    padding-top: map-get($spacers, 1) / 2;
+    padding-bottom: map-get($spacers, 1) / 2;
+}
+
 .o-hover-text-underline:hover {
     text-decoration: underline;
 }
@@ -61,8 +69,17 @@ $o-discuss-talkingColor: lighten($success, 5%);
     font-size: 0.65rem;
 }
 
+.o-xxsmaller {
+    font-size: 0.5rem;
+}
+
 .o-yellow {
     color: $yellow;
+}
+
+@mixin o-mail-call-bordered() {
+    outline: 2px solid rgba($o-action, 0.5) !important;
+    background-color: mix($white, $o-action, 95%) !important;
 }
 
 // see `@mixin button-variant`, this is the implementation without requiring `.btn` classname
@@ -166,5 +183,5 @@ a.o-discuss-mention {
 
 .o-mail-Discuss-threadActionPopover {
     width: Min(95vw, 400px);
-    max-height: Min(calc(100vh - 140px), 530px);
+    max-height: Min(50vh, 530px);
 }

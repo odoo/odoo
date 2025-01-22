@@ -90,6 +90,8 @@ export class PartnerList extends Component {
                   .toSorted((a, b) =>
                       this.props.partner?.id === a.id
                           ? -1
+                          : this.props.partner?.id === b.id
+                          ? 1
                           : (a.name || "").localeCompare(b.name || "")
                   );
 
@@ -126,6 +128,12 @@ export class PartnerList extends Component {
                 "phone_mobile_search",
                 "email",
                 "barcode",
+                "street",
+                "zip",
+                "city",
+                "state_id",
+                "country_id",
+                "vat",
             ];
             domain = [
                 ...Array(search_fields.length - 1).fill("|"),

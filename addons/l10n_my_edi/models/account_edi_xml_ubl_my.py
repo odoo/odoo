@@ -196,19 +196,6 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             'registration_name': partner.name,
         }]
 
-    def _get_invoice_tax_totals_vals_list(self, invoice, taxes_vals):
-        # EXTENDS 'account_edi_ubl_cii'
-        vals_list = super()._get_invoice_tax_totals_vals_list(invoice, taxes_vals)
-        company_currency = invoice.company_id.currency_id
-        if invoice.currency_id != company_currency:
-            vals_list.append({
-                'currency': company_currency,
-                'currency_dp': company_currency.decimal_places,
-                'tax_amount': taxes_vals['tax_amount'],
-                'tax_subtotal_vals': [],
-            })
-        return vals_list
-
     def _get_partner_party_identification_vals_list(self, partner):
         """ The id vals list must be filled with two values.
         The TIN, and then one of either:
@@ -227,7 +214,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             'id': partner.vat,
         })
 
-        if partner.country_code == 'MY':
+        if partner.l10n_my_identification_type and partner.l10n_my_identification_number:
             vals.append({
                 'id_attrs': {'schemeID': partner.l10n_my_identification_type},
                 'id': partner.l10n_my_identification_number,
@@ -297,6 +284,12 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
 
             if not partner.state_id:
                 self._l10n_my_edi_make_validation_error(constraints, 'no_state', partner_type, partner.display_name)
+            if not partner.city:
+                self._l10n_my_edi_make_validation_error(constraints, 'no_city', partner_type, partner.display_name)
+            if not partner.country_id:
+                self._l10n_my_edi_make_validation_error(constraints, 'no_country', partner_type, partner.display_name)
+            if not partner.street:
+                self._l10n_my_edi_make_validation_error(constraints, 'no_street', partner_type, partner.display_name)
 
             if partner.sst_registration_number and len(partner.sst_registration_number.split(';')) > 2:
                 self._l10n_my_edi_make_validation_error(constraints, 'too_many_sst', partner_type, partner.display_name)
@@ -452,6 +445,8 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
     def _l10n_my_edi_get_formatted_phone_number(self, number):
         # the phone number MUST follow the E.164 format.
         # Don't try to reformat too much, we don't want to risk messing it up
+        if not number:
+            return ''  # This wouldn't happen in the file as it's caught in the validation errors, but the vals are exported before these checks are done.
         return number.replace(' ', '').replace('(', '').replace(')', '').replace('-', '')
 
     @api.model
@@ -478,6 +473,18 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             ),
             'no_state': _(
                 "The following partner's state is missing: %(partner_name)s",
+                partner_name=record_name
+            ),
+            'no_city': _(
+                "The following partner's city is missing: %(partner_name)s",
+                partner_name=record_name
+            ),
+            'no_country': _(
+                "The following partner's country is missing: %(partner_name)s",
+                partner_name=record_name
+            ),
+            'no_street': _(
+                "The following partner's street is missing: %(partner_name)s",
                 partner_name=record_name
             ),
             'class_code_required': _(

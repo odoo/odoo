@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -558,6 +558,8 @@ msgid ""
 "Launch picking orders by aisle or area and regroup at packing zone. Ideal "
 "for large warehouses."
 msgstr ""
+"เริ่มการเลือกสินค้าตามช่องทางหรือพื้นที่และจัดกลุ่มใหม่ในโซนบรรจุภัณฑ์ "
+"เหมาะสำหรับคลังสินค้าขนาดใหญ่"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__line_ids
@@ -799,6 +801,7 @@ msgid ""
 "Regroup multiple orders into one picking and consolidate at the packing "
 "zone."
 msgstr ""
+"จัดกลุ่มคำสั่งซื้อหลายรายการให้เป็นหนึ่งเดียวและรวบรวมไว้ที่โซนการบรรจุ"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__user_id
@@ -892,7 +895,7 @@ msgstr "ตำแหน่งแหล่งที่มา"
 msgid ""
 "Split transfers by defined locations, then group transfers with the same "
 "location."
-msgstr ""
+msgstr "แยกการโอนตามสถานที่ที่กำหนด จากนั้นจัดกลุ่มการโอนที่มีสถานที่เดียวกัน"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_group_by_category
@@ -900,12 +903,14 @@ msgid ""
 "Split transfers by product category, then group transfers that have the same"
 " product category."
 msgstr ""
+"แยกการโอนตามหมวดหมู่ผลิตภัณฑ์ "
+"จากนั้นจึงแยกกลุ่มการโอนที่มีหมวดหมู่ผลิตภัณฑ์เดียวกัน"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_group_by_product
 msgid ""
 "Split transfers by product then group transfers that have the same product."
-msgstr ""
+msgstr "แยกการโอนตามสินค้า จากนั้นจึงจัดกลุ่มการโอนที่มีสินค้าเดียวกัน"
 
 #. module: stock_picking_batch
 #: model:mail.message.subtype,description:stock_picking_batch.mt_batch_state
@@ -1074,6 +1079,7 @@ msgstr "ตรวจสอบ"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_warehouse
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__warehouse_id
 msgid "Warehouse"
 msgstr "โกดังสินค้า"
 

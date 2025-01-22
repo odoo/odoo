@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -607,11 +607,6 @@ msgid "Default outstanding account for expenses paid by company."
 msgstr "บัญชีค้างชำระค่าเริ่มต้นสำหรับค่าใช้จ่ายที่บริษัทชำระ"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
-msgid "Default outstanding account for expenses paid by employees."
-msgstr "บัญชีค้างชำระค่าเริ่มต้นสำหรับค่าใช้จ่ายที่จ่ายโดยพนักงาน"
-
-#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__department_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -714,11 +709,6 @@ msgstr "พนักงาน (การชดเชย)"
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Employee Expense Journal"
 msgstr "สมุดรายวันค่าใช้จ่ายพนักงาน"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
-msgid "Employee Expense Oustanding Account"
-msgstr "บัญชีค่าใช้จ่ายพนักงานที่ค้างชำระ"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_account
@@ -1893,12 +1883,6 @@ msgid "Show missing work email employees"
 msgstr "แสดงอีเมลพนักงานที่ขาดหายไป"
 
 #. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-msgid "Specify expense journal to generate accounting entries."
-msgstr "ระบุสมุดรายวันค่าใช้จ่ายเพื่อสร้างรายการทางบัญชี"
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__accounting_date
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__accounting_date
 msgid "Specify the bill date of the related vendor bill."
@@ -2044,11 +2028,6 @@ msgid ""
 msgstr "บัญชีที่ใช้บันทึกยอดคงค้างค่าใช้จ่ายของบริษัท"
 
 #. module: hr_expense
-msgid ""
-"The account used to record the outstanding amount of the employee expenses."
-msgstr "บัญชีที่ใช้บันทึกยอดค้างจ่ายของค่าใช้จ่ายพนักงาน"
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
 msgid ""
@@ -2092,16 +2071,6 @@ msgid "The journal used when the expense is paid by employee."
 msgstr "สมุดรายวันที่ใช้เมื่อมีการชำระค่าใช้จ่ายโดยพนักงาน"
 
 #. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-msgid ""
-"The payment method %(method)s needs an account, or a default outstanding "
-"account must be defined in the settings."
-msgstr ""
-"วิธีการชำระเงิน %(method)s จำเป็นต้องมีบัญชี "
-"หรือต้องกำหนดบัญชีค้างชำระเริ่มต้นในการตั้งค่า"
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__payment_method_line_id
 msgid "The payment method used when the expense is paid by the company."
 msgstr "วิธีการชำระเงินที่ใช้เมื่อรายจ่ายถูกชำระโดยบริษัท"
@@ -2124,27 +2093,6 @@ msgid ""
 "The work email of some employees is missing. Please add it on the employee "
 "form"
 msgstr "อีเมลที่ทำงานของพนักงานบางคนหายไป กรุณาเพิ่มลงในแบบฟอร์มพนักงาน"
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-#, python-format
-msgid "Employee(s) should have a bank account set."
-msgstr "พนักงานควรต้องมีบัญชีธนาคาร"
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-#, python-format
-msgid "Go to Employee(s)"
-msgstr "ไปที่พนักงาน"
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-#, python-format
-msgid "Employee(s)"
-msgstr "พนักงาน"
 
 #. module: hr_expense
 #. odoo-python

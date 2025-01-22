@@ -87,3 +87,12 @@ class QuotationDocument(models.Model):
             },
             'target': 'current',
         }
+
+    # === CRUD METHODS ===#
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        docs = super().create(vals_list)
+        for doc in docs:
+            doc.write({'res_model': 'quotation.document', 'res_id': doc.id})
+        return docs

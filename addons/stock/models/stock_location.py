@@ -454,7 +454,7 @@ class Location(models.Model):
 
     def _child_of(self, other_location):
         self.ensure_one()
-        return other_location.parent_path in self.parent_path
+        return self.parent_path.startswith(other_location.parent_path)
 
     def _is_outgoing(self):
         self.ensure_one()

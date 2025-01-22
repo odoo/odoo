@@ -109,6 +109,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             self.partner_1,
             self.partner_2,
             move_type='out_invoice',
+            delivery_date='2017-01-15',
             invoice_line_ids=[
                 {
                     'product_id': self.product_a.id,
@@ -733,7 +734,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         ]
 
         invoice.action_post()
-        invoice._generate_and_send(mail_template_id=self.move_template.id)
+        invoice._generate_and_send(mail_template_id=self.move_template.id, sending_methods=['manual'])
 
         self.assertRecordValues(invoice, [{
             'amount_untaxed': 600.00,

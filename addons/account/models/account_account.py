@@ -143,7 +143,7 @@ class AccountAccount(models.Model):
 
     def _field_to_sql(self, alias: str, fname: str, query: (Query | None) = None, flush: bool = True) -> SQL:
         if fname == 'internal_group':
-            return SQL("split_part(account_account.account_type, '_', 1)", to_flush=self._fields['account_type'])
+            return SQL("split_part(%s, '_', 1)", self._field_to_sql(alias, 'account_type', query, flush))
         if fname == 'code':
             return self.with_company(self.env.company.root_id).sudo()._field_to_sql(alias, 'code_store', query, flush)
         if fname == 'placeholder_code':
@@ -386,6 +386,12 @@ class AccountAccount(models.Model):
         for record, record_root in zip(self, self.with_company(self.env.company.root_id).sudo()):
             # Need to set record.code with `company = self.env.company`, not `self.env.company.root_id`
             record_root.code_store = record.code
+
+        # Changing the code for one company should also change it for all the companies which share the same root_id.
+        # The simplest way of achieving this is invalidating it for all companies here.
+        # We re-compute it right away for the active company, as it is used by constraints while `code` is still protected.
+        self.invalidate_recordset(fnames=['code'], flush=False)
+        self._compute_code()
 
     @api.depends_context('company')
     @api.depends('code')

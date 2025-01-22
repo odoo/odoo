@@ -11,7 +11,7 @@ import {
     queryOne,
     resize,
 } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { Deferred, animationFrame, runAllTimers, tick } from "@odoo/hoot-mock";
 import { Component, onMounted, onPatched, useState, xml } from "@odoo/owl";
 
 import { makeMockEnv } from "@web/../tests/_framework/env_test_helpers";
@@ -275,6 +275,7 @@ test("dropdowns keynav", async () => {
     expect(DROPDOWN_MENU).toHaveCount(0);
 
     await press("alt+m");
+    await tick();
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(1);
 
@@ -301,6 +302,7 @@ test("dropdowns keynav", async () => {
     for (let i = 0; i < scenarioSteps.length; i++) {
         const step = scenarioSteps[i];
         await press(step.hotkey);
+        await tick();
         await animationFrame();
 
         expect(".dropdown-menu > .focus").toHaveClass(step.expected, {
@@ -316,16 +318,19 @@ test("dropdowns keynav", async () => {
 
     // Reopen dropdown
     await press("alt+m");
+    await tick();
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(1);
 
     // Select second item through data-hotkey attribute
     await press("alt+2");
+    await tick();
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(0);
 
     // Reopen dropdown
     await press("alt+m");
+    await tick();
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(1);
 
@@ -1128,6 +1133,7 @@ test("multi-level dropdown: keynav", async () => {
 
     for (const [stepIndex, step] of scenarioSteps.entries()) {
         await press(step.hotkey);
+        await tick();
         await animationFrame();
 
         if (step.highlighted !== undefined) {

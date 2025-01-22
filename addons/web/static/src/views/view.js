@@ -278,16 +278,16 @@ export class View extends Component {
         if (loadView || loadSearchView) {
             // view description (or search view description if required) is incomplete
             // a loadViews is done to complete the missing information
-            const result = await this.viewService.loadViews(
-                { context, resModel, views },
-                {
-                    actionId: this.env.config.actionId,
-                    embeddedActionId: this.env.config.currentEmbeddedActionId,
-                    embeddedParentResId: context.active_id,
-                    loadActionMenus,
-                    loadIrFilters,
-                }
-            );
+            const options = {
+                actionId: this.env.config.actionId,
+                loadActionMenus,
+                loadIrFilters,
+            };
+            if (this.env.config.currentEmbeddedActionId) {
+                options.embeddedActionId = this.env.config.currentEmbeddedActionId;
+                options.embeddedParentResId = context.active_id;
+            }
+            const result = await this.viewService.loadViews({ context, resModel, views }, options);
             // Note: if props.views is different from views, the cached descriptions
             // will certainly not be reused! (but for the standard flow this will work as
             // before)

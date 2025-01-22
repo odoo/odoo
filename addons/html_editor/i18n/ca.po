@@ -7,6 +7,7 @@
 # Eric Rial <erialmedina@gmail.com>, 2024
 # martioodo hola, 2024
 # Albert Parera, 2024
+# Manel Fernandez Ramirez <manelfera@outlook.com>, 2024
 # Josep Sànchez <papapep@gmx.com>, 2024
 # Arnau Ros, 2024
 # RGB Consulting <odoo@rgbconsulting.com>, 2024
@@ -15,12 +16,12 @@
 # Carles Antoli <carlesantoli@hotmail.com>, 2024
 # Jonatan Gk, 2024
 # jabiri7, 2024
-# Manel Fernandez Ramirez <manelfera@outlook.com>, 2024
-# Quim - eccit <quim@eccit.com>, 2024
+# Quim - coopdevs <quim.rebull@coopdevs.org>, 2024
 # Josep Anton Belchi, 2024
 # Ivan Espinola, 2024
 # Óscar Fonseca <tecnico@pyming.com>, 2024
 # Martin Trigaux, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -28,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 07:49+0000\n"
 "PO-Revision-Date: 2024-09-29 00:00+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -170,6 +171,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "Add a code section"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
+msgid "Add a download box"
 msgstr ""
 
 #. module: html_editor
@@ -523,16 +530,9 @@ msgstr "Moviment diari"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
 #: code:addons/html_editor/static/src/main/media/image_plugin.js:0
 msgid "Default"
 msgstr "Per defecte"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
-msgid "Default + Rounded"
-msgstr "Per defecte + arrodonit"
 
 #. module: html_editor
 #. odoo-javascript
@@ -572,15 +572,9 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_dialog/media_dialog.js:0
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
 msgid "Documents"
 msgstr "Documents"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/core/file/readonly_file.xml:0
-msgid "Download"
-msgstr "Descarregar"
 
 #. module: html_editor
 #. odoo-javascript
@@ -694,12 +688,6 @@ msgstr "Estendre fins al costat més llunyà"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/file_plugin/file_plugin.js:0
-msgid "File"
-msgstr "Fitxer"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/upload_progress_toast/upload_progress_toast.xml:0
 msgid "File has been uploaded"
 msgstr "L'arxiu ha sigut carregat"
@@ -721,12 +709,6 @@ msgstr "Omplir + Arrodoniment"
 #: code:addons/html_editor/static/src/main/font/gradient_picker.xml:0
 msgid "First color %"
 msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
-msgid "Flat"
-msgstr "Pla"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1912,13 +1894,19 @@ msgstr "L'URL"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Upload File"
+msgstr "Pujar fitxers"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/document_selector.js:0
 msgid "Upload a document"
 msgstr "Carregar un document"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/file_plugin/file_plugin.js:0
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
 msgid "Upload a file"
 msgstr "Puja un fitxer"
 
@@ -2096,15 +2084,33 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
+msgid "document"
+msgstr "document"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/others/embedded_components/plugins/excalidraw_plugin/excalidraw_dialog/excalidraw_dialog.xml:0
 msgid "e.g. https://link.excalidraw.com/..."
 msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
+msgid "file"
+msgstr "fitxer"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.xml:0
 msgid "media-library"
 msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "or"
+msgstr "o"
 
 #. module: html_editor
 #. odoo-javascript

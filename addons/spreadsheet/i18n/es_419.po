@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Tiffany Chang, 2024
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Wil Odoo, 2024
 # Fernanda Alvarez, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Fernanda Alvarez, 2024\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -883,12 +883,6 @@ msgid ""
 msgstr ""
 "Todas las fechas deben ser mayores o iguales a la primera fecha en "
 "cashflow_dates (%s)."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "All the ranges and the range values must have the same size"
-msgstr "Todos los rangos y los valores del rango deben tener el mismo tamaño"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2371,7 +2365,7 @@ msgstr "Tasa de cambio"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/currency/plugins/currency.js:0
 msgid "Currency not available for this company."
-msgstr "La divisa no está disponible para esta empresa."
+msgstr "La moneda no está disponible para esta empresa."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2426,7 +2420,7 @@ msgstr "Moneda personalizada"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Custom currency format"
-msgstr "Formato de divisa personalizada"
+msgstr "Formato de moneda personalizada"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3343,6 +3337,7 @@ msgstr "El campo %(field)s no es compatible debido a su tipo (%(type)s)"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/odoo_pivot.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_helpers.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 msgid "Field %s does not exist"
 msgstr "El campo %s no existe"
 
@@ -3429,7 +3424,7 @@ msgstr "Primera columna"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/currency/formulas.js:0
 msgid "First currency code."
-msgstr "Código de la primer divisa."
+msgstr "Código de la primer moneda."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6480,7 +6475,7 @@ msgstr "Segundo"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/currency/formulas.js:0
 msgid "Second currency code."
-msgstr "Código de la segunda divisa."
+msgstr "Código de la segunda moneda."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6700,6 +6695,12 @@ msgstr "Color único"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Single value from a table-like range."
 msgstr "Valor único de un rango tipo tabla."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
+msgid "Some measures are not available: %s"
+msgstr "Algunas medidas no están disponibles: %s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8599,6 +8600,23 @@ msgstr "El minuendo, o el número al cual restarle."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The minute component of the time."
 msgstr "El componente de minuto de la hora."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/data_sources/data_source.js:0
+#: code:addons/spreadsheet/static/src/pivot/odoo_pivot_loader.js:0
+msgid "The model \"%(model)s\" does not exist."
+msgstr "El modelo \"%(model)s\" no existe."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/global_filters/components/filter_value/filter_value.js:0
+msgid ""
+"The model (%(model)s) of this global filter is not valid (it may have been "
+"renamed/deleted)."
+msgstr ""
+"El modelo (%(model)s) de este filtro global no es válido (es posible que se "
+"haya cambiado el nombre o se haya borrado)."
 
 #. module: spreadsheet
 #. odoo-javascript

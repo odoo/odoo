@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Chloe Wang, 2024
 # Odoo哥 <vnsoft.he@gmail.com>, 2024
+# Chloe Wang, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Odoo哥 <vnsoft.he@gmail.com>, 2024\n"
+"Last-Translator: Chloe Wang, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -899,6 +899,16 @@ msgstr "凭证处于不一致的状态:它们不属于同一个来源或目标�
 msgid ""
 "The stock accounts should be set in order to use the automatic valuation."
 msgstr "应设置库存账户才能使用自动估值。"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move_line.py:0
+msgid ""
+"The stock valuation of a move is based on the type of the source and "
+"destination locations. As the move is already processed, you cannot modify "
+"the locations in a way that changes the valuation logic defined during the "
+"initial processing."
+msgstr "移动的库存估值基于源位置和目的地位置的类型。由于已对移动进行了处理，因此您无法以更改初始处理期间定义的评估逻辑的方式修改位置。"
 
 #. module: stock_account
 #. odoo-python

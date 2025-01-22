@@ -58,9 +58,13 @@ export class PosKanbanRenderer extends KanbanRenderer {
         });
 
         onWillRender(() => this.checkDisplayedResult());
-        onWillStart(async () => {
-            this.isPosManager = await user.hasGroup("point_of_sale.group_pos_manager");
-        });
+    }
+
+    async clickLoadScenario(item) {
+        await this.loadScenario.call(item);
+        if (this.loadScenario.status == "error") {
+            throw this.loadScenario.result;
+        }
     }
 
     checkDisplayedResult() {
@@ -69,7 +73,8 @@ export class PosKanbanRenderer extends KanbanRenderer {
 
     async callWithViewUpdate(func) {
         try {
-            if (!this.isPosManager) {
+            const isPosManager = await user.hasGroup("point_of_sale.group_pos_manager");
+            if (!isPosManager) {
                 this.dialog.add(AlertDialog, {
                     title: _t("Access Denied"),
                     body: _t(
@@ -94,7 +99,7 @@ export class PosKanbanRenderer extends KanbanRenderer {
                 iconFile: "clothes-icon.png",
             },
             {
-                name: _t("Furnitures"),
+                name: _t("Furniture"),
                 description: _t("Stock, product configurator, replenishment, discounts"),
                 functionName: "load_onboarding_furniture_scenario",
                 iconFile: "furniture-icon.png",

@@ -1,5 +1,7 @@
 import { expect, getFixture, test } from "@odoo/hoot";
 import { microTick, tick } from "@odoo/hoot-dom";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { browser } from "@web/core/browser/browser";
 
 /** @type {typeof OdooModuleLoader} */
 const ModuleLoader = Object.getPrototypeOf(odoo.loader.constructor);
@@ -65,6 +67,12 @@ test("define: duplicate name", async () => {
 });
 
 test("define: missing module", async () => {
+    patchWithCleanup(browser.console, {
+        error: (msg, args) => {
+            expect.step(msg + args);
+        },
+    });
+
     const loader = new ModuleLoader(getFixture());
 
     loader.define("b", ["a"], () => {});
@@ -72,12 +80,19 @@ test("define: missing module", async () => {
 
     await microTick();
 
-    expect(".o_module_error").toHaveCount(1);
-    expect(".o_module_error ul:first").toHaveText("a");
-    expect(".o_module_error ul:last").toHaveText("b\nc");
+    expect.verifySteps([
+        "The following modules are needed by other modules but have not been defined, they may not be present in the correct asset bundle:a",
+        "The following modules could not be loaded because they have unmet dependencies, this is a secondary error which is likely caused by one of the above problems:b,c",
+    ]);
 });
 
 test("define: dependency cycle", async () => {
+    patchWithCleanup(browser.console, {
+        error: (msg, args) => {
+            expect.step(msg + args);
+        },
+    });
+
     const loader = new ModuleLoader(getFixture());
 
     loader.define("a", ["b"], () => {});
@@ -86,6 +101,8 @@ test("define: dependency cycle", async () => {
 
     await microTick();
 
-    expect(".o_module_error").toHaveCount(1);
-    expect(".o_module_error ul:first").toHaveText(`"a" => "b" => "c" => "a"`);
+    expect.verifySteps([
+        `The following modules could not be loaded because they form a dependency cycle:"a" => "b" => "c" => "a"`,
+        "The following modules could not be loaded because they have unmet dependencies, this is a secondary error which is likely caused by one of the above problems:a,b,c",
+    ]);
 });

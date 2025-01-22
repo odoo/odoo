@@ -236,10 +236,10 @@
                             <ram:TypeCode>42</ram:TypeCode>
                             <ram:PayeePartyCreditorFinancialAccount>
                                 <ram:IBANID
-                                    t-if="record.partner_bank_id.sanitized_acc_number == 'iban'"
+                                    t-if="record.partner_bank_id.acc_type == 'iban'"
                                     t-out="record.partner_bank_id.sanitized_acc_number"/>
                                 <ram:ProprietaryID
-                                    t-if="record.partner_bank_id.sanitized_acc_number != 'iban'"
+                                    t-if="record.partner_bank_id.acc_type != 'iban'"
                                     t-out="record.partner_bank_id.sanitized_acc_number"/>
                             </ram:PayeePartyCreditorFinancialAccount>
                         </ram:SpecifiedTradeSettlementPaymentMeans>

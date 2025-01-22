@@ -1782,13 +1782,31 @@ class BaseModel(metaclass=MetaModel):
         search_fnames = self._rec_names_search or ([self._rec_name] if self._rec_name else [])
         if not search_fnames:
             _logger.warning("Cannot search on display_name, no _rec_name or _rec_names_search defined on %s", self._name)
-            return expression.FALSE_DOMAIN
+            # do not restrain anything
+            return expression.TRUE_DOMAIN
         if operator.endswith('like') and not value and '=' not in operator:
             # optimize out the default criterion of ``like ''`` that matches everything
             # return all when operator is positive
             return expression.FALSE_DOMAIN if operator in expression.NEGATIVE_TERM_OPERATORS else expression.TRUE_DOMAIN
         aggregator = expression.AND if operator in expression.NEGATIVE_TERM_OPERATORS else expression.OR
-        return aggregator([[(field_name, operator, value)] for field_name in search_fnames])
+        domains = []
+        for field_name in search_fnames:
+            # field_name may be a sequence of field names (partner_id.name)
+            # retrieve the last field in the sequence
+            model = self
+            for fname in field_name.split('.'):
+                field = model._fields[fname]
+                model = self.env.get(field.comodel_name)
+            if field.relational:
+                # relational fields will trigger a _name_search on their comodel
+                domains.append([(field_name, operator, value)])
+                continue
+            try:
+                domains.append([(field_name, operator, field.convert_to_write(value, self))])
+            except ValueError:
+                pass  # ignore that case if the value doesn't match the field type
+
+        return aggregator(domains)
 
     @api.model
     def name_create(self, name) -> tuple[int, str] | typing.Literal[False]:
@@ -4967,7 +4985,7 @@ class BaseModel(metaclass=MetaModel):
                     (data['record'], {
                         name: data['inversed'][name]
                         for name in inv_names
-                        if name in data['inversed']
+                        if name in data['inversed'] and name not in data['stored']
                     })
                     for data in data_list
                     if not inv_names.isdisjoint(data['inversed'])

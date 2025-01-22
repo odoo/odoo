@@ -499,8 +499,13 @@ var SnippetEditor = publicWidget.Widget.extend({
                         // Consider layout-only elements (like bg-shapes) as empty
                         return el.matches(this.layoutElementsSelector);
                     }));
-                return isEmpty && !$el.hasClass('oe_structure')
-                    && !$el.parent().hasClass('carousel-item')
+                const notRemovableSelector =
+                    `.oe_structure,
+                    .carousel-item,
+                    .carousel-item > .container,
+                    .carousel-item > .container-fluid,
+                    .carousel-item > .o_container_small`;
+                return isEmpty && !$el[0].matches(notRemovableSelector)
                     && (!editor || editor.isTargetParentEditable)
                     && !isUnremovable($el[0]);
             };
@@ -3119,6 +3124,13 @@ class SnippetsMenu extends Component {
         exclude += `${exclude && ', '}.o_snippet_not_selectable`;
 
         let filterFunc = function () {
+            if (forDrop) {
+                // Prevents blocks from being dropped into an image field.
+                const selfOrParentEl = isChildren ? this.parentNode : this;
+                if (selfOrParentEl.closest("[data-oe-type=image]")) {
+                    return false;
+                }
+            }
             // Exclude what it is asked to exclude.
             if ($(this).is(exclude)) {
                 return false;
@@ -5155,7 +5167,7 @@ class SnippetsMenu extends Component {
                         });
                     },
                     deleteCustomSnippet: (snippetKey) => {
-                        this._deleteCustomSnippet(snippetKey, false);
+                        return this._deleteCustomSnippet(snippetKey, false);
                     },
                     renameCustomSnippet: (snippetKey, newName) => {
                         this._renameCustomSnippet(snippetKey, newName, false);
@@ -5262,20 +5274,26 @@ class SnippetsMenu extends Component {
     async _deleteCustomSnippet(snippetKey, withMutex = true) {
         const snippet = this.snippets.get(snippetKey);
         const message = _t("Are you sure you want to delete the block %s?", snippet.displayName);
-        this.dialog.add(ConfirmationDialog, {
-            body: message,
-            confirm: async () => {
-                await this.orm.call("ir.ui.view", "delete_snippet", [], {
-                    'view_id': snippet.id,
-                    'template_key': this.options.snippets,
-                });
-                this.invalidateSnippetCache = true;
-                this.snippets.delete(snippetKey);
-                await this._loadSnippetsTemplates(withMutex);
-            },
-            cancel: () => null,
-            confirmLabel: _t("Yes"),
-            cancelLabel: _t("No"),
+        return new Promise(resolve => {
+            this.dialog.add(ConfirmationDialog, {
+                body: message,
+                confirm: async () => {
+                    await this.orm.call("ir.ui.view", "delete_snippet", [], {
+                        'view_id': snippet.id,
+                        'template_key': this.options.snippets,
+                    });
+                    this.invalidateSnippetCache = true;
+                    this.snippets.delete(snippetKey);
+                    await this._loadSnippetsTemplates(withMutex);
+                    resolve();
+                },
+                cancel: () => {
+                    resolve();
+                    return null;
+                },
+                confirmLabel: _t("Yes"),
+                cancelLabel: _t("No"),
+            });
         });
     }
     /**

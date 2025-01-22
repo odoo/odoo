@@ -28,15 +28,27 @@ export function assertCssVariable(variableName, variableValue, trigger = ':ifram
         },
     };
 }
-export function assertPathName(pathName, trigger) {
+export function assertPathName(pathname, trigger) {
     return {
-        content: `Check if we have been redirected to ${pathName}`,
+        content: `Check if we have been redirected to ${pathname}`,
         trigger: trigger,
-        run: () => {
-            if (!window.location.pathname.startsWith(pathName)) {
-                console.error(`We should be on ${pathName}.`);
-            }
-        }
+        async run() {
+            await new Promise((resolve) => {
+                let elapsedTime = 0;
+                const intervalTime = 100;
+                const interval = setInterval(() => {
+                    if (window.location.pathname.startsWith(pathname)) {
+                        clearInterval(interval);
+                        resolve();
+                    }
+                    elapsedTime += intervalTime;
+                    if (elapsedTime >= 5000) {
+                        clearInterval(interval);
+                        console.error(`The pathname ${pathname} has not been found`);
+                    }
+                }, intervalTime);
+            });
+        },
     };
 }
 
@@ -420,6 +432,7 @@ export function registerWebsitePreviewTour(name, options, steps) {
     if (typeof steps !== "function") {
         throw new Error(`tour.steps has to be a function that returns TourStep[]`);
     }
+    registry.category("web_tour.tours").remove(name);
     return registry.category("web_tour.tours").add(name, {
         ...omit(options, "edition"),
         url: getClientActionUrl(options.url, !!options.edition),
@@ -452,9 +465,10 @@ export function registerThemeHomepageTour(name, steps) {
     if (typeof steps !== "function") {
         throw new Error(`tour.steps has to be a function that returns TourStep[]`);
     }
-    return registerWebsitePreviewTour(name, {
-        url: '/',
-        saveAs: "homepage", // disable manual mode for theme homepage tours - FIXME
+    return registerWebsitePreviewTour(
+        "homepage",
+        {
+            url: "/",
         },
         () => [
             ...clickOnEditAndWaitEditMode(),
@@ -462,7 +476,8 @@ export function registerThemeHomepageTour(name, steps) {
                 steps().concat(clickOnSave()),
                 ".o_website_preview[data-view-xmlid='website.homepage'] "
             ),
-    ]);
+        ]
+    );
 }
 
 export function registerBackendAndFrontendTour(name, options, steps) {

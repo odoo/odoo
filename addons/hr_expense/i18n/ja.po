@@ -3,16 +3,16 @@
 # 	* hr_expense
 # 
 # Translators:
-# Junko Augias, 2024
 # Wil Odoo, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -597,12 +597,7 @@ msgstr "従業員から支払われる経費のデフォルト会計仕訳帳。
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Default outstanding account for expenses paid by company."
-msgstr "会社負担の経費用のデフォルト未払費用勘定。"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
-msgid "Default outstanding account for expenses paid by employees."
-msgstr "従業員が支払済経費のデフォルト未払勘定。"
+msgstr "会社負担の経費用のデフォルト未消込勘定。"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
@@ -704,11 +699,6 @@ msgstr "従業員 (要払戻)"
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Employee Expense Journal"
 msgstr "従業員経費仕訳帳"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
-msgid "Employee Expense Oustanding Account"
-msgstr "従業員経費未払勘定"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_account
@@ -905,7 +895,7 @@ msgstr "経費報告否認"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_reset
 msgid "Expense report reset to Draft"
-msgstr "経費レポートがドラフトに再設定されました"
+msgstr "経費レポートがドラフトにリセットされました"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
@@ -1873,12 +1863,6 @@ msgid "Show missing work email employees"
 msgstr "仕事用Eメールのない従業員を表示"
 
 #. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-msgid "Specify expense journal to generate accounting entries."
-msgstr "会計仕訳作成の経費仕訳帳を指定"
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__accounting_date
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__accounting_date
 msgid "Specify the bill date of the related vendor bill."
@@ -2024,11 +2008,6 @@ msgid ""
 msgstr "会社経費の未払金額を記録する口座。"
 
 #. module: hr_expense
-msgid ""
-"The account used to record the outstanding amount of the employee expenses."
-msgstr "従業員経費の未払残高を記録する勘定科目。"
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
 msgid ""
@@ -2067,14 +2046,6 @@ msgid "The journal used when the expense is paid by employee."
 msgstr "従業員に経費を支払う時に使用される仕訳帳"
 
 #. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-msgid ""
-"The payment method %(method)s needs an account, or a default outstanding "
-"account must be defined in the settings."
-msgstr "支払方法 %(method)s は勘定科目が必要です。またはデフォルト未払勘定科目を管理設定で定義する必要があります。"
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__payment_method_line_id
 msgid "The payment method used when the expense is paid by the company."
 msgstr "会社が費用を支払う際に使用される支払方法。"
@@ -2097,27 +2068,6 @@ msgid ""
 "The work email of some employees is missing. Please add it on the employee "
 "form"
 msgstr "一部の従業員の会社Eメールがありません。従業員フォームに追加して下さい。"
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-#, python-format
-msgid "Employee(s) should have a bank account set."
-msgstr ""
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-#, python-format
-msgid "Go to Employee(s)"
-msgstr ""
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-#, python-format
-msgid "Employee(s)"
-msgstr "従業員"
 
 #. module: hr_expense
 #. odoo-python

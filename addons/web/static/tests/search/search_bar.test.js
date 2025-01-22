@@ -129,7 +129,6 @@ defineActions([
         name: "Partners Action",
         res_model: "partner",
         search_view_id: [false, "search"],
-        type: "ir.actions.act_window",
         views: [[false, "list"]],
     },
 ]);

@@ -453,6 +453,11 @@ describe("Selection collapsed", () => {
                 stepFunction: splitBlockA,
                 contentAfter: "<div><a>ab</a><br>[]cd</div>",
             });
+            await testEditor({
+                contentBefore: '<div><a style="display: block;">ab[]</a></div>',
+                stepFunction: splitBlockA,
+                contentAfter: '<div><a style="display: block;">ab</a>[]<br></div>',
+            });
         });
 
         test("should insert a paragraph break outside the starting edge of an anchor", async () => {

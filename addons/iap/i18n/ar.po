@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Mustafa J. Kadhem <safi2266@gmail.com>, 2024
 # Malaz Abuidris <msea@odoo.com>, 2024
 # 
 msgid ""
@@ -252,13 +253,23 @@ msgstr "بدء نسخة تجريبية في أودو"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__state
 msgid "State"
-msgstr "الولاية "
+msgstr "الحالة "
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_name
 #: model:ir.model.fields,field_description:iap.field_iap_service__technical_name
 msgid "Technical Name"
 msgstr "الاسم التقني"
+
+#. module: iap
+#. odoo-python
+#: code:addons/iap/tools/iap_tools.py:0
+msgid ""
+"The request to the service timed out. Please contact the author of the app. "
+"The URL it tried to contact was %s"
+msgstr ""
+"انتهت مهلة طلب الخدمة. يرجى الاتصال بمنشئ التطبيق. كان عنوان URL الذي حاول "
+"الاتصال به هو %s"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__unit_name

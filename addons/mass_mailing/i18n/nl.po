@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Manon Rondou, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -386,10 +386,9 @@ msgid ""
 "                                                    To track replies, this address must belong to this database.\n"
 "                                                </small>"
 msgstr ""
-"<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" "
-"invisible=\"reply_to_mode == 'update' or mailing_model_name in "
-"['mailing.contact', 'res.contact', 'mailing.list']\">Om antwoorden bij te "
-"houden, moet dit adres tot deze database behoren.</small>"
+"<small class=\"oe_edit_only text-muted mb-2\" style=\"font-size:74%\" invisible=\"reply_to_mode == 'update' or mailing_model_name in ['mailing.contact', 'res.partner', 'mailing.list']\">\n"
+"                                                    Om antwoorden bij te houden, moet dit adres tot deze database behoren.\n"
+"                                                </small>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
@@ -958,7 +957,7 @@ msgstr ""
 "Laat de ontvanger toe om zelf zijn status op de zwarte lijst te beheren via "
 "de afmeldpagina. Als de optie actief is, is de knop 'Me blacklisten' "
 "verborgen op de afmeldpagina. De knop 'Kom terug' is altijd zichtbaar zodat "
-"leads en contacten zich opnieuw kunnen abonneren."
+"leads en partners zich opnieuw kunnen abonneren."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
@@ -2288,7 +2287,7 @@ msgstr "Volgers"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_partner_ids
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Contacten)"
+msgstr "Volgers (Partners)"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
@@ -3055,7 +3054,7 @@ msgstr "Testmail"
 #: model:ir.ui.menu,name:mass_mailing.menu_email_statistics
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_tree
 msgid "Mailing Traces"
-msgstr "Mail tracering"
+msgstr "E-mailtracering"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_type
@@ -4779,7 +4778,7 @@ msgid ""
 "Your emails might be marked as spam on the mail clients."
 msgstr ""
 "Deze e-mail van kan niet worden gebruikt met deze mailserver.\n"
-"Jouw e-mails kunnen op de e-mailclients als spam worden gemarkeerd."
+"Je e-mails kunnen op de e-mailclients als spam worden gemarkeerd."
 
 #. module: mass_mailing
 #. odoo-python
@@ -5131,7 +5130,7 @@ msgstr ""
 "Wie blijven groeien en we willen niet dat je hier geen deel van uitmaakt! We"
 " hebben onze winkeluren verlengd en hebben veel nieuwe merken beschikbaar. "
 "Door op de onderstaande knop te klikken krijg je een korting van 20% op je "
-"volgende bestelling om je terug welkom te heten."
+"volgende order om je terug welkom te heten."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_references
@@ -5358,7 +5357,7 @@ msgstr "Je ontvangt geen nieuws van de mailinglijsten waarvan je lid bent:"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_title
 msgid "Your Title"
-msgstr "Jouw titel"
+msgstr "Je titel"
 
 #. module: mass_mailing
 #. odoo-javascript

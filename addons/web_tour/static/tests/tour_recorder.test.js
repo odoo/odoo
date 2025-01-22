@@ -456,4 +456,11 @@ test("Check Tour Recorder State", async () => {
         { trigger: ".o_child_1", run: "click" },
         { trigger: ".o_child_2", run: "click" },
     ]);
+
+    await click(".o_button_record");
+    await animationFrame();
+    await click(".o_tour_recorder_close_button");
+    await animationFrame();
+    expect(tourRecorderState.getCurrentTourRecorder()).toEqual([]);
+    expect(tourRecorderState.isRecording()).toBe("0");
 });

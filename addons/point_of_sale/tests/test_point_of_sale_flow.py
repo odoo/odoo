@@ -2009,7 +2009,9 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         })
         order_payment.with_context(payment_context).check()
         self.pos_config.current_session_id.action_pos_session_closing_control()
-        self.assertEqual(order.picking_ids.move_line_ids_without_package.lot_id.name, '1001')
+        order_lot_id = order.picking_ids.move_line_ids_without_package.lot_id
+        self.assertEqual(order_lot_id.name, '1001')
+        self.assertTrue(all([quant.lot_id == order_lot_id for quant in self.env['stock.quant'].search([('product_id', '=', self.product2.id)])]))
 
     def test_pos_creation_in_branch(self):
         branch = self.env['res.company'].create({
@@ -2121,3 +2123,54 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         session_id.action_pos_session_closing_control(bank_payment_method_diffs={self.bank_payment_method.id: 5.00})
         self.assertEqual(session_id.state, 'closed')
+
+    def test_change_is_deducted_from_cash(self):
+        self.pos_config.open_ui()
+        pos_session = self.pos_config.current_session_id
+        cash_payment_method = pos_session.payment_method_ids.filtered('is_cash_count')[:1]
+        product_order = {
+           'amount_paid': 450,
+           'amount_return': 50,
+           'amount_tax': 0,
+           'amount_total': 450,
+           'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+           'fiscal_position_id': False,
+           'pricelist_id': self.pos_config.pricelist_id.id,
+           'lines': [[0, 0, {
+                'discount': 0,
+                'pack_lot_ids': [],
+                'price_unit': 450.0,
+                'product_id': self.product3.id,
+                'price_subtotal': 450.0,
+                'price_subtotal_incl': 450.0,
+                'tax_ids': [[6, False, []]],
+                'qty': 1,
+            }]],
+           'name': 'Order 12346-123-1234',
+           'partner_id': self.partner1.id,
+           'session_id': pos_session.id,
+           'sequence_number': 2,
+           'payment_ids': [[0, 0, {
+                'amount': 400,
+                'name': fields.Datetime.now(),
+                'payment_method_id': self.bank_payment_method.id
+            }], [0, 0, {
+                'amount': 100,
+                'name': fields.Datetime.now(),
+                'payment_method_id': cash_payment_method.id
+            }]],
+           'uuid': '12345-123-1234',
+           'user_id': self.env.uid,
+           'to_invoice': True
+        }
+
+        pos_order_id = self.PosOrder.sync_from_ui([product_order])['pos.order'][0]['id']
+        pos_order = self.PosOrder.search([('id', '=', pos_order_id)])
+        payments = pos_order.payment_ids
+        self.assertRecordValues(payments.sorted(), [
+            {'amount': -50, 'payment_method_id': cash_payment_method.id, 'is_change': True},
+            {'amount': 100, 'payment_method_id': cash_payment_method.id, 'is_change': False},
+            {'amount': 400, 'payment_method_id': self.bank_payment_method.id, 'is_change': False},
+        ])
+        account_moves = self.env['account.move'].search([('pos_payment_ids', 'in', pos_order.payment_ids.ids)])
+        self.assertEqual(sum(account_moves.mapped('amount_total')), pos_order.amount_total)

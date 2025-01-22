@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Tony Ng, 2024
+# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Tony Ng, 2024\n"
+"Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -898,6 +898,16 @@ msgstr "移動名細處於不一致的狀態:它們不屬於同一個來源或�
 msgid ""
 "The stock accounts should be set in order to use the automatic valuation."
 msgstr "應先設定庫存賬戶，才可使用自動估值。"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move_line.py:0
+msgid ""
+"The stock valuation of a move is based on the type of the source and "
+"destination locations. As the move is already processed, you cannot modify "
+"the locations in a way that changes the valuation logic defined during the "
+"initial processing."
+msgstr "移動操作的庫存估值，是基於來源位置及目標位置的類型。由於移動已完成處理，若修改位置的方式會改變初始處理時所設定的估值邏輯，便無法執行。"
 
 #. module: stock_account
 #. odoo-python

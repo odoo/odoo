@@ -36,6 +36,7 @@
             <field name="model">discuss.channel</field>
             <field name="res_id" ref="im_livechat.livechat_channel_session_1"/>
             <field name="author_guest_id" ref="im_livechat.livechat_channel_session_1_guest"/>
+            <field name="author_id"/>
             <field name="email_from">Visitor</field>
             <field name="body">I'm looking for an application to record my timesheet, any tips?</field>
             <field name="message_type">comment</field>
@@ -55,6 +56,7 @@
             <field name="model">discuss.channel</field>
             <field name="res_id" ref="im_livechat.livechat_channel_session_1"/>
             <field name="author_guest_id" ref="im_livechat.livechat_channel_session_1_guest"/>
+            <field name="author_id"/>
             <field name="email_from">Visitor</field>
             <field name="body">Great! Thanks for the info</field>
             <field name="message_type">comment</field>
@@ -74,6 +76,7 @@
             <field name="model">discuss.channel</field>
             <field name="res_id" ref="im_livechat.livechat_channel_session_1"/>
             <field name="author_guest_id" ref="im_livechat.livechat_channel_session_1_guest"/>
+            <field name="author_id"/>
             <field name="subtype_id" ref="mail.mt_note"/>
             <field name="message_type">notification</field>
             <field eval="DateTime.today() + relativedelta(months=-1, days=-0, minutes=5, seconds=25)" name="date"/>

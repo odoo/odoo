@@ -273,3 +273,10 @@ class ResCompany(models.Model):
             for module, identifiers in self._peppol_modules_document_types().items()
             for identifier, document_name in identifiers.items()
         }
+
+    def _get_peppol_edi_mode(self):
+        self.ensure_one()
+        config_param = self.env['ir.config_parameter'].sudo().get_param('account_peppol.edi.mode')
+        # by design, we can only have zero or one proxy user per company with type Peppol
+        peppol_user = self.sudo().account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol')
+        return peppol_user.edi_mode or config_param or 'prod'

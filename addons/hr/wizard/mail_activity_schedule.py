@@ -31,7 +31,7 @@ class MailActivitySchedule(models.TransientModel):
 
     @api.depends('plan_date', 'plan_id')
     def _compute_plan_summary(self):
-        if not self.env.context.get('sort_by_responsible', False):
+        if not self.env.context.get('sort_by_responsible', False) and self.env.context.get('active_model', False) != 'hr.employee':
             return super()._compute_plan_summary()
         self.plan_summary = False
         responsible_value_to_label = dict(

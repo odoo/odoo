@@ -9,6 +9,7 @@
 }
 
 .o-mail-DiscussSidebar-optionsBtn {
+    --border-opacity: 0.5;
     padding: map-get($spacers, 1) / 2;
 
     &:not(.o-compact) {
@@ -28,6 +29,18 @@
     outline: 1px solid transparent !important;
     padding-top: map-get($spacers, 1) / 2;
     padding-bottom: map-get($spacers, 1) / 2;
+
+    .o-mail-DiscussSidebar.o-compact & {
+        opacity: 75%;
+
+        &.o-unread {
+            opacity: 87.5%;
+        }
+
+        &.o-active, &:hover {
+            opacity: 100%;
+        }
+    }
 
     &.o-active, &:hover {
         background-color: var(--mail-DiscussSidebar-itemActiveBgColor, mix($o-view-background-color, $o-action, 90%)) !important;

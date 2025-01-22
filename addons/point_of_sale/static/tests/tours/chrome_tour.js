@@ -4,6 +4,7 @@ import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/utils/payment_screen_util";
 import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
 import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
+import * as Utils from "@point_of_sale/../tests/tours/utils/common";
 import { registry } from "@web/core/registry";
 import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
 
@@ -133,5 +134,19 @@ registry.category("web_tour.tours").add("OrderModificationAfterValidationError",
 
             // Allow order changes after the error
             ProductScreen.clickDisplayedProduct("Test Product", true, "2.00"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("SearchMoreCustomer", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.inputCustomerSearchbar("1111"),
+            Utils.selectButton("Search more"),
+            ProductScreen.clickCustomer("BPartner"),
+            ProductScreen.isShown(),
         ].flat(),
 });

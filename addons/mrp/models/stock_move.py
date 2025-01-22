@@ -331,9 +331,9 @@ class StockMove(models.Model):
                 move.display_import_lot = False
                 move.display_assign_serial = False
 
-    @api.onchange('product_uom_qty')
+    @api.onchange('product_uom_qty', 'product_uom')
     def _onchange_product_uom_qty(self):
-        if self.raw_material_production_id and self.has_tracking == 'none':
+        if self.product_uom and self.raw_material_production_id and self.has_tracking == 'none':
             mo = self.raw_material_production_id
             new_qty = float_round((mo.qty_producing - mo.qty_produced) * self.unit_factor, precision_rounding=self.product_uom.rounding)
             self.quantity = new_qty
@@ -399,6 +399,8 @@ class StockMove(models.Model):
                     values['location_dest_id'] = mo.production_location_id.id
                     if not values.get('location_id'):
                         values['location_id'] = mo.location_src_id.id
+                    if mo.state in ['progress', 'to_close'] and mo.qty_producing > 0:
+                        values['picked'] = True
                     continue
                 # produced products + byproducts
                 values['location_id'] = mo.production_location_id.id

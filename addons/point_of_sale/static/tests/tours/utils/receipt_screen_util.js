@@ -166,6 +166,16 @@ export function trackingMethodIsLot() {
         },
     ];
 }
+
+export function noDiscountAmount() {
+    return [
+        {
+            trigger: `.pos-receipt:not(:contains("Discounts"))`,
+            run: () => {},
+        },
+    ];
+}
+
 export function shippingDateExists() {
     return [
         {

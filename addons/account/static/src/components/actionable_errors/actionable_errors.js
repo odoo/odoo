@@ -21,6 +21,11 @@ export class ActionableErrors extends Component {
     }
 
     async handleOnClick(errorData){
+        if (errorData.action?.view_mode) {
+            // view_mode is not handled JS side
+            errorData.action['views'] = [[false, errorData.action.view_mode]];
+            delete errorData.action['view_mode'];
+        }
         this.env.model.action.doAction(errorData.action);
     }
 

@@ -55,11 +55,22 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         }
 
     def _get_partner_party_tax_scheme_vals_list(self, partner, role):
+        # [BR-CO-09] if the PartyTaxScheme/TaxScheme/ID == 'VAT', CompanyID must start with a country code prefix.
+        # In some countries however, the CompanyID can be with or without country code prefix and still be perfectly
+        # valid (RO, HU, non-EU countries).
+        # We have to handle their cases by changing the TaxScheme/ID to 'something other than VAT',
+        # preventing the trigger of the rule.
+        tax_scheme_id = 'VAT'
+        if (
+            partner.country_id
+            and partner.vat and not partner.vat[:2].isalpha()
+        ):
+            tax_scheme_id = 'NOT_EU_VAT'
         return [{
             'registration_name': partner.name,
             'company_id': partner.vat,
             'registration_address_vals': self._get_partner_address_vals(partner),
-            'tax_scheme_vals': {'id': 'VAT'},
+            'tax_scheme_vals': {'id': tax_scheme_id},
         }]
 
     def _get_partner_party_legal_entity_vals_list(self, partner):
@@ -101,13 +112,28 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         """
         return []
 
+    def _get_additional_document_reference_list(self, invoice):
+        """
+        This is optional and meant to be overridden when required under the form:
+        {
+            'id': str,
+            'issue_date': str,
+            'document_type_code': str,
+            'document_type': str,
+            'document_description': str,
+        }.
+        Should return a list.
+        """
+        return []
+
     def _get_delivery_vals_list(self, invoice):
         # the data is optional, except for ubl bis3 (see the override, where we need to set a default delivery address)
         return [{
-            'actual_delivery_date': None,
+            'actual_delivery_date': invoice.delivery_date,
             'delivery_location_vals': {
                 'delivery_address_vals': self._get_partner_address_vals(invoice.partner_shipping_id),
             },
+            'delivery_party_vals': self._get_partner_party_vals(invoice.partner_shipping_id, 'delivery') if invoice.partner_shipping_id else {},
         }]
 
     def _get_bank_address_vals(self, bank):
@@ -209,7 +235,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                     'currency_dp': self._get_currency_decimal_places(invoice.currency_id),
                     'taxable_amount': vals['base_amount_currency'],
                     'tax_amount': vals['tax_amount_currency'],
-                    'percent': vals['_tax_category_vals_']['percent'],
+                    'percent': vals['tax_category_percent'],
                     'tax_category_vals': vals['_tax_category_vals_'],
                 }
                 if epd_tax_to_discount:
@@ -412,6 +438,11 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             for vals in allowance_charge_vals_list
             if vals.get('charge_indicator') == 'true'
         )
+        period_vals = {}
+        # deferred_start_date & deferred_end_date are enterprise-only fields
+        if line._fields.get('deferred_start_date') and (line.deferred_start_date or line.deferred_end_date):
+            period_vals.update({'start_date': line.deferred_start_date})
+            period_vals.update({'end_date': line.deferred_end_date})
         return {
             'currency': line.currency_id,
             'currency_dp': self._get_currency_decimal_places(line.currency_id),
@@ -423,6 +454,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'tax_total_vals': self._get_invoice_line_tax_totals_vals_list(line, taxes_vals),
             'item_vals': self._get_invoice_line_item_vals(line, taxes_vals),
             'price_vals': self._get_invoice_line_price_vals(line),
+            'invoice_period_vals_list': [period_vals] if period_vals else []
         }
 
     def _get_invoice_monetary_total_vals(self, invoice, taxes_vals, line_extension_amount, allowance_total_amount, charge_total_amount):
@@ -582,6 +614,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                     'party_vals': self._get_partner_party_vals(customer, role='customer'),
                 },
                 'invoice_period_vals_list': self._get_invoice_period_vals_list(invoice),
+                'additional_document_reference_list': self._get_additional_document_reference_list(invoice),
                 'delivery_vals_list': self._get_delivery_vals_list(invoice),
                 'payment_means_vals_list': self._get_invoice_payment_means_vals_list(invoice),
                 'payment_terms_vals': self._get_invoice_payment_terms_vals_list(invoice),
@@ -687,6 +720,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         invoice_values['invoice_origin'] = tree.findtext('./{*}OrderReference/{*}ID')
         invoice_values['narration'] = self._import_description(tree, xpaths=['./{*}Note', './{*}PaymentTerms/{*}Note'])
         invoice_values['payment_reference'] = tree.findtext('./{*}PaymentMeans/{*}PaymentID')
+
+        # ==== Delivery ====
+        delivery_date = tree.find('.//{*}Delivery/{*}ActualDeliveryDate')
+        invoice.delivery_date = delivery_date is not None and delivery_date.text
 
         # ==== invoice_incoterm_id ====
         incoterm_code = tree.findtext('./{*}TransportExecutionTerms/{*}DeliveryTerms/{*}ID')

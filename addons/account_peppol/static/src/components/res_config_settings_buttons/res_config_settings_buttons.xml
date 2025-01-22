@@ -9,7 +9,7 @@
                             class="btn btn-primary me-1"
                             t-on-click="createReceiver"
                             t-if="proxyState === 'sender' and (smpRegistration or this.state.isSettingsView)">
-                            Register as a receiver
+                            Allow reception
                     </button>
                 </div>
                 <div class="mt-3">
@@ -17,7 +17,7 @@
                             class="btn btn-secondary me-1"
                             t-on-click="updateDetails"
                             t-if="['sender', 'smp_registration', 'receiver'].includes(proxyState) and this.state.isSettingsView">
-                            Update contact details
+                            Update
                     </button>
                 </div>
                 <div class="mt-3">
@@ -37,6 +37,7 @@
                     </button>
                 </div>
                 <div class="mt-3">
+                    <!-- TODO remove in master -->
                     <button type="button"
                             class="btn btn-secondary me-1"
                             t-on-click="sendCode"
@@ -57,7 +58,7 @@
                     <button type="button"
                             class="btn btn-secondary me-1"
                             t-on-click="deregister"
-                            t-if="migrationPrepared === false">
+                            t-if="migrationPrepared === false or ediMode == 'demo'">
                             <t t-out="deregisterUserButtonLabel"/>
                     </button>
                 </div>

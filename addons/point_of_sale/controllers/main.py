@@ -65,7 +65,7 @@ class PosController(PortalAccount):
         context = {
             'from_backend': 1 if from_backend else 0,
             'session_info': session_info,
-            'login_number': pos_session.login(),
+            'login_number': pos_session.with_company(pos_session.company_id).login(),
             'pos_session_id': pos_session.id,
             'pos_config_id': pos_session.config_id.id,
             'access_token': pos_session.config_id.access_token,

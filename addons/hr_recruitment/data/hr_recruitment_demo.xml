@@ -490,59 +490,6 @@
         <field name="res_id" ref="hr_recruitment.hr_candidate_mkt0"/>
     </record>
 
-    <!-- Set the main attachment to avoid automatic sending to the OCR-->
-    <record id="hr_case_salesman0" model="hr.applicant">
-        <field name="message_main_attachment_id" ref="hr_recruitment.hr_case_salesman0_cv"/>
-    </record>
-    <record id="hr_case_salesman1" model="hr.applicant">
-        <field name="message_main_attachment_id" ref="hr_recruitment.hr_case_salesman1_cv"/>
-    </record>
-    <record id="hr_case_dev0" model="hr.applicant">
-        <field name="message_main_attachment_id" ref="hr_recruitment.hr_case_dev0_cv"/>
-    </record>
-    <record id="hr_case_dev1" model="hr.applicant">
-        <field name="message_main_attachment_id" ref="hr_recruitment.hr_case_dev1_cv"/>
-    </record>
-    <record id="hr_case_dev2" model="hr.applicant">
-        <field name="message_main_attachment_id" ref="hr_recruitment.hr_case_dev2_cv"/>
-    </record>
-    <record id="hr_case_dev3" model="hr.applicant">
-        <field name="message_main_attachment_id" ref="hr_recruitment.hr_case_dev3_cv"/>
-    </record>
-    <record id="hr_case_traineemca0" model="hr.applicant">
-        <field name="message_main_attachment_id" ref="hr_recruitment.hr_case_traineemca0_cv"/>
-    </record>
-    <record id="hr_case_fresher0" model="hr.applicant">
-        <field name="message_main_attachment_id" ref="hr_recruitment.hr_case_fresher0_cv"/>
-    </record>
-    <record id="hr_case_mkt0" model="hr.applicant">
-        <field name="message_main_attachment_id" ref="hr_recruitment.hr_case_mkt0_cv"/>
-    </record>
-    <record id="hr_case_mkt1" model="hr.applicant">
-        <field name="message_main_attachment_id" ref="hr_recruitment.hr_case_mkt1_cv"/>
-    </record>
-    <record id="hr_case_yrsexperienceinphp0" model="hr.applicant">
-        <field name="message_main_attachment_id" ref="hr_recruitment.hr_case_yrsexperienceinphp0_cv"/>
-    </record>
-    <record id="hr_case_marketingjob0" model="hr.applicant">
-        <field name="message_main_attachment_id" ref="hr_recruitment.hr_case_marketingjob0_cv"/>
-    </record>
-    <record id="hr_case_financejob0" model="hr.applicant">
-        <field name="message_main_attachment_id" ref="hr_recruitment.hr_case_financejob0_cv"/>
-    </record>
-    <record id="hr_case_financejob1" model="hr.applicant">
-        <field name="message_main_attachment_id" ref="hr_recruitment.hr_case_financejob1_cv"/>
-    </record>
-    <record id="hr_case_traineemca1" model="hr.applicant">
-        <field name="message_main_attachment_id" ref="hr_recruitment.hr_case_traineemca1_cv"/>
-    </record>
-    <record id="hr_case_programmer" model="hr.applicant">
-        <field name="message_main_attachment_id" ref="hr_recruitment.hr_case_programmer_cv"/>
-    </record>
-    <record id="hr_case_advertisement" model="hr.applicant">
-        <field name="message_main_attachment_id" ref="hr_recruitment.hr_case_advertisement_cv"/>
-    </record>
-
     <record id="message_application_demo" model="mail.message">
         <field name="model">hr.applicant</field>
         <field name="res_id" ref="hr_case_advertisement"/>

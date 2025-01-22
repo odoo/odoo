@@ -16,24 +16,24 @@
 # david danilov, 2024
 # Sagi Ahiel, 2024
 # ExcaliberX <excaliberx@gmail.com>, 2024
-# yael terner, 2024
-# hed shefer <hed@laylinetech.com>, 2024
+# Hed Shefer <hed@laylinetech.com>, 2024
 # דודי מלכה <Dudimalka6@gmail.com>, 2024
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2024
 # Yihya Hugirat <hugirat@gmail.com>, 2024
 # Netta Waizer, 2024
 # Martin Trigaux, 2024
-# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024
-# NoaFarkash, 2024
 # שהאב חוסיין <shhab89@gmail.com>, 2024
+# yael terner, 2024
+# NoaFarkash, 2024
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-27 08:16+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: שהאב חוסיין <shhab89@gmail.com>, 2024\n"
+"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -975,6 +975,16 @@ msgid "Contained quantity"
 msgstr "כמות כלולה"
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_product__uom_category_id
+#: model:ir.model.fields,help:product.field_product_template__uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"המרה בין יחידות מידה יכולה להתרחש רק אם הן שייכות לאותה קטגוריה. ההמרה תיעשה"
+" על בסיס היחס בניהן."
+
+#. module: product
 #: model:product.template,name:product.product_product_13_product_template
 msgid "Corner Desk Left Sit"
 msgstr ""
@@ -1675,7 +1685,7 @@ msgstr "לינה במלון"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__id
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__id
 msgid "ID"
-msgstr "מזהה"
+msgstr "מק\"ט"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__activity_exception_icon
@@ -3565,6 +3575,12 @@ msgstr "יחידה"
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Units of Measure"
 msgstr "יחידות מידה"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__uom_category_id
+#: model:ir.model.fields,field_description:product.field_product_template__uom_category_id
+msgid "UoM Category"
+msgstr "קטגורית יחידת מידה"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form

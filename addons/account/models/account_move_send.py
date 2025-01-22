@@ -257,6 +257,16 @@ class AccountMoveSend(models.AbstractModel):
             raise UserError(_("You can only Print & Send sales documents."))
 
     @api.model
+    def _check_invoice_report(self, moves, **custom_settings):
+        if ((
+                custom_settings.get('pdf_report')
+                and not custom_settings['pdf_report'].is_invoice_report
+            )
+            or any(not self._get_default_pdf_report_id(move).is_invoice_report for move in moves)
+        ):
+            raise UserError(_("The sending of invoices is not set up properly, make sure the report used is set for invoices."))
+
+    @api.model
     def _format_error_text(self, error):
         """ Format the error that can be either a dict (complex format needed) or a string (simple format) into a
         regular string.
@@ -421,6 +431,7 @@ class AccountMoveSend(models.AbstractModel):
             .with_context(
                 no_new_invoice=True,
                 mail_notify_author=author_id in partner_ids,
+                email_notification_allow_footer=True,
             ).message_post(
                 message_type='comment',
                 **kwargs,
@@ -655,8 +666,7 @@ class AccountMoveSend(models.AbstractModel):
         This is a security in case the method is called directly without going through the wizards.
         """
         self._check_move_constrains(moves)
-        assert all(self._get_default_pdf_report_id(move).is_invoice_report for move in moves)
-        assert custom_settings['pdf_report'].is_invoice_report if custom_settings.get('pdf_report') else True
+        self._check_invoice_report(moves, **custom_settings)
         assert all(
             sending_method in dict(self.env['res.partner']._fields['invoice_sending_method'].selection)
             for sending_method in custom_settings.get('sending_methods', [])

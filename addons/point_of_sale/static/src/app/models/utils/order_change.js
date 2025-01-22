@@ -60,11 +60,10 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
                 k.startsWith(orderline.uuid)
             ); // find old data but note changed
             const quantity = orderline.get_quantity();
-
             const relatedKey = key !== lineKey ? key : lineKey; // if note update key would be different
-            const quantityDiff = oldChanges[relatedKey]
-                ? quantity - oldChanges[relatedKey].quantity
-                : quantity;
+            const quantityDiff =
+                (oldChanges[relatedKey] ? quantity - oldChanges[relatedKey].quantity : quantity) ||
+                0;
 
             const lineDetails = {
                 uuid: orderline.uuid,
@@ -77,6 +76,7 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
                 note: note,
                 pos_categ_id: product.pos_categ_ids[0]?.id ?? 0,
                 pos_categ_sequence: product.pos_categ_ids[0]?.sequence ?? 0,
+                display_name: product.display_name,
             };
 
             if (quantityDiff && orderline.skip_change === skipped) {
@@ -85,7 +85,7 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
                 changesCount += quantityDiff;
                 changeAbsCount += Math.abs(quantityDiff);
                 if (oldChanges[relatedKey] && oldChanges[relatedKey].note !== note) {
-                    lineDetails.quantity = oldChanges[relatedKey].quantity;
+                    lineDetails.quantity = oldChanges[relatedKey].quantity || 0;
                     noteupdated[lineKey] = lineDetails;
                 }
 
@@ -116,6 +116,7 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
     // was last sent to the preparation tools. If so we add this to the changes.
     for (const [lineKey, lineResume] of Object.entries(order.last_order_preparation_change.lines)) {
         if (!order.models["pos.order.line"].getBy("uuid", lineResume["uuid"])) {
+            const quantity = isNaN(lineResume["quantity"]) ? 0 : lineResume["quantity"];
             if (!changes[lineKey]) {
                 changes[lineKey] = {
                     uuid: lineResume["uuid"],
@@ -125,12 +126,12 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
                     isCombo: lineResume["isCombo"],
                     note: lineResume["note"],
                     attribute_value_ids: lineResume["attribute_value_ids"],
-                    quantity: -lineResume["quantity"],
+                    quantity: -quantity,
                 };
-                changeAbsCount += Math.abs(lineResume["quantity"]);
-                changesCount += lineResume["quantity"];
+                changeAbsCount += Math.abs(quantity);
+                changesCount += quantity;
             } else {
-                changes[lineKey]["quantity"] -= lineResume["quantity"];
+                changes[lineKey]["quantity"] -= quantity;
             }
         }
     }

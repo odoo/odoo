@@ -71,6 +71,26 @@ registerWebsitePreviewTour("website_media_dialog_external_library", {
             }
         },
     },
+    {
+        content: "Click on the first illustration image",
+        trigger: ".o_select_media_dialog .o_we_attachment_highlight",
+        run: "click",
+    },
+    {
+        content: "Select the image",
+        trigger: ":iframe .s_text_image img",
+        run: "click",
+    },
+    {
+        content: "Try to crop the image",
+        trigger: "#oe_snippets .o_we_customize_panel .o_we_user_value_widget[data-crop='true']",
+        run: "click",
+    },
+    {
+        content: "Observe the crop is denied for illustration image",
+        trigger: ".o_notification_manager .o_notification",
+    },
+    ...clickOnSave(),
 ]);
 
 registerWebsitePreviewTour('website_media_dialog_icons', {

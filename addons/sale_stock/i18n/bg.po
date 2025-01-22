@@ -10,19 +10,19 @@
 # Meglen Hadzhitsanchev, 2024
 # Martin Trigaux, 2024
 # Boris Stefanov <borkata@gmail.com>, 2024
-# Igor Sheludko <igor.sheludko@gmail.com>, 2024
 # Albena Mincheva <albena_vicheva@abv.bg>, 2024
 # Maria Boyadjieva <marabo2000@gmail.com>, 2024
 # Petko Karamotchev, 2024
 # Milena Georgieva, 2024
+# Igor Sheludko <igor.sheludko@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Milena Georgieva, 2024\n"
+"Last-Translator: Igor Sheludko <igor.sheludko@gmail.com>, 2024\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -297,6 +297,9 @@ msgid ""
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
 msgstr ""
+"Ако всички продукти се доставят наведнъж, поръчката за доставка ще бъде "
+"планирана въз основа на най-дългото време за доставка на продукт. В противен"
+" случай тя ще бъде планирана въз основа на най-краткото време."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -523,6 +526,11 @@ msgstr "Попълване при поръчка (ПП)"
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "Reserved"
 msgstr "Резервиран"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_return_picking
+msgid "Return Picking"
+msgstr "Пикинг Рекламации"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock

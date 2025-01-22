@@ -335,7 +335,7 @@ test("mark channel as fetched when a new message is loaded", async () => {
 test.tags("focus required");
 test("mark channel as fetched when a new message is loaded and thread is focused", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({});
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",

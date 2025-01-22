@@ -110,3 +110,17 @@ test("Convert self closing a elements to opening/closing tags", async () => {
         '<ul> <li><a href="xyz" t-out="xyz"></a></li> </ul>'
     );
 });
+
+test("Convert self closing t elements to opening/closing tags", async () => {
+    const { el, editor } = await setupEditor(`
+        <div>
+            <t t-out="object.partner_id" data-oe-t-inline="true" contenteditable="false"/>
+        </div>
+    `);
+    expect(el.innerHTML.trim().replace(/\s+/g, " ")).toBe(
+        `<div> <t t-out="object.partner_id" data-oe-t-inline="true" contenteditable="false"></t> </div>`
+    );
+    expect(editor.getContent().trim().replace(/\s+/g, " ")).toBe(
+        '<div> <t t-out="object.partner_id" data-oe-t-inline="true" contenteditable="false"></t> </div>'
+    );
+});

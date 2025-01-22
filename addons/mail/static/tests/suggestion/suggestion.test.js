@@ -53,6 +53,34 @@ test('display partner mention suggestions on typing "@"', async () => {
     await contains(".o-mail-Composer-suggestion strong", { count: 3 });
 });
 
+test("can @user in restricted (group_public_id) channels", async () => {
+    const pyEnv = await startServer();
+    const groupId = pyEnv["res.groups"].create({
+        name: "Custom Channel Group",
+    });
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { email: "testpartner1@odoo.com", name: "TestPartner1" },
+        { email: "testpartner2@odoo.com", name: "TestPartner2" },
+    ]);
+    pyEnv["res.users"].create([
+        { partner_id: partnerId_1, groups_id: [Command.link(groupId)] },
+        { partner_id: partnerId_2 },
+    ]);
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "Restricted Channel",
+        group_public_id: groupId,
+        channel_type: "channel",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Invite People']");
+    await contains(".o-discuss-ChannelInvitation-invitationBox", {
+        text: 'Access restricted to group "Custom Channel Group"',
+    });
+    await insertText(".o-mail-Composer-input", "@");
+    await contains(".o-mail-Composer-suggestion strong", { count: 2 });
+});
+
 test('post a first message then display partner mention suggestions on typing "@"', async () => {
     const pyEnv = await startServer();
     const partnerId_1 = pyEnv["res.partner"].create({

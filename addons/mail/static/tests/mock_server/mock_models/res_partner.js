@@ -104,73 +104,85 @@ export class ResPartner extends webModels.ResPartner {
         const DiscussChannelMember = this.env["discuss.channel.member"];
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
+        /** @type {import("mock_models").DiscussChannel} */
+        const channel = this.env["discuss.channel"].browse(channel_id)[0];
+        const searchLower = search.toLowerCase();
 
-        search = search.toLowerCase();
-        /**
-         * Returns the given list of partners after filtering it according to
-         * the logic of the Python method `get_mention_suggestions` for the
-         * given search term. The result is truncated to the given limit and
-         * formatted as expected by the original method.
-         *
-         * @param {ModelRecord[]} partners
-         * @param {string} search
-         * @param {number} limit
-         * @returns {Object[]}
-         */
-        const mentionSuggestionsFilter = (partners, search, limit) => {
-            const matchingPartners = partners.filter((partner) => {
-                const [member] = DiscussChannelMember._filter([
-                    ["channel_id", "=", channel_id],
-                    ["partner_id", "=", partner.id],
-                ]);
-                if (!member) {
-                    return false;
-                }
-                // no search term is considered as return all
-                if (!search) {
-                    return true;
-                }
-                // otherwise name or email must match search term
-                if (partner.name && partner.name.toLowerCase().includes(search)) {
-                    return true;
-                }
-                if (partner.email && partner.email.toLowerCase().includes(search)) {
-                    return true;
-                }
-                return false;
-            });
-            // reduce results to max limit
-            matchingPartners.length = Math.min(matchingPartners.length, limit);
-            return matchingPartners;
-        };
-
-        // add main suggestions based on users
-        const partnersFromUsers = ResUsers._filter([])
-            .map((user) => this.browse(user.partner_id)[0])
-            .filter((partner) => partner);
-        const mainMatchingPartners = mentionSuggestionsFilter(partnersFromUsers, search, limit);
-        let extraMatchingPartners = [];
-        // if not enough results add extra suggestions based on partners
-        const remainingLimit = limit - mainMatchingPartners.length;
-        if (mainMatchingPartners.length < limit) {
-            const partners = this._filter([
-                ["id", "not in", mainMatchingPartners.map((partner) => partner.id)],
-            ]);
-            extraMatchingPartners = mentionSuggestionsFilter(partners, search, remainingLimit);
+        const extraDomain = [
+            ["user_ids", "!=", false],
+            ["active", "=", true],
+            ["partner_share", "=", false],
+        ];
+        if (channel.group_public_id) {
+            extraDomain.push(["groups_id", "in", channel.group_public_id]);
         }
+        const baseDomain = search
+            ? ["|", ["name", "ilike", searchLower], ["email", "ilike", searchLower]]
+            : [];
+        const partners = this._search_mention_suggestions(
+            baseDomain,
+            limit,
+            channel_id,
+            extraDomain
+        );
         const store = new mailDataHelpers.Store();
-        for (const partner of mainMatchingPartners.concat(extraMatchingPartners)) {
-            store.add(this.browse(partner.id));
-            const [member] = DiscussChannelMember._filter([
-                ["channel_id", "=", channel_id],
-                ["partner_id", "=", partner.id],
-            ]);
+        const memberIds = DiscussChannelMember.search([
+            ["channel_id", "=", channel_id],
+            ["partner_id", "in", partners],
+        ]);
+        const users = ResUsers.search([["partner_id", "in", partners]]).reduce((map, userId) => {
+            const [user] = ResUsers.browse(userId);
+            map[user.partner_id] = user;
+            return map;
+        }, {});
+        for (const memberId of memberIds) {
+            const [member] = DiscussChannelMember.browse(memberId);
+            store.add(this.browse(member.partner_id));
             store.add(
                 DiscussChannelMember.browse(member.id),
                 makeKwArgs({ fields: { channel: [], persona: [] } })
             );
         }
+        for (const partnerId of partners) {
+            const data = {
+                name: users[partnerId]?.name,
+                groups_id: users[partnerId]?.groups_id.includes(channel.group_public_id)
+                    ? channel.group_public_id
+                    : undefined,
+            };
+            store.add(this.browse(partnerId), data);
+        }
         return store.get_result();
+    }
+
+    /**
+     * @param {Array} domain
+     * @param {number} limit
+     * @param {number} channel_id
+     * @param {Array} extraDomain
+     * @returns {Array}
+     */
+    _search_mention_suggestions(domain, limit, channel_id, extraDomain) {
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+        const ResUsers = this.env["res.users"];
+
+        let partnerIds = [];
+        if (!domain?.length && channel_id) {
+            partnerIds = DiscussChannelMember.search([["channel_id", "=", channel_id]]).map(
+                (memberId) => DiscussChannelMember.browse(memberId)[0].partner_id
+            );
+        } else {
+            partnerIds = ResUsers.search(domain).map(
+                (userId) => ResUsers.browse(userId)[0].partner_id
+            );
+        }
+        if (extraDomain?.length) {
+            const usersWithAccess = ResUsers.search(extraDomain).map(
+                (userId) => ResUsers.browse(userId)[0].partner_id
+            );
+            partnerIds.push(...usersWithAccess);
+        }
+        return Array.from(new Set(partnerIds)).slice(0, limit);
     }
 
     /**
@@ -218,7 +230,9 @@ export class ResPartner extends webModels.ResPartner {
         matchingPartnersIds.length = Math.min(matchingPartnersIds.length, limit);
         return new mailDataHelpers.Store(this.browse(matchingPartnersIds)).get_result();
     }
-
+    compute_im_status(partner) {
+        return partner.im_status;
+    }
     /**
      * @param {number[]} ids
      * @returns {Record<string, ModelRecord>}
@@ -227,7 +241,7 @@ export class ResPartner extends webModels.ResPartner {
         const kwargs = getKwArgs(arguments, "id", "store", "fields");
         fields = kwargs.fields;
         if (!fields) {
-            fields = ["name", "email", "active", "im_status", "is_company", "user", "write_date"];
+            fields = ["avatar_128", "name", "email", "active", "im_status", "is_company", "user"];
         }
 
         /** @type {import("mock_models").ResCountry} */
@@ -241,6 +255,7 @@ export class ResPartner extends webModels.ResPartner {
                 fields.filter(
                     (field) =>
                         ![
+                            "avatar_128",
                             "country",
                             "display_name",
                             "isAdmin",
@@ -250,6 +265,10 @@ export class ResPartner extends webModels.ResPartner {
                 ),
                 false
             );
+            if (fields.includes("avatar_128")) {
+                data.avatar_128_access_token = partner.id;
+                data.write_date = partner.write_date;
+            }
             if (fields.includes("country")) {
                 const [country] = ResCountry.browse(partner.country_id);
                 data.country = country
@@ -262,6 +281,9 @@ export class ResPartner extends webModels.ResPartner {
             }
             if (fields.includes("display_name")) {
                 data.displayName = partner.display_name || partner.name;
+            }
+            if (fields.includes("im_status")) {
+                data.im_status = this.compute_im_status(partner);
             }
             if (fields.includes("user")) {
                 const users = ResUsers.browse(partner.user_ids);

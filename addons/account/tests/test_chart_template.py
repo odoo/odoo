@@ -41,6 +41,7 @@ def test_get_data(self, template_code):
                 'bank_account_code_prefix': '1000',
                 'cash_account_code_prefix': '2000',
                 'transfer_account_code_prefix': '3000',
+                'account_sale_tax_id': 'test_tax_1_template',
             },
         },
         'account.account.tag': {
@@ -316,6 +317,88 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             {'name': 'Tax 1'},
             {'name': 'Tax 4'},
         ])
+
+    def test_new_tax_rate(self):
+        """Test the flow to replace taxes from an old to a new rate.
+
+        This test aims at defining more clearly how to update the taxes when the rate changes.
+        There are some constraints to take into account:
+        * There is a transition period where both taxes need to be usable
+        * Some reports might need to keep the references to the old tax i.e. on the fiscal positions (OSS)
+
+        The procedure for the code change is:
+        * Create the new report section if needed.
+        * Remove the taxes from the template.
+          This will not delete the taxes from the company when updating the template on the company.
+        * Add the new taxes with a xmlid different from the ones deleted.
+          The taxes will be created when updating the template on the company.
+        * Update all the references to the old taxes to the new ones.
+          - Fiscal positions: The previous mappings won't be deleted but the new ones will be created.
+                              This ensures that reports still work.
+          - Company: The default sales/purchase taxes should be updated. It should only impact the creation
+                     of new products so it is probably not going to be an issue.
+        * If such a tax was part of a group, a new group must be created and the old one removed from the template.
+
+        The procedure for the users, when they are ready, is:
+        * When the old taxes are not needed anymore (i.e. tax period closed), archive them
+        * Update the taxes on
+          - products
+          - accounts
+          - reconcile models
+        """
+        def local_get_data(self, template_code):
+            # Delete the existing tax and create a new one with a different rate
+            data = test_get_data(self, template_code)
+            del data['account.tax']['test_tax_1_template']
+            data['account.tax']['test_tax_3_template'] = _tax_vals('Tax 3', 30)
+            for fpos in data['account.fiscal.position'].values():
+                for _command, _id, tax in fpos['tax_ids']:
+                    if tax['tax_src_id'] == 'test_tax_1_template':
+                        tax['tax_src_id'] = 'test_tax_3_template'
+                    if tax['tax_dest_id'] == 'test_tax_1_template':
+                        tax['tax_dest_id'] = 'test_tax_3_template'
+            data['res.company'][self.env.company.id]['account_sale_tax_id'] = 'test_tax_3_template'
+            return data
+
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
+            self.env['account.chart.template'].try_loading('test', company=self.company, install_demo=False)
+
+        # On an existing company all the taxes are still present.
+        # The user has to deactivate them manually when not needed anymore (if they needed to encode things in the past)
+        taxes = self.env['account.tax'].search([('company_id', '=', self.company.id)])
+        self.assertRecordValues(taxes, [
+            {'name': 'Tax 1'},
+            {'name': 'Tax 2'},
+            {'name': 'Tax 3'},
+        ])
+
+        tax_1, tax_2, tax_3  = taxes
+        fiscal_position = self.env['account.fiscal.position'].search([('company_id', '=', self.company.id)])
+        self.assertRecordValues(fiscal_position.tax_ids, [
+            {'tax_src_id': tax_1.id, 'tax_dest_id': tax_2.id},
+            {'tax_src_id': tax_3.id, 'tax_dest_id': tax_2.id},
+        ])
+        self.assertEqual(self.company.account_sale_tax_id, tax_3)
+
+        # On a new company you would never see the old tax.
+        # In case users need it, they can duplicate the new one and change the rate.
+        new_company = self.env['res.company'].create({'name': 'New Company'})
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
+            self.env['account.chart.template'].try_loading('test', company=new_company, install_demo=False)
+
+        taxes = self.env['account.tax'].search([('company_id', '=', new_company.id)])
+        self.assertRecordValues(taxes, [
+            {'name': 'Tax 2'},
+            {'name': 'Tax 3'},
+        ])
+
+        tax_2, tax_3 = taxes
+        fiscal_position = self.env['account.fiscal.position'].search([('company_id', '=', new_company.id)])
+        self.assertRecordValues(fiscal_position.tax_ids, [
+            {'tax_src_id': tax_3.id, 'tax_dest_id': tax_2.id},
+        ])
+        self.assertEqual(new_company.account_sale_tax_id, tax_3)
+
 
     def test_update_taxes_update(self):
         """ When a tax is close enough from an existing tax we want to update that tax with the new values. """

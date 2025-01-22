@@ -8,6 +8,7 @@ import {
     waitUntil,
     edit,
     queryAllValues,
+    queryAll,
 } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "./_helpers/editor";
@@ -97,7 +98,7 @@ test("can render and apply gradient color", async () => {
     });
 });
 
-test("custom colors used in the editor are shown in the colorpicker", async () => {
+test("custom text-colors used in the editor are shown in the colorpicker", async () => {
     await setupEditor(
         `<p>
             <font style="color: rgb(255, 0, 0);">test</font>
@@ -112,14 +113,31 @@ test("custom colors used in the editor are shown in the colorpicker", async () =
     await animationFrame();
     expect(".o_hex_input").toHaveValue("#00FF00");
     expect(queryAllValues(".o_rgba_div input")).toEqual(["0", "255", "0", "100"]);
-    expect("button[data-color='rgb(255, 0, 0)']").toHaveCount(1);
-    expect(queryOne("button[data-color='rgb(255, 0, 0)']").style.backgroundColor).toBe(
-        "rgb(255, 0, 0)"
+    expect(queryAll("button[data-color='#ff0000']")).toHaveCount(1);
+    expect(queryOne("button[data-color='#ff0000']").style.backgroundColor).toBe("rgb(255, 0, 0)");
+    expect(queryAll("button[data-color='#00ff00']")).toHaveCount(1);
+    expect(queryOne("button[data-color='#00ff00']").style.backgroundColor).toBe("rgb(0, 255, 0)");
+});
+
+test("custom background colors used in the editor are shown in the colorpicker", async () => {
+    await setupEditor(
+        `<p>
+            <font style="background-color: rgb(255, 0, 0);">test</font>
+            <font style="background-color: rgb(0, 255, 0);">[test]</font>
+        </p>`
     );
-    expect("button[data-color='rgb(0, 255, 0)']").toHaveCount(1);
-    expect(queryOne("button[data-color='rgb(0, 255, 0)']").style.backgroundColor).toBe(
-        "rgb(0, 255, 0)"
-    );
+    await waitFor(".o-we-toolbar");
+    expect(".o_font_color_selector").toHaveCount(0);
+    await click(".o-we-toolbar .o-select-color-background");
+    await animationFrame();
+    await click(".btn:contains('Custom')");
+    await animationFrame();
+    expect(".o_hex_input").toHaveValue("#00FF00");
+    expect(queryAllValues(".o_rgba_div input")).toEqual(["0", "255", "0", "100"]);
+    expect(queryAll("button[data-color='#ff0000']")).toHaveCount(1);
+    expect(queryOne("button[data-color='#ff0000']").style.backgroundColor).toBe("rgb(255, 0, 0)");
+    expect(queryAll("button[data-color='#00ff00']")).toHaveCount(1);
+    expect(queryOne("button[data-color='#00ff00']").style.backgroundColor).toBe("rgb(0, 255, 0)");
 });
 
 test("select hex color and apply it", async () => {
@@ -178,6 +196,27 @@ test("always show the current custom color", async () => {
     expect(".o_colorpicker_section:first button").toHaveCount(1);
     expect(queryOne(".o_colorpicker_section:nth-of-type(1) button").style.backgroundColor).toBe(
         "rgb(1, 126, 132)"
+    );
+});
+
+test("show applied text color selected in solid color tab", async () => {
+    setupEditor(`<p><font style="color: rgb(255, 0, 0);">[test]</font></p>`);
+    await waitFor(".o-we-toolbar");
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect(".o_color_section .o_color_button.selected").toHaveCount(1);
+    expect(queryOne(".o_color_section .o_color_button.selected").style.backgroundColor).toBe(
+        "rgb(255, 0, 0)"
+    );
+    await contains("button[data-color='#0000FF']").click();
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(0);
+    await click(".o-we-toolbar .o-select-color-foreground"); // Open color selector again
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+    expect(".o_color_section .o_color_button.selected").toHaveCount(1);
+    expect(queryOne(".o_color_section .o_color_button.selected").style.backgroundColor).toBe(
+        "rgb(0, 0, 255)"
     );
 });
 
@@ -466,5 +505,129 @@ describe("color preview", () => {
         expect("font").toHaveCount(0);
         execCommand(editor, "historyUndo");
         expect("font").toHaveCount(0);
+    });
+
+    test("should preview color in table on hover in solid tab", async () => {
+        const { el } = await setupEditor(`
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr>
+                        <td>
+                            <p>[<br></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>]<br></p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+        await waitFor(".o-we-toolbar");
+        await animationFrame();
+        await click(".o-select-color-background");
+        await animationFrame();
+        // Hover a color
+        await hover(queryOne("button[data-color='#CE0000']"));
+        expect(getContent(el)).toBe(`
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="" style="background-color: rgb(206, 0, 0);">
+                            <p>[<br></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="" style="background-color: rgb(206, 0, 0);">
+                            <p>]<br></p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+        // Hover out
+        await hover(queryOne(".o-we-toolbar .o-select-color-foreground"));
+        await animationFrame();
+        expect(getContent(el)).toBe(`
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="o_selected_td">
+                            <p>[<br></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="o_selected_td">
+                            <p>]<br></p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+        expect(".o-we-toolbar").toHaveCount(1); // toolbar still open
+    });
+
+    test("should preview color in table on hover in custom tab", async () => {
+        const { el } = await setupEditor(`
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr>
+                        <td>
+                            <p>[<br></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p><br>]</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+        await waitFor(".o-we-toolbar");
+        await animationFrame();
+        await click(".o-select-color-background");
+        await animationFrame();
+        await click(".btn:contains('Custom')");
+        await animationFrame();
+        // Hover a color
+        await hover(queryOne("button[data-color='black']"));
+        expect(getContent(el)).toBe(`
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="bg-black">
+                            <p>[<br></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="bg-black">
+                            <p>]<br></p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+        // Hover out
+        await hover(queryOne(".o-we-toolbar .o-select-color-foreground"));
+        await animationFrame();
+        expect(getContent(el)).toBe(`
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="o_selected_td">
+                            <p>[<br></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="o_selected_td">
+                            <p>]<br></p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+        expect(".o-we-toolbar").toHaveCount(1); // toolbar still open
     });
 });

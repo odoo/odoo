@@ -625,7 +625,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertEqual(wizard.move_ids, invoice1 + invoice2)
         self.assertFalse(wizard.alerts)
         self.assertEqual(wizard.summary_data, {
-            'manual': {'count': 1, 'label': 'Download'},
+            'manual': {'count': 1, 'label': 'Manually'},
             'email': {'count': 1, 'label': 'by Email'},
         })
 
@@ -666,7 +666,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertEqual(wizard.move_ids, invoice1 + invoice2 + invoice3)
         self.assertTrue(wizard.alerts and 'account_pdf_exist' in wizard.alerts)
         self.assertEqual(wizard.summary_data, {
-            'manual': {'count': 2, 'label': 'Download'},
+            'manual': {'count': 2, 'label': 'Manually'},
             'email': {'count': 1, 'label': 'by Email'},
         })
         wizard.action_send_and_print()
@@ -707,6 +707,36 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertFalse(self._get_mail_message(invoice1))
         self.assertTrue(invoice2.invoice_pdf_report_id)
         self.assertTrue(self._get_mail_message(invoice2))
+
+    def test_invoice_multi_with_edi(self):
+        invoice1 = self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000], post=True)
+        invoice2 = self.init_invoice("out_invoice", partner=self.partner_b, amounts=[1000], post=True)
+
+        self.partner_a.invoice_sending_method = 'email'
+        self.partner_b.invoice_sending_method = 'manual'
+
+        def get_default_extra_edis(self, move):
+            if move == invoice1:
+                return {'edi1'}
+            return {'edi1', 'edi2'}
+
+        def get_all_extra_edis(self):
+            return {
+                'edi1': {'label': 'EDI 1'},
+                'edi2': {'label': 'EDI 2'},
+            }
+
+        with (
+            patch('odoo.addons.account.models.account_move_send.AccountMoveSend._get_default_extra_edis', get_default_extra_edis),
+            patch('odoo.addons.account.models.account_move_send.AccountMoveSend._get_all_extra_edis', get_all_extra_edis)
+        ):
+            wizard = self.create_send_and_print(invoice1 + invoice2)
+            self.assertEqual(wizard.summary_data, {
+                'edi1': {'count': 2, 'label': 'by EDI 1'},
+                'edi2': {'count': 1, 'label': 'by EDI 2'},
+                'manual': {'count': 1, 'label': 'Manually'},
+                'email': {'count': 1, 'label': 'by Email'},
+            })
 
     def test_invoice_mail_attachments_widget(self):
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)

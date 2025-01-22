@@ -33,8 +33,6 @@ defineActions([
         xml_id: "action_3",
         name: "Partners",
         res_model: "partner",
-        mobile_view_mode: "kanban",
-        type: "ir.actions.act_window",
         views: [
             [false, "list"],
             [1, "kanban"],
@@ -46,7 +44,6 @@ defineActions([
         xml_id: "action_4",
         name: "Partners Action 4",
         res_model: "partner",
-        type: "ir.actions.act_window",
         views: [
             [1, "kanban"],
             [2, "list"],
@@ -58,7 +55,6 @@ defineActions([
         xml_id: "action_8",
         name: "Favorite Ponies",
         res_model: "pony",
-        type: "ir.actions.act_window",
         views: [
             [false, "list"],
             [false, "form"],
@@ -323,7 +319,7 @@ test(`actions override previous state from menu click`, async () => {
 test(`action in target new do not push state`, async () => {
     defineActions([
         {
-            id: 1001,
+            id: 2001,
             tag: "__test__client__action__",
             target: "new",
             type: "ir.actions.client",
@@ -341,7 +337,7 @@ test(`action in target new do not push state`, async () => {
     expect(browser.location.href).toBe("http://example.com/odoo");
     expect(browser.history.length).toBe(1);
 
-    await getService("action").doAction(1001);
+    await getService("action").doAction(2001);
     expect(`.modal .test_client_action`).toHaveCount(1);
 
     await animationFrame();

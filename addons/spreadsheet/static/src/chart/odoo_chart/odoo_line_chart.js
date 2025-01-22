@@ -16,6 +16,7 @@ const {
     rgbaToHex,
     getTrendDatasetForLineChart,
     getChartAxisType,
+    formatValue,
     formatTickValue,
 } = spreadsheet.helpers;
 
@@ -168,6 +169,11 @@ function getLineConfiguration(chart, labels, locale) {
             position: chart.verticalAxisPosition,
             ticks: {
                 color: fontColor,
+                callback: (value) =>
+                    formatValue(value, {
+                        locale,
+                        format: Math.abs(value) >= 1000 ? "#,##" : undefined,
+                    }),
             },
             title: getChartAxisTitleRuntime(chart.axesDesign?.y),
         },

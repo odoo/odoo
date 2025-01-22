@@ -76,6 +76,12 @@ patch(PaymentScreen.prototype, {
      * @override
      */
     async _postPushOrderResolve(order, server_ids) {
+        for (const order_id of server_ids) {
+            await this._postProcessLoyalty(this.pos.models["pos.order"].get(order_id));
+        }
+        return super._postPushOrderResolve(order, server_ids);
+    },
+    async _postProcessLoyalty(order) {
         // Compile data for our function
         const ProgramModel = this.pos.models["loyalty.program"];
         const rewardLines = order._get_reward_lines();
@@ -203,6 +209,5 @@ patch(PaymentScreen.prototype, {
             }
             order.new_coupon_info = payload.new_coupon_info;
         }
-        return super._postPushOrderResolve(order, server_ids);
     },
 });

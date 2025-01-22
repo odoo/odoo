@@ -18,6 +18,7 @@ from odoo.tools.sql import column_exists, create_column
 from odoo.addons.account.tools import format_structured_reference_iso
 from odoo.exceptions import UserError, ValidationError, AccessError, RedirectWarning
 from odoo.osv import expression
+from odoo.tools.misc import clean_context
 from odoo.tools import (
     create_index,
     date_utils,
@@ -71,6 +72,9 @@ ALLOWED_MIMETYPES = {
     'application/vnd.oasis.opendocument.spreadsheet',
     'application/msword',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.ms-powerpoint',
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    'application/vnd.oasis.opendocument.presentation',
 }
 
 EMPTY = object()
@@ -116,6 +120,7 @@ class AccountMove(models.Model):
         tracking=True,
         index='trigram',
     )
+    name_placeholder = fields.Char(compute='_compute_name_placeholder')
     ref = fields.Char(
         string='Reference',
         copy=False,
@@ -340,6 +345,8 @@ class AccountMove(models.Model):
         copy=False,
         store=True,
         compute='_compute_delivery_date',
+        precompute=True,
+        readonly=False,
     )
     show_delivery_date = fields.Boolean(compute='_compute_show_delivery_date')
     invoice_payment_term_id = fields.Many2one(
@@ -872,26 +879,25 @@ class AccountMove(models.Model):
                 continue
 
             move_has_name = move.name and move.name != '/'
-            if move_has_name or move.state != 'posted':
-                if not move.posted_before and not move._sequence_matches_date():
-                    if move._get_last_sequence():
-                        # The name does not match the date and the move is not the first in the period:
-                        # Reset to draft
-                        move.name = False
-                        continue
-                else:
-                    if move_has_name and move.posted_before or not move_has_name and move._get_last_sequence():
-                        # The move either
-                        # - has a name and was posted before, or
-                        # - doesn't have a name, but is not the first in the period
-                        # so we don't recompute the name
-                        continue
-            if move.date and (not move_has_name or not move._sequence_matches_date()):
+            if not move.posted_before and not move._sequence_matches_date():
+                # The name does not match the date and the move is not the first in the period:
+                # Reset to draft
+                move.name = False
+                continue
+            if move.date and not move_has_name and move.state != 'draft':
                 move._set_next_sequence()
 
-        self.filtered(lambda m: not m.name and not move.quick_edit_mode).name = '/'
         self._inverse_name()
 
+    @api.depends('date', 'journal_id', 'move_type', 'name', 'posted_before', 'sequence_number', 'sequence_prefix', 'state')
+    def _compute_name_placeholder(self):
+        for move in self:
+            if (not move.name or move.name == '/') and not move._get_last_sequence():
+                sequence_format_string, sequence_format_values = move._get_sequence_format_param(move._get_starting_sequence())
+                sequence_format_values['seq'] = sequence_format_values['seq'] + 1
+                move.name_placeholder = sequence_format_string.format(**sequence_format_values)
+            else:
+                move.name_placeholder = False
 
     @api.depends('journal_id', 'date')
     def _compute_highest_name(self):
@@ -1016,6 +1022,10 @@ class AccountMove(models.Model):
             )
             invoice.currency_id = currency
 
+    def _get_invoice_currency_rate_date(self):
+        self.ensure_one()
+        return self.invoice_date or fields.Date.context_today(self)
+
     @api.depends('currency_id', 'company_currency_id', 'company_id', 'invoice_date')
     def _compute_invoice_currency_rate(self):
         for move in self:
@@ -1025,7 +1035,7 @@ class AccountMove(models.Model):
                         from_currency=move.company_currency_id,
                         to_currency=move.currency_id,
                         company=move.company_id,
-                        date=move.invoice_date or fields.Date.context_today(move),
+                        date=move._get_invoice_currency_rate_date(),
                     )
                 else:
                     move.invoice_currency_rate = 1
@@ -2279,7 +2289,7 @@ class AccountMove(models.Model):
     @api.onchange('journal_id')
     def _onchange_journal_id(self):
         if not self.quick_edit_mode:
-            self.name = '/'
+            self.name = False
             self._compute_name()
 
     @api.onchange('invoice_cash_rounding_id')
@@ -2977,7 +2987,7 @@ class AccountMove(models.Model):
         if to_delete:
             self.env['account.move.line'].browse(to_delete).with_context(dynamic_unlink=True).unlink()
         if to_create:
-            self.env['account.move.line'].create([
+            self.env['account.move.line'].with_context(clean_context(self.env.context)).create([
                 {**key, **values, 'display_type': line_type}
                 for key, values in to_create.items()
             ])
@@ -3335,6 +3345,16 @@ class AccountMove(models.Model):
             fields_spec = {key: val for key, val in fields_spec.items() if key != 'line_ids'}
         return super().onchange(values, field_names, fields_spec)
 
+    @api.model
+    def _get_view(self, view_id=None, view_type='form', **options):
+        arch, view = super()._get_view(view_id, view_type, **options)
+        if view_type == 'form':
+            if name_node := arch.xpath("""//field[@name="name"][@invisible="name == '/' and not posted_before and not quick_edit_mode"]"""):
+                name_node[0].set('invisible', "not (name or name_placeholder or quick_edit_mode)")
+            if draft_node := arch.xpath("""//span[@invisible="name == '/' and not posted_before and not quick_edit_mode"]"""):
+                draft_node[0].set('invisible', "name or name_placeholder or quick_edit_mode")
+        return arch, view
+
     # -------------------------------------------------------------------------
     # RECONCILIATION METHODS
     # -------------------------------------------------------------------------
@@ -3484,6 +3504,8 @@ class AccountMove(models.Model):
         last_month = int(self.company_id.fiscalyear_last_month)
         is_staggered_year = last_month != 12 or last_day != 31
         if is_staggered_year:
+            max_last_day = calendar.monthrange(self.date.year, last_month)[1]
+            last_day = min(last_day, max_last_day)
             if self.date > date(self.date.year, last_month, last_day):
                 year_part = "%s-%s" % (self.date.strftime('%y'), (self.date + relativedelta(years=1)).strftime('%y'))
             else:
@@ -3687,7 +3709,12 @@ class AccountMove(models.Model):
             price_untaxed = self.currency_id.round(
                 remaining_amount / (((1.0 - discount_percentage / 100.0) * (taxes.amount / 100.0)) + 1.0))
         else:
-            price_untaxed = taxes.with_context(force_price_include=True).compute_all(remaining_amount)['total_excluded']
+            tax_results = taxes.with_context(force_price_include=True).compute_all(remaining_amount)
+            price_untaxed = tax_results['total_excluded'] - sum(
+                tax_data['amount']
+                for tax_data in tax_results['taxes']
+                if tax_data['is_reverse_charge']
+            )
         return {'account_id': account_id, 'tax_ids': taxes.ids, 'price_unit': price_untaxed}
 
     @api.onchange('quick_edit_mode', 'journal_id', 'company_id')
@@ -4060,6 +4087,11 @@ class AccountMove(models.Model):
                     attachments_by_invoice[attachment] |= invoice
                 else:
                     attachments_by_invoice[attachment] = invoice
+                if not attachment.res_id:
+                    attachment.write({
+                        'res_id': invoice.id,
+                        'res_model': invoice._name,
+                    })
 
         file_data_list = attachments._unwrap_edi_attachments()
         attachments_by_invoice = {}
@@ -4142,6 +4174,11 @@ class AccountMove(models.Model):
     # BUSINESS METHODS
     # -------------------------------------------------------------------------
 
+    def _prepare_tax_lines_for_taxes_computation(self, tax_amls, round_from_tax_lines):
+        if round_from_tax_lines:
+            return [self._prepare_tax_line_for_taxes_computation(x) for x in tax_amls]
+        return []
+
     def _prepare_invoice_aggregated_taxes(
         self,
         filter_invl_to_apply=None,
@@ -4174,10 +4211,7 @@ class AccountMove(models.Model):
         base_amls = self.line_ids.filtered(lambda x: x.display_type == 'product' and (not filter_invl_to_apply or filter_invl_to_apply(x)))
         base_lines = [self._prepare_product_base_line_for_taxes_computation(x) for x in base_amls]
         tax_amls = self.line_ids.filtered(lambda x: x.display_type == 'tax')
-        if round_from_tax_lines:
-            tax_lines = [self._prepare_tax_line_for_taxes_computation(x) for x in tax_amls]
-        else:
-            tax_lines = []
+        tax_lines = self._prepare_tax_lines_for_taxes_computation(tax_amls, round_from_tax_lines)
         AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
         if postfix_function:
             postfix_function(base_lines)
@@ -5064,8 +5098,6 @@ class AccountMove(models.Model):
         return self.action_force_register_payment()
 
     def action_force_register_payment(self):
-        if any(m.payment_state not in ('not_paid', 'partial', 'in_payment') for m in self):
-            raise UserError(_("You can only register payments for (partially) unpaid documents."))
         if any(m.move_type == 'entry' for m in self):
             raise UserError(_("You cannot register payments for miscellaneous entries."))
         return self.line_ids.action_register_payment()
@@ -5988,8 +6020,9 @@ class AccountMove(models.Model):
         attachments_in_invoices = self.env['ir.attachment']
         for attachment in move_per_decodable_attachment:
             attachments_in_invoices += attachment
-        # Unlink the unused attachments
-        (attachments - attachments_in_invoices).unlink()
+        # Unlink the unused attachments (prevents storing marketing images sent with emails)
+        if self._context.get('from_alias'):
+            (attachments - attachments_in_invoices).unlink()
         return move_per_decodable_attachment
 
     def _creation_subtype(self):

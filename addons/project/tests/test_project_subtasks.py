@@ -542,3 +542,18 @@ class TestProjectSubtasks(TestProjectCommon):
             task_form.parent_id = Task
         self.assertEqual(task.project_id, self.task_1.project_id, "project_id should be affected")
         self.assertTrue(task.display_in_project, "display_in_project should be True when there is no parent task")
+
+    def test_invisible_subtask_became_visible_when_converted_to_task(self):
+        task = self.env['project.task'].create({
+            'name': 'Parent task',
+            'project_id': self.project_goats.id,
+            'child_ids': [Command.create({'name': 'Sub-task invisible', 'project_id': self.project_goats.id})],
+        })
+        invisible_subtask = task.child_ids
+
+        self.assertFalse(invisible_subtask.display_in_project)
+
+        with Form(invisible_subtask, view="project.project_task_convert_to_subtask_view_form") as subtask_form:
+            subtask_form.parent_id = self.env['project.task']
+
+        self.assertTrue(invisible_subtask.display_in_project)

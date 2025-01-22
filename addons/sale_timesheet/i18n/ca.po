@@ -5,7 +5,7 @@
 # Translators:
 # RGB Consulting <odoo@rgbconsulting.com>, 2024
 # Iván Infantes Castarnado, 2024
-# Harcogourmet, 2024
+# Xavier, 2024
 # Arnau Ros, 2024
 # José Cabrera Lozano <jose.cabrera@edukative.es>, 2024
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2024
@@ -17,18 +17,18 @@
 # Martin Trigaux, 2024
 # Pere Martínez, 2024
 # Josep Anton Belchi, 2024
-# Quim - eccit <quim@eccit.com>, 2024
-# Óscar Fonseca <tecnico@pyming.com>, 2024
+# Quim - coopdevs <quim.rebull@coopdevs.org>, 2024
 # Ivan Espinola, 2024
 # CristianCruzParra, 2024
+# Óscar Fonseca <tecnico@pyming.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: CristianCruzParra, 2024\n"
+"Last-Translator: Óscar Fonseca <tecnico@pyming.com>, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1140,6 +1140,17 @@ msgid "Sales Orders"
 msgstr "Comandes de venda"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_employee_ids
+msgid ""
+"Sales order item that will be selected by default on the timesheets of the corresponding employee. It bypasses the sales order item defined on the project and the task, and can be modified on each timesheet entry if necessary. In other words, it defines the rate at which an employee's time is billed based on their expertise, skills or experience, for instance.\n"
+"If you would like to bill the same service at a different rate, you need to create two separate sales order items as each sales order item can only have a single unit price at a time.\n"
+"You can also define the hourly company cost of your employees for their timesheets on this project specifically. It will bypass the timesheet cost set on the employee."
+msgstr ""
+"L'element de comanda de vendes que se seleccionarà per defecte als fulls d'hores del treballador corresponent. Eludeix l'article de la comanda de vendes definit en el projecte i la tasca, i es pot modificar en cada entrada del full de temps si és necessari. En altres paraules, defineix la taxa a la qual es factura el temps d'un empleat basant-se en la seva experiència, habilitats o experiència, per exemple.\n"
+"Si voleu facturar el mateix servei a una tarifa diferent, heu de crear dos articles de comandes de vendes separats, ja que cada article de comanda de vendes només pot tenir un preu unitari a la vegada.\n"
+"També podeu definir el cost per hora dels vostres empleats per als seus fulls d'hores en aquest projecte específicament. S'evitarà el cost del full de temps establert a l'empleat."
+
+#. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__so_line
 msgid ""
 "Sales order item to which the time spent will be added in order to be "
@@ -1264,8 +1275,17 @@ msgstr "Experiència tècnica"
 
 #. module: sale_timesheet
 #. odoo-python
-#: code:addons/sale_timesheet/models/product_product.py:0
-#: code:addons/sale_timesheet/models/product_template.py:0
+#: code:addons/sale_timesheet/models/product.py:0
+#, python-format
+msgid ""
+"The %s product is required by the Timesheets app and cannot be linked to a "
+"company."
+msgstr ""
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
+#, python-format
 msgid ""
 "The %s product is required by the Timesheets app and cannot be archived nor "
 "deleted."

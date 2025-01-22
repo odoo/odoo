@@ -14,7 +14,7 @@ portalDetails.include({
     },
 
     _showPeppolConfig() {
-        const method = document.querySelector("select[name='invoice_sending_method']").value;
+        const method = document.querySelector("select[name='invoice_sending_method']")?.value;
         const divToToggle = document.querySelectorAll(".portal_peppol_toggle");
         for (const peppolDiv of divToToggle) {
             if (method === "peppol") {

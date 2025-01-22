@@ -4,7 +4,7 @@ from datetime import date, timedelta
 from odoo import Command
 from odoo.fields import Date
 from odoo.tools import float_is_zero
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.addons.hr_timesheet.tests.test_timesheet import TestCommonTimesheet
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
 from odoo.tests import Form, tagged
@@ -381,6 +381,11 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'product_uom_qty': 20,
             'order_id': sale_order.id,
         })
+        so_line_deliver_timesheet = self.env['sale.order.line'].create({
+            'product_id': self.product_delivery_timesheet1.id,
+            'product_uom_qty': 5,
+            'order_id': sale_order.id,
+        })
 
         # confirm SO
         sale_order.action_confirm()
@@ -422,6 +427,22 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'unit_amount': 30,
             'employee_id': self.employee_manager.id
         })
+        
+        with self.assertRaises(AccessError, msg="The user should not have access to the SOL"):
+            so_line_deliver_timesheet.with_user(self.user_employee_without_sales_access).read(['name'])
+    
+        # invalidate cache to make sure the SOL set on the timesheet is not in the cache since the user
+        # should not be able to access on the SOL.
+        self.env['sale.order.line'].invalidate_model()
+        timesheet5 = self.env['account.analytic.line'].with_user(self.user_employee_without_sales_access).create({
+            'name': 'Test Line 5',
+            'project_id': task_serv2.project_id.id,
+            'task_id': task_serv2.id,
+            'unit_amount': 10,
+            'employee_id': self.employee_without_sales_access.id,
+            'so_line': so_line_deliver_timesheet.id,
+        })
+
         self.assertEqual(so_line_deliver_global_project.invoice_status, 'to invoice')
         self.assertEqual(so_line_deliver_task_project.invoice_status, 'to invoice')
         self.assertEqual(sale_order.invoice_status, 'to invoice')

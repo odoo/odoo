@@ -40,7 +40,7 @@ export class IconSelector extends Component {
         } else {
             this.state.fonts = this.props.fonts.map((font) => {
                 const icons = font.icons.filter(
-                    (icon) => icon.alias.indexOf(this.state.needle) >= 0
+                    (icon) => icon.alias.indexOf(this.state.needle.toLowerCase()) >= 0
                 );
                 return { ...font, icons };
             });

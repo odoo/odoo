@@ -21,6 +21,7 @@ import { ChatGPTPlugin } from "./main/chatgpt/chatgpt_plugin";
 import { ColumnPlugin } from "./main/column_plugin";
 import { EmojiPlugin } from "./main/emoji_plugin";
 import { ColorPlugin } from "./main/font/color_plugin";
+import { FeffPlugin } from "./main/feff_plugin";
 import { FontPlugin } from "./main/font/font_plugin";
 import { HintPlugin } from "./main/hint_plugin";
 import { InlineCodePlugin } from "./main/inline_code";
@@ -30,6 +31,7 @@ import { OdooLinkSelectionPlugin } from "./main/link/link_selection_odoo_plugin"
 import { LinkSelectionPlugin } from "./main/link/link_selection_plugin";
 import { ListPlugin } from "./main/list/list_plugin";
 import { LocalOverlayPlugin } from "./main/local_overlay_plugin";
+import { FilePlugin } from "./main/media/file_plugin";
 import { IconPlugin } from "./main/media/icon_plugin";
 import { ImageCropPlugin } from "./main/media/image_crop_plugin";
 import { ImagePlugin } from "./main/media/image_plugin";
@@ -55,7 +57,6 @@ import { CollaborationSelectionPlugin } from "./others/collaboration/collaborati
 import { DynamicPlaceholderPlugin } from "./others/dynamic_placeholder_plugin";
 import { EmbeddedComponentPlugin } from "./others/embedded_component_plugin";
 import { ExcalidrawPlugin } from "@html_editor/others/embedded_components/plugins/excalidraw_plugin/excalidraw_plugin";
-import { FilePlugin } from "@html_editor/others/embedded_components/plugins/file_plugin/file_plugin";
 import { TableOfContentPlugin } from "@html_editor/others/embedded_components/plugins/table_of_content_plugin/table_of_content_plugin";
 import { VideoPlugin } from "@html_editor/others/embedded_components/plugins/video_plugin/video_plugin";
 import { QWebPlugin } from "./others/qweb_plugin";
@@ -89,6 +90,7 @@ import { QWebPlugin } from "./others/qweb_plugin";
  * @property { import ("./main/emoji_plugin").EmojiShared } emoji
  * @property { import ("./main/local_overlay_plugin").LocalOverlayShared } localOverlay
  * @property { import ("./main/tabulation_plugin").TabulationShared } tabulation
+ * @property { import ("./main/feff_plugin").FeffShared } feff
  *
  * Others
  * @property { import("./others/collaboration/collaboration_odoo_plugin").CollaborationOdooShared } collaborationOdoo
@@ -142,6 +144,7 @@ export const MAIN_PLUGINS = [
     ImageCropPlugin,
     LinkPlugin,
     LinkPastePlugin,
+    FeffPlugin,
     LinkSelectionPlugin,
     OdooLinkSelectionPlugin,
     PowerButtonsPlugin,
@@ -151,6 +154,7 @@ export const MAIN_PLUGINS = [
     TextDirectionPlugin,
     InlineCodePlugin,
     TableResizePlugin,
+    FilePlugin,
 ];
 
 export const COLLABORATION_PLUGINS = [
@@ -163,7 +167,6 @@ export const COLLABORATION_PLUGINS = [
 export const EMBEDDED_COMPONENT_PLUGINS = [
     EmbeddedComponentPlugin,
     ExcalidrawPlugin,
-    FilePlugin,
     TableOfContentPlugin,
     VideoPlugin,
 ];

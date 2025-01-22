@@ -242,6 +242,11 @@ class ProductProduct(models.Model):
             self._check_duplicated_product_barcodes(barcodes_within_company, company_id)
             self._check_duplicated_packaging_barcodes(barcodes_within_company, company_id)
 
+    @api.constrains('company_id')
+    def _check_company_id(self):
+        combo_items = self.env['product.combo.item'].sudo().search([('product_id', 'in', self.ids)])
+        combo_items._check_company(fnames=['product_id'])
+
     def _get_invoice_policy(self):
         return False
 
@@ -376,25 +381,32 @@ class ProductProduct(models.Model):
         return res
 
     def unlink(self):
-        unlink_products = self.env['product.product']
-        unlink_templates = self.env['product.template']
-        for product in self:
+        unlink_products_ids = set()
+        unlink_templates_ids = set()
+
+        # Check if products still exists, in case they've been unlinked by unlinking their template
+        existing_products = self.exists()
+        product_ids_by_template_id = {template.id: set(ids) for template, ids in self._read_group(
+            domain=[('product_tmpl_id', 'in', existing_products.product_tmpl_id.ids)],
+            groupby=['product_tmpl_id'],
+            aggregates=['id:array_agg'],
+        )}
+        for product in existing_products:
             # If there is an image set on the variant and no image set on the
             # template, move the image to the template.
             if product.image_variant_1920 and not product.product_tmpl_id.image_1920:
                 product.product_tmpl_id.image_1920 = product.image_variant_1920
-            # Check if product still exists, in case it has been unlinked by unlinking its template
-            if not product.exists():
-                continue
             # Check if the product is last product of this template...
-            other_products = self.search([('product_tmpl_id', '=', product.product_tmpl_id.id), ('id', '!=', product.id)])
+            has_other_products = product_ids_by_template_id.get(product.product_tmpl_id.id, set()) - {product.id}
             # ... and do not delete product template if it's configured to be created "on demand"
-            if not other_products and not product.product_tmpl_id.has_dynamic_attributes():
-                unlink_templates |= product.product_tmpl_id
-            unlink_products |= product
+            if not has_other_products and not product.product_tmpl_id.has_dynamic_attributes():
+                unlink_templates_ids.add(product.product_tmpl_id.id)
+            unlink_products_ids.add(product.id)
+        unlink_products = self.env['product.product'].browse(unlink_products_ids)
         res = super(ProductProduct, unlink_products).unlink()
         # delete templates after calling super, as deleting template could lead to deleting
         # products due to ondelete='cascade'
+        unlink_templates = self.env['product.template'].browse(unlink_templates_ids)
         unlink_templates.unlink()
         # `_get_variant_id_for_combination` depends on existing variants
         self.env.registry.clear_cache()
@@ -656,7 +668,7 @@ class ProductProduct(models.Model):
     #=== BUSINESS METHODS ===#
 
     def _prepare_sellers(self, params=False):
-        sellers = self.seller_ids.filtered(lambda s: s.partner_id.active and (not s.product_id or s.product_id == self))
+        sellers = self.seller_ids._get_filtered_supplier(self.env.company, self, params)
         return sellers.sorted(lambda s: (s.sequence, -s.min_qty, s.price, s.id))
 
     def _get_filtered_sellers(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
@@ -666,7 +678,6 @@ class ProductProduct(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
         sellers_filtered = self._prepare_sellers(params)
-        sellers_filtered = sellers_filtered.filtered(lambda s: not s.company_id or s.company_id.id == self.env.company.id)
         sellers = self.env['product.supplierinfo']
         for seller in sellers_filtered:
             # Set quantity in UoM of seller

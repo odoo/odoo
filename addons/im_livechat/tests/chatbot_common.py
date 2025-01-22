@@ -40,7 +40,7 @@ class ChatbotCase(common.HttpCase):
             cls.step_dispatch_operator,
             cls.step_dispatch_documentation,
         ] = cls.env['chatbot.script.answer'].sudo().create([{
-            'name': 'I want to buy the software',
+            'name': 'I\'d like to buy the software',
             'script_step_id': cls.step_dispatch.id,
         }, {
             'name': 'Pricing Question',

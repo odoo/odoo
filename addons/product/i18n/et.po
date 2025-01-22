@@ -18,21 +18,21 @@
 # Piia Paurson <piia@avalah.ee>, 2024
 # Oliver Ernest, 2024
 # Rivo Zängov <eraser@eraser.ee>, 2024
-# Siim Raasuke, 2024
 # Algo Kärp <algokarp@gmail.com>, 2024
 # Martin Aavastik <martin@avalah.ee>, 2024
 # Leaanika Randmets, 2024
 # JanaAvalah, 2024
 # Anna, 2024
 # Katrin Kampura, 2024
+# Siim Raasuke, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-27 08:16+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Katrin Kampura, 2024\n"
+"Last-Translator: Siim Raasuke, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1010,6 +1010,16 @@ msgstr "Sisalduv kogus peaks olema positiivne."
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
 msgid "Contained quantity"
 msgstr "Sisaldab kogust"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__uom_category_id
+#: model:ir.model.fields,help:product.field_product_template__uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Ühikute vaheline konversioon on võimalik ainult siis, kui ühikud kuuluvad "
+"samasse kategooriasse. Konverteerimist tehakse määrade järgi."
 
 #. module: product
 #: model:product.template,name:product.product_product_13_product_template
@@ -3655,6 +3665,12 @@ msgstr "tk"
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Units of Measure"
 msgstr "Mõõtühikud"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__uom_category_id
+#: model:ir.model.fields,field_description:product.field_product_template__uom_category_id
+msgid "UoM Category"
+msgstr "Mõõtühikute kategooria"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form

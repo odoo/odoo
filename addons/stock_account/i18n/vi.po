@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Thi Huong Nguyen, 2024
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -313,7 +313,7 @@ msgstr "Chi phí"
 #: model:ir.model.fields,field_description:stock_account.field_product_template__cost_method
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__cost_method
 msgid "Costing Method"
-msgstr "Phương pháp giá vốn"
+msgstr "Phương pháp tính chi phí"
 
 #. module: stock_account
 #. odoo-python
@@ -322,7 +322,7 @@ msgid ""
 "Costing method change for product category %(category)s: from %(old_method)s"
 " to %(new_method)s."
 msgstr ""
-"Thay đổi phương pháp giá vốn cho danh mục sản phẩm %(category)s: từ "
+"Thay đổi phương pháp tính chi phí cho danh mục sản phẩm %(category)s: từ "
 "%(old_method)s thành %(new_method)s."
 
 #. module: stock_account
@@ -425,8 +425,8 @@ msgid ""
 "from %(old_method)s to %(new_method)s."
 msgstr ""
 "Do có thay đổi danh mục sản phẩm (từ %(old_category)s thành "
-"%(new_category)s), nên phương pháp giá vốn cho sản phẩm %(product)s đã thay "
-"đổi: từ %(old_method)s thành %(new_method)s."
+"%(new_category)s), nên phương pháp tính chi phí cho sản phẩm %(product)s đã "
+"thay đổi: từ %(old_method)s thành %(new_method)s."
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -711,7 +711,7 @@ msgstr "Nhà kho nhận hàng"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__reference
 msgid "Reference"
-msgstr "Mã tham chiếu"
+msgstr "Tham chiếu"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__lot_id
@@ -937,6 +937,19 @@ msgid ""
 "The stock accounts should be set in order to use the automatic valuation."
 msgstr ""
 "Tài khoản tồn kho phải được thiết lập để có thể sử dụng định giá tự động."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move_line.py:0
+msgid ""
+"The stock valuation of a move is based on the type of the source and "
+"destination locations. As the move is already processed, you cannot modify "
+"the locations in a way that changes the valuation logic defined during the "
+"initial processing."
+msgstr ""
+"Việc định giá tồn kho của một dịch chuyển được dựa trên loại vị trí nguồn và"
+" đích. Do dịch chuyển đã được xử lý, nên bạn không thể sửa đổi các vị trí "
+"làm thay đổi logic định giá được xác định trong quá trình xử lý ban đầu."
 
 #. module: stock_account
 #. odoo-python
@@ -1219,7 +1232,7 @@ msgid ""
 "You cannot change the costing method of product valuated by lot/serial "
 "number."
 msgstr ""
-"Bạn không thể thay đổi phương pháp tính giá thành sản phẩm theo số lô/sê-ri."
+"Bạn không thể thay đổi phương pháp tính chi phí sản phẩm theo số lô/sê-ri."
 
 #. module: stock_account
 #. odoo-python

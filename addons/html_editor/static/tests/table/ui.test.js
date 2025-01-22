@@ -420,12 +420,12 @@ test("insert column left operation", async () => {
     await click("div[name='insert_left']");
     expect(getContent(el)).toBe(
         unformat(`
-        <table style="width: 20px;">
+        <table>
             <tbody>
                 <tr>
-                    <td class="a" style="width: 13px;">1[]</td>
-                    <td style="width: 13px;"><p><br></p></td>
-                    <td class="b" style="width: 13px;">2</td>
+                    <td class="a">1[]</td>
+                    <td><p><br></p></td>
+                    <td class="b">2</td>
                 </tr>
                 <tr>
                     <td class="c">3</td>
@@ -472,12 +472,12 @@ test("insert column right operation", async () => {
     await click("div[name='insert_right']");
     expect(getContent(el)).toBe(
         unformat(`
-        <table style="width: 20px;">
+        <table>
             <tbody>
                 <tr>
-                    <td class="a" style="width: 13px;">1[]</td>
-                    <td style="width: 13px;"><p><br></p></td>
-                    <td class="b" style="width: 13px;">2</td>
+                    <td class="a">1[]</td>
+                    <td><p><br></p></td>
+                    <td class="b">2</td>
                 </tr>
                 <tr>
                     <td class="c">3</td>
@@ -530,7 +530,7 @@ test("insert row above operation", async () => {
                     <td class="a">1[]</td>
                     <td class="b">2</td>
                 </tr>
-                <tr style="height: 23px;">
+                <tr>
                     <td><p><br></p></td>
                     <td><p><br></p></td>
                 </tr>
@@ -549,6 +549,49 @@ test("insert row above operation", async () => {
             <tbody>
                 <tr><td class="a">1[]</td><td class="b">2</td></tr>
                 <tr><td class="c">3</td><td class="d">4</td></tr>
+            </tbody>
+        </table>`)
+    );
+});
+
+test("insert row above operation should not retain height and width styles", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+        <table>
+            <tbody>
+                <tr><td class="a">1[]</td><td class="b">2</td></tr>
+                <tr><td class="c">3</td><td class="d">4</td></tr>
+            </tbody>
+        </table>`)
+    );
+    expect(".o-we-table-menu").toHaveCount(0);
+
+    // hover on td to show row ui
+    await hover(el.querySelector("td.a"));
+    await waitFor(".o-we-table-menu");
+
+    // click on it to open dropdown
+    await click(".o-we-table-menu");
+    await waitFor("div[name='insert_above']");
+
+    // insert row above
+    await click("div[name='insert_above']");
+    expect(getContent(el)).toBe(
+        unformat(`
+        <table>
+            <tbody>
+                <tr>
+                    <td><p><br></p></td>
+                    <td><p><br></p></td>
+                </tr>
+                <tr>
+                    <td class="a">1[]</td>
+                    <td class="b">2</td>
+                </tr>
+                <tr>
+                    <td class="c">3</td>
+                    <td class="d">4</td>
+                </tr>
             </tbody>
         </table>`)
     );
@@ -584,7 +627,7 @@ test("insert row below operation", async () => {
                     <td class="a">1[]</td>
                     <td class="b">2</td>
                 </tr>
-                <tr style="height: 23px;">
+                <tr>
                     <td><p><br></p></td>
                     <td><p><br></p></td>
                 </tr>

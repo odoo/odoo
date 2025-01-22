@@ -16,7 +16,7 @@
 # Eric Antones <eantones@users.noreply.github.com>, 2024
 # Martin Trigaux, 2024
 # Ivan Espinola, 2024
-# Quim - eccit <quim@eccit.com>, 2024
+# Quim - coopdevs <quim.rebull@coopdevs.org>, 2024
 # marcescu, 2024
 # 
 msgid ""
@@ -50,6 +50,13 @@ msgstr "Afegeix una pàgina de portada"
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 msgid "Address"
 msgstr "Adreça"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/failure_model_patch.js:0
+msgid ""
+"An error occurred when sending a letter with Snailmail on “%(record_name)s”"
+msgstr ""
 
 #. module: snailmail
 #. odoo-javascript
@@ -475,6 +482,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_credit
 msgid "Snailmail Credit Error"
 msgstr "Error de crèdit de Snailmail"
+
+#. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/messaging_menu/messaging_menu_patch.js:0
+msgid "Snailmail Failure: %(modelName)s"
+msgstr ""
 
 #. module: snailmail
 #. odoo-javascript

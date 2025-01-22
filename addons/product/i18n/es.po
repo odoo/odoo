@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Martin Trigaux, 2024
-# Wil Odoo, 2024
 # Tiffany Chang, 2024
 # Larissa Manderfeld, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-27 08:16+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -314,7 +314,7 @@ msgid ""
 "                        will delete and recreate existing variants and lead\n"
 "                        to the loss of their possible customizations."
 msgstr ""
-"<strong>Advertencia</strong>: agregar o quitar atributos eliminará\n"
+"<strong>Advertencia</strong>: añadir o quitar atributos eliminará\n"
 "                        y recreará las variantes existentes, esto hará que pierda\n"
 "                        sus personalizaciones (si tiene)."
 
@@ -471,25 +471,25 @@ msgstr "Icono de tipo de actvidad"
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
 msgid "Add"
-msgstr "Agregar"
+msgstr "Añadir"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Add Products"
-msgstr "Agregar productos"
+msgstr "Añadir productos"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Add Products to pricelist report"
-msgstr "Agregue productos al informe de lista de precios"
+msgstr "Añada productos al informe de lista de precios"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Add a quantity"
-msgstr "Agregar una cantidad"
+msgstr "Añadir una cantidad"
 
 #. module: product
 #. odoo-javascript
@@ -498,24 +498,24 @@ msgid ""
 "Add products using the \"Add Products\" button at the top right to\n"
 "                                include them in the report."
 msgstr ""
-"Agregue productos con el botón “Agregar productos” ubicado en la parte superior derecha para\n"
+"Añada productos con el botón “Añadir productos” ubicado en la parte superior derecha para\n"
 "                                incluirlos en el informe."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid "Add to all products"
-msgstr "Agregar a todos los productos"
+msgstr "Añadir a todos los productos"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__add
 msgid "Add to existing products"
-msgstr "Agregar a los productos existentes"
+msgstr "Añadir a los productos existentes"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Add to products"
-msgstr "Agregar a productos"
+msgstr "Añadir a productos"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
@@ -632,7 +632,7 @@ msgid ""
 "quantity to add others."
 msgstr ""
 "Es posible mostrar %s cantidades al mismo tiempo. Elimine una cantidad "
-"seleccionada para agregar otras."
+"seleccionada para añadir otras."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
@@ -1006,6 +1006,16 @@ msgstr "La cantidad contenida debe ser positiva."
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
 msgid "Contained quantity"
 msgstr "Cantidad incluida"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product__uom_category_id
+#: model:ir.model.fields,help:product.field_product_template__uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"La conversión entre las unidades de medidas sólo puede ocurrir si pertenecen"
+" a la misma categoría. La conversión se basará en los índices establecidos."
 
 #. module: product
 #: model:product.template,name:product.product_product_13_product_template
@@ -3242,8 +3252,8 @@ msgid ""
 "Specify the fixed amount to add or subtract (if negative) to the amount "
 "calculated with the discount."
 msgstr ""
-"Especifique el importe fijo a agregar o a restar (si es negativo) al importe"
-" calculado con el descuento."
+"Especifique el importe fijo a añadir o a restar (si es negativo) al importe "
+"calculado con el descuento."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -3538,7 +3548,7 @@ msgstr "Esta es la suma de los precios adicionales de todos los atributos"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note is added to sales orders and invoices."
-msgstr "Esta nota se agrega a los pedidos de venta y facturas."
+msgstr "Esta nota se añade a los pedidos de venta y facturas."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -3667,6 +3677,12 @@ msgstr "Unidades"
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Units of Measure"
 msgstr "Unidades de medida"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__uom_category_id
+#: model:ir.model.fields,field_description:product.field_product_template__uom_category_id
+msgid "UoM Category"
+msgstr "Categoría de UdM"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -4011,7 +4027,7 @@ msgid ""
 "You are about to add the value \"%(attribute_value)s\" to %(product_count)s "
 "products."
 msgstr ""
-"Está a punto de agregar el valor “%(attribute_value)s” a %(product_count)s "
+"Está a punto de añadir el valor “%(attribute_value)s” a %(product_count)s "
 "productos."
 
 #. module: product

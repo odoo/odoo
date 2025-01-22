@@ -350,8 +350,9 @@ patch(PosStore.prototype, {
     async addLineToCurrentOrder(vals, opt = {}, configure = true) {
         const product = vals.product_id;
         const order = this.get_order();
-        const linkedPrograms =
-            this.models["loyalty.program"].getBy("trigger_product_ids", product.id) || [];
+        const linkedPrograms = (
+            this.models["loyalty.program"].getBy("trigger_product_ids", product.id) || []
+        ).filter((p) => ["gift_card", "ewallet"].includes(p.program_type));
         let selectedProgram = null;
         if (linkedPrograms.length > 1) {
             selectedProgram = await makeAwaitable(this.dialog, SelectionPopup, {
@@ -629,7 +630,7 @@ patch(PosStore.prototype, {
         return await this.data.searchRead(
             "loyalty.card",
             domain,
-            ["id", "points", "code", "partner_id", "program_id", "expiration_date"],
+            this.data.fields["loyalty.card"],
             { limit }
         );
     },

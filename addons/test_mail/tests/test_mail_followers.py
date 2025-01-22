@@ -11,6 +11,7 @@ from odoo import fields
 from odoo.addons.mail.models.mail_mail import _UNFOLLOW_REGEX
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError
+from odoo.tools.misc import limited_field_access_token
 from odoo.tests import tagged, users
 from odoo.tests.common import HttpCase
 from odoo.tools import email_normalize, mail, mute_logger, parse_contact_from_email
@@ -931,11 +932,17 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
             ),
             "res.partner": self._filter_partners_fields(
                 {
+                    "avatar_128_access_token": limited_field_access_token(
+                        self.env.user.partner_id, "avatar_128"
+                    ),
                     "id": self.env.user.partner_id.id,
                     "name": "Ernest Employee",
                     "write_date": fields.Datetime.to_string(self.env.user.write_date),
                 },
                 {
+                    "avatar_128_access_token": limited_field_access_token(
+                        self.partner_admin, "avatar_128"
+                    ),
                     "id": self.user_admin.partner_id.id,
                     "isInternalUser": True,
                     "is_company": False,
@@ -991,8 +998,13 @@ class UnfollowFromEmailTest(MailCommon, HttpCase):
     def _post_message_and_get_unfollow_urls(self, record, partner_ids):
         """ Post a message on the record for the partners and extract the unfollow URLs. """
         with self.mock_mail_gateway():
-            record.message_post(body='test message', subtype_id=self.env.ref('mail.mt_comment').id,
-                                partner_ids=partner_ids.ids)
+            record.with_user(self.user_admin).with_context(
+                email_notification_force_header=True,
+                email_notification_force_footer=True
+            ).message_post(
+                body='test message',
+                subtype_id=self.env.ref('mail.mt_comment').id,
+                partner_ids=partner_ids.ids)
         self.assertEqual(len(self._mails), len(partner_ids))
         mail_by_email = {parse_contact_from_email(email_to)[1]: mail
                          for mail in self._mails

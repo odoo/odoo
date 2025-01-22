@@ -197,11 +197,13 @@ const DynamicSnippet = publicWidget.Widget.extend({
         this.trigger_up('widgets_stop_request', {
             $target: $templateArea,
         });
-        const mainPageUrl = this._getMainPageUrl();
         const allContentLink = this.el.querySelector(".s_dynamic_snippet_main_page_url");
-        if (allContentLink && mainPageUrl) {
-            allContentLink.href = mainPageUrl;
-            allContentLink.classList.remove("d-none");
+        if (allContentLink?.classList.contains("d-none")) {
+            const mainPageUrl = this._getMainPageUrl();
+            if (mainPageUrl) {
+                allContentLink.href = mainPageUrl;
+                allContentLink.classList.remove("d-none");
+            }
         }
         $templateArea.html(this.renderedContent);
         // TODO this is probably not the only public widget which creates DOM

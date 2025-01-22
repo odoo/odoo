@@ -1,20 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* uom
-#
+# 
 # Translators:
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:42+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: uom
@@ -87,8 +89,13 @@ msgstr "Комбинированный коэффициент"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__category_id
-msgid "Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."
-msgstr "Пересчет между единицами измерения может произойти только в том случае, если они принадлежат к одной и той же категории. Пересчет будет осуществляться на основе коэффициентов."
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Пересчет между единицами измерения может произойти только в том случае, если"
+" они принадлежат к одной и той же категории. Пересчет будет осуществляться "
+"на основе коэффициентов."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_uid
@@ -130,13 +137,22 @@ msgstr "Часов"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__factor_inv
-msgid "How many times this Unit of Measure is bigger than the reference Unit of Measure in this category: 1 * (this unit) = ratio * (reference unit)"
-msgstr "Сколько раз эта единица измерения больше, чем эталонная единица измерения в этой категории: 1 * (эта единица) = отношение * (единица измерения)"
+msgid ""
+"How many times this Unit of Measure is bigger than the reference Unit of "
+"Measure in this category: 1 * (this unit) = ratio * (reference unit)"
+msgstr ""
+"Сколько раз эта единица измерения больше, чем эталонная единица измерения в "
+"этой категории: 1 * (эта единица) = отношение * (единица измерения)"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__factor
-msgid "How much bigger or smaller this unit is compared to the reference Unit of Measure for this category: 1 * (reference unit) = ratio * (this unit)"
-msgstr "Насколько больше или меньше эта единица сравнивается с эталонной единицей измерения для этой категории: 1 * (эталонное устройство) = отношение * (это устройство)"
+msgid ""
+"How much bigger or smaller this unit is compared to the reference Unit of "
+"Measure for this category: 1 * (reference unit) = ratio * (this unit)"
+msgstr ""
+"Насколько больше или меньше эта единица сравнивается с эталонной единицей "
+"измерения для этой категории: 1 * (эталонное устройство) = отношение * (это "
+"устройство)"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__id
@@ -239,8 +255,12 @@ msgstr "Поверхность"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__rounding
-msgid "The computed quantity will be a multiple of this value. Use 1.0 for a Unit of Measure that cannot be further split, such as a piece."
-msgstr "Вычисленное количество будет кратно этому значению. Используйте 1,0 для единиц измерения, которые нельзя разделить на части, например, для штуки."
+msgid ""
+"The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
+"of Measure that cannot be further split, such as a piece."
+msgstr ""
+"Вычисленное количество будет кратно этому значению. Используйте 1,0 для "
+"единиц измерения, которые нельзя разделить на части, например, для штуки."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
@@ -270,8 +290,12 @@ msgstr "Точность округления должна быть строго
 #. module: uom
 #. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
-msgid "The unit of measure %s defined on the order line doesn't belong to the same category as the unit of measure %s defined on the product. Please correct the unit of measure defined on the order line or on the product, they should belong to the same category."
-msgstr "Единица измерения %s, определенная в строке заказа, не принадлежит к той же категории, что и единица измерения %s, определенная в товаре. Пожалуйста, исправьте единицу измерения, определенную в строке заказа или в товаре, они должны относиться к одной и той же категории."
+msgid ""
+"The unit of measure %(unit)s defined on the order line doesn't belong to the"
+" same category as the unit of measure %(product_unit)s defined on the "
+"product. Please correct the unit of measure defined on the order line or on "
+"the product. They should belong to the same category."
+msgstr ""
 
 #. module: uom
 #. odoo-python
@@ -286,8 +310,11 @@ msgstr "Тип"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__active
-msgid "Uncheck the active field to disable a unit of measure without deleting it."
-msgstr "Снимите флажок активного поля, чтобы отключить единицу измерения, не удаляя ее."
+msgid ""
+"Uncheck the active field to disable a unit of measure without deleting it."
+msgstr ""
+"Снимите флажок активного поля, чтобы отключить единицу измерения, не удаляя "
+"ее."
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_unit
@@ -345,7 +372,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 msgid "UoM category %s must have at least one reference unit of measure."
-msgstr "Категория UoM %s должна иметь хотя бы одну эталонную единицу измерения."
+msgstr ""
+"Категория UoM %s должна иметь хотя бы одну эталонную единицу измерения."
 
 #. module: uom
 #. odoo-python
@@ -357,7 +385,8 @@ msgstr "Категория UoM %s должна иметь эталонную е�
 #. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 msgid "UoM category %s should only have one reference unit of measure."
-msgstr "Категория UoM %s должна иметь только одну эталонную единицу измерения."
+msgstr ""
+"Категория UoM %s должна иметь только одну эталонную единицу измерения."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__uom_ids

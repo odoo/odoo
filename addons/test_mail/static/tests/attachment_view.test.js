@@ -26,6 +26,9 @@ beforeEach(() => {
         closed: false,
         get document() {
             const doc = popoutIframe.contentDocument;
+            if (!doc) {
+                return undefined;
+            }
             const originalWrite = doc.write;
             doc.write = (content) => {
                 // This avoids duplicating the test script in the popoutWindow
@@ -128,7 +131,8 @@ test("Attachment view popout controls test", async () => {
     expect(".o_attachment_preview").not.toBeVisible();
 });
 
-test("Attachment view / chatter popout across multiple records test", async () => {
+test.skip("Attachment view / chatter popout across multiple records test", async () => {
+    // skip because test has race conditions: https://runbot.odoo.com/odoo/runbot.build.error/109795
     const pyEnv = await startServer();
     const recordIds = pyEnv["mail.test.simple.main.attachment"].create([
         {

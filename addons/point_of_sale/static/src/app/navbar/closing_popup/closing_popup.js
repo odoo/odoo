@@ -228,13 +228,20 @@ export class ClosePosPopup extends Component {
             const bankPaymentMethodDiffPairs = this.props.non_cash_payment_methods
                 .filter((pm) => pm.type == "bank")
                 .map((pm) => [pm.id, this.getDifference(pm.id)]);
-            const response = await this.pos.data.call("pos.session", "close_session_from_ui", [
-                this.pos.session.id,
-                bankPaymentMethodDiffPairs,
-            ]);
+            const response = await this.pos.data.call(
+                "pos.session",
+                "close_session_from_ui",
+                [this.pos.session.id, bankPaymentMethodDiffPairs],
+                {
+                    context: {
+                        login_number: odoo.login_number,
+                    },
+                }
+            );
             if (!response.successful) {
                 return this.handleClosingError(response);
             }
+            localStorage.removeItem(`pos.session.${odoo.pos_config_id}`);
             location.reload();
         } catch (error) {
             if (error instanceof ConnectionLostError) {
@@ -288,7 +295,7 @@ export class ClosePosPopup extends Component {
             confirm: () => {
                 if (!response.redirect) {
                     this.props.close();
-                    this.pos.onTicketButtonClick();
+                    this.pos.showScreen("TicketScreen");
                 }
             },
             cancel: async () => {

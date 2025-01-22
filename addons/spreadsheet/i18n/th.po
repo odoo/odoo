@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -123,6 +123,9 @@ msgid ""
 "%(replaceable_count)s match(es) replaced. %(irreplaceable_count)s match(es) "
 "cannot be replaced as they are part of a formula."
 msgstr ""
+"%(replaceable_count)s แทนที่รายการที่ตรงกันแล้ว "
+"ไม่สามารถแทนที่รายการที่ตรงกัน %(irreplaceable_count)s รายการได้ "
+"เนื่องจากเป็นส่วนหนึ่งของสูตร"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -211,37 +214,37 @@ msgstr "%s ไม่ใช่วันในสัปดาห์ที่ถู
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%s is not a valid hour (it should be a number between 0 and 23)"
-msgstr ""
+msgstr "%s ไม่ใช่ชั่วโมงที่ถูกต้อง (ควรเป็นตัวเลขระหว่าง 0 ถึง 23)"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%s is not a valid minute (it should be a number between 0 and 59)"
-msgstr ""
+msgstr "%s ไม่ใช่จำนวนนาทีที่ถูกต้อง (ควรเป็นตัวเลขระหว่าง 0 ถึง 59)"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%s is not a valid month (it should be a number between 1 and 12)"
-msgstr ""
+msgstr "%s ไม่ใช่เดือนที่ถูกต้อง (ควรเป็นตัวเลขระหว่าง 1 ถึง 12)"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%s is not a valid quarter (it should be a number between 1 and 4)"
-msgstr ""
+msgstr "%s ไม่ใช่ไตรมาสที่ถูกต้อง (ควรเป็นตัวเลขระหว่าง 1 ถึง 4)"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%s is not a valid second (it should be a number between 0 and 59)"
-msgstr ""
+msgstr "%s ไม่ใช่วินาทีที่ถูกต้อง (ควรเป็นตัวเลขระหว่าง 0 ถึง 59)"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%s is not a valid week (it should be a number between 0 and 53)"
-msgstr ""
+msgstr "%s ไม่ใช่สัปดาห์ที่ถูกต้อง (ควรเป็นตัวเลขระหว่าง 0 ถึง 53)"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -858,12 +861,6 @@ msgstr "วันที่ทั้งหมดควรมากกว่าห
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "All the ranges and the range values must have the same size"
-msgstr ""
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "All the ranges must have the same dimensions."
 msgstr "ช่วงทั้งหมดต้องมีขนาดเท่ากัน"
 
@@ -1013,6 +1010,8 @@ msgid ""
 "An unexpected error occurred while pasting content.\n"
 "          This is probably due to a spreadsheet version mismatch."
 msgstr ""
+"เกิดข้อผิดพลาดที่ไม่คาดคิดขณะวางเนื้อหา\n"
+"          อาจเป็นเพราะเวอร์ชันสเปรดชีตไม่ตรงกัน"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1243,7 +1242,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "At least one of the provided values is an invalid formula"
-msgstr ""
+msgstr "ค่าที่ให้มาอย่างน้อยหนึ่งค่าเป็นสูตรที่ไม่ถูกต้อง"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1570,6 +1569,8 @@ msgid ""
 "Calculates values as follows:\n"
 "(value for the item) / (value for the parent item on columns)"
 msgstr ""
+"คำนวณค่าดังนี้:\n"
+"(ค่าสำหรับรายการ) / (ค่าสำหรับรายการหลักในคอลัมน์)"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1578,6 +1579,8 @@ msgid ""
 "Calculates values as follows:\n"
 "(value for the item) / (value for the parent item on rows)"
 msgstr ""
+"คำนวณค่าดังนี้:\n"
+"(ค่าสำหรับรายการ) / (ค่าสำหรับรายการหลักในแถว)"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2044,6 +2047,7 @@ msgid ""
 "Consider using a dynamic pivot formula: %s. Or re-insert the static pivot "
 "from the Data menu."
 msgstr ""
+"ลองใช้สูตรจุดหมุนแบบไดนามิก: %s หรือแทรกจุดหมุนแบบคงที่จากเมนูข้อมูลอีกครั้ง"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2968,7 +2972,7 @@ msgstr ""
 msgid ""
 "Displays the value for successive items in the Base field as a running "
 "total."
-msgstr ""
+msgstr "แสดงค่าสำหรับรายการที่ต่อเนื่องกันในฟิลด์ฐานเป็นผลรวมคงค้าง"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2999,7 +3003,7 @@ msgstr "แสดงค่าเป็นเปอร์เซ็นต์ขอ
 msgid ""
 "Displays values as a percentage of the value of the Base item in the Base "
 "field."
-msgstr ""
+msgstr "แสดงค่าเป็นเปอร์เซ็นต์ของค่าของรายการฐานในฟิลด์ฐาน"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3007,7 +3011,7 @@ msgstr ""
 msgid ""
 "Displays values as the difference from the value of the Base item in the "
 "Base field."
-msgstr ""
+msgstr "แสดงค่าเป็นความแตกต่างจากค่าของรายการฐานในฟิลด์ฐาน"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3230,6 +3234,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/odoo_pivot.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_helpers.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 msgid "Field %s does not exist"
 msgstr "ไม่มีฟิลด์ %s"
 
@@ -3544,6 +3549,7 @@ msgstr ""
 msgid ""
 "Function %s expects the parameter '%s' to be reference to a cell or range."
 msgstr ""
+"ฟังก์ชัน %s คาดหวังว่าพารามิเตอร์ '%s' จะเป็นการอ้างอิงถึงเซลล์หรือช่วง"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3812,7 +3818,7 @@ msgstr "แถวส่วนหัว"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Height value is %(_height)s. It should be greater than or equal to 1."
-msgstr ""
+msgstr "ค่าความสูงคือ %(_height)s ควรมากกว่าหรือเท่ากับ 1"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4797,7 +4803,7 @@ msgstr "จับคู่เนื้อหาเซลล์ทั้งหม
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Match(es) cannot be replaced as they are part of a formula."
-msgstr ""
+msgstr "ไม่สามารถแทนที่การจับคู่ได้เนื่องจากเป็นส่วนหนึ่งของสูตร"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4908,6 +4914,7 @@ msgid ""
 "Merged cells found in the spill zone. Please unmerge cells before using "
 "array formulas."
 msgstr ""
+"พบเซลล์ที่ผสานกันในโซนที่รั่วไหล โปรดยกเลิกการผสานเซลล์ก่อนใช้สูตรอาร์เรย์"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6533,6 +6540,12 @@ msgstr "ค่าเดียวจากช่วงที่เหมือน
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
+msgid "Some measures are not available: %s"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Some used characters are not allowed in a sheet name (Forbidden characters "
@@ -7356,7 +7369,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "The columns arguments must be between -%s and %s (got %s), excluding 0."
-msgstr ""
+msgstr "อาร์กิวเมนต์ของคอลัมน์ต้องอยู่ระหว่าง -%s ถึง %s (ได้รับ %s) ไม่รวม 0"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8388,6 +8401,21 @@ msgstr "องค์ประกอบนาทีของเวลา"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/data_sources/data_source.js:0
+#: code:addons/spreadsheet/static/src/pivot/odoo_pivot_loader.js:0
+msgid "The model \"%(model)s\" does not exist."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/global_filters/components/filter_value/filter_value.js:0
+msgid ""
+"The model (%(model)s) of this global filter is not valid (it may have been "
+"renamed/deleted)."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The month (%s) must be between 1 and 12 inclusive."
 msgstr "เดือน (%s) ต้องมีตัวเลขระหว่าง 1 ถึง 12 รวมอยู่ด้วย"
@@ -8474,7 +8502,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "The number of columns of the range to return starting at the offset target."
-msgstr ""
+msgstr "จำนวนคอลัมน์ของช่วงที่จะส่งคืนโดยเริ่มต้นจากเป้าหมายออฟเซ็ต"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8607,7 +8635,7 @@ msgstr "จำนวนแถวต้องเป็นค่าบวก"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "The number of rows of the range to return starting at the offset target."
-msgstr ""
+msgstr "จำนวนแถวของช่วงที่จะส่งคืนโดยเริ่มต้นจากเป้าหมายออฟเซ็ต"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8898,13 +8926,13 @@ msgstr "ระยะเวลาต้องอยู่ระหว่าง 1 
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The pivot cannot be created because cell %s contains a reserved value"
-msgstr ""
+msgstr "ไม่สามารถสร้างไพวอทได้เนื่องจากเซลล์ %s มีค่าสงวนไว้"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The pivot cannot be created because cell %s contains an error"
-msgstr ""
+msgstr "ไม่สามารถสร้างไพวอทได้เนื่องจากเซลล์ %s มีข้อผิดพลาด"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9319,7 +9347,7 @@ msgstr "อาร์กิวเมนต์ของแถว (%s) ต้อง
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The rows arguments must be between -%s and %s (got %s), excluding 0."
-msgstr ""
+msgstr "อาร์กิวเมนต์แถวต้องอยู่ระหว่าง -%s ถึง %s (ได้รับ %s) ไม่รวม 0"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9524,7 +9552,7 @@ msgstr "start_ period (%s) ต้องน้อยกว่าหรือเ�
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The starting point from which to count the offset rows and columns."
-msgstr ""
+msgstr "จุดเริ่มต้นในการนับแถวและคอลัมน์ออฟเซ็ต"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11239,7 +11267,7 @@ msgstr "ค่าควอไทล์ใดที่ไม่รวม 0 แล
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Width value is %(_width)s. It should be greater than or equal to 1."
-msgstr ""
+msgstr "ค่าความกว้างคือ %(_width)s ควรมากกว่าหรือเท่ากับ 1"
 
 #. module: spreadsheet
 #. odoo-javascript

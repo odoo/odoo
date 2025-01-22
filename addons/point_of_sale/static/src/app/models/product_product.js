@@ -90,26 +90,30 @@ export class ProductProduct extends Base {
     getApplicablePricelistRules(pricelistRules) {
         const applicableRules = {};
         for (const pricelistId in pricelistRules) {
-            if (pricelistRules[pricelistId].productItems[this.id]) {
-                applicableRules[pricelistId] = pricelistRules[pricelistId].productItems[this.id];
-                continue;
-            }
-            const productTmplId = this.raw.product_tmpl_id;
-            if (pricelistRules[pricelistId].productTmlpItems[productTmplId]) {
-                applicableRules[pricelistId] =
-                    pricelistRules[pricelistId].productTmlpItems[productTmplId];
-                continue;
-            }
-            for (const category of this.parentCategories) {
-                if (pricelistRules[pricelistId].categoryItems[category]) {
-                    applicableRules[pricelistId] =
-                        pricelistRules[pricelistId].categoryItems[category];
-                    break;
+            applicableRules[pricelistId] = [];
+            const rules = pricelistRules[pricelistId];
+            if (rules.productItems[this.id]) {
+                applicableRules[pricelistId].push(...rules.productItems[this.id]);
+                if (!rules.productItems[this.id][0].min_quantity) {
+                    continue;
                 }
             }
-            if (!applicableRules[pricelistId]) {
-                applicableRules[pricelistId] = pricelistRules[pricelistId].globalItems;
+            const productTmplId = this.raw.product_tmpl_id;
+            if (rules.productTmlpItems[productTmplId]) {
+                applicableRules[pricelistId].push(...rules.productTmlpItems[productTmplId]);
+                if (!rules.productTmlpItems[productTmplId][0].min_quantity) {
+                    continue;
+                }
             }
+            for (const category of this.parentCategories) {
+                if (rules.categoryItems[category]) {
+                    applicableRules[pricelistId].push(...rules.categoryItems[category]);
+                    if (!rules.categoryItems[category][0].min_quantity) {
+                        break;
+                    }
+                }
+            }
+            applicableRules[pricelistId].push(...rules.globalItems);
         }
         return applicableRules;
     }
@@ -139,9 +143,8 @@ export class ProductProduct extends Base {
             );
         }
 
-        const rules = !pricelist ? [] : this.cachedPricelistRules[pricelist?.id] || [];
         let price = (list_price || this.lst_price) + (price_extra || 0);
-        const rule = rules.find((rule) => !rule.min_quantity || quantity >= rule.min_quantity);
+        const rule = this.getPricelistRule(pricelist, quantity);
         if (!rule) {
             return price;
         }
@@ -182,6 +185,10 @@ export class ProductProduct extends Base {
         return price;
     }
 
+    getPricelistRule(pricelist, quantity) {
+        const rules = !pricelist ? [] : this.cachedPricelistRules[pricelist?.id] || [];
+        return rules.find((rule) => !rule.min_quantity || quantity >= rule.min_quantity);
+    }
     getImageUrl() {
         return (
             (this.image_128 &&

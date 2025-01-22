@@ -12,6 +12,7 @@ import {
 registerWebsitePreviewTour("editable_root_as_custom_snippet", {
     edition: true,
     url: '/custom-page',
+    checkDelay: 400,
 }, () => [
     ...clickOnSnippet('.s_title.custom[data-oe-model][data-oe-id][data-oe-field][data-oe-xpath]'),
     changeOption('SnippetSave', 'we-button'),

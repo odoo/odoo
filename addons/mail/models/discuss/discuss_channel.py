@@ -929,6 +929,7 @@ class Channel(models.Model):
             info["fetchChannelInfoState"] = "fetched"
             info["parent_channel_id"] = Store.one(channel.parent_channel_id)
             info["from_message_id"] = Store.one(channel.from_message_id)
+            info["group_public_id"] = channel.group_public_id.id or False
             # find the channel member state
             if current_partner or current_guest:
                 info['message_needaction_counter'] = channel.message_needaction_counter
@@ -1007,7 +1008,7 @@ class Channel(models.Model):
             # get the existing channel between the given partners
             channel = self.browse(result[0].get('channel_id'))
             # pin or open the channel for the current partner
-            if pin or open:
+            if pin or force_open:
                 member = self.env['discuss.channel.member'].search([('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', channel.id)])
                 vals = {'last_interest_dt': fields.Datetime.now()}
                 if pin:

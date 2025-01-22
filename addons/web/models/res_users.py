@@ -12,7 +12,8 @@ class ResUsers(models.Model):
         # if we have a search with a limit, move current user as the first result
         user_list = super().name_search(name, args, operator, limit)
         uid = self._uid
-        if index := next((i for i, (user_id, _name) in enumerate(user_list) if user_id == uid), False):
+        # index 0 is correct not Falsy in this case, use None to avoid ignoring it
+        if (index := next((i for i, (user_id, _name) in enumerate(user_list) if user_id == uid), None)) is not None:
             # move found user first
             user_tuple = user_list.pop(index)
             user_list.insert(0, user_tuple)

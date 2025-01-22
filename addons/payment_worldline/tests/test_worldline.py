@@ -40,7 +40,7 @@ class WorldlineTest(WorldlineCommon, PaymentHttpCommon):
         self._webhook_notification_flow(self.notification_data)
         self.assertFalse(tx.token_id, "No token should be created.")
         self.assertEqual(tx.state, 'done')
-        self.assertEqual(tx.provider_reference, '123456789')
+        self.assertEqual(tx.provider_reference, '1234567890')
 
     @mute_logger('odoo.addons.payment_worldline.controllers.main')
     def test_webhook_notification_creates_token(self):

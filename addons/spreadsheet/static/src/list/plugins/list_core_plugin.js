@@ -395,6 +395,7 @@ export class ListCorePlugin extends OdooCorePlugin {
                         context: list.context,
                         orderBy: list.orderBy,
                     },
+                    actionXmlId: list.actionXmlId,
                     name: list.name,
                 };
                 this._addList(id, definition, list.fieldMatching);

@@ -1,9 +1,10 @@
-import { Component, xml } from "@odoo/owl";
+import { Component, onWillStart, xml } from "@odoo/owl";
 import { test, expect, beforeEach, getFixture } from "@odoo/hoot";
 import { getService, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { animationFrame } from "@odoo/hoot-mock";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { click, press } from "@odoo/hoot-dom";
+import { Deferred } from "@web/core/utils/concurrency";
 
 let target;
 
@@ -46,6 +47,37 @@ test("close on click away", async () => {
     expect(".o_popover #comp").toHaveCount(1);
 
     await click(document.body);
+    await animationFrame();
+
+    expect(".o_popover").toHaveCount(0);
+    expect(".o_popover #comp").toHaveCount(0);
+});
+
+test("close on click away when loading", async () => {
+    const def = new Deferred();
+    class Comp extends Component {
+        static template = xml`<div id="comp">in popover</div>`;
+        static props = ["*"];
+        setup() {
+            onWillStart(async () => {
+                await def;
+            });
+        }
+    }
+
+    getService("popover").add(target, Comp);
+    await animationFrame();
+
+    expect(".o_popover").toHaveCount(0);
+    expect(".o_popover #comp").toHaveCount(0);
+
+    click(document.body);
+    await animationFrame();
+
+    expect(".o_popover").toHaveCount(0);
+    expect(".o_popover #comp").toHaveCount(0);
+
+    def.resolve();
     await animationFrame();
 
     expect(".o_popover").toHaveCount(0);

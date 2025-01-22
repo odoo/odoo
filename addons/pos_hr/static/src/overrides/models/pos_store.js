@@ -37,11 +37,6 @@ patch(PosStore.prototype, {
             super.checkPreviousLoggedCashier(...arguments);
         }
     },
-    async actionAfterIdle() {
-        if (this.mainScreen.component?.name !== "LoginScreen") {
-            return super.actionAfterIdle();
-        }
-    },
     async afterProcessServerData() {
         await super.afterProcessServerData(...arguments);
         if (this.config.module_pos_hr) {

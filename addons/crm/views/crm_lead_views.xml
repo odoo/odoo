@@ -244,7 +244,7 @@
                             <group invisible="type == 'opportunity'">
                                 <field name="user_id"
                                     context="{'default_sales_team_id': team_id}" widget="many2one_avatar_user"/>
-                                <field name="team_id" options="{'no_open': True, 'no_create': True}" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
+                                <field name="team_id" options="{'no_open': True, 'no_create': True}" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
                             </group>
                             <group name="lead_priority" invisible="type == 'opportunity'">
                                 <field name="priority" widget="priority"/>
@@ -518,6 +518,7 @@
             <field name="arch" type="xml">
                 <kanban  highlight_color="color" default_group_by="stage_id" class="o_kanban_small_column o_opportunity_kanban" on_create="quick_create" quick_create_view="crm.quick_create_opportunity_form"
                     archivable="false" sample="1" js_class="crm_kanban">
+                    <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Description"}}'/>
                     <field name="probability"/>
                     <field name="active"/>
                     <field name="company_currency"/>

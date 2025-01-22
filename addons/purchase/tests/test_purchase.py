@@ -902,3 +902,43 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(po_1.user_id, user_1)
         self.assertEqual(po_1.payment_term_id, payment_term_id_1)
         self.assertEqual(po_1.incoterm_id, incoterm_id_1)
+
+    def test_vendor_price_by_purchase_order_company(self):
+        """
+        Test that in case a vendor has multiple price for two company A and B,
+        and the purchase_order.company_id != env.company_id
+        the price of chosen is the one of the company specified in the purchase order
+        """
+        company_a = self.env.company
+        company_b = self.env['res.company'].create({'name': 'Saucisson Inc.'})
+        self.env.company = company_a
+
+        self.product_a.write({
+            'seller_ids': [
+                Command.create({
+                    'partner_id': self.partner_a,
+                    'product_code': 'A',
+                    'company_id': company_a.id,
+                    'price': 10.0,
+                }),
+                Command.create({
+                    'partner_id': self.partner_a,
+                    'product_code': 'B',
+                    'company_id': company_b.id,
+                    'price': 15.0,
+                }),
+            ]
+        })
+
+        po = self.env['purchase.order'].with_context(allowed_company_ids=[company_a.id, company_b.id]).with_company(company_b).create({
+            'partner_id': self.partner_a.id,
+            'company_id': company_b.id,
+            'order_line': [Command.create({
+                'name': self.product_a.name,
+                'product_id': self.product_a.id,
+            })],
+        })
+
+        self.assertEqual(po.amount_untaxed, 15.0)
+        po.company_id = company_a.id
+        self.assertEqual(po.amount_untaxed, 10.0)

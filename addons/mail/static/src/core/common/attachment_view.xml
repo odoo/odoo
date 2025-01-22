@@ -3,7 +3,12 @@
 
     <t t-name="mail.AttachmentView">
         <div t-if="state.thread.attachmentsInWebClientView.length > 0" class="o-mail-Attachment">
-            <div class="o_attachment_control popout d-print-none" t-on-click="onClickPopout"><i class="fa fa-window-restore" aria-hidden="Pop out" title="Pop out"/></div>
+            <div class="o_attachment_control popout d-print-none cursor-pointer"
+                 t-on-click="onClickPopout"
+                 data-tooltip="Open preview in a separate window."
+                 data-tooltip-delay="400">
+                <i class="fa fa-window-restore" aria-hidden="Pop out"/>
+            </div>
             <t t-if="state.thread.mainAttachment">
                 <h3 t-if="!state.thread.mainAttachment.isPdf" class="mt0 mb8 ps-2 text-muted text-center"><t t-esc="displayName"/></h3>
                 <div t-if="state.thread.mainAttachment.isImage" class="o-mail-Attachment-imgContainer">

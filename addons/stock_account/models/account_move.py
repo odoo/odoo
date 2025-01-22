@@ -239,6 +239,7 @@ class AccountMove(models.Model):
                     else:
                         reconcile_plan += [product_account_moves]
         self.env['account.move.line']._reconcile_plan(reconcile_plan)
+        no_exchange_reconcile_plan = [amls.filtered(lambda aml: not aml.reconciled) for amls in no_exchange_reconcile_plan]
         self.env['account.move.line'].with_context(no_exchange_difference=True)._reconcile_plan(no_exchange_reconcile_plan)
 
     def _get_invoiced_lot_values(self):
@@ -263,9 +264,8 @@ class AccountMoveLine(models.Model):
             and line.move_id.is_purchase_document()
         ))
         for line in input_lines:
-            line = line.with_company(line.move_id.journal_id.company_id)
             fiscal_position = line.move_id.fiscal_position_id
-            accounts = line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fiscal_position)
+            accounts = line.with_company(line.company_id).product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fiscal_position)
             if accounts['stock_input']:
                 line.account_id = accounts['stock_input']
 

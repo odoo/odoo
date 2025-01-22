@@ -1,20 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* stock_dropshipping
-#
+# 
 # Translators:
+# Wil Odoo, 2024
+# Ilya Rozhkov, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:42+0000\n"
+"Last-Translator: Ilya Rozhkov, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: stock_dropshipping
@@ -61,22 +64,17 @@ msgstr "Тип комплектования"
 #. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_procurement_group
 msgid "Procurement Group"
-msgstr "Группа Снабжения"
+msgstr "В рамках закупки"
 
 #. module: stock_dropshipping
-#: model:ir.model,name:stock_dropshipping.model_product_replenish
-msgid "Product Replenish"
-msgstr "Пополнение продукта"
+#: model:ir.model,name:stock_dropshipping.model_stock_replenish_mixin
+msgid "Product Replenish Mixin"
+msgstr "Миксин пополнения запаса продукта"
 
 #. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_purchase_order
 msgid "Purchase Order"
-msgstr "Заказа на покупку"
-
-#. module: stock_dropshipping
-#: model:ir.model,name:stock_dropshipping.model_purchase_order_line
-msgid "Purchase Order Line"
-msgstr "Позиция заказа на покупку"
+msgstr "Заказ на покупку"
 
 #. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_sale_order
@@ -92,6 +90,11 @@ msgstr "Позиция заказа на продажу"
 #: model:ir.model,name:stock_dropshipping.model_stock_rule
 msgid "Stock Rule"
 msgstr "Правило запаса"
+
+#. module: stock_dropshipping
+#: model_terms:ir.ui.view,arch_db:stock_dropshipping.stock_picking_type_kanban
+msgid "To Validate"
+msgstr "Проверить"
 
 #. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_stock_picking

@@ -11,6 +11,7 @@ import {
     onWillUnmount,
     useExternalListener,
 } from "@odoo/owl";
+import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
@@ -110,8 +111,9 @@ export function useAsyncLockedMethod(method) {
  * }
  * ```
  * @param {(...args: any[]) => Promise<any>} asyncFn
+ * @param {{ keepLast?: boolean }} [options] - Options for managing concurrency.
  */
-export function useTrackedAsync(asyncFn) {
+export function useTrackedAsync(asyncFn, options = {}) {
     /**
      * @type {{
      *  status: 'idle' | 'loading' | 'error' | 'success',
@@ -125,7 +127,9 @@ export function useTrackedAsync(asyncFn) {
         lastArgs: null,
     });
 
-    const lockedCall = useAsyncLockedMethod(async (...args) => {
+    const { keepLast = false } = options;
+
+    const baseMethod = async (...args) => {
         state.status = "loading";
         state.result = null;
         state.lastArgs = args;
@@ -137,7 +141,16 @@ export function useTrackedAsync(asyncFn) {
             state.status = "error";
             state.result = error;
         }
-    });
+    };
+
+    let call;
+    if (keepLast) {
+        const keepLastInstance = new KeepLast();
+        call = (...args) => keepLastInstance.add(baseMethod(...args));
+    } else {
+        call = useAsyncLockedMethod(baseMethod);
+    }
+
     return {
         get status() {
             return state.status;
@@ -148,7 +161,7 @@ export function useTrackedAsync(asyncFn) {
         get lastArgs() {
             return state.lastArgs;
         },
-        call: lockedCall,
+        call,
     };
 }
 
