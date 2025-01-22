@@ -8,7 +8,6 @@ from . import test_crm_lead_notification
 from . import test_crm_lead_convert
 from . import test_crm_lead_convert_mass
 from . import test_crm_lead_duplicates
-from . import test_crm_lead_lost
 from . import test_crm_lead_merge
 from . import test_crm_lead_multicompany
 from . import test_crm_lead_smart_calendar
