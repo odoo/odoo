@@ -59,6 +59,11 @@ class SaleOrder(models.Model):
             order_amount = sum(order.sudo().pos_order_line_ids.filtered(lambda pol: pol.sale_order_line_id.is_downpayment).mapped('price_subtotal_incl'))
             order.amount_to_invoice -= order_amount
 
+    def get_pos_sale_order(self, config_id):
+        return {
+            'sale.order': self.read(self._load_pos_data_fields(config_id), load=False),
+            'sale.order.line': self.order_line._process_pos_sale_order_line(config_id),
+        }
 
 class SaleOrderLine(models.Model):
     _name = 'sale.order.line'
@@ -93,35 +98,19 @@ class SaleOrderLine(models.Model):
     def _get_sale_order_fields(self):
         return ["product_id", "display_name", "price_unit", "product_uom_qty", "tax_id", "qty_delivered", "qty_invoiced", "discount", "qty_to_invoice", "price_total", "is_downpayment"]
 
-    def read_converted(self):
-        field_names = self._get_sale_order_fields()
-        results = []
+    def _process_pos_sale_order_line(self, config_id):
+        fields = set(self._load_pos_data_fields(config_id))
+        lot_name_by_sale_order_line = {}
+        sale_lines = self.read(fields, load=False)
+
         for sale_line in self:
-            if sale_line.product_type or (sale_line.is_downpayment and sale_line.price_unit != 0):
-                product_uom = sale_line.product_id.uom_id
-                sale_line_uom = sale_line.product_uom
-                item = sale_line.read(field_names, load=False)[0]
-                if sale_line.product_id.tracking != 'none':
-                    item['lot_names'] = sale_line.move_ids.move_line_ids.lot_id.mapped('name')
-                if product_uom == sale_line_uom:
-                    results.append(item)
-                    continue
-                item['product_uom_qty'] = self._convert_qty(sale_line, item['product_uom_qty'], 's2p')
-                item['qty_delivered'] = self._convert_qty(sale_line, item['qty_delivered'], 's2p')
-                item['qty_invoiced'] = self._convert_qty(sale_line, item['qty_invoiced'], 's2p')
-                item['qty_to_invoice'] = self._convert_qty(sale_line, item['qty_to_invoice'], 's2p')
-                item['price_unit'] = sale_line_uom._compute_price(item['price_unit'], product_uom)
-                results.append(item)
+            lot_name_by_sale_order_line[sale_line.id] = sale_line.move_ids.move_line_ids.lot_id.mapped('name')
 
-            elif sale_line.display_type == 'line_note':
-                if results:
-                    if results[-1].get('customer_note'):
-                        results[-1]['customer_note'] += "--" + sale_line.name
-                    else:
-                        results[-1]['customer_note'] = sale_line.name
+        for sale_line in sale_lines:
+            id = sale_line['id']
+            sale_line['lot_names'] = lot_name_by_sale_order_line[id]
 
-
-        return results
+        return sale_lines
 
     @api.model
     def _convert_qty(self, sale_line, qty, direction):

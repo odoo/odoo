@@ -16,7 +16,6 @@ import { OpeningControlPopup } from "@point_of_sale/app/store/opening_control_po
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
-import { EditListPopup } from "@point_of_sale/app/store/select_lot_popup/select_lot_popup";
 import { ProductConfiguratorPopup } from "./product_configurator_popup/product_configurator_popup";
 import { ComboConfiguratorPopup } from "./combo_configurator_popup/combo_configurator_popup";
 import {
@@ -36,6 +35,7 @@ import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { CashMovePopup } from "@point_of_sale/app/navbar/cash_move_popup/cash_move_popup";
 import { ClosePosPopup } from "../navbar/closing_popup/closing_popup";
 import { user } from "@web/core/user";
+import { SelectLotPopup } from "@pos_sale/overrides/components/select_lot_popup/select_lot_popup";
 
 const { DateTime } = luxon;
 
@@ -929,33 +929,15 @@ export class PosStore extends Reactive {
         // This actions cannot be handled inside pos_order.js or pos_order_line.js
         const code = opts.code;
         if (values.product_id.isTracked() && (configure || code)) {
-            let pack_lot_ids = {};
-            const packLotLinesToEdit =
-                (!values.product_id.isAllowOnlyOneLot() &&
-                    this.get_order()
-                        .get_orderlines()
-                        .filter((line) => !line.get_discount())
-                        .find((line) => line.product_id.id === values.product_id.id)
-                        ?.getPackLotLinesToEdit()) ||
-                [];
+            const result = await this.editLots(values.product_id);
 
-            // if the lot information exists in the barcode, we don't need to ask it from the user.
-            if (code && code.type === "lot") {
-                // consider the old and new packlot lines
-                const modifiedPackLotLines = Object.fromEntries(
-                    packLotLinesToEdit.filter((item) => item.id).map((item) => [item.id, item.text])
-                );
-                const newPackLotLines = [{ lot_name: code.code }];
-                pack_lot_ids = { modifiedPackLotLines, newPackLotLines };
-            } else {
-                pack_lot_ids = await this.editLots(values.product_id, packLotLinesToEdit);
-            }
-
-            if (!pack_lot_ids) {
-                return;
-            } else {
-                const packLotLine = pack_lot_ids.newPackLotLines;
-                values.pack_lot_ids = packLotLine.map((lot) => ["create", lot]);
+            if (result) {
+                values.pack_lot_ids = result.map((lot) => [
+                    "create",
+                    {
+                        lot_name: lot.name,
+                    },
+                ]);
             }
         }
 
@@ -1011,12 +993,6 @@ export class PosStore extends Reactive {
             this.numberBuffer.reset();
         }
         const selectedOrderline = order.get_selected_orderline();
-        if (options.draftPackLotLines && configure) {
-            selectedOrderline.setPackLotLines({
-                ...options.draftPackLotLines,
-                setQuantity: options.quantity === undefined,
-            });
-        }
 
         let to_merge_orderline;
         for (const curLine of order.lines) {
@@ -1970,8 +1946,7 @@ export class PosStore extends Reactive {
 
         return currentPartner;
     }
-    async editLots(product, packLotLinesToEdit) {
-        const isAllowOnlyOneLot = product.isAllowOnlyOneLot();
+    async editLots(product, line) {
         let canCreateLots = this.pickingType.use_create_lots || !this.pickingType.use_existing_lots;
 
         let existingLots = [];
@@ -2011,59 +1986,51 @@ export class PosStore extends Reactive {
             canCreateLots = true;
         }
 
-        const usedLotsQty = this.models["pos.pack.operation.lot"]
-            .filter(
-                (lot) =>
-                    lot.pos_order_line_id?.product_id?.id === product.id &&
-                    lot.pos_order_line_id?.order_id?.state === "draft"
-            )
-            .reduce((acc, lot) => {
-                if (!acc[lot.lot_name]) {
-                    acc[lot.lot_name] = { total: 0, currentOrderCount: 0 };
+        const availableLots = [];
+        const draftLineWithLot = this.get_open_orders()
+            .flatMap((o) => o.lines)
+            .filter((l) => l.product_id.id === product.id && l.pack_lot_ids.length);
+
+        if (draftLineWithLot.length) {
+            for (const lot of existingLots) {
+                const qty = draftLineWithLot
+                    .filter((line) => line.pack_lot_ids.some((l) => l.lot_name === lot.lot_name))
+                    .reduce((acc, line) => acc + line.quantity, 0);
+                if (qty < lot.product_qty) {
+                    availableLots.push(lot);
                 }
-                acc[lot.lot_name].total += lot.pos_order_line_id?.qty || 0;
+            }
+        } else {
+            availableLots.push(...existingLots);
+        }
 
-                if (lot.pos_order_line_id?.order_id?.id === this.selectedOrder.id) {
-                    acc[lot.lot_name].currentOrderCount += lot.pos_order_line_id?.qty || 0;
-                }
-                return acc;
-            }, {});
-
-        // Remove lot/serial names that are already used in draft orders
-        existingLots = existingLots.filter((lot) => {
-            return lot.product_qty > (usedLotsQty[lot.name]?.total || 0);
-        });
-
-        // Check if the input lot/serial name is already used in another order
-        const isLotNameUsed = (itemValue) => {
-            const totalQty = existingLots.find((lt) => lt.name == itemValue)?.product_qty || 0;
-            const usedQty = usedLotsQty[itemValue]
-                ? usedLotsQty[itemValue].total - usedLotsQty[itemValue].currentOrderCount
-                : 0;
-            return usedQty ? usedQty >= totalQty : false;
-        };
-
-        const existingLotsName = existingLots.map((l) => l.name);
-        const payload = await makeAwaitable(this.dialog, EditListPopup, {
-            title: _t("Lot/Serial Number(s) Required"),
-            name: product.display_name,
-            isSingleItem: isAllowOnlyOneLot,
-            array: packLotLinesToEdit,
-            options: existingLotsName,
-            customInput: canCreateLots,
-            uniqueValues: product.tracking === "serial",
-            isLotNameUsed: isLotNameUsed,
+        const payload = await makeAwaitable(this.dialog, SelectLotPopup, {
+            availableLots,
+            product: product,
+            line: line,
         });
         if (payload) {
-            // Segregate the old and new packlot lines
-            const modifiedPackLotLines = Object.fromEntries(
-                payload.filter((item) => item.id).map((item) => [item.id, item.text])
-            );
-            const newPackLotLines = payload
-                .filter((item) => !item.id)
-                .map((item) => ({ lot_name: item.text }));
+            if (line) {
+                const selectedName = Object.values(payload).map((lot) => lot.name);
+                const existingName = line.pack_lot_ids.map((lot) => lot.lot_name) || [];
+                const toDelete = line.pack_lot_ids.filter(
+                    (lot) => !selectedName.includes(lot.lot_name)
+                );
+                this.models["pos.pack.operation.lot"].deleteMany(toDelete);
 
-            return { modifiedPackLotLines, newPackLotLines };
+                for (const lot of Object.values(payload)) {
+                    if (existingName.includes(lot.name)) {
+                        continue;
+                    }
+
+                    this.models["pos.pack.operation.lot"].create({
+                        lot_name: lot.name,
+                        pos_order_line_id: line,
+                    });
+                }
+            } else {
+                return Object.values(payload);
+            }
         } else {
             return null;
         }

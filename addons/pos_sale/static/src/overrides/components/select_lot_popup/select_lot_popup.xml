@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_sale.SelectLotPopup">
+        <Dialog title="dialogTitle">
+            <div class="o-lot-container">
+                <div class="w-100 position-relative mb-2" t-foreach="nbrLot" t-as="nbr" t-key="nbr_index">
+                    <input type="text"
+                        class="form-control"
+                        placeholder="Lot Name"
+                        t-att-value="this.state.selectedLot[nbr_index]?.name || ''"
+                        t-on-input="(e) => this.inputChange(e)"
+                        t-on-focus="() => this.inputFocus(nbr_index)"
+                        t-on-blur="() => this.inputBlur(nbr_index)" />
+                    <t t-set="lots" t-value="this.availableLots" />
+                    <div class="lot-selection w-100 position-absolute bg-white border d-none cursor-pointer"
+                        t-att-id="`lot-selection-${nbr_index}`"
+                        t-if="lots.length">
+                        <div t-foreach="lots"
+                            t-as="lot" t-key="lot.name"
+                            class="w-100 px-2 py-1"
+                            t-on-click="() => this.state.selectedLot[nbr_index] = lot"
+                            t-esc="lot.name"/>
+                    </div>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-secondary o-default-button" t-on-click="this.props.close">Cancel</button>
+                <button class="btn btn-primary o-default-button" t-on-click="confirm">Confirm</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

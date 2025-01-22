@@ -68,8 +68,11 @@ patch(PosStore.prototype, {
         this.selectOrderLine(this.get_order(), this.get_order().lines.at(-1));
     },
     async _getSaleOrder(id) {
-        const sale_order = (await this.data.read("sale.order", [id]))[0];
-        return sale_order;
+        const result = await this.data.callRelated("sale.order", "get_pos_sale_order", [
+            [id],
+            this.config.id,
+        ]);
+        return result["sale.order"]?.[0];
     },
     async settleSO(sale_order, orderFiscalPos) {
         if (sale_order.pricelist_id) {
@@ -116,7 +119,7 @@ patch(PosStore.prototype, {
             if (
                 newLine.get_product().tracking !== "none" &&
                 (this.pickingType.use_create_lots || this.pickingType.use_existing_lots) &&
-                line.pack_lot_ids?.length > 0
+                line.raw.lot_names?.length
             ) {
                 if (!useLoadedLots && !userWasAskedAboutLoadedLots) {
                     useLoadedLots = await ask(this.dialog, {
@@ -126,12 +129,12 @@ patch(PosStore.prototype, {
                     userWasAskedAboutLoadedLots = true;
                 }
                 if (useLoadedLots) {
-                    newLine.setPackLotLines({
-                        modifiedPackLotLines: [],
-                        newPackLotLines: (line.lot_names || []).map((name) => ({
+                    for (const name of line.raw.lot_names) {
+                        this.models["pos.pack.operation.lot"].create({
+                            pos_order_line_id: newLine,
                             lot_name: name,
-                        })),
-                    });
+                        });
+                    }
                 }
             }
 

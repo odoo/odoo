@@ -113,21 +113,7 @@ export class PosOrderline extends Base {
     }
 
     getPackLotLinesToEdit(isAllowOnlyOneLot) {
-        const currentPackLotLines = this.pack_lot_ids;
-        let nExtraLines = Math.abs(this.qty) - currentPackLotLines.length;
-        nExtraLines = Math.ceil(nExtraLines);
-        nExtraLines = nExtraLines > 0 ? nExtraLines : 1;
-        const tempLines = currentPackLotLines
-            .map((lotLine) => ({
-                id: lotLine.id,
-                text: lotLine.lot_name,
-            }))
-            .concat(
-                Array.from(Array(nExtraLines)).map((_) => ({
-                    text: "",
-                }))
-            );
-        return isAllowOnlyOneLot ? [tempLines[0]] : tempLines;
+        return [];
     }
 
     // What if a number different from 1 (or -1) is specified
@@ -677,9 +663,7 @@ export class PosOrderline extends Base {
 
     // FIXME all below should be removed
     get_valid_lots() {
-        return this.pack_lot_ids.filter((item) => {
-            return item.lot_name;
-        });
+        return this.pack_lot_ids.filter((item) => item.lot_name);
     }
     // FIXME what is the use of this ?
     updateSavedQuantity() {
