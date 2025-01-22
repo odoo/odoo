@@ -177,7 +177,7 @@ class Monetary(Field[float]):
     falsy_value = 0.0
 
     currency_field = None
-    aggregator = 'sum'
+    aggregator = 'same_unit_sum'
 
     def __init__(self, string: str | Sentinel = SENTINEL, currency_field: str | Sentinel = SENTINEL, **kwargs):
         super(Monetary, self).__init__(string=string, currency_field=currency_field, **kwargs)
