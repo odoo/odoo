@@ -377,20 +377,3 @@ class PosConfig(models.Model):
             'module_pos_restaurant': True,
             'self_ordering_mode': 'kiosk',
         })
-
-    @api.model
-    def load_onboarding_restaurant_scenario(self, with_demo_data=True):
-        res = super().load_onboarding_restaurant_scenario(with_demo_data)
-        preset_ids = self.get_record_by_ref([
-            'pos_restaurant.pos_takein_preset',
-            'pos_restaurant.pos_takeout_preset',
-            'pos_restaurant.pos_delivery_preset',
-        ])
-        presets = self.env['pos.preset'].browse(preset_ids)
-        stack = ['table', 'counter', 'delivery']
-        for preset in presets:
-            preset.write({
-                'available_in_self': True,
-                'service_at': stack.pop(0),
-            })
-        return res
