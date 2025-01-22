@@ -19,11 +19,10 @@ class StockRequestCount(models.TransientModel):
 
     def action_request_count(self):
         for count_request in self:
-            quants_to_count = count_request._get_quants_to_count()
             if count_request.set_count == 'set':
-                quants_to_count.filtered(lambda q: not q.inventory_quantity_set).action_set_inventory_quantity()
-            values = count_request._get_values_to_write()
-            quants_to_count.with_context(inventory_mode=True).write(values)
+                count_request.quant_ids.filtered(lambda q: not q.inventory_quantity_set).action_set_inventory_quantity()
+            count_request.quant_ids.with_context(inventory_mode=True).write(
+                count_request._get_values_to_write())
 
     def _get_quants_to_count(self):
         self.ensure_one()
