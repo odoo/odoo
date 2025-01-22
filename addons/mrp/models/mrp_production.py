@@ -595,7 +595,7 @@ class MrpProduction(models.Model):
                             'workcenter_id': operation.workcenter_id.id,
                             'product_uom_id': production.product_uom_id.id,
                             'operation_id': operation.id,
-                            'state': 'pending',
+                            'state': 'ready',
                         }]
                 workorders_dict = {wo.operation_id.id: wo for wo in production.workorder_ids.filtered(
                     lambda wo: wo.operation_id and wo.ids and wo.id not in deleted_workorders_ids)}
@@ -1545,7 +1545,7 @@ class MrpProduction(models.Model):
         """ Plan all the production's workorders depending on the workcenters
         work schedule.
 
-        :param replan: If it is a replan, only ready and pending workorder will be taken into account
+        :param replan: If it is a replan, only ready and blocked workorder will be taken into account
         :type replan: bool.
         """
         self.ensure_one()
@@ -1566,8 +1566,8 @@ class MrpProduction(models.Model):
             return
 
         self.with_context(force_date=True).write({
-            'date_start': min([workorder.leave_id.date_from for workorder in workorders]),
-            'date_finished': max([workorder.leave_id.date_to for workorder in workorders])
+            'date_start': min((workorder.leave_id.date_from for workorder in workorders if workorder.leave_id), default=None),
+            'date_finished': max((workorder.leave_id.date_to for workorder in workorders if workorder.leave_id), default=None),
         })
 
     def button_unplan(self):
@@ -1755,7 +1755,9 @@ class MrpProduction(models.Model):
             for workorder in order.workorder_ids:
                 if workorder.state not in ('done', 'cancel'):
                     workorder.duration_expected = workorder._get_duration_expected()
-                if workorder.duration == 0.0:
+                if workorder.state == 'cancel':
+                    workorder.duration = 0.0
+                elif workorder.duration == 0.0:
                     workorder.duration = workorder.duration_expected
                     workorder.duration_unit = round(workorder.duration / max(workorder.qty_produced, 1), 2)
             order._cal_price(moves_to_do_by_order[order.id])
@@ -2490,7 +2492,7 @@ class MrpProduction(models.Model):
                 'operation_id': operation.id,
                 'product_uom_id': self.product_uom_id.id,
                 'production_id': self.id,
-                'state': 'pending',
+                'state': 'blocked',
                 'workcenter_id': operation.workcenter_id.id,
             }
             workorders_values.append(workorder_vals)

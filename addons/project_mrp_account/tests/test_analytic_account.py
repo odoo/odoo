@@ -146,27 +146,23 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         self.assertEqual(len(mo.workorder_ids.wc_analytic_account_line_ids), 0)
 
         # change duration to 60
-        mo_form = Form(mo)
-        with mo_form.workorder_ids.edit(0) as line_edit:
-            line_edit.duration = 60.0
-        mo_form.save()
+        mo.workorder_ids[0].duration = 60.0
         self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids.amount, -10.0)
         self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids[self.analytic_plan._column_name()], self.analytic_account)
         self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids.amount, -10.0)
         self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids[analytic_plan._column_name()], wc_analytic_account)
 
         # change duration to 120
-        with mo_form.workorder_ids.edit(0) as line_edit:
-            line_edit.duration = 120.0
-        mo_form.save()
+        mo.workorder_ids[0].duration = 120.0
         self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids.amount, -20.0)
         self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids[self.analytic_plan._column_name()], self.analytic_account)
         self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids.amount, -20.0)
         self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids[analytic_plan._column_name()], wc_analytic_account)
 
         # mark as done
-        mo_form.qty_producing = 10.0
-        mo_form.save()
+
+        mo.qty_producing = 10.0
+        mo.set_qty_producing()
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
         self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids.amount, -20.0)
@@ -193,10 +189,7 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         self.assertEqual(len(mo.workorder_ids.mo_analytic_account_line_ids), 0)
 
         # Change duration to 60
-        mo_form = Form(mo)
-        with mo_form.workorder_ids.edit(0) as line_edit:
-            line_edit.duration = 60.0
-        mo_form.save()
+        mo.workorder_ids[0].duration = 60.0
         self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids[self.analytic_plan._column_name()], self.analytic_account)
 
         # Mark as done

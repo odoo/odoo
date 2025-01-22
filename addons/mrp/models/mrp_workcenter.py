@@ -47,9 +47,9 @@ class MrpWorkcenter(models.Model):
     has_routing_lines = fields.Boolean(compute='_compute_has_routing_lines', help='Technical field for workcenter views')
     order_ids = fields.One2many('mrp.workorder', 'workcenter_id', "Orders")
     workorder_count = fields.Integer('# Work Orders', compute='_compute_workorder_count')
-    workorder_ready_count = fields.Integer('# Ready Work Orders', compute='_compute_workorder_count')
+    workorder_ready_count = fields.Integer('# To Do Work Orders', compute='_compute_workorder_count')
     workorder_progress_count = fields.Integer('Total Running Orders', compute='_compute_workorder_count')
-    workorder_pending_count = fields.Integer('Total Pending Orders', compute='_compute_workorder_count')
+    workorder_blocked_count = fields.Integer('Total Pending Orders', compute='_compute_workorder_count')
     workorder_late_count = fields.Integer('Total Late Orders', compute='_compute_workorder_count')
 
     time_ids = fields.One2many('mrp.workcenter.productivity', 'workcenter_id', 'Time Logs')
@@ -165,7 +165,7 @@ class MrpWorkcenter(models.Model):
         result_duration_expected = {wid: 0 for wid in self._ids}
         # Count Late Workorder
         data = MrpWorkorder._read_group(
-            [('workcenter_id', 'in', self.ids), ('state', 'in', ('pending', 'waiting', 'ready')), ('date_start', '<', datetime.now().strftime('%Y-%m-%d'))],
+            [('workcenter_id', 'in', self.ids), ('state', 'in', ('blocked', 'ready')), ('date_start', '<', datetime.now().strftime('%Y-%m-%d'))],
             ['workcenter_id'], ['__count'])
         count_data = {workcenter.id: count for workcenter, count in data}
         # Count All, Pending, Ready, Progress Workorder
@@ -174,11 +174,11 @@ class MrpWorkcenter(models.Model):
             ['workcenter_id', 'state'], ['duration_expected:sum', '__count'])
         for workcenter, state, duration_sum, count in res:
             result[workcenter.id][state] = count
-            if state in ('pending', 'waiting', 'ready', 'progress'):
+            if state in ('blocked', 'ready', 'progress'):
                 result_duration_expected[workcenter.id] += duration_sum
         for workcenter in self:
             workcenter.workorder_count = sum(count for state, count in result[workcenter.id].items() if state not in ('done', 'cancel'))
-            workcenter.workorder_pending_count = result[workcenter.id].get('pending', 0)
+            workcenter.workorder_blocked_count = result[workcenter.id].get('blocked', 0)
             workcenter.workcenter_load = result_duration_expected[workcenter.id]
             workcenter.workorder_ready_count = result[workcenter.id].get('ready', 0)
             workcenter.workorder_progress_count = result[workcenter.id].get('progress', 0)
