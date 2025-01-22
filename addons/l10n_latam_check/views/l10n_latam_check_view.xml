@@ -14,7 +14,7 @@
                 <separator/>
                 <filter string="Payment Date" name="payment_date" date="payment_date"/>
                 <separator/>
-                <filter string="On hand" name="checks_on_hand" domain="[('issue_state', '=', 'handed')]"/>
+                <filter string="Handed" name="checks_on_hand" domain="[('issue_state', '=', 'handed')]"/>
                 <filter string="Voided" name="checks_voided" domain="[('issue_state', '=', 'voided')]"/>
                 <filter string="Debited" name="checks_debited" domain="[('issue_state', '=', 'debited')]"/>
                 <separator/>
@@ -40,7 +40,7 @@
             <filter name="checks_on_hand" position="replace"/>
             <filter name="checks_voided" position="replace"/>
             <filter name="checks_debited" position="replace">
-                <filter string="Checks on hand" name="checks_on_hand"
+                <filter string="On hand" name="checks_on_hand"
                     domain="[('current_journal_id.inbound_payment_method_line_ids.payment_method_id.code', '=', 'in_third_party_checks')]"/>
             </filter>
             <field name="original_journal_id" position="before">
@@ -150,7 +150,7 @@
         <field name="model">l10n_latam.check</field>
         <field name="priority">100</field>
         <field name="arch" type="xml">
-            <list edit="false" create="false" delete="false" duplicate="false" sample="1" decoration-info="issue_state == 'handed'" decoration-muted="issue_state == 'voided'">
+            <list edit="false" create="false" delete="false" duplicate="false" sample="1" decoration-info="issue_state == 'handed'" decoration-muted="issue_state in ('voided','debited')">
                     <header>
                     </header>
                     <field name="payment_date" optional="show"/>
@@ -161,7 +161,7 @@
                     <field name="partner_id" string="Customer"/>
                     <field name="amount"  optional="show"/>
                     <field name="currency_id" string="Payment Currency" optional="hide"/>
-                    <field name="issue_state" widget="badge" decoration-info="issue_state == 'handed'"  decoration-muted="issue_state == 'voided'" decoration-success="issue_state == 'debited'"/>
+                    <field name="issue_state" widget="badge" decoration-info="issue_state == 'handed'"  decoration-muted="issue_state in ('voided','debited')"/>
             </list>
         </field>
     </record>
