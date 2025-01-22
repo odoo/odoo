@@ -20,7 +20,7 @@ class MailActivitySchedule(models.TransientModel):
             if not scheduler.department_id:
                 final_domain = expression.AND([base_domain, [('department_id', '=', False)]])
             else:
-                final_domain = expression.AND([base_domain, ['|', ('department_id', '=', False), ('department_id', '=', self.department_id.id)]])
+                final_domain = expression.AND([base_domain, ['|', ('department_id', '=', False), ('department_id', '=', scheduler.department_id.id)]])
             scheduler.plan_available_ids = self.env['mail.activity.plan'].search(final_domain)
         super(MailActivitySchedule, self - todo)._compute_plan_available_ids()
 
