@@ -36,6 +36,47 @@ class StockQuant(models.Model):
                 or (quant.company_id or self.env.company).cost_method
             )
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        if any(val.get('accounting_date') for val in vals_list):
+            return super().create(vals_list)
+
+        product_ids = {val["product_id"] for val in vals_list}
+
+        tracked_products = self.env["product.product"].search([
+            ("id", "in", product_ids),
+            ("tracking", "in", ["lot", "serial"])
+        ])
+        tracked_product_ids = set(tracked_products.ids)
+
+        tracked_quants = [q for q in vals_list if q["product_id"] in tracked_product_ids]
+        untracked_quants = [q for q in vals_list if q["product_id"] not in tracked_product_ids]
+
+        if tracked_quants:
+            tracked_product_ids = {q["product_id"] for q in tracked_quants}
+            location_ids = {q["location_id"] for q in tracked_quants}
+
+            domain = [
+                ('product_id', 'in', list(tracked_product_ids)),
+                ('location_id', 'in', list(location_ids)),
+                ('accounting_date', '<', fields.Date.today()),
+            ]
+            query = self._search(domain, order='accounting_date desc')
+            nearest_date_quants = self.env.execute_query(
+                query.select('product_id', 'location_id', 'accounting_date')
+            )
+
+            latest_accounting_dates = {}
+            for product_id, location_id, accounting_date in nearest_date_quants:
+                key = (product_id, location_id)
+                latest_accounting_dates[key] = max(latest_accounting_dates.get(key, accounting_date), accounting_date)
+
+            for quant in tracked_quants:
+                key = (quant["product_id"], quant["location_id"])
+                if key in latest_accounting_dates:
+                    quant["accounting_date"] = latest_accounting_dates[key]
+        return super().create(tracked_quants + untracked_quants)
+
     @api.model
     def _should_exclude_for_valuation(self):
         """
