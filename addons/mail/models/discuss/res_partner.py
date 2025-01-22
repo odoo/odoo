@@ -97,8 +97,7 @@ class ResPartner(models.Model):
             ]
         )
         store = Store(members, fields={"channel": [], "persona": []})
-        for p in partners:
-            store.add(p,{
-                "groups_id": [("ADD", next((group.id for group in p.user_ids.groups_id if group.id == channel.group_public_id.id), None))]
-            })
+        if channel.group_public_id:
+            for p in partners:
+                store.add(p, {"groups_id": [("ADD", (channel.group_public_id & p.user_ids.groups_id).ids)]})
         return store.get_result()
