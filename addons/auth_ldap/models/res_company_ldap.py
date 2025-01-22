@@ -258,16 +258,13 @@ class ResCompanyLdap(models.Model):
             'ldap_tls': self.ldap_tls
         }
 
+        bind_dn = self.ldap_binddn or ''
+        bind_passwd = self.ldap_password or ''
+
         try:
             conn = self._connect(conf)
-            bind_dn = str(self.ldap_binddn) if self.ldap_binddn else ''
-            bind_passwd = str(self.ldap_password) if self.ldap_password else ''
-
             conn.simple_bind_s(bind_dn, bind_passwd)
             conn.unbind()
-
-            _logger.info("LDAP connection test successful for server %s at port %d.",
-                         self.ldap_server, self.ldap_server_port)
 
             return {
                 'type': 'ir.actions.client',
@@ -282,8 +279,6 @@ class ResCompanyLdap(models.Model):
             }
 
         except ldap.SERVER_DOWN:
-            _logger.error("LDAP connection test failed: cannot contact LDAP server at %s:%d",
-                          self.ldap_server, self.ldap_server_port)
             return {
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
@@ -297,8 +292,6 @@ class ResCompanyLdap(models.Model):
             }
 
         except ldap.INVALID_CREDENTIALS:
-            _logger.error("LDAP connection test failed: invalid credentials for bind DN %s",
-                          self.ldap_binddn)
             return {
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
@@ -312,8 +305,6 @@ class ResCompanyLdap(models.Model):
             }
 
         except ldap.TIMEOUT:
-            _logger.error("LDAP connection test failed: connection to server %s at port %d timed out.",
-                          self.ldap_server, self.ldap_server_port)
             return {
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
@@ -327,7 +318,6 @@ class ResCompanyLdap(models.Model):
             }
 
         except ldap.LDAPError as e:
-            _logger.error('LDAP connection test failed: %s', e)
             return {
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
@@ -335,7 +325,7 @@ class ResCompanyLdap(models.Model):
                     'type': 'danger',
                     'title': _('Connection Test Failed!'),
                     'message': _("An error occurred: %(error)s",
-                                 error=str(e)),
+                                 error=e),
                     'sticky': False,
                 }
             }
