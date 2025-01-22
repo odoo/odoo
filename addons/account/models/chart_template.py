@@ -163,9 +163,50 @@ class AccountChartTemplate(models.AbstractModel):
         :param install_demo: whether or not we should load demo data right after loading the
             chart template.
         """
+<<<<<<< 17.0
         # Ensure that the context is the correct one, even if not called by try_loading
         if not self.env.is_system():
             raise AccessError(_("Only administrators can install chart templates"))
+||||||| 9f4722b3eb8005ba4b40a41f0463c4eb01a8ddde
+        # do not use `request.env` here, it can cause deadlocks
+        if not company:
+            if request and hasattr(request, 'allowed_company_ids'):
+                company = self.env['res.company'].browse(request.allowed_company_ids[0])
+            else:
+                company = self.env.company
+        # If we don't have any chart of account on this company, install this chart of account
+        if not company.chart_template_id and not self.existing_accounting(company):
+            for template in self:
+                template.with_context(default_company_id=company.id)._load(company)
+            # Install the demo data when the first localization is instanciated on the company
+            if install_demo and self.env.ref('base.module_account').demo:
+                self.with_context(
+                    default_company_id=company.id,
+                    allowed_company_ids=[company.id],
+                )._create_demo_data()
+=======
+        # do not use `request.env` here, it can cause deadlocks
+        if not company:
+            if request and hasattr(request, 'allowed_company_ids'):
+                company = self.env['res.company'].browse(request.allowed_company_ids[0])
+            elif self.country_id:
+                company = self.env.company
+                company_countries = company.country_id + company.account_fiscal_country_id
+                if company_countries and self.country_id not in company_countries:
+                    return
+            else:
+                company = self.env.company
+        # If we don't have any chart of account on this company, install this chart of account
+        if not company.chart_template_id and not self.existing_accounting(company):
+            for template in self:
+                template.with_context(default_company_id=company.id)._load(company)
+            # Install the demo data when the first localization is instanciated on the company
+            if install_demo and self.env.ref('base.module_account').demo:
+                self.with_context(
+                    default_company_id=company.id,
+                    allowed_company_ids=[company.id],
+                )._create_demo_data()
+>>>>>>> 133636b9f37f1c8b2602a927753036bebe092d91
 
         chart_template_mapping = self._get_chart_template_mapping()[template_code]
         if not company.country_id:
