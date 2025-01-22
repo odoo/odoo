@@ -606,19 +606,24 @@ class TestCrmPlsSides(CrmPlsCommon):
                 'team_id': team_id,
             }
         ])
+        self.assertEqual(lead.won_status, 'pending')
 
-        # Probability 100 is not a sufficient condition to win the lead
+        # Probability 100 is a sufficient condition to win the lead (but should not)
         lead.write({'probability': 100})
+        self.assertEqual(lead.won_status, 'won')
 
         # Test won validity
         lead.write({'probability': 90})
+        self.assertEqual(lead.won_status, 'pending')
         lead.action_set_won()
         self.assertEqual(lead.probability, 100)
         self.assertTrue(lead.stage_id.is_won)
+        self.assertEqual(lead.won_status, 'won')
 
-        # Won lead can be inactive
+        # Won lead cannot be inactive (but should)
         lead.write({'active': False})
         self.assertEqual(lead.probability, 100)
+        self.assertEqual(lead.won_status, 'pending')
         lead.write({'probability': 75})
         self.assertEqual(lead.probability, 75)
 

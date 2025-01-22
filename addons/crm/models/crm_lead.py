@@ -218,6 +218,12 @@ class CrmLead(models.Model):
     automated_probability = fields.Float('Automated Probability', compute='_compute_probabilities', readonly=True, store=True)
     is_automated_probability = fields.Boolean('Is automated probability?', compute="_compute_is_automated_probability")
     # Won/Lost
+    won_status = fields.Selection(
+        [
+            ('won', 'Won'),
+            ('lost', 'Lost'),
+            ('pending', 'Pending'),
+        ], string='Is Won', compute='_compute_won_status', store=True)
     lost_reason_id = fields.Many2one(
         'crm.lost.reason', string='Lost Reason',
         index=True, ondelete='restrict', tracking=True)
@@ -526,6 +532,16 @@ class CrmLead(models.Model):
             else:
                 lead.meeting_display_date = lead_meeting_info['last_meeting_date']
                 lead.meeting_display_label = _('Last Meeting')
+
+    @api.depends('active', 'probability')
+    def _compute_won_status(self):
+        for lead in self:
+            if lead.active and lead.probability == 100:
+                lead.won_status = 'won'
+            elif not lead.active and lead.probability == 0:
+                lead.won_status = 'lost'
+            else:
+                lead.won_status = 'pending'
 
     @api.depends('email_domain_criterion', 'email_normalized', 'partner_id',
                  'phone_sanitized')
