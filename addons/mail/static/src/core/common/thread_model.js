@@ -174,7 +174,11 @@ export class Thread extends Record {
      *
      * Content should be fetched and inserted in a controlled way.
      */
-    messages = Record.many("mail.message");
+    messages = Record.many("mail.message", {
+        onUpdate() {
+            this.oldestPersistentMessage = this.messages.find((msg) => Number.isInteger(msg.id));
+        },
+    });
     /** @type {string} */
     modelName;
     /** @type {string} */
@@ -362,11 +366,8 @@ export class Thread extends Record {
             return this.newestPersistentAllMessages[0];
         },
     });
-
-    get oldestPersistentMessage() {
-        return this.messages.find((msg) => Number.isInteger(msg.id));
-    }
-
+    oldestPersistentMessage = Record.one("mail.message");
+    message_counter = 0;
     onPinStateUpdated() {}
 
     get invitationLink() {

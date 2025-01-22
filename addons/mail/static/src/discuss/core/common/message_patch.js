@@ -10,5 +10,8 @@ const messagePatch = {
     get showSeenIndicator() {
         return this.props.message.isSelfAuthored && this.props.thread?.hasSeenFeature;
     },
+    openSubChannel() {
+        this.props.message.linkedSubChannel.open();
+    },
 };
 patch(Message.prototype, messagePatch);

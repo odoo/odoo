@@ -80,6 +80,18 @@ class DiscussChannel(models.Model):
         help="Members of those groups will automatically added as followers. "
              "Note that they will be able to manage their subscription manually "
              "if necessary.")
+    oldestPersistentMessage = fields.One2many("mail.message", compute="_compute_oldest_persistent_message")
+    def _compute_oldest_persistent_message(self):
+        for channel in self:
+            last_message_id = channel.message_ids.sorted(lambda m: m.id).ids
+            message = self.env["mail.message"].browse(last_message_id[-1]) if last_message_id else None
+            channel.oldestPersistentMessage = message if message else None
+
+    message_counter = fields.Integer(string="Number of messages on the channel", compute="_compute_message_counter")
+    def _compute_message_counter(self):
+        for channel in self:
+            channel.message_counter = len(channel.message_ids)
+
     # access
     uuid = fields.Char('UUID', size=50, default=_generate_random_token, copy=False)
     group_public_id = fields.Many2one('res.groups', string='Authorized Group', compute='_compute_group_public_id', recursive=True, readonly=False, store=True)
@@ -994,6 +1006,8 @@ class DiscussChannel(models.Model):
             "last_interest_dt",
             "member_count",
             "name",
+            "message_counter",
+            Store.One("oldestPersistentMessage"),
             Store.One("parent_channel_id"),
             Store.Many("rtc_session_ids", mode="ADD", extra=True, rename="rtcSessions"),
             "uuid",

@@ -114,6 +114,15 @@
                                     imagesHeight="message.attachment_ids.length === 1 ? 300 : 75"
                                     messageSearch="props.messageSearch"/>
                                 <LinkPreviewList t-if="message.link_preview_ids.length > 0 and store.hasLinkPreviewFeature and !message.linkPreviewSquash" linkPreviews="message.link_preview_ids" deletable="props.message.editable"/>
+                                <div class="position-relative mb-2" t-if="props.message.linkedSubChannel and props.message.linkedSubChannel != props.thread" >
+                                    <svg class="position-absolute" xmlns="http://www.w3.org/2000/svg" width="10" height="20" viewBox="0 0 10 20">
+                                        <line x1="0" y1="3" x2="0" y2="100%" stroke="currentColor" stroke-width="3"/>
+                                        <line x1="0" y1="100%" x2="100%" y2="100%" stroke="currentColor" stroke-width="3"/>
+                                    </svg>
+                                    <div t-on-click="openSubChannel" class="cursor-pointer ms-4 mt-2 p-2 bg-200 rounded-2">
+                                        <t t-call="mail.MessageSubChannel"/>
+                                    </div>
+                                </div>
                             </div>
                             <t t-if="!message.is_note and !message.isPending and (!message.hasTextContent or env.inChatWindow)" t-call="mail.Message.actions"/>
                         </div>
@@ -225,6 +234,29 @@
 
 <t t-name="mail.Message.mentionedChannelIcon">
     <i t-att-class="icon"/>
+</t>
+
+<t t-name="mail.MessageSubChannel">
+    <t t-set="subChannelLastMessage" t-value="props.message.linkedSubChannel.oldestPersistentMessage"/>
+    <div>
+        <strong><t t-esc="props.message.linkedSubChannel.name"/></strong> - <t t-out="props.message.linkedSubChannel.message_counter"/> messages <span class="smaller"> <i class="fa fa-chevron-right"/></span>
+    </div>
+    <div t-if="subChannelLastMessage" class="overflow-hidden text-truncate" style="max-width: 700px">
+        <img class="o-mail-MessageInReply-avatar me-2 rounded o_object_fit_cover" t-att-src="subChannelLastMessage.author?.avatarUrl" t-att-title="subChannelLastMessage.author?.name ?? subChannelLastMessage.email_from" alt="Avatar"/>
+        <span>
+            <t t-out="subChannelLastMessage.author?.name"/>
+        </span>:
+        <span class="ms-1" >
+            <t t-if="!props.message.parentMessage.isBodyEmpty">
+                <t t-out="subChannelLastMessage.inlineBody"/>
+                <em t-if="subChannelLastMessage.edited" class="smaller fw-bold text-500"> (edited)</em>
+            </t>
+            <t t-elif="subChannelLastMessage.attachment_ids.length > 0">
+                <span class="me-2 fst-italic">Click to see the attachments</span>
+                <i class="fa fa-image"/>
+            </t>
+        </span>
+    </div>
 </t>
 
 </templates>

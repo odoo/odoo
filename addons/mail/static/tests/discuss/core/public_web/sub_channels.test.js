@@ -199,3 +199,23 @@ test("sub thread is available for channel and group, not for chat", async () => 
     await click(".o-mail-DiscussSidebarChannel", { text: "Demo" });
     await contains("button[title='Threads']", { count: 0 });
 });
+
+test("Show thread below message.", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+    });
+    const messageId = pyEnv["mail.message"].create({
+        model: "discuss.channel",
+        res_id: channelId,
+        body: "test",
+    });
+    pyEnv["discuss.channel"].create({
+        name: "ThreadOne",
+        parent_channel_id: channelId,
+        from_message_id: messageId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message-content div strong", { text: "ThreadOne" });
+});
