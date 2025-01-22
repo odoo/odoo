@@ -86,7 +86,10 @@ export class FormatPlugin extends Plugin {
             },
             {
                 id: "removeFormat",
-                title: _t("Remove Format"),
+                title: (sel, nodes) =>
+                    nodes && this.hasAnyFormat(nodes)
+                        ? _t("Remove Format")
+                        : _t("Selection has no format"),
                 icon: "fa-eraser",
                 run: this.removeFormat.bind(this),
             },
