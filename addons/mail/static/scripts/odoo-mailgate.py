@@ -12,9 +12,6 @@
 # while exim uses a syntax that looks like:
 #
 # *: |/home/odoo/src/odoo-mail.py
-#
-# Note python2 was chosen on purpose for backward compatibility with old mail
-# servers.
 
 # Dev Note exit codes should comply with https://www.unix.com/man-page/freebsd/3/sysexits/
 # see http://www.postfix.org/aliases.5.html, output may end up in bounce mails
@@ -31,11 +28,14 @@ EX_CONFIG = 78
 import sys
 try:
     import traceback
-    import xmlrpclib
+    try:
+        import xmlrpclib
+    except ImportError:
+        import xmlrpc.client as xmlrpclib
     import socket
     from optparse import OptionParser as _OptionParser
 except ImportError as e:
-    sys.stderr.write("%s only supports python2: %s" % (__file__, e))
+    sys.stderr.write('%s\n' % e)
     sys.exit(EX_SOFTWARE)
 
 
@@ -81,6 +81,8 @@ def main():
 
     try:
         msg = sys.stdin.read()
+        if sys.version_info > (3,):
+            msg = msg.encode()
         models = xmlrpclib.ServerProxy('%s://%s:%s/xmlrpc/2/object' % (o.protocol, o.host, o.port), allow_none=True)
         models.execute_kw(o.database, o.userid, o.password, 'mail.thread', 'message_process', [False, xmlrpclib.Binary(msg)], {})
     except xmlrpclib.Fault as e:
