@@ -634,3 +634,42 @@ class TestLotValuation(TestStockValuationCommon):
         quant.action_apply_inventory()
 
         self.assertEqual(lot.value_svl, 0)
+
+    def test_lot_valuated_update_from_product_product(self):
+        tmpl1 = self.product1.product_tmpl_id
+        tmpl1.categ_id.property_cost_method = 'average'
+        tmpl1.standard_price = 1
+        tmpl1.tracking = 'lot'
+        tmpl1.lot_valuated = False
+
+        lot = self.env['stock.lot'].create({
+            'product_id': self.product1.id,
+            'name': 'test',
+        })
+        quant = self.env['stock.quant'].create({
+            'product_id': self.product1.id,
+            'lot_id': lot.id,
+            'location_id': self.stock_location.id,
+            'inventory_quantity': 1
+        })
+        quant.action_apply_inventory()
+
+        self.assertEqual(self.product1.quantity_svl, 1)
+        self.assertEqual(self.product1.value_svl, 1)
+        self.assertEqual(lot.quantity_svl, 0)
+        self.assertEqual(lot.value_svl, 0)
+
+        self.product1.lot_valuated = True  # The update is done from the ProductProduct model
+        self.env.cr.flush()
+        self.assertEqual(lot.quantity_svl, 1)
+        self.assertEqual(lot.value_svl, 1)
+        self.assertEqual(self.product1.quantity_svl, 1)
+        self.assertEqual(self.product1.value_svl, 1)
+
+        self.product1.lot_valuated = False  # Check that
+        self.env.cr.flush()
+
+        self.assertEqual(self.product1.quantity_svl, 1)
+        self.assertEqual(self.product1.value_svl, 1)
+        self.assertEqual(lot.quantity_svl, 0)
+        self.assertEqual(lot.value_svl, 0)
