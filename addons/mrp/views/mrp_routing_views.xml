@@ -9,13 +9,11 @@
                 <list string="Routing Work Centers" multi_edit="1">
                     <field name="active" column_invisible="True"/>
                     <field name="company_id" column_invisible="True"/>
-                    <field name="time_cycle_manual" column_invisible="True"/>
                     <field name="name"/>
                     <field name="bom_id"/>
                     <field name="workcenter_id"/>
-                    <field name="time_mode" optional="show"/>
-                    <field name="time_computed_on" optional="hide"/>
                     <field name="time_cycle" widget="float_time" string="Duration (minutes)"/>
+                    <field name="time_total" widget="float_time" string="Total Duration (minutes)" optional="hide"/>
                     <field name="company_id" optional="hide" groups="base.group_multi_company"/>
                     <field name="possible_bom_product_template_attribute_value_ids" column_invisible="True"/>
                     <field name="bom_product_template_attribute_value_ids" optional="hide" widget="many2many_tags" options="{'no_create': True}" groups="product.group_product_variant"/>
@@ -44,7 +42,7 @@
                     <field name="sequence" widget="handle"/>
                 </xpath>
                 <xpath expr="//field[@name='bom_id']" position="replace"/>
-                <xpath expr="//field[@name='time_cycle']" position="attributes">
+                <xpath expr="//field[@name='time_total']" position="attributes">
                     <attribute name="sum">Total Duration</attribute>
                 </xpath>
                 <xpath expr="//field[@name='bom_product_template_attribute_value_ids']" position="attributes">
@@ -113,7 +111,12 @@
                                 <div invisible="time_mode == 'auto' and workorder_count != 0">
                                     <field name="time_cycle_manual" widget="float_time" class="oe_inline"/> minutes
                                 </div>
-                                <field name="time_cycle" invisible="1"/>
+                                <field name="show_time_total" invisible="1"/>
+                                <field name="cycle_number" invisible="cycle_number &lt; 2"/>
+                                <label for="time_total" invisible="not show_time_total" string="Total Duration"/>
+                                <div invisible="not show_time_total">
+                                    <field name="time_total" widget="float_time" class="oe_inline"/> minutes
+                                </div>
                                 <field name="company_id" groups="base.group_multi_company" />
                             </group>
                         </group>
