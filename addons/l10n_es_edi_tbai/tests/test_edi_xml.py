@@ -158,6 +158,7 @@ class TestEdiTbaiXmls(TestEsEdiTbaiCommon):
             self.in_invoice = self.env['account.move'].create({
                 'name': 'INV/01',
                 'move_type': 'in_invoice',
+                'ref': 'INV/5234',
                 'invoice_date': datetime.now(),
                 'partner_id': self.partner_a.id,
                 'invoice_line_ids': [(0, 0, {
@@ -182,6 +183,7 @@ class TestEdiTbaiXmls(TestEsEdiTbaiCommon):
             self.in_invoice = self.env['account.move'].create({
                 'name': 'INV/01',
                 'move_type': 'in_invoice',
+                'ref': 'INV/5234',
                 'invoice_date': datetime.now(),
                 'partner_id': self.partner_b.id,
                 'invoice_line_ids': [(0, 0, {

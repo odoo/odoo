@@ -145,13 +145,19 @@ class AccountMove(models.Model):
             return _("Cannot send an entry that is not posted to TicketBAI.")
         if self.l10n_es_tbai_state in ('sent', 'cancelled'):
             return _("This entry has already been posted.")
+        if self.company_id.l10n_es_tbai_tax_agency == 'bizkaia' and self.is_purchase_document() and not self.ref:
+            return _("You need to fill in the Reference field as the invoice number from your vendor. ")
+
 
     def _l10n_es_tbai_get_attachment_name(self, cancel=False):
         return self.name + ('_post.xml' if not cancel else '_cancel.xml')
 
     def _l10n_es_tbai_create_edi_document(self, cancel=False):
+        name = self.name
+        if self.is_purchase_document():
+            name = self.ref
         return self.env['l10n_es_edi_tbai.document'].sudo().create({
-            'name': self.name,
+            'name': name,
             'date': self.date,
             'company_id': self.company_id.id,
             'is_cancel': cancel,
