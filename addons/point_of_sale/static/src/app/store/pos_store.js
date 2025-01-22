@@ -1464,29 +1464,29 @@ export class PosStore extends Reactive {
     // Now the printer should work in PoS without restaurant
     async sendOrderInPreparation(order, cancelled = false) {
         if (this.printers_category_ids_set.size) {
-            try {
-                const changes = changesToOrder(
-                    order,
-                    false,
-                    this.orderPreparationCategories,
-                    cancelled
-                );
-                if (changes.cancelled.length > 0 || changes.new.length > 0) {
-                    const isPrintSuccessful = await order.printChanges(
+            const changes = changesToOrder(
+                order,
+                false,
+                this.orderPreparationCategories,
+                cancelled
+            );
+            if (changes.cancelled.length > 0 || changes.new.length > 0) {
+                order
+                    .printChanges(
                         false,
                         this.orderPreparationCategories,
                         cancelled,
                         this.unwatched.printers
-                    );
-                    if (!isPrintSuccessful) {
-                        this.dialog.add(AlertDialog, {
-                            title: _t("Printing failed"),
-                            body: _t("Failed in printing the changes in the order"),
-                        });
-                    }
-                }
-            } catch (e) {
-                console.info("Failed in printing the changes in the order", e);
+                    )
+                    .then((result) => {
+                        if (!result) {
+                            this.dialog.add(AlertDialog, {
+                                title: _t("Printing failed"),
+                                body: _t("Failed in printing the changes in the order"),
+                            });
+                        }
+                    })
+                    .catch((e) => console.info("Failed in printing the changes in the order", e));
             }
         }
     }
