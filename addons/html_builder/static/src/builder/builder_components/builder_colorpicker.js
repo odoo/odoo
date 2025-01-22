@@ -1,11 +1,7 @@
 import { ColorSelector } from "@html_editor/main/font/color_selector";
 import { Component, onMounted, useRef } from "@odoo/owl";
-import {
-    basicContainerBuilderComponentProps,
-    useDomState,
-    useBuilderComponent,
-    BuilderComponent,
-} from "./utils";
+import { basicContainerBuilderComponentProps, useDomState, useBuilderComponent } from "./utils";
+import { BuilderComponent } from "./builder_component";
 
 export class BuilderColorPicker extends Component {
     static template = "html_builder.BuilderColorPicker";

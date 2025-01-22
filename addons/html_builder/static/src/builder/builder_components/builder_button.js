@@ -1,9 +1,6 @@
 import { Component } from "@odoo/owl";
-import {
-    clickableBuilderComponentProps,
-    BuilderComponent,
-    useSelectableItemComponent,
-} from "./utils";
+import { clickableBuilderComponentProps, useSelectableItemComponent } from "./utils";
+import { BuilderComponent } from "./builder_component";
 
 export class BuilderButton extends Component {
     static template = "html_builder.BuilderButton";

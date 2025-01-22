@@ -4,9 +4,9 @@ import {
     basicContainerBuilderComponentProps,
     useVisibilityObserver,
     useApplyVisibility,
-    BuilderComponent,
     useSelectableComponent,
 } from "./utils";
+import { BuilderComponent } from "./builder_component";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
 export class BuilderSelect extends Component {

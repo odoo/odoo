@@ -1,10 +1,10 @@
 import { Component } from "@odoo/owl";
 import {
     basicContainerBuilderComponentProps,
-    BuilderComponent,
     useBuilderComponent,
     useInputBuilderComponent,
 } from "./utils";
+import { BuilderComponent } from "./builder_component";
 
 export class BuilderRange extends Component {
     static template = "html_builder.BuilderRange";

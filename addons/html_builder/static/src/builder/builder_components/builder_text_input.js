@@ -3,8 +3,8 @@ import {
     basicContainerBuilderComponentProps,
     useInputBuilderComponent,
     useBuilderComponent,
-    BuilderComponent,
 } from "./utils";
+import { BuilderComponent } from "./builder_component";
 
 export class BuilderTextInput extends Component {
     static template = "html_builder.BuilderTextInput";

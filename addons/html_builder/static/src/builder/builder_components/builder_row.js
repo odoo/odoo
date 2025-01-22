@@ -4,8 +4,8 @@ import {
     useApplyVisibility,
     basicContainerBuilderComponentProps,
     useBuilderComponent,
-    BuilderComponent,
 } from "./utils";
+import { BuilderComponent } from "./builder_component";
 
 export class BuilderRow extends Component {
     static template = "html_builder.BuilderRow";

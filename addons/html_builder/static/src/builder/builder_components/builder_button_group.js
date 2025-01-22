@@ -3,9 +3,9 @@ import {
     basicContainerBuilderComponentProps,
     useVisibilityObserver,
     useApplyVisibility,
-    BuilderComponent,
     useSelectableComponent,
 } from "./utils";
+import { BuilderComponent } from "./builder_component";
 
 export class BuilderButtonGroup extends Component {
     static template = "html_builder.BuilderButtonGroup";

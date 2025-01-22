@@ -1,6 +1,5 @@
 import { isTextNode } from "@html_editor/utils/dom_info";
 import {
-    Component,
     onMounted,
     onWillDestroy,
     useComponent,
@@ -9,7 +8,6 @@ import {
     useRef,
     useState,
     useSubEnv,
-    xml,
 } from "@odoo/owl";
 import { useBus } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";

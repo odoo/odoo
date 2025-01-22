@@ -3,10 +3,10 @@ import { CheckBox } from "@web/core/checkbox/checkbox";
 import {
     clickableBuilderComponentProps,
     useClickableBuilderComponent,
-    BuilderComponent,
     useDependencyDefinition,
     useDomState,
 } from "./utils";
+import { BuilderComponent } from "./builder_component";
 
 export class BuilderCheckbox extends Component {
     static template = "html_builder.BuilderCheckbox";
