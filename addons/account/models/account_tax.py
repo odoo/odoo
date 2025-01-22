@@ -956,6 +956,7 @@ class AccountTax(models.Model):
         rounding_method='round_per_line',
         product=None,
         special_mode=False,
+        manual_tax_amounts=None,
     ):
         """ Compute the tax/base amounts for the current taxes.
 
@@ -976,6 +977,7 @@ class AccountTax(models.Model):
                             will give you the same as 100 without any special_mode.
                             Note: You can only expect accurate symmetrical taxes computation with not rounded price_unit
                             as input and 'round_globally' computation. Otherwise, it's not guaranteed.
+        :param manual_tax_amounts:  A dictionary mapping a tax_id to a custom tax/base amount.
         :return: A dict containing:
             'evaluation_context':       The evaluation_context parameter.
             'taxes_data':               A list of dictionaries, one per tax containing:
@@ -998,11 +1000,14 @@ class AccountTax(models.Model):
             if is_already_computed:
                 return
 
-            tax_amount = tax_amount_function(
-                taxes_data[tax.id]['batch'],
-                raw_base + taxes_data[tax.id]['extra_base_for_tax'],
-                evaluation_context,
-            )
+            if manual_tax_amounts and str(tax.id) in manual_tax_amounts:
+                tax_amount = manual_tax_amounts[str(tax.id)]['tax_amount_currency']
+            else:
+                tax_amount = tax_amount_function(
+                    taxes_data[tax.id]['batch'],
+                    raw_base + taxes_data[tax.id]['extra_base_for_tax'],
+                    evaluation_context,
+                )
             if tax_amount is not None:
                 add_tax_amount_to_results(tax, tax_amount)
 
@@ -1079,16 +1084,24 @@ class AccountTax(models.Model):
         # Mark the base to be computed in the descending order. The order doesn't matter for no special mode or 'total_excluded' but
         # it must be in the reverse order when special_mode is 'total_included'.
         for tax in reversed(sorted_taxes):
-            if 'tax_amount' not in taxes_data[tax.id]:
+            tax_data = taxes_data[tax.id]
+            if 'tax_amount' not in tax_data:
                 continue
 
-            total_tax_amount = sum(taxes_data[other_tax.id]['tax_amount'] for other_tax in taxes_data[tax.id]['batch'])
-            base = raw_base + taxes_data[tax.id]['extra_base_for_base']
-            if taxes_data[tax.id]['price_include'] and special_mode in (False, 'total_included'):
-                base -= total_tax_amount
-            taxes_data[tax.id]['base'] = base
+            # Base amount.
+            if manual_tax_amounts and 'base_amount_currency' in manual_tax_amounts.get(str(tax.id), {}):
+                base = manual_tax_amounts[str(tax.id)]['base_amount_currency']
+            else:
+                total_tax_amount = sum(taxes_data[other_tax.id]['tax_amount'] for other_tax in tax_data['batch'])
+                base = raw_base + tax_data['extra_base_for_base']
+                if tax_data['price_include'] and special_mode in (False, 'total_included'):
+                    base -= total_tax_amount
+            tax_data['base'] = base
+
+            # Reverse charge.
             if tax.has_negative_factor:
-                reverse_charge_taxes_data[tax.id]['base'] = base
+                reverse_charge_tax_data = reverse_charge_taxes_data[tax.id]
+                reverse_charge_tax_data['base'] = base
 
         taxes_data_list = []
         for tax_data in taxes_data.values():
@@ -1195,6 +1208,8 @@ class AccountTax(models.Model):
             value = extra_values[field] or fallback
         elif isinstance(record, models.Model) and field in record._fields:
             value = record[field]
+        elif isinstance(record, dict):
+            value = record.get(field, fallback)
         else:
             value = fallback
         if need_origin:
@@ -1253,6 +1268,10 @@ class AccountTax(models.Model):
             # All computation are managing the foreign currency and the local one.
             # This is the rate to be applied when generating the tax details (see '_add_tax_details_in_base_line').
             'rate': load('rate', 1.0),
+
+            # For all computation that are inferring a base amount in order to reach a total you know in advance, you have to force some
+            # base/tax amounts for the computation (E.g. down payment, combo products, global discounts etc).
+            'manual_tax_amounts': kwargs.get('manual_tax_amounts', None),
 
             # ===== Accounting stuff =====
 
@@ -1345,6 +1364,7 @@ class AccountTax(models.Model):
             rounding_method=rounding_method or company.tax_calculation_rounding_method,
             product=base_line['product_id'],
             special_mode=base_line['special_mode'],
+            manual_tax_amounts=base_line['manual_tax_amounts'],
         )
         rate = base_line['rate']
         tax_details = base_line['tax_details'] = {

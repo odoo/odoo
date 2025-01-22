@@ -226,6 +226,7 @@ export const accountTaxHelpers = {
             // the type of involved fields and we don't have access to this information js-side.
             product = null,
             special_mode = null,
+            manual_tax_amounts = null,
         } = {}
     ) {
         const self = this;
@@ -253,12 +254,17 @@ export const accountTaxHelpers = {
                 return;
             }
 
-            const tax_amount = tax_amount_function(
-                tax,
-                taxes_data[tax.id].batch,
-                raw_base + taxes_data[tax.id].extra_base_for_tax,
-                evaluation_context
-            );
+            let tax_amount = null;
+            if (manual_tax_amounts && tax.id in manual_tax_amounts) {
+                tax_amount = manual_tax_amounts[tax.id].tax_amount_currency;
+            } else {
+                tax_amount = tax_amount_function(
+                    tax,
+                    taxes_data[tax.id].batch,
+                    raw_base + taxes_data[tax.id].extra_base_for_tax,
+                    evaluation_context
+                );
+            }
             if (tax_amount !== null) {
                 add_tax_amount_to_results(tax, tax_amount);
             }
@@ -344,24 +350,34 @@ export const accountTaxHelpers = {
         // Mark the base to be computed in the descending order. The order doesn't matter for no special mode or 'total_excluded' but
         // it must be in the reverse order when special_mode is 'total_included'.
         for (const tax of sorted_taxes.toReversed()) {
-            if (!("tax_amount" in taxes_data[tax.id])) {
+            const tax_data = taxes_data[tax.id];
+            if (!("tax_amount" in tax_data)) {
                 continue;
             }
 
-            const total_tax_amount = taxes_data[tax.id].batch.reduce(
-                (sum, other_tax) => sum + taxes_data[other_tax.id].tax_amount,
-                0
-            );
-            let base = raw_base + taxes_data[tax.id].extra_base_for_base;
-            if (
-                taxes_data[tax.id].price_include &&
-                (!special_mode || special_mode === "total_included")
-            ) {
-                base -= total_tax_amount;
+            // Base amount.
+            let base = null;
+            if (manual_tax_amounts && "base_amount_currency" in manual_tax_amounts[tax.id]) {
+                base = manual_tax_amounts[tax.id].base_amount_currency;
+            } else {
+                const total_tax_amount = taxes_data[tax.id].batch.reduce(
+                    (sum, other_tax) => sum + taxes_data[other_tax.id].tax_amount,
+                    0
+                );
+                base = raw_base + taxes_data[tax.id].extra_base_for_base;
+                if (
+                    tax_data.price_include &&
+                    (!special_mode || special_mode === "total_included")
+                ) {
+                    base -= total_tax_amount;
+                }
             }
-            taxes_data[tax.id].base = base;
-            if(tax.has_negative_factor){
-                reverse_charge_taxes_data[tax.id].base = base;
+            tax_data.base = base;
+
+            // Reverse charge.
+            if (tax.has_negative_factor) {
+                const reverse_charge_tax_data = reverse_charge_taxes_data[tax.id];
+                reverse_charge_tax_data.base = base;
             }
         }
 
@@ -476,6 +492,8 @@ export const accountTaxHelpers = {
             sign: load('sign', 1.0),
             special_mode: kwargs.special_mode || null,
             special_type: kwargs.special_type || null,
+            rate: load("rate", 1.0),
+            manual_tax_amounts: kwargs.manual_tax_amounts || null,
         }
     },
 
@@ -491,7 +509,8 @@ export const accountTaxHelpers = {
                 precision_rounding: currency_pd,
                 rounding_method: company.tax_calculation_rounding_method,
                 product: base_line.product_id,
-                special_mode: base_line.special_mode
+                special_mode: base_line.special_mode,
+                manual_tax_amounts: base_line.manual_tax_amounts
             }
         );
 
