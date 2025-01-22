@@ -120,7 +120,7 @@ export function waitUntilSubscribe() {
  *
  * @returns {import("@web/core/utils/concurrency").Deferred} */
 export function waitForChannels(channels, { operation = "add" } = {}) {
-    const { env } = MockServer.current;
+    const { env } = MockServer;
     const def = new Deferred();
     let done = false;
 

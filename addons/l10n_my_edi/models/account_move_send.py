@@ -67,7 +67,7 @@ class AccountMoveSend(models.AbstractModel):
     @api.model
     def _l10n_my_edi_generate_myinvois_xml(self, invoice, invoice_data):
         need_file = (
-            (invoice_data['invoice_edi_format'] == 'my_sinvoice' and invoice.company_id.l10n_my_edi_proxy_user_id)
+            (invoice_data['invoice_edi_format'] == 'my_myinvois' and invoice.company_id.l10n_my_edi_proxy_user_id)
             or 'my_myinvois_send' in invoice_data['extra_edis']
         )
         # It should always be generated when sending.

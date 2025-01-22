@@ -50,8 +50,14 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         this._highlightAddressCard(newAddress);
         const selectedPartnerId = newAddress.dataset.partnerId;
         await this.updateAddress(addressType, selectedPartnerId);
-        if (addressType === 'delivery') {  // A delivery address is changed.
-            if (this.use_delivery_as_billing_toggle.checked) {
+        // A delivery address is changed.
+        if (addressType === 'delivery' || this.billingContainer.dataset.deliveryAddressDisabled) {
+            if (this.billingContainer.dataset.deliveryAddressDisabled) {
+                // If a delivery address is disabled in the settings, use a billing address as
+                // a delivery one.
+                await this.updateAddress('delivery', selectedPartnerId);
+            }
+            if (this.use_delivery_as_billing_toggle?.checked) {
                 await this._selectMatchingBillingAddress(selectedPartnerId);
             }
             // Update the available delivery methods.
@@ -526,7 +532,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         const billingAddressSelected = Boolean(
             this.el.querySelector('.card.bg-primary[data-address-type="billing"]')
         );
-        return billingAddressSelected || this.use_delivery_as_billing_toggle.checked;
+        return billingAddressSelected || this.use_delivery_as_billing_toggle?.checked;
     },
 
     /**

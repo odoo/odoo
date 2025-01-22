@@ -70,13 +70,13 @@ class Department(models.Model):
             department.master_department_id = int(department.parent_path.split('/')[0])
 
     def _compute_total_employee(self):
-        emp_data = self.env['hr.employee'].sudo()._read_group([('department_id', 'in', self.ids)], ['department_id'], ['__count'])
+        emp_data = self.env['hr.employee'].sudo()._read_group([('department_id', 'in', self.ids), ('company_id', 'in', self.env.companies.ids)], ['department_id'], ['__count'])
         result = {department.id: count for department, count in emp_data}
         for department in self:
             department.total_employee = result.get(department.id, 0)
 
     def _compute_plan_count(self):
-        plans_data = self.env['mail.activity.plan']._read_group([('department_id', 'in', self.ids)], ['department_id'], ['__count'])
+        plans_data = self.env['mail.activity.plan']._read_group([('department_id', 'in', self.ids), ('company_id', 'in', self.env.companies.ids + [False])], ['department_id'], ['__count'])
         plans_count = {department.id: count for department, count in plans_data}
         for department in self:
             department.plans_count = plans_count.get(department.id, 0)

@@ -281,12 +281,12 @@ class Users(models.Model):
                         self.env.user.partner_id,
                         fields=[
                             "active",
+                            "avatar_128",
                             "isAdmin",
                             "name",
                             "notification_type",
                             "signature",
                             "user",
-                            "write_date",
                         ],
                         main_user_by_partner={self.env.user.partner_id: self.env.user},
                     ),
@@ -294,7 +294,7 @@ class Users(models.Model):
                 }
             )
         elif guest := self.env["mail.guest"]._get_guest_from_context():
-            store.add({"self": Store.one(guest, fields=["name", "write_date"])})
+            store.add({"self": Store.one(guest, fields=["avatar_128", "name"])})
 
     def _init_messaging(self, store):
         self.ensure_one()

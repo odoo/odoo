@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Thi Huong Nguyen, 2024
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,6 +52,8 @@ msgid ""
 "<b>%(destination)s</b>, <br/> as specified from <b>%(operation)s</b> "
 "destination."
 msgstr ""
+"<br/><br/>Sản phẩm được sản xuất sẽ được chuyển đến <b>%(destination)s</b>, "
+"<br/>như được chỉ định từ đích đến của <b>%(operation)s</b>."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__all_available
@@ -319,7 +321,7 @@ msgstr "<span class=\"col-6\">Đang chờ</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"fw-bold text-nowrap\">To Produce</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold text-nowrap\">Cần sản xuất</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -956,10 +958,11 @@ msgid ""
 "case the product is subcontracted, this can be used to determine the date at"
 " which components should be sent to the subcontractor."
 msgstr ""
-"Thời gian sản xuất trung bình tính bằng ngày để sản xuất sản phẩm này. Trong"
-" trường hợp DMVT đa cấp, sẽ cộng thêm thời gian sản xuất các nguyên liệu. "
-"Trong trường hợp sản phẩm được ký gia công, thời gian này có thể được sử "
-"dụng để xác định ngày mà các nguyên liệu sẽ được gửi cho đơn vị gia công."
+"Thời gian hoàn thành trung bình tính bằng ngày để sản xuất sản phẩm này. "
+"Trong trường hợp DMVT đa cấp, sẽ cộng thêm thời gian hoàn thành sản xuất các"
+" nguyên liệu. Trong trường hợp sản phẩm được ký gia công, thời gian này có "
+"thể được sử dụng để xác định ngày mà các nguyên liệu sẽ được gửi cho đơn vị "
+"gia công."
 
 #. module: mrp
 #. odoo-javascript
@@ -1533,7 +1536,7 @@ msgid ""
 msgstr ""
 "Tính số ngày cần thiết để tái cung ứng tất cả thành phần từ DMVT, bằng cách "
 "mua hoặc sản xuất các thành phần và/hoặc cụm phụ kiện. Ngoài ra, lưu ý rằng "
-"thời gian mua hàng an toàn sẽ được thêm vào nếu cần."
+"thời gian hoàn thành an toàn sẽ được thêm vào nếu cần."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
@@ -1749,7 +1752,7 @@ msgid ""
 "Note that security lead times will also be considered when appropriate."
 msgstr ""
 "Tạo và xác nhận lệnh sản xuất trước những ngày này để có đủ thời gian bổ sung nguyên liệu hoặc sản xuất bán thành phẩm.\n"
-"Lưu ý rằng thời gian mua hàng an toàn sẽ được thêm vào nếu cần."
+"Lưu ý rằng thời gian hoàn thành an toàn sẽ được thêm vào nếu cần."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -1938,7 +1941,7 @@ msgstr "Thời lượng mặc định"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__use_manufacturing_lead
 msgid "Default Manufacturing Lead Time"
-msgstr "Thời gian sản xuất mặc định"
+msgstr "Thời gian hoàn thành mặc định"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__default_capacity
@@ -2995,13 +2998,13 @@ msgstr "Các lớp được gắn với nhau để lắp ráp các tấm gỗ."
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "Lead Time"
-msgstr "Thời gian sản xuất"
+msgstr "Thời gian hoàn thành"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.js:0
 msgid "Lead Times"
-msgstr "Thời gian sản xuất"
+msgstr "Thời gian hoàn thành"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__leave_id
@@ -3237,7 +3240,7 @@ msgstr "Thời lượng thủ công"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "Manuf. Lead Time"
-msgstr "Thời gian sản xuất"
+msgstr "Thời gian hoàn thành"
 
 #. module: mrp
 #. odoo-javascript
@@ -3272,7 +3275,7 @@ msgstr "Quy tắc sản xuất"
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 msgid "Manufacture Security Lead Time"
-msgstr "Thời gian sản xuất an toàn"
+msgstr "Thời gian hoàn thành an toàn"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__type__normal
@@ -3327,7 +3330,7 @@ msgstr "Dự báo sản xuất"
 #: model:ir.model.fields,field_description:mrp.field_res_company__manufacturing_lead
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__manufacturing_lead
 msgid "Manufacturing Lead Time"
-msgstr "Thời gian sản xuất"
+msgstr "Thời gian hoàn thành"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manu_type_id
@@ -4773,7 +4776,7 @@ msgstr "Năng suất giảm"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__name
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__name
 msgid "Reference"
-msgstr "Mã tham chiếu"
+msgstr "Tham chiếu"
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_name_uniq
@@ -4791,7 +4794,7 @@ msgstr "Mã tham chiếu của tài liệu tạo ra yêu cầu sản xuất này
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "Reference:"
-msgstr "Mã tham chiếu:"
+msgstr "Tham chiếu:"
 
 #. module: mrp
 #. odoo-javascript
@@ -4858,7 +4861,7 @@ msgstr "Người phụ trách"
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 msgid "Resupply lead time."
-msgstr "Thời gian tái cung ứng."
+msgstr "Thời gian hoàn thành tái cung ứng."
 
 #. module: mrp
 #. odoo-javascript
@@ -4986,7 +4989,7 @@ msgstr "Tìm kiếm khu vực sản xuất"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Security Lead Time"
-msgstr "Thời gian sản xuất an toàn"
+msgstr "Thời gian hoàn thành an toàn"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_res_company__manufacturing_lead
@@ -6181,8 +6184,8 @@ msgid ""
 "forecasts."
 msgstr ""
 "Sử dụng báo cáo MPS để lên lịch cho hoạt động tái đặt hàng và sản xuất là "
-"tính năng hữu dụng nếu bạn có thời gian sản xuất dài và nếu bạn sản xuất dựa"
-" trên dự báo bán hàng. "
+"tính năng hữu dụng nếu bạn có thời gian hoàn thành dài và nếu bạn sản xuất "
+"dựa trên dự báo bán hàng. "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__valid_details

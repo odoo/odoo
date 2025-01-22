@@ -103,7 +103,6 @@ test(`save when page changed`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "form"],
@@ -156,7 +155,6 @@ test(`save when breadcrumb clicked`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "form"],
@@ -207,7 +205,6 @@ test(`error on save when breadcrumb clicked`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "form"],
@@ -249,7 +246,6 @@ test(`save when action changed`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "form"],
@@ -259,7 +255,6 @@ test(`save when action changed`, async () => {
             id: 2,
             name: "Other action",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[false, "kanban"]],
         },
     ]);
@@ -341,6 +336,12 @@ test("save on closing tab/browser", async () => {
     await sendBeaconDeferred;
     expect.verifySteps(["sendBeacon"]);
     expect(event.defaultPrevented).toBe(false);
+
+    // With all changes saved, the save/discard buttons should now be invisible.
+    // While it typically doesn't matter when leaving a page, an urgent save may get triggered
+    // by a user action that remains on the page, e.g. opening a VoIP client (see opw 4308954).
+    await animationFrame();
+    expect(`.o_form_status_indicator_buttons:not(.invisible)`).toHaveCount(0);
 });
 
 test("save on closing tab/browser (sendBeacon fails)", async () => {
@@ -476,7 +477,6 @@ test(`save on closing tab/browser (detached form)`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "form"],

@@ -180,24 +180,33 @@ class IotBoxOwlHomePage(Home):
             'password': helpers.generate_password(),
         })
 
-    @http.route('/hw_posbox_homepage/upgrade', auth="none", type="http", cors='*')
-    def upgrade_iotbox(self):
-        commit = subprocess.check_output(
-            ["git", "--work-tree=/home/pi/odoo/", "--git-dir=/home/pi/odoo/.git", "log", "-1"]).decode('utf-8').replace("\n", "<br/>")
-        flashToVersion = helpers.check_image()
-        actualVersion = helpers.get_version()
+    @http.route('/hw_posbox_homepage/version_info', auth="none", type="http", cors='*')
+    def get_version_info(self):
+        git = ["git", "--work-tree=/home/pi/odoo/", "--git-dir=/home/pi/odoo/.git"]
+        # Check branch name and last commit hash on IoT Box
+        current_commit = subprocess.run([*git, "rev-parse", "HEAD"], capture_output=True, check=False, text=True)
+        current_branch = subprocess.run(
+            [*git, "rev-parse", "--abbrev-ref", "HEAD"], capture_output=True, check=False, text=True
+        )
+        if current_commit.returncode != 0 or current_branch.returncode != 0:
+            return
+        current_commit = current_commit.stdout.strip()
+        current_branch = current_branch.stdout.strip()
 
-        if flashToVersion:
-            flashToVersion = '%s.%s' % (flashToVersion.get(
-                'major', ''), flashToVersion.get('minor', ''))
+        last_available_commit = subprocess.run(
+            [*git, "ls-remote", "origin", current_branch], capture_output=True, check=False, text=True
+        )
+        if last_available_commit.returncode != 0:
+            _logger.error("Failed to retrieve last commit available for branch origin/%s", current_branch)
+            return
+        last_available_commit = last_available_commit.stdout.split()[0].strip()
 
         return json.dumps({
-            'title': "Odoo's IoTBox - Software Upgrade",
-            'breadcrumb': 'IoT Box Software Upgrade',
-            'loading_message': 'Updating IoT box',
-            'commit': commit,
-            'flashToVersion': flashToVersion,
-            'actualVersion': actualVersion,
+            'status': 'success',
+            # Checkout requires db to align with its version (=branch)
+            'odooIsUpToDate': current_commit == last_available_commit or not bool(helpers.get_odoo_server_url()),
+            'imageIsUpToDate': not bool(helpers.check_image()),
+            'currentCommitHash': current_commit,
         })
 
     @http.route('/hw_posbox_homepage/log_levels', auth="none", type="http", cors='*')
@@ -364,6 +373,14 @@ class IotBoxOwlHomePage(Home):
         return {
             'status': 'success',
             'message': 'Logger level updated',
+        }
+
+    @http.route('/hw_posbox_homepage/update_git_tree', auth="none", type="json", methods=['POST'], cors='*')
+    def update_git_tree(self):
+        helpers.check_git_branch()
+        return {
+            'status': 'success',
+            'message': 'Successfully updated the IoT Box',
         }
 
     # ---------------------------------------------------------- #

@@ -6,7 +6,7 @@
         <t t-call="portal.portal_layout">
             <t t-set="no_breadcrumbs" t-value="True"/>
             <div class="row justify-content-md-center">
-                <form method="post" target="_self" t-att-action="'/pos/ticket/validate'">
+                <form method="post" target="_self" t-att-action="'/pos/ticket/validate'" onsubmit="$('button:submit').attr('disabled', 'disabled')">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <input type="hidden" name="access_token" t-att-value="access_token"/>
                     <div class="col-12 col-md-6 mt-4 offset-md-3">

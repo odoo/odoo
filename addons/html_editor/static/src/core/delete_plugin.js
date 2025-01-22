@@ -1151,9 +1151,9 @@ export class DeletePlugin extends Plugin {
 
     onBeforeInputInsertText(ev) {
         if (ev.inputType === "insertText") {
-            const selection = this.dependencies.selection.getEditableSelection();
+            const selection = this.dependencies.selection.getSelectionData().deepEditableSelection;
             if (!selection.isCollapsed) {
-                this.deleteSelection();
+                this.deleteSelection(selection);
             }
             // Default behavior: insert text and trigger input event
         }

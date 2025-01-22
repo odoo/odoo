@@ -4,6 +4,7 @@ from odoo.exceptions import UserError, ValidationError
 from xmlrpc.client import MAXINT
 
 from odoo.tools import create_index, SQL
+from odoo.tools.misc import str2bool
 
 
 class AccountBankStatementLine(models.Model):
@@ -490,6 +491,9 @@ class AccountBankStatementLine(models.Model):
 
     def _find_or_create_bank_account(self):
         self.ensure_one()
+        if str2bool(self.env['ir.config_parameter'].sudo().get_param("account.skip_create_bank_account_on_reconcile")):
+            return self.env['res.partner.bank']
+
         # There is a sql constraint on res.partner.bank ensuring an unique pair <partner, account number>.
         # Since it's not dependent of the company, we need to search on others company too to avoid the creation
         # of an extra res.partner.bank raising an error coming from this constraint.
@@ -517,7 +521,7 @@ class AccountBankStatementLine(models.Model):
             # Base domain.
             ('display_type', 'not in', ('line_section', 'line_note')),
             ('parent_state', '=', 'posted'),
-            ('company_id', 'child_of', self.company_id.root_id.id),
+            ('company_id', 'child_of', self.company_id.id),  # allow to match invoices from same or children companies to be consistant with what's shown in the interface
             # Reconciliation domain.
             ('reconciled', '=', False),
             # Domain to use the account_move_line__unreconciled_index
@@ -792,7 +796,7 @@ class AccountBankStatementLine(models.Model):
                     'currency_id': (st_line.foreign_currency_id or journal_currency or company_currency).id,
                 })
 
-            move.write(move._cleanup_write_orm_values(move, move_vals_to_write))
+            move.with_context(skip_readonly_check=True).write(move._cleanup_write_orm_values(move, move_vals_to_write))
             st_line.write(move._cleanup_write_orm_values(st_line, st_line_vals_to_write))
 
     def _synchronize_to_moves(self, changed_fields):

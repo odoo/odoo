@@ -397,7 +397,7 @@ class ProductProduct(models.Model):
             if product.image_variant_1920 and not product.product_tmpl_id.image_1920:
                 product.product_tmpl_id.image_1920 = product.image_variant_1920
             # Check if the product is last product of this template...
-            has_other_products = product_ids_by_template_id[product.product_tmpl_id.id] - {product.id}
+            has_other_products = product_ids_by_template_id.get(product.product_tmpl_id.id, set()) - {product.id}
             # ... and do not delete product template if it's configured to be created "on demand"
             if not has_other_products and not product.product_tmpl_id.has_dynamic_attributes():
                 unlink_templates_ids.add(product.product_tmpl_id.id)
@@ -668,7 +668,7 @@ class ProductProduct(models.Model):
     #=== BUSINESS METHODS ===#
 
     def _prepare_sellers(self, params=False):
-        sellers = self.seller_ids.filtered(lambda s: s.partner_id.active and (not s.product_id or s.product_id == self))
+        sellers = self.seller_ids._get_filtered_supplier(self.env.company, self, params)
         return sellers.sorted(lambda s: (s.sequence, -s.min_qty, s.price, s.id))
 
     def _get_filtered_sellers(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
@@ -678,7 +678,6 @@ class ProductProduct(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
         sellers_filtered = self._prepare_sellers(params)
-        sellers_filtered = sellers_filtered.filtered(lambda s: not s.company_id or s.company_id.id == self.env.company.id)
         sellers = self.env['product.supplierinfo']
         for seller in sellers_filtered:
             # Set quantity in UoM of seller

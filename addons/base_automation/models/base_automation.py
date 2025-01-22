@@ -2,16 +2,27 @@
 
 import datetime
 import logging
+import re
 import traceback
 from collections import defaultdict
 from uuid import uuid4
-from dateutil.relativedelta import relativedelta
 
+from dateutil.relativedelta import relativedelta
 from odoo import _, api, exceptions, fields, models
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, safe_eval
 from odoo.http import request
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, safe_eval
 
 _logger = logging.getLogger(__name__)
+
+DOMAIN_FIELDS_RE = re.compile(r"""
+    [([]\s*                 # opening bracket with any whitespace
+    (?P<quote>['"])         # opening quote
+    (?P<field>[a-z]\w*)     # field name, should start with a letter then any [a-z0-9_]
+    (?:\.[.\w]*)?           # dot followed by dots or text in between i.e. relation traversal (optional)
+    (?P=quote)              # closing quote, matching the opening one
+    (?:[^,]*?,){2}          # anything with two commas (to ensure that we are inside a triplet)
+    [^,]*?[()[\]]           # anything except a comma followed by a closing bracket or another opening bracket
+""", re.VERBOSE)
 
 DATE_RANGE_FUNCTION = {
     'minutes': lambda interval: relativedelta(minutes=interval),
@@ -259,12 +270,12 @@ class BaseAutomation(models.Model):
             if actions_to_remove:
                 rule.action_server_ids = [(3, action.id) for action in actions_to_remove]
 
-    @api.depends('trigger', 'trigger_field_ids')
+    @api.depends('trigger')
     def _compute_trg_date_id(self):
-        to_reset = self.filtered(lambda a: a.trigger not in TIME_TRIGGERS or len(a.trigger_field_ids) != 1)
+        to_reset = self.filtered(lambda a: a.trigger not in TIME_TRIGGERS)
         to_reset.trg_date_id = False
         for record in (self - to_reset):
-            record.trg_date_id = record.trigger_field_ids
+            record.trg_date_id = record._get_trigger_specific_field()
 
     @api.depends('trigger')
     def _compute_trg_date_range_data(self):
@@ -280,15 +291,15 @@ class BaseAutomation(models.Model):
         )
         to_reset.trg_date_calendar_id = False
 
-    @api.depends('trigger', 'trigger_field_ids')
+    @api.depends('trigger')
     def _compute_trg_selection_field_id(self):
         self.trg_selection_field_id = False
 
-    @api.depends('trigger', 'trigger_field_ids')
+    @api.depends('trigger')
     def _compute_trg_field_ref(self):
         self.trg_field_ref = False
 
-    @api.depends('trg_field_ref', 'trigger_field_ids')
+    @api.depends('trigger', 'trg_field_ref')
     def _compute_trg_field_ref_model_name(self):
         to_compute = self.filtered(lambda a: a.trigger in ['on_stage_set', 'on_tag_set'] and a.trg_field_ref is not False)
         # wondering why we check based on 'is not'? Because the ref could be an empty recordset
@@ -296,90 +307,79 @@ class BaseAutomation(models.Model):
         to_reset = (self - to_compute)
         to_reset.trg_field_ref_model_name = False
         for automation in to_compute:
-            relation = automation.trigger_field_ids.relation
+            relation = automation._get_trigger_specific_field().relation
             if not relation:
                 automation.trg_field_ref_model_name = False
                 continue
             automation.trg_field_ref_model_name = relation
 
-    @api.depends('trigger', 'trigger_field_ids', 'trg_field_ref')
+    @api.depends('trigger', 'trg_field_ref')
     def _compute_filter_pre_domain(self):
-        to_reset = self.filtered(lambda a: a.trigger != 'on_tag_set' or len(a.trigger_field_ids) != 1)
+        to_reset = self.filtered(lambda a: a.trigger != 'on_tag_set')
         to_reset.filter_pre_domain = False
         for automation in (self - to_reset):
-            field = automation.trigger_field_ids.name
+            field = automation._get_trigger_specific_field().name
             value = automation.trg_field_ref
-            automation.filter_pre_domain = f"[('{field}', 'not in', [{value}])]" if value else False
+            automation.filter_pre_domain = repr([(field, 'not in', [value])]) if value else False
 
-    @api.depends('trigger', 'trigger_field_ids', 'trg_selection_field_id', 'trg_field_ref')
+    @api.depends('trigger', 'trg_selection_field_id', 'trg_field_ref')
     def _compute_filter_domain(self):
-        for record in self:
-            trigger_fields_count = len(record.trigger_field_ids)
-            if trigger_fields_count == 0:
-                record.filter_domain = False
+        for automation in self:
+            field = (
+                automation._get_trigger_specific_field()
+                if automation.trigger not in ["on_create_or_write", *TIME_TRIGGERS]
+                else False
+            )
+            if not field:
+                automation.filter_domain = False
+                continue
 
-            elif trigger_fields_count == 1:
-                field = record.trigger_field_ids.name
-                trigger = record.trigger
-                if trigger in ['on_state_set', 'on_priority_set']:
-                    value = record.trg_selection_field_id.value
-                    record.filter_domain = f"[('{field}', '=', '{value}')]" if value else False
-                elif trigger == 'on_stage_set':
-                    value = record.trg_field_ref
-                    record.filter_domain = f"[('{field}', '=', {value})]" if value else False
-                elif trigger == 'on_tag_set':
-                    value = record.trg_field_ref
-                    record.filter_domain = f"[('{field}', 'in', [{value}])]" if value else False
-                elif trigger == 'on_user_set':
-                    record.filter_domain = f"[('{field}', '!=', False)]"
-                elif trigger in ['on_archive', 'on_unarchive']:
-                    record.filter_domain = f"[('{field}', '=', {trigger == 'on_unarchive'})]"
-                else:
-                    record.filter_domain = False
+            # some triggers require a domain
+            match automation.trigger:
+                case 'on_state_set' | 'on_priority_set':
+                    value = automation.trg_selection_field_id.value
+                    automation.filter_domain = repr([(field.name, '=', value)]) if value else False
+                case 'on_stage_set':
+                    value = automation.trg_field_ref
+                    automation.filter_domain = repr([(field.name, '=', value)]) if value else False
+                case 'on_tag_set':
+                    value = automation.trg_field_ref
+                    automation.filter_domain = repr([(field.name, 'in', [value])]) if value else False
+                case 'on_user_set':
+                    automation.filter_domain = repr([(field.name, '!=', False)])
+                case 'on_archive':
+                    automation.filter_domain = repr([(field.name, '=', False)])
+                case 'on_unarchive':
+                    automation.filter_domain = repr([(field.name, '=', True)])
 
-    @api.depends('model_id', 'trigger')
+    @api.depends('model_id', 'trigger', 'filter_domain')
     def _compute_on_change_field_ids(self):
         to_reset = self.filtered(lambda a: a.trigger != 'on_change')
         to_reset.on_change_field_ids = False
-        for record in (self - to_reset).filtered('on_change_field_ids'):
-            record.on_change_field_ids = record.on_change_field_ids.filtered(lambda field: field.model_id == record.model_id)
+        for automation in (self - to_reset):
+            automation.on_change_field_ids |= automation._get_filter_domain_fields()
 
-    @api.depends('model_id', 'trigger')
+    @api.depends('model_id', 'trigger', 'filter_domain')
     def _compute_trigger_field_ids(self):
         for automation in self:
-            domain = [('model_id', '=', automation.model_id.id)]
-            if automation.trigger == 'on_stage_set':
-                domain += [('ttype', '=', 'many2one'), ('name', 'in', ['stage_id', 'x_studio_stage_id'])]
-            elif automation.trigger == 'on_tag_set':
-                domain += [('ttype', '=', 'many2many'), ('name', 'in', ['tag_ids', 'x_studio_tag_ids'])]
-            elif automation.trigger == 'on_priority_set':
-                domain += [('ttype', '=', 'selection'), ('name', 'in', ['priority', 'x_studio_priority'])]
-            elif automation.trigger == 'on_state_set':
-                domain += [('ttype', '=', 'selection'), ('name', 'in', ['state', 'x_studio_state'])]
-            elif automation.trigger == 'on_user_set':
-                domain += [
-                    ('relation', '=', 'res.users'),
-                    ('ttype', 'in', ['many2one', 'many2many']),
-                    ('name', 'in', ['user_id', 'user_ids', 'x_studio_user_id', 'x_studio_user_ids']),
-                ]
-            elif automation.trigger in ['on_archive', 'on_unarchive']:
-                domain += [('ttype', '=', 'boolean'), ('name', 'in', ['active', 'x_active'])]
-            elif automation.trigger == 'on_time_created':
-                domain += [('ttype', '=', 'datetime'), ('name', '=', 'create_date')]
-            elif automation.trigger == 'on_time_updated':
-                domain += [('ttype', '=', 'datetime'), ('name', '=', 'write_date')]
-            else:
-                automation.trigger_field_ids = False
+            if automation.trigger == "on_create_or_write":
+                automation.trigger_field_ids |= automation._get_filter_domain_fields()
                 continue
-            if automation.model_id.is_mail_thread and automation.trigger in MAIL_TRIGGERS:
-                continue
+            automation._onchange_trigger()
 
-            automation.trigger_field_ids = self.env['ir.model.fields'].search(domain, limit=1)
-
-    @api.depends('trigger_field_ids')
+    @api.depends('model_id')
     def _compute_trigger(self):
-        for automation in self:
-            automation.trigger = False if not automation.trigger_field_ids else automation.trigger
+        self.trigger = False
+
+    @api.onchange('trigger')
+    def _onchange_trigger(self):
+        field = (
+            self._get_trigger_specific_field()
+            if self.trigger not in TIME_TRIGGERS
+            else False
+        )
+        self.trigger_field_ids = field
+
 
     @api.onchange('trigger', 'action_server_ids')
     def _onchange_trigger_or_actions(self):
@@ -468,6 +468,51 @@ class BaseAutomation(models.Model):
             'view_mode': 'list,form',
             'domain': [('path', '=', "base_automation(%s)" % self.id)],
         }
+
+    def _get_filter_domain_fields(self):
+        self.ensure_one()
+        if not self.filter_domain or not self.model_id:
+            return self.env['ir.model.fields']
+        model = self.model_id.model
+        fields = self.env["ir.model.fields"]
+        # wondering why we use a regex instead of safe_eval?
+        # because this method is called on a compute method hence could be triggered
+        # from an onchange call (i.e. a manually crafted malicious one)
+        # see: https://github.com/odoo/odoo/pull/189772#issuecomment-2548804283
+        for match in DOMAIN_FIELDS_RE.finditer(self.filter_domain):
+            if field := match.groupdict().get('field'):
+                fields |= self.env["ir.model.fields"]._get(model, field)
+        return fields
+
+    def _get_trigger_specific_field(self):
+        self.ensure_one()
+        match self.trigger:
+            case 'on_create_or_write':
+                return self._get_filter_domain_fields()
+            case 'on_stage_set':
+                domain = [('ttype', '=', 'many2one'), ('name', 'in', ['stage_id', 'x_studio_stage_id'])]
+            case 'on_tag_set':
+                domain = [('ttype', '=', 'many2many'), ('name', 'in', ['tag_ids', 'x_studio_tag_ids'])]
+            case 'on_priority_set':
+                domain = [('ttype', '=', 'selection'), ('name', 'in', ['priority', 'x_studio_priority'])]
+            case 'on_state_set':
+                domain = [('ttype', '=', 'selection'), ('name', 'in', ['state', 'x_studio_state'])]
+            case 'on_user_set':
+                domain = [
+                    ('relation', '=', 'res.users'),
+                    ('ttype', 'in', ['many2one', 'many2many']),
+                    ('name', 'in', ['user_id', 'user_ids', 'x_studio_user_id', 'x_studio_user_ids']),
+                ]
+            case 'on_archive' | 'on_unarchive':
+                domain = [('ttype', '=', 'boolean'), ('name', 'in', ['active', 'x_active'])]
+            case 'on_time_created':
+                domain = [('ttype', '=', 'datetime'), ('name', '=', 'create_date')]
+            case 'on_time_updated':
+                domain = [('ttype', '=', 'datetime'), ('name', '=', 'write_date')]
+            case _:
+                return self.env['ir.model.fields']
+        domain += [('model_id', '=', self.model_id.id)]
+        return self.env['ir.model.fields'].search(domain, limit=1)
 
     def _prepare_loggin_values(self, **values):
         self.ensure_one()

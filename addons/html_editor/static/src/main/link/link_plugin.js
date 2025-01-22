@@ -100,6 +100,21 @@ async function fetchInternalMetaData(url) {
     return result;
 }
 
+async function fetchAttachmentMetaData(url, ormService) {
+    try {
+        const urlParsed = new URL(url, window.location.origin);
+        const attachementId = parseInt(urlParsed.pathname.split("/").pop());
+        const [{ name, mimetype }] = await ormService.read(
+            "ir.attachment",
+            [attachementId],
+            ["name", "mimetype"]
+        );
+        return { name, mimetype };
+    } catch {
+        return { name: url, mimetype: undefined };
+    }
+}
+
 /**
  * @typedef { Object } LinkShared
  * @property { LinkPlugin['createLink'] } createLink
@@ -188,12 +203,13 @@ export class LinkPlugin extends Plugin {
     setup() {
         this.overlay = this.dependencies.overlay.createOverlay(LinkPopover, {}, { sequence: 50 });
         this.addDomListener(this.editable, "click", (ev) => {
-            if (ev.target.tagName === "A" && ev.target.isContentEditable) {
+            const target = closestElement(ev.target, "a");
+            if (target?.isContentEditable) {
                 if (ev.ctrlKey || ev.metaKey) {
-                    window.open(ev.target.href, "_blank");
+                    window.open(target.href, "_blank");
                 }
                 ev.preventDefault();
-                this.toggleLinkTools({ link: ev.target });
+                this.toggleLinkTools({ link: target });
             }
         });
         // link creation is added to the command service because of a shortcut conflict,
@@ -215,6 +231,9 @@ export class LinkPlugin extends Plugin {
 
         this.getExternalMetaData = memoize(fetchExternalMetaData);
         this.getInternalMetaData = memoize(fetchInternalMetaData);
+        this.getAttachmentMetadata = memoize((url) =>
+            fetchAttachmentMetaData(url, this.services.orm)
+        );
     }
 
     destroy() {
@@ -317,6 +336,8 @@ export class LinkPlugin extends Plugin {
             },
             getInternalMetaData: this.getInternalMetaData,
             getExternalMetaData: this.getExternalMetaData,
+            getAttachmentMetadata: this.getAttachmentMetadata,
+            recordInfo: this.config.getRecordInfo?.() || {},
         };
         if (!selectionData.documentSelectionIsInEditable) {
             // note that data-prevent-closing-overlay also used in color picker but link popover
@@ -404,6 +425,9 @@ export class LinkPlugin extends Plugin {
                     this.removeCurrentLinkIfEmtpy();
                     this.dependencies.history.addStep();
                 },
+                canEdit: !this.linkElement.classList.contains("o_link_readonly"),
+                canUpload: !this.config.disableFile,
+                onUpload: this.config.onAttachmentChange,
             };
 
             if (linkEl.isConnected) {
@@ -472,7 +496,8 @@ export class LinkPlugin extends Plugin {
         if (
             this.linkElement &&
             cleanZWChars(this.linkElement.innerText) === "" &&
-            !this.linkElement.querySelector("img")
+            !this.linkElement.querySelector("img") &&
+            this.linkElement.parentElement?.isContentEditable
         ) {
             this.linkElement.remove();
         }
@@ -587,7 +612,7 @@ export class LinkPlugin extends Plugin {
             const attributes = [...link.attributes].filter(
                 (a) => !["style", "href", "class"].includes(a.name)
             );
-            if (!classes.length && !attributes.length) {
+            if (!classes.length && !attributes.length && link.parentElement.isContentEditable) {
                 link.remove();
             }
         }
@@ -681,7 +706,7 @@ export class LinkPlugin extends Plugin {
     handleEnterAtEdgeOfLink(params, splitOrLineBreakCallback) {
         // @todo: handle target Node being a descendent of a link (iterate over
         // leaves inside the link, rather than childNodes)
-        let { targetNode, targetOffset } = params;
+        let { targetNode, targetOffset, blockToSplit } = params;
         if (targetNode.tagName !== "A") {
             return;
         }
@@ -690,7 +715,8 @@ export class LinkPlugin extends Plugin {
             return;
         }
         [targetNode, targetOffset] = edge === "start" ? leftPos(targetNode) : rightPos(targetNode);
-        splitOrLineBreakCallback({ ...params, targetNode, targetOffset });
+        blockToSplit = targetNode;
+        splitOrLineBreakCallback({ ...params, targetNode, targetOffset, blockToSplit });
         return true;
     }
 }

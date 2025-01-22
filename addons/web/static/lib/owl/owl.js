@@ -3741,6 +3741,7 @@
             index: 0,
             forceNewBlock: true,
             translate: parentCtx.translate,
+            translationCtx: parentCtx.translationCtx,
             tKeyExpr: null,
             nameSpace: parentCtx.nameSpace,
             tModelSelectedExpr: parentCtx.tModelSelectedExpr,
@@ -3843,6 +3844,7 @@
                 forceNewBlock: false,
                 isLast: true,
                 translate: true,
+                translationCtx: "",
                 tKeyExpr: null,
             });
             // define blocks and utility functions
@@ -3980,9 +3982,9 @@
             })
                 .join("");
         }
-        translate(str) {
+        translate(str, translationCtx) {
             const match = translationRE.exec(str);
-            return match[1] + this.translateFn(match[2]) + match[3];
+            return match[1] + this.translateFn(match[2], translationCtx) + match[3];
         }
         /**
          * @returns the newly created block name, if any
@@ -4023,7 +4025,9 @@
                     return this.compileTSlot(ast, ctx);
                 case 16 /* TTranslation */:
                     return this.compileTTranslation(ast, ctx);
-                case 17 /* TPortal */:
+                case 17 /* TTranslationContext */:
+                    return this.compileTTranslationContext(ast, ctx);
+                case 18 /* TPortal */:
                     return this.compileTPortal(ast, ctx);
             }
         }
@@ -4061,7 +4065,7 @@
             let { block, forceNewBlock } = ctx;
             let value = ast.value;
             if (value && ctx.translate !== false) {
-                value = this.translate(value);
+                value = this.translate(value, ctx.translationCtx);
             }
             if (!ctx.inPreTag) {
                 value = value.replace(whitespaceRE, " ");
@@ -4096,6 +4100,7 @@
             return `[${modifiersCode}${this.captureExpression(handler)}, ctx]`;
         }
         compileTDomNode(ast, ctx) {
+            var _a;
             let { block, forceNewBlock } = ctx;
             const isNewBlock = !block || forceNewBlock || ast.dynamicTag !== null || ast.ns;
             let codeIdx = this.target.code.length;
@@ -4151,7 +4156,8 @@
                     }
                 }
                 else if (this.translatableAttributes.includes(key)) {
-                    attrs[key] = this.translateFn(ast.attrs[key]);
+                    const attrTranslationCtx = ((_a = ast.attrsTranslationCtx) === null || _a === void 0 ? void 0 : _a[key]) || ctx.translationCtx;
+                    attrs[key] = this.translateFn(ast.attrs[key], attrTranslationCtx);
                 }
                 else {
                     expr = `"${ast.attrs[key]}"`;
@@ -4595,7 +4601,7 @@
             else {
                 let value;
                 if (ast.defaultValue) {
-                    const defaultValue = toStringExpression(ctx.translate ? this.translate(ast.defaultValue) : ast.defaultValue);
+                    const defaultValue = toStringExpression(ctx.translate ? this.translate(ast.defaultValue, ctx.translationCtx) : ast.defaultValue);
                     if (ast.value) {
                         value = `withDefault(${expr}, ${defaultValue})`;
                     }
@@ -4629,9 +4635,10 @@
          * "some-prop"       "state"          "'some-prop': ctx['state']"
          * "onClick.bind"    "onClick"        "onClick: bind(ctx, ctx['onClick'])"
          */
-        formatProp(name, value) {
+        formatProp(name, value, attrsTranslationCtx, translationCtx) {
             if (name.endsWith(".translate")) {
-                value = toStringExpression(this.translateFn(value));
+                const attrTranslationCtx = (attrsTranslationCtx === null || attrsTranslationCtx === void 0 ? void 0 : attrsTranslationCtx[name]) || translationCtx;
+                value = toStringExpression(this.translateFn(value, attrTranslationCtx));
             }
             else {
                 value = this.captureExpression(value);
@@ -4647,14 +4654,14 @@
                     case "translate":
                         break;
                     default:
-                        throw new OwlError("Invalid prop suffix");
+                        throw new OwlError(`Invalid prop suffix: ${suffix}`);
                 }
             }
             name = /^[a-z_]+$/i.test(name) ? name : `'${name}'`;
             return `${name}: ${value || undefined}`;
         }
-        formatPropObject(obj) {
-            return Object.entries(obj).map(([k, v]) => this.formatProp(k, v));
+        formatPropObject(obj, attrsTranslationCtx, translationCtx) {
+            return Object.entries(obj).map(([k, v]) => this.formatProp(k, v, attrsTranslationCtx, translationCtx));
         }
         getPropString(props, dynProps) {
             let propString = `{${props.join(",")}}`;
@@ -4667,7 +4674,9 @@
             let { block } = ctx;
             // props
             const hasSlotsProp = "slots" in (ast.props || {});
-            const props = ast.props ? this.formatPropObject(ast.props) : [];
+            const props = ast.props
+                ? this.formatPropObject(ast.props, ast.propsTranslationCtx, ctx.translationCtx)
+                : [];
             // slots
             let slotDef = "";
             if (ast.slots) {
@@ -4690,7 +4699,7 @@
                         params.push(`__scope: "${scope}"`);
                     }
                     if (ast.slots[slotName].attrs) {
-                        params.push(...this.formatPropObject(ast.slots[slotName].attrs));
+                        params.push(...this.formatPropObject(ast.slots[slotName].attrs, ast.slots[slotName].attrsTranslationCtx, ctx.translationCtx));
                     }
                     const slotInfo = `{${params.join(", ")}}`;
                     slotStr.push(`'${slotName}': ${slotInfo}`);
@@ -4803,7 +4812,9 @@
             if (isMultiple) {
                 key = this.generateComponentKey(key);
             }
-            const props = ast.attrs ? this.formatPropObject(ast.attrs) : [];
+            const props = ast.attrs
+                ? this.formatPropObject(ast.attrs, ast.attrsTranslationCtx, ctx.translationCtx)
+                : [];
             const scope = this.getPropString(props, dynProps);
             if (ast.defaultContent) {
                 const name = this.compileInNewTarget("defaultContent", ast.defaultContent, ctx);
@@ -4833,6 +4844,12 @@
         compileTTranslation(ast, ctx) {
             if (ast.content) {
                 return this.compileAST(ast.content, Object.assign({}, ctx, { translate: false }));
+            }
+            return null;
+        }
+        compileTTranslationContext(ast, ctx) {
+            if (ast.content) {
+                return this.compileAST(ast.content, Object.assign({}, ctx, { translationCtx: ast.translationCtx }));
             }
             return null;
         }
@@ -4905,6 +4922,7 @@
             parseTOutNode(node, ctx) ||
             parseTKey(node, ctx) ||
             parseTTranslation(node, ctx) ||
+            parseTTranslationContext(node, ctx) ||
             parseTSlot(node, ctx) ||
             parseComponent(node, ctx) ||
             parseDOMNode(node, ctx) ||
@@ -5013,6 +5031,7 @@
         node.removeAttribute("t-ref");
         const nodeAttrsNames = node.getAttributeNames();
         let attrs = null;
+        let attrsTranslationCtx = null;
         let on = null;
         let model = null;
         for (let attr of nodeAttrsNames) {
@@ -5073,6 +5092,11 @@
             else if (attr === "xmlns") {
                 ns = value;
             }
+            else if (attr.startsWith("t-translation-context-")) {
+                const attrName = attr.slice(22);
+                attrsTranslationCtx = attrsTranslationCtx || {};
+                attrsTranslationCtx[attrName] = value;
+            }
             else if (attr !== "t-name") {
                 if (attr.startsWith("t-") && !attr.startsWith("t-att")) {
                     throw new OwlError(`Unknown QWeb directive: '${attr}'`);
@@ -5094,6 +5118,7 @@
             tag: tagName,
             dynamicTag,
             attrs,
+            attrsTranslationCtx,
             on,
             ref,
             content: children,
@@ -5234,7 +5259,15 @@
             if (ast && ast.type === 11 /* TComponent */) {
                 return {
                     ...ast,
-                    slots: { default: { content: tcall, scope: null, on: null, attrs: null } },
+                    slots: {
+                        default: {
+                            content: tcall,
+                            scope: null,
+                            on: null,
+                            attrs: null,
+                            attrsTranslationCtx: null,
+                        },
+                    },
                 };
             }
         }
@@ -5349,9 +5382,15 @@
         node.removeAttribute("t-slot-scope");
         let on = null;
         let props = null;
+        let propsTranslationCtx = null;
         for (let name of node.getAttributeNames()) {
             const value = node.getAttribute(name);
-            if (name.startsWith("t-")) {
+            if (name.startsWith("t-translation-context-")) {
+                const attrName = name.slice(22);
+                propsTranslationCtx = propsTranslationCtx || {};
+                propsTranslationCtx[attrName] = value;
+            }
+            else if (name.startsWith("t-")) {
                 if (name.startsWith("t-on-")) {
                     on = on || {};
                     on[name.slice(5)] = value;
@@ -5395,12 +5434,18 @@
                 const slotAst = parseNode(slotNode, ctx);
                 let on = null;
                 let attrs = null;
+                let attrsTranslationCtx = null;
                 let scope = null;
                 for (let attributeName of slotNode.getAttributeNames()) {
                     const value = slotNode.getAttribute(attributeName);
                     if (attributeName === "t-slot-scope") {
                         scope = value;
                         continue;
+                    }
+                    else if (attributeName.startsWith("t-translation-context-")) {
+                        const attrName = attributeName.slice(22);
+                        attrsTranslationCtx = attrsTranslationCtx || {};
+                        attrsTranslationCtx[attrName] = value;
                     }
                     else if (attributeName.startsWith("t-on-")) {
                         on = on || {};
@@ -5412,17 +5457,32 @@
                     }
                 }
                 slots = slots || {};
-                slots[name] = { content: slotAst, on, attrs, scope };
+                slots[name] = { content: slotAst, on, attrs, attrsTranslationCtx, scope };
             }
             // default slot
             const defaultContent = parseChildNodes(clone, ctx);
             slots = slots || {};
             // t-set-slot="default" has priority over content
             if (defaultContent && !slots.default) {
-                slots.default = { content: defaultContent, on, attrs: null, scope: defaultSlotScope };
+                slots.default = {
+                    content: defaultContent,
+                    on,
+                    attrs: null,
+                    attrsTranslationCtx: null,
+                    scope: defaultSlotScope,
+                };
             }
         }
-        return { type: 11 /* TComponent */, name, isDynamic, dynamicProps, props, slots, on };
+        return {
+            type: 11 /* TComponent */,
+            name,
+            isDynamic,
+            dynamicProps,
+            props,
+            propsTranslationCtx,
+            slots,
+            on,
+        };
     }
     // -----------------------------------------------------------------------------
     // Slots
@@ -5434,12 +5494,18 @@
         const name = node.getAttribute("t-slot");
         node.removeAttribute("t-slot");
         let attrs = null;
+        let attrsTranslationCtx = null;
         let on = null;
         for (let attributeName of node.getAttributeNames()) {
             const value = node.getAttribute(attributeName);
             if (attributeName.startsWith("t-on-")) {
                 on = on || {};
                 on[attributeName.slice(5)] = value;
+            }
+            else if (attributeName.startsWith("t-translation-context-")) {
+                const attrName = attributeName.slice(22);
+                attrsTranslationCtx = attrsTranslationCtx || {};
+                attrsTranslationCtx[attrName] = value;
             }
             else {
                 attrs = attrs || {};
@@ -5450,10 +5516,14 @@
             type: 14 /* TSlot */,
             name,
             attrs,
+            attrsTranslationCtx,
             on,
             defaultContent: parseChildNodes(node, ctx),
         };
     }
+    // -----------------------------------------------------------------------------
+    // Translation
+    // -----------------------------------------------------------------------------
     function parseTTranslation(node, ctx) {
         if (node.getAttribute("t-translation") !== "off") {
             return null;
@@ -5462,6 +5532,21 @@
         return {
             type: 16 /* TTranslation */,
             content: parseNode(node, ctx),
+        };
+    }
+    // -----------------------------------------------------------------------------
+    // Translation Context
+    // -----------------------------------------------------------------------------
+    function parseTTranslationContext(node, ctx) {
+        const translationCtx = node.getAttribute("t-translation-context");
+        if (!translationCtx) {
+            return null;
+        }
+        node.removeAttribute("t-translation-context");
+        return {
+            type: 17 /* TTranslationContext */,
+            content: parseNode(node, ctx),
+            translationCtx,
         };
     }
     // -----------------------------------------------------------------------------
@@ -5481,7 +5566,7 @@
             };
         }
         return {
-            type: 17 /* TPortal */,
+            type: 18 /* TPortal */,
             target,
             content,
         };
@@ -5623,7 +5708,7 @@
     }
 
     // do not modify manually. This file is generated by the release script.
-    const version = "2.5.2";
+    const version = "2.6.0";
 
     // -----------------------------------------------------------------------------
     //  Scheduler
@@ -6138,8 +6223,8 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.date = '2024-12-02T15:51:07.157Z';
-    __info__.hash = '1c5b6f2';
+    __info__.date = '2025-01-15T10:40:24.184Z';
+    __info__.hash = 'a9be149';
     __info__.url = 'https://github.com/odoo/owl';
 
 

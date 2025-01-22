@@ -7,7 +7,12 @@ from odoo.tests import tagged
 class TestEdiEwaybillJson(TestEdiJson):
 
     def test_edi_json(self):
-        (self.invoice + self.invoice_full_discount + self.invoice_zero_qty).write({
+        self.env['account.move'].browse((
+            self.invoice.id,
+            self.invoice_full_discount.id,
+            self.invoice_zero_qty.id,
+            self.invoice_reverse.id,
+        )).write({
             "l10n_in_type_id": self.env.ref("l10n_in_edi_ewaybill.type_tax_invoice_sub_type_supply"),
             "l10n_in_distance": 20,
             "l10n_in_mode": "1",
@@ -75,6 +80,36 @@ class TestEdiEwaybillJson(TestEdiJson):
             "totInvValue": 2005.19
         }
         self.assertDictEqual(json_value, expected, "Indian EDI send json value is not matched")
+
+        # =================================== Credit Note Test =============================================
+        credit_note_expected = expected.copy()
+        credit_note_expected.update({
+            'docDate': '25/12/2023',
+            'docNo': 'RINV/23-24/0001',
+            'supplyType': 'I',
+            "fromGstin": expected['toGstin'],
+            "fromTrdName": expected['toTrdName'],
+            "fromAddr1": expected['toAddr1'],
+            "fromAddr2": expected['toAddr2'],
+            "fromPlace": expected['toPlace'],
+            "fromPincode": expected['toPincode'],
+            "fromStateCode": expected['toStateCode'],
+            "actFromStateCode": expected['actToStateCode'],
+            "toGstin": expected['fromGstin'],
+            "toTrdName": expected['fromTrdName'],
+            "toAddr1": expected['fromAddr1'],
+            "toAddr2": expected['fromAddr2'],
+            "toPlace": expected['fromPlace'],
+            "toPincode": expected['fromPincode'],
+            "toStateCode": expected['fromStateCode'],
+            "actToStateCode": expected['actFromStateCode'],
+        })
+        self.assertDictEqual(
+            self.env.ref(
+                'l10n_in_edi_ewaybill.edi_in_ewaybill_json_1_03'
+            )._l10n_in_edi_ewaybill_generate_json(self.invoice_reverse),
+            credit_note_expected,
+        )
 
         #=================================== Full discount test =====================================
         json_value = self.env["account.edi.format"]._l10n_in_edi_ewaybill_generate_json(self.invoice_full_discount)

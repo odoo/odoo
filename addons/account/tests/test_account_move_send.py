@@ -625,7 +625,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertEqual(wizard.move_ids, invoice1 + invoice2)
         self.assertFalse(wizard.alerts)
         self.assertEqual(wizard.summary_data, {
-            'manual': {'count': 1, 'label': 'Download'},
+            'manual': {'count': 1, 'label': 'Manually'},
             'email': {'count': 1, 'label': 'by Email'},
         })
 
@@ -666,7 +666,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertEqual(wizard.move_ids, invoice1 + invoice2 + invoice3)
         self.assertTrue(wizard.alerts and 'account_pdf_exist' in wizard.alerts)
         self.assertEqual(wizard.summary_data, {
-            'manual': {'count': 2, 'label': 'Download'},
+            'manual': {'count': 2, 'label': 'Manually'},
             'email': {'count': 1, 'label': 'by Email'},
         })
         wizard.action_send_and_print()
@@ -734,7 +734,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             self.assertEqual(wizard.summary_data, {
                 'edi1': {'count': 2, 'label': 'by EDI 1'},
                 'edi2': {'count': 1, 'label': 'by EDI 2'},
-                'manual': {'count': 1, 'label': 'Download'},
+                'manual': {'count': 1, 'label': 'Manually'},
                 'email': {'count': 1, 'label': 'by Email'},
             })
 

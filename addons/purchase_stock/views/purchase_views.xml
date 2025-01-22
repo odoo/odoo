@@ -35,10 +35,12 @@
                 <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" invisible="not id or forecasted_issue or not product_id.is_storable"/>
             </xpath>
             <xpath expr="//div[@name='date_planned_div']" position="inside">
-                <button name="%(action_purchase_vendor_delay_report)d" class="oe_link" type="action" context="{'search_default_partner_id': partner_id}" invisible="state in ['purchase', 'done'] or not partner_id">
-                    <span invisible="on_time_rate &lt; 0"><field name="on_time_rate" widget="integer" class="oe_inline"/>% On-Time Delivery</span>
-                    <span invisible="on_time_rate &gt;= 0">No On-time Delivery Data</span>
-                </button>
+                <div>
+                    <button name="%(action_purchase_vendor_delay_report)d" class="oe_link" type="action" context="{'search_default_partner_id': partner_id}" invisible="state in ['purchase', 'done'] or not partner_id">
+                        <span invisible="on_time_rate &lt; 0"><field name="on_time_rate" widget="integer" class="oe_inline"/>% On-Time Delivery</span>
+                        <span invisible="on_time_rate &gt;= 0">No On-time Delivery Data</span>
+                    </button>
+                </div>
             </xpath>
             <xpath expr="//label[@for='receipt_reminder_email']" position="attributes">
                 <attribute name="invisible">effective_date</attribute>

@@ -39,10 +39,17 @@ export class ProjectTaskRecord extends Record {
         });
         this.displaySubtasks = !this.displaySubtasks;
     }
-
 }
 
-export class ProjectTaskKanbanModel extends RelationalModel {}
+export class ProjectTaskKanbanModel extends RelationalModel {
+    async _webReadGroup(config, firstGroupByName, orderBy) {
+        config.context = {
+            ...config.context,
+            project_kanban: true,
+        };
+        return super._webReadGroup(...arguments);
+    }
+}
 
 ProjectTaskKanbanModel.DynamicGroupList = ProjectTaskKanbanDynamicGroupList;
 ProjectTaskKanbanModel.Record = ProjectTaskRecord;

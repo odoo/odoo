@@ -134,7 +134,12 @@ class MailController(http.Controller):
             url_params['view_id'] = view_id
         if cids:
             request.future_response.set_cookie('cids', '-'.join([str(cid) for cid in cids]))
-        url = f'/odoo/{model}/{res_id}?{url_encode(url_params)}'
+        
+        # @see commit c63d14a0485a553b74a8457aee158384e9ae6d3f
+        # @see router.js: heuristics to discrimate a model name from an action path
+        # is the presence of dots, or the prefix m- for models
+        model_in_url = model if "." in model else "m-" + model
+        url = f'/odoo/{model_in_url}/{res_id}?{url_encode(url_params)}'
         return request.redirect(url)
 
     @http.route('/mail/view', type='http', auth='public')

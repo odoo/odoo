@@ -7,8 +7,8 @@
 # Olga Gutorova, 2024
 # Anton Kaligin, 2024
 # Nadia Martynova, 2024
-# Ilya Rozhkov, 2024
 # Wil Odoo, 2024
+# Ilya Rozhkov, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Ilya Rozhkov, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,6 +31,8 @@ msgid ""
 "\n"
 "This issue occurs because the quantity becomes zero after rounding during the conversion. To fix this, adjust the conversion factors or rounding method to ensure that even the smallest quantity in the original unit does not round down to zero in the target unit."
 msgstr ""
+"\n"
+"Проблема возникает, когда после округления при пересчёте количество становится равным нулю. Чтобы исправить это, измените коэффициенты пересчёта или метод округления, чтобы даже самое маленькое количество не превращалось в ноль."
 
 #. module: point_of_sale
 #. odoo-python
@@ -925,7 +927,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/data_service.js:0
 msgid "An error occurred while loading the Point of Sale: \n"
-msgstr ""
+msgstr "Произошла ошибка при загрузке точки продаж:\n"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__name
@@ -2080,6 +2082,8 @@ msgid ""
 "Conversion Error: The following unit of measure conversions result in a zero"
 " quantity due to rounding:"
 msgstr ""
+"Ошибка преобразования: Округление приводит к нулевому количеству для "
+"следующих единиц измерения:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_rate
@@ -5584,7 +5588,7 @@ msgstr "Работает на"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 msgid "Powered by Odoo"
-msgstr ""
+msgstr "Работает на Odoo"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6809,7 +6813,7 @@ msgstr "Установите несколько цен на продукт, ав
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "Set the new discount"
-msgstr ""
+msgstr "Установите новую скидку"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8081,6 +8085,9 @@ msgid ""
 "\n"
 "Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
 msgstr ""
+"Чтобы удалить продукт, убедитесь, что все сеансы торговой точки закрыты.\n"
+"\n"
+"Удаление продукта, доступного в сеансе, похоже на попытку выхватить гамбургер из рук клиента в момент укуса — это приведёт к хаосу, и кетчуп с майонезом разлетятся повсюду!"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8805,6 +8812,8 @@ msgid ""
 "You do not have permission to open a POS session. Please try opening a "
 "session with a different user"
 msgstr ""
+"У вас нет прав для открытия сеанса торговой точки. Попробуйте открыть сеанс "
+"с другим пользователем"
 
 #. module: point_of_sale
 #. odoo-python
@@ -9102,7 +9111,7 @@ msgstr "используя"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/debug/debug_widget.xml:0
 msgid "{{ !barcodeReader ? 'No nomenclature' : '' }}"
-msgstr ""
+msgstr "{{ !barcodeReader ? 'Нет номенклатуры' : '' }}"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9111,3 +9120,5 @@ msgid ""
 "{{ line.has_valid_product_lot() ? 'Valid product lot' : 'Invalid product "
 "lot'}}"
 msgstr ""
+"{{ line.has_valid_product_lot() ? 'Действительная партия продукта' : "
+"'Недействительная партия продукта' }}"

@@ -583,8 +583,8 @@ class Warehouse(models.Model):
                     'active': self.reception_steps != 'one_step' and self.delivery_steps != 'ship_only'
                 },
                 'route_create_values': {
-                    'product_selectable': True,
-                    'product_categ_selectable': True,
+                    'product_selectable': False,
+                    'product_categ_selectable': False,
                     'active': self.delivery_steps != 'ship_only' and self.reception_steps != 'one_step',
                     'company_id': self.company_id.id,
                     'sequence': 20,

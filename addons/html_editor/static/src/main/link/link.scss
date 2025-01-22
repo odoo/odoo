@@ -1,0 +1,17 @@
+.odoo-editor-editable a.o_link_in_selection:not(.btn) {
+    background-color: #a6e3e2;
+    color: black !important;
+    border: 1px dashed #008f8c;
+    margin: -1px;
+}
+
+.odoo-editor-editable {
+    .btn {
+        user-select: auto;
+        cursor: text;
+    }
+
+    [contenteditable=false] .btn.btn-link {
+        cursor: pointer;
+    }
+}

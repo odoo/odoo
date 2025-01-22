@@ -8,7 +8,7 @@ import {
     insertSnippet,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
-import { boundariesIn, setSelection } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
+import { boundariesIn, setSelection, nodeSize } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 
 const clickOnImgStep = {
     content: "Click somewhere else to save.",
@@ -43,6 +43,13 @@ registerWebsitePreviewTour('link_tools', {
         run: 'edit odoo.com',
     },
     clickOnImgStep,
+    {
+        content: "Select the newly created link",
+        trigger: ':iframe #wrap .s_text_image a[href="http://odoo.com"]:contains("odoo.com")',
+        run() {
+            setSelection(this.anchor, 0, this.anchor, nodeSize(this.anchor));
+        }
+    },
     // Remove the link.
     {
         content: "Click on the newly created link",

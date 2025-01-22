@@ -14,7 +14,6 @@ patch(Navbar.prototype, {
      * If no table is set to pos, which means the current main screen
      * is floor screen, then the order count should be based on all the orders.
      */
-
     get orderCount() {
         if (this.pos.config.module_pos_restaurant && this.pos.selectedTable) {
             return this.pos.getTableOrders(this.pos.selectedTable.id).length;

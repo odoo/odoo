@@ -1975,7 +1975,9 @@ class _String(Field[str | typing.Literal[False]]):
             translation_dictionary = self.get_translation_dictionary(from_lang_value, old_translations)
             text2terms = defaultdict(list)
             for term in new_terms:
-                text2terms[self.get_text_content(term)].append(term)
+                term_text = self.get_text_content(term)
+                if term_text:
+                    text2terms[term_text].append(term)
 
             is_text = self.translate.is_text if hasattr(self.translate, 'is_text') else lambda term: True
             term_adapter = self.translate.term_adapter if hasattr(self.translate, 'term_adapter') else None

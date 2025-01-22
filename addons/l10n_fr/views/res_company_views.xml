@@ -8,7 +8,6 @@
         <field name="arch" type="xml">
         <data>
              <xpath expr="//field[@name='company_registry']" position="after">
-                 <field name="is_france_country" invisible="1"/>
                  <field name="siret" invisible="not is_france_country"/>
                  <field name="ape" invisible="not is_france_country"/>
              </xpath>

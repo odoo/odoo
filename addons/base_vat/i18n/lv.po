@@ -3,18 +3,17 @@
 # 	* base_vat
 # 
 # Translators:
-# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
 # Arnis Putniņš <arnis@allegro.lv>, 2024
 # myacc-pro, 2024
-# Martin Trigaux, 2024
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-30 14:40+0000\n"
+"POT-Creation-Date: 2024-12-23 21:07+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +25,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "'219999830019' (should be 12 digits)"
-msgstr ""
+msgstr "\"219999830019\" (jābūt 12 cipariem)"
 
 #. module: base_vat
 #. odoo-python
@@ -34,54 +33,57 @@ msgstr ""
 msgid ""
 "10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
 msgstr ""
+"10XXXXXXXXY vai 20XXXXXXXXY vai 15XXXXXXXXY vai 16XXXXXXXXY vai 17XXXXXXXXY"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "17291716060 (NIN) or 1729171602 (VKN)"
-msgstr ""
+msgstr "17291716060 (NIN) vai 1729171602 (VKN)"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "1792060346001 or 1792060346"
-msgstr ""
+msgstr "1792060346001 vai 1792060346"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "3101012009"
-msgstr ""
+msgstr "3101012009"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "310175397400003 [Fifteen digits, first and last digits should be \"3\"]"
 msgstr ""
+"310175397400003 [Piecpadsmit cipari, pirmajam un pēdējam ciparam jābūt "
+"\"3\"]"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "49-098-576 or 49098576"
-msgstr ""
+msgstr "49-098-576 vai 49098576"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "AR200-5536168-2 or 20055361682"
-msgstr ""
+msgstr "AR200-5536168-2 vai 20055361682"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
-msgstr ""
+msgstr "CHE-123.456.788 TVA vai CHE-123.456.788 MWST vai CHE-123.456.788 IVA"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "CO213123432-1 or CO213.123.432-1"
-msgstr ""
+msgstr "CO213123432-1 vai CO213.123.432-1"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -100,6 +102,7 @@ msgid ""
 "Connection with the VIES server failed. The VAT number %s could not be "
 "validated."
 msgstr ""
+"Savienojums ar VIES serveri neizdevās. PVN numurs %s nevarēja validēt."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -110,36 +113,44 @@ msgstr "Kontakts"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "DE123456788 or 12/345/67890"
-msgstr ""
+msgstr "DE123456788 vai 12/345/67890"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "DO1-01-85004-3 or 101850043"
-msgstr ""
+msgstr "DO1-01-85004-3 vai 101850043"
 
 #. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vies_valid
 #: model:ir.model.fields,help:base_vat.field_res_users__vies_valid
 msgid "European VAT numbers are automatically checked on the VIES database."
+msgstr "Eiropas PVN numuri tiek automātiski pārbaudīti VIES datu bāzē."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid ""
+"Example: '219999830019' (format: 12 digits, all numbers, valid check digit)"
 msgstr ""
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_account_fiscal_position
 msgid "Fiscal Position"
-msgstr "Nodokļu Profils"
+msgstr "Fiskālā pozīcija"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "GB123456782 or XI123456782"
-msgstr ""
+msgstr "GB123456782 vai XI123456782"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "HU12345676 or 12345678-1-11 or 8071592153"
-msgstr ""
+msgstr "HU12345676 vai 12345678-1-11, vai 8071592153"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -147,24 +158,27 @@ msgid ""
 "If this checkbox is ticked, the default fiscal position that applies will "
 "depend upon the output of the verification by the European VIES Service."
 msgstr ""
+"Ja šī izvēles rūtiņa ir atzīmēta, noklusējuma fiskālā pozīcija, kas tiek "
+"piemērota, būs atkarīga no Eiropas VIES dienesta veiktās pārbaudes "
+"rezultātiem."
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_valid
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_valid
 msgid "Intra-Community Valid"
-msgstr ""
+msgstr "Derīgs starp iekšējiem uzņēmumiem"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "MXGODE561231GR8 or GODE561231GR8"
-msgstr ""
+msgstr "MXGODE561231GR8 vai GODE561231GR8"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__perform_vies_validation
 #: model:ir.model.fields,field_description:base_vat.field_res_users__perform_vies_validation
 msgid "Perform Vies Validation"
-msgstr ""
+msgstr "Veic VIES validāciju"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
@@ -178,6 +192,8 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
+"%(vat_label)s numurs [%(wrong_vat)s] neizskatās derīgs. \n"
+"Piezīme: paredzamais formāts %(expected_format)s"
 
 #. module: base_vat
 #. odoo-python
@@ -186,12 +202,14 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
+"%(vat_label)s numurs [%(wrong_vat)s] priekš %(record_label)s neizskatās derīgs. \n"
+"Piezīme: paredzamais formāts %(expected_format)s"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "The VAT number %s could not be interpreted by the VIES server."
-msgstr ""
+msgstr "VIES serveris nevarēja interpretēt %s PVN numuru."
 
 #. module: base_vat
 #. odoo-python
@@ -200,6 +218,8 @@ msgid ""
 "The country detected for this foreign VAT number does not match any of the "
 "countries composing the country group set on this fiscal position."
 msgstr ""
+"Valsts, kas konstatēta šim ārvalstu PVN numuram, neatbilst nevienai no "
+"valstīm, kas veido šai fiskālajai pozīcijai iestatīto valstu grupu."
 
 #. module: base_vat
 #. odoo-python
@@ -208,6 +228,8 @@ msgid ""
 "The country of the foreign VAT number could not be detected. Please assign a"
 " country to the fiscal position or set a country group"
 msgstr ""
+"Valsts ar ārzemju PVN numuru netika atrasta. Lūdzu, piešķiriet valsti "
+"fiskālajai pozīcijai vai iestatiet valstu grupu"
 
 #. module: base_vat
 #. odoo-python
@@ -216,6 +238,8 @@ msgid ""
 "The request for VAT validation was not processed. VIES service has responded"
 " with the following error: %s"
 msgstr ""
+"Pieprasījums PVN validācijai nav apstrādāts. VIES pakalpojums atbildēja ar "
+"sekojošu kļūdu: %s"
 
 #. module: base_vat
 #. odoo-python
@@ -227,39 +251,39 @@ msgstr "PVN"
 #: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
 #: model:ir.model.fields,field_description:base_vat.field_res_config_settings__vat_check_vies
 msgid "Verify VAT Numbers"
-msgstr ""
+msgstr "Verificēt PVN numurus"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
-msgstr ""
+msgstr "Verificēt PVN numurus izmantojot Eiropas VIES pakalpojumu"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_vat_to_check
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_vat_to_check
 msgid "Vies Vat To Check"
-msgstr ""
+msgstr "VIES PVN pārbaudei"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
-msgstr ""
+msgstr "XXXXXXXXX [9 skaitļi] un tam ir jāievēro Luhn algoritma kontrolsumma"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "either 11 digits for CPF or 14 digits for CNPJ"
-msgstr ""
+msgstr "vai 11 skaitļi priekš CPF vai 14 skaitļi priekš CNPJ"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 msgid "fiscal position [%s]"
-msgstr ""
+msgstr "fiskālā pozīcija [%s]"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
-msgstr ""
+msgstr "partneris [%s]"

@@ -28,7 +28,7 @@ class ResPartner(models.Model):
     peppol_verification_state = fields.Selection(
         selection=[
             ('not_verified', 'Not verified yet'),
-            ('not_valid', 'Not valid'),  # does not exist on Peppol at all
+            ('not_valid', 'Not on Peppol'),  # does not exist on Peppol at all
             ('not_valid_format', 'Cannot receive this format'),  # registered on Peppol but cannot receive the selected document type
             ('valid', 'Valid'),
         ],

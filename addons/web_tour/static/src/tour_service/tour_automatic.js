@@ -5,6 +5,7 @@ import { Macro } from "@web/core/macro";
 import { browser } from "@web/core/browser/browser";
 import { setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
 import * as hoot from "@odoo/hoot-dom";
+import { patch } from "@web/core/utils/patch";
 
 export class TourAutomatic {
     mode = "auto";
@@ -61,18 +62,11 @@ export class TourAutomatic {
                         initialDelay: () => {
                             return this.previousStepIsJustACheck ? 0 : null;
                         },
-                        trigger: () => step.findTrigger(),
+                        trigger: step.trigger ? () => step.findTrigger() : null,
                         timeout: (step.timeout || 10000) + this.config.stepDelay,
                         action: async () => {
                             if (this.checkForUndeterminisms) {
-                                try {
-                                    await step.checkForUndeterminisms();
-                                } catch (error) {
-                                    this.throwError([
-                                        ...this.currentStep.describeWhyIFailed,
-                                        error.message,
-                                    ]);
-                                }
+                                await step.checkForUndeterminisms();
                             }
                             this.previousStepIsJustACheck = !this.currentStep.hasAction;
                             if (this.debugMode) {
@@ -102,6 +96,11 @@ export class TourAutomatic {
             });
 
         const end = () => {
+            //Tour is finished, it's too late to console.
+            patch(console, {
+                error: () => {},
+                warn: () => {},
+            });
             delete window.hoot;
             transitionConfig.disabled = false;
             tourState.clear();
@@ -113,7 +112,7 @@ export class TourAutomatic {
 
         this.macro = new Macro({
             name: this.name,
-            checkDelay: this.checkDelay || 300,
+            checkDelay: this.checkDelay || 200,
             steps: macroSteps,
             onError: (error) => {
                 this.throwError([error]);

@@ -106,11 +106,6 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
-            {
-                ...Dialog.confirm(),
-                content:
-                    "acknowledge printing error ( because we don't have printer in the test. )",
-            },
             ReceiptScreen.clickNextOrder(),
             // Check if there ids no active Order
             Chrome.activeTableOrOrderIs("Table"),
@@ -159,21 +154,16 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             Chrome.clickMenuOption("Orders"),
             // The order ref ends with -0002 because it is actually the 2nd order made in the session.
             // The first order made in the session is a floating order.
-            TicketScreen.deleteOrder("-0002"),
+            TicketScreen.deleteOrder("Main Floor/2"),
             Dialog.confirm(),
-            {
-                ...Dialog.confirm(),
-                content:
-                    "acknowledge printing error ( because we don't have printer in the test. )",
-            },
             Chrome.isSyncStatusConnected(),
-            TicketScreen.selectOrder("-0005"),
+            TicketScreen.selectOrder("Main Floor/5"),
             TicketScreen.loadSelectedOrder(),
             ProductScreen.isShown(),
             Chrome.clickPlanButton(),
 
             // There should be 0 synced draft order as we already deleted -0002.
-            FloorScreen.clickTable("5"),
+            FloorScreen.clickTable("2"),
             ProductScreen.orderIsEmpty(),
         ].flat(),
 });
@@ -187,7 +177,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
         [
             // There is one draft synced order from the previous tour
             Chrome.startPoS(),
-            FloorScreen.clickTable("2"),
+            FloorScreen.clickTable("5"),
             ProductScreen.totalAmountIs("4.40"),
 
             // Test transfering an order
@@ -195,18 +185,14 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
             FloorScreen.clickTable("4"),
 
             // Test if products still get merged after transfering the order
-            ProductScreen.clickDisplayedProduct("Coca-Cola", true, "2.0"),
+            ProductScreen.totalAmountIs("4.40"),
+            ProductScreen.clickDisplayedProduct("Water"),
             ProductScreen.totalAmountIs("6.60"),
             ProductScreen.clickNumpad("1"),
             ProductScreen.totalAmountIs("4.40"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
-            {
-                ...Dialog.confirm(),
-                content:
-                    "acknowledge printing error ( because we don't have printer in the test. )",
-            },
             ReceiptScreen.clickNextOrder(),
             // At this point, there are no draft orders.
 
@@ -278,11 +264,6 @@ registry.category("web_tour.tours").add("OrderTrackingTour", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
-            {
-                content:
-                    "As the font can't be loaded, we wait printing failed modal before close tour",
-                trigger: ".modal:contains(printing failed)",
-            },
         ].flat(),
 });
 registry.category("web_tour.tours").add("CategLabelCheck", {
@@ -387,5 +368,25 @@ registry.category("web_tour.tours").add("PoSPaymentSyncTour3", {
             ProductScreen.isShown(),
             ProductScreen.clickOrderButton(),
             ProductScreen.orderlinesHaveNoChange(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PreparationPrinterContent", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Product Test"),
+            Dialog.confirm("Add"),
+            ProductScreen.clickOrderButton(),
+            {
+                trigger:
+                    ".render-container .pos-receipt-body .product-name:contains('Product Test (Value 1)')",
+            },
+            {
+                trigger: ".render-container .pos-receipt-body .p-0:contains('Value 1')",
+            },
         ].flat(),
 });

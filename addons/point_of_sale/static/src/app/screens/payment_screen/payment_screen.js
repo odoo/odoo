@@ -262,11 +262,22 @@ export class PaymentScreen extends Component {
         }
         if (await this._isOrderValid(isForceValidate)) {
             // remove pending payments before finalizing the validation
+            const toRemove = [];
             for (const line of this.paymentLines) {
-                if (!line.is_done()) {
-                    this.currentOrder.remove_paymentline(line);
+                if (!line.is_done() || line.amount === 0) {
+                    toRemove.push(line);
                 }
             }
+
+            for (const line of toRemove) {
+                this.currentOrder.remove_paymentline(line);
+            }
+
+            const cash = this.payment_methods_from_config.find((pm) => pm.is_cash_count);
+            if (this.currentOrder.get_due() > 0 && this.pos.config.cash_rounding && cash) {
+                this.currentOrder.add_paymentline(cash, 0);
+            }
+
             await this._finalizeValidation();
         }
     }
@@ -296,8 +307,8 @@ export class PaymentScreen extends Component {
 
             // 2. Invoice.
             if (this.shouldDownloadInvoice() && this.currentOrder.is_to_invoice()) {
-                if (this.currentOrder.raw.account_move) {
-                    await this.invoiceService.downloadPdf(this.currentOrder.raw.account_move);
+                if (this.currentOrder.account_move) {
+                    await this.invoiceService.downloadPdf(this.currentOrder.account_move);
                 } else {
                     throw {
                         code: 401,
@@ -322,12 +333,9 @@ export class PaymentScreen extends Component {
         }
 
         // 3. Post process.
-        if (
-            syncOrderResult &&
-            syncOrderResult.length > 0 &&
-            this.currentOrder.wait_for_push_order()
-        ) {
-            await this.postPushOrderResolve(syncOrderResult.map((res) => res.id));
+        const postPushOrders = syncOrderResult.filter((order) => order.wait_for_push_order());
+        if (postPushOrders.length > 0) {
+            await this.postPushOrderResolve(postPushOrders.map((order) => order.id));
         }
 
         await this.afterOrderValidation(!!syncOrderResult && syncOrderResult.length > 0);
@@ -569,6 +577,7 @@ export class PaymentScreen extends Component {
         );
         if (isCancelSuccessful) {
             line.set_payment_status("retry");
+            this.pos.paymentTerminalInProgress = false;
         } else {
             line.set_payment_status("waitingCard");
         }

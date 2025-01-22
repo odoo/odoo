@@ -110,7 +110,7 @@ class PurchaseOrderLine(models.Model):
             tax_ids=self.taxes_id,
             quantity=self.product_qty,
             partner_id=self.order_id.partner_id,
-            currency_id=self.order_id.currency_id,
+            currency_id=self.order_id.currency_id or self.order_id.company_id.currency_id,
             rate=self.order_id.currency_rate,
         )
 
@@ -359,7 +359,7 @@ class PurchaseOrderLine(models.Model):
 
             # record product names to avoid resetting custom descriptions
             default_names = []
-            vendors = line.product_id._prepare_sellers({})
+            vendors = line.product_id._prepare_sellers(params=params)
             product_ctx = {'seller_id': None, 'partner_id': None, 'lang': get_lang(line.env, line.partner_id.lang).code}
             default_names.append(line._get_product_purchase_description(line.product_id.with_context(product_ctx)))
             for vendor in vendors:

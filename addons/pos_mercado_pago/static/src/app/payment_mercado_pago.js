@@ -44,12 +44,12 @@ export class PaymentMercadoPago extends PaymentInterface {
     }
 
     async get_payment(payment_id) {
-        const line = this.pos.get_order().selected_paymentline;
+        const line = this.pos.get_order().get_selected_paymentline();
         // mp_get_payment_status will call the Mercado Pago api
         return await this.env.services.orm.silent.call(
             "pos.payment.method",
             "mp_get_payment_status",
-            [[line.payment_method.id], payment_id]
+            [[line.payment_method_id.id], payment_id]
         );
     }
 

@@ -21,14 +21,10 @@
         contain: paint;
         background-color: transparent;
     }
-    body * {
-        visibility: hidden;
-    }
     .pos, .pos * {
         position: static !important;
     }
     .render-container .pos-receipt * {
-        visibility: visible;
         background-color: transparent !important;
         color: black !important;
     }
@@ -50,9 +46,8 @@
         top: 0;
         left: 0;
     }
-    .o-main-components-container > *:not(.render-container-parent) {
-        display: none !important;
-    }
+    body > *:not(.o-main-components-container),
+    .o-main-components-container > *:not(.render-container-parent),
     .render-container-parent > *:not(.render-container) {
         display: none !important;
     }

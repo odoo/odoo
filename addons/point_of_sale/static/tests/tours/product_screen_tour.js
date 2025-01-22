@@ -153,6 +153,26 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("FloatingOrderTour", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            ProductScreen.orderIsEmpty(),
+            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.0", "5.10"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "2.0", "10.20"),
+            ProductScreen.productCardQtyIs("Desk Organizer", "2.0"),
+            Chrome.createFloatingOrder(),
+            ProductScreen.clickDisplayedProduct("Letter Tray", true, "1.0", "5.28"),
+            ProductScreen.clickDisplayedProduct("Letter Tray", true, "2.0", "10.56"),
+            ProductScreen.selectFloatingOrder(0),
+            ProductScreen.productCardQtyIs("Desk Organizer", "2.0"),
+            ProductScreen.isShown(),
+            ProductScreen.selectFloatingOrder(1),
+            ProductScreen.productCardQtyIs("Letter Tray", "2.0"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("FiscalPositionNoTax", {
     checkDelay: 50,
     steps: () =>
@@ -268,6 +288,22 @@ registry.category("web_tour.tours").add("limitedProductPricelistLoading", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("multiPricelistRulesTour", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Test Product 1"),
+            ProductScreen.selectedOrderlineHas("Test Product 1", "1.0", "200.0"),
+            ProductScreen.clickDisplayedProduct("Test Product 1"),
+            ProductScreen.selectedOrderlineHas("Test Product 1", "2.0", "200.0"), // 100.0 * 2
+            ProductScreen.clickDisplayedProduct("Test Product 1"),
+            ProductScreen.selectedOrderlineHas("Test Product 1", "3.0", "150.0"), // 50.0 * 3
+            Chrome.endTour(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("MultiProductOptionsTour", {
     checkDelay: 50,
     steps: () =>
@@ -373,28 +409,28 @@ registry.category("web_tour.tours").add("PosCategoriesOrder", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             {
-                trigger: '.category-button > span:contains("AAA")',
+                trigger: '.category-button:eq(0) > span:contains("AAA")',
             },
             {
-                trigger: '.category-button > span:contains("AAB")',
+                trigger: '.category-button:eq(1) > span:contains("AAB")',
             },
             {
-                trigger: '.category-button > span:contains("AAC")',
+                trigger: '.category-button:eq(2) > span:contains("AAC")',
             },
             {
-                trigger: '.category-button > span:contains("AAB")',
+                trigger: '.category-button:eq(1) > span:contains("AAB")',
                 run: "click",
             },
             ProductScreen.productIsDisplayed("Product in AAB and AAX", 0),
             {
-                trigger: '.category-button > span:contains("AAX")',
+                trigger: '.category-button:eq(2) > span:contains("AAX")',
             },
             {
-                trigger: '.category-button > span:contains("AAX")',
+                trigger: '.category-button:eq(2) > span:contains("AAX")',
                 run: "click",
             },
             {
-                trigger: '.category-button > span:contains("AAY")',
+                trigger: '.category-button:eq(3) > span:contains("AAY")',
             },
         ].flat(),
 });

@@ -169,7 +169,7 @@ will update the cost of every lot/serial number in stock."),
         company_id = self.env.company
         self.company_currency_id = company_id.currency_id
         domain = [
-            *self._check_company_domain(company_id),
+            *self.env['stock.valuation.layer']._check_company_domain(company_id),
             ('product_id', 'in', self.ids),
         ]
         if self.env.context.get('to_date'):

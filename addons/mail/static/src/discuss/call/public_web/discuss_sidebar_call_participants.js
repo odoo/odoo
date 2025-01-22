@@ -60,11 +60,12 @@ export class DiscussSidebarCallParticipants extends Component {
     get sessions() {
         const sessions = [...this.props.thread.rtcSessions];
         return sessions.sort((s1, s2) => {
-            const persona1 = s1.channelMember.persona;
-            const persona2 = s2.channelMember.persona;
+            const persona1 = s1.channelMember?.persona;
+            const persona2 = s2.channelMember?.persona;
             return (
                 persona1?.name?.localeCompare(persona2?.name) ||
-                s1.channelMember.id - s2.channelMember.id
+                s1.channelMember?.id - s2.channelMember?.id ||
+                s1.id - s2.id
             );
         });
     }

@@ -36,7 +36,7 @@
                 <div t-foreach="changedlines" t-as="line" t-key="change_index">
                     <div t-attf-class="orderline #{line.isCombo ? 'mx-5 px-2' : 'mx-1'}">
                         <div class="d-flex medium">
-                            <span class="me-3" t-esc="line.quantity"/> <span class="product-name" t-esc="line.basic_name"/>
+                            <span class="me-3" t-esc="line.quantity"/> <span class="product-name" t-esc="line.display_name"/>
                         </div>
                         <div t-if="line.attribute_value_ids?.length" class="mx-5 fs-2">
                             <t t-foreach="line.attribute_value_ids" t-as="attribute" t-key="attribute.id">

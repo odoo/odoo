@@ -135,9 +135,13 @@ class Key(models.Model):
         if self.public:
             raise UserError(_("Make sure to use a private key to sign documents."))
 
+        pem_key = self.with_context(bin_size=False).pem_key
+        if self.loading_error:
+            raise UserError(self.name + " - " + self.loading_error)
+
         return self._sign_with_key(
             message,
-            self.with_context(bin_size=False).pem_key,
+            pem_key,
             pwd=None,
             hashing_algorithm=hashing_algorithm,
             formatting=formatting

@@ -5,7 +5,7 @@
 # Translators:
 # Wil Odoo, 2024
 # Manon Rondou, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:56+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -144,7 +144,7 @@ msgid ""
 "A project must be defined on the quotation or on the form of products creating a task on order.\n"
 "The following products need a project in which to put their task: %(product_names)s"
 msgstr ""
-"Een project moet worden gedefinieerd op de offerte of op het formulier van producten die een taak op bestelling maken.\n"
+"Een project moet worden gedefinieerd op de offerte of op het formulier van producten die een taak op order maken.\n"
 "De volgende producten hebben een project nodig om hun taak in te plaatsen: %(product_names)s"
 
 #. module: sale_project
@@ -167,7 +167,7 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Afhankelijk van de productinstellingen, kan de geleverde hoeveelheid automatisch worden berekend met behulp van het mechanisme:\n"
+"Afhankelijk van de productinstellingen, kan het geleverde aantal automatisch worden berekend met behulp van het mechanisme:\n"
 "  - Handmatig: het aantal wordt handmatig op de regel ingesteld\n"
 "  - Analytisch van declaraties: het aantal is de som van de geboekte declaraties\n"
 "  - Urenstaat: het aantal is de som van de uren die zijn vastgelegd voor taken die aan deze verkoopregel zijn gekoppeld\n"
@@ -177,7 +177,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Based on Delivered Quantity (Manual)"
-msgstr "Op basis van geleverde hoeveelheid (handmatig)"
+msgstr "Op basis van geleverde aantal (handmatig)"
 
 #. module: sale_project
 #. odoo-python
@@ -226,8 +226,8 @@ msgid ""
 "Create a project for the order with a task for each sales order line to "
 "track the time spent."
 msgstr ""
-"Maak een project voor de bestelling aan met een taak voor elke "
-"verkooporderregel om de bestede tijd bij te houden."
+"Maak een project voor de order aan met een taak voor elke verkooporderregel "
+"om de bestede tijd bij te houden."
 
 #. module: sale_project
 #. odoo-python
@@ -247,8 +247,7 @@ msgstr "Maak een leveranciersfactuur"
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Create an empty project for the order to track the time spent."
 msgstr ""
-"Maak een leeg project aan voor de bestelling om de bestede tijd bij te "
-"houden."
+"Maak een leeg project aan voor de order om de bestede tijd bij te houden."
 
 #. module: sale_project
 #. odoo-python
@@ -282,8 +281,8 @@ msgid ""
 "Create projects or tasks later, and link them to order to track the time "
 "spent."
 msgstr ""
-"Maak later projecten of taken aan en koppel ze aan bestellingen om de "
-"bestede tijd bij te houden."
+"Maak later projecten of taken aan en koppel ze aan orders om de bestede tijd"
+" bij te houden."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__partner_id
@@ -401,7 +400,7 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
-"Bepaal handmatig de hoeveelheden voor de order: Factuur op basis van de handmatig ingevoerde hoeveelheid, zonder het aanmaken van een analytische rekening.\n"
+"Bepaal handmatig de hoeveelheden voor de order: Factuur op basis van het handmatig ingevoerde aantal, zonder het aanmaken van een analytische rekening.\n"
 "Urenstaten op project: Factuur op basis van de geschreven uren op gerelateerde urenstaten.\n"
 "Maak een taak aan en volg de uren ervan op: Een taak maken bij e bevestiging van een verkooporder en de werkuren opvolgen."
 
@@ -472,8 +471,8 @@ msgid ""
 "Percentage of the ordered quantity that will automatically be delivered once"
 " the milestone is reached."
 msgstr ""
-"Percentage van de bestelde hoeveelheid dat automatisch geleverd zal worden "
-"zodra de milestone is behaald."
+"Percentage van het bestelde aantal dat automatisch geleverd zal worden zodra"
+" de milestone is behaald."
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_plumbing_product_template
@@ -558,13 +557,13 @@ msgstr "Projecten"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__product_uom_qty
 msgid "Quantity"
-msgstr "Hoeveelheid"
+msgstr "Aantal"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__quantity_percentage
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "Quantity (%)"
-msgstr "Hoeveelheid (%)"
+msgstr "Aantal (%)"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_template_line

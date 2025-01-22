@@ -32,8 +32,8 @@
 # Tugay Hatıl <tugayh@projetgrup.com>, 2024
 # abc Def <hdogan1974@gmail.com>, 2024
 # hamdi göktaş, 2024
-# Ediz Duman <neps1192@gmail.com>, 2024
 # Levent Karakaş <levent@mektup.at>, 2024
+# Ediz Duman <neps1192@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -41,7 +41,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Levent Karakaş <levent@mektup.at>, 2024\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -214,7 +214,7 @@ msgstr "%(name)s' Görev Analizi"
 #. odoo-python
 #: code:addons/project/models/res_partner.py:0
 msgid "%(partner_name)s's Tasks"
-msgstr ""
+msgstr "%(partner_name)s Görevler"
 
 #. module: project
 #. odoo-python
@@ -229,7 +229,7 @@ msgstr "%s (kopya)"
 #. odoo-javascript
 #: code:addons/project/static/src/components/notebook_task_one2many_field/notebook_task_list_renderer.js:0
 msgid "%s closed tasks"
-msgstr ""
+msgstr "%s  Kapanan Görevler"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
@@ -245,7 +245,7 @@ msgstr "(son proje güncellemesi),"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/depend_on_ids_one2many/depend_on_ids_list_renderer.xml:0
 msgid "(other) tasks to which you do not have access."
-msgstr ""
+msgstr "(diğer) erişiminizin olmadığı görevler."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_message_user_assigned
@@ -373,6 +373,16 @@ msgid ""
 "<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    Sayın <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
+"   Projeyi başarıyla tamamladığımızı bildirmekten mutluluk duyuyorum. \"<strong t-out=\"object.name or ''\">Renovations</strong>\".\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">Bu e-postayı, projenizin aşamaya taşınması nedeniyle alıyorsunuz<b t-out=\"object.stage_id.name or ''\">Biten</b></span>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -475,7 +485,7 @@ msgstr "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "<span class=\"fw-normal\"> Done</span>"
-msgstr ""
+msgstr "<span class=\"fw-normal\"> Biten</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
@@ -485,7 +495,7 @@ msgstr "<span class=\"fw-normal\">Görecler</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "<span class=\"o_stat_text\">Blocked Tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Engellenen Görevler</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -496,7 +506,7 @@ msgstr "<span class=\"o_stat_text\">Son Değerlendirme</span>"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Parent Task</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Üst Görev</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -512,6 +522,8 @@ msgstr "<span class=\"o_stat_text\">Görevler</span>"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<span class=\"text-muted o_row ps-1 pb-3\">Send a rating request:</span>"
 msgstr ""
+"<span class=\"text-muted o_row ps-1 pb-3\">Değerlendirme isteği "
+"gönderin:</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -832,7 +844,7 @@ msgstr "Ayrılan Zaman"
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task_allocated_hours_template
 msgid "Allocated Time:"
-msgstr ""
+msgstr "Ayrılan Zaman:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -870,7 +882,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_wizard__share_link
 msgid "Anyone with this link can access the project in read mode."
-msgstr ""
+msgstr "Bu bağlantıya sahip olan herkes projeye okuma modunda erişebilir."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__03_approved
@@ -888,13 +900,13 @@ msgstr "Mimari"
 #. odoo-javascript
 #: code:addons/project/static/src/views/analytic_account_form/analytic_account_form_controller.js:0
 msgid "Archive Account"
-msgstr ""
+msgstr "Arşiv Hesab"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/analytic_account_list/analytic_account_list_controller.js:0
 msgid "Archive Accounts"
-msgstr ""
+msgstr "Arşiv Hesablar"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
@@ -1064,6 +1076,8 @@ msgid ""
 "Automatically send an email to customers when a task reaches a specific "
 "stage in a project by setting this template on that stage"
 msgstr ""
+"Bu şablonu o aşamaya ayarlayarak, bir görev projede belirli bir aşamaya "
+"ulaştığında müşterilere otomatik olarak bir e-posta gönderin"
 
 #. module: project
 #. odoo-javascript
@@ -1217,7 +1231,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Choose one of the following access modes for your collaborators:"
-msgstr ""
+msgstr "İşbirlikçileriniz için aşağıdaki erişim modlarından birini seçin:"
 
 #. module: project
 #. odoo-javascript
@@ -1918,7 +1932,7 @@ msgstr "Düzenle"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__edit_limited
 msgid "Edit with limited access"
-msgstr ""
+msgstr "Sınırlı erişimle düzenle"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -1926,6 +1940,8 @@ msgid ""
 "Edit with limited access: collaborators can view and edit tasks they follow "
 "in the Kanban view."
 msgstr ""
+"Sınırlı erişimle düzenleme: İşbirlikçiler, Kanban görünümünde takip "
+"ettikleri görevleri görüntüleyebilir ve düzenleyebilir."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -1933,6 +1949,9 @@ msgid ""
 "Edit: collaborators can view and edit all tasks in the Kanban view. "
 "Additionally, they can choose which tasks they want to follow."
 msgstr ""
+"Düzenleme: işbirlikçiler Kanban görünümündeki tüm görevleri görüntüleyebilir"
+" ve düzenleyebilir. Ayrıca, hangi görevleri takip etmek istediklerini "
+"seçebilirler."
 
 #. module: project
 #. odoo-javascript
@@ -2176,6 +2195,9 @@ msgid ""
 "tasks of the project are not included). To grant access to tasks to a portal"
 " user, add them as followers for these tasks."
 msgstr ""
+"Portal kullanıcılarına takipçi olarak ekleyerek projenize erişim izni verin "
+"(projenin görevleri buna dahil değildir). Bir portal kullanıcısına görevlere"
+" erişim izni vermek için, onları bu görevler için takipçi olarak ekleyin."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
@@ -2464,12 +2486,12 @@ msgstr "Geçersiz değer: %s"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited internal users (private)"
-msgstr ""
+msgstr "Davetli dahili kullanıcılar (özel)"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid "Invited portal users and all internal users (public)"
-msgstr ""
+msgstr "Davetli portal kullanıcıları ve tüm dahili kullanıcılar (genel)"
 
 #. module: project
 #. odoo-javascript
@@ -3305,6 +3327,8 @@ msgstr ""
 msgid ""
 "People invited to collaborate on the project will have portal access rights."
 msgstr ""
+"Projede işbirliğine davet edilen kişilere portal erişim hakları "
+"verilecektir."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
@@ -3325,6 +3349,20 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
+"Bu projenin ve görevlerinin görülebileceği kişiler.\n"
+"\n"
+"Davetli dahili kullanıcılar: Bir projeyi takip ederken, dahili kullanıcılar ayrım yapılmaksızın tüm görevlerine erişim elde eder. Aksi takdirde, yalnızca takip ettikleri belirli görevlere erişim elde ederler.\n"
+"Proje > yönetici erişim hakkı düzeyine sahip bir kullanıcı, takipçilerin açık bir parçası olmasa bile bu projeye ve görevlerine erişebilir.\n"
+"\n"
+"- Tüm dahili kullanıcılar: Tüm dahili kullanıcılar, ayrım yapılmaksızın projeye ve tüm görevlerine erişebilir.\n"
+"\n"
+"- Davetli portal kullanıcıları ve tüm dahili kullanıcılar: tüm dahili kullanıcılar, ayrım yapılmaksızın projeye ve tüm görevlerine erişebilir.\n"
+"Bir projeyi takip ederken, portal kullanıcıları yalnızca takip ettikleri belirli görevlere erişebilecek.\n"
+"\n"
+"Bir proje salt okunur olarak paylaşıldığında, portal kullanıcısı kendi portalına yönlendirilir. Takip ettikleri görevleri görüntüleyebilirler ancak düzenleyemezler.\n"
+"Bir proje düzenlemede paylaşıldığında, portal kullanıcısı görevlerin kanban ve liste görünümlerine yönlendirilir. Görevlerdeki seçili sayıda alanı değiştirebilirler.\n"
+"\n"
+"Her durumda, proje erişim hakları olmayan dahili bir kullanıcı, ilgili URL'nin verilmesi (ve proje özel ise takipçilerin bir parçası olması) koşuluyla yine de bir göreve erişebilir."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
@@ -3492,7 +3530,7 @@ msgstr "Proje"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__account_id
 msgid "Project Account"
-msgstr ""
+msgstr "Proje Hesabı"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__user_id
@@ -3601,7 +3639,7 @@ msgstr "Proje Açıklaması..."
 #. odoo-python
 #: code:addons/project/wizard/project_share_wizard.py:0
 msgid "Project shared with your collaborators."
-msgstr ""
+msgstr "Projenizi işbirlikçilerinizle paylaştınız."
 
 #. module: project
 #: model:mail.template,subject:project.project_done_email_template
@@ -3683,7 +3721,7 @@ msgstr "Özellikler"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__share_link
 msgid "Public Link"
-msgstr ""
+msgstr "Paylaşılan Bağlantı"
 
 #. module: project
 #. odoo-javascript
@@ -3802,7 +3840,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Read: collaborators can view tasks but cannot edit them."
-msgstr ""
+msgstr "Oku: İşbirlikçiler görevleri görüntüleyebilir ancak düzenleyemezler."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_collaborator_wizard__access_mode
@@ -3811,6 +3849,11 @@ msgid ""
 "Edit with limited access: collaborators can view and edit tasks they follow in the Kanban view.\n"
 "Edit: collaborators can view and edit all tasks in the Kanban view. Additionally, they can choose which tasks they want to follow."
 msgstr ""
+"Okuma: işbirlikçiler görevleri görüntüleyebilir ancak düzenleyemez.\n"
+"Sınırlı erişimle düzenleme: İşbirlikçiler, Kanban görünümünde takip ettikleri görevleri görüntüleyebilir ve düzenleyebilir.\n"
+"Düzenleme: işbirlikçiler Kanban görünümündeki tüm görevleri görüntüleyebilir ve düzenleyebilir. Ayrıca, hangi görevleri takip etmek istediklerini seçebilirler. \n"
+" \n"
+" "
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
@@ -4096,7 +4139,7 @@ msgstr "E-posta Gönder"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_collaborator_wizard__send_invitation
 msgid "Send Invitation"
-msgstr ""
+msgstr "Davetiyeleri Gönder"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__sequence
@@ -4863,6 +4906,9 @@ msgid ""
 "project's visibility will be changed to \"invited portal users and all "
 "internal users (public)\" in order to make it accessible to the recipients."
 msgstr ""
+"Bu proje şu anda \"Davetli dahili kullanıcılar\" ile sınırlıdır. Projenin "
+"görünürlüğü, alıcıların erişebilmesi için \"davetli portal kullanıcıları ve "
+"tüm dahili kullanıcılar (genel)\" olarak değiştirilecektir."
 
 #. module: project
 #. odoo-python
@@ -5210,6 +5256,9 @@ msgid ""
 "customers. Add new people to the followers' list to make them aware of the "
 "main changes about this task."
 msgstr ""
+"Sohbeti kullanarak <b>e-postalar gönderin </b> ve müşterilerinizle etkili "
+"bir şekilde iletişim kurun. Takipçilerin listesine yeni kişiler ekleyerek bu"
+" görevle ilgili temel değişikliklerden haberdar olmalarını sağlayın."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
@@ -5470,12 +5519,12 @@ msgstr "Size atanan"
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "You have been invited to follow %s"
-msgstr ""
+msgstr "Takibe etmeye davet edildiniz %s"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_invitation_follower
 msgid "You have been invited to follow Task Document :"
-msgstr ""
+msgstr "Görev Belgesini takip etmeye davet edildiniz:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form

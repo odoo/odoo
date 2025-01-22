@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.SaverScreen">
+        <div class="login-overlay fixed-top w-100 h-100 p-4 d-flex flex-column">
+            <div class="position-absolute screen-login-header d-flex" t-attf-class="{{ env.isSmall ? 'justify-content-center' : 'justify-content-between'}}">
+                <div class="d-flex align-items-center gap-2 bg-transparent">
+                    <div class="timer-hours fs-1" t-esc="time.hours" />
+                    <div class="timer-date-container d-flex flex-column smaller">
+                        <div class="timer-day" t-esc="time.day" />
+                        <div class="timer-date" t-esc="time.date" />
+                    </div>
+                </div>
+            </div>
+            <div class="flex-grow-1 d-flex h-100 w-100 justify-content-center align-items-center">
+                <img t-att-height="env.isSmall ? 40 : 182" src="/web/static/img/odoo_logo.svg" alt="Logo"/>
+            </div>
+        </div>
+    </t>
+</templates>

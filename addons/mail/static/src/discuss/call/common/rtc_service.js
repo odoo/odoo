@@ -12,7 +12,20 @@ import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import { loadBundle, loadJS } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
+import { url } from "@web/core/utils/urls";
 import { callActionsRegistry } from "./call_actions";
+
+/**
+ *
+ * @param {EventTarget} target
+ * @param {string} event
+ * @param {Function} f event listener callback
+ * @return {Function} unsubscribe function
+ */
+function subscribe(target, event, f) {
+    target.addEventListener(event, f);
+    return () => target.removeEventListener(event, f);
+}
 
 /**
  * @typedef {'audio' | 'camera' | 'screen' } streamType
@@ -182,6 +195,8 @@ export class Rtc extends Record {
     actionsStack = [];
     /** @type {string|undefined} String representing the last call action activated, or undefined if none are */
     lastSelfCallAction = undefined;
+    /** callbacks to be called when cleaning the state up after a call */
+    cleanups = [];
 
     callActions = Record.attr([], {
         compute() {
@@ -333,7 +348,7 @@ export class Rtc extends Record {
         this.state.pttReleaseTimeout = browser.setTimeout(() => {
             this.setTalking(false);
             if (!this.selfSession?.isMute) {
-                this.soundEffectsService.play("push-to-talk-off", { volume: 0.3 });
+                this.soundEffectsService.play("push-to-talk-off");
             }
         }, Math.max(this.store.settings.voice_active_duration || 0, duration));
     }
@@ -348,7 +363,7 @@ export class Rtc extends Record {
         }
         browser.clearTimeout(this.state.pttReleaseTimeout);
         if (!this.selfSession.isTalking && !this.selfSession.isMute) {
-            this.soundEffectsService.play("push-to-talk-on", { volume: 0.3 });
+            this.soundEffectsService.play("push-to-talk-on");
         }
         this.setTalking(true);
     }
@@ -442,15 +457,22 @@ export class Rtc extends Record {
      * @param {import("models").Thread} channel
      * @param {Object} [initialState={}]
      * @param {boolean} [initialState.audio]
+     * @param {{ exit: () => {} }} [initialState.fullscreen] if set, the call view is using fullscreen.
+     *   Providing fullscreen object allows to exit on call leave.
      * @param {boolean} [initialState.camera]
      */
-    async toggleCall(channel, { audio = true, camera } = {}) {
-        await loadJS("/mail/static/lib/selfie_segmentation/selfie_segmentation.js");
+    async toggleCall(channel, { audio = true, fullscreen, camera } = {}) {
+        await Promise.resolve(() =>
+            loadJS(url("/mail/static/lib/selfie_segmentation/selfie_segmentation.js")).catch(
+                () => {}
+            )
+        );
         if (this.state.hasPendingRequest) {
             return;
         }
         const isActiveCall = channel.eq(this.state.channel);
         if (this.state.channel) {
+            fullscreen?.exit();
             await this.leaveCall(this.state.channel);
         }
         if (!isActiveCall) {
@@ -802,9 +824,13 @@ export class Rtc extends Record {
         this.soundEffectsService.play("channel-join");
         this.state.hasPendingRequest = false;
         await this.resetAudioTrack({ force: audio });
-        if (!this.state.channel?.id) {
-            return;
-        }
+        this.cleanups.push(
+            // only register the beforeunload event if there is a call as FireFox will not place
+            // the pages with beforeunload listeners in the bfcache.
+            subscribe(browser, "beforeunload", (event) => {
+                event.preventDefault();
+            })
+        );
     }
 
     async rpcLeaveCall(channel) {
@@ -857,6 +883,7 @@ export class Rtc extends Record {
                 this.removeVideoFromSession(session);
                 session.isTalking = false;
             }
+            this.cleanups.splice(0).forEach((cleanup) => cleanup());
         }
         this.sfuClient = undefined;
         this.network = undefined;
@@ -868,6 +895,8 @@ export class Rtc extends Record {
         this.state.screenTrack?.stop();
         closeStream(this.state.sourceCameraStream);
         this.state.sourceCameraStream = null;
+        closeStream(this.state.sourceScreenStream);
+        this.state.sourceScreenStream = null;
         if (this.blurManager) {
             this.blurManager.close();
             this.blurManager = undefined;
@@ -1404,7 +1433,7 @@ export const rtcService = {
                 if (!rtc.selfSession) {
                     return;
                 }
-                if (rtc.serverInfo?.url === serverInfo?.url) {
+                if (rtc.serverInfo?.channelUUID === serverInfo.channelUUID) {
                     // no reason to swap if the server is the same, if at some point we want to force a swap
                     // there should be an explicit flag in the event payload.
                     return;

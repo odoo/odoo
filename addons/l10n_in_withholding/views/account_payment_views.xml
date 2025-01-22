@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
                 <button name="%(l10n_in_withholding_entry_form_action)d" string="TDS Entry" type="action" class="btn btn-secondary float-end"
-                        invisible="country_code != 'IN' or state != 'in_process' or is_reconciled"/>
+                        invisible="country_code != 'IN' or state not in ('in_process', 'paid') or is_reconciled"/>
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button name="action_l10n_in_withholding_entries"

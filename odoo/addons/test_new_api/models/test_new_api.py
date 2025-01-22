@@ -506,6 +506,10 @@ class ComputeInverse(models.Model):
     foo = fields.Char()
     bar = fields.Char(compute='_compute_bar', inverse='_inverse_bar', store=True)
     baz = fields.Char()
+    child_ids = fields.One2many(
+        'test_new_api.compute.inverse', 'parent_id',
+        compute='_compute_child_ids', inverse='_inverse_child_ids', store=True)
+    parent_id = fields.Many2one('test_new_api.compute.inverse')
 
     @api.depends('foo')
     def _compute_bar(self):
@@ -522,6 +526,20 @@ class ComputeInverse(models.Model):
     def _check_constraint(self):
         if self._context.get('log_constraint'):
             self._context.get('log', []).append('constraint')
+
+    @api.depends('foo')
+    def _compute_child_ids(self):
+        for rec in self:
+            if rec.foo == 'has one child':
+                rec.child_ids = [
+                    Command.clear(),
+                    Command.create({'foo': 'child'}),
+                ]
+
+    def _inverse_child_ids(self):
+        for rec in self:
+            if any(child.foo == 'child' for child in self.child_ids):
+                rec.foo = 'has one child'
 
 
 class ComputeSudo(models.Model):

@@ -96,7 +96,7 @@ export class ProductScreen extends Component {
                     return acc;
                 }, {});
             },
-            () => [this.currentOrder.totalQuantity]
+            () => [this.currentOrder, this.currentOrder.totalQuantity]
         );
     }
     getAncestorsAndCurrent() {

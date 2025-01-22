@@ -20,7 +20,7 @@ class GamificationBadgeUserWizard(models.TransientModel):
             'user_id': self.user_id.id,
             'sender_id': self.env.uid,
             'badge_id': self.badge_id.id,
-            'employee_id': self.employee_id.id,
+            'employee_id': self.user_id.employee_id.id,
             'comment': self.comment,
         }
 

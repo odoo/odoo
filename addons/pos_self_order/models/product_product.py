@@ -2,6 +2,7 @@
 from __future__ import annotations
 from typing import List, Dict
 from odoo import api, models, fields
+from odoo.osv.expression import AND
 
 
 class ProductTemplate(models.Model):
@@ -46,6 +47,11 @@ class ProductProduct(models.Model):
         params = super()._load_pos_self_data_fields(config_id)
         params += ['public_description']
         return params
+    
+    @api.model
+    def _load_pos_self_data_domain(self, data):
+        domain = super()._load_pos_self_data_domain(data)
+        return AND([domain, [('self_order_available', '=', True)]])
 
     def _load_pos_self_data(self, data):
         domain = self._load_pos_data_domain(data)
@@ -65,6 +71,8 @@ class ProductProduct(models.Model):
             order='sequence,default_code,name',
             load=False
         )
+        for product in products:
+            product['image_128'] = bool(product['image_128'])
 
         data['pos.config']['data'][0]['_product_default_values'] = \
             self.env['account.tax']._eval_taxes_computation_prepare_product_default_values(product_fields)

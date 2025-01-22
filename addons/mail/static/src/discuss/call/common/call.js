@@ -8,6 +8,7 @@ import {
     onMounted,
     onPatched,
     onWillUnmount,
+    toRaw,
     useExternalListener,
     useRef,
     useState,
@@ -139,13 +140,15 @@ export class Call extends Component {
     /** @returns {CardData[]} */
     get visibleMainCards() {
         const activeSession = this.props.thread.activeRtcSession;
-        this.state.insetCard = undefined;
         if (!activeSession) {
+            this.state.insetCard = undefined;
             return this.visibleCards;
         }
         const type = activeSession.mainVideoStreamType;
         if (type === "screen" || activeSession.isScreenSharingOn) {
             this.setInset(activeSession, type === "camera" ? "screen" : "camera");
+        } else {
+            this.state.insetCard = undefined;
         }
         return [
             {
@@ -162,12 +165,18 @@ export class Call extends Component {
      * @param {String} [videoType]
      */
     setInset(session, videoType) {
-        this.state.insetCard = {
-            key: "session_" + session.id,
-            session,
-            type: videoType,
-            videoStream: session.getStream(videoType),
-        };
+        const key = "session_" + session.id;
+        if (toRaw(this.state).insetCard?.key === key) {
+            this.state.insetCard.type = videoType;
+            this.state.insetCard.videoStream = session.getStream(videoType);
+        } else {
+            this.state.insetCard = {
+                key,
+                session,
+                type: videoType,
+                videoStream: session.getStream(videoType),
+            };
+        }
     }
 
     get hasCallNotifications() {
