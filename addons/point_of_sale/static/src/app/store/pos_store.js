@@ -1643,6 +1643,7 @@ export class PosStore extends Reactive {
     // Now the printer should work in PoS without restaurant
     async sendOrderInPreparation(order, cancelled = false) {
         if (this.printers_category_ids_set.size) {
+<<<<<<< 18.0
             try {
                 const orderChange = changesToOrder(
                     order,
@@ -1653,6 +1654,55 @@ export class PosStore extends Reactive {
                 this.printChanges(order, orderChange);
             } catch (e) {
                 console.info("Failed in printing the changes in the order", e);
+||||||| ffc46f8d55d7bb3731844ef0208d5f548af79315
+            try {
+                const changes = changesToOrder(
+                    order,
+                    false,
+                    this.orderPreparationCategories,
+                    cancelled
+                );
+                if (changes.cancelled.length > 0 || changes.new.length > 0) {
+                    const isPrintSuccessful = await order.printChanges(
+                        false,
+                        this.orderPreparationCategories,
+                        cancelled,
+                        this.unwatched.printers
+                    );
+                    if (!isPrintSuccessful) {
+                        this.dialog.add(AlertDialog, {
+                            title: _t("Printing failed"),
+                            body: _t("Failed in printing the changes in the order"),
+                        });
+                    }
+                }
+            } catch (e) {
+                console.info("Failed in printing the changes in the order", e);
+=======
+            const changes = changesToOrder(
+                order,
+                false,
+                this.orderPreparationCategories,
+                cancelled
+            );
+            if (changes.cancelled.length > 0 || changes.new.length > 0) {
+                order
+                    .printChanges(
+                        false,
+                        this.orderPreparationCategories,
+                        cancelled,
+                        this.unwatched.printers
+                    )
+                    .then((result) => {
+                        if (!result) {
+                            this.dialog.add(AlertDialog, {
+                                title: _t("Printing failed"),
+                                body: _t("Failed in printing the changes in the order"),
+                            });
+                        }
+                    })
+                    .catch((e) => console.info("Failed in printing the changes in the order", e));
+>>>>>>> 4cec16812769e5fb2438c3ba186763a646c4cd2b
             }
         }
     }

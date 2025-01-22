@@ -304,6 +304,123 @@ export class PosOrder extends Base {
         });
     }
 
+<<<<<<< 18.0
+||||||| ffc46f8d55d7bb3731844ef0208d5f548af79315
+    // NOTE args added [unwatchedPrinter]
+    async printChanges(skipped = false, orderPreparationCategories, cancelled, unwatchedPrinter) {
+        const orderChange = changesToOrder(this, skipped, orderPreparationCategories, cancelled);
+        const d = new Date();
+
+        let isPrintSuccessful = true;
+
+        let hours = "" + d.getHours();
+        hours = hours.length < 2 ? "0" + hours : hours;
+
+        let minutes = "" + d.getMinutes();
+        minutes = minutes.length < 2 ? "0" + minutes : minutes;
+
+        orderChange.new.sort((a, b) => {
+            const sequenceA = a.pos_categ_sequence;
+            const sequenceB = b.pos_categ_sequence;
+            if (sequenceA === 0 && sequenceB === 0) {
+                return a.pos_categ_id - b.pos_categ_id;
+            }
+
+            return sequenceA - sequenceB;
+        });
+
+        for (const printer of unwatchedPrinter) {
+            const changes = this._getPrintingCategoriesChanges(
+                printer.config.product_categories_ids,
+                orderChange
+            );
+            if (changes["new"].length > 0 || changes["cancelled"].length > 0) {
+                const printingChanges = {
+                    new: changes["new"],
+                    cancelled: changes["cancelled"],
+                    table_name: this.table_id?.name,
+                    floor_name: this.table_id?.floor_id?.name,
+                    name: this.pos_reference || "unknown order",
+                    time: {
+                        hours,
+                        minutes,
+                    },
+                    tracking_number: this.tracking_number,
+                };
+                const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
+                    changes: printingChanges,
+                });
+                const result = await printer.printReceipt(receipt);
+                if (!result.successful) {
+                    isPrintSuccessful = false;
+                }
+            }
+        }
+
+        return isPrintSuccessful;
+    }
+
+=======
+    async printChanges(skipped = false, orderPreparationCategories, cancelled, unwatchedPrinter) {
+        const orderChange = changesToOrder(this, skipped, orderPreparationCategories, cancelled);
+        const d = new Date();
+
+        let isPrintSuccessful = true;
+
+        let hours = "" + d.getHours();
+        hours = hours.length < 2 ? "0" + hours : hours;
+
+        let minutes = "" + d.getMinutes();
+        minutes = minutes.length < 2 ? "0" + minutes : minutes;
+
+        orderChange.new.sort((a, b) => {
+            const sequenceA = a.pos_categ_sequence;
+            const sequenceB = b.pos_categ_sequence;
+            if (sequenceA === 0 && sequenceB === 0) {
+                return a.pos_categ_id - b.pos_categ_id;
+            }
+
+            return sequenceA - sequenceB;
+        });
+
+        const allPrintingChanges = [];
+
+        for (const printer of unwatchedPrinter) {
+            const changes = this._getPrintingCategoriesChanges(
+                printer.config.product_categories_ids,
+                orderChange
+            );
+            if (changes["new"].length > 0 || changes["cancelled"].length > 0) {
+                const printingChanges = {
+                    new: changes["new"],
+                    cancelled: changes["cancelled"],
+                    table_name: this.table_id?.name,
+                    floor_name: this.table_id?.floor_id?.name,
+                    name: this.pos_reference || "unknown order",
+                    time: {
+                        hours,
+                        minutes,
+                    },
+                    tracking_number: this.tracking_number,
+                };
+                allPrintingChanges.push([printer, printingChanges]);
+            }
+        }
+
+        for (const [printer, printingChanges] of allPrintingChanges) {
+            const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
+                changes: printingChanges,
+            });
+            const result = await printer.printReceipt(receipt);
+            if (!result.successful) {
+                isPrintSuccessful = false;
+            }
+        }
+
+        return isPrintSuccessful;
+    }
+
+>>>>>>> 4cec16812769e5fb2438c3ba186763a646c4cd2b
     get isBooked() {
         return Boolean(this.uiState.booked || !this.is_empty() || typeof this.id === "number");
     }
