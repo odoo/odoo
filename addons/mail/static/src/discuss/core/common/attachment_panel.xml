@@ -13,7 +13,7 @@
                     </p>
                     <div t-else="" t-foreach="attachmentsByDate" t-as="dateDay" t-key="dateDay" class="d-flex flex-column">
                         <DateSection date="dateDay" className="'my-1'"/>
-                        <AttachmentList imagesHeight="100" attachments="dateDay_value" unlinkAttachment="(attachment) => this.attachmentUploadService.unlink(attachment)"/>
+                        <AttachmentList attachments="dateDay_value" unlinkAttachment="(attachment) => this.attachmentUploadService.unlink(attachment)"/>
                     </div>
                 </div>
                 <span t-ref="load-older"/>

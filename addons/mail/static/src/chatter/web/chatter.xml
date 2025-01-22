@@ -84,7 +84,6 @@
                         <AttachmentList
                             attachments="attachments"
                             unlinkAttachment.bind="unlinkAttachment"
-                            imagesHeight="100"
                         />
                         <FileUploader multiUpload="true" fileUploadClass="'o-mail-Chatter-fileUploader'" onUploaded.bind="onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
                             <t t-set-slot="toggler">

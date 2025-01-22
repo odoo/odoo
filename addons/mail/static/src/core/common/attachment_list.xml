@@ -10,101 +10,89 @@
                 'ms-2 ps-4': isInChatWindowAndIsAlignedRight and !env.inComposer,
             }"
         >
-            <div class="d-flex flex-grow-1 flex-wrap mx-1 align-items-center" t-att-class="{
-                'justify-content-end': isInChatWindowAndIsAlignedRight and !env.inComposer,
-                        }" role="menu" >
-                <div t-foreach="images" t-as="attachment" t-key="attachment.id"
+            <div class="d-flex flex-wrap" t-att-class="{'justify-content-end': isInChatWindowAndIsAlignedRight and !env.inComposer}" role="menu" >
+                <div t-foreach="props.attachments" t-as="attachment" t-key="attachment.id"
                      t-att-aria-label="attachment.name"
-                     class="o-mail-AttachmentImage d-flex position-relative flex-shrink-0 mw-100 mb-1 me-1 rounded o-viewable"
-                     t-att-title="attachment.name"
-                     t-att-class="{ 'o-isUploading': attachment.uploading }"
+                     class="o-mail-AttachmentContainer d-flex mb-2 me-3 border position-relative"
+                     t-att-title="attachment.name ? attachment.name : undefined"
+                     t-att-class="{
+                        'o-viewable': attachment.isViewable,
+                        'o-isUploading opacity-25': attachment.uploading,
+                    }"
                      tabindex="0"
                      t-att-data-mimetype="attachment.mimetype"
                      t-on-click="() => this.onClickAttachment(attachment)"
                      role="menuitem"
                 >
+                    <!-- display of image attachments-->
                     <img
-                        class="img img-fluid my-0 mx-auto rounded"
-                        t-att-class="{ 'opacity-25': attachment.uploading }"
+                        t-if="attachment.isImage"
+                        class="o-mail-AttachmentImage img img-fluid object-fit-cover w-100"
                         t-att-src="getImageUrl(attachment)"
                         t-att-alt="attachment.name"
-                        t-attf-style="max-width: min(100%, {{ imagesWidth }}px); max-height: {{ props.imagesHeight }}px;"
                         t-on-load="onImageLoaded"
                     />
+                    <!-- display of non image attachments -->
+                    <div t-else="" class="o-mail-AttachmentCard d-flex flex-column w-100 h-100">
+                        <div class="d-flex justify-content-center align-items-center flex-grow-1 bg-white position-relative" t-on-click="() => this.onClickAttachment(attachment)">
+                            <div class="o_image" role="menuitem" aria-label="Preview" t-att-tabindex="-1" t-att-aria-disabled="false" t-att-data-mimetype="attachment.mimetype"/>
+                        </div>
+                         <div class="o-mail-AttachmentCard-info d-flex align-items-center px-2 py-1 bg-200">
+                            <div class="o-mail-AttachmentCard-image o_image me-2 flex-shrink-0" role="menuitem" aria-label="Preview" t-att-tabindex="-1" t-att-aria-disabled="false" t-att-data-mimetype="attachment.mimetype"/>
+                            <div t-if="attachment.name" class="text-truncate align-items-center fw-bold" t-out="props.messageSearch?.highlight(attachment.name) ?? attachment.name"/>
+                        </div>
+                    </div>
+                    <!-- hover information (not for mobile view) -->
+                    <div t-if="!isMobileOS" class="o-mail-Attachment-hover position-absolute top-0 bottom-0 start-0 end-0 p-1 d-flex flex-column align-items-start o-opacity-hoverable opacity-100-hover opacity-0" t-att-style="attachment.isImage ? 'background: rgba(0, 0, 0, 0.4);' : 'background: #f5f5f5;'">
+                        <div class="d-flex flex-row align-items-start">
+                            <img t-if="attachment.isImage" src="/mail/static/src/img/image_icon.png" class="me-1 mw-100 mh-100" draggable="false"/>
+                            <div t-else="" class="o-mail-Attachment-hover-image o_image me-1 flex-shrink-0" t-att-data-mimetype="attachment.mimetype"/>
+                            <div t-if="attachment.name" class="fw-bold overflow-hidden text-break" t-att-class="{ 'text-white': attachment.isImage }" style="max-height: 60px;" t-out="props.messageSearch?.highlight(attachment.name) ?? attachment.name"/>
+                        </div>
+                        <div t-if="attachment.file_size" class="ms-4 mt-1">
+                            <span t-att-class="{ 'text-white': attachment.isImage }"><t t-out="Math.round(attachment.file_size / 1024, 4)"/>KB</span>
+                        </div>
+                        <!-- buttons on hover -->
+                        <div class="o-mail-AttachmentButtons d-flex justify-content-start ms-4 mb-1 mt-auto pt-2">
+                            <a t-if="!attachment.isImage and attachment.type === 'url'" class="w-100 h-100 btn bg-500 square-btn d-flex justify-content-center align-items-center" t-att-href="attachment.url" target='_blank' title="Open Link">
+                                <i class="fa fa-external-link text-white" role="img" aria-label="Open Link"/>
+                            </a>
+                            <button t-elif="canDownload(attachment)" class="btn bg-500 w-100 h-100 square-btn d-flex justify-content-center align-items-center" t-on-click.stop="() => this.onClickDownload(attachment)" title="Download">
+                                <i class="fa fa-download text-white" role="img" aria-label="Download"/>
+                            </button>
+                            <button t-if="showDelete" class="o-mail-Attachment-unlink btn bg-500 w-100 h-100 square-btn d-flex ms-2 justify-content-center align-items-center" t-att-class="{ 'o-inComposer': env.inComposer }" t-on-click.stop="() => this.onClickUnlink(attachment)" title="Remove">
+                                <i class="fa fa-trash text-white" role="img" aria-label="Remove"/>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- dropdown (for mobile view only) -->
+                    <Actions t-else="" actions="getActions(attachment)"/>
+                    <!-- uploading info -->
                     <div t-if="attachment.uploading" class="position-absolute top-0 bottom-0 start-0 end-0 d-flex align-items-center justify-content-center" title="Uploading">
                         <i class="fa fa-circle-o-notch fa-spin"/>
                     </div>
-                    <ImageActions actions="getActions(attachment)" imagesHeight="props.imagesHeight"/>
-                </div>
-            </div>
-            <div class="d-flex flex-wrap mt-1 mx-1">
-                <!-- t-attf-class overridden in extensions -->
-                <div
-                    t-foreach="cards" t-as="attachment" t-key="attachment.id"
-                    class="o-mail-AttachmentCard d-flex rounded mb-1 me-1 mw-100 overflow-auto"
-                    t-att-class="{
-                               'ms-1': isInChatWindowAndIsAlignedRight,
-                               'me-1': !isInChatWindowAndIsAlignedRight,
-                               'o-viewable': attachment.isViewable,
-                               'o-isUploading': attachment.uploading,
-                               }"
-                    t-attf-class="bg-300"
-                    t-att-title="attachment.name ? attachment.name : undefined" role="menu" t-att-aria-label="attachment.name"
-                    t-on-click="() => this.onClickAttachment(attachment)"
-                >
-                    <!-- o_image from mimetype.scss -->
-                    <t t-ref="nonImageMain">
-                        <div class="o-mail-AttachmentCard-image o_image flex-shrink-0 m-1" role="menuitem" aria-label="Preview" t-att-tabindex="-1" t-att-aria-disabled="false" t-att-data-mimetype="attachment.mimetype"/>
-                        <div class="overflow-auto d-flex justify-content-center flex-column px-1">
-                            <div t-if="attachment.name" class="text-truncate" t-out="props.messageSearch?.highlight(attachment.name) ?? attachment.name"/>
-                            <small t-if="attachment.extension" class="text-uppercase" t-esc="attachment.extension"/>
-                        </div>
-                    </t>
-                    <div class="flex-grow-1"/>
-                    <div class="o-mail-AttachmentCard-aside position-relative rounded-end overflow-hidden d-flex" t-att-class="{ 'o-hasMultipleActions d-flex flex-column': showDelete and !env.inComposer }">
-                        <div t-if="attachment.uploading" class="d-flex justify-content-center align-items-center w-100 h-100" title="Uploading">
-                            <i class="fa fa-circle-o-notch fa-spin"/>
-                        </div>
-                        <div t-if="!attachment.uploading and env.inComposer" class="d-flex justify-content-center me-2 align-items-center w-100 h-100 text-primary" title="Uploaded">
-                            <i class="fa fa-check"/>
-                        </div>
-                        <button t-if="showDelete"
-                                class="o-mail-AttachmentCard-unlink btn top-0 align-items-center justify-content-center d-flex w-100 h-100 rounded-0 border-0"
-                                t-attf-class="{{ env.inComposer ? 'o-inComposer position-absolute btn-primary transition-base justify-content-center' : 'bg-300' }}"
-                                t-on-click.stop="() => this.onClickUnlink(attachment)" title="Remove"
-                        >
-                            <i class="fa fa-trash" role="img" aria-label="Remove"/>
-                        </button>
-                        <a t-if="attachment.type === 'url'" class="btn d-flex align-items-center justify-content-center w-100 h-100 rounded-0" t-attf-class="bg-300" t-att-href="attachment.url" target='_blank' title="Open Link">
-                            <i class="fa fa-external-link" role="img" aria-label="Open Link"/>
-                        </a>
-                        <!-- t-attf-class overridden in extensions -->
-                        <button t-elif="canDownload(attachment)" class="btn d-flex align-items-center justify-content-center w-100 h-100 rounded-0"
-                                t-attf-class="bg-300"
-                                t-att-data-download-url="attachment.downloadUrl"
-                                t-on-click.stop="() => this.onClickDownload(attachment)" title="Download"
-                        >
-                            <i class="fa fa-download" role="img" aria-label="Download"/>
-                        </button>
+                    <!-- uploaded info -->
+                    <div t-if="showUploaded(attachment)" class="o-Attachment-uploaded position-absolute top-0 d-flex" t-att-class="!isMobileOS ? 'end-0' : 'start-0'" title="Uploaded">
+                        <i class="fa fa-check"/>
                     </div>
                 </div>
             </div>
         </div>
     </t>
 
-    <t t-name="mail.ImageActions">
-        <div class="position-absolute top-0 bottom-0 start-0 end-0 p-1 text-white o-opacity-hoverable opacity-100-hover d-flex align-items-end flax-wrap flex-column" t-att-class="{ 'opacity-0': !actionsMenuState.isOpen }">
-            <button t-if="props.actions.length === 1 and props.imagesHeight gt 75" class="btn btn-sm btn-light rounded px-1 py-0" t-att-class="{ 'opacity-75 opacity-100-hover': !isMobileOS }" tabindex="0" t-att-aria-label="props.actions[0].label" t-att-title="props.actions[0].label" role="menuitem" t-on-click.stop="props.actions[0].onSelect">
+    <t t-name="mail.Actions">
+        <div class="position-absolute end-0 p-1 text-white">
+            <button t-if="props.actions.length === 1" class="btn btn-sm btn-light rounded px-1 py-0" tabindex="0" t-att-aria-label="props.actions[0].label" t-att-title="props.actions[0].label" role="menuitem" t-on-click.stop="props.actions[0].onSelect">
                 <i t-att-class="props.actions[0].icon"/>
             </button>
-            <Dropdown t-else="" menuClass="'d-flex flex-column py-0' + (props.actions.length gt 1 ? ' py-0' : '')" state="actionsMenuState" position="'right-start'">
-                <button class="btn btn-sm btn-light rounded px-1 py-0" t-att-class="{ 'opacity-75 opacity-100-hover': !isMobileOS }" tabindex="0" aria-label="Actions" title="Actions" role="menuitem">
+            <Dropdown t-else="" menuClass="'d-flex flex-column py-0'" state="actionsMenuState" position="'right-start'">
+                <button class="btn btn-sm btn-light rounded px-1 py-0" tabindex="0" aria-label="Actions" title="Actions" role="menuitem">
                     <i class="oi oi-chevron-down"/>
                 </button>
                 <t t-set-slot="content">
                     <DropdownItem t-foreach="props.actions" t-as="action" t-key="action_index" class="'px-2 py-1 d-flex align-items-center rounded-0'" onSelected="action.onSelect">
                         <i class="fa-fw" t-att-class="action.icon"/>
-                        <span class="mx-2" t-esc="action.label"/>
+                        <span class="mx-2" t-out="action.label"/>
                     </DropdownItem>
                 </t>
             </Dropdown>
