@@ -6,7 +6,6 @@ import { random5Chars, uuidv4, gte, lt } from "@point_of_sale/utils";
 import { floatIsZero, roundPrecision } from "@web/core/utils/numbers";
 import { computeComboItems } from "./utils/compute_combo_items";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
-import { getTaxesAfterFiscalPosition } from "./utils/tax_utils";
 
 const formatCurrency = registry.subRegistries.formatters.content.monetary[1];
 const { DateTime } = luxon;
@@ -129,7 +128,6 @@ export class PosOrder extends Base {
     get taxTotals() {
         const currency = this.currency;
         const company = this.company;
-        const extraValues = { currency_id: currency };
         const orderLines = this.lines;
 
         // If each line is negative, we assume it's a refund order.
@@ -141,20 +139,7 @@ export class PosOrder extends Base {
                 ? 1
                 : -1;
 
-        const baseLines = [];
-        for (const line of orderLines) {
-            let taxes = line.tax_ids;
-            if (this.fiscal_position_id) {
-                taxes = getTaxesAfterFiscalPosition(taxes, this.fiscal_position_id, this.models);
-            }
-            baseLines.push(
-                accountTaxHelpers.prepare_base_line_for_taxes_computation(line, {
-                    ...extraValues,
-                    quantity: documentSign * line.qty,
-                    tax_ids: taxes,
-                })
-            );
-        }
+        const baseLines = orderLines.map((line) => line.prepareBaseLineForTaxesComputation());
         accountTaxHelpers.add_tax_details_in_base_lines(baseLines, company);
         accountTaxHelpers.round_base_lines_tax_details(baseLines, company);
 
