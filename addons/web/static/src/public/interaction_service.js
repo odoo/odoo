@@ -93,6 +93,9 @@ class InteractionService {
     }
 
     startInteractions(el = this.el) {
+        if (!el.isConnected) {
+            return Promise.resolve();
+        }
         const proms = [];
         for (const I of this.Interactions) {
             if (I.selector === "") {
