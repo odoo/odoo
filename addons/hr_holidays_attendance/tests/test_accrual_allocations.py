@@ -33,8 +33,7 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
                     'start_type': 'day',
                     'added_value': 1,
                     'added_value_type': 'day',
-                    'frequency': 'hourly',
-                    'frequency_hourly_source': 'attendance',
+                    'frequency': 'worked_hours',
                     'cap_accrued_time': True,
                     'maximum_leave': 10000
                 })],
@@ -78,10 +77,9 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
                 'start_count': 1,
                 'added_value': 1,
                 'added_value_type': 'hour',
-                'frequency': 'hourly',
+                'frequency': 'worked_hours',
                 'cap_accrued_time': True,
                 'maximum_leave': 100,
-                'frequency_hourly_source': 'attendance'
             })],
         })
         self.env['hr.attendance'].create({

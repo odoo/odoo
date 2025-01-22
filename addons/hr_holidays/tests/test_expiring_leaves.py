@@ -129,7 +129,8 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
                 'yearly_day': 1,
                 'yearly_month': 'jan',
                 'cap_accrued_time': False,
-                'action_with_unused_accruals': 'maximum',
+                'action_with_unused_accruals': 'all',
+                'carryover_options' : 'limited',
                 'postpone_max_days': carryover_limit,
                 })
             ],
@@ -214,7 +215,8 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
                 'yearly_day': 1,
                 'yearly_month': 'jan',
                 'cap_accrued_time': False,
-                'action_with_unused_accruals': 'maximum',
+                'action_with_unused_accruals': 'all',
+                'carryover_options' : 'limited',
                 'postpone_max_days': carryover_limit,
                 })
             ],
@@ -380,7 +382,8 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
                     'yearly_day': 1,
                     'yearly_month': 'jan',
                     'cap_accrued_time': False,
-                    'action_with_unused_accruals': 'maximum',
+                    'action_with_unused_accruals': 'all',
+                    'carryover_options' : 'limited',
                     'postpone_max_days': 5,
                     })
                 ],
@@ -439,7 +442,8 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
                 'yearly_day': 1,
                 'yearly_month': 'jan',
                 'cap_accrued_time': False,
-                'action_with_unused_accruals': 'maximum',
+                'action_with_unused_accruals': 'all',
+                'carryover_options' : 'limited',
                 'postpone_max_days': 5,
                 })
             ],

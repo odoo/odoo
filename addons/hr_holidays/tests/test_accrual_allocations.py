@@ -71,7 +71,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         level.maximum_leave = 10
         self.assertEqual(accrual_plan.level_ids.maximum_leave, 10)
 
-        with self.assertRaises(UserError):
+        with self.assertRaises(IntegrityError):
             level.maximum_leave = 0
 
         level.cap_accrued_time = False
@@ -649,7 +649,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'added_value': 1,
                     'first_day': 31,
                     'frequency': 'monthly',
-                    'action_with_unused_accruals': 'maximum',
+                    'action_with_unused_accruals': 'all',
+                    'carryover_options': 'limited',
                     'postpone_max_days': 4,  # confusing name but is in hours when added_value_type == 'hour'
                 })],
             })
@@ -846,7 +847,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'frequency': 'yearly',
                     'cap_accrued_time': True,
                     'maximum_leave': 100,
-                    'action_with_unused_accruals': 'maximum',
+                    'action_with_unused_accruals': 'all',
+                    'carryover_options': 'limited',
                     'postpone_max_days': 10,
                 })],
             })
@@ -906,7 +908,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'frequency': 'daily',
                     'cap_accrued_time': True,
                     'maximum_leave': 25,
-                    'action_with_unused_accruals': 'maximum',
+                    'action_with_unused_accruals': 'all',
+                    'carryover_options': 'limited',
                     'postpone_max_days': 15,
                 })],
             })
@@ -960,7 +963,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'frequency': 'yearly',
                     'cap_accrued_time': True,
                     'maximum_leave': 100,
-                    'action_with_unused_accruals': 'maximum',
+                    'action_with_unused_accruals': 'all',
+                    'carryover_options': 'limited',
                     'postpone_max_days': 7,
                 })],
             })
@@ -1655,7 +1659,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'frequency': 'monthly',
                 'first_day': 11,
                 'cap_accrued_time': False,
-                'action_with_unused_accruals': 'maximum',
+                'action_with_unused_accruals': 'all',
+                'carryover_options': 'limited',
                 'postpone_max_days': 69,
             })],
         })
@@ -1749,7 +1754,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'first_day': 9,
                     'cap_accrued_time': True,
                     'maximum_leave': 15,
-                    'action_with_unused_accruals': 'maximum',
+                    'action_with_unused_accruals': 'all',
+                    'carryover_options': 'limited',
                     'postpone_max_days': 13,
                 }),
                 (0, 0, {
@@ -1763,7 +1769,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'second_month': 'oct',
                     'cap_accrued_time': True,
                     'maximum_leave': 10,
-                    'action_with_unused_accruals': 'maximum',
+                    'action_with_unused_accruals': 'all',
+                    'carryover_options': 'limited',
                     'postpone_max_days': 20,
                 }),
                 (0, 0, {
@@ -1977,7 +1984,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'frequency': 'monthly',
                 'first_day_display': 'last',
                 'cap_accrued_time': False,
-                'action_with_unused_accruals': 'maximum',
+                'action_with_unused_accruals': 'all',
+                'carryover_options': 'limited',
                 'postpone_max_days': 5
             })],
         })
@@ -2113,7 +2121,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'frequency': 'monthly',
                 'first_day_display': 'last',
                 'cap_accrued_time': False,
-                'action_with_unused_accruals': 'maximum',
+                'action_with_unused_accruals': 'all',
+                'carryover_options': 'limited',
                 'postpone_max_days': 5
             })],
         })
@@ -2671,7 +2680,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'frequency': 'monthly',
                     'start_count': 20,
                     'start_type': 'month',
-                    'action_with_unused_accruals': 'maximum',
+                    'action_with_unused_accruals': 'all',
+                    'carryover_options': 'limited',
                     'postpone_max_days': 5
                 })],
         })
@@ -3181,7 +3191,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'start_type': 'day',
                 'added_value': 10,
                 'frequency': 'yearly',
-                'action_with_unused_accruals': 'maximum',
+                'action_with_unused_accruals': 'all',
+                'carryover_options': 'limited',
                 'postpone_max_days': 5,
                 'accrual_validity': True,
                 'accrual_validity_type': 'day',
@@ -3326,7 +3337,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'start_type': 'day',
                 'added_value': 10,
                 'frequency': 'yearly',
-                'action_with_unused_accruals': 'maximum',
+                'action_with_unused_accruals': 'all',
+                'carryover_options': 'limited',
                 'postpone_max_days': 5,
                 'accrual_validity': True,
                 'accrual_validity_type': 'month',
@@ -3600,7 +3612,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'level_ids':
                 [(0, 0, {
                 "accrued_gain_time": "start",
-                "action_with_unused_accruals": "maximum",
+                "action_with_unused_accruals": "all",
+                "carryover_options": "limited",
                 "added_value": 21,
                 "cap_accrued_time": True,
                 "first_day": 1,
@@ -3661,7 +3674,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             f.maximum_leave = 28
             f.start_count = 0
             # Set a maximum carry-over
-            f.action_with_unused_accruals = 'maximum'
+            f.action_with_unused_accruals = 'all'
+            f.carryover_options = 'limited'
             f.postpone_max_days = 7
             # Set it back to 'lost'
             f.action_with_unused_accruals = 'lost'

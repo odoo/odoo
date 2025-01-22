@@ -15,7 +15,7 @@ class HrLeaveAccrualPlan(models.Model):
     _description = "Accrual Plan"
 
     active = fields.Boolean(default=True)
-    name = fields.Char('Name', required=True)
+    name = fields.Char('Name')
     time_off_type_id = fields.Many2one('hr.leave.type', string="Time Off Type",
         check_company=True, index='btree_not_null',
         help="""Specify if this accrual plan can only be used with this Time Off Type.
@@ -23,29 +23,26 @@ class HrLeaveAccrualPlan(models.Model):
     employees_count = fields.Integer("Employees", compute='_compute_employee_count')
     level_ids = fields.One2many('hr.leave.accrual.level', 'accrual_plan_id', copy=True, string="Milestone")
     allocation_ids = fields.One2many('hr.leave.allocation', 'accrual_plan_id')
-    company_id = fields.Many2one('res.company', string='Company',
+    company_id = fields.Many2one('res.company', string='Company', domain=lambda self: [('id', 'in', self.env.companies.ids)],
         compute="_compute_company_id", store="True", readonly=False)
     transition_mode = fields.Selection([
         ('immediately', 'Immediately'),
         ('end_of_accrual', "After this accrual's period")],
-        string="Milestone Transition", default="immediately", required=True,
-        help="""Specify what occurs if a level transition takes place in the middle of a pay period.\n
-                'Immediately' will switch the employee to the new accrual level on the exact date during the ongoing pay period.\n
-                'After this accrual's period' will keep the employee on the same accrual level until the ongoing pay period is complete.
-                After it is complete, the new level will take effect when the next pay period begins.""")
+        string="Milestone Transition", default="immediately", required=True)
     show_transition_mode = fields.Boolean(compute='_compute_show_transition_mode')
     is_based_on_worked_time = fields.Boolean("Based on worked time", compute="_compute_is_based_on_worked_time", store=True, readonly=False,
-        help="If checked, the accrual period will be calculated according to the work days, not calendar days.")
+                                             help="Only excludes requests where the time off type is set as unpaid kind of.")
     accrued_gain_time = fields.Selection([
         ("start", "At the start of the accrual period"),
         ("end", "At the end of the accrual period")],
         default="end", required=True)
+    is_carryover = fields.Boolean(default=True, store=True)
     carryover_date = fields.Selection([
         ("year_start", "At the start of the year"),
         ("allocation", "At the allocation date"),
-        ("other", "Other")],
+        ("other", "Custom date")],
         default="year_start", required=True, string="Carry-Over Time")
-    carryover_day = fields.Integer(default=1)
+    carryover_day = fields.Integer(default=1, store=True)
     carryover_day_display = fields.Selection(
         _get_selection_days, compute='_compute_carryover_day_display', inverse='_inverse_carryover_day_display')
     carryover_month = fields.Selection([
@@ -62,7 +59,61 @@ class HrLeaveAccrualPlan(models.Model):
         ("nov", "November"),
         ("dec", "December")
     ], default="jan")
-    added_value_type = fields.Selection([('day', 'Days'), ('hour', 'Hours')], compute='_compute_added_value_type', store=True)
+    added_value_type = fields.Selection([('day', 'Days'), ('hour', 'Hours')], default="day", store=True)
+    summary = fields.Html(readonly=True, compute='_compute_summary')
+
+    @api.depends('transition_mode', 'show_transition_mode', 'is_based_on_worked_time', 'accrued_gain_time',
+                 'is_carryover', 'carryover_date', 'carryover_day_display', 'carryover_month')
+    def _compute_summary(self):
+        for plan in self:
+            carryover_day = str(
+                dict(plan._fields["carryover_day_display"].get_description(plan.env).get("selection"))
+                .get(plan.carryover_day_display)) if plan.carryover_day_display else _("[select a day]")
+            carryover_month = str(
+                dict(plan._fields["carryover_month"].get_description(plan.env).get("selection"))
+                .get(plan.carryover_month)) if plan.carryover_month else _("[select a month]")
+
+            if plan.accrued_gain_time == "start":
+                if plan.is_based_on_worked_time:
+                    start_or_end_worked_time = _(
+                        "This accrual plan is accrued at the <b>start of each period</b>,\
+                         <b>based on the worked time.</b>")
+                else:
+                    start_or_end_worked_time = _("This accrual plan is accrued at the <b>start of each period</b>,\
+                     <b>based on the whole calendar days.</b>")
+            else:
+                if plan.is_based_on_worked_time:
+                    start_or_end_worked_time = _(
+                        "This accrual plan is accrued at the <b>end of each period</b>,\
+                         <b>based on the worked time.</b>")
+                else:
+                    start_or_end_worked_time = _("This accrual plan is accrued at the <b>end of each period</b>,\
+                     <b>based on the whole calendar days.</b>")
+            if plan.is_carryover:
+                if plan.carryover_date == "year_start":
+                    carryover = _("<br/>Accrued days <b>are carried over</b> from year to year,\
+                     <b>at the start of the year.</b>")
+                elif plan.carryover_date == "allocation":
+                    carryover = _("<br/>Accrued days <b>are carried over</b> from year to year,\
+                     <b>at the allocation date.</b>")
+                else:
+                    carryover = _("<br/>Accrued days <b>are carried over</b> from year to year,\
+                     <b>at the %(day)s of %(month)s.</b>", day=carryover_day, month=carryover_month)
+            else:
+                carryover = _("<br/>Accrued days <b>are not carried over</b> from year to year.")
+            if plan.show_transition_mode:
+                if plan.transition_mode == "immediately":
+                    transition_mode = _(
+                        "<br/>If an accrual level changes in the middle of a pay period, <b>employees are immediately \
+                        placed on the next accrual level</b> on the exact date during the current pay period.")
+                else:
+                    transition_mode = _(
+                        "<br/>If an accrual level changes in the middle of a pay period, <b>employees are placed on \
+                        the next accrual level on the next pay period.</b>")
+            else:
+                transition_mode = ""
+
+            plan.summary = start_or_end_worked_time + carryover + transition_mode
 
     @api.depends('level_ids')
     def _compute_show_transition_mode(self):
@@ -107,12 +158,6 @@ class HrLeaveAccrualPlan(models.Model):
             if plan.accrued_gain_time == "start":
                 plan.is_based_on_worked_time = False
 
-    @api.depends("level_ids")
-    def _compute_added_value_type(self):
-        for plan in self:
-            if plan.level_ids:
-                plan.added_value_type = plan.level_ids[0].added_value_type
-
     @api.depends("carryover_day")
     def _compute_carryover_day_display(self):
         days_select = _get_selection_days(self)
@@ -123,12 +168,13 @@ class HrLeaveAccrualPlan(models.Model):
         for plan in self:
             if plan.carryover_day_display == 'last':
                 plan.carryover_day = 31
-            else:
+            elif int(plan.carryover_day_display) in range(1,29):
                 plan.carryover_day = DAY_SELECT_VALUES.index(plan.carryover_day_display) + 1
+            else:
+                plan.carryover_day = False
 
     def action_open_accrual_plan_employees(self):
         self.ensure_one()
-
         return {
             'name': _("Accrual Plan's Employees"),
             'type': 'ir.actions.act_window',
@@ -136,6 +182,27 @@ class HrLeaveAccrualPlan(models.Model):
             'res_model': 'hr.employee',
             'domain': [('id', 'in', self.allocation_ids.employee_id.ids)],
         }
+
+    def action_create_accrual_plan_level(self):
+        action = self.env.ref('hr_holidays.action_open_accrual_plan_level').read()[0]
+        action['name'] = _('New Milestone')
+        action['context'] = dict(self.env.context)
+        action["context"].update({
+            'new': True,
+            'is_carryover': self.is_carryover,
+            'accrued_gain_time': self.accrued_gain_time,
+            'can_modify_value_type': not self.time_off_type_id and not self.level_ids,
+            'added_value_type': self.added_value_type,
+        })
+        return action
+
+    def action_open_accrual_plan_level(self,level_id):
+        action = self.env.ref('hr_holidays.action_open_accrual_plan_level').read()[0]
+        action.update({
+            'name': _('Milestone Edition'),
+            'res_id': level_id,
+        })
+        return action
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
@@ -152,3 +219,9 @@ class HrLeaveAccrualPlan(models.Model):
             raise ValidationError(_(
                 "Some of the accrual plans you're trying to delete are linked to an existing allocation. Delete or cancel them first."
             ))
+
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        if not 'name' in res or not res['name']:
+            res.write({'name': "My Plan #" + str(res.id)})
+        return res
