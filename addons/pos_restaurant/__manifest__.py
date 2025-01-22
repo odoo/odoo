@@ -25,6 +25,7 @@ This module adds several features to the Point of Sale that are specific to rest
         'views/res_config_settings_views.xml',
     ],
     'demo': [
+        'data/preset_data.xml',
         'data/demo_data.xml',
     ],
     'installable': True,
