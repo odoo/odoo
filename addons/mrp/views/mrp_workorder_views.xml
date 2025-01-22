@@ -9,9 +9,8 @@
                 <field name="workcenter_id"/>
                 <field name="product_id"/>
                 <field name="finished_lot_id"/>
-                <filter string="Ready" name="ready" domain="[('state','=','ready')]"/>
-                <filter string="Waiting" name="waiting" domain="[('state','=','waiting')]"/>
-                <filter string="Pending" name="pending" domain="[('state','=','pending')]"/>
+                <filter string="To Do" name="ready" domain="[('state','=','ready')]"/>
+                <filter string="Blocked" name="blocked" domain="[('state','=','blocked')]"/>
                 <filter string="In Progress" name="progress" domain="[('state','=','progress')]"/>
                 <filter string="Done" name="done" domain="[('state','=', 'done')]"/>
                 <filter string="Late" name="late" domain="[('date_start','&lt;=',time.strftime('%Y-%m-%d'))]"/>
@@ -61,7 +60,7 @@
         <field name="model">mrp.workorder</field>
         <field name="priority" eval="100"/>
         <field name="arch" type="xml">
-            <list editable="bottom" multi_edit="1">
+            <list>
                 <field name="consumption" column_invisible="True"/>
                 <field name="company_id" column_invisible="True"/>
                 <field name="is_produced" column_invisible="True"/>
@@ -76,9 +75,8 @@
                 <field name="name" string="Operation" readonly="state in ['cancel', 'done']"/>
                 <field name="workcenter_id" readonly="state in ['cancel', 'done', 'progress']"/>
                 <field name="product_id" optional="show"/>
-                <field name="qty_remaining" optional="show" string="Quantity Remaining"/>
-                <field name="qty_produced" optional="hide" string="Quantity Produced" readonly="state in ['done', 'cancel'] or not production_availability"/>
-                <field name="qty_ready" optional="hide"/>
+                <field name="qty_remaining" optional="show" string="Quantity"/>
+                <field name="qty_ready" optional="hide" groups="base.group_no_one"/>
                 <field name="finished_lot_id" optional="hide" string="Lot/Serial"/>
                 <field name="date_start" optional="hide" readonly="state in ['progress', 'done', 'cancel']"/>
                 <field name="date_finished" optional="hide" readonly="state in ['progress', 'done', 'cancel']"/>
@@ -86,9 +84,6 @@
                 <field name="duration" widget="mrp_timer"
                   invisible="production_state == 'draft'"
                   readonly="is_user_working" sum="real duration"/>
-                <field name="state" widget="badge" decoration-warning="state == 'progress'" decoration-success="state == 'done'" decoration-danger="state == 'cancel'" decoration-info="state not in ('progress', 'done', 'cancel')"
-                  column_invisible="parent and parent.state == 'draft'"
-                  invisible="production_state == 'draft'"/>
                 <button name="button_start" type="object" title="Start" class="btn-success px-2"
                   invisible="production_state in ('draft', 'done', 'cancel') or working_state == 'blocked' or state in ('done', 'cancel') or is_user_working" icon="fa-play"/>
                 <button name="button_pending" type="object" title="Pause" class="btn-warning px-2" icon="fa-pause"
@@ -96,8 +91,9 @@
                 <button name="button_finish" type="object" title="Done" class="btn-success px-2" icon="fa-check"
                   invisible="production_state in ('draft', 'done', 'cancel') or working_state == 'blocked' or not is_user_working"/>
                 <widget name="mo_view_list_dropdown"/>
-                <field name="show_json_popover" column_invisible="True"/>
-                <field name="json_popover" widget="mrp_workorder_popover" string=" " invisible="not show_json_popover"  width="30px"/>
+                <field name="state" widget="badge" decoration-info="state == 'progress'" decoration-success="state == 'done'" decoration-danger="state == 'cancel'" decoration-warning="state == 'blocked'" decoration-muted="state == 'ready'"
+                  column_invisible="parent and parent.state == 'draft'"
+                  invisible="production_state == 'draft'"/>
             </list>
         </field>
     </record>
@@ -113,9 +109,6 @@
             </xpath>
             <xpath expr="//list/field[@name='qty_ready']" position="attributes">
                 <attribute name="column_invisible">parent.state == 'done'</attribute>
-            </xpath>
-            <xpath expr="//field[@name='show_json_popover']" position='before'>
-                <button name="action_open_wizard" type="object" icon="fa-external-link" class="oe_edit_only" title="Open Work Order" context="{'default_workcenter_id': workcenter_id}"/>
             </xpath>
             <xpath expr="//field[@name='name']" position='before'>
                 <field name="sequence" widget="handle" column_invisible="parent.state != 'draft'"/>
@@ -153,8 +146,10 @@
             <field name="is_user_working" invisible="1"/>
             <field name="working_state" invisible="1"/>
             <field name="production_state" invisible="1"/>
+            <field name="operation_id" invisible="1"/>
+            <field name="sequence" invisible="1"/>
             <header>
-                <field name="state" widget="statusbar" statusbar_visible="pending,waiting,ready,progress,done"/>
+                <field name="state" widget="statusbar" statusbar_visible="blocked,ready,progress,done"/>
             </header>
             <sheet>
                 <div class="oe_button_box" name="button_box">
@@ -171,12 +166,13 @@
                 <field name="finished_lot_id" invisible="1"/>
                 <group>
                     <group>
-                        <field name="name" readonly="1"/>
+                        <field name="name" readonly="state in ['cancel', 'done']" force_save="1"/>
                         <field name="workcenter_id" readonly="state in ['cancel', 'done', 'progress']"/>
                     </group>
                     <group>
                         <field name="product_id" readonly="1"/>
-                        <field name="qty_remaining" string="Quantity" readonly="1"/>
+                        <field name="qty_remaining" string="Quantity" readonly="1" invisible="state == 'done'"/>
+                        <field name="qty_produced" string="Produced Quantity" groups="base.group_no_one" readonly="state == 'done'"/>
                         <field name="finished_lot_id" readonly="1"/>
                     </group>
                 </group>
@@ -198,7 +194,7 @@
                         </div>
                     </group>
                     <group>
-                        <field name="production_id"/>
+                        <field name="production_id" force_save="1"/>
                     </group>
                 </group>
                 <notebook>
@@ -233,7 +229,7 @@
                         <div>
                             <label for="duration" class="pe-2"/>
                             <field name="duration" widget="float_time" readonly="1"/>
-                            <span>&amp;nbsp;(minutes)</span>
+                            <span>&#160;(minutes)</span>
                         </div>
                 </page>
                 <page string="Components" name="components">
@@ -257,8 +253,8 @@
                 </page>
                 <field name="allow_workorder_dependencies" invisible="1"/>
                 <page string="Blocked By" name="dependencies" invisible="not allow_workorder_dependencies">
-                    <field name="blocked_by_workorder_ids" nolabel="1">
-                        <list editable="bottom">
+                    <field name="blocked_by_workorder_ids" nolabel="1" readonly="1">
+                        <list>
                             <field name="company_id" column_invisible="True"/>
                             <field name="name" string="Operation" readonly="state in ['cancel', 'done']"/>
                             <field name="company_id" optional="hide" groups="base.group_multi_company"/>
@@ -291,11 +287,10 @@
                 <field name="product_id"/>
                 <field name="finished_lot_id"/>
                 <filter string="In Progress" name="progress" domain="[('state', '=', 'progress')]"/>
-                <filter string="Ready" name="ready" domain="[('state', '=', 'ready')]"/>
-                <filter string="Waiting" name="waiting" domain="[('state', '=', 'waiting')]"/>
-                <filter string="Pending" name="pending" domain="[('state', '=', 'pending'), ('production_state', '!=', 'draft')]"/>
-                <filter string="Draft" name="draft" domain="[('state', '=', 'pending'), ('production_state', '=', 'draft')]"/>
+                <filter string="To Do" name="ready" domain="[('state', '=', 'ready')]"/>
+                <filter string="Blocked" name="blocked" domain="[('state', '=', 'blocked')]"/>
                 <filter string="Finished" name="finish" domain="[('state', '=', 'done')]"/>
+                <filter string="Cancelled" name="cancel" domain="[('state', '=', 'cancel')]"/>
                 <separator/>
                 <filter string="Late" name="late" domain="['&amp;', ('date_start', '&lt;', datetime.datetime.now()), ('state', '=', 'ready')]"
                     help="Production started late"/>
@@ -371,7 +366,7 @@
                                 <field t-if="!record.date_start.raw_value" name="production_date"/>
                             </div>
                             <div class="h2 ms-2">
-                                <span t-attf-class="badge #{['progress'].indexOf(record.state.raw_value) > -1 ? 'text-bg-warning' : ['ready', 'waiting', 'pending'].indexOf(record.state.raw_value) > -1 ? 'text-bg-primary' : ['done'].indexOf(record.state.raw_value) > -1 ? 'text-bg-success' : 'text-bg-danger'}">
+                                <span t-attf-class="badge #{['progress'].indexOf(record.state.raw_value) > -1 ? 'text-bg-warning' : ['ready', 'blocked'].indexOf(record.state.raw_value) > -1 ? 'text-bg-primary' : ['done'].indexOf(record.state.raw_value) > -1 ? 'text-bg-success' : 'text-bg-danger'}">
                                     <field name="state"/>
                                 </span>
                             </div>
@@ -399,7 +394,7 @@
         <field name="path">workcenter-planning</field>
         <field name="view_mode">list,form,calendar,pivot,graph</field>
         <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
-        <field name="context">{'search_default_work_center': True, 'search_default_ready': True, 'search_default_waiting': True, 'search_default_progress': True, 'search_default_pending': True}</field>
+        <field name="context">{'search_default_work_center': True, 'search_default_ready': True, 'search_default_blocked': True, 'search_default_progress': True}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             No work orders to do!
@@ -417,7 +412,7 @@
         <field name="domain">[('production_state','not in',('done','cancel'))]</field>
         <field name="view_mode">list,form,calendar,pivot,graph</field>
         <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
-        <field name="context">{'search_default_production': True, 'search_default_ready': True, 'search_default_waiting': True, 'search_default_progress': True, 'search_default_pending': True}</field>
+        <field name="context">{'search_default_production': True, 'search_default_ready': True, 'search_default_blocked': True, 'search_default_progress': True}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             No work orders to do!
@@ -443,7 +438,7 @@
         <field name="view_mode">list,kanban,form,calendar,pivot,graph</field>
         <field name="view_id" ref="mrp.mrp_production_workorder_tree_view"/>
         <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
-        <field name="context">{'search_default_ready': True, 'search_default_progress': True, 'search_default_pending': True, 'search_default_waiting': True}</field>
+        <field name="context">{'search_default_ready': True, 'search_default_progress': True, 'search_default_blocked': True}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             No work orders to do!

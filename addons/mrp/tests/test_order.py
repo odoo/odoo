@@ -2294,7 +2294,7 @@ class TestMrpOrder(TestMrpCommon):
 
         mo_3.button_plan()
         self.assertEqual(mo_3.state, 'confirmed')
-        self.assertEqual(mo_3.workorder_ids[0].state, 'waiting')
+        self.assertEqual(mo_3.workorder_ids[0].state, 'ready')  # No matter the MO Reservation state, the first WO is always ready
 
         mo_1 = Form(self.env['mrp.production'])
         mo_1.bom_id = self.bom_3
@@ -2313,8 +2313,8 @@ class TestMrpOrder(TestMrpCommon):
         (mo_1 | mo_2).button_plan()  # Confirm and plan in the same "request"
         self.assertEqual(mo_1.state, 'confirmed')
         self.assertEqual(mo_2.state, 'confirmed')
-        self.assertEqual(mo_1.workorder_ids[0].state, 'waiting')
-        self.assertEqual(mo_2.workorder_ids[0].state, 'waiting')
+        self.assertEqual(mo_1.workorder_ids[0].state, 'ready')
+        self.assertEqual(mo_2.workorder_ids[0].state, 'ready')
 
         # produce
         (mo_1 | mo_2).button_mark_done()
@@ -2467,19 +2467,19 @@ class TestMrpOrder(TestMrpCommon):
         mo.bom_id = bom
         mo = mo.save()
 
-        self.assertEqual(list(mo.workorder_ids.mapped("state")), ["waiting", "waiting"])
+        self.assertEqual(list(mo.workorder_ids.mapped("state")), ["ready", "ready"])  # default is ready
 
         mo.action_confirm()
         mo.action_assign()
         self.assertEqual(mo.move_raw_ids.state, "assigned")
-        self.assertEqual(list(mo.workorder_ids.mapped("state")), ["ready", "pending"])
+        self.assertEqual(list(mo.workorder_ids.mapped("state")), ["ready", "blocked"])
         mo.do_unreserve()
-
-        self.assertEqual(list(mo.workorder_ids.mapped("state")), ["waiting", "pending"])
+        # No matter the MO Reservation state, the first WO is always ready
+        self.assertEqual(list(mo.workorder_ids.mapped("state")), ["ready", "blocked"])
 
         mo.workorder_ids[0].unlink()
 
-        self.assertEqual(list(mo.workorder_ids.mapped("state")), ["waiting"])
+        self.assertEqual(list(mo.workorder_ids.mapped("state")), ["ready"])
         mo.action_assign()
         self.assertEqual(list(mo.workorder_ids.mapped("state")), ["ready"])
 
@@ -2714,9 +2714,8 @@ class TestMrpOrder(TestMrpCommon):
         # 'invisible': [('state', '=', 'draft')]
         production_form = Form(production)
         production_form.qty_producing = 1
-        with production_form.workorder_ids.edit(0) as wo:
-            wo.duration = 15 # in 15 minutes
         production = production_form.save()
+        production.workorder_ids[0].duration = 15
         production.button_mark_done()
         # It is saved and done, registered in the db. There are now 1 productions of that operation
 
@@ -2731,9 +2730,8 @@ class TestMrpOrder(TestMrpCommon):
         # 'invisible': [('state', '=', 'draft')]
         production_form = Form(production)
         production_form.qty_producing = 1
-        with production_form.workorder_ids.edit(0) as wo:
-            wo.duration = 10  # In 10 minutes this time
         production = production_form.save()
+        production.workorder_ids[0].duration = 10
         production.button_mark_done()
         # It is saved and done, registered in the db. There are now 2 productions of that operation
 
@@ -2762,9 +2760,8 @@ class TestMrpOrder(TestMrpCommon):
         # 'invisible': [('state', '=', 'draft')]
         production_form = Form(production)
         production_form.qty_producing = 1
-        with production_form.workorder_ids.edit(0) as wo:
-            wo.duration = 10  # in 10 minutes
         production = production_form.save()
+        production.workorder_ids[0].duration = 10
         production.button_mark_done()
         # It is saved and done, registered in the db. There are now 1 productions of that operation
 
@@ -2781,9 +2778,8 @@ class TestMrpOrder(TestMrpCommon):
         # 'invisible': [('state', '=', 'draft')]
         production_form = Form(production)
         production_form.qty_producing = 2
-        with production_form.workorder_ids.edit(0) as wo:
-            wo.duration = 10  # In 10 minutes this time
         production = production_form.save()
+        production.workorder_ids[0].duration = 10
         production.button_mark_done()
         # It is saved and done, registered in the db. There are now 2 productions of that operation but they have the same duration
 
@@ -2815,9 +2811,8 @@ class TestMrpOrder(TestMrpCommon):
         # 'invisible': [('state', '=', 'draft')]
         production_form = Form(production)
         production_form.qty_producing = 1
-        with production_form.workorder_ids.edit(0) as wo:
-            wo.duration = 10  # in 10 minutes
         production = production_form.save()
+        production.workorder_ids[0].duration = 10
         production.button_mark_done()
 
         production_form = Form(self.env['mrp.production'])
@@ -3250,6 +3245,7 @@ class TestMrpOrder(TestMrpCommon):
         for _ in range(2):
             mo_form = Form(self.env['mrp.production'])
             mo_form.bom_id = self.bom_4
+            mo_form.save()
             with mo_form.workorder_ids.edit(0) as wo_line:
                 wo_line.date_start = datetime.now()
             mos += mo_form.save()
@@ -3457,7 +3453,7 @@ class TestMrpOrder(TestMrpCommon):
 
         self.assertEqual(mo_backorder.workorder_ids[0].state, 'cancel')
         self.assertEqual(mo_backorder.workorder_ids[1].state, 'ready')
-        self.assertEqual(mo_backorder.workorder_ids[2].state, 'pending')
+        self.assertEqual(mo_backorder.workorder_ids[2].state, 'blocked')
         self.assertFalse(mo_backorder.workorder_ids[0].date_start)
         self.assertEqual(mo_backorder.workorder_ids[1].date_start, datetime(2023, 3, 1, 12, 0))
         self.assertEqual(mo_backorder.workorder_ids[2].date_start, datetime(2023, 3, 1, 12, 45))
@@ -3471,6 +3467,7 @@ class TestMrpOrder(TestMrpCommon):
 
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = self.product_8
+        mo = mo_form.save()
         with mo_form.workorder_ids.new() as workorder:
             workorder.name = "OP1"
             workorder.workcenter_id = self.workcenter_2
@@ -4762,6 +4759,7 @@ class TestMrpOrder(TestMrpCommon):
         mo_form.product_id = product_to_build
         mo_form.bom_id = bom_1
         mo_form.product_qty = qty_final
+        mo = mo_form.save()
         if extra_component:
             with mo_form.move_raw_ids.new() as line:
                 line.product_id = product_to_use_1
@@ -5043,9 +5041,8 @@ class TestMrpOrder(TestMrpCommon):
         production.button_plan()
         production_form = Form(production)
         production_form.qty_producing = 1
-        with production_form.workorder_ids.edit(0) as wo:
-            wo.duration = 15  # Complete the work order in 15 minutes
         production = production_form.save()
+        production.workorder_ids[0].duration = 15
         production.button_mark_done()
 
         production_form = Form(self.env['mrp.production'])
@@ -5244,10 +5241,8 @@ class TestMrpOrder(TestMrpCommon):
 
     def test_workorder_without_product(self):
         mo_form = Form(self.env['mrp.production'])
-
-        with mo_form.workorder_ids.new() as wo:
-            wo.name = "Cutting"
-            wo.workcenter_id = self.workcenter_1
+        with self.assertRaises(AssertionError):
+            mo_form.save()
 
         mo_form.product_id = self.product_1
         mo_form.product_qty = 1.0

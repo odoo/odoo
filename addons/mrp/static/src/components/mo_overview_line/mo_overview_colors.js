@@ -25,12 +25,11 @@ const PICKING_DECORATORS = {
 };
 
 const OPERATION_DECORATORS = {
-    pending: "info",
-    waiting: "info",
-    ready: "info",
-    progress: "warning",
+    blocked: "warning",
+    ready: "muted",
+    progress: "info",
     done: "success",
-    cancel: "secondary",
+    cancel: "danger",
 };
 
 const PRODUCT_DECORATORS = {
