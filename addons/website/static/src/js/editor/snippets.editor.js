@@ -199,8 +199,8 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         // TODO remove in master and adapt XML.
         const contentAdditionEl = $html.find("#so_content_addition")[0];
         if (contentAdditionEl) {
-            // Allows dropping "inner blocks" next to an image link.
-            contentAdditionEl.dataset.dropNear += ", div:not(.o_grid_item_image) > a:has(img)";
+            // Necessary to be able to drop "inner blocks" next to an image link.
+            contentAdditionEl.dataset.dropNear += ", div:not(.o_grid_item_image) > a";
         }
     },
     /**
