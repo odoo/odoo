@@ -17,8 +17,9 @@ export class BillScreen extends ReceiptScreen {
      * @override
      */
     async printReceipt() {
+        const order = this.currentOrder;
         await super.printReceipt();
-        this.currentOrder._printed = false;
+        order._printed = false;
     }
 
     get isBill() {
