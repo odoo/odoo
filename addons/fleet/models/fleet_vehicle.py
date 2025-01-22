@@ -162,11 +162,14 @@ class FleetVehicle(models.Model):
                 record.odometer = 0
 
     def _set_odometer(self):
-        for record in self:
-            if record.odometer:
-                date = fields.Date.context_today(record)
-                data = {'value': record.odometer, 'date': date, 'vehicle_id': record.id}
-                self.env['fleet.vehicle.odometer'].create(data)
+        self.env['fleet.vehicle.odometer'].create([
+            {
+                'value': vehicle.odometer,
+                'date': fields.Date.context_today(vehicle),
+                'vehicle_id': vehicle.id,
+                'driver_id': vehicle.driver_id.id
+            } for vehicle in self if vehicle.odometer
+        ])
 
     def _compute_count_all(self):
         Odometer = self.env['fleet.vehicle.odometer']
