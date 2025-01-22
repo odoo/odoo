@@ -986,7 +986,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                     ("company_id", "=", self.account_revenue_c1.company_ids.id),
                     ("move_id.state", "!=", "cancel"),
                 ],
-                "name": "Journal items for account prefix sp1234566",
+                "name": "Cell Audit",
             },
         )
 
@@ -1002,6 +1002,10 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                 "include_unposted": True,
             }
         )
+        company = self.company_data['company']
+        payable_receivable_accounts = self.env['account.account'].with_company(company).search([
+            ('account_type', 'in', ['liability_payable', 'asset_receivable'])
+        ])
         self.assertEqual(
             action,
             {
@@ -1010,7 +1014,23 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                 "view_mode": "list",
                 "views": [[False, "list"]],
                 "target": "current",
-                "domain": [(0, "=", 1)],
-                "name": "Journal items for account prefix ",
+                "domain": [
+                    "&",
+                    "&",
+                    "&",
+                    ("account_id", "in", payable_receivable_accounts.ids),
+                    "|",
+                    "&",
+                    ("account_id.include_initial_balance", "=", True),
+                    ("date", "<=", date(2022, 12, 31)),
+                    "&",
+                    "&",
+                    ("account_id.include_initial_balance", "=", False),
+                    ("date", ">=", date(2022, 1, 1)),
+                    ("date", "<=", date(2022, 12, 31)),
+                    ("company_id", "=", company.id),
+                    ("move_id.state", "!=", "cancel")
+                ],
+                "name": "Cell Audit",
             },
         )
