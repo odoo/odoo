@@ -125,7 +125,7 @@ class L10nInEwaybill(models.Model):
                 self._ewaybill_get_by_irn(json_payload.get("Irn"))
                 response.update({
                     'odoo_warning': [{
-                        'message': EWayBillApi.DEFAULT_HELP_MESSAGE % 'generated',
+                        'message': str(EWayBillApi.DEFAULT_HELP_MESSAGE) % 'generated',
                         'message_post': True
                     }]
                 })
