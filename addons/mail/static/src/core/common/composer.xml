@@ -92,8 +92,7 @@
                 <AttachmentList
                     t-if="allowUpload and props.composer.attachments.length > 0"
                     attachments="props.composer.attachments"
-                    unlinkAttachment.bind="(...args) => attachmentUploader.unlink(...args)"
-                    imagesHeight="75"/>
+                    unlinkAttachment.bind="(...args) => attachmentUploader.unlink(...args)"/>
                 <div t-if="!extended and !props.composer.message" class="o-mail-Composer-pickerContainer" t-att-class="{ 'o-active': composerActions.activePicker and ui.isSmall }" t-ref="picker-container">
                     <div t-if="partitionedActions.pickers.length > 1 and composerActions.activePicker and ui.isSmall" class="o-mail-Composer-pickerSelection btn-group w-100">
                         <button t-foreach="partitionedActions.pickers" t-as="pickerAction" t-key="'PICKER_' + pickerAction.id" class="btn btn-secondary" t-esc="pickerAction.pickerName" t-on-click="(ev) => pickerAction.onClick(ev)" t-att-class="{

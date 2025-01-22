@@ -666,7 +666,7 @@ test("chat window: composer state conservation on toggle discuss", async () => {
     });
     // Set attachments of the composer
     await inputFiles(".o-mail-Composer .o_input_file", [textFile1, textFile2]);
-    await contains(".o-mail-AttachmentCard .fa-check", { count: 2 });
+    await contains(".o-mail-AttachmentContainer .fa-check", { count: 2 });
     await openDiscuss();
     await contains(".o-mail-ChatWindow", { count: 0 });
     await openFormView("discuss.channel", channelId);

@@ -40,7 +40,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
             },
         },
         {
-            trigger: ".o-mail-AttachmentCard:not(.o-isUploading)", // waiting the attachment to be uploaded
+            trigger: ".o-mail-AttachmentContainer:not(.o-isUploading)", // waiting the attachment to be uploaded
         },
         {
             content: "Open full composer",
@@ -144,11 +144,11 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         },
         {
             content: "Check message contains the first attachment",
-            trigger: '.o-mail-Message .o-mail-AttachmentCard:contains("file1.txt")',
+            trigger: '.o-mail-Message .o-mail-AttachmentContainer:contains("file1.txt")',
         },
         {
             content: "Check message contains the second attachment",
-            trigger: '.o-mail-Message .o-mail-AttachmentCard:contains("file2.txt")',
+            trigger: '.o-mail-Message .o-mail-AttachmentContainer:contains("file2.txt")',
         },
         // Test the full composer input text is kept on closing
         {

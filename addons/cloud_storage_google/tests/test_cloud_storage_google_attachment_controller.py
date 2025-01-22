@@ -46,6 +46,7 @@ class TestCloudStorageAttachmentController(HttpCaseWithUserDemo, TestCloudStorag
                                 "create_date": odoo.fields.Datetime.to_string(
                                     attachment.create_date
                                 ),
+                                "file_size": 0,
                                 "id": attachment.id,
                                 "mimetype": "text/x-python",
                                 "name": "__init__.py",

@@ -4,7 +4,7 @@
     <t t-name="mail.VoicePlayer">
         <div class="o-mail-VoicePlayer d-flex align-items-center my-1 position-relative">
             <t t-set="playOrPause"><t t-if="state.repeat">Repeat</t><t t-elif="state.playing">Pause</t><t t-else="">Play</t></t>
-            <button class="border-0 btn shadow-none rounded-pill fa fa-fw ms-2 me-3 bg-100"
+            <button class="border-0 btn shadow-none rounded-pill fa fa-fw ms-2 me-3 bg-200"
                 t-att-class="{
                     'fa-stop text-danger btn-sm': state.playing,
                     'btn-light btn-sm': !state.playing,

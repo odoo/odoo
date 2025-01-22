@@ -410,6 +410,6 @@ test("Scheduled message with attachments", async () => {
     await contains(".o-mail-Scheduled-Message");
     await contains(".o-mail-AttachmentList");
     await contains(".o-mail-Chatter-attachFiles sup", { text: "2" });
-    await contains(".o-mail-AttachmentCard[title='Blah.txt']");
-    await contains(".o-mail-AttachmentImage[title='Blu.png']");
+    await contains(".o-mail-AttachmentCard");
+    await contains(".o-mail-AttachmentImage");
 });

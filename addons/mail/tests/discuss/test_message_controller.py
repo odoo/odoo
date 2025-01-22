@@ -103,6 +103,7 @@ class TestMessageController(HttpCaseWithUserDemo):
                     {
                     "checksum": False,
                     "create_date": fields.Datetime.to_string(self.attachments[0].create_date),
+                    "file_size": 0,
                     "id": self.attachments[0].id,
                     "name": "File 1",
                     "raw_access_token": limited_field_access_token(self.attachments[0], "raw"),
@@ -160,6 +161,7 @@ class TestMessageController(HttpCaseWithUserDemo):
                 {
                     "checksum": False,
                     "create_date": fields.Datetime.to_string(self.attachments[0].create_date),
+                    "file_size": 0,
                     "id": self.attachments[0].id,
                     "name": "File 1",
                     "raw_access_token": limited_field_access_token(self.attachments[0], "raw"),
@@ -173,6 +175,7 @@ class TestMessageController(HttpCaseWithUserDemo):
                 {
                     "checksum": False,
                     "create_date": fields.Datetime.to_string(self.attachments[1].create_date),
+                    "file_size": 0,
                     "id": self.attachments[1].id,
                     "name": "File 2",
                     "raw_access_token": limited_field_access_token(self.attachments[1], "raw"),
@@ -208,6 +211,7 @@ class TestMessageController(HttpCaseWithUserDemo):
                 {
                     "checksum": False,
                     "create_date": fields.Datetime.to_string(self.attachments[0].create_date),
+                    "file_size": 0,
                     "id": self.attachments[0].id,
                     "name": "File 1",
                     "raw_access_token": limited_field_access_token(self.attachments[0], "raw"),
@@ -221,6 +225,7 @@ class TestMessageController(HttpCaseWithUserDemo):
                 {
                     "checksum": False,
                     "create_date": fields.Datetime.to_string(self.attachments[1].create_date),
+                    "file_size": 0,
                     "id": self.attachments[1].id,
                     "name": "File 2",
                     "raw_access_token": limited_field_access_token(self.attachments[1], "raw"),
