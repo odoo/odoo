@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record model="pos.preset" id="pos_restaurant.pos_takein_preset">
+            <field name="available_in_self">True</field>
+            <field name="service_at">table</field>
+        </record>
+        <record model="pos.preset" id="pos_restaurant.pos_takeout_preset">
+            <field name="available_in_self">True</field>
+        </record>
+        <record model="pos.preset" id="pos_restaurant.pos_delivery_preset">
+            <field name="available_in_self">True</field>
+            <field name="service_at">delivery</field>
+        </record>
+    </data>
+</odoo>

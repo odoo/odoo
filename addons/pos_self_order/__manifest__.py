@@ -22,6 +22,7 @@
         "views/point_of_sale_dashboard.xml",
     ],
     "demo": [
+        "data/preset_data.xml",
         "data/kiosk_demo_data.xml",
     ],
     "assets": {
