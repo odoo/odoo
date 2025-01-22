@@ -250,17 +250,27 @@ class EventEvent(models.Model):
         help="This information will be printed on your tickets.")
     # questions
     question_ids = fields.Many2many(
-        'event.question', 'event_id', 'Questions', copy=True,
+        'event.question', string='Questions', copy=True,
         compute='_compute_question_ids', readonly=False, store=True)
-    general_question_ids = fields.One2many('event.question', 'event_id', 'General Questions',
-                                           domain=[('once_per_order', '=', True)])
-    specific_question_ids = fields.One2many('event.question', 'event_id', 'Specific Questions',
-                                            domain=[('once_per_order', '=', False)])
+    general_question_ids = fields.Many2many('event.question', string='General Questions',
+                                           compute='_compute_general_question_ids')
+    specific_question_ids = fields.Many2many('event.question', string='Specific Questions',
+                                            compute='_compute_specific_question_ids')
 
     def _compute_use_barcode(self):
         use_barcode = self.env['ir.config_parameter'].sudo().get_param('event.use_event_barcode') == 'True'
         for record in self:
             record.use_barcode = use_barcode
+
+    @api.depends('question_ids')
+    def _compute_general_question_ids(self):
+        for record in self:
+            record.general_question_ids = record.question_ids.filtered(lambda r: r.once_per_order)
+
+    @api.depends('question_ids')
+    def _compute_specific_question_ids(self):
+        for record in self:
+            record.specific_question_ids = record.question_ids.filtered(lambda r: not r.once_per_order)
 
     @api.depends('event_type_id')
     def _compute_question_ids(self):
