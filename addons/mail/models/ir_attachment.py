@@ -80,6 +80,7 @@ class IrAttachment(models.Model):
         return [
             "checksum",
             "create_date",
+            "file_size",
             "mimetype",
             "name",
             "res_name",
