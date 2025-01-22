@@ -1,5 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
@@ -16,7 +15,11 @@ CONTACT_PROXY_METHOD = 'odoo.addons.l10n_my_edi.models.account_edi_proxy_user.Ac
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
+class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
+    """ The tests in this file are similar to the ones in test_submissions but use the new flow (outside of send & print)
+    to test the features of the EDI.
+    These will fully replace the old tests in master.
+    """
 
     @classmethod
     @AccountTestInvoicingCommon.setup_country('my')
@@ -57,20 +60,16 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
         cls.proxy_user = cls.env['account_edi_proxy_client.user']._register_proxy_user(cls.company_data['company'], 'l10n_my_edi', 'demo')
         cls.proxy_user.edi_mode = 'test'
 
-        # This will allow to still use the send and print flow when testing, even if the new module is installed.
-        # It's best to keep the code tested even if we expect users to use the new flow.
-        cls.env['ir.config_parameter'].set_param('l10n_my_edi.disable.send_and_print.first', 'False')
+        cls.env['ir.config_parameter'].set_param('l10n_my_edi.disable.send_and_print.first', 'True')
 
-        cls.fakenow = datetime(2024, 7, 15, 10, 00, 00)
-        cls.startClassPatcher(freeze_time(cls.fakenow))
-
-    def test_01_basic_submission(self):
+    @freeze_time('2024-07-15 10:00:00')
+    def test_01_new_basic_submission(self):
         """
         This tests the most basic flow: an invoice is successfully sent to the MyInvois platform, and then pass validation.
         """
-        send_and_print = self.create_send_and_print(self.basic_invoice)
+        # Send to MyInvois
         with patch(CONTACT_PROXY_METHOD, new=self._test_01_mock):
-            send_and_print.action_send_and_print()
+            self.basic_invoice.action_l10n_my_edi_send_invoice()
 
         # Now that the invoice has been sent successfully, we assert that some info have been saved correctly.
         self.assertRecordValues(
@@ -78,6 +77,7 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
             [{
                 'l10n_my_edi_state': 'valid',
                 'l10n_my_edi_validation_time': datetime.strptime('2024-07-15 05:00:00', '%Y-%m-%d %H:%M:%S'),
+                'l10n_my_edi_invoice_long_id': '123-789-654',
                 'l10n_my_edi_submission_uid': '123456789',
                 'l10n_my_edi_external_uuid': '123458974513518',
             }]
@@ -86,31 +86,31 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
         # We will test the actual file in another test class, but we ensure it was generated as expected.
         self.assertTrue(self.basic_invoice.l10n_my_edi_file_id)
 
-    def test_02_failed_submission(self):
+    @freeze_time('2024-07-15 10:00:00')
+    def test_02_new_failed_submission(self):
         """
         This test will test a flow where the submission itself (not the documents inside) fails for any reason.
         A general error as such should be handled, but is not expected and should be treated as a bug on our side.
 
         As we submit a single invoice, we expect a UserError to be raised.
         """
-        send_and_print = self.create_send_and_print(self.basic_invoice)
         with patch(CONTACT_PROXY_METHOD, new=self._test_02_mock):
-            with self.assertRaises(UserError, msg='Server error; If the problem persists, please contact the Odoo support.'):
-                send_and_print.action_send_and_print()
+            with self.assertRaisesRegex(UserError, 'Server error; If the problem persists, please contact the Odoo support.'):
+                self.basic_invoice.action_l10n_my_edi_send_invoice()
 
-    def test_03_failed_document_submission(self):
+    @freeze_time('2024-07-15 10:00:00')
+    def test_03_new_failed_document_submission(self):
         """
         Unlike the previous test, this will test the use case where the submission is done correctly but the document
         itself is incorrect.
 
         This would be due to an incorrect supplier tin for example.
         """
-        send_and_print = self.create_send_and_print(self.basic_invoice)
         with patch(CONTACT_PROXY_METHOD, new=self._test_03_mock):
             # We want to assert that some values are saved during the commit, which won't happen during a test if we raise all the way.
             # So instead of doing an assertRaises, we will catch the error (ensuring that it does happen) then continue.
             try:
-                send_and_print.action_send_and_print()
+                self.basic_invoice.action_l10n_my_edi_send_invoice()
             except UserError:
                 pass  # We expect a user error to be raised here.
             else:
@@ -127,14 +127,14 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
             }]
         )
 
-    def test_04_cancellation(self):
+    @freeze_time('2024-07-15 10:00:00')
+    def test_04_new_cancellation(self):
         """
         An invoice can be cancelled up to 72h after validation.
         Test the cancellation flow when it works well.
         """
-        send_and_print = self.create_send_and_print(self.basic_invoice)
         with patch(CONTACT_PROXY_METHOD, new=self._test_04_mock):
-            send_and_print.action_send_and_print()
+            self.basic_invoice.action_l10n_my_edi_send_invoice()
 
             # Open the wizard successfully, 72h did not pass
             action = self.basic_invoice.button_request_cancel()
@@ -151,14 +151,14 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
             }]
         )
 
-    def test_05_cancellation_failures(self):
+    @freeze_time('2024-07-15 10:00:00')
+    def test_05_new_cancellation_failures(self):
         """
         Tests two scenarios when cancellation fails.
         First on is trying to launch the wizard past the 72h mark, and then an actual cancellation error.
         """
-        send_and_print = self.create_send_and_print(self.basic_invoice)
         with patch(CONTACT_PROXY_METHOD, new=self._test_05_mock):
-            send_and_print.action_send_and_print()
+            self.basic_invoice.action_l10n_my_edi_send_invoice()
 
             self.basic_invoice.l10n_my_edi_validation_time = datetime.strptime('2024-07-12 10:00:00', '%Y-%m-%d %H:%M:%S')
 
@@ -175,17 +175,17 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
             wizard.button_request_update()
             self.assertEqual(self.basic_invoice.message_ids[0].preview, 'You do not have the permission to update this invoice.')
 
-    def test_06_invalid_reset(self):
+    @freeze_time('2024-07-15 10:00:00')
+    def test_06_new_invalid_reset(self):
         """
         Test that an invalid invoice can be reset, and that after reset the edi related fields are correctly reset beside the hash and retry time.
         Also test that the invoice can be sent again after correction.
         """
-        send_and_print = self.create_send_and_print(self.basic_invoice)
         with patch(CONTACT_PROXY_METHOD, new=self._test_06_mock):
             # We want to assert that some values are saved during the commit, which won't happen during a test if we raise all the way.
             # So instead of doing an assertRaises, we will catch the error (ensuring that it does happen) then continue.
             try:
-                send_and_print.action_send_and_print()
+                self.basic_invoice.action_l10n_my_edi_send_invoice()
             except UserError:
                 pass  # We expect a user error to be raised here.
             else:
@@ -210,8 +210,7 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
             # ... we change whatever
             self.basic_invoice.action_post()
 
-            send_and_print = self.create_send_and_print(self.basic_invoice)
-            send_and_print.action_send_and_print()
+            self.basic_invoice.action_l10n_my_edi_send_invoice()
 
             self.assertRecordValues(
                 self.basic_invoice,
@@ -220,15 +219,15 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
                 }]
             )
 
-    def test_07_pending_submission(self):
+    @freeze_time('2024-07-15 10:00:00')
+    def test_07_new_pending_submission(self):
         """
         Test the case of a submission status being unavailable at the time of submission.
         No errors should be raised, and it should be handled by the cron later on.
         """
         self.get_submission_status_count = 0  # Needed for the mock; we get it twice. Once during submission and once from the cron.
-        send_and_print = self.create_send_and_print(self.basic_invoice)
         with patch(CONTACT_PROXY_METHOD, new=self._test_07_mock):
-            send_and_print.action_send_and_print()
+            self.basic_invoice.action_l10n_my_edi_send_invoice()
 
             self.assertRecordValues(
                 self.basic_invoice,
@@ -243,9 +242,17 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
             self.env['account.move']._cron_l10n_my_edi_synchronize_myinvois()
 
             # The update should be reflected on the move.
-            self.assertEqual(self.basic_invoice.l10n_my_edi_state, 'valid')
+            self.assertRecordValues(
+                self.basic_invoice,
+                [{
+                    'l10n_my_edi_state': 'valid',
+                    'l10n_my_edi_validation_time': datetime.strptime('2024-07-15 05:00:00', '%Y-%m-%d %H:%M:%S'),
+                    'l10n_my_edi_invoice_long_id': '123-789-654',
+                }]
+            )
 
-    def test_08_mass_submission(self):
+    @freeze_time('2024-07-15 10:00:00')
+    def test_08_new_mass_submission(self):
         """ This test will ensure that invoices are split as expected if there are more than SUBMISSION_MAX_SIZE at once. """
         # For performance purposes we will not create 100 invoices here, but instead patch SUBMISSION_MAX_SIZE to make batches of two invoices.
         self.submission_count = 0
@@ -263,19 +270,18 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
         self.submission_invoice.action_post()
         self.submission_invoice |= self.basic_invoice
 
-        send_and_print = self.create_send_and_print(self.submission_invoice)
         with patch(CONTACT_PROXY_METHOD, new=self._test_08_mock), \
              patch('odoo.addons.l10n_my_edi.models.account_move.SUBMISSION_MAX_SIZE', 2):
-            send_and_print.action_send_and_print(force_synchronous=True)
+            self.submission_invoice.action_l10n_my_edi_send_invoice()
 
         # we have 10 invoices, with a max size of 2 we expect 5 different submissions.
         self.assertEqual(self.submission_count, 5)
 
-    def test_09_fetch_status(self):
+    @freeze_time('2024-07-15 10:00:00')
+    def test_09_new_fetch_status(self):
         """ After pushing an invoice, we can optionally fetch the status manually if needed. """
-        send_and_print = self.create_send_and_print(self.basic_invoice)
         with patch(CONTACT_PROXY_METHOD, new=self._test_09_mock):
-            send_and_print.action_send_and_print()
+            self.basic_invoice.action_l10n_my_edi_send_invoice()
 
             self.assertRecordValues(
                 self.basic_invoice,
@@ -292,45 +298,16 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
             # The update should be reflected on the move.
             self.assertEqual(self.basic_invoice.l10n_my_edi_state, 'valid')
 
-    def test_10_reject_bill(self):
-        """
-        An invoice can be cancelled up to 72h after validation.
-        Test the cancellation flow when it works well.
-        """
-        bill = self.init_invoice(
-            'in_invoice', products=self.product_a
-        )
-        bill.action_post()
-
-        # Technically this would have been done at import
-        bill.l10n_my_edi_state = 'valid'
-
-        with patch(CONTACT_PROXY_METHOD, new=self._test_10_mock):
-            action = bill.action_l10n_my_edi_reject_bill()
-            wizard = self.env[action['res_model']].with_context(action['context']).create({
-                'reason': 'Discount not applied',
-            })
-            # Cancel the invoice
-            wizard.button_request_update()
-
-        self.assertRecordValues(  # Did not change, not until the supplier cancel.
-            bill,
-            [{
-                'l10n_my_edi_state': 'rejected',
-                'state': 'posted',
-            }]
-        )
-
-    def test_11_full_rejection_flow_invoice(self):
+    @freeze_time('2024-07-15 10:00:00')
+    def test_10_new_full_rejection_flow_invoice(self):
         """
         We issue an invoice to our customer with the wrong address.
         The customer reject it for that reason.
         We receive the updated status later on, and cancel the invoice to issue a new one later.
         """
-        send_and_print = self.create_send_and_print(self.basic_invoice)
-        with patch(CONTACT_PROXY_METHOD, new=self._test_11_mock):
+        with patch(CONTACT_PROXY_METHOD, new=self._test_10_mock):
             # Issue the invoice, and get a valid status.
-            send_and_print.action_send_and_print()
+            self.basic_invoice.action_l10n_my_edi_send_invoice()
             # Update the status, and receive a rejection request.
             self.basic_invoice.action_l10n_my_edi_update_status()
             self.assertEqual(self.basic_invoice.l10n_my_edi_state, 'rejected')
@@ -342,6 +319,15 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
             # Cancel the invoice
             wizard.button_request_update()
             self.assertEqual(self.basic_invoice.l10n_my_edi_state, 'cancelled')
+
+    @freeze_time('2024-07-15 10:00:00')
+    def test_11_qr_code_generation(self):
+        """ Basic test that ensure that a valid invoice can generate a QR code. """
+        with patch(CONTACT_PROXY_METHOD, new=self._test_11_mock):
+            self.basic_invoice.action_l10n_my_edi_send_invoice()
+
+        qr_data_uri = self.basic_invoice._generate_myinvois_qr_code()
+        self.assertTrue(qr_data_uri)
 
     # -------------------------------------------------------------------------
     # Patched methods
@@ -364,7 +350,7 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
                     '123458974513518': {
                         'status': 'valid',
                         'reason': '',
-                        'long_id': '',
+                        'long_id': '123-789-654',
                         'valid_datetime': '2024-07-15T05:00:00Z',
                     }
                 },
@@ -538,7 +524,7 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
                     '123458974513518': {
                         'status': 'valid',
                         'reason': '',
-                        'long_id': '',
+                        'long_id': '123-789-654',
                         'valid_datetime': '2024-07-15T05:00:00Z',
                     }
                 },
@@ -611,15 +597,6 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
 
     def _test_10_mock(self, endpoint, params):
         """ Basic mocked method that simulate what the proxy would return depending on the endpoint. """
-        if endpoint == 'api/l10n_my_edi/1/update_status':
-            return {
-                'success': True,
-            }
-        else:
-            raise UserError('Unexpected endpoint called during a test: %s with params %s.' % (endpoint, params))
-
-    def _test_11_mock(self, endpoint, params):
-        """ Basic mocked method that simulate what the proxy would return depending on the endpoint. """
         if endpoint == 'api/l10n_my_edi/1/submit_invoices':
             return {
                 'submission_uid': '123456789',
@@ -651,6 +628,32 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
         elif endpoint == 'api/l10n_my_edi/1/update_status':
             return {
                 'success': True,
+            }
+        else:
+            raise UserError('Unexpected endpoint called during a test: %s with params %s.' % (endpoint, params))
+
+    def _test_11_mock(self, endpoint, params):
+        """ Basic mocked method that simulate what the proxy would return depending on the endpoint. """
+        if endpoint == 'api/l10n_my_edi/1/submit_invoices':
+            return {
+                'submission_uid': '123456789',
+                'documents': [{
+                    'move_id': params['documents'][0]['move_id'],
+                    'uuid': '123458974513518',
+                    'success': True,
+                }]
+            }
+        elif endpoint == 'api/l10n_my_edi/1/get_submission_statuses':
+            return {
+                'statuses': {
+                    '123458974513518': {
+                        'status': 'valid',
+                        'reason': '',
+                        'long_id': '123-789-654',
+                        'valid_datetime': '2024-07-15T05:00:00Z',
+                    }
+                },
+                'document_count': 1,
             }
         else:
             raise UserError('Unexpected endpoint called during a test: %s with params %s.' % (endpoint, params))
