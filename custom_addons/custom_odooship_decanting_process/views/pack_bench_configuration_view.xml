@@ -11,9 +11,11 @@
                         <group>
                             <field name="name"/>
                             <field name="printer_name"/>
+                            <field name="tenant_code_id"/>
                         </group>
                         <group>
                             <field name="printer_ip"/>
+                            <field name="site_code_id"/>
                         </group>
                     </group>
                 </sheet>
@@ -32,6 +34,8 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="name"/>
+                <field name="tenant_code_id"/>
+                <field name="site_code_id"/>
             </tree>
         </field>
     </record>

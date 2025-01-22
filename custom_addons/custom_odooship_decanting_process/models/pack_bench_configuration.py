@@ -14,4 +14,10 @@ class PackBenchConfiguration(models.Model):
     pack_bench_id = fields.Integer(string='Pack Bench ID', tracking=True)
     printer_ip = fields.Char(string='Printer IP', tracking=True)
     printer_name = fields.Char(string='Printer Name', tracking=True)
+    tenant_code_id = fields.Many2one(
+        'tenant.code.configuration',
+        string='Tenant Code',
+        store=True
+    )
+    site_code_id = fields.Many2one('site.code.configuration', string='Site Code', store=True)
 
