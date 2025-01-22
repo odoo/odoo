@@ -145,11 +145,13 @@ class Index(TableObject):
         cr = model.env.cr
         conname = self.full_name(model)
         definition = self.definition
-        current_definition = sql.index_definition(cr, conname)
-        if current_definition == definition:
+        db_definition, db_comment = sql.index_definition(cr, conname)
+        if db_comment == definition or (not db_comment and db_definition):
+            # keep when the definition matches the comment in the database
+            # or if we have an index without a comment (this is used by support to tweak indexes)
             return
 
-        if current_definition:
+        if db_definition:
             # constraint exists but its definition may have changed
             sql.drop_index(cr, conname, model._table)
 
