@@ -34,6 +34,11 @@ class CrmActivityReport(models.Model):
         help="Type is used to separate Leads and Opportunities")
     active = fields.Boolean('Active', readonly=True)
     tag_ids = fields.Many2many(related="lead_id.tag_ids", readonly=True)
+    won_status = fields.Selection([
+        ('won', 'Won'),
+        ('lost', 'Lost'),
+        ('pending', 'Pending'),
+    ], string='Is Won', readonly=True)
 
     def _select(self):
         return """
@@ -56,7 +61,8 @@ class CrmActivityReport(models.Model):
                 l.stage_id,
                 l.partner_id,
                 l.type as lead_type,
-                l.active
+                l.active,
+                l.won_status
         """
 
     def _from(self):
