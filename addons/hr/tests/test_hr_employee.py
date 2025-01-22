@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from psycopg2.errors import UniqueViolation
 
-from odoo.tests import Form, users
+from odoo.fields import Domain
+from odoo.tests import Form, users, new_test_user
 from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.tools import mute_logger
 from odoo.exceptions import ValidationError
@@ -462,3 +463,18 @@ class TestHrEmployee(TestHrCommon):
 
         all_employees = employee_A | employee_B | employee_C
         self.assertEqual(all_employees.filtered(lambda e: e.active), employee_B, "Employees should have been archived")
+
+    def test_search_hr_employee_no_access(self):
+        new_user = new_test_user(self.env, 'employee')
+        employee = self.env['hr.employee'].create({
+            'name': 'Test Employee',
+        })
+        domain = Domain([
+            ('name', '=', 'Test Employee'),
+            ('active', '=', True)
+        ])._optimize(self.env['hr.employee'])
+        with self.assertNoLogs('odoo.domains'):
+            self.assertEqual(
+                employee.ids,
+                self.env['hr.employee'].with_user(new_user).search(domain).ids,
+            )

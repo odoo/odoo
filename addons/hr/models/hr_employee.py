@@ -13,6 +13,7 @@ from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
 from odoo import api, fields, models, _
+from odoo.fields import Domain
 from odoo.exceptions import ValidationError, AccessError
 from odoo.osv import expression
 from odoo.tools import convert, format_date
@@ -335,6 +336,8 @@ class HrEmployee(models.Model):
         # cache, and interpreted as an access error
         self._check_private_fields(field_names)
         self.flush_model(field_names)
+        # HACK: suppress warning if domain is optimized for another model
+        domain = list(domain) if isinstance(domain, Domain) else domain
         public = self.env['hr.employee.public'].search_fetch(domain, field_names, offset, limit, order)
         employees = self.browse(public._ids)
         employees._copy_cache_from(public, field_names)
@@ -418,6 +421,8 @@ class HrEmployee(models.Model):
         if self.browse().has_access('read'):
             return super()._search(domain, offset, limit, order)
         try:
+            # HACK: suppress warning if domain is optimized for another model
+            domain = list(domain) if isinstance(domain, Domain) else domain
             ids = self.env['hr.employee.public']._search(domain, offset, limit, order)
         except ValueError:
             raise AccessError(_('You do not have access to this document.'))
