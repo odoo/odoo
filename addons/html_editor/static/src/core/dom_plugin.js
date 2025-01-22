@@ -269,6 +269,7 @@ export class DomPlugin extends Plugin {
         let nodeToInsert;
         let doesCurrentNodeAllowsP = allowsParagraphRelatedElements(currentNode);
         const insertedNodes = [...container.childNodes];
+        const candidatesForRemoval = [];
         while ((nodeToInsert = container.firstChild)) {
             if (isBlock(nodeToInsert) && !doesCurrentNodeAllowsP) {
                 // Split blocks at the edges if inserting new blocks (preventing
@@ -303,14 +304,14 @@ export class DomPlugin extends Plugin {
                         );
                         currentNode = insertBefore ? right : left;
                         const otherNode = insertBefore ? left : right;
-                        if (
-                            this.dependencies.split.isUnsplittable(nodeToInsert) &&
-                            container.childNodes.length === 1
-                        ) {
+                        if (isBlock(otherNode)) {
                             fillShrunkPhrasingParent(otherNode);
-                        } else if (isEmptyBlock(otherNode)) {
-                            otherNode.remove();
                         }
+                        // After the content insertion, the right-part of a
+                        // split is evaluated for removal, if it is unnecessary
+                        // (to guarantee a paragraph-related element
+                        // after the last unsplittable inserted element).
+                        candidatesForRemoval.push(right);
                     } else {
                         if (isBlock(currentNode)) {
                             fillShrunkPhrasingParent(currentNode);
@@ -392,6 +393,26 @@ export class DomPlugin extends Plugin {
                         );
                     },
                 ]);
+            }
+        }
+        for (const candidateForRemoval of candidatesForRemoval) {
+            // Ensure that a paragraph related element is present after the last
+            // unsplittable inserted element
+            if (
+                candidateForRemoval.isConnected &&
+                [...paragraphRelatedElements, "LI"].includes(candidateForRemoval.nodeName) &&
+                candidateForRemoval.parentElement.isContentEditable &&
+                isEmptyBlock(candidateForRemoval) &&
+                ((candidateForRemoval.previousElementSibling &&
+                    !this.dependencies.split.isUnsplittable(
+                        candidateForRemoval.previousElementSibling
+                    )) ||
+                    (candidateForRemoval.nextElementSibling &&
+                        !this.dependencies.split.isUnsplittable(
+                            candidateForRemoval.nextElementSibling
+                        )))
+            ) {
+                candidateForRemoval.remove();
             }
         }
         for (const insertedNode of allInsertedNodes.reverse()) {
