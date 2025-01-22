@@ -116,7 +116,6 @@ class TestBomPrice(TestBomPriceCommon):
         workcenter_form1 = Form(self.env['mrp.workcenter'])
         workcenter_form1.name = 'Workcenter'
         workcenter_form1.time_efficiency = 80
-        workcenter_form1.default_capacity = 2
         workcenter_form1.oee_target = 100
         workcenter_form1.time_start = 15
         workcenter_form1.time_stop = 15
