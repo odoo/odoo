@@ -1,10 +1,10 @@
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { insertText, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
-import { click, queryAll, queryAllTexts } from "@odoo/hoot-dom";
+import { click, queryAll, queryOne, queryAllTexts } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
-import { insertStructureSnippet } from "./helpers";
+import { insertStructureSnippet, setupWebsiteBuilderWithSnippet } from "./helpers";
 
 defineWebsiteModels();
 
@@ -127,4 +127,23 @@ test("remove main content with table of content", async () => {
 
     undo(editor);
     expect(queryAllTexts(":iframe .s_table_of_content_navbar a")).toEqual(["Design features"]);
+});
+test("update second toc navbar", async () => {
+    const { getEditor } = await setupWebsiteBuilderWithSnippet("s_table_of_content");
+    const editor = getEditor();
+    await insertStructureSnippet(editor, "s_table_of_content");
+    const toc1Anchor1El = queryOne(
+        ":iframe .s_table_of_content:nth-child(1) .s_table_of_content_navbar a:nth-child(1)"
+    );
+    const toc1Anchor2El = queryOne(
+        ":iframe .s_table_of_content:nth-child(1) .s_table_of_content_navbar a:nth-child(2)"
+    );
+    const toc2Anchor1El = queryOne(
+        ":iframe .s_table_of_content:nth-child(2) .s_table_of_content_navbar a:nth-child(1)"
+    );
+    const toc2Anchor2El = queryOne(
+        ":iframe .s_table_of_content:nth-child(2) .s_table_of_content_navbar a:nth-child(2)"
+    );
+    expect(toc1Anchor1El.getAttribute("href")).not.toEqual(toc2Anchor1El.getAttribute("href"));
+    expect(toc1Anchor2El.getAttribute("href")).not.toEqual(toc2Anchor2El.getAttribute("href"));
 });

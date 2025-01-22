@@ -49,10 +49,12 @@ export function defineWebsiteModels() {
 
 export async function setupWebsiteBuilder(
     websiteContent,
-    { snippets, openEditor = true, loadIframeBundles = false } = {}
+    { snippets, openEditor = true, loadIframeBundles = false, hasToCreateWebsite = true } = {}
 ) {
-    const pyEnv = await startServer();
-    pyEnv["website"].create({});
+    if (hasToCreateWebsite) {
+        const pyEnv = await startServer();
+        pyEnv["website"].create({});
+    }
     let editor;
     await mountWithCleanup(WebClient);
     let resolveIframeLoaded = () => {};
