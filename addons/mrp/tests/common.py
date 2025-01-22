@@ -104,26 +104,30 @@ class TestMrpCommon(TestStockCommon):
 
         cls.workcenter_1 = cls.env['mrp.workcenter'].create({
             'name': 'Nuclear Workcenter',
-            'default_capacity': 2,
             'time_start': 10,
             'time_stop': 5,
             'time_efficiency': 80,
         })
         cls.workcenter_2 = cls.env['mrp.workcenter'].create({
             'name': 'Simple Workcenter',
-            'default_capacity': 1,
             'time_start': 0,
             'time_stop': 0,
             'time_efficiency': 100,
         })
         cls.workcenter_3 = cls.env['mrp.workcenter'].create({
             'name': 'Double Workcenter',
-            'default_capacity': 2,
             'time_start': 0,
             'time_stop': 0,
             'time_efficiency': 100,
         })
-
+        for (workcenter, default_capacity) in [(cls.workcenter_1, 2), (cls.workcenter_2, 1), (cls.workcenter_3, 2)]:
+            cls.env['mrp.workcenter.capacity'].create({
+                'workcenter_id': workcenter.id,
+                'product_uom_id': cls.uom_unit.id,
+                'capacity': default_capacity,
+                'time_start': workcenter.time_start,
+                'time_stop': workcenter.time_stop,
+            })
         cls.bom_1 = cls.env['mrp.bom'].create({
             'product_id': cls.product_4.id,
             'product_tmpl_id': cls.product_4.product_tmpl_id.id,
