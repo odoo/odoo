@@ -550,13 +550,13 @@ def check_index_exist(cr, indexname):
 def index_definition(cr, indexname):
     """ Read the index definition from the database """
     cr.execute(SQL("""
-        SELECT COALESCE(d.description, idx.indexdef) AS def
+        SELECT idx.indexdef, d.description
         FROM pg_class c
         JOIN pg_indexes idx ON c.relname = idx.indexname
         LEFT JOIN pg_description d ON c.oid = d.objoid
         WHERE c.relname = %s AND c.relkind = 'i'
     """, indexname))
-    return cr.fetchone()[0] if cr.rowcount else None
+    return cr.fetchone() if cr.rowcount else (None, None)
 
 
 def create_index(
