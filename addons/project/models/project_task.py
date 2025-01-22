@@ -214,6 +214,8 @@ class ProjectTask(models.Model):
         compute='_compute_partner_phone', inverse='_inverse_partner_phone',
         string="Contact Number", readonly=False, store=True, copy=False
     )
+    # Need this field to check there is no email loops when Odoo reply automatically
+    email_from = fields.Char('Email From')
     email_cc = fields.Char(help='Email addresses that were in the CC of the incoming emails from this task and that are not currently linked to an existing customer.')
     company_id = fields.Many2one('res.company', string='Company', compute='_compute_company_id', store=True, readonly=False, recursive=True, copy=True, default=_default_company_id)
     color = fields.Integer(string='Color Index', export_string_translation=False)
