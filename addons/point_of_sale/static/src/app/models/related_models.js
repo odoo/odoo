@@ -146,9 +146,10 @@ function processModelDefs(modelDefs) {
 }
 
 export class Base extends WithLazyGetterTrap {
-    constructor({ model, traps }) {
+    constructor({ model, traps, opts }) {
         super({ traps });
         this.model = model;
+        this._opts = opts;
     }
     get models() {
         return this.model.models;
@@ -233,11 +234,11 @@ export class Base extends WithLazyGetterTrap {
                             let data = {};
 
                             if (
-                                !SERIALIZABLE_MODELS.includes(params.relation) &&
+                                !this._opts.serializableModels.has(params.relation) &&
                                 typeof id === "number"
                             ) {
                                 return [4, id];
-                            } else if (!SERIALIZABLE_MODELS.includes(params.relation)) {
+                            } else if (!this._opts.serializableModels.has(params.relation)) {
                                 throw new Error(
                                     "Trying to create a non serializable record" + params.relation
                                 );
@@ -497,6 +498,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         return new Model({
             model,
             traps: { set: setTrapsCache[modelName] },
+            opts,
         });
     }
 
