@@ -192,6 +192,7 @@ const threadPatch = {
         }
         return undefined;
     },
+<<<<<<< saas-18.1
     get correspondents() {
         return this.channel_member_ids.filter(({ persona }) => persona.notEq(this.store.self));
     },
@@ -228,6 +229,35 @@ const threadPatch = {
         }
         this.fetchMembersState = "fetched";
         this.store.insert(data);
+||||||| 2a2bf4503f5e3eeb9028bd809f4d7effbaac40ed
+    async fetchChannelInfo() {
+        return this.fetchChannelMutex.exec(async () => {
+            if (!(this.localId in this.store.Thread.records)) {
+                return; // channel was deleted in-between two calls
+            }
+            const data = await rpc("/discuss/channel/info", { channel_id: this.id });
+            if (data) {
+                this.store.insert(data);
+            } else {
+                this.delete();
+            }
+            return data ? this : undefined;
+        });
+=======
+    async fetchChannelInfo() {
+        return this.fetchChannelMutex.exec(async () => {
+            if (!(this.localId in this.store.Thread.records)) {
+                return; // channel was deleted in-between two calls
+            }
+            const data = await rpc("/discuss/channel/info", { channel_id: this.id });
+            if (data) {
+                this.store.insert(data, { html: true });
+            } else {
+                this.delete();
+            }
+            return data ? this : undefined;
+        });
+>>>>>>> 3bbe2ba05e484b3c066a7cc2365c5bfb160bd458
     },
     async fetchMoreAttachments(limit = 30) {
         if (this.isLoadingAttachments || this.areAttachmentsLoaded) {
