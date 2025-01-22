@@ -2,8 +2,12 @@
 
 import { _t } from "@web/core/l10n/translation";
 
+import { cookie } from "@web/core/browser/cookie";
+import { getColor } from "@web/core/colors/colors";
 import { GraphRenderer } from "@web/views/graph/graph_renderer";
 import { groupBy } from "@web/core/utils/arrays";
+
+const colorScheme = cookie.get("color_scheme");
 
 
 export class HrHolidaysGraphRenderer extends GraphRenderer {
@@ -43,18 +47,19 @@ export class HrHolidaysGraphRenderer extends GraphRenderer {
             .map(labelPart => labelPart === this.model.allocation_label || labelPart === this.model.timeoff_label ? this.balance_label : labelPart)
             .join(this.delimiter)
         );
-        const balanceDatasets = Object.entries(datasetsByLabel).map(([label, datasets]) =>
-            this._initializeBalanceDatasetFrom(datasets, label)
+        this.datasets_offset = data.datasets.length;
+        this.datasets_length = this.datasets_offset + Object.keys(datasetsByLabel).length;
+        const balanceDatasets = Object.entries(datasetsByLabel).map(([label, datasets], index) =>
+            this._initializeBalanceDatasetFrom(datasets, label, index)
         );
         return balanceDatasets;
     }
 
-    _initializeBalanceDatasetFrom(datasets, label){
+    _initializeBalanceDatasetFrom(datasets, label, index){
         let dataset = datasets[0];
-        let backgroundColor = datasets.filter(dataset => dataset.stack === this.model.allocation_label)[0]?.backgroundColor;
-        if (!backgroundColor){
-            backgroundColor = dataset.backgroundColor;
-        }
+
+        const dataset_index = this.datasets_offset + index;
+        const backgroundColor = getColor(dataset_index, colorScheme, this.datasets_length);
 
         let balanceDataset = {
             'trueLabels': dataset.trueLabels,
