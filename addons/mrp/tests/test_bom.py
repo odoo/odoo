@@ -590,15 +590,15 @@ class TestBoM(TestMrpCommon):
             with bom.operation_ids.new() as operation:
                 operation.workcenter_id = workcenter
                 operation.name = 'Prepare biscuits'
-                operation.time_cycle_manual = 5
+                operation.time_cycle_manual = 5 * bom_crumble.product_qty
             with bom.operation_ids.new() as operation:
                 operation.workcenter_id = workcenter
                 operation.name = 'Prepare butter'
-                operation.time_cycle_manual = 3
+                operation.time_cycle_manual = 3 * bom_crumble.product_qty
             with bom.operation_ids.new() as operation:
                 operation.workcenter_id = workcenter
                 operation.name = 'Mix manually'
-                operation.time_cycle_manual = 5
+                operation.time_cycle_manual = 5 * bom_crumble.product_qty
 
         # TEST BOM STRUCTURE VALUE WITH BOM QUANTITY
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_crumble.id, searchQty=11, searchVariant=False)
@@ -622,9 +622,9 @@ class TestBoM(TestMrpCommon):
         # TEST BOM STRUCTURE VALUE BY UNIT
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_crumble.id, searchQty=1, searchVariant=False)
         # 5 min 'Prepare biscuits' + 3 min 'Prepare butter' + 5 min 'Mix manually' = 13 minutes
-        self.assertEqual(report_values['lines']['operations_time'], 13.0, 'Operation time should be the same for 1 unit or for the batch')
+        self.assertEqual(report_values['lines']['operations_time'], 143.0, 'Operation time should be the same for 1 unit or for the batch')
         # Operation cost is the sum of operation line.
-        operation_cost = float_round(5 / 60 * 10, precision_digits=2) * 2 + float_round(3 / 60 * 10, precision_digits=2)
+        operation_cost = float_round(bom_crumble.product_qty * 5 / 60 * 10, precision_digits=2) * 2 + float_round(bom_crumble.product_qty * 3 / 60 * 10, precision_digits=2)
         self.assertEqual(float_compare(report_values['lines']['operations_cost'], operation_cost, precision_digits=2), 0, '13 minute for 10$/hours -> 2.16')
 
         for component_line in report_values['lines']['components']:
@@ -635,8 +635,8 @@ class TestBoM(TestMrpCommon):
             if component_line['product'].id == biscuit.id:
                 # 6 kg of biscuits at 1.50$ for 11kg of crumble -> / 11 for price per unit (0.82)
                 self.assertEqual(float_compare(component_line['bom_cost'], (1.5 * 6) * (1 / 11), precision_digits=2), 0)
-        # total price = 3.19 + 0.82 + operation_cost(0.83 + 0.83 + 0.5 = 2.16) = 6,17
-        self.assertEqual(float_compare(report_values['lines']['bom_cost'], 6.17, precision_digits=2), 0, 'Product Unit Bom Price is not correct')
+        # total price = 3.19 + 0.82 + operation_cost(23.84) = 27.85
+        self.assertEqual(float_compare(report_values['lines']['bom_cost'], 27.85, precision_digits=2), 0, 'Bom Price is not correct')
 
         # TEST OPERATION COST WHEN PRODUCED QTY > BOM QUANTITY
         report_values_12 = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_crumble.id, searchQty=12, searchVariant=False)
@@ -690,11 +690,11 @@ class TestBoM(TestMrpCommon):
             with bom.operation_ids.new() as operation:
                 operation.workcenter_id = workcenter
                 operation.name = 'Mix cheese and crumble'
-                operation.time_cycle_manual = 10
+                operation.time_cycle_manual = 10 * bom_cheese_cake.product_qty
             with bom.operation_ids.new() as operation:
                 operation.workcenter_id = workcenter_2
                 operation.name = 'Cake mounting'
-                operation.time_cycle_manual = 5
+                operation.time_cycle_manual = 5 * bom_cheese_cake.product_qty
 
         # TEST CHEESE BOM STRUCTURE VALUE WITH BOM QUANTITY
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_cheese_cake.id, searchQty=60, searchVariant=False)
@@ -712,8 +712,8 @@ class TestBoM(TestMrpCommon):
                 # 5.4 kg of crumble at the cost of a batch.
                 crumble_cost = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_crumble.id, searchQty=5.4, searchVariant=False)['lines']['bom_cost']
                 self.assertEqual(float_compare(component_line['bom_cost'], crumble_cost, precision_digits=2), 0)
-        # total price = Cream (15.51€) + crumble_cost (34.63 €) + operation_cost(209,33) = 259.47€
-        self.assertEqual(float_compare(report_values['lines']['bom_cost'], 259.47, precision_digits=2), 0, 'Product Bom Price is not correct')
+        # total price = Cream (15.51€) + crumble_cost (45.47 €) + operation_cost(209,33) = 270.31€
+        self.assertEqual(float_compare(report_values['lines']['bom_cost'], 270.31, precision_digits=2), 0, 'Product Bom Price is not correct')
 
     def test_bom_report_dozens(self):
         """ Simulate a drawer bom with dozens as bom units
@@ -742,7 +742,12 @@ class TestBoM(TestMrpCommon):
             'costs_hour': 10,
             'name': 'Deserts Table'
         })
-
+        self.env['mrp.workcenter.capacity'].create({
+            'workcenter_id': workcenter.id,
+            'product_id': drawer.id,
+            'product_uom_id': drawer.uom_id.id,
+            'capacity': bom_drawer.product_qty,
+        })
         # Required to display `operation_ids` in the form view
         self.env.user.group_ids += self.env.ref("mrp.group_mrp_routings")
         with Form(bom_drawer) as bom:
@@ -753,7 +758,7 @@ class TestBoM(TestMrpCommon):
             with bom.operation_ids.new() as operation:
                 operation.workcenter_id = workcenter
                 operation.name = 'Screw drawer'
-                operation.time_cycle_manual = 5
+                operation.time_cycle_manual = 5 * bom_drawer.product_qty
 
         # TEST BOM STRUCTURE VALUE WITH BOM QUANTITY
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_drawer.id, searchQty=11, searchVariant=False)

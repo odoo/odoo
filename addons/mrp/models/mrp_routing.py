@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.tools import float_round
+from odoo.tools import float_round, float_is_zero
 
 
 class MrpRoutingWorkcenter(models.Model):
@@ -61,6 +61,9 @@ class MrpRoutingWorkcenter(models.Model):
                                      string="Blocks", help="Operations that cannot start before this operation is completed.",
                                      domain="[('allow_operation_dependencies', '=', True), ('id', '!=', id), ('bom_id', '=', bom_id)]",
                                      copy=False)
+    cycle_number = fields.Integer("Repetitions", compute="_compute_cycle_number_total_time", store=True)
+    time_total = fields.Float('Total Duration', compute="_compute_cycle_number_total_time", store=True)
+    show_time_total = fields.Boolean('Show Total Duration?', compute='_compute_cycle_number_total_time', store=True)
 
     @api.depends('time_mode', 'time_mode_batch')
     def _compute_time_computed_on(self):
@@ -88,9 +91,8 @@ class MrpRoutingWorkcenter(models.Model):
             cycle_number = 0  # Never 0 unless infinite item['workcenter_id'].capacity
             for item in data:
                 total_duration += item['duration']
-                capacity = item['workcenter_id']._get_capacity(item.product_id)
-                qty_produced = item.product_uom_id._compute_quantity(item['qty_produced'], item.product_id.uom_id)
-                cycle_number += float_round((qty_produced / capacity or 1.0), precision_digits=0, rounding_method='UP')
+                (capacity, _setup, _cleanup) = item['workcenter_id']._get_capacity(item.product_id, item.product_uom_id, operation.bom_id.product_qty)
+                cycle_number += float_round((item['qty_produced'] / capacity), precision_digits=0, rounding_method='UP')
             if cycle_number:
                 operation.time_cycle = total_duration / cycle_number
             else:
@@ -103,6 +105,22 @@ class MrpRoutingWorkcenter(models.Model):
         count_data = {operation.id: count for operation, count in data}
         for operation in self:
             operation.workorder_count = count_data.get(operation.id, 0)
+
+    @api.depends('bom_id.product_id', 'bom_id.product_qty', 'workcenter_id.time_start', 'workcenter_id.time_stop', 'workcenter_id.capacity_ids', 'time_cycle')
+    def _compute_cycle_number_total_time(self):
+        for operation in self:
+            workcenter = operation.workcenter_id
+            product = operation.bom_id.product_id or operation.bom_id.product_tmpl_id.product_variant_ids
+            if len(product) > 1:
+                operation.cycle_number = 1
+                operation.time_total = workcenter.time_start + workcenter.time_stop + operation.time_cycle_manual
+                operation.show_time_total = False
+                continue
+            quantity = operation.bom_id.product_qty or 1
+            (capacity, setup, cleanup) = workcenter._get_capacity(product, operation.bom_id.product_uom_id, quantity)
+            operation.cycle_number = float_round(quantity / capacity, precision_digits=0, rounding_method="UP")
+            operation.time_total = setup + cleanup + operation.cycle_number * operation.time_cycle
+            operation.show_time_total = operation.cycle_number > 0 or not float_is_zero(setup + cleanup)
 
     @api.constrains('blocked_by_operation_ids')
     def _check_no_cyclic_dependencies(self):
@@ -178,16 +196,16 @@ class MrpRoutingWorkcenter(models.Model):
         return self.env['mrp.bom']._skip_for_no_variant(product, self.bom_product_template_attribute_value_ids, never_attribute_values)
 
     def _get_duration_expected(self, product, quantity, unit=False, workcenter=False):
-        product = product or self.bom_id.product_tmpl_id
+        product = product or self.bom_id.product_id or self.bom_id.product_tmpl_id.product_variant_id
         if self._skip_operation_line(product):
             return 0
-        unit = unit or product.uom_id
+        unit = unit or self.bom_id.product_uom_id
         quantity = self.bom_id.product_uom_id._compute_quantity(quantity, unit)
         workcenter = workcenter or self.workcenter_id
-        capacity = workcenter._get_capacity(product)
+        (capacity, setup, cleanup) = workcenter._get_capacity(product, unit, self.bom_id.product_qty)
         cycle_number = float_round(quantity / capacity, precision_digits=0, rounding_method='UP')
-        return workcenter._get_expected_duration(product) + cycle_number * self.time_cycle * 100.0 / workcenter.time_efficiency
+        return setup + cleanup + cycle_number * self.time_cycle * 100.0 / workcenter.time_efficiency
 
-    def _compute_operation_cost(self):
-        duration = self.env.context.get('op_duration', self.time_cycle)
-        return (duration / 60.0) * (self.workcenter_id.costs_hour)
+    def _compute_operation_cost(self, product, quantity, unit=False, workcenter=False):
+        duration = self._get_duration_expected(product, quantity, unit, workcenter)
+        return (duration, (duration / 60.0) * (self.workcenter_id.costs_hour))
