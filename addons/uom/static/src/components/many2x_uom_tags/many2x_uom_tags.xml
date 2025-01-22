@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="uom.Many2ManyUomTagsField" t-inherit="web.Many2ManyTagsField">
+        <xpath expr="//Many2XAutocomplete" position="attributes">
+            <attribute name="productModel">["product.template", "product.product"].includes(this.props.record.resModel) ? this.props.record.resModel : "product.product"</attribute>
+            <attribute name="productId">["product.template", "product.product"].includes(this.props.record.resModel) ? (this.props.record.resId || 0) : this.props.record.data[this.props.productField][0] || 0</attribute>
+            <attribute name="productQuantity">this.props.record.data[this.props.quantityField]</attribute>
+        </xpath>
+    </t>
+    <t t-name="uom.Many2OneUomField" t-inherit="web.Many2OneField">
+        <xpath expr="//Many2XAutocomplete" position="attributes">
+            <attribute name="productModel">["product.template", "product.product"].includes(this.props.record.resModel) ? this.props.record.resModel : "product.product"</attribute>
+            <attribute name="productId">["product.template", "product.product"].includes(this.props.record.resModel) ? (this.props.record.resId || 0) : this.props.record.data[this.props.productField][0] || 0</attribute>
+            <attribute name="productQuantity">this.props.record.data[this.props.quantityField]</attribute>
+        </xpath>
+    </t>
+</templates>

@@ -115,7 +115,7 @@ class ProductTemplate(models.Model):
         'uom.uom', 'Unit', tracking=True,
         default=_get_default_uom_id, required=True,
         help="Default unit of measure used for all stock operations.")
-    uom_ids = fields.Many2many('uom.uom', string='Packagings', help="Additional packagings for this product which can be used for sales")
+    uom_ids = fields.Many2many('uom.uom', string='Packagings', help="Additional packagings for this product which can be used for sales", domain="[('id', '!=', uom_id)]")
     uom_name = fields.Char(string='Unit Name', related='uom_id.name', readonly=True)
     company_id = fields.Many2one(
         'res.company', 'Company', index=True)
