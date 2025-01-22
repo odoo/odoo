@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
@@ -26,17 +25,18 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
     def test_frequency_hourly_attendance(self):
         with freeze_time("2017-12-05"):
             accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
-                'name': 'Accrual Plan For Test',
                 'is_based_on_worked_time': True,
+                'can_be_carryover': True,
                 'level_ids': [(0, 0, {
+                    'milestone_date': 'after',
                     'start_count': 1,
                     'start_type': 'day',
                     'added_value': 1,
                     'added_value_type': 'day',
-                    'frequency': 'hourly',
-                    'frequency_hourly_source': 'attendance',
+                    'frequency': 'worked_hours',
                     'cap_accrued_time': True,
-                    'maximum_leave': 10000
+                    'maximum_leave': 10000,
+                    'action_with_unused_accruals': 'all',
                 })],
             })
             allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
@@ -73,15 +73,17 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
             'name': 'Accrual Plan For Test',
             'is_based_on_worked_time': False,
             'accrued_gain_time': 'end',
+            'can_be_carryover': True,
             'carryover_date': 'year_start',
             'level_ids': [(0, 0, {
+                'milestone_date': 'after',
                 'start_count': 1,
                 'added_value': 1,
                 'added_value_type': 'hour',
-                'frequency': 'hourly',
+                'frequency': 'worked_hours',
                 'cap_accrued_time': True,
                 'maximum_leave': 100,
-                'frequency_hourly_source': 'attendance'
+                'action_with_unused_accruals': 'all',
             })],
         })
         self.env['hr.attendance'].create({

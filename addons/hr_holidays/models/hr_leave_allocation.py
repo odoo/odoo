@@ -377,7 +377,7 @@ class HrLeaveAllocation(models.Model):
             planned_worked = worked
         left = self.employee_id.sudo()._get_leave_days_data_batch(start_dt, end_dt, calendar=self.employee_id._get_calendars(start_dt)[self.employee_id.id],
             domain=[('time_type', '=', 'leave')])[self.employee_id.id]['hours']
-        if level.frequency == 'hourly':
+        if level.frequency in level._get_hourly_frequencies():
             if level.accrual_plan_id.is_based_on_worked_time:
                 work_entry_prorata = planned_worked
             else:
@@ -391,7 +391,7 @@ class HrLeaveAllocation(models.Model):
         Returns the added days for that level
         """
         self.ensure_one()
-        if level.frequency == 'hourly' or level.accrual_plan_id.is_based_on_worked_time:
+        if level.frequency in level._get_hourly_frequencies() or level.accrual_plan_id.is_based_on_worked_time:
             work_entry_prorata = self._get_accrual_plan_level_work_entry_prorata(level, start_period, start_date, end_period, end_date)
             added_value = work_entry_prorata * level.added_value
         else:
@@ -510,10 +510,10 @@ class HrLeaveAllocation(models.Model):
                 # if it's the carry-over date, adjust days using current level's carry-over policy
                 if allocation.nextcall == carryover_date:
                     allocation.last_executed_carryover_date = carryover_date
-                    if current_level.action_with_unused_accruals in ['lost', 'maximum']:
+                    if current_level.action_with_unused_accruals == 'lost' or current_level.carryover_options == 'limited':
                         allocated_days_left = allocation.number_of_days - leaves_taken
                         allocation_max_days = 0 # default if unused_accrual are lost
-                        if current_level.action_with_unused_accruals == 'maximum':
+                        if current_level.carryover_options == 'limited':
                             if current_level.added_value_type == 'day':
                                 postpone_max_days = current_level.postpone_max_days
                             else:
@@ -550,7 +550,7 @@ class HrLeaveAllocation(models.Model):
                         carryover_period_end = min(carryover_period_end, carryover_level_last_date)
                     # Handle the special case for hourly/daily accruals. Carryover_period_end should be equal to last_carryover_date
                     # because the carryover period is just 1 day.
-                    if carryover_level.frequency == 'hourly' or carryover_level.frequency == 'daily':
+                    if carryover_level.frequency in carryover_level._get_hourly_frequencies() + ['daily']:
                         carryover_period_end = last_carryover_date
                     # Carryover policy should be only applied to the days accrued on period_end.
                     # Days accrued on level transition date aren't subject to the carryover policy.
@@ -558,14 +558,14 @@ class HrLeaveAllocation(models.Model):
                     accrued = not allocation.already_accrued and allocation.nextcall == period_end
                     # If the days were accrued on the carryover period, then apply the carryover policy
                     if accrued and last_carryover_date <= allocation.nextcall <= carryover_period_end:
-                        if carryover_level.action_with_unused_accruals in ['lost', 'maximum']:
+                        if carryover_level.action_with_unused_accruals == 'lost' or carryover_level.carryover_options == 'limited':
                             allocation.last_executed_carryover_date = carryover_date
                             allocated_days_left = allocation.number_of_days - leaves_taken
                             postpone_max_days = current_level.postpone_max_days if current_level.added_value_type == 'day' \
                                 else current_level.postpone_max_days / allocation.employee_id._get_hours_per_day(allocation.date_from)
                             allocated_days_left = allocation.number_of_days - leaves_taken
                             allocation_max_days = 0 # default if unused_accrual are lost
-                            if current_level.action_with_unused_accruals == 'maximum':
+                            if current_level.carryover_options == 'limited':
                                 postpone_max_days = current_level.postpone_max_days
                                 allocation_max_days = min(postpone_max_days, allocated_days_left)
                             allocation.number_of_days = min(allocation.number_of_days, allocation_max_days) + leaves_taken

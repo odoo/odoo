@@ -5,16 +5,12 @@
         <field name="model">hr.leave.accrual.level</field>
         <field name="inherit_id" ref="hr_holidays.hr_accrual_level_view_form"/>
         <field name="arch" type="xml">
-            <div name="hourly" position="inside">
-                <div class="o_row" invisible="accrued_gain_time == 'start'">
-                    <label for="frequency_hourly_source" string="Source"/>
-                    <field
-                        name="frequency_hourly_source"
-                        required="frequency == 'hourly'"
-                        widget="radio"
-                        options="{'horizontal': true}"/>
-                </div>
-            </div>
+            <xpath expr="//field[@name='frequency']" position="replace">
+                <field nolabel="1" name="frequency" invisible="accrued_gain_time == 'end'"
+                       widget="filterable_selection" options="{'blacklisted_values': ['worked_hours']}"/>
+                <field nolabel="1" name="frequency" invisible="accrued_gain_time == 'start'"
+                       widget="selection"/>
+            </xpath>
         </field>
     </record>
 </odoo>

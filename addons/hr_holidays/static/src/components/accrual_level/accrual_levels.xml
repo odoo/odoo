@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_holidays.AccrualLevels">
+        <div class="o_accrual_level w-100 d-flex vertical-align-middle">
+            <div class="d-flex flex-column align-items-end mx-2" style="width: 150px; min-width: 150px; align-self: center;"/>
+            <div class="timeline d-flex align-items-center flex-column" style="pointer-events: none;">
+                <h3 class="my-2" style="margin-left: -85%;">
+                    Milestones
+                </h3>
+            </div>
+        </div>
+        <t t-foreach="milestones" t-as="level" t-key="level.id">
+            <div class="o_accrual_level w-100 d-flex vertical-align-middle" t-if="level.data">
+                <div class="time d-flex flex-column align-items-end mx-2" style="width: 150px; min-width: 150px; align-self: center;">
+                    <span class="o_accrual_bg border w-100 position-relative text-center px-3 py-1 rounded-3" role="button" t-on-click="editMilestone.bind(this, level.data.id)">
+                        <span class="new-text position-absolute fw-bold" t-if="getNewMilestoneClass(level.data.id)">New !</span>
+                        <span class="text">
+                            <t t-if="level.data.milestone_date == 'creation'">
+                                Immediately
+                            </t>
+                                <t t-else="">
+                                After <t t-esc="level.data.start_count"/> <t t-esc="level.data.start_type"/>(s)
+                            </t>
+                        </span>
+                    </span>
+                </div>
+                <span class="timeline d-flex align-items-center flex-column" style="pointer-events: none;">
+                    <span class="flex-grow-1 rounded border" style="width: 0;"/>
+                    <span class="circle position-relative border rounded-circle border" style="z-index: 0; height: 15px; width: 15px;" t-att-class="getNewMilestoneClass(level.data.id)"/>
+                    <span class="flex-grow-1 rounded border" style="width: 0;"/>
+                    <i class="arrow down"/>
+                </span>
+                <div class="content o_accrual_bg align-self-center w-100 h-100 px-3 py-2 my-3 ms-2 border rounded-3" role="button" t-on-click="editMilestone.bind(this, level.data.id)">
+                    <span class="text">
+                        <h4 class="header m-0" name="header">
+                            Accrual frequency : <t t-esc="level.data.added_value"/> <t t-esc="level.data.added_value_type"/>(s)
+                            <t t-if="level.data.frequency == 'hourly'">
+                                every hour.
+                                <br/>
+                            </t>
+                            <t t-elif="level.data.frequency == 'daily'">
+                                every day.
+                                <br/>
+                            </t>
+                            <t t-elif="level.data.frequency == 'weekly'">
+                                every week on <t t-esc="getFullDay(level.data.week_day)"/>.
+                                <br/>
+                            </t>
+                            <t t-elif="level.data.frequency == 'bimonthly'">
+                                twice a month on the <t t-esc="level.data.first_day"/>
+                                and the
+                                <t t-esc="level.data.second_day"/>
+                                of the month.
+                                <br/>
+                            </t>
+                            <t t-elif="level.data.frequency == 'monthly'">
+                                every month on the <t t-esc="level.data.first_day"/>
+                                of the month.
+                                <br/>
+                            </t>
+                            <t t-elif="level.data.frequency == 'biyearly'">
+                                twice a year on the <t t-esc="level.data.first_month_day"/>
+                                of
+                                <t t-esc="getFullMonth(level.data.first_month)"/>
+                                and the
+                                <t t-esc="level.data.second_month_day"/>
+                                of <t t-esc="getFullMonth(level.data.second_month)"/>.
+                                <br/>
+                            </t>
+                            <t t-elif="level.data.frequency == 'yearly'">
+                                every year on the <t t-esc="level.data.yearly_day"/>
+                                of <t t-esc="getFullMonth(level.data.yearly_month)"/>.
+                                <br/>
+                            </t>
+                        </h4>
+                        <div class="mt-1" t-if="level.data.can_be_carryover || level.data.cap_accrued_time_yearly || level.data.maximum_leave">
+                            <t t-if="level.data.can_be_carryover">
+                                <t t-if="level.data.action_with_unused_accruals == 'lost'">
+                                    Unused days will be lost.<br/>
+                                </t>
+                                <t t-elif="level.data.carryover_options == 'unlimited'">
+                                    Unused days will be transferred totally on each <t t-esc="state.carryOverDate"/>.
+                                    <br/>
+                                </t>
+                                <t t-else="">
+                                    Unused days will be transferred with a max of <t t-esc="level.data.postpone_max_days"/> <t t-esc="level.data.added_value_type"/>
+                                    on each <t t-esc="state.carryOverDate"/>.
+                                    <br/>
+                                </t>
+                            </t>
+                            <t t-if="level.data.cap_accrued_time_yearly">
+                                <t t-if="level.data.cap_accrued_time">
+                                    A yearly cap is set to <t t-esc="level.data.maximum_leave_yearly"/> <t t-esc="level.data.added_value_type"/>(s)
+                                    and a balance cap is set to <t t-esc="level.data.maximum_leave"/> <t t-esc="level.data.added_value_type"/>(s).
+                                </t>
+                                <t t-else="">
+                                    A yearly cap is set to <t t-esc="level.data.maximum_leave_yearly"/> <t t-esc="level.data.added_value_type"/>(s).
+                                </t>
+                            </t>
+                            <t t-elif="level.data.maximum_leave">
+                                A balance cap is set to <t t-esc="level.data.maximum_leave"/> <t t-esc="level.data.added_value_type"/>(s).
+                            </t>
+                        </div>
+                    </span>
+                </div>
+                <div class="delete d-flex align-self-center">
+                    <span class="o_accrual_bg d-flex justify-content-center align-items-center border rounded-circle mx-2" style="width: 30px; height: 30px;" t-on-click="level.onDelete.bind(this)" role="button">
+                        <i class="fa fa-trash"/>
+                    </span>
+                </div>
+            </div>
+        </t>
+        <div class="o_accrual_level w-100 d-flex vertical-align-middle">
+            <div class="d-flex flex-column align-items-end mx-2" style="width: 150px; min-width: 150px; align-self: center;"/>
+            <div class="timeline d-flex align-items-center flex-column" style="pointer-events: all;">
+                <button class="btn btn-secondary my-2" style="margin-left: -85%;" t-on-click="editMilestone.bind(this, false)">
+                    Add a milestone
+                </button>
+            </div>
+        </div>
+    </t>
+</templates>

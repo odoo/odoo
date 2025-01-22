@@ -5,7 +5,7 @@ const fieldRegistry = registry.category("fields");
 
 class FloatWithoutTrailingZeros extends FloatField {
     get formattedValue() {
-        return super.formattedValue.replace(/\.0+$/, "");
+        return super.formattedValue.replace(/^([\d,]+)$|^([\d,]+)\.0*$|^([\d,]+\.\d*?)0*$/, "$1$2$3");
     }
 }
 

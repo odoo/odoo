@@ -22,6 +22,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'name': 'Test Seniority Plan',
             'level_ids': [
                 (0, 0, {
+                    'milestone_date': 'after',
                     'start_count': 1,
                     'start_type': 'day',
                     'added_value': 1,
@@ -31,6 +32,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'maximum_leave': 10000,
                 }),
                 (0, 0, {
+                    'milestone_date': 'after',
                     'start_count': 4,
                     'start_type': 'year',
                     'added_value': 1,
@@ -40,6 +42,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'maximum_leave': 10000,
                 }),
                 (0, 0, {
+                    'milestone_date': 'after',
                     'start_count': 8,
                     'start_type': 'year',
                     'added_value': 1,

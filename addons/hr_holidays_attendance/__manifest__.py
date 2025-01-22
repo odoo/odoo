@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': "HR Attendance Holidays",
@@ -21,7 +20,7 @@ Convert employee's extra hours to leave allocations.
     ],
     'assets': {
         'web.assets_backend': [
-            'hr_holidays_attendance/static/src/xml/time_off_calendar.xml',
+            'hr_holidays_attendance/static/src/**/*',
         ],
     },
     'author': 'Odoo S.A.',
