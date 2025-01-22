@@ -32,9 +32,6 @@ class MrpWorkcenter(models.Model):
     code = fields.Char('Code', copy=False)
     note = fields.Html(
         'Description')
-    default_capacity = fields.Float(
-        'Capacity', default=1.0,
-        help="Default number of pieces (in product unit) that can be produced in parallel (at the same time) at this work center. For example: the capacity is 5 and you need to produce 10 units, then the operation time listed on the BOM will be multiplied by two. However, note that both time before and after production will only be counted once.")
     sequence = fields.Integer(
         'Sequence', default=1, required=True,
         help="Gives the sequence order when displaying a list of work centers.")
@@ -253,11 +250,6 @@ class MrpWorkcenter(models.Model):
     def _compute_has_routing_lines(self):
         for workcenter in self:
             workcenter.has_routing_lines = self.env['mrp.routing.workcenter'].search_count([('workcenter_id', 'in', workcenter.ids)], limit=1)
-
-    @api.constrains('default_capacity')
-    def _check_capacity(self):
-        if any(workcenter.default_capacity <= 0.0 for workcenter in self):
-            raise exceptions.UserError(_('The capacity must be strictly positive.'))
 
     def unblock(self):
         self.ensure_one()
@@ -583,6 +575,8 @@ class MrpWorkcenterCapacity(models.Model):
     _name = 'mrp.workcenter.capacity'
     _description = 'Work Center Capacity'
     _check_company_auto = True
+    _order = 'workcenter_id, product_id nulls first,product_uom_id'
+
 
     def _default_time_start(self):
         workcenter_id = self.workcenter_id.id or self.env.context.get('default_workcenter_id')
@@ -593,8 +587,9 @@ class MrpWorkcenterCapacity(models.Model):
         return self.env['mrp.workcenter'].browse(workcenter_id).time_stop if workcenter_id else 0.0
 
     workcenter_id = fields.Many2one('mrp.workcenter', string='Work Center', required=True)
-    product_id = fields.Many2one('product.product', string='Product', required=True)
-    product_uom_id = fields.Many2one('uom.uom', string='Product Unit', related='product_id.uom_id')
+    product_id = fields.Many2one('product.product', string='Product')
+    product_uom_id = fields.Many2one('uom.uom', string='Unit', default=lambda self: self.env.ref('uom.product_uom_unit'),
+        compute="_compute_product_uom_id", store=True, readonly=False, required=True)
     capacity = fields.Float('Capacity', default=1.0, help="Number of pieces that can be produced in parallel for this product.")
     time_start = fields.Float('Setup Time (minutes)', default=_default_time_start, help="Time in minutes for the setup.")
     time_stop = fields.Float('Cleanup Time (minutes)', default=_default_time_stop, help="Time in minutes for the cleaning.")
@@ -603,7 +598,12 @@ class MrpWorkcenterCapacity(models.Model):
         'CHECK(capacity > 0)',
         'Capacity should be a positive number.',
     )
-    _unique_product = models.Constraint(
-        'UNIQUE(workcenter_id, product_id)',
-        'Product capacity should be unique for each workcenter.',
+    _workcenter_product_product_uom_unique = models.UniqueIndex(
+        '(workcenter_id, COALESCE(product_id, 0), product_uom_id)',
+        'Product/Unit capacity should be unique for each workcenter.'
     )
+
+    @api.depends('product_id')
+    def _compute_product_uom_id(self):
+        for capacity in self:
+            capacity.product_uom_id = capacity.product_id.uom_id or self.env.ref('uom.product_uom_unit')
