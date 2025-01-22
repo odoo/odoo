@@ -262,7 +262,7 @@ class AccountEdiFormat(models.Model):
             'taxTotals': [
                 {
                     'taxType': grouping_key['tax_type'],
-                    'amount': self._l10n_eg_edi_round(tax_values['tax_amount']),
+                    'amount': self._l10n_eg_edi_round(abs(tax_values['tax_amount'])),
                 }
                 for grouping_key, tax_values in values_per_grouping_key.items()
                 if grouping_key
@@ -315,7 +315,7 @@ class AccountEdiFormat(models.Model):
                 'taxableItems': [
                     {
                         'taxType': grouping_key['tax_type'],
-                        'amount': self._l10n_eg_edi_round(tax_values['tax_amount']),
+                        'amount': self._l10n_eg_edi_round(abs(tax_values['tax_amount'])),
                         'subType': grouping_key['sub_type'],
                         'rate': grouping_key['rate'],
                     }
