@@ -9,6 +9,7 @@ import {
     getTaxesAfterFiscalPosition,
     getTaxesValues,
 } from "@point_of_sale/app/models/utils/tax_utils";
+import { accountTaxHelpers } from "@account/helpers/account_tax";
 
 export class PosOrderline extends Base {
     static pythonModel = "pos.order.line";
@@ -360,6 +361,31 @@ export class PosOrderline extends Base {
         this.update({
             pack_lot_ids: [["link", ...orderline.pack_lot_ids]],
         });
+    }
+
+    prepareBaseLineForTaxesComputationExtraValues() {
+        const order = this.order_id;
+        const isRefund = order._isRefundOrder();
+        const documentSign = isRefund ? -1 : 1;
+        const currency = order.config.currency_id;
+        const extraValues = { currency_id: currency };
+
+        let taxes = this.tax_ids;
+        if (order.fiscal_position_id) {
+            taxes = getTaxesAfterFiscalPosition(taxes, order.fiscal_position_id, order.models);
+        }
+        return {
+            ...extraValues,
+            quantity: documentSign * this.qty,
+            tax_ids: taxes,
+        };
+    }
+
+    prepareBaseLineForTaxesComputation() {
+        return accountTaxHelpers.prepare_base_line_for_taxes_computation(
+            this,
+            this.prepareBaseLineForTaxesComputationExtraValues()
+        );
     }
 
     set_unit_price(price) {
