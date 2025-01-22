@@ -24,16 +24,6 @@ registry.category("web_tour.tours").add("time_off_graph_view_tour", {
             content: "Open bar chart view",
             trigger: "button[data-mode='bar']",
             run: "click",
-        },
-        {
-            content: "Open line chart view",
-            trigger: "button[data-mode='line']",
-            run: "click",
-        },
-        {
-            content: "Open pie chart view",
-            trigger: "button[data-mode='pie']",
-            run: "click",
         }
     ]
 });
