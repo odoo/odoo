@@ -140,6 +140,11 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         if (snippetSaveOptionEl) {
             snippetSaveOptionEl.dataset.selector += ", .s_searchbar_input";
         }
+        // TODO remove in master
+        const imageReorderEl = $html.find("[data-js='gallery_img']")[0];
+        if (imageReorderEl) {
+            imageReorderEl.dataset.selector += ", .s_image_gallery .media_iframe_video";
+        }
     },
     /**
      * Depending of the demand, reconfigure they gmap key or configure it
