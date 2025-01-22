@@ -8,17 +8,21 @@
 </head>
 <body style="font-family:Verdana, Arial,sans-serif; color: #454748;">
 <t t-set="subtype_internal" t-value="subtype and subtype.internal"/>
+<t t-set="show_header" t-value="email_notification_force_header or (
+    email_notification_allow_header and has_button_access)"/>
+<t t-set="show_footer" t-value="email_notification_force_footer or (
+    email_notification_allow_footer and show_header and author_user and author_user._is_internal())"/>
 <!-- HEADER -->
 <t t-call="mail.notification_preview"/>
 <div style="max-width: 900px; width: 100%;">
-<div t-if="has_button_access" itemscope="itemscope" itemtype="http://schema.org/EmailMessage">
+<div t-if="show_header and has_button_access" itemscope="itemscope" itemtype="http://schema.org/EmailMessage">
     <div itemprop="potentialAction" itemscope="itemscope" itemtype="http://schema.org/ViewAction">
         <link itemprop="target" t-att-href="button_access['url']"/>
         <link itemprop="url" t-att-href="button_access['url']"/>
         <meta itemprop="name" t-att-content="button_access['title']"/>
     </div>
 </div>
-<div t-if="subtitles or has_button_access or not is_discussion"
+<div t-if="show_header and (subtitles or has_button_access or not is_discussion)"
         summary="o_mail_notification" style="padding: 0px;">
     <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="width: 100%; margin-top: 5px;">
         <tbody>
@@ -51,9 +55,6 @@
                 <td valign="center">
                     <hr width="100%"
                         style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin: 10px 0px;"/>
-                    <p t-if="subtype_internal" style="background-color: #f2dede; padding: 5px; margin-bottom: 16px; font-size: 13px;">
-                        <strong>Internal communication</strong>: Replying will post an internal note. Followers won't receive any email notification.
-                    </p>
                 </td>
             </tr>
         </tbody>
@@ -70,7 +71,7 @@
     <div t-if="email_add_signature and not is_html_empty(signature)" t-out="signature" style="font-size: 13px;"/>
 </t>
 <!-- FOOTER -->
-<div style="margin-top:16px;">
+<div t-if="show_footer" style="margin-top:16px;">
     <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;"/>
     <b t-out="company.name" style="font-size:11px;"/><br/>
     <p style="color: #999999; margin-top:2px; font-size:11px;">
@@ -81,7 +82,7 @@
         <a t-if="company.website" t-att-href="'%s' % company.website" style="text-decoration:none; color: #999999;" t-out="company.website"/>
     </p>
 </div>
-<div style="color: #555555; font-size:11px;">
+<div t-if="show_footer" style="color: #555555; font-size:11px;">
     Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email"
                   t-att-style="'color: ' + (company.email_secondary_color or '#875A7B') + ';'">Odoo</a>
     <span id="mail_unfollow">

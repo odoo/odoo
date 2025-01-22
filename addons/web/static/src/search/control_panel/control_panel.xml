@@ -94,7 +94,7 @@
                     <t t-if="env.config.viewSwitcherEntries?.length > 1">
                         <div t-if="env.isSmall" class="o_cp_switch_buttons btn-group d-print-none">
                             <Dropdown>
-                                <button class="btn btn-secondary o-dropdown-caret">
+                                <button class="btn btn-secondary">
                                     <t t-set="activeView" t-value="env.config.viewSwitcherEntries.find((view) => view.active)"/>
                                     <i class="oi-fw" t-att-class="activeView.icon"/>
                                 </button>
@@ -129,7 +129,7 @@
     <t t-name="web.embeddedActionsDropdown">
         <Dropdown menuClass="'o_embedded_actions_dropdown_menu'">
             <button class="btn btn-secondary">
-                <i class="fa fa-sliders"/>
+                <i class="fa fa-fw fa-sliders"/>
             </button>
             <t t-set-slot="content">
                 <t t-foreach="state.embeddedInfos.embeddedActions" t-as="action" t-key="action.id">

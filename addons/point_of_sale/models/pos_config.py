@@ -63,7 +63,7 @@ class PosConfig(models.Model):
 
     def _get_default_tip_product(self):
         tip_product_id = self.env.ref("point_of_sale.product_product_tip", raise_if_not_found=False)
-        if not tip_product_id:
+        if not tip_product_id or (tip_product_id.sudo().company_id and tip_product_id.sudo().company_id != self.env.company):
             tip_product_id = self.env['product.product'].search([('default_code', '=', 'TIPS')], limit=1)
         return tip_product_id
 
@@ -766,7 +766,11 @@ class PosConfig(models.Model):
             self.get_limited_product_count(),
         )
         product_ids = [r[0] for r in self.env.execute_query(sql)]
-        product_ids.extend(self._get_special_products().ids)
+        special_products = self._get_special_products().filtered(
+            lambda product: not product.sudo().company_id
+                            or product.sudo().company_id == self.company_id
+        )
+        product_ids.extend(special_products.ids)
         products = self.env['product.product'].browse(product_ids)
         product_combo = products.filtered(lambda p: p['type'] == 'combo')
         product_in_combo = product_combo.combo_ids.combo_item_ids.product_id
@@ -953,7 +957,7 @@ class PosConfig(models.Model):
             'point_of_sale.pos_category_lower',
             'point_of_sale.pos_category_others'
         ])
-        journal, payment_methods_ids = self._create_journal_and_payment_methods(cash_journal_vals={'name': 'Cash Clothes Shop', 'show_on_dashboard': False})
+        journal, payment_methods_ids = self._create_journal_and_payment_methods(cash_journal_vals={'name': _("Cash Clothes Shop"), 'show_on_dashboard': False})
         config = self.env['pos.config'].create([{
             'name': _('Clothes Shop'),
             'company_id': self.env.company.id,
@@ -974,7 +978,7 @@ class PosConfig(models.Model):
         if not self.env.ref(ref_name, raise_if_not_found=False):
             convert.convert_file(self.env, 'point_of_sale', 'data/scenarios/bakery_data.xml', None, mode='init', noupdate=True, kind='data')
 
-        journal, payment_methods_ids = self._create_journal_and_payment_methods(cash_journal_vals={'name': 'Cash Bakery', 'show_on_dashboard': False})
+        journal, payment_methods_ids = self._create_journal_and_payment_methods(cash_journal_vals={'name': _("Cash Bakery"), 'show_on_dashboard': False})
         bakery_categories = self.get_categories([
             'point_of_sale.pos_category_breads',
             'point_of_sale.pos_category_pastries',
@@ -1001,7 +1005,7 @@ class PosConfig(models.Model):
 
         journal, payment_methods_ids = self._create_journal_and_payment_methods(
             cash_ref='point_of_sale.cash_payment_method_furniture',
-            cash_journal_vals={'name': 'Cash Furn. Shop', 'show_on_dashboard': False},
+            cash_journal_vals={'name': _("Cash Furn. Shop"), 'show_on_dashboard': False},
         )
         furniture_categories = self.get_categories([
             'point_of_sale.pos_category_miscellaneous',
@@ -1053,7 +1057,7 @@ class PosConfig(models.Model):
         pos_restaurant_module = self.env['ir.module.module'].search([('name', '=', 'pos_restaurant')])
         pos_restaurant_module.button_immediate_install()
         return {'installed_with_demo': pos_restaurant_module.demo}
-    
+
     def _get_available_pricelists(self):
         self.ensure_one()
         return self.available_pricelist_ids if self.use_pricelist else self.pricelist_id
