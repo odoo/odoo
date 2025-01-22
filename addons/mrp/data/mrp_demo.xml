@@ -52,7 +52,7 @@
             <field name="bom_id" ref="mrp_bom_manufacture"/>
             <field name="workcenter_id" ref="mrp_workcenter_3"/>
             <field name="name">Manual Assembly</field>
-            <field name="time_cycle">60</field>
+            <field name="time_cycle_manual">60</field>
             <field name="sequence">5</field>
         </record>
 
@@ -253,7 +253,7 @@
         <record id="mrp_routing_workcenter_5" model="mrp.routing.workcenter">
             <field name="bom_id" ref="mrp_bom_desk"/>
             <field name="workcenter_id" ref="mrp_workcenter_3"/>
-            <field name="time_cycle">120</field>
+            <field name="time_cycle_manual">120</field>
             <field name="sequence">10</field>
             <field name="name">Assembly</field>
         </record>
@@ -310,7 +310,7 @@
             <field name="bom_id" ref="mrp_bom_table_top"/>
             <field name="workcenter_id" ref="mrp_workcenter_3"/>
             <field name="name">Manual Assembly</field>
-            <field name="time_cycle">60</field>
+            <field name="time_cycle_manual">60</field>
             <field name="sequence">5</field>
         </record>
 
@@ -338,7 +338,7 @@
             <field name="bom_id" ref="mrp_bom_plastic_laminate"/>
             <field name="workcenter_id" ref="mrp_workcenter_3"/>
             <field name="name">Long time assembly</field>
-            <field name="time_cycle">180</field>
+            <field name="time_cycle_manual">180</field>
             <field name="sequence">15</field>
         </record>
 
@@ -346,7 +346,7 @@
             <field name="bom_id" ref="mrp_bom_plastic_laminate"/>
             <field name="workcenter_id" ref="mrp_workcenter_3"/>
             <field name="name">Testing</field>
-            <field name="time_cycle">60</field>
+            <field name="time_cycle_manual">60</field>
             <field name="sequence">10</field>
         </record>
 
@@ -354,7 +354,7 @@
             <field name="bom_id" ref="mrp_bom_plastic_laminate"/>
             <field name="workcenter_id" ref="mrp_workcenter_1"/>
             <field name="name">Packing</field>
-            <field name="time_cycle">30</field>
+            <field name="time_cycle_manual">30</field>
             <field name="sequence">5</field>
         </record>
         <record id="mrp_bom_line_plastic_laminate" model="mrp.bom.line">
@@ -572,7 +572,7 @@
             <field name="bom_id" ref="mrp_bom_drawer_rout"/>
             <field name="workcenter_id" ref="mrp_workcenter_3"/>
             <field name="name">Long time assembly</field>
-            <field name="time_cycle">180</field>
+            <field name="time_cycle_manual">180</field>
             <field name="sequence">15</field>
         </record>
 
@@ -580,7 +580,7 @@
             <field name="bom_id" ref="mrp_bom_drawer_rout"/>
             <field name="workcenter_id" ref="mrp_workcenter_3"/>
             <field name="name">Testing</field>
-            <field name="time_cycle">60</field>
+            <field name="time_cycle_manual">60</field>
             <field name="sequence">10</field>
         </record>
 
@@ -588,7 +588,7 @@
             <field name="bom_id" ref="mrp_bom_drawer_rout"/>
             <field name="workcenter_id" ref="mrp_workcenter_1"/>
             <field name="name">Packing</field>
-            <field name="time_cycle">30</field>
+            <field name="time_cycle_manual">30</field>
             <field name="sequence">5</field>
         </record>
         <record id="mrp_bom_drawer_rout_line_1" model="mrp.bom.line">
