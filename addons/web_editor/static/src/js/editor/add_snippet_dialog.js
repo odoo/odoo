@@ -242,6 +242,9 @@ export class AddSnippetDialog extends Component {
                 // the tours here.
                 snippetPreviewWrapEl.dataset.snippetId = snippet.data.oeSnippetKey;
                 snippetPreviewWrapEl.dataset.snippetKey = snippet.key;
+                if (snippet.label) {
+                    snippetPreviewWrapEl.dataset.label = snippet.label;
+                }
                 snippetPreviewWrapEl.appendChild(clonedSnippetEl);
                 this.__onSnippetPreviewClick = this._onSnippetPreviewClick.bind(this);
                 snippetPreviewWrapEl.addEventListener("click", this.__onSnippetPreviewClick);
