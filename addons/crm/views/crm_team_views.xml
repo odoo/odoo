@@ -219,7 +219,7 @@
                         </div>
                         <div class="row" t-if="record.opportunities_overdue_count.raw_value">
                             <div class="col-8">
-                                <a name="%(crm_lead_action_team_overdue_opportunity)d" type="action">
+                                <a name="%(crm_lead_action_team_overdue_opportunity)d" type="action" context="{'search_default_overdue_opportunities': True}">
                                     <field name="opportunities_overdue_count"/>
                                     <t t-if="record.opportunities_overdue_count.raw_value == 1">Overdue Opportunity</t>
                                     <t t-else="">Overdue Opportunities</t>

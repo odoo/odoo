@@ -814,6 +814,9 @@
                     <filter string="Open Opportunities" name="open_opportunities"
                         domain="[('probability', '&lt;', 100), ('type', '=', 'opportunity')]"
                         help="Open Opportunities"/>
+                    <filter string="Overdue Opportunities" name="overdue_opportunities"
+                            domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d')),('type', '=', 'opportunity'),('probability', '&lt;', 100)]"
+                            help="Overdue opportunities"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
                     <separator/>
