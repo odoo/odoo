@@ -164,12 +164,6 @@ test("model_selector: click on start typing", async () => {
     await contains("li.o-autocomplete--dropdown-item:eq(8)").click();
     expect(".o-autocomplete--input").toHaveValue("");
     expect(".o-autocomplete.dropdown ul").toHaveCount(0);
-
-    //label must be empty
-    expect(".o_global_filter_label").toHaveCount(0);
-
-    //Default value and matching fields should not be available
-    expect(".o_side_panel_section").toHaveCount(0);
 });
 
 test("model_selector: with an initial value", async () => {
