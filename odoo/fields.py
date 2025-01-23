@@ -3111,6 +3111,11 @@ class _Relational(Field[M], typing.Generic[M]):
                 return f"({field_to_check} and {company_domain} or {no_company_domain}) + ({domain or []})"
         return domain
 
+    def _description_allow_hierachy_operators(self, env):
+        """ Return if the child_of/parent_of makes sense on this field """
+        comodel = env[self.comodel_name]
+        return comodel._parent_name in comodel._fields
+
 
 class Many2one(_Relational[M]):
     """ The value of such a field is a recordset of size 0 (no
