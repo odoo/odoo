@@ -1,8 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from dateutil.relativedelta import relativedelta
 from lxml.builder import E
 
 from odoo import api, fields, models, _
+from odoo.tools import Query, SQL
 from odoo.exceptions import ValidationError
 from odoo.osv.expression import OR
 
@@ -198,3 +199,9 @@ class AccountAnalyticLine(models.Model):
         [('other', 'Other')],
         default='other',
     )
+
+    def _condition_to_sql(self, alias: str, fname: str, operator: str, value, query: Query) -> SQL:
+        if fname == 'date' and value == 'fiscal_start_year':
+            fiscalyear_date_range = self.env.company.compute_fiscalyear_dates(fields.Date.today())
+            value = fiscalyear_date_range['date_from'] - relativedelta(years=1)
+        return super()._condition_to_sql(alias, fname, operator, value, query)
