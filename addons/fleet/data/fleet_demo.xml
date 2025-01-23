@@ -7,6 +7,10 @@
         ]"/>
     </record>
 
+    <record id="base.default_user_group" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('fleet.fleet_group_manager'))]"/>
+    </record>
+
         <record id="fleet_vehicle_state_ordered" model="fleet.vehicle.state">
             <field name="name">Ordered</field>
             <field name="sequence">6</field>

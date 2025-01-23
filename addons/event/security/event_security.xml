@@ -27,10 +27,6 @@
     </data>
 
     <data noupdate="1">
-        <record id="base.default_user" model="res.users">
-            <field name="group_ids" eval="[(4,ref('event.group_event_manager'))]"/>
-        </record>
-
         <!-- Multi - Company Rules -->
         <record model="ir.rule" id="event_event_company_rule">
             <field name="name">Event: multi-company</field>
