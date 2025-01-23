@@ -238,6 +238,8 @@ export class Rtc extends Record {
     cleanups = [];
     /** @type {number} */
     sfuTimeout;
+    /**@type {function} */
+    handleScreenShare;
 
     callActions = Record.attr([], {
         compute() {
@@ -395,6 +397,10 @@ export class Rtc extends Record {
             }
             this.call();
         }, 30_000);
+    }
+
+    get displaySurface() {
+        return this.state.sourceScreenStream?.getVideoTracks()[0].getSettings().displaySurface;
     }
 
     setPttReleaseTimeout(duration = 200) {
@@ -1138,6 +1144,7 @@ export class Rtc extends Record {
                 const sendScreen = force ?? !this.state.sendScreen;
                 this.state.sendScreen = false;
                 await this.setVideo(track, type, sendScreen);
+                this.handleScreenShare();
                 break;
             }
         }

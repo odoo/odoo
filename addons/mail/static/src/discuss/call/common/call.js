@@ -17,6 +17,8 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { ScreenshareWarningOverlay } from "@mail/discuss/call/common/screenshare_warning_overlay";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 /**
  * @typedef CardData
@@ -43,7 +45,10 @@ export class Call extends Component {
         super.setup();
         this.grid = useRef("grid");
         this.notification = useService("notification");
+        this.dialog = useService("dialog");
         this.rtc = useService("discuss.rtc");
+        this.rtc.handleScreenShare = this.handleScreenShare.bind(this);
+        this.overlay = useService("overlay");
         this.state = useState({
             isFullscreen: false,
             sidebar: false,
@@ -309,5 +314,35 @@ export class Call extends Component {
         this.state.isFullscreen = Boolean(
             document.webkitFullscreenElement || document.fullscreenElement
         );
+        if (
+            this.rtc.state.sourceScreenStream &&
+            this.rtc.displaySurface !== "browser" &&
+            this.state.isFullscreen
+        ) {
+            this.removeWarningOverlay = this.overlay.add(ScreenshareWarningOverlay, {
+                removeWarningOverlay: () => {
+                    if (this.removeWarningOverlay) {
+                        this.removeWarningOverlay();
+                        this.removeWarningOverlay = null;
+                    }
+                },
+            });
+        }
+    }
+
+    handleScreenShare() {
+        if (this.rtc.state.sourceScreenStream && this.rtc.displaySurface !== "browser") {
+            this.dialog.add(ConfirmationDialog, {
+                body: _t(
+                    "To avoid an infinity mirror, don't share your entire screen or browser window. Share just a tab or a different window instead."
+                ),
+                confirmLabel: _t("Stop sharing"),
+                cancelLabel: _t("Ignore"),
+                confirm: () => {
+                    this.rtc.toggleVideo("screen", false);
+                },
+                cancel: () => {},
+            });
+        }
     }
 }
