@@ -27,6 +27,13 @@
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
 
+    <record id="spreadsheet_dashboard_rule_manager" model="ir.rule">
+        <field name="name">Spreadsheet dashboard: manager</field>
+        <field name="model_id" ref="model_spreadsheet_dashboard" />
+        <field name="groups" eval="[(4, ref('spreadsheet_dashboard.group_dashboard_manager'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
     <record id="spreadsheet_dashboard_share_create_uid_rule" model="ir.rule">
         <field name="name">spreadsheet.dashboard.share: create uid</field>
         <field name="model_id" ref="model_spreadsheet_dashboard_share" />
