@@ -3297,6 +3297,7 @@ class SnippetsMenu extends Component {
                     isCustom: isCustom,
                     snippetGroup: snippetEl.dataset.oSnippetGroup,
                     group: isCustom ? "custom" : snippetEl.dataset.oGroup,
+                    label: snippetEl.dataset.oLabel,
                     key: index++,
                 };
 

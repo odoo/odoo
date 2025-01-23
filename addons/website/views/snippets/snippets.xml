@@ -45,16 +45,16 @@
                 <t t-snippet="website.s_banner" string="Banner" group="intro">
                     <keywords>hero, jumbotron, headline, header, branding, intro, home, showcase, spotlight, lead, welcome, announcement, splash, top, main</keywords>
                 </t>
-                <t t-snippet="website.s_cover" string="Cover" group="intro">
-                    <keywords>hero, jumbotron, headline, header, branding, intro, home, showcase, spotlight, main, landing, presentation, top, splash</keywords>
+                <t t-snippet="website.s_cover" string="Cover" group="intro" label="Parallax">
+                    <keywords>hero, jumbotron, headline, header, branding, intro, home, showcase, spotlight, main, landing, presentation, top, splash, parallax</keywords>
                 </t>
                 <t t-snippet="website.s_text_cover" string="Text Cover" group="intro">
                     <keywords>hero, jumbotron, headline, header, intro, home, content, description, primary, highlight, lead</keywords>
                 </t>
-                <t t-snippet="website.s_carousel" string="Carousel" group="intro">
+                <t t-snippet="website.s_carousel" string="Carousel" group="intro" label="Carousel">
                     <keywords>gallery, carousel, slider, slideshow, picture, photo, image-slider, rotating, swipe, transition, media-carousel, movement</keywords>
                 </t>
-                <t t-snippet="website.s_carousel_intro" string="Carousel Intro" group="intro">
+                <t t-snippet="website.s_carousel_intro" string="Carousel Intro" group="intro" label="Carousel">
                     <keywords>gallery, carousel, slider, slideshow, picture, photo, image-slider, rotating, swipe, transition, media-carousel, movement</keywords>
                 </t>
                 <t t-snippet="website.s_adventure" string="Adventure" group="intro">
@@ -66,8 +66,8 @@
                 <t t-snippet="website.s_motto" string="Motto" group="intro">
                     <keywords>cite, slogan, tagline, mantra, catchphrase, statements, sayings, comments, mission, citations, maxim, quotes, principle, ethos, values</keywords>
                 </t>
-                <t t-snippet="website.s_kickoff" string="Kickoff" group="intro">
-                    <keywords>picture, photo, illustration, media, visual, start, launch, commencement, initiation, opening, kick-off, kickoff, beginning, events</keywords>
+                <t t-snippet="website.s_kickoff" string="Kickoff" group="intro" label="Parallax">
+                    <keywords>picture, photo, illustration, media, visual, start, launch, commencement, initiation, opening, kick-off, kickoff, beginning, events, parallax</keywords>
                 </t>
                 <t t-snippet="website.s_closer_look" string="Closer Look" group="intro">
                     <keywords>content, picture, photo, illustration, media, visual, focus, in-depth, analysis, more, contact, detailed, mockup, explore, insight</keywords>
@@ -170,7 +170,7 @@
                 <t t-snippet="website.s_color_blocks_2" string="Big Boxes" group="content">
                     <keywords>columns, containers, layouts, large, panels, modules</keywords>
                 </t>
-                <t t-snippet="website.s_popup" string="Popup" group="content"/>
+                <t t-snippet="website.s_popup" string="Popup" group="content" label="Popup"/>
                 <t t-snippet="website.s_countdown" string="Countdown" t-thumbnail="/website/static/src/img/snippets_thumbs/s_countdown.svg" group="content">
                     <keywords>celebration, launch</keywords>
                 </t>
@@ -216,7 +216,7 @@
                 <t t-snippet="website.s_features_grid" string="Features Grid" group="content">
                     <keywords>promotion, characteristic, quality, highlights, specs, advantages, functionalities, exhibit, details, capabilities, attributes, promotion</keywords>
                 </t>
-                <t t-snippet="website.s_tabs" string="Tabs" group="content">
+                <t t-snippet="website.s_tabs" string="Tabs" group="content" label="Tab">
                     <keywords>navigation, sections, multi-tab, panel, toggle</keywords>
                 </t>
                 <t t-snippet="website.s_tabs_images" string="Tabs Images" group="content">
@@ -240,7 +240,7 @@
                 <t t-snippet="website.s_accordion_image" string="Accordion Image" group="content">
                     <keywords>common answers, common questions, faq, QA, collapse, expandable, toggle, collapsible, hide-show, movement, information, image, picture, photo, illustration, media, visual</keywords>
                 </t>
-                <t t-snippet="website.s_carousel_cards" string="Carousel Cards" group="content">
+                <t t-snippet="website.s_carousel_cards" string="Carousel Cards" group="content" label="Carousel">
                     <keywords>gallery, carousel, slider, slideshow, picture, photo, image-slider, rotating, swipe, transition, media-carousel, movement, cta, engagement, call to action</keywords>
                 </t>
 
@@ -275,17 +275,17 @@
                 <t t-snippet="website.s_quadrant" string="Quadrant" group="images">
                     <keywords>four sections, column, grid, division, split, segments, pictures, illustration, media, photos, tiles, arrangement, gallery, images-grid, mixed, collection, stacking, visual-grid, showcase, visuals, portfolio, thumbnails, engage, call to action, cta, showcase</keywords>
                 </t>
-                <t t-snippet="website.s_image_gallery" string="Image Gallery" group="images">
+                <t t-snippet="website.s_image_gallery" string="Image Gallery" group="images" label="Carousel">
                     <keywords>gallery, carousel, pictures, photos, album, showcase, visuals, portfolio, thumbnails, slideshow</keywords>
                 </t>
-                <t t-snippet="website.s_images_wall" string="Images Wall" group="images">
+                <t t-snippet="website.s_images_wall" string="Images Wall" group="images" label="Gallery">
                     <keywords>grid, gallery, pictures, photos, album, showcase, visuals, portfolio, mosaic, collage, arrangement, collection, visual-grid</keywords>
                 </t>
                 <t t-snippet="website.s_image_punchy" string="Punchy Image" group="images">
                     <keywords>headline, header, content, picture, photo, illustration, media, visual, article, combination, trendy, pattern, design, bold, impactful, vibrant, standout</keywords>
                 </t>
-                <t t-snippet="website.s_parallax" string="Parallax" group="images">
-                    <keywords>scrolling, depth, effect, background, layer, visual, movement</keywords>
+                <t t-snippet="website.s_parallax" string="Parallax" group="images" label="Parallax">
+                    <keywords>scrolling, depth, effect, background, layer, visual, movement, parallax</keywords>
                 </t>
                 <t t-snippet="website.s_unveil" string="Unveil" group="images">
                     <keywords>reveal, showcase, launch, presentation, announcement, content, picture, photo, illustration, media, visual, article, combination</keywords>
@@ -334,11 +334,11 @@
                 <t t-snippet="website.s_references_grid" string="References Grid" group="people">
                     <keywords>customers, clients, sponsors, partners, supporters, case-studies, collaborators, associations, associates, testimonials, endorsements</keywords>
                 </t>
-                <t t-snippet="website.s_quotes_carousel" string="Quotes" group="people">
-                    <keywords>cite, testimonials, endorsements, reviews, feedback, statements, references, sayings, comments, appreciations, citations</keywords>
+                <t t-snippet="website.s_quotes_carousel" string="Quotes" group="people" label="Carousel">
+                    <keywords>cite, testimonials, endorsements, reviews, feedback, statements, references, sayings, comments, appreciations, citations, carousel</keywords>
                 </t>
-                <t t-snippet="website.s_quotes_carousel_minimal" string="Quotes Minimal" group="people">
-                    <keywords>cite, testimonials, endorsements, reviews, feedback, statements, references, sayings, comments, appreciations, citations</keywords>
+                <t t-snippet="website.s_quotes_carousel_minimal" string="Quotes Minimal" group="people" label="Carousel">
+                    <keywords>cite, testimonials, endorsements, reviews, feedback, statements, references, sayings, comments, appreciations, citations, carousel</keywords>
                 </t>
 
                 <!-- Text group -->
@@ -354,8 +354,8 @@
                 <t t-snippet="website.s_faq_list" string="FAQ List" group="text">
                     <keywords>questions, answers, common answers, common questions, faq, help, support, information, knowledge, guide, troubleshooting, assistance, columns, QA</keywords>
                 </t>
-                <t t-snippet="website.s_table_of_content" string="Table of Content" group="text">
-                    <keywords>navigation, index, outline, chapters, sections, overview, menu</keywords>
+                <t t-snippet="website.s_table_of_content" string="Table of Content" group="text" label="Tab">
+                    <keywords>navigation, index, outline, chapters, sections, overview, menu, tab</keywords>
                 </t>
                 <t t-snippet="website.s_faq_horizontal" string="Topics List" group="text">
                     <keywords>questions, answers, common answers, common questions, faq, help, support, information, knowledge, guide, troubleshooting, assistance, QA, terms of services</keywords>
@@ -493,7 +493,7 @@
             t-image-preview="/website/static/src/img/snippets_previews/s_newsletter_centered_preview.jpg"/>
         <t t-install="mass_mailing" string="Newsletter Grid" group="contact_and_forms"
             t-image-preview="/website/static/src/img/snippets_previews/s_newsletter_grid_preview.jpg"/>
-        <t t-install="mass_mailing" string="Newsletter Popup" group="contact_and_forms"
+        <t t-install="mass_mailing" string="Newsletter Popup" group="contact_and_forms" label="Popup"
             t-image-preview="/website/static/src/img/snippets_previews/s_newsletter_subscribe_popup_preview.png"/>
         <t t-install="mass_mailing" string="Newsletter Box" group="contact_and_forms"
             t-image-preview="/website/static/src/img/snippets_previews/s_newsletter_box_preview.jpg"/>

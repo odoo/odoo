@@ -2964,6 +2964,19 @@ we-select.o_grid we-toggler {
                     }
                 }
             }
+            &[data-label]:not([data-label=""])::before {
+                content: attr(data-label);
+                @include o-position-absolute(0, 0);
+                z-index: 1;
+                transform-origin: top right;
+                transform: scale(3.4);
+                font-family: $o-we-font-family;
+                font-size: $o-we-sidebar-font-size;
+                background-color: $o-we-toolbar-color-accent;
+                color: white;
+                padding: 6px 12px;
+                border-bottom-left-radius: 5px;
+            }
             &::after {
                 content: "";
                 @include o-position-absolute(0, 0, 0, 0);
