@@ -15,15 +15,22 @@ publicWidget.registry.PortalPrepayment = publicWidget.Widget.extend({
             'button[name="o_sale_portal_amount_prepayment_button"]'
         );
 
+        const params = new URLSearchParams(window.location.search);
+        const isPartialPayment = params.has('installment') ? params.get('installment') === 'true': true;
+        const showPaymentModal = params.get('showPaymentModal') === 'true';
+
+        // When updating the amount re-open the modal.
+        if (showPaymentModal) {
+            const payNowButton = this.$('#o_sale_portal_paynow')[0];
+            payNowButton && payNowButton.click();
+        }
+
         if (!this.AmountTotalButton) {
             // Button not available in dom => confirmed SO or partial payment not enabled on this SO
             // this widget has nothing to manage
             return;
         }
 
-        const params = new URLSearchParams(window.location.search);
-        const isPartialPayment = params.has('downpayment') ? params.get('downpayment') === 'true': true;
-        const showPaymentModal = params.get('showPaymentModal') === 'true';
 
         // Prepare the modal to show if the down payment amount is selected or not.
         if (isPartialPayment) {
@@ -32,11 +39,6 @@ publicWidget.registry.PortalPrepayment = publicWidget.Widget.extend({
             this._onClickAmountTotalButton(false);
         }
 
-        // When updating the amount re-open the modal.
-        if (showPaymentModal) {
-            const payNowButton = this.$('#o_sale_portal_paynow')[0];
-            payNowButton && payNowButton.click();
-        }
     },
 
     _onClickAmountPrepaymentButton: function (doReload=true) {
@@ -67,9 +69,9 @@ publicWidget.registry.PortalPrepayment = publicWidget.Widget.extend({
         const searchParams = new URLSearchParams(window.location.search);
 
         if (partialPayment) {
-            searchParams.set('downpayment', true);
+            searchParams.set('installment', true);
         } else {
-            searchParams.set('downpayment', false);
+            searchParams.set('installment', false);
         }
         searchParams.set('showPaymentModal', true);
 
