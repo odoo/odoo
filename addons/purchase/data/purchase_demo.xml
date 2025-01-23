@@ -6,6 +6,10 @@
             <field name="group_ids" eval="[(3, ref('purchase.group_purchase_manager'))]"/>
         </record>
 
+        <record id="base.default_user_group" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('purchase.group_purchase_manager'))]"/>
+        </record>
+
         <record id="base.res_partner_1" model="res.partner">
             <field name="receipt_reminder_email">True</field>
         </record>

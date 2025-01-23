@@ -48,9 +48,6 @@
     </record>
 
 <data noupdate="1">
-    <record id="base.default_user" model="res.users">
-        <field name="group_ids" eval="[(4,ref('project.group_project_manager'))]"/>
-    </record>
 
     <record model="ir.rule" id="project_comp_rule">
         <field name="name">Project: multi-company</field>

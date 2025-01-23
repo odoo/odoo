@@ -23,8 +23,4 @@
         <field name="implied_ids" eval="[(4, ref('hr_expense.group_hr_expense_user'))]"/>
         <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
     </record>
-
-    <record id="base.default_user" model="res.users">
-        <field name="group_ids" eval="[(4,ref('hr_expense.group_hr_expense_manager'))]"/>
-    </record>
 </odoo>

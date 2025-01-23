@@ -9,6 +9,10 @@
             (3, ref('hr_holidays.group_hr_holidays_manager'))]"/>
     </record>
 
+    <record id="base.default_user_group" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('hr_holidays.group_hr_holidays_manager'))]"/>
+    </record>
+
     <!--Time Off Type-->
     <record id="hr_holiday_status_dv" model="hr.leave.type">
         <field name="name">Parental Leaves</field>

@@ -83,9 +83,5 @@
         <field name="groups" eval="[(4, ref('group_pos_user'))]"/>
         <field name="domain_force">[('move_id.pos_order_ids', '!=', False)]</field>
     </record>
-
-        <record id="base.default_user" model="res.users">
-            <field name="group_ids" eval="[(4,ref('point_of_sale.group_pos_manager'))]"/>
-        </record>
     </data>
 </odoo>

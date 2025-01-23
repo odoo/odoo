@@ -151,6 +151,21 @@
         </record>
         <menuitem action="action_res_groups" id="menu_action_res_groups" parent="base.menu_users" groups="base.group_no_one" sequence="3"/>
 
+        <record id="view_default_groups_form" model="ir.ui.view">
+            <field name="name">res.groups default groups form</field>
+            <field name="model">res.groups</field>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <form string="Groups">
+                  <sheet>
+                    <group>
+                        <field name="implied_ids" widget="res_user_group_ids" nolabel="1" colspan="2"/>
+                    </group>
+                  </sheet>
+                </form>
+            </field>
+        </record>
+
         <!-- res.users -->
         <record id="view_users_simple_form" model="ir.ui.view">
             <field name="name">res.users.simplified.form</field>
