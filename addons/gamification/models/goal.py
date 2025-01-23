@@ -221,7 +221,9 @@ class Goal(models.Model):
 
         # generate a reminder report
         body_html = self.env.ref('gamification.email_template_goal_reminder')._render_field('body_html', self.ids, compute_lang=True)[self.id]
-        self.message_notify(
+        self.env['mail.thread'].message_notify(
+            model=self._name,
+            res_id=self.id,
             body=body_html,
             partner_ids=[self.user_id.partner_id.id],
             subtype_xmlid='mail.mt_comment',
