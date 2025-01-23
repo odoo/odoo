@@ -54,6 +54,7 @@ models.Order = models.Order.extend({
         }
         this.customer_count = this.customer_count || 1;
         this.save_to_db();
+        return this;
     },
     export_as_JSON: function() {
         var json = _super_order.export_as_JSON.apply(this,arguments);
