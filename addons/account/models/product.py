@@ -62,13 +62,16 @@ class ProductTemplate(models.Model):
         return fiscal_pos.map_accounts(accounts)
 
     @api.depends('taxes_id', 'list_price')
+    @api.depends_context('company')
     def _compute_tax_string(self):
         for record in self:
             record.tax_string = record._construct_tax_string(record.list_price)
 
     def _construct_tax_string(self, price):
         currency = self.currency_id
-        res = self.taxes_id.compute_all(price, product=self, partner=self.env['res.partner'])
+        res = self.taxes_id.filtered(lambda t: t.company_id == self.env.company).compute_all(
+            price, product=self, partner=self.env['res.partner']
+        )
         joined = []
         included = res['total_included']
         if currency.compare_amounts(included, price):
@@ -212,6 +215,7 @@ class ProductProduct(models.Model):
         return product_price_unit
 
     @api.depends('lst_price', 'product_tmpl_id', 'taxes_id')
+    @api.depends_context('company')
     def _compute_tax_string(self):
         for record in self:
             record.tax_string = record.product_tmpl_id._construct_tax_string(record.lst_price)
