@@ -125,9 +125,9 @@ export class ChatWindow extends Component {
             case "Tab": {
                 const index = this.store.chatHub.opened.findIndex((cw) => cw.eq(chatWindow));
                 if (index === this.store.chatHub.opened.length - 1) {
-                    this.store.chatHub.opened[0].focus();
+                    this.store.chatHub.opened[0].focus({ jumpToNewMessage: true });
                 } else {
-                    this.store.chatHub.opened[index + 1].focus();
+                    this.store.chatHub.opened[index + 1].focus({ jumpToNewMessage: true });
                 }
                 break;
             }

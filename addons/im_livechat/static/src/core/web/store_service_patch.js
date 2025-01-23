@@ -34,7 +34,7 @@ const storePatch = {
             return true;
         }
         const chatWindow = this.ChatWindow.insert({ thread: oldestUnreadThread });
-        chatWindow.open({ focus: true });
+        chatWindow.open({ focus: true, jumpToNewMessage: true });
         return true;
     },
     /**

@@ -19,6 +19,7 @@ export class ChatWindow extends Record {
     actionsDisabled = false;
     thread = Record.one("Thread");
     autofocus = 0;
+    jumpToNewMessage = 0;
     hidden = false;
     /** Whether the chat window was created from the messaging menu */
     fromMessagingMenu = false;
@@ -50,8 +51,11 @@ export class ChatWindow extends Record {
         this.delete();
     }
 
-    focus() {
+    focus({ jumpToNewMessage = false } = {}) {
         this.autofocus++;
+        if (jumpToNewMessage) {
+            this.jumpToNewMessage++;
+        }
     }
 
     fold() {
@@ -61,7 +65,7 @@ export class ChatWindow extends Record {
         this.store.chatHub.save();
     }
 
-    open({ focus = false, notifyState = true } = {}) {
+    open({ focus = false, notifyState = true, jumpToNewMessage = false } = {}) {
         this.store.chatHub.folded.delete(this);
         this.store.chatHub.opened.delete(this);
         this.store.chatHub.opened.unshift(this);
@@ -69,7 +73,7 @@ export class ChatWindow extends Record {
             this.store.chatHub.save();
         }
         if (focus && !isMobileOS()) {
-            this.focus();
+            this.focus({ jumpToNewMessage });
         }
     }
 
