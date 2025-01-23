@@ -295,7 +295,7 @@
                 <filter string="Draft" name="draft" domain="[('state', '=', 'pending'), ('production_state', '=', 'draft')]"/>
                 <filter string="Finished" name="finish" domain="[('state', '=', 'done')]"/>
                 <separator/>
-                <filter string="Late" name="late" domain="['&amp;', ('date_start', '&lt;', current_date), ('state', '=', 'ready')]"
+                <filter string="Late" name="late" domain="['&amp;', ('date_start', '&lt;', datetime.datetime.now()), ('state', '=', 'ready')]"
                     help="Production started late"/>
                 <group expand="0" string="Group By">
                     <filter string="Work Center" name="work_center" domain="[]" context="{'group_by': 'workcenter_id'}"/>
