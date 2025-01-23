@@ -193,10 +193,13 @@ class ResUsers(models.Model):
     def _default_groups(self):
         """Default groups for employees
 
-        All the groups of the Template User
+        All the groups of the Default User Group
         """
-        default_user = self.env.ref('base.default_user', raise_if_not_found=False)
-        return default_user.sudo().group_ids if default_user else []
+        groups = self.env.ref('base.group_user')
+        default_group = self.env.ref('base.default_user_group', raise_if_not_found=False)
+        if default_group:
+            groups += default_group.implied_ids
+        return groups
 
     partner_id = fields.Many2one('res.partner', required=True, ondelete='restrict', auto_join=True, index=True,
         string='Related Partner', help='Partner-related data of the user')
@@ -530,15 +533,6 @@ class ResUsers(models.Model):
             self.env['res.users.settings'].sudo().create(setting_vals)
         return users
 
-    def _apply_groups_to_existing_employees(self):
-        """ Should new groups be added to existing employees?
-
-        If the template user is being modified, the groups should be applied to
-        every other base_user users
-        """
-        default_user = self.env.ref('base.default_user', raise_if_not_found=False)
-        return default_user and default_user in self
-
     def write(self, values):
         if values.get('active') and SUPERUSER_ID in self._ids:
             raise UserError(_("You cannot activate the superuser."))
@@ -560,23 +554,7 @@ class ResUsers(models.Model):
                 # safe fields only, so we write as super-user to bypass access rights
                 self = self.sudo()
 
-        old_groups = []
-        if 'group_ids' in values:
-            users_before = self.filtered(lambda u: u._is_internal())
-            if self._apply_groups_to_existing_employees():
-                # if modify group_ids content, compute the delta of groups to apply
-                # the new ones to other existing users
-                old_groups = self._default_groups()
-
         res = super().write(values)
-
-        if old_groups:
-            # new elements in _default_groups() means new groups for default users
-            # that needs to be added to existing ones as well for consistency
-            added_groups = self._default_groups() - old_groups
-            if added_groups:
-                internal_users = self.env.ref('base.group_user').all_user_ids - self
-                internal_users.write({'group_ids': [Command.link(gid) for gid in added_groups.ids]})
 
         if 'company_id' in values:
             for user in self:
@@ -609,14 +587,13 @@ class ResUsers(models.Model):
     @api.ondelete(at_uninstall=True)
     def _unlink_except_master_data(self):
         portal_user_template = self.env.ref('base.template_portal_user_id', False)
-        default_user_template = self.env.ref('base.default_user', False)
         if SUPERUSER_ID in self.ids:
             raise UserError(_('You can not remove the admin user as it is used internally for resources created by Odoo (updates, module installation, ...)'))
         user_admin = self.env.ref('base.user_admin', raise_if_not_found=False)
         if user_admin and user_admin in self:
             raise UserError(_('You cannot delete the admin user because it is utilized in various places (such as security configurations,...). Instead, archive it.'))
         self.env.registry.clear_cache()
-        if (portal_user_template and portal_user_template in self) or (default_user_template and default_user_template in self):
+        if portal_user_template and portal_user_template in self:
             raise UserError(_('Deleting the template users is not allowed. Deleting this profile will compromise critical functionalities.'))
 
     @api.model

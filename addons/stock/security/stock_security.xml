@@ -75,10 +75,6 @@
     </record>
 </data>
 <data noupdate="1">
-    <record id="base.default_user" model="res.users">
-        <field name="group_ids" eval="[(4,ref('stock.group_stock_manager'))]"/>
-    </record>
-
 <!-- multi -->
     <record model="ir.rule" id="stock_picking_rule">
         <field name="name">stock_picking multi-company</field>

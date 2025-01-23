@@ -25,13 +25,6 @@
             <field name="user_id" ref="base.user_admin"/>
         </record>
 
-        <!-- Default user with full access rights for newly created users -->
-        <record id="default_user" model="res.users">
-            <field name="name">Default User Template</field>
-            <field name="login">default</field>
-            <field name="active" eval="False"/>
-        </record>
-
         <record id="public_user" model="res.users">
             <field name="name">Public user</field>
             <field name="login">public</field>

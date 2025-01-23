@@ -31,20 +31,3 @@ class ResUsers(models.Model):
             user = self.with_context(signup_valid=True).create(default_values)
 
         return True
-
-    def _default_groups(self):
-        """Default groups for employees
-
-        If base_setup.default_user_rights is set, only the "Employee" group is used
-        """
-        if not str2bool(self.env['ir.config_parameter'].sudo().get_param("base_setup.default_user_rights"), default=False):
-            return self.env.ref("base.group_user")
-        return super()._default_groups()
-
-    def _apply_groups_to_existing_employees(self):
-        """
-        If base_setup.default_user_rights is set, do not apply any new groups to existing employees
-        """
-        if not str2bool(self.env['ir.config_parameter'].sudo().get_param("base_setup.default_user_rights"), default=False):
-            return False
-        return super()._apply_groups_to_existing_employees()

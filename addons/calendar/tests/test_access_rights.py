@@ -304,8 +304,6 @@ class TestAccessRights(TransactionCase):
         default privacy from the 'res.users' related field without throwing any error.
         Updates from others users are blocked during write (except for Default User Template from admins).
         """
-        default_user = self.env.ref('base.default_user', raise_if_not_found=False)
-
         for privacy in ['public', 'private', 'confidential']:
             # Update normal user and administrator 'calendar_default_privacy' simulating their own update.
             self.john.with_user(self.john).write({'calendar_default_privacy': privacy})
@@ -313,11 +311,10 @@ class TestAccessRights(TransactionCase):
             self.assertEqual(self.john.calendar_default_privacy, privacy, 'Normal user must be able to update its calendar default privacy.')
             self.assertEqual(self.admin_system_user.calendar_default_privacy, privacy, 'Admin must be able to update its calendar default privacy.')
 
-            # Update the Default User Template's 'calendar_default_privacy' as an administrator.
-            default_user.with_user(self.admin_system_user).write({'calendar_default_privacy': privacy})
-            self.assertEqual(default_user.calendar_default_privacy, privacy, 'Admin must be able to update the Default User Template calendar privacy.')
+            # Update the Default 'calendar.default_privacy' as an administrator.
+            self.env['ir.config_parameter'].sudo().set_param("calendar.default_privacy", privacy)
 
-            # All calendar default privacy updates (except for Default user Template) must be blocked during write.
+            # All calendar default privacy updates must be blocked during write.
             with self.assertRaises(AccessError):
                 self.john.with_user(self.admin_system_user).write({'calendar_default_privacy': privacy})
             with self.assertRaises(AccessError):

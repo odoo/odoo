@@ -11,9 +11,6 @@ class ResConfigSettings(models.TransientModel):
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env.company)
     is_root_company = fields.Boolean(compute='_compute_is_root_company')
-    user_default_rights = fields.Boolean(
-        "Default Access Rights",
-        config_parameter='base_setup.default_user_rights')
     module_base_import = fields.Boolean("Allow users to import data from CSV/XLS/XLSX/ODS files")
     module_google_calendar = fields.Boolean(
         string='Allow the users to synchronize their calendar  with Google Calendar')
@@ -57,14 +54,29 @@ class ResConfigSettings(models.TransientModel):
             'target': 'current',
         }
 
-    def open_default_user(self):
-        action = self.env["ir.actions.actions"]._for_xml_id("base.action_res_users")
-        if self.env.ref('base.default_user', raise_if_not_found=False):
-            action['res_id'] = self.env.ref('base.default_user').id
-        else:
-            raise UserError(_("Default User Template not found."))
-        action['views'] = [[self.env.ref('base.view_users_form').id, 'form']]
-        return action
+    def open_new_user_default_groups(self):
+        default_group = self.env.ref('base.default_user_group', raise_if_not_found=False)
+        if not default_group:
+            default_group = self.env['res.groups'].create({
+                'name': _('Default access for new users'),
+                'category_id': self.env.ref('base.module_category_hidden').id,
+            })
+            self.env['ir.model.data'].create({
+                'name': 'default_user_group',
+                'module': 'base',
+                'res_id': default_group.id,
+                'model': 'res.groups',
+                'noupdate': True,
+            })
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Edit new user default group"),
+            'view_mode': 'form',
+            'res_model': 'res.groups',
+            'res_id': default_group.id,
+            'views': [(self.env.ref('base.view_default_groups_form').id, 'form')],
+            'target': 'new',
+        }
 
     @api.model
     def _prepare_report_view_action(self, template):

@@ -207,14 +207,13 @@ class TestGroups(TransactionCase):
     def test_remove_groups(self):
         u1 = self.env['res.users'].create({'login': 'u1', 'name': 'U1'})
         u2 = self.env['res.users'].create({'login': 'u2', 'name': 'U2'})
-        default = self.env.ref('base.default_user')
         portal = self.env.ref('base.group_portal')
         p = self.env['res.users'].create({'login': 'p', 'name': 'P', 'group_ids': [Command.set([portal.id])]})
 
         a = self.env['res.groups'].create({'name': 'A', 'user_ids': [Command.set(u1.ids)]})
         b = self.env['res.groups'].create({'name': 'B', 'user_ids': [Command.set(u1.ids)]})
-        c = self.env['res.groups'].create({'name': 'C', 'implied_ids': [Command.set(a.ids)], 'user_ids': [Command.set([p.id, u2.id, default.id])]})
-        d = self.env['res.groups'].create({'name': 'D', 'implied_ids': [Command.set(a.ids)], 'user_ids': [Command.set([u2.id, default.id])]})
+        c = self.env['res.groups'].create({'name': 'C', 'implied_ids': [Command.set(a.ids)], 'user_ids': [Command.set([p.id, u2.id])]})
+        d = self.env['res.groups'].create({'name': 'D', 'implied_ids': [Command.set(a.ids)], 'user_ids': [Command.set([u2.id])]})
 
         def assertUsersEqual(users, group):
             self.assertEqual(
@@ -222,10 +221,10 @@ class TestGroups(TransactionCase):
                 sorted(group.with_context(active_test=False).mapped('all_user_ids.login'))
             )
         # sanity checks
-        assertUsersEqual([u1, u2, p, default], a)
+        assertUsersEqual([u1, u2, p], a)
         assertUsersEqual([u1], b)
-        assertUsersEqual([u2, p, default], c)
-        assertUsersEqual([u2, default], d)
+        assertUsersEqual([u2, p], c)
+        assertUsersEqual([u2], d)
 
         # C already implies A, we want none of B+C to imply A
         (b + c)._remove_group(a)
@@ -239,15 +238,14 @@ class TestGroups(TransactionCase):
         #   not have U1 as a user
         # - P should be removed as was only added via inheritance to C
         # - U2 should not be removed from A since it is implied via C but also via D
-        assertUsersEqual([u1, u2, default], a)
+        assertUsersEqual([u1, u2], a)
         assertUsersEqual([u1], b)
-        assertUsersEqual([u2, p, default], c)
-        assertUsersEqual([u2, default], d)
+        assertUsersEqual([u2, p], c)
+        assertUsersEqual([u2], d)
 
-        # When adding the template user to a new group, it should add it to existing internal users
+        # When adding a new group to all users
         e = self.env['res.groups'].create({'name': 'E'})
-        default.write({'group_ids': [Command.link(e.id)]})
-        self.assertIn(u1, e.user_ids)
-        self.assertIn(u2, e.user_ids)
-        self.assertIn(default, e.with_context(active_test=False).user_ids)
-        self.assertNotIn(p, e.user_ids)
+        self.env.ref('base.group_user').write({'implied_ids': [Command.link(e.id)]})
+        self.assertIn(u1, e.all_user_ids)
+        self.assertIn(u2, e.all_user_ids)
+        self.assertNotIn(p, e.all_user_ids)

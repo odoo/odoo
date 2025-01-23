@@ -30,7 +30,6 @@
         'data/mailing_list_contact.xml',
         'data/mailing_subscription_optout.xml',
         'data/mailing_subscription.xml',
-        'data/res_users_data.xml',
         'data/mass_mailing_tour.xml',
         'wizard/mail_compose_message_views.xml',
         'wizard/mailing_contact_import_views.xml',
@@ -90,6 +89,7 @@
         'demo/mailing_subscription.xml',
         'demo/mailing_mailing.xml',
         'demo/mailing_trace.xml',
+        'demo/res_users.xml',
     ],
     'application': True,
     'assets': {

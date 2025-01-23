@@ -61,10 +61,6 @@
             <field name="groups" eval="[(4, ref('lunch.group_lunch_manager'))]"/>
         </record>
 
-        <record id="base.default_user" model="res.users">
-            <field name="group_ids" eval="[(4,ref('lunch.group_lunch_manager'))]"/>
-        </record>
-
         <record id="ir_rule_lunch_supplier_multi_company" model="ir.rule">
             <field name="name">Lunch supplier: Multi Company</field>
             <field name="model_id" ref="model_lunch_supplier"/>
