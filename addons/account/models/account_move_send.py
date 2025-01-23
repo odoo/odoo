@@ -444,7 +444,7 @@ class AccountMoveSend(models.AbstractModel):
     @api.model
     def _send_mail(self, move, mail_template, **kwargs):
         """ Send the journal entry passed as parameter by mail. """
-        new_message = move.message_post(
+        new_message = move.with_context(disable_attachment_import=True).message_post(
             message_type='comment',
             **kwargs,
             **{  # noqa: PIE804

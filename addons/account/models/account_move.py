@@ -83,7 +83,7 @@ def rollbackable_transaction(cr):
 
     :raise: an Exception if an error was caught and the transaction was rolled back.
     """
-    if modules.module.current_test:
+    if not AccountMove._can_commit():
         yield
         return
 
@@ -6009,7 +6009,7 @@ class AccountMove(models.Model):
             'invoice_source_email': from_mail_addresses[0],
             'partner_id': partners and partners[0].id or False,
         }
-        move_ctx = self.with_context(default_move_type=custom_values['move_type'], default_journal_id=custom_values['journal_id'])
+        move_ctx = self.with_context(from_alias=True, default_move_type=custom_values['move_type'], default_journal_id=custom_values['journal_id'])
         move = super(AccountMove, move_ctx).message_new(msg_dict, custom_values=values)
         move._compute_name()  # because the name is given, we need to recompute in case it is the first invoice of the journal
 
@@ -6030,17 +6030,16 @@ class AccountMove(models.Model):
             based on its mimetype.
         """
         # EXTENDS mail mail.thread
-        message_source = self.env.context.get('message_source')
         attachments = new_message.attachment_ids
 
-        if not attachments or not message_source:
+        if not attachments or new_message.message_type not in {'email', 'comment'} or self.env.context.get('disable_attachment_import'):
             # No attachments, or the message was created in application code, so don't do anything.
             return super()._message_post_after_hook(new_message, message_values)
 
         # Extract embedded files.
         attachments |= attachments._get_embedded_attachments()
 
-        if message_source == 'email_to_alias':
+        if self.env.context.get('from_alias'):
             # This is a newly-created invoice from a mail alias.
             # So dispatch the attachments into groups, and create a new invoice for each group beyond the first.
             attachment_groups = self._group_mail_alias_attachments(attachments)
@@ -6075,7 +6074,7 @@ class AccountMove(models.Model):
 
             return res
 
-        elif message_source in {'email_to_thread', 'webclient'}:
+        else:
             # This is an existing invoice on which a message was posted either by e-mail or via the webclient.
             attachment_records = attachments.filtered(lambda a: not isinstance(a.id, api.NewId))
             self._fix_attachments_on_invoice(attachment_records)

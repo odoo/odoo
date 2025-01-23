@@ -151,7 +151,7 @@ class TestAccountInvoiceImportMixin:
 
             match origin:
                 case 'chatter_message':
-                    move.with_context(message_source='webclient').message_post(attachment_ids=attachments.ids)
+                    move.message_post(message_type='comment', attachment_ids=attachments.ids)
                 case 'chatter_upload':
                     attachments.write({'res_model': 'account.move', 'res_id': move.id})
                     attachments._post_add_create()
