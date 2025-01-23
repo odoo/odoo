@@ -92,7 +92,9 @@ patch(PaymentScreen.prototype, {
             ) {
                 agg[pe.coupon_id].partner_id = partner.id;
             }
-            agg[pe.coupon_id].date_to = program.date_to;
+            if (program.program_type != "loyalty") {
+                agg[pe.coupon_id].date_to = program.date_to;
+            }
             return agg;
         }, {});
         for (const line of rewardLines) {
@@ -102,10 +104,12 @@ patch(PaymentScreen.prototype, {
                 couponData[couponId] = {
                     points: 0,
                     program_id: reward.program_id.id,
-                    date_to: reward.program_id.date_to,
                     coupon_id: couponId,
                     barcode: false,
                 };
+                if (reward.program_type != "loyalty") {
+                    couponData[couponId].date_to = reward.program_id.date_to;
+                }
             }
             if (!couponData[couponId].line_codes) {
                 couponData[couponId].line_codes = [];
