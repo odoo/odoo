@@ -206,7 +206,7 @@ class AccountBankStatementLine(models.Model):
                     ORDER BY first_line_index DESC
                     LIMIT 1
                 """,
-                [min_index, journal.id],
+                [min_index or '', journal.id],
             )
             current_running_balance = 0.0
             extra_clause = SQL()
@@ -236,7 +236,7 @@ class AccountBankStatementLine(models.Model):
                         %s
                     ORDER BY st_line.internal_index
                 """,
-                max_index,
+                max_index or '',
                 journal.id,
                 company2children[journal.company_id].ids,
                 extra_clause,

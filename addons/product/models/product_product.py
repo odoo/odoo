@@ -154,6 +154,9 @@ class ProductProduct(models.Model):
         works as intended :-)
         """
         for record in self:
+            if not record.id:
+                record.write_date = record._origin.write_date
+                continue
             record.write_date = max(record.write_date or self.env.cr.now(), record.product_tmpl_id.write_date)
 
     def _compute_image_1920(self):
@@ -311,8 +314,8 @@ class ProductProduct(models.Model):
             domain = [
                 ('pricelist_id.active', '=', True),
                 '|',
-                    '&', ('product_tmpl_id', '=', product.product_tmpl_id.id), ('applied_on', '=', '1_product'),
-                    '&', ('product_id', '=', product.id), ('applied_on', '=', '0_product_variant'),
+                    '&', ('product_tmpl_id', 'in', product.product_tmpl_id.ids), ('applied_on', '=', '1_product'),
+                    '&', ('product_id', 'in', product.ids), ('applied_on', '=', '0_product_variant'),
                 ('compute_price', '=', 'fixed'),
             ]
             product.pricelist_item_count = self.env['product.pricelist.item'].search_count(domain)
@@ -321,7 +324,7 @@ class ProductProduct(models.Model):
         for product in self:
             product.product_document_count = product.env['product.document'].search_count([
                 ('res_model', '=', 'product.product'),
-                ('res_id', '=', product.id),
+                ('res_id', 'in', product.ids),
             ])
 
     @api.depends('product_tag_ids', 'additional_product_tag_ids')

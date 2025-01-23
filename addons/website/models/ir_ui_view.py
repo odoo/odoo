@@ -50,7 +50,7 @@ class IrUiView(models.Model):
 
     def _compute_first_page_id(self):
         for view in self:
-            view.first_page_id = self.env['website.page'].search([('view_id', '=', view.id)], limit=1)
+            view.first_page_id = self.env['website.page'].search([('view_id', 'in', view.ids)], limit=1)
 
     @api.model_create_multi
     def create(self, vals_list):

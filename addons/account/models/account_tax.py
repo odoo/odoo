@@ -3,7 +3,7 @@ from odoo import api, fields, models, _, Command
 from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import frozendict, groupby, html2plaintext, is_html_empty, split_every
+from odoo.tools import frozendict, groupby, html2plaintext, is_html_empty, split_every, SQL
 from odoo.tools.float_utils import float_repr, float_round, float_compare
 from odoo.tools.misc import clean_context, formatLang
 from odoo.tools.translate import html_translate
@@ -289,43 +289,44 @@ class AccountTax(models.Model):
     def _compute_is_used(self):
         used_taxes = set()
 
-        # Fetch for taxes used in account moves
-        self.env['account.move.line'].flush_model(['tax_ids'])
-        self.env.cr.execute("""
-            SELECT id
-            FROM account_tax
-            WHERE EXISTS(
-                SELECT 1
-                FROM account_move_line_account_tax_rel AS line
-                WHERE account_tax_id IN %s
-                AND account_tax.id = line.account_tax_id
-            )
-        """, [tuple(self.ids)])
-        used_taxes.update([tax[0] for tax in self.env.cr.fetchall()])
-        taxes_to_compute = set(self.ids) - used_taxes
+        if self.ids:
+            # Fetch for taxes used in account moves
+            self.env['account.move.line'].flush_model(['tax_ids'])
+            used_taxes.update(id_ for [id_] in self.env.execute_query(SQL(
+                """ SELECT id
+                    FROM account_tax
+                    WHERE EXISTS(
+                        SELECT 1
+                        FROM account_move_line_account_tax_rel AS line
+                        WHERE account_tax_id IN %s
+                        AND account_tax.id = line.account_tax_id
+                    ) """,
+                tuple(self.ids),
+            )))
+            taxes_to_compute = set(self.ids) - used_taxes
 
-        # Fetch for taxes used in reconciliation
-        if taxes_to_compute:
-            self.env['account.reconcile.model.line'].flush_model(['tax_ids'])
-            self.env.cr.execute("""
-                SELECT id
-                FROM account_tax
-                WHERE EXISTS(
-                    SELECT 1
-                    FROM account_reconcile_model_line_account_tax_rel AS reco
-                    WHERE account_tax_id IN %s
-                    AND account_tax.id = reco.account_tax_id
-                )
-            """, [tuple(taxes_to_compute)])
-            used_taxes.update([tax[0] for tax in self.env.cr.fetchall()])
-            taxes_to_compute -= used_taxes
+            # Fetch for taxes used in reconciliation
+            if taxes_to_compute:
+                self.env['account.reconcile.model.line'].flush_model(['tax_ids'])
+                used_taxes.update(id_ for [id_] in self.env.execute_query(SQL(
+                    """ SELECT id
+                        FROM account_tax
+                        WHERE EXISTS(
+                            SELECT 1
+                            FROM account_reconcile_model_line_account_tax_rel AS reco
+                            WHERE account_tax_id IN %s
+                            AND account_tax.id = reco.account_tax_id
+                        ) """,
+                    tuple(taxes_to_compute)
+                )))
+                taxes_to_compute -= used_taxes
 
-        # Fetch for tax used in other modules
-        if taxes_to_compute:
-            used_taxes.update(self._hook_compute_is_used(taxes_to_compute))
+            # Fetch for tax used in other modules
+            if taxes_to_compute:
+                used_taxes.update(self._hook_compute_is_used(taxes_to_compute))
 
         for tax in self:
-            tax.is_used = tax.id in used_taxes
+            tax.is_used = tax._origin.id in used_taxes
 
     @api.depends('repartition_line_ids.account_id', 'repartition_line_ids.sequence', 'repartition_line_ids.factor_percent', 'repartition_line_ids.use_in_tax_closing', 'repartition_line_ids.tag_ids')
     def _compute_repartition_lines_str(self):

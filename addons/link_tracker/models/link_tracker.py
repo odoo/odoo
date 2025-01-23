@@ -83,7 +83,7 @@ class LinkTracker(models.Model):
 
     def _compute_code(self):
         for tracker in self:
-            record = self.env['link.tracker.code'].search([('link_id', '=', tracker.id)], limit=1, order='id DESC')
+            record = self.env['link.tracker.code'].search([('link_id', 'in', tracker.ids)], limit=1, order='id DESC')
             tracker.code = record.code
 
     def _inverse_code(self):

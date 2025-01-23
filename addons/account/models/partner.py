@@ -486,7 +486,7 @@ class ResPartner(models.Model):
     def _compute_journal_item_count(self):
         AccountMoveLine = self.env['account.move.line']
         for partner in self:
-            partner.journal_item_count = AccountMoveLine.search_count([('partner_id', '=', partner.id)])
+            partner.journal_item_count = AccountMoveLine.search_count([('partner_id', 'in', partner.ids)])
 
     def _compute_available_invoice_template_pdf_report_ids(self):
         moves = self.env['account.move']

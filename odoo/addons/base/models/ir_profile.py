@@ -48,6 +48,7 @@ class IrProfile(models.Model):
         domain = [('create_date', '<', fields.Datetime.now() - datetime.timedelta(days=30))]
         return self.sudo().search(domain).unlink()
 
+    @api.depends('init_stack_trace')
     def _compute_speedscope(self):
         for execution in self:
             sp = Speedscope(init_stack_trace=json.loads(execution.init_stack_trace))
@@ -61,6 +62,7 @@ class IrProfile(models.Model):
             result = json.dumps(sp.add_default().make())
             execution.speedscope = base64.b64encode(result.encode('utf-8'))
 
+    @api.depends('speedscope')
     def _compute_speedscope_url(self):
         for profile in self:
             profile.speedscope_url = f'/web/speedscope/{profile.id}'

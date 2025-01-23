@@ -53,13 +53,13 @@ class PosPreset(models.Model):
 
     def _compute_count_linked_orders(self):
         for record in self:
-            record.count_linked_orders = self.env['pos.order'].search_count([('preset_id', '=', record.id)])
+            record.count_linked_orders = self.env['pos.order'].search_count([('preset_id', 'in', record.ids)])
 
     def _compute_count_linked_config(self):
         for record in self:
             record.count_linked_config = self.env['pos.config'].search_count([
-                '|', ('default_preset_id', '=', record.id),
-                ('available_preset_ids', 'in', record.id)
+                '|', ('default_preset_id', 'in', record.ids),
+                ('available_preset_ids', 'in', record.ids)
             ])
 
     # Slots are created directly here in the form of dates, to avoid polluting
