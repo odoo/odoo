@@ -79,6 +79,11 @@ class TestCertificationFlow(common.TestSurveyCommon, MockEmail, HttpCase):
                     {'value': 'a_future_and_yet_unknown_model', 'is_correct': True, 'answer_score': 1.0},
                     {'value': 'none', 'answer_score': -1.0}
                 ])
+            q06 = self._add_question(
+                None, 'Are you sure of all your answers (not rated)', 'simple_choice',
+                sequence=6,
+                constr_mandatory=False, survey_id=certification.id,
+                labels=[{'value': 'Yes'}, {'value': 'No'}])
 
         # Step: employee takes the certification
         # --------------------------------------------------
@@ -104,12 +109,19 @@ class TestCertificationFlow(common.TestSurveyCommon, MockEmail, HttpCase):
 
         with self.mock_mail_gateway():
             self._answer_question(q01, q01.suggested_answer_ids.ids[3], answer_token, csrf_token)
-            self._answer_question(q02, q02.suggested_answer_ids.ids[1], answer_token, csrf_token)
+            self._answer_question(q02, q02.suggested_answer_ids.ids[0], answer_token, csrf_token)  # incorrect => no points
+            self._answer_question(q03, "", answer_token, csrf_token, button_submit='previous')
+            self._answer_question(q02, q02.suggested_answer_ids.ids[1], answer_token, csrf_token)  # correct answer
             self._answer_question(q03, "I think they're great!", answer_token, csrf_token)
             self._answer_question(q04, q04.suggested_answer_ids.ids[0], answer_token, csrf_token, button_submit='previous')
             self._answer_question(q03, "Just kidding, I don't like it...", answer_token, csrf_token)
-            self._answer_question(q04, q04.suggested_answer_ids.ids[0], answer_token, csrf_token)
-            self._answer_question(q05, [q05.suggested_answer_ids.ids[0], q05.suggested_answer_ids.ids[1], q05.suggested_answer_ids.ids[3]], answer_token, csrf_token)
+            self._answer_question(q04, q04.suggested_answer_ids.ids[0], answer_token, csrf_token,
+                                  submit_query_count=42, access_page_query_count=24)
+            q05_answers = q05.suggested_answer_ids.ids[0:2] + [q05.suggested_answer_ids.ids[3]]
+            self._answer_question(q05, q05_answers, answer_token, csrf_token,
+                                  submit_query_count=28, access_page_query_count=24)
+            self._answer_question(q06, q06.suggested_answer_ids.ids[0], answer_token, csrf_token,
+                                  submit_query_count=104, access_page_query_count=24)
 
         user_inputs.invalidate_recordset()
         # Check that certification is successfully passed
