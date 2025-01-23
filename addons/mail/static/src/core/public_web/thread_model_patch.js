@@ -70,7 +70,7 @@ patch(Thread.prototype, {
             this.model !== "mail.box" &&
             !this.store.shouldDisplayWelcomeViewInitially
         ) {
-            this.open();
+            this.open({ focus: true });
         }
     },
 

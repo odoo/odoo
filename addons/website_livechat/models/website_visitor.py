@@ -92,9 +92,7 @@ class WebsiteVisitor(models.Model):
                 )
                 channel.add_members(guest_ids=guest.ids, post_joined_message=False)
         # Open empty channel to allow the operator to start chatting with the visitor
-        operator._bus_send_store(
-            discuss_channels, notification_type="website_livechat.send_chat_request"
-        )
+        operator._bus_send_store(discuss_channels, extra_fields={"open_chat_window": True})
 
     def _merge_visitor(self, target):
         """ Copy sessions of the secondary visitors to the main partner visitor. """

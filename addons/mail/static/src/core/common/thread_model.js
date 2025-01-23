@@ -674,11 +674,11 @@ export class Thread extends Record {
     /** @param {Object} [options] */
     open(options) {}
 
-    openChatWindow({ focus = true, fromMessagingMenu } = {}) {
+    openChatWindow({ focus = false, fromMessagingMenu } = {}) {
         const cw = this.store.ChatWindow.insert(
             assignDefined({ thread: this }, { fromMessagingMenu })
         );
-        cw.open({ focus: focus && !isMobileOS() });
+        cw.open({ focus: focus });
         if (isMobileOS()) {
             this.markAsRead();
         }
