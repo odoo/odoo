@@ -4,9 +4,13 @@
 from datetime import datetime, timedelta
 from unittest.mock import patch
 
+import pytz
+
 from odoo import fields
 from odoo.addons.website.models.website_visitor import WebsiteVisitor
+from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_event.tests.common import TestEventOnlineCommon
+from odoo.addons.website_event_track.controllers.event_track import EventTrackController
 from odoo.tests.common import users
 
 class TestTrackData(TestEventOnlineCommon):
@@ -94,6 +98,64 @@ class TestTrackData(TestEventOnlineCommon):
         self.assertEqual(
             new_track.contact_phone, customer.phone,
             'Track customer should take over existing contact phone value')
+
+    def test_prepare_calendar_values(self):
+        event = self.env['event.event'].create({
+            'name': 'TestEvent new',
+            'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),
+            'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
+            'website_menu': True,
+            'community_menu': True,
+            'auto_confirm': True,
+            'date_tz': 'Europe/Brussels',
+            'website_track': True,
+            'is_published':True,
+            'website_track_proposal': True,
+            'menu_register_cta':True,
+            'track_ids': [
+            (0, 0, {
+                'name': 'Advanced Reporting Presentation',
+                'stage_id': self.env.ref('website_event_track.event_track_stage3').id,
+                'date': self.reference_now + timedelta(hours=1),
+                'duration': 30,
+                'can_publish':True,
+                'is_published': True,
+                'wishlisted_by_default': True,
+            }),
+            (0, 0, {
+                'name': 'Portfolio Status & Strategy',
+                'stage_id': self.env.ref('website_event_track.event_track_stage3').id,
+                'date': self.reference_now + timedelta(hours=3),
+                'duration': 1,
+                'can_publish':True,
+                'is_published': True,
+                'wishlisted_by_default': True,
+            })],
+        })
+
+        self.env.context = {'lang': 'en_US'}
+        with MockRequest(self.env):
+            data = EventTrackController()._prepare_calendar_values(event)
+            local_tz = pytz.timezone(event.date_tz or 'UTC')
+            break_out_flag = False
+            event_tracks = []
+
+            for event_track in event.track_ids:
+                for time_slots in data['time_slots'].values():
+                    for time_slot, track_data in time_slots.items():
+                        if track_data.get(event_track, {}) and event_track not in event_tracks:
+                            break_out_flag = True
+                            track = [*track_data.get(event_track)][0]
+                            start_datetime = time_slot
+                            self.assertEqual(start_datetime, event_track.date.replace(tzinfo=pytz.utc).astimezone(local_tz))
+                            self.assertEqual(track.duration, event_track.duration)
+                            self.assertEqual(track.name, event_track.name)
+                            event_tracks.append(event_track)
+                            break
+                    if break_out_flag:
+                        break_out_flag = False
+                        break
+
 
 class TestTrackSuggestions(TestEventOnlineCommon):
 
