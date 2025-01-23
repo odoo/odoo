@@ -11,6 +11,7 @@ from . import test_onchange_domains
 from . import test_orm_import
 from . import test_override_signatures
 from . import test_pofile
+from . import test_populate
 from . import test_pylint
 from . import test_routes
 from . import test_i18n
