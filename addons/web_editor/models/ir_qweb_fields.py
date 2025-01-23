@@ -93,7 +93,8 @@ class IrQweb(models.AbstractModel):
         forbid_sanitize = el.attrib.pop('t-forbid-sanitize', None)
         snippet_group = el.attrib.pop('snippet-group', None)
         group = el.attrib.pop('group', None)
-        div = Markup('<div name="%s" data-oe-type="snippet" data-o-image-preview="%s" data-oe-thumbnail="%s" data-oe-snippet-id="%s" data-oe-snippet-key="%s" data-oe-keywords="%s" %s %s %s>') % (
+        label = el.attrib.pop('label', None)
+        div = Markup('<div name="%s" data-oe-type="snippet" data-o-image-preview="%s" data-oe-thumbnail="%s" data-oe-snippet-id="%s" data-oe-snippet-key="%s" data-oe-keywords="%s" %s %s %s %s>') % (
             name,
             escape_silent(image_preview),
             thumbnail,
@@ -103,6 +104,7 @@ class IrQweb(models.AbstractModel):
             Markup('data-oe-forbid-sanitize="%s"') % forbid_sanitize if forbid_sanitize else '',
             Markup('data-o-snippet-group="%s"') % snippet_group if snippet_group else '',
             Markup('data-o-group="%s"') % group if group else '',
+            Markup('data-o-label="%s"') % label if label else '',
         )
         self._append_text(div, compile_context)
         code = self._compile_node(el, compile_context, indent)
@@ -121,18 +123,20 @@ class IrQweb(models.AbstractModel):
         thumbnail = el.attrib.pop('t-thumbnail', 'oe-thumbnail')
         image_preview = el.attrib.pop('t-image-preview', None)
         group = el.attrib.pop('group', None)
+        label = el.attrib.pop('label', None)
         if self.env.user.has_group('base.group_system'):
             module = self.env['ir.module.module'].search([('name', '=', key)])
             if not module or module.state == 'installed':
                 return []
             name = el.attrib.get('string') or 'Snippet'
-            div = Markup('<div name="%s" data-oe-type="snippet" data-module-id="%s" data-module-display-name="%s" data-o-image-preview="%s" data-oe-thumbnail="%s" %s><section/></div>') % (
+            div = Markup('<div name="%s" data-oe-type="snippet" data-module-id="%s" data-module-display-name="%s" data-o-image-preview="%s" data-oe-thumbnail="%s" %s %s><section/></div>') % (
                 name,
                 module.id,
                 module.display_name,
                 escape_silent(image_preview),
                 thumbnail,
                 Markup('data-o-group="%s"') % group if group else '',
+                Markup('data-o-label="%s"') % label if label else '',
             )
             self._append_text(div, compile_context)
         return []
