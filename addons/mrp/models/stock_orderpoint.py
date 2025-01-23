@@ -167,3 +167,12 @@ class StockWarehouseOrderpoint(models.Model):
             ('state', '=', 'draft'),
         ]).action_confirm()
         return super()._post_process_scheduler()
+
+    def _check_if_linked_procurement_exist(self, orderpoint, origin):
+        super_res = super()._check_if_linked_procurement_exist(orderpoint, origin)
+        mos_with_same_origin = self.env['mrp.production'].search([
+            ('product_id', '=', orderpoint.product_id.id),
+            ('state', '=', 'confirmed'),
+            ('origin', 'like', origin)
+        ])
+        return super_res or len(mos_with_same_origin) > 0
