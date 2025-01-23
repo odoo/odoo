@@ -24,12 +24,41 @@
             data-selector="main:has(.o_wsale_products_page)"
             data-no-check="true"
             string="Products Page"
-            data-target="#products_grid"
+            data-target="#o_wsale_container"
         >
-            <we-select class="o_wsale_editor_section" string="Layout">
-                <we-button data-select-class="o_wsale_layout_catalog" data-customize-website-views="" data-name="grid_view_opt">Grid</we-button>
-                <we-button data-select-class="o_wsale_layout_list" data-customize-website-views="website_sale.products_list_view">List</we-button>
-            </we-select>
+            <we-button-group
+                string="Content Width"
+                class="o_wsale_editor_section">
+                <we-button
+                    data-select-class="container"
+                    data-img="/website/static/src/img/snippets_options/content_width_normal.svg"
+                    title="Regular"
+                    />
+                <we-button
+                    data-select-class="container-fluid o_wsale_page_fluid"
+                    data-customize-website-views="website_sale.shop_fullwidth"
+                    data-img="/website/static/src/img/snippets_options/content_width_full.svg"
+                    title="Full"
+                    />
+            </we-button-group>
+
+            <we-button-group class="o_wsale_editor_section" string="Layout">
+                <we-button
+                    title="Catalog of products"
+                    data-select-class="o_wsale_layout_catalog"
+                    data-customize-website-views=""
+                    data-name="grid_view_opt"
+                    >
+                    <i class="oi oi-apps"/>
+                </we-button>
+                <we-button
+                    title="List of products"
+                    data-select-class="o_wsale_layout_list"
+                    data-customize-website-views="website_sale.products_list_view"
+                    >
+                    <i class="oi oi-view-list"/>
+                </we-button>
+            </we-button-group>
 
             <we-row string="Size" class="o_we_sublevel_1">
                 <we-input data-set-ppg="" data-step="1" data-no-preview="true" data-reload="/"/>
@@ -38,12 +67,12 @@
                     <we-button data-set-ppr="2">2</we-button>
                     <we-button data-set-ppr="3">3</we-button>
                     <we-button data-set-ppr="4">4</we-button>
+                    <we-button data-set-ppr="5">5</we-button>
                 </we-select>
             </we-row>
 
             <we-range
                 string="Gap" class="o_we_sublevel_1"
-                data-apply-to=".o_wsale_products_grid_table_wrapper > .o_wsale_products_grid_table"
                 data-select-style="0"
                 data-set-gap=""
                 data-css-property="--o-wsale-products-grid-gap"
@@ -53,8 +82,7 @@
                 data-min="0"
                 data-max="28"
             />
-            <we-select string="Products"
-                data-apply-to=".o_wsale_products_grid_table_wrapper > .o_wsale_products_grid_table"
+            <we-select string="Style"
                 class="o_wsale_editor_section"
                 >
                 <we-button data-select-class=""
@@ -77,7 +105,6 @@
             <we-collapse>
             <we-select string="Images Size"
                 class="o_we_sublevel_1"
-                data-apply-to=".o_wsale_products_grid_table_wrapper > .o_wsale_products_grid_table"
                 >
                 <we-button data-select-class="o_wsale_context_thumb_4_3"
                            data-customize-website-views="website_sale.products_thumb_4_3">
@@ -99,7 +126,6 @@
             <we-button-group string="Images Fill"
                 class="o_we_sublevel_2"
                 data-variable="thumb_size"
-                data-apply-to=".o_wsale_products_grid_table_wrapper > .o_wsale_products_grid_table"
                 >
                 <we-button data-select-class=""
                            title="Contain within the box"
