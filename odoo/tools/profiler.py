@@ -5,6 +5,7 @@ from datetime import datetime
 import gc
 import json
 import logging
+import os
 import sys
 import time
 import threading
@@ -483,7 +484,9 @@ class Profiler:
 
         if db is ...:
             # determine database from current thread
-            db = getattr(threading.current_thread(), 'dbname', None)
+            db = os.environ.get('ODOO_PROFILER_DATABASE')
+            if not db:
+                db = getattr(threading.current_thread(), 'dbname', None)
             if not db:
                 # only raise if path is not given and db is not explicitely disabled
                 raise Exception('Database name cannot be defined automaticaly. \n Please provide a valid/falsy dbname or path parameter')
@@ -548,7 +551,7 @@ class Profiler:
                     )
                     cr.execute(query, [tuple(values.values())])
                     self.profile_id = cr.fetchone()[0]
-                    _logger.info('ir_profile %s (%s) created', self.profile_id, self.profile_session)
+                    _logger.info('ir_profile %s (%s) created in database %s', self.profile_id, self.profile_session, self.db)
         finally:
             if self.disable_gc:
                 gc.enable()
