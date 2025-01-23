@@ -299,7 +299,12 @@ export class PosOrder extends Base {
                         product_id: line.getProduct().id,
                         name: line.getFullProductName(),
                         basic_name: line.getProduct().name,
+<<<<<<< master
                         display_name: line.getProduct().display_name,
+||||||| d226989350c5a2a66f698783443f17fc9325ed4e
+=======
+                        display_name: line.getProduct().name,
+>>>>>>> 1f8c06a0ec62dc5e611ac16c8bd70b27fccc3026
                         note: line.getNote(),
                         quantity: line.getQuantity(),
                     };
