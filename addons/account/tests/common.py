@@ -619,6 +619,8 @@ class AccountTestInvoicingCommon(ProductCommon):
             'total_amount': company_currency,
             'cash_rounding_base_amount_currency': currency,
             'cash_rounding_base_amount': company_currency,
+            'non_deductible_tax_amount_currency': currency,
+            'non_deductible_tax_amount': company_currency,
         }
 
         current_values = {k: len(v) if k == 'subtotals' else v for k, v in tax_totals.items() if k not in excluded_fields}
