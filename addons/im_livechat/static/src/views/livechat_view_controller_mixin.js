@@ -21,7 +21,7 @@ export const LivechatViewControllerMixin = (ViewController) =>
                 id: record.resId,
             });
             if (thread) {
-                return thread.open();
+                return thread.open({ focus: true });
             }
             return super.openRecord(record);
         }

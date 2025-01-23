@@ -9,7 +9,7 @@ messageActionsRegistry.add("create-or-view-thread", {
     icon: "fa fa-comments-o",
     onClick: (component) => {
         if (component.message.linkedSubChannel) {
-            component.message.linkedSubChannel.open();
+            component.message.linkedSubChannel.open({ focus: true });
         } else {
             component.message.thread.createSubChannel({ initialMessage: component.message });
         }

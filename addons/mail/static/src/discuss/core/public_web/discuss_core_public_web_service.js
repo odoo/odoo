@@ -51,7 +51,7 @@ export class DiscussCorePublicWeb {
                         model: "discuss.channel",
                         id: data.id,
                     });
-                    channel?.open();
+                    channel?.open({ focus: true });
                     if (!data.joinCall || !channel || this.rtcService.state.channel?.eq(channel)) {
                         return;
                     }

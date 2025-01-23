@@ -108,7 +108,7 @@ export class LivechatService {
      */
     async open() {
         await this._createThread({ persist: false });
-        this.thread?.openChatWindow();
+        this.thread?.openChatWindow({ focus: true });
     }
 
     /**

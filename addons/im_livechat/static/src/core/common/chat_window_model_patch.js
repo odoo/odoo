@@ -28,7 +28,7 @@ const chatWindowPatch = {
                 if (!this.thread.livechat_active) {
                     if (isSelfVisitor) {
                         this.livechatStep = CW_LIVECHAT_STEP.FEEDBACK;
-                        this.open({ notifyState: this.thread?.state !== "open" });
+                        this.open({ focus: true, notifyState: this.thread?.state !== "open" });
                     } else {
                         super.close(...args);
                     }
@@ -37,14 +37,14 @@ const chatWindowPatch = {
                 this.actionsDisabled = true;
                 this.livechatStep = CW_LIVECHAT_STEP.CONFIRM_CLOSE;
                 if (!this.hubAsOpened) {
-                    this.open();
+                    this.open({ focus: true });
                 }
                 break;
             }
             case CW_LIVECHAT_STEP.CONFIRM_CLOSE: {
                 this.actionsDisabled = false;
                 if (this.thread.livechatVisitorMember?.persona?.eq(this.store.self)) {
-                    this.open({ notifyState: this.thread?.state !== "open" });
+                    this.open({ focus: true, notifyState: this.thread?.state !== "open" });
                     this.livechatStep = CW_LIVECHAT_STEP.FEEDBACK;
                 } else {
                     this.livechatStep = CW_LIVECHAT_STEP.NONE;
