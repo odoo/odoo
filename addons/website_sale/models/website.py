@@ -264,7 +264,9 @@ class Website(models.Model):
         partner_sudo = website.env.user.partner_id
         is_user_public = self.env.user._is_public()
         if not is_user_public:
-            partner_pricelist_id = partner_sudo.property_product_pricelist.id
+            # Don't needlessly trigger `depends_context` recompute
+            ctx = {'country_code': country_code} if country_code else {}
+            partner_pricelist_id = partner_sudo.with_context(**ctx).property_product_pricelist.id
         else:  # public user: do not compute partner pl (not used)
             partner_pricelist_id = False
         website_pricelists = website.sudo().pricelist_ids
