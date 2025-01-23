@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, _
+from odoo.tools import SQL
 
 
 class HrEmployee(models.Model):
@@ -10,16 +11,18 @@ class HrEmployee(models.Model):
     has_work_entries = fields.Boolean(compute='_compute_has_work_entries', groups="base.group_system,hr.group_hr_user")
 
     def _compute_has_work_entries(self):
-        self.env.cr.execute("""
-        SELECT id, EXISTS(SELECT 1 FROM hr_work_entry WHERE employee_id = e.id limit 1)
-          FROM hr_employee e
-         WHERE id in %s
-        """, (tuple(self.ids), ))
-
-        result = {eid[0]: eid[1] for eid in self.env.cr.fetchall()}
+        if self.ids:
+            result = dict(self.env.execute_query(SQL(
+                """ SELECT id, EXISTS(SELECT 1 FROM hr_work_entry WHERE employee_id = e.id LIMIT 1)
+                      FROM hr_employee e
+                     WHERE id in %s """,
+                tuple(self.ids),
+            )))
+        else:
+            result = {}
 
         for employee in self:
-            employee.has_work_entries = result.get(employee.id, False)
+            employee.has_work_entries = result.get(employee._origin.id, False)
 
     def action_open_work_entries(self, initial_date=False):
         self.ensure_one()

@@ -34,7 +34,9 @@ class ProductTemplate(models.Model):
 
     def _compute_bom_count(self):
         for product in self:
-            product.bom_count = self.env['mrp.bom'].search_count(['|', ('product_tmpl_id', '=', product.id), ('byproduct_ids.product_id.product_tmpl_id', '=', product.id)])
+            product.bom_count = self.env['mrp.bom'].search_count(
+                ['|', ('product_tmpl_id', 'in', product.ids), ('byproduct_ids.product_id.product_tmpl_id', 'in', product.ids)]
+            )
 
     @api.depends_context('company')
     def _compute_is_kits(self):
@@ -64,7 +66,7 @@ class ProductTemplate(models.Model):
     def _compute_used_in_bom_count(self):
         for template in self:
             template.used_in_bom_count = self.env['mrp.bom'].search_count(
-                [('bom_line_ids.product_tmpl_id', '=', template.id)])
+                [('bom_line_ids.product_tmpl_id', 'in', template.ids)])
 
     def write(self, values):
         if 'active' in values:
@@ -138,7 +140,10 @@ class ProductProduct(models.Model):
 
     def _compute_bom_count(self):
         for product in self:
-            product.bom_count = self.env['mrp.bom'].search_count(['|', '|', ('byproduct_ids.product_id', '=', product.id), ('product_id', '=', product.id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product.product_tmpl_id.id)])
+            product.bom_count = self.env['mrp.bom'].search_count([
+                '|', '|', ('byproduct_ids.product_id', 'in', product.ids), ('product_id', 'in', product.ids),
+                '&', ('product_id', '=', False), ('product_tmpl_id', 'in', product.product_tmpl_id.ids),
+            ])
 
     @api.depends_context('company')
     def _compute_is_kits(self):
@@ -185,7 +190,8 @@ class ProductProduct(models.Model):
 
     def _compute_used_in_bom_count(self):
         for product in self:
-            product.used_in_bom_count = self.env['mrp.bom'].search_count([('bom_line_ids.product_id', '=', product.id)])
+            product.used_in_bom_count = self.env['mrp.bom'].search_count(
+                [('bom_line_ids.product_id', 'in', product.ids)])
 
     @api.depends_context('order_id')
     def _compute_product_is_in_bom_and_mo(self):

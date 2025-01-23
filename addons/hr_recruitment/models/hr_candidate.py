@@ -83,6 +83,9 @@ class HrCandidate(models.Model):
 
     _email_partner_phone_mobile = models.Index("(email_normalized, partner_phone_sanitized)")
 
+    def _phone_get_number_fields(self):
+        return super()._phone_get_number_fields() + ['partner_phone']
+
     @api.depends('partner_name')
     def _compute_display_name(self):
         for candidate in self:

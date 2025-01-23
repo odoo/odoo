@@ -261,8 +261,8 @@ class PosSession(models.Model):
     @api.depends('picking_ids', 'picking_ids.state')
     def _compute_picking_count(self):
         for session in self:
-            session.picking_count = self.env['stock.picking'].search_count([('pos_session_id', '=', session.id)])
-            session.failed_pickings = bool(self.env['stock.picking'].search([('pos_session_id', '=', session.id), ('state', '!=', 'done')], limit=1))
+            session.picking_count = self.env['stock.picking'].search_count([('pos_session_id', 'in', session.ids)])
+            session.failed_pickings = bool(self.env['stock.picking'].search([('pos_session_id', 'in', session.ids), ('state', '!=', 'done')], limit=1))
 
     def action_stock_picking(self):
         self.ensure_one()

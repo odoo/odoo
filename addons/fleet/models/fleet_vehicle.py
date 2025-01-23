@@ -155,7 +155,7 @@ class FleetVehicle(models.Model):
     def _get_odometer(self):
         FleetVehicalOdometer = self.env['fleet.vehicle.odometer']
         for record in self:
-            vehicle_odometer = FleetVehicalOdometer.search([('vehicle_id', '=', record.id)], limit=1, order='value desc')
+            vehicle_odometer = FleetVehicalOdometer.search([('vehicle_id', 'in', record.ids)], limit=1, order='value desc')
             if vehicle_odometer:
                 record.odometer = vehicle_odometer.value
             else:

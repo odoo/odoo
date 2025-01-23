@@ -61,7 +61,10 @@ class RatingRating(models.Model):
     @api.depends('res_model', 'res_id')
     def _compute_res_name(self):
         for rating in self:
-            name = self.env[rating.res_model].sudo().browse(rating.res_id).display_name
+            if rating.res_model and rating.res_id:
+                name = self.env[rating.res_model].sudo().browse(rating.res_id).display_name
+            else:
+                name = False
             rating.res_name = name or f'{rating.res_model}/{rating.res_id}'
 
     @api.depends('res_model', 'res_id')
