@@ -1264,6 +1264,7 @@ class AccountTax(models.Model):
             # - False for the normal behavior.
             # - early_payment if the base line represent an early payment in mixed mode.
             # - cash_rounding if the base line is a delta to round the business object for the cash rounding feature.
+            # - non_deductible if the base line is used to compute non deductible amounts in bills.
             'special_type': kwargs.get('special_type', False),
 
             # All computation are managing the foreign currency and the local one.
@@ -2107,6 +2108,10 @@ class AccountTax(models.Model):
                     display_base_amount:                    The base amount to display expressed in local currency.
                                                             The flat base amount and the amount to be displayed are sometimes different
                                                             (e.g. division/fixed taxes).
+                    non_deductible_tax_amount_currency:     The tax delta added by 'non_deductible' expressed in foreign currency.
+                                                            If there is no amount added, the key is not in the result.
+                    non_deductible_tax_amount:              The tax delta added by 'non_deductible' expressed in local currency.
+                                                            If there is no amount added, the key is not in the result.
         """
         tax_totals_summary = {
             'currency_id': currency.id,
@@ -2277,6 +2282,33 @@ class AccountTax(models.Model):
             subtotal['base_amount'] -= cash_rounding_base_amount
         encountered_base_amounts.add(float_repr(tax_totals_summary['base_amount_currency'], currency.decimal_places))
         tax_totals_summary['same_tax_base'] = len(encountered_base_amounts) == 1
+
+        # Non deductible lines (this part is not implemented in the JS-part of the tax total summary computation)
+        taxed_non_deductible_lines = [
+            base_line
+            for base_line in base_lines
+            if base_line['special_type'] == 'non_deductible'
+            and base_line['tax_ids']
+        ]
+        if taxed_non_deductible_lines:
+            base_lines_aggregated_values = self._aggregate_base_lines_tax_details(taxed_non_deductible_lines, tax_group_grouping_function)
+            values_per_grouping_key = self._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
+            for subtotal in tax_totals_summary['subtotals']:
+                for tax_group in subtotal['tax_groups']:
+                    tax_values = values_per_grouping_key[self.env['account.tax.group'].browse(tax_group['id'])]
+                    tax_group['non_deductible_tax_amount'] = tax_values['tax_amount']
+                    tax_group['non_deductible_tax_amount_currency'] = tax_values['tax_amount_currency']
+
+                    tax_group['tax_amount'] -= tax_values['tax_amount']
+                    tax_group['tax_amount_currency'] -= tax_values['tax_amount_currency']
+                    tax_group['base_amount'] -= tax_values['base_amount']
+                    tax_group['base_amount_currency'] -= tax_values['base_amount_currency']
+
+                    subtotal['tax_amount'] -= tax_values['tax_amount']
+                    subtotal['tax_amount_currency'] -= tax_values['tax_amount_currency']
+
+                    tax_totals_summary['tax_amount'] -= tax_values['tax_amount']
+                    tax_totals_summary['tax_amount_currency'] -= tax_values['tax_amount_currency']
 
         # Total amount.
         tax_totals_summary['total_amount_currency'] = \

@@ -120,6 +120,15 @@ class AccountJournal(models.Model):
              "allowing finding the right account.", string='Suspense Account',
         domain="[('deprecated', '=', False), ('account_type', '=', 'asset_current')]",
     )
+    non_deductible_account_id = fields.Many2one(
+        comodel_name='account.account',
+        check_company=True,
+        string='Private Part Account',
+        readonly=False,
+        store=True,
+        domain="[('deprecated', '=', False)]",
+        help="Account used to register the private part of mixed expenses.",
+    )
     restrict_mode_hash_table = fields.Boolean(string="Secure Posted Entries with Hash",
         help="If ticked, when an entry is posted, we retroactively hash all moves in the sequence from the entry back to the last hashed entry. The hash can also be performed on demand by the Secure Entries wizard.")
     sequence = fields.Integer(help='Used to order Journals in the dashboard view', default=10)

@@ -93,6 +93,10 @@
                                                required="type in ('bank', 'cash', 'credit')"
                                                options="{'no_quick_create': True}"
                                                groups="account.group_account_readonly"/>
+                                        <field name="non_deductible_account_id"
+                                               invisible="type != 'purchase'"
+                                               options="{'no_quick_create': True}"
+                                               groups="account.group_account_readonly"/>
                                         <field name="profit_account_id" invisible="type not in ('cash', 'bank')" groups="account.group_account_readonly"/>
                                         <field name="loss_account_id" invisible="type not in ('cash', 'bank')" groups="account.group_account_readonly"/>
                                         <field name="refund_sequence" invisible="type not in ['sale', 'purchase']"/>

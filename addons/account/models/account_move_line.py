@@ -306,7 +306,10 @@ class AccountMoveLine(models.Model):
             ('payment_term', 'Payment Term'),
             ('line_section', 'Section'),
             ('line_note', 'Note'),
-            ('epd', 'Early Payment Discount')
+            ('epd', 'Early Payment Discount'),
+            ('non_deductible_product_total', 'Non Deductible Products Total'),
+            ('non_deductible_product', 'Non Deductible Products'),
+            ('non_deductible_tax', 'Non Deductible Tax'),
         ],
         compute='_compute_display_type', store=True, readonly=False, precompute=True,
         required=True,
@@ -363,6 +366,8 @@ class AccountMoveLine(models.Model):
     tax_calculation_rounding_method = fields.Selection(
         related='company_id.tax_calculation_rounding_method',
         string='Tax calculation rounding method', readonly=True)
+    deductible_amount = fields.Float("Deductibility", default=100)
+
     # === Invoice sync fields === #
     term_key = fields.Binary(compute='_compute_term_key', exportable=False)
     epd_key = fields.Binary(compute='_compute_epd_key', exportable=False)
@@ -812,7 +817,7 @@ class AccountMoveLine(models.Model):
         AccountTax = self.env['account.tax']
         for line in self:
             # TODO remove the need of cogs lines to have a price_subtotal/price_total
-            if line.display_type not in ('product', 'cogs'):
+            if line.display_type not in ('product', 'cogs', 'non_deductible_product', 'non_deductible_product_total'):
                 line.price_total = line.price_subtotal = False
                 continue
 
@@ -1298,6 +1303,14 @@ class AccountMoveLine(models.Model):
                     raise Exception("Matching number should be the full reconcile")
             elif line.matched_debit_ids or line.matched_credit_ids:
                 raise Exception("Should have number")
+
+    @api.constrains('deductible_amount')
+    def _constrains_deductible_amount(self):
+        for line in self:
+            if not line.move_id.is_purchase_document() and float_compare(line.deductible_amount, 100, precision_digits=2):
+                raise ValidationError(_("Only vendor bills allow for deductibility of product/services."))
+            if line.deductible_amount < 0 or line.deductible_amount > 100:
+                raise ValidationError(_("The deductibility must be a value between 0 and 100."))
 
     # -------------------------------------------------------------------------
     # CRUD/ORM
