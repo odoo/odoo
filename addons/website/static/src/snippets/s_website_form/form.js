@@ -44,7 +44,8 @@ export class Form extends Interaction {
             "t-on-input": this.onFieldInput,
             "t-att-class": (el) => ({ "d-none": !this.isFieldVisible(el) }),
         },
-        ".s_website_form_field .s_website_form_input": {
+        // Do not disable inputs that are required for the model.
+        ".s_website_form_field:not(.s_website_form_model_required) .s_website_form_input": {
             "t-att-disabled": (el) => !this.isInputVisible(el) || undefined,
         },
         ".s_website_form_datetime, .o_website_form_datetime, .s_website_form_date, .o_website_form_date": {
