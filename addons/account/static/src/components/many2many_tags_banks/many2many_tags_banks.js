@@ -16,6 +16,13 @@ export class FieldMany2ManyTagsBanks extends Many2ManyTagsFieldColorEditable {
         TagsList: FieldMany2ManyTagsBanksTagsList,
     };
 
+    setup() {
+        super.setup();
+        // Needed when you create a partner (from a move for example), we want the partner to be saved to be able
+        // to have it as account holder
+        this.props.record.model.root.save();
+    }
+
     getTagProps(record) {
         return {
             ...super.getTagProps(record),
