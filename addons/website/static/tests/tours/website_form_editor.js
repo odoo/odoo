@@ -576,6 +576,47 @@ odoo.define('website.tour.form_editor', function (require) {
             trigger: `iframe .s_website_form:has(${triggerFieldByLabel("field A")}:visible)`,
             run: () => null, // it's a check
         },
+
+        ...wTourUtils.clickOnEditAndWaitEditMode(),
+        ...addCustomField("char", "text", "field D", false),
+        {
+            content: "Select the 'Subject' field",
+            trigger: 'iframe .s_website_form_field.s_website_form_model_required:has(label:contains("Subject"))',
+        },
+        ...selectButtonByText(CONDITIONALVISIBILITY),
+        ...selectButtonByData('data-set-visibility-dependency="field D"'),
+        ...selectButtonByData('data-select-data-attribute="set"'),
+        {
+            content: "Set a default value to the 'Subject' field",
+            trigger: 'we-input[data-attribute-name="value"] input',
+            run: 'text Default Subject',
+        },
+        {
+            content: "Select the 'Your Message' field",
+            trigger: 'iframe .s_website_form_field.s_website_form_required:has(label:contains("Your Message"))',
+        },
+        ...selectButtonByText(CONDITIONALVISIBILITY),
+        ...selectButtonByData('data-set-visibility-dependency="field D"'),
+        ...selectButtonByData('data-select-data-attribute="set"'),
+
+        ...wTourUtils.clickOnSave(),
+        // Ensure that a field required for a model is not disabled when
+        // conditionally hidden.
+        {
+            content: "Check that the 'Subject' field is not disabled",
+            trigger: `iframe .s_website_form:has(.s_website_form_model_required ` +
+                `.s_website_form_input[value="Default Subject"]:not([disabled]):not(:visible))`,
+            run: () => null, // it's a check
+        },
+        // Ensure that a required field (but not for a model) is disabled when
+        // conditionally hidden.
+        {
+            content: "Check that the 'Your Message' field is disabled",
+            trigger: `iframe .s_website_form:has(.s_website_form_required ` +
+                `.s_website_form_input[name="body_html"][required][disabled]:not(:visible))`,
+            run: () => null, // it's a check
+        },
+
         ...wTourUtils.clickOnEditAndWaitEditMode(),
         {
             content: 'Click on the submit button',
