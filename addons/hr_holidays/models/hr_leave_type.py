@@ -509,7 +509,7 @@ class HrLeaveType(models.Model):
         allocations_leaves_consumed, extra_data = employees.with_context(
             ignored_leave_ids=self.env.context.get('ignored_leave_ids')
         )._get_consumed_leaves(self, target_date)
-        leave_type_requires_allocation = self.filtered(lambda lt: lt.requires_allocation == 'yes')
+        leave_type_requires_allocation = self.filtered(lambda lt: lt.requires_allocation != 'no')
 
         for employee in employees:
             for leave_type in leave_type_requires_allocation:
