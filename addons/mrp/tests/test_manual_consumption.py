@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 # -*- coding: utf-8 -*-
 
+from odoo import Command
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.tests import tagged, Form, HttpCase
 
@@ -56,8 +57,9 @@ class TestManualConsumption(TestMrpCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.stock_location = cls.env.ref('stock.stock_location_stock')
-        cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('stock.group_production_lot').id)]})
+        cls.env.ref('base.group_user').write({
+            'implied_ids': [Command.link(cls.env.ref('stock.group_production_lot').id)],
+        })
 
     def test_manual_consumption_with_different_component_price(self):
         """
@@ -231,7 +233,7 @@ class TestManualConsumption(TestMrpCommon):
         bom.bom_line_ids[-1].product_qty = 0.0
         self.env['stock.quant']._update_available_quantity(components[0], self.warehouse_1.lot_stock_id, 10.0)
         mo_form = Form(self.env['mrp.production'])
-        mo_form.picking_type_id = self.warehouse_1.manu_type_id
+        mo_form.picking_type_id = self.picking_type_manu
         mo_form.bom_id = bom
         mo_form.product_qty = 4
         mo = mo_form.save()

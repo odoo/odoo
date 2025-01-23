@@ -18,7 +18,7 @@ class TestOee(TestMrpCommon):
             'description': loss_reason.name
         })
 
-    def test_wrokcenter_oee(self):
+    def test_workcenter_oee(self):
         """  Test case workcenter oee. """
         day = datetime.date(datetime.today())
         self.workcenter_1.resource_calendar_id.leave_ids.unlink()

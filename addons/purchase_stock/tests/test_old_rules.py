@@ -10,10 +10,9 @@ from odoo.addons.purchase_stock.tests.common import PurchaseTestCommon
 class TestPurchaseOldRules(PurchaseTestCommon):
 
     def create_picking_out(self, warehouse):
-        customer_location = self.env.ref('stock.stock_location_customers')
         picking_out = self.env['stock.picking'].create({
             'location_id': warehouse.out_type_id.default_location_src_id.id,
-            'location_dest_id': customer_location.id,
+            'location_dest_id': self.customer_location.id,
             'partner_id': self.customer.id,
             'group_id': self.group.id,
             'picking_type_id': warehouse.out_type_id.id,
@@ -26,7 +25,7 @@ class TestPurchaseOldRules(PurchaseTestCommon):
             'picking_id': picking_out.id,
             'group_id': self.group.id,
             'location_id': warehouse.out_type_id.default_location_src_id.id,
-            'location_dest_id': customer_location.id,
+            'location_dest_id': self.customer_location.id,
             'procure_method': 'make_to_order',
         })
         return picking_out
@@ -39,7 +38,7 @@ class TestPurchaseOldRules(PurchaseTestCommon):
         cls.product = cls.env['product.product'].create({
             'name': 'Geyser',
             'is_storable': True,
-            'route_ids': [Command.link(cls.route_mto), Command.link(cls.route_buy)],
+            'route_ids': [Command.set([cls.route_mto.id, cls.route_buy.id])],
             'seller_ids': [Command.create({
                 'partner_id': cls.customer.id,
                 'price': 100.0,
@@ -48,8 +47,6 @@ class TestPurchaseOldRules(PurchaseTestCommon):
 
         # Since the old rules are still a valid setup for multi-step routes, we need to make sure they still work.
         # Create a warehouse with 3 steps using old rules setup so we need to restore it only once.
-        mto_route = cls.env['stock.route'].browse(cls.route_mto)
-        buy_route = cls.env['stock.route'].browse(cls.route_buy)
         cls.warehouse_3_steps = cls.env['stock.warehouse'].create({
             'name': 'Warehouse 3 steps',
             'code': '3S',
@@ -57,20 +54,18 @@ class TestPurchaseOldRules(PurchaseTestCommon):
             'delivery_steps': 'pick_pack_ship',
         })
         delivery_route_3 = cls.warehouse_3_steps.delivery_route_id
-        delivery_route_3.rule_ids[0].write({
-            'location_dest_id': delivery_route_3.rule_ids[1].location_src_id.id,
-        })
-        delivery_route_3.rule_ids[1].write({'action': 'pull'})
-        delivery_route_3.rule_ids[2].write({'action': 'pull'})
-        mto_route.rule_ids.filtered(lambda r: r.picking_type_id == cls.warehouse_3_steps.pick_type_id).write({
-            'location_dest_id': delivery_route_3.rule_ids[1].location_src_id.id,
-        })
+        delivery_route_3.rule_ids[0].location_dest_id = delivery_route_3.rule_ids[1].location_src_id.id
+        delivery_route_3.rule_ids[1].action = 'pull'
+        delivery_route_3.rule_ids[2].action = 'pull'
+        cls.route_mto.rule_ids.filtered(
+            lambda r: r.picking_type_id == cls.warehouse_3_steps.pick_type_id
+        ).location_dest_id = delivery_route_3.rule_ids[1].location_src_id.id
         reception_route_3 = cls.warehouse_3_steps.reception_route_id
-        reception_route_3.rule_ids[0].write({'action': 'pull_push'})
-        reception_route_3.rule_ids[1].write({'action': 'pull_push'})
-        buy_route.rule_ids.filtered(lambda r: r.picking_type_id == cls.warehouse_3_steps.in_type_id).write({
-            'location_dest_id': reception_route_3.rule_ids[0].location_src_id.id,
-        })
+        reception_route_3.rule_ids[0].action = 'pull_push'
+        reception_route_3.rule_ids[1].action = 'pull_push'
+        cls.route_buy.rule_ids.filtered(
+            lambda r: r.picking_type_id == cls.warehouse_3_steps.in_type_id
+        ).location_dest_id = reception_route_3.rule_ids[0].location_src_id.id
 
         # Create a warehouse with 2 steps using old rules setup.
         cls.warehouse_2_steps = cls.env['stock.warehouse'].create({
@@ -80,18 +75,16 @@ class TestPurchaseOldRules(PurchaseTestCommon):
             'delivery_steps': 'pick_ship',
         })
         delivery_route_2 = cls.warehouse_2_steps.delivery_route_id
-        delivery_route_2.rule_ids[0].write({
-            'location_dest_id': delivery_route_2.rule_ids[1].location_src_id.id,
-        })
-        delivery_route_2.rule_ids[1].write({'action': 'pull'})
-        mto_route.rule_ids.filtered(lambda r: r.picking_type_id == cls.warehouse_2_steps.pick_type_id).write({
-            'location_dest_id': delivery_route_2.rule_ids[1].location_src_id.id,
-        })
+        delivery_route_2.rule_ids[0].location_dest_id = delivery_route_2.rule_ids[1].location_src_id.id
+        delivery_route_2.rule_ids[1].action = 'pull'
+        cls.route_mto.rule_ids.filtered(
+            lambda r: r.picking_type_id == cls.warehouse_2_steps.pick_type_id
+        ).location_dest_id = delivery_route_2.rule_ids[1].location_src_id.id
         reception_route_2 = cls.warehouse_2_steps.reception_route_id
-        reception_route_2.rule_ids[0].write({'action': 'pull_push'})
-        buy_route.rule_ids.filtered(lambda r: r.picking_type_id == cls.warehouse_2_steps.in_type_id).write({
-            'location_dest_id': reception_route_2.rule_ids[0].location_src_id.id,
-        })
+        reception_route_2.rule_ids[0].action = 'pull_push'
+        cls.route_buy.rule_ids.filtered(
+            lambda r: r.picking_type_id == cls.warehouse_2_steps.in_type_id
+        ).location_dest_id = reception_route_2.rule_ids[0].location_src_id.id
 
     def test_03_cancel_draft_purchase_order_two_steps_pull(self):
         """ Check the picking and moves status related PO, When canceling purchase order
@@ -238,12 +231,12 @@ class TestPurchaseOldRules(PurchaseTestCommon):
             and warehouse route's delay."""
 
         company = self.env.ref('base.main_company')
-        company.write({'po_lead': 1.00})
+        company.po_lead = 1.00
 
         warehouse = self.warehouse_3_steps
         # Set delay on push rule
         for push_rule in warehouse.reception_route_id.rule_ids:
-            push_rule.write({'delay': 2})
+            push_rule.delay = 2
 
         rule_delay = sum(warehouse.reception_route_id.rule_ids.mapped('delay'))
         date_planned = fields.Datetime.now() + timedelta(days=10)
