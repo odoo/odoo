@@ -331,5 +331,9 @@ export class ProductTemplate extends Base {
     get productDescriptionMarkup() {
         return this.public_description ? markup(this.public_description) : "";
     }
+
+    get canBeDisplayed() {
+        return this.active && this.available_in_pos;
+    }
 }
 registry.category("pos_available_models").add(ProductTemplate.pythonModel, ProductTemplate);
