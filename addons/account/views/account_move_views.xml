@@ -1169,6 +1169,10 @@
                                                context="{'append_type_to_tax_name': not parent.invoice_filter_type_domain, 'active_test': True}"
                                                options="{'no_create': True}"
                                                optional="show"/>
+                                        <field name="deductible_amount"
+                                               column_invisible="parent.move_type not in ['in_invoice', 'in_refund']"
+                                               string="Professional %"
+                                               optional="hide"/>
                                         <field name="price_subtotal"
                                                column_invisible="parent.move_type not in ['in_invoice', 'in_refund', 'in_receipt'] and parent.company_price_include == 'tax_included'"
                                                string="Amount"/>
