@@ -4,6 +4,9 @@ import ast
 import logging
 import os
 
+from odoo._monkeypatches import register
+
+
 _logger = logging.getLogger(__name__)
 orig_literal_eval = ast.literal_eval
 
@@ -30,3 +33,4 @@ def literal_eval(expr):
 
 def patch_literal_eval():
     ast.literal_eval = literal_eval
+    register({'ast': ast})

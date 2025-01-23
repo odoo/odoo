@@ -5,10 +5,19 @@ import time
 from .evented import patch_evented
 
 
+modules = {}
+
+
 def set_timezone_utc():
     os.environ['TZ'] = 'UTC'  # Set the timezone
     if hasattr(time, 'tzset'):
         time.tzset()
+
+
+def register(patched_modules):
+    modules.update(patched_modules)
+    for patched_module in patched_modules.values():
+        patched_module._patched = True
 
 
 def patch_all():
@@ -27,9 +36,15 @@ def patch_all():
     patch_num2words()
     from .stdnum import patch_stdnum
     patch_stdnum()
-    from .werkzeug_urls import patch_werkzeug
-    patch_werkzeug()
     from .zeep import patch_zeep
     patch_zeep()
     from .win32 import patch_win32
     patch_win32()
+    from .csv import patch_csv
+    patch_csv()
+    from .re import patch_re
+    patch_re()
+    from .xlsxwriter import patch_xlsxwriter
+    patch_xlsxwriter()
+    from .xlwt import patch_xlwt
+    patch_xlwt()

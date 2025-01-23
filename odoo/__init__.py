@@ -44,6 +44,7 @@ def registry(database_name=None):
 # ----------------------------------------------------------
 # Import tools to patch code and libraries
 # required to do as early as possible for evented and timezone
+# werkzeug.urls monkeypatching is postponed
 # ----------------------------------------------------------
 from . import _monkeypatches
 _monkeypatches.patch_all()
@@ -59,9 +60,10 @@ from . import modules
 from . import netsvc
 from . import osv
 from . import release
+# both service and sql_db use werkzeug.urls, which is monkeypatched by tools
+from . import tools
 from . import service
 from . import sql_db
-from . import tools
 
 # ----------------------------------------------------------
 # Model classes, fields, api decorators, and translations

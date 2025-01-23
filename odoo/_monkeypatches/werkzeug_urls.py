@@ -17,6 +17,9 @@ from werkzeug.routing import Rule
 from werkzeug.urls import _decode_idna
 from werkzeug.wrappers import Request, Response
 
+from odoo._monkeypatches import register
+
+
 Rule_get_func_code = hasattr(Rule, '_get_func_code') and Rule._get_func_code
 
 
@@ -1040,7 +1043,7 @@ def url_join(
     return url_unparse((scheme, netloc, path, query, fragment))
 
 
-def patch_werkzeug():
+def patch_werkzeug_urls():
     from ..tools.json import scriptsafe  # noqa: PLC0415
     Request.json_module = Response.json_module = scriptsafe
 
@@ -1068,3 +1071,5 @@ def patch_werkzeug():
     urls.url_unquote_plus = url_unquote_plus
     urls.url_unparse = url_unparse
     urls.URL = URL
+
+    register({'werkzeug.urls': urls})

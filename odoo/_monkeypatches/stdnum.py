@@ -1,5 +1,8 @@
 # ruff: noqa: PLC0415
 
+from odoo._monkeypatches import register
+
+
 _soap_clients = {}
 
 
@@ -55,3 +58,4 @@ def patch_stdnum():
         return  # nothing to patch
 
     util.get_soap_client = new_get_soap_client
+    register({'stdnum.util': util})

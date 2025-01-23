@@ -1,8 +1,9 @@
+import babel.core
 import codecs
 import encodings.aliases
 import re
 
-import babel.core
+from odoo._monkeypatches import register
 
 
 def patch_codecs():
@@ -24,3 +25,8 @@ def patch_codecs():
 
     # To remove when corrected in Babel
     babel.core.LOCALE_ALIASES['nb'] = 'nb_NO'
+    register({
+        'encodings': encodings,
+        'codecs': codecs,
+        'babel': babel,
+    })

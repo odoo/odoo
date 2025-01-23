@@ -4,6 +4,8 @@ import locale
 import time
 import datetime
 
+from odoo._monkeypatches import register
+
 
 def patch_win32():
     if not hasattr(locale, 'D_FMT'):
@@ -29,3 +31,4 @@ def patch_win32():
                     format_time = format_time.replace(x, y)
                 return format_time
         locale.nl_langinfo = nl_langinfo
+    register({'locale': locale})

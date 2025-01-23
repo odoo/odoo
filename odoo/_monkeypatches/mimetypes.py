@@ -1,5 +1,7 @@
 import mimetypes
 
+from odoo._monkeypatches import register
+
 
 def patch_mimetypes():
     # if extension is already knows, the new definition will remplace the existing one
@@ -13,3 +15,4 @@ def patch_mimetypes():
     # this one can be present on windows with the value 'text/plain' which
     # breaks loading js files from an addon's static folder
     mimetypes.add_type('text/javascript', '.js')
+    register({'mimetypes': mimetypes})
