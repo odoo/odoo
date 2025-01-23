@@ -66,8 +66,7 @@ odoo.define('board.AddToBoardMenu', function (require) {
             delete controllerQueryParams.context;
             context.add(Object.assign(controllerQueryParams, queryContext));
 
-            const domainArray = new Domain(this.env.action.domain || []);
-            const domain = Domain.prototype.normalizeArray(domainArray.toArray().concat(searchQuery.domain));
+            const domain = Domain.prototype.normalizeArray(searchQuery.domain);
 
             const evalutatedContext = context.eval();
             for (const key in evalutatedContext) {
