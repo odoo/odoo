@@ -300,5 +300,8 @@ export class ProductTemplate extends Base {
         });
         return isCombinationArchived;
     }
+    get canBeDisplayed() {
+        return this.active && this.available_in_pos;
+    }
 }
 registry.category("pos_available_models").add(ProductTemplate.pythonModel, ProductTemplate);
