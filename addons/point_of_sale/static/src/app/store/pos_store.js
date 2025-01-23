@@ -244,7 +244,7 @@ export class PosStore extends Reactive {
     }
 
     async closingSessionNotification(data) {
-        if (data.login_number === this.session.login_number) {
+        if (data.login_number == this.session.login_number) {
             return;
         }
 
@@ -287,7 +287,7 @@ export class PosStore extends Reactive {
             console.info("Session Ids", odoo.pos_session_id, data.session_id);
         }
 
-        if (data.login_number === odoo.login_number || data.session_id !== odoo.pos_session_id) {
+        if (data.login_number == odoo.login_number || data.session_id !== odoo.pos_session_id) {
             return;
         }
 
