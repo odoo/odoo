@@ -128,7 +128,7 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
 
     def test_create_product_purchase_user(self):
         uom = self.env.ref('uom.product_uom_gram')
-        self.purchase_user.groups_id += self.env.ref('product.group_product_manager')
+        self.purchase_user.groups_id += self.env.ref('product.group_product_administrator')
         product = self.env['product.template'].with_user(self.purchase_user).create({
             'name': 'Test Product UOM Default',
             'type': 'consu',

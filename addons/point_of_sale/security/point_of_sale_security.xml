@@ -12,7 +12,7 @@
     <record id="group_pos_manager" model="res.groups">
         <field name="name">Administrator</field>
         <field name="category_id" ref="base.module_category_sales_point_of_sale"/>
-        <field name="implied_ids" eval="[(4, ref('group_pos_user')), (4, ref('stock.group_stock_user'))]"/>
+        <field name="implied_ids" eval="[(4, ref('group_pos_user')), (4, ref('stock.group_stock_user')), (4, ref('product.group_product_administrator'))]"/>
         <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
     </record>
 

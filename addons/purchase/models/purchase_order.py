@@ -112,15 +112,19 @@ class PurchaseOrder(models.Model):
         ('invoiced', 'Fully Billed'),
     ], string='Billing Status', compute='_get_invoiced', store=True, readonly=True, copy=False, default='no')
     date_planned = fields.Datetime(
-        string='Expected Arrival', index=True, copy=False, compute='_compute_date_planned', store=True, readonly=False,
+        string='Request Ship Date', index=True, copy=False, compute='_compute_date_planned', store=True, readonly=False,
         help="Delivery date promised by vendor. This date is used to determine expected arrival of products.")
+    # Technical field to display a computed lead time as a placeholder in the 'date_planned' field.
+    # Show placeholder when RFQ is manually created and remains unconfirmed by the vendor.
+    date_planned_placeholder = fields.Char(string='Request Ship Date Placeholder', compute='_compute_date_planned_placeholder',
+        copy=False, store=True, readonly=False)
     date_calendar_start = fields.Datetime(compute='_compute_date_calendar_start', readonly=True, store=True)
 
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', tracking=True)
     tax_totals = fields.Binary(compute='_compute_tax_totals', exportable=False)
     amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
     amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all')
-    amount_total_cc = fields.Monetary(string="Company Total", store=True, readonly=True, compute="_amount_all", currency_field="company_currency_id")
+    amount_total_cc = fields.Monetary(string="Total In Currency", store=True, readonly=True, compute="_amount_all", currency_field="company_currency_id")
 
     fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     tax_country_id = fields.Many2one(
@@ -150,10 +154,10 @@ class PurchaseOrder(models.Model):
         store=True,
         precompute=True,
     )
+    has_po_edit = fields.Selection(related='company_id.po_lock', help="If true then only show the Lock/Unlock button for PO Editing.")
 
     mail_reminder_confirmed = fields.Boolean("Reminder Confirmed", default=False, readonly=True, copy=False, help="True if the reminder email is confirmed by the vendor.")
-    mail_reception_confirmed = fields.Boolean("Reception Confirmed", default=False, readonly=True, copy=False, help="True if PO reception is confirmed by the vendor.")
-    mail_reception_declined = fields.Boolean("Reception Declined", readonly=True, copy=False, help="True if PO reception is declined by the vendor.")
+    mail_reception_acknowledged = fields.Boolean("Reception Acknowledged", default=False, readonly=True, copy=False, help="True if PO reception is Acknowledged by the vendor.")
 
     receipt_reminder_email = fields.Boolean('Receipt Reminder Email', compute='_compute_receipt_reminder_email')
     reminder_date_before_receipt = fields.Integer('Days Before Receipt', compute='_compute_receipt_reminder_email')
@@ -200,15 +204,30 @@ class PurchaseOrder(models.Model):
         for order in self:
             order.amount_total_cc = order.amount_total / order.currency_rate
 
-    @api.depends('order_line.date_planned')
+    @api.depends('order_line.date_planned', 'state')
     def _compute_date_planned(self):
         """ date_planned = the earliest date_planned across all order lines. """
         for order in self:
             dates_list = order.order_line.filtered(lambda x: not x.display_type and x.date_planned).mapped('date_planned')
             if dates_list:
-                order.date_planned = min(dates_list)
+                if not order.origin:
+                    if order.state in ('purchase', 'done', 'cancel') or order.date_planned:
+                        order.date_planned = min(dates_list)
+                else:
+                    order.date_planned = min(dates_list)
             else:
                 order.date_planned = False
+
+    @api.depends('order_line.date_planned', 'order_line.date_planned_pol_placeholder')
+    def _compute_date_planned_placeholder(self):
+        for order in self:
+            all_dates = [x.date_planned or fields.Datetime.from_string(x.date_planned_pol_placeholder) for x in order.order_line
+                        if not x.display_type and (x.date_planned or x.date_planned_pol_placeholder)
+                    ]
+            if all_dates and not order.origin:
+                order.date_planned_placeholder = fields.Datetime.to_string(min(all_dates))
+            else:
+                order.date_planned_placeholder = False
 
     @api.depends('name', 'partner_ref', 'amount_total', 'currency_id')
     @api.depends_context('show_total_amount')
@@ -256,11 +275,22 @@ class PurchaseOrder(models.Model):
     @api.onchange('date_planned')
     def onchange_date_planned(self):
         if self.date_planned:
-            self.order_line.filtered(lambda line: not line.display_type).date_planned = self.date_planned
+            self.date_planned_placeholder = fields.Datetime.to_string(self.date_planned)
+            self.order_line.filtered(lambda line: not line.display_type).write({'date_planned_pol_placeholder': fields.Datetime.to_string(self.date_planned), 'date_planned': self.date_planned})
 
     def write(self, vals):
         vals, partner_vals = self._write_partner_values(vals)
         res = super().write(vals)
+
+        if 'partner_id' in vals:
+            # When the partner changes, update the date_planned and date_planned_pol_placeholder for each order line
+            for line in self.order_line:
+                seller = line._get_seller()
+                if not seller:
+                    continue
+                date_planned = line._get_date_planned(seller)
+                line.write({'date_planned': date_planned, 'date_planned_pol_placeholder': fields.Datetime.to_string(date_planned)})
+
         if partner_vals:
             self.partner_id.sudo().write(partner_vals)  # Because the purchase user doesn't have write on `res.partner`
         return res
@@ -297,12 +327,17 @@ class PurchaseOrder(models.Model):
         ctx.pop('default_product_id', None)
         self = self.with_context(ctx)
         new_pos = super().copy(default=default)
-        for line in new_pos.order_line:
-            if line.product_id:
-                seller = line.product_id._select_seller(
-                    partner_id=line.partner_id, quantity=line.product_qty,
-                    date=line.order_id.date_order and line.order_id.date_order.date(), uom_id=line.product_uom_id)
-                line.date_planned = line._get_date_planned(seller)
+        for order in self:
+            for line in new_pos.order_line:
+                if line.product_id:
+                    seller = line.product_id._select_seller(
+                        partner_id=line.partner_id, quantity=line.product_qty,
+                        date=line.order_id.date_order and line.order_id.date_order.date(), uom_id=line.product_uom_id)
+
+                    if not order.origin and not order.date_planned:
+                        line.date_planned_pol_placeholder = fields.Datetime.to_string(line._get_date_planned(seller))
+                    else:
+                        line.date_planned = line._get_date_planned(seller)
         return new_pos
 
     def _must_delete_date_planned(self, field_name):
@@ -317,8 +352,9 @@ class PurchaseOrder(models.Model):
         result = super().onchange(values, field_names, fields_spec)
         if any(self._must_delete_date_planned(field) for field in field_names) and 'value' in result:
             for line in result['value'].get('order_line', []):
-                if line[0] == Command.UPDATE and 'date_planned' in line[2]:
-                    del line[2]['date_planned']
+                if line[0] == Command.UPDATE:
+                    line[2].pop('date_planned', None)
+                    line[2].pop('date_planned_pol_placeholder', None)
         return result
 
     def _get_report_base_filename(self):
@@ -500,7 +536,6 @@ class PurchaseOrder(models.Model):
         }
 
     def print_quotation(self):
-        self.write({'state': "sent"})
         return self.env.ref('purchase.report_purchase_quotation').report_action(self)
 
     def button_approve(self, force=False):
@@ -584,20 +619,6 @@ class PurchaseOrder(models.Model):
                 }
                 # supplier info should be added regardless of the user access rights
                 line.product_id.product_tmpl_id.sudo().write(vals)
-
-    def action_bill_matching(self):
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _("Bill Matching"),
-            'res_model': 'purchase.bill.line.match',
-            'domain': [
-                ('partner_id', '=', self.partner_id.id),
-                ('company_id', 'in', self.env.company.ids),
-                ('purchase_order_id', 'in', [self.id, False]),
-            ],
-            'views': [(self.env.ref('purchase.purchase_bill_line_match_tree').id, 'list')],
-        }
 
     def _prepare_down_payment_section_values(self):
         self.ensure_one()
@@ -739,7 +760,7 @@ class PurchaseOrder(models.Model):
                                                                                 l.product_uom_id == rfq_line.product_uom_id and
                                                                                 l.analytic_distribution == rfq_line.analytic_distribution and
                                                                                 l.discount == rfq_line.discount and
-                                                                                abs(l.date_planned - rfq_line.date_planned).total_seconds() <= 86400  # 24 hours in seconds
+                                                                                abs(fields.Datetime.from_string(l.date_planned_pol_placeholder) - fields.Datetime.from_string(rfq_line.date_planned_pol_placeholder)).total_seconds() <= 86400  # 24 hours in seconds
                                                                         )
                     if len(existing_line) > 1:
                         existing_line[0].product_qty += sum(existing_line[1:].mapped('product_qty'))
@@ -837,6 +858,30 @@ class PurchaseOrder(models.Model):
 
         return result
 
+    def _compute_avg_days_to_purchase(self, user_specific=False):
+        """
+        This method calculates the average number of days taken for purchase orders to be approved
+        after creation within the last three months.
+        """
+        three_months_ago = fields.Datetime.subtract(fields.Datetime.now(), months=3)
+        user_condition = "AND po.user_id = %s" if user_specific else ""
+        params = [three_months_ago, self.env.company.id]
+        if user_specific:
+            params.append(self.env.uid)
+
+        query = """
+            SELECT ROUND(AVG(EXTRACT(epoch FROM (po.date_approve - po.create_date)) / 86400)::decimal(16, 2), 2)
+            FROM purchase_order po
+            WHERE po.create_date >= %s
+            AND po.state IN ('purchase', 'done')
+            AND po.company_id = %s
+            {user_condition}
+        """.format(user_condition=user_condition)
+
+        self.env.cr.execute(query, tuple(params))
+        result = self.env.cr.fetchone()
+        return result[0] if result and result[0] is not None else 0
+
     @api.model
     def retrieve_dashboard(self):
         """ This function returns the values to populate the custom dashboard in
@@ -845,60 +890,39 @@ class PurchaseOrder(models.Model):
         self.browse().check_access('read')
 
         result = {
-            'all_to_send': 0,
-            'all_waiting': 0,
-            'all_late': 0,
-            'my_to_send': 0,
-            'my_waiting': 0,
-            'my_late': 0,
-            'all_avg_order_value': 0,
-            'all_avg_days_to_purchase': 0,
-            'all_total_last_7_days': 0,
+            'all_draft_rfqs': 0,
+            'my_draft_rfqs': 0,
+            'all_priority_draft_rfqs': 0,
+            'my_priority_draft_rfqs': 0,
             'all_sent_rfqs': 0,
-            'company_currency_symbol': self.env.company.currency_id.symbol
+            'my_sent_rfqs': 0,
+            'all_late_rfqs': 0,
+            'my_late_rfqs': 0,
+            'all_not_acknowledged_orders': 0,
+            'my_not_acknowledged_orders': 0,
+            'all_late_orders': 0,
+            'my_late_orders': 0,
+            'all_on_time_delivery': 0,
+            'my_on_time_delivery': 0,
+            'all_avg_days_to_purchase': 0,
+            'my_avg_days_to_purchase': 0,
+            'default_days_to_purchase': 0
         }
-
-        one_week_ago = fields.Datetime.to_string(fields.Datetime.now() - relativedelta(days=7))
-
-        query = """SELECT COUNT(1)
-                   FROM mail_message m
-                   JOIN purchase_order po ON (po.id = m.res_id)
-                   WHERE m.create_date >= %s
-                     AND m.model = 'purchase.order'
-                     AND m.message_type = 'notification'
-                     AND m.subtype_id = %s
-                     AND po.company_id = %s;
-                """
-
-        self.env.cr.execute(query, (one_week_ago, self.env.ref('purchase.mt_rfq_sent').id, self.env.company.id))
-        res = self.env.cr.fetchone()
-        result['all_sent_rfqs'] = res[0] or 0
 
         # easy counts
         po = self.env['purchase.order']
-        result['all_to_send'] = po.search_count([('state', '=', 'draft')])
-        result['my_to_send'] = po.search_count([('state', '=', 'draft'), ('user_id', '=', self.env.uid)])
-        result['all_waiting'] = po.search_count([('state', '=', 'sent'), ('date_order', '>=', fields.Datetime.now())])
-        result['my_waiting'] = po.search_count([('state', '=', 'sent'), ('date_order', '>=', fields.Datetime.now()), ('user_id', '=', self.env.uid)])
-        result['all_late'] = po.search_count([('state', 'in', ['draft', 'sent', 'to approve']), ('date_order', '<', fields.Datetime.now())])
-        result['my_late'] = po.search_count([('state', 'in', ['draft', 'sent', 'to approve']), ('date_order', '<', fields.Datetime.now()), ('user_id', '=', self.env.uid)])
-
-        # Calculated values ('avg order value', 'avg days to purchase', and 'total last 7 days') note that 'avg order value' and
-        # 'total last 7 days' takes into account exchange rate and current company's currency's precision.
-        # This is done via SQL for scalability reasons
-        query = """SELECT AVG(COALESCE(po.amount_total / NULLIF(po.currency_rate, 0), po.amount_total)),
-                          AVG(extract(epoch from age(po.date_approve,po.create_date)/(24*60*60)::decimal(16,2))),
-                          SUM(CASE WHEN po.date_approve >= %s THEN COALESCE(po.amount_total / NULLIF(po.currency_rate, 0), po.amount_total) ELSE 0 END)
-                   FROM purchase_order po
-                   WHERE po.state in ('purchase', 'done')
-                     AND po.company_id = %s
-                """
-        self._cr.execute(query, (one_week_ago, self.env.company.id))
-        res = self.env.cr.fetchone()
-        result['all_avg_days_to_purchase'] = round(res[1] or 0, 2)
-        currency = self.env.company.currency_id
-        result['all_avg_order_value'] = format_amount(self.env, res[0] or 0, currency)
-        result['all_total_last_7_days'] = format_amount(self.env, res[2] or 0, currency)
+        result['all_draft_rfqs'] = po.search_count([('state', '=', 'draft')])
+        result['my_draft_rfqs'] = po.search_count([('state', '=', 'draft'), ('user_id', '=', self.env.uid)])
+        result['all_priority_draft_rfqs'] = po.search_count([('state', '=', 'draft'), ('priority', '=', 1)])
+        result['my_priority_draft_rfqs'] = po.search_count([('state', '=', 'draft'), ('priority', '=', 1), ('user_id', '=', self.env.uid)])
+        result['all_sent_rfqs'] = po.search_count([('state', '=', 'sent')])
+        result['my_sent_rfqs'] = po.search_count([('state', '=', 'sent'), ('user_id', '=', self.env.uid)])
+        result['all_late_rfqs'] = po.search_count([('state', 'in', ['sent', 'draft']), ('date_order', '<', fields.Datetime.now())])
+        result['my_late_rfqs'] = po.search_count([('state', 'in', ['sent', 'draft']), ('date_order', '<', fields.Datetime.now()), ('user_id', '=', self.env.uid)])
+        result['all_not_acknowledged_orders'] = po.search_count([('state', '=', 'purchase'), ('mail_reception_acknowledged', '=', False)])
+        result['my_not_acknowledged_orders'] = po.search_count([('state', '=', 'purchase'), ('mail_reception_acknowledged', '=', False), ('user_id', '=', self.env.uid)])
+        result['all_avg_days_to_purchase'] = self._compute_avg_days_to_purchase()
+        result['my_avg_days_to_purchase'] = self._compute_avg_days_to_purchase(user_specific=True)
 
         return result
 
@@ -1063,7 +1087,7 @@ class PurchaseOrder(models.Model):
     def get_confirm_url(self, confirm_type=None):
         """Create url for confirm reminder or purchase reception email for sending
         in mail."""
-        if confirm_type in ['reminder', 'reception', 'decline']:
+        if confirm_type in ['reminder', 'acknowledged']:
             param = url_encode({
                 'confirm': confirm_type,
                 'confirmed_date': self.date_planned and self.date_planned.date(),
@@ -1084,6 +1108,12 @@ class PurchaseOrder(models.Model):
                 date_planned = order.get_localized_date_planned(confirmed_date).date()
                 order.message_post(body=_("%(vendor)s confirmed the receipt will take place on %(date)s.", vendor=order.partner_id.name, date=date_planned))
 
+    def confirm_reception_acknowledged(self):
+        for order in self:
+            if order.state in ['purchase', 'done'] and not order.mail_reception_acknowledged:
+                order.mail_reception_acknowledged = True
+                order.message_post(body=_("The order receipt has been acknowledged by %s.", order.partner_id.name))
+
     def _approval_allowed(self):
         """Returns whether the order qualifies to be approved by the current user"""
         self.ensure_one()
@@ -1094,27 +1124,6 @@ class PurchaseOrder(models.Model):
                     self.company_id.po_double_validation_amount, self.currency_id, self.company_id,
                     self.date_order or fields.Date.today()))
             or self.env.user.has_group('purchase.group_purchase_manager'))
-
-    def _confirm_reception_mail(self):
-        for order in self:
-            if order.state in ['purchase', 'done'] and not order.mail_reception_confirmed:
-                order.mail_reception_confirmed = True
-                order.message_post(body=_("The order receipt has been acknowledged by %s.", order.partner_id.name))
-            elif order.state == 'sent' and not order.mail_reception_confirmed:
-                order.mail_reception_confirmed = True
-                order.message_post(body=_("The RFQ has been acknowledged by %s.", order.partner_id.name))
-
-    def _decline_reception_mail(self):
-        for order in self:
-            if order.state in ['purchase', 'done'] and not order.mail_reception_declined:
-                order.mail_reception_declined = True
-                order.activity_schedule(
-                    'mail.mail_activity_data_todo',
-                    note=_('The vendor asked to decline this confirmed RfQ, if you agree on that, cancel this PO'))
-                order.message_post(body=_("The order receipt has been declined by %s.", order.partner_id.name))
-            elif order.state  == 'sent' and not order.mail_reception_declined:
-                order.mail_reception_declined = True
-                order.message_post(body=_("The RFQ has been declined by %s.", order.partner_id.name))
 
     def get_localized_date_planned(self, date_planned=False):
         """Returns the localized date planned in the timezone of the order's user or the

@@ -15,7 +15,7 @@
     <record id="group_mrp_manager" model="res.groups">
         <field name="name">Administrator</field>
         <field name="category_id" ref="base.module_category_manufacturing_manufacturing"/>
-        <field name="implied_ids" eval="[(4, ref('group_mrp_user'))]"/>
+        <field name="implied_ids" eval="[(4, ref('group_mrp_user')), (4, ref('product.group_product_administrator'))]"/>
         <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
     </record>
 

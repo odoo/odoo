@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="purchase.DatetimePlaceholderField" t-inherit="web.DateTimeField" t-inherit-mode="primary">
+
+        <xpath expr="//t[@t-if='props.readonly']" position="attributes">
+            <attribute name="t-if">!props</attribute>
+        </xpath>
+
+        <xpath expr="//input[@t-ref='start-date']" position="attributes">
+            <attribute name="t-att-placeholder">placeholder</attribute>
+        </xpath>
+    </t>
+
+</templates>

@@ -125,35 +125,24 @@
             <field name="arch" type="xml">
                 <form string="Purchase Order" class="o_purchase_order">
                 <header>
-                    <button name="action_rfq_send" invisible="state != 'draft'" string="Send by Email" type="object" context="{'send_rfq':True}" class="oe_highlight" data-hotkey="g"/>
-                    <button name="print_quotation" string="Print RFQ" type="object" invisible="state != 'draft'" class="oe_highlight" groups="base.group_user" data-hotkey="k"/>
+                    <button name="action_rfq_send" invisible="state != 'draft'" string="Send RFQ" type="object" context="{'send_rfq':True}" class="oe_highlight" data-hotkey="g"/>
+                    <button name="print_quotation" string="Print" type="object" invisible="state != 'draft'" class="btn btn-secondary" groups="base.group_user" data-hotkey="k"/>
                     <button name="button_confirm" type="object" invisible="state != 'sent'" string="Confirm Order" context="{'validate_analytic': True}" class="oe_highlight" id="bid_confirm" data-hotkey="q"/>
                     <button name="button_approve" type="object" invisible="state != 'to approve'" string="Approve Order" class="oe_highlight" groups="purchase.group_purchase_manager" data-hotkey="z"/>
-                    <button name="action_create_invoice" string="Create Bill" type="object" class="oe_highlight" context="{'create_bill':True}" invisible="state not in ('purchase', 'done') or invoice_status in ('no', 'invoiced')" data-hotkey="w"/>
-                    <button name="action_rfq_send" invisible="state != 'sent'" string="Re-Send by Email" type="object" context="{'send_rfq':True}" data-hotkey="g"/>
-                    <button name="print_quotation" string="Print RFQ" type="object" invisible="state != 'sent'" groups="base.group_user" data-hotkey="k"/>
+                    <button name="action_rfq_send" invisible="state != 'sent'" string="Send by Email" type="object" context="{'send_rfq':True}" data-hotkey="g"/>
                     <button name="button_confirm" type="object" invisible="state != 'draft'" context="{'validate_analytic': True}" string="Confirm Order" id="draft_confirm" data-hotkey="q"/>
-                    <button name="action_rfq_send" invisible="state != 'purchase'" string="Send PO by Email" type="object" context="{'send_rfq':False}" data-hotkey="g"/>
+                    <button name="action_rfq_send" invisible="state != 'purchase'" string="Send PO" type="object" context="{'send_rfq':False}" data-hotkey="g"/>
+                    <widget name="purchase_file_uploader" btnClass="btn btn-secondary oe_kanban_action" invisible="state not in ('purchase', 'done') or invoice_status not in ('no', 'invoiced') or not order_line" data-hotkey="w"/>
                     <button name="confirm_reminder_mail" string="Confirm Receipt Date" type="object" invisible="state not in ('purchase', 'done') or mail_reminder_confirmed or not date_planned" groups="base.group_no_one" data-hotkey="o"/>
-                    <button name="action_create_invoice" string="Create Bill" type="object" context="{'create_bill':True}" invisible="state not in ('purchase', 'done') or invoice_status not in ('no', 'invoiced') or not order_line" data-hotkey="w"/>
+                    <button name="confirm_reception_acknowledged" string="Acknowledged" type="object" invisible="state not in ('purchase', 'done') or mail_reception_acknowledged"/>
                     <button name="button_draft" invisible="state != 'cancel'" string="Set to Draft" type="object" data-hotkey="o"/>
                     <button name="button_cancel" invisible="state not in ('draft', 'to approve', 'sent', 'purchase')" string="Cancel" type="object" data-hotkey="x" />
-                    <button name="button_done" type="object" string="Lock" invisible="state != 'purchase'" data-hotkey="l"/>
+                    <button name="button_done" type="object" string="Lock" invisible="state != 'purchase' or has_po_edit == 'edit'" data-hotkey="l"/>
                     <button name="button_unlock" type="object" string="Unlock" invisible="state != 'done'" groups="purchase.group_purchase_manager" data-hotkey="l"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,sent,purchase" readonly="1"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button"
-                                name="action_bill_matching"
-                                type="object"
-                                groups="account.group_account_invoice"
-                                icon="fa-bullseye"
-                                invisible="not partner_id or state not in ('purchase', 'done') or not partner_bill_count or invoice_status == 'invoiced'">
-                            <div class="o_field_statinfo">
-                                <span class="o_stat_text">Bill Matching</span>
-                            </div>
-                        </button>
                         <button type="object"  name="action_view_invoice"
                             class="oe_stat_button"
                             icon="fa-pencil-square-o" invisible="invoice_count == 0 or state in ('draft', 'sent', 'to approve')">
@@ -189,7 +178,8 @@
                             </div>
                             <label for="date_planned"/>
                             <div name="date_planned_div" class="o_row">
-                                <field name="date_planned" readonly="state not in ('draft', 'sent', 'to approve', 'purchase')"/>
+                                <field name="date_planned_placeholder" invisible="1"/> <!-- Needed for the placeholder widget -->
+                                <field name="date_planned" readonly="state not in ('draft', 'sent', 'to approve', 'purchase')" widget="datetime_placeholder_field" options="{'placeholder_field': 'date_planned_placeholder'}"/>
                                 <field name="mail_reminder_confirmed" invisible="1"/>
                                 <span class="text-muted" invisible="not mail_reminder_confirmed">(confirmed by vendor)</span>
                             </div>
@@ -237,7 +227,9 @@
                                         context="{'partner_id':parent.partner_id, 'quantity':product_qty, 'company_id': parent.company_id}"
                                         force_save="1" domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', 'parent_of', parent.company_id)]"/>
                                     <field name="name" widget="section_and_note_text" optional="show"/>
-                                    <field name="date_planned" optional="hide" required="not display_type and not is_downpayment" force_save="1" readonly="is_downpayment"/>
+                                    <field name="date_planned_pol_placeholder" column_invisible="True"/> <!-- Needed for the placeholder widget -->
+                                    <field name="date_planned" optional="hide" required="not display_type and not is_downpayment and state not in ('draft', 'sent', 'to approve')"
+                                            force_save="1" readonly="is_downpayment" widget="datetime_placeholder_field" options="{'placeholder_field': 'date_planned_pol_placeholder'}"/>
                                     <field name="analytic_distribution" widget="analytic_distribution"
                                            optional="hide"
                                            groups="analytic.group_analytic_accounting"
@@ -254,7 +246,7 @@
                                         widget="many2one_uom"
                                         force_save="1" optional="show"/>
                                     <field name="price_unit" readonly="qty_invoiced != 0"/>
-                                    <button name="action_purchase_history" type="object" icon="fa-history" title="Purchase History" invisible="not id"/>
+                                    <button name="action_purchase_history" type="object" icon="fa-history" title="History" invisible="not id"/>
                                     <field name="taxes_id" widget="many2many_tax_tags" domain="[('type_tax_use', '=', 'purchase'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id), ('active', '=', True)]" context="{'default_type_tax_use': 'purchase', 'search_view_ref': 'account.account_tax_view_search'}" options="{'no_create': True}" optional="show" readonly="is_downpayment"/>
                                     <field name="discount" string="Disc.%" width="50px" readonly="qty_invoiced != 0" optional="hide"/>
                                     <field name="price_subtotal" string="Amount"/>
@@ -390,15 +382,16 @@
                     <filter string="Starred" name="starred" domain="[('priority', '=', '1')]"/>
                     <separator/>
                     <filter name="draft" string="RFQs" domain="[('state', 'in', ('draft', 'sent', 'to approve'))]"/>
-                    <filter name="unconfirmed" string="Not Acknowledged" domain="[('mail_reception_confirmed', '=', False), ('mail_reception_declined', '=', False), ('state', 'in', ('draft', 'sent'))]"/>
+                    <filter name="not_acknowledged" string="Not Acknowledged" domain="[('mail_reception_acknowledged', '=', False), ('state', '=', 'purchase')]"/>
                     <separator/>
                     <filter name="approved" string="Purchase Orders" domain="[('state', 'in', ('purchase', 'done'))]"/>
                     <filter name="to_approve" string="To Approve" domain="[('state', '=', 'to approve')]"/>
                     <separator/>
                     <filter name="order_date" string="Order Date" date="date_order"/>
                     <filter name="draft_rfqs" string="Draft RFQs" domain="[('state', '=', 'draft')]"/>
-                    <filter name="waiting_rfqs" string="Waiting RFQs" domain="[('state', '=', 'sent'), ('date_order', '&gt;=', datetime.datetime.now())]"/>
-                    <filter name="late_rfqs" string="Late RFQs" domain="[('state', 'in', ['draft', 'sent', 'to approve']),('date_order', '&lt;', datetime.datetime.now())]"/>
+                    <filter name="sent_rfqs" string="Sent RFQs" domain="[('state', '=', 'sent')]"/>
+                    <filter name="late_rfqs" string="Late RFQs" domain="[('state', 'in', ['draft', 'sent']), ('date_order', '&lt;', datetime.datetime.now())]"/>
+                    <filter name="not_acknowledged_orders" string="Not Acknowledged Orders" domain="[('mail_reception_acknowledged', '=', False), ('state', '=', 'purchase')]"/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
@@ -539,7 +532,6 @@
                 decoration-muted="state == 'cancel'"
                 class="o_purchase_order" js_class="purchase_dashboard_list" sample="1">
                     <header>
-                        <button name="action_create_invoice" type="object" string="Create Bills"/>
                         <button name="button_cancel" type="object" string="Cancel"
                             confirm="Are you sure you want to cancel the selected RFQs/Orders?"/>
                     </header>
@@ -558,7 +550,7 @@
                         column_invisible="not context.get('quotation_only', False)"
                         readonly="state in ['cancel', 'done', 'purchase']" widget="remaining_days" optional="show"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
-                    <field name="origin" optional="show"/>
+                    <field name="origin" optional="hide"/>
                     <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed" widget="monetary" optional="hide"/>
                     <field name="amount_total" sum="Total amount" widget="monetary" optional="show" decoration-bf="state in ['purchase', 'done']"/>
                     <field name="currency_id" column_invisible="True" readonly="state in ['cancel', 'done', 'purchase']"/>
@@ -581,7 +573,6 @@
                     class="o_purchase_order"
                     sample="1">
                     <header>
-                        <button name="action_create_invoice" type="object" string="Create Bills"/>
                         <button name="button_cancel" type="object" string="Cancel"
                             confirm="Are you sure you want to cancel the selected RFQs/Orders?"/>
                     </header>
@@ -823,18 +814,6 @@
         </field>
     </record>
 
-    <record id="action_purchase_batch_bills" model="ir.actions.server">
-        <field name="name">Create Vendor Bills</field>
-        <field name="model_id" ref="purchase.model_purchase_order"/>
-        <field name="binding_model_id" ref="purchase.model_purchase_order"/>
-        <field name='groups_id' eval="[(4, ref('account.group_account_invoice'))]"/>
-        <field name="state">code</field>
-        <field name="code">
-            if records:
-                action = records.action_create_invoice()
-        </field>
-    </record>
-
     <record id="action_purchase_send_reminder" model="ir.actions.server">
         <field name="name">Send Reminder</field>
         <field name="model_id" ref="purchase.model_purchase_order"/>
@@ -861,6 +840,7 @@
         <field name="name">Merge</field>
         <field name="model_id" ref="purchase.model_purchase_order"/>
         <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+        <field name="binding_view_types">list</field>
         <field name='groups_id' eval="[(4, ref('account.group_account_invoice'))]"/>
         <field name="state">code</field>
         <field name="sequence">1</field>

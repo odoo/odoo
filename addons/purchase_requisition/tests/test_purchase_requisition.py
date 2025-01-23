@@ -3,9 +3,10 @@
 
 from odoo.addons.purchase_requisition.tests.common import TestPurchaseRequisitionCommon
 from odoo import Command, fields
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tests import Form
 
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from odoo.tests.common import tagged
 
@@ -161,6 +162,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
             line.product_qty = 5.0
             line.price_unit = unit_price
             line.product_uom_id = self.env.ref('uom.product_uom_dozen')
+            line.date_planned = datetime.strptime(line.date_planned_pol_placeholder, "%Y-%m-%d %H:%M:%S").strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         with po_form.order_line.new() as line:
             line.display_type = "line_section"
             line.name = "Products"
@@ -189,7 +191,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         self.assertEqual(len(alt_po_1.alternative_po_ids), 2, "Newly created PO should be auto-linked to itself and original PO")
 
         # check compare POLs correctly calcs best date/price PO lines: orig_po.date_planned = best & alt_po.price = best
-        alt_po_1.order_line[0].date_planned += timedelta(days=1)
+        alt_po_1.order_line[0].date_planned = (datetime.strptime(alt_po_1.order_line[0].date_planned_pol_placeholder, "%Y-%m-%d %H:%M:%S") + timedelta(days=1)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         alt_po_1.order_line[0].price_unit = unit_price - 10
         action = orig_po.action_compare_alternative_lines()
         best_price_ids, best_date_ids, best_price_unit_ids = orig_po.get_tender_best_lines()

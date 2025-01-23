@@ -929,26 +929,6 @@ stepUtils.autoExpandMoreButtons(),
     tooltipPosition: 'bottom',
     run: "click",
 },
-...stepUtils.statusbarButtonsSteps('Create Bill', _t('go to Vendor Bills'), ".o_statusbar_status:contains('Purchase Order')"),
-{
-    trigger: ".o_form_label .o_field_widget:contains('Vendor Bill')",
-},
-{
-    trigger:".o_field_widget[name=invoice_date] input",
-    content: _t('Set the invoice date'),
-    run: "edit 01/01/2020",
-},
-...stepUtils.statusbarButtonsSteps('Confirm', _t("Try to send it to email"), ".o_statusbar_status .o_arrow_button_current:contains('Draft')"),
-...stepUtils.statusbarButtonsSteps('Pay', _t("Pay"), ".o_statusbar_status .o_arrow_button_current:contains('Posted')"),
-{
-    trigger: ".modal .modal-footer .btn-primary",
-    content: _t("Validate"),
-    tooltipPosition: "bottom",
-    run: "click",
-},
-{
-    trigger: "body:not(:has(.modal))",
-},
 ...stepUtils.toggleHomeMenu(),
 ...stepUtils.goToAppSteps('mrp.menu_mrp_root', _t('Go to Manufacturing')),
 {

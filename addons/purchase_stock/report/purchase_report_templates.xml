@@ -34,6 +34,11 @@
                         <span t-field="o.picking_type_id.warehouse_id.name"/>
                         <div t-field="o.picking_type_id.warehouse_id.partner_id" t-options='{"widget": "contact", "fields": ["address", "phone"], "no_marker": True, "phone_icons": True}'/>
                     </div>
+                    <div>
+                        <strong>Requested Ship Date:</strong>
+                        <span t-if="o.date_planned" t-field="o.date_planned" t-options="{'date_only': 'true'}"/>
+                        <span t-else="" t-field="o.date_planned_placeholder"/>
+                    </div>
                 </t>
             </t>
         </xpath>

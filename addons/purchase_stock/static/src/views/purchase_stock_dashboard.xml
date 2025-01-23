@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="purchase_stock.PurchaseStockDashboard" t-inherit="purchase.PurchaseDashboard" t-inherit-mode="extension">
+        <xpath expr="//div[@id='all_not_acknowledged_orders']" position="after">
+            <div class="col p-1 p-lg-2 card-min-height" t-on-click="setSearchContext" title="All Late Receipts Orders" filter_name="late_receipt">
+                <a href="#" t-attf-class="w-100 h-100 border-0 rounded-0 text-capitalize text-break fw-normal #{purchaseData['all_late_orders'] > 1 ? 'btn btn-danger' : 'btn btn-secondary'}" class="d-flex flex-column justify-content-center align-items-center text-center">
+                    <div class="fs-2 mb-1" t-out="purchaseData['all_late_orders']"/>
+                    <div>Late Receipts</div>
+                </a>
+            </div>
+        </xpath>
+
+        <xpath expr="//div[@id='my_not_acknowledged_orders']" position="after">
+            <div class="col p-1 p-lg-2 card-min-height" t-on-click="setSearchContext" title="My Late Receipts Orders" filter_name="late_receipt,my_purchases">
+                <a href="#" t-attf-class="w-100 h-100 border-0 rounded-0 text-capitalize text-break fw-normal #{purchaseData['my_late_orders'] > 1 ? 'btn btn-danger' : 'btn btn-secondary'} d-flex justify-content-center align-items-center">
+                    <div class="w-100 p-2" t-out="purchaseData['my_late_orders']"/>
+                </a>
+            </div>
+        </xpath>
+
+        <xpath expr="//div[@id='all_avg_days_to_purchase']" position="after">
+            <div class="col p-1 p-lg-2 card-min-height" title="Computed based on last 3 months">
+                <a href="#" t-attf-class="btn btn-secondary w-100 h-100 border-0 rounded-0 text-capitalize text-break fw-normal" class="d-flex flex-column justify-content-center align-items-center text-center">
+                    <div class="fs-2 mb-1"><span t-out="purchaseData['all_on_time_delivery']"></span><span>%</span></div>
+                    <div>OTD</div>
+                </a>
+            </div>
+        </xpath>
+
+        <xpath expr="//div[@id='my_avg_days_to_purchase']" position="after">
+            <div class="col p-1 p-lg-2 card-min-height" title="Computed based on last 3 months">
+                <a href="#" t-attf-class="btn btn-secondary w-100 h-100 border-0 rounded-0 text-capitalize text-break fw-normal d-flex flex-column justify-content-center align-items-center text-center">
+                    <div class="w-100 p-2"><span t-out="purchaseData['my_on_time_delivery']"></span><span>%</span></div>
+                </a>
+            </div>
+        </xpath>
+
+        <xpath expr="//div[@id='all_my_avg_days_otd_box']" position="attributes">
+            <attribute name="class" add="col-xl-3" separator=" "/>
+        </xpath>
+
+    </t>
+
+</templates>

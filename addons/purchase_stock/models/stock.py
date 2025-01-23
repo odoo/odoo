@@ -24,6 +24,15 @@ class StockPicking(models.Model):
             else:
                 picking.days_to_arrive = False
 
+    @api.depends('date_deadline')
+    def _compute_scheduled_date(self):
+        for picking in self:
+            if picking.purchase_id and not picking.purchase_id.origin:
+                if picking.date_deadline and picking.scheduled_date and picking.date_deadline > picking.scheduled_date:
+                    picking.scheduled_date = picking.date_deadline
+            else:
+                return super(StockPicking, self)._compute_scheduled_date()
+
     def _compute_date_order(self):
         for picking in self:
             picking.delay_pass = picking.purchase_id.date_order if picking.purchase_id else fields.Datetime.now()
