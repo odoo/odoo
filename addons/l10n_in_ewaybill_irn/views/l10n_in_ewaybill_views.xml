@@ -5,6 +5,17 @@
         <field name="model">l10n.in.ewaybill</field>
         <field name="inherit_id" ref="l10n_in_ewaybill.l10n_in_ewaybill_form_view"/>
         <field name="arch" type="xml">
+            <xpath expr="//group[@name='document_details']" position="before">
+                <group name="processing_method" string="Processing Method" invisible="not display_is_process_through_irn">
+                    <group>
+                        <field name="is_process_through_irn"
+                               readonly="state != 'pending'"
+                               string="Using IRN"
+                               widget="boolean_toggle"/>
+                    </group>
+                    <group/>
+                </group>
+            </xpath>
             <xpath expr="//group[@name='document_details']" position="attributes">
                 <attribute name="invisible">is_process_through_irn</attribute>
             </xpath>
