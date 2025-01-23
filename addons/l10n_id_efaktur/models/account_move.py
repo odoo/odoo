@@ -19,11 +19,11 @@ class AccountMove(models.Model):
             ('03', '03 To other VAT Collectors other than the Treasurer'),
             ('04', '04 Other Value of VAT Imposition Base'),
             ('05', '05 Specified Amount (Article 9A Paragraph (1) VAT Law)'),
-            ('06', '06 Other Deliveries'),
+            ('06', '06 to individuals holding foreign passports'),
             ('07', '07 Deliveries that the VAT is not Collected'),
             ('08', '08 Deliveries that the VAT is Exempted'),
             ('09', '09 Deliveries of Assets (Article 16D of VAT Law)'),
-        ], string='Tax Transaction Code', help='The first 2 digits of tax number',
+        ], string='Kode Transaksi', help='Dua digit pertama nomor pajak',
         readonly=False, copy=False,
         compute="_compute_kode_transaksi", store=True)
     l10n_id_efaktur_range = fields.Many2one("l10n_id_efaktur.efaktur.range", string="E-faktur Range", copy=False, domain="[('company_id', '=', company_id), ('available', '>', 0)]")

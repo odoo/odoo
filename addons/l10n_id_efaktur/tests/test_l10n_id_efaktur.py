@@ -4,8 +4,10 @@ from odoo import Command
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.tests import tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.l10n_id_efaktur.models.account_move import AccountMove
 from odoo.addons.l10n_id_efaktur.models.efaktur_document import FK_HEAD_LIST, LT_HEAD_LIST, OF_HEAD_LIST, _csv_row
-
+from odoo.exceptions import RedirectWarning
+from unittest.mock import patch
 
 @tagged('post_install', '-at_install', 'post_install_l10n')
 class TestIndonesianEfaktur(AccountTestInvoicingCommon):
@@ -28,6 +30,16 @@ class TestIndonesianEfaktur(AccountTestInvoicingCommon):
 
         # multi-company setup
         cls.company_data_2 = cls.setup_other_company()
+
+        # For the sake of unit test of this module, we want to retain the the compute method for field
+        # l10n_id_need_kode_transaksi of this module. In the coretax module, l10n_id_need_kode_transaksi
+        # is always set to False to prevent the flows of old module to be triggered
+        patch_kode_transaksi = patch('odoo.addons.l10n_id_efaktur_coretax.models.account_move.AccountMove._compute_need_kode_transaksi',
+                                AccountMove._compute_need_kode_transaksi)
+        cls.startClassPatcher(patch_kode_transaksi)
+        patch_download_efaktur = patch("odoo.addons.l10n_id_efaktur_coretax.models.account_move.AccountMove.download_efaktur",
+                                AccountMove.download_efaktur)
+        cls.startClassPatcher(patch_download_efaktur)
 
     def test_posting_without_code(self):
         """ Make sure that if an invoice has no code computed but the partner has one, we still allow posting but also set the code. """
