@@ -485,7 +485,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         # Deactivate all other programs to avoid interference
         (LoyaltyProgram.search([])).write({'pos_ok': False})
         # But activate the gift_card_product_50 because it's shared among new gift card programs.
-        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+        self.env.ref('loyalty.gift_card_product_50').product_tmpl_id.write({'active': True})
         # Create gift card program
         gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
         # Run the tour to create a gift card
@@ -510,7 +510,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         # Deactivate all other programs to avoid interference
         (LoyaltyProgram.search([])).write({'pos_ok': False})
         # But activate the ewallet_product_50 because it's shared among new ewallet programs.
-        self.env.ref('loyalty.ewallet_product_50').write({'active': True})
+        self.env.ref('loyalty.ewallet_product_50').product_tmpl_id.write({'active': True})
         # Create ewallet program
         ewallet_program = self.create_programs([('arbitrary_name', 'ewallet')])['arbitrary_name']
         # Create test partners
@@ -547,8 +547,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         # Deactivate all other programs to avoid interference
         (LoyaltyProgram.search([])).write({'pos_ok': False})
         # But activate the gift_card_product_50 and ewallet_product_50 because they're shared among new programs.
-        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
-        self.env.ref('loyalty.ewallet_product_50').write({'active': True})
+        self.env.ref('loyalty.gift_card_product_50').product_tmpl_id.write({'active': True})
+        self.env.ref('loyalty.ewallet_product_50').product_tmpl_id.write({'active': True})
         # Create programs
         programs = self.create_programs([
             ('gift_card_1', 'gift_card'),
@@ -822,7 +822,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         # Deactivate all other programs to avoid interference
         (LoyaltyProgram.search([])).write({'pos_ok': False})
         # But activate the gift_card_product_50 because it's shared among new gift card programs.
-        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+        self.env.ref('loyalty.gift_card_product_50').product_tmpl_id.write({'active': True})
         # Create gift card program
         self.create_programs([('arbitrary_name', 'gift_card')])
         self.start_pos_tour("GiftCardWithRefundtTour")
@@ -1385,7 +1385,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         # Deactivate all other programs to avoid interference
         (LoyaltyProgram.search([])).write({'pos_ok': False})
         # But activate the ewallet_product_50 because it's shared among new ewallet programs.
-        self.env.ref('loyalty.ewallet_product_50').write({'active': True})
+        self.env.ref('loyalty.ewallet_product_50').product_tmpl_id.write({'active': True})
         # Create ewallet program
         ewallet_program = self.create_programs([('arbitrary_name', 'ewallet')])['arbitrary_name']
         # Create test partners
@@ -1609,7 +1609,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         # Deactivate all other programs to avoid interference
         (LoyaltyProgram.search([])).write({'pos_ok': False})
         # But activate the gift_card_product_50 because it's shared among new gift card programs.
-        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+        self.env.ref('loyalty.gift_card_product_50').product_tmpl_id.write({'active': True})
 
         # Create gift card program
         gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
@@ -1642,7 +1642,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         LoyaltyProgram = self.env['loyalty.program']
         # Deactivate all other programs to avoid interference and activate the gift_card_product_50
         LoyaltyProgram.search([]).write({'pos_ok': False})
-        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+        self.env.ref('loyalty.gift_card_product_50').product_tmpl_id.write({'active': True})
 
         # Create gift card program
         gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
@@ -1995,7 +1995,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             ]
         })
         self.env['loyalty.program'].search([]).write({'active': False})
-        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+        self.env.ref('loyalty.gift_card_product_50').product_tmpl_id.write({'active': True})
         # Create gift card program
         self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
 
@@ -2174,7 +2174,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         Check the gift card value when the reward has taxes
         """
         self.env['loyalty.program'].search([]).write({'active': False})
-        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+        self.env.ref('loyalty.gift_card_product_50').product_tmpl_id.write({'active': True})
 
         gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
         self.product_a = self.env["product.product"].create({
@@ -2386,7 +2386,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         LoyaltyProgram = self.env['loyalty.program']
         (LoyaltyProgram.search([])).write({'pos_ok': False})
-        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+        self.env.ref('loyalty.gift_card_product_50').product_tmpl_id.write({'active': True})
 
         gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
         self.env['res.partner'].create({'name': 'Test Partner'})
@@ -2502,7 +2502,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         # Deactivate all other programs to avoid interference
         (LoyaltyProgram.search([])).write({'pos_ok': False})
         # But activate the ewallet_product_50 because it's shared among new ewallet programs.
-        self.env.ref('loyalty.ewallet_product_50').write({'active': True})
+        self.env.ref('loyalty.ewallet_product_50').product_tmpl_id.write({'active': True})
         # Create ewallet program
         ewallet_program = self.create_programs([('arbitrary_name', 'ewallet')])['arbitrary_name']
         # Create test partners
