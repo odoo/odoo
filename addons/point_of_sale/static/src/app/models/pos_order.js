@@ -300,6 +300,7 @@ export class PosOrder extends Base {
                         product_id: line.getProduct().id,
                         name: line.getFullProductName(),
                         basic_name: line.getProduct().name,
+                        display_name: line.getProduct().name,
                         note: line.getNote(),
                         quantity: line.getQuantity(),
                     };
