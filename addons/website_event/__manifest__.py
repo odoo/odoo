@@ -54,9 +54,9 @@
         ],
         'web.assets_tests': [
             'website_event/static/tests/**/*',
+            'website_event/static/src/js/tours/**/*',
         ],
         'web.assets_frontend': [
-            'website_event/static/src/js/tours/**/*',
             'website_event/static/src/scss/event_templates_common.scss',
             'website_event/static/src/scss/event_templates_list.scss',
             'website_event/static/src/scss/event_templates_page.scss',
