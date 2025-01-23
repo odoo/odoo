@@ -93,6 +93,10 @@
             <field name="group_ids" eval="[(3, ref('lunch.group_lunch_manager'))]"/>
         </record>
 
+        <record id="base.default_user_group" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('lunch.group_lunch_manager'))]"/>
+        </record>
+
         <record model="lunch.product.category" id="categ_pasta">
             <field name="name">Pasta</field>
         </record>

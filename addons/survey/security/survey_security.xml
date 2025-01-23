@@ -20,10 +20,6 @@
             <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>
 
-        <record id="base.default_user" model="res.users">
-            <field name="group_ids" eval="[(4, ref('group_survey_user'))]"/>
-        </record>
-
         <!-- SURVEY: SURVEY, PAGE, STAGE, QUESTION, LABEL -->
         <record id="survey_survey_rule_survey_manager" model="ir.rule">
             <field name="name">Survey: manager: all</field>

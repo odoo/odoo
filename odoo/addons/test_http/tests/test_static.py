@@ -277,10 +277,10 @@ class TestHttpStatic(TestHttpStaticCommon):
 
     def test_static16_public_access_rights(self):
         self.authenticate(None, None)
-        default_user = self.env.ref('base.default_user')
+        user_template = self.env.ref('base.template_portal_user_id')
 
         with self.subTest('model access rights'):
-            res = self.url_open(f'/web/content/res.users/{default_user.id}/image_128')
+            res = self.url_open(f'/web/content/res.users/{user_template.id}/image_128')
             self.assertEqual(res.status_code, 404)
 
         with self.subTest('attachment + field access rights'):

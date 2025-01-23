@@ -19,10 +19,6 @@
             <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>
 
-        <record id="base.default_user" model="res.users">
-            <field name="group_ids" eval="[(4,ref('hr_contract.group_hr_contract_manager'))]"/>
-        </record>
-
         <record id="ir_rule_hr_contract_history_multi_company" model="ir.rule">
             <field name="name">HR Contract History: Multi Company</field>
             <field name="model_id" ref="model_hr_contract_history"/>

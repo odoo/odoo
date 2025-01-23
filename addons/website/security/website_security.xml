@@ -13,20 +13,9 @@
         <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         <field name="implied_ids" eval="[(4, ref('group_website_restricted_editor')), (4, ref('base.group_sanitize_override'))]"/>
         <field name="category_id" ref="base.module_category_website_website"/>
-    </record>
-
-    <record id="base.default_user" model="res.users">
-        <field name="group_ids" eval="[(4, ref('group_website_designer'))]"/>
-    </record>
-    <!-- FIXME: groups on existing users should probably be updated when implied_ids is, or existing users don't get the relevant implied groups on module installation... -->
-    <record id="base.user_admin" model="res.users">
-        <field name="group_ids" eval="[(4, ref('website.group_website_designer'))]"/>
-    </record>
-
-    <!-- NOTE: this group implication is needed so that any admin user can do the website onboarding
-        after website app installation. -->
-    <record id="base.group_system" model="res.groups">
-        <field name="implied_ids" eval="[(4, ref('website.group_website_designer'))]"/>
+        <!-- NOTE: this group implication is needed so that any admin user can do the website onboarding
+            after website app installation. -->
+        <field name="implied_by_ids" eval="[(4, ref('base.group_system'))]"/>
     </record>
 
     <data noupdate="1">

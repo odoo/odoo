@@ -45,5 +45,10 @@
             <field name="alarm_type">email</field>
             <field name="mail_template_id" ref="calendar.calendar_template_meeting_reminder"/>
         </record>
+
+        <record id="default_privacy" model="ir.config_parameter">
+            <field name="key">calendar.default_privacy</field>
+            <field name="value">public</field>
+        </record>
     </data>
 </odoo>

@@ -7,6 +7,10 @@
             <field name="group_ids" eval="[(3, ref('project.group_project_manager'))]"/>
         </record>
 
+        <record id="base.default_user_group" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('project.group_project_manager'))]"/>
+        </record>
+
         <!-- Groups : Add milestones feature by default -->
         <record id="base.group_user" model="res.groups">
             <field name="implied_ids" eval="[Command.link(ref('group_project_milestone'))]"/>

@@ -36,10 +36,6 @@
         <field name="implied_ids" eval="[(4, ref('purchase.group_send_reminder'))]"/>
     </record>
 
-    <record id="base.default_user" model="res.users">
-        <field name="group_ids" eval="[(4,ref('purchase.group_purchase_manager'))]"/>
-    </record>
-
     <record model="ir.rule" id="purchase_order_comp_rule">
         <field name="name">Purchase Order multi-company</field>
         <field name="model_id" ref="model_purchase_order"/>

@@ -17,9 +17,6 @@
         </record>
 
     <data noupdate="1">
-        <record id="base.default_user" model="res.users">
-            <field name="group_ids" eval="[(4,ref('fleet.fleet_group_manager'))]"/>
-        </record>
         <record id="fleet_rule_contract_visibility_manager" model="ir.rule">
             <field name="name">Administrator has all rights on vehicle's contracts</field>
             <field name="model_id" ref="model_fleet_vehicle_log_contract"/>

@@ -296,22 +296,25 @@ class TestUsers2(UsersCommonCase):
                 "Setting a valid email as login should update the partner's email"
             )
 
-    def test_reified_groups(self):
+    def test_default_groups(self):
         """ The groups handler doesn't use the "real" view with pseudo-fields
         during installation, so it always works (because it uses the normal
         group_ids field).
         """
+        default_group = self.env.ref('base.default_user_group')
+        test_group = self.env['res.groups'].create({'name': 'test_group'})
+        default_group.implied_ids = test_group
+
         # use the specific views which has the pseudo-fields
         f = Form(self.env['res.users'], view='base.view_users_form')
         f.name = "bob"
         f.login = "bob"
         user = f.save()
 
-        self.assertIn(self.env.ref('base.group_user'), user.group_ids)
+        group_user = self.env.ref('base.group_user')
 
-        # all template user groups are copied
-        default_user = self.env.ref('base.default_user')
-        self.assertEqual(default_user.group_ids, user.group_ids)
+        self.assertIn(group_user, user.group_ids)
+        self.assertEqual(default_group.implied_ids + group_user, user.group_ids)
 
     def test_selection_groups(self):
         # create 3 groups that should be in a selection
