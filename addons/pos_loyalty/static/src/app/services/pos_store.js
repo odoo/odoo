@@ -469,6 +469,10 @@ patch(PosStore.prototype, {
     },
     getPotentialFreeProductRewards() {
         const order = this.getOrder();
+        const result = [];
+        if (!order) {
+            return result;
+        }
         const allCouponPrograms = Object.values(order.uiState.couponPointChanges)
             .map((pe) => ({
                 program_id: pe.program_id,
@@ -480,7 +484,6 @@ patch(PosStore.prototype, {
                     coupon_id: coupon.id,
                 }))
             );
-        const result = [];
         for (const couponProgram of allCouponPrograms) {
             const program = this.models["loyalty.program"].get(couponProgram.program_id);
             if (
