@@ -235,7 +235,7 @@
                                 <label for="use_partner_credit_limit"/>
                                 <div class="o_row">
                                     <field name="use_partner_credit_limit"/>
-                                    <field name="credit_limit" class="oe_inline" attrs="{'invisible': [('use_partner_credit_limit', '=', False)]}"/>
+                                    <field name="credit_limit" class="oe_inline" widget="monetary" options="{'currency_field': 'currency_id'}"  attrs="{'invisible': [('use_partner_credit_limit', '=', False)]}"/>
                                 </div>
                             </group>
                         </group>
