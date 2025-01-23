@@ -168,7 +168,9 @@
                                     </div>
                                 </div>
                             </setting>
-                            <setting company_dependent="1" help="Trigger alerts when creating Invoices and Sales Orders for Partners with a Total Receivable amount exceeding a limit.">
+                            <setting company_dependent="1"
+                                     help="Trigger alerts when creating Invoices and Sales Orders for Partners with a Total Receivable amount exceeding a limit.
+                                     Set a value greater than 0.0 to activate a credit limit check">
                                 <field name="account_use_credit_limit"/>
                                 <div class="content-group mt-2" invisible="not account_use_credit_limit">
                                     <div class="row">
