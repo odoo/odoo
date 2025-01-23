@@ -4560,9 +4560,8 @@ class AccountMove(models.Model):
                 'in_receipt': _('Draft Purchase Receipt'),
                 'entry': _('Draft Entry'),
             }[self.move_type]
-            name += ' '
         if self.name and self.name != '/':
-            name += self.name
+            name = f"{name} {self.name}".strip()
             if self.env.context.get('input_full_display_name'):
                 if self.partner_id:
                     name += f', {self.partner_id.name}'
@@ -5772,7 +5771,7 @@ class AccountMove(models.Model):
     def _get_invoice_proforma_pdf_report_filename(self):
         """ Get the filename of the generated proforma PDF invoice report. """
         self.ensure_one()
-        return f"{self.name.replace('/', '_')}_proforma.pdf"
+        return f"{self._get_move_display_name().replace(' ', '_').replace('/', '_')}_proforma.pdf"
 
     def _prepare_edi_vals_to_export(self):
         ''' The purpose of this helper is to prepare values in order to export an invoice through the EDI system.
