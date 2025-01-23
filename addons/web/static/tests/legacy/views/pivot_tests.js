@@ -3128,10 +3128,10 @@ QUnit.module('Views', {
             pivot.$('th').slice(8).text(),
             [
                 'Total',
-                    '2016-12-15',
-                    '2016-12-17',
-                    '2016-11-22',
-                    '2016-11-03'
+                    '15 Dec 2016',
+                    '17 Dec 2016',
+                    '22 Nov 2016',
+                    '03 Nov 2016'
             ].join(''),
             "The row headers should be as expected"
         );
@@ -3143,7 +3143,7 @@ QUnit.module('Views', {
             pivot.$('th').slice(0, 7).text(),
             [
                 '', 'Total',                                                '',
-                    '2016-12-15', '2016-12-17', '2016-11-22', '2016-11-03',
+                    '15 Dec 2016', '17 Dec 2016', '22 Nov 2016', '03 Nov 2016',
             ].join(''),
             "The col headers should be as expected"
         );
@@ -3171,7 +3171,7 @@ QUnit.module('Views', {
             pivot.$('th').slice(0, 7).text(),
             [
                 '', 'Total',                                                '',
-                    '2016-11-22', '2016-11-03', '2016-12-15', '2016-12-17',
+                    '22 Nov 2016', '03 Nov 2016', '15 Dec 2016', '17 Dec 2016',
             ].join(''),
             "The col headers should be as expected"
         );
