@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Invoicing',
@@ -112,6 +111,13 @@ You could use this simplified accounting in case you work with an (external) acc
             'account/static/src/js/search/search_bar/search_bar.js',
             'account/static/src/helpers/*.js',
             'account/static/src/core/utils/*.js',
+            'account/static/src/js/search/search_model/search_model.js',
+            ('remove', 'account/static/src/views/account_graph/account_graph_view.js'),
+            ('remove', 'account/static/src/views/account_pivot/account_pivot_view.js'),
+        ],
+        'web.assets_backend_lazy': [
+            'account/static/src/views/account_graph/account_graph_view.js',
+            'account/static/src/views/account_pivot/account_pivot_view.js',
         ],
         # Unit test files
         'web.assets_unit_tests': [
