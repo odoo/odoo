@@ -2158,9 +2158,7 @@ export class PosStore extends WithLazyGetterTrap {
         ];
 
         list = list
-            .filter(
-                (product) => !excludedProductIds.includes(product.id) && product.available_in_pos
-            )
+            .filter((product) => !excludedProductIds.includes(product.id) && product.canBeDisplayed)
             .slice(0, 100);
 
         return searchWord !== ""
