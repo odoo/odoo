@@ -167,6 +167,7 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         bom = self.env['mrp.bom'].create({
             'product_tmpl_id': tracked_product.product_tmpl_id.id,
             'product_qty': 1,
+            'picking_type_id': self.warehouse_1.manu_type_id.id,
             'bom_line_ids': [Command.create({
                 'product_id': component.id,
                 'product_qty': 1,

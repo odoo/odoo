@@ -353,9 +353,8 @@ class TestBoM(TestMrpCommon):
                 })
             ]
         })
-        location = self.env.ref('stock.stock_location_stock')
-        self.env['stock.quant']._update_available_quantity(self.product_2, location, 4.0)
-        self.env['stock.quant']._update_available_quantity(self.product_3, location, 8.0)
+        self.env['stock.quant']._update_available_quantity(self.product_2, self.stock_location, 4.0)
+        self.env['stock.quant']._update_available_quantity(self.product_3, self.stock_location, 8.0)
         # Force the kit product available qty to be computed at the same time than its component quantities
         # Because `qty_available` of a bom kit "recurse" on `qty_available` of its component,
         # and this is a tricky thing for the ORM:
@@ -368,19 +367,17 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(kit_product_qty, 8)
 
     def test_14_bom_kit_qty_multi_uom(self):
-        uom_dozens = self.env.ref('uom.product_uom_dozen')
-        uom_unit = self.env.ref('uom.product_uom_unit')
         product_unit = self.env['product.product'].create({
             'name': 'Test units',
             'type': 'consu',
             'is_storable': True,
-            'uom_id': uom_unit.id,
+            'uom_id': self.uom_unit.id,
         })
         product_dozens = self.env['product.product'].create({
             'name': 'Test dozens',
             'type': 'consu',
             'is_storable': True,
-            'uom_id': uom_dozens.id,
+            'uom_id': self.uom_dozen.id,
         })
 
         self.env['mrp.bom'].create({
@@ -392,12 +389,11 @@ class TestBoM(TestMrpCommon):
                 (0, 0, {
                     'product_id': product_dozens.id,
                     'product_qty': 1,
-                    'product_uom_id': uom_unit.id,
+                    'product_uom_id': self.uom_unit.id,
                 })
             ]
         })
-        location = self.env.ref('stock.stock_location_stock')
-        self.env['stock.quant']._update_available_quantity(product_dozens, location, 1.0)
+        self.env['stock.quant']._update_available_quantity(product_dozens, self.stock_location, 1.0)
         self.assertEqual(product_unit.qty_available, 12.0)
 
     def test_13_negative_on_hand_qty(self):
@@ -407,12 +403,10 @@ class TestBoM(TestMrpCommon):
         precision = self.env.ref('uom.decimal_product_uom')
         precision.digits = 5
 
-        uom_unit = self.env.ref('uom.product_uom_unit')
-
         _ = self.env['mrp.bom'].create({
             'product_id': self.product_2.id,
             'product_tmpl_id': self.product_2.product_tmpl_id.id,
-            'product_uom_id': uom_unit.id,
+            'product_uom_id': self.uom_unit.id,
             'product_qty': 1.00,
             'type': 'phantom',
             'bom_line_ids': [
@@ -423,7 +417,7 @@ class TestBoM(TestMrpCommon):
             ]
         })
 
-        self.env['stock.quant']._update_available_quantity(self.product_3, self.env.ref('stock.stock_location_stock'), -384.0)
+        self.env['stock.quant']._update_available_quantity(self.product_3, self.stock_location, -384.0)
 
         kit_product_qty = self.product_2.qty_available  # Without product_3 in the prefetch
         # Use the float_repr to remove extra small decimal (and represent the front-end behavior)
@@ -716,24 +710,22 @@ class TestBoM(TestMrpCommon):
     def test_bom_report_dozens(self):
         """ Simulate a drawer bom with dozens as bom units
         """
-        uom_dozen = self.env.ref('uom.product_uom_dozen')
-        uom_unit = self.env.ref('uom.product_uom_unit')
         drawer = self.env['product.product'].create({
             'name': 'drawer',
             'is_storable': True,
-            'uom_id': uom_unit.id,
+            'uom_id': self.uom_unit.id,
         })
         screw = self.env['product.product'].create({
             'name': 'screw',
             'is_storable': True,
-            'uom_id': uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'standard_price': 7.01
         })
 
         bom_form_drawer = Form(self.env['mrp.bom'])
         bom_form_drawer.product_tmpl_id = drawer.product_tmpl_id
         bom_form_drawer.product_qty = 11
-        bom_form_drawer.product_uom_id = uom_dozen
+        bom_form_drawer.product_uom_id = self.uom_dozen
         bom_drawer = bom_form_drawer.save()
 
         workcenter = self.env['mrp.workcenter'].create({
@@ -746,7 +738,7 @@ class TestBoM(TestMrpCommon):
         with Form(bom_drawer) as bom:
             with bom.bom_line_ids.new() as line:
                 line.product_id = screw
-                line.product_uom_id = uom_unit
+                line.product_uom_id = self.uom_unit
                 line.product_qty = 5
             with bom.operation_ids.new() as operation:
                 operation.workcenter_id = workcenter
@@ -984,27 +976,24 @@ class TestBoM(TestMrpCommon):
         Check the Price for 80 units of Finished -> 2.92$:
         """
         # Create a products templates
-        uom_unit = self.env.ref('uom.product_uom_unit')
-        uom_kg = self.env.ref('uom.product_uom_kgm')
-        uom_dozen = self.env.ref('uom.product_uom_dozen')
         uom_litre = self.env.ref('uom.product_uom_litre')
 
         finished = self.env['product.product'].create({
             'name': 'Finished',
             'is_storable': True,
-            'uom_id': uom_unit.id,
+            'uom_id': self.uom_unit.id,
         })
 
         semi_finished = self.env['product.product'].create({
             'name': 'Semi-Finished',
             'is_storable': True,
-            'uom_id': uom_kg.id,
+            'uom_id': self.uom_kg.id,
         })
 
         assembly = self.env['product.product'].create({
             'name': 'Assembly',
             'is_storable': True,
-            'uom_id': uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
         })
 
         raw_material = self.env['product.product'].create({
@@ -1020,7 +1009,7 @@ class TestBoM(TestMrpCommon):
         bom_finished.product_qty = 100
         with bom_finished.bom_line_ids.new() as line:
             line.product_id = semi_finished
-            line.product_uom_id = uom_kg
+            line.product_uom_id = self.uom_kg
             line.product_qty = 5
         bom_finished = bom_finished.save()
 
@@ -1029,7 +1018,7 @@ class TestBoM(TestMrpCommon):
         bom_semi_finished.product_qty = 11
         with bom_semi_finished.bom_line_ids.new() as line:
             line.product_id = assembly
-            line.product_uom_id = uom_dozen
+            line.product_uom_id = self.uom_dozen
             line.product_qty = 2
         bom_semi_finished = bom_semi_finished.save()
 
@@ -1047,9 +1036,6 @@ class TestBoM(TestMrpCommon):
         self.assertAlmostEqual(report_values['lines']['bom_cost'], 2.92)
 
     def test_bom_report_capacity_with_quantity_of_0(self):
-        uom_unit = self.env.ref('uom.product_uom_unit')
-        location = self.env.ref('stock.stock_location_stock')
-
         target = self.env['product.product'].create({
             'name': 'Target',
             'is_storable': True,
@@ -1059,13 +1045,13 @@ class TestBoM(TestMrpCommon):
             'name': 'Component one',
             'is_storable': True,
         })
-        self.env['stock.quant']._update_available_quantity(product_one, location, 3.0)
+        self.env['stock.quant']._update_available_quantity(product_one, self.stock_location, 3.0)
 
         product_two = self.env['product.product'].create({
             'name': 'Component two',
             'is_storable': True,
         })
-        self.env['stock.quant']._update_available_quantity(product_two, location, 4.0)
+        self.env['stock.quant']._update_available_quantity(product_two, self.stock_location, 4.0)
 
         bom = self.env['mrp.bom'].create({
             'product_tmpl_id': target.product_tmpl_id.id,
@@ -1076,12 +1062,12 @@ class TestBoM(TestMrpCommon):
                 Command.create({
                     'product_id': product_one.id,
                     'product_qty': 0,
-                    'product_uom_id': uom_unit.id,
+                    'product_uom_id': self.uom_unit.id,
                 }),
                 Command.create({
                     'product_id': product_two.id,
                     'product_qty': 0.1,
-                    'product_uom_id': uom_unit.id,
+                    'product_uom_id': self.uom_unit.id,
                 })
             ]
         })
@@ -1093,8 +1079,7 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(report_values["lines"]["producible_qty"], 40)
 
     def test_bom_report_capacity_with_duplicate_components(self):
-        location = self.env.ref('stock.stock_location_stock')
-        self.env['stock.quant']._update_available_quantity(self.product_2, location, 2.0)
+        self.env['stock.quant']._update_available_quantity(self.product_2, self.stock_location, 2.0)
         bom = self.env['mrp.bom'].create({
             'product_tmpl_id': self.product_3.product_tmpl_id.id,
             'product_qty': 1,
@@ -1117,12 +1102,10 @@ class TestBoM(TestMrpCommon):
     def test_bom_report_same_component(self):
         """ Test report bom structure with duplicated components.
         """
-        location = self.env.ref('stock.stock_location_stock')
-        uom_unit = self.env.ref('uom.product_uom_unit')
         final_product_tmpl = self.env['product.template'].create({'name': 'Final Product', 'is_storable': True})
         component_product = self.env['product.product'].create({'name': 'Compo 1', 'is_storable': True})
 
-        self.env['stock.quant']._update_available_quantity(component_product, location, 3.0)
+        self.env['stock.quant']._update_available_quantity(component_product, self.stock_location, 3.0)
 
         bom = self.env['mrp.bom'].create({
             'product_tmpl_id': final_product_tmpl.id,
@@ -1133,12 +1116,12 @@ class TestBoM(TestMrpCommon):
                 Command.create({
                     'product_id': component_product.id,
                     'product_qty': 3,
-                    'product_uom_id': uom_unit.id,
+                    'product_uom_id': self.uom_unit.id,
                 }),
                 Command.create({
                     'product_id': component_product.id,
                     'product_qty': 3,
-                    'product_uom_id': uom_unit.id,
+                    'product_uom_id': self.uom_unit.id,
                 })
             ]
         })
@@ -1164,18 +1147,17 @@ class TestBoM(TestMrpCommon):
         """
         Cannot set a BOM line on a BOM with the same product as the BOM itself
         """
-        uom_unit = self.env.ref('uom.product_uom_unit')
         finished = self.env['product.product'].create({
             'name': 'Finished',
             'is_storable': True,
-            'uom_id': uom_unit.id,
+            'uom_id': self.uom_unit.id,
         })
         bom_finished = Form(self.env['mrp.bom'])
         bom_finished.product_tmpl_id = finished.product_tmpl_id
         bom_finished.product_qty = 100
         with bom_finished.bom_line_ids.new() as line:
             line.product_id = finished
-            line.product_uom_id = uom_unit
+            line.product_uom_id = self.uom_unit
             line.product_qty = 5
         with self.assertRaises(exceptions.ValidationError), self.cr.savepoint():
             bom_finished = bom_finished.save()
@@ -1184,14 +1166,13 @@ class TestBoM(TestMrpCommon):
         """
         Cannot set a BOM line on a BOM with the same product variant as the BOM itself
         """
-        uom_unit = self.env.ref('uom.product_uom_unit')
         bom_finished = Form(self.env['mrp.bom'])
         bom_finished.product_tmpl_id = self.product_7_template
         bom_finished.product_id = self.product_7_3
         bom_finished.product_qty = 100
         with bom_finished.bom_line_ids.new() as line:
             line.product_id = self.product_7_3
-            line.product_uom_id = uom_unit
+            line.product_uom_id = self.uom_unit
             line.product_qty = 5
         with self.assertRaises(exceptions.ValidationError), self.cr.savepoint():
             bom_finished = bom_finished.save()
@@ -1202,14 +1183,13 @@ class TestBoM(TestMrpCommon):
         Usecase for example A black T-shirt made  from a white T-shirt and
         black color.
         """
-        uom_unit = self.env.ref('uom.product_uom_unit')
         bom_finished = Form(self.env['mrp.bom'])
         bom_finished.product_tmpl_id = self.product_7_template
         bom_finished.product_id = self.product_7_3
         bom_finished.product_qty = 100
         with bom_finished.bom_line_ids.new() as line:
             line.product_id = self.product_7_2
-            line.product_uom_id = uom_unit
+            line.product_uom_id = self.uom_unit
             line.product_qty = 5
         bom_finished = bom_finished.save()
 
@@ -1217,14 +1197,13 @@ class TestBoM(TestMrpCommon):
         """
         Can set a BOM line on a BOM with a product variant when the BOM has no variant selected
         """
-        uom_unit = self.env.ref('uom.product_uom_unit')
         bom_finished = Form(self.env['mrp.bom'])
         bom_finished.product_tmpl_id = self.product_6.product_tmpl_id
         # no product_id
         bom_finished.product_qty = 100
         with bom_finished.bom_line_ids.new() as line:
             line.product_id = self.product_7_2
-            line.product_uom_id = uom_unit
+            line.product_uom_id = self.uom_unit
             line.product_qty = 5
         bom_finished = bom_finished.save()
 
@@ -1233,28 +1212,25 @@ class TestBoM(TestMrpCommon):
             The multiple quantity of the orderpoint should be the
             quantity of the BoM in the UoM of the product.
         """
-
-        uom_kg = self.env.ref('uom.product_uom_kgm')
-        uom_gram = self.env.ref('uom.product_uom_gram')
         manufacturing_route_id = self.ref('mrp.route_warehouse0_manufacture')
 
         product_gram = self.env['product.product'].create({
             'name': 'Product sold in grams',
             'is_storable': True,
-            'uom_id': uom_gram.id,
+            'uom_id': self.uom_gm.id,
             'route_ids': [(4, manufacturing_route_id)],
         })
         # We create a BoM that manufactures 2kg of product
         self.env['mrp.bom'].create({
             'product_id': product_gram.id,
             'product_tmpl_id': product_gram.product_tmpl_id.id,
-            'product_uom_id': uom_kg.id,
+            'product_uom_id': self.uom_kg.id,
             'product_qty': 2.0,
             'type': 'normal',
         })
         # We create a delivery order of 2300 grams
         picking_form = Form(self.env['stock.picking'])
-        picking_form.picking_type_id = self.env.ref('stock.picking_type_out')
+        picking_form.picking_type_id = self.picking_type_out
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = product_gram
             move.product_uom_qty = 2300.0
@@ -1265,7 +1241,7 @@ class TestBoM(TestMrpCommon):
         self.env.flush_all()
         self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
         orderpoint = self.env['stock.warehouse.orderpoint'].search([('product_id', '=', product_gram.id)])
-        orderpoint.replenishment_uom_id = uom_kg
+        orderpoint.replenishment_uom_id = self.uom_kg
         self.assertEqual(orderpoint.route_id.id, manufacturing_route_id)
         self.assertEqual(orderpoint.qty_to_order, 3000.0)
 
@@ -1382,8 +1358,6 @@ class TestBoM(TestMrpCommon):
         Checks the generated BoM has the expected BoM lines UoM and quantity.
         """
         self.env.user.group_ids += self.env.ref('uom.group_uom')
-        uom_unit = self.env.ref('uom.product_uom_unit')
-        uom_dozen = self.env.ref('uom.product_uom_dozen')
         # Creates some products.
         common_vals = {'is_storable': True}
         finished_product = self.env['product.product'].create(dict(common_vals, name="CO² Molecule"))
@@ -1393,26 +1367,26 @@ class TestBoM(TestMrpCommon):
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = finished_product
         mo_form.product_qty = 1
-        mo_form.product_uom_id = uom_dozen
+        mo_form.product_uom_id = self.uom_dozen
         with mo_form.move_raw_ids.new() as raw_move:
             raw_move.product_id = component_1
             raw_move.product_uom_qty = 12
-            raw_move.product_uom = uom_unit
+            raw_move.product_uom = self.uom_unit
         with mo_form.move_raw_ids.new() as raw_move:
             raw_move.product_id = component_2
             raw_move.product_uom_qty = 2
-            raw_move.product_uom = uom_dozen
+            raw_move.product_uom = self.uom_dozen
         mo = mo_form.save()
         mo.action_confirm()
         # Generates a BoM from the MO and checks its values.
         action_generate_new_bom = mo.action_generate_bom()
         bom_form = Form(self.env['mrp.bom'].with_context(action_generate_new_bom['context']))
         bom_from_mo = bom_form.save()
-        self.assertEqual(bom_from_mo.product_uom_id, uom_dozen)
+        self.assertEqual(bom_from_mo.product_uom_id, self.uom_dozen)
         self.assertEqual(bom_from_mo.product_qty, 1)
         self.assertRecordValues(bom_from_mo.bom_line_ids, [
-            {'product_id': component_1.id, 'product_qty': 12, 'product_uom_id': uom_unit.id},
-            {'product_id': component_2.id, 'product_qty': 2, 'product_uom_id': uom_dozen.id},
+            {'product_id': component_1.id, 'product_qty': 12, 'product_uom_id': self.uom_unit.id},
+            {'product_id': component_2.id, 'product_qty': 2, 'product_uom_id': self.uom_dozen.id},
         ])
 
     def test_bom_generated_from_mo_with_byproducts(self):
@@ -1468,13 +1442,12 @@ class TestBoM(TestMrpCommon):
         bom = self.make_bom(prod1, prod2)
         bom.product_qty = 100
 
-        loc = self.env.ref("stock.stock_location_stock")
-        self.env["stock.quant"]._update_available_quantity(p3, loc, 10)
-        self.env["stock.quant"]._update_available_quantity(p4, loc, 10)
-        self.env["stock.quant"]._update_available_quantity(p6, loc, 5.5)
-        self.env["stock.quant"]._update_available_quantity(p6, loc, -4.8)
-        self.env["stock.quant"]._update_available_quantity(prod2, loc, 5.57)
-        self.env["stock.quant"]._update_available_quantity(prod2, loc, -5)
+        self.env["stock.quant"]._update_available_quantity(p3, self.stock_location, 10)
+        self.env["stock.quant"]._update_available_quantity(p4, self.stock_location, 10)
+        self.env["stock.quant"]._update_available_quantity(p6, self.stock_location, 5.5)
+        self.env["stock.quant"]._update_available_quantity(p6, self.stock_location, -4.8)
+        self.env["stock.quant"]._update_available_quantity(prod2, self.stock_location, 5.57)
+        self.env["stock.quant"]._update_available_quantity(prod2, self.stock_location, -5)
 
         self.assertEqual(p1.qty_available, 5.0)
         self.assertEqual(p2.qty_available, 10.0)
@@ -1605,8 +1578,6 @@ class TestBoM(TestMrpCommon):
         Checks the MO's raw moves' quantities are correctly updated.
         """
         self.env.user.group_ids += self.env.ref('uom.group_uom')
-        uom_unit = self.env.ref('uom.product_uom_unit')
-        uom_dozen = self.env.ref('uom.product_uom_dozen')
         # Creates a BoM.
         common_vals = {'is_storable': True}
         finished_product = self.env['product.product'].create(dict(common_vals, name="Monster in Jar"))
@@ -1622,12 +1593,12 @@ class TestBoM(TestMrpCommon):
         mo_form = Form(self.env['mrp.production'])
         mo_form.bom_id = bom
         mo_form.product_qty = 4
-        mo_form.product_uom_id = uom_dozen
+        mo_form.product_uom_id = self.uom_dozen
         mo_1 = mo_form.save()
         self.assertRecordValues(mo_1.move_raw_ids, [{
-            'product_id': component_1.id, 'product_uom_qty': 24, 'product_uom': uom_unit.id,
+            'product_id': component_1.id, 'product_uom_qty': 24, 'product_uom': self.uom_unit.id,
         }, {
-            'product_id': component_2.id, 'product_uom_qty': 24, 'product_uom': uom_unit.id,
+            'product_id': component_2.id, 'product_uom_qty': 24, 'product_uom': self.uom_unit.id,
         }])
 
         ### Test draft MO ###
@@ -1637,19 +1608,19 @@ class TestBoM(TestMrpCommon):
             "BoM changed, it should be marked as updated.")
         mo_1.action_update_bom()
         self.assertRecordValues(mo_1,
-            [{'product_qty': 4, 'product_uom_id': uom_dozen.id}])
+            [{'product_qty': 4, 'product_uom_id': self.uom_dozen.id}])
         self.assertRecordValues(mo_1.move_raw_ids, [{
-            'product_id': component_1.id, 'product_uom_qty': 48, 'product_uom': uom_unit.id,
+            'product_id': component_1.id, 'product_uom_qty': 48, 'product_uom': self.uom_unit.id,
         }, {
-            'product_id': component_2.id, 'product_uom_qty': 48, 'product_uom': uom_unit.id,
+            'product_id': component_2.id, 'product_uom_qty': 48, 'product_uom': self.uom_unit.id,
         }])
 
         ### Test confirmed MO ###
         mo_1.product_qty = 1
         self.assertRecordValues(mo_1.move_raw_ids, [{
-            'product_id': component_1.id, 'product_uom_qty': 12, 'product_uom': uom_unit.id,
+            'product_id': component_1.id, 'product_uom_qty': 12, 'product_uom': self.uom_unit.id,
         }, {
-            'product_id': component_2.id, 'product_uom_qty': 12, 'product_uom': uom_unit.id,
+            'product_id': component_2.id, 'product_uom_qty': 12, 'product_uom': self.uom_unit.id,
         }])
         mo_1.action_confirm()
         # Updates the BoM by set the first BoM line's quantity to 2.
@@ -1663,26 +1634,26 @@ class TestBoM(TestMrpCommon):
         mo_1.action_update_bom()
         self.assertEqual(mo_1.is_outdated_bom, False)
         self.assertRecordValues(mo_1.move_raw_ids, [{
-            'product_id': component_1.id, 'product_uom_qty': 24, 'product_uom': uom_unit.id,
+            'product_id': component_1.id, 'product_uom_qty': 24, 'product_uom': self.uom_unit.id,
         }, {
-            'product_id': component_2.id, 'product_uom_qty': 12, 'product_uom': uom_unit.id,
+            'product_id': component_2.id, 'product_uom_qty': 12, 'product_uom': self.uom_unit.id,
         }])
 
         # Do the same but while changing the raw moves' UoM too.
         mo_form = Form(self.env['mrp.production'])
         mo_form.bom_id = bom
-        mo_form.product_uom_id = uom_dozen
+        mo_form.product_uom_id = self.uom_dozen
         with mo_form.move_raw_ids.edit(0) as move_raw:
             move_raw.product_uom_qty = 2
-            move_raw.product_uom = uom_dozen
+            move_raw.product_uom = self.uom_dozen
         with mo_form.move_raw_ids.edit(1) as move_raw:
             move_raw.product_uom_qty = 1
-            move_raw.product_uom = uom_dozen
+            move_raw.product_uom = self.uom_dozen
         mo_2 = mo_form.save()
         mo_2.action_confirm()
         self.assertRecordValues(mo_2.move_raw_ids, [
-            {'product_id': component_1.id, 'product_uom_qty': 2, 'product_uom': uom_dozen.id},
-            {'product_id': component_2.id, 'product_uom_qty': 1, 'product_uom': uom_dozen.id}
+            {'product_id': component_1.id, 'product_uom_qty': 2, 'product_uom': self.uom_dozen.id},
+            {'product_id': component_2.id, 'product_uom_qty': 1, 'product_uom': self.uom_dozen.id}
         ])
 
         # Updates the BoM by set the second BoM line's quantity to 2.
@@ -1698,8 +1669,8 @@ class TestBoM(TestMrpCommon):
         # As there is a difference for the second component, the quantity should
         # be updated (resets the UoM from the BoM line's one).
         self.assertRecordValues(mo_2.move_raw_ids, [
-            {'product_id': component_1.id, 'product_uom_qty': 2, 'product_uom': uom_dozen.id},
-            {'product_id': component_2.id, 'product_uom_qty': 24, 'product_uom': uom_unit.id}
+            {'product_id': component_1.id, 'product_uom_qty': 2, 'product_uom': self.uom_dozen.id},
+            {'product_id': component_2.id, 'product_uom_qty': 24, 'product_uom': self.uom_unit.id}
         ])
 
     def test_bom_updates_mo_after_updating_operations(self):
@@ -2133,19 +2104,17 @@ class TestBoM(TestMrpCommon):
 
     def test_availability_bom_type_kit(self):
         """ Product should only be available if bom type is kit """
-        uom_unit = self.env.ref('uom.product_uom_unit')
-        location = self.env.ref('stock.stock_location_stock')
         product_one = self.env['product.product'].create({
             'name': 'Product',
             'is_storable': True,
-            'uom_id': uom_unit.id,
+            'uom_id': self.uom_unit.id,
         })
         product_two = self.env['product.product'].create({
             'name': 'Component',
             'is_storable': True,
-            'uom_id': uom_unit.id,
+            'uom_id': self.uom_unit.id,
         })
-        self.env['stock.quant']._update_available_quantity(product_two, location, 4.0)
+        self.env['stock.quant']._update_available_quantity(product_two, self.stock_location, 4.0)
 
         bom_normal = self.env['mrp.bom'].create({
             'product_tmpl_id': product_one.product_tmpl_id.id,

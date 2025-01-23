@@ -12,8 +12,6 @@ class TestWarehouseMrp(common.TestMrpCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        unit = cls.env.ref("uom.product_uom_unit")
-        cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.depot_location = cls.env['stock.location'].create({
             'name': 'Depot',
             'usage': 'internal',
@@ -36,12 +34,13 @@ class TestWarehouseMrp(common.TestMrpCommon):
         cls.bom_laptop = cls.env['mrp.bom'].create({
             'product_tmpl_id': cls.laptop.product_tmpl_id.id,
             'product_qty': 1,
-            'product_uom_id': unit.id,
+            'product_uom_id': cls.uom_unit.id,
+            'picking_type_id': cls.warehouse_1.manu_type_id.id,
             'consumption': 'flexible',
             'bom_line_ids': [(0, 0, {
                 'product_id': cls.graphics_card.id,
                 'product_qty': 1,
-                'product_uom_id': unit.id
+                'product_uom_id': cls.uom_unit.id
             })],
             'operation_ids': [
                 (0, 0, {'name': 'Cutting Machine', 'workcenter_id': cls.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
@@ -169,7 +168,6 @@ class TestWarehouseMrp(common.TestMrpCommon):
             mto.id,
         ])]
         warehouse_2.resupply_route_ids.rule_ids.procure_method = 'make_to_order'
-        customer_location = self.env.ref('stock.stock_location_customers')
         pg = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mto'})
 
         self.env['procurement.group'].run([
@@ -177,7 +175,7 @@ class TestWarehouseMrp(common.TestMrpCommon):
                 self.product_6,
                 5.0,
                 self.product_6.uom_id,
-                customer_location,
+                self.customer_location,
                 'test_ressuply',
                 'test_ressuply',
                 self.warehouse_1.company_id,
@@ -286,7 +284,7 @@ class TestWarehouseMrp(common.TestMrpCommon):
 
     def test_backorder_unpacking(self):
         """ Test that movement of pack in backorder is correctly handled. """
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse = self.warehouse_1
         warehouse.write({'manufacture_steps': 'pbm'})
 
         self.product_1.is_storable = True
@@ -418,7 +416,7 @@ class TestKitPicking(common.TestMrpCommon):
         cls.test_supplier = cls.env['stock.location'].create({
             'name': 'supplier',
             'usage': 'supplier',
-            'location_id': cls.env.ref('stock.stock_location_stock').id,
+            'location_id': cls.stock_location.id,
         })
 
         cls.expected_quantities = {
@@ -439,7 +437,7 @@ class TestKitPicking(common.TestMrpCommon):
             'location_id': self.test_supplier.id,
             'location_dest_id': self.warehouse_1.wh_input_stock_loc_id.id,
             'partner_id': self.test_partner.id,
-            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'picking_type_id': self.picking_type_in.id,
         })
         self.env['stock.move'].create({
             'name': self.kit_parent.name,
@@ -448,7 +446,7 @@ class TestKitPicking(common.TestMrpCommon):
             'picked': True,
             'product_uom': self.kit_parent.uom_id.id,
             'picking_id': picking.id,
-            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'picking_type_id': self.picking_type_in.id,
             'location_id':  self.test_supplier.id,
             'location_dest_id': self.warehouse_1.wh_input_stock_loc_id.id,
         })
@@ -468,7 +466,7 @@ class TestKitPicking(common.TestMrpCommon):
             'location_id': self.test_supplier.id,
             'location_dest_id': self.warehouse_1.wh_input_stock_loc_id.id,
             'partner_id': self.test_partner.id,
-            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'picking_type_id': self.picking_type_in.id,
         })
         move_receipt_1 = self.env['stock.move'].create({
             'name': self.kit_parent.name,
@@ -476,7 +474,7 @@ class TestKitPicking(common.TestMrpCommon):
             'product_uom_qty': 3,
             'product_uom': self.kit_parent.uom_id.id,
             'picking_id': picking.id,
-            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'picking_type_id': self.picking_type_in.id,
             'location_id':  self.test_supplier.id,
             'location_dest_id': self.warehouse_1.wh_input_stock_loc_id.id,
         })
@@ -489,8 +487,6 @@ class TestKitPicking(common.TestMrpCommon):
 
     def test_add_sml_with_kit_to_confirmed_picking(self):
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        customer_location = self.env.ref('stock.stock_location_customers')
-        stock_location = warehouse.lot_stock_id
         in_type = warehouse.in_type_id
 
         self.bom_4.type = 'phantom'
@@ -500,15 +496,15 @@ class TestKitPicking(common.TestMrpCommon):
 
         receipt = self.env['stock.picking'].create({
             'picking_type_id': in_type.id,
-            'location_id': customer_location.id,
-            'location_dest_id': stock_location.id,
+            'location_id': self.customer_location.id,
+            'location_dest_id': self.stock_location.id,
             'move_ids': [(0, 0, {
                 'name': product.name,
                 'product_id': product.id,
                 'product_uom_qty': 1,
                 'product_uom': product.uom_id.id,
-                'location_id': customer_location.id,
-                'location_dest_id': stock_location.id,
+                'location_id': self.customer_location.id,
+                'location_dest_id': self.stock_location.id,
             })]
         })
         receipt.action_confirm()
@@ -518,8 +514,8 @@ class TestKitPicking(common.TestMrpCommon):
             'product_id': kit.id,
             'quantity': 1,
             'product_uom_id': kit.uom_id.id,
-            'location_id': customer_location.id,
-            'location_dest_id': stock_location.id,
+            'location_id': self.customer_location.id,
+            'location_dest_id': self.stock_location.id,
         })]
         receipt.move_ids.picked = True
 
@@ -535,11 +531,10 @@ class TestKitPicking(common.TestMrpCommon):
         """ Test the `stock.move.line` method `_get_aggregated_product_quantities`,
         who returns data used to print delivery slips, using kits.
         """
-        uom_unit = self.env.ref('uom.product_uom_unit')
         kit, kit_component_1, kit_component_2, not_kit_1, not_kit_2 = self.env['product.product'].create([{
             'name': name,
             'is_storable': True,
-            'uom_id': uom_unit.id,
+            'uom_id': self.uom_unit.id,
         } for name in ['Kit', 'Kit Component 1', 'Kit Component 2', 'Not Kit 1', 'Not Kit 2']])
 
         bom_kit = self.env['mrp.bom'].create({
@@ -561,7 +556,7 @@ class TestKitPicking(common.TestMrpCommon):
         })
 
         delivery_form = Form(self.env['stock.picking'])
-        delivery_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        delivery_form.picking_type_id = self.picking_type_in
         with delivery_form.move_ids_without_package.new() as move:
             move.product_id = bom_kit.product_id
             move.product_uom_qty = 4
