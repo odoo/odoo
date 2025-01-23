@@ -670,7 +670,6 @@ export class SelfOrder extends Reactive {
 
         try {
             const uuid = this.currentOrder.uuid;
-            this.currentOrder.recomputeOrderData();
             const data = await rpc(
                 `/pos-self-order/process-order/${this.config.self_ordering_mode}`,
                 {
