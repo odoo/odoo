@@ -6,7 +6,7 @@ from odoo import api, Command, fields, models, SUPERUSER_ID, _
 from odoo.tools.float_utils import float_compare
 from odoo.exceptions import UserError
 from odoo.tools import format_list
-from odoo.tools.misc import OrderedSet
+from odoo.tools.misc import OrderedSet, groupby
 
 
 class PurchaseOrder(models.Model):
@@ -37,6 +37,7 @@ class PurchaseOrder(models.Model):
        help="Red: Late\n\
             Orange: To process today\n\
             Green: On time")
+    picking_type_visible = fields.Boolean(compute='_compute_picking_type_visible')
 
     @api.depends('order_line.move_ids.picking_id')
     def _compute_picking_ids(self):
@@ -77,6 +78,15 @@ class PurchaseOrder(models.Model):
     @api.depends('picking_type_id')
     def _compute_dest_address_id(self):
         self.filtered(lambda po: po.picking_type_id.default_location_dest_id.usage != 'customer').dest_address_id = False
+
+    @api.depends('company_id')
+    def _compute_picking_type_visible(self):
+        if self.env.user.has_group('stock.group_stock_multi_locations'):
+            self.picking_type_visible = True
+            return
+        for company, orders in groupby(self, lambda o: o.company_id):
+            picking_type = self._get_picking_type(company.id)
+            self.env['purchase.order'].concat(*orders).picking_type_visible = not bool(picking_type)
 
     @api.onchange('company_id')
     def _onchange_company_id(self):
@@ -251,9 +261,6 @@ class PurchaseOrder(models.Model):
         picking_type = self.env['stock.picking.type'].search([('code', '=', 'incoming'), ('warehouse_id.company_id', '=', company_id)])
         if not picking_type:
             picking_type = self.env['stock.picking.type'].search([('code', '=', 'incoming'), ('warehouse_id', '=', False)])
-        company_warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_id)], limit=1)
-        if not company_warehouse:
-            self.env['stock.warehouse']._warehouse_redirect_warning()
         return picking_type[:1]
 
     def _prepare_group_vals(self):
