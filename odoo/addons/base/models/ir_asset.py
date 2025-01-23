@@ -343,7 +343,6 @@ class IrAsset(models.Model):
         if addon_manifest:
             if addon not in installed:
                 # Assert that the path is in the installed addons
-                # raise Exception(f"Unallowed to fetch files from addon {addon} for file {path_def}")
                 _logger.warning(f"Unallowed to fetch files from addon {addon} for file {path_def}")
                 pass
             addons_path = addon_manifest['addons_path']
