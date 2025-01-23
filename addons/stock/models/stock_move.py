@@ -2028,6 +2028,29 @@ class StockMove(models.Model):
         self.ensure_one()
         return self.state != 'draft' or (self.picking_id.immediate_transfer and self.state == 'draft')
 
+    def _track_move_from_forecast_report(self, model, product_id):
+        moves_before_reservation = []
+        product_ids = [product_id]
+        if model == 'product.template':
+            product_ids = self.env['product.product'].search([('product_tmpl_id', '=', product_id)]).ids
+        for move in self:
+            if move.product_id.id not in product_ids or \
+               move.state in ('draft', 'cancel', 'done') or not move.product_uom_qty or \
+               float_compare(move.reserved_availability, move.product_uom_qty, precision_digits=move.product_uom.rounding) == 0.0:
+                continue
+            moves_before_reservation.append((move, move.reserved_availability))
+        return moves_before_reservation
+
+    def _generate_flags_for_forecast_report(self, moves_before_reservation):
+        should_refresh = False
+        should_alert = False
+        for move, previous_reserved_qty in moves_before_reservation:
+            if not should_refresh and float_compare(move.reserved_availability, previous_reserved_qty, precision_digits=move.product_uom.rounding) != 0.0:
+                should_refresh = True
+            elif not should_alert and float_compare(move.reserved_availability, previous_reserved_qty, precision_digits=move.product_uom.rounding) == 0.0:
+                should_alert = True
+        return dict(should_refresh=should_refresh, should_alert=should_alert)
+
     def _trigger_scheduler(self):
         """ Check for auto-triggered orderpoints and trigger them. """
         if not self or self.env['ir.config_parameter'].sudo().get_param('stock.no_auto_scheduler'):

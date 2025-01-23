@@ -135,7 +135,8 @@
                             </td>
                             <td t-esc="line['receipt_date'] or ''"
                                 t-attf-class="#{line['is_late'] and 'o_grid_warning'}"/>
-                            <td t-if="docs['multiple_product']" t-esc="line['product']['display_name']"/>
+                            <td t-if="docs['multiple_product']" t-esc="line['product']['display_name']"
+                                t-att-data-product-id="line['product']['id']"/>
                             <td class="text-right"><t t-if="not line['replenishment_filled']">- </t><t t-esc="line['quantity']" t-options="{'widget': 'float', 'precision': precision}"/></td>
                             <td t-attf-class="#{not line['replenishment_filled'] and 'o_grid_warning'}" name="usedby_cell">
                                 <button t-if="line['move_out'] and line['move_out'].picking_id"

@@ -5,7 +5,7 @@ import json
 import time
 from ast import literal_eval
 from datetime import date, timedelta
-from itertools import groupby
+from itertools import groupby, product
 from operator import attrgetter, itemgetter
 from collections import defaultdict
 
@@ -813,6 +813,21 @@ class Picking(models.Model):
             raise UserError(_('Nothing to check the availability for.'))
         moves._action_assign()
         return True
+
+    def action_assign_from_forecast_report(self, model, product_id):
+        """ Calls `action_assign` but also keeps track of reservations to know
+        if there is reservations who can't be fully done.
+
+        :returns: a dict of flags to pass to the client.
+        :rtype: dict
+        """
+        self.ensure_one()
+        moves_before_reservation = self.move_lines._track_move_from_forecast_report(model, product_id)
+        self.action_assign()
+        flags = self.move_lines._generate_flags_for_forecast_report(moves_before_reservation)
+        if flags['should_alert']:
+            flags['doc_name'] = self.display_name
+        return flags
 
     def action_cancel(self):
         self.mapped('move_lines')._action_cancel()
