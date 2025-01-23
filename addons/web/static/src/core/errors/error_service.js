@@ -82,7 +82,8 @@ export const errorService = {
                 // ignore Chrome video internal error: https://crbug.com/809574
                 "ResizeObserver loop limit exceeded",
             ];
-            if (!error && errorsToIgnore.includes(message)) {
+            if (!(error instanceof Error) && errorsToIgnore.includes(message)) {
+                ev.preventDefault();
                 return;
             }
             const isRedactedError = !filename && !lineno && !colno;
