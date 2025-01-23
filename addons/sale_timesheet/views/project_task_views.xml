@@ -6,9 +6,6 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="hr_timesheet.project_invoice_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='action_view_so']" position="attributes">
-                <attribute name="attrs">{'invisible': ['|', ('allow_billable', '=', False), ('sale_order_id', '=', False)]}</attribute>
-            </xpath>
             <xpath expr="//button[@name='%(project.action_project_task_burndown_chart_report)d']" position="after">
                 <button name="action_billable_time_button" type="object" class="oe_stat_button" icon="fa-clock-o" attrs="{'invisible': ['|', ('allow_timesheets', '=', False), ('analytic_account_id', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_approver">
                     <div class="o_field_widget o_stat_info">
@@ -65,6 +62,17 @@
                         </div>
                     </div>
                 </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_project_view_form_sale_project" model="ir.ui.view">
+        <field name="name">project.project.form.inherit.sale_project</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="sale_project.view_edit_project_inherit_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_so']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('allow_billable', '=', False), ('sale_order_id', '=', False)]}</attribute>
             </xpath>
         </field>
     </record>
@@ -136,7 +144,7 @@
         <record id="project_task_view_form_inherit_sale_timesheet" model="ir.ui.view">
             <field name="name">project.task.form.inherit.timesheet</field>
             <field name="model">project.task</field>
-            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="inherit_id" ref="sale_project.view_sale_project_inherit_form"/>
             <field name="groups_id" eval="[(6,0, (ref('hr_timesheet.group_hr_timesheet_user'),))]"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='timesheet_ids']/tree" position="attributes">
@@ -195,7 +203,7 @@
         <record id="view_task_form2_inherit_sale_timesheet" model="ir.ui.view">
             <field name="name">view.task.form2.inherit</field>
             <field name="model">project.task</field>
-            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="inherit_id" ref="sale_project.view_sale_project_inherit_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='sale_line_id']" position="attributes">
                     <attribute name="context">{'with_remaining_hours': True, 'with_price_unit': True}</attribute>
