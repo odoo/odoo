@@ -2,7 +2,7 @@
 <odoo>
 
 <template name="Map" id="s_map">
-    <section class="s_map pb56 pt56" data-map-type="m" data-map-zoom="12" t-att-data-map-address="' '.join(filter(None, (user_id.company_id.street, user_id.company_id.city, user_id.company_id.state_id.display_name, user_id.company_id.country_id.display_name)))">
+    <section class="s_map pb56 pt56 rounded-3" data-map-type="m" data-map-zoom="12" t-att-data-map-address="' '.join(filter(None, (user_id.company_id.street, user_id.company_id.city, user_id.company_id.state_id.display_name, user_id.company_id.country_id.display_name)))">
         <div class="map_container o_not_editable">
             <div class="css_non_editable_mode_hidden">
                 <div class="missing_option_warning alert alert-info rounded-0 fade show d-none d-print-none">
