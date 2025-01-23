@@ -940,7 +940,17 @@ class ProductTemplate(models.Model):
                 raise UserError(_("You can not change the inventory tracking of a product that is currently reserved on a stock move. If you need to change the inventory tracking, you should first unreserve the stock move."))
         if 'is_storable' in vals and not vals['is_storable'] and any(p.is_storable and not float_is_zero(p.qty_available, precision_rounding=p.uom_id.rounding) for p in self):
             raise UserError(_("Available quantity should be set to zero before changing inventory tracking"))
-        return super().write(vals)
+        products_to_convert_ids = False
+        moves_to_unreserve = False
+        if 'uom_id' in vals:
+            products_to_convert_ids = self.filtered(lambda template: template.uom_id.id != vals['uom_id']).product_variant_ids.ids
+            moves_to_unreserve = self.env['stock.move'].sudo().search([('product_id', 'in', products_to_convert_ids), ('quantity', '!=', 0)])
+            moves_to_unreserve._do_unreserve()
+            self.env['stock.quant'].sudo().search([('product_id', 'in', products_to_convert_ids)])._update_uom_id(self.env['uom.uom'].browse(vals['uom_id']))
+        res = super().write(vals)
+        if moves_to_unreserve:
+            moves_to_unreserve._action_assign()
+        return res
 
     def copy(self, default=None):
         new_products = super().copy(default=default)
