@@ -1016,7 +1016,7 @@ class HrExpenseSheet(models.Model):
         for sheet in self:
             employee_ids = sheet.expense_line_ids.mapped('employee_id')
             if len(employee_ids) > 1 or (len(employee_ids) == 1 and employee_ids != sheet.employee_id):
-                raise ValidationError(_('You cannot add expenses of another employee.'))
+                raise ValidationError(_('Employee field on the report must have the same employee selected as on the expense lines.'))
 
     @api.constrains('expense_line_ids', 'company_id')
     def _check_expense_lines_company(self):
