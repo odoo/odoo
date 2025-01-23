@@ -356,6 +356,10 @@ export class Rtc extends Record {
         }, 30_000);
     }
 
+    get displaySurface() {
+        return this.state.sourceScreenStream?.getVideoTracks()[0].getSettings().displaySurface;
+    }
+
     setPttReleaseTimeout(duration = 200) {
         this.state.pttReleaseTimeout = browser.setTimeout(() => {
             this.setTalking(false);

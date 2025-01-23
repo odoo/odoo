@@ -17,6 +17,7 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { ScreenshareWarningOverlay } from "@mail/discuss/call/common/screenshare_warning_overlay";
 
 /**
  * @typedef CardData
@@ -44,6 +45,7 @@ export class Call extends Component {
         this.grid = useRef("grid");
         this.notification = useService("notification");
         this.rtc = useService("discuss.rtc");
+        this.overlay = useService("overlay");
         this.state = useState({
             isFullscreen: false,
             sidebar: false,
@@ -309,5 +311,25 @@ export class Call extends Component {
         this.state.isFullscreen = Boolean(
             document.webkitFullscreenElement || document.fullscreenElement
         );
+        if (
+            this.state.isFullscreen &&
+            this.rtc.state.sourceScreenStream &&
+            this.rtc.displaySurface !== "browser"
+        ) {
+            this.showWarningOverlay();
+        } else {
+            this.removeWarningOverlay();
+        }
+    }
+
+    showWarningOverlay() {
+        this.removeWarningOverlayFn = this.overlay.add(ScreenshareWarningOverlay, {
+            removeWarningOverlay: this.removeWarningOverlay.bind(this),
+        });
+    }
+
+    removeWarningOverlay() {
+        this.removeWarningOverlayFn?.();
+        this.removeWarningOverlayFn = null;
     }
 }
