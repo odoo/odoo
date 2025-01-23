@@ -129,6 +129,8 @@ class MailThread(models.AbstractModel):
             ('partner_id', operator, operand),
         ])
         # use inselect to avoid reading thousands of potentially followed objects
+        if not followers:
+            return [('id', 'in', [])]
         return [('id', neg + 'inselect', followers.subselect('res_id'))]
 
     @api.depends('message_follower_ids')
