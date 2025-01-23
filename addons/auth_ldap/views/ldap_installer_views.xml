@@ -7,28 +7,33 @@
             <field name="model">res.company.ldap</field>
             <field name="arch" type="xml">
                 <form string="LDAP Configuration">
-                    <group>
-                        <field name="company"/>
-                        <newline/>
-                        <group string="Server Information">
-                              <field name="ldap_server"/>
-                              <field name="ldap_server_port"/>
-                              <field name="ldap_tls"/>
+                    <header>
+                        <button name="test_ldap_connection" type="object" string="Test Connection" icon="fa-television" class="btn-primary"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="company"/>
+                            <newline/>
+                            <group string="Server Information">
+                                <field name="ldap_server"/>
+                                <field name="ldap_server_port"/>
+                                <field name="ldap_tls"/>
+                            </group>
+                            <group string="Login Information">
+                                <field name="ldap_binddn"/>
+                                <field name="ldap_password" password="True"/>
+                            </group>
+                            <group string="Process Parameter">
+                                <field name="ldap_base"/>
+                                <field name="ldap_filter"/>
+                                <field name="sequence"/>
+                            </group>
+                            <group string="User Information">
+                                <field name="create_user"/>
+                                <field name="user"/>
+                            </group>
                         </group>
-                        <group string="Login Information">
-                              <field name="ldap_binddn"/>
-                              <field name="ldap_password" password="True"/>
-                        </group>
-                        <group string="Process Parameter">
-                             <field name="ldap_base"/>
-                             <field name="ldap_filter"/>
-                             <field name="sequence"/>
-                        </group>
-                        <group string="User Information">
-                             <field name="create_user"/>
-                             <field name="user"/>
-                        </group>
-                    </group>
+                    </sheet>
                 </form>
             </field>
         </record>
