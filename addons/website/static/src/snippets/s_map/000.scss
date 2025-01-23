@@ -10,6 +10,10 @@ $s-map-desc-hover-alpha: 0.55 !default;
 
     .map_container {
         @include o-position-absolute(0, 0, 0, 0);
+
+        .s_map_embedded {
+            @extend %o-we-inner-border-radius;
+        }
     }
     .description {
         @include o-position-absolute(auto, 0, 0, 0);
