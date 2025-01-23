@@ -3,7 +3,7 @@ import { OdooCorePlugin } from "@spreadsheet/plugins";
 const { tokenize, parse, convertAstNodes, astToFormula } = spreadsheet;
 const { corePluginRegistry, migrationStepRegistry } = spreadsheet.registries;
 
-export const ODOO_VERSION = 13;
+export const ODOO_VERSION = 14;
 
 const MAP_V1 = {
     PIVOT: "ODOO.PIVOT",
@@ -34,6 +34,25 @@ migrationStepRegistry.add("odoo_migration_sorted_column", {
         const version = data.odooVersion || 0;
         if (version < 13) {
             data = migrate12to13(data);
+        }
+        return data;
+    },
+});
+
+migrationStepRegistry.add("odoo_missing_sorted_column", {
+    versionFrom: "25.1",
+    migrate(data) {
+        if (!data.pivots) {
+            return data;
+        }
+        for (const pivot of Object.values(data.pivots)) {
+            if (!pivot.sortedColumn) {
+                continue;
+            }
+            const measureIds = pivot.measures.map((measure) => measure.id);
+            if (!measureIds.includes(pivot.sortedColumn.measure)) {
+                delete pivot.sortedColumn;
+            }
         }
         return data;
     },

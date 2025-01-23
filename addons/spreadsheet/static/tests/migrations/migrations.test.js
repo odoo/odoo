@@ -513,27 +513,72 @@ test("Pivot sorted columns are migrated (12 to 13)", () => {
         pivots: {
             1: {
                 name: "test",
-                sortedColumn: { groupId: [[], []], measure: "testMeasure", order: "desc" },
+                sortedColumn: { groupId: [[], []], measure: "testMeasure:sum", order: "desc" },
                 columns: [],
                 rows: [],
-                measures: [],
+                measures: [{ id: "testMeasure:sum", fieldName: "testMeasure", aggregator: "sum" }],
             },
             2: {
                 name: "test2",
-                sortedColumn: { groupId: [[], [1]], measure: "testMeasure", order: "desc" },
+                sortedColumn: { groupId: [[], [1]], measure: "testMeasure:sum", order: "desc" },
                 columns: [{ fieldName: "product_id" }],
                 rows: [],
-                measures: [],
+                measures: [{ id: "testMeasure:sum", fieldName: "testMeasure", aggregator: "sum" }],
             },
         },
     };
     const migratedData = load(data);
     expect(migratedData.pivots["1"].sortedColumn).toEqual({
         domain: [],
-        measure: "testMeasure",
+        measure: "testMeasure:sum",
         order: "desc",
     });
     expect(migratedData.pivots["2"].sortedColumn).toBe(undefined);
+});
+
+test("drop sorted column if not part of measures", async () => {
+    const data = {
+        version: 23,
+        pivots: {
+            1: {
+                type: "ODOO",
+                columns: [],
+                domain: [],
+                measures: [{ id: "probability:sum", fieldName: "probability", aggregator: "sum" }],
+                model: "partner",
+                rows: [{ fieldName: "bar" }],
+                sortedColumn: {
+                    measure: "foo",
+                    order: "asc",
+                    groupId: [[], [1]],
+                },
+                name: "A pivot",
+                context: {},
+                fieldMatching: {},
+                formulaId: "1",
+            },
+            2: {
+                type: "ODOO",
+                columns: [],
+                domain: [],
+                measures: [{ id: "probability:sum", fieldName: "probability", aggregator: "sum" }],
+                model: "partner",
+                rows: [{ fieldName: "bar" }],
+                sortedColumn: {
+                    measure: "probability:sum",
+                    order: "asc",
+                    groupId: [[], [1]],
+                },
+                name: "A pivot",
+                context: {},
+                fieldMatching: {},
+                formulaId: "2",
+            },
+        },
+    };
+    const migratedData = load(data);
+    expect(migratedData.pivots["1"].sortedColumn).toBe(undefined);
+    expect(migratedData.pivots["2"].sortedColumn).toBe(data.pivots["2"].sortedColumn); // unchanged
 });
 
 test("Odoo version is exported", () => {
