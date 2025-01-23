@@ -4,7 +4,7 @@
             <field name="name">mailing.trace.report.view.tree</field>
             <field name="model">mailing.trace.report</field>
             <field name="arch" type="xml">
-                <tree string="Mass Mailing Statistics" sample="1">
+                <tree string="Mass Mailing Statistics" sample="1" create="false" delete="false">
                     <field name="name"/>
                     <field name="campaign" groups="mass_mailing.group_mass_mailing_campaign"/>
                     <field name="mailing_type" invisible="1"/>
