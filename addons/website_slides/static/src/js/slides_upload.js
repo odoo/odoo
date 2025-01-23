@@ -15,9 +15,9 @@ publicWidget.registry.websiteSlidesUpload = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        if ('openModal' in this.$el.data()) {
-            this._openDialog(this.$el);
-            this.$el.data('openModal', false);
+        if ("openModal" in this.el.dataset) {
+            this._openDialog(this.el);
+            this.el.dataset.openModal = false;
         }
         return this._super.apply(this, arguments);
     },
@@ -26,14 +26,17 @@ publicWidget.registry.websiteSlidesUpload = publicWidget.Widget.extend({
     // Private
     //--------------------------------------------------------------------------
 
-    _openDialog: function ($element) {
-        const dataset = $element.data();
+    _openDialog(element) {
+        const dataset = element.dataset;
+        const modulesToInstall = dataset.modulesToInstall
+            ? JSON.parse(dataset.modulesToInstall)
+            : [];
         this.call("dialog", "add", SlideUploadDialog, {
             categoryId: dataset.categoryId,
-            channelId: dataset.channelId,
+            channelId: parseInt(dataset.channelId),
             canPublish: dataset.canPublish === "True",
             canUpload: dataset.canUpload === "True",
-            modulesToInstall: dataset.modulesToInstall || [],
+            modulesToInstall: modulesToInstall,
             openModal: dataset.openModal,
         });
     },
@@ -47,7 +50,7 @@ publicWidget.registry.websiteSlidesUpload = publicWidget.Widget.extend({
      */
     _onUploadClick: function (ev) {
         ev.preventDefault();
-        this._openDialog($(ev.currentTarget));
+        this._openDialog(ev.currentTarget);
     },
 });
 

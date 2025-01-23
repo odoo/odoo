@@ -30,12 +30,15 @@ export const WebsiteSlidesEnroll = publicWidget.Widget.extend({
             "action_request_access",
             [channelId],
         );
-        const $alert = $(clickedEl.closest(".alert"));
+        const alertEl = clickedEl.closest(".alert");
         const message = done ? _t("Request sent!") : error || _t("Unknown error, try again.");
-        $alert.replaceWith(`
-            <div class="alert alert-${done ? "success" : "danger"}" role="alert">
-                <strong>${escape(message)}</strong>
-            </div>`);
+        const alertDivEl = document.createElement("div");
+        alertDivEl.className = `alert alert-${done ? "success" : "danger"}`;
+        alertDivEl.setAttribute("role", "alert");
+        const strongElement = document.createElement("strong");
+        strongElement.textContent = escape(message);
+        alertDivEl.appendChild(strongElement);
+        alertEl.replaceWith(alertDivEl);
     },
 });
 

@@ -10,9 +10,9 @@ publicWidget.registry.websiteSlidesShare = publicWidget.Widget.extend({
     },
 
     getDocumentMaxPage() {
-        const iframe = document.querySelector("iframe.o_wslides_iframe_viewer");
-        const iframeDocument = iframe.contentWindow.document;
-        return parseInt(iframeDocument.querySelector("#page_count").innerText);
+        const iframeEl = document.querySelector("iframe.o_wslides_iframe_viewer");
+        const iframeDocument = iframeEl?.contentWindow.document;
+        return parseInt(iframeDocument?.querySelector("#page_count").innerText);
     },
 
     //--------------------------------------------------------------------------
@@ -44,13 +44,16 @@ publicWidget.registry.websiteSlidesEmbedShare = publicWidget.Widget.extend({
 
     _onShareLinkCopy: async function (ev) {
         ev.preventDefault();
-        const $clipboardBtn = $(ev.currentTarget);
-        $clipboardBtn.tooltip({title: "Copied!", trigger: "manual", placement: "bottom"});
-        var share_embed_el = this.$('#wslides_share_embed_id_' + $clipboardBtn[0].id.split('id_')[1]);
-        await browser.navigator.clipboard.writeText(share_embed_el.val() || '');
-        $clipboardBtn.tooltip('show');
+        const clipboardBtnEl = ev.currentTarget;
+        new Tooltip(clipboardBtnEl, { title: "Copied!", trigger: "manual", placement: "bottom" });
+        const shareEmbedEl = this.el.querySelector(
+            "#wslides_share_embed_id_" + clipboardBtnEl.id.split("id_")[1]
+        );
+        await browser.navigator.clipboard.writeText(shareEmbedEl.value || "");
+        const tooltip = Tooltip.getOrCreateInstance(clipboardBtnEl);
+        tooltip.show();
         setTimeout(function () {
-            $clipboardBtn.tooltip("hide");
+            tooltip.hide();
         }, 800);
     },
 });

@@ -10,8 +10,8 @@ publicWidget.registry.websiteSlidesUnsubscribe = publicWidget.Widget.extend({
     // Private
     //--------------------------------------------------------------------------
 
-    _openDialog: function ($element) {
-        var data = $element.data();
+    _openDialog(element) {
+        const data = element.dataset;
         this.call("dialog", "add", SlideUnsubscribeDialog, data);
     },
 
@@ -25,7 +25,7 @@ publicWidget.registry.websiteSlidesUnsubscribe = publicWidget.Widget.extend({
      */
     _onUnsubscribeClick: function (ev) {
         ev.preventDefault();
-        this._openDialog($(ev.currentTarget));
+        this._openDialog(ev.currentTarget);
     },
 });
 

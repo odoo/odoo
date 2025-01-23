@@ -99,11 +99,11 @@ var CourseJoinWidget = publicWidget.Widget.extend({
 
     /**
      * @private
-     * @param {Object} $el
+     * @param {Object} el
      * @param {String} message
      */
-    _popoverAlert: function ($el, message) {
-        $el.popover({
+    _popoverAlert(el, message) {
+        const popover = Popover.getOrCreateInstance(el, {
             trigger: 'focus',
             delay: {'hide': 300},
             placement: 'bottom',
@@ -112,7 +112,8 @@ var CourseJoinWidget = publicWidget.Widget.extend({
             content: function () {
                 return message;
             }
-        }).popover('show');
+        });
+        popover.show();
     },
 
     //--------------------------------------------------------------------------
@@ -125,7 +126,7 @@ var CourseJoinWidget = publicWidget.Widget.extend({
     joinChannel: function (channelId) {
         var self = this;
         rpc('/slides/channel/join', {
-            channel_id: channelId,
+            channel_id: parseInt(channelId),
         }).then(function (data) {
             if (!data.error) {
                 self.afterJoin();
@@ -137,11 +138,11 @@ var CourseJoinWidget = publicWidget.Widget.extend({
                         errorSignupAllowed: data.error_signup_allowed,
                         widget: self,
                     });
-                    self._popoverAlert(self.$el, popupContent);
+                    self._popoverAlert(self.el, popupContent);
                 } else if (data.error === 'join_done') {
-                    self._popoverAlert(self.$el, _t('You have already joined this channel'));
+                    self._popoverAlert(self.el, _t("You have already joined this channel"));
                 } else {
-                    self._popoverAlert(self.$el, _t('Unknown error'));
+                    self._popoverAlert(self.el, _t("Unknown error"));
                 }
             }
         });
@@ -158,20 +159,27 @@ publicWidget.registry.websiteSlidesCourseJoin = publicWidget.Widget.extend({
     start: function () {
         var self = this;
         var proms = [this._super.apply(this, arguments)];
-        var data = self.$el.data();
+        const data = self.el.dataset;
+        let isMemberOrInvited;
+        if (data.isMemberOrInvited) {
+            isMemberOrInvited =
+                data.isMemberOrInvited === "true" || data.isMemberOrInvited === "True"
+                    ? true
+                    : false;
+        }
         var options = {
             channel: {
                 channelEnroll: data.channelEnroll,
-                channelId: data.channelId
+                channelId: parseInt(data.channelId),
             },
             inviteHash: data.inviteHash,
             invitePartnerId: data.invitePartnerId,
             invitePreview: data.invitePreview,
-            isMemberOrInvited: data.isMemberOrInvited,
-            isPartnerWithoutUser: data.isPartnerWithoutUser
+            isMemberOrInvited: isMemberOrInvited,
+            isPartnerWithoutUser: data.isPartnerWithoutUser,
         };
-        $('.o_wslides_js_course_join').each(function () {
-            proms.push(new CourseJoinWidget(self, options).attachTo($(this)));
+        document.querySelectorAll(".o_wslides_js_course_join").forEach((el) => {
+            proms.push(new CourseJoinWidget(self, options).attachTo(el));
         });
         return Promise.all(proms);
     },

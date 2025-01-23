@@ -40,7 +40,7 @@ publicWidget.registry.websiteSlidesCategoryAdd = publicWidget.Widget.extend({
      */
     _onAddSectionClick: function (ev) {
         ev.preventDefault();
-        this._openDialog($(ev.currentTarget).attr('channel_id'));
+        this._openDialog(parseInt(ev.currentTarget.getAttribute("channel_id")));
     },
 });
 

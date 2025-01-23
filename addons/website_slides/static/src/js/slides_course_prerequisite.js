@@ -6,8 +6,8 @@ publicWidget.registry.websiteSlidesCoursePrerequisite = publicWidget.Widget.exte
 
     async start() {
         await this._super(...arguments);
-        const channels = this.$el.data('channels');
-        this.$el.popover({
+        const channels = this.el.dataset.channels.split(",");
+        Popover.getOrCreateInstance(this.el, {
             trigger: 'focus',
             placement: 'bottom',
             container: 'body',

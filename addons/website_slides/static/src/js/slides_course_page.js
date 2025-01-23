@@ -2,6 +2,7 @@ import publicWidget from '@web/legacy/js/public/public_widget';
 import { session } from "@web/session";
 import { renderToElement } from "@web/core/utils/render";
 import { rpc } from "@web/core/network/rpc";
+import { processDataset } from "./slides";
 
 /**
  * Global widget for both fullscreen view and non-fullscreen view of a slide course.
@@ -37,21 +38,23 @@ export const SlideCoursePage = publicWidget.Widget.extend({
      * @param {Boolean} completed
      */
     toggleCompletionButton: function (slide, completed = true) {
-        const $button = this.$(`.o_wslides_sidebar_done_button[data-id="${slide.id}"]`);
+        const buttonEl = this.el.querySelector(
+            `.o_wslides_sidebar_done_button[data-id="${slide.id}"]`
+        );
 
-        if (!$button.length) {
+        if (!buttonEl) {
             return;
         }
 
         const newButton = renderToElement('website.slides.sidebar.done.button', {
             slideId: slide.id,
-            uncompletedIcon: $button.data('uncompletedIcon') ?? 'fa-circle-thin',
+            uncompletedIcon: buttonEl.dataset.uncompletedIcon ?? "fa-circle-thin" ,
             slideCompleted: completed ? 1 : 0,
-            canSelfMarkUncompleted: slide.canSelfMarkUncompleted,
-            canSelfMarkCompleted: slide.canSelfMarkCompleted,
-            isMember: slide.isMember,
+            canSelfMarkUncompleted: slide.canSelfMarkUncompleted ? 1 : 0,
+            canSelfMarkCompleted: slide.canSelfMarkCompleted ? 1 : 0,
+            isMember: slide.isMember ? 1 : 0,
         });
-        $button.replaceWith(newButton);
+        buttonEl.parentNode.replaceChild(newButton, buttonEl);
     },
 
     /**
@@ -63,21 +66,25 @@ export const SlideCoursePage = publicWidget.Widget.extend({
     updateProgressbar: function (channelCompletion) {
         const completion = Math.min(100, channelCompletion);
 
-        const $completed = $('.o_wslides_channel_completion_completed');
-        const $progressbar = $('.o_wslides_channel_completion_progressbar');
+        const completedEl = document.querySelector(".o_wslides_channel_completion_completed");
+        const progressbarEl = document.querySelector(".o_wslides_channel_completion_progressbar");
 
         if (completion < 100) {
             // Hide the "Completed" text and show the progress bar
-            $completed.addClass('d-none');
-            $progressbar.removeClass('d-none').addClass('d-flex');
+            completedEl.classList.add("d-none");
+            progressbarEl?.classList.remove("d-none");
+            progressbarEl?.classList.add("d-flex");
         } else {
             // Hide the progress bar and show the "Completed" text
-            $completed.removeClass('d-none');
-            $progressbar.addClass('d-none').removeClass('d-flex');
+            completedEl.classList.remove("d-none");
+            progressbarEl?.classList.add("d-none");
+            progressbarEl?.classList.remove("d-flex");
         }
 
-        $progressbar.find('.progress-bar').css('width', `${completion}%`);
-        $progressbar.find('.o_wslides_progress_percentage').text(completion);
+        if (progressbarEl) {
+            progressbarEl.querySelector(".progress-bar").style.width = `${completion}%`;
+            progressbarEl.querySelector(".o_wslides_progress_percentage").textContent = completion;
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -118,7 +125,8 @@ export const SlideCoursePage = publicWidget.Widget.extend({
      * @param {Integer} slideId
      */
     _getSlide: function (slideId) {
-        return $(`.o_wslides_sidebar_done_button[data-id="${slideId}"]`).data();
+        return this.el.querySelector(`.o_wslides_sidebar_done_button[data-id="${slideId}"]`)
+            ?.dataset;
     },
 
     //--------------------------------------------------------------------------
@@ -135,9 +143,9 @@ export const SlideCoursePage = publicWidget.Widget.extend({
         ev.stopPropagation();
         ev.preventDefault();
 
-        const $button = $(ev.currentTarget).closest('.o_wslides_sidebar_done_button');
+        const buttonEl = ev.currentTarget.closest(".o_wslides_sidebar_done_button");
 
-        const slideData = $button.data();
+        const slideData = processDataset(buttonEl.dataset);
         const isCompleted = Boolean(slideData.completed);
 
         this._toggleSlideCompleted(slideData, !isCompleted);

@@ -9,7 +9,6 @@ function patchFullScreen() {
     const FullScreen = odoo.loader.modules.get('@website_slides/js/slides_course_fullscreen_player')[Symbol.for("default")];
     FullScreen.include({
         _renderSlide: function () {
-
             const slide = this._slideValue;
             slide.embedUrl += '&start=260';
             this._updateSlideValue(slide);

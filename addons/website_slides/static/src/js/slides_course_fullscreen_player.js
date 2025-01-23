@@ -8,6 +8,7 @@
     import { unhideConditionalElements } from '@website/js/content/inject_dom';
     import { SlideShareDialog } from './public/components/slide_share_dialog/slide_share_dialog';
     import '@website_slides/js/slides_course_join';
+    import { processDataset } from './slides';
     import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
     import { rpc } from "@web/core/network/rpc";
 
@@ -50,9 +51,10 @@
         _loadYoutubeAPI: function () {
             var self = this;
             var prom = new Promise(function (resolve, reject) {
-                if ($(document).find('script[src="' + self.youtubeUrl + '"]').length === 0) {
-                    var $youtubeElement = $('<script/>', {src: self.youtubeUrl});
-                    $(document.head).append($youtubeElement);
+                if (!document.querySelector('script[src="' + self.youtubeUrl + '"]')) {
+                    const youtubeEl = document.createElement("script");
+                    youtubeEl.src = self.youtubeUrl;
+                    document.head.append(youtubeEl);
 
                     // function called when the Youtube asset is loaded
                     // see https://developers.google.com/youtube/iframe_api_reference#Requirements
@@ -158,13 +160,9 @@
          */
         willStart: function () {
             var self = this;
-            var vimeoAPIPromise = new Promise(function (resolve, reject) {
-                if ($(document).find('script[src="' + self.vimeoScriptUrl + '"]').length === 0) {
-                    $.ajax({
-                        url: self.vimeoScriptUrl,
-                        dataType: 'script',
-                        success: function () {resolve();}
-                    });
+            const vimeoAPIPromise = new Promise((resolve, reject) => {
+                if (document.querySelector('script[src="' + self.vimeoScriptUrl + '"]')) {
+                    fetch(self.vimeoScriptUrl).then(resolve);
                 } else {
                     resolve();
                 }
@@ -185,10 +183,10 @@
          * Instantiate the Vimeo player and register the various events.
          */
         _setupVideoPlayer: async function () {
-            this.player = new Vimeo.Player(this.$('iframe')[0]);
+            this.player = new Vimeo.Player(this.el.querySelector("iframe"));
             this.videoDuration = await this.player.getDuration();
-            this.player.on('timeupdate', this._onVideoTimeUpdate.bind(this));
-            this.player.on('ended', this._onVideoEnded.bind(this));
+            this.player.addEventListener("timeupdate", this._onVideoTimeUpdate.bind(this));
+            this.player.addEventListener("ended", this._onVideoEnded.bind(this));
         },
 
         //--------------------------------------------------------------------------
@@ -247,11 +245,12 @@
         start: function () {
             var self = this;
             return this._super.apply(this, arguments).then(function () {
-                $(document).keydown(self._onKeyDown.bind(self));
+                self._onKeyDownBounded = self._onKeyDown.bind(self);
+                document.addEventListener("keydown", self._onKeyDownBounded);
             });
         },
         destroy: function () {
-            $(document).unbind('keydown', this._onKeyDown.bind(this));
+            document.removeEventListener("keydown", this._onKeyDownBounded);
             return this._super.apply(this, arguments);
         },
         //--------------------------------------------------------------------------
@@ -289,7 +288,7 @@
         _getCurrentIndex: function () {
             const slide = this._slideEntry;
             var currentIndex = this.slideEntries.findIndex(entry =>{
-                return entry.id === slide.id && entry.isQuiz === slide.isQuiz;
+                return entry.id === slide?.id && entry.isQuiz === slide?.isQuiz;
             });
             return currentIndex;
         },
@@ -305,8 +304,8 @@
          * @private
          * @param {*} ev
          */
-        _onClickMiniQuiz: function (ev) {
-            var slideID = parseInt($(ev.currentTarget).data().slide_id);
+        _onClickMiniQuiz(ev) {
+            const slideID = parseInt(ev.currentTarget.dataset.slideId);
             this._updateSlideEntry({
                 slideID: slideID,
                 isMiniQuiz: true
@@ -321,11 +320,11 @@
          */
         _onClickTab: function (ev) {
             ev.stopPropagation();
-            const $elem = $(ev.currentTarget).closest('.o_wslides_fs_sidebar_list_item');
-            if ($elem.data('canAccess') === 'True') {
-                var isQuiz = $elem.data('isQuiz');
-                var slideID = parseInt($elem.data('id'));
-                var slide = findSlide(this.slideEntries, {id: slideID, isQuiz: isQuiz});
+            const elem = ev.currentTarget.closest(".o_wslides_fs_sidebar_list_item");
+            if (elem.dataset.canAccess === "True") {
+                const isQuiz = elem.dataset.isQuiz == "1";
+                const slideID = parseInt(elem.dataset.id);
+                const slide = findSlide(this.slideEntries, { id: slideID, isQuiz: isQuiz });
                 this._updateSlideEntry(slide);
             }
         },
@@ -341,10 +340,16 @@
                 return;
             }
             this._slideEntry = slide;
-            this.$('.o_wslides_fs_sidebar_list_item.active').removeClass('active');
-            var selector = '.o_wslides_fs_sidebar_list_item[data-id='+slide.id+'][data-is-quiz!="1"]';
-
-            this.$(selector).addClass('active');
+            this.el.querySelector(".o_wslides_fs_sidebar_list_item.active")?.classList.remove("active");
+            if (slide) {
+                const selector = `.o_wslides_fs_sidebar_list_item[data-id="${slide.id}"]`;
+                const els = this.el.querySelectorAll(selector);
+                els.forEach((el) => {
+                    if(el.getAttribute("data-is-quiz") !== "1") {
+                        el.classList.add("active");
+                    }
+                });
+            }
             this.trigger_up('change_slide', this._slideEntry);
         },
 
@@ -395,7 +400,10 @@
             var slide;
             const urlParams = new URL(window.location).searchParams;
             if (defaultSlideId) {
-                slide = findSlide(this.slides, {id: defaultSlideId, isQuiz: String(urlParams.get("quiz")) === "1" });
+                slide = findSlide(this.slides, {
+                    id: defaultSlideId,
+                    isQuiz: String(urlParams.get("quiz")) === "1",
+                });
             } else {
                 slide = this.slides[0];
             }
@@ -427,8 +435,8 @@
          */
         attachTo: function (){
             var defs = [this._super.apply(this, arguments)];
-            defs.push(this.sidebar.attachTo(this.$('.o_wslides_fs_sidebar')));
-            return $.when.apply($, defs);
+            defs.push(this.sidebar.attachTo(this.el.querySelector(".o_wslides_fs_sidebar")));
+            return Promise.all(defs);
         },
         //--------------------------------------------------------------------------
         // Private
@@ -441,7 +449,7 @@
         _fetchHtmlContent: function () {
             const currentSlide = this._slideValue;
             return rpc("/slides/slide/get_html_content", {
-                'slide_id': currentSlide.id
+                'slide_id': currentSlide.id,
             }).then(function (data){
                 if (data.html_content) {
                     currentSlide.htmlContent = data.html_content;
@@ -454,7 +462,7 @@
         *
         * @private
         */
-        _fetchSlideContent: function () {
+        _fetchSlideContent: function (){
             const slide = this._slideValue;
             if (slide.category === 'article' && !slide.isQuiz) {
                 return this._fetchHtmlContent();
@@ -463,8 +471,8 @@
         },
         getDocumentMaxPage() {
             const iframe = document.querySelector("iframe.o_wslides_iframe_viewer");
-            const iframeDocument = iframe.contentWindow.document;
-            return parseInt(iframeDocument.querySelector("#page_count").innerText);
+            const iframeDocument = iframe?.contentWindow.document;
+            return parseInt(iframeDocument?.querySelector("#page_count").innerText);
         },
         /**
          * Extend the slide data list to add informations about rendering method, and other
@@ -474,22 +482,32 @@
             slidesDataList.forEach(function (slideData, index) {
                 // compute hasNext slide
                 slideData.hasNext = index < slidesDataList.length-1;
+                const domParser = new DOMParser();
                 // compute embed url
                 if (slideData.category === 'video' && slideData.videoSourceType !== 'vimeo') {
-                    slideData.embedCode = $(slideData.embedCode).attr('src') || ""; // embedCode contains an iframe tag, where src attribute is the url (youtube or embed document from odoo)
-                    var separator = slideData.embedCode.indexOf("?") !== -1 ? "&" : "?";
-                    var scheme = slideData.embedCode.indexOf('//') === 0 ? 'https:' : '';
-                    var params = { rel: 0, enablejsapi: 1, origin: window.location.origin };
+                    const parsedDocument = domParser.parseFromString(slideData.embedCode, "text/html");
+                    const embedCodeEl = parsedDocument.body.firstChild;
+                    slideData.embedCode = embedCodeEl.getAttribute("src") || ""; // embedCode contains an iframe tag, where src attribute is the url (youtube or embed document from odoo)
+                    const separator = slideData.embedCode.indexOf("?") !== -1 ? "&" : "?";
+                    const scheme = slideData.embedCode.indexOf("//") === 0 ? "https:" : "";
+                    const params = { rel: 0, enablejsapi: 1, origin: window.location.origin };
                     if (slideData.embedCode.indexOf("//drive.google.com") === -1) {
                         params.autoplay = 1;
                     }
-                    slideData.embedUrl = slideData.embedCode ? scheme + slideData.embedCode + separator + $.param(params) : "";
+                    slideData.embedUrl = slideData.embedCode ? scheme + slideData.embedCode + separator + new URLSearchParams(params).toString() : "";
                 } else if (slideData.category === 'video' && slideData.videoSourceType === 'vimeo') {
                     slideData.embedCode = markup(slideData.embedCode);
                 } else if (slideData.category === 'infographic') {
                     slideData.embedUrl = `/web/image/slide.slide/${encodeURIComponent(slideData.id)}/image_1024`;
                 } else if (slideData.category === 'document') {
-                    slideData.embedUrl = $(slideData.embedCode).attr('src');
+                    if (slideData.embedCode) {
+                        const parsedDocument = domParser.parseFromString(
+                            slideData.embedCode,
+                            "text/html"
+                        );
+                        const embedCodeEl = parsedDocument.body.firstChild;
+                        slideData.embedUrl = embedCodeEl.getAttribute("src");
+                    }
                 }
                 // fill empty property to allow searching on it with list.filter(matcher)
                 slideData.isQuiz = !!slideData.isQuiz;
@@ -515,14 +533,14 @@
          */
         _pushUrlState: function () {
             var urlParts = window.location.pathname.split('/');
-            urlParts[urlParts.length - 1] = this._slideValue.slug;
+            urlParts[urlParts.length-1] = this._slideValue?.slug;
             var url =  urlParts.join('/');
-            this.$('.o_wslides_fs_exit_fullscreen').attr('href', url);
+            this.el.querySelector(".o_wslides_fs_exit_fullscreen").setAttribute("href", url);
             var params = {'fullscreen': 1 };
-            if (this._slideValue.isQuiz) {
+            if (this._slideValue?.isQuiz) {
                 params.quiz = 1;
             }
-            var fullscreenUrl = `${url}?${$.param(params)}`;
+            const fullscreenUrl = `${url}?${new URLSearchParams(params).toString()}`;
             history.pushState(null, '', fullscreenUrl);
         },
         /**
@@ -540,40 +558,45 @@
             this._renderSlideRunning = true;
             try {
                 const slide = this._slideValue;
-                var $content = this.$('.o_wslides_fs_content');
-                $content.empty();
+                const contentEl = this.el.querySelector('.o_wslides_fs_content');
+                contentEl.innerHTML = '';
                 if (this.websiteAnimateWidget) {
                     this.websiteAnimateWidget.destroy()
                     this.websiteAnimateWidget = null;
                 }
 
                 // display quiz slide, or quiz attached to a slide
-                if (slide.category === 'quiz' || slide.isQuiz) {
-                    $content.addClass('bg-white');
+                if (slide?.category === 'quiz' || slide?.isQuiz) {
+                    contentEl.classList.add('bg-white');
                     var QuizWidget = new Quiz(this, slide, this.channel);
-                    return await QuizWidget.appendTo($content);
+                    return await QuizWidget.appendTo(contentEl);
                 }
 
                 // render slide content
-                if (['document', 'infographic'].includes(slide.category)) {
-                    $content.empty().append(renderToElement('website.slides.fullscreen.content', {widget: this}));
-                } else if (slide.category === 'video' && slide.videoSourceType === 'youtube') {
+                if (['document', 'infographic'].includes(slide?.category)) {
+                    contentEl.innerHTML = '';
+                    contentEl.appendChild(renderToElement('website.slides.fullscreen.content', {widget: this}));
+                } else if (slide?.category === 'video' && slide.videoSourceType === 'youtube') {
                     this.videoPlayer = new VideoPlayerYouTube(this, slide);
-                    return await this.videoPlayer.appendTo($content);
-                } else if (slide.category === 'video' && slide.videoSourceType === 'vimeo') {
+                    return await this.videoPlayer.appendTo(contentEl)
+                } else if (slide?.category === 'video' && slide?.videoSourceType === 'vimeo') {
                     this.videoPlayer = new VideoPlayerVimeo(this, slide);
-                    return await this.videoPlayer.appendTo($content);
-                } else if (slide.category === 'video' && slide.videoSourceType === 'google_drive') {
-                    $content.empty().append(renderToElement('website.slides.fullscreen.video.google_drive', {widget: this}));
-                } else if (slide.category === 'article'){
+                    return await this.videoPlayer.appendTo(contentEl);
+                } else if (slide?.category === 'video' && slide?.videoSourceType === 'google_drive') {
+                    contentEl.innerHTML = "";
+                    contentEl.appendChild(renderToElement("website.slides.fullscreen.video.google_drive", {widget: this}));
+                } else if (slide?.category === 'article'){
                     this.websiteAnimateWidget = new publicWidget.registry.WebsiteAnimate();
-                    var $wpContainer = $('<div>').addClass('o_wslide_fs_article_content bg-white block w-100 overflow-auto p-3');
-                    $wpContainer.html(slide.htmlContent);
-                    $content.append($wpContainer);
+                    const wpContainerEl = document.createElement("div");
+                    wpContainerEl.classList.add("o_wslide_fs_article_content", "bg-white", "block", "w-100", "overflow-auto", "p-3");
+                    if (slide.htmlContent) {
+                        wpContainerEl.innerHTML = slide.htmlContent;
+                    }
+                    contentEl.append(wpContainerEl);
                     this.trigger_up('widgets_start_request', {
-                        $target: $content,
+                        $target: contentEl,
                     });
-                    this.websiteAnimateWidget.attachTo($wpContainer);
+                    this.websiteAnimateWidget.attachTo(wpContainerEl);
                 }
                 unhideConditionalElements();
             } finally {
@@ -617,7 +640,7 @@
                 return self._renderSlide();
             }).then(function() {
                 if (slide._autoSetDone && !session.is_website_user) {  // no useless RPC call
-                    if (slide.category === 'document') {
+                    if (slide?.category === 'document') {
                         // only set the slide as completed after iFrame is loaded to avoid concurrent execution with 'embedUrl' controller
                         self.el.querySelector('iframe.o_wslides_iframe_viewer').addEventListener('load', () => self._toggleSlideCompleted(slide));
                     } else {
@@ -636,7 +659,7 @@
             var slideData = ev.data;
             var newSlide = findSlide(this.slides, {
                 id: slideData.id,
-                isQuiz: slideData.isQuiz || false,
+                isQuiz: slideData.isQuiz,
             });
             this._updateSlideValue(newSlide);
         },
@@ -661,7 +684,7 @@
             fsSlides.forEach(slide => slide.completed = completed);
 
             const currentSlide = this._slideValue;
-            if (currentSlide.id === slide.id) {
+            if (parseInt(currentSlide.id) === slide.id) {
                 currentSlide.completed = completed;
                 this._updateSlideValue(currentSlide);
 
@@ -709,8 +732,8 @@
          * @private
          */
         _toggleSidebar: function () {
-            this.$('.o_wslides_fs_sidebar').toggleClass('o_wslides_fs_sidebar_hidden');
-            this.$('.o_wslides_fs_toggle_sidebar').toggleClass('active');
+            this.el.querySelector(".o_wslides_fs_sidebar").classList.toggle("o_wslides_fs_sidebar_hidden");
+            this.el.querySelector(".o_wslides_fs_toggle_sidebar").classList.toggle("active");
         },
     });
 
@@ -725,20 +748,20 @@
             return proms;
         },
         _extractChannelData: function (){
-            return this.$el.data();
+            return this.el.dataset;
         },
         _getCurrentSlideID: function (){
-            return parseInt(this.$('.o_wslides_fs_sidebar_list_item.active').data('id'));
+            return parseInt(this.el.querySelector('.o_wslides_fs_sidebar_list_item.active').dataset.id);
         },
         /**
          * @private
          * Creates slides objects from every slide-list-cells attributes
          */
         _getSlides: function (){
-            var $slides = this.$('.o_wslides_fs_sidebar_list_item[data-can-access="True"]');
-            var slideList = [];
-            $slides.each(function () {
-                var slideData = $(this).data();
+            const slideEls = this.el.querySelectorAll(".o_wslides_fs_sidebar_list_item[data-can-access='True']");
+            const slideList = [];
+            slideEls.forEach((el) => {
+                const slideData = processDataset(el.dataset);
                 slideList.push(slideData);
             });
             return slideList;
