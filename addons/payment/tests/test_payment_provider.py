@@ -232,7 +232,8 @@ class TestPaymentProvider(PaymentCommon):
         """ Test that every possible unavailability reason is correctly reported. """
         # Disable all providers.
         providers = self.env['payment.provider'].search([])
-        providers.state = 'disabled'
+        for provider in providers:
+            provider.state = 'disabled'
 
         # Prepare a base provider.
         self.provider.write({
