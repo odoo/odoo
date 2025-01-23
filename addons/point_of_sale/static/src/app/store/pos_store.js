@@ -6,7 +6,7 @@ import { floatIsZero } from "@web/core/utils/numbers";
 import { renderToElement } from "@web/core/utils/render";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { deduceUrl, random5Chars, uuidv4, getOnNotified } from "@point_of_sale/utils";
+import { deduceUrl, random5Chars, uuidv4 } from "@point_of_sale/utils";
 import { Reactive } from "@web/core/utils/reactive";
 import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 import { ConnectionLostError } from "@web/core/network/rpc";
@@ -36,6 +36,7 @@ import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { CashMovePopup } from "@point_of_sale/app/navbar/cash_move_popup/cash_move_popup";
 import { ClosePosPopup } from "../navbar/closing_popup/closing_popup";
 import { user } from "@web/core/user";
+import { debounce } from "@web/core/utils/timing";
 
 const { DateTime } = luxon;
 
@@ -148,6 +149,7 @@ export class PosStore extends Reactive {
             await this.connectToProxy();
         }
         this.closeOtherTabs();
+        this.syncAllOrdersDebounced = debounce(this.syncAllOrders, 100);
     }
 
     get firstScreen() {
@@ -237,9 +239,8 @@ export class PosStore extends Reactive {
 
     async initServerData() {
         await this.processServerData();
-        this.onNotified = getOnNotified(this.bus, this.config.access_token);
-        this.onNotified("CLOSING_SESSION", this.closingSessionNotification.bind(this));
-        this.onNotified("SYNCHRONISATION", this.recordSynchronisation.bind(this));
+        this.data.connectWebSocket("CLOSING_SESSION", this.closingSessionNotification.bind(this));
+        this.data.connectWebSocket("SYNCHRONISATION", this.recordSynchronisation.bind(this));
         return await this.afterProcessServerData();
     }
 
@@ -503,7 +504,7 @@ export class PosStore extends Reactive {
                     await this.sendOrderInPreparation(order, true);
                 }
 
-                const cancelled = this.removeOrder(order, true);
+                const cancelled = this.removeOrder(order, false);
                 this.removePendingOrder(order);
                 if (!cancelled) {
                     return false;
@@ -1100,6 +1101,7 @@ export class PosStore extends Reactive {
         if (this.isOpenOrderShareable() || removeFromServer) {
             if (typeof order.id === "number" && !order.finalized) {
                 this.addPendingOrder([order.id], true);
+                this.syncAllOrdersDebounced();
             }
         }
 
@@ -1108,7 +1110,7 @@ export class PosStore extends Reactive {
             return;
         }
 
-        return this.data.localDeleteCascade(order, removeFromServer);
+        return this.data.localDeleteCascade(order);
     }
 
     /**
@@ -1601,6 +1603,9 @@ export class PosStore extends Reactive {
         );
     }
     showScreen(name, props) {
+        if (name === "PaymentScreen" && !props.orderUuid) {
+            name = "ProductScreen";
+        }
         if (name === "ProductScreen") {
             this.get_order()?.deselect_orderline();
         }
@@ -2030,9 +2035,9 @@ export class PosStore extends Reactive {
             }, {});
 
         // Remove lot/serial names that are already used in draft orders
-        existingLots = existingLots.filter((lot) => {
-            return lot.product_qty > (usedLotsQty[lot.name]?.total || 0);
-        });
+        existingLots = existingLots.filter(
+            (lot) => lot.product_qty > (usedLotsQty[lot.name]?.total || 0)
+        );
 
         // Check if the input lot/serial name is already used in another order
         const isLotNameUsed = (itemValue) => {

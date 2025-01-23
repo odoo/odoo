@@ -313,6 +313,28 @@ class TestSanitizer(BaseCase):
             for text in in_lst:
                 self.assertIn(text, new_html)
 
+    def test_quote_signature_container_propagation(self):
+        """Test that applying normalization twice doesn't quote more than wanted."""
+        # quote signature with bare signature in main block
+        bare_signature_body = (
+            "<div>"
+            "<div><p>Hello</p><p>Here is your document</p></div>"
+            "<div>--<br>Mark Demo</div>"
+            "<div class=\"bg-300\"></div>"
+            "</div>"
+        )
+        expected_result = (
+            "<div data-o-mail-quote-container=\"1\">"
+            "<div><p>Hello</p><p>Here is your document</p></div>"
+            "<div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\">Mark Demo</div>"
+            "<div class=\"bg-300\" data-o-mail-quote=\"1\"></div>"
+            "</div>"
+        )
+        sanitized_once = html_sanitize(bare_signature_body)
+        sanitized_twice = html_sanitize(sanitized_once)
+        self.assertEqual(sanitized_once, expected_result)
+        self.assertEqual(sanitized_twice, expected_result)
+
     def test_quote_gmail(self):
         html = html_sanitize(test_mail_examples.GMAIL_1)
         for ext in test_mail_examples.GMAIL_1_IN:
