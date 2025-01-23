@@ -550,7 +550,7 @@
                                 <th t-if="display_discount" t-attf-class="text-end {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">
                                     <span>Disc.%</span>
                                 </th>
-                                <th t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" id="taxes_header">
+                                <th t-if="not sale_order.company_id.setting_account_avatax" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" id="taxes_header">
                                     <span>Taxes</span>
                                 </th>
                                 <th class="text-end" id="subtotal_header">
@@ -594,7 +594,7 @@
                                                 <t t-out="((line.discount % 1) and '%s' or '%d') % line.discount"/>%
                                             </strong>
                                         </td>
-                                        <td t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" id="taxes">
+                                        <td t-if="not sale_order.company_id.setting_account_avatax" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" id="taxes">
                                             <span t-out="', '.join(map(lambda x: (x.description or x.name), line.tax_id))"/>
                                         </td>
                                         <td t-if="not line.is_downpayment" class="text-end" id="subtotal">
