@@ -134,7 +134,7 @@ patch(MessagingMenu.prototype, {
             // and the chat window does not look good.
             this.store.ChatWindow.get({ thread })?.close();
         } else {
-            thread.open({ fromMessagingMenu: true });
+            thread.open({ focus: true, fromMessagingMenu: true });
         }
         this.dropdown.close();
     },

@@ -72,7 +72,7 @@ const threadPatch = {
             });
             return;
         }
-        super.open();
+        super.open(...arguments);
     },
     async unpin() {
         const chatWindow = this.store.ChatWindow.get({ thread: this });
