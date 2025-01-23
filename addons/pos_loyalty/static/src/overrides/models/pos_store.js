@@ -43,6 +43,28 @@ patch(PosStore.prototype, {
             [this.data.records["pos.order"]]
         );
     },
+    async loadRecords() {
+        const couponByLineUuidCache = this.models["pos.order.line"].reduce((acc, line) => {
+            if (line.coupon_id && line.coupon_id.id < 0) {
+                acc[line.uuid] = line.coupon_id.id;
+            }
+            return acc;
+        }, {});
+
+        const result = await super.loadRecords(...arguments);
+        if (result["pos.order.line"]?.length > 0) {
+            const lines = this.models["pos.order.line"].getAllBy(
+                "uuid",
+                Object.keys(couponByLineUuidCache)
+            );
+            for (const line of Object.values(lines)) {
+                line.update({
+                    coupon_id: this.models["loyalty.card"].get(couponByLineUuidCache[line.uuid]),
+                });
+            }
+        }
+        return result;
+    },
     async updateOrder(order) {
         // Read value to trigger effect
         order?.lines?.length;

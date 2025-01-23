@@ -25,6 +25,15 @@ registry.category("mock_server").add("pos.session/load_data", async function (ro
 
 registry
     .category("mock_server")
+    .add("pos.config/get_pos_config_orders", async function (route, { args }) {
+        return {
+            data: {},
+            deleted_orders: [],
+        };
+    });
+
+registry
+    .category("mock_server")
     .add("pos.session/get_pos_ui_product_product_by_params", async function (route, { args }) {
         return this.mockSearchRead("product.product", args[1], {});
     });

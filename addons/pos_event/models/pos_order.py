@@ -17,29 +17,28 @@ class PosOrder(models.Model):
         action['domain'] = [('pos_order_id', 'in', self.ids)]
         return action
 
-    @api.model
-    def sync_from_ui(self, orders):
-        results = super().sync_from_ui(orders)
-        paid_orders = self.browse([order['id'] for order in results['pos.order'] if order['state'] in ['paid', 'done', 'invoiced']])
+    def read_for_pos(self, config_id, new_session = False, ui_orders=None):
+        result = super().read_for_pos(config_id, new_session, ui_orders)
+        paid_orders = self.filtered(lambda order: order.state in ['paid', 'invoiced'])
 
         if not paid_orders:
-            return results
+            return result
 
         lines_with_event = paid_orders.mapped('lines').filtered(lambda line: line.event_ticket_id)
         event_event_fields = self.env['event.event']._load_pos_data_fields(paid_orders[0].config_id.id)
         event_ticket_fields = self.env['event.event.ticket']._load_pos_data_fields(paid_orders[0].config_id.id)
         event_registrations_fields = self.env['event.registration']._load_pos_data_fields(paid_orders[0].config_id.id)
         event_registrations_answer_fields = self.env['event.registration.answer']._load_pos_data_fields(paid_orders[0].config_id.id)
-        results['event.registration'] = lines_with_event.event_registration_ids.read(event_registrations_fields, load=False)
-        results['event.event'] = lines_with_event.event_registration_ids.mapped('event_id').read(event_event_fields, load=False)
-        results['event.event.ticket'] = lines_with_event.event_registration_ids.mapped('event_ticket_id').read(event_ticket_fields, load=False)
-        results['event.registration.answer'] = lines_with_event.event_registration_ids.mapped('registration_answer_ids').read(event_registrations_answer_fields, load=False)
+        result['event.registration'] = lines_with_event.event_registration_ids.read(event_registrations_fields, load=False)
+        result['event.event'] = lines_with_event.event_registration_ids.mapped('event_id').read(event_event_fields, load=False)
+        result['event.event.ticket'] = lines_with_event.event_registration_ids.mapped('event_ticket_id').read(event_ticket_fields, load=False)
+        result['event.registration.answer'] = lines_with_event.event_registration_ids.mapped('registration_answer_ids').read(event_registrations_answer_fields, load=False)
 
         for registration in lines_with_event.event_registration_ids:
             if registration.email:
                 registration.action_send_badge_email()
 
-        return results
+        return result
 
     @api.model
     def _process_order(self, order, existing_order):

@@ -58,6 +58,16 @@ class PosOrder(models.Model):
 
         raise UserError(_('No open session available. Please open a new session to capture the order.'))
 
+    def unlink(self):
+        config_ids = self.session_id.config_id
+        result = super().unlink()
+
+        for config in config_ids:
+            current_session_id = config.current_session_id.id
+            config.notify_synchronisation({}, current_session_id, 0)
+
+        return result
+
     @api.depends('sequence_number', 'session_id')
     def _compute_tracking_number(self):
         for record in self:
@@ -973,18 +983,25 @@ class PosOrder(models.Model):
 
         for order in pos_order_ids:
             order._ensure_access_token()
+            order.config_id.notify_synchronisation(
+                {},
+                order.config_id.current_session_id.id,
+                self.env.context.get("login_number", 0))
 
         # If the previous session is closed, the order will get a new session_id due to _get_valid_session in _process_order
         is_new_session = any(order.get('session_id') not in session_ids for order in orders)
 
         _logger.info("PoS synchronisation #%d finished", sync_token)
-        return {
-            'pos.order': pos_order_ids.read(pos_order_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
-            'pos.session': pos_order_ids.session_id._load_pos_data({})['data'] if config_id and is_new_session else [],
-            'pos.payment': pos_order_ids.payment_ids.read(pos_order_ids.payment_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
-            'pos.order.line': pos_order_ids.lines.read(pos_order_ids.lines._load_pos_data_fields(config_id), load=False) if config_id else [],
-            'pos.pack.operation.lot': pos_order_ids.lines.pack_lot_ids.read(pos_order_ids.lines.pack_lot_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
-            "product.attribute.custom.value": pos_order_ids.lines.custom_attribute_value_ids.read(pos_order_ids.lines.custom_attribute_value_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
+        return pos_order_ids.read_for_pos(config_id, is_new_session, orders)
+
+    def read_for_pos(self, config_id, new_session = False, ui_orders=None):
+         return {
+            'pos.order': self.read(self._load_pos_data_fields(config_id), load=False) if config_id else [],
+            'pos.session': self.session_id._load_pos_data({})['data'] if config_id and new_session else [],
+            'pos.payment': self.payment_ids.read(self.payment_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
+            'pos.order.line': self.lines.read(self.lines._load_pos_data_fields(config_id), load=False) if config_id else [],
+            'pos.pack.operation.lot': self.lines.pack_lot_ids.read(self.lines.pack_lot_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
+            "product.attribute.custom.value": self.lines.custom_attribute_value_ids.read(self.lines.custom_attribute_value_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
         }
 
     def _is_the_same_order(self, data, existing_order):

@@ -43,12 +43,14 @@ export class DebugWidget extends Component {
         this.dialog = useService("dialog");
         useBus(numberBuffer, "buffer-update", this._onBufferUpdate);
         this.state = useState({
+            createRandomLineToggle: false,
             barcodeInput: "",
             weightInput: "",
             buffer: numberBuffer.get(),
         });
         this.root = useRef("root");
         this.position = useState({ left: null, top: null });
+        this.lineCreationInterval = null;
         useDialogDraggable({
             ref: this.root,
             elements: ".debug-widget",
@@ -96,6 +98,107 @@ export class DebugWidget extends Component {
         const ean = this.barcodeReader.parser.sanitize_ean(this.state.barcodeInput || "0");
         this.state.barcodeInput = ean;
         await this.barcodeReader.scan(ean);
+    }
+    async toggleRandomLine() {
+        this.state.createRandomLineToggle = !this.state.createRandomLineToggle;
+        clearInterval(this.lineCreationInterval);
+
+        const findRandomTable = () => {
+            const activeFloor = this.pos.currentFloor;
+            const tables = activeFloor.table_ids.filter(
+                (t) => !t.parent_id && !t["<-restaurant.table.parent_id"].length
+            );
+            return tables[Math.floor(Math.random() * tables.length)];
+        };
+
+        const findRandomOrder = () => {
+            const openOrders = this.pos.get_open_orders().filter((o) => o.table_id);
+            return openOrders[Math.floor(Math.random() * openOrders.length)];
+        };
+
+        const findRandomProduct = () => {
+            const allProducts = this.pos.models["product.product"].getAll();
+            return allProducts[Math.floor(Math.random() * allProducts.length)];
+        };
+
+        if (this.state.createRandomLineToggle) {
+            this.lineCreationInterval = setInterval(async () => {
+                if (this.pos.config.module_pos_restaurant) {
+                    const randomProduct = findRandomProduct();
+                    const randomOrder = findRandomOrder();
+
+                    if (!randomOrder) {
+                        this.notification.add(_t("No open order found for creation bot"));
+                        return;
+                    }
+
+                    const line1 = await this.pos.addLineToOrder(
+                        {
+                            product_id: randomProduct,
+                            qty: 1,
+                        },
+                        randomOrder,
+                        {},
+                        false
+                    );
+
+                    console.info(
+                        `DEBUG SYNC: Adding line ${randomProduct.name} to order ${randomOrder.table_id.name}`,
+                        randomOrder,
+                        line1
+                    );
+
+                    const mergedTable = this.pos.models["restaurant.table"].find(
+                        (t) => t.parent_id
+                    );
+
+                    if (!mergedTable) {
+                        const randomTable1 = findRandomTable();
+                        const randomTable2 = findRandomTable();
+
+                        if (randomTable1 !== randomTable2) {
+                            const oToTrans = this.pos.getActiveOrdersOnTable(randomTable1)[0];
+
+                            // Merge random table
+                            if (oToTrans) {
+                                this.pos.orderToTransferUuid = oToTrans.uuid;
+                                this.pos.transferOrder(randomTable2);
+                            }
+                            this.pos.data.write("restaurant.table", [randomTable1.id], {
+                                parent_id: randomTable2.id,
+                            });
+                        }
+
+                        setTimeout(() => {
+                            this.pos.data.write("restaurant.table", [randomTable1.id], {
+                                parent_id: false,
+                            });
+                            this.pos.computeTableCount();
+                        }, 4000);
+                    }
+
+                    const cashPaymentMethod = this.pos.config.payment_method_ids.find(
+                        (method) => method.is_cash_count
+                    );
+                    if (Math.random() > 0.5) {
+                        const table = randomOrder.table_id;
+                        randomOrder.add_paymentline(cashPaymentMethod);
+                        randomOrder.state = "paid";
+
+                        console.info(`DEBUG SYNC: Paid order on table ${table.name}`, randomOrder);
+
+                        const order = this.pos.add_new_order({
+                            table_id: table,
+                        });
+
+                        console.log(`DEBUG SYNC: Creating new order on table ${table.name}`, order);
+                    }
+                }
+
+                await this.pos.syncAllOrders();
+                this.pos.computeTableCount();
+            }, 1000);
+        }
     }
     _createBlob(contents) {
         if (typeof contents !== "string") {

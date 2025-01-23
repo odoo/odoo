@@ -34,9 +34,9 @@ patch(PosStore.prototype, {
             this.currentFloor = this.config.floor_ids?.length > 0 ? this.config.floor_ids[0] : null;
         }
     },
-    async recordSynchronisation(data) {
-        await super.recordSynchronisation(...arguments);
-        if (data.records["pos.order"]?.length > 0) {
+    async loadRecords() {
+        const result = await super.loadRecords(...arguments);
+        if (result["pos.order"]?.length > 0) {
             // Verify if there is only 1 order by table.
             const orderByTableId = this.models["pos.order"].reduce((acc, order) => {
                 // Floating order doesn't need to be verified.
@@ -53,6 +53,10 @@ patch(PosStore.prototype, {
                     // In this case we take orderline of the local order and we add it to the synced order.
                     const syncedOrder = orders.find((order) => typeof order.id === "number");
                     const localOrders = orders.find((order) => typeof order.id !== "number");
+
+                    if (!syncedOrder || !localOrders) {
+                        continue;
+                    }
 
                     let watcher = 0;
                     while (localOrders.lines.length > 0) {
@@ -75,8 +79,10 @@ patch(PosStore.prototype, {
                     localOrders.delete();
                 }
             }
-            this.computeTableCount();
         }
+
+        this.computeTableCount();
+        return result;
     },
     get firstScreen() {
         return this.config.module_pos_restaurant ? "FloorScreen" : super.firstScreen;
@@ -296,6 +302,7 @@ patch(PosStore.prototype, {
         }
 
         this.selectedTable = table;
+        this.loadRecords();
         try {
             this.loadingOrderState = true;
         } finally {

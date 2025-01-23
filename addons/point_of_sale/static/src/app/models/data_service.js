@@ -1,5 +1,5 @@
 import { Reactive, effect } from "@web/core/utils/reactive";
-import { createRelatedModels } from "@point_of_sale/app/models/related_models";
+import { createRelatedModels, SERIALIZABLE_MODELS } from "@point_of_sale/app/models/related_models";
 import { registry } from "@web/core/registry";
 import { Mutex } from "@web/core/utils/concurrency";
 import { markRaw } from "@odoo/owl";
@@ -76,22 +76,20 @@ export class PosData extends Reactive {
         this.onNotified(channel, method);
     }
 
-    dispatchData(data) {
-        let hasChanges = false;
+    dispatchData(data = {}) {
         const recordIds = Object.entries(data).reduce((acc, [model, records]) => {
+            if (SERIALIZABLE_MODELS.includes(model)) {
+                return acc;
+            }
+
             acc[model] = records.map((record) => record.id);
-            hasChanges = hasChanges || acc[model].length > 0;
             return acc;
         }, {});
 
-        if (!hasChanges) {
-            return;
-        }
-
-        return this.call("pos.config", "dispatch_record_ids", [
+        return this.call("pos.config", "notify_synchronisation", [
             odoo.pos_config_id,
-            odoo.pos_session_id,
             recordIds,
+            odoo.pos_session_id,
             odoo.login_number,
         ]);
     }
@@ -303,22 +301,6 @@ export class PosData extends Reactive {
         this.models.loadData(data, this.modelToLoad);
         this.models.loadData({ "pos.order": order, "pos.order.line": orderlines });
         const dbData = await this.loadIndexedDBData();
-
-        if (dbData && dbData["pos.order"]?.length) {
-            const ids = dbData["pos.order"].map((o) => o.id).filter((id) => typeof id === "number");
-
-            if (ids.length) {
-                const result = await this.read("pos.order", ids);
-                const serverIds = result.map((r) => r.id);
-
-                for (const id of ids) {
-                    if (!serverIds.includes(id)) {
-                        this.localDeleteCascade(this.models["pos.order"].get(id), true);
-                    }
-                }
-            }
-        }
-
         this.loadedIndexedDBProducts = dbData ? dbData["product.product"] : [];
         this.network.loading = false;
     }
@@ -362,6 +344,7 @@ export class PosData extends Reactive {
                 case "call":
                     result = await this.orm.call(model, method, args, kwargs);
                     break;
+                case "raw_read":
                 case "read":
                     queue = false;
                     result = await this.orm.read(model, ids, fields, {
@@ -603,6 +586,10 @@ export class PosData extends Reactive {
         });
     }
 
+    async rawRead(model, ids, fields = [], options = [], queue = false) {
+        return await this.execute({ type: "raw_read", model, ids, fields, options, queue });
+    }
+
     async read(model, ids, fields = [], options = [], queue = false) {
         return await this.execute({ type: "read", model, ids, fields, options, queue });
     }
@@ -642,7 +629,7 @@ export class PosData extends Reactive {
         return await this.execute({ type: "delete", model, ids, queue });
     }
 
-    localDeleteCascade(record, force = false) {
+    localDeleteCascade(record, force = false, opts = {}) {
         const recordModel = record.constructor.pythonModel;
         if (typeof record.id === "number" && !force) {
             console.info(
@@ -663,11 +650,11 @@ export class PosData extends Reactive {
         this.indexedDB.delete(recordModel, [record.uuid]);
         for (const item of recordsToDelete) {
             this.indexedDB.delete(item.model.modelName, [item.uuid]);
-            item.delete();
+            item.delete(opts);
         }
 
         // Delete the main record
-        const result = record.delete();
+        const result = record.delete(opts);
         return result;
     }
 

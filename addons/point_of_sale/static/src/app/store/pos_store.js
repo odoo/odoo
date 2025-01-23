@@ -157,6 +157,7 @@ export class PosStore extends Reactive {
         await this.processServerData();
         this.data.connectWebSocket("CLOSING_SESSION", this.closingSessionNotification.bind(this));
         this.data.connectWebSocket("SYNCHRONISATION", this.recordSynchronisation.bind(this));
+        await this.loadRecords();
         return await this.afterProcessServerData();
     }
 
@@ -167,63 +168,56 @@ export class PosStore extends Reactive {
             console.info("Session Ids", odoo.pos_session_id, data.session_id);
         }
 
-        if (data.login_number === odoo.login_number || data.session_id !== odoo.pos_session_id) {
-            return;
+        if (data.login_number == odoo.login_number || data.session_id != odoo.pos_session_id) {
+            return {};
         }
 
-        const records = await this.data.call("pos.config", "get_records", [
+        for (const [model, ids] of Object.entries(data.record_ids || {})) {
+            const data = await this.data.rawRead(model, ids);
+            this.models.loadData({ [model]: data }, [], false, true);
+        }
+
+        await this.loadRecords();
+    }
+
+    async loadRecords() {
+        const serverOpenOrders = this.get_open_orders().filter((o) => typeof o.id === "number");
+        const localDomain = serverOpenOrders.map((o) => {
+            const dateTime = DateTime.fromSQL(o.write_date);
+            const newDateTime = dateTime.plus({ seconds: 1 });
+            return [
+                "&",
+                ["uuid", "=", o.uuid],
+                "|",
+                ["write_date", ">", newDateTime.toFormat("yyyy-MM-dd HH:mm:ss")],
+                ["state", "!=", o.state],
+            ];
+        });
+        const localUuids = serverOpenOrders.map((o) => o.uuid);
+        const localIds = serverOpenOrders.map((o) => o.id);
+        const orLength = localDomain.length;
+        const domain = localDomain.flat();
+        const result = await this.data.call("pos.config", "get_pos_config_orders", [
             odoo.pos_config_id,
-            data["records"],
+            localIds,
+            [
+                ["config_id", "=", odoo.pos_config_id],
+                ...Array(orLength).fill("|", 0, orLength),
+                "&",
+                ["state", "=", "draft"],
+                ["uuid", "not in", localUuids],
+                ...domain,
+            ],
         ]);
+        const missing = await this.data.missingRecursive(result.data);
+        const loadResult = this.models.loadData(missing, [], false, true);
 
-        const missing = await this.data.missingRecursive(records);
-        const toRemove = {};
-        const toCreate = {};
-        const toUpdate = {};
+        if (result.deleted_orders.length) {
+            const orders = this.models["pos.order"].readMany(result.deleted_orders);
 
-        for (const [model, records] of Object.entries(missing)) {
-            toCreate[model] = [];
-            toUpdate[model] = [];
-
-            for (const record of records) {
-                const existingRec = this.models[model].get(record.id);
-                if (existingRec) {
-                    if (model === "pos.order" && existingRec.state === "draft") {
-                        // Verify if some subrecords are deleted
-                        const children = ["lines", "payment_ids"];
-                        for (const child of children) {
-                            const existingChild = existingRec[child];
-                            const recordChild = record[child];
-
-                            if (existingChild.length !== recordChild.length) {
-                                // We only delete server records, the local one will be synced later
-                                const toDelete = existingChild.filter(
-                                    (c) => !recordChild.includes(c.id) && typeof c.id === "number"
-                                );
-
-                                if (toDelete.length) {
-                                    const childModel = toDelete[0].model.modelName;
-                                    toRemove[childModel] = toRemove[childModel] || [];
-                                    toRemove[childModel].push(...toDelete);
-                                }
-                            }
-                        }
-                    } else if (model === "pos.order") {
-                        continue;
-                    }
-
-                    toUpdate[model].push(record);
-                } else {
-                    toCreate[model].push(record);
-                }
+            while (orders.length) {
+                this.data.localDeleteCascade(orders.pop(), true, { silent: true });
             }
-        }
-
-        this.models.loadData(toCreate, [], false);
-        this.models.loadData(toUpdate, [], false, true);
-
-        for (const [model, records] of Object.entries(toRemove)) {
-            this.models[model].deleteMany(records, { silent: true });
         }
 
         if (
@@ -234,6 +228,8 @@ export class PosStore extends Reactive {
         ) {
             this.add_new_order();
         }
+
+        return loadResult;
     }
 
     async closingSessionNotification(data) {
@@ -1145,7 +1141,6 @@ export class PosStore extends Reactive {
             });
 
             const missingRecords = await this.data.missingRecursive(data);
-            this.data.dispatchData(missingRecords);
             const newData = this.models.loadData(missingRecords, [], false, true);
             for (const order of newData["pos.order"]) {
                 if (!["invoiced", "paid", "done", "cancel"].includes(order.state)) {
@@ -1498,8 +1493,13 @@ export class PosStore extends Reactive {
         const order = getOrder(uuid);
         await this.sendOrderInPreparation(order, cancelled);
         getOrder(uuid).updateLastOrderChange();
-        await this.syncAllOrders();
-        getOrder(uuid).updateSavedQuantity();
+        setTimeout(async () => {
+            // This is necessary for synchronisation since we use write_date
+            // if both syncAllOrders in this method are executed at the same time
+            // the second will not trigger the update on the other devices
+            await this.syncAllOrders();
+            getOrder(uuid).updateSavedQuantity();
+        }, 1000);
     }
     closeScreen() {
         this.addOrderIfEmpty();

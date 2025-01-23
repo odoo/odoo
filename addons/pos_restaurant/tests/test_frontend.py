@@ -261,7 +261,7 @@ class TestFrontend(TestFrontendCommon):
         self.assertTrue(order2.is_tipped and order2.tip_amount == 1.00)
         self.assertTrue(order3.is_tipped and order3.tip_amount == 1.50)
         self.assertTrue(order4.is_tipped and order4.tip_amount == 1.00)
-        self.assertTrue(order5.is_tipped and order5.tip_amount == 0.00)
+        self.assertTrue(order5.tip_amount == 0.00)
 
         self.assertEqual(order4.customer_count, 2)
 

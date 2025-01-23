@@ -37,6 +37,11 @@
                     <div class="debug-orders">
                         <h5 class="category">Orders</h5>
                         <ul class="mb-3">
+                            <li class="button btn btn-link" t-on-click="() => this.toggleRandomLine()">
+                                <t t-if="state.createRandomLineToggle">Stop</t>
+                                <t t-else="">Start</t>
+                                <span> random lines</span>
+                            </li>
                             <li class="button btn btn-link" t-on-click="() => this.deleteOrders({ paid: true })">
                                 Delete Paid Orders
                             </li>
