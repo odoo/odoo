@@ -956,7 +956,7 @@ class AccountJournal(models.Model):
                 'move_type': move_type,
             })
 
-            invoice._extend_with_attachments(attachment, new=True)
+            invoice.with_context(skip_is_manually_modified=True)._extend_with_attachments(attachment, new=True)
 
             all_invoices |= invoice
 

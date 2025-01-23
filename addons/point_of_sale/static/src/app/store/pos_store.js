@@ -6,7 +6,7 @@ import { floatIsZero } from "@web/core/utils/numbers";
 import { renderToElement } from "@web/core/utils/render";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { deduceUrl, random5Chars, uuidv4, getOnNotified } from "@point_of_sale/utils";
+import { deduceUrl, random5Chars, uuidv4 } from "@point_of_sale/utils";
 import { Reactive } from "@web/core/utils/reactive";
 import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 import { ConnectionLostError } from "@web/core/network/rpc";
@@ -237,9 +237,8 @@ export class PosStore extends Reactive {
 
     async initServerData() {
         await this.processServerData();
-        this.onNotified = getOnNotified(this.bus, this.config.access_token);
-        this.onNotified("CLOSING_SESSION", this.closingSessionNotification.bind(this));
-        this.onNotified("SYNCHRONISATION", this.recordSynchronisation.bind(this));
+        this.data.connectWebSocket("CLOSING_SESSION", this.closingSessionNotification.bind(this));
+        this.data.connectWebSocket("SYNCHRONISATION", this.recordSynchronisation.bind(this));
         return await this.afterProcessServerData();
     }
 
@@ -2030,9 +2029,9 @@ export class PosStore extends Reactive {
             }, {});
 
         // Remove lot/serial names that are already used in draft orders
-        existingLots = existingLots.filter((lot) => {
-            return lot.product_qty > (usedLotsQty[lot.name]?.total || 0);
-        });
+        existingLots = existingLots.filter(
+            (lot) => lot.product_qty > (usedLotsQty[lot.name]?.total || 0)
+        );
 
         // Check if the input lot/serial name is already used in another order
         const isLotNameUsed = (itemValue) => {
