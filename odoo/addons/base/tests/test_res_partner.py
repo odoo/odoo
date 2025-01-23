@@ -312,6 +312,32 @@ class TestPartner(TransactionCaseWithUserDemo):
             "'Destination Contact' name should contain db ID in brackets"
         )
 
+    def test_partner_merge_null_company_property(self):
+        """ Check that partner with null company ir.property can be merged """
+        partners = self.env['res.partner'].create([
+            {'name': 'no barcode partner'},
+            {'name': 'partner1', 'barcode': 'partner1'},
+            {'name': 'partner2', 'barcode': 'partner2'},
+        ])
+        with self.assertLogs(level='ERROR'):
+            partner_merge_wizard = self.env['base.partner.merge.automatic.wizard']._merge(
+                partners.ids,
+                partners[0],
+            )
+            self.assertFalse(partners[0].barcode)
+
+        partners = self.env['res.partner'].create([
+            {'name': 'partner1', 'barcode': 'partner1'},
+            {'name': 'partner2', 'barcode': 'partner2'},
+        ])
+        self.env['ir.property'].search([
+            ('res_id', 'in', ["res.partner,{}".format(p.id) for p in partners])
+        ]).company_id = None
+        partner_merge_wizard = self.env['base.partner.merge.automatic.wizard']._merge(
+            partners.ids,
+            partners[0],
+        )
+
     def test_read_group(self):
         title_sir = self.env['res.partner.title'].create({'name': 'Sir...'})
         title_lady = self.env['res.partner.title'].create({'name': 'Lady...'})

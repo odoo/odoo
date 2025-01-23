@@ -796,7 +796,8 @@ class MrpProduction(models.Model):
 
     @api.onchange('qty_producing', 'lot_producing_id')
     def _onchange_producing(self):
-        self._set_qty_producing()
+        productions_bypass_qty_producting = self.filtered(lambda p: p.lot_producing_id and p.product_tracking == 'lot' and p._origin and p._origin.qty_producing == p.qty_producing)
+        (self - productions_bypass_qty_producting)._set_qty_producing()
 
     @api.onchange('lot_producing_id')
     def _onchange_lot_producing(self):
