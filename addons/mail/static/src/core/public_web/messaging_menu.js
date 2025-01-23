@@ -137,7 +137,7 @@ export class MessagingMenu extends Component {
     }
 
     openDiscussion(thread) {
-        thread.open({ fromMessagingMenu: true });
+        thread.open({ focus: true, fromMessagingMenu: true });
         this.dropdown.close();
     }
 
