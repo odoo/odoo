@@ -130,8 +130,8 @@ export async function initAutoMoreMenu(el, options) {
             maxWidth -= (parseFloat(style.paddingLeft) + parseFloat(style.paddingRight) + parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth));
             maxWidth -= unfoldableItems.reduce((sum, el) => sum + computeFloatOuterWidthWithMargins(el, true, true, false), 0);
         }
-        // Ignore if there is no overflow.
-        if (maxWidth - menuItemsWidth >= -0.001) {
+        // Ignore if there is no overflow - or no items
+        if ((nbItems == 0) || (maxWidth - menuItemsWidth >= -0.001)) {
             return _endAutoMoreMenu();
         }
 
