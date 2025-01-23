@@ -1245,6 +1245,9 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             if self.holiday_status_id.responsible_ids:
                 responsible = self.holiday_status_id.responsible_ids
         return responsible
+    
+    def _get_to_clean_activities(self):
+        return ['hr_holidays.mail_act_leave_approval', 'hr_holidays.mail_act_leave_second_approval']
 
     def activity_update(self):
         if self.env.context.get('mail_activity_automation_skip'):
@@ -1295,7 +1298,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             elif holiday.state in ['refuse', 'cancel']:
                 to_clean |= holiday
         if to_clean:
-            to_clean.activity_unlink(['hr_holidays.mail_act_leave_approval', 'hr_holidays.mail_act_leave_second_approval'])
+            to_clean.activity_unlink(self._get_to_clean_activities(), only_automated=False)
         if to_do_confirm_activity:
             to_do_confirm_activity.activity_feedback(['hr_holidays.mail_act_leave_approval'])
         if to_do:
