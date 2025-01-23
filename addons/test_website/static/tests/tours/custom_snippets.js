@@ -10,7 +10,8 @@ var tour = require('web_tour.tour');
  * -> drag a banner into page content
  * -> customize banner (set text)
  * -> save banner as custom snippet
- * -> confirm save
+ * -> rename custom snippet
+ * -> check if auto save works and rename snippet
  * -> ensure custom snippet is available
  * -> drag custom snippet
  * -> ensure block appears as banner
@@ -67,11 +68,11 @@ tour.register('test_custom_snippet', {
     {
         content: "set name",
         trigger: ".oe_snippet[name='Custom Banner'] input",
-        run: "text Bruce Banner",
+        run: "text_blur Bruce Banner",
     },
     {
-        content: "confirm rename",
-        trigger: ".oe_snippet[name='Custom Banner'] we-button.o_we_confirm_btn",
+        content: "check if the snippet is auto-saved when the focus is removed from the input field",
+        trigger: ".oe_snippet[name='Bruce Banner']"
     },
     {
         content: "drop custom snippet",
