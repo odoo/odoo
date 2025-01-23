@@ -3,6 +3,8 @@
 
 import base64
 import collections
+import difflib
+import io
 import itertools
 import logging
 import random
@@ -16,6 +18,7 @@ import html as htmllib
 
 import idna
 import markupsafe
+import nh3
 from lxml import etree, html
 from lxml.html import (
     XHTML_NAMESPACE,
@@ -163,38 +166,8 @@ class _Cleaner(clean.Cleaner):
 
 
 def tag_quote(el):
-    def _create_new_node(tag, text, tail=None, attrs=None):
-        new_node = etree.Element(tag)
-        new_node.text = text
-        new_node.tail = tail
-        if attrs:
-            for key, val in attrs.items():
-                new_node.set(key, val)
-        return new_node
-
-    def _tag_matching_regex_in_text(regex, node, tag='span', attrs=None):
-        text = node.text or ''
-        if not re.search(regex, text):
-            return
-
-        child_node = None
-        idx, node_idx = 0, 0
-        for item in re.finditer(regex, text):
-            new_node = _create_new_node(tag, text[item.start():item.end()], None, attrs)
-            if child_node is None:
-                node.text = text[idx:item.start()]
-                new_node.tail = text[item.end():]
-                node.insert(node_idx, new_node)
-            else:
-                child_node.tail = text[idx:item.start()]
-                new_node.tail = text[item.end():]
-                node.insert(node_idx, new_node)
-            child_node = new_node
-            idx = item.end()
-            node_idx = node_idx + 1
-
-    el_class = el.get('class', '') or ''
-    el_id = el.get('id', '') or ''
+    el_class = el.get('class') or ''
+    el_id = el.get('id') or ''
 
     # gmail or yahoo // # outlook, html // # msoffice
     if 'gmail_extra' in el_class or \
@@ -219,15 +192,30 @@ def tag_quote(el):
             el.getparent().set('data-o-mail-quote-container', '1')
 
     # text-based quotes (>, >>) and signatures (-- Signature)
-    text_complete_regex = re.compile(r"((?:\n[>]+[^\n\r]*)+|(?:(?:^|\n)[-]{2}[\s]?[\r\n]{1,2}[\s\S]+))")
-    if not el.get('data-o-mail-quote'):
-        _tag_matching_regex_in_text(text_complete_regex, el, 'span', {'data-o-mail-quote': '1'})
+    if (text := el.text) and not el.get('data-o-mail-quote'):
+        attrs = {'data-o-mail-quote': '1'}
+
+        child_node = None
+        idx = 0
+        text_patterns = re.compile(r"((?:\n>+[^\n\r]*)+|(?:^|\n)-{2}\s?[\r\n]{1,2}[\s\S]+)")
+        for node_idx, item in enumerate(text_patterns.finditer(text)):
+            if child_node is None:
+                el.text = text[idx:item.start()]
+            else:
+                child_node.tail = text[idx:item.start()]
+
+            child_node = etree.Element('span', attrib=attrs)
+            child_node.text = item[0]
+            child_node.tail = text[item.end():]
+            el.insert(node_idx, child_node)
+
+            idx = item.end()
 
     if el.tag == 'blockquote':
         # remove single node
         el.set('data-o-mail-quote-node', '1')
         el.set('data-o-mail-quote', '1')
-    if el.getparent() is not None and (el.getparent().get('data-o-mail-quote') or el.getparent().get('data-o-mail-quote-container')) and not el.getparent().get('data-o-mail-quote-node'):
+    elif (p := el.getparent()) is not None and (p.get('data-o-mail-quote') or p.get('data-o-mail-quote-container')) and not p.get('data-o-mail-quote-node'):
         el.set('data-o-mail-quote', '1')
 
 
@@ -317,16 +305,34 @@ def html_normalize(src, filter_callback=None, output_method="html"):
     :param output_method: defines the output method to pass to `html.tostring`.
         It defaults to 'html', but can also be 'xml' for xhtml output.
     """
-    if not src:
-        return src
+    if not (src and src.strip()):
+        return ""
 
-    # html: remove encoding attribute inside tags
-    src = re.sub(r'(<[^>]*\s)(encoding=(["\'][^"\']*?["\']|[^\s\n\r>]+)(\s[^>]*|/)?>)', "", src)
+    # html: remove XML declaration if it contains an encoding, as lxml chokes
+    #       on explicit encoding in unicode strings
+    src = re.sub(r"""
+^\ufeff? # an XML declaration starts with the document except for an optional bom
+<\?xml
+    \s+
+        version
+        \s*=\s*
+        (['"])1.[0-9]+\1
+    \s+
+        encoding\s*=\s*['"]
+    [^>]+
+\?>
+""",
+        "",
+        src,
+        flags=re.VERBOSE,
+    )
 
+    # malformed and conditional comments
     src = src.replace('--!>', '-->')
     src = re.sub(r'(<!-->|<!--->)', '<!-- -->', src)
     # On the specific case of Outlook desktop it adds unnecessary '<o:.*></o:.*>' tags which are parsed
     # in '<p></p>' which may alter the appearance (eg. spacing) of the mail body
+    # FIXME: move this to HTML cleaner?
     src = re.sub(r'</?o:.*?>', '', src)
 
     try:
@@ -344,9 +350,9 @@ def html_normalize(src, filter_callback=None, output_method="html"):
     if filter_callback:
         doc = filter_callback(doc)
 
-    src = html.tostring(doc, encoding='unicode', method=output_method)
+    out = html.tostring(doc, encoding='unicode', method=output_method)
 
-    if not single_body_element and src.startswith('<div>') and src.endswith('</div>'):
+    if not single_body_element and out.startswith('<div>') and out.endswith('</div>'):
         # the <div></div> may come from 2 places
         # 1. the src is parsed as multiple body elements
         #    <div></div> wraps all elements.
@@ -355,12 +361,12 @@ def html_normalize(src, filter_callback=None, output_method="html"):
         #    then the Cleaner as the filter_callback which has 'html' in its
         #    'remove_tags' will write <html></html> to <div></div> since it
         #    cannot directly drop the parent-most tag
-        src = src[5:-6]
+        out = out[5:-6]
 
     # html considerations so real html content match database value
-    src = src.replace(u'\xa0', u'&nbsp;')
+    out = out.replace('\xa0', '&nbsp;')
 
-    return src
+    return out
 
 
 def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=False, sanitize_style=False, sanitize_form=True, sanitize_conditional_comments=True, strip_style=False, strip_classes=False, output_method="html"):
@@ -403,19 +409,129 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
         return doc
 
     try:
+        t0 = time.perf_counter_ns()
         sanitized = html_normalize(src, filter_callback=sanitize_handler, output_method=output_method)
+        t = time.perf_counter_ns() - t0
     except etree.ParserError:
         if not silent:
             raise
         logger.warning(u'ParserError obtained when sanitizing %r', src, exc_info=True)
         sanitized = '<p>ParserError when sanitizing</p>'
+        t = float('inf')
     except Exception:
         if not silent:
             raise
         logger.warning(u'unknown error obtained when sanitizing %r', src, exc_info=True)
         sanitized = '<p>Unknown error when sanitizing</p>'
+        t = float('inf')
+
+    # NOTE: ammonia / nh3 does not support ignoring PI (?)
+    opts = {
+        'strip_comments': False,
+        'link_rel': None,
+    }
+    if sanitize_tags:
+        kill_tags = opts['clean_content_tags'] = set(SANITIZE_TAGS['kill_tags'])
+        opts['tags'] = SANITIZE_TAGS['allow_tags'].difference(
+            {etree.Comment},
+            SANITIZE_TAGS['remove_tags'],
+            kill_tags,
+        )
+    else:
+        "FIXME: how do you allow all tags?"
+        # in lxml.html.Clearner, if allow_tags is falsy (empty or none) then we
+        # don't process that bit at all
+        # this is only done by a location which wants to strip_classes without
+        # applying and
+        # card.template.body (sanitize_tags=False, sanitize_attributes=False)
+        #       => complete bypass (strip_class is false by default)
+
+    # page_structure=True is an alias for `remove_tags |= {head, html, title}`
+    # sanitize_form=True is an alias for `remove_tags |= {form}; kill_tags |= {button, input, select, textarea}`
+    # remove_unknown_tags=True is an alias for `allow_tags = defs.tags`
+    # processing_instructions=True is an alias for `kill_tags |= ProcessingInstruction`
+    # comments=True is an alias for `kill_tags |= Comments`
+    if sanitize_attributes:
+        attrs = safe_attrs
+        if strip_style:
+            attrs -= {'style'}
+        opts['attributes'] = {'*': attrs}
+        if strip_classes:
+            opts['attributes']['*'] -= {'class'}
+    else:
+        opts['generic_attribute_prefixes'] = {''}
+        if strip_classes:
+            opts['attribute_filter'] = lambda t, a, v: None if a == 'class' else v
+
+    if not strip_style:
+        opts.setdefault('attributes', {'*': frozenset()})['*'] |= {'style'}
+        if sanitize_style:
+            # fixme: needs to be merged with the previous one
+            opts['attribute_filter'] = _sanitize_style
+
+    # without normalisation: 10x perf difference
+    # with: 20~50%
+    # normalization does:
+    # - remove @encoding
+    # - replace conditional comments by regular
+    # - removes outlook `o:?` tags
+    # - catches empty documents, returns empty documents
+    # - converts back \xa0 to &nbsp; otherwise values don't round-trip and
+    #   causes unnecessary writes
+    # - whatever `tag_quote` is up to
+    t0 = time.perf_counter_ns()
+    # TODO: output_method?
+    if normalized := html_normalize(src):
+        ammoniazed = nh3.clean(normalized, **opts)
+    else:
+        ammoniazed = ""
+    tt = time.perf_counter_ns() - t0
+
+    ns_to_ms = 1_000_000
+    if max(t, tt) > 10 * ns_to_ms:
+        ammoniazed = ammoniazed.replace('<tbody>', '').replace('</tbody>', '')
+        if ammoniazed == sanitized:
+            _logger.runbot(
+                "%d bytes: %d ms -> %d ms",
+                len(src.encode()),
+                t // ns_to_ms,
+                tt // ns_to_ms
+            )
+        else:
+            _logger.runbot(
+                "%d bytes: %d ms -> %d ms (%.1fx) (%d b -> %d b)\n%s",
+                len(src.encode()),
+                t // ns_to_ms,
+                tt // ns_to_ms,
+                t / tt,
+                len(sanitized.encode()),
+                len(ammoniazed.encode()),
+                "".join(difflib.unified_diff(
+                    sanitized.splitlines(keepends=True),
+                    ammoniazed.splitlines(keepends=True),
+                    "sanitized",
+                    "ammoniazed",
+                ))
+            )
 
     return markupsafe.Markup(sanitized)
+
+
+def _sanitize_style(el: str, att: str, attval: str) -> str | None:
+    match el, att:
+        case _, 'style':
+            valid_styles = [
+                f"{style[0].lower()}:{style[1]}"
+                for style in _Cleaner._style_re.findall(attval)
+                if style[0].lower() in _Cleaner._style_whitelist
+            ]
+            if valid_styles:
+                return '; '.join(valid_styles)
+            else:
+                return None
+        case _:
+            return attval
+
 
 # ----------------------------------------------------------
 # HTML/Text management
