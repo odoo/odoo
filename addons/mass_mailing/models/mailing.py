@@ -76,10 +76,11 @@ class MassMailing(models.Model):
 
     schedule_type = fields.Selection([('now', 'Send now'), ('scheduled', 'Send on')], string='Schedule',
                                      default='now', required=True, readonly=True,
-                                     states={'draft': [('readonly', False)], 'in_queue': [('readonly', False)]})
+                                     states={'draft': [('readonly', False)], 'in_queue': [('readonly', False)]},
+                                     copy=False)
     schedule_date = fields.Datetime(string='Scheduled for', tracking=True, readonly=True,
                                     states={'draft': [('readonly', False)], 'in_queue': [('readonly', False)]},
-                                    compute='_compute_schedule_date', store=True, copy=True)
+                                    compute='_compute_schedule_date', store=True)
     calendar_date = fields.Datetime('Calendar Date', compute='_compute_calendar_date', store=True, copy=False,
         help="Date at which the mailing was or will be sent.")
     # don't translate 'body_arch', the translations are only on 'body_html'
