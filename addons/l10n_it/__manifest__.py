@@ -28,7 +28,6 @@ Italian accounting chart and localization.
         'data/tax_report/annual_report_sections/vj.xml',
         'data/tax_report/annual_report_sections/vl.xml',
         'data/tax_report/account_annual_tax_report_data.xml',
-        'data/account_tax_report_data.xml',
         'views/account_tax_views.xml'
     ],
     'demo': [
