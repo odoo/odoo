@@ -13,7 +13,10 @@ describe.current.tags("interaction_dev");
 function checkField(inputEl, isVisible, hasError) {
     const fieldEl = inputEl.closest(".s_website_form_field");
     isVisible ? expect(fieldEl).not.toHaveClass("d-none") : expect(fieldEl).toHaveClass("d-none");
-    isVisible ? expect(inputEl).toBeEnabled() : expect(inputEl).not.toBeEnabled();
+    // Inputs required for the model are never disabled.
+    if (!fieldEl.matches(".s_website_form_model_required")) {
+        isVisible ? expect(inputEl).toBeEnabled() : expect(inputEl).not.toBeEnabled();
+    }
     hasError
         ? expect(inputEl).toHaveClass("is-invalid")
         : expect(inputEl).not.toHaveClass("is-invalid");
@@ -187,12 +190,12 @@ test("(subject) form checks conditions", async () => {
     checkField(subjectEl, false, false);
     // Submit
     await click("a.s_website_form_send");
-    checkField(subjectEl, false, false);
+    checkField(subjectEl, false, true);
     // Fill mail
     await click("input[name=email_from]");
     await fill("a@b.com");
     await advanceTime(400); // Debounce delay.
-    checkField(subjectEl, true, false);
+    checkField(subjectEl, true, true);
     // Submit
     await click("a.s_website_form_send");
     checkField(subjectEl, true, true);
