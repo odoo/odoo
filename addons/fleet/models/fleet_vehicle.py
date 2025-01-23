@@ -165,7 +165,7 @@ class FleetVehicle(models.Model):
         for record in self:
             if record.odometer:
                 date = fields.Date.context_today(record)
-                data = {'value': record.odometer, 'date': date, 'vehicle_id': record.id}
+                data = {'value': record.odometer, 'date': date, 'vehicle_id': record.id, 'driver_id': record.driver_id.id}
                 self.env['fleet.vehicle.odometer'].create(data)
 
     def _compute_count_all(self):
