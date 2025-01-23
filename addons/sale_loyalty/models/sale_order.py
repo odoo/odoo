@@ -581,7 +581,7 @@ class SaleOrder(models.Model):
                 # Check for any order line where its taxes exactly match reward_taxes
                 matching_lines = [
                     line for line in self.order_line
-                    if not line.is_delivery and set(line.tax_id) == set(mapped_taxes)
+                    if not line._is_delivery() and set(line.tax_id) == set(mapped_taxes)
                 ]
 
                 if not matching_lines:
