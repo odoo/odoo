@@ -38,7 +38,7 @@ class CrmTeamMember(models.Model):
     email = fields.Char(string='Email', related='user_id.email')
     phone = fields.Char(string='Phone', related='user_id.phone')
     mobile = fields.Char(string='Mobile', related='user_id.mobile')
-    company_id = fields.Many2one('res.company', string='Company', related='user_id.company_id')
+    company_id = fields.Many2one('res.company', string='Company', related='crm_team_id.company_id')
 
     @api.constrains('crm_team_id', 'user_id', 'active')
     def _constrains_membership(self):
