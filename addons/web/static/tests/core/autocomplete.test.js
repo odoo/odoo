@@ -2,6 +2,7 @@ import { expect, test } from "@odoo/hoot";
 import {
     pointerDown,
     pointerUp,
+    press,
     queryAllAttributes,
     queryAllTexts,
     queryFirst,
@@ -672,4 +673,40 @@ test("autocomplete trim spaces for search", async () => {
     await mountWithCleanup(Parent);
     await contains(`.o-autocomplete input`).click();
     expect(queryAllTexts(`.o-autocomplete--dropdown-item`)).toEqual(["World", "Hello"]);
+});
+
+test("tab and shift+tab close the dropdown", async () => {
+    class Parent extends Component {
+        static template = xml`
+            <AutoComplete value="state.value" sources="sources" onSelect="() => {}"/>
+        `;
+        static props = ["*"];
+        static components = { AutoComplete };
+        setup() {
+            this.state = useState({ value: "" });
+        }
+        get sources() {
+            return [
+                {
+                    options: [{ label: "World" }, { label: "Hello" }],
+                },
+            ];
+        }
+    }
+    await mountWithCleanup(Parent);
+    const input = ".o-autocomplete input";
+    const dropdown = ".o-autocomplete--dropdown-menu";
+    expect(input).toHaveCount(1);
+    // Tab
+    await contains(input).click();
+    expect(dropdown).toBeVisible();
+    await press("Tab");
+    await animationFrame();
+    expect(dropdown).not.toBeVisible();
+    // Shift + Tab
+    await contains(input).click();
+    expect(dropdown).toBeVisible();
+    await press("Tab", { shiftKey: true });
+    await animationFrame();
+    expect(dropdown).not.toBeVisible();
 });
