@@ -6,6 +6,7 @@ import {
     focus,
     inputFiles,
     insertText,
+    isInViewportOf,
     onRpcBefore,
     openDiscuss,
     openFormView,
@@ -1003,4 +1004,45 @@ test("Chat window should be closed when leaving a chat", async () => {
     await contains(".o-mail-Composer-input", { value: "/leave " });
     triggerHotkey("Enter");
     await contains(".o-mail-ChatWindow", { text: "Demo", count: 0 });
+});
+
+test.tags("focus required");
+test("getting focus of chat window through tab key should jump to new message separator", async () => {
+    const pyEnv = await startServer();
+    const channel_ids = pyEnv["discuss.channel"].create([
+        {
+            name: "important channel",
+            channel_member_ids: [
+                Command.create({
+                    partner_id: serverState.partnerId,
+                    new_message_separator: 21,
+                }),
+            ],
+        },
+        { name: "other channel" },
+    ]);
+    for (let i = 0; i < 40; i++) {
+        pyEnv["mail.message"].create({
+            body: `message_${i}`,
+            model: "discuss.channel",
+            res_id: channel_ids[0],
+        });
+    }
+    patchUiSize({ width: 1920 });
+    setupChatHub({ opened: channel_ids });
+    await start();
+    await contains(".o-mail-ChatWindow", { count: 2 });
+    await contains(".o-mail-ChatWindow:eq(0)", { text: "important channel" });
+    await contains(".o-mail-ChatWindow:eq(1)", { text: "other channel" });
+    await contains(".o-mail-ChatWindow:eq(0) .o-mail-Message", { count: 40 });
+    await scroll(".o-mail-ChatWindow:eq(0) .o-mail-Thread", 0);
+    await contains(".o-mail-ChatWindow:eq(0) .o-mail-Thread", { scroll: 0 });
+    await focus(".o-mail-Composer-input:eq(1)");
+    await contains(".o-mail-ChatWindow:eq(1) .o-mail-Composer.o-focused");
+    triggerHotkey("Tab");
+    await contains(".o-mail-ChatWindow:eq(0) .o-mail-Composer.o-focused");
+    await isInViewportOf(
+        ".o-mail-Message:contains(message_20)",
+        ".o-mail-ChatWindow:eq(0) .o-mail-Thread"
+    );
 });
