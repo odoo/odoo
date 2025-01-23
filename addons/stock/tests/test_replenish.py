@@ -5,7 +5,7 @@ from freezegun import freeze_time
 
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.tests import Form
-from odoo import fields
+from odoo import Command, fields
 
 
 
@@ -15,47 +15,45 @@ class TestStockReplenish(TestStockCommon):
         """Open the replenish view and check if delay is taken into account
             in the base date computation
         """
-        stock_location = self.env.ref('stock.stock_location_stock')
-
         push_location = self.env['stock.location'].create({
-            'location_id': stock_location.location_id.id,
+            'location_id': self.stock_location.location_id.id,
             'name': 'push location',
         })
 
         route_no_delay = self.env['stock.route'].create({
             'name': 'new route',
-            'rule_ids': [(0, False, {
+            'rule_ids': [Command.create({
                 'name': 'create a move to push location',
-                'location_src_id': stock_location.id,
+                'location_src_id': self.stock_location.id,
                 'location_dest_id': push_location.id,
                 'company_id': self.env.company.id,
                 'action': 'push',
                 'auto': 'manual',
-                'picking_type_id': self.env.ref('stock.picking_type_in').id,
+                'picking_type_id': self.picking_type_in.id,
                 'delay': 0,
             })],
         })
 
         route_delay = self.env['stock.route'].create({
             'name': 'new route',
-            'rule_ids': [(0, False, {
+            'rule_ids': [Command.create({
                 'name': 'create a move to push location',
-                'location_src_id': stock_location.id,
+                'location_src_id': self.stock_location.id,
                 'location_dest_id': push_location.id,
                 'company_id': self.env.company.id,
                 'action': 'push',
                 'auto': 'manual',
-                'picking_type_id': self.env.ref('stock.picking_type_in').id,
+                'picking_type_id': self.picking_type_in.id,
                 'delay': 2,
             }),
             (0, False, {
                 'name': 'create a move to push location',
                 'location_src_id': push_location.id,
-                'location_dest_id': stock_location.id,
+                'location_dest_id': self.stock_location.id,
                 'company_id': self.env.company.id,
                 'action': 'push',
                 'auto': 'manual',
-                'picking_type_id': self.env.ref('stock.picking_type_in').id,
+                'picking_type_id': self.picking_type_in.id,
                 'delay': 4,
             })],
         })
