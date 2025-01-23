@@ -54,6 +54,10 @@ var AbstractView = Factory.extend({
     searchMenuTypes: ['filter', 'groupBy', 'favorite'],
     // determines if a control panel should be instantiated
     withControlPanel: true,
+    // determines if a buttons are available
+    withControlPanelButtons: true,
+    // determines if a view switcher buttons are available
+    withViewSwitcher: true,
     // determines if a search panel could be instantiated
     withSearchPanel: true,
     // determines the MVC components to use
@@ -151,6 +155,7 @@ var AbstractView = Factory.extend({
             isEmbedded: isEmbedded,
             modelName: params.modelName,
             viewType: this.viewType,
+            withControlPanelButtons: params.withControlPanelButtons,
         };
 
         var controllerState = params.controllerState || {};
@@ -259,6 +264,7 @@ var AbstractView = Factory.extend({
                 ),
                 withBreadcrumbs: params.withBreadcrumbs,
                 withSearchBar: params.withSearchBar,
+                withViewSwitcher: params.withViewSwitcher,
             };
             this.controllerParams.controlPanel = {
                 Component: ControlPanelComponent,
@@ -386,6 +392,8 @@ var AbstractView = Factory.extend({
             searchMenuTypes: inline ? [] : this.searchMenuTypes,
             withBreadcrumbs: 'no_breadcrumbs' in context ? !context.no_breadcrumbs : true,
             withControlPanel: this.withControlPanel,
+            withControlPanelButtons: this.withControlPanelButtons,
+            withViewSwitcher: this.withViewSwitcher,
             withSearchBar: inline ? false : this.withSearchBar,
             withSearchPanel: this.withSearchPanel,
         };
