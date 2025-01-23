@@ -84,7 +84,7 @@ export class Discuss extends Component {
                         return;
                     }
                     if (isSmall) {
-                        this.chatWindow = this.thread.openChatWindow();
+                        this.chatWindow = this.thread.openChatWindow({ focus: true });
                     } else {
                         this.chatWindow?.close();
                     }

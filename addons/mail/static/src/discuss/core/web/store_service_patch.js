@@ -23,5 +23,11 @@ const StorePatch = {
             this.channels.fetch();
         }
     },
+    onLinkFollowed(fromThread) {
+        super.onLinkFollowed(...arguments);
+        if (!this.env.isSmall && fromThread?.model === "discuss.channel") {
+            fromThread.open({ focus: false });
+        }
+    },
 };
 patch(Store.prototype, StorePatch);

@@ -133,10 +133,6 @@ const StorePatch = {
         }
         return false;
     },
-    onLinkFollowed(fromThread) {
-        if (!this.env.isSmall && fromThread?.model === "discuss.channel") {
-            fromThread.open(true, { autofocus: false });
-        }
-    },
+    onLinkFollowed(fromThread) {},
 };
 patch(Store.prototype, StorePatch);

@@ -34,8 +34,7 @@ const storePatch = {
             return true;
         }
         const chatWindow = this.ChatWindow.insert({ thread: oldestUnreadThread });
-        chatWindow.open();
-        chatWindow.focus();
+        chatWindow.open({ focus: true });
         return true;
     },
     /**

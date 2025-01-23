@@ -124,7 +124,7 @@ const threadPatch = {
             name,
         });
         this.store.insert(data, { html: true });
-        this.store.Thread.get({ model: "discuss.channel", id: sub_channel }).open();
+        this.store.Thread.get({ model: "discuss.channel", id: sub_channel }).open({ focus: true });
     },
     /**
      * @param {*} param0

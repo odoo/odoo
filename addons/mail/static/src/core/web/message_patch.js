@@ -62,7 +62,7 @@ patch(Message.prototype, {
         }
     },
     openRecord() {
-        this.message.thread.open();
+        this.message.thread.open({ focus: true });
     },
 
     /**
