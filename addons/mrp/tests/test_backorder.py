@@ -14,11 +14,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('stock.group_production_lot').id)]})
-        cls.stock_location = cls.env.ref('stock.stock_location_stock')
-        warehouse_form = Form(cls.env['stock.warehouse'])
-        warehouse_form.name = 'Test Warehouse'
-        warehouse_form.code = 'TWH'
-        cls.warehouse = warehouse_form.save()
+        cls.warehouse = cls.warehouse_1
 
     def test_no_tracking_1(self):
         """Create a MO for 4 product. Produce 4. The backorder button should
@@ -290,7 +286,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
             'name': 'Botox',
             'type': 'consu',
             'is_storable': True,
-            'uom_id': self.env.ref('uom.product_uom_kgm').id,
+            'uom_id': self.uom_kg.id,
         })
 
         mo_form = Form(self.env['mrp.production'])
@@ -299,13 +295,14 @@ class TestMrpProductionBackorder(TestMrpCommon):
             'product_id': product_finished.id,
             'product_tmpl_id': product_finished.product_tmpl_id.id,
             'product_uom_id': self.uom_unit.id,
+            'picking_type_id': self.warehouse_1.manu_type_id.id,
             'product_qty': 1.0,
             'type': 'normal',
             'consumption': 'flexible',
             'bom_line_ids': [(0, 0, {
                 'product_id': product_component.id,
                 'product_qty': 1,
-                'product_uom_id':self.env.ref('uom.product_uom_gram').id,
+                'product_uom_id':self.uom_gm.id,
             }),]
         })
         mo_form.product_qty = 1000
@@ -439,10 +436,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
             backorder.save().action_backorder()
             return mo.procurement_group_id.mrp_production_ids[-1]
 
-        default_picking_type_id = self.env['mrp.production']._get_default_picking_type_id(self.env.company.id)
-        default_picking_type = self.env['stock.picking.type'].browse(default_picking_type_id)
-        mo_sequence = default_picking_type.sequence_id
-        mo_sequence.prefix = "WH-MO-"
+        mo_sequence = self.warehouse_1.manu_type_id.sequence_id
         initial_mo_name = mo_sequence.prefix + str(mo_sequence.number_next_actual).zfill(mo_sequence.padding)
         production = self.generate_mo(qty_final=5)[0]
         self.assertEqual(production.name, initial_mo_name)
@@ -564,8 +558,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
                 'location_id': self.stock_location.id,
             })._apply_inventory()
 
-        default_picking_type_id = self.env['mrp.production']._get_default_picking_type_id(self.env.company.id)
-        default_picking_type = self.env['stock.picking.type'].browse(default_picking_type_id)
+        default_picking_type = self.warehouse_1.manu_type_id
 
         # make sure generated MO will auto-assign
         default_picking_type.reservation_method = 'at_confirm'

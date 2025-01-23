@@ -56,7 +56,6 @@ class TestManualConsumption(TestMrpCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('stock.group_production_lot').id)]})
 
     def test_manual_consumption_backorder(self):
