@@ -301,9 +301,15 @@ export class ProductTemplate extends Base {
         });
         return isCombinationArchived;
     }
+<<<<<<< saas-18.2
 
     get productDescriptionMarkup() {
         return this.public_description ? markup(this.public_description) : "";
+||||||| bce53c3c6e16c62b2b996040a8f7eae24477c041
+=======
+    get canBeDisplayed() {
+        return this.active && this.available_in_pos;
+>>>>>>> 66bbed634be9f9b332c0d6abfba306176006dda8
     }
 }
 registry.category("pos_available_models").add(ProductTemplate.pythonModel, ProductTemplate);
