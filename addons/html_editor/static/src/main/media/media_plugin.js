@@ -57,7 +57,7 @@ export class MediaPlugin extends Plugin {
                 ? []
                 : [{ categoryId: "media", commandId: "insertMedia" }]),
         ],
-        power_buttons: { commandId: "insertMedia" },
+        power_buttons: withSequence(1, { commandId: "insertMedia" }),
 
         /** Handlers */
         clean_handlers: this.clean.bind(this),
@@ -159,6 +159,7 @@ export class MediaPlugin extends Plugin {
             onAttachmentChange: this.config.onAttachmentChange || (() => {}),
             noVideos: !!this.config.disableVideo,
             noImages: !!this.config.disableImage,
+            extraTabs: this.getResource("media_dialog_extra_tabs"),
             ...this.config.mediaModalParams,
             ...params,
         });
