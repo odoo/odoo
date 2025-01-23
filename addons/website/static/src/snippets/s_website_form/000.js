@@ -280,22 +280,11 @@ import wUtils from '@website/js/utils';
             var self = this;
 
             self.$el.find('#s_website_form_result, #o_website_form_result').empty(); // !compatibility
+            this.el.querySelectorAll(".s_website_form_custom_error")?.forEach((error) => {
+                error.remove();
+            });
             if (!self.check_error_fields({})) {
-                if (this.fileInputError) {
-                    const errorMessage = this.fileInputError.type === "number"
-                        ? _t(
-                            "Please fill in the form correctly. You uploaded too many files. (Maximum %s files)", 
-                            this.fileInputError.limit
-                        )
-                        : _t(
-                            "Please fill in the form correctly. The file “%(file name)s” is too large. (Maximum %(max)s MB)", 
-                            { "file name": this.fileInputError.fileName, max:this.fileInputError.limit }
-                        );
-                    this.update_status("error", errorMessage);
-                    delete this.fileInputError;
-                } else {
-                    this.update_status("error", _t("Please fill in the form correctly."));
-                }
+                this.update_status("error", _t("Please fill in the form correctly."));
                 return false;
             }
 
@@ -474,6 +463,10 @@ import wUtils from '@website/js/utils';
         resetForm() {
             this.el.reset();
 
+            // Remove previous error messages.
+            this.el.querySelectorAll(".s_website_form_custom_error")?.forEach((error) => {
+                error.remove();
+            });
             // For file inputs, remove the files zone, restore the file input
             // and remove the files list.
             this.el.querySelectorAll("input[type=file]").forEach(inputEl => {
@@ -532,7 +525,10 @@ import wUtils from '@website/js/utils';
                         if (!date || !date.isValid) {
                             return true;
                         }
-                    } else if (input.type === "file" && !self.isFileInputValid(input)) {
+                    } else if (input.type === "file") {
+                        return self.isFileInputValid(input);
+                    } else if (self._requirementFunction(field) === false) {
+                        self.update_status_inline(field.dataset.errorMessage, input);
                         return true;
                     }
 
@@ -590,6 +586,22 @@ import wUtils from '@website/js/utils';
             })));
         },
 
+        update_status_inline(message, inputEl) {
+            if (inputEl.parentElement.classList.contains("date")) {
+                inputEl.parentElement.after(
+                    renderToElement("website.s_website_form_status_custom_error", {
+                        message: message,
+                    })
+                );
+            } else {
+                inputEl.parentElement.appendChild(
+                    renderToElement("website.s_website_form_status_custom_error", {
+                        message: message,
+                    })
+                );
+            }
+        },
+
         /**
          * Checks if the file input is valid: if the number of files uploaded
          * and their size do not exceed the limits that were set.
@@ -606,8 +618,12 @@ import wUtils from '@website/js/utils';
             const maxFilesNumber = inputEl.dataset.maxFilesNumber;
             if (maxFilesNumber && inputEl.files.length > maxFilesNumber) {
                 // Store information to display the error message later.
-                this.fileInputError = {type: "number", limit: maxFilesNumber};
-                return false;
+                const errorMessage = _t(
+                    "Please fill in the form correctly. You uploaded too many files. (Maximum %s files)", 
+                    maxFilesNumber
+                );
+                this.update_status_inline(errorMessage, inputEl);
+                return true;
             }
             // Checking the files size.
             const maxFileSize = inputEl.dataset.maxFileSize; // in megabytes.
@@ -615,12 +631,16 @@ import wUtils from '@website/js/utils';
             if (maxFileSize) {
                 for (const file of Object.values(inputEl.files)) {
                     if (file.size / bytesInMegabyte > maxFileSize) {
-                        this.fileInputError = {type: "size", limit: maxFileSize, fileName: file.name};
-                        return false;
+                        const errorMessage = _t(
+                            "Please fill in the form correctly. The file “%(fileName)s” is too large. (Maximum %(max)s MB)", 
+                            { "fileName": file.name, "max": maxFileSize }
+                        );
+                        this.update_status_inline(errorMessage, inputEl);
+                        return true;
                     }
                 }
             }
-            return true;
+            return false;
         },
 
         //----------------------------------------------------------------------
@@ -661,6 +681,10 @@ import wUtils from '@website/js/utils';
                     return value.includes(comparable);
                 case '!contains':
                     return !value.includes(comparable);
+                case "substring":
+                    return value.includes(comparable);
+                case "!substring":
+                    return !value.includes(comparable);
                 case 'equal':
                 case 'selected':
                     return value === comparable;
@@ -685,9 +709,15 @@ import wUtils from '@website/js/utils';
                     return value.name === '';
             }
 
-            const format = value.includes(':')
-                ? localization.dateTimeFormat
-                : localization.dateFormat;
+            let format = "";
+            const currentDate = new Date();
+            const xYearAgo = new Date();
+            if (value.includes(":")) {
+                format = localization.dateTimeFormat;
+            } else {
+                format = localization.dateFormat;
+                xYearAgo.setHours(0, 0, 0, 0);
+            }
             // Date & Date Time comparison requires formatting the value
             const dateTime = DateTime.fromFormat(value, format);
             // If invalid, any value other than "NaN" would cause certain
@@ -713,6 +743,10 @@ import wUtils from '@website/js/utils';
                     return !(value >= comparable && value <= between);
                 case 'equal or after':
                     return value >= comparable;
+                case "lessyears":
+                    xYearAgo.setFullYear(currentDate.getFullYear() - comparable);
+                    value = new Date(value * 1000);
+                    return value > xYearAgo;
             }
         },
         /**
@@ -741,6 +775,29 @@ import wUtils from '@website/js/utils';
                     : formData.get(dependencyName);
                 return this._compareTo(comparator, currentValueOfDependency, visibilityCondition, between);
             };
+        },
+        /**
+         * @private
+         * @param {HTMLElement} fieldEl whose validity according to
+         *      requirement needs to varify.
+         * @returns {boolean} Boolean indicating validity of fieldEl
+         *      according to set requirement.
+         */
+        _requirementFunction(fieldEl) {
+            const requirementCondition = fieldEl.dataset.requirementCondition;
+            const comparator = fieldEl.dataset.requirementComparator;
+            const between = fieldEl.dataset.requirementBetween;
+            const value = fieldEl.querySelector(".s_website_form_input").value;
+            if (!requirementCondition && comparator) {
+                return true;
+            }
+            if (["between", "!between"].includes(comparator) && !between) {
+                return true;
+            }
+            if (!value.trim()) {
+                return true;
+            }
+            return this._compareTo(comparator, value, requirementCondition, between);
         },
         /**
          * Calculates the visibility for each field with conditional visibility
