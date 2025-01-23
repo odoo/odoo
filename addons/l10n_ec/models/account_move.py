@@ -197,7 +197,7 @@ class AccountMove(models.Model):
             return super()._get_l10n_latam_documents_domain()
         domain = [
             ('country_id.code', '=', 'EC'),
-            ('internal_type', 'in', ['invoice', 'debit_note', 'credit_note', 'invoice_in'])
+            ('internal_type', 'in', ['invoice', 'debit_note', 'credit_note', 'invoice_in', 'purchase_liquidation'])
         ]
         internal_type = self._get_l10n_ec_internal_type()
         allowed_documents = self._get_l10n_ec_documents_allowed(self._get_l10n_ec_identification_type())
