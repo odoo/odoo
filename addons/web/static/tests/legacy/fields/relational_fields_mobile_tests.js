@@ -61,6 +61,47 @@ QUnit.module("fields", {}, function () {
 
             form.destroy();
         });
+        QUnit.test("in mobiler kanban view with no data should display no content helper", async function (assert) {
+            assert.expect(3);
+            this.data.partner.records = [];
+            var form = await testUtils.createView({
+                View: FormView,
+                arch:
+                    '<form>' +
+                        '<sheet>' +
+                            '<field name="trululu"/>' +
+                        '</sheet>' +
+                    '</form>',
+                archs: {
+                    'partner,false,kanban': '<kanban>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div class="oe_kanban_global_click"><field name="display_name"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+                    'partner,false,search': '<search></search>',
+                },
+                data: this.data,
+                model: 'partner',
+                config: {device: {isMobile: true}},
+                viewOptions: {mode: 'edit'},
+            });
+
+            const $input = form.$('.o_field_many2one input');
+
+            await testUtils.dom.click($input);
+            await testUtils.nextTick();
+            await testUtils.nextTick();
+            await testUtils.nextTick();
+            await testUtils.nextTick();
+
+            const $modal = $('.o_modal_full .modal-lg');
+            assert.equal($modal.length, 1, 'there should be one modal opened in full screen');
+            assert.containsOnce($modal, '.o_kanban_view',
+                'kanban view should be open in SelectCreateDialog');
+            assert.containsOnce($modal, '.o_nocontent_help',
+                'kanban view should have no content helper');
+            form.destroy();
+        });
     });
 });
 });
