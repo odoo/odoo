@@ -238,11 +238,9 @@ class IrModel(models.Model):
     def _inherited_models(self):
         self.inherited_model_ids = False
         for model in self:
-            parent_names = list(self.env[model.model]._inherits)
-            if parent_names:
-                model.inherited_model_ids = self.search([('model', 'in', parent_names)])
-            else:
-                model.inherited_model_ids = False
+            records = self.env.get(model.model)
+            if records is not None:
+                model.inherited_model_ids = self.search([('model', 'in', list(records._inherits))])
 
     @api.depends()
     def _in_modules(self):
@@ -262,8 +260,8 @@ class IrModel(models.Model):
     def _compute_count(self):
         self.count = 0
         for model in self:
-            records = self.env[model.model]
-            if not records._abstract and records._auto:
+            records = self.env.get(model.model)
+            if records is not None and not records._abstract and records._auto:
                 [[count]] = self.env.execute_query(SQL("SELECT COUNT(*) FROM %s", SQL.identifier(records._table)))
                 model.count = count
 

@@ -252,7 +252,7 @@ class MrpWorkcenter(models.Model):
     @api.depends('routing_line_ids')
     def _compute_has_routing_lines(self):
         for workcenter in self:
-            workcenter.has_routing_lines = self.env['mrp.routing.workcenter'].search_count([('workcenter_id', '=', workcenter.id)], limit=1)
+            workcenter.has_routing_lines = self.env['mrp.routing.workcenter'].search_count([('workcenter_id', 'in', workcenter.ids)], limit=1)
 
     @api.constrains('default_capacity')
     def _check_capacity(self):

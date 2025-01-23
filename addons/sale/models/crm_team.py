@@ -67,28 +67,29 @@ class CrmTeam(models.Model):
             team.sales_to_invoice_count = data_map.get(team.id,0.0)
 
     def _compute_invoiced(self):
-        if not self:
-            return
+        if self.ids:
+            today = fields.Date.today()
+            data_map = dict(self.env.execute_query(SQL(
+                ''' SELECT
+                        move.team_id AS team_id,
+                        SUM(move.amount_untaxed_signed) AS amount_untaxed_signed
+                    FROM account_move move
+                    WHERE move.move_type IN ('out_invoice', 'out_refund', 'out_receipt')
+                    AND move.payment_state IN ('in_payment', 'paid', 'reversed')
+                    AND move.state = 'posted'
+                    AND move.team_id IN %s
+                    AND move.date BETWEEN %s AND %s
+                    GROUP BY move.team_id
+                ''',
+                tuple(self.ids),
+                fields.Date.to_string(today.replace(day=1)),
+                fields.Date.to_string(today),
+            )))
+        else:
+            data_map = {}
 
-        query = '''
-            SELECT
-                move.team_id AS team_id,
-                SUM(move.amount_untaxed_signed) AS amount_untaxed_signed
-            FROM account_move move
-            WHERE move.move_type IN ('out_invoice', 'out_refund', 'out_receipt')
-            AND move.payment_state IN ('in_payment', 'paid', 'reversed')
-            AND move.state = 'posted'
-            AND move.team_id IN %s
-            AND move.date BETWEEN %s AND %s
-            GROUP BY move.team_id
-        '''
-        today = fields.Date.today()
-        params = [tuple(self.ids), fields.Date.to_string(today.replace(day=1)), fields.Date.to_string(today)]
-        self._cr.execute(query, params)
-
-        data_map = dict((v[0], v[1]) for v in self._cr.fetchall())
         for team in self:
-            team.invoiced = data_map.get(team.id, 0.0)
+            team.invoiced = data_map.get(team._origin.id, 0.0)
 
     def _compute_sale_order_count(self):
         sale_order_data = self.env['sale.order']._read_group([
