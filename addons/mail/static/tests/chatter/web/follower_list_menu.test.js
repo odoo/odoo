@@ -59,13 +59,13 @@ test('click on "add followers" button', async () => {
     });
     mockService("action", {
         doAction(action, options) {
-            if (action?.res_model !== "mail.wizard.invite") {
+            if (action?.res_model !== "mail.followers.edit") {
                 return super.doAction(...arguments);
             }
             asyncStep("action:open_view");
             expect(action.context.default_res_model).toBe("res.partner");
-            expect(action.context.default_res_id).toBe(partnerId_1);
-            expect(action.res_model).toBe("mail.wizard.invite");
+            expect(action.context.default_res_ids).toEqual([partnerId_1]);
+            expect(action.res_model).toBe("mail.followers.edit");
             expect(action.type).toBe("ir.actions.act_window");
             pyEnv["mail.followers"].create({
                 partner_id: partnerId_3,

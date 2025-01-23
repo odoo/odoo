@@ -9,4 +9,4 @@ from . import mail_activity_schedule
 from . import mail_resend_message
 from . import mail_template_preview
 from . import mail_template_reset
-from . import mail_wizard_invite
+from . import mail_followers_edit
