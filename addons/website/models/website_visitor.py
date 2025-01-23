@@ -92,6 +92,9 @@ class WebsiteVisitor(models.Model):
     def _compute_partner_id(self):
         # The browse in the loop is fine, there is no SQL Query on partner here
         for visitor in self:
+            if not visitor.id:
+                visitor.partner_id = visitor._origin.partner_id
+                continue
             # If the access_token is not a 32 length hexa string, it means that
             # the visitor is linked to a logged in user, in which case its
             # partner_id is used instead as the token.

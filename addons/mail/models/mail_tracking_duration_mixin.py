@@ -1,6 +1,7 @@
 from collections import defaultdict
 
 from odoo import _, fields, models
+from odoo.tools import SQL
 
 
 class MailTrackingDurationMixin(models.AbstractModel):
@@ -43,22 +44,25 @@ class MailTrackingDurationMixin(models.AbstractModel):
                 field=self._track_duration_field, model=self._name
             ))
 
-        self.env['mail.tracking.value'].flush_model()
-        self.env['mail.message'].flush_model()
-        query = """
-               SELECT m.res_id,
-                      v.create_date,
-                      v.old_value_integer
-                 FROM mail_tracking_value v
-            LEFT JOIN mail_message m
-                   ON m.id = v.mail_message_id
-                  AND v.field_id = %(field_id)s
-                WHERE m.model = %(model_name)s
-                  AND m.res_id IN %(record_ids)s
-             ORDER BY v.id
-        """
-        self.env.cr.execute(query, {"field_id": field.id, "model_name": self._name, "record_ids": tuple(self.ids)})
-        trackings = self.env.cr.dictfetchall()
+        if self.ids:
+            self.env['mail.tracking.value'].flush_model()
+            self.env['mail.message'].flush_model()
+            trackings = self.env.execute_query_dict(SQL("""
+                   SELECT m.res_id,
+                          v.create_date,
+                          v.old_value_integer
+                     FROM mail_tracking_value v
+                LEFT JOIN mail_message m
+                       ON m.id = v.mail_message_id
+                      AND v.field_id = %(field_id)s
+                    WHERE m.model = %(model_name)s
+                      AND m.res_id IN %(record_ids)s
+                 ORDER BY v.id
+                """,
+                field_id=field.id, model_name=self._name, record_ids=tuple(self.ids),
+            ))
+        else:
+            trackings = []
 
         for record in self:
             record_trackings = [tracking for tracking in trackings if tracking['res_id'] == record._origin.id]
@@ -79,7 +83,7 @@ class MailTrackingDurationMixin(models.AbstractModel):
         """
         self.ensure_one()
         json = defaultdict(lambda: 0)
-        previous_date = self.create_date
+        previous_date = self.create_date or self.env.cr.now()
 
         # If there is a tracking value to be created, but still in the
         # precommit values, create a fake one to take it into account.
@@ -87,7 +91,7 @@ class MailTrackingDurationMixin(models.AbstractModel):
         # previous tracked field value to the time spent in the new value
         # (after writing the stage on the record)
         if f'mail.tracking.{self._name}' in self.env.cr.precommit.data:
-            if data := self.env.cr.precommit.data.get(f'mail.tracking.{self._name}', {}).get(self.id):
+            if data := self.env.cr.precommit.data.get(f'mail.tracking.{self._name}', {}).get(self._origin.id):
                 new_id = data.get(self._track_duration_field, self.env[self._name]).id
                 if new_id and new_id != self[self._track_duration_field].id:
                     trackings.append({

@@ -581,7 +581,7 @@ class AccountAccount(models.Model):
         for record in self:
             record.related_taxes_amount = self.env['account.tax'].search_count([
                 *self.env['account.tax']._check_company_domain(self.env.company),
-                ('repartition_line_ids.account_id', '=', record.id),
+                ('repartition_line_ids.account_id', 'in', record.ids),
             ])
 
     @api.depends_context('company')

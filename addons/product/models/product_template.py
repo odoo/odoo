@@ -182,7 +182,7 @@ class ProductTemplate(models.Model):
             # Pricelist item count counts the rules applicable on current template or on its variants.
             template.pricelist_item_count = template.env['product.pricelist.item'].search_count([
                 '&',
-                '|', ('product_tmpl_id', '=', template.id), ('product_id', 'in', template.product_variant_ids.ids),
+                '|', ('product_tmpl_id', 'in', template.ids), ('product_id', 'in', template.product_variant_ids.ids),
                 ('pricelist_id.active', '=', True),
                 ('compute_price', '=', 'fixed'),
             ])
@@ -191,7 +191,7 @@ class ProductTemplate(models.Model):
         for template in self:
             template.product_document_count = template.env['product.document'].search_count([
                 '|',
-                    '&', ('res_model', '=', 'product.template'), ('res_id', '=', template.id),
+                    '&', ('res_model', '=', 'product.template'), ('res_id', 'in', template.ids),
                     '&',
                         ('res_model', '=', 'product.product'),
                         ('res_id', 'in', template.product_variant_ids.ids),
