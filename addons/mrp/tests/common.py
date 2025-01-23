@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from odoo import Command
 from odoo.tests import Form
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.stock.tests.common import TestStockCommon
@@ -40,8 +41,8 @@ class TestMrpCommon(TestStockCommon):
             'type': 'normal',
             'consumption': consumption if consumption else 'flexible',
             'bom_line_ids': [
-                (0, 0, {'product_id': product_to_use_2.id, 'product_qty': qty_base_2}),
-                (0, 0, {'product_id': product_to_use_1.id, 'product_qty': qty_base_1})
+                Command.create({'product_id': product_to_use_2.id, 'product_qty': qty_base_2}),
+                Command.create({'product_id': product_to_use_1.id, 'product_qty': qty_base_1}),
             ]})
         mo_form = Form(cls.env['mrp.production'])
         mo_form.product_id = product_to_build
@@ -101,6 +102,9 @@ class TestMrpCommon(TestStockCommon):
         # field `product_uom_id` must be set by many tests, and subviews of
         # `workorder_ids` must be present in many tests to create records.
         cls.env.user.group_ids += cls.env.ref('uom.group_uom') + cls.env.ref('mrp.group_mrp_routings')
+        cls.picking_type_manu = cls.warehouse_1.manu_type_id
+        cls.picking_type_manu.sequence = 5
+        cls.route_manufacture = cls.warehouse_1.manufacture_pull_id.route_id
 
         cls.workcenter_1 = cls.env['mrp.workcenter'].create({
             'name': 'Nuclear Workcenter',
@@ -138,8 +142,8 @@ class TestMrpCommon(TestStockCommon):
             ],
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {'product_id': cls.product_2.id, 'product_qty': 2}),
-                (0, 0, {'product_id': cls.product_1.id, 'product_qty': 4})
+                Command.create({'product_id': cls.product_2.id, 'product_qty': 2}),
+                Command.create({'product_id': cls.product_1.id, 'product_qty': 4}),
             ]})
         cls.bom_2 = cls.env['mrp.bom'].create({
             'product_id': cls.product_5.id,
@@ -148,13 +152,13 @@ class TestMrpCommon(TestStockCommon):
             'consumption': 'flexible',
             'product_qty': 1.0,
             'operation_ids': [
-                (0, 0, {'name': 'Gift Wrap Maching', 'workcenter_id': cls.workcenter_1.id, 'time_cycle': 15, 'sequence': 1}),
+                Command.create({'name': 'Gift Wrap Maching', 'workcenter_id': cls.workcenter_1.id, 'time_cycle': 15, 'sequence': 1}),
             ],
             'type': 'phantom',
             'sequence': 2,
             'bom_line_ids': [
-                (0, 0, {'product_id': cls.product_4.id, 'product_qty': 2}),
-                (0, 0, {'product_id': cls.product_3.id, 'product_qty': 3})
+                Command.create({'product_id': cls.product_4.id, 'product_qty': 2}),
+                Command.create({'product_id': cls.product_3.id, 'product_qty': 3}),
             ]})
         cls.bom_3 = cls.env['mrp.bom'].create({
             'product_id': cls.product_6.id,
@@ -164,63 +168,65 @@ class TestMrpCommon(TestStockCommon):
             'consumption': 'flexible',
             'product_qty': 2.0,
             'operation_ids': [
-                (0, 0, {'name': 'Cutting Machine', 'workcenter_id': cls.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
-                (0, 0, {'name': 'Weld Machine', 'workcenter_id': cls.workcenter_1.id, 'time_cycle': 18, 'sequence': 2}),
+                Command.create({'name': 'Cutting Machine', 'workcenter_id': cls.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
+                Command.create({'name': 'Weld Machine', 'workcenter_id': cls.workcenter_1.id, 'time_cycle': 18, 'sequence': 2}),
             ],
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {'product_id': cls.product_5.id, 'product_qty': 2}),
-                (0, 0, {'product_id': cls.product_4.id, 'product_qty': 8}),
-                (0, 0, {'product_id': cls.product_2.id, 'product_qty': 12})
+                Command.create({'product_id': cls.product_5.id, 'product_qty': 2}),
+                Command.create({'product_id': cls.product_4.id, 'product_qty': 8}),
+                Command.create({'product_id': cls.product_2.id, 'product_qty': 12}),
             ]})
         cls.bom_4 = cls.env['mrp.bom'].create({
             'product_id': cls.product_6.id,
             'product_tmpl_id': cls.product_6.product_tmpl_id.id,
             'consumption': 'flexible',
             'product_qty': 1.0,
-            'operation_ids': [
-                (0, 0, {'name': 'Rub it gently with a cloth', 'workcenter_id': cls.workcenter_2.id,
-                        'time_mode_batch': 1, 'time_mode': "auto", 'sequence': 1}),
-            ],
+            'operation_ids': [Command.create({
+                'name': 'Rub it gently with a cloth',
+                'workcenter_id': cls.workcenter_2.id,
+                'time_mode_batch': 1,
+                'time_mode': "auto",
+                'sequence': 1,
+            })],
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {'product_id': cls.product_1.id, 'product_qty': 1}),
+                Command.create({'product_id': cls.product_1.id, 'product_qty': 1}),
             ]})
         cls.bom_5 = cls.env['mrp.bom'].create({
             'product_id': cls.product_6.id,
             'product_tmpl_id': cls.product_6.product_tmpl_id.id,
             'consumption': 'flexible',
             'product_qty': 1.0,
-            'operation_ids': [
-                (0, 0, {'name': 'Rub it gently with a cloth two at once', 'workcenter_id': cls.workcenter_3.id,
-                        'time_mode_batch': 2, 'time_mode': "auto", 'sequence': 1}),
-            ],
+            'operation_ids': [Command.create({
+                'name': 'Rub it gently with a cloth two at once',
+                'workcenter_id': cls.workcenter_3.id,
+                'time_mode_batch': 2,
+                'time_mode': "auto",
+                'sequence': 1,
+            })],
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {'product_id': cls.product_1.id, 'product_qty': 1}),
+                Command.create({'product_id': cls.product_1.id, 'product_qty': 1}),
             ]})
         cls.bom_6 = cls.env['mrp.bom'].create({
             'product_id': cls.product_6.id,
             'product_tmpl_id': cls.product_6.product_tmpl_id.id,
             'consumption': 'flexible',
             'product_qty': 1.0,
-            'operation_ids': [
-                (0, 0, {'name': 'Rub it gently with a cloth two at once', 'workcenter_id': cls.workcenter_3.id,
-                        'time_mode_batch': 1, 'time_mode': "auto", 'sequence': 1}),
-            ],
+            'operation_ids': [Command.create({
+                'name': 'Rub it gently with a cloth two at once',
+                'workcenter_id': cls.workcenter_3.id,
+                'time_mode_batch': 1,
+                'time_mode': "auto",
+                'sequence': 1,
+            })],
             'type': 'normal',
             'bom_line_ids': [
-                (0, 0, {'product_id': cls.product_1.id, 'product_qty': 1}),
+                Command.create({'product_id': cls.product_1.id, 'product_qty': 1}),
             ]})
 
-        cls.stock_location_14 = cls.env['stock.location'].create({
-            'name': 'Shelf 2',
-            'location_id': cls.env.ref('stock.warehouse0').lot_stock_id.id,
-        })
-        cls.stock_location_components = cls.env['stock.location'].create({
-            'name': 'Shelf 1',
-            'location_id': cls.env.ref('stock.warehouse0').lot_stock_id.id,
-        })
+        cls.stock_location_components = cls.shelf_1
         cls.laptop = cls.env['product.product'].create({
             'name': 'Acoustic Bloc Screens',
             'uom_id': cls.env.ref("uom.product_uom_unit").id,
@@ -255,7 +261,7 @@ class TestMrpCommon(TestStockCommon):
                 "type": "phantom",
                 "product_uom_id": cls.uom_unit.id,
                 "bom_line_ids": [
-                    (0, 0, {
+                    Command.create({
                         "product_id": c.id,
                         "product_qty": 1,
                         "product_uom_id": cls.uom_unit.id

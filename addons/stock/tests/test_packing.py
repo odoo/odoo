@@ -14,7 +14,7 @@ class TestPackingCommon(TransactionCase):
         super(TestPackingCommon, cls).setUpClass()
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.warehouse = cls.env['stock.warehouse'].search([('lot_stock_id', '=', cls.stock_location.id)], limit=1)
-        cls.warehouse.write({'delivery_steps': 'pick_pack_ship'})
+        cls.warehouse.delivery_steps = 'pick_pack_ship'
         cls.warehouse.int_type_id.reservation_method = 'manual'
         cls.pack_location = cls.warehouse.wh_pack_stock_loc_id
         cls.ship_location = cls.warehouse.wh_output_stock_loc_id
@@ -1816,7 +1816,7 @@ class TestPacking(TestPackingCommon):
         Ensure it results with the two first package reserved. The first and the third package
         should be picked.
         """
-        self.warehouse.write({'delivery_steps': 'ship_only'})
+        self.warehouse.delivery_steps = 'ship_only'
 
         pack1, pack2, pack3 = self.env['stock.quant.package'].create([
             {'name': 'pack1'},

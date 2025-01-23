@@ -4,7 +4,7 @@
 from datetime import datetime, timedelta, time
 from unittest.mock import patch
 
-from odoo import fields
+from odoo import Command, fields
 from .common import PurchaseTestCommon
 from odoo.tests import Form
 
@@ -100,8 +100,8 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         # create a product with manufacture route
         product_1 = self.env['product.product'].create({
             'name': 'AAA',
-            'route_ids': [(4, self.route_buy)],
-            'seller_ids': [(0, 0, {'partner_id': self.partner_1.id, 'delay': 5})]
+            'route_ids': [Command.link(self.route_buy.id)],
+            'seller_ids': [Command.create({'partner_id': self.partner_1.id, 'delay': 5})]
         })
 
         # create a move for product_1 from stock to output and reserve to trigger the
@@ -109,9 +109,9 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         move_1 = self.env['stock.move'].create({
             'name': 'move_1',
             'product_id': product_1.id,
-            'product_uom': self.ref('uom.product_uom_unit'),
-            'location_id': self.ref('stock.stock_location_stock'),
-            'location_dest_id': self.ref('stock.stock_location_output'),
+            'product_uom': self.uom_unit.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.output_location.id,
             'product_uom_qty': 10,
             'procure_method': 'make_to_order'
         })
@@ -126,9 +126,9 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         move_2 = self.env['stock.move'].create({
             'name': 'move_2',
             'product_id': product_1.id,
-            'product_uom': self.ref('uom.product_uom_unit'),
-            'location_id': self.ref('stock.stock_location_stock'),
-            'location_dest_id': self.ref('stock.stock_location_output'),
+            'product_uom': self.uom_unit.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.output_location.id,
             'product_uom_qty': 5,
             'procure_method': 'make_to_order'
         })
@@ -225,7 +225,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
             'name': 'Carrot',
             'is_storable': True,
             'seller_ids': [
-                (0, 0, {'partner_id': vendor.id, 'delay': 1.0, 'company_id': company.id})
+                Command.create({'partner_id': vendor.id, 'delay': 1.0, 'company_id': company.id})
             ]
         })
 
@@ -237,7 +237,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
             'product_uom': prod.uom_id.id,
             'product_uom_qty': 5.0,
             'location_id': warehouse.lot_stock_id.id,
-            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'location_dest_id': self.customer_location.id,
         })._action_confirm()
         self.env['stock.warehouse.orderpoint'].action_open_orderpoints()
         replenishment = self.env['stock.warehouse.orderpoint'].search([
@@ -250,8 +250,8 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
             'name': 'Chicory',
             'is_storable': True,
             'seller_ids': [
-                (0, 0, {'partner_id': vendor2.id, 'delay': 15.0, 'company_id': company2.id}),
-                (0, 0, {'partner_id': vendor.id, 'delay': 1.0, 'company_id': company.id})
+                Command.create({'partner_id': vendor2.id, 'delay': 15.0, 'company_id': company2.id}),
+                Command.create({'partner_id': vendor.id, 'delay': 1.0, 'company_id': company.id})
             ]
         })
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
@@ -274,7 +274,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
                 'product_uom': product.uom_id.id,
                 'product_uom_qty': 5.0,
                 'location_id': warehouse.lot_stock_id.id,
-                'location_dest_id': self.ref('stock.stock_location_customers'),
+                'location_dest_id': self.customer_location.id,
             })
         delivery_moves._action_confirm()
         self.env['procurement.group'].run_scheduler()

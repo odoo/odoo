@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo import Command
 from odoo.tests import tagged
 from .common import PurchaseTestCommon
 
@@ -11,8 +12,6 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         super().setUpClass()
         cls.customer = cls.env['res.partner'].create({'name': 'abc'})
         cls.group = cls.env['procurement.group'].create({'partner_id': cls.customer.id, 'name': 'New Group'})
-        cls.warehouse = cls.env.ref('stock.warehouse0')
-        cls.cust_location = cls.env.ref('stock.stock_location_customers')
         seller = cls.env['product.supplierinfo'].create({
             'partner_id': cls.customer.id,
             'price': 100.0,
@@ -20,15 +19,15 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         product = cls.env['product.product'].create({
             'name': 'Geyser',
             'is_storable': True,
-            'route_ids': [(4, cls.route_mto), (4, cls.route_buy)],
-            'seller_ids': [(6, 0, [seller.id])],
+            'route_ids': [Command.set([cls.route_mto.id, cls.route_buy.id])],
+            'seller_ids': [Command.set([seller.id])],
         })
         cls.picking_out = cls.env['stock.picking'].create({
-            'location_id': cls.warehouse.out_type_id.default_location_src_id.id,
-            'location_dest_id': cls.cust_location.id,
+            'location_id': cls.picking_type_out.default_location_src_id.id,
+            'location_dest_id': cls.customer_location.id,
             'partner_id': cls.customer.id,
             'group_id': cls.group.id,
-            'picking_type_id': cls.env.ref('stock.picking_type_out').id,
+            'picking_type_id': cls.picking_type_out.id,
         })
         cls.move = cls.env['stock.move'].create({
             'name': product.name,
@@ -37,8 +36,8 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
             'product_uom': product.uom_id.id,
             'picking_id': cls.picking_out.id,
             'group_id': cls.group.id,
-            'location_id': cls.warehouse.out_type_id.default_location_src_id.id,
-            'location_dest_id': cls.cust_location.id,
+            'location_id': cls.picking_type_out.default_location_src_id.id,
+            'location_dest_id': cls.customer_location.id,
             'procure_method': 'make_to_order',
         })
 
@@ -49,9 +48,10 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
                 2) Create Delivery order with mto move and confirm the order, related RFQ should be generated.
                 3) Cancel 'draft' purchase order should not cancel < Delivery >
         """
-        self.warehouse.write({'delivery_steps': 'ship_only', 'reception_steps': 'one_step'})
-        self.picking_out.write({'location_id': self.warehouse.out_type_id.default_location_src_id.id})
-        self.move.write({'location_id': self.warehouse.out_type_id.default_location_src_id.id})
+        self.warehouse_1.delivery_steps = 'ship_only'
+        self.warehouse_1.reception_steps = 'one_step'
+        self.picking_out.location_id = self.picking_type_out.default_location_src_id.id
+        self.move.location_id = self.picking_type_out.default_location_src_id.id
         self.picking_out.action_confirm()
 
         # Find PO related to picking.
@@ -78,9 +78,10 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
                 3) Cancel 'confirmed' purchase order, should cancel releted < Receiption >
                   but it should not cancel < Delivery > order.
         """
-        self.warehouse.write({'delivery_steps': 'ship_only', 'reception_steps': 'one_step'})
-        self.picking_out.write({'location_id': self.warehouse.out_type_id.default_location_src_id.id})
-        self.move.write({'location_id': self.warehouse.out_type_id.default_location_src_id.id})
+        self.warehouse_1.delivery_steps = 'ship_only'
+        self.warehouse_1.reception_steps = 'one_step'
+        self.picking_out.location_id = self.picking_type_out.default_location_src_id.id
+        self.move.location_id = self.picking_type_out.default_location_src_id.id
         self.picking_out.action_confirm()
 
         # Find PO related to picking.
@@ -91,7 +92,7 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         # Check status of Purchase Order
         self.assertEqual(purchase_order.state, 'draft', "Purchase order should be in 'draft' state.")
         purchase_order .button_confirm()
-        picking_in = purchase_order.picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse.in_type_id)
+        picking_in = purchase_order.picking_ids.filtered(lambda r: r.picking_type_id == self.picking_type_in)
         # Cancel Purchase order.
         purchase_order .button_cancel()
 
@@ -108,11 +109,12 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
                 3) Cancel 'draft' purchase order should cancel < Input to Stock>
                   but it should not cancel < PICK, Delivery >
         """
-        self.warehouse.write({'delivery_steps': 'pick_ship', 'reception_steps': 'two_steps'})
+        self.warehouse_1.delivery_steps = 'pick_ship'
+        self.warehouse_1.reception_steps = 'two_steps'
         self.move.write({
             'picking_id': False,
-            'picking_type_id': self.warehouse.pick_type_id.id,
-            'location_final_id': self.cust_location,
+            'picking_type_id': self.warehouse_1.pick_type_id.id,
+            'location_final_id': self.customer_location.id,
         })
         self.move._action_confirm()
         self.assertEqual(self.move.picking_id.state, 'waiting')
@@ -137,11 +139,12 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
                 3) Cancel 'comfirm' purchase order should cancel releted < Receiption Picking IN, INT>
                   not < PICK, SHIP >
         """
-        self.warehouse.write({'delivery_steps': 'pick_ship', 'reception_steps': 'two_steps'})
+        self.warehouse_1.delivery_steps = 'pick_ship'
+        self.warehouse_1.reception_steps = 'two_steps'
         self.move.write({
             'picking_id': False,
-            'picking_type_id': self.warehouse.pick_type_id.id,
-            'location_final_id': self.cust_location,
+            'picking_type_id': self.warehouse_1.pick_type_id.id,
+            'location_final_id': self.customer_location.id,
         })
         self.move._action_confirm()
         self.assertEqual(self.move.picking_id.state, 'waiting')
@@ -155,7 +158,7 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         self.assertEqual(purchase_order.state, 'draft', "Purchase order should be in 'draft' state.")
 
         purchase_order.button_confirm()
-        picking_in = purchase_order.picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse.in_type_id)
+        picking_in = purchase_order.picking_ids.filtered(lambda r: r.picking_type_id == self.picking_type_in)
         # Cancel Purchase order.
         purchase_order.button_cancel()
 
@@ -171,11 +174,12 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
                 3) Cancel 'draft' purchase order should cancel releted < Receiption Picking  IN>
                   not < PICK, PACK, SHIP >
         """
-        self.warehouse.write({'delivery_steps': 'pick_pack_ship', 'reception_steps': 'three_steps'})
+        self.warehouse_1.delivery_steps = 'pick_pack_ship'
+        self.warehouse_1.reception_steps = 'three_steps'
         self.move.write({
             'picking_id': False,
-            'picking_type_id': self.warehouse.pick_type_id.id,
-            'location_final_id': self.cust_location,
+            'picking_type_id': self.warehouse_1.pick_type_id.id,
+            'location_final_id': self.customer_location.id,
         })
         self.move._action_confirm()
         self.assertEqual(self.move.picking_id.state, 'waiting')
@@ -200,11 +204,12 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
                 3) Cancel 'comfirm' purchase order should cancel releted < Receiption Picking IN, INT>
                   not < PICK, PACK, SHIP >
         """
-        self.warehouse.write({'delivery_steps': 'pick_pack_ship', 'reception_steps': 'three_steps'})
+        self.warehouse_1.delivery_steps = 'pick_pack_ship'
+        self.warehouse_1.reception_steps = 'three_steps'
         self.move.write({
             'picking_id': False,
-            'picking_type_id': self.warehouse.pick_type_id.id,
-            'location_final_id': self.cust_location,
+            'picking_type_id': self.warehouse_1.pick_type_id.id,
+            'location_final_id': self.customer_location.id,
         })
         self.move._action_confirm()
         self.assertEqual(self.move.picking_id.state, 'waiting')
@@ -218,7 +223,7 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         self.assertEqual(purchase_order.state, 'draft', "Purchase order should be in 'draft' state.")
 
         purchase_order.button_confirm()
-        picking_in = purchase_order.picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse.in_type_id)
+        picking_in = purchase_order.picking_ids.filtered(lambda r: r.picking_type_id == self.picking_type_in)
         # Cancel Purchase order.
         purchase_order.button_cancel()
 
@@ -230,10 +235,6 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         """Check for done and cancelled moves. Ensure that the RFQ cancellation
         will not impact the delivery state if it's already cancelled.
         """
-        stock_location = self.env.ref('stock.stock_location_stock')
-        customer_location = self.env.ref('stock.stock_location_customers')
-        picking_type_out = self.env.ref('stock.picking_type_out')
-
         partner = self.env['res.partner'].create({
             'name': 'Steve'
         })
@@ -244,19 +245,22 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         product_car = self.env['product.product'].create({
             'name': 'Car',
             'is_storable': True,
-            'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase_stock.route_warehouse0_buy'))],
-            'seller_ids': [(6, 0, [seller.id])],
+            'route_ids': [
+                Command.link(self.route_mto.id),
+                Command.link(self.route_buy.id),
+            ],
+            'seller_ids': [Command.set([seller.id])],
         })
         customer_picking = self.env['stock.picking'].create({
-            'location_id': stock_location.id,
-            'location_dest_id': customer_location.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
             'partner_id': partner.id,
-            'picking_type_id': picking_type_out.id,
+            'picking_type_id': self.picking_type_out.id,
         })
         customer_move = self.env['stock.move'].create({
             'name': 'move out',
-            'location_id': stock_location.id,
-            'location_dest_id': customer_location.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
             'product_id': product_car.id,
             'product_uom': product_car.uom_id.id,
             'product_uom_qty': 10.0,

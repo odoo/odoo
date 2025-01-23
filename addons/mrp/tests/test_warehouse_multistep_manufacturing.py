@@ -18,7 +18,6 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         # Required for `manufacture_steps` to be visible in the view
         cls.env.user.group_ids += cls.env.ref('stock.group_adv_location')
         # Create warehouse
-        cls.customer_location = cls.env['ir.model.data']._xmlid_to_res_id('stock.stock_location_customers')
         warehouse_form = Form(cls.env['stock.warehouse'])
         warehouse_form.name = 'Test Warehouse'
         warehouse_form.code = 'TWH'
@@ -180,11 +179,11 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         with Form(self.warehouse) as warehouse:
             warehouse.manufacture_steps = 'pbm_sam'
         self.warehouse.flush_model()
-        self.env.ref('stock.route_warehouse0_mto').active = True
+        self.route_mto.active = True
         self.env['stock.quant']._update_available_quantity(self.raw_product, self.warehouse.lot_stock_id, 4.0)
         picking_customer = self.env['stock.picking'].create({
             'location_id': self.warehouse.wh_output_stock_loc_id.id,
-            'location_dest_id': self.customer_location,
+            'location_dest_id': self.customer_location.id,
             'partner_id': self.env['ir.model.data']._xmlid_to_res_id('base.res_partner_4'),
             'picking_type_id': self.warehouse.out_type_id.id,
             'state': 'draft',
@@ -197,7 +196,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             'product_uom': self.uom_unit.id,
             'picking_id': picking_customer.id,
             'location_id': self.warehouse.lot_stock_id.id,
-            'location_dest_id': self.customer_location,
+            'location_dest_id': self.customer_location.id,
             'procure_method': 'make_to_order',
             'origin': 'SOURCEDOCUMENT',
             'state': 'draft',
@@ -264,7 +263,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         self.env['stock.quant']._update_available_quantity(self.raw_product, self.warehouse.lot_stock_id, 4.0)
         picking_customer = self.env['stock.picking'].create({
             'location_id': self.warehouse.lot_stock_id.id,
-            'location_dest_id': self.customer_location,
+            'location_dest_id': self.customer_location.id,
             'partner_id': self.env['ir.model.data']._xmlid_to_res_id('base.res_partner_4'),
             'picking_type_id': self.warehouse.out_type_id.id,
             'state': 'draft',
@@ -276,7 +275,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             'picking_id': picking_customer.id,
             'product_uom': self.uom_unit.id,
             'location_id': self.warehouse.lot_stock_id.id,
-            'location_dest_id': self.customer_location,
+            'location_dest_id': self.customer_location.id,
             'procure_method': 'make_to_order',
         })
         picking_customer.action_confirm()
@@ -371,7 +370,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
 
         finished_product = self.env['product.product'].create({
             'name': 'Super Product',
-            'route_ids': [(4, self.ref('mrp.route_warehouse0_manufacture'))],
+            'route_ids': [Command.link(self.route_manufacture.id)],
             'is_storable': True,
         })
         secondary_product = self.env['product.product'].create({
@@ -762,7 +761,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         self.env.user.group_ids += self.env.ref('mrp.group_mrp_byproducts')
         demo = self.env['product.product'].create({
             'name': 'DEMO',
-            'route_ids': [(4, self.ref('mrp.route_warehouse0_manufacture'))],
+            'route_ids': [Command.link(self.route_manufacture.id)],
             'is_storable': True,
         })
         comp1 = self.env['product.product'].create({

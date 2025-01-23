@@ -99,14 +99,11 @@ class TestRepairTraceability(TestMrpCommon):
             mo.button_mark_done()
             return mo
 
-
-        stock_location = self.env.ref('stock.stock_location_stock')
-
         finished, component = self.env['product.product'].create([{
             'name': 'Finished Product',
             'is_storable': True,
         }, {
-            'name': 'SN Componentt',
+            'name': 'SN Component',
             'is_storable': True,
             'tracking': 'serial',
         }])
@@ -115,7 +112,7 @@ class TestRepairTraceability(TestMrpCommon):
             'product_id': component.id,
             'name': 'USN01',
         })
-        self.env['stock.quant']._update_available_quantity(component, stock_location, 1, lot_id=sn_lot)
+        self.env['stock.quant']._update_available_quantity(component, self.stock_location, 1, lot_id=sn_lot)
 
         mo = produce_one(finished, component)
         self.assertEqual(mo.state, 'done')
@@ -142,7 +139,7 @@ class TestRepairTraceability(TestMrpCommon):
         with ro_form.move_ids.new() as ro_line:
             ro_line.repair_line_type = 'recycle'
             ro_line.product_id = component
-            ro_line.location_dest_id = stock_location
+            ro_line.location_dest_id = self.stock_location
         ro = ro_form.save()
         ro.action_validate()
         ro.move_ids[0].lot_ids = sn_lot
@@ -155,7 +152,7 @@ class TestRepairTraceability(TestMrpCommon):
         with ro_form.move_ids.new() as ro_line:
             ro_line.repair_line_type = 'add'
             ro_line.product_id = component
-            ro_line.location_id = stock_location
+            ro_line.location_id = self.stock_location
         ro = ro_form.save()
         ro.action_validate()
         ro.move_ids[0].lot_ids = sn_lot
@@ -168,7 +165,7 @@ class TestRepairTraceability(TestMrpCommon):
         with ro_form.move_ids.new() as ro_line:
             ro_line.repair_line_type = 'recycle'
             ro_line.product_id = component
-            ro_line.location_dest_id = stock_location
+            ro_line.location_dest_id = self.stock_location
         ro = ro_form.save()
         ro.action_validate()
         ro.move_ids[0].lot_ids = sn_lot
@@ -212,8 +209,7 @@ class TestRepairTraceability(TestMrpCommon):
         ro.action_repair_start()
         ro.action_repair_end()
 
-        stock_location = self.env.ref('stock.stock_location_stock')
-        self.env['stock.quant']._update_available_quantity(component, stock_location, 1, lot_id=sn_lot)
+        self.env['stock.quant']._update_available_quantity(component, self.stock_location, 1, lot_id=sn_lot)
         self.assertEqual(component.qty_available, 1)
 
         # create a manufacturing order
@@ -258,7 +254,6 @@ class TestRepairTraceability(TestMrpCommon):
         Move the component back to the stock
         Use it in a MO
         """
-        stock_location = self.env.ref('stock.stock_location_stock')
         scrap_location = self.env['stock.location'].search([('company_id', '=', self.env.company.id), ('scrap_location', '=', True)], limit=1)
 
         finished = self.bom_4.product_id
@@ -273,7 +268,7 @@ class TestRepairTraceability(TestMrpCommon):
             'name': 'SN01',
             'company_id': self.env.company.id,
         })
-        self.env['stock.quant']._update_available_quantity(component, stock_location, 1, lot_id=sn_lot)
+        self.env['stock.quant']._update_available_quantity(component, self.stock_location, 1, lot_id=sn_lot)
 
         mo_form = Form(self.env['mrp.production'])
         mo_form.bom_id = self.bom_4
@@ -308,7 +303,7 @@ class TestRepairTraceability(TestMrpCommon):
             'product_uom_qty': 1,
             'product_uom': component.uom_id.id,
             'location_id': scrap_location.id,
-            'location_dest_id': stock_location.id,
+            'location_dest_id': self.stock_location.id,
         })
         sm._action_confirm()
         sm.move_line_ids.write({

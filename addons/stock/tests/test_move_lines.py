@@ -9,7 +9,7 @@ from odoo.exceptions import UserError
 from odoo.tests import Form
 
 
-class StockMoveLine(TestStockCommon):
+class TestStockMoveLine(TestStockCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -21,11 +21,6 @@ class StockMoveLine(TestStockCommon):
             'name': 'Product A',
             'is_storable': True,
             'tracking': 'lot',
-        })
-        cls.shelf1 = cls.env['stock.location'].create({
-            'name': 'Shelf 1',
-            'usage': 'internal',
-            'location_id': cls.stock_location,
         })
         cls.pack = cls.env['stock.quant.package'].create({
             'name': 'Pack A',
@@ -41,17 +36,16 @@ class StockMoveLine(TestStockCommon):
 
         cls.quant = cls.env['stock.quant'].create({
             'product_id': cls.product.id,
-            'location_id': cls.shelf1.id,
+            'location_id': cls.shelf_1.id,
             'quantity': 10,
             'lot_id': cls.lot.id,
             'package_id': cls.pack.id,
             'owner_id': cls.partner.id,
         })
-        cls.picking_type_internal = cls.env['ir.model.data']._xmlid_to_res_id('stock.picking_type_internal')
 
     def test_pick_from_1(self):
         """ test quant display_name """
-        self.assertEqual(self.quant.display_name, 'WH/Stock/Shelf 1 - Lot 1 - Pack A - The Owner')
+        self.assertEqual(self.quant.display_name, 'BWH/Stock/Shelf 1 - Lot 1 - Pack A - The Owner')
 
     def test_pick_from_2(self):
         """ Create a move line from a quant"""
@@ -59,8 +53,8 @@ class StockMoveLine(TestStockCommon):
             'name': 'Test move',
             'product_id': self.product.id,
             'product_uom': self.product.uom_id.id,
-            'location_id': self.stock_location,
-            'location_dest_id': self.stock_location,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
         })
         move_form = Form(move, view='stock.view_stock_move_operations')
         with move_form.move_line_ids.new() as ml:
@@ -71,7 +65,7 @@ class StockMoveLine(TestStockCommon):
         self.assertEqual(move.move_line_ids.lot_id, self.lot)
         self.assertEqual(move.move_line_ids.package_id, self.pack)
         self.assertEqual(move.move_line_ids.owner_id, self.partner)
-        self.assertEqual(move.move_line_ids.location_id, self.shelf1)
+        self.assertEqual(move.move_line_ids.location_id, self.shelf_1)
         self.assertEqual(move.move_line_ids.quantity, 10)
 
     def test_pick_from_3(self):
@@ -80,9 +74,9 @@ class StockMoveLine(TestStockCommon):
             'name': 'Test move',
             'product_id': self.product.id,
             'product_uom': self.product.uom_id.id,
-            'location_id': self.stock_location,
-            'location_dest_id': self.stock_location,
-            'picking_type_id': self.picking_type_internal,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.picking_type_int.id,
             'state': 'draft',
             'product_uom_qty': 5,
         })
@@ -98,14 +92,14 @@ class StockMoveLine(TestStockCommon):
 
     def test_pick_from_4(self):
         """ check the quantity done is not negative if the quant has negative quantity"""
-        self.env['stock.quant']._update_available_quantity(self.product, self.shelf1, -20, lot_id=self.lot, package_id=self.pack, owner_id=self.partner)
+        self.env['stock.quant']._update_available_quantity(self.product, self.shelf_1, -20, lot_id=self.lot, package_id=self.pack, owner_id=self.partner)
         self.assertEqual(self.quant.quantity, -10)
         move = self.env['stock.move'].create({
             'name': 'Test move',
             'product_id': self.product.id,
             'product_uom': self.product.uom_id.id,
-            'location_id': self.stock_location,
-            'location_dest_id': self.stock_location,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
         })
         move_form = Form(move, view='stock.view_stock_move_operations')
         with move_form.move_line_ids.new() as ml:
@@ -121,8 +115,8 @@ class StockMoveLine(TestStockCommon):
         move = self.env['stock.move'].create({
             'name': 'Test move',
             'product_id': self.product.id,
-            'location_id': self.stock_location,
-            'location_dest_id': self.stock_location,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
             'product_uom_qty': 1e-5,
         })
         move_form = Form(move, view='stock.view_stock_move_operations')
@@ -139,9 +133,9 @@ class StockMoveLine(TestStockCommon):
     def test_put_in_pack_with_several_move_lines(self):
         picking1 = self.env['stock.picking'].create({
             'name': 'Picking 1',
-            'location_id': self.env.ref('stock.stock_location_stock').id,
-            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
-            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.picking_type_out.id,
         })
         picking2 = picking1.copy({'name': 'picking 2'})
         move_line1 = self.env['stock.move.line'].create({
@@ -163,13 +157,13 @@ class StockMoveLine(TestStockCommon):
         """
         Ensure that the quant_id and lot_id cannot be updated in multi-edit mode when the move lines use different products.
         """
-        self.env['stock.quant']._update_available_quantity(self.product, self.shelf1, 20, lot_id=self.lot, owner_id=self.partner)
-        quant_productA = self.env['stock.quant']._update_available_quantity(self.productA, self.shelf1, 20, owner_id=self.partner)
+        self.env['stock.quant']._update_available_quantity(self.product, self.shelf_1, 20, lot_id=self.lot, owner_id=self.partner)
+        quant_productA = self.env['stock.quant']._update_available_quantity(self.productA, self.shelf_1, 20, owner_id=self.partner)
         picking1 = self.env['stock.picking'].create({
             'name': 'Picking 1',
-            'location_id': self.env.ref('stock.stock_location_stock').id,
-            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
-            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.picking_type_out.id,
         })
         move_line1 = self.env['stock.move.line'].create({
             'picking_id': picking1.id,
@@ -191,8 +185,8 @@ class StockMoveLine(TestStockCommon):
         with freeze_time() as freeze:
             move = self.env['stock.move'].create({
                 'name': 'test_move_line_date',
-                'location_id': self.stock_location,
-                'location_dest_id': self.customer_location,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
                 'product_id': self.productA.id,
                 'product_uom': self.uom_unit.id,
                 'product_uom_qty': 10.0,

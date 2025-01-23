@@ -15,8 +15,7 @@ class TestMrpAccount(TestMrpCommon):
     @classmethod
     def setUpClass(cls):
         super(TestMrpAccount, cls).setUpClass()
-        cls.source_location_id = cls.stock_location_14.id
-        cls.warehouse = cls.env.ref('stock.warehouse0')
+        cls.source_location_id = cls.shelf_1.id
         # setting up alternative workcenters
         cls.wc_alt_1 = cls.env['mrp.workcenter'].create({
             'name': 'Nuclear Workcenter bis',
@@ -226,7 +225,7 @@ class TestMrpAccount(TestMrpCommon):
             'name': 'in 2 component',
             'product_id': component.id,
             'product_uom_qty': 2.0,
-            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_id': self.supplier_location.id,
             'location_dest_id': self.source_location_id,
             'price_unit': 1,
         })
@@ -279,7 +278,7 @@ class TestMrpAccount(TestMrpCommon):
             'product_id': final_product.id,
             'product_uom_qty': 1.0,
             'location_id': self.source_location_id,
-            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'location_dest_id': self.customer_location.id,
         })
         out_move._action_confirm()
         out_move._action_assign()
