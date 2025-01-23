@@ -124,7 +124,7 @@
                                         <a id="last" href="#" onclick="return false;"
                                            class="text-decoration-none mx-1 mx-sm-2" title="Last slide"
                                            aria-label="Last slide" role="button"> <i class="fa fa-step-forward"/> </a>
-                                        <a t-if="slide.slide_resource_downloadable" id="download" t-attf-href="/web/content/slide.slide/#{slide.id}/datas?download=true"
+                                        <a data-no-post-process="1" t-if="slide.slide_resource_downloadable" id="download" t-attf-href="/web/content/slide.slide/#{slide.id}/datas?download=true"
                                            class="text-decoration-none ml-1 ml-sm-2" title="Download Content" role="img" aria-label="Download">
                                             <i class="fa fa-download" />
                                         </a>
