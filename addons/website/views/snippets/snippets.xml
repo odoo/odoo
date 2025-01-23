@@ -1535,16 +1535,14 @@
                   data-dependencies="!header_effect_scroll_opt"/>
     </div>
 
-    <!-- Footer - Colors & Layouts -->
-    <div data-js="WebsiteLevelColor"
+    <!-- Footer - Layouts -->
+    <div data-js="FooterTemplateSelector"
          data-selector="#wrapwrap > footer"
          data-no-check="true"
          groups="website.group_website_designer">
-
-        <!-- Layouts -->
         <we-select string="Template"
-            data-variable="footer-template"
-            data-reload="/">
+                   data-variable="footer-template"
+                   data-reload="/">
             <we-button title="Default"
                        data-customize-website-views="website.footer_custom"
                        data-customize-website-variable="'default'"
@@ -1578,6 +1576,35 @@
                        data-customize-website-variable="'headline'"
                        data-img="/website/static/src/img/snippets_options/footer_template_headline.svg"/>
         </we-select>
+    </div>
+
+    <!-- Footer Content Width -->
+    <div data-js="ContainerWidthFooter"
+         data-selector="#wrapwrap > footer"
+         data-no-check="true"
+         groups="website.group_website_designer">
+        <we-button-group string="Content Width"
+                         data-reload="/" data-no-preview="false"
+                         data-apply-to="> #footer > section > .container, > #footer > section > .container-fluid, > #footer > section > .o_container_small, .o_footer_copyright > .container, .o_footer_copyright > .container-fluid, .o_footer_copyright > .o_container_small">
+            <we-button title="Small"
+                       data-img="/website/static/src/img/snippets_options/content_width_small.svg"
+                       data-select-class="o_container_small"
+                       data-customize-website-views="website.footer_copyright_content_width_small"/>
+            <we-button title="Regular"
+                       data-img="/website/static/src/img/snippets_options/content_width_normal.svg"
+                       data-select-class="container"/>
+            <we-button Title="Full"
+                       data-img="/website/static/src/img/snippets_options/content_width_full.svg"
+                       data-select-class="container-fluid"
+                       data-customize-website-views="website.footer_copyright_content_width_fluid"/>
+        </we-button-group>
+    </div>
+
+    <!-- Footer - Colors & Copyright -->
+    <div data-js="WebsiteLevelColor"
+         data-selector="#wrapwrap > footer"
+         data-no-check="true"
+         groups="website.group_website_designer">
 
         <!-- Colors -->
         <we-colorpicker string="Colors"
@@ -1601,10 +1628,10 @@
 
         <!-- Copyright -->
         <we-checkbox string="Copyright"
-                data-name="footer_copyright_opt"
-                data-customize-website-views="website.footer_no_copyright|"
-                data-no-preview="true"
-                data-reload="/"/>
+                     data-name="footer_copyright_opt"
+                     data-customize-website-views="website.footer_no_copyright|"
+                     data-no-preview="true"
+                     data-reload="/"/>
     </div>
 
     <!-- Footer - Borders & Shadows -->
@@ -1752,7 +1779,8 @@
 
     <!-- Stretch section -->
     <div data-js="ContainerWidth" data-selector="section, .s_carousel .carousel-item, .s_carousel_intro_item"
-        data-exclude="[data-snippet] :not(.oe_structure) > [data-snippet]" data-target="> .container, > .container-fluid, > .o_container_small">
+         data-exclude="[data-snippet] :not(.oe_structure) > [data-snippet], #footer > *"
+         data-target="> .container, > .container-fluid, > .o_container_small">
         <we-button-group string="Content Width">
             <we-button data-select-class="o_container_small"
                        data-img="/website/static/src/img/snippets_options/content_width_small.svg"
