@@ -112,6 +112,9 @@ class Test_Base_AutomationTask(models.Model):
         compute='_compute_project_id', recursive=True, store=True, readonly=False,
     )
 
+    def action_modify_name(self):
+        self.name = self.name + " modified"
+
     @api.depends('parent_id.project_id')
     def _compute_project_id(self):
         for task in self:

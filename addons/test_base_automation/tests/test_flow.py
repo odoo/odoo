@@ -1473,6 +1473,24 @@ class TestCompute(common.TransactionCase):
         partner_count = self.env['res.partner'].search_count([('name', '=', 'Test Partner Automation')])
         self.assertEqual(partner_count, 1, "Only one partner should have been created")
 
+    def test_public_method(self):
+        model_id = self.env["ir.model"]._get("test_base_automation.task")
+        self.env["ir.ui.view"].create({
+            "type": "form",
+            "model": model_id.model,
+            "arch": """<form><button name="action_modify_name" type="object" string="Modify The Name" /></form>"""
+        })
+        with Form(self.env['ir.actions.server']) as new_act_server:
+            new_act_server.model_id = model_id
+            new_act_server.state = "public_method"
+            self.assertEqual(new_act_server.public_method_selection, """[["action_modify_name", "Modify The Name"]]""")
+            new_act_server.public_method = "action_modify_name"
+            act_server = new_act_server.save()
+
+        task = self.env[model_id.model].create({"name": "public method tester"})
+        act_server.with_context({"active_model": task._name, "active_id": task.id}).run()
+        self.assertEqual(task.name, "public method tester modified")
+
 
 @common.tagged("post_install", "-at_install")
 class TestHttp(common.HttpCase):

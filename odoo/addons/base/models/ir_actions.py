@@ -1083,13 +1083,15 @@ class IrActionsServer(models.Model):
 
     @api.depends("model_name")
     def _compute_public_method_selection(self):
+        map = {m: json.dumps(list(self._get_model_buttons(m).items())) for m in self.mapped("model_name")}
         for act in self:
-            act.public_method_selection = json.dumps(list(self._get_model_buttons(act.model_name).items()))
+            act.public_method_selection = map[act.model_name]
 
     @api.constrains("public_method")
     def _validate_method(self):
         for act in self:
-            self._validate_model_method(act.model_name, act.public_method, raise_if_invalid=True)
+            if act.state == "public_method":
+                self._validate_model_method(act.model_name, act.public_method, raise_if_invalid=True)
 
     def _validate_model_method(self, model_name, method_name, raise_if_invalid=False):
         invalid = False, ""
@@ -1120,7 +1122,10 @@ class IrActionsServer(models.Model):
         if not model_name:
             return {}
 
-        ctx = {k: v for k, v in self._context.items() if "_view_ref" not in k}
+        ctx = {k: v for k, v in self._context.items()
+            if "_view_ref" not in k or
+            self.env.ref(v, raise_if_not_found=False).model == model_name}
+
         form = self.env[model_name].with_context(ctx).sudo().get_view(view_type="form")["arch"]
         form = etree.fromstring(form)
         results = {}
@@ -1144,7 +1149,7 @@ class IrActionsServer(models.Model):
         return results
 
     def _run_action_public_method_multi(self, eval_context=None):
-        method_name = self.public_method
+        method_name = (self.public_method or "").strip()
         if not method_name:
             return
         check_method_name(method_name)
