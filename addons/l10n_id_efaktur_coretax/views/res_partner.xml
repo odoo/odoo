@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_tax_form_view" model="ir.ui.view">
+        <field name="name">res.partner.tax.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="l10n_id_efaktur.res_partner_tax_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='l10n_id_nik']" position="after">
+                <field name="l10n_id_tku"/>
+                    <label for="l10n_id_buyer_document_type" string="Document Type"/>
+                    <div class="d-flex gap-2">
+                        <field name="l10n_id_buyer_document_type" />
+                        <span class="d-flex gap-2 w-10">
+                            <field name="l10n_id_buyer_document_number" invisible="l10n_id_buyer_document_type == 'TIN'" placeholder="e.g. 0123456"/>
+                        </span>
+                    </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
