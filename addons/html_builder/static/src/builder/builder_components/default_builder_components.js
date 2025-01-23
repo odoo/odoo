@@ -10,8 +10,10 @@ import { BuilderColorPicker } from "./builder_colorpicker";
 import { BuilderTextInput } from "./builder_text_input";
 import { BuilderCheckbox } from "./builder_checkbox";
 import { BuilderRange } from "./builder_range";
+import { BuilderContext } from "./builder_context";
 
 export const defaultBuilderComponents = {
+    BuilderContext,
     BuilderRow,
     Dropdown,
     DropdownItem,
