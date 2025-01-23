@@ -4739,6 +4739,16 @@ export class OdooEditor extends EventTarget {
         for (const el of element.querySelectorAll('*[class=""]')) {
             el.removeAttribute('class');
         }
+
+        // Fix t-field inline nodes to use div as root instead.
+        for (const el of element.querySelectorAll('b[data-oe-field][data-oe-type="html"]')) {
+            const blockEl = this.document.createElement('div');
+            for (const attr of el.attributes) {
+                blockEl.setAttribute(attr.name, attr.value);
+            }
+            blockEl.replaceChildren(...el.childNodes);
+            el.replaceWith(blockEl);
+        }
     }
     /**
      * Handle the hint preview for the Powerbox.
