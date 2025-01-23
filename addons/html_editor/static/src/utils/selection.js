@@ -1,5 +1,6 @@
 import { closestBlock, isBlock } from "./blocks";
 import {
+    getDeepestPosition,
     isContentEditable,
     isNotEditableNode,
     isSelfClosingElement,
@@ -242,11 +243,11 @@ export const callbacksForCursorUpdate = {
  */
 export function getAdjacentCharacter(selection, side, editable) {
     let { focusNode, focusOffset } = selection;
+    [focusNode, focusOffset] = getDeepestPosition(focusNode, focusOffset);
     const originalBlock = closestBlock(focusNode);
     let adjacentCharacter;
     while (!adjacentCharacter && focusNode) {
         if (side === "previous") {
-            // @todo: this might be wrong in the first time, as focus node might not be a leaf.
             adjacentCharacter = focusOffset > 0 && focusNode.textContent[focusOffset - 1];
         } else {
             adjacentCharacter = focusNode.textContent[focusOffset];
