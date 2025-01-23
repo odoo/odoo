@@ -13012,6 +13012,55 @@ QUnit.module('Views', {
         assert.verifySteps(['create']);
     });
 
+    QUnit.test('form view: check one2many list view with relative and absolute field, column headings not truncated', async function (assert) {
+        assert.expect(2);
+
+        serverData.models.foo.fields.foo_o2m = {
+                string: "Foo O2M",
+                type: "one2many",
+                relation: "foo",
+        };
+
+            var form = await createView({
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            res_id: 1,
+            viewOptions: { mode: 'edit' },
+            arch: `
+                    <form>
+                        <sheet>
+                            <group>
+                                <field name="foo" sring='name'/>
+                            </group>
+                            <notebook>
+                                <page string='Testing x2m without records'>
+                                    <field name="foo_o2m">
+                                        <tree>
+                                            <field name="foo" />
+                                            <field name="bar" string="Testing for very big text in column" />
+                                            <field name="date" string="Testing for fixed width in column" width="100px"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+                        </sheet>
+                    </form>`,
+            });
+
+        const relativeFieldHeading = form.el.querySelectorAll('th')
+        assert.strictEqual(
+            relativeFieldHeading[1].style.minWidth,
+            "70px",
+            "Absolute field heading should have min-width of 70px i.e. default width of boolean without any record"
+        );
+        assert.strictEqual(
+            relativeFieldHeading[2].style.width,
+            "100px",
+            "Field heading should have width of 100px without record as defined in inline css"
+        );
+        form.destroy();
+    });
 });
 
 });
