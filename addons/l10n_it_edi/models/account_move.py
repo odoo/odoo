@@ -580,7 +580,6 @@ class AccountMove(models.Model):
                 line = base_line['record']
                 if line.price_subtotal < 0 and line._get_downpayment_lines():
                     downpayment_lines.append(base_line)
-                    base_lines.remove(base_line)
 
             if float_compare(quantity, 0, 2) < 0:
                 # Negative quantity is refused by SDI, so we invert quantity and price_unit to keep the price_subtotal
@@ -588,6 +587,8 @@ class AccountMove(models.Model):
                     'quantity': -quantity,
                     'price_unit': -price_unit,
                 })
+        for downpayment_line in downpayment_lines:
+            base_lines.remove(downpayment_line)
 
         dispatched_results = self.env['account.tax']._dispatch_negative_lines(base_lines)
         base_lines = dispatched_results['result_lines'] + dispatched_results['orphan_negative_lines'] + downpayment_lines
