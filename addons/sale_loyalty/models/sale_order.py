@@ -596,9 +596,9 @@ class SaleOrder(models.Model):
 
                 reward_line_values['tax_id'] = [Command.set(mapped_taxes.ids)]
 
-            # Discount amount should not exceed the untaxed amount on the order
-            if abs(reward_line_values['price_unit']) > self.amount_untaxed:
-                reward_line_values['price_unit'] = -self.amount_untaxed
+            # Discount amount should not exceed the total amount on the order
+            if abs(reward_line_values['price_unit']) > self.amount_total:
+                reward_line_values['price_unit'] = -self.amount_total
 
             return [reward_line_values]
 
