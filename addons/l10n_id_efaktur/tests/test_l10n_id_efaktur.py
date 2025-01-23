@@ -4,9 +4,9 @@ from odoo import Command
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.addons.l10n_id_efaktur.models.account_move import FK_HEAD_LIST, LT_HEAD_LIST, OF_HEAD_LIST, _csv_row
+from odoo.addons.l10n_id_efaktur.models.account_move import FK_HEAD_LIST, LT_HEAD_LIST, OF_HEAD_LIST, _csv_row, AccountMove
 from odoo.exceptions import RedirectWarning
-
+from unittest.mock import patch
 
 @tagged('post_install', '-at_install', 'post_install_l10n')
 class TestIndonesianEfaktur(AccountTestInvoicingCommon):
@@ -26,6 +26,16 @@ class TestIndonesianEfaktur(AccountTestInvoicingCommon):
 
         cls.efaktur = cls.env['l10n_id_efaktur.efaktur.range'].create({'min': '0000000000001', 'max': '0000000000010'})
         cls.maxDiff = None
+
+        # For the sake of unit test of this module, we want to retain the the compute method for field
+        # l10n_id_need_kode_transaksi of this module. In the coretax module, l10n_id_need_kode_transaksi
+        # is always set to False to prevent the flows of old module to be triggered
+        patch_kode_transaksi = patch('odoo.addons.l10n_id_efaktur_coretax.models.account_move.AccountMove._compute_need_kode_transaksi',
+                                AccountMove._compute_need_kode_transaksi)
+        cls.startClassPatcher(patch_kode_transaksi)
+        patch_download_efaktur = patch("odoo.addons.l10n_id_efaktur_coretax.models.account_move.AccountMove.download_efaktur",
+                                AccountMove.download_efaktur)
+        cls.startClassPatcher(patch_download_efaktur)
 
     def test_efaktur_csv_output_1(self):
         """
