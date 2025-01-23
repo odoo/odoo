@@ -12,9 +12,9 @@ class TestAnalyticsReinvoice(TestAnalytics):
             'expense_policy': 'cost',
         })
         picking_out = self.PickingObj.create({
-            'picking_type_id': self.picking_type_out,
-            'location_id': self.stock_location,
-            'location_dest_id': self.customer_location,
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
             'project_id': self.project.id,
         })
         picking_out.picking_type_id.analytic_costs = True
@@ -22,8 +22,8 @@ class TestAnalyticsReinvoice(TestAnalytics):
             'name': 'Move',
             'product_uom': self.uom_unit.id,
             'picking_id': picking_out.id,
-            'location_id': self.stock_location,
-            'location_dest_id': self.customer_location,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
             'product_id': reinvoicable_product.id,
             'product_uom_qty': 3,
         })

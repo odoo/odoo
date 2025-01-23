@@ -13,40 +13,38 @@ from odoo import fields, Command
 
 class TestMrpReplenish(TestMrpCommon):
 
-    def _create_wizard(self, product, wh):
+    def _create_wizard(self, product, warehouse):
         return self.env['product.replenish'].with_context(default_product_tmpl_id=product.product_tmpl_id.id).create({
                 'product_id': product.id,
                 'product_uom_id': self.uom_unit.id,
                 'quantity': 1,
-                'warehouse_id': wh.id,
+                'warehouse_id': warehouse.id,
             })
 
     def test_mrp_delay(self):
         """Open the replenish view and check if delay is taken into account
             in the base date computation
         """
-        route = self.env.ref('mrp.route_warehouse0_manufacture')
+        route = self.warehouse_1.manufacture_pull_id.route_id
         product = self.product_4
         product.route_ids = route
-        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
         self.env.company.manufacturing_lead = 0
         self.env['ir.config_parameter'].sudo().set_param('mrp.use_manufacturing_lead', True)
 
         with freeze_time("2023-01-01"):
-            wizard = self._create_wizard(product, wh)
+            wizard = self._create_wizard(product, self.warehouse_1)
             self.assertEqual(fields.Datetime.from_string('2023-01-01 00:00:00'), wizard.date_planned)
             self.env.company.manufacturing_lead = 3
-            wizard2 = self._create_wizard(product, wh)
+            wizard2 = self._create_wizard(product, self.warehouse_1)
             self.assertEqual(fields.Datetime.from_string('2023-01-04 00:00:00'), wizard2.date_planned)
             route.rule_ids[0].delay = 2
-            wizard3 = self._create_wizard(product, wh)
+            wizard3 = self._create_wizard(product, self.warehouse_1)
             self.assertEqual(fields.Datetime.from_string('2023-01-06 00:00:00'), wizard3.date_planned)
 
     def test_mrp_orderpoint_leadtime(self):
-        self.warehouse = self.env.ref('stock.warehouse0')
-        route_manufacture = self.warehouse.manufacture_pull_id.route_id
-        route_manufacture.supplied_wh_id = self.warehouse
-        route_manufacture.supplier_wh_id = self.warehouse
+        route_manufacture = self.warehouse_1.manufacture_pull_id.route_id
+        route_manufacture.supplied_wh_id = self.warehouse_1
+        route_manufacture.supplier_wh_id = self.warehouse_1
         route_manufacture.rule_ids.delay = 2
         product_1 = self.env['product.product'].create({
             'name': 'Cake',
@@ -63,7 +61,7 @@ class TestMrpReplenish(TestMrpCommon):
         # setup orderpoint (reordering rule)
         rr = self.env['stock.warehouse.orderpoint'].create({
             'name': 'Cake RR',
-            'location_id': self.warehouse.lot_stock_id.id,
+            'location_id': self.stock_location.id,
             'product_id': product_1.id,
             'product_min_qty': 0,
             'product_max_qty': 5,
@@ -78,8 +76,8 @@ class TestMrpReplenish(TestMrpCommon):
         """Check manufacturing order take bom according to picking type of the rule triggered by an
         orderpoint."""
 
-        self.product_4.route_ids = self.env.ref('mrp.route_warehouse0_manufacture')
-        picking_type_2 = self.warehouse_1.manu_type_id.copy({'sequence': 100})
+        self.product_4.route_ids = self.warehouse_1.manufacture_pull_id.route_id
+        picking_type_2 = self.picking_type_manu.copy({'sequence': 100})
         self.product_4.bom_ids.picking_type_id = picking_type_2
         rr = self.env['stock.warehouse.orderpoint'].create({
             'name': 'Cake RR',
@@ -97,36 +95,34 @@ class TestMrpReplenish(TestMrpCommon):
         self.assertTrue(mo)
 
     def test_mrp_delay_bom(self):
-        route = self.env.ref('mrp.route_warehouse0_manufacture')
+        route = self.warehouse_1.manufacture_pull_id.route_id
         product = self.product_4
         bom = product.bom_ids
         product.route_ids = route
-        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
         self.env.company.manufacturing_lead = 0
         with freeze_time("2023-01-01"):
-            wizard = self._create_wizard(product, wh)
+            wizard = self._create_wizard(product, self.warehouse_1)
             self.assertEqual(fields.Datetime.from_string('2023-01-01 00:00:00'), wizard.date_planned)
             bom.produce_delay = 2
-            wizard2 = self._create_wizard(product, wh)
+            wizard2 = self._create_wizard(product, self.warehouse_1)
             self.assertEqual(fields.Datetime.from_string('2023-01-03 00:00:00'), wizard2.date_planned)
             bom.days_to_prepare_mo = 4
-            wizard3 = self._create_wizard(product, wh)
+            wizard3 = self._create_wizard(product, self.warehouse_1)
             self.assertEqual(fields.Datetime.from_string('2023-01-07 00:00:00'), wizard3.date_planned)
 
     def test_replenish_from_scrap(self):
         """ Test that when ticking replenish on the scrap wizard of a MO, the new move
         is linked to the MO and validating it will automatically reserve the quantity
         on the MO. """
-        warehouse = self.env.ref('stock.warehouse0')
-        warehouse.manufacture_steps = 'pbm'
+        self.warehouse_1.manufacture_steps = 'pbm'
         basic_mo, dummy1, dummy2, product_to_scrap, other_product = self.generate_mo(qty_final=1, qty_base_1=1, qty_base_2=1)
         for product in (product_to_scrap, other_product):
             self.env['stock.quant'].create({
                 'product_id': product.id,
-                'location_id': warehouse.lot_stock_id.id,
+                'location_id': self.stock_location.id,
                 'quantity': 2
             })
-        self.assertEqual(basic_mo.move_raw_ids.location_id, warehouse.pbm_loc_id)
+        self.assertEqual(basic_mo.move_raw_ids.location_id, self.warehouse_1.pbm_loc_id)
         basic_mo.action_confirm()
         self.assertEqual(len(basic_mo.picking_ids), 1)
         basic_mo.picking_ids.action_assign()
@@ -136,7 +132,7 @@ class TestMrpReplenish(TestMrpCommon):
         scrap_form = Form.from_action(self.env, basic_mo.button_scrap())
         scrap_form.product_id = product_to_scrap
         scrap_form.should_replenish = True
-        self.assertEqual(scrap_form.location_id, warehouse.pbm_loc_id)
+        self.assertEqual(scrap_form.location_id, self.warehouse_1.pbm_loc_id)
         scrap_form.save().action_validate()
         self.assertNotEqual(basic_mo.move_raw_ids.mapped('state'), ['assigned', 'assigned'])
         self.assertEqual(len(basic_mo.picking_ids), 2)
@@ -147,16 +143,15 @@ class TestMrpReplenish(TestMrpCommon):
     def test_scrap_replenishment_reassigns_required_qty_to_component(self):
         """ Test that when validating the scrap replenishment transfer, the required quantity
         is re-assigned to the component for the final manufacturing product. """
-        warehouse = self.env.ref('stock.warehouse0')
-        warehouse.manufacture_steps = 'pbm'
+        self.warehouse_1.manufacture_steps = 'pbm'
         basic_mo, _, _, product_to_scrap, other_product = self.generate_mo(qty_final=1, qty_base_1=10, qty_base_2=10)
         for product in (product_to_scrap, other_product):
             self.env['stock.quant'].create({
                 'product_id': product.id,
-                'location_id': warehouse.lot_stock_id.id,
+                'location_id': self.stock_location.id,
                 'quantity': 20
             })
-        self.assertEqual(basic_mo.move_raw_ids.location_id, warehouse.pbm_loc_id)
+        self.assertEqual(basic_mo.move_raw_ids.location_id, self.warehouse_1.pbm_loc_id)
         basic_mo.action_confirm()
         self.assertEqual(len(basic_mo.picking_ids), 1)
         basic_mo.picking_ids.action_assign()
@@ -168,7 +163,7 @@ class TestMrpReplenish(TestMrpCommon):
         scrap_form.product_id = product_to_scrap
         scrap_form.scrap_qty = 5
         scrap_form.should_replenish = True
-        self.assertEqual(scrap_form.location_id, warehouse.pbm_loc_id)
+        self.assertEqual(scrap_form.location_id, self.warehouse_1.pbm_loc_id)
         scrap_form.save().action_validate()
 
         # Assert that the component quantity is reduced
@@ -191,22 +186,24 @@ class TestMrpReplenish(TestMrpCommon):
         """ Ensure global visibility days will only be captured one time in an orderpoint's
         lead_days/json_lead_days.
         """
-        wh = self.env.user._get_default_warehouse_id()
-        wh.manufacture_steps = 'pbm'
+        self.warehouse_1.manufacture_steps = 'pbm'
         finished_product = self.product_4
-        finished_product.route_ids = [(6, 0, self.env['stock.route'].search([('name', '=', 'Manufacture')], limit=1).ids)]
+        finished_product.route_ids = [Command.set(self.warehouse_1.manufacture_pull_id.route_id.ids)]
 
-        orderpoint = self.env['stock.warehouse.orderpoint'].create({'product_id': finished_product.id})
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': finished_product.id,
+            'location_id': self.stock_location.id,
+        })
         out_picking = self.env['stock.picking'].create({
-            'picking_type_id': self.env.ref('stock.picking_type_out').id,
-            'location_id': wh.lot_stock_id.id,
-            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
             'move_ids': [Command.create({
                 'name': 'TGVDALTMR out move',
                 'product_id': finished_product.id,
                 'product_uom_qty': 2,
-                'location_id': wh.lot_stock_id.id,
-                'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
             })],
         })
         out_picking.with_context(global_visibility_days=365).action_assign()

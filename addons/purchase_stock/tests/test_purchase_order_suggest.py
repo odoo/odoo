@@ -14,9 +14,6 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.delivery_type = cls.env['stock.picking.type'].browse(cls.picking_type_out)
-        cls.stock_location = cls.delivery_type.default_location_src_id
-        cls.customer_location = cls.delivery_type.default_location_dest_id
         # Create a product and a supplier info.
         cls.product_1 = cls.env['product.product'].create({
             'name': 'Product 1',
@@ -41,10 +38,10 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon):
 
     def _create_and_process_delivery_at_date(self, products_and_quantities, date=False, warehouse=False):
         date = date or datetime.now()
-        delivery_type = warehouse.out_type_id if warehouse else self.delivery_type
+        delivery_type = warehouse.out_type_id if warehouse else self.picking_type_out
         with freeze_time(date):
             delivery = self.env['stock.picking'].create({
-                'picking_type_id': self.delivery_type.id,
+                'picking_type_id': self.picking_type_out.id,
                 'location_id': delivery_type.default_location_src_id.id,
                 'location_dest_id': delivery_type.default_location_dest_id.id,
                 'move_ids': [Command.create({
@@ -355,12 +352,12 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon):
 
         # Prepare a receipt for this product and confirm it.
         receipt = self.env['stock.picking'].create({
-            'picking_type_id': self.picking_type_in,
-            'location_id': self.supplier_location,
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'move_ids': [Command.create({
                 'name': f'Receipt move test for {self.product_1.name}',
-                'location_id': self.supplier_location,
+                'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
                 'product_id': self.product_1.id,
                 'product_uom': self.uom_unit.id,
@@ -378,21 +375,22 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon):
 
     def test_purchase_order_suggest_quantities_multiwarehouse(self):
         """ Ensure the product's qty demand is correctly computed for the right warehouse."""
-        warehouse = self.delivery_type.warehouse_id
+        main_warehouse = self.env.ref('stock.warehouse0')
+
         date = fields.Datetime.now() - relativedelta(days=15)
-        self.env['stock.quant']._update_available_quantity(self.product_1, self.stock_location, 5)
+        self.env['stock.quant']._update_available_quantity(self.product_1, main_warehouse.lot_stock_id, 5)
         self.env['stock.quant']._update_available_quantity(self.product_1, self.warehouse_1.lot_stock_id, 10)
         # Make a delivery in each warehouse.
-        self._create_and_process_delivery_at_date([(self.product_1, 5)], date)
+        self._create_and_process_delivery_at_date([(self.product_1, 5)], date, warehouse=main_warehouse)
         self._create_and_process_delivery_at_date([(self.product_1, 10)], date, warehouse=self.warehouse_1)
         self.assertEqual(self.product_1.monthly_demand, 15)
-        self.assertEqual(self.product_1.with_context(warehouse_id=warehouse.id).monthly_demand, 5)
+        self.assertEqual(self.product_1.with_context(warehouse_id=main_warehouse.id).monthly_demand, 5)
         self.assertEqual(self.product_1.with_context(warehouse_id=self.warehouse_1.id).monthly_demand, 10)
 
         # Create a PO for each warehouse and check the right quantity is added to the PO line.
         po_1 = self.env['purchase.order'].create({
             'partner_id': self.partner_1.id,
-            'picking_type_id': warehouse.in_type_id.id,
+            'picking_type_id': main_warehouse.in_type_id.id,
         })
         action = po_1.action_display_suggest()
         context = {
@@ -404,10 +402,10 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon):
         })
         self.assertEqual(po_1_suggest.warehouse_id, po_1.picking_type_id.warehouse_id, "Should use PO warehouse by default")
         self.assertEstimatedPrice(po_1_suggest, 1500, warehouse=False)
-        self.assertEstimatedPrice(po_1_suggest, 500, warehouse=warehouse)
+        self.assertEstimatedPrice(po_1_suggest, 500, warehouse=main_warehouse)
         self.assertEstimatedPrice(po_1_suggest, 1000, warehouse=self.warehouse_1)
         # Generate PO line for qty demand based on one specific warehouse.
-        po_1_suggest.warehouse_id = warehouse
+        po_1_suggest.warehouse_id = main_warehouse
         po_1_suggest.action_purchase_order_suggest()
         self.assertRecordValues(po_1.order_line, [
             {'product_id': self.product_1.id, 'product_qty': 5},
@@ -433,7 +431,7 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon):
         })
         self.assertEqual(po_2_suggest.warehouse_id, po_2.picking_type_id.warehouse_id, "Should use PO warehouse by default")
         self.assertEstimatedPrice(po_2_suggest, 1500, warehouse=False)
-        self.assertEstimatedPrice(po_2_suggest, 500, warehouse=warehouse)
+        self.assertEstimatedPrice(po_2_suggest, 500, warehouse=main_warehouse)
         self.assertEstimatedPrice(po_2_suggest, 1000, warehouse=self.warehouse_1)
         # Generate PO line for qty demand based on one specific warehouse.
         po_2_suggest.warehouse_id = self.warehouse_1
