@@ -45,6 +45,7 @@ patch(OrderSummary.prototype, {
             return false;
         }
         return (
+            currentOrder &&
             this.pos.config.module_pos_restaurant &&
             !currentOrder.finalized &&
             currentOrder.isBooked &&
