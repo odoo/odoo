@@ -898,7 +898,7 @@ class AccountMove(models.Model):
 
             # Unwrap the attachments. Potentially each FatturaPA file can get unwrapped into several sub-attachments that
             # should each create one invoice.
-            attachments |= attachments._get_embedded_attachments()
+            attachments |= attachments._unwrap_attachments()
 
             moves = self.with_company(proxy_user.company_id).create([{}] * len(attachments))
 

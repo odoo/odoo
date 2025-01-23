@@ -58,18 +58,20 @@ class IrAttachment(models.Model):
             return ('l10n_it.fatturapa', 20)
         return super()._get_import_type_and_priority()
 
-    def _unwrap_attachment(self):
+    def _unwrap_attachments(self, recurse=True):
         """ Divide a FatturaPA file into constituent invoices and create a new attachment for each invoice after the first. """
         # EXTENDS 'account'
-        if self.import_type == 'l10n_it.fatturapa' and len(self.xml_tree.findall('.//FatturaElettronicaBody')) > 1:
+        embedded = super()._unwrap_attachments(recurse=False)
+
+        for attachment in self.filtered(lambda a: a.import_type == 'l10n_it.fatturapa' and len(a.xml_tree.findall('.//FatturaElettronicaBody')) > 1):
             # One FatturaPA file may contain multiple invoices. In that case, create an
             # attachment for each invoice beyond the first. We don't set the `root_attachment_id`
             # field on those attachments to make sure they are not grouped with the original file,
             # and we also create them as database records so that they persist on the invoice chatter.
 
             # Create a new xml tree for each invoice beyond the first
-            trees = split_etree_on_tag(self.xml_tree, 'FatturaElettronicaBody')
-            filename_without_extension, dummy, extension = self.name.rpartition('.')
+            trees = split_etree_on_tag(attachment.xml_tree, 'FatturaElettronicaBody')
+            filename_without_extension, dummy, extension = attachment.name.rpartition('.')
             attachment_vals = [
                 {
                     'name': f'{filename_without_extension}_{filename_index}.{extension}',
@@ -78,6 +80,8 @@ class IrAttachment(models.Model):
                 }
                 for filename_index, tree in enumerate(trees[1:], start=2)
             ]
-            return self.create(attachment_vals)
+            embedded |= self.create(attachment_vals)
 
-        return super()._unwrap_attachment()
+        if embedded and recurse:
+            embedded |= embedded._unwrap_attachments(recurse=True)
+        return embedded

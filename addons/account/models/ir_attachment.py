@@ -56,6 +56,12 @@ class IrAttachment(models.Model):
         comodel_name='ir.attachment',
         store=False,  # only needed during invoice import, so we keep it cache-only.
     )
+    origin_attachment_id = fields.Many2one(
+        string="Origin attachment",
+        help="Technical field which is computed as `origin_attachment_id = root_attachment_id or self`",
+        comodel_name='ir.attachment',
+        compute='_compute_origin_attachment_id',
+    )
 
     @api.depends('name', 'mimetype', 'raw')
     def _compute_import_type_and_priority(self):
@@ -67,6 +73,11 @@ class IrAttachment(models.Model):
         for attachment in self:
             xml_tree = attachment._get_xml_tree()
             attachment.xml_tree = xml_tree if xml_tree is not None else False
+
+    @api.depends('root_attachment_id')
+    def _compute_origin_attachment_id(self):
+        for attachment in self:
+            attachment.origin_attachment_id = attachment.root_attachment_id or attachment
 
     def _get_import_type_and_priority(self):
         if 'pdf' in self.mimetype or self.name.endswith('.pdf'):
@@ -96,23 +107,8 @@ class IrAttachment(models.Model):
             except etree.ParseError as e:
                 _logger.info('Error when reading the xml file "%s": %s', self.name, e)
 
-    def _get_embedded_attachments(self):
-        """ Extract all the embedded attachments of `self` into ir.attachment records,
-        by recursively calling `_unwrap_attachments`.
-
-        The resulting records can be `new` records or in-database records.
-        """
-        embedded = self.env['ir.attachment'].union(*(a._unwrap_attachment() for a in self))
-
-        # Recursively call until all embedded-of-embedded attachments have been unwrapped.
-        if embedded:
-            embedded |= embedded._get_embedded_attachments()
-        return embedded
-
-    def _unwrap_attachment(self):
-        """ Unwrap any embedded files that can be found in the given attachment.
-
-        This method can be extended to handle the unwrapping of various file formats.
+    def _unwrap_attachments(self, recurse=True):
+        """ Unwrap and return any embedded attachments.
 
         The resulting attachments can be `new` records if we don't intend to save them to DB,
         or can be in-database records.
@@ -121,38 +117,36 @@ class IrAttachment(models.Model):
         be grouped with their parent attachment when determining how to dispatch attachments into
         invoices. Otherwise, it should not be set.
 
+        :param recurse: if True, embedded-of-embedded attachments will also be unwrapped and returned.
         :return: an ir.attachment recordset of the embedded attachments.
         """
-        self.ensure_one()
-        if self.import_type == 'pdf':
-            with io.BytesIO(self.raw) as buffer:
+        embedded = self.browse()
+        for attachment in self.filtered(lambda a: a.import_type == 'pdf'):
+            with io.BytesIO(attachment.raw) as buffer:
                 try:
                     pdf_reader = OdooPdfFileReader(buffer, strict=False)
                 except Exception as e:
                     # Malformed pdf
-                    _logger.info('Error when reading the pdf file "%s": %s', self.name, e)
-                    return self.browse()
+                    _logger.info('Error when reading the pdf file "%s": %s', attachment.name, e)
+                else:
+                    try:
+                        for filename, content in pdf_reader.getAttachments():
+                            # We process embedded files as NewRecords so they will never be saved to database.
+                            embedded |= self.new({
+                                'name': filename,
+                                'raw': content,
+                                'mimetype': guess_mimetype(content),
+                                'root_attachment_id': attachment.origin_attachment_id.id,
+                            })
+                    except (NotImplementedError, StructError, PdfReadError) as e:
+                        _logger.warning("Unable to access the attachments of %s. Tried to decrypt it, but %s.", attachment.name, e)
 
-                # Process embedded files.
-                try:
-                    return self.env['ir.attachment'].union(*(
-                        # We create these as NewRecords so they will never be saved to database.
-                        self.new({
-                            'name': filename,
-                            'raw': content,
-                            'mimetype': guess_mimetype(content),
-                            'root_attachment_id': self.root_attachment_id.id or self.id,
-                        })
-                        for filename, content in pdf_reader.getAttachments()
-                    ))
-
-                except (NotImplementedError, StructError, PdfReadError) as e:
-                    _logger.warning("Unable to access the attachments of %s. Tried to decrypt it, but %s.", self.name, e)
-                    return self.browse()
-        return self.browse()
+        if embedded and recurse:
+            embedded |= embedded._unwrap_attachments(recurse=True)
+        return embedded
 
     def _post_add_create(self, **kwargs):
         for move_id, attachments in self.filtered(lambda attachment: attachment.res_model == 'account.move').grouped('res_id').items():
-            attachments |= attachments._get_embedded_attachments()
+            attachments |= attachments._unwrap_attachments()
             self.env['account.move'].browse(move_id)._extend_with_attachments(attachments)
         super()._post_add_create(**kwargs)

@@ -958,7 +958,7 @@ class AccountJournal(models.Model):
                 'res_model': 'mail.compose.message',
                 'datas': base64.encodebytes(content),
             })
-            bill.message_post(attachment_ids=[attachment.id])
+            bill.message_post(attachment_ids=attachment.ids)
         return {
             'name': _('Bills'),
             'res_id': bill.id,

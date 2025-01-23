@@ -6037,7 +6037,7 @@ class AccountMove(models.Model):
             return super()._message_post_after_hook(new_message, message_values)
 
         # Extract embedded files.
-        attachments |= attachments._get_embedded_attachments()
+        attachments |= attachments._unwrap_attachments()
 
         if self.env.context.get('from_alias'):
             # This is a newly-created invoice from a mail alias.
@@ -6125,15 +6125,16 @@ class AccountMove(models.Model):
 
             :return: A list of ir.attachment groups (each group is a recordset), each group corresponding to a single invoice.
         """
-        # 1. Sort the attachments by root attachment type, those without type coming last.
-        attachments = attachments.sorted(lambda a: ((a.root_attachment_id or a).import_type is False, (a.root_attachment_id or a).import_type))
+        def order(a):
+            import_type = a.origin_attachment_id.import_type
+            return (import_type is False, import_type)
 
-        # 2. Dispatch the attachments into groups.
+        # 1. Dispatch the attachments into groups.
         groups = []
-        for attachment in attachments:
+        for attachment in attachments.sorted(order):
             self._assign_attachment_to_group(attachment, groups)
 
-        # 3. Convert each group from a list of ir.attachment records into an ir.attachment recordset.
+        # 2. Convert each group from a list of ir.attachment records into an ir.attachment recordset.
         groups = list(itertools.starmap(self.env['ir.attachment'].union, groups))
 
         return groups
@@ -6146,21 +6147,18 @@ class AccountMove(models.Model):
             :param incoming_attachment: An ir.attachment record coming from a mail alias
             :groups: The groups that already exist, each group is a list of ir.attachment records.
         """
-        def get_root_attachment(attachment):
-            return attachment.root_attachment_id or attachment
-
         # Special rule 1: attachments that come from the same root attachment must be added to the same group.
         for group in groups:
             if any(
-                get_root_attachment(incoming_attachment) == get_root_attachment(attachment)
+                incoming_attachment.origin_attachment_id == attachment.origin_attachment_id
                 for attachment in group
             ):
                 group.append(incoming_attachment)
                 return
 
         # Special rule 2: images and non-identified attachments are just added to the first group.
-        incoming_root_type = get_root_attachment(incoming_attachment).import_type
-        if incoming_root_type in {False, 'jpg', 'png'}:
+        incoming_origin_type = incoming_attachment.origin_attachment_id.import_type
+        if incoming_origin_type in {False, 'jpg', 'png'}:
             if not groups:
                 groups.append([incoming_attachment])
             else:
@@ -6172,7 +6170,7 @@ class AccountMove(models.Model):
         if groups_with_different_root_type := [
             group
             for group in groups
-            if incoming_root_type not in ((attachment.root_attachment_id or attachment).import_type for attachment in group)
+            if incoming_origin_type not in (attachment.origin_attachment_id.import_type for attachment in group)
         ]:
             sorted_by_similarity = sorted(
                 groups_with_different_root_type,

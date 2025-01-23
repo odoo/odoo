@@ -970,17 +970,17 @@ class AccountJournal(models.Model):
             raise UserError(self.env['account.journal']._build_no_journal_error_msg(self.env.company.display_name, [journal_type]))
 
         # Extract embedded attachments
-        attachments |= attachments._get_embedded_attachments()
+        attachments |= attachments._unwrap_attachments()
 
         # Perform a grouping to determine how many invoices to create
         attachment_groups = self._group_uploaded_attachments(attachments)
 
-        # Create one invoice per attachment.
-        invoice_vals = {
-            'journal_id': self.id,
-            'move_type': move_type,
-        }
-        invoices = self.env['account.move'].create([invoice_vals] * len(attachment_groups))
+        # Create one invoice per group.
+        invoices = self.env['account.move'].with_context(
+            default_journal_id=self.id,
+            default_move_type=move_type,
+        ).create([{}] * len(attachment_groups))
+
         for invoice, attachment_group in zip(invoices, attachment_groups):
             attachment_records = attachment_group.filtered(lambda a: not isinstance(a.id, api.NewId))
             attachment_records.write({
@@ -1000,7 +1000,7 @@ class AccountJournal(models.Model):
 
     def _group_uploaded_attachments(self, attachments):
         # Group embedded files together
-        return attachments.grouped(lambda a: a.root_attachment_id or a).values()
+        return attachments.grouped('origin_attachment_id').values()
 
     def create_document_from_attachment(self, attachment_ids):
         """ Create the invoices from files.

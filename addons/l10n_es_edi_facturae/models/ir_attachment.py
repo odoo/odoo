@@ -22,13 +22,15 @@ class IrAttachment(models.Model):
 
         return super()._get_import_type_and_priority()
 
-    def _unwrap_attachment(self):
+    def _unwrap_attachments(self, recurse=True):
         """ Divide a Facturae file into constituent invoices and create a new attachment for each invoice after the first. """
         # EXTENDS 'account'
-        if self.import_type == 'l10n_es.facturae' and len(self.xml_tree.findall('.//Invoice')) > 1:
+        embedded = super()._unwrap_attachments(recurse=False)
+
+        for attachment in self.filtered(lambda a: a.import_type == 'l10n_es.facturae' and len(a.xml_tree.findall('.//Invoice')) > 1):
             # Create a new attachment for each invoice beyond the first.
-            trees = split_etree_on_tag(self.xml_tree, 'Invoice')
-            filename_without_extension, dummy, extension = self.name.rpartition('.')
+            trees = split_etree_on_tag(attachment.xml_tree, 'Invoice')
+            filename_without_extension, dummy, extension = attachment.name.rpartition('.')
             attachment_vals = [
                 {
                     'name': f'{filename_without_extension}_{filename_index}.{extension}',
@@ -37,6 +39,8 @@ class IrAttachment(models.Model):
                 }
                 for filename_index, tree in enumerate(trees[1:], start=2)
             ]
-            return self.create(attachment_vals)
+            embedded |= self.create(attachment_vals)
 
-        return super()._unwrap_attachment()
+        if embedded and recurse:
+            embedded |= embedded._unwrap_attachments(recurse=True)
+        return embedded
