@@ -37,23 +37,19 @@
                                 </div>
                                 <div class="col-6 o_kanban_primary_right">
                                     <div t-if="record.count_mo_waiting.raw_value > 0" class="row">
-                                        <div class="col-9">
+                                        <div class="col-12">
                                             <a name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_waiting': 1}">
+                                                <field name="count_mo_waiting"/>
                                                 Waiting
                                             </a>
                                         </div>
-                                        <div class="col-3">
-                                            <field name="count_mo_waiting"/>
-                                        </div>
                                     </div>
                                     <div t-if="record.count_mo_late.raw_value > 0" class="row">
-                                        <div class="col-9">
+                                        <div class="col-12">
                                             <a class="oe_kanban_stock_picking_type_list" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_planning_issues': 1, 'default_picking_type_id': active_id}">
+                                                <field name="count_mo_late"/>
                                                 Late
                                             </a>
-                                        </div>
-                                        <div class="col-3">
-                                            <field name="count_mo_late"/>
                                         </div>
                                     </div>
                                 </div>
