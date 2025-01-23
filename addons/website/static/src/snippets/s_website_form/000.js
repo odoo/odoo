@@ -648,7 +648,7 @@ import wUtils from '@website/js/utils';
          *      is between or !between
          * @returns {boolean}
          */
-        _compareTo(comparator, value = '', comparable, between) {
+        _compareTo(comparator, value = '', comparable, between, dependencyEl) {
             // Value can be null when the compared field is supposed to be
             // visible, but is not yet retrievable from the FormData() because
             // the field was conditionally hidden. It can be considered empty.
@@ -658,9 +658,21 @@ import wUtils from '@website/js/utils';
 
             switch (comparator) {
                 case 'contains':
-                    return value.includes(comparable);
                 case '!contains':
-                    return !value.includes(comparable);
+                    const isContains = comparator === 'contains';
+                    const isMultiValue = dependencyEl.type === 'checkbox' 
+                        || dependencyEl.type === 'radio'
+                        || dependencyEl.nodeName === 'SELECT';
+                    if (isMultiValue) {
+                        comparable = comparable.split(',');
+                        return isContains 
+                        ? value.some(v => comparable.includes(v))
+                        : !value.some(v => comparable.includes(v));
+                    } else {
+                        return isContains
+                        ? value[0].includes(comparable)
+                        : !value[0].includes(comparable);
+                    }
                 case 'equal':
                 case 'selected':
                     return value === comparable;
@@ -736,10 +748,11 @@ import wUtils from '@website/js/utils';
                 }
 
                 const formData = new FormData(this.el);
+                const dependencyElement = this.el.querySelector(`.s_website_form_input[name="${CSS.escape(dependencyName)}"]`);
                 const currentValueOfDependency = ["contains", "!contains"].includes(comparator)
-                    ? formData.getAll(dependencyName).join()
+                    ? formData.getAll(dependencyName)
                     : formData.get(dependencyName);
-                return this._compareTo(comparator, currentValueOfDependency, visibilityCondition, between);
+                return this._compareTo(comparator, currentValueOfDependency, visibilityCondition, between, dependencyElement);
             };
         },
         /**
