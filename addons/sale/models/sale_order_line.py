@@ -84,10 +84,15 @@ class SaleOrderLine(models.Model):
         """
         for line in self:
             if line.order_id.state in ['sale', 'done']:
+                rounding = line.product_uom.rounding or 1
                 if line.product_id.invoice_policy == 'order':
-                    line.qty_to_invoice = line.product_uom_qty - line.qty_invoiced
+                    line.qty_to_invoice = float_round(
+                        line.product_uom_qty, precision_rounding=rounding, rounding_method='UP'
+                    ) - line.qty_invoiced
                 else:
-                    line.qty_to_invoice = line.qty_delivered - line.qty_invoiced
+                    line.qty_to_invoice = float_round(
+                        line.qty_delivered, precision_rounding=rounding, rounding_method='UP'
+                    ) - line.qty_invoiced
             else:
                 line.qty_to_invoice = 0
 
