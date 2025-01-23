@@ -18,7 +18,7 @@ class ResPartner(models.Model):
         help="This pricelist will be used, instead of the default one, for sales to the current partner")
 
     @api.depends('country_id')
-    @api.depends_context('company')
+    @api.depends_context('company', 'country_code')
     def _compute_product_pricelist(self):
         res = self.env['product.pricelist']._get_partner_pricelist_multi(self._ids)
         for partner in self:
