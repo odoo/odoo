@@ -54,6 +54,6 @@ publicWidget.registry.websiteEventCreateMeetingRoom = publicWidget.Widget.extend
     },
 });
 
-return publicWidget.registry.websiteEventMeetingRoom;
+return publicWidget.registry.websiteEventCreateMeetingRoom;
 
 });
