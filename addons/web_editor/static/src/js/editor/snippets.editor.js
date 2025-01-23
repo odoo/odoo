@@ -1242,6 +1242,7 @@ var SnippetsMenu = Widget.extend({
         'drag_and_drop_stop': '_onSnippetDragAndDropStop',
         'drag_and_drop_start': '_onSnippetDragAndDropStart',
         'get_snippet_versions': '_onGetSnippetVersions',
+        'get_bypass_confirm_save_prompt': '_onGetBypassConfirmSavePrompt',
         'find_snippet_template': '_onFindSnippetTemplate',
         'remove_snippet': '_onRemoveSnippet',
         'snippet_edition_request': '_onSnippetEditionRequest',
@@ -1314,6 +1315,7 @@ var SnippetsMenu = Widget.extend({
         this.loadingTimers = {};
         this.loadingElements = {};
         this._loadingEffectDisabled = false;
+        this._bypassConfirmSavePrompt = false;
     },
     /**
      * @override
@@ -3505,6 +3507,13 @@ var SnippetsMenu = Widget.extend({
         });
     },
     /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onGetBypassConfirmSavePrompt: function (ev) {
+        ev.data.onSuccess(this._bypassConfirmSavePrompt);
+    },
+    /**
      * UNUSED: used to be called when saving a custom snippet. We now save and
      * reload the page when saving a custom snippet so that all the DOM cleanup
      * mechanisms are run before saving. Kept for compatibility.
@@ -3554,6 +3563,15 @@ var SnippetsMenu = Widget.extend({
         }
         delete data._toMutex;
         ev.stopPropagation();
+
+        // Don't ask the user whether to save or not
+        // This also allows any side effect (mutexed snippet updates) to be started before our save request
+        const self = this;
+        this._bypassConfirmSavePrompt = true;
+
+        // Make sure all widgets are closed
+        this._closeWidgets();
+
         this._execWithLoadingEffect(() => {
             if (data.reloadEditor) {
                 data.reload = false;
@@ -3563,6 +3581,12 @@ var SnippetsMenu = Widget.extend({
                         await oldOnSuccess.call(this, ...arguments);
                     }
                     window.location.href = window.location.origin + window.location.pathname + '?enable_editor=1';
+                };
+
+                const oldOnError = data.onError;
+                data.onError = async function () {
+                    self._bypassConfirmSavePrompt = false;
+                    await oldOnError.call(this, ...arguments);
                 };
             }
             this.trigger_up('request_save', data);
