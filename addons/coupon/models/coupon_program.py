@@ -53,6 +53,11 @@ class CouponProgram(models.Model):
         help="Validity duration for a coupon after its generation")
     total_order_count = fields.Integer("Total Order Count", compute="_compute_total_order_count")
 
+    @api.constrains('rule_min_quantity', 'reward_type')
+    def _check_rule_min_quantity(self):
+        if self.reward_type == 'product' and not self.rule_min_quantity > 0:
+            raise ValidationError(_('Minimum quantity should be greater than 0 when the reward type is product.'))
+
     @api.constrains('promo_code')
     def _check_promo_code_constraint(self):
         """ Program code must be unique """
