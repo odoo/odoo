@@ -383,6 +383,7 @@ export class AutoComplete extends Component {
                 this.cancel();
                 break;
             case "tab":
+            case "shift+tab":
                 if (!this.isOpened) {
                     return;
                 }
