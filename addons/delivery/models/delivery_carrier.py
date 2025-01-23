@@ -44,6 +44,7 @@ class DeliveryCarrier(models.Model):
     debug_logging = fields.Boolean('Debug logging', help="Log requests in order to ease debugging")
     company_id = fields.Many2one('res.company', string='Company', related='product_id.company_id', store=True, readonly=False)
     product_id = fields.Many2one('product.product', string='Delivery Product', required=True, ondelete='restrict')
+    website_description = fields.Text(string="Description for the website", translate=True)
 
     invoice_policy = fields.Selection([
         ('estimated', 'Estimated cost'),
