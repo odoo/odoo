@@ -210,7 +210,7 @@ class SaleOrderLine(models.Model):
         """ Sale Timesheet module compute delivered qty for product [('type', 'in', ['service']), ('service_type', '=', 'timesheet')] """
         super(SaleOrderLine, self)._compute_qty_delivered_method()
         for line in self:
-            if not line.is_expense and line.product_id.type == 'service' and line.product_id.service_type == 'timesheet':
+            if not line.is_expense and line.product_id.type == 'service' and (line.product_id.service_type == 'timesheet' or line.product_id.service_policy == 'ordered_timesheet'):
                 line.qty_delivered_method = 'timesheet'
 
     @api.depends('analytic_line_ids.project_id', 'project_id.pricing_type')
