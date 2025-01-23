@@ -2432,18 +2432,3 @@ input[value*="data-oe-translation-initial-sha"] {
 .o_dropdown_menu {
     @extend .dropdown-menu;
 }
-
-// o_facebook_page (Facebook page plugin)
-
-// Since October 2024, the Facebook mobile site (m.facebook.com) uses an
-// 'X-Frame-Options' header set to 'deny', preventing iframe embedding across
-// different domains. This header enforces a security policy restricting
-// cross-origin access to the content.
-// Meta has not provided any communication regarding this change. Until it is
-// resolved, we have no choice but to hide the iframe on mobile to prevent users
-// from seeing a "unavailable content" icon.
-@include media-breakpoint-down(md) {
-    .o_facebook_page {
-        display: none;
-    }
-}
