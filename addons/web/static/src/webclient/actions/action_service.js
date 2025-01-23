@@ -825,7 +825,9 @@ function makeActionManager(env) {
      */
     function _executeActURLAction(action, options) {
         let url = action.url;
-        if (url && !(url.startsWith("http") || url.startsWith("/"))) {
+        let isAbsoluteUrl = action.isAbsoluteUrl ? action.isAbsoluteUrl : false;
+
+        if(url && (!(isAbsoluteUrl)) && !(url.startsWith("http") || url.startsWith("/"))){
             url = "/" + url;
         }
         if (action.target === "self") {
