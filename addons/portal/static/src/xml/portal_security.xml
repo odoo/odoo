@@ -30,7 +30,7 @@
                 Here is your new API key, use it instead of a password for RPC access.
                 Your login is still necessary for interactive usage.
             </p>
-            <p><code><span t-out="key"/></code></p>
+            <p><code><span t-out="key" widget="CopyClipboardChar" options="{'string': 'Copy Key'}"/></code></p>
             <p class="alert alert-warning" role="alert">
                 <strong>Important:</strong>
                 The key cannot be retrieved later and provides <b>full access</b>
