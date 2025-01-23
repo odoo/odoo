@@ -169,15 +169,7 @@ export class ProductsWidget extends Component {
                 "product.product",
                 "search",
                 [
-                    [
-                        "&",
-                        ["available_in_pos", "=", true],
-                        "|",
-                        "|",
-                        ["name", "ilike", searchProductWord],
-                        ["default_code", "ilike", searchProductWord],
-                        ["barcode", "ilike", searchProductWord],
-                    ],
+                    domain
                 ],
                 {
                     offset: this.state.currentOffset,
