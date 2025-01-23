@@ -15,6 +15,7 @@ import {
     pointerDown,
     press,
     queryOne,
+    queryRect,
     scroll,
     select,
     uncheck,
@@ -366,4 +367,61 @@ export async function editAce(value) {
     await contains(".ace_editor textarea", { displayed: true, visible: false }).edit(value, {
         instantly: true,
     });
+}
+
+/**
+ * Dragging methods taking into account the fact that it's the top of the
+ * dragged element that triggers the moves (not the position of the cursor),
+ * and the fact that during the first move, the dragged element is replaced by
+ * a placeholder that does not have the same height. The moves are done with
+ * the same x position to prevent triggering horizontal moves.
+ *
+ * @param {Target} from
+ * @param {DragAndDropOptions} [options]
+ */
+export async function sortableDrag(from, options) {
+    const fromRect = queryRect(from);
+    const { cancel, drop, moveTo } = await contains(from).drag({
+        initialPointerMoveDistance: 0,
+        ...options,
+    });
+
+    let isFirstMove = true;
+
+    /**
+     * @param {string} [targetSelector]
+     */
+    const moveAbove = async (targetSelector) => {
+        await moveTo(targetSelector, {
+            position: {
+                x: fromRect.x - queryRect(targetSelector).x + fromRect.width / 2,
+                y: fromRect.height / 2 + 5,
+            },
+            relative: true,
+        });
+        isFirstMove = false;
+    };
+
+    /**
+     * @param {string} [targetSelector]
+     */
+    const moveUnder = async (targetSelector) => {
+        const elRect = queryRect(targetSelector);
+        // Need to consider that the moved element will be replaced by a
+        // placeholder with a height of 5px
+        const firstMoveBelow = isFirstMove && elRect.y > fromRect.y;
+        await moveTo(targetSelector, {
+            position: {
+                x: fromRect.x - elRect.x + fromRect.width / 2,
+                y:
+                    ((firstMoveBelow ? -1 : 1) * fromRect.height) / 2 +
+                    elRect.height +
+                    (firstMoveBelow ? 4 : -1),
+            },
+            relative: true,
+        });
+        isFirstMove = false;
+    };
+
+    return { cancel, moveAbove, moveTo, moveUnder, drop };
 }
