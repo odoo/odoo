@@ -129,13 +129,23 @@ test("visitor leaving ends the livechat conversation", async () => {
         livechat_operator_id: serverState.partnerId,
         create_uid: serverState.publicUserId,
     });
+    pyEnv["mail.message"].create([
+        {
+            author_guest_id: guestId,
+            body: "Hello",
+            model: "discuss.channel",
+            res_id: channel_id,
+        },
+    ]);
     setupChatHub({ opened: [channel_id] });
     await start();
     await contains(".o-mail-ChatWindow");
+    await contains(".o-mail-Thread-banner");
     // simulate visitor leaving
     await withGuest(guestId, () => rpc("/im_livechat/visitor_leave_session", { channel_id }));
     await contains("span", { text: "This livechat conversation has ended" });
     await contains(".o-mail-Composer-input"); // so that can still `/lead` or last resort send message to visitor
+    await contains(".o-mail-Thread-banner", { count: 0 });
     await click("button[title*='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
 });
