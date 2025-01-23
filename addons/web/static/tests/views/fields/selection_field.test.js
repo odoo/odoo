@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import {
     click,
     pointerDown,
@@ -421,4 +421,40 @@ test("SelectionField in kanban view with handle widget", async () => {
     const events = await pointerDown(".o_kanban_record .o_field_widget[name=color] select");
     await animationFrame();
     expect(events.get("pointerdown").defaultPrevented).toBe(false);
+});
+
+describe("Dynamic Selection", () => {
+    class PartnerExt extends models.Model {
+        _name = "partner.ext";
+        char = fields.Char();
+        sel_field = fields.Char();
+
+        _records = [{ id: 1, sel_field: `[["opt1", "Option One"]]` }];
+    }
+    defineModels([PartnerExt]);
+    test("DynamicSelection gets and sets its value correctly", async () => {
+        onRpc("web_save", ({ args }) => {
+            expect.step(args[1]);
+        });
+        await mountView({
+            type: "form",
+            resModel: "partner.ext",
+            resId: 1,
+            arch: /* xml */ `<form>
+                <field name="char" widget="char_dynamic_selection" options="{'selection_field': 'sel_field'}" />
+                <field name="sel_field" invisible="1"/>
+            </form>`,
+        });
+
+        expect("select option:eq(1)").toHaveAttribute("value", '"opt1"');
+        expect("select option:eq(1)").toHaveText("Option One (opt1)");
+        await click("select");
+        await select('"opt1"');
+        await click(".o_form_button_save");
+        expect.verifySteps([{ char: "opt1" }]);
+        await click("select");
+        await select("false");
+        await click(".o_form_button_save");
+        expect.verifySteps([{ char: false }]);
+    });
 });
