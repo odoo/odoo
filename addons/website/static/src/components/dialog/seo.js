@@ -2,6 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
+import { escapeRegExp } from "@web/core/utils/strings";
 import { useService, useAutofocus } from '@web/core/utils/hooks';
 import { MediaDialog } from '@web_editor/components/media_dialog/media_dialog';
 import { WebsiteDialog } from './dialog';
@@ -158,13 +159,19 @@ class Keyword extends Component {
                 lang: this.props.language,
                 keywords: this.props.keyword,
             });
-            const regex = new RegExp(WORD_SEPARATORS_REGEX + this.props.keyword + WORD_SEPARATORS_REGEX, 'gi');
+            const regex = new RegExp(
+                WORD_SEPARATORS_REGEX + escapeRegExp(this.props.keyword) + WORD_SEPARATORS_REGEX,
+                "gi"
+            );
             this.state.suggestions = [...new Set(JSON.parse(suggestions).map(word => word.replace(regex, '').trim()))];
         });
     }
 
     isKeywordIn(string) {
-        return new RegExp(WORD_SEPARATORS_REGEX + this.props.keyword + WORD_SEPARATORS_REGEX, 'gi').test(string);
+        return new RegExp(
+            WORD_SEPARATORS_REGEX + escapeRegExp(this.props.keyword) + WORD_SEPARATORS_REGEX,
+            "gi"
+        ).test(string);
     }
 
     getHeaders(tag) {
@@ -237,7 +244,7 @@ class MetaKeywords extends Component {
     }
 
     addKeyword(keyword) {
-        keyword = keyword.trim();
+        keyword = keyword.replaceAll(/,\s*/gi, " ").trim();
         if (keyword && !this.isFull && !this.seoContext.keywords.includes(keyword)) {
             this.seoContext.keywords.push(keyword);
             this.state.keyword = '';
