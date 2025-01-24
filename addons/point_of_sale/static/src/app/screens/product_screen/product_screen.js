@@ -288,21 +288,6 @@ export class ProductScreen extends Component {
             this.currentOrder.getSelectedOrderline()?.getDisplayPrice()
         );
     }
-    /**
-     * This getter is used to restart the animation on the product-reminder.
-     * When the information present on the product-reminder will change,
-     * the key will change and thus a new product-reminder will be created
-     * and the old one will be garbage collected leading to the animation
-     * being retriggered.
-     */
-    get animationKey() {
-        return [
-            this.currentOrder.getSelectedOrderline()?.uuid,
-            this.selectedOrderlineQuantity,
-            this.selectedOrderlineDisplayName,
-            this.selectedOrderlineTotal,
-        ].join(",");
-    }
 
     switchPane() {
         this.pos.scanning = false;
