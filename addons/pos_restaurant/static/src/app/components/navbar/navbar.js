@@ -37,4 +37,7 @@ patch(Navbar.prototype, {
     get mainButton() {
         return this.pos.mainScreen.component.name === "FloorScreen" ? "table" : super.mainButton;
     },
+    get currentOrderName() {
+        return this.pos.getOrder().getName().replace("T ", "");
+    },
 });
