@@ -56,10 +56,9 @@ class PosConfig(models.Model):
             main_floor = self.env['restaurant.floor'].create({
                 'name': pos_config.company_id.name,
                 'pos_config_ids': [(4, pos_config.id)],
-                'floor_prefix': 1,
             })
             self.env['restaurant.table'].create({
-                'table_number': 101,
+                'table_number': 1,
                 'floor_id': main_floor.id,
                 'seats': 1,
                 'position_h': 100,

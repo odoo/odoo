@@ -65,16 +65,4 @@ export class ProductInfoBanner extends Component {
             () => [this.props.product]
         );
     }
-
-    get bannerBackground() {
-        if (!this.props.productTemplate.is_storable || this.state.available_quantity > 10) {
-            return "bg-info";
-        }
-
-        return this.state.available_quantity < 5 ? "bg-danger" : "bg-warning";
-    }
-
-    get bannerClass() {
-        return this.bannerBackground;
-    }
 }
