@@ -17,4 +17,26 @@ patch(PaymentScreen.prototype, {
             }
         });
     },
+
+    async addNewPaymentLine(paymentMethod) {
+        if (paymentMethod.use_payment_terminal === "viva_wallet" && this.isRefundOrder) {
+            const refundedOrder = this.currentOrder.lines[0]?.refunded_orderline_id?.order_id;
+            const amountDue = Math.abs(this.currentOrder.getDue());
+            const matchedPaymentLine = refundedOrder.payment_ids.find(
+                (line) =>
+                    line.payment_method_id.use_payment_terminal === "viva_wallet" &&
+                    line.amount === amountDue
+            );
+            if (matchedPaymentLine) {
+                const paymentLineAddedSuccessfully = await super.addNewPaymentLine(paymentMethod);
+                if (paymentLineAddedSuccessfully) {
+                    const newPaymentLine = this.paymentLines.at(-1);
+                    newPaymentLine.updateRefundPaymentLine(matchedPaymentLine);
+                }
+                return paymentLineAddedSuccessfully;
+            }
+        }
+
+        return await super.addNewPaymentLine(paymentMethod);
+    },
 });

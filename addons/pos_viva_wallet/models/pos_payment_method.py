@@ -150,6 +150,13 @@ class PosPaymentMethod(models.Model):
         endpoint = "transactions:sale"
         return self._call_viva_wallet(endpoint, 'post', data)
 
+    def viva_wallet_send_refund_request(self, data):
+        if not self.env.user.has_group('point_of_sale.group_pos_user'):
+            raise AccessError(_("Only 'group_pos_user' are allowed to send a Viva Wallet refund request"))
+
+        endpoint = "transactions:refund" if data.get("parentSessionId") else "transactions:unreferenced-refund"
+        return self._call_viva_wallet(endpoint, 'post', data)
+
     def viva_wallet_send_payment_cancel(self, data):
         if not self.env.user.has_group('point_of_sale.group_pos_user'):
             raise AccessError(_("Only 'group_pos_user' are allowed to cancel a Viva Wallet payment"))
