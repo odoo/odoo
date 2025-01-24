@@ -1,3 +1,4 @@
+import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { Component, useState } from "@odoo/owl";
 
@@ -18,6 +19,10 @@ export class ProgressBar extends Component {
         size: "",
         errorMessage: "",
     };
+
+    get errorMessage() {
+        return this.props.errorMessage || _t("File could not be saved");
+    }
 
     get progress() {
         return Math.round(this.props.progress);

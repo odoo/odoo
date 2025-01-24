@@ -92,7 +92,8 @@
                             </div>
                             <div t-if="state.urlTitle and state.url and state.urlTitle !== state.url" class="text-truncate" style="max-width: 200px; font-size: 12px;">
                                 <span t-attf-class="o_we_full_url text-muted o_we_webkit_box" t-attf-title="{{state.url}}">
-                                    <t t-esc="state.url || 'No URL specified'"/>
+                                    <t t-if="state.url" t-esc="state.url"/>
+                                    <t t-else="">No URL specified</t>
                                 </span>
                             </div>
                         </div>
