@@ -65,23 +65,23 @@ export class ActivityMenu extends Component {
         if (!isIosApp()) { // iOS app lacks permissions to call `getCurrentPosition`
             navigator.geolocation.getCurrentPosition(
                 async ({coords: {latitude, longitude}}) => {
-                    await rpc("/hr_attendance/systray_check_in_out", {
+                    this.employee = await rpc("/hr_attendance/systray_check_in_out", {
                         latitude,
                         longitude
                     })
-                    await this.searchReadEmployee()
+                    this._searchReadEmployeeFill();
                 },
                 async err => {
-                    await rpc("/hr_attendance/systray_check_in_out")
-                    await this.searchReadEmployee()
+                    this.employee = await rpc("/hr_attendance/systray_check_in_out")
+                    this._searchReadEmployeeFill();
                 },
                 {
                     enableHighAccuracy: true,
                 }
             )
         } else {
-            await rpc("/hr_attendance/systray_check_in_out")
-            await this.searchReadEmployee()
+            this.employee = await rpc("/hr_attendance/systray_check_in_out")
+            this._searchReadEmployeeFill();
         }
     }
 }
