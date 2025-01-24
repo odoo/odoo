@@ -1,15 +1,13 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAll, queryAllTexts } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
-import { insertStructureSnippet } from "./helpers";
+import { defineWebsiteModels } from "../helpers";
+import { setupWebsiteBuilderWithSnippet } from "./helpers";
 
 defineWebsiteModels();
 
 test("add a date in timeline", async () => {
-    const { getEditor } = await setupWebsiteBuilder("<div></div>");
-    const editor = getEditor();
-    await insertStructureSnippet(editor, "s_timeline");
+    await setupWebsiteBuilderWithSnippet("s_timeline");
     expect(queryAllTexts(":iframe .s_timeline_row h3")).toEqual([
         "First Feature",
         "Second Feature",

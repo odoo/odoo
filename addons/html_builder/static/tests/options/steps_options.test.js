@@ -1,14 +1,12 @@
 import { expect, test } from "@odoo/hoot";
 import { contains } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
-import { insertStructureSnippet } from "./helpers";
+import { defineWebsiteModels } from "../helpers";
+import { setupWebsiteBuilderWithSnippet } from "./helpers";
 
 defineWebsiteModels();
 
 test("modify the steps color", async () => {
-    const { getEditor } = await setupWebsiteBuilder("<div></div>");
-    const editor = getEditor();
-    await insertStructureSnippet(editor, "s_process_steps");
+    await setupWebsiteBuilderWithSnippet("s_process_steps");
     await contains(":iframe .s_process_steps").click();
     await contains("[data-label='Connector'] .o_we_color_preview").click();
     await contains(".o-overlay-item [data-color='#FF0000']").click();

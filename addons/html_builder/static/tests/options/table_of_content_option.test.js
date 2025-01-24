@@ -3,15 +3,14 @@ import { insertText, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
 import { click, queryAll, queryOne, queryAllTexts } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
+import { defineWebsiteModels } from "../helpers";
 import { insertStructureSnippet, setupWebsiteBuilderWithSnippet } from "./helpers";
 
 defineWebsiteModels();
 
 test("edit title in content with table of content", async () => {
-    const { getEditor } = await setupWebsiteBuilder("<div></div>");
+    const { getEditor } = await setupWebsiteBuilderWithSnippet("s_table_of_content");
     const editor = getEditor();
-    await insertStructureSnippet(editor, "s_table_of_content");
     expect(":iframe .s_table_of_content").toHaveCount(1);
     expect(queryAllTexts(":iframe .s_table_of_content_navbar a")).toEqual([
         "Intuitive system",
@@ -46,9 +45,8 @@ test("edit title in content with table of content", async () => {
 });
 
 test("click on addItem option button", async () => {
-    const { getEditor } = await setupWebsiteBuilder("<div><p>Text</p></div>");
+    const { getEditor } = await setupWebsiteBuilderWithSnippet("s_table_of_content");
     const editor = getEditor();
-    await insertStructureSnippet(editor, "s_table_of_content");
     expect(queryAllTexts(":iframe .s_table_of_content_navbar a")).toEqual([
         "Intuitive system",
         "Design features",
@@ -83,9 +81,8 @@ test("click on addItem option button", async () => {
 });
 
 test("hide title in content with table of content", async () => {
-    const { getEditor } = await setupWebsiteBuilder("<div></div>");
+    const { getEditor } = await setupWebsiteBuilderWithSnippet("s_table_of_content");
     const editor = getEditor();
-    await insertStructureSnippet(editor, "s_table_of_content");
     expect(":iframe .s_table_of_content").toHaveCount(1);
     expect(queryAllTexts(":iframe .s_table_of_content_navbar a")).toEqual([
         "Intuitive system",
@@ -107,9 +104,8 @@ test("hide title in content with table of content", async () => {
 });
 
 test("remove main content with table of content", async () => {
-    const { getEditor } = await setupWebsiteBuilder("<div></div>");
+    const { getEditor } = await setupWebsiteBuilderWithSnippet("s_table_of_content");
     const editor = getEditor();
-    await insertStructureSnippet(editor, "s_table_of_content");
     expect(":iframe .s_table_of_content").toHaveCount(1);
     expect(queryAllTexts(":iframe .s_table_of_content_navbar a")).toEqual([
         "Intuitive system",

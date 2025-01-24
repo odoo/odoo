@@ -1,15 +1,13 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAll } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
-import { insertStructureSnippet } from "./helpers";
+import { defineWebsiteModels } from "../helpers";
+import { setupWebsiteBuilderWithSnippet } from "./helpers";
 
 defineWebsiteModels();
 
 test("toggle price list description items", async () => {
-    const { getEditor } = await setupWebsiteBuilder("<div></div>");
-    const editor = getEditor();
-    await insertStructureSnippet(editor, "s_pricelist_boxed");
+    await setupWebsiteBuilderWithSnippet("s_pricelist_boxed");
     await contains(":iframe .s_pricelist_boxed_section").click();
     expect(
         "[data-action-id='togglePriceListDescription'] .o-checkbox .form-check-input:checked"
