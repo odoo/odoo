@@ -27,6 +27,14 @@ class TestSaleOrder(ClickAndCollectCommon):
         so._set_pickup_location('{"id":' + str(self.warehouse.id) + '}')
         self.assertEqual(so.warehouse_id, self.warehouse)
 
+    def test_free_qty_calculated_from_order_wh_if_dm_is_in_store(self):
+        self.warehouse_2 = self._create_warehouse()
+        self.website.warehouse_id = self.warehouse_2
+        so = self._create_in_store_delivery_order()
+        so.warehouse_id = self.warehouse
+        _, free_qty = so._get_cart_and_free_qty(self.storable_product)
+        self.assertEqual(free_qty, 10)
+
     def test_prevent_buying_out_of_stock_products(self):
         cart = self._create_in_store_delivery_order(order_line=[Command.create({
             'product_id': self.product_2.id,
