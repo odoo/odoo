@@ -330,7 +330,7 @@ test("many2one with hr group widget in form view", async () => {
     ]);
 });
 
-test("many2one widget in list view", async () => {
+test("many2many widget in list view", async () => {
     const { env } = await makeMockServer();
     const [partnerId_1, partnerId_2] = env["res.partner"].create([
         { name: "Mario" },
@@ -356,16 +356,17 @@ test("many2one widget in list view", async () => {
     env["m2x.avatar.employee"].create({
         employee_ids: [employeeId_1, employeeId_2],
     });
+    onRpc("has_group", () => false);
     await start();
     await mountView({
         type: "list",
         resModel: "m2x.avatar.employee",
         arch: `<list><field name="employee_ids" widget="many2many_avatar_employee"/></list>`,
     });
-    expect(".o_data_cell:first .o_field_many2many_avatar_employee > div > span").toHaveCount(2);
+    expect(".o_data_cell:first .o_field_many2many_avatar_employee img.o_m2m_avatar").toHaveCount(2);
 
     // Clicking on first employee's avatar
-    await contains(".o_data_cell .o_m2m_avatar:eq(0)").click();
+    await contains(".o_data_cell img.o_m2m_avatar:eq(0)").click();
     await waitFor(".o_avatar_card");
     expect(".o_card_user_infos > span").toHaveText("Mario");
     expect(".o_card_user_infos > a").toHaveText("Mario@partner.com");
@@ -375,7 +376,7 @@ test("many2one widget in list view", async () => {
     await waitFor(".o-mail-ChatWindow-header:contains('Mario')");
 
     // Clicking on second employee's avatar
-    await contains(".o_data_cell .o_m2m_avatar:eq(1)").click();
+    await contains(".o_data_cell img.o_m2m_avatar:eq(1)").click();
     expect(".o_card_user_infos span").toHaveText("Yoshi");
     expect(".o_avatar_card").toHaveCount(1);
     expect(".o_avatar_card_buttons button:eq(0)").toHaveText("Send message");
