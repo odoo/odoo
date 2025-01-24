@@ -65,11 +65,4 @@ patch(Thread.prototype, {
             ? _t("This livechat conversation has ended")
             : null;
     },
-
-    get leaveNotificationMessage() {
-        if (this.channel_type === "livechat") {
-            return _t("You ended the conversation with %(name)s.", { name: this.displayName });
-        }
-        return super.leaveNotificationMessage;
-    },
 });

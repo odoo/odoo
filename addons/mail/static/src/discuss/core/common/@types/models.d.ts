@@ -58,7 +58,6 @@ declare module "models" {
         showUnreadBanner(): boolean,
         typingMembers: ChannelMember[],
         readonly hasMemberList: boolean,
-        readonly notifyOnleave: boolean,
         readonly unknownMembersCount: number,
         private _computeOfflineMembers(): ChannelMember[],
     }

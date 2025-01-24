@@ -2,7 +2,6 @@ import { Record } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 import { compareDatetime, nearestGreaterThanOrEqual } from "@mail/utils/common/misc";
 
-import { _t } from "@web/core/l10n/translation";
 import { formatList } from "@web/core/l10n/utils";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
@@ -317,14 +316,6 @@ const threadPatch = {
         return this.isChatChannel
             ? this.selfMember?.message_unread_counter ?? 0
             : super.needactionCounter;
-    },
-    get notifyOnLeave() {
-        // Skip notification if display name is unknown (might depend on
-        // knowledge of members for groups).
-        return Boolean(this.displayName);
-    },
-    get leaveNotificationMessage() {
-        return _t("You left %(channel)s.", { channel: this.displayName });
     },
     /** @override */
     onNewSelfMessage(message) {
