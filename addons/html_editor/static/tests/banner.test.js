@@ -6,6 +6,7 @@ import { getContent, setSelection } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
 import { loader } from "@web/core/emoji_picker/emoji_picker";
 import { execCommand } from "./_helpers/userCommands";
+import { unformat } from "./_helpers/format";
 
 test("should insert a banner with focus inside followed by a paragraph", async () => {
     const { el, editor } = await setupEditor("<p>Test[]</p>");
@@ -82,12 +83,51 @@ test("remove all content should preserves the first paragraph tag inside the ban
     );
 });
 
+test("Inserting a banner at the top of the editable also inserts a paragraph above it", async () => {
+    const { el, editor } = await setupEditor("<p>[]</p>");
+    await insertText(editor, "/bannerinfo");
+    await press("enter");
+    expect(unformat(getContent(el))).toBe(
+        unformat(
+            `<p><br></p>
+            <div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
+                <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
+                <div class="w-100 px-3" contenteditable="true">
+                    <p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>
+                </div>
+            </div>
+            <p><br></p>`
+        )
+    );
+});
+
 test("Everything gets selected with ctrl+a, including a contenteditable=false as first element", async () => {
+    const { el } = await setupEditor(
+        `<div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
+                <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
+                <div class="w-100 px-3" contenteditable="true">
+                    <p><br></p>
+                </div>
+            </div><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
+    );
+    await press(["ctrl", "a"]);
+    await animationFrame();
+    expect(getContent(el)).toBe(
+        `[<div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
+                <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
+                <div class="w-100 px-3" contenteditable="true">
+                    <p><br></p>
+                </div>
+            </div><p placeholder='Type "/" for commands' class="o-we-hint"><br></p>]`
+    );
+});
+
+test("Everything gets selected with ctrl+a, including a banner", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>");
     await insertText(editor, "/bannerinfo");
     await press("enter");
     // Move the selection outside of the banner
-    setSelection({ anchorNode: el.querySelectorAll("p")[1], anchorOffset: 0 });
+    setSelection({ anchorNode: el.querySelectorAll("p")[2], anchorOffset: 0 });
     await insertText(editor, "Test1");
     await manuallyDispatchProgrammaticEvent(editor.editable, "beforeinput", {
         inputType: "insertParagraph",
@@ -95,7 +135,7 @@ test("Everything gets selected with ctrl+a, including a contenteditable=false as
     await insertText(editor, "Test2");
     await press(["ctrl", "a"]);
     expect(getContent(el)).toBe(
-        `[\u200b<div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
+        `[<p><br></p><div class="o_editor_banner user-select-none o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" contenteditable="false">
                 <i class="o_editor_banner_icon mb-3 fst-normal" aria-label="Banner Info">💡</i>
                 <div class="w-100 px-3" contenteditable="true">
                     <p><br></p>
