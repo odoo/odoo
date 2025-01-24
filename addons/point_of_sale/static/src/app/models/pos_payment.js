@@ -21,12 +21,30 @@ export class PosPayment extends Base {
         return this.pos_order_id?.uiState?.selected_paymentline_uuid === this.uuid;
     }
 
+<<<<<<< saas-18.1
     setAmount(value) {
         this.pos_order_id.assertEditable();
         this.amount = roundDecimals(
             parseFloat(value) || 0,
             this.pos_order_id.currency.decimal_places
         );
+||||||| 96fe2e7dda7529be582d98a7dac7470891b757f3
+    set_amount(value) {
+        this.pos_order_id.assert_editable();
+        this.amount = roundDecimals(
+            parseFloat(value) || 0,
+            this.pos_order_id.currency.decimal_places
+        );
+=======
+    set_amount(value) {
+        this.pos_order_id.assert_editable();
+        this.update({
+            amount: roundDecimals(
+                parseFloat(value) || 0,
+                this.pos_order_id.currency.decimal_places
+            ),
+        });
+>>>>>>> 3e8bcd5de55f1f05bd9a11a5d63c4e59ad4e5331
     }
 
     getAmount() {
@@ -37,8 +55,16 @@ export class PosPayment extends Base {
         return this.payment_status;
     }
 
+<<<<<<< saas-18.1
     setPaymentStatus(value) {
         this.payment_status = value;
+||||||| 96fe2e7dda7529be582d98a7dac7470891b757f3
+    set_payment_status(value) {
+        this.payment_status = value;
+=======
+    set_payment_status(value) {
+        this.update({ payment_status: value });
+>>>>>>> 3e8bcd5de55f1f05bd9a11a5d63c4e59ad4e5331
     }
 
     isDone() {
