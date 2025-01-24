@@ -71,6 +71,9 @@ class AccountEdiFormat(models.Model):
         if self.code != 'es_tbai' or invoice.country_code != 'ES':
             return errors
 
+        if invoice.is_purchase_document() and not invoice.ref:
+            errors.append(_("You need to fill in the Reference field as the invoice number from your vendor."))
+
         # Ensure a certificate is available.
         if not invoice.company_id.l10n_es_edi_certificate_id:
             errors.append(_("Please configure the certificate for TicketBAI/SII."))
