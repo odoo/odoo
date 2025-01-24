@@ -36,9 +36,11 @@ export class OutOfFocusService {
         }
         const author = message.author;
         let notificationTitle;
+        let icon = "/mail/static/src/img/odoobot_transparent.png";
         if (!author) {
             notificationTitle = _t("New message");
         } else {
+            icon = author.avatarUrl;
             if (message.thread?.channel_type === "channel") {
                 notificationTitle = _t("%(author name)s from %(channel name)s", {
                     "author name": author.name,
@@ -57,6 +59,7 @@ export class OutOfFocusService {
             sound: message.thread?.model === "discuss.channel",
             title: notificationTitle,
             type: "info",
+            icon,
         });
     }
 
@@ -84,7 +87,7 @@ export class OutOfFocusService {
      * @param {string} [param0.type] The type to be passed to the no
      * service when native notifications can't be sent.
      */
-    sendNotification({ message, sound = true, title, type }) {
+    sendNotification({ message, sound = true, title, type, icon }) {
         if (!this.canSendNativeNotification) {
             this.sendOdooNotification(message, { sound, title, type });
             return;
@@ -93,7 +96,7 @@ export class OutOfFocusService {
             return;
         }
         try {
-            this.sendNativeNotification(title, message, { sound });
+            this.sendNativeNotification(title, message, icon, { sound });
         } catch (error) {
             // Notification without Serviceworker in Chrome Android doesn't works anymore
             // So we fallback to the notification service in this case
@@ -123,10 +126,10 @@ export class OutOfFocusService {
      * @param {string} title
      * @param {string} message
      */
-    sendNativeNotification(title, message, { sound = true } = {}) {
+    sendNativeNotification(title, message, icon, { sound = true } = {}) {
         const notification = new Notification(title, {
             body: message,
-            icon: "/mail/static/src/img/odoobot_transparent.png",
+            icon,
         });
         notification.addEventListener("click", ({ target: notification }) => {
             window.focus();
