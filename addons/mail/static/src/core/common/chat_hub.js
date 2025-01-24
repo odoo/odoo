@@ -8,6 +8,7 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { ChatBubble } from "./chat_bubble";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 export class ChatHub extends Component {
     static components = { ChatBubble, ChatWindow, Dropdown };
@@ -44,6 +45,10 @@ export class ChatHub extends Component {
             onDrop: ({ top, left }) =>
                 Object.assign(this.compactPosition, { left: `${left}px`, top: `${top}px` }),
         });
+    }
+
+    get isMobileOS() {
+        return isMobileOS();
     }
 
     onResize() {
