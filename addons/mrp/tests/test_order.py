@@ -4149,9 +4149,9 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(production.workorder_ids.duration_expected, init_duration_expected + 5)
 
     def test_batch_production_01(self):
-        """ Test the wizard mrp.batch.produce without tracked components.
-        """
+        """ Test the wizard mrp.batch.produce without tracked components."""
         self.product_4.tracking = 'serial'
+        self.bom_1.product_uom_id = self.product_4.uom_id
         self.product_4.uom_id = self.uom_unit
         mo_form = Form(self.env['mrp.production'])
         mo_form.bom_id = self.bom_1
@@ -4182,6 +4182,7 @@ class TestMrpOrder(TestMrpCommon):
         self.env['stock.picking.type'].search([('code', '=', 'mrp_operation')]).use_create_components_lots = True
         self.product_1.tracking = 'serial'
         self.product_4.tracking = 'serial'
+        self.bom_1.product_uom_id = self.product_4.uom_id
         self.product_4.uom_id = self.uom_unit
 
         mo_form = Form(self.env['mrp.production'])
@@ -4223,6 +4224,7 @@ class TestMrpOrder(TestMrpCommon):
         self.product_1.tracking = 'serial'
         self.product_2.tracking = 'lot'
         self.product_4.tracking = 'serial'
+        self.bom_1.product_uom_id = self.product_4.uom_id
         self.product_4.uom_id = self.uom_unit
 
         mo_form = Form(self.env['mrp.production'])
