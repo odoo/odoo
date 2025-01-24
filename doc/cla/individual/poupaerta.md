@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Andries andries.poupaert@gmail.com https://github.com/poupaerta
+Andries Poupaert andries.poupaert@gmail.com https://github.com/poupaerta
