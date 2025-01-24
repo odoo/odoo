@@ -2,7 +2,12 @@ import { expect, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
-import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../../helpers";
+import {
+    addActionOption,
+    addOption,
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+} from "../../helpers";
 
 defineWebsiteModels();
 
@@ -76,4 +81,29 @@ test("apply color to a different style than color or backgroundColor", async () 
     expect(".we-bg-options-container .dropdown").toHaveStyle({
         "background-color": "rgb(255, 0, 0)",
     });
+});
+
+test("apply custom action", async () => {
+    const styleName = "border-top-color";
+    addActionOption({
+        customAction: {
+            load: async () => {
+                expect.step("load");
+            },
+            apply: async ({ editingElement }) => {
+                expect.step(
+                    `apply ${getComputedStyle(editingElement).getPropertyValue(styleName)}`
+                );
+            },
+        },
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderColorPicker styleAction="'${styleName}'" action="'customAction'"/>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    await contains(".we-bg-options-container .dropdown").click();
+    await contains(".o-overlay-item [data-color='#FF0000']").click();
+    expect.verifySteps(["load", "apply rgb(255, 0, 0)", "load", "apply rgb(255, 0, 0)"]);
 });

@@ -8,9 +8,9 @@
                 type="this.colorType"
                 getSelectedColors='() => this.currentColors'
                 getUsedCustomColors='() => []'
-                applyColor='this.applyColor.commit'
-                applyColorPreview='this.applyColor.preview'
-                applyColorResetPreview='this.applyColor.revert'
+                applyColor="onCommit"
+                applyColorPreview="onPreview"
+                applyColorResetPreview="onRevert"
                 focusEditable='() => this.env.editor.shared.selection.focusEditable()'>
                 <div class="o_we_color_preview" t-ref="colorButton" />
             </ColorSelector>

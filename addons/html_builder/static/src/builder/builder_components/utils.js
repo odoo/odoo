@@ -463,7 +463,7 @@ export const clickableBuilderComponentProps = {
     inheritedActions: { type: Array, element: String, optional: true },
 };
 
-function getAllActionsAndOperations(comp) {
+export function getAllActionsAndOperations(comp) {
     function getActionsSpecs(actions, userValueInput) {
         const getAction = comp.env.editor.shared.builderActions.getAction;
         const specs = [];
