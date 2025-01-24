@@ -113,6 +113,32 @@ class ProductProduct(models.Model):
     def _get_backend_root_menu_ids(self):
         return super()._get_backend_root_menu_ids() + [self.env.ref('purchase.menu_purchase_root').id]
 
+    def _update_uom(self, to_uom_id):
+        for uom, product, po_lines in self.env['purchase.order.line']._read_group(
+            [('product_id', 'in', self.ids)],
+            ['product_uom_id', 'product_id'],
+            ['id:recordset'],
+        ):
+            if uom != product.product_tmpl_id.uom_id:
+                raise UserError(_(
+                    'As other units of measure (ex : %(problem_uom)s) '
+                    'than %(uom)s have already been used for this product, the change of unit of measure can not be done.'
+                    'If you want to change it, please archive the product and create a new one.',
+                    problem_uom=uom.display_name, uom=product.product_tmpl_id.uom_id.display_name))
+            po_lines.product_uom_id = to_uom_id
+            po_lines.flush_recordset()
+
+        return super()._update_uom(to_uom_id)
+
+    def _trigger_uom_warning(self):
+        res = super()._trigger_uom_warning()
+        if res:
+            return res
+        po_lines = self.env['purchase.order.line'].sudo().search_count(
+            [('product_id', 'in', self.ids)], limit=1
+        )
+        return bool(po_lines)
+
 
 class ProductSupplierinfo(models.Model):
     _inherit = "product.supplierinfo"

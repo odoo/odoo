@@ -32,6 +32,7 @@ class TestMrpAccount(TestMrpCommon):
             'time_stop': 5,
             'time_efficiency': 85,
         })
+        cls.bom_1.product_uom_id = cls.uom_dozen
         cls.product_4.uom_id = cls.uom_unit
         cls.planning_bom = cls.env['mrp.bom'].create({
             'product_id': cls.product_4.id,

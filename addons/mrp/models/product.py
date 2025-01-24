@@ -429,3 +429,42 @@ class ProductProduct(models.Model):
 
     def _get_backend_root_menu_ids(self):
         return super()._get_backend_root_menu_ids() + [self.env.ref('mrp.menu_mrp_root').id]
+
+    def _update_uom(self, to_uom_id):
+        for uom, product_template, boms in self.env['mrp.bom']._read_group(
+            [('product_tmpl_id', 'in', self.product_tmpl_id.ids)],
+            ['product_uom_id', 'product_tmpl_id'],
+            ['id:recordset'],
+        ):
+            if product_template.uom_id != uom:
+                raise UserError(_('As other units of measure (ex : %(problem_uom)s) '
+                'than %(uom)s have already been used for this product, the change of unit of measure can not be done.'
+                'If you want to change it, please archive the product and create a new one.',
+                problem_uom=uom.name, uom=product_template.uom_id.name))
+            boms.product_uom_id = to_uom_id
+
+        for uom, product, bom_lines in self.env['mrp.bom.line']._read_group(
+            [('product_id', 'in', self.ids)],
+            ['product_uom_id', 'product_id'],
+            ['id:recordset'],
+        ):
+            if product.product_tmpl_id.uom_id != uom:
+                raise UserError(_('As other units of measure (ex : %(problem_uom)s) '
+                'than %(uom)s have already been used for this product, the change of unit of measure can not be done.'
+                'If you want to change it, please archive the product and create a new one.',
+                problem_uom=uom.name, uom=product.product_tmpl_id.uom_id.name))
+            bom_lines.product_uom_id = to_uom_id
+
+        for uom, product, productions in self.env['mrp.production']._read_group(
+            [('product_id', 'in', self.ids)],
+            ['product_uom_id', 'product_id'],
+            ['id:recordset'],
+        ):
+            if product.product_tmpl_id.uom_id != uom:
+                raise UserError(_('As other units of measure (ex : %(problem_uom)s) '
+                'than %(uom)s have already been used for this product, the change of unit of measure can not be done.'
+                'If you want to change it, please archive the product and create a new one.',
+                problem_uom=uom.name, uom=product.product_tmpl_id.uom_id.name))
+            productions.product_uom_id = to_uom_id
+
+        return super()._update_uom(to_uom_id)

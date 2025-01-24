@@ -675,7 +675,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         if 'quantity' in vals:
             if any(move.state == 'cancel' for move in self):
                 raise UserError(_('You cannot change a cancelled stock move, create a new line instead.'))
-        if 'product_uom' in vals and any(move.state == 'done' for move in self):
+        if 'product_uom' in vals and any(move.state == 'done' for move in self) and not self.env.context.get('skip_uom_conversion'):
             raise UserError(_('You cannot change the UoM for a stock move that has been set to \'Done\'.'))
         if 'product_uom_qty' in vals:
             for move in self.filtered(lambda m: m.state not in ('done', 'draft') and m.picking_id):

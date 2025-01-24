@@ -98,6 +98,30 @@ class ProductProduct(models.Model):
         linked_product_ids = [product.id for [product] in lines]
         return super(ProductProduct, self - self.browse(linked_product_ids))._filter_to_unlink()
 
+    def _update_uom(self, to_uom_id):
+        for uom, product, so_lines in self.env['sale.order.line']._read_group(
+            [('product_id', 'in', self.ids)],
+            ['product_uom_id', 'product_id'],
+            ['id:recordset'],
+        ):
+            if so_lines.product_uom_id != product.product_tmpl_id.uom_id:
+                raise UserError(_(
+                    'As other units of measure (ex : %(problem_uom)s) '
+                    'than %(uom)s have already been used for this product, the change of unit of measure can not be done.'
+                    'If you want to change it, please archive the product and create a new one.',
+                    problem_uom=uom.display_name, uom=product.product_tmpl_id.uom_id.display_name))
+            so_lines.product_uom_id = to_uom_id
+        return super()._update_uom(to_uom_id)
+
+    def _trigger_uom_warning(self):        
+        res = super()._trigger_uom_warning()
+        if res:
+            return res
+        so_lines = self.env['sale.order.line'].sudo().search_count(
+            [('product_id', 'in', self.ids)], limit=1
+        )
+        return bool(so_lines)
+
 
 class ProductAttributeCustomValue(models.Model):
     _inherit = "product.attribute.custom.value"
