@@ -93,10 +93,7 @@ patch(MessagingMenu.prototype, {
             displayName: _t("Turn on notifications"),
             iconSrc: this.store.odoobot.avatarUrl,
             partner: this.store.odoobot,
-            isShown:
-                this.store.discuss.activeTab === "main" &&
-                this.shouldAskPushPermission &&
-                !this.store.isNotificationPermissionDismissed,
+            isShown: this.store.discuss.activeTab === "main" && this.shouldAskPushPermission,
         };
     },
     get tabs() {
@@ -180,7 +177,10 @@ patch(MessagingMenu.prototype, {
         return this.store.discuss.activeTab !== "channel" && !this.state.adding;
     },
     get shouldAskPushPermission() {
-        return this.notification.permission === "prompt";
+        return (
+            this.notification.permission === "prompt" &&
+            !this.store.isNotificationPermissionDismissed
+        );
     },
     getFailureNotificationName(failure) {
         if (failure.type === "email") {

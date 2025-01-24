@@ -68,17 +68,7 @@ export class TestsSharedJsPython extends Component {
                 document.company,
                 {cash_rounding: document.cash_rounding}
             );
-            return {tax_totals: taxTotals};
-        }
-        if (params.test === "tax_total") {
-            const document = this.populateDocument(params.document);
-            const taxTotals = accountTaxHelpers.get_tax_totals_summary(
-                document.lines,
-                document.currency,
-                document.company,
-                {cash_rounding: document.cash_rounding}
-            );
-            return {tax_amount_currency: taxTotals.tax_amount_currency};
+            return {tax_totals: taxTotals, soft_checking: params.soft_checking};
         }
     }
 

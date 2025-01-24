@@ -150,6 +150,9 @@ class ProductProduct(models.Model):
     def write(self, vals):
         if 'standard_price' in vals and not self.env.context.get('disable_auto_svl'):
             self.filtered(lambda p: p.cost_method != 'fifo')._change_standard_price(vals['standard_price'])
+        if 'lot_valuated' in vals:
+            # lot_valuated must be updated from the ProductTemplate
+            self.product_tmpl_id.write({'lot_valuated': vals.pop('lot_valuated')})
         return super().write(vals)
 
     @api.onchange('standard_price')

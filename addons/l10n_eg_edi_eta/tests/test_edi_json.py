@@ -3,7 +3,9 @@ from unittest.mock import patch
 
 from freezegun import freeze_time
 
+from odoo import Command
 from odoo.tests import tagged
+from odoo import Command
 
 from .common import TestEGEdiCommon
 
@@ -386,6 +388,19 @@ class TestEdiJson(TestEGEdiCommon):
                         'product_uom_id': self.env.ref('uom.product_uom_unit').id,
                         'tax_ids': [(6, 0, self.env.ref(f'account.{self.env.company.id}_eg_standard_sale_14').ids)],
                     },
+                    {
+                        'product_id': self.product_a.id,
+                        'price_unit': 100,
+                        'quantity': 1.0,
+                        'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                        'discount': 10.0,
+                        'tax_ids': [Command.create({
+                            "amount_type": "fixed",
+                            "amount": 10.0,
+                            "name": "Fixed Tax",
+                            "l10n_eg_eta_code": "t3_tbl02",
+                        })],
+                    },
                 ],
             )
             invoice.action_post()
@@ -447,12 +462,29 @@ class TestEdiJson(TestEGEdiCommon):
                                 'netTotal': 899.6,
                                 'total': 1025.54,
                             },
+                            {
+                                'description': 'product_a',
+                                'itemType': 'GS1',
+                                'itemCode': '1KGS1TEST',
+                                'unitType': 'C62',
+                                'quantity': 1.0,
+                                'internalCode': '',
+                                'valueDifference': 0.0,
+                                'totalTaxableFees': 0.0,
+                                'itemsDiscount': 0.0,
+                                'unitValue': {'currencySold': 'EGP', 'amountEGP': 100.0},
+                                'discount': {'rate': 10.0, 'amount': 10.0},
+                                'taxableItems': [{'taxType': 'T3', 'amount': 10.0, 'subType': 'TBL02', 'rate': 0.0}],
+                                'salesTotal': 100.0,
+                                'netTotal': 90.0,
+                                'total': 100.0,
+                            },
                         ],
-                        'taxTotals': [{'taxType': 'T1', 'amount': 141.18}],
-                        'totalDiscountAmount': 112.05445,
-                        'totalSalesAmount': 1120.54445,
-                        'netAmount': 1008.49,
-                        'totalAmount': 1149.67,
+                        'taxTotals': [{'taxType': 'T1', 'amount': 141.18}, {'taxType': 'T3', 'amount': 10.0}],
+                        'totalDiscountAmount': 122.05445,
+                        'totalSalesAmount': 1220.54445,
+                        'netAmount': 1098.49,
+                        'totalAmount': 1249.67,
                     },
                     'response': ETA_TEST_RESPONSE,
                 },
@@ -815,3 +847,77 @@ class TestEdiJson(TestEGEdiCommon):
             json_file = json.loads(generated_files[0])
             serialized_string = self.env['l10n_eg_edi.thumb.drive']._serialize_for_signing(json_file['request'])
             self.assertEqual(serialized_string, '"ISSUER""ADDRESS""COUNTRY""EG""GOVERNATE""Cairo""REGIONCITY""Iswan""STREET""12th dec. street""BUILDINGNUMBER""10""POSTALCODE""""BRANCHID""0""NAME""branch partner""TYPE""B""ID""456-789-123""RECEIVER""ADDRESS""COUNTRY""EG""GOVERNATE""Cairo""REGIONCITY""Iswan""STREET""12th dec. street""BUILDINGNUMBER""12""POSTALCODE""""NAME""عميل 1""TYPE""B""ID""123-456-789""DOCUMENTTYPE""i""DOCUMENTTYPEVERSION""1.0""DATETIMEISSUED""2022-03-15T00:00:00Z""TAXPAYERACTIVITYCODE""8121""INTERNALID""INV/2022/00001""INVOICELINES""INVOICELINES""DESCRIPTION""product_a""ITEMTYPE""GS1""ITEMCODE""1KGS1TEST""UNITTYPE""C62""QUANTITY""1.0""INTERNALCODE""""VALUEDIFFERENCE""0.0""TOTALTAXABLEFEES""0.0""ITEMSDISCOUNT""0.0""UNITVALUE""CURRENCYSOLD""AED""AMOUNTEGP""504.75556""CURRENCYEXCHANGERATE""5.04756""AMOUNTSOLD""100.0""DISCOUNT""RATE""10.0""AMOUNT""50.47556""TAXABLEITEMS""TAXABLEITEMS""TAXTYPE""T1""AMOUNT""0.0""SUBTYPE""V003""RATE""0.0""SALESTOTAL""504.75556""NETTOTAL""454.28""TOTAL""454.28""INVOICELINES""DESCRIPTION""product_b""ITEMTYPE""EGS""ITEMCODE""EG-EGS-TEST""UNITTYPE""CMT""QUANTITY""5.0""INTERNALCODE""""VALUEDIFFERENCE""0.0""TOTALTAXABLEFEES""0.0""ITEMSDISCOUNT""0.0""UNITVALUE""CURRENCYSOLD""AED""AMOUNTEGP""506.51494""CURRENCYEXCHANGERATE""5.04756""AMOUNTSOLD""100.35""DISCOUNT""RATE""13.0""AMOUNT""329.23471""TAXABLEITEMS""TAXABLEITEMS""TAXTYPE""T1""AMOUNT""0.0""SUBTYPE""V003""RATE""0.0""SALESTOTAL""2532.57471""NETTOTAL""2203.34""TOTAL""2203.34""TAXTOTALS""TAXTOTALS""TAXTYPE""T1""AMOUNT""0.0""TOTALDISCOUNTAMOUNT""379.71027""TOTALSALESAMOUNT""3037.33027""NETAMOUNT""2657.62""TOTALAMOUNT""2657.62""EXTRADISCOUNTAMOUNT""0.0""TOTALITEMSDISCOUNTAMOUNT""0.0""SIGNATURES""SIGNATURES""1""1"')
+
+    def test_9_test_withholding_tax(self):
+        with freeze_time(self.frozen_today), patch(
+            'odoo.addons.l10n_eg_edi_eta.models.account_move.AccountMove.action_post_sign_invoices',
+            new=mocked_action_post_sign_invoices,
+        ), patch(
+            'odoo.addons.l10n_eg_edi_eta.models.account_edi_format.AccountEdiFormat._l10n_eg_edi_post_invoice_web_service',
+            new=mocked_l10n_eg_edi_post_invoice_web_service,
+        ):
+            taxes = self.env.ref(f'account.{self.env.company.id}_eg_standard_sale_14').ids + self.env.ref(f'account.{self.env.company.id}_eg_withholding_3_sale').ids
+            invoice = self.create_invoice(
+                move_type='out_invoice',
+                partner_id=self.partner_a.id,
+                invoice_line_ids=[
+                    {
+                        'product_id': self.product_a.id,
+                        'price_unit': 100.0,
+                        'quantity': 1.0,
+                        'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                        'tax_ids': [Command.set(taxes)],
+                    },
+                ],
+            )
+            invoice.action_post()
+            invoice.action_post_sign_invoices()
+
+            generated_files = self._process_documents_web_services(invoice, {'eg_eta'})
+            self.assertTrue(generated_files)
+            json_file = json.loads(generated_files[0])
+
+            self.assertEqual(
+                json_file,
+                {
+                    'request': {**COMMON_REQUEST_DICT,
+                        'receiver': {
+                            'address': {
+                                'country': 'EG',
+                                'governate': 'Cairo',
+                                'regionCity': 'Iswan',
+                                'street': '12th dec. street',
+                                'buildingNumber': '12',
+                                'postalCode': '',
+                            },
+                            'name': 'partner_a',
+                            'type': 'B',
+                            'id': 'BE0477472701',
+                        },
+                        'invoiceLines': [
+                            {
+                                'description': 'product_a',
+                                'itemType': 'GS1',
+                                'itemCode': '1KGS1TEST',
+                                'unitType': 'C62',
+                                'quantity': 1.0,
+                                'internalCode': '',
+                                'valueDifference': 0.0,
+                                'totalTaxableFees': 0.0,
+                                'itemsDiscount': 0.0,
+                                'unitValue': {'currencySold': 'EGP', 'amountEGP': 100.0},
+                                'discount': {'rate': 0.0, 'amount': -0.0},
+                                'taxableItems': [{'taxType': 'T1', 'amount': 14.0, 'subType': 'V009', 'rate': 14.0}, {'taxType': 'T4', 'amount': 3.0, 'subType': 'W004', 'rate': 3.0}],
+                                'salesTotal': 100.0,
+                                'netTotal': 100.0,
+                                'total': 111.00,
+                            },
+                        ],
+                        'taxTotals': [{'taxType': 'T1', 'amount': 14.0}, {'amount': 3.0, 'taxType': 'T4'}],
+                        'totalSalesAmount': 100.0,
+                        'netAmount': 200.0,
+                        'totalAmount': 211.0,
+                    },
+                    'response': ETA_TEST_RESPONSE,
+                },
+            )

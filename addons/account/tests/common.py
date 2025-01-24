@@ -551,7 +551,12 @@ class AccountTestInvoicingCommon(ProductCommon):
             current_amounts = {}
         self.assertDictEqual(current_amounts, expected_amounts)
 
-    def _assert_tax_totals_summary(self, tax_totals, expected_results):
+    def _assert_tax_totals_summary(self, tax_totals, expected_results, soft_checking=False):
+        """ Assert the tax totals.
+        :param tax_totals:          The tax totals computed from _get_tax_totals_summary in account.tax.
+        :param expected_results:    The expected values.
+        :param soft_checking:       Limit the asserted values to the ones in 'expected_results' and don't go deeper inside the dictionary.
+        """
         def fix_monetary_value(current_values, expected_values, monetary_fields):
             for key, current_value in current_values.items():
                 if not isinstance(expected_values.get(key), float):
@@ -593,8 +598,14 @@ class AccountTestInvoicingCommon(ProductCommon):
 
         current_values = {k: len(v) if k == 'subtotals' else v for k, v in tax_totals.items() if k not in excluded_fields}
         expected_values = {k: len(v) if k == 'subtotals' else v for k, v in expected_results.items()}
+        if soft_checking:
+            current_values = {k: v for k, v in current_values.items() if k in expected_values}
+
         fix_monetary_value(current_values, expected_values, monetary_fields)
         self.assertEqual(current_values, expected_values)
+        if soft_checking:
+            return
+
         for subtotal, expected_subtotal in zip(tax_totals['subtotals'], expected_results['subtotals']):
             current_values = {k: len(v) if k == 'tax_groups' else v for k, v in subtotal.items() if k not in excluded_fields}
             expected_values = {k: len(v) if k == 'tax_groups' else v for k, v in expected_subtotal.items()}
@@ -918,11 +929,11 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
 
     def convert_document_to_invoice(self, document):
         invoice_date = '2020-01-01'
-        usd = self.setup_other_currency('EUR', rates=[(invoice_date, document['rate'])])
+        currency = self.setup_other_currency(document['currency'].name.upper(), rates=[(invoice_date, document['rate'])])
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'invoice_date': invoice_date,
-            'currency_id': document['currency'].id,
+            'currency_id': currency.id,
             'invoice_cash_rounding_id': document['cash_rounding'] and document['cash_rounding'].id,
             'invoice_line_ids': [
                 Command.create({
@@ -935,7 +946,6 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
                 for base_line in document['lines']
             ],
         })
-        usd.rate_ids.unlink()
         return invoice
 
     def _run_js_tests(self):
@@ -1159,9 +1169,9 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
     # -------------------------------------------------------------------------
 
     def _assert_sub_test_tax_totals_summary(self, results, expected_results):
-        self._assert_tax_totals_summary(results['tax_totals'], expected_results)
+        self._assert_tax_totals_summary(results['tax_totals'], expected_results, soft_checking=results['soft_checking'])
 
-    def _create_py_sub_test_tax_totals_summary(self, document, excluded_tax_group_ids):
+    def _create_py_sub_test_tax_totals_summary(self, document, excluded_tax_group_ids, soft_checking):
         AccountTax = self.env['account.tax']
         tax_totals = AccountTax._get_tax_totals_summary(
             base_lines=document['lines'],
@@ -1171,15 +1181,16 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
         )
         if excluded_tax_group_ids:
             tax_totals = AccountTax._exclude_tax_groups_from_tax_totals_summary(tax_totals, excluded_tax_group_ids)
-        return {'tax_totals': tax_totals}
+        return {'tax_totals': tax_totals, 'soft_checking': soft_checking}
 
-    def _create_js_sub_test_tax_totals_summary(self, document, excluded_tax_group_ids):
+    def _create_js_sub_test_tax_totals_summary(self, document, excluded_tax_group_ids, soft_checking):
         return {
             'test': 'tax_totals_summary',
             'document': self._jsonify_document(document),
+            'soft_checking': soft_checking,
         }
 
-    def assert_tax_totals_summary(self, document, expected_values, excluded_tax_group_ids=None):
+    def assert_tax_totals_summary(self, document, expected_values, excluded_tax_group_ids=None, soft_checking=False):
         self._create_assert_test(
             expected_values,
             self._create_py_sub_test_tax_totals_summary,
@@ -1187,44 +1198,18 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             self._assert_sub_test_tax_totals_summary,
             document,
             excluded_tax_group_ids or set(),
-        )
-
-    # -------------------------------------------------------------------------
-    # tax_totals_summary, tax_amount_currency only
-    # -------------------------------------------------------------------------
-
-    def _assert_sub_test_tax_total(self, results, expected_tax_amount):
-        tax_amount_currency = results['tax_amount_currency']
-        self.assertAlmostEqual(tax_amount_currency, expected_tax_amount)
-
-    def _create_py_sub_test_tax_total(self, document):
-        tax_totals = self.env['account.tax']._get_tax_totals_summary(document['lines'], document['currency'], self.env.company)
-        return {'tax_amount_currency': tax_totals['tax_amount_currency']}
-
-    def _create_js_sub_test_tax_total(self, document):
-        return {
-            'test': 'tax_total',
-            'document': self._jsonify_document(document),
-            'rounding_method': self.env.company.tax_calculation_rounding_method,
-        }
-
-    def assert_tax_total(self, document, expected_tax_amount):
-        self._create_assert_test(
-            expected_tax_amount,
-            self._create_py_sub_test_tax_total,
-            self._create_js_sub_test_tax_total,
-            self._assert_sub_test_tax_total,
-            document,
+            soft_checking,
         )
 
     # -------------------------------------------------------------------------
     # invoice tax_totals_summary
     # -------------------------------------------------------------------------
 
-    def assert_invoice_tax_totals_summary(self, invoice, expected_values):
-        self._assert_tax_totals_summary(invoice.tax_totals, expected_values)
+    def assert_invoice_tax_totals_summary(self, invoice, expected_values, soft_checking=False):
+        self._assert_tax_totals_summary(invoice.tax_totals, expected_values, soft_checking=soft_checking)
+        cash_rounding_base_amount_currency = invoice.tax_totals.get('cash_rounding_base_amount_currency', 0.0)
         self.assertRecordValues(invoice, [{
-            'amount_untaxed': expected_values['base_amount_currency'],
+            'amount_untaxed': expected_values['base_amount_currency'] + cash_rounding_base_amount_currency,
             'amount_tax': expected_values['tax_amount_currency'],
             'amount_total': expected_values['total_amount_currency'],
         }])
