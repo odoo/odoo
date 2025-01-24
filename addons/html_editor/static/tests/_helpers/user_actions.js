@@ -40,17 +40,32 @@ export async function insertText(editor, text) {
     };
     for (const char of text) {
         // KeyDownEvent is required to trigger deleteRange.
-        await manuallyDispatchProgrammaticEvent(editor.editable, "keydown", { key: char });
+        const keydownEvent = await manuallyDispatchProgrammaticEvent(editor.editable, "keydown", {
+            key: char,
+        });
+        if (keydownEvent.defaultPrevented) {
+            continue;
+        }
         // InputEvent is required to simulate the insert text.
-        await manuallyDispatchProgrammaticEvent(editor.editable, "beforeinput", {
-            inputType: "insertText",
-            data: char,
-        });
+        const beforeinputEvent = await manuallyDispatchProgrammaticEvent(
+            editor.editable,
+            "beforeinput",
+            {
+                inputType: "insertText",
+                data: char,
+            }
+        );
+        if (beforeinputEvent.defaultPrevented) {
+            continue;
+        }
         insertChar(char);
-        await manuallyDispatchProgrammaticEvent(editor.editable, "input", {
+        const inputEvent = await manuallyDispatchProgrammaticEvent(editor.editable, "input", {
             inputType: "insertText",
             data: char,
         });
+        if (inputEvent.defaultPrevented) {
+            continue;
+        }
         // KeyUpEvent is not required but is triggered like the browser would.
         await manuallyDispatchProgrammaticEvent(editor.editable, "keyup", { key: char });
     }
