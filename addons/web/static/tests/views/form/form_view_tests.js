@@ -15234,4 +15234,49 @@ QUnit.module("Views", (hooks) => {
             assert.verifySteps(["Check/prepare record datas", "web_save", "Perform Action"]);
         }
     );
+
+    QUnit.test(
+        "open x2many with non inline form view, delayed get_views, form destroyed",
+        async function (assert) {
+            serverData.models.partner.records[0].product_ids = [37];
+            serverData.views = {
+                "product,false,form": `<form><field name="display_name"/></form>`,
+            };
+
+            let def;
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <field name="product_ids">
+                            <tree>
+                                <field name="display_name"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                resId: 1,
+                async mockRPC(route, { method }) {
+                    if (method === "get_views") {
+                        assert.step("get_views");
+                        await def;
+                    }
+                },
+            });
+
+            // click on an x2many record to open it in dialog (get_views delayed)
+            def = makeDeferred();
+            await click(target, ".o_data_row .o_data_cell");
+            assert.containsNone(target, ".o_dialog");
+
+            // destroy the form view while get_views is pending
+            form.__owl__.destroy();
+            def.resolve();
+            await nextTick();
+
+            // everything should have gone smoothly, nothing should have happened as the view is destroyed
+            assert.verifySteps(["get_views", "get_views"]);
+        }
+    );
 });
