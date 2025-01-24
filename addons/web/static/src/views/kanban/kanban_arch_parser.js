@@ -70,6 +70,7 @@ export class KanbanArchParser {
                             context: childNode.getAttribute("context"),
                             string: childNode.getAttribute("string"),
                             invisible: childNode.getAttribute("invisible"),
+                            class: childNode.getAttribute("class"),
                         });
                     } else if (childNode.tagName === "delete") {
                         controls.push({

@@ -168,9 +168,11 @@
                         <field name="level_ids" mode="kanban" nolabel="1"
                             class="o_hr_holidays_plan_level_container"
                             widget="accrual_levels_one2many"
-                            add-label="New Milestone"
                             >
                             <kanban default_order="sequence">
+                                <control>
+                                    <create class="o-kanban-button-new" string="New Milestone"/>
+                                </control>
                                 <field name="sequence"/>
                                 <field name="action_with_unused_accruals"/>
                                 <field name="accrual_validity_count"/>

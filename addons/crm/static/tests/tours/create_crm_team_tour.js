@@ -18,7 +18,7 @@ registry.category("web_tour.tours").add('create_crm_team_tour', {
     trigger: 'input[id="name_0"]',
     run: "edit My CRM Team",
 }, {
-    trigger: 'button.o-kanban-button-new',
+    trigger: '.btn.o-kanban-button-new',
     run: "click",
 }, {
     trigger: 'div.modal-dialog tr:contains("Test Salesman") input.form-check-input',

@@ -8,7 +8,6 @@ import {
     clickKanbanRecord,
     clickModalButton,
     clickSave,
-    clickViewButton,
     contains,
     defineModels,
     fieldInput,
@@ -264,10 +263,10 @@ test("many2many kanban: edition", async () => {
             </form>`,
     });
 
-    expect(`.o_kanban_record:visible`).toHaveCount(2);
+    expect(`.o_kanban_record:visible:not(.o-kanban-button-new)`).toHaveCount(2);
     expect(`.o_kanban_record:first`).toHaveText("gold");
     expect(`.o_kanban_renderer .delete_icon`).toBeVisible();
-    expect(`.o_field_many2many .o-kanban-button-new:visible`).toHaveText("Add");
+    expect(`.o_field_many2many .o-kanban-button-new:visible`).toHaveText("Add pokemon");
 
     // edit existing subrecord
 
@@ -281,17 +280,17 @@ test("many2many kanban: edition", async () => {
 
     // add subrecords
     // -> single select
-    await clickViewButton({ text: "Add" });
+    await contains(".o_view_controller .btn:contains(Add pokemon)").click();
 
     expect(".modal .o_list_view tbody .o_list_record_selector").toHaveCount(3);
 
     await contains(".modal .o_list_view tbody tr:contains(red) .o_data_cell").click();
 
-    expect(".o_kanban_record:visible").toHaveCount(3);
+    expect(".o_kanban_record:visible:not(.o-kanban-button-new)").toHaveCount(3);
     expect(".o_kanban_record:contains(red)").toBeVisible();
 
     // -> multiple select
-    await clickViewButton({ text: "Add" });
+    await contains(".o_view_controller .btn:contains(Add pokemon)").click();
     expect(".modal .o_select_button").not.toBeEnabled();
     await animationFrame();
 
@@ -301,10 +300,10 @@ test("many2many kanban: edition", async () => {
     await clickModalButton({ text: "Select" });
 
     expect(".modal .o_list_view").toHaveCount(0);
-    expect(".o_kanban_record:visible").toHaveCount(5);
+    expect(".o_kanban_record:visible:not(.o-kanban-button-new)").toHaveCount(5);
 
     // -> created record
-    await clickViewButton({ text: "Add" });
+    await contains(".o_view_controller .btn:contains(Add pokemon)").click();
     await clickModalButton({ text: "New" });
 
     expect(".modal .o_form_view .o_form_editable").toBeVisible();
@@ -312,7 +311,7 @@ test("many2many kanban: edition", async () => {
     await fieldInput("name").edit("A new type");
     await clickModalButton({ text: "Save & Close" });
 
-    expect(".o_kanban_record:visible").toHaveCount(6);
+    expect(".o_kanban_record:visible:not(.o-kanban-button-new)").toHaveCount(6);
     expect(".o_kanban_record:contains(A new type)").toBeVisible();
 
     // delete subrecords
@@ -322,12 +321,12 @@ test("many2many kanban: edition", async () => {
     await clickModalButton({ text: "Remove" });
 
     expect(".modal").toHaveCount(0);
-    expect(".o_kanban_record:visible").toHaveCount(5);
+    expect(".o_kanban_record:visible:not(.o-kanban-button-new)").toHaveCount(5);
     expect(".o_kanban_record:contains(silver)").toHaveCount(0);
 
     await clickKanbanRecord({ text: "blue", target: ".delete_icon" });
 
-    expect(".o_kanban_record:visible").toHaveCount(4);
+    expect(".o_kanban_record:visible:not(.o-kanban-button-new)").toHaveCount(4);
     expect(".o_kanban_record:contains(blue)").toHaveCount(0);
 
     // save the record
@@ -1466,20 +1465,20 @@ test("onchange with 40+ commands for a many2many", async () => {
 
     await contains(".o_field_widget[name=foo] input").edit("trigger onchange");
     expect.verifySteps(["onchange"]);
-    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(40);
+    expect(".o_kanban_record:not(.o_kanban_ghost):not(.o-kanban-button-new)").toHaveCount(40);
     await contains(".o_field_widget[name=timmy] .o_pager_next:eq(0)").click();
     expect.verifySteps([]);
-    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(5);
+    expect(".o_kanban_record:not(.o_kanban_ghost):not(.o-kanban-button-new)").toHaveCount(5);
 
     await clickSave();
 
-    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(40);
+    expect(".o_kanban_record:not(.o_kanban_ghost):not(.o-kanban-button-new)").toHaveCount(40);
 
     await contains(".o_field_widget[name=timmy] .o_pager_next:eq(0)").click();
-    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(5);
+    expect(".o_kanban_record:not(.o_kanban_ghost):not(.o-kanban-button-new)").toHaveCount(5);
 
     await contains(".o_field_widget[name=timmy] .o_pager_next:eq(0)").click();
-    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(40);
+    expect(".o_kanban_record:not(.o_kanban_ghost):not(.o-kanban-button-new)").toHaveCount(40);
 
     expect.verifySteps(["web_save", "web_read"]);
 });
