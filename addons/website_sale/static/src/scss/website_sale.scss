@@ -319,7 +319,7 @@ $input-border-color: $gray-400;
                 }
 
                 &::after {
-                    width: 100vw;
+                    width: calc(100% + var(--o-wsale-products-grid-gap));
                     height: $border-width;
                     bottom: calc(var(--line-offset-y) * -1);
                     left: calc(var(--line-offset-x) * -1);
