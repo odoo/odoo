@@ -8,12 +8,18 @@
                     <group col="1">
                         <field name="refuse_reason_id" string="Reason" widget="selection_badge" options="{'horizontal': true, 'no_create': True, 'no_open': True}"/>
                         <group invisible="not refuse_reason_id">
-                            <field name="send_mail" widget="boolean_toggle"/>
-                            <label for="duplicates" invisible="duplicates_count == 0"/>
-                            <div class="d-flex" invisible="duplicates_count == 0">
-                                <field name="duplicates" nolabel="1"/>
-                                <span>Refuse the<field name="duplicates_count" class="oe_inline mx-1"/>other application(s)</span>
-                            </div>
+                            <field name="duplicates"
+                                string="Refuse Duplicate Applications"
+                                widget="boolean_toggle"
+                                options="{'autosave': False}"
+                                invisible="duplicates_count == 0"/>
+                            <field name="refused_duplicate_applicant_ids"
+                                string="Duplicate Applications" 
+                                widget="applicant_line_many2many"
+                                domain="[('id', 'in', duplicate_applicant_ids)]"
+                                invisible="not duplicates"
+                                />
+                            <field name="send_mail" widget="boolean_toggle" options="{'autosave': False}"/>
                         </group>
                         <group col="1" invisible="not send_mail">
                             <group col="2">

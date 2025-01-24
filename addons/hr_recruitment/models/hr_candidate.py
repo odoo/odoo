@@ -161,15 +161,14 @@ class HrCandidate(models.Model):
             Thus, search on the domain will return the current candidate as well if any of
             the following fields are filled.
         """
-        self.ensure_one()
         if not self:
             return []
         domain = [('id', 'in', self.ids)]
-        if self.email_normalized:
-            domain = expression.OR([domain, [('email_normalized', '=', self.email_normalized)]])
-        if self.partner_phone_sanitized:
-            domain = expression.OR([domain, [('partner_phone_sanitized', '=', self.partner_phone_sanitized)]])
-        domain = expression.AND([domain, [('company_id', '=', self.company_id.id)]])
+        if self.mapped('email_normalized'):
+            domain = expression.OR([domain, [('email_normalized', 'in', self.mapped('email_normalized'))]])
+        if self.mapped('partner_phone_sanitized'):
+            domain = expression.OR([domain, [('partner_phone_sanitized', 'in', self.mapped('partner_phone_sanitized'))]])
+        domain = expression.AND([domain, [('company_id', 'in', self.mapped('company_id.id'))]])
         return domain
 
     def _compute_attachment_count(self):

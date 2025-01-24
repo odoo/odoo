@@ -5,6 +5,7 @@ from markupsafe import Markup
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.osv import expression
 
 
 class ApplicantGetRefuseReason(models.TransientModel):
@@ -17,15 +18,16 @@ class ApplicantGetRefuseReason(models.TransientModel):
 
     refuse_reason_id = fields.Many2one('hr.applicant.refuse.reason', 'Refuse Reason', required=True, default=_default_refuse_reason_id)
     applicant_ids = fields.Many2many('hr.applicant')
-    send_mail = fields.Boolean("Send Email", default=True)
+    send_mail = fields.Boolean("Send Email", default=False)
     template_id = fields.Many2one('mail.template', string='Email Template',
         related="refuse_reason_id.template_id", store=True, readonly=False,
         domain="[('model', '=', 'hr.applicant')]")
     applicant_without_email = fields.Text(compute='_compute_applicant_without_email',
         string='Applicant(s) not having email')
-    applicant_emails = fields.Text(compute='_compute_applicant_emails')
     duplicates = fields.Boolean('Duplicates')
-    duplicates_count = fields.Integer('Duplicates Count', compute='_compute_duplicates_count')
+    duplicates_count = fields.Integer('Duplicates Count', compute='_compute_duplicate_applicant_ids')
+    duplicate_applicant_ids = fields.Many2many('hr.applicant', string='Duplicate Applicants', compute='_compute_duplicate_applicant_ids')
+    refused_duplicate_applicant_ids = fields.Many2many('hr.applicant', compute='_compute_duplicate_applicant_ids', readonly=False)
     attachment_ids = fields.Many2many('ir.attachment', string='Attachments')
 
     @api.depends('refuse_reason_id')
@@ -45,28 +47,16 @@ class ApplicantGetRefuseReason(models.TransientModel):
             else:
                 wizard.applicant_without_email = False
 
-    @api.depends("applicant_ids.email_from")
-    def _compute_single_applicant_email(self):
-        for wizard in self:
-            if len(wizard.applicant_ids) == 1:
-                wizard.single_applicant_email = (
-                    wizard.applicant_ids.email_from
-                    or wizard.applicant_ids.partner_id.email
-                )
-
-    def _inverse_single_applicant_email(self):
-        for wizard in self:
-            if len(wizard.applicant_ids) == 1:
-                wizard.applicant_ids.email_from = wizard.single_applicant_email
-
-    @api.depends('applicant_ids.email_from')
-    def _compute_applicant_emails(self):
-        for wizard in self:
-            wizard.applicant_emails = ', '.join(a.email_from or a.partner_id.email for a in wizard.applicant_ids if a.email_from or a.partner_id.email)
-
-    @api.depends('applicant_ids')
-    def _compute_duplicates_count(self):
-        self.duplicates_count = self.applicant_ids.other_applications_count if len(self.applicant_ids) == 1 else 0
+    @api.depends('applicant_ids', 'applicant_ids.candidate_id')
+    def _compute_duplicate_applicant_ids(self):
+        duplicate_candidates_domain = self.applicant_ids.candidate_id._get_similar_candidates_domain()
+        self.duplicate_applicant_ids = self.env['hr.candidate'].search(duplicate_candidates_domain).applicant_ids \
+            .filtered(
+                lambda applicant: applicant.id not in self.applicant_ids.ids and
+                applicant.application_status not in ['hired', 'refused', 'archived']
+            )
+        self.duplicates_count = len(self.duplicate_applicant_ids)
+        self.refused_duplicate_applicant_ids = self.duplicate_applicant_ids
 
     # Overrides of mail.composer.mixin
     @api.depends('refuse_reason_id')  # fake trigger otherwise not computed in new mode
@@ -83,17 +73,13 @@ class ApplicantGetRefuseReason(models.TransientModel):
                 raise UserError(_("At least one applicant doesn't have a email; you can't use send email option."))
 
         refused_applications = self.applicant_ids
-        # duplicates_count can be true only if only one application is selected
         if self.duplicates_count and self.duplicates:
-            applicant_id = self.applicant_ids[0]
-            duplicate_domain = applicant_id.candidate_id._get_similar_candidates_domain()
-            duplicates = self.env['hr.candidate'].search(duplicate_domain).applicant_ids
-            refused_applications |= duplicates
-            url = applicant_id._get_html_link()
-            message = _(
-                "Refused automatically because this application has been identified as a duplicate of %(link)s",
-                link=url)
-            duplicates._message_log_batch(bodies={duplicate.id: message for duplicate in duplicates})
+            refused_applications |= self.refused_duplicate_applicant_ids
+            # url = applicant_id._get_html_link()
+            # message = _(
+            #     "Refused automatically because this application has been identified as a duplicate of %(link)s",
+            #     link=url)
+            # duplicates._message_log_batch(bodies={duplicate.id: message for duplicate in duplicates})
         refused_applications.write({'refuse_reason_id': self.refuse_reason_id.id, 'active': False, 'refuse_date': datetime.now()})
 
         if self.send_mail:
