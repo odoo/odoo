@@ -215,6 +215,10 @@ class AccountMove(models.Model):
         else:
             self._l10n_my_edi_set_status(result['status'])
 
+        # As done during submission flow, when the status becomes
+        if self.l10n_my_edi_state == 'valid':
+            self._update_validation_fields(result)
+
     def action_l10n_my_edi_reject_bill(self):
         self.ensure_one()
 
@@ -372,10 +376,7 @@ class AccountMove(models.Model):
                         elif result['status_reason']:
                             errors[move] = [result['status_reason']]
                 elif move.l10n_my_edi_state == 'valid':
-                    # We receive a timezone_aware datetime, but it should always be in UTC.
-                    # Odoo expect a timezone unaware datetime in UTC, so we can safely remove the info without any more work needed.
-                    utc_tz_aware_datetime = dateutil.parser.isoparse(status_info['valid_datetime'])
-                    move.l10n_my_edi_validation_time = utc_tz_aware_datetime.replace(tzinfo=None)
+                    move._update_validation_fields(status_info)
 
             if self._can_commit():
                 self._cr.commit()
@@ -486,6 +487,8 @@ class AccountMove(models.Model):
                         state=invoice_result['status'],
                         message=_('This invoice has been %(status)s for reason: %(reason)s', status=invoice_result['status'], reason=invoice_result['reason']) if invoice_result.get('reason') else None,
                     )
+                    if invoice.l10n_my_edi_state == 'valid':
+                        invoice._update_validation_fields(invoice_result)
                 submission_processed += 1
                 # Commit if we can, in case an issue arises later.
                 if self._can_commit():
@@ -545,6 +548,14 @@ class AccountMove(models.Model):
                 'document_uuid': self.l10n_my_edi_external_uuid,
             },
         )
+
+    def _update_validation_fields(self, validation_result):
+        """ Update a few important fields in self based on the data received when an invoice gets to the 'valid' state. """
+        self.ensure_one()
+        # We receive a timezone_aware datetime, but it should always be in UTC.
+        # Odoo expect a timezone unaware datetime in UTC, so we can safely remove the info without any more work needed.
+        utc_tz_aware_datetime = dateutil.parser.isoparse(validation_result['valid_datetime'])
+        self.l10n_my_edi_validation_time = utc_tz_aware_datetime.replace(tzinfo=None)
 
     # Other methods
 
