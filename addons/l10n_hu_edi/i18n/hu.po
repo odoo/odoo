@@ -4,9 +4,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 18.2a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-03 08:13+0000\n"
+"POT-Creation-Date: 2025-01-30 17:28+0000\n"
 "PO-Revision-Date: 2024-05-03 12:35+0000\n"
 "Last-Translator: Tóth Csaba <csaba.toth@odootech.hu>\n"
 "Language-Team: Hungarian\n"
@@ -30,26 +30,28 @@ msgstr ""
 "\n"
 "            - Éles: A számlákat a NAV éles rendszerébe küldi.\n"
 "            - Teszt: A számlákat a NAV teszt rendszerébe küldi.\n"
-"            - Demó: A NAV kapcsolat modellezése (nem igényel hitelesítő adatokat).\n"
+"            - Demó: A NAV kapcsolat modellezése (nem igényel hitelesítő "
+"adatokat).\n"
 "        "
 
 #. module: l10n_hu_edi
 #: model:ir.model.fields,help:l10n_hu_edi.field_account_bank_statement_line__l10n_hu_invoice_chain_index
 #: model:ir.model.fields,help:l10n_hu_edi.field_account_move__l10n_hu_invoice_chain_index
-#: model:ir.model.fields,help:l10n_hu_edi.field_account_payment__l10n_hu_invoice_chain_index
 msgid ""
 "\n"
 "            Index in the chain of modification invoices:\n"
 "                -1 for a base invoice;\n"
 "                1, 2, 3, ... for modification invoices;\n"
-"                0 for rejected/cancelled invoices or if it has not yet been set.\n"
+"                0 for rejected/cancelled invoices or if it has not yet been "
+"set.\n"
 "            "
 msgstr ""
 "\n"
 "            Index a módosító számlák láncolatában:\n"
 "                -1 egy alap számla esetében;\n"
 "                1, 2, 3, ... a módosító számlák esetében;\n"
-"                0 az elutasított/megszakított számlák esetében, vagy ha még nem került megadásra.\n"
+"                0 az elutasított/megszakított számlák esetében, vagy ha még "
+"nem került megadásra.\n"
 "            "
 
 #. module: l10n_hu_edi
@@ -64,8 +66,8 @@ msgstr "<strong>Vevő:</strong>"
 
 #. module: l10n_hu_edi
 #: model_terms:ir.ui.view,arch_db:l10n_hu_edi.report_invoice_document
-msgid "<strong>Payment Mode:</strong>"
-msgstr "<strong>Fizetési mód:</strong>"
+msgid "<strong>Payment Mode</strong>"
+msgstr "<strong>Fizetési mód</strong>"
 
 #. module: l10n_hu_edi
 #: model_terms:ir.ui.view,arch_db:l10n_hu_edi.report_invoice_document
@@ -90,7 +92,6 @@ msgstr "AAM - Alanyi adómentes"
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_tax.py:0
-#, python-format
 msgid "AAM Tax exempt"
 msgstr "AAM Alanyi adómentes"
 
@@ -119,7 +120,6 @@ msgstr "ATK - Áfa törvény hatályán kívüli"
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_tax.py:0
-#, python-format
 msgid "ATK Outside the scope of VAT - VAT tv.2-3.§"
 msgstr "ATK ÁFA törvény hatályán kívüli - ÁFA tv.2-3.§"
 
@@ -141,7 +141,6 @@ msgstr "Bizonylat küldés"
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "All advance invoices must be paid and sent to NAV before the final invoice "
 "is issued."
@@ -187,7 +186,6 @@ msgstr "CSK - Csomagolási katalógus kód"
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Cancellation request failed."
 msgstr "A törlési kérelem sikertelen."
 
@@ -204,14 +202,12 @@ msgstr "Elküldött törlési kérelem"
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Cancellation request submitted, waiting for response."
 msgstr "Törlési kérelem beküldve, várakozás a válaszra."
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "Cancellation request timed out. Please wait at least 6 minutes, then update "
 "the status."
@@ -227,13 +223,12 @@ msgstr "Törölt"
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "Cannot reset to draft or cancel invoice %s because an electronic document "
 "was already sent to NAV!"
 msgstr ""
-"Nem lehet visszaállítani a %s számlát tervezetté vagy visszavonttá, mert már"
-" elektronikus dokumentumot küldött a NAV-nak!"
+"Nem lehet visszaállítani a %s számlát tervezetté vagy visszavonttá, mert már "
+"elektronikus dokumentumot küldött a NAV-nak!"
 
 #. module: l10n_hu_edi
 #: model:ir.model.fields.selection,name:l10n_hu_edi.selection__uom_uom__l10n_hu_edi_code__carton
@@ -285,7 +280,6 @@ msgstr "Figyelmeztetésekkel megerősítve"
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/l10n_hu_edi_connection.py:0
-#, python-format
 msgid "Connection to NAV servers timed out."
 msgstr "Csatlakozás a NAV szerveréhez időtúllépés miatt meghiúsult."
 
@@ -297,7 +291,6 @@ msgstr "Névjegy"
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "Could not acquire lock on invoices - is another user performing operations "
 "on them?"
@@ -308,8 +301,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Could not authenticate with NAV. Check your credentials and try again."
 msgstr ""
 "Nem sikerült a NAV-nál hitelesíteni. Ellenőrizze a hitelesítő adatokat, és "
@@ -318,30 +309,32 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
-"Could not match NAV transaction_code %s, index %s to an invoice in Odoo"
+"Could not match NAV transaction_code %(code)s, index %(index)s to an invoice "
+"in Odoo"
 msgstr ""
-"Nem sikerült megfeleltetni a NAV transaction_code %s, sorszám %s adatot egy "
-"számlának az Odoo-ban"
+"Nem sikerült megfeleltetni a NAV transaction_code %(code)s, sorszám "
+"%(index)s adatot egy számlának az Odoo-ban"
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/l10n_hu_edi_connection.py:0
-#, python-format
 msgid "Could not parse time of previous transaction"
 msgstr "Nem sikerült értelmezni az előző tranzakció idejét"
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/__init__.py:0
-#, python-format
 msgid ""
-"Could not set NAV tax types on taxes because some taxes from l10n_hu are missing.\n"
-"You should set the type manually or reload the CoA before sending invoices to NAV."
+"Could not set NAV tax types on taxes because some taxes from l10n_hu are "
+"missing.\n"
+"You should set the type manually or reload the CoA before sending invoices "
+"to NAV."
 msgstr ""
-"Nem sikerült beállítani a NAV adótípusait az adókra, mert néhány adó hiányzik a l10n_hu-ból.\n"
-"A típusokat kézzel kell beállítani, vagy újra kell tölteni a CoA-t, mielőtt a számlákat elküldi a NAV-nak."
+"Nem sikerült beállítani a NAV adótípusait az adókra, mert néhány adó "
+"hiányzik a l10n_hu-ból.\n"
+"A típusokat kézzel kell beállítani, vagy újra kell tölteni a CoA-t, mielőtt "
+"a számlákat elküldi a NAV-nak."
 
 #. module: l10n_hu_edi
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_cancellation__create_uid
@@ -391,8 +384,18 @@ msgid "Demo"
 msgstr "Demó"
 
 #. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_chart_template__display_name
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move_reversal__display_name
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move_send__display_name
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_tax__display_name
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_cancellation__display_name
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_tax_audit_export__display_name
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_product_template__display_name
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_res_partner__display_name
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_uom_uom__display_name
 msgid "Display Name"
 msgstr "Megjelenített név"
 
@@ -406,7 +409,6 @@ msgstr "EAM - Termékexport 3.országba - ÁFA tv.98-109.§"
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_tax.py:0
-#, python-format
 msgid "EAM Product export to 3rd country - VAT tv.98-109.§"
 msgstr "EAM Termékexport 3.országba - ÁFA tv.98-109.§"
 
@@ -443,7 +445,6 @@ msgstr "EUE - 2.EU-s országban teljesített eladás - nem EUFAD37 és nem EUFAD
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_tax.py:0
-#, python-format
 msgid "EUE Sales made in a 2nd EU country"
 msgstr "EUE 2.EU-s országban teljesített eladás"
 
@@ -457,23 +458,20 @@ msgstr "EUFAD37 - ÁFA tv. 37.§ (1) Fordított ÁFA másik EU-s országban"
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_tax.py:0
-#, python-format
 msgid "EUFAD37 § 37 (1) Reverse VAT in another EU country"
 msgstr "EUFAD37 ÁFA tv. 37.§ (1) Fordított ÁFA másik EU-s országban"
 
 #. module: l10n_hu_edi
 #: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_tax__l10n_hu_tax_type__eufade
 msgid ""
-"EUFADE - Reverse charge transaction carried out in another Member State, not"
-" subject to Section 37 of the VAT Act"
+"EUFADE - Reverse charge transaction carried out in another Member State, not "
+"subject to Section 37 of the VAT Act"
 msgstr "EUFADE - Fordított ÁFA másik EU-s országban nem ÁFA tv. 37.§ (1)"
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_tax.py:0
-#, python-format
-msgid ""
-"EUFADE Reverse charge of VAT in another EU country not VAT tv. § 37 (1)"
+msgid "EUFADE Reverse charge of VAT in another EU country not VAT tv. § 37 (1)"
 msgstr "EUFADE Fordított ÁFA másik EU-s országban nem ÁFA tv. 37.§ (1)"
 
 #. module: l10n_hu_edi
@@ -486,14 +484,12 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/l10n_hu_edi_connection.py:0
-#, python-format
 msgid "Error during decryption of ExchangeToken."
 msgstr "Hiba az ExchangeToken dekódolása során."
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/res_company.py:0
-#, python-format
 msgid "Error listing transactions while attempting transaction recovery."
 msgstr ""
 "A tranzakciók listázási hibája a tranzakció helyreállításának megkísérlése "
@@ -502,7 +498,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/res_company.py:0
-#, python-format
 msgid "Error querying transaction while attempting transaction recovery."
 msgstr ""
 "A tranzakció lekérdezésének hibája a tranzakció helyreállításának "
@@ -544,7 +539,6 @@ msgstr "HO - Szolgáltatás 3.országba"
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_tax.py:0
-#, python-format
 msgid "HO Service to 3rd country"
 msgstr "HO Szolgáltatás 3.országba"
 
@@ -571,8 +565,18 @@ msgid "Hungary"
 msgstr "Magyarország"
 
 #. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_chart_template__id
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move_reversal__id
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move_send__id
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_tax__id
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_cancellation__id
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_tax_audit_export__id
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_product_template__id
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_res_config_settings__id
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_res_partner__id
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_uom_uom__id
 msgid "ID"
 msgstr "Azonosító"
 
@@ -581,8 +585,7 @@ msgstr "Azonosító"
 #: model:ir.model.fields,help:l10n_hu_edi.field_res_partner__l10n_hu_group_vat
 #: model:ir.model.fields,help:l10n_hu_edi.field_res_users__l10n_hu_group_vat
 msgid ""
-"If this company belongs to a VAT group, indicate the group's VAT number "
-"here."
+"If this company belongs to a VAT group, indicate the group's VAT number here."
 msgstr ""
 "Ha ez a vállalat áfacsoporthoz tartozik, itt kell feltüntetni a csoport "
 "adószámát."
@@ -610,18 +613,18 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/res_company.py:0
-#, python-format
 msgid ""
-"Incorrect NAV Credentials! Check that your company VAT number is set correctly. \n"
+"Incorrect NAV Credentials! Check that your company VAT number is set "
+"correctly. \n"
 "Error details: %s"
 msgstr ""
-"Helytelen NAV hitelesítő adatok! Ellenőrizze, hogy a cég adószáma helyesen van-e beállítva. \n"
+"Helytelen NAV hitelesítő adatok! Ellenőrizze, hogy a cég adószáma helyesen "
+"van-e beállítva. \n"
 "Hiba részletei: %s"
 
 #. module: l10n_hu_edi
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_bank_statement_line__l10n_hu_edi_batch_upload_index
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move__l10n_hu_edi_batch_upload_index
-#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_payment__l10n_hu_edi_batch_upload_index
 msgid "Index of invoice within a batch upload"
 msgstr "A számla indexe egy kötegelt feltöltésen belül"
 
@@ -633,22 +636,18 @@ msgstr "Alanyi adómentes"
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/l10n_hu_edi_connection.py:0
-#, python-format
 msgid "Invalid NAV response!"
 msgstr "Érvénytelen NAV válasz!"
 
 #. module: l10n_hu_edi
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_bank_statement_line__l10n_hu_invoice_chain_index
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move__l10n_hu_invoice_chain_index
-#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_payment__l10n_hu_invoice_chain_index
 msgid "Invoice Chain Index"
 msgstr "Számlalánc index"
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/l10n_hu_edi_connection.py:0
-#: code:addons/l10n_hu_edi/models/l10n_hu_edi_connection.py:0
-#, python-format
 msgid "Invoice Upload failed: NAV did not return a Transaction ID."
 msgstr ""
 "A számla feltöltése sikertelen: NAV nem adott vissza tranzakcióazonosítót."
@@ -656,28 +655,24 @@ msgstr ""
 #. module: l10n_hu_edi
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_bank_statement_line__l10n_hu_edi_attachment
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move__l10n_hu_edi_attachment
-#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_payment__l10n_hu_edi_attachment
 msgid "Invoice XML file"
 msgstr "Számla XML fájl"
 
 #. module: l10n_hu_edi
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_bank_statement_line__l10n_hu_edi_attachment_filename
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move__l10n_hu_edi_attachment_filename
-#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_payment__l10n_hu_edi_attachment_filename
 msgid "Invoice XML filename"
 msgstr "Számla XML fájlnév"
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Invoice submission failed."
 msgstr "A számla beküldése sikertelen."
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "Invoice submission timed out. Please wait at least 6 minutes, then update "
 "the status."
@@ -688,7 +683,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Invoice submitted, waiting for response."
 msgstr "A számla beküldésre került, várakozás a válaszra."
 
@@ -700,30 +694,23 @@ msgstr "Törlendő számla"
 #. module: l10n_hu_edi
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_bank_statement_line__l10n_hu_edi_send_time
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move__l10n_hu_edi_send_time
-#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_payment__l10n_hu_edi_send_time
 msgid "Invoice upload time"
 msgstr "Számla beküldés ideje"
 
 #. module: l10n_hu_edi
 #. odoo-python
-#: code:addons/l10n_hu_edi/wizard/account_move_send.py:0
-#, python-format
+#: code:addons/l10n_hu_edi/models/account_move_send.py:0
 msgid ""
 "Invoices issued in Hungary must, with few exceptions, be reported to the "
-"NAV's Online-Invoice system!"
+"NAV's Online-Invoice system."
 msgstr ""
 "Magyarországon a kiállított számlákat, néhány kivételtől eltekintve, "
-"kötelező jelenteni az adóhatóság online számla rendszerébe!"
+"kötelező jelenteni az adóhatóság online számla rendszerébe."
 
 #. module: l10n_hu_edi
 #: model:ir.model,name:l10n_hu_edi.model_account_move
 msgid "Journal Entry"
 msgstr "Könyvelési tétel"
-
-#. module: l10n_hu_edi
-#: model:ir.model,name:l10n_hu_edi.model_account_move_line
-msgid "Journal Item"
-msgstr "Napló tétel"
 
 #. module: l10n_hu_edi
 #: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_tax__l10n_hu_tax_type__kbaet
@@ -733,7 +720,6 @@ msgstr "KBAET - EU-ba eladás - ÁFA tv.89.§"
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_tax.py:0
-#, python-format
 msgid "KBAET sale to EU - VAT tv.§ 89."
 msgstr "KBAET EU-n belüli eladás - ÁFA tv.89.§."
 
@@ -745,7 +731,6 @@ msgstr "KBAUK - Új közlekedési eszköz EU-n belülre - ÁFA tv.89.§(2)"
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_tax.py:0
-#, python-format
 msgid "KBAUK New means of transport within the EU - VAT tv.§ 89.§(2)"
 msgstr "KBAUK Új közlekedési eszköz EU-n belülre - ÁFA tv.89.§(2)"
 
@@ -773,11 +758,6 @@ msgstr "Kilométer"
 #: model:ir.model.fields.selection,name:l10n_hu_edi.selection__uom_uom__l10n_hu_edi_code__kwh
 msgid "Kilowatt hour"
 msgstr "Kilowatt óra"
-
-#. module: l10n_hu_edi
-#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move_send__l10n_hu_edi_enable_nav_30
-msgid "L10N Hu Edi Enable Nav 30"
-msgstr "L10N Hu Edi Nav 30 engedélyezése"
 
 #. module: l10n_hu_edi
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_res_config_settings__l10n_hu_edi_is_active
@@ -835,14 +815,12 @@ msgstr "Perc"
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/res_company.py:0
-#, python-format
 msgid "Missing NAV credentials for company %s"
 msgstr "Hiányzó NAV hitelesítő adatok a %s vállalathoz"
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/l10n_hu_edi_connection.py:0
-#, python-format
 msgid "Missing token in response from NAV."
 msgstr "Hiányzó token a NAV válaszában."
 
@@ -854,7 +832,6 @@ msgstr "Üzemmód"
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/l10n_hu_edi_connection.py:0
-#, python-format
 msgid "Mode should be Production or Test!"
 msgstr "Az üzemmód legyen Éles vagy Teszt!"
 
@@ -865,19 +842,18 @@ msgstr "Hónap"
 
 #. module: l10n_hu_edi
 #: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_tax__l10n_hu_tax_type__nam
-msgid ""
-"NAM - tax-exempt on other grounds related to international transactions"
+msgid "NAM - tax-exempt on other grounds related to international transactions"
 msgstr "NAM - egyéb export ügylet ÁFA tv 110-118.§"
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_tax.py:0
-#, python-format
 msgid "NAM other export transaction VAT law § 110-118"
 msgstr "NAM egyéb export ügylet ÁFA tv 110-118.§"
 
 #. module: l10n_hu_edi
-#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move_send__l10n_hu_edi_checkbox_nav_30
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move_send.py:0
 #: model_terms:ir.ui.view,arch_db:l10n_hu_edi.view_move_form_inherit_l10n_hu_edi
 msgid "NAV 3.0"
 msgstr ""
@@ -885,7 +861,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_bank_statement_line__l10n_hu_edi_state
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move__l10n_hu_edi_state
-#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_payment__l10n_hu_edi_state
 msgid "NAV 3.0 status"
 msgstr "NAV 3.0 állapot"
 
@@ -902,7 +877,6 @@ msgstr "NAV Hitelesítési Azonosítók"
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/res_company.py:0
-#, python-format
 msgid ""
 "NAV Credentials: Please set the hungarian vat number on the company first!"
 msgstr ""
@@ -957,16 +931,8 @@ msgstr "NAV ÁFA adótípus"
 #. module: l10n_hu_edi
 #: model:ir.model.fields,help:l10n_hu_edi.field_account_bank_statement_line__l10n_hu_payment_mode
 #: model:ir.model.fields,help:l10n_hu_edi.field_account_move__l10n_hu_payment_mode
-#: model:ir.model.fields,help:l10n_hu_edi.field_account_payment__l10n_hu_payment_mode
 msgid "NAV expected payment mode of the invoice."
 msgstr ""
-
-#. module: l10n_hu_edi
-#. odoo-python
-#: code:addons/l10n_hu_edi/models/l10n_hu_edi_connection.py:0
-#, python-format
-msgid "NAV replied with non-OK funcCode: %s"
-msgstr "A NAV nem OK funcCode-dal válaszolt: %s"
 
 #. module: l10n_hu_edi
 #: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_tax__l10n_hu_tax_type__nonrefundable_vat
@@ -990,7 +956,6 @@ msgstr "Számlaszámig"
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/wizard/l10n_hu_edi_tax_audit_export.py:0
-#, python-format
 msgid "No invoice to export!"
 msgstr "Nincs exportálandó számla!"
 
@@ -1002,7 +967,6 @@ msgstr "Normál ÁFA (százalékos)"
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Open Accounting Settings"
 msgstr "Nyissa meg a Számlázási beállításokat"
 
@@ -1030,7 +994,6 @@ msgstr "Jelszó"
 #. module: l10n_hu_edi
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_bank_statement_line__l10n_hu_payment_mode
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move__l10n_hu_payment_mode
-#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_payment__l10n_hu_payment_mode
 msgid "Payment mode"
 msgstr "Fizetési mód"
 
@@ -1042,7 +1005,6 @@ msgstr "Darab"
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "Please create a sales tax with type ATK (outside the scope of the VAT Act)."
 msgstr ""
@@ -1052,19 +1014,16 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "Please enter the Hungarian VAT (and/or Group VAT) number in 12345678-1-12 "
 "format!"
 msgstr ""
-"Kérjük, adja meg a magyar ÁFA (és/vagy csoportos ÁFA) számot a 12345678-1-12"
-" formátumban!"
+"Kérjük, adja meg a magyar ÁFA (és/vagy csoportos ÁFA) számot a 12345678-1-12 "
+"formátumban!"
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Please set NAV credentials in the Accounting Settings!"
 msgstr ""
 "Kérjük, állítsa be a NAV hitelesítő adatait a Könyvelési beállításoknál!"
@@ -1072,7 +1031,12 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
+msgid "Please set a valid recipient bank account number!"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
 msgid "Please set any VAT taxes to be 'Affected by previous taxes'!"
 msgstr ""
 "Kérjük, állítsa be az ÁFA adókat úgy, hogy a 'Korábbi adók által érintett' "
@@ -1081,10 +1045,9 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
-"Please set any non-VAT (excise) taxes to be 'Included in Price' and 'Affects"
-" subsequent taxes'!"
+"Please set any non-VAT (excise) taxes to be 'Included in Price' and 'Affects "
+"subsequent taxes'!"
 msgstr ""
 "Kérjük, hogy a nem-áfás (jövedéki) adókat állítsa be úgy, hogy 'Az ár "
 "tartalmazza' és 'Hatással van a későbbi adókra'!"
@@ -1092,7 +1055,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Please set company Country, Zip, City and Street!"
 msgstr ""
 "Kérjük, adja meg vállalatának országát, irányítószámát, városát és utcáját!"
@@ -1100,28 +1062,24 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Please set company VAT number!"
 msgstr "Kérjük, adja meg a vállalata adószámát!"
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Please set exactly one VAT tax on each invoice line!"
 msgstr "Kérjük, hogy minden számlasoron pontosan egy áfa adót adjon meg!"
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Please set invoice date to today!"
 msgstr "Kérjük, állítsa a számla dátumát a mai napra!"
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Please set partner Country, Zip, City and Street!"
 msgstr ""
 "Kérjük, állítsa be a partner országát, irányítószámát, városát és utcáját!"
@@ -1129,14 +1087,12 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Please set partner Tax ID on company partners!"
 msgstr "Kérjük, adja meg a névjegy adószámát a céges partnerekre!"
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Please use HUF as company currency!"
 msgstr "Kérjük, hogy a vállalat pénznemeként HUF-ot használjon!"
 
@@ -1183,8 +1139,8 @@ msgid ""
 "REFUNDABLE_VAT - VAT incurred under sections 11 or 14, without an agreement "
 "from the beneficiary to reimburse VAT"
 msgstr ""
-"REFUNDABLE_VAT - a 11. vagy 14. szakasz alapján felmerült ÁFA, anélkül, hogy"
-" a kedvezményezett az ÁFA visszatérítésére vonatkozó megállapodással "
+"REFUNDABLE_VAT - a 11. vagy 14. szakasz alapján felmerült ÁFA, anélkül, hogy "
+"a kedvezményezett az ÁFA visszatérítésére vonatkozó megállapodással "
 "rendelkezne"
 
 #. module: l10n_hu_edi
@@ -1247,7 +1203,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_tax.py:0
-#, python-format
 msgid "TAM Exempt property"
 msgstr "TAM Tárgyi adómentes"
 
@@ -1267,6 +1222,11 @@ msgid "Tax"
 msgstr "Adó"
 
 #. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.report_invoice_document
+msgid "Tax ID"
+msgstr "Adószám"
+
+#. module: l10n_hu_edi
 #: model:ir.actions.act_window,name:l10n_hu_edi.action_l10n_hu_edi_tax_audit_export_form
 #: model:ir.model,name:l10n_hu_edi.model_l10n_hu_edi_tax_audit_export
 #: model:ir.ui.menu,name:l10n_hu_edi.menu_hu_tax_audit_export
@@ -1276,7 +1236,6 @@ msgstr "Adóhatósági Ellenőrzési Adatszolgáltatás"
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Technical Annulment"
 msgstr "Technikai érvénytelenítés"
 
@@ -1288,11 +1247,15 @@ msgstr "Technikai érvénytelenítés varázsló"
 #. module: l10n_hu_edi
 #: model_terms:ir.ui.view,arch_db:l10n_hu_edi.l10n_hu_edi_cancellation_form
 msgid ""
-"Technical Annulment should only be used when an error in the software caused an incorrect data report.<br/>\n"
-"                    To cancel an invoice / credit note in a normal business flow, please create a credit note / debit note."
+"Technical Annulment should only be used when an error in the software caused "
+"an incorrect data report.<br/>\n"
+"                    To cancel an invoice / credit note in a normal business "
+"flow, please create a credit note / debit note."
 msgstr ""
-"A technikai érvénytelenítés csak akkor alkalmazható, ha a szoftver hibájából kifolyólag hibás adatszolgáltatás történt.<br/>\n"
-"                    A számla / jóváírás normál ügymenetben történő visszavonásához hozzon létre jóváíró / bővítő számlát."
+"A technikai érvénytelenítés csak akkor alkalmazható, ha a szoftver hibájából "
+"kifolyólag hibás adatszolgáltatás történt.<br/>\n"
+"                    A számla / jóváírás normál ügymenetben történő "
+"visszavonásához hozzon létre jóváíró / bővítő számlát."
 
 #. module: l10n_hu_edi
 #: model:ir.model.fields.selection,name:l10n_hu_edi.selection__res_company__l10n_hu_edi_server_mode__test
@@ -1302,18 +1265,16 @@ msgstr "Teszt"
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "The annulment request has been approved by the user on the OnlineSzámla "
 "portal."
 msgstr ""
-"A technikai érvénytelenítési kérelmet a felhasználó az OnlineSzámla portálon"
-" jóváhagyta."
+"A technikai érvénytelenítési kérelmet a felhasználó az OnlineSzámla portálon "
+"jóváhagyta."
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "The annulment request is pending, please confirm it on the OnlineSzámla "
 "portal."
@@ -1324,7 +1285,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "The annulment request was received by the NAV, but has not been confirmed "
 "yet."
@@ -1335,24 +1295,21 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "The annulment request was rejected by NAV."
 msgstr "A technikai érvénytelenítési kérelmet a NAV elutasította."
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "The annulment request was rejected by the user on the OnlineSzámla portal."
 msgstr ""
-"A technikai érvénytelenítési kérelmet a felhasználó az OnlineSzámla portálon"
-" elutasította."
+"A technikai érvénytelenítési kérelmet a felhasználó az OnlineSzámla portálon "
+"elutasította."
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "The annulment was sent to the NAV, but there was an error querying its "
 "status."
@@ -1363,14 +1320,12 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "The cancellation request could not be performed."
 msgstr "A törlési kérelmet nem lehetett teljesíteni."
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "The following invoices appear to be earlier in the chain, but have not yet "
 "been sent. Please send them first."
@@ -1381,10 +1336,9 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
-"The invoice was accepted by the NAV, but warnings were reported. To reverse,"
-" create a credit note / debit note."
+"The invoice was accepted by the NAV, but warnings were reported. To reverse, "
+"create a credit note / debit note."
 msgstr ""
 "A számlát a NAV elfogadta, de figyelmeztetést jelzett. Visszafordításhoz "
 "hozzon létre jóváíró / módostó számlát."
@@ -1392,21 +1346,18 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "The invoice was received by the NAV, but has not been confirmed yet."
 msgstr "A számlát a NAV befogadta, de még nem igazolta vissza."
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "The invoice was rejected by the NAV."
 msgstr "A számlát a NAV elutasította."
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "The invoice was sent to the NAV, but there was an error querying its status."
 msgstr ""
@@ -1416,7 +1367,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "The invoice was successfully accepted by the NAV."
 msgstr "A számlát a NAV sikeresen elfogadta."
 
@@ -1453,21 +1403,18 @@ msgstr "Tonna"
 #. module: l10n_hu_edi
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_bank_statement_line__l10n_hu_edi_transaction_code
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move__l10n_hu_edi_transaction_code
-#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_payment__l10n_hu_edi_transaction_code
 msgid "Transaction Code"
 msgstr "Tranzakciós kód"
 
 #. module: l10n_hu_edi
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_bank_statement_line__l10n_hu_edi_message_html
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move__l10n_hu_edi_message_html
-#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_payment__l10n_hu_edi_message_html
 msgid "Transaction messages"
 msgstr "Tranzakciós üzenetek"
 
 #. module: l10n_hu_edi
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_bank_statement_line__l10n_hu_edi_messages
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move__l10n_hu_edi_messages
-#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_payment__l10n_hu_edi_messages
 msgid "Transaction messages (JSON)"
 msgstr "Tranzakciós üzenetek (JSON)"
 
@@ -1499,43 +1446,30 @@ msgstr "VTSZ - Vámtarifaszám"
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#: code:addons/l10n_hu_edi/models/account_move.py:0
-#: code:addons/l10n_hu_edi/models/account_move.py:0
-#: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "View Company/ies"
 msgstr "Vállalat(ok) megtekintése"
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "View advance invoice(s)"
 msgstr "Előlegszámla(k) megtekintése"
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#: code:addons/l10n_hu_edi/models/account_move.py:0
-#: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "View invoice(s)"
 msgstr "Számla(k) megtekintése"
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#: code:addons/l10n_hu_edi/models/account_move.py:0
-#: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "View partner(s)"
 msgstr "Partner(ek) megtekintése"
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "View tax(es)"
 msgstr "Adó(k) megtekintése"
 

@@ -19,8 +19,9 @@
                     <ul class="list-unstyled">
                         <li><t t-out="o.company_id.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/></li>
                         <li>
+                            <t t-set="default_vat_label">Tax ID</t>
                             <t t-if="not o.fiscal_position_id.foreign_vat and o.company_id.partner_id.l10n_hu_group_vat">Group Tax ID</t>
-                            <t t-else="else" t-out="o.company_id.account_fiscal_country_id.vat_label or 'Tax ID'"/>:
+                            <t t-else="else" t-out="o.company_id.account_fiscal_country_id.vat_label or default_vat_label"/>:
                             <span t-if="o.fiscal_position_id.foreign_vat" t-out="o.fiscal_position_id.foreign_vat"/>
                             <span t-else="else" t-out="o.company_id.vat"/>
                         </li>
