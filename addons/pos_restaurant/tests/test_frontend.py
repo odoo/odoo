@@ -65,23 +65,21 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
         cls.main_floor = cls.env['restaurant.floor'].create({
             'name': 'Main Floor',
             'pos_config_ids': [(4, cls.pos_config.id)],
-            'floor_prefix': 1,
         })
         cls.second_floor = cls.env['restaurant.floor'].create({
             'name': 'Second Floor',
             'pos_config_ids': [(4, cls.pos_config.id)],
-            'floor_prefix': 2,
         })
 
         cls.main_floor_table_5 = cls.env['restaurant.table'].create([{
-            'table_number': 105,
+            'table_number': 5,
             'floor_id': cls.main_floor.id,
             'seats': 4,
             'position_h': 100,
             'position_v': 100,
         }])
         cls.env['restaurant.table'].create([{
-            'table_number': 104,
+            'table_number': 4,
             'floor_id': cls.main_floor.id,
             'seats': 4,
             'shape': 'square',
@@ -89,7 +87,7 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
             'position_v': 100,
         },
         {
-            'table_number': 102,
+            'table_number': 2,
             'floor_id': cls.main_floor.id,
             'seats': 4,
             'position_h': 250,
@@ -97,7 +95,7 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
         },
         {
 
-            'table_number': 201,
+            'table_number': 1,
             'floor_id': cls.second_floor.id,
             'seats': 4,
             'shape': 'square',
@@ -105,7 +103,7 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
             'position_v': 150,
         },
         {
-            'table_number': 203,
+            'table_number': 3,
             'floor_id': cls.second_floor.id,
             'seats': 4,
             'position_h': 100,

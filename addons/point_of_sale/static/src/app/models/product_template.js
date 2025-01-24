@@ -2,7 +2,7 @@ import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 import { _t } from "@web/core/l10n/translation";
 import { roundPrecision } from "@web/core/utils/numbers";
-import { getTaxesAfterFiscalPosition } from "./utils/tax_utils";
+import { getTaxesAfterFiscalPosition, getTaxesValues } from "./utils/tax_utils";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 
 /**
@@ -66,6 +66,31 @@ export class ProductTemplate extends Base {
         } else {
             return baseLine.tax_details.total_excluded_currency;
         }
+    }
+    getProductPriceInfo(product, company, pricelist = false, fiscalPosition = false) {
+        if (!product) {
+            product = this.product_variant_ids[0];
+        }
+        const price = this.getPrice(pricelist, 1, 0, false, product);
+
+        const extraValues = this.prepareProductBaseLineForTaxesComputationExtraValues(
+            price,
+            pricelist,
+            fiscalPosition
+        );
+
+        // Taxes computation.
+        const taxesData = getTaxesValues(
+            extraValues.tax_ids,
+            extraValues.price_unit,
+            extraValues.quantity,
+            product,
+            extraValues.product_id,
+            company,
+            extraValues.currency_id
+        );
+
+        return taxesData;
     }
 
     isAllowOnlyOneLot() {
