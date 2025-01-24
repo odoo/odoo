@@ -435,7 +435,9 @@ class DiscussChannel(models.Model):
     def _action_unfollow(self, partner=None, guest=None):
         self.ensure_one()
         self.message_unsubscribe(partner.ids)
-        custom_store = Store(self, {"is_pinned": False, "isLocallyPinned": False})
+        custom_store = Store(
+            self, {"close_chat_window": True, "is_pinned": False, "isLocallyPinned": False}
+        )
         member = self.env["discuss.channel.member"].search(
             [
                 ("channel_id", "=", self.id),
@@ -443,8 +445,7 @@ class DiscussChannel(models.Model):
             ]
         )
         if not member:
-            target = partner or guest
-            target._bus_send_store(custom_store, notification_type="discuss.channel/leave")
+            (partner or guest)._bus_send_store(custom_store)
             return
         notification = Markup('<div class="o_mail_notification">%s</div>') % _(
             "left the channel"
@@ -454,7 +455,7 @@ class DiscussChannel(models.Model):
             body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id
         )
         # send custom store after message_post to avoid is_pinned reset to True
-        member._bus_send_store(custom_store, notification_type="discuss.channel/leave")
+        member._bus_send_store(custom_store)
         member.unlink()
         self._bus_send_store(
             self,
@@ -1102,7 +1103,7 @@ class DiscussChannel(models.Model):
         if member:
             member.write({'unpin_dt': False if pinned else fields.Datetime.now()})
         if not pinned:
-            self.env.user._bus_send("discuss.channel/unpin", {"id": self.id})
+            self.env.user._bus_send_store(self, {"close_chat_window": True, "is_pinned": False})
         else:
             self.env.user._bus_send_store(self)
 
