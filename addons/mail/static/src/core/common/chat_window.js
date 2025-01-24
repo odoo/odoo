@@ -149,7 +149,7 @@ export class ChatWindow extends Component {
 
     toggleFold() {
         const chatWindow = toRaw(this.props.chatWindow);
-        if (this.ui.isSmall || this.state.actionsMenuOpened) {
+        if (this.state.actionsMenuOpened) {
             return;
         }
         chatWindow.fold();
