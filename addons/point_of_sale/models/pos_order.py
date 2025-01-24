@@ -1014,7 +1014,6 @@ class PosOrder(models.Model):
         sync_token = randrange(100_000_000)  # Use to differentiate 2 parallels calls to this function in the logs
         _logger.info("PoS synchronisation #%d started for PoS orders references: %s", sync_token, [self._get_order_log_representation(order) for order in orders])
         order_ids = []
-        session_ids = set({order.get('session_id') for order in orders})
         for order in orders:
             order_log_name = self._get_order_log_representation(order)
             _logger.debug("PoS synchronisation #%d processing order %s order full data: %s", sync_token, order_log_name, pformat(order))
@@ -1032,6 +1031,7 @@ class PosOrder(models.Model):
             else:
                 # In theory, this situation is unintended
                 # In practice it can happen when "Tip later" option is used
+                order_ids.append(existing_order.id)
                 _logger.info("PoS synchronisation #%d order %s sync ignored for existing PoS order %s (state: %s)", sync_token, order_log_name, existing_order, existing_order.state)
 
         # Sometime pos_orders_ids can be empty.
@@ -1040,18 +1040,24 @@ class PosOrder(models.Model):
 
         for order in pos_order_ids:
             order._ensure_access_token()
-
-        # If the previous session is closed, the order will get a new session_id due to _get_valid_session in _process_order
-        is_new_session = any(order.get('session_id') not in session_ids for order in orders)
+            if not self.env.context.get('preparation'):
+                order.config_id.notify_synchronisation(order.config_id.current_session_id.id, self.env.context.get('login_number', 0))
 
         _logger.info("PoS synchronisation #%d finished", sync_token)
+        return pos_order_ids.read_pos_data(orders, config_id)
+
+    def read_pos_data(self, data, config_id):
+        # If the previous session is closed, the order will get a new session_id due to _get_valid_session in _process_order
+        session_ids = set({order.get('session_id') for order in data})
+        is_new_session = any(order.get('session_id') not in session_ids for order in data)
+
         return {
-            'pos.order': pos_order_ids.read(pos_order_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
-            'pos.session': pos_order_ids.session_id._load_pos_data({})['data'] if config_id and is_new_session else [],
-            'pos.payment': pos_order_ids.payment_ids.read(pos_order_ids.payment_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
-            'pos.order.line': pos_order_ids.lines.read(pos_order_ids.lines._load_pos_data_fields(config_id), load=False) if config_id else [],
-            'pos.pack.operation.lot': pos_order_ids.lines.pack_lot_ids.read(pos_order_ids.lines.pack_lot_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
-            "product.attribute.custom.value": pos_order_ids.lines.custom_attribute_value_ids.read(pos_order_ids.lines.custom_attribute_value_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
+            'pos.order': self.read(self._load_pos_data_fields(config_id), load=False) if config_id else [],
+            'pos.session': self.session_id._load_pos_data({})['data'] if config_id and is_new_session else [],
+            'pos.payment': self.payment_ids.read(self.payment_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
+            'pos.order.line': self.lines.read(self.lines._load_pos_data_fields(config_id), load=False) if config_id else [],
+            'pos.pack.operation.lot': self.lines.pack_lot_ids.read(self.lines.pack_lot_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
+            "product.attribute.custom.value": self.lines.custom_attribute_value_ids.read(self.lines.custom_attribute_value_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
         }
 
     @api.model
