@@ -1,14 +1,51 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 
-from odoo import models, fields
+from odoo import api, fields, models
+from odoo.exceptions import ValidationError
+from odoo.tools.date_utils import sum_intervals
+from odoo.tools.intervals import Intervals
 
 
 class HrLeave(models.Model):
     _inherit = "hr.leave"
 
     l10n_in_contains_sandwich_leaves = fields.Boolean()
+
+    @api.constrains("holiday_status_id", "request_date_from", "request_date_to")
+    def _l10n_in_check_optional_holiday_request_dates(self):
+        leaves_to_check = self.filtered(lambda leave: leave.holiday_status_id.l10n_in_is_limited_to_optional_days)
+        if not leaves_to_check:
+            return
+        date_from = min(leaves_to_check.mapped("request_date_from"))
+        date_to = max(leaves_to_check.mapped("request_date_to"))
+        optional_holidays = dict(self.env["l10n.in.hr.leave.optional.holiday"]._read_group(
+            domain=[("date", ">=", date_from), ("date", "<=", date_to)],
+            groupby=["date:day"],
+            aggregates=["__count"],
+        ))
+        optional_holidays_intervals = Intervals([(
+                datetime.combine(date, time.min),
+                datetime.combine(date, time.max),
+                self.env['l10n.in.hr.leave.optional.holiday']
+            )
+            for date in optional_holidays
+        ])
+        invalid_leaves = []
+        for leave in leaves_to_check:
+            leave_intervals = Intervals([(
+                    datetime.combine(leave.request_date_from, time.min),
+                    datetime.combine(leave.request_date_to, time.max),
+                    self.env['l10n.in.hr.leave.optional.holiday']
+                )])
+            common_intervals = leave_intervals & optional_holidays_intervals
+            if round(sum_intervals(common_intervals), 2) != round(sum_intervals(leave_intervals), 2):
+                invalid_leaves.append(leave.display_name)
+        if invalid_leaves:
+            raise ValidationError(
+                self.env._("The following leaves are not on Optional Holidays:\n - %s", "\n - ".join(invalid_leaves))
+            )
 
     def _l10n_in_apply_sandwich_rule(self, public_holidays, employee_leaves):
         self.ensure_one()
