@@ -4,6 +4,7 @@ import { CommentPlugin } from "./core/comment_plugin";
 import { DeletePlugin } from "./core/delete_plugin";
 import { DialogPlugin } from "./core/dialog_plugin";
 import { DomPlugin } from "./core/dom_plugin";
+import { SeparatorPlugin } from "./main/separator_plugin";
 import { FormatPlugin } from "./core/format_plugin";
 import { HistoryPlugin } from "./core/history_plugin";
 import { InputPlugin } from "./core/input_plugin";
@@ -126,6 +127,7 @@ export const MAIN_PLUGINS = [
     BannerPlugin,
     ChatGPTPlugin,
     ColorPlugin,
+    SeparatorPlugin,
     ColumnPlugin,
     EmojiPlugin,
     HintPlugin,
