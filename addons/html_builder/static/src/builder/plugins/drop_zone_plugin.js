@@ -10,6 +10,27 @@ function filterFunction(el, exclude) {
     return true;
 }
 
+/**
+ * Ensures that `element` will be visible in its `scrollable`.
+ *
+ * @param {HTMLElement} element
+ * @param {object} options
+ * @param {string} [options.behavior] "smooth", "instant", "auto" <=> undefined
+ *        @url https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollTo#behavior
+ * @param {number} [options.offset] applies a vertical offset
+ */
+export function scrollToWindow(element, { behavior, offset } = {}) {
+    const topOffset = 50;
+    const window = element.ownerDocument.defaultView;
+    const top = element.getBoundingClientRect().top + window.scrollY - topOffset;
+
+    const prom = new Promise((resolve) => {
+        window.addEventListener("scrollend", () => resolve(), { once: true });
+    });
+    window.scrollTo({ top, behavior });
+    return prom;
+}
+
 export class DropZonePlugin extends Plugin {
     static id = "dropzone";
     static dependencies = ["history"];
@@ -141,6 +162,7 @@ export class DropZonePlugin extends Plugin {
         this.clearDropZone();
         return (elementToAdd) => {
             addAfter ? target.after(elementToAdd) : target.before(elementToAdd);
+            scrollToWindow(elementToAdd, { behavior: "smooth", offset: 50 });
             this.dependencies.history.addStep();
         };
     }
