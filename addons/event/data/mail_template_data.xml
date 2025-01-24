@@ -27,7 +27,8 @@
                 <tr><td valign="middle">
                     <span style="font-size: 10px;">Your registration</span><br/>
                     <span style="font-size: 20px; font-weight: bold;">
-                        <t t-out="object.name or 'Guest'"/>
+                        <t t-set="default_name">Guest</t>
+                        <t t-out="object.name or default_name"/>
                     </span>
                 </td><td valign="middle" align="right">
                     <a t-attf-href="/event/{{ object.event_id.id }}/my_tickets?badge_mode=1&amp;registration_ids={{ registration_ids }}&amp;tickets_hash={{ object.event_id._get_tickets_access_hash(registration_ids) }}"
@@ -50,7 +51,8 @@
             <table width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
                 <tr><td valign="top" style="font-size: 14px;">
                     <div>
-                        Hello <t t-out="object.name or 'Guest'"/>,<br/><br/>
+                        <t t-set="default_name">Guest</t>
+                        Hello <t t-out="object.name or default_name"/>,<br/><br/>
                         Please find attached your badge for
                         <t t-if="is_online">
                             <a t-att-href="object.event_id.website_url" style="font-weight:bold;color:#875A7B;text-decoration:none;" t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</a>
@@ -269,7 +271,8 @@
                 <tr><td valign="middle">
                     <span style="font-size: 10px;">Your registration</span><br/>
                     <span style="font-size: 20px; font-weight: bold;">
-                        <t t-out="object.name or 'Guest'"/>
+                        <t t-set="default_name">Guest</t>
+                        <t t-out="object.name or default_name"/>
                     </span>
                     <div style="margin-bottom: 5px;margin-top: 18px;">
                         <a t-attf-href="/event/{{ object.event_id.id }}/my_tickets?registration_ids={{ registration_ids }}&amp;tickets_hash={{ object.event_id._get_tickets_access_hash(registration_ids) }}&amp;responsive_html=1"
@@ -299,7 +302,8 @@
             <table width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
                 <tr><td valign="top" style="font-size: 14px;">
                     <div>
-                        Hello <t t-out="object.name or 'Guest'"/>,<br/><br/>
+                        <t t-set="default_name">Guest</t>
+                        Hello <t t-out="object.name or default_name"/>,<br/><br/>
                         We are happy to confirm your registration to the event
                         <t t-if="is_online">
                             <a t-att-href="object.event_id.website_url" style="color:#875A7B;text-decoration:none;font-weight:bold;" t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</a>
@@ -527,7 +531,8 @@
             <table width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
                 <tr><td valign="middle">
                     <span style="font-size: 10px;">Your registration</span><br/>
-                    <span style="font-size: 20px; font-weight: bold;" t-out="object.name or 'Guest'"/>
+                    <t t-set="default_name">Guest</t>
+                    <span style="font-size: 20px; font-weight: bold;" t-out="object.name or default_name"/>
                     <div style="margin-bottom: 5px;margin-top: 18px;">
                         <a t-attf-href="/event/{{ object.event_id.id }}/my_tickets?registration_ids={{ registration_ids }}&amp;tickets_hash={{ object.event_id._get_tickets_access_hash(registration_ids) }}&amp;responsive_html=1"
                             target="_blank" style="padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px">
@@ -556,7 +561,8 @@
             <table width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
                 <tr><td valign="top" style="font-size: 14px;">
                     <div>
-                        Hello <t t-out="object.name or 'Guest'"/>,<br/><br/>
+                        <t t-set="default_name">Guest</t>
+                        Hello <t t-out="object.name or default_name"/>,<br/><br/>
                         We are excited to remind you that the event
                         <t t-if="is_online">
                             <a t-att-href="object.event_id.website_url" style="font-weight:bold;color:#875A7B;text-decoration:none;" t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</a>

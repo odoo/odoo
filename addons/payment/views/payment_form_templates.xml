@@ -189,13 +189,13 @@
                                 <t t-if="is_unpublished" t-call="payment.form_icon">
                                     <t t-set="icon_name" t-value="'eye-slash'"/>
                                     <t t-set="color_name" t-value="'danger'"/>
-                                    <t t-set="title" t-value="'Unpublished'"/>
+                                    <t t-set="title">Unpublished</t>
                                 </t>
                                 <!-- === "Test mode" icon === -->
                                 <t t-if="is_test" t-call="payment.form_icon">
                                     <t t-set="icon_name" t-value="'exclamation-triangle'"/>
                                     <t t-set="color_name" t-value="'warning'"/>
-                                    <t t-set="title" t-value="'Test mode'"/>
+                                    <t t-set="title">Test mode</t>
                                 </t>
                             </div>
                         </div>
@@ -291,13 +291,13 @@
                             <t t-if="is_unpublished" t-call="payment.form_icon">
                                 <t t-set="icon_name" t-value="'eye-slash'"/>
                                 <t t-set="color_name" t-value="'danger'"/>
-                                <t t-set="title" t-value="'Unpublished'"/>
+                                <t t-set="title">Unpublished</t>
                             </t>
                             <!-- === "Test mode" icon === -->
                             <t t-if="is_test" t-call="payment.form_icon">
                                 <t t-set="icon_name" t-value="'exclamation-triangle'"/>
                                 <t t-set="color_name" t-value="'warning'"/>
-                                <t t-set="title" t-value="'Test mode'"/>
+                                <t t-set="title">Test mode</t>
                             </t>
                         </div>
                     </div>

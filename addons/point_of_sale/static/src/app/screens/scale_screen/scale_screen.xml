@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.ScaleScreen">
-        <Dialog size="'md'" title="props.product?.display_name || 'Unnamed Product'">
+        <Dialog size="'md'" title="productName">
             <t t-set-slot="header">
                 <t t-if="this.env.isSmall">
                     <button class="btn oi oi-arrow-left" data-bs-dismiss="modal" aria-label="Close" t-on-click="props.close" />
                 </t>
                 <h4 class="modal-title text-break text-center w-100" t-att-class="{ 'me-auto': this.env.isSmall }">
-                    <t t-esc="props.productName || 'Unnamed Product'"/>
+                    <t t-set="defaultProductName">Unnamed Product</t>
+                    <t t-esc="props.productName || defaultProductName"/>
                 </h4>
                 <t t-if="!this.env.isSmall">
                     <button type="button" class="btn-close" aria-label="Close" tabindex="-1" t-on-click="props.close"></button>
