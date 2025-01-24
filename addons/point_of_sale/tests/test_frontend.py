@@ -616,6 +616,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         last_order = self.env['pos.order'].search([], limit=1, order="id desc")
         self.assertEqual(last_order.lines[0].price_subtotal, 30.0)
         self.assertEqual(last_order.lines[0].price_subtotal_incl, 30.0)
+        # Check if session name contains config name as prefix
+        self.assertEqual(self.main_pos_config.name in last_order.session_id.name, True)
 
     def test_04_product_configurator(self):
         # Making one attribute inactive to verify that it doesn't show

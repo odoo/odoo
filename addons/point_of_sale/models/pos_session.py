@@ -1694,7 +1694,7 @@ class PosSession(models.Model):
     def set_opening_control(self, cashbox_value: int, notes: str):
         self.state = 'opened'
         self.start_at = fields.Datetime.now()
-        self.name = self.env['ir.sequence'].with_context(
+        self.name = self.config_id.name + self.env['ir.sequence'].with_context(
             company_id=self.config_id.company_id.id
         ).next_by_code('pos.session') + (self.name if self.name != '/' else '')
 
