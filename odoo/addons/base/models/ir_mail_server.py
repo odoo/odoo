@@ -617,7 +617,11 @@ class IrMail_Server(models.Model):
         if attachments:
             for (fname, fcontent, mime) in attachments:
                 maintype, subtype = mime.split('/') if mime and '/' in mime else ('application', 'octet-stream')
-                msg.add_attachment(fcontent, maintype, subtype, filename=fname)
+                if maintype == 'message' and subtype == 'rfc822':
+                    #  Use binary encoding for "message/rfc822" attachments (see RFC 2046 Section 5.2.1)
+                    msg.add_attachment(fcontent, maintype, subtype, filename=fname, cte='binary')
+                else:
+                    msg.add_attachment(fcontent, maintype, subtype, filename=fname)
         return msg
 
     @api.model
