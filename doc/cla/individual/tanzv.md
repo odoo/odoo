@@ -1,4 +1,4 @@
-China, 2015-01-25
+India, 2020-08-21
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Andrey Troitskiy troizky@mail.ru https://github.com/troizky
+Sudhir Arya zkind@foxmail.com https://github.com/tanzv
