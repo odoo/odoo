@@ -46,6 +46,7 @@ class TestGSTStatusFeature(TransactionCase):
                 "error": [{"code": "FO8000", "message": "No records found for the provided GSTIN."}],
             },
         }
+        self.env.company.account_fiscal_country_id = self.env.ref("base.in")
 
     @freeze_time('2024-05-20')
     @mute_logger('odoo.addons.l10n_in_gstin_status.models.res_partner')
