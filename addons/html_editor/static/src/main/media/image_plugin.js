@@ -2,7 +2,7 @@ import { Plugin } from "../../plugin";
 import { _t } from "@web/core/l10n/translation";
 import { isImageUrl } from "@html_editor/utils/url";
 import { ImageDescription } from "./image_description";
-import { ImagePadding } from "./image_padding";
+import { ImageToolbarDropdown } from "./image_toolbar_dropdown";
 import { createFileViewer } from "@web/core/file_viewer/file_viewer_hook";
 import { boundariesOut } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
@@ -10,10 +10,26 @@ import { ImageTransformButton } from "./image_transform_button";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { fillEmpty } from "@html_editor/utils/dom";
+import { reactive } from "@odoo/owl";
 
 function hasShape(imagePlugin, shapeName) {
     return () => imagePlugin.isSelectionShaped(shapeName);
 }
+
+const IMAGE_PADDING = [
+    { name: "None", value: 0 },
+    { name: "Small", value: 1 },
+    { name: "Medium", value: 2 },
+    { name: "Large", value: 3 },
+    { name: "XL", value: 5 },
+];
+
+const IMAGE_SIZE = [
+    { name: "Default", value: "" },
+    { name: "100%", value: "100%" },
+    { name: "50%", value: "50%" },
+    { name: "25%", value: "25%" },
+];
 
 export class ImagePlugin extends Plugin {
     static id = "image";
@@ -122,49 +138,34 @@ export class ImagePlugin extends Plugin {
                 id: "image_padding",
                 groupId: "image_padding",
                 title: _t("Image padding"),
-                Component: ImagePadding,
+                Component: ImageToolbarDropdown,
                 props: {
-                    onSelected: this.setImagePadding.bind(this),
+                    name: "image_padding",
+                    icon: "html_editor.ImagePaddingIcon",
+                    items: IMAGE_PADDING,
+                    onSelected: (item) => {
+                        this.setImagePadding({ size: item.value });
+                    },
                 },
             },
             {
-                id: "resize_default",
+                id: "image_size",
                 groupId: "image_size",
-                commandId: "resizeImage",
-                title: _t("Resize Default"),
-                text: _t("Default"),
-                isActive: () => this.hasImageSize(""),
-            },
-            {
-                id: "resize_100",
-                groupId: "image_size",
-                commandId: "resizeImage",
-                commandParams: { size: "100%" },
-                title: _t("Resize Full"),
-                text: "100%",
-                isActive: () => this.hasImageSize("100%"),
-            },
-            {
-                id: "resize_50",
-                groupId: "image_size",
-                commandId: "resizeImage",
-                commandParams: { size: "50%" },
-                title: _t("Resize Half"),
-                text: "50%",
-                isActive: () => this.hasImageSize("50%"),
-            },
-            {
-                id: "resize_25",
-                groupId: "image_size",
-                commandId: "resizeImage",
-                commandParams: { size: "25%" },
-                title: _t("Resize Quarter"),
-                text: "25%",
-                isActive: () => this.hasImageSize("25%"),
+                title: _t("Image size"),
+                Component: ImageToolbarDropdown,
+                props: {
+                    name: "image_size",
+                    items: IMAGE_SIZE,
+                    getDisplay: () => this.imageSize,
+                    onSelected: (item) => {
+                        this.resizeImage({ size: item.value });
+                        this.updateImageParams();
+                    },
+                },
             },
             {
                 id: "image_transform",
-                groupId: "image_transform",
+                groupId: "image_modifiers",
                 title: _t("Transform the picture (click twice to reset transformation)"),
                 Component: ImageTransformButton,
                 props: this.getImageTransformProps(),
@@ -176,9 +177,13 @@ export class ImagePlugin extends Plugin {
             },
         ],
         paste_url_overrides: this.handlePasteUrl.bind(this),
+        selectionchange_handlers: this.updateImageParams.bind(this),
+        post_undo_handlers: this.updateImageParams.bind(this),
+        post_redo_handlers: this.updateImageParams.bind(this),
     };
 
     setup() {
+        this.imageSize = reactive({ displayName: "" });
         this.addDomListener(this.editable, "dblclick", (e) => {
             if (e.target.tagName === "IMG") {
                 this.previewImage();
@@ -197,6 +202,22 @@ export class ImagePlugin extends Plugin {
             }
         });
         this.fileViewer = createFileViewer();
+    }
+
+    get imageSizeName() {
+        const selectedImg = this.getSelectedImage();
+        if (!selectedImg) {
+            return "Default";
+        }
+        if (selectedImg.style.width === "100%") {
+            return "100%";
+        } else if (selectedImg.style.width === "50%") {
+            return "50%";
+        } else if (selectedImg.style.width === "25%") {
+            return "25%";
+        } else {
+            return "Default";
+        }
     }
 
     destroy() {
@@ -350,5 +371,9 @@ export class ImagePlugin extends Plugin {
             editable: this.editable,
             activeTitle: _t("Click again to reset transformation"),
         };
+    }
+
+    updateImageParams() {
+        this.imageSize.displayName = this.imageSizeName;
     }
 }
