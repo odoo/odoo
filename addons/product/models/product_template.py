@@ -455,6 +455,21 @@ class ProductTemplate(models.Model):
             self.purchase_ok = False
         return {}
 
+    @api.onchange('uom_id')
+    def _onchange_uom_id(self):
+        if self._origin.uom_id == self.uom_id or not self.with_context(active_test=False).product_variant_ids._trigger_uom_warning():
+            return
+        message = _(
+            'Changing the unit of measure for your product will apply a conversion 1 %(old_uom_name)s = 1 %(new_uom_name)s.\n'
+            'All existing records (Sales orders, Purchase orders, etc.) using this product will be updated by replacing the unit name.',
+            old_uom_name=self._origin.uom_id.display_name, new_uom_name=self.uom_id.display_name)
+        return {
+            'warning': {
+                'title': _('What to expect ?'),
+                'message': message,
+            }
+        }
+
     @api.constrains('type', 'combo_ids')
     def _check_combo_ids_not_empty(self):
         for template in self:
@@ -498,6 +513,9 @@ class ProductTemplate(models.Model):
         return templates
 
     def write(self, vals):
+        if 'uom_id' in vals:
+            products = self.filtered(lambda template: template.uom_id.id != vals['uom_id']).product_variant_ids
+            products.with_context(skip_uom_conversion=True)._update_uom(vals['uom_id'])
         res = super(ProductTemplate, self).write(vals)
         if self._context.get("create_product_product", True) and 'attribute_line_ids' in vals or (vals.get('active') and len(self.product_variant_ids) == 0):
             self._create_variant_ids()
