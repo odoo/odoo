@@ -50,6 +50,20 @@ class SaleOrder(models.Model):
                 zip_code = None  # Reset the zip code to skip the `assert` in the `super` call.
         return super()._get_pickup_locations(zip_code=zip_code, country=country, **kwargs)
 
+    def _get_cart_and_free_qty(self, product, line=None):
+        """ Override of `website_sale_stock` to get free_qty of the product from the warehouse that
+        was chosen rather than website's one.
+
+        :param product.product product: The product
+        :param sale.order.line line: The optional line
+        """
+        cart_qty, free_qty = super()._get_cart_and_free_qty(product, line=line)
+        if self.carrier_id.delivery_type == 'in_store':
+            free_qty = (product or line.product_id).with_context(
+                warehouse_id=self.warehouse_id.id
+            ).free_qty
+        return cart_qty, free_qty
+
     def _check_cart_is_ready_to_be_paid(self):
         """ Override of `website_sale` to check if all products are in stock in the selected
         warehouse. """
