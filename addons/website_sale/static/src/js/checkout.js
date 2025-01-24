@@ -282,6 +282,11 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
         const amountTotal = document.querySelectorAll(
             '#order_total .monetary_field, #amount_total_summary.monetary_field'
         );
+        // When no dm is set and a price span is hidden, hide the message and show the price span.
+        if (amountDelivery.classList.contains('d-none')) {
+            document.querySelector('#message_no_dm_set').classList.add('d-none');
+            amountDelivery.classList.remove('d-none');
+        }
         amountDelivery.innerHTML = result.amount_delivery;
         amountUntaxed.innerHTML = result.amount_untaxed;
         amountTax.innerHTML = result.amount_tax;

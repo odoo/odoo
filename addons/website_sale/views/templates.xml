@@ -2478,20 +2478,23 @@
         <div id="cart_total" t-if="website_sale_order and website_sale_order.website_order_line" t-att-class="_cart_total_classes">
             <table class="table mb-0">
                 <tr
-                    t-if="website_sale_order._has_deliverable_products() and website_sale_order.carrier_id"
+                    t-if="website_sale_order._has_deliverable_products()"
                     id="order_delivery"
                 >
-                    <td
-                        class="ps-0 pt-0 pb-2 border-0 text-muted"
-                        colspan="2"
-                        title="Delivery will be updated after choosing a new delivery method"
-                    >
+                    <td class="ps-0 pt-0 pb-2 border-0 text-muted" colspan="2">
                         Delivery
                     </td>
                     <td class="text-end pe-0 pt-0 pb-2 border-0">
                         <span
+                            id="message_no_dm_set"
+                            t-att-class="'d-none' if website_sale_order.carrier_id else ''"
+                            title="Price will be updated after choosing a delivery method"
+                        >
+                            -
+                        </span>
+                        <span
                             t-out="website_sale_order.amount_delivery"
-                            class="monetary_field"
+                            t-att-class="'monetary_field' + ('' if website_sale_order.carrier_id else ' d-none')"
                             style="white-space: nowrap;"
                             t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"
                         />
