@@ -6,7 +6,7 @@ import { floatIsZero } from "@web/core/utils/numbers";
 import { renderToElement } from "@web/core/utils/render";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { deduceUrl, random5Chars, uuidv4 } from "@point_of_sale/utils";
+import { deduceUrl, lte, random5Chars, uuidv4 } from "@point_of_sale/utils";
 import { Reactive } from "@web/core/utils/reactive";
 import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 import { ConnectionLostError } from "@web/core/network/rpc";
@@ -2150,6 +2150,21 @@ export class PosStore extends Reactive {
                 (p) => p.raw.product_tmpl_id === product.raw.product_tmpl_id
             ).length > 1
         );
+    }
+
+    getPaymentMethodDisplayText(pm, order) {
+        const { cash_rounding, only_round_cash_method } = this.config;
+        const amount = order.getDefaultAmountDueToPayIn(pm);
+        const fmtAmount = this.env.utils.formatCurrency(amount, false);
+        if (
+            lte(amount, 0, { decimals: this.currency.decimal_places }) ||
+            !cash_rounding ||
+            (only_round_cash_method && pm.type !== "cash")
+        ) {
+            return pm.name;
+        } else {
+            return `${pm.name} (${fmtAmount})`;
+        }
     }
 }
 

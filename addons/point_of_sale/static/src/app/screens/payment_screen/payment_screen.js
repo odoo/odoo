@@ -272,12 +272,6 @@ export class PaymentScreen extends Component {
             for (const line of toRemove) {
                 this.currentOrder.remove_paymentline(line);
             }
-
-            const cash = this.payment_methods_from_config.find((pm) => pm.is_cash_count);
-            if (this.currentOrder.get_due() > 0 && this.pos.config.cash_rounding && cash) {
-                this.currentOrder.add_paymentline(cash, 0);
-            }
-
             await this._finalizeValidation();
         }
     }
