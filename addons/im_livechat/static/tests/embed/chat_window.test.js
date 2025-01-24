@@ -2,8 +2,25 @@ import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
 } from "@im_livechat/../tests/livechat_test_helpers";
+<<<<<<< saas-18.1
 import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
 
+||||||| 7e25dff5672f0aadc12a5ba4312b0eacb34e278e
+import { describe, test } from "@odoo/hoot";
+import { deserializeDateTime } from "@web/core/l10n/dates";
+import { getOrigin } from "@web/core/utils/urls";
+import { mountWithCleanup, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+=======
+import { describe, test } from "@odoo/hoot";
+import { deserializeDateTime } from "@web/core/l10n/dates";
+import { getOrigin } from "@web/core/utils/urls";
+import {
+    Command,
+    mountWithCleanup,
+    patchWithCleanup,
+    serverState,
+} from "@web/../tests/web_test_helpers";
+>>>>>>> 811ecc766a71a93b4255ca356c508a8d8770a7b6
 import {
     assertChatHub,
     click,
@@ -11,10 +28,13 @@ import {
     inputFiles,
     insertText,
     onRpcBefore,
+    patchUiSize,
+    SIZES,
     start,
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
+import { expirableStorage } from "@im_livechat/embed/common/expirable_storage";
 
 import { describe, test } from "@odoo/hoot";
 
@@ -119,6 +139,7 @@ test("avatar url contains access token for non-internal users", async () => {
     );
 });
 
+<<<<<<< saas-18.1
 test("can close confirm livechat with keyboard", async () => {
     await startServer();
     await loadDefaultEmbedConfig();
@@ -147,4 +168,37 @@ test("can close confirm livechat with keyboard", async () => {
     await triggerHotkey("Enter");
     await waitForSteps(["/im_livechat/visitor_leave_session"]);
     await contains(".o-mail-ChatWindow", { text: "Did we correctly answer your question?" });
+||||||| 7e25dff5672f0aadc12a5ba4312b0eacb34e278e
+=======
+test("livechat is shown as bubble on page reload", async () => {
+    const pyEnv = await startServer();
+    const livechatChannelId = await loadDefaultEmbedConfig();
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ guest_id: guestId, fold_state: "open" }),
+        ],
+        channel_type: "livechat",
+        livechat_active: true,
+        livechat_channel_id: livechatChannelId,
+        livechat_operator_id: serverState.partnerId,
+    });
+    expirableStorage.setItem(
+        "im_livechat.saved_state",
+        JSON.stringify({
+            store: { "discuss.channel": [{ id: channelId }] },
+            persisted: true,
+            livechatUserId: serverState.publicUserId,
+        })
+    );
+
+    pyEnv["res.partner"].write(serverState.partnerId, { user_livechat_username: "MitchellOp" });
+    patchUiSize({ size: SIZES.SM });
+    await start({
+        authenticateAs: { ...pyEnv["mail.guest"].read(guestId)[0], _name: "mail.guest" },
+    });
+    await click(".o-mail-ChatBubble");
+    await contains(".o-mail-ChatWindow-header", { text: "MitchellOp" });
+>>>>>>> 811ecc766a71a93b4255ca356c508a8d8770a7b6
 });

@@ -40,6 +40,7 @@ export class Thread extends Record {
     static insert(data) {
         return super.insert(...arguments);
     }
+<<<<<<< saas-18.1
     static async getOrFetch(data, fieldNames = []) {
         let thread = this.get(data);
         if (
@@ -54,8 +55,46 @@ export class Thread extends Record {
             thread = this.get(data);
             if (!thread.exists() || !thread.hasReadAccess) {
                 return;
+||||||| 7e25dff5672f0aadc12a5ba4312b0eacb34e278e
+    static new() {
+        const thread = super.new(...arguments);
+        Record.onChange(thread, ["state"], () => {
+            if (thread.state === "open" && !this.store.env.services.ui.isSmall) {
+                const cw = this.store.ChatWindow?.insert({ thread });
+                thread.store.chatHub.opened.delete(cw);
+                thread.store.chatHub.opened.unshift(cw);
+=======
+    static new() {
+        const thread = super.new(...arguments);
+        Record.onChange(thread, ["state"], () => {
+            if (
+                thread.state === "folded" ||
+                (thread.state === "open" &&
+                    this.store.env.services.ui.isSmall &&
+                    this.store.env.services["im_livechat.livechat"])
+            ) {
+                const cw = this.store.ChatWindow?.insert({ thread });
+                thread.store.chatHub.folded.delete(cw);
+                thread.store.chatHub.folded.unshift(cw);
             }
+            if (thread.state === "open" && !this.store.env.services.ui.isSmall) {
+                const cw = this.store.ChatWindow?.insert({ thread });
+                thread.store.chatHub.opened.delete(cw);
+                thread.store.chatHub.opened.unshift(cw);
+>>>>>>> 811ecc766a71a93b4255ca356c508a8d8770a7b6
+            }
+<<<<<<< saas-18.1
         }
+||||||| 7e25dff5672f0aadc12a5ba4312b0eacb34e278e
+            if (thread.state === "folded") {
+                const cw = this.store.ChatWindow?.insert({ thread });
+                thread.store.chatHub.folded.delete(cw);
+                thread.store.chatHub.folded.unshift(cw);
+            }
+        });
+=======
+        });
+>>>>>>> 811ecc766a71a93b4255ca356c508a8d8770a7b6
         return thread;
     }
 
