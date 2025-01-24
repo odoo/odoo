@@ -1,6 +1,9 @@
 import * as SelectionPopup from "@point_of_sale/../tests/generic_helpers/selection_popup_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_popup_util";
+import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
+import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
+import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 
 export function clickLoginButton() {
     return [
@@ -55,5 +58,31 @@ export function refreshPage() {
                 window.location.reload();
             },
         },
+    ];
+}
+
+export function editCreateProductFlow(access = true) {
+    return [
+        ProductScreen.clickInfoProduct("Desk Pad", "1"),
+        {
+            trigger: access
+                ? `.modal .modal-footer .btn-secondary:contains("Edit")`
+                : negate(`.modal .modal-footer .btn-secondary:contains("Edit")`),
+        },
+        Dialog.cancel(),
+        Chrome.clickMenuButton(),
+        {
+            trigger: access
+                ? `span.dropdown-item:contains("Create Product")`
+                : negate(`span.dropdown-item:contains("Create Product")`),
+        },
+    ];
+}
+
+export function testUserAccess(employeeName, hasAccess) {
+    return [
+        clickCashierName(),
+        SelectionPopup.has(employeeName, { run: "click" }),
+        ...editCreateProductFlow(hasAccess),
     ];
 }

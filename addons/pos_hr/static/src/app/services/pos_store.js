@@ -137,10 +137,9 @@ patch(PosStore.prototype, {
         }
         return super.shouldShowOpeningControl(...arguments);
     },
-    async allowProductCreation() {
-        if (this.config.module_pos_hr) {
-            return this.employeeIsAdmin;
-        }
-        return await super.allowProductCreation();
+    allowProductCreation() {
+        return this.config.module_pos_hr
+            ? this.cashier._role === "manager" && super.allowProductCreation()
+            : super.allowProductCreation();
     },
 });

@@ -3,6 +3,8 @@ import { patch } from "@web/core/utils/patch";
 
 patch(ProductInfoPopup.prototype, {
     get allowProductEdition() {
-        return !this.pos.config.module_pos_hr || this.pos.employeeIsAdmin;
+        return this.pos.config.module_pos_hr
+            ? this.pos.cashier._role === "manager" && super.allowProductEdition
+            : super.allowProductEdition;
     },
 });

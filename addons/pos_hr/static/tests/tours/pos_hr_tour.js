@@ -181,3 +181,33 @@ registry.category("web_tour.tours").add("test_change_on_rights_reflected_directl
             Utils.negateStep(...SelectionPopup.has("Pos Employee1")),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("UserEditOrCreateProduct", {
+    steps: () =>
+        [
+            Chrome.clickBtn("Open Register"),
+            PosHr.loginScreenIsShown(),
+            PosHr.clickLoginButton(),
+            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            Dialog.confirm("Open Register"),
+            ...PosHr.editCreateProductFlow(true),
+            ...PosHr.testUserAccess("Pos Employee1", false),
+            ...PosHr.testUserAccess("Test Employee 3", false),
+            ProductScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("UserEditOrCreateProduct2", {
+    steps: () =>
+        [
+            Chrome.clickBtn("Open Register"),
+            PosHr.loginScreenIsShown(),
+            PosHr.clickLoginButton(),
+            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            Dialog.confirm("Open Register"),
+            ...PosHr.editCreateProductFlow(false),
+            ...PosHr.testUserAccess("Pos Employee1", false),
+            ...PosHr.testUserAccess("Test Employee 3", false),
+            ProductScreen.isShown(),
+        ].flat(),
+});

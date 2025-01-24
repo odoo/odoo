@@ -136,6 +136,8 @@ export class PosStore extends WithLazyGetterTrap {
         });
         this.scale = pos_scale;
 
+        this.isProductCreation = await user.hasGroup("product.group_product_manager");
+        this.isPOSManager = await user.hasGroup("point_of_sale.group_pos_manager");
         this.orderCounter = new Counter(0);
 
         // FIXME POSREF: the hardwareProxy needs the pos and the pos needs the hardwareProxy. Maybe
@@ -1821,8 +1823,8 @@ export class PosStore extends WithLazyGetterTrap {
             }
         );
     }
-    async allowProductCreation() {
-        return await user.hasGroup("base.group_system");
+    allowProductCreation() {
+        return this.isPOSManager ? true : this.isProductCreation;
     }
     orderDetailsProps(order) {
         return {

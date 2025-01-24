@@ -9,13 +9,12 @@ import {
     SaleDetailsButton,
     handleSaleDetails,
 } from "@point_of_sale/app/components/navbar/sale_details_button/sale_details_button";
-import { Component, onMounted, useState, useExternalListener } from "@odoo/owl";
+import { Component, useState, useExternalListener } from "@odoo/owl";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
 import { barcodeService } from "@barcodes/barcode_service";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { user } from "@web/core/user";
 import { OrderTabs } from "@point_of_sale/app/components/order_tabs/order_tabs";
 import { PresetSlotsPopup } from "@point_of_sale/app/components/popups/preset_slots_popup/preset_slots_popup";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
@@ -51,9 +50,6 @@ export class Navbar extends Component {
         this.isBarcodeScannerSupported = isBarcodeScannerSupported;
         this.timeout = null;
         this.bufferedInput = "";
-        onMounted(async () => {
-            this.isSystemUser = await user.hasGroup("base.group_system");
-        });
         useExternalListener(document, "keydown", this.handleKeydown.bind(this));
     }
 
@@ -152,7 +148,7 @@ export class Navbar extends Component {
     }
 
     get showCreateProductButton() {
-        return this.isSystemUser;
+        return this.pos.allowProductCreation();
     }
 
     get shouldDisplayPresetTime() {
