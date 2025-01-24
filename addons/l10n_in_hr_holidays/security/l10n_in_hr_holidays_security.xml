@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_leave_optional_holiday_rule_multi_company" model="ir.rule">
+        <field name="name">Optional Holiday: multi company rule</field>
+        <field name="model_id" ref="model_l10n_in_hr_leave_optional_holiday"/>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+</odoo>
