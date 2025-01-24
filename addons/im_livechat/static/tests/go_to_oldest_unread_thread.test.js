@@ -1,4 +1,5 @@
 import {
+    click,
     contains,
     focus,
     insertText,
@@ -9,9 +10,12 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
+import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
+import { animationFrame, press } from "@odoo/hoot-dom";
 import { describe, test } from "@odoo/hoot";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { defineLivechatModels } from "./livechat_test_helpers";
+import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -90,6 +94,108 @@ test("tab on discuss composer goes to oldest unread livechat", async () => {
     await contains(".o-active .o-mail-DiscussSidebar-badge", { count: 0 });
     triggerHotkey("Tab");
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Visitor 12" });
+});
+
+test("Tab livechat picks ended livechats last", async () => {
+    const pyEnv = await startServer();
+    const guestIds = pyEnv["mail.guest"].create([
+        { name: "Visitor 0" },
+        { name: "Visitor 1" },
+        { name: "Visitor 2" },
+        { name: "Visitor 3" },
+        { name: "Visitor 4" },
+    ]);
+    const livechatChannelId = pyEnv["im_livechat.channel"].create({
+        name: "Test",
+        user_ids: [serverState.userId],
+    });
+    const channelIds = pyEnv["discuss.channel"].create(
+        guestIds.map((guestId) => ({
+            channel_type: "livechat",
+            channel_member_ids: [
+                Command.create({
+                    partner_id: serverState.partnerId,
+                    last_interest_dt: "2021-01-02 10:00:00",
+                }),
+                Command.create({ guest_id: guestId }),
+            ],
+            livechat_active: true,
+            livechat_channel_id: livechatChannelId,
+            livechat_operator_id: serverState.partnerId,
+            create_uid: serverState.publicUserId,
+        }))
+    );
+    patchUiSize({ width: 1920 });
+    setupChatHub({ folded: [channelIds[0], channelIds[1], channelIds[2], channelIds[3]] });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem", { text: "Visitor 4" });
+    await contains(".o-mail-ChatWindow", { text: "Visitor 4" });
+    await contains(".o-mail-Composer-input[placeholder='Message Visitor 4…']:focus");
+    await withGuest(guestIds[1], () =>
+        rpc("/mail/message/post", {
+            post_data: {
+                body: "livechat 1",
+                message_type: "comment",
+                subtype_xmlid: "mail.mt_comment",
+            },
+            thread_id: channelIds[1],
+            thread_model: "discuss.channel",
+        })
+    );
+    await withGuest(guestIds[1], () =>
+        rpc("/im_livechat/visitor_leave_session", { channel_id: channelIds[1] })
+    );
+    await withGuest(guestIds[3], () =>
+        rpc("/mail/message/post", {
+            post_data: {
+                body: "livechat 3",
+                message_type: "comment",
+                subtype_xmlid: "mail.mt_comment",
+            },
+            thread_id: channelIds[3],
+            thread_model: "discuss.channel",
+        })
+    );
+    await contains(".o-mail-ChatBubble-counter", { text: "1", count: 2 });
+    await press("Tab");
+    await contains(".o-mail-ChatWindow", { count: 2 });
+    await contains(".o-mail-ChatWindow", { text: "Visitor 3" });
+    await contains(".o-mail-Composer-input[placeholder='Message Visitor 3…']:focus");
+    await withGuest(guestIds[0], () =>
+        rpc("/mail/message/post", {
+            post_data: {
+                body: "livechat 0",
+                message_type: "comment",
+                subtype_xmlid: "mail.mt_comment",
+            },
+            thread_id: channelIds[0],
+            thread_model: "discuss.channel",
+        })
+    );
+    await contains(".o-mail-ChatBubble-counter", { text: "1", count: 2 });
+    await press("Tab");
+    await contains(".o-mail-ChatWindow", { count: 3 });
+    await contains(".o-mail-ChatWindow", { text: "Visitor 0" });
+    await withGuest(guestIds[2], () =>
+        rpc("/mail/message/post", {
+            post_data: {
+                body: "livechat 2",
+                message_type: "comment",
+                subtype_xmlid: "mail.mt_comment",
+            },
+            thread_id: channelIds[2],
+            thread_model: "discuss.channel",
+        })
+    );
+    await contains(".o-mail-ChatBubble-counter", { text: "1", count: 2 });
+    await press("Tab");
+    await contains(".o-mail-ChatWindow", { text: "Visitor 2" });
+    await animationFrame();
+    await press("Tab");
+    // Ensure the last tab selection is an ended livechat
+    await contains(".o-mail-ChatWindow", { text: "Visitor 1" });
+    await contains("span", { text: "This livechat conversation has ended" });
 });
 
 test.tags("focus required");
