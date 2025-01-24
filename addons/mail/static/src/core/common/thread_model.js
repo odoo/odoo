@@ -74,6 +74,15 @@ export class Thread extends Record {
     get canUnpin() {
         return this.channel_type === "chat" && this.importantCounter === 0;
     }
+    close_chat_window = Record.attr(undefined, {
+        /** @this {import("models").Thread} */
+        onUpdate() {
+            if (this.close_chat_window) {
+                this.closeChatWindow();
+                this.close_chat_window = undefined;
+            }
+        },
+    });
     composer = Record.one("Composer", {
         compute: () => ({}),
         inverse: "thread",

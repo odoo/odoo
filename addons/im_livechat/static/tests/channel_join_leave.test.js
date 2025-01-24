@@ -103,7 +103,6 @@ test("from chat window", async () => {
     await click("button[title*='Close Chat Window']");
     await click("button:contains('Yes, leave conversation')");
     await contains(".o-mail-ChatWindow", { count: 0 });
-    await contains(".o_notification:contains(You ended the conversation with Visitor)");
 });
 
 test("visitor leaving ends the livechat conversation", async () => {

@@ -62,6 +62,7 @@ export class DiscussChannel extends models.ServerModel {
 
         const [channel] = this.browse(ids);
         const custom_store = new mailDataHelpers.Store(this.browse(channel.id), {
+            close_chat_window: true,
             is_pinned: false,
             isLocallyPinned: false,
         });
@@ -71,7 +72,7 @@ export class DiscussChannel extends models.ServerModel {
             ["partner_id", "=", this.env.user.partner_id],
         ]);
         if (!channelMember) {
-            BusBus._sendone(partner, "discuss.channel/leave", custom_store.get_result());
+            BusBus._sendone(partner, "mail.record/insert", custom_store.get_result());
             return true;
         }
         this.write([channel.id], {
@@ -86,7 +87,7 @@ export class DiscussChannel extends models.ServerModel {
             })
         );
         // send custom store after message_post to avoid is_pinned reset to True
-        BusBus._sendone(partner, "discuss.channel/leave", custom_store.get_result());
+        BusBus._sendone(partner, "mail.record/insert", custom_store.get_result());
         const store = new mailDataHelpers.Store(this.browse(channel.id), {
             channel_member_ids: mailDataHelpers.Store.many(
                 DiscussChannelMember.browse(channelMember.id),
@@ -471,9 +472,15 @@ export class DiscussChannel extends models.ServerModel {
         }
         const [partner] = ResPartner.read(this.env.user.partner_id);
         if (!pinned) {
-            BusBus._sendone(partner, "discuss.channel/unpin", {
-                id: channel.id,
-            });
+            BusBus._sendone(
+                partner,
+                "mail.record/insert",
+                new mailDataHelpers.Store(DiscussChannel.browse(channel.id), {
+                    close_chat_window: true,
+                    id: channel.id,
+                    is_pinned: false,
+                }).get_result()
+            );
         } else {
             BusBus._sendone(
                 partner,

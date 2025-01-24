@@ -395,10 +395,11 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                         "payload": {"data": left_message_data, "id": discuss_channel.id},
                     },
                     {
-                        "type": "discuss.channel/leave",
+                        "type": "mail.record/insert",
                         "payload": {
                             "discuss.channel": [
                                 {
+                                    "close_chat_window": True,
                                     "id": discuss_channel.id,
                                     "isLocallyPinned": False,
                                     "is_pinned": False,

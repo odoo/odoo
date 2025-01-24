@@ -77,7 +77,9 @@ class DiscussChannelMember(models.Model):
         members = self.env["discuss.channel.member"].search(domain)
         members.unpin_dt = fields.Datetime.now()
         for member in members:
-            member._bus_send("discuss.channel/unpin", {"id": member.channel_id.id})
+            member._bus_send_store(
+                member.channel_id, {"close_chat_window": True, "is_pinned": False}
+            )
 
     @api.constrains('partner_id')
     def _contrains_no_public_member(self):
