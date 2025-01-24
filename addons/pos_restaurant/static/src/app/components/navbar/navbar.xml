@@ -15,7 +15,7 @@
             <attribute name="t-if">!pos.config.module_pos_restaurant</attribute>
         </xpath>
         <xpath expr="//div[hasclass('pos-leftheader')]//OrderTabs" position="after">
-            <span t-if="pos.config.module_pos_restaurant and pos.getOrder()" t-esc="pos.getOrder().getName()" class="badge rounded-pill text-bg-info py-2 fs-6 fw-bolder text-truncate"/>
+            <span t-if="pos.config.module_pos_restaurant and pos.getOrder()" t-esc="currentOrderName" class="badge rounded-pill text-bg-info py-2 fs-6 fw-bolder text-truncate"/>
         </xpath>
         <xpath expr="//button[hasclass('register-label')]" position="before">
             <button t-if="pos.config.module_pos_restaurant" class="table-button btn btn-lg btn-light lh-lg" t-att-class="{'active': mainButton === 'table', 'text-muted': this.pos.getOrder()?.isFilledDirectSale}" t-on-click="() => this.onClickPlanButton()">
