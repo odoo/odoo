@@ -3,7 +3,7 @@ import { click, press, queryOne, waitFor, waitUntil, dblclick } from "@odoo/hoot
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "./_helpers/editor";
 import { contains } from "@web/../tests/web_test_helpers";
-import { setContent } from "./_helpers/selection";
+import { getContent, setContent } from "./_helpers/selection";
 import { undo } from "./_helpers/user_actions";
 
 const base64Img =
@@ -406,6 +406,30 @@ test("Can delete an image", async () => {
     await click("button[name='image_delete']");
     await animationFrame();
     expect(".test-image").toHaveCount(0);
+});
+
+test("Deleting an image that is alone inside `p` should set selection at start of `p`", async () => {
+    const { el } = await setupEditor(`<p><img>[]</p>`);
+    await click("img");
+    await waitFor(".o-we-toolbar");
+    expect("button[name='image_delete']").toHaveCount(1);
+    await click("button[name='image_delete']");
+    await animationFrame();
+    expect(".test-image").toHaveCount(0);
+    expect(getContent(el)).toBe(
+        `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
+    );
+});
+
+test("Deleting an image that is the only content inside a <p> tag should place the selection at the start of the <p>", async () => {
+    const { el } = await setupEditor(`<p>abc<img>[]</p>`);
+    await click("img");
+    await waitFor(".o-we-toolbar");
+    expect("button[name='image_delete']").toHaveCount(1);
+    await click("button[name='image_delete']");
+    await animationFrame();
+    expect(".test-image").toHaveCount(0);
+    expect(getContent(el)).toBe(`<p>abc[]</p>`);
 });
 
 test("Toolbar detect image namespace even if it is the only child of a p", async () => {
