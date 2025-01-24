@@ -13167,7 +13167,7 @@ test("kanbans with basic and custom compiler, same arch", async () => {
     expect(".o_form_view .o_field_widget[name=one2many]").toHaveCount(1);
 
     // x2many kanban, basic renderer
-    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(1);
+    expect(".o_kanban_record:not(.o_kanban_ghost):not(.o-kanban-button-new)").toHaveCount(1);
     expect(".my_kanban_compiler").toHaveCount(0);
 });
 
