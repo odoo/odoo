@@ -873,11 +873,11 @@ if env.context.get('old_values', None):  # on write
         })
 
         # first run, check we have a field set
+        # this does not happen using the UI where the trigger is forced to be set
         self.assertFalse(automation.last_run)
         with self.assertLogs('odoo.addons.base_automation', 'WARNING') as capture:
             self.env["base.automation"]._cron_process_time_based_actions(auto_commit=False)
         self.assertRegex(capture.output[0], r"Missing date trigger")
-        self.assertFalse(automation.last_run)
         automation.trg_date_id = model.field_id.filtered(lambda f: f.name == 'date_automation_last')
 
         # normal run
