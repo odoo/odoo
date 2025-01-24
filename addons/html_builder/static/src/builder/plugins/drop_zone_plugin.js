@@ -20,9 +20,8 @@ function filterFunction(el, exclude) {
  * @param {number} [options.offset] applies a vertical offset
  */
 export function scrollToWindow(element, { behavior, offset } = {}) {
-    const topOffset = 50;
     const window = element.ownerDocument.defaultView;
-    const top = element.getBoundingClientRect().top + window.scrollY - topOffset;
+    const top = element.getBoundingClientRect().top + window.scrollY - offset;
 
     const prom = new Promise((resolve) => {
         window.addEventListener("scrollend", () => resolve(), { once: true });
