@@ -9,6 +9,30 @@ import { rpc } from "@web/core/network/rpc";
 describe.current.tags("desktop");
 defineLivechatModels();
 
+test.tags("mobile");
+test("can fold livechat chat windows in mobile", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Visitor" });
+    pyEnv["res.users"].create([{ partner_id: partnerId }]);
+    pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({
+                unpin_dt: false,
+                partner_id: serverState.partnerId,
+            }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "livechat",
+    });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem", { text: "Visitor" });
+    await click(".o-mail-ChatWindow-command[title*='Fold']", {
+        parent: [".o-mail-ChatWindow", { text: "Visitor" }],
+    });
+    await contains(".o-mail-ChatBubble");
+});
+
 test("closing a chat window with no message from admin side unpins it", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
