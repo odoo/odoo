@@ -433,6 +433,8 @@ class StockMoveLine(models.Model):
             vals.update(self._copy_quant_info(vals))
         updates = {}
         for key, model in triggers:
+            if self.env.context.get('skip_uom_conversion'):
+                continue
             if key in vals:
                 updates[key] = vals[key] if isinstance(vals[key], models.BaseModel) else self.env[model].browse(vals[key])
 
