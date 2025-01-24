@@ -200,3 +200,40 @@ class ChatbotCase(chatbot_common.ChatbotCase):
             .chatbot_script_id,
             chatbot_operator,
         )
+
+    def test_end_session_step_flow(self):
+        self.chatbot_script = self.env["chatbot.script"].create({
+            "title": "Chat bot",
+            "script_step_ids": [
+                Command.create({
+                    "step_type": "text",
+                    "message": "Hello",
+                    "sequence": 1,
+                }),
+                Command.create({
+                    "step_type": "end_session",
+                    "message": "Goodbye",
+                    "sequence": 2,
+                }),
+                Command.create({
+                    "step_type": "text",
+                    "message": "This should never be reached",
+                    "sequence": 3,
+                }),
+            ],
+        })
+        text_step, end_step, unreachable_step = self.chatbot_script.script_step_ids
+        discuss_channel = self.env["discuss.channel"].create({
+            "name": "Test Channel",
+            "channel_type": "livechat",
+            "livechat_channel_id": self.livechat_channel.id,
+            "chatbot_current_step_id": text_step.id,
+            "livechat_operator_id": self.chatbot_script.operator_partner_id.id,
+        })
+
+        next_step = text_step._process_answer(discuss_channel, "<p>Some user input</p>")
+        self.assertEqual(next_step, end_step, "Text step should transition to end step")
+
+        next_step = end_step._process_answer(discuss_channel, "<p>Some user input</p>")
+        self.assertFalse(next_step, "End session step should return empty recordset")
+        self.assertNotEqual(next_step, unreachable_step, "End session step should not transition to next step")
