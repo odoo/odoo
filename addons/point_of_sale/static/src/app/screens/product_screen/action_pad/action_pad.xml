@@ -9,7 +9,7 @@
                     <SelectPartnerButton partner="props.partner"/>
                     <button t-if="pos.config.use_presets"
                         class="btn btn-secondary btn-lg flex-shrink-0 border-0"
-                        t-attf-class="{{`o_colorlist_item_color_transparent_${currentOrder.preset_id?.color}`}}"
+                        t-attf-class="{{`o_colorlist_item_color_${currentOrder.preset_id?.color}`}}"
                         t-on-click="() => this.pos.selectPreset()">
                         <span t-esc="currentOrder.preset_id?.name" />
                     </button>
