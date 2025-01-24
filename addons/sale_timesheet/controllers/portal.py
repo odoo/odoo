@@ -61,7 +61,7 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
 
     def _get_searchbar_inputs(self):
         return super()._get_searchbar_inputs() | {
-            'so': {'input': 'so', 'label': _('Search in Sales Order'), 'sequence': 50},
+            'so': {'input': 'so', 'label': _('Search in Sales Order Item'), 'sequence': 50},
             'invoice': {'input': 'invoice', 'label': _('Search in Invoice'), 'sequence': 80},
         }
 

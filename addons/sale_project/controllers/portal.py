@@ -24,7 +24,7 @@ class SaleProjectCustomerPortal(ProjectCustomerPortal):
             del values['partner_id']
         if not project or project.sudo().allow_billable:
             values |= {
-                'sale_order':  {'input': 'sale_order', 'label': _('Search in Sales Order'), 'sequence': 90},
+                'sale_order':  {'input': 'sale_order', 'label': _('Search in Sales Order Item'), 'sequence': 90},
                 'invoice': {'input': 'invoice', 'label': _('Search in Invoice'), 'sequence': 100},
             }
         return values
