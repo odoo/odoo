@@ -236,13 +236,14 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
                     <ApellidosNombreRazonSocial>&amp;@àÁ$£€èêÈÊöÔÇç¡⅛™³</ApellidosNombreRazonSocial>
                 </EmisorFacturaRecibida>
                 <CabeceraFactura>
-                    <SerieFactura>INVTEST</SerieFactura>
-                    <NumFactura>01</NumFactura>
+                    <SerieFactura>TEST</SerieFactura>
+                    <NumFactura>INV/5234</NumFactura>
                     <FechaExpedicionFactura>01-01-2022</FechaExpedicionFactura>
                     <FechaRecepcion>01-01-2022</FechaRecepcion>
                     <TipoFactura>F1</TipoFactura>
                 </CabeceraFactura>
                 <DatosFactura>
+                    <DescripcionOperacion>INV/5234</DescripcionOperacion>
                     <Claves>
                         <IDClave>
                             <ClaveRegimenIvaOpTrascendencia>01</ClaveRegimenIvaOpTrascendencia>
@@ -285,13 +286,14 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
                     <ApellidosNombreRazonSocial>partner_b</ApellidosNombreRazonSocial>
                 </EmisorFacturaRecibida>
                 <CabeceraFactura>
-                    <SerieFactura>INVTEST</SerieFactura>
-                    <NumFactura>01</NumFactura>
+                    <SerieFactura>TEST</SerieFactura>
+                    <NumFactura>INV/5234</NumFactura>
                     <FechaExpedicionFactura>01-01-2022</FechaExpedicionFactura>
                     <FechaRecepcion>01-01-2022</FechaRecepcion>
                     <TipoFactura>F1</TipoFactura>
                 </CabeceraFactura>
                 <DatosFactura>
+                    <DescripcionOperacion>INV/5234</DescripcionOperacion>
                     <Claves>
                         <IDClave>
                             <ClaveRegimenIvaOpTrascendencia>09</ClaveRegimenIvaOpTrascendencia>
