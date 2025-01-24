@@ -101,11 +101,6 @@ class PurchaseOrderLine(models.Model):
         lines = self.filtered(lambda l: l.order_id.state == 'purchase'
                                         and not l.display_type)
 
-        if 'product_uom_id' in values and values['product_uom_id'] != self.product_id.uom_id.id:
-            self.move_ids.filtered(
-                lambda m: m.state not in ['cancel', 'done']
-            ).product_uom = values['product_uom_id']
-
         previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
         previous_product_qty = {line.id: line.product_qty for line in lines}
         result = super(PurchaseOrderLine, self).write(values)
