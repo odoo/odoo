@@ -1,4 +1,5 @@
 import { click, contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
+import { press } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { describe, test } from "@odoo/hoot";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
@@ -70,6 +71,66 @@ test("closing a chat window with no message from admin side unpins it", async ()
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { text: "Partner 1" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Partner 2" });
+});
+
+test("Should open active livechat first on Tab key press", async () => {
+    const pyEnv = await startServer();
+    const guestIds = pyEnv["mail.guest"].create([
+        { name: "Visitor 1" },
+        { name: "Visitor 2" },
+        { name: "Visitor 3" },
+    ]);
+    const livechatChannelId = pyEnv["im_livechat.channel"].create({
+        name: "Test",
+        user_ids: [serverState.userId],
+    });
+    const channelIds = pyEnv["discuss.channel"].create(
+        guestIds.map((guestId) => ({
+            channel_type: "livechat",
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ guest_id: guestId }),
+            ],
+            livechat_active: true,
+            livechat_channel_id: livechatChannelId,
+            livechat_operator_id: serverState.partnerId,
+            create_uid: serverState.publicUserId,
+        }))
+    );
+
+    pyEnv["mail.message"].create([
+        {
+            author_guest_id: guestIds[0],
+            body: "livechat 1",
+            model: "discuss.channel",
+            res_id: channelIds[0],
+        },
+        {
+            author_guest_id: guestIds[1],
+            body: "livechat 2",
+            model: "discuss.channel",
+            res_id: channelIds[1],
+        },
+    ]);
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem", { text: "Visitor 3" });
+    await contains(".o-mail-ChatWindow", { text: "Visitor 3" });
+    await contains(".o-mail-Composer-input[placeholder='Message Visitor 3…']:focus");
+    // simulate visitor leaving
+    await withGuest(guestIds[0], () =>
+        rpc("/im_livechat/visitor_leave_session", { channel_id: channelIds[0] })
+    );
+    await animationFrame();
+    await press("Tab");
+    await contains(".o-mail-ChatWindow", { count: 2 });
+    await contains(".o-mail-ChatWindow", { text: "Visitor 2" });
+    await contains(".o-mail-Composer-input[placeholder='Message Visitor 2…']:focus");
+    await animationFrame();
+    await press("Tab");
+    await contains(".o-mail-ChatWindow", { count: 3 });
+    await contains(".o-mail-ChatWindow", { text: "Visitor 1" });
+    await contains("span", { text: "This livechat conversation has ended" });
 });
 
 test.tags("focus required");
