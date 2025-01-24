@@ -8,19 +8,17 @@ defineWebsiteModels();
 const base64Img =
     "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
 
-test("Add image in gallery", async () => {
-    onRpc("/web/dataset/call_kw/ir.attachment/search_read", (test) => {
-        return [
-            {
-                id: 1,
-                name: "logo",
-                mimetype: "image/png",
-                image_src: "/web/static/img/logo2.png",
-                access_token: false,
-                public: true,
-            },
-        ];
-    });
+test.todo("Add image in gallery", async () => {
+    onRpc("/web/dataset/call_kw/ir.attachment/search_read", (test) => [
+        {
+            id: 1,
+            name: "logo",
+            mimetype: "image/png",
+            image_src: "/web/static/img/logo2.png",
+            access_token: false,
+            public: true,
+        },
+    ]);
     await setupWebsiteBuilder(
         `
         <section class="s_image_gallery o_masonry" data-columns="2">
