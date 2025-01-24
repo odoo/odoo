@@ -6,6 +6,7 @@ import { ImageTransformation } from "./image_transformation";
 export class ImageTransformButton extends Component {
     static template = "html_editor.ImageTransformButton";
     static props = {
+        id: String,
         icon: String,
         getSelectedImage: Function,
         resetImageTransformation: Function,
@@ -18,25 +19,27 @@ export class ImageTransformButton extends Component {
 
     setup() {
         this.state = useState({ active: false });
-        this.mouseDownInsideTransform = false;
-        // We close the image transform when we click outside any element not related to it
-        // When the mousedown of the click is inside the image transform and mouseup is outside
-        // while resizing or rotating the image it will consider the click as being done outside
-        // image transform. So we need to keep track if the mousedown is inside or outside to
-        // know if we want to close the image transform component or not.
-        useExternalListener(this.props.document, "mousedown", (ev) => {
+        this.pointerDownInsideTransform = false;
+        // We close the image transform when we click outside any element not
+        // related to it. When the pointerdown of the click is inside the image
+        // transform and pointerup is outside while resizing or rotating the
+        // image it will consider the click as being done outside image
+        // transform. So we need to keep track if the pointerdown is inside or
+        // outside to know if we want to close the image transform component or
+        // not.
+        useExternalListener(this.props.document, "pointerdown", (ev) => {
             if (this.isNodeInsideTransform(ev.target)) {
-                this.mouseDownInsisdeTransform = true;
+                this.pointerDownInsideTransform = true;
             } else {
                 this.closeImageTransformation();
-                this.mouseDownInsideTransform = false;
+                this.pointerDownInsideTransform = false;
             }
         });
         useExternalListener(this.props.document, "click", (ev) => {
-            if (!this.isNodeInsideTransform(ev.target) && !this.mouseDownInsideTransform) {
+            if (!this.isNodeInsideTransform(ev.target) && !this.pointerDownInsideTransform) {
                 this.closeImageTransformation();
             }
-            this.mouseDownInsideTransform = false;
+            this.pointerDownInsideTransform = false;
         });
         // When we click on any character the image is deleted and we need to close the image transform
         // We handle this by selectionchange
