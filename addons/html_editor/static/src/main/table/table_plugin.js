@@ -776,6 +776,7 @@ export class TablePlugin extends Plugin {
                     table.classList.toggle("o_selected_table", true);
                     for (const td of getTableCells(table)) {
                         td.classList.toggle("o_selected_td", true);
+                        this.dispatchTo("deselect_custom_selected_nodes_handlers", td);
                     }
                 }
             }
@@ -971,6 +972,7 @@ export class TablePlugin extends Plugin {
                 (_, index) => index >= minColIndex && index <= maxColIndex
             )) {
                 td.classList.toggle("o_selected_td", true);
+                this.dispatchTo("deselect_custom_selected_nodes_handlers", td);
             }
         }
     }
