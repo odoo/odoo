@@ -53,15 +53,7 @@ export class X2ManyField extends Component {
 
         const { activeActions, controls } = this.archInfo;
         if (this.props.viewMode === "kanban") {
-            this.controls = controls.length
-                ? controls
-                : [
-                      {
-                          type: "create",
-                          string: this.props.addLabel || _t("Add"),
-                          class: "o-kanban-button-new",
-                      },
-                  ];
+            this.controls = controls || [];
         }
         const subViewActiveActions = activeActions;
         this.activeActions = useActiveActions({
@@ -136,8 +128,11 @@ export class X2ManyField extends Component {
     }
 
     get displayControlPanelButtons() {
+        return this.props.viewMode === "kanban" && this.canCreate && this.controls.length > 0;
+    }
+
+    get canCreate() {
         return (
-            this.props.viewMode === "kanban" &&
             ("link" in this.activeActions ? this.activeActions.link : this.activeActions.create) &&
             !this.props.readonly
         );
@@ -206,6 +201,10 @@ export class X2ManyField extends Component {
                 }
                 return this.list.delete(record);
             };
+            if (this.canCreate && this.controls.length === 0) {
+                props.addLabel = this.props.addLabel || _t("Add %s", this.field.string);
+                props.onAdd = this.onAdd.bind(this);
+            }
             return props;
         }
 

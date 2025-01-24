@@ -57,6 +57,8 @@ export class KanbanRenderer extends Component {
         "canQuickCreate?",
         "quickCreateState?",
         "progressBarState?",
+        "addLabel?",
+        "onAdd?",
     ];
 
     static defaultProps = {
