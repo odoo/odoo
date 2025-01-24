@@ -8,7 +8,7 @@
                     t-att-class="{'opacity-50': !category.isChildren and !category.isSelected, 'justify-content-center': ui.isSmall}"
                     class="category-button p-1 btn btn-light d-flex justify-content-center align-items-center rounded-3">
                     <img t-if="category.imgSrc and !ui.isSmall" t-att-src="category.imgSrc"
-                        class="category-img-thumb bg-100 bg-opacity-25 h-100 rounded-3 object-fit-cover me-1"
+                        class="category-img-thumb h-100 rounded-3 object-fit-cover"
                         alt="Category"
                     />
                     <span t-if="category.name" t-attf-class="{{category.imgSrc ? 'px-2' : 'px-3'}} text-center text-wrap-categ fs-5" t-esc="category.name" />

@@ -115,7 +115,7 @@ export function hasCustomerNote(note) {
     return [
         {
             content: `Order customer note is '${note}'`,
-            trigger: `.order-container .customer-note .col div:contains("${note}")`,
+            trigger: `.order-container .customer-note  div:contains("${note}")`,
         },
     ];
 }

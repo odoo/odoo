@@ -74,8 +74,8 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             Chrome.clickPlanButton(),
 
             // Create first order
-            FloorScreen.clickTable("105"),
-            Chrome.isTabActive("T 105"),
+            FloorScreen.clickTable("5"),
+            Chrome.isTabActive("5"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             inLeftSide(Order.hasLine({ productName: "Coca-Cola", run: "dblclick" })),
             ProductScreen.clickDisplayedProduct("Water", true),
@@ -88,14 +88,14 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
                 content:
                     "acknowledge printing error ( because we don't have printer in the test. )",
             },
-            FloorScreen.clickTable("105"),
+            FloorScreen.clickTable("5"),
             ProductScreen.orderlinesHaveNoChange(),
             checkOrderChanges([]),
             ProductScreen.totalAmountIs("4.40"),
 
             // Create 2nd order (paid)
             Chrome.clickPlanButton(),
-            FloorScreen.clickTable("102"),
+            FloorScreen.clickTable("2"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             ProductScreen.clickDisplayedProduct("Minute Maid", true),
             ProductScreen.totalAmountIs("4.40"),
@@ -109,8 +109,8 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ReceiptScreen.clickNextOrder(),
 
             // order on another table with a product variant
-            FloorScreen.orderCountSyncedInTableIs("105", "1"),
-            FloorScreen.clickTable("104"),
+            FloorScreen.orderCountSyncedInTableIs("5", "1"),
+            FloorScreen.clickTable("4"),
             ProductScreen.clickDisplayedProduct("Desk Organizer", false),
             {
                 ...Dialog.confirm(),
@@ -124,7 +124,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
                 content:
                     "acknowledge printing error ( because we don't have printer in the test. )",
             },
-            FloorScreen.clickTable("104"),
+            FloorScreen.clickTable("4"),
             ProductScreen.orderlinesHaveNoChange(),
             checkOrderChanges([]),
             ProductScreen.totalAmountIs("5.87"),
@@ -135,17 +135,17 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
 
             // After clicking next order, floor screen is shown.
             // It should have 1 as number of draft synced order.
-            FloorScreen.orderCountSyncedInTableIs("105", "1"),
-            FloorScreen.clickTable("105"),
+            FloorScreen.orderCountSyncedInTableIs("5", "1"),
+            FloorScreen.clickTable("5"),
             ProductScreen.totalAmountIs("4.40"),
 
             // Create another draft order and go back to floor
             Chrome.clickPlanButton(),
-            FloorScreen.clickTable("102"),
+            FloorScreen.clickTable("2"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             ProductScreen.clickDisplayedProduct("Minute Maid", true),
             Chrome.clickPlanButton(),
-            FloorScreen.orderCountSyncedInTableIs("105", "1"),
+            FloorScreen.orderCountSyncedInTableIs("5", "1"),
 
             // Delete the first order then go back to floor
             Chrome.clickOrders(),
@@ -165,7 +165,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             Chrome.clickPlanButton(),
 
             // There should be 0 synced draft order as we already deleted -00002.
-            FloorScreen.clickTable("105"),
+            FloorScreen.clickTable("5"),
             ProductScreen.orderIsEmpty(),
         ].flat(),
 });

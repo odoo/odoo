@@ -123,8 +123,8 @@
     </t>
 
     <t t-name="point_of_sale.ProductConfiguratorPopup">
-        <Dialog title.translate="Attribute selection">
-            <ProductInfoBanner productTemplate="this.state.productTemplate" product="this.state.product" />
+        <Dialog title="title">
+            <ProductInfoBanner t-if="showInfoBanner" productTemplate="this.state.productTemplate" product="this.state.product"/>
             <div t-ref="input-area">
                 <div t-if="isArchivedCombination()" class="alert alert-warning mt-3">
                     <span>This combination does not exist.</span>

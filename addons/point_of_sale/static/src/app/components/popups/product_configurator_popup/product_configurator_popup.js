@@ -128,6 +128,7 @@ export class ProductConfiguratorPopup extends Component {
             productTemplate: this.props.productTemplate,
             product: null,
             payload: this.env.attribute_components,
+            info: null,
         });
 
         useRefListener(this.inputArea, "touchend", this.computeProductProduct.bind(this));
@@ -178,7 +179,7 @@ export class ProductConfiguratorPopup extends Component {
                 product = newProduct;
             }
         }
-
+        this.state.info = this.props.productTemplate.getProductPriceInfo(product, this.pos.company);
         this.state.product = product;
     }
     get imageUrl() {
@@ -187,6 +188,20 @@ export class ProductConfiguratorPopup extends Component {
     }
     get unitPrice() {
         return this.env.utils.formatCurrency(this.props.productTemplate.list_price);
+    }
+    get title() {
+        const name = this.state.productTemplate.display_name;
+        const total = this.env.utils.formatCurrency(
+            this.state.info?.raw_total_included_currency || 0.0
+        );
+        const taxName = this.state.info?.taxes_data[0]?.name || "";
+        const taxAmount = this.env.utils.formatCurrency(
+            this.state.info?.taxes_data[0]?.raw_tax_amount_currency || 0.0
+        );
+        return `${name} | ${total} | VAT: ${taxName} (= ${taxAmount})`;
+    }
+    get showInfoBanner() {
+        return this.props.productTemplate.is_storable || this.state.other_warehouses?.length > 0;
     }
     close() {
         this.props.close();
