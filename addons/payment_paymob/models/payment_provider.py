@@ -31,7 +31,7 @@ class PaymentProvider(models.Model):
         comodel_name='res.country',
         compute='_compute_paymob_account_country',
         inverse='_inverse_paymob_account_country',
-        domain=f'[("code", "in", {list(const.COUNTRY_CURRENCY_MAPPING.keys())})]',
+        domain=f'[("code", "in", {list(const.PAYMOB_CONFIG.keys())})]',
     )
     paymob_public_key = fields.Char(string="Paymob Public Key", required_if_provider='paymob')
     paymob_secret_key = fields.Char(
@@ -125,16 +125,18 @@ class PaymentProvider(models.Model):
 
     # === BUSINESS METHODS - GETTERS === #
     def _get_country_from_currency(self):
-        country_code = [
-            country for country, currency
-            in const.COUNTRY_CURRENCY_MAPPING.items()
-            if currency == self.available_currency_ids.name
-        ]
-        if country_code:
-            return country_code[0]
+        if self.available_currency_ids.name:
+            return const.PAYMOB_CONFIG[self.available_currency_ids.name]['country_code']
 
     def _get_paymob_account_currency(self):
-        return const.COUNTRY_CURRENCY_MAPPING[self.paymob_account_country_id.code]
+        currency = [
+            currency for currency, currency_config
+            in const.PAYMOB_CONFIG.items()
+            if currency_config['country_code'] == self.paymob_account_country_id.code
+        ]
+        if currency:
+            return currency[0]
+        # return const.COUNTRY_CURRENCY_MAPPING[self.paymob_account_country_id.code]
 
     def _get_supported_currencies(self):
         """ Override of `payment` to return the supported currencies. """
@@ -146,7 +148,7 @@ class PaymentProvider(models.Model):
                 )
             else:
                 supported_currencies = supported_currencies.filtered(
-                    lambda c: c.name in const.SUPPORTED_CURRENCIES
+                    lambda c: c.name in const.PAYMOB_CONFIG
                 )
         return supported_currencies[0]
 
@@ -159,7 +161,8 @@ class PaymentProvider(models.Model):
         :rtype: str
         """
         self.ensure_one()
-        url = f"https://{const.COUNTRY_API_MAPPING[self.paymob_account_country_id.code]}.paymob.com"
+        api_prefix = const.PAYMOB_CONFIG[self.available_currency_ids.name]['api_prefix']
+        url = f"https://{api_prefix}.paymob.com"
         return url
 
     def _get_default_payment_method_codes(self):

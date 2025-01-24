@@ -1,66 +1,44 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-# ISO 4217 codes of currencies supported by Paymob
+# Only 5 countries are supported and for each country the matching currency is required.
+# For each country, different api endpoints are used.
+# Paymob deals with the amount in cents, so each amount needs to be converted according to
+# the number of cents in each currency
 # Last seen on: 17 December 2024.
-SUPPORTED_CURRENCIES = [
-    'AED',
-    'EGP',
-    'OMR',
-    'PKR',
-    'SAR',
-]
+# ISO 4217 codes of currencies supported by Paymob
 
-# For Paymob they only support 5 countries and for each country the matching currency is supported
-COUNTRY_CURRENCY_MAPPING = {
-    'AE': 'AED',
-    'EG': 'EGP',
-    'OM': 'OMR',
-    'PK': 'PKR',
-    'SA': 'SAR',
-}
-
-COUNTRY_API_MAPPING = {
-    'AE': 'uae',
-    'EG': 'accept',
-    'OM': 'oman',
-    'PK': 'pakistan',
-    'SA': 'ksa',
+PAYMOB_CONFIG = {
+    'AED': {
+        'amount_cents': 100,
+        'country_code': 'AE',
+        'api_prefix': 'uae',
+    },
+    'EGP': {
+        'amount_cents': 100,
+        'country_code': 'EG',
+        'api_prefix': 'accept',
+    },
+    'OMR': {
+        'amount_cents': 1000,
+        'country_code': 'OM',
+        'api_prefix': 'oman',
+    },
+    'PKR': {
+        'amount_cents': 100,
+        'country_code': 'PK',
+        'api_prefix': 'pakistan',
+    },
+    'SAR': {
+        'amount_cents': 100,
+        'country_code': 'SA',
+        'api_prefix': 'ksa',
+    },
 }
 
 # The codes of the payment methods to activate when Paymob is activated.
 DEFAULT_PAYMENT_METHOD_CODES = {
     # Primary payment methods.
     'card',
-}
-
-# Paymob deals with integer values for the amount
-# Error message from Paymob:
-# The amount parameter should be provided as an integer representing the decimal units
-# of the currency. Example: Pass 100 for EGP 1 / AED 1 / PKR 1 / SAR 1, Pass 1000 for OMR 1."]}
-CURRENCY_DECIMAL_MAPPING = {
-    'AED': 100,
-    'EGP': 100,
-    'OMR': 1000,
-    'PKR': 100,
-    'SAR': 100,
-}
-
-PAYMENT_STATUS_MAPPING = {
-    'pending': (
-        'PENDING',
-        'CREATED',
-        'APPROVED',  # The buyer approved a checkout order.
-    ),
-    'done': (
-        'COMPLETED',
-        'CAPTURED',
-    ),
-    'cancel': (
-        'DECLINED',
-        'DENIED',
-        'VOIDED',
-    ),
-    'error': ('FAILED',),
 }
 
 PAYMOB_SIGNATURE_FIELDS = [

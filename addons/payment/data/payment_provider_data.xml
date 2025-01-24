@@ -282,6 +282,7 @@
         <field name="name">Paymob</field>
         <field name="image_128" type="base64" file="payment_paymob/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_paymob"/>
+        <!-- For each country available payment methods are different but card is common for all-->
         <!-- https://developers.paymob.com/egypt/payment-methods -->
         <field name="payment_method_ids"
                eval="[Command.set([

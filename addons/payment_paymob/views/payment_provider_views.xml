@@ -36,7 +36,7 @@
                 <field
                     class="alert alert-warning"
                     name="paymob_integration_message"
-                    invisible="code != 'paymob'"
+                    invisible="code != 'paymob' or state=='disabled' or  not payment_method_ids"
                 />
             </div>
             </group>

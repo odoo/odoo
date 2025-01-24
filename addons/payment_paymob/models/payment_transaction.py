@@ -85,11 +85,9 @@ class PaymentTransaction(models.Model):
 
         return {
             'special_reference': self.reference,
-            'amount': self.amount * const.CURRENCY_DECIMAL_MAPPING[self.currency_id.name],
+            'amount': self.amount * const.PAYMOB_CONFIG[self.currency_id.name]['amount_cents'],
             'currency': self.currency_id.name,
-            # 'payment_methods': self.provider_id.paymob_integration_ids.mapped(
-            #     lambda pi_id: int(pi_id.name)),
-            'payment_methods': self.provider_id.payment_method_ids.mapped('code'),
+            'payment_methods': [self.payment_method_code],
             'notification_url': webhook_url,
             'redirection_url': redirect_url,
             'billing_data': {
