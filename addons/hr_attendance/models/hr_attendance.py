@@ -92,7 +92,13 @@ class HrAttendance(models.Model):
 
     @api.depends('worked_hours')
     def _compute_overtime_hours(self):
-        day_starts = {att: self._get_day_start_and_day(att.employee_id, att.check_in) for att in self}
+        day_starts = {
+            att: self._get_day_start_and_day(att.employee_id, att.check_in)
+            for att in self
+            if att.employee_id
+        }
+        if not day_starts:
+            return
         date_min, date_max = min(date for dummy, date in day_starts.values()), max(date for dummy, date in day_starts.values())
         datetime_min, datetime_max = min(time for time, dummy in day_starts.values()), max(time for time, dummy in day_starts.values())
 
