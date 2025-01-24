@@ -12,7 +12,7 @@
                         <t t-if="props.showVariants">
                             <button t-on-click="() => this.props.print(true)" type="button" class="btn btn-secondary text-nowrap">Print All Variants</button>
                         </t>
-                        <button t-on-click="clickTogglefold" type="button" class="btn btn-secondary"><t t-esc="props.allFolded ? 'Unfold' : 'Fold'"/></button>
+                        <button t-on-click="clickTogglefold" type="button" class="btn btn-secondary" t-esc="foldButtonText"/>
                     </div>
                 </div>
             </t>

@@ -39,6 +39,11 @@ export class NumberPopup extends Component {
             buffer: this.props.startingValue,
         });
     }
+
+    get confirmButtonLabel() {
+        return this.props.confirmButtonLabel || _t("Ok");
+    }
+
     confirm() {
         this.props.getPayload(this.state.buffer);
         this.props.close();

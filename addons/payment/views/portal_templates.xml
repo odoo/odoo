@@ -18,7 +18,7 @@
             - partner_is_different: Whether the partner logged in is the one making the payment.
         -->
         <t t-call="portal.frontend_layout">
-            <t t-set="page_title" t-value="'Payment'"/>
+            <t t-set="page_title">Payment</t>
             <t t-set="additional_title"><t t-esc="page_title"/></t>
             <div class="wrap">
                 <div class="container">
@@ -90,7 +90,7 @@
     <!-- Display of /my/payment_methods -->
     <template id="payment.payment_methods" name="Payment Methods">
         <t t-call="portal.frontend_layout">
-            <t t-set="page_title" t-value="'Payment Methods'"/>
+            <t t-set="page_title">Payment Methods</t>
             <t t-set="additional_title"><t t-esc="page_title"/></t>
             <div class="wrap">
                 <div class="container">
@@ -110,7 +110,7 @@
     <!-- Display of /payment/status -->
     <template id="payment.payment_status" name="Payment Status">
         <t t-call="portal.frontend_layout">
-            <t t-set="page_title" t-value="'Payment Status'"/>
+            <t t-set="page_title">Payment Status</t>
             <t t-set="additional_title"><t t-esc="page_title"/></t>
             <div class="wrap">
                 <div class="container">
@@ -166,7 +166,7 @@
             - tx: The transaction to display.
         -->
         <t t-call="portal.frontend_layout">
-            <t t-set="page_title" t-value="'Payment Confirmation'"/>
+            <t t-set="page_title">Payment Confirmation</t>
             <t t-set="additional_title"><t t-esc="page_title"/></t>
             <t t-set="show_pm" t-value="tx.payment_method_code != 'unknown'"/>
             <div class="wrap">
