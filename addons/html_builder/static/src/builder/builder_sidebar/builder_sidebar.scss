@@ -65,12 +65,26 @@
     }
 }
 
-.o_we_sublevel > div:first-child::before {
+%o_we_sublevel > div:first-child::before {
     content: "└"; // TODO The size and look of this depends on the
                   // browser default font, we should use a SVG instead.
     display: inline-block;
     margin-right: 0.4em;
-    // TODO take care of the rtl icon case
+
+    .o_rtl & {
+        transform: scaleX(-1);
+    }
+}
+@for $level from 1 through 3 {
+    .o_we_sublevel_#{$level} {
+        @extend %o_we_sublevel;
+
+        @if $level > 1 {
+            > div:first-child::before {
+                padding-left: ($level - 1) * 0.6em;
+            }
+        }
+    }
 }
 
 .o-snippets-tabs > button[disabled] {

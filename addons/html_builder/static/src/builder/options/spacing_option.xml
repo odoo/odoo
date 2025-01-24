@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.SpacingOption">
-    <BuilderRow label="'└ Spacing (Y, X)'">
+    <BuilderRow label.translate="Spacing (Y, X)" level="1">
         <input type="number" class="form-control" t-att-value="state.spacingY"
             t-on-input="(e) => this.previewSpacingY(e.target.value)"
             t-on-change="(e) => this.changeSpacingY(e.target.value)"/>

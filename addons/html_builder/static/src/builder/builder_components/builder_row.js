@@ -16,11 +16,15 @@ export class BuilderRow extends Component {
         dependencies: { type: [String, Array], optional: true },
         tooltip: { type: String, optional: true },
         slots: { type: Object, optional: true },
-        extraClassName: { type: String, optional: true },
+        level: { type: Number, optional: true },
     };
 
     setup() {
         useBuilderComponent();
         useVisibilityObserver("content", useApplyVisibility("root"));
+    }
+
+    getLevelClass() {
+        return this.props.level ? `o_we_sublevel_${this.props.level}` : "";
     }
 }
