@@ -16,9 +16,10 @@ class TestInit(BaseCase):
         super().setUpClass()
         cls.python_path = Path(__file__).parents[4].resolve()
 
-    def run_python(self, code, check=True, capture_output=True, text=True, timeout=10, **kwargs):
+    def run_python(self, code, check=True, capture_output=True, text=True, timeout=10, env=None, **kwargs):
         code = code.replace('\n', '; ')
         env = {
+            **(env or {}),
             "PYTHONPATH": str(self.python_path),
         }
         # disable warnings for frozen_modules when debugger is running
@@ -46,8 +47,12 @@ class TestInit(BaseCase):
     def test_import(self):
         """Test that importing a sub-module in any order works."""
         for module in sorted(self.odoo_modules_to_test()):
-            with self.subTest(module=module):
+            set_timezone = True
+            env = {'TZ': 'CET'}
+            timezone = 'UTC' if set_timezone else 'CET'
+            code = f"import {module}; import sys, time; sys.exit(0 if (time.tzname[0] == '{timezone}') else 5)"
+            with self.subTest(module=module, timezone=timezone):
                 start_time = time.perf_counter()
-                self.run_python(f'import {module}')
+                self.run_python(code, env=env)
                 end_time = time.perf_counter()
                 _logger.info("  %s execution time: %.3fs", module, end_time - start_time)
