@@ -13,7 +13,7 @@ from werkzeug.exceptions import BadRequest
 from odoo import api, http, SUPERUSER_ID, _
 from odoo.exceptions import AccessDenied
 from odoo.http import request, Response
-from odoo import registry as registry_get
+from odoo.modules.registry import Registry
 from odoo.tools.misc import clean_context
 
 from odoo.addons.auth_signup.controllers.main import AuthSignupHome as Home
@@ -187,7 +187,7 @@ class OAuthController(http.Controller):
         if not http.db_filter([dbname]):
             raise BadRequest()
 
-        registry = registry_get(dbname)
+        registry = Registry(dbname)
         with registry.cursor() as cr:
             try:
                 env = api.Environment(cr, SUPERUSER_ID, {})
