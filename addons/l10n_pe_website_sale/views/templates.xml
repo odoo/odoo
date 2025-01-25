@@ -9,7 +9,8 @@
                     <option value="">Identification Type...</option>
                     <t t-foreach="identification_types" t-as="id_type">
                         <option t-att-value="id_type.id"
-                            t-att-selected="id_type.id == partner_sudo.l10n_latam_identification_type_id.id">
+                            t-att-selected="id_type.id == int(identification or 0)"
+                        >
                             <t t-out="id_type.name"/>
                         </option>
                     </t>
