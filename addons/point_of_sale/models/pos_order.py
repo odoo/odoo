@@ -179,9 +179,19 @@ class PosOrder(models.Model):
                 # do not hide transactional errors, the order(s) won't be saved!
                 raise
             except Exception as e:
+<<<<<<< 17.0
                 _logger.error('Could not fully process the POS Order: %s', tools.ustr(e))
             self._create_order_picking()
             self._compute_total_cost_in_real_time()
+||||||| e0c16bb9a90dfb378b75e0de059e71f0aebd84fb
+                _logger.error('Could not fully process the POS Order: %s', tools.ustr(e))
+            pos_order._create_order_picking()
+            pos_order._compute_total_cost_in_real_time()
+=======
+                _logger.error('Could not fully process the POS Order: %s', tools.ustr(e), exc_info=True)
+            pos_order._create_order_picking()
+            pos_order._compute_total_cost_in_real_time()
+>>>>>>> c66f010df5a03dbcb848eafe09168eab46d27ac4
 
         if self.to_invoice and self.state == 'paid':
             self._generate_pos_order_invoice()
