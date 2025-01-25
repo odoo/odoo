@@ -31,11 +31,11 @@ class ResUsers(models.Model):
     )
     livechat_expertise_ids = fields.Many2many(
         "im_livechat.expertise",
+        "im_livechat_expertise_res_users_rel",
+        "user_id",
+        "expertise_id",
         string="Live Chat Expertise",
         groups="im_livechat.im_livechat_group_user,base.group_erp_manager",
-        compute="_compute_livechat_expertise_ids",
-        inverse="_inverse_livechat_expertise_ids",
-        store=False,
         help="When forwarding live chat conversations, the chatbot will prioritize users with matching expertise.",
     )
     livechat_ongoing_session_count = fields.Integer(
@@ -109,17 +109,6 @@ class ResUsers(models.Model):
         for user in self:
             settings = self.env['res.users.settings']._find_or_create_for_user(user)
             settings.livechat_lang_ids = user.livechat_lang_ids
-
-    @api.depends("res_users_settings_id.livechat_expertise_ids")
-    def _compute_livechat_expertise_ids(self):
-        for user in self:
-            # sudo: livechat user can see the livechat expertise of any other user
-            user.livechat_expertise_ids = user.sudo().res_users_settings_id.livechat_expertise_ids
-
-    def _inverse_livechat_expertise_ids(self):
-        for user in self:
-            settings = self.env["res.users.settings"]._find_or_create_for_user(user)
-            settings.livechat_expertise_ids = user.livechat_expertise_ids
 
     @api.depends("group_ids")
     def _compute_has_access_livechat(self):
