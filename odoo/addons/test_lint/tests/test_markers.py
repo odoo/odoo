@@ -24,12 +24,14 @@ class TestConflictMarkers(lint_case.LintCase):
 
         counter = 0
 
-        odoo_path = os.path.abspath(os.path.dirname(odoo.__file__))
-        paths = [*odoo.addons.__path__, odoo_path]
-        paths.remove(os.path.join(odoo_path, 'addons'))  # avoid checking odoo/addons twice
+        paths = sorted(os.path.abspath(p) for p in [*odoo.addons.__path__, *odoo.__path__])
 
+        already_visited = set()
         for p in paths:
+            if p in already_visited:
+                continue
             for dp, _, file_names in os.walk(p):
+                already_visited.add(dp)
                 if 'node_modules' in dp:
                     continue
                 for fn in file_names:
