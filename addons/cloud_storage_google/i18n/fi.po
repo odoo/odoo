@@ -5,6 +5,7 @@
 # Translators:
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # Martin Trigaux, 2024
+# Jessica Jakara, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-08-18 03:00+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +29,7 @@ msgstr "Liite"
 #. module: cloud_storage_google
 #: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__cloud_storage_provider
 msgid "Cloud Storage Provider for new attachments"
-msgstr ""
+msgstr "Pilvitallennuspalvelun tarjoaja uusille liitteille"
 
 #. module: cloud_storage_google
 #: model:ir.model,name:cloud_storage_google.model_res_config_settings
@@ -38,22 +39,22 @@ msgstr "Asetukset"
 #. module: cloud_storage_google
 #: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__cloud_storage_google_bucket_name
 msgid "Google Bucket Name"
-msgstr ""
+msgstr "Google Bucket pavadinimas"
 
 #. module: cloud_storage_google
 #: model:ir.model.fields.selection,name:cloud_storage_google.selection__res_config_settings__cloud_storage_provider__google
 msgid "Google Cloud Storage"
-msgstr ""
+msgstr "Google Pilvitallennus"
 
 #. module: cloud_storage_google
 #: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__cloud_storage_google_account_info
 msgid "Google Service Account Info"
-msgstr ""
+msgstr "Google Service Account tiedot"
 
 #. module: cloud_storage_google
 #: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__cloud_storage_google_service_account_key
 msgid "Google Service Account Key"
-msgstr ""
+msgstr "Google Palvelutilin avain"
 
 #. module: cloud_storage_google
 #. odoo-python
@@ -62,6 +63,8 @@ msgid ""
 "Some Google attachments are in use, please migrate cloud storages before "
 "disable the provider"
 msgstr ""
+"Joitakin Googlen liitteitä on käytössä, ole hyvä ja siirrä "
+"pilvitallennustila ennen kuin poistat palveluntarjoajan käytöstä."
 
 #. module: cloud_storage_google
 #. odoo-python
@@ -70,6 +73,8 @@ msgid ""
 "The account info is not allowed to download blobs from the bucket.\n"
 "%s"
 msgstr ""
+"Tilitiedot eivät voi ladata blob-objekteja säiliöstä.\n"
+"%s"
 
 #. module: cloud_storage_google
 #. odoo-python
@@ -78,6 +83,8 @@ msgid ""
 "The account info is not allowed to set the bucket's CORS.\n"
 "%s"
 msgstr ""
+"Tilitiedot eivät voi asettaa säiliön CORS:ia.\n"
+"%s"
 
 #. module: cloud_storage_google
 #. odoo-python
@@ -86,3 +93,5 @@ msgid ""
 "The account info is not allowed to upload blobs to the bucket.\n"
 "%s"
 msgstr ""
+"Tilitiedot eivät voi ladata blob-objekteja säiliöön.\n"
+"%s"

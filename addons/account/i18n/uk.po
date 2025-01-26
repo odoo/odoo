@@ -3574,6 +3574,7 @@ msgstr "Неможливо створити документ про продаж
 #, python-format
 msgid "Cannot create an accrual entry with orders in different currencies."
 msgstr ""
+"Неможливо створити запис нарахування із замовленнями в різних валютах."
 
 #. module: account
 #. odoo-python
@@ -5935,7 +5936,7 @@ msgstr "Чернетка"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Draft (%(currency_amount)s)"
-msgstr ""
+msgstr "Чернетка (%(currency_amount)s)"
 
 #. module: account
 #. odoo-python
@@ -6004,31 +6005,31 @@ msgstr "Чернетка сторно постачальника"
 #. odoo-javascript
 #: code:addons/account/static/src/components/bills_upload/bills_upload.xml:0
 msgid "Drag & drop"
-msgstr ""
+msgstr "Перетягніть"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Drop and let the AI process your bills automatically."
-msgstr ""
+msgstr "Відпустіть і дозвольте ШІ автоматично обробляти ваші рахунки."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Drop to create journal entries with attachments."
-msgstr ""
+msgstr "Перетягніть, щоб створити записи журналу із прикріплень."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Drop to import transactions"
-msgstr ""
+msgstr "Перетягніть для імпорту транзакцій"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Drop to import your invoices."
-msgstr ""
+msgstr "Перетягніть для імпорту рахунків-фактур."
 
 #. module: account
 #. odoo-python
@@ -6078,13 +6079,13 @@ msgstr "Підрахунок дубльованих банківських ра�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Duplicated Documents"
-msgstr ""
+msgstr "Продубльовані документи"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "Duplicated Payments"
-msgstr ""
+msgstr "Продубльовані платежі"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__duplicated_ref_ids
@@ -6130,12 +6131,12 @@ msgstr "Рання знижка"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
 msgid "Early Discount Gain"
-msgstr ""
+msgstr "Рання знижка"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
 msgid "Early Discount Loss"
-msgstr ""
+msgstr "Втрата ранньої знижки"
 
 #. module: account
 #. odoo-python
@@ -6184,7 +6185,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Early payment discounts:"
-msgstr ""
+msgstr "Знижки на ранній платіж:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
@@ -6219,7 +6220,7 @@ msgstr "Псевдонім ел. пошти"
 #. odoo-javascript
 #: code:addons/account/static/src/components/bills_upload/bills_upload.xml:0
 msgid "Email bills"
-msgstr ""
+msgstr "Рахунки електронною поштою"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__invoice_is_email
@@ -6298,7 +6299,7 @@ msgstr "Кінцевий баланс"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.xml:0
 msgid "Enter a description"
-msgstr ""
+msgstr "Введіть опис"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_line_form
@@ -6315,7 +6316,7 @@ msgstr "Підрахунок записів"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Entries are correctly hashed"
-msgstr ""
+msgstr "Записи правильно хешуються"
 
 #. module: account
 #. odoo-python
@@ -6390,6 +6391,8 @@ msgstr "Капітал"
 msgid ""
 "Error importing attachment '%(file_name)s' as invoice (decoder=%(decoder)s)"
 msgstr ""
+"Помилка імпорту вкладення '%(file_name)s' як рахунок-фактура "
+"(decoder=%(decoder)s)"
 
 #. module: account
 #. odoo-python
@@ -6469,7 +6472,7 @@ msgstr "Рух обміну"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Exchange difference entries:"
-msgstr ""
+msgstr "Проведення курсових різниць:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__excluded_journal_ids
@@ -6872,13 +6875,15 @@ msgstr "Іконка з чудовим шрифтом, напр. fa-tasks"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.email_template_mail_gateway_failed
 msgid "For any other question, write to"
-msgstr ""
+msgstr "З інших питань пишіть"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.email_template_mail_gateway_failed
 msgid ""
 "For new invoices, please ensure a PDF or electronic invoice file is attached"
 msgstr ""
+"Для нових рахунків-фактур переконайтеся, що вкладено PDF-файл або "
+"електронний файл рахунку-фактури"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value_amount
@@ -6996,7 +7001,7 @@ msgstr "Від"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_base_document_layout__from_invoice
 msgid "From Invoice"
-msgstr ""
+msgstr "З рахунку-фактури"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -7077,7 +7082,7 @@ msgstr "Майбутні дії"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Future-dated"
-msgstr ""
+msgstr "З майбутньою датою"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7121,7 +7126,7 @@ msgstr "Податковий звіт Generic"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Get Paid online. Send electronic invoices."
-msgstr ""
+msgstr "Отримуйте гроші онлайн. Надсилайте електронні рахунки."
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_hash_integrity
@@ -7142,7 +7147,7 @@ msgstr "Поверніться"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
 msgid "Go to the accounting settings"
-msgstr ""
+msgstr "Зайдіть в налаштування бухгалтерського обліку"
 
 #. module: account
 #. odoo-python
