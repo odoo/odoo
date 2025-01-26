@@ -11,6 +11,7 @@
 # Martin Trigaux, 2024
 # Maria Chalepiadou, 2025
 # Gerasimos Kanelatos, 2025
+# Charalampos Loukas, 2025
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Gerasimos Kanelatos, 2025\n"
+"Last-Translator: Charalampos Loukas, 2025\n"
 "Language-Team: Greek (https://app.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,27 +41,29 @@ msgid ""
 "%(date_start)s at %(time_start)s To\n"
 " %(date_end)s at %(time_end)s (%(timezone)s)"
 msgstr ""
+"%(date_start)s στις %(time_start)s To\n"
+" %(date_end)s at %(time_end)s (%(timezone)s)"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "%(day)s at (%(start)s To %(end)s) (%(timezone)s)"
-msgstr ""
+msgstr "%(day)s στις (%(start)s Έως %(end)s) (%(timezone)s)"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_attendee.py:0
 #, python-format
 msgid "%s has accepted the invitation"
-msgstr ""
+msgstr "%s έχει αποδεχθεί την πρόσκληση"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_attendee.py:0
 #, python-format
 msgid "%s has declined the invitation"
-msgstr ""
+msgstr "%s έχει απορρίψει την πρόσκληση"
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_changedate
@@ -495,6 +498,9 @@ msgid ""
 "['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != "
 "'weekly')\">Repeat on</span>"
 msgstr ""
+"<span class=\"fw-bold text-nowrap\" invisible=\"rrule_type_ui not in "
+"['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != "
+"'weekly')\">Επαναλάβετε</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
@@ -510,17 +516,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<span class=\"oi oi-arrow-right\"/><span> Join video call</span>"
-msgstr ""
+msgstr "<span class=\"oi oi-arrow-right\"/><span> Συμμετοχή σε βιντεοκλήση</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "<span invisible=\"allday\" style=\"white-space: pre;\"> or </span>"
-msgstr ""
+msgstr "<span invisible=\"allday\" style=\"white-space: pre;\"> ή </span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "<span> Attendees</span>"
-msgstr ""
+msgstr "<span> Παρευρισκόμενοι</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -545,7 +551,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_filters_user_id_partner_id_unique
 msgid "A user cannot have the same contact twice."
-msgstr ""
+msgstr "Ένας χρήστης δεν μπορεί να έχει την ίδια επαφή δύο φορές."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -613,12 +619,12 @@ msgstr "Προσθήκη"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "Add attendees..."
-msgstr ""
+msgstr "Προσθήκη συμμετεχόντων..."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Add description"
-msgstr ""
+msgstr "Προσθήκη περιγραφής"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
@@ -798,7 +804,7 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
 msgid "Calendar Settings"
-msgstr ""
+msgstr "Ρυθμίσεις Ημερολογίου"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_changedate
@@ -963,7 +969,7 @@ msgstr "Προσωποποιημένο"
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__daily
 msgid "Daily"
-msgstr ""
+msgstr "Καθημερινά"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -1210,7 +1216,7 @@ msgstr "Ώρα Συμβάντος"
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Days"
-msgstr ""
+msgstr "Κάθε %(interval)s Ημέρες"
 
 #. module: calendar
 #. odoo-python
@@ -1297,7 +1303,7 @@ msgstr ""
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Years"
-msgstr ""
+msgstr "Κάθε %(interval)s Έτη"
 
 #. module: calendar
 #. odoo-python
@@ -1318,7 +1324,7 @@ msgstr ""
 #: code:addons/calendar/models/mail_activity.py:0
 #, python-format
 msgid "Feedback: %(feedback)s"
-msgstr ""
+msgstr "Ανατροφοδότηση: %(feedback)s"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__1
@@ -1380,7 +1386,7 @@ msgstr "Παρασκευή"
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_provider_config__external_calendar_provider__google
 msgid "Google"
-msgstr ""
+msgstr "Google"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
@@ -1390,7 +1396,7 @@ msgstr "Google Ημερολόγιο"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "Google Calendar icon"
-msgstr ""
+msgstr "Εικονίδιο Ημερολογίου Google"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__cal_client_id
@@ -1599,7 +1605,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__tentative
 #, python-format
 msgid "Maybe"
-msgstr ""
+msgstr "Ίσως"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__user_id
@@ -1713,7 +1719,7 @@ msgstr "Μήνες"
 #: code:addons/calendar/static/src/views/calendar_form/calendar_quick_create.xml:0
 #, python-format
 msgid "More Options"
-msgstr ""
+msgstr "Περισσότερες Επιλογές"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -1860,7 +1866,7 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Online Meeting"
-msgstr ""
+msgstr "Διαδικτυακή συνάντηση"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -2096,12 +2102,12 @@ msgstr "Επιλέξτε συμμετέχοντες..."
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Send Email to attendees"
-msgstr ""
+msgstr "Αποστολή Email στους συμμετέχοντες"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Send Invitations"
-msgstr ""
+msgstr "Αποστολή Προσκλήσεων"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
@@ -2167,7 +2173,7 @@ msgstr "Κατάσταση"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Status:"
-msgstr ""
+msgstr "Κατάσταση:"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__stop
@@ -2309,7 +2315,7 @@ msgstr "Τρίτο"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__future_events
 #, python-format
 msgid "This and following events"
-msgstr ""
+msgstr "Αυτό και τα επόμενα συμβάντα"
 
 #. module: calendar
 #. odoo-javascript
@@ -2347,7 +2353,7 @@ msgstr ""
 #: code:addons/calendar/models/res_users.py:0
 #, python-format
 msgid "Today's Meetings"
-msgstr ""
+msgstr "Σημερινές Συναντήσεις"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__trigger_id
@@ -2407,7 +2413,7 @@ msgstr "Χρήστης"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__user_can_edit
 msgid "User Can Edit"
-msgstr ""
+msgstr "Ο χρήστης μπορεί να επεξεργαστεί"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_source
@@ -2418,7 +2424,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "Videocall URL"
-msgstr ""
+msgstr "URL βιντεοκλήσης"
 
 #. module: calendar
 #. odoo-javascript
@@ -2511,33 +2517,33 @@ msgstr ""
 #: code:addons/calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_renderer.xml:0
 #, python-format
 msgid "You're alone in this meeting"
-msgstr ""
+msgstr "Είσαι μόνος σε αυτή τη συνάντηση"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 #, python-format
 msgid "accepted"
-msgstr ""
+msgstr "αποδεκτό"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 #, python-format
 msgid "attendees"
-msgstr ""
+msgstr "συμμετέχοντες"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "awaiting"
-msgstr ""
+msgstr "σε εναμονή"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 #, python-format
 msgid "declined"
-msgstr ""
+msgstr "απορρίφθηκε"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2552,12 +2558,12 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "maybe,"
-msgstr ""
+msgstr "ίσως,"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "no,"
-msgstr ""
+msgstr "όχι,"
 
 #. module: calendar
 #. odoo-javascript
@@ -2571,12 +2577,12 @@ msgstr ""
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 #, python-format
 msgid "uncertain"
-msgstr ""
+msgstr "αβέβαιος"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "yes,"
-msgstr ""
+msgstr "ναι,"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_reminder

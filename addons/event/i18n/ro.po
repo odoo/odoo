@@ -13,7 +13,7 @@
 # Betty Keresztesi, 2024
 # Corina Calin, 2024
 # Lyall Kindmurr, 2024
-# Dorin Hongu <dhongu@gmail.com>, 2024
+# Dorin Hongu <dhongu@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2024\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2441,6 +2441,13 @@ msgid "Insert dynamic Google Maps in your email templates"
 msgstr ""
 
 #. module: event
+#: model:ir.model.fields,help:event.field_event_event__date_tz
+msgid ""
+"Indicates the timezone in which the event dates/times will be displayed on "
+"the website."
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_nbr
 msgid "Interval"
@@ -3944,7 +3951,7 @@ msgstr "Înțelegeți diversele module;"
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_unit
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_unit
 msgid "Unit"
-msgstr "buc"
+msgstr "Unitate"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -4091,6 +4098,14 @@ msgstr "Săptămâni"
 #, python-format
 msgid "Welcome to"
 msgstr "Bun venit la"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__date_begin
+#: model:ir.model.fields,help:event.field_event_registration__event_begin_date
+msgid ""
+"When the event is scheduled to take place (expressed in your local timezone "
+"on the form view)."
+msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
