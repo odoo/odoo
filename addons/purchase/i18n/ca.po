@@ -3,17 +3,17 @@
 # 	* purchase
 # 
 # Translators:
-# Wil Odoo, 2024
 # Josep Anton Belchi, 2024
 # Xavier, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Xavier, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -576,15 +576,6 @@ msgid "A warning can be set on a product or a customer (Purchase)"
 msgstr "Es pot establir una alerta en un producte o un client (Compra)"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid ""
-"Ability to select a package type in purchase orders and to force a quantity "
-"that is a multiple of the number of units per package."
-msgstr ""
-"Possibilitat de seleccionar un tipus de paquet a les comandes de compra i "
-"forçar una quantitat que sigui un múltiple del nombre d'unitats per paquet."
-
-#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "Accept"
 msgstr "Acceptar"
@@ -736,6 +727,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__edit
 msgid "Allow to edit purchase orders"
 msgstr "Permet modificar les ordres de compra"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__allowed_uom_ids
+msgid "Allowed Uom"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__aml_id
@@ -990,9 +986,9 @@ msgid "Catalog"
 msgstr "Catàleg"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_category_id
-msgid "Category"
-msgstr "Categoria"
+#: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
+msgid "Categories"
+msgstr "Categories"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -1116,15 +1112,6 @@ msgstr "Contacte"
 #: model:ir.model.fields,field_description:purchase.field_product_template__purchase_method
 msgid "Control Policy"
 msgstr "Política de Control"
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_line__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"La conversió entre les unitats de mesura només és possible si pertanyen a la"
-" mateixa categoria. La conversió es basarà en les ràtios establertes."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -1328,7 +1315,6 @@ msgstr "Descompte:"
 #: model:ir.model.fields,field_description:purchase.field_account_tax__display_name
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__display_name
 #: model:ir.model.fields,field_description:purchase.field_ir_actions_report__display_name
-#: model:ir.model.fields,field_description:purchase.field_product_packaging__display_name
 #: model:ir.model.fields,field_description:purchase.field_product_product__display_name
 #: model:ir.model.fields,field_description:purchase.field_product_supplierinfo__display_name
 #: model:ir.model.fields,field_description:purchase.field_product_template__display_name
@@ -1530,7 +1516,6 @@ msgstr "Amaga les línies cancel·lades"
 #: model:ir.model.fields,field_description:purchase.field_account_tax__id
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__id
 #: model:ir.model.fields,field_description:purchase.field_ir_actions_report__id
-#: model:ir.model.fields,field_description:purchase.field_product_packaging__id
 #: model:ir.model.fields,field_description:purchase.field_product_product__id
 #: model:ir.model.fields,field_description:purchase.field_product_supplierinfo__id
 #: model:ir.model.fields,field_description:purchase.field_product_template__id
@@ -1584,11 +1569,6 @@ msgid ""
 msgstr ""
 "Si s'instal·len, les variants del producte s'afegiran a les comandes de "
 "compra mitjançant una graella."
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_product_packaging__purchase
-msgid "If true, the packaging can be used for purchase orders"
-msgstr "Si és cert, l'embalatge es pot utilitzar per a comandes de compra"
 
 #. module: purchase
 #. odoo-python
@@ -2169,16 +2149,6 @@ msgid "Our Orders"
 msgstr "Les nostres comandes"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_packaging_id
-msgid "Packaging"
-msgstr "Empaquetament"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_packaging_qty
-msgid "Packaging Quantity"
-msgstr "Quantitat d'embalatge"
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__partner_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__partner_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__partner_id
@@ -2266,11 +2236,6 @@ msgid "Product"
 msgstr "Producte"
 
 #. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
-msgid "Product Categories"
-msgstr "Categories de producte"
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__category_id
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Product Category"
@@ -2280,11 +2245,6 @@ msgstr "Categoria del producte"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Product Description"
 msgstr "Descripció del producte"
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_product_packaging
-msgid "Product Packaging"
-msgstr "Embalatge de productes"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__product_tmpl_id
@@ -2340,7 +2300,6 @@ msgid "Provide a double validation mechanism for purchases"
 msgstr "Ofereix un mecanisme de doble validació per compres"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_product_packaging__purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_root
 #: model:ir.ui.menu,name:purchase.purchase_report
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2541,11 +2500,6 @@ msgstr "Comandes de les quals se n'han emès factures."
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Purchase orders that include lines not invoiced."
 msgstr "Comanda de compra que inclouen línies no facturades."
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "Purchase products by multiple of unit # per package"
-msgstr "Compreu productes per múltiple d'unitat # per paquet"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.purchase_send_reminder_mail_ir_actions_server
@@ -2976,8 +2930,8 @@ msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "Sell and purchase products in different units of measure"
-msgstr "Vendre i Comprar productes en diferents unitats de mesuara"
+msgid "Sell and purchase products in different units of measure or packagings"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3315,16 +3269,6 @@ msgstr "Aquesta nota s'afegeix a les comandes de compra."
 
 #. module: purchase
 #. odoo-python
-#: code:addons/purchase/models/purchase_order_line.py:0
-msgid ""
-"This product is packaged by %(pack_size).2f %(pack_name)s. You should "
-"purchase %(quantity).2f %(unit)s."
-msgstr ""
-"Aquest producte està envasat per %(pack_size).2f %(pack_name)s. Hauries de "
-"comprar %(quantity).2f %(unit)s."
-
-#. module: purchase
-#. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "This vendor bill has been created from: "
 msgstr "Aquesta factura de venedor ha estat creada de:"
@@ -3477,7 +3421,8 @@ msgstr ""
 "cancel·lar les factures de proveïdor relacionades."
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_id
 msgid "Unit"
 msgstr "Unitat de venda"
 
@@ -3498,30 +3443,10 @@ msgid "Unit Price:"
 msgstr "Preu unitari:"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_id
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_id
-msgid "Unit of Measure"
-msgstr "Unitat de mesura"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "Units Of Measure"
-msgstr "Unitat de mesura"
-
-#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
-msgid "Units of Measure"
-msgstr "Unitats de mesura"
-
-#. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
-msgid "Units of Measure Categories"
-msgstr "Categories d'unitats de mesura"
-
-#. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_unit_of_measure_in_config_purchase
-msgid "Units of Measures"
-msgstr "Unitats de mesura"
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+msgid "Units & Packagings"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3544,11 +3469,6 @@ msgstr "Base imposable"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__untaxed_total
 msgid "Untaxed Total"
 msgstr "Total abans d'impostos"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "UoM"
-msgstr "UdM"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__priority__1
@@ -3694,8 +3614,6 @@ msgid "Want to import this document in Odoo?"
 msgstr "Voleu importar aquest document a Odoo?"
 
 #. module: purchase
-#. odoo-python
-#: code:addons/purchase/models/purchase_order_line.py:0
 #: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_line_warn__warning
 #: model:ir.model.fields.selection,name:purchase.selection__res_partner__purchase_warn__warning
 msgid "Warning"

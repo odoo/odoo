@@ -3,15 +3,16 @@
 # 	* pos_self_order
 # 
 # Translators:
-# Wil Odoo, 2024
+# Wil Odoo, 2025
+# Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +27,7 @@ msgstr "\"QRコード\""
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid ""
 "%s is not available anymore, it has thus been removed from your order. "
 "Please review your order and validate it again."
@@ -101,18 +102,8 @@ msgid "All the items will be removed from the cart."
 msgstr "全てのプロダクトがカートから削除されます。"
 
 #. module: pos_self_order
-#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
-msgid "Allow self-order customers to set their order for takeout."
-msgstr "セルフオーダーの顧客に、テイクアウト用のオーダを設定できるようにします。"
-
-#. module: pos_self_order
-#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
-msgid "Allow takeout order"
-msgstr "テイクアウトオーダを許可する"
-
-#. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "An error has occurred"
 msgstr "エラーが発生しました"
 
@@ -140,7 +131,7 @@ msgstr "利用可能終了時間:"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/overrides/components/product_info_banner/product_info_banner.xml:0
+#: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Available"
 msgstr "処理可能"
@@ -166,6 +157,11 @@ msgstr "セルフオーダで利用可能"
 #: model:ir.model.fields,field_description:pos_self_order.field_product_template__self_order_available
 msgid "Available in Self Order"
 msgstr "セルフオーダで利用可能"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__available_in_self
+msgid "Available in self"
+msgstr ""
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -261,12 +257,13 @@ msgstr "コンフィグ設定"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Connection lost, please try again later"
 msgstr "接続が切断されました。後ほどお試し下さい。"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
 #: code:addons/pos_self_order/static/src/app/components/timeout_popup/timeout_popup.xml:0
 msgid "Continue"
 msgstr "次へ進む"
@@ -351,6 +348,11 @@ msgid "Default language for the kiosk mode"
 msgstr "キオスクモードのデフォルト言語"
 
 #. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_preset__service_at__delivery
+msgid "Delivery"
+msgstr "配送"
+
+#. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__nothing
 msgid "Disable"
 msgstr "無効にする"
@@ -365,7 +367,22 @@ msgid "Discard"
 msgstr "破棄"
 
 #. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_account_fiscal_position__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_ir_http__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_category__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_load_mixin__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_payment_method__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__display_name
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_session__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_product_product__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_product_template__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_restaurant_floor__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_restaurant_table__display_name
 msgid "Display Name"
 msgstr "表示名"
 
@@ -396,10 +413,9 @@ msgstr ""
 "以下の例に示すように、生成されるURLでは販売ポイントとテーブル名の両方が暗号化されます。"
 
 #. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
-msgid "Eat In"
-msgstr "イートイン"
+#: model:ir.model,name:pos_self_order.model_pos_preset
+msgid "Easily load a set of configuration options"
+msgstr "設定オプションのセットを簡単に読み込みます。"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -419,11 +435,6 @@ msgid ""
 "Feel free to use and print this QR code as many times as needed according to"
 " your requirements."
 msgstr "このQRコードはご要望に応じて、何度でもご自由にご利用・印刷して頂けます。"
-
-#. module: pos_self_order
-#: model:ir.model,name:pos_self_order.model_ir_binary
-msgid "File streaming helper model for controllers"
-msgstr "コントローラーのファイルストリーミングヘルパーモデル"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_account_fiscal_position
@@ -488,7 +499,22 @@ msgid "How to use"
 msgstr "使用方法"
 
 #. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_account_fiscal_position__id
+#: model:ir.model.fields,field_description:pos_self_order.field_ir_http__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_category__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_load_mixin__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_payment_method__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__id
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_session__id
+#: model:ir.model.fields,field_description:pos_self_order.field_product_product__id
+#: model:ir.model.fields,field_description:pos_self_order.field_product_template__id
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__id
+#: model:ir.model.fields,field_description:pos_self_order.field_restaurant_floor__id
+#: model:ir.model.fields,field_description:pos_self_order.field_restaurant_table__id
 msgid "ID"
 msgstr "ID"
 
@@ -679,7 +705,7 @@ msgstr "プロダクトが見つかりません"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/overrides/components/product_info_banner/product_info_banner.xml:0
+#: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
 msgid "Not available"
 msgstr "利用不可"
 
@@ -725,7 +751,7 @@ msgstr "オーダしてカウンタで受取る"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Orders not found on server"
 msgstr "サーバ上にオーダが見つかりません"
 
@@ -775,14 +801,9 @@ msgstr "カウンタで受取る"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_service_mode__counter
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_preset__service_at__counter
 msgid "Pickup zone"
 msgstr "受取ゾーン"
-
-#. module: pos_self_order
-#. odoo-python
-#: code:addons/pos_self_order/models/pos_session.py:0
-msgid "PoS Order by Session"
-msgstr "セッション別POSオーダ"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_load_mixin
@@ -878,13 +899,13 @@ msgstr "プロダクト画像"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Product is not available"
 msgstr "プロダクトは利用できません"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Product not found"
 msgstr "製品は見つかりませんでした"
 
@@ -955,6 +976,12 @@ msgstr "セキュリティトークン"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
+msgid "Select a hour"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
 msgid "Select a table"
 msgstr "テーブルを選択"
@@ -987,6 +1014,7 @@ msgstr "セルフオーダ:"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+#: model_terms:ir.ui.view,arch_db:pos_self_order.view_pos_preset_form
 msgid "Self Ordering"
 msgstr "セルフオーダ"
 
@@ -1013,20 +1041,8 @@ msgid "Self Ordering Url"
 msgstr "セルフオーダURL"
 
 #. module: pos_self_order
-#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_takeaway
-#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_takeaway
-msgid "Self Takeaway"
-msgstr "セルフテイクアウト"
-
-#. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
-msgid "Self-Order"
-msgstr "セルフオーダ"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/overrides/components/product_info_banner/product_info_banner.xml:0
+#: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
 msgid "Self-ordering:"
 msgstr "セルフオーダ:"
 
@@ -1036,6 +1052,7 @@ msgid "Sequence"
 msgstr "シーケンス"
 
 #. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__service_at
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Service at"
 msgstr "以下でのサービス:"
@@ -1079,6 +1096,7 @@ msgstr "成功"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_service_mode__table
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_preset__service_at__table
 msgid "Table"
 msgstr "テーブル"
 
@@ -1106,12 +1124,6 @@ msgstr "テーブル:"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
-msgid "Take Out"
-msgstr "テイクアウト"
-
-#. module: pos_self_order
-#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 msgid "Tax:"
 msgstr "税:"
@@ -1125,6 +1137,7 @@ msgstr "税:"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
+#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
 msgid "Thanks a lot!"
 msgstr "ありがとうございました！"
 
@@ -1205,7 +1218,7 @@ msgstr "この時間は利用不可能です"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Uncategorised"
 msgstr "カテゴリなし"
 
@@ -1216,7 +1229,13 @@ msgstr "警告"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
+msgid "We'll do everything to be on time!"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "We're currently closed"
 msgstr "現在閉店中です"
 
@@ -1231,6 +1250,12 @@ msgstr "現在閉店中です"
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "We're preparing your order!"
 msgstr "オーダを準備しています"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
+msgid "When would you like to receive your orders ?"
+msgstr ""
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -1252,7 +1277,7 @@ msgstr "投稿済のオーダ明細を編集することはできません"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "You're not authorized to perform this action"
 msgstr "このアクションを実行する権限がありません"
 
@@ -1271,13 +1296,13 @@ msgstr "選択"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Your order has been cancelled"
 msgstr "オーダが取消されました"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Your order has been paid"
 msgstr "オーダが支払されました"
 
@@ -1289,7 +1314,7 @@ msgstr "オーダ番号"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Your order status has been changed"
 msgstr "オーダのステータスが変わりました"
 

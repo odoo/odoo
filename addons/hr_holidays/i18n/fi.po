@@ -2769,6 +2769,14 @@ msgstr "Vain"
 
 #. module: hr_holidays
 #. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"Only %s's Time Off Approver, a time off Officer/Responsible or Administrator"
+" can approve or refuse allocation requests."
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Manager can reset a refused leave."
 msgstr "Vain vapaa-aikaesimies voi nollata evätyn loman."
@@ -2801,17 +2809,16 @@ msgstr "Vain esimies voi muuttaa peruutettua lomaa."
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid "Only a time off Manager can approve its own requests."
-msgstr "Vain vapaa-aikaesimies voi hyväksyä omat pyyntönsä."
+msgid "Only a time off Administrator can approve their own requests."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"Only a time off Officer/Responsible or Manager can approve or refuse time "
-"off requests."
+"Only a time off Officer/Responsible or Administrator can approve or refuse "
+"allocation requests."
 msgstr ""
-"Ainoastaan vapaa-aikaesimies voi hyväksyä tai hylätä vapaa-aikapyynnöt."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4464,6 +4471,14 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You must be %s's Manager to approve this leave"
 msgstr "Sinun täytyy olla %s:n esimies, jotta voit hyväksyä tämän loman"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"You must be either %s's Time Off Approver or Time off Administrator to "
+"validate this allocation request."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python

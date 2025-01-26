@@ -3,15 +3,16 @@
 # 	* hr_expense
 # 
 # Translators:
-# Wil Odoo, 2024
+# Daye Jeong, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -484,13 +485,6 @@ msgstr "환경설정"
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_configuration
 msgid "Configuration"
 msgstr "설정"
-
-#. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr "단위 사이의 변환은 동일 카테고리에서만 가능합니다. 변환은 비율에 따라 이루어집니다."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_kanban_view
@@ -1078,6 +1072,11 @@ msgid "Hotel, plane ticket, taxi, etc."
 msgstr "호텔, 비행기 티켓, 택시 등."
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_domain_id
+msgid "Hr Expense Alias Domain"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_account__id
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_applicability__id
 #: model:ir.model.fields,field_description:hr_expense.field_account_move__id
@@ -1351,7 +1350,7 @@ msgstr "내 활동 마감일"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "My Closed Expenses"
-msgstr ""
+msgstr "내 마감된 비용"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_my_all
@@ -1363,7 +1362,7 @@ msgstr "내 경비"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "My Open Expenses"
-msgstr ""
+msgstr "내 마감되지 않은 비용"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_my_all
@@ -2240,6 +2239,11 @@ msgid "Under Validation"
 msgstr "승인 중"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_uom_id
+msgid "Unit"
+msgstr "단위"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__price_unit
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -2247,20 +2251,10 @@ msgid "Unit Price"
 msgstr "단가"
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_uom_id
-msgid "Unit of Measure"
-msgstr "단위"
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__untaxed_amount
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Untaxed Amount"
 msgstr "공급가액"
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_uom_category_id
-msgid "UoM Category"
-msgstr "단위카테고리"
 
 #. module: hr_expense
 #. odoo-javascript

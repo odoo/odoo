@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Rasareeyar Lappiam, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-01-20 08:41+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Rasareeyar Lappiam, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,7 +67,16 @@ msgstr "สร้างเมื่อ"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__display_name
+#: model:ir.model.fields,field_description:bus.field_bus_listener_mixin__display_name
 #: model:ir.model.fields,field_description:bus.field_bus_presence__display_name
+#: model:ir.model.fields,field_description:bus.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:bus.field_ir_http__display_name
+#: model:ir.model.fields,field_description:bus.field_ir_model__display_name
+#: model:ir.model.fields,field_description:bus.field_ir_websocket__display_name
+#: model:ir.model.fields,field_description:bus.field_res_groups__display_name
+#: model:ir.model.fields,field_description:bus.field_res_partner__display_name
+#: model:ir.model.fields,field_description:bus.field_res_users__display_name
+#: model:ir.model.fields,field_description:bus.field_res_users_settings__display_name
 msgid "Display Name"
 msgstr "แสดงชื่อ"
 
@@ -77,7 +87,16 @@ msgstr "การกำหนด HTTP"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__id
+#: model:ir.model.fields,field_description:bus.field_bus_listener_mixin__id
 #: model:ir.model.fields,field_description:bus.field_bus_presence__id
+#: model:ir.model.fields,field_description:bus.field_ir_attachment__id
+#: model:ir.model.fields,field_description:bus.field_ir_http__id
+#: model:ir.model.fields,field_description:bus.field_ir_model__id
+#: model:ir.model.fields,field_description:bus.field_ir_websocket__id
+#: model:ir.model.fields,field_description:bus.field_res_groups__id
+#: model:ir.model.fields,field_description:bus.field_res_partner__id
+#: model:ir.model.fields,field_description:bus.field_res_users__id
+#: model:ir.model.fields,field_description:bus.field_res_users_settings__id
 msgid "ID"
 msgstr "ไอดี"
 
@@ -130,6 +149,13 @@ msgstr "ออนไลน์"
 
 #. module: bus
 #. odoo-javascript
+#: code:addons/bus/static/src/components/bus_connection_alert.xml:0
+msgid "Real-time connection lost..."
+msgstr "การเชื่อมต่อแบบเรียลไทม์ขาดหาย..."
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/outdated_page_watcher_service.js:0
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
 #: code:addons/bus/static/src/services/bus_service.js:0
 msgid "Refresh"
@@ -137,6 +163,7 @@ msgstr "รีเฟรช"
 
 #. module: bus
 #. odoo-javascript
+#: code:addons/bus/static/src/outdated_page_watcher_service.js:0
 #: code:addons/bus/static/src/services/bus_service.js:0
 msgid ""
 "Save your work and refresh to get the latest updates and avoid potential "
@@ -152,6 +179,7 @@ msgstr "ดูเหมือนเพจจะล้าสมัยแล้ว
 
 #. module: bus
 #. odoo-javascript
+#: code:addons/bus/static/src/outdated_page_watcher_service.js:0
 #: code:addons/bus/static/src/services/bus_service.js:0
 msgid "The page is out of date"
 msgstr "หน้านี้เลิกใช้งานแล้ว"

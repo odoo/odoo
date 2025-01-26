@@ -3,16 +3,16 @@
 # 	* sale_pdf_quote_builder
 # 
 # Translators:
-# Wil Odoo, 2024
 # Malaz Abuidris <msea@odoo.com>, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -180,7 +180,12 @@ msgid "Description"
 msgstr "الوصف"
 
 #. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_ir_actions_report__display_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__display_name
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__display_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__display_name
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__display_name
 msgid "Display Name"
 msgstr "اسم العرض "
@@ -254,7 +259,7 @@ msgstr "حقول الاستمارة مشمولة "
 #. module: sale_pdf_quote_builder
 #: model:ir.model.constraint,message:sale_pdf_quote_builder.constraint_sale_pdf_form_field_unique_name_per_doc_type
 msgid "Form field name must be unique for a given document type."
-msgstr ""
+msgstr "يجب أن يكون اسم حقل النموذج فريداً لنوع مستند معين. "
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_pdf_form_field
@@ -297,7 +302,12 @@ msgid "History"
 msgstr "السجل"
 
 #. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_ir_actions_report__id
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__id
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__id
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_line__id
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__id
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__id
 msgid "ID"
 msgstr "المُعرف"
@@ -404,7 +414,7 @@ msgstr "آخر تحديث في"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
 msgid "Mark fields as safe to fill in the quote."
-msgstr ""
+msgstr "قم بتحديد الحقول على أنها آمنة لتعبئتها في عرض الأسعار. "
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__mimetype
@@ -432,7 +442,7 @@ msgstr "يمكن فقط إرفاق الملفات بصيغة PDF داخل عرض
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/quotation_document.py:0
 msgid "Only PDF documents can be used as header or footer."
-msgstr ""
+msgstr "يمكن استخدام مستندات PDF فقط كرأس أو تذييل. "
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__original_id
@@ -562,6 +572,8 @@ msgstr "البيع: مرئي في "
 #: model:ir.actions.server,name:sale_pdf_quote_builder.cron_post_upgrade_assign_missing_form_fields_ir_actions_server
 msgid "Sale Pdf Quote Builder: assign form fields to documents post upgrade"
 msgstr ""
+"أداة إنشاء عروض أسعار البيع بتنسيق Pdf: قم بتعيين حقول الاستمارة إلى "
+"المستندات بعد الترقية "
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_order
@@ -592,7 +604,7 @@ msgstr "الحقل %(field_name)s غير موجود في النموذج %(model_
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_pdf_form_field__name
 msgid "The form field name as written in the PDF."
-msgstr ""
+msgstr "اسم حقل النموذج كما هو مكتوب في ملف PDF. "
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_pdf_form_field__path
@@ -632,6 +644,11 @@ msgstr "رفع ترويسات وتذييلات عروض الأسعار "
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__url
 msgid "Url"
 msgstr "رابط URL "
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
+msgid "Visible to all"
+msgstr "مرئي للكل "
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__voice_ids

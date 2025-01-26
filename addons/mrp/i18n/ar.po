@@ -3,16 +3,16 @@
 # 	* mrp
 # 
 # Translators:
-# Wil Odoo, 2024
 # Malaz Abuidris <msea@odoo.com>, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,6 +86,12 @@ msgstr "عدد أوامر العمل"
 #: model:ir.model.fields,field_description:mrp.field_product_template__used_in_bom_count
 msgid "# of BoM Where is Used"
 msgstr "عدد قوائم المواد المستخدم فيها"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_bom.py:0
+msgid "%(display_name)s"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -603,6 +609,7 @@ msgid "Action Needed"
 msgstr "إجراء مطلوب"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__active
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__active
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__active
 msgid "Active"
@@ -753,6 +760,12 @@ msgstr "السماح بإنشاء أرقام دفعات/أرقام تسلسلي�
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__consumption__flexible
 msgid "Allowed"
 msgstr "مسموح به"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__allowed_uom_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__allowed_uom_ids
+msgid "Allowed Uom"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reserve_visible
@@ -1337,10 +1350,6 @@ msgid "Catalog"
 msgstr "كتالوج "
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_uom_category_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__product_uom_category_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_uom_category_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_production__product_uom_category_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__loss_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_type__loss_type
 #: model_terms:ir.ui.view,arch_db:mrp.oee_loss_tree_view
@@ -1580,18 +1589,6 @@ msgstr "الاستهلاك "
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
 msgid "Consumption Warning"
 msgstr "تحذير الاستهلاك "
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_bom__product_uom_category_id
-#: model:ir.model.fields,help:mrp.field_mrp_bom_byproduct__product_uom_category_id
-#: model:ir.model.fields,help:mrp.field_mrp_bom_line__product_uom_category_id
-#: model:ir.model.fields,help:mrp.field_mrp_production__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"لا يمكن التحويل بين وحدات القياس إلا إذا كانت تنتمي لنفس الفئة. سيتم إجراء "
-"التحويل بناءً على النسب."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_bom_tree_view
@@ -1919,16 +1916,12 @@ msgstr "مهلة التصنيع الافتراضية"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__default_capacity
 msgid ""
-"Default number of pieces (in product UoM) that can be produced in parallel "
+"Default number of pieces (in product unit) that can be produced in parallel "
 "(at the same time) at this work center. For example: the capacity is 5 and "
 "you need to produce 10 units, then the operation time listed on the BOM will"
 " be multiplied by two. However, note that both time before and after "
 "production will only be counted once."
 msgstr ""
-"عدد القطع الافتراضي (في قائمة مواد المنتج) التي يمكن إنتاجها بشكل موازٍ (في "
-"نفس الوقت) في مركز العمل هذا. على سبيل المثال: السعة هي 5 وتحتاج إلى إنتاج "
-"10 وحدات، ستم مضاعفة وقت العملية المذكور في قائمة المواد، ولكن يرجى العلم "
-"بأنه سيتم حساب الوقت قبل وبعد الإنتاج مرة واحدة فقط. "
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_consumption_warning_line__product_uom_id
@@ -4472,16 +4465,9 @@ msgid "Product Template"
 msgstr "قالب المنتج"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_uom_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_production__product_uom_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_split__product_uom_id
-msgid "Product Unit of Measure"
-msgstr "وحدة قياس المنتج"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__product_uom_id
-msgid "Product UoM"
-msgstr "وحدة قياس المنتج"
+msgid "Product Unit"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
@@ -4549,11 +4535,6 @@ msgstr "أمر الإنتاج للمكونات "
 #: model:ir.model.fields,field_description:mrp.field_stock_move__production_id
 msgid "Production Order for finished products"
 msgstr "أمر الإنتاج للمنتجات المنتهية"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom__active
-msgid "Production Ready"
-msgstr "الإنتاج جاهز"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_state
@@ -5487,15 +5468,6 @@ msgstr "لقد تم تحديث قائمة المواد منذ أن تم إنشا
 
 #. module: mrp
 #. odoo-python
-#: code:addons/mrp/models/mrp_bom.py:0
-msgid ""
-"The Product Unit of Measure you chose has a different category than in the "
-"product form."
-msgstr ""
-"لدى وحدة قياس المنتج التى اخترتها فئة تختلف عن التي في استمارة المنتج. "
-
-#. module: mrp
-#. odoo-python
 #: code:addons/mrp/models/mrp_workcenter.py:0
 msgid "The Workorder (%s) cannot be started twice!"
 msgstr "لايمكن بدء أمر العمل (%s) مرتين! "
@@ -6078,7 +6050,17 @@ msgid "Unfold"
 msgstr "كشف"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_split__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__product_uom_name
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "Unit"
 msgstr "الوحدة"
 
@@ -6104,21 +6086,12 @@ msgstr "عامل الوحدة "
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_uom_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__product_uom_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__product_uom_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__product_uom_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__product_uom_id
-#: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__product_uom_name
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_tree_view
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "Unit of Measure"
 msgstr "وحدة القياس"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__product_uom_id
-#: model:ir.model.fields,help:mrp.field_mrp_bom_line__product_uom_id
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
@@ -6149,11 +6122,6 @@ msgstr "إلغاء التخطيط "
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Unreserve"
 msgstr "إلغاء الحجز"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
-msgid "UoM"
-msgstr "وحدة القياس"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -6188,21 +6156,6 @@ msgstr "استخدام تبعيات العمليات "
 #: model:res.groups,name:mrp.group_mrp_reception_report
 msgid "Use Reception Report with Manufacturing Orders"
 msgstr "استخدام تقرير الاستلام مع أوامر التصنيع "
-
-#. module: mrp
-#: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
-#: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production_specific
-#: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
-#: model_terms:ir.actions.act_window,help:mrp.action_work_orders
-#: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
-msgid ""
-"Use the table work center control panel to register operations in the shop floor directly.\n"
-"            The tablet provides worksheets for your workers and allow them to scrap products, track time,\n"
-"            launch a maintenance request, perform quality tests, etc."
-msgstr ""
-"استخدم لوحة تحكم جدول مركز العمل لتسجيل العمليات في شاشة التصنيع مباشرة.\n"
-"            يمنحك الجهاز اللوحي أوراق عمل لعمالك ويساعدهم فيما يتعلق بمخلفات التصنيع وتتبع الوقت\n"
-"            وإنشاء طلب صيانة وإجراء اختبارات الجودة وما إلى ذلك. "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
@@ -6578,10 +6531,18 @@ msgid "Work center"
 msgstr "مركز العمل "
 
 #. module: mrp
+#: model_terms:ir.actions.act_window,help:mrp.action_work_orders
+msgid ""
+"Work orders are operations to do as part of a manufacturing order.\n"
+"                    Operations are defined in the bill of materials or added in the manufacturing order directly."
+msgstr ""
+"أوامر العمل هي عمليات لتنفيذها كجزء من أمر التصنيع.\n"
+"                    تكون العمليات محددة في قائمة المواد أو مضافة في أمر التصنيع مباشرة. "
+
+#. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production_specific
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
-#: model_terms:ir.actions.act_window,help:mrp.action_work_orders
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
 msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"

@@ -3,17 +3,17 @@
 # 	* website
 # 
 # Translators:
-# Wil Odoo, 2024
 # Jakub Smolka, 2024
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5655,12 +5655,6 @@ msgstr "Např. /kontaktujte nebo /obchod"
 #: model:ir.model.fields,help:website.field_website__domain
 msgid "E.g. https://www.mydomain.com"
 msgstr "Např. https://www.mojedomena.com"
-
-#. module: website
-#. odoo-python
-#: code:addons/website/controllers/form.py:0
-msgid "EXTERNAL SUBMISSION - Customer not verified"
-msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_horizontal
@@ -11607,6 +11601,11 @@ msgid "Recipient Email"
 msgstr "E-mail adresáta"
 
 #. module: website
+#: model:ir.model,name:website.model_ir_rule
+msgid "Record Rule"
+msgstr "Pravidlo záznamu"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_controller_page__record_view_id
 msgid "Record view"
 msgstr ""
@@ -11977,11 +11976,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_route__path
 msgid "Route"
 msgstr "Trasa"
-
-#. module: website
-#: model:ir.model,name:website.model_ir_rule
-msgid "Rule"
-msgstr "Pravidlo"
 
 #. module: website
 #. odoo-javascript
@@ -13541,6 +13535,12 @@ msgid "The message will be visible once the countdown ends"
 msgstr "Zpráva bude viditelná, jakmile skončí odpočítávání"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_website_controller_page__name
+msgid ""
+"The name is used to generate the URL and is shown in the browser title bar"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,help:website.field_website_controller_page__name_slugified
 msgid "The name of the page usable in a URL"
 msgstr ""
@@ -13688,14 +13688,6 @@ msgstr "Třetí funkce"
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_multi_menus
 msgid "Third Menu"
 msgstr "Třetí nabídka"
-
-#. module: website
-#. odoo-python
-#: code:addons/website/controllers/form.py:0
-msgid ""
-"This %(model_name)s was submitted by %(user_name)s (%(user_email)s) on "
-"behalf of %(form_email)s"
-msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -14755,7 +14747,6 @@ msgid "View Hierarchy"
 msgstr ""
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_controller_page__name
 #: model:ir.model.fields,field_description:website.field_website_page__name
 #: model:ir.model.fields,field_description:website.field_website_page_properties__name
 msgid "View Name"

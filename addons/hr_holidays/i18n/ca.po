@@ -2722,6 +2722,14 @@ msgstr "Sols"
 
 #. module: hr_holidays
 #. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"Only %s's Time Off Approver, a time off Officer/Responsible or Administrator"
+" can approve or refuse allocation requests."
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Manager can reset a refused leave."
 msgstr ""
@@ -2757,19 +2765,16 @@ msgstr ""
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid "Only a time off Manager can approve its own requests."
+msgid "Only a time off Administrator can approve their own requests."
 msgstr ""
-"Només un gestor de temps lliure pot aprovar les seves pròpies peticions."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"Only a time off Officer/Responsible or Manager can approve or refuse time "
-"off requests."
+"Only a time off Officer/Responsible or Administrator can approve or refuse "
+"allocation requests."
 msgstr ""
-"Només els administradors i responsables d'absències poden aprovar o refusar "
-"les sol·licituds d'absència. "
 
 #. module: hr_holidays
 #. odoo-python
@@ -4373,6 +4378,14 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You must be %s's Manager to approve this leave"
 msgstr "Heu de ser el gestor de %s per aprovar aquest permís"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"You must be either %s's Time Off Approver or Time off Administrator to "
+"validate this allocation request."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python

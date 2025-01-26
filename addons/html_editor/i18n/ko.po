@@ -3,15 +3,16 @@
 # 	* html_editor
 # 
 # Translators:
-# Wil Odoo, 2024
+# Daye Jeong, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2025-01-20 08:41+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,18 +34,6 @@ msgstr ""
 #: code:addons/html_editor/static/src/main/media/image_description.xml:0
 msgid "'Title tag' is shown as a tooltip when you hover the picture."
 msgstr "사진을 가리키면 '제목 태그'가 툴팁으로 표시됩니다."
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/image_description.xml:0
-msgid "(ALT Tag)"
-msgstr "(ALT 태그)"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/image_description.xml:0
-msgid "(TITLE Tag)"
-msgstr "(제목 태그)"
 
 #. module: html_editor
 #. odoo-javascript
@@ -153,6 +142,12 @@ msgstr "코드 섹션 추가"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
+msgid "Add a download box"
+msgstr "다운로드 박스 추가"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_plugin.js:0
 msgid "Add a link"
 msgstr "링크 추가"
@@ -166,8 +161,8 @@ msgstr "이모티콘 추가하기"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/others/embedded_components/core/table_of_content/table_of_content.xml:0
-msgid "Add headings in this field to fill the Table of Content"
-msgstr "목차를 채우려면 이 필드에 제목을 추가하세요."
+msgid "Add headings to fill the Table of Contents"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -336,12 +331,6 @@ msgstr "취소"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/image_description.xml:0
-msgid "Change media description and tooltip"
-msgstr "미디어 설명 및 툴팁 변경"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/chatgpt/chatgpt_plugin.js:0
 msgid "ChatGPT"
 msgstr "챗GPT"
@@ -382,14 +371,6 @@ msgstr "코드"
 #: code:addons/html_editor/static/src/fields/html_field.js:0
 msgid "Code view"
 msgstr "코드 보기"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/excalidraw_plugin/excalidraw_dialog/excalidraw_dialog.xml:0
-msgid ""
-"Collaborative Links require joining, while Embed Links directly show the "
-"drawing."
-msgstr "공동 작업 링크는 가입이 필요하지만 임베드 링크는 도면을 직접 표시합니다."
 
 #. module: html_editor
 #. odoo-javascript
@@ -504,16 +485,9 @@ msgstr "Dailymotion"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
 #: code:addons/html_editor/static/src/main/media/image_plugin.js:0
 msgid "Default"
 msgstr "기본"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
-msgid "Default + Rounded"
-msgstr "기본 + 둥근 모서리"
 
 #. module: html_editor
 #. odoo-javascript
@@ -554,16 +528,15 @@ msgstr ""
 "있습니다!"
 
 #. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_dialog/media_dialog.js:0
-msgid "Documents"
-msgstr "문서"
+#: model:ir.model.fields,field_description:html_editor.field_ir_attachment__display_name
+msgid "Display Name"
+msgstr "표시명"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/core/file/readonly_file.xml:0
-msgid "Download"
-msgstr "다운로드"
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
+msgid "Documents"
+msgstr "문서"
 
 #. module: html_editor
 #. odoo-javascript
@@ -675,12 +648,6 @@ msgstr "가장 먼 쪽으로 확장"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/file_plugin/file_plugin.js:0
-msgid "File"
-msgstr "파일"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/upload_progress_toast/upload_progress_toast.xml:0
 msgid "File has been uploaded"
 msgstr "파일이 업로드 되었습니다"
@@ -702,12 +669,6 @@ msgstr "채우기 + 둥근 모서리"
 #: code:addons/html_editor/static/src/main/font/gradient_picker.xml:0
 msgid "First color %"
 msgstr "첫 번째 색상 %"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
-msgid "Flat"
-msgstr "고정 소수점"
 
 #. module: html_editor
 #. odoo-javascript
@@ -893,8 +854,8 @@ msgstr "공유 버튼 숨기기"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/others/embedded_components/plugins/table_of_content_plugin/table_of_content_plugin.js:0
-msgid "Highlight the structure (headings) of this field"
-msgstr "이 필드에 적절한 제목을 추가하여 구조를 강조하세요."
+msgid "Highlight the structure (headings)"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -907,6 +868,11 @@ msgstr "기록"
 #: code:addons/html_editor/static/src/fields/html_field.js:0
 msgid "Html"
 msgstr "Html"
+
+#. module: html_editor
+#: model:ir.model.fields,field_description:html_editor.field_ir_attachment__id
+msgid "ID"
+msgstr "ID"
 
 #. module: html_editor
 #. odoo-javascript
@@ -976,6 +942,12 @@ msgstr "이미지 Src"
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__image_width
 msgid "Image Width"
 msgstr "이미지 폭"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/image_description.xml:0
+msgid "Image description"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1325,6 +1297,12 @@ msgstr "%s 파일을 찾을 수 없습니다. 파일을 다시 업로드하시�
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/core/excalidraw/readonly_excalidraw.xml:0
+msgid "Open"
+msgstr "열기"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Open in a new tab"
 msgstr "새 탭에서 열기"
@@ -1334,6 +1312,14 @@ msgstr "새 탭에서 열기"
 #: code:addons/html_editor/static/src/others/embedded_components/core/excalidraw/readonly_excalidraw.xml:0
 msgid "Open in new Window"
 msgstr "새 창으로 열기"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/excalidraw_plugin/excalidraw_dialog/excalidraw_dialog.xml:0
+msgid ""
+"Open the share menu of your Excalidraw scene and paste its shareable or "
+"embed link here."
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1699,9 +1685,10 @@ msgstr "테이블"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/core/table_of_content/table_of_content.xml:0
 #: code:addons/html_editor/static/src/others/embedded_components/plugins/table_of_content_plugin/table_of_content_plugin.js:0
-msgid "Table Of Content"
-msgstr "목차"
+msgid "Table of Contents"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1889,13 +1876,19 @@ msgstr "URL"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Upload File"
+msgstr "파일 업로드"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/document_selector.js:0
 msgid "Upload a document"
 msgstr "문서 업로드"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/file_plugin/file_plugin.js:0
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
 msgid "Upload a file"
 msgstr "파일 업로드"
 
@@ -2070,15 +2063,33 @@ msgstr "deg"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
+msgid "document"
+msgstr "문서"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/others/embedded_components/plugins/excalidraw_plugin/excalidraw_dialog/excalidraw_dialog.xml:0
 msgid "e.g. https://link.excalidraw.com/..."
 msgstr "예: https://link.excalidraw.com/..."
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
+msgid "file"
+msgstr "파일"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.xml:0
 msgid "media-library"
 msgstr "media-library"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "or"
+msgstr "또는"
 
 #. module: html_editor
 #. odoo-javascript

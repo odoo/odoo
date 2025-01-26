@@ -3,16 +3,16 @@
 # 	* stock
 # 
 # Translators:
-# Wil Odoo, 2024
 # Rasareeyar Lappiam, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,12 +47,9 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 msgid ""
 "\n"
-"The quantity done for the product %(product)s doesn't respect the rounding precision defined on the unit of measure %(unit)s.\n"
-"Please change the quantity done or the rounding precision of your unit of measure."
+"The quantity done for the product %(product)s doesn't respect the rounding precision defined on the system.\n"
+"Please change the quantity done or the rounding precision in your settings."
 msgstr ""
-"\n"
-"ปริมาณที่ทำสำหรับผลิตภัณฑ์ %(product)s ไม่คำนึงถึงความแม่นยำในการปัดเศษที่กำหนดไว้ในหน่วยวัด %(unit)s\n"
-"โปรดเปลี่ยนปริมาณที่ทำหรือความแม่นยำในการปัดเศษของหน่วยวัดของคุณ"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -169,18 +166,6 @@ msgstr ""
 #: code:addons/stock/models/stock_scrap.py:0
 msgid "%(product)s: Insufficient Quantity To Scrap"
 msgstr ""
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-msgid ""
-"%(product_name)s --> Product UoM is %(product_uom)s "
-"(%(product_uom_category)s) - Move UoM is %(move_uom)s "
-"(%(move_uom_category)s)"
-msgstr ""
-"%(product_name)s --> สินค้า UoM คือ %(product_uom)s "
-"(%(product_uom_category)s) - ย้าย UoM คือ %(move_uom)s "
-"(%(move_uom_category)s)"
 
 #. module: stock
 #. odoo-python
@@ -472,11 +457,6 @@ msgid "54326786758"
 msgstr "54326786758"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_inventory
-msgid "98"
-msgstr "98"
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
 msgid ""
 "<br/>\n"
@@ -561,6 +541,39 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        สวัสดี <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"        เรายินดีที่จะแจ้งให้คุณทราบว่าคำสั่งซื้อของคุณได้รับการจัดส่งแล้ว\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">\n"
+"            ข้อมูลอ้างอิงการติดตามของคุณคือ\n"
+"            <strong>\n"
+"            <t t-if=\"object.carrier_tracking_url\">\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"/>\n"
+"                <t t-if=\"multiple_carrier_tracking\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">\n"
+"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"/>\n"
+"                    </t>\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"                </t>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"            </t>\n"
+"            </strong>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        โปรดดูรายละเอียดเพิ่มเติมในใบจัดส่งของคุณ<br/><br/>\n"
+"        ขอบคุณ\n"
+"        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"            <br/>\n"
+"            <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_view_kanban
@@ -1154,10 +1167,22 @@ msgid "Allowed Location"
 msgstr "ตำแหน่งที่ได้รับอนุญาต"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_replenishment_uom_ids
+msgid "Allowed Replenishment Uom"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__allowed_route_ids
 #: model:ir.model.fields,field_description:stock.field_stock_replenish_mixin__allowed_route_ids
 msgid "Allowed Route"
 msgstr "เส้นทางที่อนุญาต"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__allowed_uom_ids
+#: model:ir.model.fields,field_description:stock.field_stock_move_line__allowed_uom_ids
+#: model:ir.model.fields,field_description:stock.field_stock_scrap__allowed_uom_ids
+msgid "Allowed Uom"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__alternative
@@ -1221,9 +1246,9 @@ msgid "Applicable On"
 msgstr "นำไปใช้ได้กับ"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_route__packaging_selectable
-msgid "Applicable on Packaging"
-msgstr "ใช้ได้กับบรรจุภัณฑ์"
+#: model:ir.model.fields,field_description:stock.field_stock_route__package_type_selectable
+msgid "Applicable on Package Type"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__product_selectable
@@ -1551,12 +1576,6 @@ msgid "Blocking Message"
 msgstr "บล็อกข้อความ"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-msgid "Blocking: %s"
-msgstr "การบล็อก: %s"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__quant_ids
 msgid "Bulk Content"
 msgstr "เนื้อหาปริมาณมาก"
@@ -1669,6 +1688,7 @@ msgstr "ไม่สามารถลบตำแหน่งของแพ็
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__capacity_ids
+#: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
 msgid "Capacity"
 msgstr "ความจุ"
 
@@ -1683,10 +1703,11 @@ msgid "Capacity by Product"
 msgstr "ความจุตามสินค้า"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_category_id
-#: model:ir.model.fields,field_description:stock.field_stock_move__product_uom_category_id
-#: model:ir.model.fields,field_description:stock.field_stock_move_line__product_uom_category_id
-#: model:ir.model.fields,field_description:stock.field_stock_scrap__product_uom_category_id
+#: model:ir.ui.menu,name:stock.menu_product_category_config_stock
+msgid "Categories"
+msgstr "หมวดหมู่"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_search_form_view_stock_report
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -2053,18 +2074,6 @@ msgstr "ต่อไป"
 #: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
 msgid "Control panel buttons"
 msgstr "ปุ่มบนแผงควบคุม"
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_product_replenish__product_uom_category_id
-#: model:ir.model.fields,help:stock.field_stock_move__product_uom_category_id
-#: model:ir.model.fields,help:stock.field_stock_move_line__product_uom_category_id
-#: model:ir.model.fields,help:stock.field_stock_scrap__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"การแปลงระหว่างหน่วยวัดจะเกิดขึ้นได้ก็ต่อเมื่ออยู่ในหมวดหมู่เดียวกัน "
-"การแปลงจะอิงตามอัตราส่วน"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posx
@@ -2836,17 +2845,6 @@ msgid "Demo Product"
 msgstr "สาธิตการใช้งานสินค้า"
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_product_packaging__route_ids
-msgid ""
-"Depending on the modules installed, this will allow you to define the route "
-"of the product in this packaging: whether it will be bought, manufactured, "
-"replenished on order, etc."
-msgstr ""
-"ขึ้นอยู่กับโมดูลที่ติดตั้ง "
-"สิ่งนี้จะช่วยให้คุณสามารถกำหนดเส้นทางของสินค้าในบรรจุภัณฑ์นี้: "
-"ไม่ว่าจะเป็นการซื้อ ผลิต เติมสินค้าตามคำสั่งซื้อ ฯลฯ"
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
 #: model:ir.model.fields,help:stock.field_product_template__route_ids
 msgid ""
@@ -3014,6 +3012,11 @@ msgid "Difference"
 msgstr "ส่วนต่าง"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
+msgid "Dimensions"
+msgstr "มิติ"
+
+#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.inventory_warning_reset_view
@@ -3073,7 +3076,6 @@ msgstr "แสดงล็อตและหมายเลขซีเรีย
 #: model:ir.model.fields,field_description:stock.field_procurement_group__display_name
 #: model:ir.model.fields,field_description:stock.field_product_category__display_name
 #: model:ir.model.fields,field_description:stock.field_product_label_layout__display_name
-#: model:ir.model.fields,field_description:stock.field_product_packaging__display_name
 #: model:ir.model.fields,field_description:stock.field_product_product__display_name
 #: model:ir.model.fields,field_description:stock.field_product_removal__display_name
 #: model:ir.model.fields,field_description:stock.field_product_replenish__display_name
@@ -3177,11 +3179,6 @@ msgstr "เสร็จสิ้น"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
 msgid "Done By"
 msgstr "ทำโดย"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_quantity
-msgid "Done Packaging Quantity"
-msgstr "ปริมาณบรรจุภัณฑ์เสร็จแล้ว"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_package_level__state__draft
@@ -3871,7 +3868,6 @@ msgstr "ควรสำรองสินค้าในการโอนย้
 #: model:ir.model.fields,field_description:stock.field_procurement_group__id
 #: model:ir.model.fields,field_description:stock.field_product_category__id
 #: model:ir.model.fields,field_description:stock.field_product_label_layout__id
-#: model:ir.model.fields,field_description:stock.field_product_packaging__id
 #: model:ir.model.fields,field_description:stock.field_product_product__id
 #: model:ir.model.fields,field_description:stock.field_product_removal__id
 #: model:ir.model.fields,field_description:stock.field_product_replenish__id
@@ -5247,11 +5243,6 @@ msgid "Manage Push and Pull inventory flows"
 msgstr "จัดการการไหลของสินค้าแบบผลักและแบบดึง"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Manage product packagings (e.g. pack of 6 bottles, box of 10 pieces)"
-msgstr "จัดการบรรจุภัณฑ์ของสินค้า (เช่น แพ็ค 6 ขวด, กล่องสำหรับ 10 ชิ้น)"
-
-#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__trigger__manual
 msgid "Manual"
 msgstr "ด้วยตัวเอง"
@@ -5470,11 +5461,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_adv_location
 msgid "Multi-Step Routes"
 msgstr "เส้นทางสินค้าแบบหลายสเตป"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_multiple
-msgid "Multiple Quantity"
-msgstr "หลายปริมาณ"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_unique_package_type
@@ -6348,12 +6334,13 @@ msgid "Package Transfers"
 msgstr "การโอนย้ายแพ็คเกจ"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_product_packaging__package_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__name
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__package_type_ids
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__package_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category_capacity__package_type_id
+#: model:ir.model.fields,field_description:stock.field_uom_uom__package_type_id
 #: model_terms:ir.ui.view,arch_db:stock.quant_package_search_view
+#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
 msgid "Package Type"
 msgstr "ประเภทแพ็คเกจ"
@@ -6417,7 +6404,7 @@ msgstr ""
 "               เมื่อสร้างแล้ว สามารถย้ายสินค้าทั้งหมดได้ในคราวเดียว หรือสามารถแกะสินค้าและย้ายเป็นหน่วยเดียวอีกครั้งได้"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_id
+#: model:ir.model.fields,field_description:stock.field_stock_move__packaging_uom_id
 msgid "Packaging"
 msgstr "บรรจุภัณฑ์"
 
@@ -6432,15 +6419,19 @@ msgid "Packaging Length"
 msgstr "ความยาวบรรจุภัณฑ์"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__packaging_uom_qty
+msgid "Packaging Quantity"
+msgstr "จำนวนบรรจุภัณฑ์"
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__width
 msgid "Packaging Width"
 msgstr "ความกว้างของบรรจุภัณฑ์"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_route__packaging_ids
-#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
-msgid "Packagings"
-msgstr "บรรจุภัณฑ์"
+#: model:ir.model.fields,help:stock.field_stock_move__packaging_uom_id
+msgid "Packaging unit from sale or purchase orders"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_pack_stock_loc_id
@@ -6807,7 +6798,6 @@ msgstr "ความจุของสินค้า"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__categ_ids
-#: model:ir.ui.menu,name:stock.menu_product_category_config_stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Product Categories"
 msgstr "หมวดหมู่สินค้า"
@@ -6858,22 +6848,6 @@ msgstr "ตัวกรองล็อตสินค้า"
 #: model:ir.model,name:stock.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
 msgstr "ย้ายสินค้า ( รายการเคลื่อนย้ายสต็อก )"
-
-#. module: stock
-#: model:ir.model,name:stock.model_product_packaging
-msgid "Product Packaging"
-msgstr "บรรจุภัณฑ์ของสินค้า"
-
-#. module: stock
-#: model:ir.actions.report,name:stock.label_product_packaging
-msgid "Product Packaging (ZPL)"
-msgstr "บรรจุภัณฑ์ของผลิตภัณฑ์ (ZPL)"
-
-#. module: stock
-#: model:ir.ui.menu,name:stock.menu_product_packagings
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Product Packagings"
-msgstr "บรรจุภัณฑ์สินค้า"
 
 #. module: stock
 #. odoo-python
@@ -7128,11 +7102,6 @@ msgid "Putaway:"
 msgstr "นำส่งสินค้า:"
 
 #. module: stock
-#: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_qty_multiple_check
-msgid "Qty Multiple must be greater than or equal to zero."
-msgstr "จำนวนหลายรายการต้องมากกว่าหรือเท่ากับศูนย์"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_quality_control
 msgid "Quality"
 msgstr "คุณภาพ"
@@ -7229,11 +7198,6 @@ msgid "Quantity"
 msgstr "ปริมาณ"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
-msgid "Quantity Multiple"
-msgstr "ปริมาณหลายรายการ"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__qty_available
 #: model:ir.model.fields,field_description:stock.field_product_template__qty_available
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
@@ -7288,6 +7252,11 @@ msgstr "ปริมาณในสต็อกที่ยังสามาร
 #: model:ir.model.fields,help:stock.field_stock_move__product_qty
 msgid "Quantity in the default UoM of the product"
 msgstr "ปริมาณใน UoM เริ่มต้นของสินค้า"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_move__packaging_uom_qty
+msgid "Quantity in the packaging unit"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__incoming_qty
@@ -7692,6 +7661,11 @@ msgid "Replenishment Information for %(product)s in %(warehouse)s"
 msgstr "ข้อมูลการเติมสินค้าสำหรับ %(product)s ใน %(warehouse)s"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__replenishment_uom_id
+msgid "Replenishment Multiple"
+msgstr ""
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 msgid "Replenishment Report"
@@ -7782,12 +7756,6 @@ msgid "Reserved"
 msgstr "สำรองแล้ว"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_qty
-#: model:ir.model.fields,field_description:stock.field_stock_move_line__product_packaging_qty
-msgid "Reserved Packaging Quantity"
-msgstr "ปริมาณบรรจุภัณฑ์ที่สงวนไว้"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__reserved_quantity
 msgid "Reserved Quantity"
 msgstr "ปริมาณที่สำรองไว้"
@@ -7833,6 +7801,11 @@ msgstr "เส้นทางการทดแทนสินค้า"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 msgid "Return"
 msgstr "ส่งคืน"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
+msgid "Return All"
+msgstr ""
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
@@ -7933,10 +7906,11 @@ msgstr "ลำดับเส้นทาง"
 #: model:ir.actions.act_window,name:stock.action_routes_form
 #: model:ir.actions.server,name:stock.action_open_routes
 #: model:ir.model.fields,field_description:stock.field_product_category__route_ids
-#: model:ir.model.fields,field_description:stock.field_product_packaging__route_ids
 #: model:ir.model.fields,field_description:stock.field_product_product__route_ids
 #: model:ir.model.fields,field_description:stock.field_product_template__route_ids
+#: model:ir.model.fields,field_description:stock.field_stock_package_type__route_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__route_ids
+#: model:ir.model.fields,field_description:stock.field_uom_uom__route_ids
 #: model:ir.ui.menu,name:stock.menu_routes_config
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
@@ -7948,6 +7922,11 @@ msgstr "เส้นทาง"
 #: model:ir.model.fields,field_description:stock.field_product_template__has_available_route_ids
 msgid "Routes can be selected on this product"
 msgstr "สามารถเลือกเส้นทางได้ในสินค้านี้ได้"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_uom_uom__route_ids
+msgid "Routes propagated from the package type"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__resupply_wh_ids
@@ -8207,8 +8186,8 @@ msgstr "ไม่รองรับการเลือก"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Sell and purchase products in different units of measure"
-msgstr "ขายและซื้อสินค้าในหน่วยวัดต่าง ๆ "
+msgid "Sell and purchase products in different units of measure or packagings"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9056,12 +9035,6 @@ msgid "Template"
 msgstr "เทมเพลต"
 
 #. module: stock
-#: model_terms:res.company,sign_terms:stock.res_company_1
-#: model_terms:res.company,sign_terms_html:stock.res_company_1
-msgid "Terms &amp; Conditions"
-msgstr "เงื่อนไขและข้อกำหนด"
-
-#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 msgid ""
@@ -9085,7 +9058,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "The Lot/Serial number (%s) is linked to another product."
-msgstr ""
+msgstr "หมายเลขล็อต/หมายเลขซีเรียล (%s) เชื่อมโยงกับผลิตภัณฑ์อื่น"
 
 #. module: stock
 #. odoo-python
@@ -9265,13 +9238,11 @@ msgstr ""
 "'ประตู 1'"
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__qty_multiple
+#: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__replenishment_uom_id
 msgid ""
-"The procurement quantity will be rounded up to a multiple of this field "
-"quantity. If it is 0, it is not rounded."
+"The procurement quantity will be rounded up to a multiple of this "
+"unit/packaging. If it is not set, it is not rounded."
 msgstr ""
-"ปริมาณการจัดซื้อจะถูกปัดเศษขึ้นเป็นผลคูณของปริมาณฟิลด์นี้ หากเป็น 0 "
-"จะไม่ปัดเศษ"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -9569,6 +9540,15 @@ msgstr ""
 "สินค้านี้ถูกใช้ในการย้ายสินค้าคงคลังอย่างน้อยหนึ่งครั้ง "
 "ไม่แนะนำให้เปลี่ยนประเภทสินค้า เนื่องจากอาจทำให้เกิดความไม่สอดคล้องกันได้ "
 "วิธีแก้ปัญหาที่ดีกว่าอาจเป็นการเก็บถาวรสินค้าและสร้างสินค้าใหม่แทน"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/product.py:0
+msgid ""
+"This product has been used in at least one inventory movement. It is not "
+"advised to change the Unit of Measure since it can lead to inconsistencies. "
+"The existing moves will not be recalculated with the new unit of measure."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10019,7 +9999,7 @@ msgstr "ตำแหน่งส่งผ่าน"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Transport management: organize packs in your fleet, or carriers."
-msgstr ""
+msgstr "การจัดการการขนส่ง: จัดระเบียบแพ็คเกจในยานพาหนะหรือผู้ให้บริการของคุณ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__trigger
@@ -10103,6 +10083,8 @@ msgid ""
 "Unavailable Serial numbers. Please correct the serial numbers encoded: "
 "%(serial_numbers_to_locations)s"
 msgstr ""
+"หมายเลขซีเรียลไม่พร้อมใช้งาน โปรดแก้ไขหมายเลขซีเรียลที่เข้ารหัส: "
+"%(serial_numbers_to_locations)s"
 
 #. module: stock
 #. odoo-javascript
@@ -10116,24 +10098,10 @@ msgid "Unique Lot/Serial Number"
 msgstr "ล็อต/หมายเลขซีเรียล ที่ไม่ซ้ำกัน"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
-#: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
-#: model_terms:ir.ui.view,arch_db:stock.view_move_tree
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_simple
-msgid "Unit"
-msgstr "หน่วย"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__price_unit
-msgid "Unit Price"
-msgstr "ราคาต่อหน่วย"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__forecast_uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__product_uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_lot__product_uom_id
+#: model:ir.model.fields,field_description:stock.field_stock_move__product_uom
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__product_uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__uom_id
@@ -10142,20 +10110,19 @@ msgstr "ราคาต่อหน่วย"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_uom
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty__product_uom_name
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__product_uom_name
-#: model_terms:ir.ui.view,arch_db:stock.package_level_form_view
-#: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
-#: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree_detailed
-#: model_terms:ir.ui.view,arch_db:stock.view_move_tree_receipt_picking
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_move_tree
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_kanban
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
-msgid "Unit of Measure"
-msgstr "หน่วยวัด"
+#: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
+msgid "Unit"
+msgstr "หน่วย"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__uom
-msgid "Unit of Measure Name"
-msgstr "ชื่อหน่วยวัด"
+msgid "Unit Name"
+msgstr "ชื่อหน่วย"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__price_unit
+msgid "Unit Price"
+msgstr "ราคาต่อหน่วย"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -10164,19 +10131,10 @@ msgid "Units"
 msgstr "หน่วย"
 
 #. module: stock
+#: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Units Of Measure"
-msgstr "หน่วยวัด"
-
-#. module: stock
-#: model:ir.ui.menu,name:stock.menu_stock_unit_measure_stock
-msgid "Units of Measure"
-msgstr "หน่วยวัด"
-
-#. module: stock
-#: model:ir.ui.menu,name:stock.product_uom_menu
-msgid "Units of Measures"
-msgstr "หน่วยวัด"
+msgid "Units & Packagings"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
@@ -10217,29 +10175,9 @@ msgid "Unreturned"
 msgstr "ไม่ส่งคืน"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-msgid "Unsafe unit of measure"
-msgstr "หน่วยวัดที่ไม่ปลอดภัย"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__unwanted_replenish
 msgid "Unwanted Replenish"
 msgstr "ไม่ต้องการการเติมสินค้า"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__product_uom
-#: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
-#: model_terms:ir.ui.view,arch_db:stock.replenishment_option_tree_view
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
-#: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
-msgid "UoM"
-msgstr "หน่วยวัด"
-
-#. module: stock
-#: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
-msgid "UoM Categories"
-msgstr "หมวดหมู่หน่วยวัด"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot_report__uom_id
@@ -10686,14 +10624,14 @@ msgstr ""
 "เส้นทางจะสามารถเลือกได้ในแท็บสินค้าคงคลังของแบบฟอร์มสินค้า"
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_stock_route__package_type_selectable
+msgid "When checked, the route will be selectable on package types"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__product_categ_selectable
 msgid "When checked, the route will be selectable on the Product Category."
 msgstr "เมื่อทำเครื่องหมายแล้ว จะสามารถเลือกเส้นทางได้ที่หมวดหมู่สินค้า"
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_route__packaging_selectable
-msgid "When checked, the route will be selectable on the Product Packaging."
-msgstr "เมื่อทำเครื่องหมายแล้ว จะสามารถเลือกเส้นทางได้บนบรรจุภัณฑ์ของสินค้า"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_in_id
@@ -10893,21 +10831,6 @@ msgid ""
 msgstr "คุณกำลังพยายามนำสินค้าไปยังสถานที่ที่ต่างกันไว้ในบรรจุภัณฑ์เดียวกัน"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-msgid ""
-"You are using a unit of measure smaller than the one you are using in order "
-"to stock your product. This can lead to rounding problem on reserved "
-"quantity. You should use the smaller unit of measure possible in order to "
-"valuate your stock or change its rounding precision to a smaller value "
-"(example: 0.00001)."
-msgstr ""
-"คุณกำลังใช้หน่วยวัดที่น้อยกว่าที่คุณใช้เพื่อสต็อกสินค้าของคุณ "
-"ซึ่งอาจนำไปสู่ปัญหาการปัดเศษของปริมาณที่สำรองไว้ "
-"คุณควรใช้หน่วยวัดที่น้อยกว่าที่เป็นไปได้เพื่อประเมินมูลค่าสต็อกของคุณหรือเปลี่ยนความแม่นยำในการปัดเศษให้เป็นค่าที่น้อยลง"
-" (ตัวอย่าง: 0.00001)"
-
-#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_routes_form
 msgid ""
 "You can define here the main routes that run through\n"
@@ -11097,17 +11020,6 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/product.py:0
-msgid ""
-"You cannot change the unit of measure as there are already stock moves for "
-"this product. If you want to change the unit of measure, you should rather "
-"archive this product and create a new one."
-msgstr ""
-"คุณไม่สามารถเปลี่ยนหน่วยวัดได้ เนื่องจากมีสินค้าที่ถูกย้ายในสต็อกอยู่แล้ว "
-"หากคุณต้องการเปลี่ยนหน่วยวัด คุณควรเก็บถาวรสินค้านี้และสร้างสินค้าใหม่"
-
-#. module: stock
-#. odoo-python
 #: code:addons/stock/models/stock_scrap.py:0
 msgid "You cannot delete a scrap which is done."
 msgstr "คุณไม่สามารถลบเศษสินค้าที่ทำเสร็จแล้วได้"
@@ -11141,15 +11053,6 @@ msgid ""
 "You cannot pack products into the same package when they are from different "
 "transfers with different operation types"
 msgstr ""
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-msgid ""
-"You cannot perform moves because their unit of measure has a different "
-"category from their product unit of measure."
-msgstr ""
-"คุณไม่สามารถดำเนินการย้ายได้เนื่องจากหน่วยวัดมีหมวดหมู่ที่แตกต่างจากหน่วยวัดผลิตภัณฑ์"
 
 #. module: stock
 #. odoo-python
@@ -11256,15 +11159,6 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/stock_orderpoint.py:0
-msgid ""
-"You have to select a product unit of measure that is in the same category as"
-" the default unit of measure of the product"
-msgstr ""
-"คุณต้องเลือกหน่วยวัดสินค้าที่อยู่ในหมวดหมู่เดียวกันกับหน่วยวัดเริ่มต้นของสินค้า"
-
-#. module: stock
-#. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 msgid "You may only return Done pickings."
 msgstr "คุณสามารถส่งคืนได้เฉพาะการเลือกที่เสร็จสิ้นแล้วเท่านั้น"
@@ -11296,6 +11190,8 @@ msgid ""
 "You need to supply a Lot/Serial Number for product:\n"
 "%(products)s"
 msgstr ""
+"คุณต้องระบุหมายเลขล็อต/หมายเลขซีเรียลสำหรับผลิตภัณฑ์:\n"
+"%(products)s"
 
 #. module: stock
 #. odoo-python
@@ -11346,12 +11242,6 @@ msgstr ""
 "คุณจะพบข้อเสนอการเติมสินค้าอัจฉริยะที่นี่ตามการคาดการณ์สินค้าคงคลัง\n"
 "            เลือกปริมาณที่จะซื้อหรือผลิตและเปิดคำสั่งซื้อได้ในคลิกเดียว\n"
 "            เพื่อประหยัดเวลาในอนาคต ให้ตั้งกฎเป็น \"อัตโนมัติ\""
-
-#. module: stock
-#: model_terms:res.company,sign_terms:stock.res_company_1
-#: model_terms:res.company,sign_terms_html:stock.res_company_1
-msgid "Your conditions..."
-msgstr "เงื่อนไขของคุณ..."
 
 #. module: stock
 #: model_terms:res.company,lunch_notify_message:stock.res_company_1

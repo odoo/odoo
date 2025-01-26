@@ -3,15 +3,16 @@
 # 	* sale_timesheet
 # 
 # Translators:
-# Wil Odoo, 2024
+# Tony Ng, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -528,8 +529,23 @@ msgid "Discover our products."
 msgstr "了解我們的產品。"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_move__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template__display_name
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_project__display_name
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_update__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_report_project_task_user__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
 
@@ -666,8 +682,23 @@ msgid "Hours Remaining)"
 msgstr "小時剩餘可用）"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_move__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_move_line__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template__id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_project__id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_update__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_report_project_task_user__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_res_config_settings__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__id
 msgid "ID"
 msgstr "識別號"
 
@@ -755,6 +786,11 @@ msgstr "初級建築設計（工時表憑單）"
 #: model:product.template,name:sale_timesheet.product_service_deliver_milestones_product_template
 msgid "Kitchen Assembly (Milestones)"
 msgstr "廚房組裝（里程碑）"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__last_sol_of_customer
+msgid "Last Sol Of Customer"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__write_uid
@@ -1144,6 +1180,17 @@ msgid "Sales Orders"
 msgstr "銷售訂單"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_employee_ids
+msgid ""
+"Sales order item that will be selected by default on the timesheets of the corresponding employee. It bypasses the sales order item defined on the project and the task, and can be modified on each timesheet entry if necessary. In other words, it defines the rate at which an employee's time is billed based on their expertise, skills or experience, for instance.\n"
+"If you would like to bill the same service at a different rate, you need to create two separate sales order items as each sales order item can only have a single unit price at a time.\n"
+"You can also define the hourly company cost of your employees for their timesheets on this project specifically. It will bypass the timesheet cost set on the employee."
+msgstr ""
+"在相應員工的工時表上預設選擇的銷售訂單項目。它會繞過專案及任務設定的銷售訂單項目，並可按需要，修改個別工時記項。換句話說，它定義了員工工時計費的收費率，例如可根據員工的專業知識、技能或經驗等計費。\n"
+"若想以不同收費率對相同服務計費，則需要建立兩個單獨的銷售訂單項目，因為每個銷售訂單項目只能有一個單價。\n"
+"你亦可以專為今次專案，特別設定員工工時表所採用的每小時公司成本。它將繞過員工預設的工時表成本。"
+
+#. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__so_line
 msgid ""
 "Sales order item to which the time spent will be added in order to be "
@@ -1262,21 +1309,20 @@ msgstr "技術專長"
 
 #. module: sale_timesheet
 #. odoo-python
-#: code:addons/sale_timesheet/models/product.py:0
-#, python-format
-msgid ""
-"The %s product is required by the Timesheets app and cannot be linked to a "
-"company."
-msgstr ""
-
-#. module: sale_timesheet
-#. odoo-python
-#: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
-#, python-format
+#: code:addons/sale_timesheet/models/product_product.py:0
+#: code:addons/sale_timesheet/models/product_template.py:0
 msgid ""
 "The %s product is required by the Timesheets app and cannot be archived nor "
 "deleted."
 msgstr "%s 產品是 工時管理 模組所必需的，無法存檔或刪除。"
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/product_template.py:0
+msgid ""
+"The %s product is required by the Timesheets app and cannot be linked to a "
+"company."
+msgstr "產品「%s」是工時表應用程式所必需的資訊，亦不可連結至公司。"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1542,6 +1588,27 @@ msgstr "培訓"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__price_unit
 msgid "Unit Price"
 msgstr "單價"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_task__display_name
+msgid ""
+"Use these keywords in the title to set new tasks:\n"
+"\n"
+"        30h Allocate 30 hours to the task\n"
+"        #tags Set tags on the task\n"
+"        @user Assign the task to a user\n"
+"        ! Set the task a high priority\n"
+"\n"
+"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+msgstr ""
+"在新任務標題中，使用這些關鍵字進行設定：\n"
+"\n"
+"        30h：向任務分配 30 小時\n"
+"        #標籤名稱：對任務設定標籤\n"
+"        @用戶名稱：將任務指派給用戶\n"
+"        !：將任務設為高優先級別\n"
+"\n"
+"        記得使用正確格式和順序，例如：改進配置畫面 5h #特色功能 #v16 @志明 !"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer

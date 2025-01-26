@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Xavier, 2024
+# Xavier, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Xavier, 2024\n"
+"Last-Translator: Xavier, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -84,6 +84,12 @@ msgstr "# Ordres de treball"
 #: model:ir.model.fields,field_description:mrp.field_product_template__used_in_bom_count
 msgid "# of BoM Where is Used"
 msgstr "# de LdM On s'utilitza"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_bom.py:0
+msgid "%(display_name)s"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -599,6 +605,7 @@ msgid "Action Needed"
 msgstr "Acció necessària"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__active
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__active
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__active
 msgid "Active"
@@ -746,6 +753,12 @@ msgstr "Permet crear números de lot/sèrie nous per als components"
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__consumption__flexible
 msgid "Allowed"
 msgstr "Permès"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__allowed_uom_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__allowed_uom_ids
+msgid "Allowed Uom"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reserve_visible
@@ -1329,10 +1342,6 @@ msgid "Catalog"
 msgstr "Catàleg"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_uom_category_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__product_uom_category_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_uom_category_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_production__product_uom_category_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__loss_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_type__loss_type
 #: model_terms:ir.ui.view,arch_db:mrp.oee_loss_tree_view
@@ -1569,18 +1578,6 @@ msgstr "Consum"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
 msgid "Consumption Warning"
 msgstr "Avís de consum"
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_bom__product_uom_category_id
-#: model:ir.model.fields,help:mrp.field_mrp_bom_byproduct__product_uom_category_id
-#: model:ir.model.fields,help:mrp.field_mrp_bom_line__product_uom_category_id
-#: model:ir.model.fields,help:mrp.field_mrp_production__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"La conversió entre les unitats de mesura només és possible si pertanyen a la"
-" mateixa categoria. La conversió es basarà en les ràtios establertes."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_bom_tree_view
@@ -1906,18 +1903,12 @@ msgstr "Temps d'inici de fabricació per defecte"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__default_capacity
 msgid ""
-"Default number of pieces (in product UoM) that can be produced in parallel "
+"Default number of pieces (in product unit) that can be produced in parallel "
 "(at the same time) at this work center. For example: the capacity is 5 and "
 "you need to produce 10 units, then the operation time listed on the BOM will"
 " be multiplied by two. However, note that both time before and after "
 "production will only be counted once."
 msgstr ""
-"Nombre predeterminat de peces (en el producte UoM) que es poden produir en "
-"paral·lel (al mateix temps) en aquest centre de treball. Per exemple: la "
-"capacitat és 5 i cal produir 10 unitats, llavors el temps d'operació "
-"enumerat en el LDM es multiplicarà per dos. No obstant això, cal tenir en "
-"compte que el temps abans i després de la producció només es comptarà una "
-"vegada."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_consumption_warning_line__product_uom_id
@@ -4474,16 +4465,9 @@ msgid "Product Template"
 msgstr "Plantilla de producte"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_uom_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_production__product_uom_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_split__product_uom_id
-msgid "Product Unit of Measure"
-msgstr "Unitat de mesura del producte"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__product_uom_id
-msgid "Product UoM"
-msgstr "UdM de producte"
+msgid "Product Unit"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
@@ -4552,11 +4536,6 @@ msgstr "Ordre de producció per als components"
 #: model:ir.model.fields,field_description:mrp.field_stock_move__production_id
 msgid "Production Order for finished products"
 msgstr "Ordre de fabricació de productes acabats"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom__active
-msgid "Production Ready"
-msgstr "Producció preparada"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_state
@@ -5490,16 +5469,6 @@ msgstr ""
 
 #. module: mrp
 #. odoo-python
-#: code:addons/mrp/models/mrp_bom.py:0
-msgid ""
-"The Product Unit of Measure you chose has a different category than in the "
-"product form."
-msgstr ""
-"La unitat de mesura del producte que heu triat, te una categoria diferent "
-"que en la forma del producte."
-
-#. module: mrp
-#. odoo-python
 #: code:addons/mrp/models/mrp_workcenter.py:0
 msgid "The Workorder (%s) cannot be started twice!"
 msgstr "L'ordre de treball (%s) no es pot iniciar dues vegades!"
@@ -6095,7 +6064,17 @@ msgid "Unfold"
 msgstr "Desplegar"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_split__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__product_uom_name
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "Unit"
 msgstr "Unitat de venda"
 
@@ -6121,21 +6100,12 @@ msgstr "Factor unitat"
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_uom_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__product_uom_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__product_uom_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__product_uom_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__product_uom_id
-#: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__product_uom_name
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_tree_view
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "Unit of Measure"
 msgstr "Unitat de mesura"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__product_uom_id
-#: model:ir.model.fields,help:mrp.field_mrp_bom_line__product_uom_id
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
@@ -6168,11 +6138,6 @@ msgid "Unreserve"
 msgstr "Anul·lar la reserva"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
-msgid "UoM"
-msgstr "UdM"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Update BoM"
 msgstr "Actualitza el LdM"
@@ -6203,21 +6168,6 @@ msgstr "Utilitza les dependències de l'operació"
 #: model:res.groups,name:mrp.group_mrp_reception_report
 msgid "Use Reception Report with Manufacturing Orders"
 msgstr "Usa l'informe de recepció amb ordres de fabricació"
-
-#. module: mrp
-#: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
-#: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production_specific
-#: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
-#: model_terms:ir.actions.act_window,help:mrp.action_work_orders
-#: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
-msgid ""
-"Use the table work center control panel to register operations in the shop floor directly.\n"
-"            The tablet provides worksheets for your workers and allow them to scrap products, track time,\n"
-"            launch a maintenance request, perform quality tests, etc."
-msgstr ""
-"Utilitzeu el panell de control del centre de treball de taula per registrar les operacions directament al pis de la botiga.\n"
-"            La tauleta proporciona fulls de treball per als vostres treballadors i els permet descartar productes, fer un seguiment del temps,\n"
-"            llança una sol·licitud de manteniment, realitza proves de qualitat, etc."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
@@ -6598,10 +6548,18 @@ msgid "Work center"
 msgstr "Centre de treball"
 
 #. module: mrp
+#: model_terms:ir.actions.act_window,help:mrp.action_work_orders
+msgid ""
+"Work orders are operations to do as part of a manufacturing order.\n"
+"                    Operations are defined in the bill of materials or added in the manufacturing order directly."
+msgstr ""
+"Les ordres de treball són operacions per fer com a part d'una ordre de fabricació.\n"
+"            Les operacions es defineixen a la llista de materials o s'afegeixen directament a l'ordre de fabricació."
+
+#. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production_specific
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
-#: model_terms:ir.actions.act_window,help:mrp.action_work_orders
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
 msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"

@@ -3,15 +3,16 @@
 # 	* payment_mercado_pago
 # 
 # Translators:
-# Wil Odoo, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-01-20 08:43+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,6 +69,18 @@ msgstr "Koodi"
 #: code:addons/payment_mercado_pago/models/payment_provider.py:0
 msgid "Could not establish the connection to the API."
 msgstr "Yhteyttä API:han ei saatu muodostettua."
+
+#. module: payment_mercado_pago
+#: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: payment_mercado_pago
+#: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields.selection,name:payment_mercado_pago.selection__payment_provider__code__mercado_pago
@@ -134,6 +147,8 @@ msgid ""
 "The communication with the API failed. Mercado Pago gave us the following "
 "information: '%(error_message)s' (code %(error_code)s)"
 msgstr ""
+"Yhteys API:n kanssa epäonnistui. Mercado Pago antoi meille seuraavat tiedot:"
+" \"%(error_message)s\" (koodi %(error_code)s)"
 
 #. module: payment_mercado_pago
 #. odoo-python

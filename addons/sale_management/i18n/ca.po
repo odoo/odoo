@@ -3,17 +3,17 @@
 # 	* sale_management
 # 
 # Translators:
-# Wil Odoo, 2024
 # Josep Anton Belchi, 2024
 # Xavier, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:30+0000\n"
+"POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Xavier, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -83,17 +83,17 @@ msgid "All Sales"
 msgstr "Totes les vendes"
 
 #. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__allowed_uom_ids
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__allowed_uom_ids
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__allowed_uom_ids
+msgid "Allowed Uom"
+msgstr ""
+
+#. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
 msgid "Archived"
 msgstr "Arxivat"
-
-#. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__product_uom_category_id
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_category_id
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__product_uom_category_id
-msgid "Category"
-msgstr "Categoria"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_res_company
@@ -117,17 +117,6 @@ msgstr "Paràmetres de configuració"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__mail_template_id
 msgid "Confirmation Mail"
 msgstr "Correu electrònic de confirmació"
-
-#. module: sale_management
-#: model:ir.model.fields,help:sale_management.field_sale_order_option__product_uom_category_id
-#: model:ir.model.fields,help:sale_management.field_sale_order_template_line__product_uom_category_id
-#: model:ir.model.fields,help:sale_management.field_sale_order_template_option__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"La conversió entre les unitats de mesura només és possible si pertanyen a la"
-" mateixa categoria. La conversió es basarà en les ràtios establertes."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
@@ -600,6 +589,13 @@ msgid "Tip: Sell or buy products in bulk with matrixes"
 msgstr "Consell: Venda o compra productes en massa amb matrius"
 
 #. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__uom_id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__uom_id
+msgid "Unit"
+msgstr "Unitat de venda"
+
+#. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__price_unit
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -610,18 +606,6 @@ msgstr "Preu un."
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 msgid "Unit Price:"
 msgstr "Preu unitari:"
-
-#. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__uom_id
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_id
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__uom_id
-msgid "Unit of Measure"
-msgstr "Unitat de mesura"
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
-msgid "UoM"
-msgstr "UdM"
 
 #. module: sale_management
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action

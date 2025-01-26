@@ -3,17 +3,17 @@
 # 	* stock
 # 
 # Translators:
-# Wil Odoo, 2024
 # Xavier, 2024
 # EstudiTIC - estuditic.com <odoo@estuditic.com>, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: EstudiTIC - estuditic.com <odoo@estuditic.com>, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,12 +46,9 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 msgid ""
 "\n"
-"The quantity done for the product %(product)s doesn't respect the rounding precision defined on the unit of measure %(unit)s.\n"
-"Please change the quantity done or the rounding precision of your unit of measure."
+"The quantity done for the product %(product)s doesn't respect the rounding precision defined on the system.\n"
+"Please change the quantity done or the rounding precision in your settings."
 msgstr ""
-"\n"
-"La quantitat feta pel producte %(product)s no respecta la precisió d'arrodoniment definida a la unitat de mesura %(unit)s.\n"
-"Si us plau, canvieu la quantitat feta o la precisió d'arrodoniment de la unitat de mesura."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -166,15 +163,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_scrap.py:0
 msgid "%(product)s: Insufficient Quantity To Scrap"
-msgstr ""
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-msgid ""
-"%(product_name)s --> Product UoM is %(product_uom)s "
-"(%(product_uom_category)s) - Move UoM is %(move_uom)s "
-"(%(move_uom_category)s)"
 msgstr ""
 
 #. module: stock
@@ -461,11 +449,6 @@ msgstr "4 x 7 amb preu"
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "54326786758"
 msgstr "54326786758"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_inventory
-msgid "98"
-msgstr "98"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -1143,9 +1126,21 @@ msgid "Allowed Location"
 msgstr "Ubicació permesa"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_replenishment_uom_ids
+msgid "Allowed Replenishment Uom"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__allowed_route_ids
 #: model:ir.model.fields,field_description:stock.field_stock_replenish_mixin__allowed_route_ids
 msgid "Allowed Route"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__allowed_uom_ids
+#: model:ir.model.fields,field_description:stock.field_stock_move_line__allowed_uom_ids
+#: model:ir.model.fields,field_description:stock.field_stock_scrap__allowed_uom_ids
+msgid "Allowed Uom"
 msgstr ""
 
 #. module: stock
@@ -1210,9 +1205,9 @@ msgid "Applicable On"
 msgstr "Aplicable en"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_route__packaging_selectable
-msgid "Applicable on Packaging"
-msgstr "Applicable en comprimir"
+#: model:ir.model.fields,field_description:stock.field_stock_route__package_type_selectable
+msgid "Applicable on Package Type"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__product_selectable
@@ -1539,12 +1534,6 @@ msgid "Blocking Message"
 msgstr "Missatge de bloqueig"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-msgid "Blocking: %s"
-msgstr ""
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__quant_ids
 msgid "Bulk Content"
 msgstr "Contingut complet"
@@ -1658,6 +1647,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__capacity_ids
+#: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
 msgid "Capacity"
 msgstr "Capacitat"
 
@@ -1672,10 +1662,11 @@ msgid "Capacity by Product"
 msgstr "Capacitat per producte"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_category_id
-#: model:ir.model.fields,field_description:stock.field_stock_move__product_uom_category_id
-#: model:ir.model.fields,field_description:stock.field_stock_move_line__product_uom_category_id
-#: model:ir.model.fields,field_description:stock.field_stock_scrap__product_uom_category_id
+#: model:ir.ui.menu,name:stock.menu_product_category_config_stock
+msgid "Categories"
+msgstr "Categories"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_search_form_view_stock_report
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -2044,18 +2035,6 @@ msgstr "Continuar"
 #: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
 msgid "Control panel buttons"
 msgstr "Botons del panel de control"
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_product_replenish__product_uom_category_id
-#: model:ir.model.fields,help:stock.field_stock_move__product_uom_category_id
-#: model:ir.model.fields,help:stock.field_stock_move_line__product_uom_category_id
-#: model:ir.model.fields,help:stock.field_stock_scrap__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"La conversió entre les unitats de mesura només és possible si pertanyen a la"
-" mateixa categoria. La conversió es basarà en les ràtios establertes."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posx
@@ -2831,17 +2810,6 @@ msgid "Demo Product"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_product_packaging__route_ids
-msgid ""
-"Depending on the modules installed, this will allow you to define the route "
-"of the product in this packaging: whether it will be bought, manufactured, "
-"replenished on order, etc."
-msgstr ""
-"Depenent dels mòduls instal· lats, això us permetrà definir la ruta del "
-"producte en aquest empaquetament: si s' ha de comprar, fabricat, es replens,"
-" per ordre, etc."
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
 #: model:ir.model.fields,help:stock.field_product_template__route_ids
 msgid ""
@@ -3009,6 +2977,11 @@ msgid "Difference"
 msgstr "Diferència"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
+msgid "Dimensions"
+msgstr "Dimensions"
+
+#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.inventory_warning_reset_view
@@ -3068,7 +3041,6 @@ msgstr "Mostra lots i números de sèrie als albarans d'entrega"
 #: model:ir.model.fields,field_description:stock.field_procurement_group__display_name
 #: model:ir.model.fields,field_description:stock.field_product_category__display_name
 #: model:ir.model.fields,field_description:stock.field_product_label_layout__display_name
-#: model:ir.model.fields,field_description:stock.field_product_packaging__display_name
 #: model:ir.model.fields,field_description:stock.field_product_product__display_name
 #: model:ir.model.fields,field_description:stock.field_product_removal__display_name
 #: model:ir.model.fields,field_description:stock.field_product_replenish__display_name
@@ -3172,11 +3144,6 @@ msgstr "Fet"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
 msgid "Done By"
 msgstr "Fet per"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_quantity
-msgid "Done Packaging Quantity"
-msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_package_level__state__draft
@@ -3865,7 +3832,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_procurement_group__id
 #: model:ir.model.fields,field_description:stock.field_product_category__id
 #: model:ir.model.fields,field_description:stock.field_product_label_layout__id
-#: model:ir.model.fields,field_description:stock.field_product_packaging__id
 #: model:ir.model.fields,field_description:stock.field_product_product__id
 #: model:ir.model.fields,field_description:stock.field_product_removal__id
 #: model:ir.model.fields,field_description:stock.field_product_replenish__id
@@ -5232,13 +5198,6 @@ msgid "Manage Push and Pull inventory flows"
 msgstr "Gestionar fluxos d'inventari push i pull"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Manage product packagings (e.g. pack of 6 bottles, box of 10 pieces)"
-msgstr ""
-"Gestionar l'empaquetament de productes (per exemple: pack de 6 ampolles, "
-"caixa de 10 peces)"
-
-#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__trigger__manual
 msgid "Manual"
 msgstr "Manual"
@@ -5460,11 +5419,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_adv_location
 msgid "Multi-Step Routes"
 msgstr "Rutes en diversos passos"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_multiple
-msgid "Multiple Quantity"
-msgstr "Quantitat múltiple"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_unique_package_type
@@ -6336,12 +6290,13 @@ msgid "Package Transfers"
 msgstr "Transferència de paquets"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_product_packaging__package_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__name
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__package_type_ids
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__package_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category_capacity__package_type_id
+#: model:ir.model.fields,field_description:stock.field_uom_uom__package_type_id
 #: model_terms:ir.ui.view,arch_db:stock.quant_package_search_view
+#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
 msgid "Package Type"
 msgstr "Tipus de paquet"
@@ -6405,7 +6360,7 @@ msgstr ""
 "                Una vegada creat, tot el paquet es pot moure a la vegada, o els productes es poden desempaquetar i moure com a unitats individuals de nou."
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_id
+#: model:ir.model.fields,field_description:stock.field_stock_move__packaging_uom_id
 msgid "Packaging"
 msgstr "Empaquetament"
 
@@ -6420,15 +6375,19 @@ msgid "Packaging Length"
 msgstr "Longitud del embalatge"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__packaging_uom_qty
+msgid "Packaging Quantity"
+msgstr "Quantitat d'embalatge"
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__width
 msgid "Packaging Width"
 msgstr "Amplada embalada"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_route__packaging_ids
-#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
-msgid "Packagings"
-msgstr "Embalatges"
+#: model:ir.model.fields,help:stock.field_stock_move__packaging_uom_id
+msgid "Packaging unit from sale or purchase orders"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_pack_stock_loc_id
@@ -6793,7 +6752,6 @@ msgstr "Capacitat de producte"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__categ_ids
-#: model:ir.ui.menu,name:stock.menu_product_category_config_stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Product Categories"
 msgstr "Categories de producte"
@@ -6844,22 +6802,6 @@ msgstr "Filtre lots de producte"
 #: model:ir.model,name:stock.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
 msgstr "Moviment del producte (línia de moviment d'estoc)"
-
-#. module: stock
-#: model:ir.model,name:stock.model_product_packaging
-msgid "Product Packaging"
-msgstr "Embalatge de productes"
-
-#. module: stock
-#: model:ir.actions.report,name:stock.label_product_packaging
-msgid "Product Packaging (ZPL)"
-msgstr "Paquet del producte (ZPL)"
-
-#. module: stock
-#: model:ir.ui.menu,name:stock.menu_product_packagings
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Product Packagings"
-msgstr "Embalatge de productes"
 
 #. module: stock
 #. odoo-python
@@ -7119,11 +7061,6 @@ msgid "Putaway:"
 msgstr "Entrada d'emmagatzematge:"
 
 #. module: stock
-#: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_qty_multiple_check
-msgid "Qty Multiple must be greater than or equal to zero."
-msgstr "El múltiple de la quantitat ha de ser major o igual a 0."
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_quality_control
 msgid "Quality"
 msgstr "Qualitat"
@@ -7220,11 +7157,6 @@ msgid "Quantity"
 msgstr "Quantitat"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
-msgid "Quantity Multiple"
-msgstr "Múltiple de la quantitat"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__qty_available
 #: model:ir.model.fields,field_description:stock.field_product_template__qty_available
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
@@ -7279,6 +7211,11 @@ msgstr "Quantitat en estoc que encara pot ser reservada per aquest moviment."
 #: model:ir.model.fields,help:stock.field_stock_move__product_qty
 msgid "Quantity in the default UoM of the product"
 msgstr "Quantitat en la UdM per defecte del producte"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_move__packaging_uom_qty
+msgid "Quantity in the packaging unit"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__incoming_qty
@@ -7684,6 +7621,11 @@ msgid "Replenishment Information for %(product)s in %(warehouse)s"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__replenishment_uom_id
+msgid "Replenishment Multiple"
+msgstr ""
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 msgid "Replenishment Report"
@@ -7774,12 +7716,6 @@ msgid "Reserved"
 msgstr "Reservat"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_qty
-#: model:ir.model.fields,field_description:stock.field_stock_move_line__product_packaging_qty
-msgid "Reserved Packaging Quantity"
-msgstr ""
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__reserved_quantity
 msgid "Reserved Quantity"
 msgstr "Quantitat reservada"
@@ -7825,6 +7761,11 @@ msgstr "Rutes de reaprovisionament"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 msgid "Return"
 msgstr "Retorna"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
+msgid "Return All"
+msgstr ""
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
@@ -7925,10 +7866,11 @@ msgstr "Seqüència de la ruta"
 #: model:ir.actions.act_window,name:stock.action_routes_form
 #: model:ir.actions.server,name:stock.action_open_routes
 #: model:ir.model.fields,field_description:stock.field_product_category__route_ids
-#: model:ir.model.fields,field_description:stock.field_product_packaging__route_ids
 #: model:ir.model.fields,field_description:stock.field_product_product__route_ids
 #: model:ir.model.fields,field_description:stock.field_product_template__route_ids
+#: model:ir.model.fields,field_description:stock.field_stock_package_type__route_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__route_ids
+#: model:ir.model.fields,field_description:stock.field_uom_uom__route_ids
 #: model:ir.ui.menu,name:stock.menu_routes_config
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
@@ -7940,6 +7882,11 @@ msgstr "Rutes"
 #: model:ir.model.fields,field_description:stock.field_product_template__has_available_route_ids
 msgid "Routes can be selected on this product"
 msgstr "Les rutes es poden seleccionar en aquest producte"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_uom_uom__route_ids
+msgid "Routes propagated from the package type"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__resupply_wh_ids
@@ -8200,8 +8147,8 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Sell and purchase products in different units of measure"
-msgstr "Vendre i Comprar productes en diferents unitats de mesuara"
+msgid "Sell and purchase products in different units of measure or packagings"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9048,12 +8995,6 @@ msgid "Template"
 msgstr "Plantilla"
 
 #. module: stock
-#: model_terms:res.company,sign_terms:stock.res_company_1
-#: model_terms:res.company,sign_terms_html:stock.res_company_1
-msgid "Terms &amp; Conditions"
-msgstr "Termes i condicions "
-
-#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 msgid ""
@@ -9253,10 +9194,10 @@ msgstr ""
 "despatx' és la ubicació principal 'Porta 1'."
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__qty_multiple
+#: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__replenishment_uom_id
 msgid ""
-"The procurement quantity will be rounded up to a multiple of this field "
-"quantity. If it is 0, it is not rounded."
+"The procurement quantity will be rounded up to a multiple of this "
+"unit/packaging. If it is not set, it is not rounded."
 msgstr ""
 
 #. module: stock
@@ -9547,6 +9488,15 @@ msgstr ""
 "Aquest producte s'ha utilitzat com a mínim en un moviment d'inventari. No es"
 " recomana canviar el tipus de producte ja que pot provocar inconsistències. "
 "Una millor solució podria ser arxivar el producte i crear-ne un de nou."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/product.py:0
+msgid ""
+"This product has been used in at least one inventory movement. It is not "
+"advised to change the Unit of Measure since it can lead to inconsistencies. "
+"The existing moves will not be recalculated with the new unit of measure."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10097,24 +10047,10 @@ msgid "Unique Lot/Serial Number"
 msgstr "Núm. de lot/sèrie únic"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
-#: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
-#: model_terms:ir.ui.view,arch_db:stock.view_move_tree
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_simple
-msgid "Unit"
-msgstr "Unitat de venda"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__price_unit
-msgid "Unit Price"
-msgstr "Preu un."
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__forecast_uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__product_uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_lot__product_uom_id
+#: model:ir.model.fields,field_description:stock.field_stock_move__product_uom
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__product_uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__uom_id
@@ -10123,20 +10059,19 @@ msgstr "Preu un."
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_uom
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty__product_uom_name
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__product_uom_name
-#: model_terms:ir.ui.view,arch_db:stock.package_level_form_view
-#: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
-#: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree_detailed
-#: model_terms:ir.ui.view,arch_db:stock.view_move_tree_receipt_picking
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_move_tree
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_kanban
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
-msgid "Unit of Measure"
-msgstr "Unitat de mesura"
+#: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
+msgid "Unit"
+msgstr "Unitat de venda"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__uom
-msgid "Unit of Measure Name"
-msgstr "Unitat del nom de mesura"
+msgid "Unit Name"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__price_unit
+msgid "Unit Price"
+msgstr "Preu un."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -10145,19 +10080,10 @@ msgid "Units"
 msgstr "Unitats"
 
 #. module: stock
+#: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Units Of Measure"
-msgstr "Unitat de mesura"
-
-#. module: stock
-#: model:ir.ui.menu,name:stock.menu_stock_unit_measure_stock
-msgid "Units of Measure"
-msgstr "Unitats de mesura"
-
-#. module: stock
-#: model:ir.ui.menu,name:stock.product_uom_menu
-msgid "Units of Measures"
-msgstr "Unitats de mesura"
+msgid "Units & Packagings"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
@@ -10196,29 +10122,9 @@ msgid "Unreturned"
 msgstr ""
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-msgid "Unsafe unit of measure"
-msgstr "Unitat de mesura insegura"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__unwanted_replenish
 msgid "Unwanted Replenish"
 msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__product_uom
-#: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
-#: model_terms:ir.ui.view,arch_db:stock.replenishment_option_tree_view
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
-#: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
-msgid "UoM"
-msgstr "UdM"
-
-#. module: stock
-#: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
-msgid "UoM Categories"
-msgstr "Categories UoM"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot_report__uom_id
@@ -10664,16 +10570,15 @@ msgstr ""
 "forma de producte."
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_stock_route__package_type_selectable
+msgid "When checked, the route will be selectable on package types"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__product_categ_selectable
 msgid "When checked, the route will be selectable on the Product Category."
 msgstr ""
 "Quan està marcat, la ruta serà seleccionable en la categoria de producte."
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_route__packaging_selectable
-msgid "When checked, the route will be selectable on the Product Packaging."
-msgstr ""
-"Quan està marcat, la ruta serà seleccionable en el paquet de producte."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_in_id
@@ -10862,22 +10767,6 @@ msgstr ""
 "paquet"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-msgid ""
-"You are using a unit of measure smaller than the one you are using in order "
-"to stock your product. This can lead to rounding problem on reserved "
-"quantity. You should use the smaller unit of measure possible in order to "
-"valuate your stock or change its rounding precision to a smaller value "
-"(example: 0.00001)."
-msgstr ""
-"Estàs utilitzant una unitat de mesura més petita que la que has fet servir "
-"per emmagatzemar el teu producte. Pot suposar un problema d'arrodoniment en "
-"la quantitat reservada. Hauries d'utilitzar la unitat de mesura més petita "
-"possible per tal de valorar el teu estoc o canviar la precisió "
-"d'arrodoniment a un valor més petit (exemple 0.00001)"
-
-#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_routes_form
 msgid ""
 "You can define here the main routes that run through\n"
@@ -11054,18 +10943,6 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/product.py:0
-msgid ""
-"You cannot change the unit of measure as there are already stock moves for "
-"this product. If you want to change the unit of measure, you should rather "
-"archive this product and create a new one."
-msgstr ""
-"No pots canviar la unitat de mesura mentre hi hagi moviments d'estoc pel "
-"producte. Si vols canviar la unitat de mesura, has d'arxivar aquest producte"
-" i crear-ne un de nou. "
-
-#. module: stock
-#. odoo-python
 #: code:addons/stock/models/stock_scrap.py:0
 msgid "You cannot delete a scrap which is done."
 msgstr "No es pot eliminar ferralla feta."
@@ -11098,14 +10975,6 @@ msgstr ""
 msgid ""
 "You cannot pack products into the same package when they are from different "
 "transfers with different operation types"
-msgstr ""
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-msgid ""
-"You cannot perform moves because their unit of measure has a different "
-"category from their product unit of measure."
 msgstr ""
 
 #. module: stock
@@ -11206,16 +11075,6 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/stock_orderpoint.py:0
-msgid ""
-"You have to select a product unit of measure that is in the same category as"
-" the default unit of measure of the product"
-msgstr ""
-"Heu de seleccionar una unitat de producte de mesura que estigui en la "
-"mateixa categoria que la unitat per omissió de mesura del producte"
-
-#. module: stock
-#. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 msgid "You may only return Done pickings."
 msgstr "Només pots retornar entregues fetes"
@@ -11301,12 +11160,6 @@ msgstr ""
 "Aquí trobareu propostes intel·ligents de replenament basades en projeccions d'inventari.\n"
 "            Seleccioneu la quantitat a comprar o fabricar i llanceu ordres amb un clic.\n"
 "            Per a estalviar temps en el futur, establiu les regles com a \"auto\""
-
-#. module: stock
-#: model_terms:res.company,sign_terms:stock.res_company_1
-#: model_terms:res.company,sign_terms_html:stock.res_company_1
-msgid "Your conditions..."
-msgstr "Les teves condicions..."
 
 #. module: stock
 #: model_terms:res.company,lunch_notify_message:stock.res_company_1

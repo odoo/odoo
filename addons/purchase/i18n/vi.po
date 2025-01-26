@@ -3,16 +3,16 @@
 # 	* purchase
 # 
 # Translators:
-# Wil Odoo, 2024
 # Thi Huong Nguyen, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -575,15 +575,6 @@ msgid "A warning can be set on a product or a customer (Purchase)"
 msgstr "Có thể đặt cảnh báo đối với sản phẩm hoặc khách hàng (Mua hàng)"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid ""
-"Ability to select a package type in purchase orders and to force a quantity "
-"that is a multiple of the number of units per package."
-msgstr ""
-"Khả năng chọn kiểu đóng gói trong đơn mua hàng và buộc số lượng là bội số "
-"của số lượng hàng trên mỗi kiện."
-
-#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "Accept"
 msgstr "Chấp nhận"
@@ -731,6 +722,11 @@ msgstr "Cho phép tự động gửi email để nhắc nhà cung cấp về ng�
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__edit
 msgid "Allow to edit purchase orders"
 msgstr "Cho phép sửa đơn mua hàng"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__allowed_uom_ids
+msgid "Allowed Uom"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__aml_id
@@ -982,8 +978,8 @@ msgid "Catalog"
 msgstr "Danh mục"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_category_id
-msgid "Category"
+#: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
+msgid "Categories"
 msgstr "Danh mục"
 
 #. module: purchase
@@ -1108,15 +1104,6 @@ msgstr "Liên hệ"
 #: model:ir.model.fields,field_description:purchase.field_product_template__purchase_method
 msgid "Control Policy"
 msgstr "Chính sách kiểm soát"
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_line__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"Việc chuyển đổi qua lại giữa các Đơn vị tính chỉ có thể khả dụng nếu chúng "
-"cùng loại. Việc chuyển đổi sẽ được thực hiện dựa trên tỉ lệ."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -1318,7 +1305,6 @@ msgstr "Chiết khấu:"
 #: model:ir.model.fields,field_description:purchase.field_account_tax__display_name
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__display_name
 #: model:ir.model.fields,field_description:purchase.field_ir_actions_report__display_name
-#: model:ir.model.fields,field_description:purchase.field_product_packaging__display_name
 #: model:ir.model.fields,field_description:purchase.field_product_product__display_name
 #: model:ir.model.fields,field_description:purchase.field_product_supplierinfo__display_name
 #: model:ir.model.fields,field_description:purchase.field_product_template__display_name
@@ -1520,7 +1506,6 @@ msgstr "Ẩn các dòng đã hủy"
 #: model:ir.model.fields,field_description:purchase.field_account_tax__id
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__id
 #: model:ir.model.fields,field_description:purchase.field_ir_actions_report__id
-#: model:ir.model.fields,field_description:purchase.field_product_packaging__id
 #: model:ir.model.fields,field_description:purchase.field_product_product__id
 #: model:ir.model.fields,field_description:purchase.field_product_supplierinfo__id
 #: model:ir.model.fields,field_description:purchase.field_product_template__id
@@ -1573,11 +1558,6 @@ msgid ""
 msgstr ""
 "Nếu được cài đặt, biến thể sản phẩm sẽ được thêm vào đơn mua hàng thông qua "
 "một mục nhập dạng lưới."
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_product_packaging__purchase
-msgid "If true, the packaging can be used for purchase orders"
-msgstr "Nếu đúng, có thể sử dụng gói hàng cho các đơn mua hàng"
 
 #. module: purchase
 #. odoo-python
@@ -2155,16 +2135,6 @@ msgid "Our Orders"
 msgstr "Đơn hàng của chúng tôi"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_packaging_id
-msgid "Packaging"
-msgstr "Gói hàng"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_packaging_qty
-msgid "Packaging Quantity"
-msgstr "Số lượng gói hàng"
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__partner_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__partner_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__partner_id
@@ -2250,11 +2220,6 @@ msgid "Product"
 msgstr "Sản phẩm"
 
 #. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
-msgid "Product Categories"
-msgstr "Danh mục sản phẩm"
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__category_id
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Product Category"
@@ -2264,11 +2229,6 @@ msgstr "Danh mục sản phẩm"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Product Description"
 msgstr "Mô tả Sản phẩm"
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_product_packaging
-msgid "Product Packaging"
-msgstr "Gói hàng"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__product_tmpl_id
@@ -2324,7 +2284,6 @@ msgid "Provide a double validation mechanism for purchases"
 msgstr "Cung cấp cơ chế xác minh hai lần khi mua hàng"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_product_packaging__purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_root
 #: model:ir.ui.menu,name:purchase.purchase_report
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2524,11 +2483,6 @@ msgstr "Đơn mua hàng đã được xuất hoá đơn"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Purchase orders that include lines not invoiced."
 msgstr "Đơn mua hàng có chứa các dòng chưa được xuất hóa đơn."
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "Purchase products by multiple of unit # per package"
-msgstr "Mua sản phẩm theo bội số của số lượng hàng trên mỗi kiện"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.purchase_send_reminder_mail_ir_actions_server
@@ -2953,8 +2907,8 @@ msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "Sell and purchase products in different units of measure"
-msgstr "Bán và mua sản phẩm theo đơn vị tính khác nhau"
+msgid "Sell and purchase products in different units of measure or packagings"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3293,16 +3247,6 @@ msgstr "Ghi chú này đã được thêm vào đơn mua hàng."
 
 #. module: purchase
 #. odoo-python
-#: code:addons/purchase/models/purchase_order_line.py:0
-msgid ""
-"This product is packaged by %(pack_size).2f %(pack_name)s. You should "
-"purchase %(quantity).2f %(unit)s."
-msgstr ""
-"Sản phẩm này được đóng gói bằng %(pack_size).2f %(pack_name)s. Bạn nên mua "
-"%(quantity).2f %(unit)s."
-
-#. module: purchase
-#. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "This vendor bill has been created from: "
 msgstr "Hoá đơn mua hàng này đã được tạo từ:"
@@ -3452,7 +3396,8 @@ msgstr ""
 " quan trước."
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_id
 msgid "Unit"
 msgstr "Đơn vị"
 
@@ -3473,30 +3418,10 @@ msgid "Unit Price:"
 msgstr "Đơn giá:"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_id
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_id
-msgid "Unit of Measure"
-msgstr "Đơn vị tính"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "Units Of Measure"
-msgstr "Đơn vị tính"
-
-#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
-msgid "Units of Measure"
-msgstr "Đơn vị tính"
-
-#. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
-msgid "Units of Measure Categories"
-msgstr "Danh mục đơn vị tính"
-
-#. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_unit_of_measure_in_config_purchase
-msgid "Units of Measures"
-msgstr "Đơn vị tính"
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+msgid "Units & Packagings"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3519,11 +3444,6 @@ msgstr "Số tiền trước thuế"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__untaxed_total
 msgid "Untaxed Total"
 msgstr "Tổng tiền trước thuế"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "UoM"
-msgstr "ĐVT"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__priority__1
@@ -3668,8 +3588,6 @@ msgid "Want to import this document in Odoo?"
 msgstr "Bạn muốn nhập chứng từ này vào Odoo?"
 
 #. module: purchase
-#. odoo-python
-#: code:addons/purchase/models/purchase_order_line.py:0
 #: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_line_warn__warning
 #: model:ir.model.fields.selection,name:purchase.selection__res_partner__purchase_warn__warning
 msgid "Warning"

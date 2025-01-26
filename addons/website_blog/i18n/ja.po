@@ -3,15 +3,16 @@
 # 	* website_blog
 # 
 # Translators:
-# Wil Odoo, 2024
+# Junko Augias, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-01-20 08:43+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,11 +45,6 @@ msgstr "のページヘッダー。"
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "'. Showing results for '"
 msgstr "」。 次の結果を表示しています「"
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.date_selector
-msgid "-- All dates"
-msgstr "-- 全日付"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_6
@@ -341,6 +337,11 @@ msgstr "全てのブログ"
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
 msgid "All blogs"
 msgstr "全てのブログ"
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.date_selector
+msgid "All dates"
+msgstr "全ての日付"
 
 #. module: website_blog
 #. odoo-python
@@ -808,6 +809,8 @@ msgstr "デクスター"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__display_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__display_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__display_name
+#: model:ir.model.fields,field_description:website_blog.field_website__display_name
+#: model:ir.model.fields,field_description:website_blog.field_website_snippet_filter__display_name
 msgid "Display Name"
 msgstr "表示名"
 
@@ -1013,6 +1016,8 @@ msgstr "正しいホテルの選び方"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__id
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__id
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__id
+#: model:ir.model.fields,field_description:website_blog.field_website__id
+#: model:ir.model.fields,field_description:website_blog.field_website_snippet_filter__id
 msgid "ID"
 msgstr "ID"
 
@@ -1695,6 +1700,11 @@ msgid "Separate every keyword with a comma"
 msgstr "コンマでキーワードごとに区切ります。"
 
 #. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog__sequence
+msgid "Sequence"
+msgstr "シーケンス"
+
+#. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 msgid "Set a blog post <b>cover</b>."
@@ -2121,12 +2131,12 @@ msgstr "タイトル"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Title Above Cover"
-msgstr "表紙上のタイトル"
+msgstr "タイトル: カバー上部"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Title Inside Cover"
-msgstr "表紙内のタイトル"
+msgstr "タイトル: カバー内"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_7
@@ -2216,7 +2226,7 @@ msgstr "このアイコンを使用して、<b>携帯端末</b>ブログ投稿�
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_tag_form
 msgid "Used in:"
-msgstr "以下で使用:"
+msgstr "使用箇所:"
 
 #. module: website_blog
 #. odoo-python

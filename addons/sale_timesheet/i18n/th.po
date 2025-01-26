@@ -3,15 +3,16 @@
 # 	* sale_timesheet
 # 
 # Translators:
-# Wil Odoo, 2024
+# Rasareeyar Lappiam, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -533,8 +534,23 @@ msgid "Discover our products."
 msgstr "ค้นพบสินค้าของเรา"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_move__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template__display_name
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_project__display_name
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_update__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_report_project_task_user__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__display_name
 msgid "Display Name"
 msgstr "แสดงชื่อ"
 
@@ -671,8 +687,23 @@ msgid "Hours Remaining)"
 msgstr "ชั่วโมงที่เหลืออยู่)"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_move__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_move_line__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template__id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_project__id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_update__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_report_project_task_user__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_res_config_settings__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__id
 msgid "ID"
 msgstr "ไอดี"
 
@@ -760,6 +791,11 @@ msgstr "สถาปนิกรุ่นเยาว์ (แจ้งหนี�
 #: model:product.template,name:sale_timesheet.product_service_deliver_milestones_product_template
 msgid "Kitchen Assembly (Milestones)"
 msgstr "การประกอบครัว (เหตุการณ์สำคัญ)"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__last_sol_of_customer
+msgid "Last Sol Of Customer"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__write_uid
@@ -1158,6 +1194,17 @@ msgid "Sales Orders"
 msgstr "คำสั่งขาย"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_employee_ids
+msgid ""
+"Sales order item that will be selected by default on the timesheets of the corresponding employee. It bypasses the sales order item defined on the project and the task, and can be modified on each timesheet entry if necessary. In other words, it defines the rate at which an employee's time is billed based on their expertise, skills or experience, for instance.\n"
+"If you would like to bill the same service at a different rate, you need to create two separate sales order items as each sales order item can only have a single unit price at a time.\n"
+"You can also define the hourly company cost of your employees for their timesheets on this project specifically. It will bypass the timesheet cost set on the employee."
+msgstr ""
+"รายการในใบสั่งขายที่จะถูกเลือกตามค่าเริ่มต้นในใบบันทึกเวลาของพนักงานที่เกี่ยวข้อง โดยจะข้ามรายการใบสั่งขายที่กำหนดไว้ในโปรเจ็กต์และงาน สามารถแก้ไขได้ในแต่ละรายการในใบบันทึกเวลา หากมีความจำเป็น ซึ่งหมายความว่า จะกำหนดอัตราที่เรียกเก็บเงินเวลาของพนักงานตามความเชี่ยวชาญ ทักษะ หรือประสบการณ์ เป็นต้น\n"
+"หากคุณต้องการเรียกเก็บเงินบริการเดียวกันในอัตราที่แตกต่างกัน คุณต้องสร้างรายการในใบสั่งขายแยกกันสองรายการ เนื่องจากแต่ละรายการในใบสั่งขายสามารถมีราคาต่อหน่วยได้ครั้งละหนึ่งรายการเท่านั้น\n"
+"คุณยังสามารถกำหนดต้นทุนรายชั่วโมงของบริษัทของพนักงานของคุณสำหรับระบบบันทึกเวลาในโปรเจ็กต์นี้ได้โดยเฉพาะ และมันจะข้ามต้นทุนการบันทึกเวลาที่กำหนดให้กับพนักงาน"
+
+#. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__so_line
 msgid ""
 "Sales order item to which the time spent will be added in order to be "
@@ -1280,22 +1327,22 @@ msgstr "ผู้เชี่ยวชาญด้านเทคนิค"
 
 #. module: sale_timesheet
 #. odoo-python
-#: code:addons/sale_timesheet/models/product.py:0
-#, python-format
-msgid ""
-"The %s product is required by the Timesheets app and cannot be linked to a "
-"company."
-msgstr ""
-
-#. module: sale_timesheet
-#. odoo-python
-#: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
-#, python-format
+#: code:addons/sale_timesheet/models/product_product.py:0
+#: code:addons/sale_timesheet/models/product_template.py:0
 msgid ""
 "The %s product is required by the Timesheets app and cannot be archived nor "
 "deleted."
 msgstr ""
 "%s สินค้าที่จำเป็นสำหรับแอประบบบันทึกเวลาและไม่สามารถเก็บถาวรหรือลบได้"
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/product_template.py:0
+msgid ""
+"The %s product is required by the Timesheets app and cannot be linked to a "
+"company."
+msgstr ""
+"ผลิตภัณฑ์ %s จำเป็นสำหรับแอประบบบันทึกเวลาและไม่สามารถเชื่อมโยงกับบริษัทได้"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1507,7 +1554,7 @@ msgstr "ใบบันทึกเวลาที่ใช้ไปเพื่
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Timesheets without a sales order item are reported as"
-msgstr ""
+msgstr "รายงานใบเวลาที่ไม่มีรายการใบสั่งขายเป็น"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -1570,6 +1617,27 @@ msgstr "การฝึกอบรม"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__price_unit
 msgid "Unit Price"
 msgstr "ราคาต่อหน่วย"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_task__display_name
+msgid ""
+"Use these keywords in the title to set new tasks:\n"
+"\n"
+"        30h Allocate 30 hours to the task\n"
+"        #tags Set tags on the task\n"
+"        @user Assign the task to a user\n"
+"        ! Set the task a high priority\n"
+"\n"
+"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+msgstr ""
+"ใช้คำสำคัญเหล่านี้ในชื่อเรื่องเพื่อกำหนดงานใหม่:\n"
+"\n"
+"        30 ชม. จัดสรรเวลา 30 ชั่วโมงให้กับงาน\n"
+"        #แท็ก ตั้งค่าแท็กในงาน\n"
+"        @ผู้ใช้ มอบหมายงานให้กับผู้ใช้\n"
+"        ! กำหนดให้งานมีลำดับความสำคัญสูง\n"
+"\n"
+"        ตรวจสอบให้แน่ใจว่าใช้รูปแบบและลำดับที่ถูกต้อง เช่น ปรับหน้าจอของการกำหนดค่า 5 ชม #feature #v16 @Mitchell !"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer

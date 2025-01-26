@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-20 08:41+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
 "Last-Translator: Maitê Dietze, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -182,15 +182,6 @@ msgid "Can send, pending registration to receive"
 msgstr "Pode enviar. Registro pendente para receber."
 
 #. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
-msgid "Can't migrate unless registered to receive documents."
-msgstr ""
-"Não é possível migrar a menos que esteja registrado para recebimento de "
-"documentos."
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_service_configuration
 msgid "Cancel"
 msgstr "Cancelar"
@@ -504,11 +495,6 @@ msgid "Live"
 msgstr "Ao vivo"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
-msgid "Migrate registration to another service"
-msgstr "Migrar registro para outro serviço"
-
-#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_migration_key
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_migration_key
 msgid "Migration Key"
@@ -667,12 +653,8 @@ msgstr "Assistente de serviços da Peppol"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
-msgid ""
-"Peppol document (UUID: %(uuid)s) has been received successfully.\n"
-"(Sender endpoint: %(endpoint)s)"
+msgid "Peppol document (UUID: %(uuid)s) has been received successfully"
 msgstr ""
-"O documento Peppol (UUID: %(uuid)s) foi recebido com sucesso.\n"
-"(Ponto de extremidade do remetente: %(endpoint)s)"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.portal_my_details_fields
@@ -828,6 +810,7 @@ msgid "Registered to receive documents via Peppol."
 msgstr "Registrado para receber documentos via Peppol."
 
 #. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Registration rejected."
 msgstr ""
@@ -964,11 +947,10 @@ msgid "This will delete your Peppol registration."
 msgstr ""
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+#: code:addons/account_peppol/models/res_config_settings.py:0
 msgid ""
-"This will migrate your Peppol registration away from Odoo.  A migration key "
-"will be generated.                                         If the other "
-"service does not support migration, consider unregistering instead."
+"This feature is deprecated. Contact odoo support if you need a migration "
+"key."
 msgstr ""
 
 #. module: account_peppol
@@ -1058,11 +1040,13 @@ msgid "You can now send and receive electronic invoices via Peppol"
 msgstr "Agora é possível enviar e receber faturas eletrônicas via Peppol"
 
 #. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "You can now send electronic invoices via Peppol."
 msgstr "Agora é possível enviar faturas eletrônicas via Peppol."
 
 #. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/tools/demo_utils.py:0
 msgid "You can now send invoices in demo mode."
 msgstr "Agora você pode enviar faturas no modo de demonstração."
@@ -1104,6 +1088,7 @@ msgid "Your mobile"
 msgstr "Your mobile"
 
 #. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid ""
 "Your registration has been rejected. Please contact the support for further "

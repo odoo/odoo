@@ -3,16 +3,16 @@
 # 	* sale_timesheet
 # 
 # Translators:
-# Wil Odoo, 2024
 # Ilya Rozhkov, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Ilya Rozhkov, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -508,8 +508,23 @@ msgid "Discover our products."
 msgstr "Откройте для себя нашу продукцию."
 
 #. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_move__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template__display_name
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_project__display_name
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_update__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_report_project_task_user__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__display_name
 msgid "Display Name"
 msgstr "Отображаемое имя"
 
@@ -641,8 +656,23 @@ msgid "Hours Remaining)"
 msgstr "Оставшиеся часы)"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_move__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_move_line__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template__id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_project__id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_update__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_report_project_task_user__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_res_config_settings__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__id
+#: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__id
 msgid "ID"
 msgstr "ID"
 
@@ -730,6 +760,11 @@ msgstr "Младший архитектор (оплата по табелю)"
 #: model:product.template,name:sale_timesheet.product_service_deliver_milestones_product_template
 msgid "Kitchen Assembly (Milestones)"
 msgstr "Сборка кухни (этапы)"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__last_sol_of_customer
+msgid "Last Sol Of Customer"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__write_uid
@@ -1131,6 +1166,17 @@ msgid "Sales Orders"
 msgstr "Заказы на продажу"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_employee_ids
+msgid ""
+"Sales order item that will be selected by default on the timesheets of the corresponding employee. It bypasses the sales order item defined on the project and the task, and can be modified on each timesheet entry if necessary. In other words, it defines the rate at which an employee's time is billed based on their expertise, skills or experience, for instance.\n"
+"If you would like to bill the same service at a different rate, you need to create two separate sales order items as each sales order item can only have a single unit price at a time.\n"
+"You can also define the hourly company cost of your employees for their timesheets on this project specifically. It will bypass the timesheet cost set on the employee."
+msgstr ""
+"Элемент заказа на продажу, который будет выбран по умолчанию в табеле учета рабочего времени соответствующего сотрудника. Он обходит элемент заказа на продажу, определенный для проекта и задачи, и при необходимости может быть изменен в каждой записи табеля учета рабочего времени. Другими словами, он определяет ставку, по которой оплачивается время сотрудника, исходя, например, из его знаний, навыков или опыта.\n"
+"Если вы хотите выставить счет за одну и ту же услугу по другой ставке, вам нужно создать два отдельных элемента заказа на продажу, поскольку каждый элемент заказа на продажу может иметь только одну единичную цену за один раз.\n"
+"Вы также можете определить почасовую стоимость сотрудников для их табелей учета рабочего времени в этом проекте. Она будет обходить стоимость табеля, установленную для сотрудника."
+
+#. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__so_line
 msgid ""
 "Sales order item to which the time spent will be added in order to be "
@@ -1255,25 +1301,24 @@ msgstr "Техническая экспертиза"
 
 #. module: sale_timesheet
 #. odoo-python
-#: code:addons/sale_timesheet/models/product.py:0
-#, python-format
-msgid ""
-"The %s product is required by the Timesheets app and cannot be linked to a "
-"company."
-msgstr ""
-"Продукт %s используется модулем «Табели» и не может быть привязан к "
-"компании."
-
-#. module: sale_timesheet
-#. odoo-python
-#: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
-#, python-format
+#: code:addons/sale_timesheet/models/product_product.py:0
+#: code:addons/sale_timesheet/models/product_template.py:0
 msgid ""
 "The %s product is required by the Timesheets app and cannot be archived nor "
 "deleted."
 msgstr ""
 "Продукт %s требуется приложению Timesheets, его нельзя ни архивировать, ни "
 "удалять."
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/product_template.py:0
+msgid ""
+"The %s product is required by the Timesheets app and cannot be linked to a "
+"company."
+msgstr ""
+"Продукт %s используется модулем «Табели» и не может быть привязан к "
+"компании."
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1555,6 +1600,27 @@ msgstr "Тренинги"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__price_unit
 msgid "Unit Price"
 msgstr "Цена за единицу"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_task__display_name
+msgid ""
+"Use these keywords in the title to set new tasks:\n"
+"\n"
+"        30h Allocate 30 hours to the task\n"
+"        #tags Set tags on the task\n"
+"        @user Assign the task to a user\n"
+"        ! Set the task a high priority\n"
+"\n"
+"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+msgstr ""
+"Используйте эти ключевые слова в заголовке, чтобы настроить новые задачи:\n"
+"\n"
+"       30h — Назначить задаче 30 часов\n"
+"       #tags — Установить теги для задачи\n"
+"       @user — Назначить задачу пользователю\n"
+"       ! — Установить высокий приоритет задачи\n"
+"\n"
+"Убедитесь, что используется правильный формат и порядок, например: Улучшить экран настройки 5h #feature #v16 @Mitchell !"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer

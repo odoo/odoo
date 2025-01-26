@@ -3,16 +3,16 @@
 # 	* web
 # 
 # Translators:
-# Wil Odoo, 2024
 # Ilya Rozhkov, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Ilya Rozhkov, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -806,6 +806,12 @@ msgstr "Действия"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/search/cog_menu/cog_menu.xml:0
+msgid "Actions menu"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu_items.js:0
 msgid "Activate Test Mode"
 msgstr ""
@@ -1120,12 +1126,6 @@ msgstr "Вы уверены, что хотите заархивировать э
 #: code:addons/web/static/src/search/control_panel/control_panel.js:0
 msgid "Are you sure that you want to remove this embedded action?"
 msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.js:0
-msgid "Are you sure that you want to remove this filter?"
-msgstr "Вы уверены, что хотите удалить этот фильтр?"
 
 #. module: web
 #. odoo-javascript
@@ -1825,12 +1825,6 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.xml:0
-msgid "Comparison"
-msgstr "Сравнение"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/views/debug_items.js:0
 msgid "Computed Arch"
 msgstr ""
@@ -2004,6 +1998,12 @@ msgstr "Не удалось отобразить выбранный pdf"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.js:0
+msgid "Could not display the selected spreadsheet"
+msgstr "Не удалось отобразить выбранную электронную таблицу"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/image_url/image_url_field.js:0
 msgid "Could not display the specified image url."
 msgstr "Не удалось отобразить указанный url изображения."
@@ -2107,8 +2107,8 @@ msgstr "Валюта"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
-msgid "Current state"
-msgstr "Текущее состояние"
+msgid "Current state is %s"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -2321,12 +2321,6 @@ msgstr "Удалить"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.js:0
-msgid "Delete Filter"
-msgstr "Удалить"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid "Delete Property Field"
 msgstr "Удалить поле свойств"
@@ -2334,7 +2328,6 @@ msgstr "Удалить поле свойств"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/search/control_panel/control_panel.xml:0
-#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.xml:0
 msgid "Delete item"
 msgstr "Удалить элемент"
 
@@ -2440,6 +2433,16 @@ msgstr "Отменить изменения"
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_record_quick_create.js:0
 #: model:ir.model.fields,field_description:web.field_base_document_layout__display_name
+#: model:ir.model.fields,field_description:web.field_ir_http__display_name
+#: model:ir.model.fields,field_description:web.field_ir_model__display_name
+#: model:ir.model.fields,field_description:web.field_ir_qweb_field_image__display_name
+#: model:ir.model.fields,field_description:web.field_ir_qweb_field_image_url__display_name
+#: model:ir.model.fields,field_description:web.field_ir_ui_menu__display_name
+#: model:ir.model.fields,field_description:web.field_ir_ui_view__display_name
+#: model:ir.model.fields,field_description:web.field_res_company__display_name
+#: model:ir.model.fields,field_description:web.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:web.field_res_partner__display_name
+#: model:ir.model.fields,field_description:web.field_res_users__display_name
 msgid "Display Name"
 msgstr "Отображаемое имя"
 
@@ -2657,6 +2660,12 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.xml:0
+msgid "Edit favorite"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/domain/domain_field.js:0
 msgid "Edit in dialog"
 msgstr "Редактирование в диалоговом окне"
@@ -2723,6 +2732,12 @@ msgstr ""
 #: code:addons/web/static/src/webclient/settings_form_view/highlight_text/form_label_highlight_text.xml:0
 msgid "Enterprise"
 msgstr "Предприятие"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/webclient/debug/profiling/profiling_item.xml:0
+msgid "Entry Count"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -2906,6 +2921,12 @@ msgstr "Феррис"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/field_selector/field_selector_field.js:0
+msgid "Field Selector"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 msgid "Field Type"
 msgstr "Тип поля"
@@ -2991,7 +3012,7 @@ msgstr "Складной"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/dynamic_widget/dynamic_model_field_selector_char.js:0
+#: code:addons/web/static/src/views/fields/field_selector/field_selector_field.js:0
 msgid "Follow relations"
 msgstr "Следить за отношениями"
 
@@ -3141,17 +3162,10 @@ msgstr "Перейти на URL"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/google_slide_viewer.js:0
-#: code:addons/web/static/src/views/fields/google_slide_viewer.xml:0
-#, python-format
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.js:0
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.xml:0
 msgid "Google Slide Viewer"
 msgstr "Просмотрщик Google Slide"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/graph/graph_view.js:0
-msgid "Graph"
-msgstr "График"
 
 #. module: web
 #. odoo-javascript
@@ -3276,6 +3290,16 @@ msgstr "Я хочу обновить данные (импорт-совмести
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #: model:ir.model.fields,field_description:web.field_base_document_layout__id
+#: model:ir.model.fields,field_description:web.field_ir_http__id
+#: model:ir.model.fields,field_description:web.field_ir_model__id
+#: model:ir.model.fields,field_description:web.field_ir_qweb_field_image__id
+#: model:ir.model.fields,field_description:web.field_ir_qweb_field_image_url__id
+#: model:ir.model.fields,field_description:web.field_ir_ui_menu__id
+#: model:ir.model.fields,field_description:web.field_ir_ui_view__id
+#: model:ir.model.fields,field_description:web.field_res_company__id
+#: model:ir.model.fields,field_description:web.field_res_config_settings__id
+#: model:ir.model.fields,field_description:web.field_res_partner__id
+#: model:ir.model.fields,field_description:web.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -3774,7 +3798,7 @@ msgstr "Веселый Роджер"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/jsonb/jsonb.js:0
+#: code:addons/web/static/src/views/fields/json/json_field.js:0
 msgid "Json"
 msgstr "Json"
 
@@ -4221,7 +4245,7 @@ msgstr "Режим"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/domain/domain_field.js:0
-#: code:addons/web/static/src/views/fields/dynamic_widget/dynamic_model_field_selector_char.js:0
+#: code:addons/web/static/src/views/fields/field_selector/field_selector_field.js:0
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 msgid "Model"
 msgstr "Модель"
@@ -4310,6 +4334,12 @@ msgstr "Больше"
 #: code:addons/web/static/src/webclient/navbar/navbar.xml:0
 msgid "More Menu"
 msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
+msgid "More..."
+msgstr "Больше..."
 
 #. module: web
 #. odoo-javascript
@@ -4521,9 +4551,8 @@ msgstr "Следующий год"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/model/relational_model/utils.js:0
 #: code:addons/web/static/src/search/search_bar/search_bar.js:0
-#: code:addons/web/static/src/views/kanban/kanban_header.js:0
-#: code:addons/web/static/src/views/list/list_renderer.js:0
 #: code:addons/web/static/src/views/pivot/pivot_model.js:0
 msgid "No"
 msgstr "Нет"
@@ -4593,8 +4622,8 @@ msgstr "Устройство не найдено."
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
-msgid "No emoji match your search"
-msgstr "Ни один эмодзи не соответствует вашему запросу"
+msgid "No emoji matches your search"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -4666,10 +4695,10 @@ msgstr "Нет, оставить"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/model/relational_model/utils.js:0
 #: code:addons/web/static/src/views/graph/graph_model.js:0
-#: code:addons/web/static/src/views/kanban/kanban_header.js:0
-#: code:addons/web/static/src/views/list/list_renderer.js:0
 #: code:addons/web/static/src/views/pivot/pivot_model.js:0
+#: code:addons/web/static/src/webclient/debug/profiling/profiling_item.xml:0
 msgid "None"
 msgstr "Нет"
 
@@ -4688,14 +4717,8 @@ msgstr "Недействительно %s"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
-msgid "Not active state"
-msgstr "Неактивное состояние"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
-msgid "Not active state, click to change it"
-msgstr "Неактивное состояние, нажмите, чтобы изменить его"
+msgid "Not active state, click to change it to %s"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -4894,7 +4917,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/dynamic_widget/dynamic_model_field_selector_char.js:0
+#: code:addons/web/static/src/views/fields/field_selector/field_selector_field.js:0
 msgid "Only searchable"
 msgstr "Только с возможностью поиска"
 
@@ -5265,18 +5288,6 @@ msgstr "Предыдущий (стрелка влево)"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/utils/dates.js:0
-msgid "Previous Period"
-msgstr "Прошлый период"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/search/utils/dates.js:0
-msgid "Previous Year"
-msgstr "Предыдущий год"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/datetime/datetime_picker.js:0
 msgid "Previous century"
 msgstr "Предыдущий век"
@@ -5311,6 +5322,12 @@ msgstr "Основной цвет"
 #: code:addons/web/static/src/webclient/actions/reports/report_action.xml:0
 msgid "Print"
 msgstr "Печать"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/cog_menu/cog_menu.js:0
+msgid "Print report: %s"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -5419,13 +5436,13 @@ msgstr "Поле изображения Qweb"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/colorpicker/colorpicker.xml:0
+#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
 msgid "RGB"
 msgstr "RGB"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/colorpicker/colorpicker.xml:0
+#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
 msgid "RGBA"
 msgstr "RGBA"
 
@@ -5845,6 +5862,12 @@ msgstr "Поиск Подробнее..."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
+msgid "Search emoji"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 msgid "Search for a command..."
 msgstr "Поиск команды..."
@@ -5854,12 +5877,6 @@ msgstr "Поиск команды..."
 #: code:addons/web/static/src/webclient/menus/menu_providers.js:0
 msgid "Search for a menu..."
 msgstr "Поиск по меню..."
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
-msgid "Search for an emoji"
-msgstr "Поиск эмодзи"
 
 #. module: web
 #. odoo-javascript
@@ -6293,6 +6310,12 @@ msgstr "Статус"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
+msgid "Statusbar"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/settings_confirmation_dialog.xml:0
 msgid "Stay Here"
 msgstr "Оставайтесь здесь"
@@ -6653,12 +6676,6 @@ msgid "This file is invalid. Please select an image."
 msgstr "Этот файл недействителен. Пожалуйста, выберите изображение."
 
 #. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.js:0
-msgid "This filter is global and will be removed for everyone."
-msgstr "Этот фильтр является глобальным и будет удален для всех."
-
-#. module: web
 #: model_terms:ir.ui.view,arch_db:web.preview_externalreport
 msgid "This is a sample of an external report."
 msgstr "Это пример внешнего отчета."
@@ -6736,6 +6753,18 @@ msgstr "Титания"
 #: code:addons/web/static/src/views/widgets/ribbon/ribbon.js:0
 msgid "Title"
 msgstr "Заголовок"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
+msgid "To next categories"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
+msgid "To previous categories"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -7000,6 +7029,12 @@ msgstr "Несохраненные изменения"
 #: code:addons/web/static/src/views/list/list_controller.xml:0
 msgid "Unselect All"
 msgstr "Отменить выбор"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
+msgid "Unselected state is %s"
+msgstr ""
 
 #. module: web
 #. odoo-python
@@ -7291,7 +7326,6 @@ msgstr "Туалет"
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 #: code:addons/web/static/src/model/relational_model/dynamic_list.js:0
 #: code:addons/web/static/src/search/control_panel/control_panel.js:0
-#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.js:0
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 msgid "Warning"
 msgstr "Предупреждение"
@@ -7318,11 +7352,6 @@ msgstr "Путь"
 #: model:ir.model.fields,field_description:web.field_res_config_settings__web_app_name
 msgid "Web App Name"
 msgstr "Имя веб-приложения"
-
-#. module: web
-#: model_terms:ir.ui.view,arch_db:web.qunit_mobile_suite
-msgid "Web Mobile Tests"
-msgstr "Мобильные веб-тесты"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.qunit_suite
@@ -7443,10 +7472,9 @@ msgstr "Желтый"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/model/relational_model/utils.js:0
 #: code:addons/web/static/src/search/search_bar/search_bar.js:0
 #: code:addons/web/static/src/views/fields/field_tooltip.xml:0
-#: code:addons/web/static/src/views/kanban/kanban_header.js:0
-#: code:addons/web/static/src/views/list/list_renderer.js:0
 #: code:addons/web/static/src/views/pivot/pivot_model.js:0
 msgid "Yes"
 msgstr "Да"
@@ -14779,7 +14807,7 @@ msgstr "героиня"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/colorpicker/colorpicker.xml:0
+#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
 msgid "hex"
 msgstr "шестигранник"
 
@@ -15548,14 +15576,50 @@ msgstr "между"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
+msgid "is equal"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
+msgid "is greater"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
+msgid "is greater or equal"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "is in"
 msgstr "находится в"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
+msgid "is lower"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
+msgid "is lower or equal"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "is not"
 msgstr "не является"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
+msgid "is not equal"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -24995,6 +25059,12 @@ msgstr "девственница"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "virus"
 msgstr "вирус"
+
+#. module: web
+#. odoo-python
+#: code:addons/web/controllers/vcard.py:0
+msgid "vobject library is not installed"
+msgstr ""
 
 #. module: web
 #. odoo-javascript

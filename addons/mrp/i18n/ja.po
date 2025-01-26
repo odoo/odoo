@@ -3,16 +3,16 @@
 # 	* mrp
 # 
 # Translators:
-# Wil Odoo, 2024
-# Junko Augias, 2024
+# Junko Augias, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Junko Augias, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,6 +86,12 @@ msgstr "作業オーダ数"
 #: model:ir.model.fields,field_description:mrp.field_product_template__used_in_bom_count
 msgid "# of BoM Where is Used"
 msgstr "# BoMの使用方法"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_bom.py:0
+msgid "%(display_name)s"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -605,6 +611,7 @@ msgid "Action Needed"
 msgstr "要アクション"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__active
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__active
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__active
 msgid "Active"
@@ -752,6 +759,12 @@ msgstr "構成品用に新しいロット/シリアル番号の作成を許可�
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__consumption__flexible
 msgid "Allowed"
 msgstr "許可"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__allowed_uom_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__allowed_uom_ids
+msgid "Allowed Uom"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reserve_visible
@@ -1327,10 +1340,6 @@ msgid "Catalog"
 msgstr "カタログ"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_uom_category_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__product_uom_category_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_uom_category_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_production__product_uom_category_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__loss_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_type__loss_type
 #: model_terms:ir.ui.view,arch_db:mrp.oee_loss_tree_view
@@ -1567,16 +1576,6 @@ msgstr "消費"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
 msgid "Consumption Warning"
 msgstr "消費警告"
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_bom__product_uom_category_id
-#: model:ir.model.fields,help:mrp.field_mrp_bom_byproduct__product_uom_category_id
-#: model:ir.model.fields,help:mrp.field_mrp_bom_line__product_uom_category_id
-#: model:ir.model.fields,help:mrp.field_mrp_production__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr "単位間の変換は同じカテゴリに属している場合のみ可能です。変換は比率に基づいて行われます。"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_bom_tree_view
@@ -1897,13 +1896,12 @@ msgstr "初期設定の製造リードタイム"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__default_capacity
 msgid ""
-"Default number of pieces (in product UoM) that can be produced in parallel "
+"Default number of pieces (in product unit) that can be produced in parallel "
 "(at the same time) at this work center. For example: the capacity is 5 and "
 "you need to produce 10 units, then the operation time listed on the BOM will"
 " be multiplied by two. However, note that both time before and after "
 "production will only be counted once."
 msgstr ""
-"この作業区で並行して(同時に)生産できる個数のデフォルト数(プロダクト単位)。例：生産能力が5で、10個生産する必要がある場合、部品表に記載されている作業時間は2の倍数になります。ただし、生産前後の時間は1回のみカウントされます。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_consumption_warning_line__product_uom_id
@@ -2798,17 +2796,17 @@ msgstr "ブロック理由"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Is paused"
-msgstr ""
+msgstr "停止中"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Is running"
-msgstr ""
+msgstr "稼働中"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Is stopped"
-msgstr ""
+msgstr "終了中"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__is_user_working
@@ -4407,7 +4405,7 @@ msgstr "プロダクトの移動(在庫移動ライン)"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__product_qty_available
 msgid "Product On Hand Quantity"
-msgstr "プロダクト手持数量"
+msgstr "プロダクト手持在庫数"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_graph
@@ -4432,16 +4430,9 @@ msgid "Product Template"
 msgstr "プロダクトテンプレート"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_uom_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_production__product_uom_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_split__product_uom_id
-msgid "Product Unit of Measure"
-msgstr "プロダクト単位"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__product_uom_id
-msgid "Product UoM"
-msgstr "プロダクト単位"
+msgid "Product Unit"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
@@ -4509,11 +4500,6 @@ msgstr "構成品用生産オーダ"
 #: model:ir.model.fields,field_description:mrp.field_stock_move__production_id
 msgid "Production Order for finished products"
 msgstr "生産済プロダクトの製造オーダ"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom__active
-msgid "Production Ready"
-msgstr "製造準備完了"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_state
@@ -4644,7 +4630,7 @@ msgstr "生産中数量"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_ready
 msgid "Quantity Ready"
-msgstr ""
+msgstr "準備完了数量"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
@@ -5440,14 +5426,6 @@ msgstr "製造オーダ作成後から部品表が更新されています"
 
 #. module: mrp
 #. odoo-python
-#: code:addons/mrp/models/mrp_bom.py:0
-msgid ""
-"The Product Unit of Measure you chose has a different category than in the "
-"product form."
-msgstr "選択された計量単位は、製品形態とは異なるカテゴリのものです。"
-
-#. module: mrp
-#. odoo-python
 #: code:addons/mrp/models/mrp_workcenter.py:0
 msgid "The Workorder (%s) cannot be started twice!"
 msgstr "作業オーダ (%s)は2度開始することはできません。"
@@ -5549,7 +5527,7 @@ msgstr "バックオーダチェーンで割り当て待ちの生産済み数量
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "The quantity produced must be positive."
-msgstr ""
+msgstr "生産数は正の数にして下さい。"
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_qty_positive
@@ -6009,7 +5987,17 @@ msgid "Unfold"
 msgstr "展開"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_split__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__product_uom_name
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "Unit"
 msgstr "単位"
 
@@ -6035,21 +6023,12 @@ msgstr "ユニットファクター"
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_uom_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__product_uom_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__product_uom_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__product_uom_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__product_uom_id
-#: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__product_uom_name
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_tree_view
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "Unit of Measure"
 msgstr "単位"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__product_uom_id
-#: model:ir.model.fields,help:mrp.field_mrp_bom_line__product_uom_id
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
@@ -6082,11 +6061,6 @@ msgid "Unreserve"
 msgstr "引当解除"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
-msgid "UoM"
-msgstr "測定単位"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Update BoM"
 msgstr "部品表を更新"
@@ -6117,21 +6091,6 @@ msgstr "工程依存関係を使用"
 #: model:res.groups,name:mrp.group_mrp_reception_report
 msgid "Use Reception Report with Manufacturing Orders"
 msgstr "製造オーダつき入荷レポートを使用する"
-
-#. module: mrp
-#: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
-#: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production_specific
-#: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
-#: model_terms:ir.actions.act_window,help:mrp.action_work_orders
-#: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
-msgid ""
-"Use the table work center control panel to register operations in the shop floor directly.\n"
-"            The tablet provides worksheets for your workers and allow them to scrap products, track time,\n"
-"            launch a maintenance request, perform quality tests, etc."
-msgstr ""
-"テーブル作業区のコントロールパネルを使用して、製造現場のオペレーションを直接登録します。\n"
-"　　　　タブレットで作業員用のワークシートを提供し、プロダクトの廃棄、時間の記録、\n"
-"　　　　修理依頼、品質検査などを行うことができます。"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
@@ -6299,6 +6258,7 @@ msgid ""
 "BoM search. That allows to define stock rules which trigger different "
 "manufacturing orders with different BoMs."
 msgstr ""
+"調達が、同じオペレーションタイプが設定された'生産'ルートを持つとき、同じオペレーションタイプの部品表を使用して、そのプロダクトの製造オーダの作成を試みます。そうでない場合、オペレーションタイプは部品表検索では考慮されません。これにより、異なる部品表で異なる製造オーダのトリガとなる在庫規則を定義できます。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__manual_consumption
@@ -6498,10 +6458,16 @@ msgid "Work center"
 msgstr "作業区"
 
 #. module: mrp
+#: model_terms:ir.actions.act_window,help:mrp.action_work_orders
+msgid ""
+"Work orders are operations to do as part of a manufacturing order.\n"
+"                    Operations are defined in the bill of materials or added in the manufacturing order directly."
+msgstr "作業オーダは、製造オーダの一部として行う工程です。工程は部品表で定義されるか、または、製造オーダに直接追加されます。"
+
+#. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production_specific
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
-#: model_terms:ir.actions.act_window,help:mrp.action_work_orders
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
 msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"
@@ -6664,7 +6630,7 @@ msgstr "ステータスが同じ製造のみマージできます。"
 msgid ""
 "You cannot change the quantity produced of a work order that is in done or "
 "cancel state."
-msgstr ""
+msgstr "完了または取消状態の作業オーダの生産数量を変更することはできません。"
 
 #. module: mrp
 #. odoo-python
@@ -6715,7 +6681,7 @@ msgstr "一度キャンセルまたは完了した製造オーダを移動する
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "You cannot produce more than 1 unit of a serial product at a time."
-msgstr ""
+msgstr "シリアルプロダクトは一度に1個以上生産できません。"
 
 #. module: mrp
 #. odoo-python

@@ -481,6 +481,19 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    <t t-out=\"object.partner_id.name or '客戶'\">Brandon Freeman</t> 您好！<br/><br/>\n"
+"    谢谢联络我们，感谢您对我们的产品/服务感兴趣。<br/>\n"
+"    我们的团队目前正在处理您的查询，会尽快回复您的电邮。<br/>\n"
+"   期间如果您有任何问题或疑虑，欢迎随时告诉我们，我们乐意协助。<br/><br/>\n"
+"    感谢您耐心等待。<br/>\n"
+"    顺祝  安康\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -1102,7 +1115,7 @@ msgstr "附件"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__attachment_ids
 msgid "Attachments that don't come from a message"
-msgstr ""
+msgstr "并非来自信息的附件"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__user_id

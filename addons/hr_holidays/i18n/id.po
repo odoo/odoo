@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Abe Manyo, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-24 15:31+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Abe Manyo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -333,6 +334,8 @@ msgid ""
 "<span>The allocated days cannot be used, because the allocation is set to "
 "finish in the past.</span>"
 msgstr ""
+"<span>Hari-hari yang dialokasikan tidak dapat digunakan, karena alokasi "
+"ditetapkan untuk selesai di masa lalu.</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -721,6 +724,8 @@ msgid ""
 "Allocation must be \"To Approve\" or \"Second Approval\" in order to approve"
 " it."
 msgstr ""
+"Alokasi harus \"Untuk Disetujui\" atau \"Persetujuan Kedua\" agar dapat "
+"divalidasi."
 
 #. module: hr_holidays
 #. odoo-python
@@ -1729,6 +1734,8 @@ msgid ""
 "End date has been updated because the employee will leave the company on "
 "%(departure_date)s."
 msgstr ""
+"Tanggal akhir harus diupdate karena karyawan akan keluar dari perusahaan "
+"pada tanggal %(departure_date)s./"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__employee_requests__yes
@@ -2759,6 +2766,14 @@ msgstr "Hanya"
 
 #. module: hr_holidays
 #. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"Only %s's Time Off Approver, a time off Officer/Responsible or Administrator"
+" can approve or refuse allocation requests."
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Manager can reset a refused leave."
 msgstr "Hanya Manajer Cuti yang dapat reset cuti yang ditolak."
@@ -2792,18 +2807,16 @@ msgstr "Hanya manajer yang dapat memodifikasi cuti yang dibatalkan."
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid "Only a time off Manager can approve its own requests."
-msgstr "Hanya Manajer Cuti yang dapat menyetujui permintaan mereka sendiri."
+msgid "Only a time off Administrator can approve their own requests."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"Only a time off Officer/Responsible or Manager can approve or refuse time "
-"off requests."
+"Only a time off Officer/Responsible or Administrator can approve or refuse "
+"allocation requests."
 msgstr ""
-"Hanya Penanggungjawab/Petugas cuti atau Manajer yang dapat menyetujui atau "
-"menolak permintaan cuti."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4461,6 +4474,14 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You must be %s's Manager to approve this leave"
 msgstr "Anda harus menjadi Manajer %s untuk menyetujui cuti ini"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"You must be either %s's Time Off Approver or Time off Administrator to "
+"validate this allocation request."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python

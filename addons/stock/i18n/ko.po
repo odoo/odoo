@@ -3,16 +3,16 @@
 # 	* stock
 # 
 # Translators:
-# Wil Odoo, 2024
 # Daye Jeong, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Daye Jeong, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,12 +47,9 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 msgid ""
 "\n"
-"The quantity done for the product %(product)s doesn't respect the rounding precision defined on the unit of measure %(unit)s.\n"
-"Please change the quantity done or the rounding precision of your unit of measure."
+"The quantity done for the product %(product)s doesn't respect the rounding precision defined on the system.\n"
+"Please change the quantity done or the rounding precision in your settings."
 msgstr ""
-"\n"
-"품목 %(product)s의 최종 수량에는 기본 단위 %(unit)s에 정의되어 있는 소수점 자릿수가 반영되지 않습니다.\n"
-"최종 수량 또는 기본 단위의 소수점을 변경해 주세요."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -165,17 +162,6 @@ msgstr "%(operations)s 의 기본 원본 또는 대상 위치가 %(warehouse)s �
 #: code:addons/stock/models/stock_scrap.py:0
 msgid "%(product)s: Insufficient Quantity To Scrap"
 msgstr "%(product)s: 폐기할 수량이 충분하지 않습니다"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-msgid ""
-"%(product_name)s --> Product UoM is %(product_uom)s "
-"(%(product_uom_category)s) - Move UoM is %(move_uom)s "
-"(%(move_uom_category)s)"
-msgstr ""
-"%(product_name)s --> 품목의 기본 단위는 %(product_uom)s (%(product_uom_category)s) -"
-" 이동 기본 단위는 %(move_uom)s (%(move_uom_category)s)"
 
 #. module: stock
 #. odoo-python
@@ -312,7 +298,7 @@ msgstr "(일련번호 바코드)"
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
 #: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
 msgid ")^FS"
-msgstr ""
+msgstr ")^FS"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state
@@ -324,6 +310,11 @@ msgid ""
 "* Available: The product of the stock move is reserved.\n"
 "* Done: The product has been transferred and the transfer has been confirmed."
 msgstr ""
+"* 신규: 재고 이동이 생성되었으나 승인되지 않았습니다.\n"
+"* 다른 이동 대기 중: 이 이동 전에 연결된 재고 이동이 먼저 완료되어야 합니다.\n"
+"* 예약 대기 중: 재고 이동이 확인되었으나 품목을 예약할 수 없습니다.\n"
+"* 사용 가능: 재고 이동 품목이 예약되었습니다.\n"
+"* 완료: 품목 이전 후 승인 완료되었습니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__usage
@@ -460,11 +451,6 @@ msgstr "4 x 7, 가격 표시"
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "54326786758"
 msgstr "54326786758"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_inventory
-msgid "98"
-msgstr "98"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -770,7 +756,7 @@ msgstr "<strong>고객 주소</strong>"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery Address:</strong>"
-msgstr ""
+msgstr "<strong>배송 주소:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -1168,10 +1154,22 @@ msgid "Allowed Location"
 msgstr "허용된 위치"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_replenishment_uom_ids
+msgid "Allowed Replenishment Uom"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__allowed_route_ids
 #: model:ir.model.fields,field_description:stock.field_stock_replenish_mixin__allowed_route_ids
 msgid "Allowed Route"
 msgstr "이동 경로 사용 허용"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__allowed_uom_ids
+#: model:ir.model.fields,field_description:stock.field_stock_move_line__allowed_uom_ids
+#: model:ir.model.fields,field_description:stock.field_stock_scrap__allowed_uom_ids
+msgid "Allowed Uom"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__alternative
@@ -1233,9 +1231,9 @@ msgid "Applicable On"
 msgstr "적용 가능"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_route__packaging_selectable
-msgid "Applicable on Packaging"
-msgstr "패키지에 적용 가능"
+#: model:ir.model.fields,field_description:stock.field_stock_route__package_type_selectable
+msgid "Applicable on Package Type"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__product_selectable
@@ -1560,12 +1558,6 @@ msgid "Blocking Message"
 msgstr "차단 메시지"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-msgid "Blocking: %s"
-msgstr "차단: %s"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__quant_ids
 msgid "Bulk Content"
 msgstr "대량 콘텐츠"
@@ -1674,6 +1666,7 @@ msgstr "비어 있지 않은 패키지의 위치를 제거할 수 없습니다."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__capacity_ids
+#: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
 msgid "Capacity"
 msgstr "생산 능력"
 
@@ -1688,10 +1681,11 @@ msgid "Capacity by Product"
 msgstr "품목별 용량"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_category_id
-#: model:ir.model.fields,field_description:stock.field_stock_move__product_uom_category_id
-#: model:ir.model.fields,field_description:stock.field_stock_move_line__product_uom_category_id
-#: model:ir.model.fields,field_description:stock.field_stock_scrap__product_uom_category_id
+#: model:ir.ui.menu,name:stock.menu_product_category_config_stock
+msgid "Categories"
+msgstr "카테고리"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_search_form_view_stock_report
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -2049,16 +2043,6 @@ msgstr "계속"
 #: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
 msgid "Control panel buttons"
 msgstr "제어판 버튼 "
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_product_replenish__product_uom_category_id
-#: model:ir.model.fields,help:stock.field_stock_move__product_uom_category_id
-#: model:ir.model.fields,help:stock.field_stock_move_line__product_uom_category_id
-#: model:ir.model.fields,help:stock.field_stock_scrap__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr "단위 사이의 변환은 동일 카테고리에서만 가능합니다. 변환은 비율에 따라 이루어집니다."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posx
@@ -2668,6 +2652,13 @@ msgid ""
 "Least Packages: products/lots that were stocked in package with least amount of qty will be moved out first.\n"
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
+"품목을 가져올 정확한 위치 (선반)나 어떤 로트로 가져올지 등 기본 방법을 정의합니다. 이 방법은 품목 카테고리 수준에서 적용될 수 있으며 설정한 내용이 없는 경우에는 상위 위치에서 대안책으로 설정된 내용이 실행됩니다.\n"
+"\n"
+"FIFO: 먼저 입고된 품목이나 로트가 먼저 출고됩니다.\n"
+"LIFO: 나중에 입고된 품목이나 로트가 먼저 출고됩니다.\n"
+"Closet: 대상 장소에 가장 가까이에 위치한 품목이나 로트가 먼저 출고됩니다.\n"
+"최소 패키지: 최소 수량 패키지에 포함된 제품/로트가 먼저 출고됩니다.\n"
+"FEFO: 유효기간에 가장 근접한 품목이나 로트가 먼저 출고됩니다. (\"유효기간 만료\" 설정에 따라서 이 방법은 달라질 수 있습니다)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert_date
@@ -2819,16 +2810,6 @@ msgstr "데모 로트/일련번호"
 #: model_terms:ir.ui.view,arch_db:stock.report_lot_label
 msgid "Demo Product"
 msgstr "데모용 품목"
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_product_packaging__route_ids
-msgid ""
-"Depending on the modules installed, this will allow you to define the route "
-"of the product in this packaging: whether it will be bought, manufactured, "
-"replenished on order, etc."
-msgstr ""
-"설치되어 있는 모듈에 따라, 이 패키지에서 품목 경로를 설정할 수 있습니다. 구매를 거친 것인지, 제조한 것인지, 주문에 따라 보충된 "
-"것인지 등을 설정합니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
@@ -2996,6 +2977,11 @@ msgid "Difference"
 msgstr "차액"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
+msgid "Dimensions"
+msgstr "크기"
+
+#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.inventory_warning_reset_view
@@ -3055,7 +3041,6 @@ msgstr "납품 전표에 로트 번호 및 일련번호 표시"
 #: model:ir.model.fields,field_description:stock.field_procurement_group__display_name
 #: model:ir.model.fields,field_description:stock.field_product_category__display_name
 #: model:ir.model.fields,field_description:stock.field_product_label_layout__display_name
-#: model:ir.model.fields,field_description:stock.field_product_packaging__display_name
 #: model:ir.model.fields,field_description:stock.field_product_product__display_name
 #: model:ir.model.fields,field_description:stock.field_product_removal__display_name
 #: model:ir.model.fields,field_description:stock.field_product_replenish__display_name
@@ -3159,11 +3144,6 @@ msgstr "완료"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
 msgid "Done By"
 msgstr "작업자"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_quantity
-msgid "Done Packaging Quantity"
-msgstr "완료 패키지 수량"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_package_level__state__draft
@@ -3843,7 +3823,6 @@ msgstr "이 작업 유형에서 운송 중에 있는 품목을 예약하는 방�
 #: model:ir.model.fields,field_description:stock.field_procurement_group__id
 #: model:ir.model.fields,field_description:stock.field_product_category__id
 #: model:ir.model.fields,field_description:stock.field_product_label_layout__id
-#: model:ir.model.fields,field_description:stock.field_product_packaging__id
 #: model:ir.model.fields,field_description:stock.field_product_product__id
 #: model:ir.model.fields,field_description:stock.field_product_removal__id
 #: model:ir.model.fields,field_description:stock.field_product_replenish__id
@@ -5180,11 +5159,6 @@ msgid "Manage Push and Pull inventory flows"
 msgstr "Push and Pull 재고 흐름 관리"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Manage product packagings (e.g. pack of 6 bottles, box of 10 pieces)"
-msgstr "품목 패키지를 관리합니다. (예. 6병 포장, 10개들이 상자 포장)"
-
-#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__trigger__manual
 msgid "Manual"
 msgstr "수동"
@@ -5401,11 +5375,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_adv_location
 msgid "Multi-Step Routes"
 msgstr "다중-단계 경로"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_multiple
-msgid "Multiple Quantity"
-msgstr "여러 수량"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_unique_package_type
@@ -6269,12 +6238,13 @@ msgid "Package Transfers"
 msgstr "패키지 이송"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_product_packaging__package_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__name
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__package_type_ids
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__package_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category_capacity__package_type_id
+#: model:ir.model.fields,field_description:stock.field_uom_uom__package_type_id
 #: model_terms:ir.ui.view,arch_db:stock.quant_package_search_view
+#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
 msgid "Package Type"
 msgstr "패키지 유형"
@@ -6338,7 +6308,7 @@ msgstr ""
 "            일단 생성되면 전체 패키지를 한 번에 이동하거나 포장을 풀고 품목을 다시 각각의 단위로 이동할 수 있습니다."
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_id
+#: model:ir.model.fields,field_description:stock.field_stock_move__packaging_uom_id
 msgid "Packaging"
 msgstr "패키징"
 
@@ -6353,15 +6323,19 @@ msgid "Packaging Length"
 msgstr "패키지 길이"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__packaging_uom_qty
+msgid "Packaging Quantity"
+msgstr "포장 수량"
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__width
 msgid "Packaging Width"
 msgstr "패키지 폭"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_route__packaging_ids
-#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
-msgid "Packagings"
-msgstr "패키지"
+#: model:ir.model.fields,help:stock.field_stock_move__packaging_uom_id
+msgid "Packaging unit from sale or purchase orders"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_pack_stock_loc_id
@@ -6726,7 +6700,6 @@ msgstr "품목 용량"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__categ_ids
-#: model:ir.ui.menu,name:stock.menu_product_category_config_stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Product Categories"
 msgstr "품목 카테고리"
@@ -6777,22 +6750,6 @@ msgstr "품목 LOT 필터"
 #: model:ir.model,name:stock.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
 msgstr "품목 이동 (재고 이동 상세)"
-
-#. module: stock
-#: model:ir.model,name:stock.model_product_packaging
-msgid "Product Packaging"
-msgstr "품목 포장법"
-
-#. module: stock
-#: model:ir.actions.report,name:stock.label_product_packaging
-msgid "Product Packaging (ZPL)"
-msgstr "품목 패키지(ZPL)"
-
-#. module: stock
-#: model:ir.ui.menu,name:stock.menu_product_packagings
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Product Packagings"
-msgstr "패키지 품목"
 
 #. module: stock
 #. odoo-python
@@ -7045,11 +7002,6 @@ msgid "Putaway:"
 msgstr "반입 :"
 
 #. module: stock
-#: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_qty_multiple_check
-msgid "Qty Multiple must be greater than or equal to zero."
-msgstr "다수 수량은 0보다 크거나 같아야합니다."
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_quality_control
 msgid "Quality"
 msgstr "품질 관리"
@@ -7146,11 +7098,6 @@ msgid "Quantity"
 msgstr "수량"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
-msgid "Quantity Multiple"
-msgstr "다수의 수량"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__qty_available
 #: model:ir.model.fields,field_description:stock.field_product_template__qty_available
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
@@ -7205,6 +7152,11 @@ msgstr "이 이동을 위해 여전히 예약 할 수있는 재고 수량"
 #: model:ir.model.fields,help:stock.field_stock_move__product_qty
 msgid "Quantity in the default UoM of the product"
 msgstr "이 양은 품목의 기본 단위로 수량이 표시됩니다"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_move__packaging_uom_qty
+msgid "Quantity in the packaging unit"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__incoming_qty
@@ -7606,6 +7558,11 @@ msgid "Replenishment Information for %(product)s in %(warehouse)s"
 msgstr "%(product)s 중 %(warehouse)s에 위치한 품목에 대한 보충 정보 "
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__replenishment_uom_id
+msgid "Replenishment Multiple"
+msgstr ""
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 msgid "Replenishment Report"
@@ -7696,12 +7653,6 @@ msgid "Reserved"
 msgstr "예약됨"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_qty
-#: model:ir.model.fields,field_description:stock.field_stock_move_line__product_packaging_qty
-msgid "Reserved Packaging Quantity"
-msgstr "예약된 포장 수량"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__reserved_quantity
 msgid "Reserved Quantity"
 msgstr "예약된 수량"
@@ -7747,6 +7698,11 @@ msgstr "재공급 경로"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 msgid "Return"
 msgstr "반납"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
+msgid "Return All"
+msgstr ""
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
@@ -7847,10 +7803,11 @@ msgstr "경로 순서"
 #: model:ir.actions.act_window,name:stock.action_routes_form
 #: model:ir.actions.server,name:stock.action_open_routes
 #: model:ir.model.fields,field_description:stock.field_product_category__route_ids
-#: model:ir.model.fields,field_description:stock.field_product_packaging__route_ids
 #: model:ir.model.fields,field_description:stock.field_product_product__route_ids
 #: model:ir.model.fields,field_description:stock.field_product_template__route_ids
+#: model:ir.model.fields,field_description:stock.field_stock_package_type__route_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__route_ids
+#: model:ir.model.fields,field_description:stock.field_uom_uom__route_ids
 #: model:ir.ui.menu,name:stock.menu_routes_config
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
@@ -7862,6 +7819,11 @@ msgstr "경로"
 #: model:ir.model.fields,field_description:stock.field_product_template__has_available_route_ids
 msgid "Routes can be selected on this product"
 msgstr "이 품목에 대한 이동경로를 선택할 수 있습니다"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_uom_uom__route_ids
+msgid "Routes propagated from the package type"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__resupply_wh_ids
@@ -8111,8 +8073,8 @@ msgstr "지원되지 않는 선택"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Sell and purchase products in different units of measure"
-msgstr "품목의 판매 단위와 구매 단위를 다르게 설정합니다."
+msgid "Sell and purchase products in different units of measure or packagings"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8435,7 +8397,7 @@ msgstr "다음 행동 날짜가 오늘 이전 인 모든 기록보기"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_kandan
 msgid "Show details"
-msgstr ""
+msgstr "세부 정보 표시"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_lots_m2o
@@ -8953,12 +8915,6 @@ msgid "Template"
 msgstr "서식"
 
 #. module: stock
-#: model_terms:res.company,sign_terms:stock.res_company_1
-#: model_terms:res.company,sign_terms_html:stock.res_company_1
-msgid "Terms &amp; Conditions"
-msgstr "이용 약관"
-
-#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 msgid ""
@@ -9154,11 +9110,11 @@ msgid ""
 msgstr "이 공간(위치)을 포함하는 상위 공간(위치)입니다. 예: '입고 공간(위치)'은 '게이트1'의 상위 공간(위치)입니다."
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__qty_multiple
+#: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__replenishment_uom_id
 msgid ""
-"The procurement quantity will be rounded up to a multiple of this field "
-"quantity. If it is 0, it is not rounded."
-msgstr "조달 수량은 이 필드 수량의 가장 가까운 배수로 반올림됩니다. 필드 수량이 0이면 반올림되지 않습니다."
+"The procurement quantity will be rounded up to a multiple of this "
+"unit/packaging. If it is not set, it is not rounded."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -9436,6 +9392,15 @@ msgid ""
 msgstr ""
 "이 품목은 하나 이상의 재고 이동에 사용되었습니다. 불일치가 발생할 수 있으므로 품목 유형을 변경하지 않는 것이 좋습니다. 더 나은 "
 "방법은 품목을 보관하고 대신 신규 품목을 만드는 것입니다."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/product.py:0
+msgid ""
+"This product has been used in at least one inventory movement. It is not "
+"advised to change the Unit of Measure since it can lead to inconsistencies. "
+"The existing moves will not be recalculated with the new unit of measure."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -9966,24 +9931,10 @@ msgid "Unique Lot/Serial Number"
 msgstr "고유한 LOT/일련번호"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
-#: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
-#: model_terms:ir.ui.view,arch_db:stock.view_move_tree
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_simple
-msgid "Unit"
-msgstr "단위"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__price_unit
-msgid "Unit Price"
-msgstr "단가"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__forecast_uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__product_uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_lot__product_uom_id
+#: model:ir.model.fields,field_description:stock.field_stock_move__product_uom
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__product_uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__uom_id
@@ -9992,20 +9943,19 @@ msgstr "단가"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_uom
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty__product_uom_name
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__product_uom_name
-#: model_terms:ir.ui.view,arch_db:stock.package_level_form_view
-#: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
-#: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree_detailed
-#: model_terms:ir.ui.view,arch_db:stock.view_move_tree_receipt_picking
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_move_tree
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_kanban
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
-msgid "Unit of Measure"
+#: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
+msgid "Unit"
 msgstr "단위"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__uom
-msgid "Unit of Measure Name"
-msgstr "단위명"
+msgid "Unit Name"
+msgstr "단위 이름"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__price_unit
+msgid "Unit Price"
+msgstr "단가"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -10014,19 +9964,10 @@ msgid "Units"
 msgstr "단위"
 
 #. module: stock
+#: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Units Of Measure"
-msgstr "단위"
-
-#. module: stock
-#: model:ir.ui.menu,name:stock.menu_stock_unit_measure_stock
-msgid "Units of Measure"
-msgstr "단위"
-
-#. module: stock
-#: model:ir.ui.menu,name:stock.product_uom_menu
-msgid "Units of Measures"
-msgstr "단위"
+msgid "Units & Packagings"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
@@ -10065,29 +10006,9 @@ msgid "Unreturned"
 msgstr "미반송"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-msgid "Unsafe unit of measure"
-msgstr "안전하지 않은 측정 단위"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__unwanted_replenish
 msgid "Unwanted Replenish"
 msgstr "요청하지 않은 보충"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__product_uom
-#: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
-#: model_terms:ir.ui.view,arch_db:stock.replenishment_option_tree_view
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
-#: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
-msgid "UoM"
-msgstr "단위"
-
-#. module: stock
-#: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
-msgid "UoM Categories"
-msgstr "단위 범주"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot_report__uom_id
@@ -10529,14 +10450,14 @@ msgid ""
 msgstr "선택 시, 품목 서식의 재고 탭에서 이동 경로를 설정할 수 있습니다."
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_stock_route__package_type_selectable
+msgid "When checked, the route will be selectable on package types"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__product_categ_selectable
 msgid "When checked, the route will be selectable on the Product Category."
 msgstr "선택 시 품목 카테고리에서 이동 경로를 선택할 수 있습니다."
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_route__packaging_selectable
-msgid "When checked, the route will be selectable on the Product Packaging."
-msgstr "선택하면 품목 패키지에서 경로를 선택할 수 있습니다."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_in_id
@@ -10724,19 +10645,6 @@ msgid ""
 msgstr "서로 다른 공간으로 이동하는 품목을 동일한 패키지에 넣을 수 없습니다"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-msgid ""
-"You are using a unit of measure smaller than the one you are using in order "
-"to stock your product. This can lead to rounding problem on reserved "
-"quantity. You should use the smaller unit of measure possible in order to "
-"valuate your stock or change its rounding precision to a smaller value "
-"(example: 0.00001)."
-msgstr ""
-"품목 재고를 확보하기 위해 사용하는 것보다 작은 단위를 사용하고 있습니다. 이로 인해 예약 수량에 반올림 문제가 발생할 수 "
-"있습니다. 재고를 평가하거나 반올림 정밀도를 더 작은 값으로 변경하려면 가능한 작은 측정 단위를 사용해야합니다 (예: 0.00001)."
-
-#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_routes_form
 msgid ""
 "You can define here the main routes that run through\n"
@@ -10903,17 +10811,6 @@ msgstr "특정 품목이 이 단위를 이미 사용하고 있거나 현재 예�
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/product.py:0
-msgid ""
-"You cannot change the unit of measure as there are already stock moves for "
-"this product. If you want to change the unit of measure, you should rather "
-"archive this product and create a new one."
-msgstr ""
-"이 품목에 대한 재고 이동이 이미 있으므로 단위를 변경할 수 없습니다. 단위를 변경하려면, 이 품목을 보관하고 신규 품목을 만들어야 "
-"합니다."
-
-#. module: stock
-#. odoo-python
 #: code:addons/stock/models/stock_scrap.py:0
 msgid "You cannot delete a scrap which is done."
 msgstr "완료된 폐기건은 삭제할 수 없습니다."
@@ -10944,15 +10841,7 @@ msgstr "동일한 이송에서 동일한 패키지 내용을 두 번 이상 이�
 msgid ""
 "You cannot pack products into the same package when they are from different "
 "transfers with different operation types"
-msgstr ""
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-msgid ""
-"You cannot perform moves because their unit of measure has a different "
-"category from their product unit of measure."
-msgstr "측정 단위가 제품 측정 단위 카테고리와 다르기 때문에 이동을 수행할 수 없습니다."
+msgstr "서로 다른 작업 유형의 서로 다른 이송으로 출발한 제품은 함께 패키징할 수 없습니다."
 
 #. module: stock
 #. odoo-python
@@ -11046,14 +10935,6 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/stock_orderpoint.py:0
-msgid ""
-"You have to select a product unit of measure that is in the same category as"
-" the default unit of measure of the product"
-msgstr "품목의 기본 단위와 동일 카테고리에 있는 단위를 선택해야 합니다"
-
-#. module: stock
-#. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 msgid "You may only return Done pickings."
 msgstr "선별 완료만 반환할 수 있습니다."
@@ -11135,12 +11016,6 @@ msgstr ""
 "            규칙을 \"자동\"으로 설정해놓으면 주문에 소요되는 시간을 줄일 수 있습니다. "
 
 #. module: stock
-#: model_terms:res.company,sign_terms:stock.res_company_1
-#: model_terms:res.company,sign_terms_html:stock.res_company_1
-msgid "Your conditions..."
-msgstr "귀하의 조건"
-
-#. module: stock
 #: model_terms:res.company,lunch_notify_message:stock.res_company_1
 msgid ""
 "Your lunch has been delivered.\n"
@@ -11186,12 +11061,12 @@ msgstr "ZPL 라벨, 가격 표시"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_label_layout__zpl_preview
 msgid "ZPL Preview"
-msgstr ""
+msgstr "ZPL 미리보기"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_label_layout__zpl_template
 msgid "ZPL Template"
-msgstr ""
+msgstr "ZPL 템플릿"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -11262,6 +11137,8 @@ msgid ""
 "^FS\n"
 "^FT35,48^A0N,15^FD"
 msgstr ""
+"^FS\n"
+"^FT35,48^A0N,15^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
@@ -11269,22 +11146,24 @@ msgid ""
 "^FS\n"
 "^FT35,65^A0N,20^FD"
 msgstr ""
+"^FS\n"
+"^FT35,65^A0N,20^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.jewelry_zpl_label
 msgid "^FT210,30^A0N,25^FD"
-msgstr ""
+msgstr "^FT210,30^A0N,25^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
 #: model_terms:ir.ui.view,arch_db:stock.small_zpl_label
 msgid "^FT35,30^A0N,20^FD"
-msgstr ""
+msgstr "^FT35,30^A0N,20^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
 msgid "^FT35,40^A0N,25^FD"
-msgstr ""
+msgstr "^FT35,40^A0N,25^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form

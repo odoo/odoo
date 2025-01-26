@@ -3,16 +3,16 @@
 # 	* account
 # 
 # Translators:
-# Wil Odoo, 2024
 # Maitê Dietze, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:30+0000\n"
+"POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
-"Last-Translator: Maitê Dietze, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -139,12 +139,6 @@ msgstr "%(amount)s devido em %(date)s"
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "%(exception)s for %(user)s%(end_datetime_string)s%(reason)s."
 msgstr "%(exception)s para %(user)s%(end_datetime_string)s%(reason)s."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_bank_statement.py:0
-msgid "%(journal_code)s Statement %(date)s"
-msgstr "%(journal_code)s Demonstrativo %(date)s "
 
 #. module: account
 #. odoo-python
@@ -3349,11 +3343,6 @@ msgid "Automatic Entry Default Journal"
 msgstr "Diário padrão de lançamento automático"
 
 #. module: account
-#: model:account.fiscal.position,name:account.1_account_fiscal_position_avatax_us
-msgid "Automatic Tax Mapping (AvaTax)"
-msgstr "Mapeamento automático de impostos (AvaTax)"
-
-#. module: account
 #: model:ir.model,name:account.model_sequence_mixin
 msgid "Automatic sequence"
 msgstr "Sequência automática"
@@ -3753,6 +3742,11 @@ msgid "Based on Payment"
 msgstr "Baseado no pagamento"
 
 #. module: account
+#: model:res.groups,name:account.group_account_basic
+msgid "Basic"
+msgstr "Básico"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Batch Payment Number Sequence"
@@ -3826,6 +3820,7 @@ msgstr "Referência da conta"
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #: code:addons/account/models/account_journal_dashboard.py:0
+#: model:ir.actions.act_window,name:account.action_move_in_invoice
 #: model:ir.actions.act_window,name:account.action_move_in_invoice_type
 #: model:ir.ui.menu,name:account.menu_action_move_in_invoice_type
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -3888,11 +3883,6 @@ msgstr "Mensagem de bloqueio"
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__body_has_template_value
 msgid "Body content is the same as the template"
 msgstr "O conteúdo do corpo do texto é igual ao do modelo"
-
-#. module: account
-#: model:res.groups,name:account.group_account_user
-msgid "Bookkeeper"
-msgstr "Guarda-livros"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -4093,6 +4083,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+#, python-format
+msgid "Cannot create an accrual entry with orders in different currencies."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
 "Cannot find a chart of accounts for this company, You should configure it. \n"
@@ -4132,6 +4129,7 @@ msgid "Capital"
 msgstr "Capital"
 
 #. module: account
+#: model_terms:ir.actions.act_window,help:account.action_move_in_invoice
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice_type
 msgid ""
 "Capture invoices, register payments and keep track of the discussions with "
@@ -4149,7 +4147,6 @@ msgstr "Passar para"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.1_cash_journal_default_account_46
-#: model:account.account,name:account.1_cash_journal_default_account_55
 #: model:account.journal,name:account.1_cash
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -4161,16 +4158,6 @@ msgstr "Dinheiro"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Cash Account"
 msgstr "Conta de caixa"
-
-#. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_52
-msgid "Cash Bakery"
-msgstr "Caixa - Padaria"
-
-#. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_54
-msgid "Cash Bar"
-msgstr "Cash bar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_exigibility
@@ -4207,11 +4194,6 @@ msgstr "Impostos em regime de caixa"
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_transition_account_id
 msgid "Cash Basis Transition Account"
 msgstr "Conta de transição em regime de caixa"
-
-#. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_51
-msgid "Cash Clothes Shop"
-msgstr "Caixa - Loja de roupas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_expense_account_id
@@ -4267,20 +4249,10 @@ msgid "Cash Discount Write-Off Loss Account"
 msgstr "Conta de perdas para dar baixa em desconto para pagamento à vista"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_50
-msgid "Cash Furn. Shop"
-msgstr "Caixa - Loja de móveis"
-
-#. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Cash Registers"
 msgstr "Caixas registradoras"
-
-#. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_53
-msgid "Cash Restaurant"
-msgstr "Restaurante (dinheiro)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
@@ -4329,8 +4301,12 @@ msgid "Catalog"
 msgstr "Catálogo"
 
 #. module: account
+#: model:ir.ui.menu,name:account.menu_product_product_categories
+msgid "Categories"
+msgstr "Categorias"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__category
-#: model:ir.model.fields,field_description:account.field_account_move_line__product_uom_category_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 msgid "Category"
 msgstr "Categoria"
@@ -4903,15 +4879,6 @@ msgid "Control-Access"
 msgstr "Controle de acesso"
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_move_line__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"A conversão entre unidades de medida só pode ocorrer se elas pertencerem à "
-"mesma categoria. A conversão será feita com base nas proporções."
-
-#. module: account
 #: model_terms:ir.actions.act_window,help:account.action_amounts_to_settle
 msgid "Cool, it looks like you don't have any amount to settle."
 msgstr "Legal! Parece que você não tem nenhum valor para liquidar."
@@ -5109,6 +5076,7 @@ msgid "Create a credit note"
 msgstr "Criar uma nota de crédito"
 
 #. module: account
+#: model_terms:ir.actions.act_window,help:account.action_move_out_invoice
 #: model_terms:ir.actions.act_window,help:account.action_move_out_invoice_type
 msgid "Create a customer invoice"
 msgstr "Criar uma fatura de cliente"
@@ -5188,6 +5156,7 @@ msgstr ""
 " impressão simultânea."
 
 #. module: account
+#: model_terms:ir.actions.act_window,help:account.action_move_in_invoice
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice_type
 msgid "Create a vendor bill"
 msgstr "Criar uma conta de fornecedor"
@@ -5225,6 +5194,7 @@ msgid "Create invoice/bill"
 msgstr "Criar conta/fatura"
 
 #. module: account
+#: model_terms:ir.actions.act_window,help:account.action_move_out_invoice
 #: model_terms:ir.actions.act_window,help:account.action_move_out_invoice_type
 msgid ""
 "Create invoices, register payments and keep track of the discussions with "
@@ -7426,6 +7396,12 @@ msgid "Filter Multivat"
 msgstr "Filtro multi NIF"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_root.py:0
+msgid "Filter on the Account or its Display Name instead"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__general_account_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 msgid "Financial Account"
@@ -9263,6 +9239,7 @@ msgstr "Faturado"
 #. module: account
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
+#: model:ir.actions.act_window,name:account.action_move_out_invoice
 #: model:ir.actions.act_window,name:account.action_move_out_invoice_type
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_ids
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_ids
@@ -9371,11 +9348,6 @@ msgstr "Correspondência exata de faturas/contas"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Invoicing"
 msgstr "Faturamento"
-
-#. module: account
-#: model:res.groups,name:account.group_account_basic
-msgid "Invoicing & Banks"
-msgstr "Faturamento e bancos"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__invoicing_legacy
@@ -10399,6 +10371,12 @@ msgstr ""
 "Depósito em lote: debite vários cheques de clientes de uma só vez, gerando e enviando um depósito em lote ao seu banco. É necessário o módulo account_batch_payment.\n"
 "Transferência de crédito SEPA: pagamentos na zona SEPA com envio de um arquivo de transferência de crédito SEPA para o seu banco. O módulo account_sepa é necessário.\n"
 "Débito direto SEPA: receber pagamentos na zona SEPA por um mandato concedido pelo seu usuário. O módulo account_sepa é necessário.\n"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+msgid "Manually"
+msgstr "Manualmente"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -11736,6 +11714,7 @@ msgstr "Conta pendente"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_account_journal_payment_credit_account_id
 msgid "Outstanding Payments"
 msgstr "Pagamentos pendentes"
 
@@ -11747,6 +11726,7 @@ msgstr "Contas de pagamentos pendentes"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_account_journal_payment_debit_account_id
 msgid "Outstanding Receipts"
 msgstr "Recebimentos pendentes"
 
@@ -12709,11 +12689,6 @@ msgid "Product"
 msgstr "Produto"
 
 #. module: account
-#: model:ir.ui.menu,name:account.menu_product_product_categories
-msgid "Product Categories"
-msgstr "Categorias de produtos"
-
-#. module: account
 #: model:ir.model,name:account.model_product_category
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__product_categ_id
@@ -12919,11 +12894,6 @@ msgstr "Classificações"
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
 msgstr "Ressequenciar"
-
-#. module: account
-#: model:res.groups,name:account.group_account_readonly
-msgid "Read-only"
-msgstr "Somente leitura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__reason
@@ -13586,11 +13556,6 @@ msgid "STANDARD TERMS AND CONDITIONS OF SALE"
 msgstr "TERMOS E CONDIÇÕES PADRÕES DE VENDA"
 
 #. module: account
-#: model:account.journal,name:account.1_hr_payroll_account_journal
-msgid "Salaries"
-msgstr "Salários"
-
-#. module: account
 #: model:account.account,name:account.1_expense_salary
 msgid "Salary Expenses"
 msgstr "Despesas salariais"
@@ -13968,8 +13933,8 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Sell and purchase products in different units of measure"
-msgstr "Vender e comprar produtos em unidades de medida diferentes"
+msgid "Sell and purchase products in different units of measure or packagings"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -14308,6 +14273,11 @@ msgstr ""
 "também serão nomeados usando este prefixo por padrão."
 
 #. module: account
+#: model:res.groups,name:account.group_account_readonly
+msgid "Show Accounting Features - Readonly"
+msgstr "Mostrar Recursos de Contabilidade - Somente Leitura"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__show_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_users__show_credit_limit
 msgid "Show Credit Limit"
@@ -14334,6 +14304,11 @@ msgstr "Exibir informações de desconto"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__show_force_tax_included
 msgid "Show Force Tax Included"
 msgstr "Mostrar imposto incluído forçado"
+
+#. module: account
+#: model:res.groups,name:account.group_account_user
+msgid "Show Full Accounting Features"
+msgstr "Mostrar Todas as Funcionalidades de Contabilidade"
 
 #. module: account
 #: model:res.groups,name:account.group_account_secured
@@ -14530,6 +14505,12 @@ msgstr "Estado"
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Statement"
 msgstr "Demonstrativo"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+msgid "Statement %(date)s"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
@@ -15376,16 +15357,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
-msgid ""
-"The Unit of Measure (UoM) '%(uom)s' you have selected for product "
-"'%(product)s', is incompatible with its category : %(category)s."
-msgstr ""
-"A unidade de medida (UM) '%(uom)s' selecionada para o produto '%(product)s',"
-" é incompatível com sua categoria: %(category)s."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move_line.py:0
 msgid "The account %(name)s (%(code)s) is deprecated."
 msgstr "A conta %(name)s (%(code)s) está depreciada."
 
@@ -16189,6 +16160,14 @@ msgid ""
 msgstr ""
 "A forma de pagamento selecionada não está disponível para este pagamento; "
 "selecione uma forma de pagamento novamente."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"The sending of invoices is not set up properly, make sure the report used is"
+" set for invoices."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__sequence
@@ -17322,6 +17301,12 @@ msgid "Unique identifier for this line."
 msgstr "Identificador único para esta linha."
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__product_uom_id
+#: model:ir.model.fields,field_description:account.field_account_move_line__product_uom_id
+msgid "Unit"
+msgstr "Unidade"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_unit
 msgid "Unit Price"
 msgstr "Preço unitário"
@@ -17332,12 +17317,6 @@ msgid "Unit Price:"
 msgstr "Preço unitário:"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_report__product_uom_id
-#: model:ir.model.fields,field_description:account.field_account_move_line__product_uom_id
-msgid "Unit of Measure"
-msgstr "Unidade de medida"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/template_generic_coa.py:0
 msgid "United States of America (Generic)"
@@ -17345,8 +17324,8 @@ msgstr "Estados Unidos da América (genérico)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Units of Measure"
-msgstr "Unidades de medida"
+msgid "Units & Packagings"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -17468,11 +17447,6 @@ msgstr "Banco não confiável"
 #: model:ir.model.fields,field_description:account.field_account_payment_register__untrusted_payments_count
 msgid "Untrusted Payments Count"
 msgstr "Total de pagamentos não confiáveis"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid "UoM"
-msgstr "UM"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up

@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Daye Jeong, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-24 15:31+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Daye Jeong, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -332,7 +333,7 @@ msgstr "<span class=\"text-muted\">시작 </span>"
 msgid ""
 "<span>The allocated days cannot be used, because the allocation is set to "
 "finish in the past.</span>"
-msgstr ""
+msgstr "<span>할당된 날짜는 과거에 만료되도록 설정되어 있으므로 사용할 수 없습니다.</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -2101,7 +2102,7 @@ msgstr "무급 여부"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__is_used
 msgid "Is Used"
-msgstr ""
+msgstr "사용됨"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__jan
@@ -2712,6 +2713,14 @@ msgstr "한정"
 
 #. module: hr_holidays
 #. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"Only %s's Time Off Approver, a time off Officer/Responsible or Administrator"
+" can approve or refuse allocation requests."
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Manager can reset a refused leave."
 msgstr "휴가 담당자만이 반려된 휴가를 재설정할 수 있습니다."
@@ -2744,16 +2753,16 @@ msgstr "관리자만 취소된 휴가를 수정할 수 있습니다."
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid "Only a time off Manager can approve its own requests."
-msgstr "휴가 관리자만이 자신의 요청을 승인할 수 있습니다."
+msgid "Only a time off Administrator can approve their own requests."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"Only a time off Officer/Responsible or Manager can approve or refuse time "
-"off requests."
-msgstr "휴가 담당 부서장/책임자 또는 관리자만이 휴가 요청을 승인하거나 거절할 수 있습니다."
+"Only a time off Officer/Responsible or Administrator can approve or refuse "
+"allocation requests."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -4341,6 +4350,14 @@ msgstr "휴가 요청에 대한 재승인을 받을 수 있는 권한이 없습�
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You must be %s's Manager to approve this leave"
 msgstr "이 휴가를 승인하려면 %s의 관리자 권한이 있어야 합니다"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"You must be either %s's Time Off Approver or Time off Administrator to "
+"validate this allocation request."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python

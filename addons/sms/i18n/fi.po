@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +37,7 @@ msgid ""
 "%(count)s out of the %(total)s selected SMS Text Messages have successfully "
 "been resent."
 msgstr ""
+"%(count)s valituista %(total)s tekstiviesteistä on lähetetty uudelleen."
 
 #. module: sms
 #. odoo-python
@@ -53,7 +54,13 @@ msgstr "%s virheelliset vastaanottajat"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "+1 555-555-555"
-msgstr ""
+msgstr "+1 555-555-555"
+
+#. module: sms
+#. odoo-javascript
+#: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
+msgid ", fits in"
+msgstr ", sopii"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -61,6 +68,8 @@ msgid ""
 "<i class=\"fa fa-warning\"/> An error occurred with your account. Please "
 "contact the support for more information..."
 msgstr ""
+"<i class=\"fa fa-warning\"/> Tililläsi tapahtui virhe. Ota yhteyttä "
+"asiakaspalveluun saadaksesi lisätietoja..."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -68,6 +77,8 @@ msgid ""
 "<i class=\"fa fa-warning\"/> You cannot send SMS while your account is not "
 "registered."
 msgstr ""
+"<i class=\"fa fa-warning\"/> Et voi lähettää tekstiviestejä, jos tilisi ei "
+"ole rekisteröity."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -75,6 +86,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                            Register"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                            Rekisteröi"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -82,6 +95,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                            Set Sender Name"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                            Aseta lähettäjän nimi"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -196,12 +211,20 @@ msgid "An error occurred when sending an SMS"
 msgstr "Tekstiviestin lähettämisessä tapahtui virhe"
 
 #. module: sms
+#. odoo-javascript
+#: code:addons/sms/static/src/core/failure_model_patch.js:0
+msgid "An error occurred when sending an SMS on “%(record_name)s”"
+msgstr ""
+"Tekstiviestin lähettämisessä tapahtui virhe osoitteessa \"%(record_name)s\""
+
+#. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid ""
 "An unknown error occurred. Please contact Odoo support if this error "
 "persists."
 msgstr ""
+"Tuntematon virhe tapahtui. Ota yhteyttä Odoo-tukeen, jos tämä virhe jatkuu."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_id
@@ -222,6 +245,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_attachment_count
 msgid "Attachment Count"
 msgstr "Liitteiden määrä"
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/controllers/main.py:0
+msgid "Bad parameters"
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_blacklist
@@ -301,7 +330,7 @@ msgstr "Valitse esimerkki"
 #: code:addons/sms/wizard/sms_account_code.py:0
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 msgid "Choose your sender name"
-msgstr ""
+msgstr "Valitse lähettäjän nimi"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -376,7 +405,7 @@ msgstr "Luotu"
 #. module: sms
 #: model:iap.service,unit_name:sms.iap_service_sms
 msgid "Credits"
-msgstr ""
+msgstr "Tekijät"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__partner_id
@@ -404,6 +433,14 @@ msgid "Discard"
 msgstr "Hylkää"
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_iap_account__display_name
+#: model:ir.model.fields,field_description:sms.field_ir_actions_server__display_name
+#: model:ir.model.fields,field_description:sms.field_ir_model__display_name
+#: model:ir.model.fields,field_description:sms.field_mail_followers__display_name
+#: model:ir.model.fields,field_description:sms.field_mail_message__display_name
+#: model:ir.model.fields,field_description:sms.field_mail_notification__display_name
+#: model:ir.model.fields,field_description:sms.field_mail_thread__display_name
+#: model:ir.model.fields,field_description:sms.field_res_partner__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_account_phone__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_account_sender__display_name
@@ -468,6 +505,7 @@ msgstr "Ota tekstiviesti käyttöön"
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "Enter a phone number to get an SMS with a verification code."
 msgstr ""
+"Kirjoita puhelinnumero saadaksesi tekstiviestin, jossa on vahvistuskoodi."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__error
@@ -554,6 +592,14 @@ msgid "IAP Account"
 msgstr "IAP Tili"
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_iap_account__id
+#: model:ir.model.fields,field_description:sms.field_ir_actions_server__id
+#: model:ir.model.fields,field_description:sms.field_ir_model__id
+#: model:ir.model.fields,field_description:sms.field_mail_followers__id
+#: model:ir.model.fields,field_description:sms.field_mail_message__id
+#: model:ir.model.fields,field_description:sms.field_mail_notification__id
+#: model:ir.model.fields,field_description:sms.field_mail_thread__id
+#: model:ir.model.fields,field_description:sms.field_res_partner__id
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__id
 #: model:ir.model.fields,field_description:sms.field_sms_account_phone__id
 #: model:ir.model.fields,field_description:sms.field_sms_account_sender__id
@@ -675,6 +721,9 @@ msgid ""
 "i.e. a plus sign (+), then country code, city code, and local phone number. "
 "For example: +1 555-555-555"
 msgstr ""
+"Virheellinen puhelinnumero. Varmista, että noudatat kansainvälistä muotoa, "
+"eli plusmerkki (+), sitten maatunnus, kaupunkitunnus ja paikallinen "
+"puhelinnumero. Esim: +1 555-555-555"
 
 #. module: sms
 #. odoo-python
@@ -822,6 +871,8 @@ msgid ""
 "Note that this is not required, if you don't set a sender name, your SMS "
 "will be sent from a short code."
 msgstr ""
+"Huomaa, että tätä ei tarvita, jos et aseta lähettäjän nimeä, tekstiviestisi "
+"lähetetään lyhytkoodista."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__notification_id
@@ -1006,7 +1057,7 @@ msgstr "Ilmoittaudu"
 #: code:addons/sms/models/iap_account.py:0
 #: code:addons/sms/wizard/sms_account_phone.py:0
 msgid "Register Account"
-msgstr ""
+msgstr "Rekisteröidy"
 
 #. module: sms
 #. odoo-python
@@ -1018,7 +1069,7 @@ msgstr "Rekisteröidy nyt."
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_code_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "Register your SMS account"
-msgstr ""
+msgstr "Rekisteröi SMS-tilisi"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_rejected
@@ -1098,17 +1149,17 @@ msgstr "Tekstiviesti (ilman huomautusta)"
 #. module: sms
 #: model:ir.model,name:sms.model_sms_account_phone
 msgid "SMS Account Registration Phone Number Wizard"
-msgstr ""
+msgstr "SMS-tilin puhelinnumeron rekisteröinnin ohjattu toiminto"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_account_sender
 msgid "SMS Account Sender Name Wizard"
-msgstr ""
+msgstr "SMS-tilin lähettäjän nimen ohjattu toiminto"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_account_code
 msgid "SMS Account Verification Code Wizard"
-msgstr ""
+msgstr "SMS-tilin vahvistuskoodin ohjattu toiminto"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_account_analytic_account__message_has_sms_error
@@ -1143,6 +1194,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_res_users__message_has_sms_error
 msgid "SMS Delivery error"
 msgstr "Tekstiviestin toimitusvirhe"
+
+#. module: sms
+#. odoo-javascript
+#: code:addons/sms/static/src/messaging_menu/messaging_menu_patch.js:0
+msgid "SMS Failure: %(modelName)s"
+msgstr "Tekstiviestien epäonnistuminen: %(modelName)s"
 
 #. module: sms
 #. odoo-javascript
@@ -1304,7 +1361,7 @@ msgstr "Lähetä tekstiviestejä erissä"
 #. module: sms
 #: model:iap.service,description:sms.iap_service_sms
 msgid "Send SMS to your contacts directly from your database."
-msgstr ""
+msgstr "Lähetä tekstiviestejä yhteystiedoillesi suoraan tietokannastasi."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1324,13 +1381,13 @@ msgstr "Lähetä numeroihin"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "Send verification code"
-msgstr ""
+msgstr "Lähetä vahvistuskoodi"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_iap_account__sender_name
 #: model:ir.model.fields,field_description:sms.field_sms_account_sender__sender_name
 msgid "Sender Name"
-msgstr ""
+msgstr "Lähettäjän nimi"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_resend_action
@@ -1364,7 +1421,7 @@ msgstr "Palvelinvirhe"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 msgid "Set sender name"
-msgstr ""
+msgstr "Aseta lähettäjän nimi"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -1393,7 +1450,7 @@ msgstr "Single Mode"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 msgid "Skip for now"
-msgstr ""
+msgstr "Ohita toistaiseksi"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_resend_id
@@ -1448,6 +1505,8 @@ msgid ""
 "The SMS Service is currently unavailable for new users and new accounts "
 "registrations are suspended."
 msgstr ""
+"Tekstiviestipalvelu ei ole tällä hetkellä uusien käyttäjien käytettävissä. "
+"Uusien tilien rekisteröinti on keskeytetty."
 
 #. module: sms
 #. odoo-python
@@ -1483,7 +1542,7 @@ msgstr "Asiakirjatyyppi, jonka kanssa tätä mallia voidaan käyttää"
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "The verification code is incorrect."
-msgstr ""
+msgstr "Vahvistuskoodi on virheellinen."
 
 #. module: sms
 #. odoo-python
@@ -1503,11 +1562,12 @@ msgstr "Tämä tekstiviesti on poistettu, koska numero oli jo käytössä."
 msgid ""
 "This account already has an existing sender name and it cannot be changed."
 msgstr ""
+"Tällä tilillä on jo olemassa oleva lähettäjän nimi, eikä sitä voi muuttaa."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_iap_account__sender_name
 msgid "This is the name that will be displayed as the sender of the SMS."
-msgstr ""
+msgstr "Tämä on nimi, joka näytetään tekstiviestin lähettäjänä."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.res_partner_view_form
@@ -1521,7 +1581,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "This phone number/account has been banned from our service."
-msgstr ""
+msgstr "Tämä puhelinnumero tai on poistettu palvelustamme."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__resend
@@ -1631,7 +1691,7 @@ msgstr "Varoitus"
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "We were not able to find your account in our database."
-msgstr ""
+msgstr "Tiliäsi ei löydy tietokannastamme."
 
 #. module: sms
 #. odoo-python
@@ -1640,6 +1700,8 @@ msgid ""
 "We were not able to reach you via your phone number. If you have requested "
 "multiple codes recently, please retry later."
 msgstr ""
+"Emme tavoittaneet sinua puhelinnumerosi kautta. Jos olet pyytänyt useita "
+"koodeja äskettäin, yritä myöhemmin uudelleen."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__website_message_ids
@@ -1693,7 +1755,7 @@ msgstr "Sinulla ei ole tarpeeksi krediittejä IAP-tililläsi."
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "You tried too many times. Please retry later."
-msgstr ""
+msgstr "Yritit liian monta kertaa. Yritä uudelleen myöhemmin."
 
 #. module: sms
 #. odoo-javascript
@@ -1706,15 +1768,18 @@ msgstr "Tekstiviestissäsi on oltava vähintään yksi muu kuin välilyöntimerk
 #. odoo-python
 #: code:addons/sms/wizard/sms_account_code.py:0
 msgid "Your SMS account has been successfully registered."
-msgstr ""
+msgstr "SMS-tilisi on rekisteröity onnistuneesti."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
+#: code:addons/sms/wizard/sms_account_sender.py:0
 msgid ""
 "Your sender name must be between 3 and 11 characters long and only contain "
 "alphanumeric characters."
 msgstr ""
+"Lähettäjän nimen on oltava 3-11 merkkiä pitkä ja sisällettävä vain "
+"aakkosnumeerisia merkkejä."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
@@ -1722,18 +1787,20 @@ msgid ""
 "Your sender name must be between 3 and 11 characters long and only contain alphanumeric characters.\n"
 "                        It must fit your company name, and you aren't allowed to modify it once you registered one, choose it carefully."
 msgstr ""
+"Lähettäjän nimen on oltava 3-11 merkkiä pitkä ja sisällettävä vain aakkosnumeerisia merkkejä.\n"
+"                        Sen on vastattava yrityksesi nimeä, etkä saa muuttaa sitä, kun olet rekisteröinyt sen, joten valitse se huolellisesti."
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "Your sms account has not been activated yet."
-msgstr ""
+msgstr "SMS-tiliäsi ei ole vielä aktivoitu."
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
-msgid "characters, fits in"
-msgstr "kirjaimia, mahtuu"
+msgid "characters"
+msgstr "merkkiä"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form

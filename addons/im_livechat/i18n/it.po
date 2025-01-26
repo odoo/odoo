@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-15 08:33+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Marianna Ciofani, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
@@ -484,12 +484,6 @@ msgid "Conversation"
 msgstr "Conversazione"
 
 #. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
-msgid "Conversation ended..."
-msgstr "La conversazione è terminata..."
-
-#. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "Conversation with %s"
@@ -800,6 +794,12 @@ msgid "Free Input (Multi-Line)"
 msgstr "Input libero (più righe)"
 
 #. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/chat_window_patch.xml:0
+msgid "Give your feedback"
+msgstr "Dai un feedback"
+
+#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__sequence
 msgid ""
 "Given the order to find a matching rule. If 2 rules are matching for the "
@@ -1092,7 +1092,7 @@ msgstr "Esci dal canale"
 #: code:addons/im_livechat/static/src/core/common/close_confirmation.xml:0
 #: code:addons/im_livechat/static/src/core/public_web/thread_model_patch.js:0
 msgid "Leaving will end the livechat. Proceed leaving?"
-msgstr ""
+msgstr "Se esci la live chat terminerà. Vuoi procedere?"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel__max_sessions_mode__limited
@@ -1227,10 +1227,12 @@ msgstr "Lingue chat dal vivo"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__livechat_active
-msgid "Livechat session is active until visitor leaves the conversation."
+msgid ""
+"Livechat session is active until visitor or operator leaves the "
+"conversation."
 msgstr ""
-"La sessione di livechat è attiva fino a quando il visitatore abbandona la "
-"conversazione."
+"La sessione di live chat è attiva fino a quando il visitatore o l'operatore "
+"abbandona la conversazione."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__sequence
@@ -1631,7 +1633,7 @@ msgstr "Salvare il canale per ottenere il widget di configurazione."
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
+#: code:addons/im_livechat/static/src/embed/common/thread_model_patch.js:0
 msgid "Say something"
 msgstr "Di' qualcosa"
 
@@ -1680,7 +1682,7 @@ msgstr "Vedi ultime 15 pagine visitate"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
+#: code:addons/im_livechat/static/src/embed/common/thread_model_patch.js:0
 msgid "Select an option above"
 msgstr "Seleziona una delle opzioni in alto"
 
@@ -1894,9 +1896,10 @@ msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/common/chat_window_patch.xml:0
+#: code:addons/im_livechat/static/src/core/common/thread_model_patch.js:0
+#: code:addons/im_livechat/static/src/embed/common/thread_model_patch.js:0
 msgid "This livechat conversation has ended"
-msgstr ""
+msgstr "Questa conversazione live chat è terminata"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_res_users_settings__livechat_username
@@ -2122,6 +2125,12 @@ msgstr ""
 "È possibile creare un canale per ciascun sito web nel quale si\n"
 "                voglia integrare il widget per la chat dal vivo, consentendo ai\n"
 "                visitatori di parlare in tempo reale con gli operatori."
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/common/thread_model_patch.js:0
+msgid "You ended the conversation with %(name)s."
+msgstr "Hai terminato la conversazione con %(name)s."
 
 #. module: im_livechat
 #. odoo-javascript

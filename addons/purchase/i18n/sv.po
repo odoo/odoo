@@ -3,15 +3,15 @@
 # 	* purchase
 # 
 # Translators:
-# Wil Odoo, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -494,15 +494,6 @@ msgid "A warning can be set on a product or a customer (Purchase)"
 msgstr "En varning kan sättas på en produkt eller en kund (Inköp)"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid ""
-"Ability to select a package type in purchase orders and to force a quantity "
-"that is a multiple of the number of units per package."
-msgstr ""
-"Möjlighet att välja en förpackningstyp i inköpsorder och att tvinga fram en "
-"kvantitet som är en multipel av antalet enheter per förpackning."
-
-#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "Accept"
 msgstr "Godkänn"
@@ -652,6 +643,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__edit
 msgid "Allow to edit purchase orders"
 msgstr "Möjlighet att ändra inköpsorder"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__allowed_uom_ids
+msgid "Allowed Uom"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__aml_id
@@ -901,9 +897,9 @@ msgid "Catalog"
 msgstr "Katalog"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_category_id
-msgid "Category"
-msgstr "Kategori"
+#: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
+msgid "Categories"
+msgstr "Kategorier"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -1027,15 +1023,6 @@ msgstr "Kontakt"
 #: model:ir.model.fields,field_description:purchase.field_product_template__purchase_method
 msgid "Control Policy"
 msgstr "Kontrollpolicy"
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_line__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"Omräkning av enheter kan endast ske om de tillhör samma kategori. "
-"Omräkningen baseras på ett givet förhållande."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -1237,7 +1224,6 @@ msgstr "Rabatt:"
 #: model:ir.model.fields,field_description:purchase.field_account_tax__display_name
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__display_name
 #: model:ir.model.fields,field_description:purchase.field_ir_actions_report__display_name
-#: model:ir.model.fields,field_description:purchase.field_product_packaging__display_name
 #: model:ir.model.fields,field_description:purchase.field_product_product__display_name
 #: model:ir.model.fields,field_description:purchase.field_product_supplierinfo__display_name
 #: model:ir.model.fields,field_description:purchase.field_product_template__display_name
@@ -1439,7 +1425,6 @@ msgstr "Dölj avbrutna linjer"
 #: model:ir.model.fields,field_description:purchase.field_account_tax__id
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__id
 #: model:ir.model.fields,field_description:purchase.field_ir_actions_report__id
-#: model:ir.model.fields,field_description:purchase.field_product_packaging__id
 #: model:ir.model.fields,field_description:purchase.field_product_product__id
 #: model:ir.model.fields,field_description:purchase.field_product_supplierinfo__id
 #: model:ir.model.fields,field_description:purchase.field_product_template__id
@@ -1492,11 +1477,6 @@ msgid ""
 msgstr ""
 "Om det är installerat kommer produktvarianterna att läggas till på "
 "inköpsorder via en rutnätspost."
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_product_packaging__purchase
-msgid "If true, the packaging can be used for purchase orders"
-msgstr "Om det är sant kan förpackningen användas för inköpsorder"
 
 #. module: purchase
 #. odoo-python
@@ -2076,16 +2056,6 @@ msgid "Our Orders"
 msgstr "Våra beställningar"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_packaging_id
-msgid "Packaging"
-msgstr "Förpackning"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_packaging_qty
-msgid "Packaging Quantity"
-msgstr "Förpackningskvantitet"
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__partner_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__partner_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__partner_id
@@ -2172,11 +2142,6 @@ msgid "Product"
 msgstr "Produkt"
 
 #. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
-msgid "Product Categories"
-msgstr "Produktkategorier"
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__category_id
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Product Category"
@@ -2186,11 +2151,6 @@ msgstr "Produktkategori"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Product Description"
 msgstr "Produktbeskrivning"
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_product_packaging
-msgid "Product Packaging"
-msgstr "Produktförpackning"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__product_tmpl_id
@@ -2246,7 +2206,6 @@ msgid "Provide a double validation mechanism for purchases"
 msgstr "Tillhandahålla en dubbel valideringsmekanism för inköp"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_product_packaging__purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_root
 #: model:ir.ui.menu,name:purchase.purchase_report
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2446,11 +2405,6 @@ msgstr "Inköpsorder som har fakturerats."
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Purchase orders that include lines not invoiced."
 msgstr "Beställningar som inkluderar rader som inte är fakturerade."
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "Purchase products by multiple of unit # per package"
-msgstr "Köp produkter genom att multiplicera antalet enheter per förpackning"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.purchase_send_reminder_mail_ir_actions_server
@@ -2877,8 +2831,8 @@ msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "Sell and purchase products in different units of measure"
-msgstr "Sälj och köp produkter med olika måttenheter"
+msgid "Sell and purchase products in different units of measure or packagings"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3217,16 +3171,6 @@ msgstr "Denna anteckning läggs till på inköpsordrar."
 
 #. module: purchase
 #. odoo-python
-#: code:addons/purchase/models/purchase_order_line.py:0
-msgid ""
-"This product is packaged by %(pack_size).2f %(pack_name)s. You should "
-"purchase %(quantity).2f %(unit)s."
-msgstr ""
-"Denna produkt är förpackad i %(pack_size).2f %(pack_name)s. Du bör köpa "
-"%(quantity).2f %(unit)s."
-
-#. module: purchase
-#. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "This vendor bill has been created from: "
 msgstr "Denna leverantörsfaktura har skapats från: "
@@ -3377,7 +3321,8 @@ msgstr ""
 "relaterade leverantörsfakturor."
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_id
 msgid "Unit"
 msgstr "Enhet"
 
@@ -3398,30 +3343,10 @@ msgid "Unit Price:"
 msgstr "Enhetspris:"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_id
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_id
-msgid "Unit of Measure"
-msgstr "Måttenhet"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "Units Of Measure"
-msgstr "Måttenhet"
-
-#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
-msgid "Units of Measure"
-msgstr "Måttenheter"
-
-#. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
-msgid "Units of Measure Categories"
-msgstr "Kategorier för måttenheter"
-
-#. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_unit_of_measure_in_config_purchase
-msgid "Units of Measures"
-msgstr "Måttenheter"
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+msgid "Units & Packagings"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3444,11 +3369,6 @@ msgstr "Summa exkl. moms"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__untaxed_total
 msgid "Untaxed Total"
 msgstr "Total exkl. moms"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "UoM"
-msgstr "Måttenhet"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__priority__1
@@ -3593,8 +3513,6 @@ msgid "Want to import this document in Odoo?"
 msgstr "Vill du importera detta dokument i Odoo?"
 
 #. module: purchase
-#. odoo-python
-#: code:addons/purchase/models/purchase_order_line.py:0
 #: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_line_warn__warning
 #: model:ir.model.fields.selection,name:purchase.selection__res_partner__purchase_warn__warning
 msgid "Warning"

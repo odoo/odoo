@@ -3,15 +3,16 @@
 # 	* spreadsheet_account
 # 
 # Translators:
-# Wil Odoo, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,9 +42,75 @@ msgid "Account"
 msgstr "Tili"
 
 #. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Bank and Cash"
+msgstr "Käteisvarat (pankki, käteinen)"
+
+#. module: spreadsheet_account
 #: model:ir.model,name:spreadsheet_account.model_res_company
 msgid "Companies"
 msgstr "Yritykset"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Cost of Revenue"
+msgstr "Tulojen kustannukset"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Credit Card"
+msgstr "Luottokortti"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Current Assets"
+msgstr "Vaihtuvat vastaavat"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Current Liabilities"
+msgstr "Lyhytaikaiset velat"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Current Year Earnings"
+msgstr "Kuluvan vuoden tulos"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Depreciation"
+msgstr "Poistot"
+
+#. module: spreadsheet_account
+#: model:ir.model.fields,field_description:spreadsheet_account.field_account_account__display_name
+#: model:ir.model.fields,field_description:spreadsheet_account.field_res_company__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Equity"
+msgstr "Oma pääoma"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Expenses"
+msgstr "Kulut"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Fixed Assets"
+msgstr "Käyttöomaisuus"
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -64,6 +131,18 @@ msgid "Get the total debit for the specified account(s) and period."
 msgstr "Hae määritetyn tilin (tilien) ja ajanjakson kokonaisdebit."
 
 #. module: spreadsheet_account
+#: model:ir.model.fields,field_description:spreadsheet_account.field_account_account__id
+#: model:ir.model.fields,field_description:spreadsheet_account.field_res_company__id
+msgid "ID"
+msgstr "ID"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Income"
+msgstr "Tulo"
+
+#. module: spreadsheet_account
 #. odoo-python
 #: code:addons/spreadsheet_account/models/account.py:0
 msgid "Journal items for account prefix %s"
@@ -71,9 +150,51 @@ msgstr "Tilin etuliitteen %s"
 
 #. module: spreadsheet_account
 #. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Non-current Assets"
+msgstr "Pysyvät vastaavat"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Non-current Liabilities"
+msgstr "Pitkäaikaiset velat"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Off-Balance Sheet"
+msgstr "Taseen ulkopuolella"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Other Income"
+msgstr "Muut tulot"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Payable"
+msgstr "Ostovelat"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Prepayments"
+msgstr "Ennakot"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Receivable"
+msgstr "Saatavat"
+
+#. module: spreadsheet_account
+#. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-msgid "Returns the account ids of a given group."
-msgstr "Palauttaa tietyn ryhmän tilitunnukset."
+msgid "Returns the account codes of a given group."
+msgstr "Palauttaa tietyn ryhmän tilikoodit."
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -101,12 +222,6 @@ msgstr "Katso tietueet"
 msgid "Set to TRUE to include unposted entries."
 msgstr ""
 "Asetetaan arvoksi TRUE, jos haluat sisällyttää postittamattomat merkinnät."
-
-#. module: spreadsheet_account
-#. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-msgid "The account type (income, expense, asset_current,...)."
-msgstr "Tilityyppi (tulot, menot, saamiset_juoksevat,...)."
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -153,6 +268,12 @@ msgstr "Päivä, josta verovuoden alku otetaan."
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 msgid "The prefix of the accounts."
 msgstr "Tilien etuliite."
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "The technical account type (possible values are: %s)."
+msgstr "Teknisen tilin tyyppi (mahdolliset arvot: %s)."
 
 #. module: spreadsheet_account
 #. odoo-javascript

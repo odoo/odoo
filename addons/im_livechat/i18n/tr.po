@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-15 08:33+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Martin Trigaux, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
@@ -480,12 +480,6 @@ msgid "Conversation"
 msgstr "Sohbet"
 
 #. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
-msgid "Conversation ended..."
-msgstr "Sohbet sona erdi..."
-
-#. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "Conversation with %s"
@@ -792,6 +786,12 @@ msgstr "Ücretsiz Giriş"
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__free_input_multi
 msgid "Free Input (Multi-Line)"
 msgstr "Ücretsiz Giriş (Çoklu)"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/chat_window_patch.xml:0
+msgid "Give your feedback"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__sequence
@@ -1220,8 +1220,10 @@ msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__livechat_active
-msgid "Livechat session is active until visitor leaves the conversation."
-msgstr "Canlı sohbet oturumu, ziyaretçi sohbetten ayrılana kadar etkindir."
+msgid ""
+"Livechat session is active until visitor or operator leaves the "
+"conversation."
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__sequence
@@ -1620,7 +1622,7 @@ msgstr "Yapılandırma sihirbazınızı almak için kanalınızı kaydedin."
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
+#: code:addons/im_livechat/static/src/embed/common/thread_model_patch.js:0
 msgid "Say something"
 msgstr "Bir şey söyle"
 
@@ -1669,7 +1671,7 @@ msgstr "Ziyaret edilen son 15 sayfayı gör"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
+#: code:addons/im_livechat/static/src/embed/common/thread_model_patch.js:0
 msgid "Select an option above"
 msgstr "Yukarıda bir seçenek belirleyin"
 
@@ -1880,7 +1882,8 @@ msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/common/chat_window_patch.xml:0
+#: code:addons/im_livechat/static/src/core/common/thread_model_patch.js:0
+#: code:addons/im_livechat/static/src/embed/common/thread_model_patch.js:0
 msgid "This livechat conversation has ended"
 msgstr ""
 
@@ -2105,6 +2108,12 @@ msgstr ""
 "Websitesi Canlı Sohbet öğesini eklemek istediğiniz her bir websitesi\n"
 "                için kanallar oluşturabilirsiniz. Bu sayede websitenizdeki\n"
 "                ziyaretçiler operatörlerle canlı sohbet edebilirler."
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/common/thread_model_patch.js:0
+msgid "You ended the conversation with %(name)s."
+msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript

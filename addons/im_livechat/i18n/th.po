@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-15 08:33+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -480,12 +480,6 @@ msgid "Conversation"
 msgstr "การสนทนา"
 
 #. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
-msgid "Conversation ended..."
-msgstr "การสนทนาสิ้นสุด..."
-
-#. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "Conversation with %s"
@@ -791,6 +785,12 @@ msgstr "ป้อนข้อมูลฟรี"
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__free_input_multi
 msgid "Free Input (Multi-Line)"
 msgstr "ป้อนข้อมูลฟรี (หลายบรรทัด)"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/chat_window_patch.xml:0
+msgid "Give your feedback"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__sequence
@@ -1214,8 +1214,10 @@ msgstr "ภาษาของไลฟ์แชท"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__livechat_active
-msgid "Livechat session is active until visitor leaves the conversation."
-msgstr "เซสชันไลฟ์แชทจะทำงานจนกว่าผู้เยี่ยมชมจะออกจากการสนทนา"
+msgid ""
+"Livechat session is active until visitor or operator leaves the "
+"conversation."
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__sequence
@@ -1614,7 +1616,7 @@ msgstr "บันทึกช่องของคุณเพื่อรับ
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
+#: code:addons/im_livechat/static/src/embed/common/thread_model_patch.js:0
 msgid "Say something"
 msgstr "พูดอะไรซักอย่าง"
 
@@ -1663,7 +1665,7 @@ msgstr "ดู 15 หน้าที่ถูกเยี่ยมชมล่�
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
+#: code:addons/im_livechat/static/src/embed/common/thread_model_patch.js:0
 msgid "Select an option above"
 msgstr "เลือกตัวเลือกด้านบน"
 
@@ -1875,7 +1877,8 @@ msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/common/chat_window_patch.xml:0
+#: code:addons/im_livechat/static/src/core/common/thread_model_patch.js:0
+#: code:addons/im_livechat/static/src/embed/common/thread_model_patch.js:0
 msgid "This livechat conversation has ended"
 msgstr ""
 
@@ -2096,6 +2099,12 @@ msgstr ""
 "คุณสามารถสร้างช่องทางสำหรับแต่ละเว็บไซต์ที่คุณต้องการ\n"
 "              รวมวิดเจ็ตไลฟ์แชทของเว็บไซต์ ช่วยให้ผู้เยี่ยมชมเว็บไซต์ของคุณ\n"
 "              พูดคุยกับผู้ให้บริการของคุณได้แบบเรียลไทม์"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/common/thread_model_patch.js:0
+msgid "You ended the conversation with %(name)s."
+msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript

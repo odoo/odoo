@@ -3,17 +3,17 @@
 # 	* website
 # 
 # Translators:
-# Wil Odoo, 2024
 # Martin Trigaux, 2024
 # Tony Ng, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5736,12 +5736,6 @@ msgstr "例：/contactus 或 /shop"
 #: model:ir.model.fields,help:website.field_website__domain
 msgid "E.g. https://www.mydomain.com"
 msgstr "例：https://www.mydomain.com"
-
-#. module: website
-#. odoo-python
-#: code:addons/website/controllers/form.py:0
-msgid "EXTERNAL SUBMISSION - Customer not verified"
-msgstr "【外部提交】- 客戶未經驗證"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_horizontal
@@ -11646,6 +11640,11 @@ msgid "Recipient Email"
 msgstr "收件人電郵地址"
 
 #. module: website
+#: model:ir.model,name:website.model_ir_rule
+msgid "Record Rule"
+msgstr "記錄規則"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_controller_page__record_view_id
 msgid "Record view"
 msgstr "記錄檢視畫面"
@@ -11825,7 +11824,7 @@ msgstr "替換檔案"
 #. module: website
 #: model:ir.ui.menu,name:website.menu_reporting
 msgid "Reporting"
-msgstr "報表"
+msgstr "報告"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -12016,11 +12015,6 @@ msgstr "圓框選單"
 #: model:ir.model.fields,field_description:website.field_website_route__path
 msgid "Route"
 msgstr "路線"
-
-#. module: website
-#: model:ir.model,name:website.model_ir_rule
-msgid "Rule"
-msgstr "規則"
 
 #. module: website
 #. odoo-javascript
@@ -13566,6 +13560,12 @@ msgid "The message will be visible once the countdown ends"
 msgstr "倒計時結束後將顯示該消息"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_website_controller_page__name
+msgid ""
+"The name is used to generate the URL and is shown in the browser title bar"
+msgstr "該名稱用於生成網址，並會在瀏覽器標題列顯示"
+
+#. module: website
 #: model:ir.model.fields,help:website.field_website_controller_page__name_slugified
 msgid "The name of the page usable in a URL"
 msgstr "網址內可用的頁面名稱"
@@ -13711,15 +13711,6 @@ msgid "Third Menu"
 msgstr "第三個功能表"
 
 #. module: website
-#. odoo-python
-#: code:addons/website/controllers/form.py:0
-msgid ""
-"This %(model_name)s was submitted by %(user_name)s (%(user_email)s) on "
-"behalf of %(form_email)s"
-msgstr ""
-"此 %(model_name)s 是由 %(user_name)s (%(user_email)s) 代表 %(form_email)s 提交"
-
-#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 msgid "This URL is contained in the “%(field)s” of the following “%(model)s”"
@@ -13731,7 +13722,7 @@ msgstr "此網址是包含在以下模組的欄位「%(field)s」內。模組：
 msgid ""
 "This block will temporarily not be shown on mobile due to recent Facebook "
 "issues."
-msgstr ""
+msgstr "由於最近 Facebook 出現問題，此區塊暫時不會在流動裝置上顯示。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_0_s_three_columns
@@ -14748,7 +14739,6 @@ msgid "View Hierarchy"
 msgstr "檢視層次結構"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_controller_page__name
 #: model:ir.model.fields,field_description:website.field_website_page__name
 #: model:ir.model.fields,field_description:website.field_website_page_properties__name
 msgid "View Name"
@@ -16976,6 +16966,8 @@ msgid ""
 "stores, button, engagement, appeal, mockup, text, content, picture, photo, "
 "illustration, media, visual, article, story"
 msgstr ""
+"電商, 網店, 商城, 市集, 按鈕, 互動, 吸引, 號召, 小樣, 樣板, 樣辦, 文字, 文本, 內容, 圖片, 照片, 相片, 插圖, 媒體, "
+"多媒體, 視覺, 文章, 故事"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view

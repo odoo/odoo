@@ -3,16 +3,16 @@
 # 	* purchase
 # 
 # Translators:
-# Wil Odoo, 2024
 # Abe Manyo, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Abe Manyo, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -573,15 +573,6 @@ msgid "A warning can be set on a product or a customer (Purchase)"
 msgstr "Peringatan dapat diterapkan pada produk atau pelanggan (Pembelian)"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid ""
-"Ability to select a package type in purchase orders and to force a quantity "
-"that is a multiple of the number of units per package."
-msgstr ""
-"Dapat memilih tipe paket di SPB dan untuk memaksakan kuantitas yang "
-"merupakan kelipatan dari jumlah unit tiap paket."
-
-#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "Accept"
 msgstr "Terima"
@@ -731,6 +722,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__edit
 msgid "Allow to edit purchase orders"
 msgstr "Ijinkan untuk mengubah order pembelian"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__allowed_uom_ids
+msgid "Allowed Uom"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__aml_id
@@ -983,8 +979,8 @@ msgid "Catalog"
 msgstr "Katalog"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_category_id
-msgid "Category"
+#: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
+msgid "Categories"
 msgstr "Kategori"
 
 #. module: purchase
@@ -1109,15 +1105,6 @@ msgstr "Kontak"
 #: model:ir.model.fields,field_description:purchase.field_product_template__purchase_method
 msgid "Control Policy"
 msgstr "Kebijakan Kontrol"
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order_line__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"Konversi antara satuan hanya dapat terjadi jika mereka berada pada kategori "
-"yang sama. Konversi akan dibuat berdasarkan rasio."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -1319,7 +1306,6 @@ msgstr "Diskon:"
 #: model:ir.model.fields,field_description:purchase.field_account_tax__display_name
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__display_name
 #: model:ir.model.fields,field_description:purchase.field_ir_actions_report__display_name
-#: model:ir.model.fields,field_description:purchase.field_product_packaging__display_name
 #: model:ir.model.fields,field_description:purchase.field_product_product__display_name
 #: model:ir.model.fields,field_description:purchase.field_product_supplierinfo__display_name
 #: model:ir.model.fields,field_description:purchase.field_product_template__display_name
@@ -1521,7 +1507,6 @@ msgstr "Sembunyikan baris dibatalkan"
 #: model:ir.model.fields,field_description:purchase.field_account_tax__id
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__id
 #: model:ir.model.fields,field_description:purchase.field_ir_actions_report__id
-#: model:ir.model.fields,field_description:purchase.field_product_packaging__id
 #: model:ir.model.fields,field_description:purchase.field_product_product__id
 #: model:ir.model.fields,field_description:purchase.field_product_supplierinfo__id
 #: model:ir.model.fields,field_description:purchase.field_product_template__id
@@ -1573,11 +1558,6 @@ msgid ""
 "a grid entry."
 msgstr ""
 "Bila diinstal, varian produk akan ditambahkan ke SPB melalui entri grid."
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_product_packaging__purchase
-msgid "If true, the packaging can be used for purchase orders"
-msgstr "Jika TRUE, paket akan digunakan untuk SPB"
 
 #. module: purchase
 #. odoo-python
@@ -2160,16 +2140,6 @@ msgid "Our Orders"
 msgstr "Order Kami"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_packaging_id
-msgid "Packaging"
-msgstr "Kemasan"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_packaging_qty
-msgid "Packaging Quantity"
-msgstr "Kuantitas Paket"
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__partner_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__partner_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__partner_id
@@ -2255,11 +2225,6 @@ msgid "Product"
 msgstr "Produk"
 
 #. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
-msgid "Product Categories"
-msgstr "Kategori Produk"
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__category_id
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Product Category"
@@ -2269,11 +2234,6 @@ msgstr "Kategori Produk"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Product Description"
 msgstr "Keterangan Produk"
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_product_packaging
-msgid "Product Packaging"
-msgstr "Kemasan Produk"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__product_tmpl_id
@@ -2329,7 +2289,6 @@ msgid "Provide a double validation mechanism for purchases"
 msgstr "Menyediakan mekanisme dua kali validasi untuk pembelian"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_product_packaging__purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_root
 #: model:ir.ui.menu,name:purchase.purchase_report
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2529,11 +2488,6 @@ msgstr "Order pembelian yang telah difakturkan."
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Purchase orders that include lines not invoiced."
 msgstr "Order pembelian yang mencakup baris belum difakturkan."
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "Purchase products by multiple of unit # per package"
-msgstr "Beli produk dengan kelipatan unit # per paket"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.purchase_send_reminder_mail_ir_actions_server
@@ -2959,8 +2913,8 @@ msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "Sell and purchase products in different units of measure"
-msgstr "Jual dan beli produk dalam satuan yang berbeda"
+msgid "Sell and purchase products in different units of measure or packagings"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3298,16 +3252,6 @@ msgstr "Catatan ini ditambahkan ke SPB."
 
 #. module: purchase
 #. odoo-python
-#: code:addons/purchase/models/purchase_order_line.py:0
-msgid ""
-"This product is packaged by %(pack_size).2f %(pack_name)s. You should "
-"purchase %(quantity).2f %(unit)s."
-msgstr ""
-"Produk ini dipaket oleh %(pack_size).2f %(pack_name)s. Anda sebaiknya "
-"membeli %(quantity).2f %(unit)s."
-
-#. module: purchase
-#. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "This vendor bill has been created from: "
 msgstr "Tagihan vendor ini telah dibuat dari:"
@@ -3458,7 +3402,8 @@ msgstr ""
 "tagihan vendor terkait."
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_id
 msgid "Unit"
 msgstr "Unit"
 
@@ -3479,30 +3424,10 @@ msgid "Unit Price:"
 msgstr "Harga Satuan:"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_id
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_id
-msgid "Unit of Measure"
-msgstr "Satuan Ukuran"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "Units Of Measure"
-msgstr "Satuan Ukuran"
-
-#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
-msgid "Units of Measure"
-msgstr "Satuan Ukuran"
-
-#. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
-msgid "Units of Measure Categories"
-msgstr "Kategori Satuan Ukuran"
-
-#. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_unit_of_measure_in_config_purchase
-msgid "Units of Measures"
-msgstr "Satuan Ukuran"
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+msgid "Units & Packagings"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3525,11 +3450,6 @@ msgstr "Jumlah Sebelum Pajak"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__untaxed_total
 msgid "Untaxed Total"
 msgstr "Total Sebelum Pajak"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "UoM"
-msgstr "Satuan Ukuran"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__priority__1
@@ -3673,8 +3593,6 @@ msgid "Want to import this document in Odoo?"
 msgstr "Ingin mengimpor dokumen ini ke Odoo?"
 
 #. module: purchase
-#. odoo-python
-#: code:addons/purchase/models/purchase_order_line.py:0
 #: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_line_warn__warning
 #: model:ir.model.fields.selection,name:purchase.selection__res_partner__purchase_warn__warning
 msgid "Warning"

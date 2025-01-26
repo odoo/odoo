@@ -3,15 +3,15 @@
 # 	* website_blog
 # 
 # Translators:
-# Wil Odoo, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-01-20 08:43+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,11 +44,6 @@ msgstr "' 页眉."
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "'. Showing results for '"
 msgstr "'. 显示结果 '"
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.date_selector
-msgid "-- All dates"
-msgstr "-- 所有日期"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_6
@@ -337,6 +332,11 @@ msgstr "所有博客"
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
 msgid "All blogs"
 msgstr "全部博文"
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.date_selector
+msgid "All dates"
+msgstr "所有日期"
 
 #. module: website_blog
 #. odoo-python
@@ -804,6 +804,8 @@ msgstr "德克斯特"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__display_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__display_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__display_name
+#: model:ir.model.fields,field_description:website_blog.field_website__display_name
+#: model:ir.model.fields,field_description:website_blog.field_website_snippet_filter__display_name
 msgid "Display Name"
 msgstr "显示名称"
 
@@ -1009,6 +1011,8 @@ msgstr "如何选择合适的酒店"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__id
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__id
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__id
+#: model:ir.model.fields,field_description:website_blog.field_website__id
+#: model:ir.model.fields,field_description:website_blog.field_website_snippet_filter__id
 msgid "ID"
 msgstr "ID"
 
@@ -1683,6 +1687,11 @@ msgstr "Seo 名称"
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Separate every keyword with a comma"
 msgstr "用逗号分\",\"隔每个关键字"
+
+#. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog__sequence
+msgid "Sequence"
+msgstr "序列"
 
 #. module: website_blog
 #. odoo-javascript

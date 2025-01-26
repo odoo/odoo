@@ -2771,6 +2771,14 @@ msgstr "Solo"
 
 #. module: hr_holidays
 #. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"Only %s's Time Off Approver, a time off Officer/Responsible or Administrator"
+" can approve or refuse allocation requests."
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Manager can reset a refused leave."
 msgstr "Solo un gerente de ausencias puede restablecer un permiso rechazado."
@@ -2808,18 +2816,16 @@ msgstr "Solo un gerente puede modificar un permiso cancelado"
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid "Only a time off Manager can approve its own requests."
-msgstr "Solo un gerente de ausencias puede aprobar sus propias solicitudes."
+msgid "Only a time off Administrator can approve their own requests."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"Only a time off Officer/Responsible or Manager can approve or refuse time "
-"off requests."
+"Only a time off Officer/Responsible or Administrator can approve or refuse "
+"allocation requests."
 msgstr ""
-"Solo un encargado/responsable o gerente de ausencias puede aprobar o "
-"rechazar solicitudes de tiempo ausencias."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4494,6 +4500,14 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You must be %s's Manager to approve this leave"
 msgstr "Debe ser el gerente de %s para aprobar este permiso"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"You must be either %s's Time Off Approver or Time off Administrator to "
+"validate this allocation request."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python

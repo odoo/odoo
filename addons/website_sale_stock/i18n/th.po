@@ -3,15 +3,16 @@
 # 	* website_sale_stock
 # 
 # Translators:
-# Wil Odoo, 2024
+# Rasareeyar Lappiam, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:50+0000\n"
+"POT-Creation-Date: 2025-01-20 08:43+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +29,11 @@ msgstr "<span invisible=\"not show_availability\">หน่วย</span>"
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/product_card/product_card.js:0
 msgid "All available quantity selected"
+msgstr ""
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "All warehouses"
 msgstr ""
 
 #. module: website_sale_stock
@@ -73,6 +79,17 @@ msgid "Default visibility for custom messages."
 msgstr "การมองเห็นเริ่มต้นสำหรับข้อความที่กำหนดเอง"
 
 #. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_website__display_name
+msgid "Display Name"
+msgstr "แสดงชื่อ"
+
+#. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "Get notified when back in stock"
@@ -82,6 +99,17 @@ msgstr "รับการแจ้งเตือนเมื่อมีสิ
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "How to display products having low quantities (on hand - reserved)"
 msgstr "วิธีแสดงสินค้าที่มีปริมาณน้อย (คงเหลือ - สำรองไว้)"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_stock_picking__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_website__id
+msgid "ID"
+msgstr "ไอดี"
 
 #. module: website_sale_stock
 #. odoo-python
@@ -285,6 +313,7 @@ msgid ""
 "You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
 "available"
 msgstr ""
+"คุณขอ %(desired_qty)s %(product_name)s แต่มีอยู่เพียง %(new_qty)s เท่านั้น"
 
 #. module: website_sale_stock
 #. odoo-python
@@ -297,6 +326,7 @@ msgstr "คุณขอสินค้า %(desired_qty)s แต่มีสิ�
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 msgid "You ask for %(quantity1)s Units but only %(quantity2)s are available."
 msgstr ""
+"คุณขอหน่วย %(quantity1)s แต่มีเพียง %(quantity2)s เท่านั้นที่พร้อมใช้งาน"
 
 #. module: website_sale_stock
 #. odoo-javascript

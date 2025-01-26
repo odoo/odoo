@@ -2719,6 +2719,14 @@ msgstr "Kun"
 
 #. module: hr_holidays
 #. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"Only %s's Time Off Approver, a time off Officer/Responsible or Administrator"
+" can approve or refuse allocation requests."
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Manager can reset a refused leave."
 msgstr "Kun en Fri tid Leder kan nulstille et afvist orlog."
@@ -2751,18 +2759,16 @@ msgstr ""
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid "Only a time off Manager can approve its own requests."
-msgstr "Kun en fri tids leder kan godkende deres egne anmodninger."
+msgid "Only a time off Administrator can approve their own requests."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"Only a time off Officer/Responsible or Manager can approve or refuse time "
-"off requests."
+"Only a time off Officer/Responsible or Administrator can approve or refuse "
+"allocation requests."
 msgstr ""
-"Kun en fri tids officer/ansvarlig eller leder kan godkende eller afvise fri "
-"tids anmodninger."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4356,6 +4362,14 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You must be %s's Manager to approve this leave"
 msgstr "Du skal være %s's leder for at godkende denne fri-tid"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"You must be either %s's Time Off Approver or Time off Administrator to "
+"validate this allocation request."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python

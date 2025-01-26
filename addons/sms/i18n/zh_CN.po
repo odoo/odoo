@@ -4,14 +4,16 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Chloe Wang, 2025
+# Jeffery CHEN <jeffery9@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,6 +55,12 @@ msgstr "%s无效的收件人"
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "+1 555-555-555"
 msgstr "+1 555-555-555"
+
+#. module: sms
+#. odoo-javascript
+#: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
+msgid ", fits in"
+msgstr "，需要"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -195,6 +203,12 @@ msgid "An error occurred when sending an SMS"
 msgstr "发送短信时发生错误"
 
 #. module: sms
+#. odoo-javascript
+#: code:addons/sms/static/src/core/failure_model_patch.js:0
+msgid "An error occurred when sending an SMS on “%(record_name)s”"
+msgstr "向 “%(record_name)s” 发送短信时发生错误"
+
+#. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid ""
@@ -219,6 +233,12 @@ msgstr "你确定要将这些短信息模板重置为原始配置吗？更改和
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_attachment_count
 msgid "Attachment Count"
 msgstr "附件数量"
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/controllers/main.py:0
+msgid "Bad parameters"
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_blacklist
@@ -401,6 +421,14 @@ msgid "Discard"
 msgstr "丢弃"
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_iap_account__display_name
+#: model:ir.model.fields,field_description:sms.field_ir_actions_server__display_name
+#: model:ir.model.fields,field_description:sms.field_ir_model__display_name
+#: model:ir.model.fields,field_description:sms.field_mail_followers__display_name
+#: model:ir.model.fields,field_description:sms.field_mail_message__display_name
+#: model:ir.model.fields,field_description:sms.field_mail_notification__display_name
+#: model:ir.model.fields,field_description:sms.field_mail_thread__display_name
+#: model:ir.model.fields,field_description:sms.field_res_partner__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_account_phone__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_account_sender__display_name
@@ -547,6 +575,14 @@ msgid "IAP Account"
 msgstr "IAP 账户"
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_iap_account__id
+#: model:ir.model.fields,field_description:sms.field_ir_actions_server__id
+#: model:ir.model.fields,field_description:sms.field_ir_model__id
+#: model:ir.model.fields,field_description:sms.field_mail_followers__id
+#: model:ir.model.fields,field_description:sms.field_mail_message__id
+#: model:ir.model.fields,field_description:sms.field_mail_notification__id
+#: model:ir.model.fields,field_description:sms.field_mail_thread__id
+#: model:ir.model.fields,field_description:sms.field_res_partner__id
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__id
 #: model:ir.model.fields,field_description:sms.field_sms_account_phone__id
 #: model:ir.model.fields,field_description:sms.field_sms_account_sender__id
@@ -1124,6 +1160,12 @@ msgstr "短信发送错误"
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/messaging_menu/messaging_menu_patch.js:0
+msgid "SMS Failure: %(modelName)s"
+msgstr "短信发送失败：%(modelName)s"
+
+#. module: sms
+#. odoo-javascript
+#: code:addons/sms/static/src/messaging_menu/messaging_menu_patch.js:0
 msgid "SMS Failures"
 msgstr "短信息失败"
 
@@ -1680,6 +1722,7 @@ msgstr "您的 SMS 账户已成功注册。"
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
+#: code:addons/sms/wizard/sms_account_sender.py:0
 msgid ""
 "Your sender name must be between 3 and 11 characters long and only contain "
 "alphanumeric characters."
@@ -1703,8 +1746,8 @@ msgstr "您的短信账户尚未激活。"
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
-msgid "characters, fits in"
-msgstr "字符,适合在"
+msgid "characters"
+msgstr "字元"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form

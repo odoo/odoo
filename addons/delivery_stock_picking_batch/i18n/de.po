@@ -3,15 +3,16 @@
 # 	* delivery_stock_picking_batch
 # 
 # Translators:
-# Wil Odoo, 2024
+# Larissa Manderfeld, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-01-20 08:41+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +32,7 @@ msgstr ""
 #. module: delivery_stock_picking_batch
 #: model:ir.model.fields,help:delivery_stock_picking_batch.field_stock_picking_type__batch_group_by_carrier
 msgid "Automatically group batches by carriers"
-msgstr "Stapel automatisch nach Transportunternehmen gruppieren"
+msgstr "Stapel automatisch nach Zustellern gruppieren"
 
 #. module: delivery_stock_picking_batch
 #: model:ir.model,name:delivery_stock_picking_batch.model_stock_picking_batch
@@ -41,7 +42,21 @@ msgstr "Stapeltransfer"
 #. module: delivery_stock_picking_batch
 #: model:ir.model.fields,field_description:delivery_stock_picking_batch.field_stock_picking_type__batch_group_by_carrier
 msgid "Carrier"
-msgstr "Transportunternehmen"
+msgstr "Zusteller"
+
+#. module: delivery_stock_picking_batch
+#: model:ir.model.fields,field_description:delivery_stock_picking_batch.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:delivery_stock_picking_batch.field_stock_picking_batch__display_name
+#: model:ir.model.fields,field_description:delivery_stock_picking_batch.field_stock_picking_type__display_name
+msgid "Display Name"
+msgstr "Anzeigename"
+
+#. module: delivery_stock_picking_batch
+#: model:ir.model.fields,field_description:delivery_stock_picking_batch.field_stock_picking__id
+#: model:ir.model.fields,field_description:delivery_stock_picking_batch.field_stock_picking_batch__id
+#: model:ir.model.fields,field_description:delivery_stock_picking_batch.field_stock_picking_type__id
+msgid "ID"
+msgstr "ID"
 
 #. module: delivery_stock_picking_batch
 #: model:ir.model.fields,field_description:delivery_stock_picking_batch.field_stock_picking_type__batch_max_weight

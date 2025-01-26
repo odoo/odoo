@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Marta Wacławek, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:57+0000\n"
+"POT-Creation-Date: 2025-01-20 08:43+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -129,8 +130,11 @@ msgid "Discard"
 msgstr "Odrzuć"
 
 #. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__display_name
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__display_name
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__display_name
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__display_name
+#: model:ir.model.fields,field_description:phone_validation.field_res_users__display_name
 msgid "Display Name"
 msgstr "Nazwa wyświetlana"
 
@@ -162,8 +166,11 @@ msgid "Has Message"
 msgstr "Ma wiadomość"
 
 #. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__id
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__id
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__id
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__id
+#: model:ir.model.fields,field_description:phone_validation.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -401,9 +408,17 @@ msgid "User"
 msgstr "Użytkownik"
 
 #. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/models/mail_thread_phone.py:0
+msgid ""
+"You do not have the access right to unblacklist phone numbers. Please "
+"contact your administrator."
+msgstr ""
+
+#. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
 msgid "e.g \"Asked to receive our next newsletters\""
-msgstr ""
+msgstr "np. \"Poprosił o otrzymywanie naszych nadchodzących newsletterów\""
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form

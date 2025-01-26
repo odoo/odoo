@@ -11,9 +11,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
@@ -217,11 +217,6 @@ msgid "Cancelled by the agreement associated to this quotation."
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_uom_category_id
-msgid "Category"
-msgstr "Kategori"
-
-#. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
 msgid "Choose"
 msgstr "Velg"
@@ -304,15 +299,6 @@ msgid "Confirmed"
 msgstr "Bekreftet"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_line__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"Konvertering mellom enheter fungerer kun når de tilhører samme kategori. "
-"Konverteringen gjøres basert på forholdet mellom enhetene."
-
-#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__copy_products
 msgid "Copy Products"
 msgstr ""
@@ -390,11 +376,16 @@ msgid "Discard"
 msgstr "Avbryt"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_product__display_name
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__display_name
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_group__display_name
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_line__display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__display_name
+#: model:ir.model.fields,field_description:purchase_requisition.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "Visningsnavn"
 
@@ -478,11 +469,16 @@ msgid "Has Message"
 msgstr "Har melding"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_product__id
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_group__id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_line__id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__id
+#: model:ir.model.fields,field_description:purchase_requisition.field_res_config_settings__id
 msgid "ID"
 msgstr "ID"
 
@@ -709,11 +705,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Product"
 msgstr "Produkt"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_uom_id
-msgid "Product Unit of Measure"
-msgstr "Produktenhet"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_product
@@ -1011,6 +1002,7 @@ msgid "Type of the exception activity on record."
 msgstr "Type unntaks-aktivitet på posten."
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_uom_id
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Unit"
 msgstr "Enhet"
@@ -1020,11 +1012,6 @@ msgstr "Enhet"
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Unit Price"
 msgstr "Enhetspris"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
-msgid "UoM"
-msgstr "Enhet"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__vendor_id

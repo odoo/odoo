@@ -3,15 +3,16 @@
 # 	* payment_paypal
 # 
 # Translators:
-# Wil Odoo, 2024
+# Rasareeyar Lappiam, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-01-20 08:43+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,6 +48,12 @@ msgid "Could not generate a new access token."
 msgstr ""
 
 #. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "แสดงชื่อ"
+
+#. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_email_account
 msgid "Email"
 msgstr "อีเมล"
@@ -60,6 +67,12 @@ msgstr "สร้างเว็บฮุคของคุณ"
 #: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
 msgid "How to configure your paypal account?"
 msgstr "วิธีกำหนดค่าบัญชี Paypal ของคุณ?"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__id
+msgid "ID"
+msgstr "ไอดี"
 
 #. module: payment_paypal
 #. odoo-python
@@ -151,7 +164,7 @@ msgstr "ลูกค้าออกจากหน้าชำระเงิน
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_access_token_expiry
 msgid "The moment at which the access token becomes invalid."
-msgstr ""
+msgstr "ขณะที่โทเค็นการเข้าถึงกลายเป็นไม่ถูกต้อง"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_email_account
@@ -178,4 +191,4 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_paypal/models/payment_provider.py:0
 msgid "You must have an HTTPS connection to generate a webhook."
-msgstr ""
+msgstr "คุณต้องมีการเชื่อมต่อ HTTPS เพื่อสร้างเว็บฮุก"

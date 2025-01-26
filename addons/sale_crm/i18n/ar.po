@@ -3,15 +3,16 @@
 # 	* sale_crm
 # 
 # Translators:
-# Wil Odoo, 2024
+# Malaz Abuidris <msea@odoo.com>, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -70,7 +71,10 @@ msgid "Customer"
 msgstr "العميل"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__display_name
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__display_name
+#: model:ir.model.fields,field_description:sale_crm.field_crm_team__display_name
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__display_name
 msgid "Display Name"
 msgstr "اسم العرض "
 
@@ -83,17 +87,15 @@ msgstr "عدم الربط بعميل "
 #. odoo-python
 #: code:addons/sale_crm/models/crm_lead.py:0
 msgid "Expected revenue has been updated based on the linked Sales Orders."
-msgstr ""
+msgstr "تم تحديث الإيرادات المتوقعة بناءً على أوامر المبيعات المرتبطة. "
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__id
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__id
+#: model:ir.model.fields,field_description:sale_crm.field_crm_team__id
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__id
 msgid "ID"
 msgstr "المُعرف"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users__target_sales_invoiced
-msgid "Invoiced in Sales Orders Target"
-msgstr "تمت الفوترة في أوامر البيع المستهدفة "
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__write_uid
@@ -107,8 +109,8 @@ msgstr "آخر تحديث في"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
-msgid "Lead/Opportunity"
-msgstr "عميل مهتم/فرصة "
+msgid "Lead"
+msgstr "عميل مهتم "
 
 #. module: sale_crm
 #: model:ir.model.fields.selection,name:sale_crm.selection__crm_quotation_partner__action__exist
@@ -198,11 +200,6 @@ msgstr "إجمالي الطلبات "
 #: model:ir.model.fields,help:sale_crm.field_crm_lead__sale_amount_total
 msgid "Untaxed Total of Confirmed Orders"
 msgstr "إجمالي أوامر البيع المؤكدة غير الشامل للضريبة "
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_res_users
-msgid "User"
-msgstr "المستخدم"
 
 #. module: sale_crm
 #. odoo-python

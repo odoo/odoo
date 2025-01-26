@@ -5,14 +5,15 @@
 # Translators:
 # Wil Odoo, 2024
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2025
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-15 08:33+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2025\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -118,7 +119,7 @@ msgstr "<i title=\"Poista operaattori\" class=\"fa fa-fw fa-lg fa-close\"/>"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
 msgid "<span class=\"fw-bold\">Country: </span>"
-msgstr ""
+msgstr "<span class=\"fw-bold\">Maa: </span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
@@ -483,12 +484,6 @@ msgid "Conversation"
 msgstr "Keskustelu"
 
 #. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
-msgid "Conversation ended..."
-msgstr "Keskustelu päättyi..."
-
-#. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "Conversation with %s"
@@ -797,6 +792,12 @@ msgid "Free Input (Multi-Line)"
 msgstr "Vapaa syöttö (monirivinen)"
 
 #. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/chat_window_patch.xml:0
+msgid "Give your feedback"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__sequence
 msgid ""
 "Given the order to find a matching rule. If 2 rules are matching for the "
@@ -1010,7 +1011,7 @@ msgstr "Liity"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_model_patch.js:0
 msgid "Join %s"
-msgstr ""
+msgstr "Liity %s"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -1076,7 +1077,7 @@ msgstr "Poissaolo"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_model_patch.js:0
 msgid "Leave %s"
-msgstr ""
+msgstr "Jätä %s"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -1222,8 +1223,10 @@ msgstr "Livechat kielet"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__livechat_active
-msgid "Livechat session is active until visitor leaves the conversation."
-msgstr "Livechat-istunto on aktiivinen, kunnes kävijä poistuu keskustelusta."
+msgid ""
+"Livechat session is active until visitor or operator leaves the "
+"conversation."
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__sequence
@@ -1623,7 +1626,7 @@ msgstr "Tallenna kanavasi saadaksesi määrityswidgetin."
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
+#: code:addons/im_livechat/static/src/embed/common/thread_model_patch.js:0
 msgid "Say something"
 msgstr "Sano jotakin"
 
@@ -1672,7 +1675,7 @@ msgstr "Katso 15 viimeksi vierailtua sivua"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
+#: code:addons/im_livechat/static/src/embed/common/thread_model_patch.js:0
 msgid "Select an option above"
 msgstr "Valitse yllä oleva vaihtoehto"
 
@@ -1885,7 +1888,8 @@ msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/common/chat_window_patch.xml:0
+#: code:addons/im_livechat/static/src/core/common/thread_model_patch.js:0
+#: code:addons/im_livechat/static/src/embed/common/thread_model_patch.js:0
 msgid "This livechat conversation has ended"
 msgstr ""
 
@@ -2078,7 +2082,7 @@ msgstr "Jättäisitkö sähköpostiosoitteesi jotta voimme ottaa sinuun yhteytt�
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/common/close_confirmation.xml:0
 msgid "Yes, leave conversation"
-msgstr ""
+msgstr "Kyllä, jätä keskustelu"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
@@ -2113,15 +2117,21 @@ msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/web/livechat_channel_model_patch.js:0
-msgid "You joined %s."
+#: code:addons/im_livechat/static/src/core/common/thread_model_patch.js:0
+msgid "You ended the conversation with %(name)s."
 msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_model_patch.js:0
+msgid "You joined %s."
+msgstr "Liityit %s."
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/web/livechat_channel_model_patch.js:0
 msgid "You left %s."
-msgstr ""
+msgstr "Jätit %s."
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.discuss_channel_action

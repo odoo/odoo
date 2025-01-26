@@ -3,16 +3,16 @@
 # 	* stock
 # 
 # Translators:
-# Wil Odoo, 2024
 # Ilya Rozhkov, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Ilya Rozhkov, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,12 +47,9 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 msgid ""
 "\n"
-"The quantity done for the product %(product)s doesn't respect the rounding precision defined on the unit of measure %(unit)s.\n"
-"Please change the quantity done or the rounding precision of your unit of measure."
+"The quantity done for the product %(product)s doesn't respect the rounding precision defined on the system.\n"
+"Please change the quantity done or the rounding precision in your settings."
 msgstr ""
-"\n"
-"Количество выполнено для товара %(product)s не соответствует точности округления, заданной для единицы измерения %(unit)s. \n"
-"Пожалуйста, измените выполненное количество или точность округления вашей единицы измерения."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -167,18 +164,6 @@ msgstr ""
 #: code:addons/stock/models/stock_scrap.py:0
 msgid "%(product)s: Insufficient Quantity To Scrap"
 msgstr "%(product)s: Недостаточное количество для списания"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-msgid ""
-"%(product_name)s --> Product UoM is %(product_uom)s "
-"(%(product_uom_category)s) - Move UoM is %(move_uom)s "
-"(%(move_uom_category)s)"
-msgstr ""
-"%(product_name)s --> Единица измерения товара: %(product_uom)s "
-"(%(product_uom_category)s) - Единица измерения для перемещения: %(move_uom)s"
-" (%(move_uom_category)s)"
 
 #. module: stock
 #. odoo-python
@@ -467,11 +452,6 @@ msgstr "4 x 7 с ценой"
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "54326786758"
 msgstr "54326786758"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_inventory
-msgid "98"
-msgstr "98"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -1157,10 +1137,22 @@ msgid "Allowed Location"
 msgstr "Разрешенное местоположение"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_replenishment_uom_ids
+msgid "Allowed Replenishment Uom"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__allowed_route_ids
 #: model:ir.model.fields,field_description:stock.field_stock_replenish_mixin__allowed_route_ids
 msgid "Allowed Route"
 msgstr "Разрешенный маршрут"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__allowed_uom_ids
+#: model:ir.model.fields,field_description:stock.field_stock_move_line__allowed_uom_ids
+#: model:ir.model.fields,field_description:stock.field_stock_scrap__allowed_uom_ids
+msgid "Allowed Uom"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__alternative
@@ -1225,9 +1217,9 @@ msgid "Applicable On"
 msgstr "Применяется на"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_route__packaging_selectable
-msgid "Applicable on Packaging"
-msgstr "Применяется для упаковки"
+#: model:ir.model.fields,field_description:stock.field_stock_route__package_type_selectable
+msgid "Applicable on Package Type"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__product_selectable
@@ -1558,12 +1550,6 @@ msgid "Blocking Message"
 msgstr "Блокирующее сообщение"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-msgid "Blocking: %s"
-msgstr "Блокировка: %s"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__quant_ids
 msgid "Bulk Content"
 msgstr "Основное содержание"
@@ -1675,6 +1661,7 @@ msgstr "Нельзя убрать локацию для непустой тар�
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__capacity_ids
+#: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
 msgid "Capacity"
 msgstr "Вместимость"
 
@@ -1689,10 +1676,11 @@ msgid "Capacity by Product"
 msgstr "Вместимость по товарам"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_category_id
-#: model:ir.model.fields,field_description:stock.field_stock_move__product_uom_category_id
-#: model:ir.model.fields,field_description:stock.field_stock_move_line__product_uom_category_id
-#: model:ir.model.fields,field_description:stock.field_stock_scrap__product_uom_category_id
+#: model:ir.ui.menu,name:stock.menu_product_category_config_stock
+msgid "Categories"
+msgstr "Категории"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_search_form_view_stock_report
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -2061,19 +2049,6 @@ msgstr "Продолжить"
 #: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
 msgid "Control panel buttons"
 msgstr "Кнопки панели управления"
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_product_replenish__product_uom_category_id
-#: model:ir.model.fields,help:stock.field_stock_move__product_uom_category_id
-#: model:ir.model.fields,help:stock.field_stock_move_line__product_uom_category_id
-#: model:ir.model.fields,help:stock.field_stock_scrap__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"Пересчет между единицами измерения может произойти только в том случае, если"
-" они принадлежат к одной и той же категории. Пересчет будет осуществляться "
-"на основе коэффициентов."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posx
@@ -2849,17 +2824,6 @@ msgid "Demo Product"
 msgstr "Демо-товар"
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_product_packaging__route_ids
-msgid ""
-"Depending on the modules installed, this will allow you to define the route "
-"of the product in this packaging: whether it will be bought, manufactured, "
-"replenished on order, etc."
-msgstr ""
-"В зависимости от установленных модулей, это позволит вам определить маршрут "
-"движения продукта в этой упаковке: будет ли он куплен, произведен, пополнен "
-"под заказ и т.д."
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
 #: model:ir.model.fields,help:stock.field_product_template__route_ids
 msgid ""
@@ -3027,6 +2991,11 @@ msgid "Difference"
 msgstr "Разница"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
+msgid "Dimensions"
+msgstr "Размеры"
+
+#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.inventory_warning_reset_view
@@ -3086,7 +3055,6 @@ msgstr "Показать лоты & серийные номера на блан�
 #: model:ir.model.fields,field_description:stock.field_procurement_group__display_name
 #: model:ir.model.fields,field_description:stock.field_product_category__display_name
 #: model:ir.model.fields,field_description:stock.field_product_label_layout__display_name
-#: model:ir.model.fields,field_description:stock.field_product_packaging__display_name
 #: model:ir.model.fields,field_description:stock.field_product_product__display_name
 #: model:ir.model.fields,field_description:stock.field_product_removal__display_name
 #: model:ir.model.fields,field_description:stock.field_product_replenish__display_name
@@ -3190,11 +3158,6 @@ msgstr "Готово"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
 msgid "Done By"
 msgstr "Выполнено"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_quantity
-msgid "Done Packaging Quantity"
-msgstr "Выполнено Количество в упаковке"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_package_level__state__draft
@@ -3887,7 +3850,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_procurement_group__id
 #: model:ir.model.fields,field_description:stock.field_product_category__id
 #: model:ir.model.fields,field_description:stock.field_product_label_layout__id
-#: model:ir.model.fields,field_description:stock.field_product_packaging__id
 #: model:ir.model.fields,field_description:stock.field_product_product__id
 #: model:ir.model.fields,field_description:stock.field_product_removal__id
 #: model:ir.model.fields,field_description:stock.field_product_replenish__id
@@ -5285,11 +5247,6 @@ msgid "Manage Push and Pull inventory flows"
 msgstr "Управление толкать и тянуть потоков инвентаризации"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Manage product packagings (e.g. pack of 6 bottles, box of 10 pieces)"
-msgstr "Управление упаковками продуктов (например, коробка из 10 шт.)"
-
-#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__trigger__manual
 msgid "Manual"
 msgstr "Руководство"
@@ -5511,11 +5468,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_adv_location
 msgid "Multi-Step Routes"
 msgstr "Маршруты"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_multiple
-msgid "Multiple Quantity"
-msgstr "Множественное количество"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_unique_package_type
@@ -6389,12 +6341,13 @@ msgid "Package Transfers"
 msgstr "Перемещение упаковок"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_product_packaging__package_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__name
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__package_type_ids
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__package_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category_capacity__package_type_id
+#: model:ir.model.fields,field_description:stock.field_uom_uom__package_type_id
 #: model_terms:ir.ui.view,arch_db:stock.quant_package_search_view
+#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
 msgid "Package Type"
 msgstr "Тип размещения"
@@ -6458,7 +6411,7 @@ msgstr ""
 "                После создания пакет может быть перемещен сразу целиком, либо продукты могут быть распакованы и снова перемещены как отдельные единицы."
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_id
+#: model:ir.model.fields,field_description:stock.field_stock_move__packaging_uom_id
 msgid "Packaging"
 msgstr "Упаковка"
 
@@ -6473,15 +6426,19 @@ msgid "Packaging Length"
 msgstr "Длина упаковки"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__packaging_uom_qty
+msgid "Packaging Quantity"
+msgstr "Количество в упаковке"
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__width
 msgid "Packaging Width"
 msgstr "Ширина упаковки"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_route__packaging_ids
-#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
-msgid "Packagings"
-msgstr "Тара"
+#: model:ir.model.fields,help:stock.field_stock_move__packaging_uom_id
+msgid "Packaging unit from sale or purchase orders"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_pack_stock_loc_id
@@ -6848,7 +6805,6 @@ msgstr "Вместимость продукта"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__categ_ids
-#: model:ir.ui.menu,name:stock.menu_product_category_config_stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Product Categories"
 msgstr "Категории товаров"
@@ -6899,22 +6855,6 @@ msgstr "Фильтр партий продукта"
 #: model:ir.model,name:stock.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
 msgstr "Перемещение продукта (Позиции движения запасов)"
-
-#. module: stock
-#: model:ir.model,name:stock.model_product_packaging
-msgid "Product Packaging"
-msgstr "Упаковка продукта"
-
-#. module: stock
-#: model:ir.actions.report,name:stock.label_product_packaging
-msgid "Product Packaging (ZPL)"
-msgstr "Упаковка продуктов (ZPL)"
-
-#. module: stock
-#: model:ir.ui.menu,name:stock.menu_product_packagings
-#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Product Packagings"
-msgstr "Упаковки продукта"
 
 #. module: stock
 #. odoo-python
@@ -7172,11 +7112,6 @@ msgid "Putaway:"
 msgstr "Приемка:"
 
 #. module: stock
-#: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_qty_multiple_check
-msgid "Qty Multiple must be greater than or equal to zero."
-msgstr "Qty Multiple должно быть больше или равно нулю."
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_quality_control
 msgid "Quality"
 msgstr "Качество"
@@ -7274,11 +7209,6 @@ msgid "Quantity"
 msgstr "Количество"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
-msgid "Quantity Multiple"
-msgstr "Количество Несколько"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__qty_available
 #: model:ir.model.fields,field_description:stock.field_product_template__qty_available
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
@@ -7335,6 +7265,11 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_move__product_qty
 msgid "Quantity in the default UoM of the product"
 msgstr "Количество в единицах измерения продукта по умолчанию"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_move__packaging_uom_qty
+msgid "Quantity in the packaging unit"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__incoming_qty
@@ -7741,6 +7676,11 @@ msgid "Replenishment Information for %(product)s in %(warehouse)s"
 msgstr "Информация о пополнении для %(product)s на %(warehouse)s"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__replenishment_uom_id
+msgid "Replenishment Multiple"
+msgstr ""
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 msgid "Replenishment Report"
@@ -7831,12 +7771,6 @@ msgid "Reserved"
 msgstr "Зарезервировано"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_qty
-#: model:ir.model.fields,field_description:stock.field_stock_move_line__product_packaging_qty
-msgid "Reserved Packaging Quantity"
-msgstr "Зарезервированная упаковка Количество"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__reserved_quantity
 msgid "Reserved Quantity"
 msgstr "Зарезервирована Количество"
@@ -7882,6 +7816,11 @@ msgstr "Маршруты пополнения"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 msgid "Return"
 msgstr "Возврат"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
+msgid "Return All"
+msgstr ""
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
@@ -7982,10 +7921,11 @@ msgstr "Последовательность маршрутов"
 #: model:ir.actions.act_window,name:stock.action_routes_form
 #: model:ir.actions.server,name:stock.action_open_routes
 #: model:ir.model.fields,field_description:stock.field_product_category__route_ids
-#: model:ir.model.fields,field_description:stock.field_product_packaging__route_ids
 #: model:ir.model.fields,field_description:stock.field_product_product__route_ids
 #: model:ir.model.fields,field_description:stock.field_product_template__route_ids
+#: model:ir.model.fields,field_description:stock.field_stock_package_type__route_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__route_ids
+#: model:ir.model.fields,field_description:stock.field_uom_uom__route_ids
 #: model:ir.ui.menu,name:stock.menu_routes_config
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
@@ -7997,6 +7937,11 @@ msgstr "Маршруты"
 #: model:ir.model.fields,field_description:stock.field_product_template__has_available_route_ids
 msgid "Routes can be selected on this product"
 msgstr "В данном продукте можно выбрать маршруты"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_uom_uom__route_ids
+msgid "Routes propagated from the package type"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__resupply_wh_ids
@@ -8255,8 +8200,8 @@ msgstr "Выбор не поддерживается."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Sell and purchase products in different units of measure"
-msgstr "Продать и закупить продукты в разных единицах измерения"
+msgid "Sell and purchase products in different units of measure or packagings"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9108,12 +9053,6 @@ msgid "Template"
 msgstr "Шаблон"
 
 #. module: stock
-#: model_terms:res.company,sign_terms:stock.res_company_1
-#: model_terms:res.company,sign_terms_html:stock.res_company_1
-msgid "Terms &amp; Conditions"
-msgstr "Соглашение"
-
-#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 msgid ""
@@ -9317,10 +9256,10 @@ msgstr ""
 "'Зоной отправки' является родительское местоположение 'Gate 1'."
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__qty_multiple
+#: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__replenishment_uom_id
 msgid ""
-"The procurement quantity will be rounded up to a multiple of this field "
-"quantity. If it is 0, it is not rounded."
+"The procurement quantity will be rounded up to a multiple of this "
+"unit/packaging. If it is not set, it is not rounded."
 msgstr ""
 
 #. module: stock
@@ -9626,6 +9565,15 @@ msgstr ""
 "рекомендуется изменять тип продукта, так как это может привести к "
 "несоответствиям. Лучшим решением могло бы стать архивирование продукта и "
 "создание нового вместо него."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/product.py:0
+msgid ""
+"This product has been used in at least one inventory movement. It is not "
+"advised to change the Unit of Measure since it can lead to inconsistencies. "
+"The existing moves will not be recalculated with the new unit of measure."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10180,24 +10128,10 @@ msgid "Unique Lot/Serial Number"
 msgstr "Уникальная партия/серийный номер"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
-#: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
-#: model_terms:ir.ui.view,arch_db:stock.view_move_tree
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_simple
-msgid "Unit"
-msgstr "Единица"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__price_unit
-msgid "Unit Price"
-msgstr "Цена за единицу"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__forecast_uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__product_uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_lot__product_uom_id
+#: model:ir.model.fields,field_description:stock.field_stock_move__product_uom
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__product_uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__uom_id
@@ -10206,20 +10140,19 @@ msgstr "Цена за единицу"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_uom
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty__product_uom_name
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__product_uom_name
-#: model_terms:ir.ui.view,arch_db:stock.package_level_form_view
-#: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
-#: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree_detailed
-#: model_terms:ir.ui.view,arch_db:stock.view_move_tree_receipt_picking
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_move_tree
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_kanban
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
-msgid "Unit of Measure"
-msgstr "Ед. изм"
+#: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
+msgid "Unit"
+msgstr "Единица"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__uom
-msgid "Unit of Measure Name"
-msgstr "Наименование единицы измерения"
+msgid "Unit Name"
+msgstr "Название единицы"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__price_unit
+msgid "Unit Price"
+msgstr "Цена за единицу"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -10228,19 +10161,10 @@ msgid "Units"
 msgstr "Единицы"
 
 #. module: stock
+#: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-msgid "Units Of Measure"
-msgstr "Единицы измерения"
-
-#. module: stock
-#: model:ir.ui.menu,name:stock.menu_stock_unit_measure_stock
-msgid "Units of Measure"
-msgstr "Единицы измерения"
-
-#. module: stock
-#: model:ir.ui.menu,name:stock.product_uom_menu
-msgid "Units of Measures"
-msgstr "Единицы измерения"
+msgid "Units & Packagings"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
@@ -10279,29 +10203,9 @@ msgid "Unreturned"
 msgstr ""
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-msgid "Unsafe unit of measure"
-msgstr "Небезопасная единица измерения"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__unwanted_replenish
 msgid "Unwanted Replenish"
 msgstr "Нежелательное пополнение"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__product_uom
-#: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
-#: model_terms:ir.ui.view,arch_db:stock.replenishment_option_tree_view
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
-#: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
-msgid "UoM"
-msgstr "UoM"
-
-#. module: stock
-#: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
-msgid "UoM Categories"
-msgstr "Категории ед. изм"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot_report__uom_id
@@ -10746,18 +10650,16 @@ msgstr ""
 "\"Инвентарь\" формы \"Товар\"."
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_stock_route__package_type_selectable
+msgid "When checked, the route will be selectable on package types"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__product_categ_selectable
 msgid "When checked, the route will be selectable on the Product Category."
 msgstr ""
 "Если флажок установлен, маршрут будет доступен для выбора в категории "
 "товаров."
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_route__packaging_selectable
-msgid "When checked, the route will be selectable on the Product Packaging."
-msgstr ""
-"Если флажок установлен, маршрут будет доступен для выбора на странице "
-"\"Упаковка продукта\"."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_in_id
@@ -10948,22 +10850,6 @@ msgid ""
 "package"
 msgstr ""
 "Вы пытаетесь поместить продукты из разных мест в одну и ту же упаковку"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-msgid ""
-"You are using a unit of measure smaller than the one you are using in order "
-"to stock your product. This can lead to rounding problem on reserved "
-"quantity. You should use the smaller unit of measure possible in order to "
-"valuate your stock or change its rounding precision to a smaller value "
-"(example: 0.00001)."
-msgstr ""
-"Вы используете единицу измерения, меньшую, чем та, которую вы используете, "
-"чтобы заказывать ваш продукт. Это может привести к проблеме округления "
-"зарезервированного количества. Вам следует использовать меньшую возможную "
-"единицу измерения, чтобы оценить свой запас или изменить его точность "
-"округления до меньшего значения (например: 0,00001)."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_routes_form
@@ -11157,18 +11043,6 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/product.py:0
-msgid ""
-"You cannot change the unit of measure as there are already stock moves for "
-"this product. If you want to change the unit of measure, you should rather "
-"archive this product and create a new one."
-msgstr ""
-"Вы не можете изменить единицу измерения, так как для этого продукта уже есть"
-" запасы. Если вы хотите изменить единицу измерения, вам лучше перенести этот"
-" продукт в архив и создать новый."
-
-#. module: stock
-#. odoo-python
 #: code:addons/stock/models/stock_scrap.py:0
 msgid "You cannot delete a scrap which is done."
 msgstr "Вы не можете удалить отходы, которые уже перемещены."
@@ -11202,16 +11076,6 @@ msgid ""
 "You cannot pack products into the same package when they are from different "
 "transfers with different operation types"
 msgstr ""
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move.py:0
-msgid ""
-"You cannot perform moves because their unit of measure has a different "
-"category from their product unit of measure."
-msgstr ""
-"Нельзя выполнить перемещения, так как их единица измерения отличается от "
-"единицы измерения товара."
 
 #. module: stock
 #. odoo-python
@@ -11321,16 +11185,6 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/models/stock_orderpoint.py:0
-msgid ""
-"You have to select a product unit of measure that is in the same category as"
-" the default unit of measure of the product"
-msgstr ""
-"Вы должны выбрать единицу измерения продукта, которая находится в той же "
-"категории, что и единица измерения продукта по умолчанию"
-
-#. module: stock
-#. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 msgid "You may only return Done pickings."
 msgstr "Вы можете вернуть только готовые комплекты."
@@ -11416,12 +11270,6 @@ msgstr ""
 "Здесь вы найдете умные предложения по пополнению запасов, основанные на прогнозах товарных запасов.\n"
 "            Выберите количество для закупки или производства и запускайте заказы одним щелчком мыши.\n"
 "            Чтобы сэкономить время в будущем, установите правила как «автоматические»."
-
-#. module: stock
-#: model_terms:res.company,sign_terms:stock.res_company_1
-#: model_terms:res.company,sign_terms_html:stock.res_company_1
-msgid "Your conditions..."
-msgstr "Ваши условия..."
 
 #. module: stock
 #: model_terms:res.company,lunch_notify_message:stock.res_company_1

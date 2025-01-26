@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-15 08:33+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -469,12 +469,6 @@ msgid "Conversation"
 msgstr "对话"
 
 #. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
-msgid "Conversation ended..."
-msgstr "对话结束..."
-
-#. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "Conversation with %s"
@@ -773,6 +767,12 @@ msgstr "自由输入"
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__free_input_multi
 msgid "Free Input (Multi-Line)"
 msgstr "自由输入（多行）"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/chat_window_patch.xml:0
+msgid "Give your feedback"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__sequence
@@ -1191,8 +1191,10 @@ msgstr "即时聊天语言"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__livechat_active
-msgid "Livechat session is active until visitor leaves the conversation."
-msgstr "实时聊天会话处于活动状态，直到访问者离开对话。"
+msgid ""
+"Livechat session is active until visitor or operator leaves the "
+"conversation."
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__sequence
@@ -1589,7 +1591,7 @@ msgstr "保存您的频道以获得您的配置部件。"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
+#: code:addons/im_livechat/static/src/embed/common/thread_model_patch.js:0
 msgid "Say something"
 msgstr "说些什么····"
 
@@ -1638,7 +1640,7 @@ msgstr "查看最后访问的 15 个页面"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
+#: code:addons/im_livechat/static/src/embed/common/thread_model_patch.js:0
 msgid "Select an option above"
 msgstr "选择上面的一个选项"
 
@@ -1841,7 +1843,8 @@ msgstr "这是一个自动的 '欢迎' 信息，当访客开始新的会话时�
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/common/chat_window_patch.xml:0
+#: code:addons/im_livechat/static/src/core/common/thread_model_patch.js:0
+#: code:addons/im_livechat/static/src/embed/common/thread_model_patch.js:0
 msgid "This livechat conversation has ended"
 msgstr ""
 
@@ -2058,6 +2061,12 @@ msgid ""
 msgstr ""
 "您可以为每个想要\n"
 " 集成网站实时聊天小工具的网站创建频道，这样您的网站访客便能够与操作人员实时交流。"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/common/thread_model_patch.js:0
+msgid "You ended the conversation with %(name)s."
+msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript

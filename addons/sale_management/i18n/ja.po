@@ -3,15 +3,15 @@
 # 	* sale_management
 # 
 # Translators:
-# Wil Odoo, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:30+0000\n"
+"POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,17 +81,17 @@ msgid "All Sales"
 msgstr "全ての販売"
 
 #. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__allowed_uom_ids
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__allowed_uom_ids
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__allowed_uom_ids
+msgid "Allowed Uom"
+msgstr ""
+
+#. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
 msgid "Archived"
 msgstr "アーカイブ済"
-
-#. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__product_uom_category_id
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_category_id
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__product_uom_category_id
-msgid "Category"
-msgstr "カテゴリー"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_res_company
@@ -115,15 +115,6 @@ msgstr "コンフィグ設定"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__mail_template_id
 msgid "Confirmation Mail"
 msgstr "確認メール"
-
-#. module: sale_management
-#: model:ir.model.fields,help:sale_management.field_sale_order_option__product_uom_category_id
-#: model:ir.model.fields,help:sale_management.field_sale_order_template_line__product_uom_category_id
-#: model:ir.model.fields,help:sale_management.field_sale_order_template_option__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr "単位間の変換は同じカテゴリに属している場合のみ可能です。変換は比率に基づいて行われます。"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
@@ -569,6 +560,13 @@ msgid "Tip: Sell or buy products in bulk with matrixes"
 msgstr "ヒント：マトリクスで製品を大量に売ったり買ったりする"
 
 #. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__uom_id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__uom_id
+msgid "Unit"
+msgstr "単位"
+
+#. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__price_unit
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -579,18 +577,6 @@ msgstr "単価"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 msgid "Unit Price:"
 msgstr "単価:"
-
-#. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__uom_id
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_id
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__uom_id
-msgid "Unit of Measure"
-msgstr "単位"
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
-msgid "UoM"
-msgstr "測定単位"
 
 #. module: sale_management
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action

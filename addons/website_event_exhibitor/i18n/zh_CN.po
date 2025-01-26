@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-01-20 08:43+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -312,8 +312,12 @@ msgid "Discover more"
 msgstr "发现更多"
 
 #. module: website_event_exhibitor
+#: model:ir.model.fields,field_description:website_event_exhibitor.field_event_event__display_name
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__display_name
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor_type__display_name
+#: model:ir.model.fields,field_description:website_event_exhibitor.field_event_type__display_name
+#: model:ir.model.fields,field_description:website_event_exhibitor.field_website__display_name
+#: model:ir.model.fields,field_description:website_event_exhibitor.field_website_event_menu__display_name
 msgid "Display Name"
 msgstr "显示名称"
 
@@ -460,8 +464,12 @@ msgid "Has Message"
 msgstr "有消息"
 
 #. module: website_event_exhibitor
+#: model:ir.model.fields,field_description:website_event_exhibitor.field_event_event__id
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__id
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor_type__id
+#: model:ir.model.fields,field_description:website_event_exhibitor.field_event_type__id
+#: model:ir.model.fields,field_description:website_event_exhibitor.field_website__id
+#: model:ir.model.fields,field_description:website_event_exhibitor.field_website_event_menu__id
 msgid "ID"
 msgstr "ID"
 
@@ -1014,6 +1022,7 @@ msgid "We could not find any exhibitor matching your search for:"
 msgstr "找不到与您的搜索匹配的参展商："
 
 #. module: website_event_exhibitor
+#: model:ir.model,name:website_event_exhibitor.model_website
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_tree
 msgid "Website"
@@ -1097,6 +1106,11 @@ msgid ""
 msgstr ""
 "已经结束了。\n"
 "               <br/>"
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_topbar
+msgid "sponsor"
+msgstr ""
 
 #. module: website_event_exhibitor
 #. odoo-javascript

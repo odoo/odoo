@@ -3,16 +3,16 @@
 # 	* sale_stock
 # 
 # Translators:
-# Wil Odoo, 2024
 # Tony Ng, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -195,7 +195,7 @@ msgstr "預設倉庫"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Delivery"
-msgstr "交貨"
+msgstr "送貨"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel__display_delivery_alert
@@ -221,6 +221,31 @@ msgid ""
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
 "交貨日期，您可以向客戶承諾，在服務產品的情況下，從訂單行的最短提前期計算。在裝運的情況下，將考慮訂單的裝運策略，以使用訂單行的最短或最長提前期。"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_account_move__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_procurement_group__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_product_template__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_stock_rule__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_res_company__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_res_users__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_sale_report__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_forecasted_product_product__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_lot__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_return_picking__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_route__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rule__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__display_name
+msgid "Display Name"
+msgstr "顯示名稱"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
@@ -296,6 +321,31 @@ msgstr "全數完成送貨"
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
 msgid "Has late picking"
 msgstr "有延後揀貨"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_account_move__id
+#: model:ir.model.fields,field_description:sale_stock.field_account_move_line__id
+#: model:ir.model.fields,field_description:sale_stock.field_procurement_group__id
+#: model:ir.model.fields,field_description:sale_stock.field_product_template__id
+#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_stock_rule__id
+#: model:ir.model.fields,field_description:sale_stock.field_res_company__id
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__id
+#: model:ir.model.fields,field_description:sale_stock.field_res_users__id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel__id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_report__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_forecasted_product_product__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_lot__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move_line__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_picking__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_return_picking__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_route__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rule__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__id
+msgid "ID"
+msgstr "識別號"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
@@ -523,6 +573,11 @@ msgstr "訂單補給（特別訂製）"
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "Reserved"
 msgstr "已保留"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_return_picking
+msgid "Return Picking"
+msgstr "退回揀貨"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock

@@ -3,17 +3,16 @@
 # 	* account
 # 
 # Translators:
-# Raymond Yu <cl_yu@hotmail.com>, 2024
-# Wil Odoo, 2024
 # Chloe Wang, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:30+0000\n"
+"POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
-"Last-Translator: Chloe Wang, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -137,12 +136,6 @@ msgstr "%(amount)s到期日期 %(date)s"
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "%(exception)s for %(user)s%(end_datetime_string)s%(reason)s."
 msgstr "%(exception)s for %(user)s%(end_datetime_string)s%(reason)s."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_bank_statement.py:0
-msgid "%(journal_code)s Statement %(date)s"
-msgstr "%(journal_code)s 声明 %(date)s"
 
 #. module: account
 #. odoo-python
@@ -3241,11 +3234,6 @@ msgid "Automatic Entry Default Journal"
 msgstr "自动分录默认日记账"
 
 #. module: account
-#: model:account.fiscal.position,name:account.1_account_fiscal_position_avatax_us
-msgid "Automatic Tax Mapping (AvaTax)"
-msgstr "自动税项映射（AvaTax）"
-
-#. module: account
 #: model:ir.model,name:account.model_sequence_mixin
 msgid "Automatic sequence"
 msgstr "自动序列"
@@ -3638,6 +3626,11 @@ msgid "Based on Payment"
 msgstr "基于付款"
 
 #. module: account
+#: model:res.groups,name:account.group_account_basic
+msgid "Basic"
+msgstr "基础的"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Batch Payment Number Sequence"
@@ -3710,6 +3703,7 @@ msgstr "账单参考号"
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 #: code:addons/account/models/account_journal_dashboard.py:0
+#: model:ir.actions.act_window,name:account.action_move_in_invoice
 #: model:ir.actions.act_window,name:account.action_move_in_invoice_type
 #: model:ir.ui.menu,name:account.menu_action_move_in_invoice_type
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -3772,11 +3766,6 @@ msgstr "阻止消息"
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__body_has_template_value
 msgid "Body content is the same as the template"
 msgstr "正文内容与模板相同"
-
-#. module: account
-#: model:res.groups,name:account.group_account_user
-msgid "Bookkeeper"
-msgstr "簿记员"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -3964,6 +3953,13 @@ msgstr "不能在非销售日记账中创建销售单据"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+#, python-format
+msgid "Cannot create an accrual entry with orders in different currencies."
+msgstr "无法创建包含不同货币订单的应计项目。"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
 "Cannot find a chart of accounts for this company, You should configure it. \n"
@@ -3999,6 +3995,7 @@ msgid "Capital"
 msgstr "资本"
 
 #. module: account
+#: model_terms:ir.actions.act_window,help:account.action_move_in_invoice
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice_type
 msgid ""
 "Capture invoices, register payments and keep track of the discussions with "
@@ -4014,7 +4011,6 @@ msgstr "结转至"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.1_cash_journal_default_account_46
-#: model:account.account,name:account.1_cash_journal_default_account_55
 #: model:account.journal,name:account.1_cash
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -4026,16 +4022,6 @@ msgstr "现金"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Cash Account"
 msgstr "现金科目"
-
-#. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_52
-msgid "Cash Bakery"
-msgstr "现金 - 烘焙店"
-
-#. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_54
-msgid "Cash Bar"
-msgstr "现金酒吧"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_exigibility
@@ -4072,11 +4058,6 @@ msgstr "现金收付税费"
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_transition_account_id
 msgid "Cash Basis Transition Account"
 msgstr "现金收付转移科目"
-
-#. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_51
-msgid "Cash Clothes Shop"
-msgstr "现金 - 服裝店"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_expense_account_id
@@ -4132,20 +4113,10 @@ msgid "Cash Discount Write-Off Loss Account"
 msgstr "现金折扣冲销损失科目"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_50
-msgid "Cash Furn. Shop"
-msgstr "现金 - 家俱店"
-
-#. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Cash Registers"
 msgstr "收银台"
-
-#. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_53
-msgid "Cash Restaurant"
-msgstr "现金餐厅"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
@@ -4194,8 +4165,12 @@ msgid "Catalog"
 msgstr "目录"
 
 #. module: account
+#: model:ir.ui.menu,name:account.menu_product_product_categories
+msgid "Categories"
+msgstr "类别"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__category
-#: model:ir.model.fields,field_description:account.field_account_move_line__product_uom_category_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 msgid "Category"
 msgstr "类别"
@@ -4745,13 +4720,6 @@ msgid "Control-Access"
 msgstr "控制-访问"
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_move_line__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr "仅同类别的计量单位可以互相转换。根据比例进行转换。"
-
-#. module: account
 #: model_terms:ir.actions.act_window,help:account.action_amounts_to_settle
 msgid "Cool, it looks like you don't have any amount to settle."
 msgstr "很好，看来没有任何金额需要缴清。"
@@ -4942,6 +4910,7 @@ msgid "Create a credit note"
 msgstr "创建退款通知"
 
 #. module: account
+#: model_terms:ir.actions.act_window,help:account.action_move_out_invoice
 #: model_terms:ir.actions.act_window,help:account.action_move_out_invoice_type
 msgid "Create a customer invoice"
 msgstr "创建客户发票"
@@ -5019,6 +4988,7 @@ msgid ""
 msgstr "创建包含多个部分的结构化报表，以便于导航和同时打印。"
 
 #. module: account
+#: model_terms:ir.actions.act_window,help:account.action_move_in_invoice
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice_type
 msgid "Create a vendor bill"
 msgstr "创建供应商账单"
@@ -5056,6 +5026,7 @@ msgid "Create invoice/bill"
 msgstr "创建发票/账单"
 
 #. module: account
+#: model_terms:ir.actions.act_window,help:account.action_move_out_invoice
 #: model_terms:ir.actions.act_window,help:account.action_move_out_invoice_type
 msgid ""
 "Create invoices, register payments and keep track of the discussions with "
@@ -7209,6 +7180,12 @@ msgid "Filter Multivat"
 msgstr "多增值税筛选器"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_root.py:0
+msgid "Filter on the Account or its Display Name instead"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__general_account_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 msgid "Financial Account"
@@ -8945,6 +8922,7 @@ msgstr "已开具发票"
 #. module: account
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
+#: model:ir.actions.act_window,name:account.action_move_out_invoice
 #: model:ir.actions.act_window,name:account.action_move_out_invoice_type
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_ids
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_ids
@@ -9054,11 +9032,6 @@ msgid "Invoicing"
 msgstr "发票"
 
 #. module: account
-#: model:res.groups,name:account.group_account_basic
-msgid "Invoicing & Banks"
-msgstr "发票及银行"
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__invoicing_legacy
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__invoicing_legacy
 #: model:ir.model.fields.selection,name:account.selection__account_move__status_in_payment__invoicing_legacy
@@ -9102,7 +9075,7 @@ msgstr "介于"
 #: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
 #: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
 msgid "Is Coa Installed"
-msgstr ""
+msgstr "是否已安装账目总表"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
@@ -10062,6 +10035,12 @@ msgstr ""
 "单一欧元支付区（SEPA）直接借项：合作伙伴基于授权在单一欧元支付区完成付款。需要模块account_sepa。\n"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+msgid "Manually"
+msgstr "手动"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Mapping"
 msgstr "配对"
@@ -10494,7 +10473,7 @@ msgstr "名称"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__name_placeholder
 #: model:ir.model.fields,field_description:account.field_account_move__name_placeholder
 msgid "Name Placeholder"
-msgstr ""
+msgstr "名称占位符"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__name_searchable
@@ -11362,6 +11341,7 @@ msgstr "未结科目"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_account_journal_payment_credit_account_id
 msgid "Outstanding Payments"
 msgstr "未结清付款"
 
@@ -11373,6 +11353,7 @@ msgstr "未结付款科目"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: model:account.account,name:account.1_account_journal_payment_debit_account_id
 msgid "Outstanding Receipts"
 msgstr "未结清收据"
 
@@ -11463,7 +11444,7 @@ msgstr "未付款的PDF"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "PEPPOL Electronic Invoicing"
-msgstr ""
+msgstr "PEPPOL 电子发票"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_peppol
@@ -12313,11 +12294,6 @@ msgid "Product"
 msgstr "产品"
 
 #. module: account
-#: model:ir.ui.menu,name:account.menu_product_product_categories
-msgid "Product Categories"
-msgstr "产品类别"
-
-#. module: account
 #: model:ir.model,name:account.model_product_category
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__product_categ_id
@@ -12523,11 +12499,6 @@ msgstr "点评"
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
 msgstr "重新排序"
-
-#. module: account
-#: model:res.groups,name:account.group_account_readonly
-msgid "Read-only"
-msgstr "只读"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__reason
@@ -13183,11 +13154,6 @@ msgid "STANDARD TERMS AND CONDITIONS OF SALE"
 msgstr "标准销售条款和条件"
 
 #. module: account
-#: model:account.journal,name:account.1_hr_payroll_account_journal
-msgid "Salaries"
-msgstr "薪资"
-
-#. module: account
 #: model:account.account,name:account.1_expense_salary
 msgid "Salary Expenses"
 msgstr "工资费用"
@@ -13541,8 +13507,8 @@ msgstr "选择该“警告”选项，将通过消息通知用户，选择“阻
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Sell and purchase products in different units of measure"
-msgstr "以不同的计量单位买卖产品"
+msgid "Sell and purchase products in different units of measure or packagings"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -13864,6 +13830,11 @@ msgid ""
 msgstr "用于显示的简称。该日记账的日记账分录也默认使用该前缀命名。"
 
 #. module: account
+#: model:res.groups,name:account.group_account_readonly
+msgid "Show Accounting Features - Readonly"
+msgstr "显示会计功能 - 只读"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__show_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_users__show_credit_limit
 msgid "Show Credit Limit"
@@ -13890,6 +13861,11 @@ msgstr "显示折扣详情"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__show_force_tax_included
 msgid "Show Force Tax Included"
 msgstr "显示包含的强制税项"
+
+#. module: account
+#: model:res.groups,name:account.group_account_user
+msgid "Show Full Accounting Features"
+msgstr "显示完整会计功能"
 
 #. module: account
 #: model:res.groups,name:account.group_account_secured
@@ -14074,6 +14050,12 @@ msgstr "省/州"
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Statement"
 msgstr "对账单"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+msgid "Statement %(date)s"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
@@ -14881,15 +14863,6 @@ msgstr "税务识别码。此处的值将根据国家格式进行验证。您可
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
-msgid ""
-"The Unit of Measure (UoM) '%(uom)s' you have selected for product "
-"'%(product)s', is incompatible with its category : %(category)s."
-msgstr ""
-"您选择了 “%(uom)s” 作为产品 “%(product)s” 的计量单位，但相关产品类别 “%(category)s” 并不兼容使用此单位。"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move_line.py:0
 msgid "The account %(name)s (%(code)s) is deprecated."
 msgstr "账户%(name)s（%(code)s）已弃用。"
 
@@ -15604,6 +15577,14 @@ msgid ""
 "The selected payment method is not available for this payment, please select"
 " the payment method again."
 msgstr "所选付款方式不适用于此次付款，请重新选择付款方式。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"The sending of invoices is not set up properly, make sure the report used is"
+" set for invoices."
+msgstr "发送发票的设置不正确，请确保所使用的报告设置为发票。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__sequence
@@ -16643,6 +16624,12 @@ msgid "Unique identifier for this line."
 msgstr "该行的唯一标识符。"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_report__product_uom_id
+#: model:ir.model.fields,field_description:account.field_account_move_line__product_uom_id
+msgid "Unit"
+msgstr "单元"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_unit
 msgid "Unit Price"
 msgstr "单价"
@@ -16653,12 +16640,6 @@ msgid "Unit Price:"
 msgstr "单价："
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_report__product_uom_id
-#: model:ir.model.fields,field_description:account.field_account_move_line__product_uom_id
-msgid "Unit of Measure"
-msgstr "计量单位"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/template_generic_coa.py:0
 msgid "United States of America (Generic)"
@@ -16666,8 +16647,8 @@ msgstr "美国（通用）"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Units of Measure"
-msgstr "计量单位"
+msgid "Units & Packagings"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -16789,11 +16770,6 @@ msgstr "不信任的银行"
 #: model:ir.model.fields,field_description:account.field_account_payment_register__untrusted_payments_count
 msgid "Untrusted Payments Count"
 msgstr "不信任的支付次数"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid "UoM"
-msgstr "计量单位"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
@@ -18228,7 +18204,7 @@ msgstr "以下项目的账单"
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
 msgid "by %s"
-msgstr ""
+msgstr "由%s"
 
 #. module: account
 #. odoo-python

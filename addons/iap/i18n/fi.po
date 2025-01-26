@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-01-20 08:41+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,6 +26,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                                    Buy Credit"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                                    Osta krediittejä"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
@@ -50,6 +53,8 @@ msgid ""
 "An error occurred while reaching %s. Please contact Odoo support if this "
 "error persists."
 msgstr ""
+"Tavoitettaessa %s tapahtui virhe. Ota yhteyttä Odoo-tukeen, jos tämä virhe "
+"jatkuu."
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__balance
@@ -93,7 +98,7 @@ msgstr "Luotu"
 #. module: iap
 #: model:iap.service,unit_name:iap.iap_service_reveal
 msgid "Credits"
-msgstr ""
+msgstr "Tekijät"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__description
@@ -103,6 +108,7 @@ msgstr "Kuvaus"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__display_name
+#: model:ir.model.fields,field_description:iap.field_iap_enrich_api__display_name
 #: model:ir.model.fields,field_description:iap.field_iap_service__display_name
 msgid "Display Name"
 msgstr "Näyttönimi"
@@ -110,12 +116,12 @@ msgstr "Näyttönimi"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__warning_user_ids
 msgid "Email Alert Recipients"
-msgstr ""
+msgstr "Sähköpostihälytyksen vastaanottajat"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__warning_threshold
 msgid "Email Alert Threshold"
-msgstr ""
+msgstr "Sähköpostihälytyksen kynnysarvo"
 
 #. module: iap
 #: model:iap.service,description:iap.iap_service_reveal
@@ -124,6 +130,9 @@ msgid ""
 "leads, generate leads based on a set of criteria and enrich the company data"
 " of your opportunities."
 msgstr ""
+"Hanki laadukkaita liidejä ja myyntimahdollisuuksia: muunna verkkosivuston "
+"kävijät liideiksi, luo liidejä tiettyjen kriteerien perusteella ja rikasta "
+"tilaisuuksiesi yritystietoja."
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_root_menu
@@ -151,10 +160,11 @@ msgstr "IAP liidin rikastus API"
 #. module: iap
 #: model:ir.model,name:iap.model_iap_service
 msgid "IAP Service"
-msgstr ""
+msgstr "IAP-palvelu"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__id
+#: model:ir.model.fields,field_description:iap.field_iap_enrich_api__id
 #: model:ir.model.fields,field_description:iap.field_iap_service__id
 msgid "ID"
 msgstr "ID"
@@ -168,7 +178,7 @@ msgstr "Krediitit eivät riitä tämän palvelun suorittamiseen."
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__integer_balance
 msgid "Integer Balance"
-msgstr ""
+msgstr "Kokonaisluku saldo"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__write_uid
@@ -186,13 +196,19 @@ msgstr "Viimeksi päivitetty"
 #. odoo-javascript
 #: code:addons/iap/static/src/action_buttons_widget/action_buttons_widget.xml:0
 msgid "Manage Service & Buy Credits"
-msgstr ""
+msgstr "Hallitse palvelua ja osta krediittejä"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__name
 #: model:ir.model.fields,field_description:iap.field_iap_service__name
 msgid "Name"
 msgstr "Nimi"
+
+#. module: iap
+#. odoo-python
+#: code:addons/iap/models/iap_account.py:0
+msgid "No service exists with the provided technical name"
+msgstr ""
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
@@ -206,17 +222,19 @@ msgid ""
 "One of the email alert recipients doesn't have an email address set. Users: "
 "%s"
 msgstr ""
+"Yhdellä sähköpostihälytyksen vastaanottajista ei ole määritetty "
+"sähköpostiosoitetta. Käyttäjät: %s"
 
 #. module: iap
 #: model:ir.model.constraint,message:iap.constraint_iap_service_unique_technical_name
 msgid "Only one service can exist with a specific technical_name"
-msgstr ""
+msgstr "Vain yksi palvelu voi olla olemassa tietyllä technical_name-nimellä"
 
 #. module: iap
 #. odoo-python
 #: code:addons/iap/models/iap_account.py:0
 msgid "Please set a positive email alert threshold."
-msgstr ""
+msgstr "Aseta positiivinen sähköpostihälytyskynnys."
 
 #. module: iap
 #: model:ir.model.fields.selection,name:iap.selection__iap_account__state__registered
@@ -231,7 +249,7 @@ msgstr "Palvelu"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_locked
 msgid "Service Locked"
-msgstr ""
+msgstr "Palvelu lukittu"
 
 #. module: iap
 #. odoo-javascript
@@ -257,6 +275,8 @@ msgid ""
 "The request to the service timed out. Please contact the author of the app. "
 "The URL it tried to contact was %s"
 msgstr ""
+"Pyyntö palveluun päättyi. Ota yhteyttä sovelluksen tekijään. URL-osoite, "
+"johon se yritti ottaa yhteyttä, oli %s"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__unit_name

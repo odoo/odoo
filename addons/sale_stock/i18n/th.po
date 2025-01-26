@@ -3,15 +3,16 @@
 # 	* sale_stock
 # 
 # Translators:
-# Wil Odoo, 2024
+# Rasareeyar Lappiam, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -152,6 +153,9 @@ msgid ""
 "            Orange: Partially Delivered\n"
 "            Green: Fully Delivered"
 msgstr ""
+"สีน้ำเงิน: ยังไม่ได้จัดส่ง/เริ่มต้น\n"
+"            สีส้ม : จัดส่งบางส่วนแล้ว\n"
+"            สีเขียว : จัดส่งครบถ้วน"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -220,6 +224,31 @@ msgstr ""
 "โดยคำนวณจากระยะเวลานำสินค้าขั้นต่ำของรายการคำสั่งในกรณีของสินค้าบริการ "
 "ในกรณีของการจัดส่ง "
 "นโยบายการจัดส่งของคำสั่งจะถูกนำมาพิจารณาโดยใช้ระยะเวลานำสินค้าขั้นต่ำหรือสูงสุดของรายการคำสั่ง"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_account_move__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_procurement_group__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_product_template__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_stock_rule__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_res_company__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_res_users__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_sale_report__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_forecasted_product_product__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_lot__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_return_picking__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_route__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rule__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__display_name
+msgid "Display Name"
+msgstr "แสดงชื่อ"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
@@ -295,6 +324,31 @@ msgstr "จัดส่งครบแล้ว"
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
 msgid "Has late picking"
 msgstr "มีการรับล่าช้า"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_account_move__id
+#: model:ir.model.fields,field_description:sale_stock.field_account_move_line__id
+#: model:ir.model.fields,field_description:sale_stock.field_procurement_group__id
+#: model:ir.model.fields,field_description:sale_stock.field_product_template__id
+#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_stock_rule__id
+#: model:ir.model.fields,field_description:sale_stock.field_res_company__id
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__id
+#: model:ir.model.fields,field_description:sale_stock.field_res_users__id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel__id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_report__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_forecasted_product_product__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_lot__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move_line__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_picking__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_return_picking__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_route__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rule__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__id
+msgid "ID"
+msgstr "ไอดี"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
@@ -533,6 +587,11 @@ msgstr "เติมสินค้าตามคำสั่งขาย (MTO)
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "Reserved"
 msgstr "สำรองแล้ว"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_return_picking
+msgid "Return Picking"
+msgstr "ส่งคืนการรับ"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -786,7 +845,7 @@ msgstr "จะต้องมีคลังสินค้าสำหรับ
 #. odoo-python
 #: code:addons/sale_stock/models/sale_order.py:0
 msgid "You must set a warehouse on your sale order to proceed."
-msgstr ""
+msgstr "คุณจะต้องตั้งค่าคลังสินค้าในใบสั่งขายของคุณเพื่อดำเนินการต่อ"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so

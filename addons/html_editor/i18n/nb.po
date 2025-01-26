@@ -3,20 +3,20 @@
 # 	* html_editor
 # 
 # Translators:
-# Wil Odoo, 2024
 # Vidar Thomassen, 2024
 # Thor Arne Hvidsten <thor.arne.hvidsten@gmail.com>, 2024
 # Marius Stedjan <marius@stedjan.com>, 2024
 # Lars Aam <lars.aam@vikenfiber.no>, 2024
 # Jorunn D. Newth, 2024
-# Martin Trigaux, 2024
+# Martin Trigaux, 2025
+# Wil Odoo, 2025
 # Rune Restad, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2025-01-20 08:41+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Rune Restad, 2025\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
@@ -41,18 +41,6 @@ msgstr ""
 #: code:addons/html_editor/static/src/main/media/image_description.xml:0
 msgid "'Title tag' is shown as a tooltip when you hover the picture."
 msgstr "'Title'-etiketten vises som et verktøytips når du holder over bildet."
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/image_description.xml:0
-msgid "(ALT Tag)"
-msgstr "(ALT Etikett)"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/image_description.xml:0
-msgid "(TITLE Tag)"
-msgstr "(TITLE Etikett)"
 
 #. module: html_editor
 #. odoo-javascript
@@ -161,6 +149,12 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
+msgid "Add a download box"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_plugin.js:0
 msgid "Add a link"
 msgstr ""
@@ -174,7 +168,7 @@ msgstr ""
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/others/embedded_components/core/table_of_content/table_of_content.xml:0
-msgid "Add headings in this field to fill the Table of Content"
+msgid "Add headings to fill the Table of Contents"
 msgstr ""
 
 #. module: html_editor
@@ -344,12 +338,6 @@ msgstr "Avbryt"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/image_description.xml:0
-msgid "Change media description and tooltip"
-msgstr "Endre beskrivelse og hjelpetekst for media"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/chatgpt/chatgpt_plugin.js:0
 msgid "ChatGPT"
 msgstr ""
@@ -389,14 +377,6 @@ msgstr "Kode"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/fields/html_field.js:0
 msgid "Code view"
-msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/excalidraw_plugin/excalidraw_dialog/excalidraw_dialog.xml:0
-msgid ""
-"Collaborative Links require joining, while Embed Links directly show the "
-"drawing."
 msgstr ""
 
 #. module: html_editor
@@ -510,16 +490,9 @@ msgstr "DailyMotion"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
 #: code:addons/html_editor/static/src/main/media/image_plugin.js:0
 msgid "Default"
 msgstr "Standard"
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
-msgid "Default + Rounded"
-msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -558,16 +531,15 @@ msgid ""
 msgstr ""
 
 #. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/media/media_dialog/media_dialog.js:0
-msgid "Documents"
-msgstr "Dokumenter"
+#: model:ir.model.fields,field_description:html_editor.field_ir_attachment__display_name
+msgid "Display Name"
+msgstr "Visningsnavn"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/core/file/readonly_file.xml:0
-msgid "Download"
-msgstr "Last ned"
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
+msgid "Documents"
+msgstr "Dokumenter"
 
 #. module: html_editor
 #. odoo-javascript
@@ -679,12 +651,6 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/file_plugin/file_plugin.js:0
-msgid "File"
-msgstr "Fil"
-
-#. module: html_editor
-#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/upload_progress_toast/upload_progress_toast.xml:0
 msgid "File has been uploaded"
 msgstr ""
@@ -706,12 +672,6 @@ msgstr ""
 #: code:addons/html_editor/static/src/main/font/gradient_picker.xml:0
 msgid "First color %"
 msgstr ""
-
-#. module: html_editor
-#. odoo-javascript
-#: code:addons/html_editor/static/src/main/link/link_popover.js:0
-msgid "Flat"
-msgstr "Flat"
 
 #. module: html_editor
 #. odoo-javascript
@@ -897,7 +857,7 @@ msgstr "Skjul deleknapp"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/others/embedded_components/plugins/table_of_content_plugin/table_of_content_plugin.js:0
-msgid "Highlight the structure (headings) of this field"
+msgid "Highlight the structure (headings)"
 msgstr ""
 
 #. module: html_editor
@@ -911,6 +871,11 @@ msgstr "Historikk"
 #: code:addons/html_editor/static/src/fields/html_field.js:0
 msgid "Html"
 msgstr "HTML"
+
+#. module: html_editor
+#: model:ir.model.fields,field_description:html_editor.field_ir_attachment__id
+msgid "ID"
+msgstr "ID"
 
 #. module: html_editor
 #. odoo-javascript
@@ -980,6 +945,12 @@ msgstr "Bilde kilde"
 #: model:ir.model.fields,field_description:html_editor.field_ir_attachment__image_width
 msgid "Image Width"
 msgstr "Bilde bredde"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/image_description.xml:0
+msgid "Image description"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1329,6 +1300,12 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/core/excalidraw/readonly_excalidraw.xml:0
+msgid "Open"
+msgstr "Åpen"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Open in a new tab"
 msgstr ""
@@ -1337,6 +1314,14 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/html_editor/static/src/others/embedded_components/core/excalidraw/readonly_excalidraw.xml:0
 msgid "Open in new Window"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/excalidraw_plugin/excalidraw_dialog/excalidraw_dialog.xml:0
+msgid ""
+"Open the share menu of your Excalidraw scene and paste its shareable or "
+"embed link here."
 msgstr ""
 
 #. module: html_editor
@@ -1703,9 +1688,10 @@ msgstr "Tabell"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/core/table_of_content/table_of_content.xml:0
 #: code:addons/html_editor/static/src/others/embedded_components/plugins/table_of_content_plugin/table_of_content_plugin.js:0
-msgid "Table Of Content"
-msgstr "Liste over innhold"
+msgid "Table of Contents"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1892,13 +1878,19 @@ msgstr "URL"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "Upload File"
+msgstr "Last opp fil"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/document_selector.js:0
 msgid "Upload a document"
 msgstr "Last opp et dokument"
 
 #. module: html_editor
 #. odoo-javascript
-#: code:addons/html_editor/static/src/others/embedded_components/plugins/file_plugin/file_plugin.js:0
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
 msgid "Upload a file"
 msgstr "Last opp fil"
 
@@ -2073,8 +2065,20 @@ msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
+msgid "document"
+msgstr "dokument"
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/others/embedded_components/plugins/excalidraw_plugin/excalidraw_dialog/excalidraw_dialog.xml:0
 msgid "e.g. https://link.excalidraw.com/..."
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/media/file_plugin.js:0
+msgid "file"
 msgstr ""
 
 #. module: html_editor
@@ -2082,6 +2086,12 @@ msgstr ""
 #: code:addons/html_editor/static/src/main/media/media_dialog/file_selector.xml:0
 msgid "media-library"
 msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/link/link_popover.xml:0
+msgid "or"
+msgstr "eller"
 
 #. module: html_editor
 #. odoo-javascript

@@ -3,15 +3,16 @@
 # 	* payment_razorpay_oauth
 # 
 # Translators:
-# Wil Odoo, 2024
+# Junko Augias, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-13 15:58+0000\n"
+"POT-Creation-Date: 2025-01-20 08:43+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,24 +33,23 @@ msgstr "エラー発生"
 #. module: payment_razorpay_oauth
 #. odoo-python
 #: code:addons/payment_razorpay_oauth/models/payment_provider.py:0
-#, python-format
 msgid "An error occurred when communicating with the proxy."
-msgstr ""
+msgstr "プロキシとの通信中にエラーが発生しました。"
 
 #. module: payment_razorpay_oauth
 #: model_terms:ir.ui.view,arch_db:payment_razorpay_oauth.authorization_error
 msgid "An error occurred while linking your Razorpay account with Odoo."
-msgstr ""
+msgstr "RazorpayアカウントとOdooの連携中にエラーが発生しました。"
 
 #. module: payment_razorpay_oauth
 #: model_terms:ir.ui.view,arch_db:payment_razorpay_oauth.payment_provider_form_razorpay_oauth
 msgid "Are you sure you want to disconnect?"
-msgstr ""
+msgstr "本当に接続解除しますか?"
 
 #. module: payment_razorpay_oauth
 #: model_terms:ir.ui.view,arch_db:payment_razorpay_oauth.authorization_error
 msgid "Back to the Razorpay provider"
-msgstr ""
+msgstr "Razorpayプロバイダーに戻る"
 
 #. module: payment_razorpay_oauth
 #: model_terms:ir.ui.view,arch_db:payment_razorpay_oauth.payment_provider_form_razorpay_oauth
@@ -59,16 +59,19 @@ msgstr "接続"
 #. module: payment_razorpay_oauth
 #. odoo-python
 #: code:addons/payment_razorpay_oauth/models/payment_provider.py:0
-#, python-format
 msgid "Could not establish the connection."
-msgstr ""
+msgstr "接続できませんでした。"
 
 #. module: payment_razorpay_oauth
 #. odoo-python
 #: code:addons/payment_razorpay_oauth/controllers/onboarding.py:0
-#, python-format
 msgid "Could not find Razorpay provider with id %s"
-msgstr ""
+msgstr "プロバイダー 識別番号 %sが見つかりませんでした。"
+
+#. module: payment_razorpay_oauth
+#: model:ir.model.fields,field_description:payment_razorpay_oauth.field_payment_provider__display_name
+msgid "Display Name"
+msgstr "表示名"
 
 #. module: payment_razorpay_oauth
 #: model_terms:ir.ui.view,arch_db:payment_razorpay_oauth.payment_provider_form_razorpay_oauth
@@ -76,9 +79,13 @@ msgid "Generate your webhook"
 msgstr "Webhookを作成"
 
 #. module: payment_razorpay_oauth
+#: model:ir.model.fields,field_description:payment_razorpay_oauth.field_payment_provider__id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment_razorpay_oauth
 #. odoo-python
 #: code:addons/payment_razorpay_oauth/models/payment_provider.py:0
-#, python-format
 msgid "Other Payment Providers"
 msgstr "他の決済プロバイダー"
 
@@ -90,17 +97,17 @@ msgstr "決済プロバイダー"
 #. module: payment_razorpay_oauth
 #: model:ir.model.fields,field_description:payment_razorpay_oauth.field_payment_provider__razorpay_access_token
 msgid "Razorpay Access Token"
-msgstr ""
+msgstr "Razorpayアクセストークン"
 
 #. module: payment_razorpay_oauth
 #: model:ir.model.fields,field_description:payment_razorpay_oauth.field_payment_provider__razorpay_access_token_expiry
 msgid "Razorpay Access Token Expiry"
-msgstr ""
+msgstr "Razorpayアクセストークン期限"
 
 #. module: payment_razorpay_oauth
 #: model:ir.model.fields,field_description:payment_razorpay_oauth.field_payment_provider__razorpay_account_id
 msgid "Razorpay Account ID"
-msgstr ""
+msgstr "Razorpay アカウントID"
 
 #. module: payment_razorpay_oauth
 #: model:ir.model.fields,field_description:payment_razorpay_oauth.field_payment_provider__razorpay_key_id
@@ -115,12 +122,12 @@ msgstr "Razorpayキーシークレット"
 #. module: payment_razorpay_oauth
 #: model:ir.model.fields,field_description:payment_razorpay_oauth.field_payment_provider__razorpay_public_token
 msgid "Razorpay Public Token"
-msgstr ""
+msgstr "Razorpay公開トークン"
 
 #. module: payment_razorpay_oauth
 #: model:ir.model.fields,field_description:payment_razorpay_oauth.field_payment_provider__razorpay_refresh_token
 msgid "Razorpay Refresh Token"
-msgstr ""
+msgstr "Razorpay更新トークン"
 
 #. module: payment_razorpay_oauth
 #: model:ir.model.fields,field_description:payment_razorpay_oauth.field_payment_provider__razorpay_webhook_secret
@@ -130,16 +137,15 @@ msgstr "Razorpay Webhookシークレット"
 #. module: payment_razorpay_oauth
 #. odoo-python
 #: code:addons/payment_razorpay_oauth/models/payment_provider.py:0
-#, python-format
 msgid ""
 "Razorpay is not available in your country; please use another payment "
 "provider."
-msgstr ""
+msgstr "Razorpayはお客様の国ではご利用いただけません。他の決済プロバイダーをご利用下さい。"
 
 #. module: payment_razorpay_oauth
 #: model_terms:ir.ui.view,arch_db:payment_razorpay_oauth.payment_provider_form_razorpay_oauth
 msgid "Reset Your Razorpay Account"
-msgstr ""
+msgstr "Razorpayアカウントをリセット"
 
 #. module: payment_razorpay_oauth
 #: model:ir.model.fields,help:payment_razorpay_oauth.field_payment_provider__razorpay_key_id
@@ -149,7 +155,7 @@ msgstr "Razorpayのアカウントを識別するためにのみ使用される�
 #. module: payment_razorpay_oauth
 #: model_terms:ir.ui.view,arch_db:payment_razorpay_oauth.payment_provider_form_razorpay_oauth
 msgid "This provider is linked with your Razorpay account."
-msgstr ""
+msgstr "このプロバイダーは、お客様のRazorpayアカウントとリンクされています。"
 
 #. module: payment_razorpay_oauth
 #: model_terms:ir.ui.view,arch_db:payment_razorpay_oauth.payment_provider_form_razorpay_oauth
@@ -163,10 +169,12 @@ msgid ""
 "                    deprecated. Click the \"Connect\" button below to use the recommended OAuth\n"
 "                    method."
 msgstr ""
+"現在、認証情報方式でRazorpayに接続していますが、これは\n"
+"                    非推奨です。推奨されるOAuth方式を使用するには、下の \"接続 \" ボタンをクリックして\n"
+"                    下さい。"
 
 #. module: payment_razorpay_oauth
 #. odoo-python
 #: code:addons/payment_razorpay_oauth/models/payment_provider.py:0
-#, python-format
 msgid "Your Razorpay webhook was successfully set up!"
-msgstr ""
+msgstr "Razorpayのウェブフックが正常に設定されました! "

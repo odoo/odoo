@@ -3,16 +3,17 @@
 # 	* sale
 # 
 # Translators:
-# Wil Odoo, 2024
+# Fernanda Alvarez, 2025
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -98,9 +99,9 @@ msgstr "<b>Envíese la cotización</b> para ver lo que recibirá el cliente."
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
-"        <t t-set=\"transaction_sudo\" t-value=\"object.get_portal_last_transaction()\"></t>\n"
+"        <t t-set=\"transaction_sudo\" t-value=\"object.get_portal_last_transaction()\"/>\n"
 "        Hello,\n"
-"        <br><br>\n"
+"        <br/><br/>\n"
 "        A payment with reference\n"
 "        <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference or ''\">SOOO49</span>\n"
 "        amounting\n"
@@ -109,7 +110,7 @@ msgid ""
 "        <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span>\n"
 "        <t t-if=\"transaction_sudo and transaction_sudo.state == 'pending'\">\n"
 "            is pending.\n"
-"            <br>\n"
+"            <br/>\n"
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid + transaction_sudo.amount, object.amount_total) &gt;= 0 and object.state in ('draft', 'sent')\">\n"
 "                Your order will be confirmed once the payment is confirmed.\n"
 "            </t>\n"
@@ -122,64 +123,64 @@ msgid ""
 "        <t t-else=\"\">\n"
 "            has been confirmed.\n"
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid, object.amount_total) &lt; 0\">\n"
-"                <br>\n"
+"                <br/>\n"
 "                <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total - object.amount_paid, object.currency_id) or ''\">$ 10.00</span>\n"
 "                remains to be paid.\n"
 "            </t>\n"
 "        </t>\n"
-"        <br><br>\n"
+"        <br/><br/>\n"
 "        Thank you for your trust!\n"
-"        <br>\n"
+"        <br/>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
-"            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "        </t>\n"
-"        <br><br>\n"
+"        <br/><br/>\n"
 "    </p>\n"
 "</div>\n"
 "            "
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
-"        <t t-set=\"transaction_sudo\" t-value=\"object.get_portal_last_transaction()\"></t>\n"
+"        <t t-set=\"transaction_sudo\" t-value=\"object.get_portal_last_transaction()\"/>\n"
 "        Hola,\n"
-"        <br><br>\n"
+"        <br/><br/>\n"
 "        El pago con la referencia\n"
 "        <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference or ''\">SOOO49</span>\n"
-"        por un importe de\n"
-"        <span style=\"font-weight:bold;\" t-out=\"format_amount(transaction_sudo.amount, object.currency_id) or ''\">$10.00</span>\n"
+"        por un total de\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount(transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
 "        para la orden\n"
 "        <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span>\n"
 "        <t t-if=\"transaction_sudo and transaction_sudo.state == 'pending'\">\n"
 "            está pendiente.\n"
-"            <br>\n"
+"            <br/>\n"
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid + transaction_sudo.amount, object.amount_total) &gt;= 0 and object.state in ('draft', 'sent')\">\n"
-"                Confirmaremos su orden una vez que confirmemos el pago.\n"
+"                Confirmaremos su orden una vez que se confirme el pago.\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                Una vez que se confirme, faltarán\n"
-"                <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total - object.amount_paid - transaction_sudo.amount, object.currency_id) or ''\">$10.00</span>\n"
+"                Una vez que se confirmen, faltarán\n"
+"                <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total - object.amount_paid - transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
 "                por pagar.\n"
 "            </t>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            ha sido confirmado.\n"
+"            se confirmó.\n"
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid, object.amount_total) &lt; 0\">\n"
-"                <br>\n"
-"                Faltan <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total - object.amount_paid, object.currency_id) or ''\">$10.00</span>\n"
-"                por pagar.\n"
+"                <br/>\n"
+"                <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total - object.amount_paid, object.currency_id) or ''\">$ 10.00</span>\n"
+"                faltan por pagar.\n"
 "            </t>\n"
 "        </t>\n"
-"        <br><br>\n"
+"        <br/><br/>\n"
 "        Agradecemos su confianza.\n"
-"        <br>\n"
+"        <br/>\n"
 "        No dude en ponerse en contacto con nosotros si tiene alguna pregunta.\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
-"            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "        </t>\n"
-"        <br><br>\n"
+"        <br/><br/>\n"
 "    </p>\n"
 "</div>\n"
 "            "
@@ -190,23 +191,23 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
 "        Hello,\n"
-"        <br><br>\n"
-"        <t t-set=\"tx_sudo\" t-value=\"object.get_portal_last_transaction()\"></t>\n"
+"        <br/><br/>\n"
+"        <t t-set=\"tx_sudo\" t-value=\"object.get_portal_last_transaction()\"/>\n"
 "        Your order <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span> amounting in <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
 "        <t t-if=\"object.state == 'sale' or (tx_sudo and tx_sudo.state in ('done', 'authorized'))\">\n"
-"            has been confirmed.<br>\n"
+"            has been confirmed.<br/>\n"
 "            Thank you for your trust!\n"
 "        </t>\n"
 "        <t t-elif=\"tx_sudo and tx_sudo.state == 'pending'\">\n"
 "            is pending. It will be confirmed when the payment is received.\n"
 "            <t t-if=\"object.reference\">\n"
-"                Your payment reference is <span style=\"font-weight:bold;\" t-out=\"object.reference or ''\"></span>.\n"
+"                Your payment reference is <span style=\"font-weight:bold;\" t-out=\"object.reference or ''\"/>.\n"
 "            </t>\n"
 "        </t>\n"
-"        <br>\n"
-"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"></t>\n"
+"        <br/>\n"
+"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/>\n"
 "        <t t-if=\"documents\">\n"
-"            <br> \n"
+"            <br/> \n"
 "            <t t-if=\"len(documents)&gt;1\">\n"
 "                Here are some additional documents that may interest you:\n"
 "            </t>\n"
@@ -216,25 +217,25 @@ msgid ""
 "            <ul style=\"margin-bottom: 0;\">\n"
 "                <t t-foreach=\"documents\" t-as=\"document\">\n"
 "                    <li style=\"font-size: 13px;\">\n"
-"                        <a t-out=\"document.ir_attachment_id.name\" t-att-href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-target=\"target\"></a>\n"
+"                        <a t-out=\"document.ir_attachment_id.name\" t-att-href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-target=\"target\"/>\n"
 "                    </li>\n"
 "                </t>\n"
 "            </ul>\n"
 "        </t>\n"
-"        <br>\n"
+"        <br/>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
-"            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "        </t>\n"
-"        <br><br>\n"
+"        <br/><br/>\n"
 "    </p>\n"
 "<t t-if=\"hasattr(object, 'website_id') and object.website_id\">\n"
 "    <div style=\"margin: 0px; padding: 0px;\">\n"
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse; white-space: nowrap;\">\n"
 "            <tr style=\"border-bottom: 2px solid #dee2e6;\">\n"
 "                <td style=\"width: 150px;\"><span style=\"font-weight:bold;\">Products</span></td>\n"
-"                <td></td>\n"
+"                <td/>\n"
 "                <td width=\"15%\" align=\"center\"><span style=\"font-weight:bold;\">Quantity</span></td>\n"
 "                <td width=\"20%\" align=\"right\">\n"
 "                    <span style=\"font-weight:bold;\">\n"
@@ -248,20 +249,20 @@ msgid ""
 "                </td>\n"
 "            </tr>\n"
 "        </table>\n"
-"        <t t-set=\"current_subtotal\" t-value=\"0\"></t>\n"
+"        <t t-set=\"current_subtotal\" t-value=\"0\"/>\n"
 "        <t t-foreach=\"object.order_line\" t-as=\"line\">\n"
-"            <t t-set=\"line_subtotal\" t-value=\"                     line.price_subtotal                     if object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'                     else line.price_total                 \"></t>\n"
-"            <t t-set=\"current_subtotal\" t-value=\"current_subtotal + line_subtotal\"></t>\n"
+"            <t t-set=\"line_subtotal\" t-value=\"                     line.price_subtotal                     if object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'                     else line.price_total                 \"/>\n"
+"            <t t-set=\"current_subtotal\" t-value=\"current_subtotal + line_subtotal\"/>\n"
 "            <t t-if=\"(not hasattr(line, 'is_delivery') or not line.is_delivery) and (                     line.display_type in ['line_section', 'line_note']                     or line.product_type == 'combo'                 )\">\n"
 "                <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
-"                    <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number or 0\"></t>\n"
+"                    <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number or 0\"/>\n"
 "                    <tr t-att-style=\"'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
-"                        <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number + 1\"></t>\n"
+"                        <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number + 1\"/>\n"
 "                        <td colspan=\"4\">\n"
 "                            <t t-if=\"line.display_type == 'line_section' or line.product_type == 'combo'\">\n"
 "                                <span style=\"font-weight:bold;\" t-out=\"line.name or ''\">Taking care of Trees Course</span>\n"
-"                                <t t-set=\"current_section\" t-value=\"line\"></t>\n"
-"                                <t t-set=\"current_subtotal\" t-value=\"0\"></t>\n"
+"                                <t t-set=\"current_section\" t-value=\"line\"/>\n"
+"                                <t t-set=\"current_subtotal\" t-value=\"0\"/>\n"
 "                            </t>\n"
 "                            <t t-elif=\"line.display_type == 'line_note'\">\n"
 "                                <i t-out=\"line.name or ''\">Taking care of Trees Course</i>\n"
@@ -272,11 +273,11 @@ msgid ""
 "            </t>\n"
 "            <t t-elif=\"(not hasattr(line, 'is_delivery') or not line.is_delivery)\">\n"
 "                <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
-"                    <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number or 0\"></t>\n"
+"                    <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number or 0\"/>\n"
 "                    <tr t-att-style=\"'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
-"                        <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number + 1\"></t>\n"
+"                        <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number + 1\"/>\n"
 "                        <td style=\"width: 150px;\">\n"
-"                            <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 64px; height: 64px; object-fit: contain;\" alt=\"Product image\">\n"
+"                            <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 64px; height: 64px; object-fit: contain;\" alt=\"Product image\"/>\n"
 "                        </td>\n"
 "                        <td align=\"left\" t-out=\"line.product_id.name or ''\">\tTaking care of Trees Course</td>\n"
 "                        <td width=\"15%\" align=\"center\" t-out=\"line.product_uom_qty or ''\">1</td>\n"
@@ -292,11 +293,11 @@ msgid ""
 "                </table>\n"
 "            </t>\n"
 "            <t t-if=\"current_section and (                     line_last                     or object.order_line[line_index+1].display_type == 'line_section'                     or object.order_line[line_index+1].product_type == 'combo'                     or (                         line.combo_item_id                         and not object.order_line[line_index+1].combo_item_id                     )                 ) and not line.is_downpayment\">\n"
-"                <t t-set=\"current_section\" t-value=\"None\"></t>\n"
+"                <t t-set=\"current_section\" t-value=\"None\"/>\n"
 "                <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
-"                    <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number or 0\"></t>\n"
+"                    <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number or 0\"/>\n"
 "                    <tr t-att-style=\"'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
-"                        <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number + 1\"></t>\n"
+"                        <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number + 1\"/>\n"
 "                        <td style=\"width: 100%\" align=\"right\">\n"
 "                            <span style=\"font-weight: bold;\">Subtotal:</span>\n"
 "                            <span t-out=\"format_amount(current_subtotal, object.currency_id) or ''\">$ 10.00</span>\n"
@@ -309,12 +310,12 @@ msgid ""
 "    <div style=\"margin: 0px; padding: 0px;\" t-if=\"hasattr(object, 'carrier_id') and object.carrier_id\">\n"
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px; white-space: nowrap;\" align=\"right\">\n"
 "            <tr>\n"
-"                <td style=\"width: 60%\"></td>\n"
+"                <td style=\"width: 60%\"/>\n"
 "                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><span style=\"font-weight:bold;\">Delivery:</span></td>\n"
 "                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object.amount_delivery, object.currency_id) or ''\">$ 0.00</td>\n"
 "            </tr>\n"
 "            <tr>\n"
-"                <td style=\"width: 60%\"></td>\n"
+"                <td style=\"width: 60%\"/>\n"
 "                <td style=\"width: 30%;\" align=\"right\"><span style=\"font-weight:bold;\">Untaxed Amount:</span></td>\n"
 "                <td style=\"width: 10%;\" align=\"right\" t-out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">$ 10.00</td>\n"
 "            </tr>\n"
@@ -323,7 +324,7 @@ msgid ""
 "    <div style=\"margin: 0px; padding: 0px;\" t-else=\"\">\n"
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px; white-space: nowrap;\" align=\"right\">\n"
 "            <tr>\n"
-"                <td style=\"width: 60%\"></td>\n"
+"                <td style=\"width: 60%\"/>\n"
 "                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><span style=\"font-weight:bold;\">Untaxed Amount:</span></td>\n"
 "                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">$ 10.00</td>\n"
 "            </tr>\n"
@@ -332,12 +333,12 @@ msgid ""
 "    <div style=\"margin: 0px; padding: 0px;\">\n"
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px; white-space: nowrap;\" align=\"right\">\n"
 "            <tr>\n"
-"                <td style=\"width: 60%\"></td>\n"
+"                <td style=\"width: 60%\"/>\n"
 "                <td style=\"width: 30%;\" align=\"right\"><span style=\"font-weight:bold;\">Taxes:</span></td>\n"
 "                <td style=\"width: 10%;\" align=\"right\" t-out=\"format_amount(object.amount_tax, object.currency_id) or ''\">$ 0.00</td>\n"
 "            </tr>\n"
 "            <tr>\n"
-"                <td style=\"width: 60%\"></td>\n"
+"                <td style=\"width: 60%\"/>\n"
 "                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><span style=\"font-weight:bold;\">Total:</span></td>\n"
 "                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</td>\n"
 "            </tr>\n"
@@ -359,10 +360,10 @@ msgid ""
 "                <td>\n"
 "                    <span style=\"font-weight:bold;\">Payment Method:</span>\n"
 "                    <t t-if=\"tx_sudo.token_id\">\n"
-"                        <t t-out=\"tx_sudo.token_id.display_name or ''\"></t>\n"
+"                        <t t-out=\"tx_sudo.token_id.display_name or ''\"/>\n"
 "                    </t>\n"
 "                    <t t-else=\"\">\n"
-"                        <t t-out=\"tx_sudo.provider_id.sudo().name or ''\"></t>\n"
+"                        <t t-out=\"tx_sudo.provider_id.sudo().name or ''\"/>\n"
 "                    </t>\n"
 "                    (<t t-out=\"format_amount(tx_sudo.amount, object.currency_id) or ''\">$ 10.00</t>)\n"
 "                </td>\n"
@@ -373,7 +374,7 @@ msgid ""
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
 "            <tr>\n"
 "                <td>\n"
-"                    <br>\n"
+"                    <br/>\n"
 "                    <span style=\"font-weight:bold;\">Ship to:</span>\n"
 "                    <t t-out=\"object.partner_shipping_id.street or ''\">1201 S Figueroa St</t>\n"
 "                    <t t-out=\"object.partner_shipping_id.city or ''\">Los Angeles</t>\n"
@@ -387,7 +388,7 @@ msgid ""
 "            <tr>\n"
 "                <td>\n"
 "                    <span style=\"font-weight:bold;\">Shipping Method:</span>\n"
-"                    <t t-out=\"object.carrier_id.name or ''\"></t>\n"
+"                    <t t-out=\"object.carrier_id.name or ''\"/>\n"
 "                    <t t-if=\"object.amount_delivery == 0.0\">\n"
 "                        (Free)\n"
 "                    </t>\n"
@@ -399,7 +400,7 @@ msgid ""
 "            <tr t-if=\"object.carrier_id.carrier_description\">\n"
 "                <td>\n"
 "                    <strong>Shipping Description:</strong>\n"
-"                    <t t-out=\"object.carrier_id.carrier_description\"></t>\n"
+"                    <t t-out=\"object.carrier_id.carrier_description\"/>\n"
 "                </td>\n"
 "            </tr>\n"
 "        </table>\n"
@@ -410,51 +411,51 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
 "        Hola,\n"
-"        <br><br>\n"
-"        <t t-set=\"tx_sudo\" t-value=\"object.get_portal_last_transaction()\"></t>\n"
-"        Su orden <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span> por un importe de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$10.00</span>\n"
+"        <br/><br/>\n"
+"        <t t-set=\"tx_sudo\" t-value=\"object.get_portal_last_transaction()\"/>\n"
+"        Su orden <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span> por un importe de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
 "        <t t-if=\"object.state == 'sale' or (tx_sudo and tx_sudo.state in ('done', 'authorized'))\">\n"
-"            se confirmó.<br>\n"
+"            se confirmó.<br/>\n"
 "            Agradecemos su confianza.\n"
 "        </t>\n"
 "        <t t-elif=\"tx_sudo and tx_sudo.state == 'pending'\">\n"
-"             está pendiente. Se confirmará cuando recibamos su pago.\n"
+"            está pendiente. Se confirmará cuando recibamos su pago.\n"
 "            <t t-if=\"object.reference\">\n"
-"                La referencia de pago es <span style=\"font-weight:bold;\" t-out=\"object.reference or ''\"></span>.\n"
+"                La referencia de pago es <span style=\"font-weight:bold;\" t-out=\"object.reference or ''\"/>.\n"
 "            </t>\n"
 "        </t>\n"
-"        <br>\n"
-"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"></t>\n"
+"        <br/>\n"
+"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/>\n"
 "        <t t-if=\"documents\">\n"
-"            <br> \n"
+"            <br/> \n"
 "            <t t-if=\"len(documents)&gt;1\">\n"
 "                A continuación encontrará algunos documentos adicionales que podrían interesarle:\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                 A continuación encontrará otro documento que podría interesarle:\n"
+"                A continuación encontrará otro documento que podría interesarle:\n"
 "            </t>\n"
 "            <ul style=\"margin-bottom: 0;\">\n"
 "                <t t-foreach=\"documents\" t-as=\"document\">\n"
 "                    <li style=\"font-size: 13px;\">\n"
-"                        <a t-out=\"document.ir_attachment_id.name\" t-att-href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-target=\"target\"></a>\n"
+"                        <a t-out=\"document.ir_attachment_id.name\" t-att-href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-target=\"target\"/>\n"
 "                    </li>\n"
 "                </t>\n"
 "            </ul>\n"
 "        </t>\n"
-"        <br>\n"
+"        <br/>\n"
 "        No dude en ponerse en contacto con nosotros si tiene alguna pregunta.\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
-"            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "        </t>\n"
-"        <br><br>\n"
+"        <br/><br/>\n"
 "    </p>\n"
 "<t t-if=\"hasattr(object, 'website_id') and object.website_id\">\n"
 "    <div style=\"margin: 0px; padding: 0px;\">\n"
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse; white-space: nowrap;\">\n"
 "            <tr style=\"border-bottom: 2px solid #dee2e6;\">\n"
 "                <td style=\"width: 150px;\"><span style=\"font-weight:bold;\">Productos</span></td>\n"
-"                <td></td>\n"
+"                <td/>\n"
 "                <td width=\"15%\" align=\"center\"><span style=\"font-weight:bold;\">Cantidad</span></td>\n"
 "                <td width=\"20%\" align=\"right\">\n"
 "                    <span style=\"font-weight:bold;\">\n"
@@ -468,20 +469,20 @@ msgstr ""
 "                </td>\n"
 "            </tr>\n"
 "        </table>\n"
-"        <t t-set=\"current_subtotal\" t-value=\"0\"></t>\n"
+"        <t t-set=\"current_subtotal\" t-value=\"0\"/>\n"
 "        <t t-foreach=\"object.order_line\" t-as=\"line\">\n"
-"            <t t-set=\"line_subtotal\" t-value=\"                     line.price_subtotal                     if object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'                     else line.price_total                 \"></t>\n"
-"            <t t-set=\"current_subtotal\" t-value=\"current_subtotal + line_subtotal\"></t>\n"
+"            <t t-set=\"line_subtotal\" t-value=\"                     line.price_subtotal                     if object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'                     else line.price_total                 \"/>\n"
+"            <t t-set=\"current_subtotal\" t-value=\"current_subtotal + line_subtotal\"/>\n"
 "            <t t-if=\"(not hasattr(line, 'is_delivery') or not line.is_delivery) and (                     line.display_type in ['line_section', 'line_note']                     or line.product_type == 'combo'                 )\">\n"
 "                <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
-"                    <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number or 0\"></t>\n"
+"                    <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number or 0\"/>\n"
 "                    <tr t-att-style=\"'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
-"                        <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number + 1\"></t>\n"
+"                        <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number + 1\"/>\n"
 "                        <td colspan=\"4\">\n"
 "                            <t t-if=\"line.display_type == 'line_section' or line.product_type == 'combo'\">\n"
 "                                <span style=\"font-weight:bold;\" t-out=\"line.name or ''\">Curso sobre el cuidado de los árboles</span>\n"
-"                                <t t-set=\"current_section\" t-value=\"line\"></t>\n"
-"                                <t t-set=\"current_subtotal\" t-value=\"0\"></t>\n"
+"                                <t t-set=\"current_section\" t-value=\"line\"/>\n"
+"                                <t t-set=\"current_subtotal\" t-value=\"0\"/>\n"
 "                            </t>\n"
 "                            <t t-elif=\"line.display_type == 'line_note'\">\n"
 "                                <i t-out=\"line.name or ''\">Curso sobre el cuidado de los árboles</i>\n"
@@ -492,34 +493,34 @@ msgstr ""
 "            </t>\n"
 "            <t t-elif=\"(not hasattr(line, 'is_delivery') or not line.is_delivery)\">\n"
 "                <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
-"                    <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number or 0\"></t>\n"
+"                    <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number or 0\"/>\n"
 "                    <tr t-att-style=\"'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
-"                        <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number + 1\"></t>\n"
+"                        <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number + 1\"/>\n"
 "                        <td style=\"width: 150px;\">\n"
-"                            <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 64px; height: 64px; object-fit: contain;\" alt=\"Product image\">\n"
+"                            <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 64px; height: 64px; object-fit: contain;\" alt=\"Product image\"/>\n"
 "                        </td>\n"
 "                        <td align=\"left\" t-out=\"line.product_id.name or ''\">\tCurso sobre el cuidado de los árboles</td>\n"
 "                        <td width=\"15%\" align=\"center\" t-out=\"line.product_uom_qty or ''\">1</td>\n"
 "                        <td width=\"20%\" align=\"right\"><span style=\"font-weight:bold; white-space: nowrap;\">\n"
 "                        <t t-if=\"object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'\">\n"
-"                            <t t-out=\"format_amount(line.price_reduce_taxexcl, object.currency_id) or ''\">$10.00</t>\n"
+"                            <t t-out=\"format_amount(line.price_reduce_taxexcl, object.currency_id) or ''\">$ 10.00</t>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
-"                            <t t-out=\"format_amount(line.price_reduce_taxinc, object.currency_id) or ''\">$10.00</t>\n"
+"                            <t t-out=\"format_amount(line.price_reduce_taxinc, object.currency_id) or ''\">$ 10.00</t>\n"
 "                        </t>\n"
 "                        </span></td>\n"
 "                    </tr>\n"
 "                </table>\n"
 "            </t>\n"
 "            <t t-if=\"current_section and (                     line_last                     or object.order_line[line_index+1].display_type == 'line_section'                     or object.order_line[line_index+1].product_type == 'combo'                     or (                         line.combo_item_id                         and not object.order_line[line_index+1].combo_item_id                     )                 ) and not line.is_downpayment\">\n"
-"                <t t-set=\"current_section\" t-value=\"None\"></t>\n"
+"                <t t-set=\"current_section\" t-value=\"None\"/>\n"
 "                <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
-"                    <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number or 0\"></t>\n"
+"                    <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number or 0\"/>\n"
 "                    <tr t-att-style=\"'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
-"                        <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number + 1\"></t>\n"
+"                        <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number + 1\"/>\n"
 "                        <td style=\"width: 100%\" align=\"right\">\n"
 "                            <span style=\"font-weight: bold;\">Subtotal:</span>\n"
-"                            <span t-out=\"format_amount(current_subtotal, object.currency_id) or ''\">$10.00</span>\n"
+"                            <span t-out=\"format_amount(current_subtotal, object.currency_id) or ''\">$ 10.00</span>\n"
 "                        </td>\n"
 "                    </tr>\n"
 "                </table>\n"
@@ -529,37 +530,37 @@ msgstr ""
 "    <div style=\"margin: 0px; padding: 0px;\" t-if=\"hasattr(object, 'carrier_id') and object.carrier_id\">\n"
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px; white-space: nowrap;\" align=\"right\">\n"
 "            <tr>\n"
-"                <td style=\"width: 60%\"></td>\n"
+"                <td style=\"width: 60%\"/>\n"
 "                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><span style=\"font-weight:bold;\">Entrega:</span></td>\n"
-"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object.amount_delivery, object.currency_id) or ''\">$0.00</td>\n"
+"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object.amount_delivery, object.currency_id) or ''\">$ 0.00</td>\n"
 "            </tr>\n"
 "            <tr>\n"
-"                <td style=\"width: 60%\"></td>\n"
+"                <td style=\"width: 60%\"/>\n"
 "                <td style=\"width: 30%;\" align=\"right\"><span style=\"font-weight:bold;\">Subtotal:</span></td>\n"
-"                <td style=\"width: 10%;\" align=\"right\" t-out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">$10.00</td>\n"
+"                <td style=\"width: 10%;\" align=\"right\" t-out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">$ 10.00</td>\n"
 "            </tr>\n"
 "        </table>\n"
 "    </div>\n"
 "    <div style=\"margin: 0px; padding: 0px;\" t-else=\"\">\n"
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px; white-space: nowrap;\" align=\"right\">\n"
 "            <tr>\n"
-"                <td style=\"width: 60%\"></td>\n"
+"                <td style=\"width: 60%\"/>\n"
 "                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><span style=\"font-weight:bold;\">Subtotal:</span></td>\n"
-"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">$10.00</td>\n"
+"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">$ 10.00</td>\n"
 "            </tr>\n"
 "        </table>\n"
 "    </div>\n"
 "    <div style=\"margin: 0px; padding: 0px;\">\n"
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px; white-space: nowrap;\" align=\"right\">\n"
 "            <tr>\n"
-"                <td style=\"width: 60%\"></td>\n"
+"                <td style=\"width: 60%\"/>\n"
 "                <td style=\"width: 30%;\" align=\"right\"><span style=\"font-weight:bold;\">Impuestos:</span></td>\n"
-"                <td style=\"width: 10%;\" align=\"right\" t-out=\"format_amount(object.amount_tax, object.currency_id) or ''\">$0.00</td>\n"
+"                <td style=\"width: 10%;\" align=\"right\" t-out=\"format_amount(object.amount_tax, object.currency_id) or ''\">$ 0.00</td>\n"
 "            </tr>\n"
 "            <tr>\n"
-"                <td style=\"width: 60%\"></td>\n"
+"                <td style=\"width: 60%\"/>\n"
 "                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><span style=\"font-weight:bold;\">Total:</span></td>\n"
-"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$10.00</td>\n"
+"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</td>\n"
 "            </tr>\n"
 "        </table>\n"
 "    </div>\n"
@@ -569,7 +570,7 @@ msgstr ""
 "                <td style=\"padding-top: 10px;\">\n"
 "                    <span style=\"font-weight:bold;\">Dirección de facturación:</span>\n"
 "                    <t t-out=\"object.partner_invoice_id.street or ''\">1201 S Figueroa St</t>\n"
-"                    <t t-out=\"object.partner_invoice_id.city or ''\">Los Ángeles</t>\n"
+"                    <t t-out=\"object.partner_invoice_id.city or ''\">Los Angeles</t>\n"
 "                    <t t-out=\"object.partner_invoice_id.state_id.name or ''\">California</t>\n"
 "                    <t t-out=\"object.partner_invoice_id.zip or ''\">90015</t>\n"
 "                    <t t-out=\"object.partner_invoice_id.country_id.name or ''\">Estados Unidos</t>\n"
@@ -579,12 +580,12 @@ msgstr ""
 "                <td>\n"
 "                    <span style=\"font-weight:bold;\">Método de pago:</span>\n"
 "                    <t t-if=\"tx_sudo.token_id\">\n"
-"                        <t t-out=\"tx_sudo.token_id.display_name or ''\"></t>\n"
+"                        <t t-out=\"tx_sudo.token_id.display_name or ''\"/>\n"
 "                    </t>\n"
 "                    <t t-else=\"\">\n"
-"                        <t t-out=\"tx_sudo.provider_id.sudo().name or ''\"></t>\n"
+"                        <t t-out=\"tx_sudo.provider_id.sudo().name or ''\"/>\n"
 "                    </t>\n"
-"                    (<t t-out=\"format_amount(tx_sudo.amount, object.currency_id) or ''\">$10.00</t>)\n"
+"                    (<t t-out=\"format_amount(tx_sudo.amount, object.currency_id) or ''\">$ 10.00</t>)\n"
 "                </td>\n"
 "            </tr>\n"
 "        </table>\n"
@@ -593,10 +594,10 @@ msgstr ""
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
 "            <tr>\n"
 "                <td>\n"
-"                    <br>\n"
+"                    <br/>\n"
 "                    <span style=\"font-weight:bold;\">Dirección de envío:</span>\n"
 "                    <t t-out=\"object.partner_shipping_id.street or ''\">1201 S Figueroa St</t>\n"
-"                    <t t-out=\"object.partner_shipping_id.city or ''\">Los Ángeles</t>\n"
+"                    <t t-out=\"object.partner_shipping_id.city or ''\">Los Angeles</t>\n"
 "                    <t t-out=\"object.partner_shipping_id.state_id.name or ''\">California</t>\n"
 "                    <t t-out=\"object.partner_shipping_id.zip or ''\">90015</t>\n"
 "                    <t t-out=\"object.partner_shipping_id.country_id.name or ''\">Estados Unidos</t>\n"
@@ -607,19 +608,19 @@ msgstr ""
 "            <tr>\n"
 "                <td>\n"
 "                    <span style=\"font-weight:bold;\">Método de envío:</span>\n"
-"                    <t t-out=\"object.carrier_id.name or ''\"></t>\n"
+"                    <t t-out=\"object.carrier_id.name or ''\"/>\n"
 "                    <t t-if=\"object.amount_delivery == 0.0\">\n"
 "                        (Gratis)\n"
 "                    </t>\n"
 "                    <t t-else=\"\">\n"
-"                        (<t t-out=\"format_amount(object.amount_delivery, object.currency_id) or ''\">$10.00</t>)\n"
+"                        (<t t-out=\"format_amount(object.amount_delivery, object.currency_id) or ''\">$ 10.00</t>)\n"
 "                    </t>\n"
 "                </td>\n"
 "            </tr>\n"
 "            <tr t-if=\"object.carrier_id.carrier_description\">\n"
 "                <td>\n"
-"                    <strong>Descripción del envío:</strong>\n"
-"                    <t t-out=\"object.carrier_id.carrier_description\"></t>\n"
+"                    <strong>Descripción de envío:</strong>\n"
+"                    <t t-out=\"object.carrier_id.carrier_description\"/>\n"
 "                </td>\n"
 "            </tr>\n"
 "        </table>\n"
@@ -632,28 +633,18 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"></t>\n"
+"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
 "        Hello,\n"
-"        <br><br>\n"
-"        Your\n"
-"        <t t-if=\"ctx.get('proforma')\">\n"
-"            Pro forma invoice for <t t-out=\"doc_name or ''\">quotation</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
-"            <t t-if=\"object.origin\">\n"
-"                (with reference: <t t-out=\"object.origin or ''\"></t> )\n"
-"            </t>\n"
-"            amounting in <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> is available.\n"
+"        <br/><br/>\n"
+"        Your <t t-out=\"doc_name or ''\">quotation</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"/>\n"
+"        <t t-if=\"object.origin\">\n"
+"            (with reference: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "        </t>\n"
-"        <t t-else=\"\">\n"
-"            <t t-out=\"doc_name or ''\">quotation</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"></span>\n"
-"            <t t-if=\"object.origin\">\n"
-"                (with reference: <t t-out=\"object.origin or ''\">S00052</t> )\n"
-"            </t>\n"
-"            amounting in <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> is ready for review.\n"
-"        </t>\n"
-"        <br>\n"
-"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"></t>\n"
+"        amounting in <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> is ready for review.\n"
+"        <br/>\n"
+"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/>\n"
 "        <t t-if=\"documents\">\n"
-"            <br> \n"
+"            <br/> \n"
 "            <t t-if=\"len(documents)&gt;1\">\n"
 "                Here are some additional documents that may interest you:\n"
 "            </t>\n"
@@ -663,79 +654,56 @@ msgid ""
 "            <ul style=\"margin-bottom: 0;\">\n"
 "                <t t-foreach=\"documents\" t-as=\"document\">\n"
 "                    <li style=\"font-size: 13px;\">\n"
-"                        <a t-out=\"document.ir_attachment_id.name\" t-att-href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-target=\"target\"></a>\n"
+"                        <a t-out=\"document.ir_attachment_id.name\" t-att-href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-target=\"target\"/>\n"
 "                    </li>\n"
 "                </t>\n"
 "            </ul>\n"
 "        </t>\n"
-"        <br>\n"
+"        <br/>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
-"            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "        </t>\n"
-"        <br><br>\n"
+"        <br/><br/>\n"
 "    </p>\n"
 "</div>\n"
 "            "
 msgstr ""
+
+#. module: sale
+#: model:mail.template,body_html:sale.email_template_proforma
+msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'cotización' if object.state in ('draft', 'sent') else 'orden'\"></t>\n"
-"        Hola,\n"
-"        <br><br>\n"
-"        Su\n"
-"        <t t-if=\"ctx.get('proforma')\">\n"
-"            factura proforma para la <t t-out=\"doc_name or ''\">cotización</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
-"            <t t-if=\"object.origin\">\n"
-"                (con referencia: <t t-out=\"object.origin or ''\"></t> )\n"
-"            </t>\n"
-"            por un importe de <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> está disponible.\n"
+"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
+"        Hello,\n"
+"        <br/><br/>\n"
+"        Your Pro forma invoice for <t t-out=\"doc_name or ''\">quotation</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"        <t t-if=\"object.origin\">\n"
+"            (with reference: <t t-out=\"object.origin or ''\"/> )\n"
 "        </t>\n"
-"        <t t-else=\"\">\n"
-"            <t t-out=\"doc_name or ''\">cotización</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"></span>\n"
-"            <t t-if=\"object.origin\">\n"
-"                (con referencia: <t t-out=\"object.origin or ''\">S00052</t> )\n"
-"            </t>\n"
-"            por un importe de <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> está lista para su revisión.\n"
+"        amounting in <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> is available.\n"
+"        <br/><br/>\n"
+"        Do not hesitate to contact us if you have any questions.\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "        </t>\n"
-"        <br>\n"
-"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"></t>\n"
-"        <t t-if=\"documents\">\n"
-"            <br> \n"
-"            <t t-if=\"len(documents)&gt;1\">\n"
-"                Aquí hay algunos documentos adicionales que podrían interesarle:\n"
-"            </t>\n"
-"            <t t-else=\"\">\n"
-"                Aquí hay un documento adicional que podría interesarle:\n"
-"            </t>\n"
-"            <ul style=\"margin-bottom: 0;\">\n"
-"                <t t-foreach=\"documents\" t-as=\"document\">\n"
-"                    <li style=\"font-size: 13px;\">\n"
-"                        <a t-out=\"document.ir_attachment_id.name\" t-att-href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-target=\"target\"></a>\n"
-"                    </li>\n"
-"                </t>\n"
-"            </ul>\n"
-"        </t>\n"
-"        <br>\n"
-"        Si tiene alguna pregunta, no dude en ponerse en contacto con nosotros.\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
-"            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
-"        </t>\n"
-"        <br><br>\n"
+"        <br/><br/>\n"
 "    </p>\n"
 "</div>\n"
 "            "
+msgstr ""
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_cancellation
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"object.type_name\"></t>\n"
+"        <t t-set=\"doc_name\" t-value=\"object.type_name\"/>\n"
 "        Dear <t t-out=\"object.partner_id.name or ''\">user</t>,\n"
-"        <br><br>\n"
+"        <br/><br/>\n"
 "        Please be advised that your\n"
 "        <t t-out=\"doc_name or ''\">quotation</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
 "        <t t-if=\"object.origin\">\n"
@@ -743,28 +711,28 @@ msgid ""
 "        </t>\n"
 "        has been cancelled. Therefore, you should not be charged further for this order.\n"
 "        If any refund is necessary, this will be executed at best convenience.\n"
-"        <br><br>\n"
+"        <br/><br/>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
-"        <br>\n"
+"        <br/>\n"
 "    </p>\n"
 "</div>\n"
 "            "
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"object.type_name\"></t>\n"
+"        <t t-set=\"doc_name\" t-value=\"object.type_name\"/>\n"
 "        Apreciable <t t-out=\"object.partner_id.name or ''\">usuario</t>,\n"
-"        <br><br>\n"
+"        <br/><br/>\n"
 "        Tenga en cuenta que su\n"
 "        <t t-out=\"doc_name or ''\">cotización</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
 "        <t t-if=\"object.origin\">\n"
 "            (con referencia: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "        </t>\n"
-"        se ha cancelado. Por lo tanto, ya no se le harán cargos por esta orden.\n"
+"        se canceló. Por lo que ya no se le harán cargos por esta orden.\n"
 "        Si es necesario realizar algún reembolso, se ejecutará lo más rápido posible.\n"
-"        <br><br>\n"
-"         No dude en ponerse en contacto con nosotros si tiene alguna pregunta.\n"
-"        <br>\n"
+"        <br/><br/>\n"
+"        No dude en ponerse en contacto con nosotros si tiene alguna pregunta.\n"
+"        <br/>\n"
 "    </p>\n"
 "</div>\n"
 "            "
@@ -913,15 +881,11 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid ""
-"<span invisible=\"advance_payment_method != 'percentage'\" class=\"oe_inline\">% </span>\n"
-"                        <span invisible=\"not display_invoice_amount_warning\" class=\"oe_inline text-danger\" title=\"The Down Payment is greater than the amount remaining to be invoiced.\">\n"
-"                            <i class=\"fa fa-warning\"/>\n"
-"                        </span>"
+"<span invisible=\"advance_payment_method != 'percentage'\" "
+"class=\"oe_inline\">% </span>"
 msgstr ""
-"<span invisible=\"advance_payment_method != 'percentage'\" class=\"oe_inline\">% </span>\n"
-"                        <span invisible=\"not display_invoice_amount_warning\" class=\"oe_inline text-danger\" title=\"El total del anticipo es mayor que el importe que todavía se debe facturar.\">\n"
-"                            <i class=\"fa fa-warning\"/>\n"
-"                        </span>"
+"<span invisible=\"advance_payment_method != 'percentage'\" "
+"class=\"oe_inline\">% </span>"
 
 #. module: sale
 #: model_terms:web_tour.tour,rainbow_man_message:sale.sale_tour
@@ -1090,15 +1054,6 @@ msgid "A warning can be set on a product or a customer (Sale)"
 msgstr "Se puede crear una advertencia sobre un producto o un cliente (Venta)"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid ""
-"Ability to select a package type in sales orders and to force a quantity "
-"that is a multiple of the number of units per package."
-msgstr ""
-"Permite seleccionar un tipo de paquete en las órdenes de venta y forzar una "
-"cantidad que sea un múltiplo del número de unidades por paquete."
-
-#. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Accept & Pay Quotation"
@@ -1255,6 +1210,11 @@ msgid "Add several variants to an order from a grid"
 msgstr "Agregar varias variantes a una orden desde una tabla"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__allowed_uom_ids
+msgid "Allowed Uom"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro-Forma Invoice to your customers"
 msgstr "Le permite enviar una factura proforma a sus clientes"
@@ -1315,12 +1275,6 @@ msgstr "Importe antes del descuento"
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_amount
 msgid "Amount of quotations to invoice"
 msgstr "Importe de cotizaciones a facturar"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__amount_to_invoice
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__amount_to_invoice
-msgid "Amount to invoice"
-msgstr "Importe a facturar"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -1614,9 +1568,9 @@ msgid "Catalog"
 msgstr "Catálogo"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_category_id
-msgid "Category"
-msgstr "Categoría"
+#: model:ir.ui.menu,name:sale.menu_product_categories
+msgid "Categories"
+msgstr "Categorías"
 
 #. module: sale
 #: model:product.template,name:sale.product_product_1_product_template
@@ -1662,7 +1616,7 @@ msgstr "Cerrar"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_combos
 msgid "Combo Choices"
-msgstr "Opciones para el set"
+msgstr "Opciones de los combos"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__combo_item_id
@@ -1805,16 +1759,6 @@ msgid "Contents"
 msgstr "Contenidos"
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order_line__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"Las unidades de medida solo se pueden convertir si ambas unidades pertenecen"
-" a la misma categoría. La conversión se basará en las proporciones "
-"establecidas."
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__country_code
 msgid "Country code"
 msgstr "Código del país"
@@ -1891,11 +1835,9 @@ msgstr "Crear en la orden"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__consolidated_billing
 msgid ""
-"Create one invoice for all orders related to same customer and same "
-"invoicing address"
+"Create one invoice for all orders related to same customer, same invoicing "
+"address and same delivery address."
 msgstr ""
-"Cree una factura para todas las órdenes relacionadas al mismo cliente y a la"
-" misma dirección de facturación"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__create_uid
@@ -2255,11 +2197,25 @@ msgid "Display Draft Invoice Warning"
 msgstr "Mostrar advertencia de borrador de factura"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_invoice_amount_warning
-msgid "Display Invoice Amount Warning"
-msgstr "Mostrar advertencia de importe de la factura"
-
-#. module: sale
+#: model:ir.model.fields,field_description:sale.field_account_analytic_applicability__display_name
+#: model:ir.model.fields,field_description:sale.field_account_analytic_line__display_name
+#: model:ir.model.fields,field_description:sale.field_account_chart_template__display_name
+#: model:ir.model.fields,field_description:sale.field_account_invoice_report__display_name
+#: model:ir.model.fields,field_description:sale.field_account_move__display_name
+#: model:ir.model.fields,field_description:sale.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:sale.field_base_document_layout__display_name
+#: model:ir.model.fields,field_description:sale.field_crm_team__display_name
+#: model:ir.model.fields,field_description:sale.field_payment_link_wizard__display_name
+#: model:ir.model.fields,field_description:sale.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:sale.field_payment_transaction__display_name
+#: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__display_name
+#: model:ir.model.fields,field_description:sale.field_product_category__display_name
+#: model:ir.model.fields,field_description:sale.field_product_document__display_name
+#: model:ir.model.fields,field_description:sale.field_product_product__display_name
+#: model:ir.model.fields,field_description:sale.field_product_template__display_name
+#: model:ir.model.fields,field_description:sale.field_res_company__display_name
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:sale.field_res_partner__display_name
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_name
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__display_name
 #: model:ir.model.fields,field_description:sale.field_sale_order__display_name
@@ -2268,6 +2224,7 @@ msgstr "Mostrar advertencia de importe de la factura"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__display_name
 #: model:ir.model.fields,field_description:sale.field_sale_report__display_name
+#: model:ir.model.fields,field_description:sale.field_utm_campaign__display_name
 msgid "Display Name"
 msgstr "Nombre en pantalla"
 
@@ -2417,7 +2374,7 @@ msgstr ""
 
 #. module: sale
 #. odoo-javascript
-#: code:addons/sale/static/src/js/product_template_attribute_line/product_template_attribute_line.xml:0
+#: code:addons/sale/static/src/js/product_template_attribute_line/product_template_attribute_line.js:0
 msgid "Enter a customized value"
 msgstr "Escriba un valor personalizado"
 
@@ -2663,6 +2620,25 @@ msgid "Hidden"
 msgstr "Oculto"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_account_analytic_applicability__id
+#: model:ir.model.fields,field_description:sale.field_account_analytic_line__id
+#: model:ir.model.fields,field_description:sale.field_account_chart_template__id
+#: model:ir.model.fields,field_description:sale.field_account_invoice_report__id
+#: model:ir.model.fields,field_description:sale.field_account_move__id
+#: model:ir.model.fields,field_description:sale.field_account_move_line__id
+#: model:ir.model.fields,field_description:sale.field_base_document_layout__id
+#: model:ir.model.fields,field_description:sale.field_crm_team__id
+#: model:ir.model.fields,field_description:sale.field_payment_link_wizard__id
+#: model:ir.model.fields,field_description:sale.field_payment_provider__id
+#: model:ir.model.fields,field_description:sale.field_payment_transaction__id
+#: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__id
+#: model:ir.model.fields,field_description:sale.field_product_category__id
+#: model:ir.model.fields,field_description:sale.field_product_document__id
+#: model:ir.model.fields,field_description:sale.field_product_product__id
+#: model:ir.model.fields,field_description:sale.field_product_template__id
+#: model:ir.model.fields,field_description:sale.field_res_company__id
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__id
+#: model:ir.model.fields,field_description:sale.field_res_partner__id
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__id
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__id
 #: model:ir.model.fields,field_description:sale.field_sale_order__id
@@ -2671,6 +2647,7 @@ msgstr "Oculto"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__id
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__id
 #: model:ir.model.fields,field_description:sale.field_sale_report__id
+#: model:ir.model.fields,field_description:sale.field_utm_campaign__id
 msgid "ID"
 msgstr "ID"
 
@@ -2713,12 +2690,6 @@ msgid ""
 msgstr ""
 "La venta no se puede modificar si está bloqueada. Sin embargo, todavía la "
 "podrá facturar o entregar."
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_product_packaging__sales
-msgid "If true, the packaging can be used for sales orders"
-msgstr ""
-"Si está activo, el paquete se puede utilizar para las órdenes de venta"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
@@ -3671,16 +3642,6 @@ msgid "PRO-FORMA Invoice"
 msgstr "Factura PROFORMA"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__product_packaging_id
-msgid "Packaging"
-msgstr "Embalaje"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__product_packaging_qty
-msgid "Packaging Quantity"
-msgstr "Cantidad de embalaje"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_credit_warning
 msgid "Partner Credit Warning"
 msgstr "Advertencia de crédito del contacto"
@@ -3879,11 +3840,6 @@ msgid "Product Catalog Product Is In Sale Order"
 msgstr "El producto del catálogo está en la orden de venta"
 
 #. module: sale
-#: model:ir.ui.menu,name:sale.menu_product_categories
-msgid "Product Categories"
-msgstr "Categorías de producto"
-
-#. module: sale
 #: model:ir.model,name:sale.model_product_category
 #: model:ir.model.fields,field_description:sale.field_sale_report__categ_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -3901,11 +3857,6 @@ msgstr "Documento del producto"
 #: code:addons/sale/static/src/js/product_card/product_card.xml:0
 msgid "Product Image"
 msgstr "Imagen del producto"
-
-#. module: sale
-#: model:ir.model,name:sale.model_product_packaging
-msgid "Product Packaging"
-msgstr "Embalaje del producto"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_tags
@@ -4347,7 +4298,6 @@ msgid "Sale orders to cancel"
 msgstr "Órdenes de venta a cancelar"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_product_packaging__sales
 #: model:ir.ui.menu,name:sale.menu_reporting_sales
 #: model:ir.ui.menu,name:sale.sale_menu_root
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
@@ -4476,6 +4426,7 @@ msgstr "Órdenes de venta"
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_order_calendar
@@ -4540,6 +4491,11 @@ msgstr "Ventas: confirmación de orden"
 #: model:mail.template,name:sale.mail_template_sale_payment_executed
 msgid "Sales: Payment Done"
 msgstr "Ventas: pago realizado"
+
+#. module: sale
+#: model:mail.template,name:sale.email_template_proforma
+msgid "Sales: Send Proforma"
+msgstr ""
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
@@ -4621,19 +4577,14 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Sell and purchase products in different units of measure"
-msgstr "Vender y comprar productos en diferentes unidades de medida"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Sell products by multiple of unit # per package"
-msgstr "Vender productos por múltiplo de número de unidad por paquete"
+msgid "Sell and purchase products in different units of measure or packagings"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell variants of a product using attributes (size, color, etc.)"
 msgstr ""
-"Vender variantes de un producto usando atributos (tamaño, color, etc.)"
+"Venda variantes de sus productos con atributos (tamaño, color, entre otros)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4949,7 +4900,7 @@ msgstr "Método de redondeo al calcular impuestos"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_tax
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__tax_ids
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__tax_id
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__tax_ids
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Taxes"
 msgstr "Impuestos"
@@ -5053,13 +5004,6 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:0
 msgid "The access token is invalid."
 msgstr "El token de acceso no es válido."
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount_to_invoice
-msgid "The amount to invoice = Sale Order Total - Confirmed Down Payments."
-msgstr ""
-"La cantidad a facturar = Total de la orden de ventas - Anticipos "
-"confirmados."
 
 #. module: sale
 #. odoo-python
@@ -5295,16 +5239,6 @@ msgid "This payment will confirm the quotation."
 msgstr "Este pago confirmará la cotización."
 
 #. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order_line.py:0
-msgid ""
-"This product is packaged by %(pack_size).2f %(pack_name)s. You should sell "
-"%(quantity).2f %(unit)s."
-msgstr ""
-"Este producto lo empacó %(pack_size).2f%(pack_name)s. Debería "
-"vender%(quantity).2f%(unit)s."
-
-#. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_customers
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_products
@@ -5495,8 +5429,15 @@ msgstr "Campaña UTM "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_to_invoice
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__amount_to_invoice
 msgid "Un-invoiced Balance"
 msgstr "Balance sin facturar"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_id
+#: model:ir.model.fields,field_description:sale.field_sale_report__product_uom_id
+msgid "Unit"
+msgstr "Unidad"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_unit
@@ -5512,23 +5453,10 @@ msgid "Unit Price:"
 msgstr "Precio unitario:"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom
-#: model:ir.model.fields,field_description:sale.field_sale_report__product_uom
-#: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
-msgid "Unit of Measure"
-msgstr "Unidad de medida"
-
-#. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_form_action
-#: model:ir.ui.menu,name:sale.next_id_16
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Units of Measure"
-msgstr "Unidades de medida"
-
-#. module: sale
-#: model:ir.ui.menu,name:sale.menu_product_uom_categ_form_action
-msgid "Units of Measure Categories"
-msgstr "Categorías de las unidades de medida"
+msgid "Units & Packagings"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5568,11 +5496,6 @@ msgstr "Descuento sin impuesto"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "UoM"
-msgstr "UdM"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Prices"
 msgstr "Actualizar precios"
 
@@ -5594,6 +5517,11 @@ msgstr "Venta adicional %(order)s para el cliente %(customer)s"
 #: model:ir.model.fields.selection,name:sale.selection__sale_report__line_invoice_status__upselling
 msgid "Upselling Opportunity"
 msgstr "Oportunidad de venta adicional"
+
+#. module: sale
+#: model:mail.template,description:sale.email_template_proforma
+msgid "Used by salespeople when they send proforma to prospects"
+msgstr ""
 
 #. module: sale
 #: model:mail.template,description:sale.email_template_edi_sale
@@ -5672,7 +5600,6 @@ msgstr "Volumen"
 #. odoo-python
 #: code:addons/sale/models/product_product.py:0
 #: code:addons/sale/models/product_template.py:0
-#: code:addons/sale/models/sale_order_line.py:0
 #: code:addons/sale/wizard/res_config_settings.py:0
 #: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__warning
 #: model:ir.model.fields.selection,name:sale.selection__res_partner__sale_warn__warning
@@ -5886,7 +5813,7 @@ msgstr "días"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "for the"
-msgstr "para el"
+msgstr "para la cotización por un monto de"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -5902,7 +5829,7 @@ msgstr "continuemos"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "quote."
-msgstr "cotización."
+msgstr "."
 
 #. module: sale
 #. odoo-python
@@ -5942,15 +5869,18 @@ msgstr ""
 "'n/a' }})"
 
 #. module: sale
+#: model:mail.template,subject:sale.email_template_proforma
+msgid ""
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
+"'Proforma' or 'Order'}} (Ref {{ object.name or 'n/a' }})"
+msgstr ""
+
+#. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
 msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
-"(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ "
-"object.name or 'n/a' }})"
+"'Quotation' or 'Order' }} (Ref {{ object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
-"(ctx.get('proforma') and 'Proforma' or 'Cotización') or 'Orden' }} (Ref {{ "
-"object.name or 'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_cancellation

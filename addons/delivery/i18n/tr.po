@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-01-20 08:41+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
@@ -149,6 +149,13 @@ msgid "Archived"
 msgstr "Arşivlendi"
 
 #. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
+msgid ""
+"Are you sure you want the delivery to be free for this order? You might have"
+" forgotten to compute the rates."
+msgstr ""
+
+#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Availability"
 msgstr "Müsaitlik"
@@ -198,7 +205,7 @@ msgstr ""
 #. module: delivery
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
-#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.xml:0
+#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
 msgid "Choose this location"
 msgstr ""
 
@@ -271,12 +278,6 @@ msgstr "Müşteri"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__debug_logging
 msgid "Debug logging"
 msgstr "Günlüğü Ayıkla"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
-#: model:ir.model.fields,help:delivery.field_res_users__property_delivery_carrier_id
-msgid "Default delivery method used in sales orders."
-msgstr "Satış siparişlerinde kullanılan varsayılan teslimat yöntemi."
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -382,6 +383,10 @@ msgstr "Sil"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__display_name
+#: model:ir.model.fields,field_description:delivery.field_product_category__display_name
+#: model:ir.model.fields,field_description:delivery.field_res_partner__display_name
+#: model:ir.model.fields,field_description:delivery.field_sale_order__display_name
+#: model:ir.model.fields,field_description:delivery.field_sale_order_line__display_name
 msgid "Display Name"
 msgstr "İsim Göster"
 
@@ -481,6 +486,10 @@ msgstr "Grupla"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__id
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__id
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__id
+#: model:ir.model.fields,field_description:delivery.field_product_category__id
+#: model:ir.model.fields,field_description:delivery.field_res_partner__id
+#: model:ir.model.fields,field_description:delivery.field_sale_order__id
+#: model:ir.model.fields,field_description:delivery.field_sale_order_line__id
 msgid "ID"
 msgstr "ID"
 
@@ -553,21 +562,15 @@ msgstr "Son Güncelleyen"
 msgid "Last Updated on"
 msgstr "Son Güncelleme"
 
-#. module: stock_delivery
-#. odoo-python
-#: code:addons/stock_delivery/models/stock_picking.py:0
-msgid "Manual actions might be needed."
-msgstr ""
-
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "List view"
 msgstr "Liste Görünümü"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Loading..."
 msgstr "Yükleniyor..."
 
@@ -588,7 +591,7 @@ msgstr "Teslimat zip öneklerini yönetme"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Map view"
 msgstr ""
 
@@ -646,7 +649,7 @@ msgstr ""
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "No result"
 msgstr "Sonuç Yok"
 
@@ -658,8 +661,8 @@ msgstr ""
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location/location.xml:0
-#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location/location.js:0
+#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
 msgid "Opening hours"
 msgstr ""
 
@@ -893,7 +896,7 @@ msgstr "Sipariş miktarı %.2f'yi aştığı için kargo ücretsizdir."
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.xml:0
+#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
 msgid "There was an error loading the map"
 msgstr ""
 
@@ -943,6 +946,12 @@ msgstr "Güncelle"
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "Update shipping cost"
 msgstr "Taşıma maliyetini güncelleyin"
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
+#: model:ir.model.fields,help:delivery.field_res_users__property_delivery_carrier_id
+msgid "Used in sales orders."
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable

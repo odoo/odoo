@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-20 08:41+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Chloe Wang, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -1082,7 +1082,6 @@ msgstr "如果勾选此项，则需要查看新消息。"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__message_has_error
-#: model:ir.model.fields,help:lunch.field_lunch_supplier__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "如果勾选此项， 某些消息将出现发送错误。"
 
@@ -1320,32 +1319,32 @@ msgid "Lunch: Supplier Order"
 msgstr "午餐：供应商订单"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_1824
+#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_226
 msgid "Lunch: alert chat notification (Alert for Office 3)"
 msgstr "午餐：提醒聊天通知（提醒Office 3）。"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_1825
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_227
 msgid "Lunch: send automatic email to Coin gourmand"
 msgstr "午餐：自动发送电子邮件给Coin gourmand"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_1820
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_222
 msgid "Lunch: send automatic email to Lunch Supplier"
 msgstr "午餐：自动发送电子邮件给午餐供应商"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_1826
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_228
 msgid "Lunch: send automatic email to Pizza Inn"
 msgstr "午餐：自动发送电子邮件给Pizza Inn"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_1828
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_230
 msgid "Lunch: send automatic email to Sushi Shop"
 msgstr "午餐：自动发送电子邮件给寿司店"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_1827
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_229
 msgid "Lunch: send automatic email to The Corner"
 msgstr "午餐：自动发送电子邮件给 The Corner"
 
@@ -1817,11 +1816,6 @@ msgid "Quantity"
 msgstr "数量"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__rating_ids
-msgid "Ratings"
-msgstr "点评"
-
-#. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Re-order"
 msgstr "重新订购"
@@ -1867,11 +1861,6 @@ msgstr "负责人"
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_user_id
 msgid "Responsible User"
 msgstr "责任用户"
-
-#. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "短信发送错误"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_chirashi
@@ -2312,16 +2301,6 @@ msgstr "按日期交货的订单"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Vendors"
 msgstr "供应商"
-
-#. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__website_message_ids
-msgid "Website Messages"
-msgstr "网站消息"
-
-#. module: lunch
-#: model:ir.model.fields,help:lunch.field_lunch_supplier__website_message_ids
-msgid "Website communication history"
-msgstr "网站沟通记录"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__wed

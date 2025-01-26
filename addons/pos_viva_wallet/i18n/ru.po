@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-20 08:41+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Ilya Rozhkov, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
@@ -93,14 +93,8 @@ msgstr "Сообщение от Viva Wallet: %s"
 #. module: pos_viva_wallet
 #. odoo-python
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-msgid "Not receive Bearer Token"
-msgstr "Не получен токен на предъявителя"
-
-#. module: pos_viva_wallet
-#. odoo-python
-#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-msgid "Only 'group_pos_user' are allowed to fetch token from Viva Wallet"
-msgstr "Только 'group_pos_user' имеют право получать токен из Viva Wallet"
+msgid "Only 'group_pos_user' are allowed to cancel a Viva Wallet payment"
+msgstr ""
 
 #. module: pos_viva_wallet
 #. odoo-python
@@ -108,6 +102,20 @@ msgstr "Только 'group_pos_user' имеют право получать т�
 msgid "Only 'group_pos_user' are allowed to get latest transaction status"
 msgstr ""
 "Только 'group_pos_user' имеют право получать последний статус транзакции"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+msgid ""
+"Only 'group_pos_user' are allowed to get the payment status from Viva Wallet"
+msgstr ""
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+msgid ""
+"Only 'group_pos_user' are allowed to send a Viva Wallet payment request"
+msgstr ""
 
 #. module: pos_viva_wallet
 #: model:ir.model,name:pos_viva_wallet.model_pos_payment_method
@@ -144,6 +152,14 @@ msgid "There are some issues between us and Viva Wallet, try again later.%s)"
 msgstr ""
 "Между нами и Viva Wallet возникли некоторые проблемы, повторите попытку "
 "позже.%s)"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+msgid ""
+"Unable to retrieve Viva Wallet Bearer Token: Please verify that the Client "
+"ID and Client Secret are correct"
+msgstr ""
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_api_key

@@ -3,15 +3,15 @@
 # 	* sale_stock
 # 
 # Translators:
-# Wil Odoo, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -222,6 +222,31 @@ msgstr ""
 "您能承诺给客户的交货日期，通过服务产品的订单明细行的最小前置时间计算。一旦发货，订单的发货策略将会被考虑来决定是使用订单明细行的最小或最大前置时间。"
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_account_move__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_procurement_group__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_product_template__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_stock_rule__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_res_company__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_res_users__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_sale_report__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_forecasted_product_product__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_lot__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_return_picking__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_route__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rule__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
 msgid "Display Qty Widget"
 msgstr "显示数量挂件"
@@ -295,6 +320,31 @@ msgstr "完全交付"
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
 msgid "Has late picking"
 msgstr "有迟到拣货"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_account_move__id
+#: model:ir.model.fields,field_description:sale_stock.field_account_move_line__id
+#: model:ir.model.fields,field_description:sale_stock.field_procurement_group__id
+#: model:ir.model.fields,field_description:sale_stock.field_product_template__id
+#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_stock_rule__id
+#: model:ir.model.fields,field_description:sale_stock.field_res_company__id
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__id
+#: model:ir.model.fields,field_description:sale_stock.field_res_users__id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel__id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_report__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_forecasted_product_product__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_lot__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move_line__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_picking__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_return_picking__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_route__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rule__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__id
+msgid "ID"
+msgstr "ID"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
@@ -522,6 +572,11 @@ msgstr "按订单补给(MTO)"
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "Reserved"
 msgstr "已预留"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_return_picking
+msgid "Return Picking"
+msgstr "退货分拣"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock

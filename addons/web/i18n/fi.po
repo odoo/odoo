@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # Jessica Jakara, 2025
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Jessica Jakara, 2025\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +32,7 @@ msgstr "# Koodieditori"
 #. odoo-python
 #: code:addons/web/controllers/export.py:0
 msgid "%(property_string)s (%(parent_name)s)"
-msgstr ""
+msgstr "%(property_string)s (%(parent_name)s)"
 
 #. module: web
 #. odoo-javascript
@@ -92,7 +92,7 @@ msgstr "'%s' ei ole kelvollinen päivämäärä tai aikaleima"
 #. odoo-javascript
 #: code:addons/web/static/src/core/file_upload/file_upload_progress_record.js:0
 msgid "(%(mbLoaded)s/%(mbTotal)sMB)"
-msgstr ""
+msgstr "(%(mbLoaded)s/%(mbTotal)sMB)"
 
 #. module: web
 #. odoo-javascript
@@ -521,7 +521,7 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span id=\"line_tax_ids\">15%</span>"
-msgstr ""
+msgstr "<span id=\"line_tax_ids\">15%</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -601,6 +601,8 @@ msgid ""
 "<strong class=\"text-nowrap\">$ <span class=\"oe_currency_value\">\n"
 "                                                       22,137.50</span></strong>"
 msgstr ""
+"<strong class=\"text-nowrap\">$ <span class=\"oe_currency_value\">\n"
+"                                                       22,137.50</span></strong>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.address_layout
@@ -702,7 +704,7 @@ msgstr "Suosikkisuodattimelle on annettava nimi."
 #. odoo-javascript
 #: code:addons/web/static/src/search/control_panel/control_panel.js:0
 msgid "A name for your new action is required."
-msgstr ""
+msgstr "Uudelle toiminnolle on annettava nimi."
 
 #. module: web
 #. odoo-javascript
@@ -809,9 +811,15 @@ msgstr "Toiminnot"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/search/cog_menu/cog_menu.xml:0
+msgid "Actions menu"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu_items.js:0
 msgid "Activate Test Mode"
-msgstr ""
+msgstr "Aktivoi testitila"
 
 #. module: web
 #. odoo-javascript
@@ -894,7 +902,7 @@ msgstr "Lisää arvo"
 #. odoo-javascript
 #: code:addons/web/static/src/search/search_bar/search_bar.js:0
 msgid "Add a custom filter"
-msgstr ""
+msgstr "Lisää mukautettu suodatin"
 
 #. module: web
 #. odoo-javascript
@@ -960,7 +968,7 @@ msgstr "Osoite"
 #. odoo-javascript
 #: code:addons/web/static/src/views/view_dialogs/select_create_dialog.xml:0
 msgid "Adjust your filters or create a new record."
-msgstr ""
+msgstr "Säädä suodattimia tai luo uusi tietue."
 
 #. module: web
 #. odoo-javascript
@@ -998,7 +1006,7 @@ msgstr "Kaikki"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/navbar/navbar.xml:0
 msgid "All Apps"
-msgstr ""
+msgstr "Kaikki sovellukset"
 
 #. module: web
 #. odoo-javascript
@@ -1022,7 +1030,7 @@ msgstr "Manteli"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/image/image_field.js:0
 msgid "Alternative text"
-msgstr ""
+msgstr "Vaihtoehtoinen teksti"
 
 #. module: web
 #. odoo-javascript
@@ -1046,7 +1054,7 @@ msgstr "Niistä"
 #. odoo-javascript
 #: code:addons/web/static/src/search/control_panel/control_panel.js:0
 msgid "An action with the same name already exists."
-msgstr ""
+msgstr "Samanniminen toiminto on jo olemassa."
 
 #. module: web
 #. odoo-javascript
@@ -1070,7 +1078,7 @@ msgstr "Eläimet ja luonto"
 #. odoo-javascript
 #: code:addons/web/static/src/core/install_scoped_app/install_scoped_app.xml:0
 msgid "Application name"
-msgstr ""
+msgstr "Sovelluksen nimi"
 
 #. module: web
 #. odoo-javascript
@@ -1123,13 +1131,7 @@ msgstr "Oletko varma että haluat arkistoida tämän tietueen?"
 #. odoo-javascript
 #: code:addons/web/static/src/search/control_panel/control_panel.js:0
 msgid "Are you sure that you want to remove this embedded action?"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.js:0
-msgid "Are you sure that you want to remove this filter?"
-msgstr "Haluatko varmasti poistaa tämän suodattimen?"
+msgstr "Oletko varma, että haluat poistaa tämän upotetun toiminnon?"
 
 #. module: web
 #. odoo-javascript
@@ -1150,6 +1152,8 @@ msgid ""
 "Are you sure you want to delete this property field? It will be removed for "
 "everyone using the \"%(parentName)s\" %(parentFieldLabel)s."
 msgstr ""
+"Oletko varma, että haluat poistaa tämän ominaisuuskentän? Se poistetaan "
+"kaikilta, jotka käyttävät kenttää \"%(parentName)s\" %(parentFieldLabel)s."
 
 #. module: web
 #. odoo-javascript
@@ -1282,13 +1286,13 @@ msgstr "Takaisin"
 #. odoo-javascript
 #: code:addons/web/static/src/search/breadcrumbs/breadcrumbs.js:0
 msgid "Back to “%s”"
-msgstr ""
+msgstr "Takaisin kohtaan \"%s\""
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/search/breadcrumbs/breadcrumbs.js:0
 msgid "Back to “%s” form"
-msgstr ""
+msgstr "Takaisin muotoon \"%s\""
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
@@ -1340,7 +1344,7 @@ msgstr "Viivakoodinlukija"
 #. odoo-javascript
 #: code:addons/web/static/src/core/barcode/barcode_video_scanner.js:0
 msgid "Barcode Video Scanner could not be mounted properly."
-msgstr ""
+msgstr "Viivakoodivideoskanneria ei voitu asentaa oikein."
 
 #. module: web
 #: model:ir.model,name:web.model_base
@@ -1490,7 +1494,7 @@ msgstr "CL-nappi"
 #. odoo-javascript
 #: code:addons/web/static/src/search/search_panel/search_panel.xml:0
 msgid "CLEAR ALL"
-msgstr ""
+msgstr "TYHJENNÄ KAIKKI"
 
 #. module: web
 #. odoo-javascript
@@ -1591,7 +1595,7 @@ msgstr "Tarkista uudelleen"
 #. odoo-javascript
 #: code:addons/web/static/src/core/barcode/barcode_dialog.js:0
 msgid "Check your browser permissions"
-msgstr ""
+msgstr "Tarkista selaimen käyttöoikeudet"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.webclient_offline
@@ -1631,7 +1635,7 @@ msgstr "Valitse debug-komento..."
 #. odoo-javascript
 #: code:addons/web/static/src/core/user_switch/user_switch.xml:0
 msgid "Choose a user"
-msgstr ""
+msgstr "Valitse käyttäjä"
 
 #. module: web
 #. odoo-javascript
@@ -1640,6 +1644,8 @@ msgid ""
 "Choose which maximal precision (days, months, ...) you want in the datetime "
 "picker."
 msgstr ""
+"Valitse haluamasi enimmäistarkkuus (päivät, kuukaudet, ...) päivämäärän "
+"valitsimessa."
 
 #. module: web
 #. odoo-javascript
@@ -1648,6 +1654,8 @@ msgid ""
 "Choose which minimal precision (days, months, ...) you want in the datetime "
 "picker."
 msgstr ""
+"Valitse haluamasi vähimmäistarkkuus (päivät, kuukaudet, ...) päivämäärän "
+"valitsimessa."
 
 #. module: web
 #. odoo-javascript
@@ -1694,7 +1702,7 @@ msgstr "Pyyhi"
 #. odoo-javascript
 #: code:addons/web/static/src/search/search_panel/search_panel.xml:0
 msgid "Clear All"
-msgstr ""
+msgstr "Tyhjennä kaikki"
 
 #. module: web
 #. odoo-javascript
@@ -1830,21 +1838,15 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.xml:0
-msgid "Comparison"
-msgstr "Vertailu"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/views/debug_items.js:0
 msgid "Computed Arch"
-msgstr ""
+msgstr "Laskennallinen kaari"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Condensed display"
-msgstr ""
+msgstr "Tiivistetty näyttö"
 
 #. module: web
 #. odoo-javascript
@@ -1950,7 +1952,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/image/image_field.js:0
 msgid "Convert to webp"
-msgstr ""
+msgstr "Muunna webp:ksi"
 
 #. module: web
 #. odoo-javascript
@@ -2009,6 +2011,12 @@ msgstr "Valittua pdf-tiedostoa ei voitu näyttää"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.js:0
+msgid "Could not display the selected spreadsheet"
+msgstr "Valittua laskentataulukkoa ei voitu näyttää"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/image_url/image_url_field.js:0
 msgid "Could not display the specified image url."
 msgstr "Määritettyä kuvan url-osoitetta ei voitu näyttää."
@@ -2027,7 +2035,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/core/barcode/barcode_video_scanner.js:0
 msgid "Could not start scanning. %(message)s"
-msgstr ""
+msgstr "Skannausta ei voitu aloittaa. %(message)s"
 
 #. module: web
 #. odoo-javascript
@@ -2061,7 +2069,7 @@ msgstr "Luo \"%s\""
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
 msgid "Create %(value)s as a new %(field)s?"
-msgstr ""
+msgstr "Luo %(value)s uudeksi kentäksi %(field)s?"
 
 #. module: web
 #. odoo-javascript
@@ -2112,8 +2120,8 @@ msgstr "Valuutta"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
-msgid "Current state"
-msgstr "Nykyinen tila"
+msgid "Current state is %s"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -2136,13 +2144,13 @@ msgstr "Räätälöidyt värit"
 #. odoo-javascript
 #: code:addons/web/static/src/search/control_panel/control_panel.js:0
 msgid "Custom Embedded Action"
-msgstr ""
+msgstr "Mukautettu sulautettu toiminto"
 
 #. module: web
 #. odoo-python
 #: code:addons/web/controllers/view.py:0
 msgid "Custom view %(view)s does not belong to user %(user)s"
-msgstr ""
+msgstr "Mukautettu näkymä %(view)s ei kuulu käyttäjälle %(user)s"
 
 #. module: web
 #. odoo-javascript
@@ -2172,7 +2180,7 @@ msgstr "Data"
 #. odoo-javascript
 #: code:addons/web/static/src/views/debug_items.js:0
 msgid "Data: %(model)s(%(id)s)"
-msgstr ""
+msgstr "Tiedot: %(model)s(%(id)s)"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
@@ -2246,7 +2254,7 @@ msgstr "Työkalut..."
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Decades"
-msgstr ""
+msgstr "Vuosikymmenet"
 
 #. module: web
 #. odoo-javascript
@@ -2324,12 +2332,6 @@ msgstr "Poista"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.js:0
-msgid "Delete Filter"
-msgstr "Poista suodatin"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid "Delete Property Field"
 msgstr "Poista ominaisuuskenttä"
@@ -2337,7 +2339,6 @@ msgstr "Poista ominaisuuskenttä"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/search/control_panel/control_panel.xml:0
-#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.xml:0
 msgid "Delete item"
 msgstr "Poista kohta"
 
@@ -2431,7 +2432,7 @@ msgstr "Hylkää"
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 msgid "Discard all changes"
-msgstr ""
+msgstr "Hylkää kaikki muutokset"
 
 #. module: web
 #. odoo-javascript
@@ -2443,6 +2444,16 @@ msgstr "Hylkää muutokset"
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_record_quick_create.js:0
 #: model:ir.model.fields,field_description:web.field_base_document_layout__display_name
+#: model:ir.model.fields,field_description:web.field_ir_http__display_name
+#: model:ir.model.fields,field_description:web.field_ir_model__display_name
+#: model:ir.model.fields,field_description:web.field_ir_qweb_field_image__display_name
+#: model:ir.model.fields,field_description:web.field_ir_qweb_field_image_url__display_name
+#: model:ir.model.fields,field_description:web.field_ir_ui_menu__display_name
+#: model:ir.model.fields,field_description:web.field_ir_ui_view__display_name
+#: model:ir.model.fields,field_description:web.field_res_company__display_name
+#: model:ir.model.fields,field_description:web.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:web.field_res_partner__display_name
+#: model:ir.model.fields,field_description:web.field_res_users__display_name
 msgid "Display Name"
 msgstr "Näyttönimi"
 
@@ -2481,13 +2492,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Displays or hides the seconds in the datetime value."
-msgstr ""
+msgstr "Näyttää tai piilottaa sekunnit datetime-arvossa."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Displays or hides the time in the datetime value."
-msgstr ""
+msgstr "Näyttää tai piilottaa ajan datetime-arvossa."
 
 #. module: web
 #. odoo-javascript
@@ -2496,6 +2507,8 @@ msgid ""
 "Displays the value of the selected field as a textual hint. If the selected "
 "field is empty, the static placeholder attribute is displayed instead."
 msgstr ""
+"Näyttää valitun kentän arvon tekstivihjeenä. Jos valittu kenttä on tyhjä, "
+"sen sijaan näytetään staattinen paikanvaraaja-attribuutti."
 
 #. module: web
 #. odoo-javascript
@@ -2644,7 +2657,7 @@ msgstr "Muokkaa"
 #. odoo-javascript
 #: code:addons/web/static/src/core/expression_editor_dialog/expression_editor_dialog.xml:0
 msgid "Edit Condition"
-msgstr ""
+msgstr "Muokkaa ehtoa"
 
 #. module: web
 #. odoo-javascript
@@ -2656,6 +2669,12 @@ msgstr "Muokkaa toimialuetta"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
 msgid "Edit Tags"
+msgstr "Muokkaa tunnisteita"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.xml:0
+msgid "Edit favorite"
 msgstr ""
 
 #. module: web
@@ -2713,19 +2732,25 @@ msgstr "Loppupäivämääräkenttä"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/dynamic_placeholder_popover.xml:0
 msgid "Enter a default value"
-msgstr ""
+msgstr "Syötä oletusarvo"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.xml:0
 msgid "Enter an email"
-msgstr ""
+msgstr "Kirjoita sähköpostiosoite"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/highlight_text/form_label_highlight_text.xml:0
 msgid "Enterprise"
 msgstr "Enterprise"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/webclient/debug/profiling/profiling_item.xml:0
+msgid "Entry Count"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -2909,6 +2934,12 @@ msgstr "Ferris"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/field_selector/field_selector_field.js:0
+msgid "Field Selector"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 msgid "Field Type"
 msgstr "Kentän tyyppi"
@@ -2993,7 +3024,7 @@ msgstr "Taitettava"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/dynamic_widget/dynamic_model_field_selector_char.js:0
+#: code:addons/web/static/src/views/fields/field_selector/field_selector_field.js:0
 msgid "Follow relations"
 msgstr "Seuraa suhteita"
 
@@ -3144,17 +3175,10 @@ msgstr "Siirry URL-osoitteeseen"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/google_slide_viewer.js:0
-#: code:addons/web/static/src/views/fields/google_slide_viewer.xml:0
-#, python-format
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.js:0
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.xml:0
 msgid "Google Slide Viewer"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/graph/graph_view.js:0
-msgid "Graph"
-msgstr "Kaavio"
+msgstr "Google Slide Viewer"
 
 #. module: web
 #. odoo-javascript
@@ -3237,7 +3261,7 @@ msgstr "Piilota symboli"
 #. odoo-javascript
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 msgid "Hide technical details"
-msgstr ""
+msgstr "Piilota tekniset tiedot"
 
 #. module: web
 #. odoo-javascript
@@ -3278,6 +3302,16 @@ msgstr "Haluan päivittää dataa (tuontiyhteensopiva vienti)"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #: model:ir.model.fields,field_description:web.field_base_document_layout__id
+#: model:ir.model.fields,field_description:web.field_ir_http__id
+#: model:ir.model.fields,field_description:web.field_ir_model__id
+#: model:ir.model.fields,field_description:web.field_ir_qweb_field_image__id
+#: model:ir.model.fields,field_description:web.field_ir_qweb_field_image_url__id
+#: model:ir.model.fields,field_description:web.field_ir_ui_menu__id
+#: model:ir.model.fields,field_description:web.field_ir_ui_view__id
+#: model:ir.model.fields,field_description:web.field_res_company__id
+#: model:ir.model.fields,field_description:web.field_res_config_settings__id
+#: model:ir.model.fields,field_description:web.field_res_partner__id
+#: model:ir.model.fields,field_description:web.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -3326,6 +3360,10 @@ msgid ""
 "edit it. Note that if a color field is also set, the tag edition will "
 "prevail. So, the color picker will not be displayed on click on the tag."
 msgstr ""
+"Jos valittu, tunnisteen napsauttaminen avaa lomakkeen, jonka avulla sitä voi"
+" suoraan muokata. Huomaa, että jos myös värikenttä on asetettu, tunnisteen "
+"valinta on ensisijainen. Värinvalitsin ei tule näkyviin, kun tunnistetta "
+"napsautetaan."
 
 #. module: web
 #. odoo-javascript
@@ -3412,7 +3450,7 @@ msgstr "Lisää"
 #: code:addons/web/static/src/views/fields/char/char_field.xml:0
 #: code:addons/web/static/src/views/fields/text/text_field.xml:0
 msgid "Insert Field"
-msgstr ""
+msgstr "Lisää kenttä"
 
 #. module: web
 #. odoo-javascript
@@ -3440,6 +3478,8 @@ msgid ""
 "Install the app on your device to access it easily. Here are the steps to "
 "follow:"
 msgstr ""
+"Asenna sovellus laitteeseesi, jotta voit käyttää sitä helposti. Tässä ovat "
+"seuraavat vaiheet:"
 
 #. module: web
 #. odoo-javascript
@@ -3477,7 +3517,7 @@ msgstr "Virheellistä dataa"
 #. odoo-python
 #: code:addons/web/controllers/json.py:0
 msgid "Invalid default search filter name for %s"
-msgstr ""
+msgstr "Virheellinen oletushakusuodattimen nimi %s"
 
 #. module: web
 #. odoo-javascript
@@ -3540,6 +3580,8 @@ msgstr "Virheellinen tietueen ID: %s"
 #: code:addons/web/controllers/json.py:0
 msgid "Invalid view type '%(view_type)s' for action id=%(action)s"
 msgstr ""
+"Invalid view type '%(view_type)s' for action id=%(action)s (Toiminto "
+"id=%(action)s)"
 
 #. module: web
 #. odoo-javascript
@@ -3606,6 +3648,8 @@ msgid ""
 "It seems the records with IDs %s cannot be found. They might have been "
 "deleted."
 msgstr ""
+"Näyttää siltä, että tietueita, joiden tunnukset ovat %s, ei löydy. Ne on "
+"ehkä poistettu."
 
 #. module: web
 #. odoo-javascript
@@ -3771,7 +3815,7 @@ msgstr "Pääkallo ja reisiluut"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/jsonb/jsonb.js:0
+#: code:addons/web/static/src/views/fields/json/json_field.js:0
 msgid "Json"
 msgstr "Json"
 
@@ -3797,7 +3841,7 @@ msgstr "Kanban esimerkkejä"
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_record.js:0
 msgid "Kanban: no action for type: %(type)s"
-msgstr ""
+msgstr "Kanban: ei toimintoa tyypille: %(type)s"
 
 #. module: web
 #. odoo-javascript
@@ -3892,7 +3936,7 @@ msgstr "Asettelun tausta"
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu_items.js:0
 msgid "Leave Debug Mode"
-msgstr ""
+msgstr "Poistu debug-tilasta"
 
 #. module: web
 #. odoo-javascript
@@ -4033,13 +4077,13 @@ msgstr "Päätoiminnot"
 #. odoo-javascript
 #: code:addons/web/static/src/search/control_panel/control_panel.xml:0
 msgid "Make this embedded action available to other users"
-msgstr ""
+msgstr "Aseta tämä upotettu toiminto muiden käyttäjien saataville"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
 msgid "Make this filter available to other users"
-msgstr ""
+msgstr "Aseta tämä suodatin muiden käyttäjien saataville"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login_layout
@@ -4056,13 +4100,13 @@ msgstr "Many2OneBarcode"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2one_reference/many2one_reference_field.js:0
 msgid "Many2OneReference"
-msgstr ""
+msgstr "Many2OneReference"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2one_reference_integer/many2one_reference_integer_field.js:0
 msgid "Many2OneReferenceInteger"
-msgstr ""
+msgstr "Many2OneReferenceInteger"
 
 #. module: web
 #. odoo-javascript
@@ -4088,7 +4132,7 @@ msgstr "Vastaavuus"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/gauge/gauge_field.js:0
 msgid "Max value"
-msgstr ""
+msgstr "Max. arvo"
 
 #. module: web
 #. odoo-javascript
@@ -4101,13 +4145,13 @@ msgstr "Maksimiarvokenttä"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/gauge/gauge_field.js:0
 msgid "Max: %(max)s"
-msgstr ""
+msgstr "Max: %(max)s"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Maximal precision"
-msgstr ""
+msgstr "Maksimaalinen tarkkuus"
 
 #. module: web
 #. odoo-javascript
@@ -4177,7 +4221,7 @@ msgstr "Linnunrata"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Minimal precision"
-msgstr ""
+msgstr "Minimaalinen tarkkuus"
 
 #. module: web
 #. odoo-javascript
@@ -4189,7 +4233,7 @@ msgstr "Epäsuhtainen otsikko"
 #. odoo-javascript
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 msgid "Missing Action"
-msgstr ""
+msgstr "Puuttuva toiminto"
 
 #. module: web
 #. odoo-javascript
@@ -4201,7 +4245,7 @@ msgstr "Puuttuva tietue"
 #. odoo-python
 #: code:addons/web/controllers/json.py:0
 msgid "Missing record id"
-msgstr ""
+msgstr "Tietueen id puuttuu"
 
 #. module: web
 #. odoo-javascript
@@ -4218,7 +4262,7 @@ msgstr "Tila"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/domain/domain_field.js:0
-#: code:addons/web/static/src/views/fields/dynamic_widget/dynamic_model_field_selector_char.js:0
+#: code:addons/web/static/src/views/fields/field_selector/field_selector_field.js:0
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 msgid "Model"
 msgstr "Malli"
@@ -4239,7 +4283,7 @@ msgstr "Mallin kenttä"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/field_tooltip.xml:0
 msgid "Model field:"
-msgstr ""
+msgstr "Mallin kenttä:"
 
 #. module: web
 #. odoo-javascript
@@ -4251,7 +4295,7 @@ msgstr "Malli:"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/actions/debug_items.js:0
 msgid "Model: %s"
-msgstr ""
+msgstr "Malli: %s"
 
 #. module: web
 #: model:ir.model,name:web.model_ir_model
@@ -4268,7 +4312,7 @@ msgstr "Muokkaa ehtoa"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 msgid "Modify filter"
-msgstr ""
+msgstr "Muokkaa suodatinta"
 
 #. module: web
 #. odoo-javascript
@@ -4306,7 +4350,13 @@ msgstr "Lisää"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/navbar/navbar.xml:0
 msgid "More Menu"
-msgstr ""
+msgstr "Lisävalikko"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
+msgid "More..."
+msgstr "Lisää…"
 
 #. module: web
 #. odoo-javascript
@@ -4518,9 +4568,8 @@ msgstr "Seuraava vuosi"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/model/relational_model/utils.js:0
 #: code:addons/web/static/src/search/search_bar/search_bar.js:0
-#: code:addons/web/static/src/views/kanban/kanban_header.js:0
-#: code:addons/web/static/src/views/list/list_renderer.js:0
 #: code:addons/web/static/src/views/pivot/pivot_model.js:0
 msgid "No"
 msgstr "Ei"
@@ -4590,8 +4639,8 @@ msgstr "Laitetta ei löydy."
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
-msgid "No emoji match your search"
-msgstr "Hakusi ei löytänyt hymiöitä"
+msgid "No emoji matches your search"
+msgstr "Mikään hymiö ei vastaa hakuasi"
 
 #. module: web
 #. odoo-javascript
@@ -4609,7 +4658,7 @@ msgstr "Valikkoa ei löytynyt"
 #. odoo-javascript
 #: code:addons/web/static/src/views/view_dialogs/select_create_dialog.xml:0
 msgid "No record found"
-msgstr ""
+msgstr "Tietuetta ei löytynyt"
 
 #. module: web
 #. odoo-javascript
@@ -4624,7 +4673,7 @@ msgstr "Ei tietueita"
 #. odoo-javascript
 #: code:addons/web/static/src/search/action_menus/action_menus.js:0
 msgid "No report available."
-msgstr ""
+msgstr "Raporttia ei ole saatavilla."
 
 #. module: web
 #. odoo-javascript
@@ -4663,10 +4712,10 @@ msgstr "Ei, pidä se"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/model/relational_model/utils.js:0
 #: code:addons/web/static/src/views/graph/graph_model.js:0
-#: code:addons/web/static/src/views/kanban/kanban_header.js:0
-#: code:addons/web/static/src/views/list/list_renderer.js:0
 #: code:addons/web/static/src/views/pivot/pivot_model.js:0
+#: code:addons/web/static/src/webclient/debug/profiling/profiling_item.xml:0
 msgid "None"
 msgstr "Ei mitään"
 
@@ -4685,14 +4734,8 @@ msgstr "Ei kelvollinen %s"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
-msgid "Not active state"
-msgstr "Ei aktiivista tilaa"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
-msgid "Not active state, click to change it"
-msgstr "Ei aktiivista tilaa, klikkaa muuttaaksesi"
+msgid "Not active state, click to change it to %s"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -4846,6 +4889,8 @@ msgid ""
 "Of the %(selectedRecord)s selected records, only the first %(firstRecords)s "
 "have been archived/unarchived."
 msgstr ""
+"Valituista %(selectedRecord)s tietueista vain ensimmäiset %(firstRecords)s "
+"on arkistoitu tai palautettu arkistosta."
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.webclient_offline
@@ -4890,7 +4935,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/dynamic_widget/dynamic_model_field_selector_char.js:0
+#: code:addons/web/static/src/views/fields/field_selector/field_selector_field.js:0
 msgid "Only searchable"
 msgstr "Vain haettavissa"
 
@@ -4901,6 +4946,8 @@ msgid ""
 "Only the first %(count)s records have been deleted (out of %(total)s "
 "selected)"
 msgstr ""
+"Vain ensimmäiset %(count)s tietuetta on poistettu (valituista %(total)s "
+"tietueesta)"
 
 #. module: web
 #. odoo-python
@@ -5047,7 +5094,7 @@ msgstr "PDF-tiedosto"
 #: model_terms:ir.ui.view,arch_db:web.external_layout_striped
 #: model_terms:ir.ui.view,arch_db:web.external_layout_wave
 msgid "Page <span class=\"page\"/> / <span class=\"topage\"/>"
-msgstr ""
+msgstr "Sivu <span class=\"page\"/> / <span class=\"topage\"/>"
 
 #. module: web
 #. odoo-javascript
@@ -5163,7 +5210,7 @@ msgstr "Ole hyvä ja anna tallennus kentän listan nimi"
 #. odoo-javascript
 #: code:addons/web/static/src/views/list/list_renderer.js:0
 msgid "Please save your changes first"
-msgstr ""
+msgstr "Tallenna muutokset ensin"
 
 #. module: web
 #. odoo-javascript
@@ -5261,18 +5308,6 @@ msgstr "Edellinen (nuoli vasemmalle)"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/utils/dates.js:0
-msgid "Previous Period"
-msgstr "Edellinen jakso"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/search/utils/dates.js:0
-msgid "Previous Year"
-msgstr "Edellinen vuosi"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/datetime/datetime_picker.js:0
 msgid "Previous century"
 msgstr "Edellinen vuosisata"
@@ -5307,6 +5342,12 @@ msgstr "Pääväri"
 #: code:addons/web/static/src/webclient/actions/reports/report_action.xml:0
 msgid "Print"
 msgstr "Tulosta"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/cog_menu/cog_menu.js:0
+msgid "Print report: %s"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -5415,13 +5456,13 @@ msgstr "Qweb kentän kuva"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/colorpicker/colorpicker.xml:0
+#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
 msgid "RGB"
 msgstr "RGB"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/colorpicker/colorpicker.xml:0
+#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
 msgid "RGBA"
 msgstr "RGBA"
 
@@ -5528,7 +5569,7 @@ msgstr "Päivitä"
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu_items.js:0
 msgid "Regenerate Assets"
-msgstr ""
+msgstr "Luo omaisuuserät uudestaan"
 
 #. module: web
 #. odoo-javascript
@@ -5604,7 +5645,7 @@ msgstr "Poista tämä suosikkikalentereista"
 #. odoo-javascript
 #: code:addons/web/static/src/core/user_switch/user_switch.xml:0
 msgid "Remove user from switcher"
-msgstr ""
+msgstr "Poista käyttäjä kytkimestä"
 
 #. module: web
 #. odoo-javascript
@@ -5680,14 +5721,14 @@ msgstr "Kierrä (r)"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/clickbot/clickbot_loader.js:0
 msgid "Run Click Everywhere"
-msgstr ""
+msgstr "Suorita Click Everywhere"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_providers.js:0
 #: code:addons/web/static/src/webclient/debug/debug_items.js:0
 msgid "Run Unit Tests"
-msgstr ""
+msgstr "Suorita yksikkötestit"
 
 #. module: web
 #. odoo-javascript
@@ -5779,7 +5820,7 @@ msgstr "Tallenna ja luo uusi"
 #. odoo-javascript
 #: code:addons/web/static/src/search/control_panel/control_panel.xml:0
 msgid "Save View"
-msgstr ""
+msgstr "Tallenna näkymä"
 
 #. module: web
 #. odoo-javascript
@@ -5841,6 +5882,12 @@ msgstr "Etsi lisää..."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
+msgid "Search emoji"
+msgstr "Etsi hymiötä"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 msgid "Search for a command..."
 msgstr "Etsi komento..."
@@ -5850,12 +5897,6 @@ msgstr "Etsi komento..."
 #: code:addons/web/static/src/webclient/menus/menu_providers.js:0
 msgid "Search for a menu..."
 msgstr "Etsi valikko..."
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
-msgid "Search for an emoji"
-msgstr "Etsi emoji"
 
 #. module: web
 #. odoo-javascript
@@ -5893,7 +5934,7 @@ msgstr "Etsi: %s"
 #. odoo-javascript
 #: code:addons/web/static/src/views/debug_items.js:0
 msgid "SearchView"
-msgstr ""
+msgstr "SearchView"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__secondary_color
@@ -5916,7 +5957,7 @@ msgstr "Katso esimerkit"
 #. odoo-javascript
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 msgid "See technical details"
-msgstr ""
+msgstr "Katso tekniset tiedot"
 
 #. module: web
 #. odoo-javascript
@@ -5956,7 +5997,7 @@ msgstr "Valitse oletusarvo"
 #. odoo-javascript
 #: code:addons/web/static/src/core/model_field_selector/model_field_selector_popover.js:0
 msgid "Select a field"
-msgstr ""
+msgstr "Valitse kenttä"
 
 #. module: web
 #. odoo-javascript
@@ -5980,7 +6021,7 @@ msgstr "Valitse kaikki"
 #. odoo-javascript
 #: code:addons/web/static/src/views/list/list_controller.xml:0
 msgid "Select all records matching the search"
-msgstr ""
+msgstr "Valitse kaikki hakua vastaavat tietueet"
 
 #. module: web
 #. odoo-javascript
@@ -6055,7 +6096,7 @@ msgstr "Erotin"
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/views/debug_items.js:0
 msgid "Set Default Values"
-msgstr ""
+msgstr "Aseta oletusarvot"
 
 #. module: web
 #. odoo-javascript
@@ -6102,6 +6143,8 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Set to true to display days, months (and hours) with unpadded numbers"
 msgstr ""
+"Asetetaan arvoksi true, jos haluat näyttää päivät, kuukaudet (ja tunnit) "
+"pehmustamattomilla numeroilla"
 
 #. module: web
 #. odoo-javascript
@@ -6127,7 +6170,7 @@ msgstr "Jaettu"
 #. odoo-javascript
 #: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.xml:0
 msgid "Shared filters"
-msgstr ""
+msgstr "Jaetut suodattimet"
 
 #. module: web
 #. odoo-javascript
@@ -6157,13 +6200,13 @@ msgstr "Näytä %s näkymä"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 msgid "Show matching records"
-msgstr ""
+msgstr "Näytä vastaavat tietueet"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Show seconds"
-msgstr ""
+msgstr "Näytä sekunnit"
 
 #. module: web
 #. odoo-javascript
@@ -6223,7 +6266,7 @@ msgstr "Jotain kamalaa tapahtui"
 msgid ""
 "Something went wrong... If you really are stuck, share the report with your "
 "friendly support service"
-msgstr ""
+msgstr "Jokin meni pieleen. Lähetä raportti tukipalvelulle tiedoksi"
 
 #. module: web
 #. odoo-javascript
@@ -6289,6 +6332,12 @@ msgstr "Tila"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
+msgid "Statusbar"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/settings_confirmation_dialog.xml:0
 msgid "Stay Here"
 msgstr "Pysy täällä"
@@ -6346,7 +6395,7 @@ msgstr "Tuki"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/switch_company_menu/switch_company_menu.js:0
 msgid "Switch Company"
-msgstr ""
+msgstr "Vaihda yritystä"
 
 #. module: web
 #. odoo-javascript
@@ -6406,7 +6455,7 @@ msgstr "Tunniste"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Tagline"
-msgstr ""
+msgstr "Sivuston kuvaus"
 
 #. module: web
 #. odoo-javascript
@@ -6509,25 +6558,25 @@ msgstr ""
 #. odoo-python
 #: code:addons/web/controllers/action.py:0
 msgid "The action “%s” does not exist"
-msgstr ""
+msgstr "Toimintoa \"%s\" ei ole olemassa"
 
 #. module: web
 #. odoo-python
 #: code:addons/web/controllers/action.py:0
 msgid "The action “%s” does not exist."
-msgstr ""
+msgstr "Toimintoa \"%s\" ei ole olemassa."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/install_scoped_app/install_scoped_app.xml:0
 msgid "The app cannot be installed with this browser"
-msgstr ""
+msgstr "Sovellusta ei voi asentaa tällä selaimella"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/install_scoped_app/install_scoped_app.xml:0
 msgid "The app seems to be installed on your device"
-msgstr ""
+msgstr "Sovellus näyttää olevan asennettu laitteeseesi"
 
 #. module: web
 #. odoo-python
@@ -6563,6 +6612,8 @@ msgid ""
 "The selected file (%(size)sB) is larger than the maximum allowed file size "
 "(%(maxSize)sB)."
 msgstr ""
+"Valittu tiedosto (%(size)sB) on suurempi kuin tiedoston suurin sallittu koko"
+" (%(maxSize)sB)."
 
 #. module: web
 #. odoo-javascript
@@ -6584,6 +6635,8 @@ msgid ""
 "There are too many rows (%(count)s rows, limit: %(limit)s) to export as "
 "Excel 2007-2013 (.xlsx) format. Consider splitting the export."
 msgstr ""
+"Excel 2007-2013 (.xlsx) -muodossa vietäviä rivejä on liikaa (%(count)s "
+"riviä, rajoitus: %(limit)s). Harkitse viennin jakamista osiin."
 
 #. module: web
 #. odoo-javascript
@@ -6620,6 +6673,7 @@ msgstr "Tätä verkkotunnusta ei tueta."
 #: code:addons/web/static/src/search/control_panel/control_panel.js:0
 msgid "This embedded action is global and will be removed for everyone."
 msgstr ""
+"Tämä upotettu toiminto on maailmanlaajuinen, ja se poistetaan kaikilta."
 
 #. module: web
 #. odoo-javascript
@@ -6644,12 +6698,6 @@ msgstr "Tämä kenttä on jo viimeinen"
 #: code:addons/web/static/src/core/signature/name_and_signature.xml:0
 msgid "This file is invalid. Please select an image."
 msgstr "Tämä tiedosto on virheellinen. Valitse kuva."
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.js:0
-msgid "This filter is global and will be removed for everyone."
-msgstr "Tämä suodatin on globaali ja poistetaan kaikilta."
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.preview_externalreport
@@ -6728,6 +6776,18 @@ msgstr "Titania"
 #: code:addons/web/static/src/views/widgets/ribbon/ribbon.js:0
 msgid "Title"
 msgstr "Otsikko"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
+msgid "To next categories"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
+msgid "To previous categories"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6927,7 +6987,7 @@ msgstr "US12345671"
 #. odoo-javascript
 #: code:addons/web/static/src/core/barcode/barcode_dialog.xml:0
 msgid "Unable to access camera"
-msgstr ""
+msgstr "Kameraa ei voi käyttää"
 
 #. module: web
 #. odoo-javascript
@@ -6936,12 +6996,14 @@ msgid ""
 "Unable to find Wkhtmltopdf on this system. The report will be shown in "
 "html.%(link)s"
 msgstr ""
+"Wkhtmltopdf-ohjelmaa ei löydy järjestelmästä. Raportti näytetään html-"
+"muodossa.%(link)s"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 msgid "Unable to save. Correct the issue or discard all changes"
-msgstr ""
+msgstr "Tallentaminen ei onnistu. Korjaa ongelma tai hylkää kaikki muutokset"
 
 #. module: web
 #. odoo-javascript
@@ -6994,10 +7056,16 @@ msgid "Unselect All"
 msgstr "Poista kaikki valinnat"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
+msgid "Unselected state is %s"
+msgstr ""
+
+#. module: web
 #. odoo-python
 #: code:addons/web/controllers/json.py:0
 msgid "Unsupported server action"
-msgstr ""
+msgstr "Ei tuettu palvelimen toiminto"
 
 #. module: web
 #. odoo-javascript
@@ -7091,7 +7159,7 @@ msgstr "Käytä helppolukuista muotoa (esim. 500G eikä 500 000 000 000 000)."
 #. odoo-javascript
 #: code:addons/web/static/src/core/user_switch/user_switch.xml:0
 msgid "Use another user"
-msgstr ""
+msgstr "Käytä toista käyttäjää"
 
 #. module: web
 #. odoo-javascript
@@ -7107,7 +7175,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
 msgid "Use this filter by default when opening this view"
-msgstr ""
+msgstr "Käytä tätä suodatinta oletusarvoisesti, kun avaat tämän näkymän"
 
 #. module: web
 #. odoo-javascript
@@ -7189,7 +7257,7 @@ msgstr "Arvoa ei tueta"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/gauge/gauge_field.js:0
 msgid "Value: %(value)s"
-msgstr ""
+msgstr "Arvo: %(value)s"
 
 #. module: web
 #. odoo-javascript
@@ -7227,13 +7295,13 @@ msgstr "Näytä"
 #. odoo-javascript
 #: code:addons/web/static/src/views/list/list_renderer.xml:0
 msgid "View Button"
-msgstr ""
+msgstr "Näytä painike"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/widgets/documentation_link/documentation_link.xml:0
 msgid "View Documentation"
-msgstr ""
+msgstr "Näytä ohjeet"
 
 #. module: web
 #. odoo-javascript
@@ -7245,7 +7313,7 @@ msgstr "Näytä metatiedot"
 #. odoo-javascript
 #: code:addons/web/static/src/views/debug_items.js:0
 msgid "View: %(displayName)s"
-msgstr ""
+msgstr "Näkymä: %(displayName)s"
 
 #. module: web
 #. odoo-javascript
@@ -7282,7 +7350,6 @@ msgstr "WC"
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 #: code:addons/web/static/src/model/relational_model/dynamic_list.js:0
 #: code:addons/web/static/src/search/control_panel/control_panel.js:0
-#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.js:0
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 msgid "Warning"
 msgstr "Varoitus"
@@ -7311,11 +7378,6 @@ msgid "Web App Name"
 msgstr "Verkkosovelluksen nimi"
 
 #. module: web
-#: model_terms:ir.ui.view,arch_db:web.qunit_mobile_suite
-msgid "Web Mobile Tests"
-msgstr "Web Mobile Testit"
-
-#. module: web
 #: model_terms:ir.ui.view,arch_db:web.qunit_suite
 msgid "Web Tests"
 msgstr "Verkkotestit"
@@ -7323,7 +7385,7 @@ msgstr "Verkkotestit"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.unit_tests_suite
 msgid "Web Unit Tests"
-msgstr ""
+msgstr "Web-yksikkötestit"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__website
@@ -7360,7 +7422,7 @@ msgstr "Hyvin tehty!"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/dynamic_placeholder_popover.xml:0
 msgid "What should we write if the field is empty"
-msgstr ""
+msgstr "Mitä kirjoitetaan, jos kenttä on tyhjä"
 
 #. module: web
 #. odoo-javascript
@@ -7401,6 +7463,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Write your phone, email, bank account, tax ID, ..."
 msgstr ""
+"Kirjoita puhelinnumerosi, sähköpostiosoitteesi, pankkitilisi, "
+"verotunnuksesi, ..."
 
 #. module: web
 #. odoo-python
@@ -7435,10 +7499,9 @@ msgstr "Keltainen"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/model/relational_model/utils.js:0
 #: code:addons/web/static/src/search/search_bar/search_bar.js:0
 #: code:addons/web/static/src/views/fields/field_tooltip.xml:0
-#: code:addons/web/static/src/views/kanban/kanban_header.js:0
-#: code:addons/web/static/src/views/list/list_renderer.js:0
 #: code:addons/web/static/src/views/pivot/pivot_model.js:0
 msgid "Yes"
 msgstr "Kyllä"
@@ -7469,7 +7532,7 @@ msgstr "Olet offline"
 #. odoo-javascript
 #: code:addons/web/static/src/core/install_scoped_app/install_scoped_app.xml:0
 msgid "You can install the app from the browser menu"
-msgstr ""
+msgstr "Voit asentaa sovelluksen selaimen valikosta"
 
 #. module: web
 #. odoo-javascript
@@ -7481,7 +7544,7 @@ msgstr "Sinulla ei ole pääsyä malliin \"%s\"."
 #. odoo-python
 #: code:addons/web/models/models.py:0
 msgid "You don't have access to this record"
-msgstr ""
+msgstr "Sinulla ei ole pääsyä tähän tietueeseen"
 
 #. module: web
 #. odoo-javascript
@@ -7502,7 +7565,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/web/controllers/json.py:0
 msgid "You need export permissions to use the /json route"
-msgstr ""
+msgstr "Tarvitset vientioikeudet /json-reitin käyttämiseen"
 
 #. module: web
 #. odoo-javascript
@@ -7538,6 +7601,9 @@ msgid ""
 "to get a correct display of headers and footers as well as support for "
 "table-breaking between pages.%(link)s"
 msgstr ""
+"Sinun tulee päivittää Wkhtmltopdf-versiosi vähintään versioon 0.12.0, jotta "
+"saat otsikot ja alatunnisteet oikein näkyviin sekä tuen sivujen väliselle "
+"taulukon katkaisulle.%(link)s"
 
 #. module: web
 #. odoo-javascript
@@ -7553,6 +7619,8 @@ msgid ""
 "Your installation of Wkhtmltopdf seems to be broken. The report will be "
 "shown in html.%(link)s"
 msgstr ""
+"Wkhtmltopdf-ohjelman asennus näyttää olevan rikki. Raportti näytetään html-"
+"muodossa.%(link)s"
 
 #. module: web
 #. odoo-javascript
@@ -12324,7 +12392,7 @@ msgstr "meksikolainen voileipä"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "ends with"
-msgstr ""
+msgstr "päättyy"
 
 #. module: web
 #. odoo-javascript
@@ -14770,7 +14838,7 @@ msgstr "sankaritar"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/colorpicker/colorpicker.xml:0
+#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
 msgid "hex"
 msgstr "hex"
 
@@ -15539,14 +15607,50 @@ msgstr "on välillä"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
+msgid "is equal"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
+msgid "is greater"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
+msgid "is greater or equal"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "is in"
 msgstr "on"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
+msgid "is lower"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
+msgid "is lower or equal"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "is not"
 msgstr "ei ole"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
+msgid "is not equal"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -15570,7 +15674,7 @@ msgstr "on asetettu"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "is within"
-msgstr ""
+msgstr "on sisällä"
 
 #. module: web
 #. odoo-javascript
@@ -17352,25 +17456,25 @@ msgstr "hieronta"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "match"
-msgstr ""
+msgstr "täsmäävyys"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "match none of"
-msgstr ""
+msgstr "ei vastaa mitään"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "matches"
-msgstr ""
+msgstr "tulitikut"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "matches none of"
-msgstr ""
+msgstr "ei vastaa mitään"
 
 #. module: web
 #. odoo-javascript
@@ -18270,7 +18374,7 @@ msgstr "uusi välilehti"
 #. odoo-javascript
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 msgid "new_template"
-msgstr ""
+msgstr "uusi_malli"
 
 #. module: web
 #. odoo-javascript
@@ -23096,7 +23200,7 @@ msgstr "vaikutuksen tehnyt"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "starts with"
-msgstr ""
+msgstr "alkaa"
 
 #. module: web
 #. odoo-javascript
@@ -24989,6 +25093,12 @@ msgid "virus"
 msgstr "virus"
 
 #. module: web
+#. odoo-python
+#: code:addons/web/controllers/vcard.py:0
+msgid "vobject library is not installed"
+msgstr ""
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "volcano"
@@ -26246,7 +26356,7 @@ msgstr "jee"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "years"
-msgstr ""
+msgstr "vuotta"
 
 #. module: web
 #. odoo-javascript

@@ -3,15 +3,15 @@
 # 	* website_blog
 # 
 # Translators:
-# Wil Odoo, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-01-20 08:43+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,11 +44,6 @@ msgstr "' 페이지 머리말."
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "'. Showing results for '"
 msgstr "'. 다음에 대한 결과 표시 중 '"
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.date_selector
-msgid "-- All dates"
-msgstr "-- 모든 날짜"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_6
@@ -350,6 +345,11 @@ msgstr "모든 블로그"
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
 msgid "All blogs"
 msgstr "모든 블로그"
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.date_selector
+msgid "All dates"
+msgstr "모든 날짜"
 
 #. module: website_blog
 #. odoo-python
@@ -834,6 +834,8 @@ msgstr "Dexter"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__display_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__display_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__display_name
+#: model:ir.model.fields,field_description:website_blog.field_website__display_name
+#: model:ir.model.fields,field_description:website_blog.field_website_snippet_filter__display_name
 msgid "Display Name"
 msgstr "표시명"
 
@@ -1048,6 +1050,8 @@ msgstr "올바른 호텔을 선택하는 방법"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__id
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__id
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__id
+#: model:ir.model.fields,field_description:website_blog.field_website__id
+#: model:ir.model.fields,field_description:website_blog.field_website_snippet_filter__id
 msgid "ID"
 msgstr "ID"
 
@@ -1747,6 +1751,11 @@ msgstr "Seo 이름"
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Separate every keyword with a comma"
 msgstr "모든 키워드는 쉼표로 구분하십시오"
+
+#. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog__sequence
+msgid "Sequence"
+msgstr "순서"
 
 #. module: website_blog
 #. odoo-javascript

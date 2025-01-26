@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-20 08:41+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
@@ -55,6 +55,7 @@ msgstr ""
 #: code:addons/stock_account/models/stock_valuation_layer.py:0
 msgid "%(user)s changed cost from %(previous)s to %(new_price)s - %(record)s"
 msgstr ""
+"قام %(user)s بتغيير التكلفة من %(previous)s إلى %(new_price)s - %(record)s "
 
 #. module: stock_account
 #. odoo-python
@@ -63,6 +64,8 @@ msgid ""
 "%(user)s changed stock valuation from  %(previous)s to %(new_value)s - %(product)s\n"
 "%(reason)s"
 msgstr ""
+"قام %(user)s بتغيير تقييم المخزون من %(previous)s إلى %(new_value)s - %(product)s\n"
+"%(reason)s "
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -500,6 +503,7 @@ msgstr "المُعرف"
 #: model:ir.model.fields,help:stock_account.field_product_template__lot_valuated
 msgid "If checked, the valuation will be specific by Lot/Serial number."
 msgstr ""
+"إذا تم تحديده، فسيكون التقييم محدداً حسب رقم المجموعة/الرقم التسلسلي. "
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
@@ -605,6 +609,7 @@ msgstr "إعاجة تقييم رقم المجموعة/الرقم التسلسل�
 #: code:addons/stock_account/models/stock_move_line.py:0
 msgid "Lot/Serial number is mandatory for product valuated by lot"
 msgstr ""
+"رقم المجموعة/الرقم التسلسلي إلزامي للمنتج الذي يتم تقييمه حسب المجموعة "
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -1063,7 +1068,8 @@ msgstr ""
 "المرتبط "
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__uom_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_uom_name
 msgid "Unit"
 msgstr "الوحدة"
 
@@ -1076,12 +1082,6 @@ msgstr "تكلفة الوحدة"
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__unit_cost
 msgid "Unit Value"
 msgstr "قيمة الوحدة "
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__uom_id
-#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_uom_name
-msgid "Unit of Measure"
-msgstr "وحدة القياس"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
@@ -1246,7 +1246,7 @@ msgstr "نموذج المعالج لإعادة تقييم بضاعة المخز�
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot adjust the valuation of a layer with zero quantity"
-msgstr ""
+msgstr "لا يمكنك ضبط تقييم طبقة ذات كمية تساوي صفر "
 
 #. module: stock_account
 #. odoo-python

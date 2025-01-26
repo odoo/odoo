@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-24 15:31+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +26,7 @@ msgstr ""
 msgid ""
 "Adding a new Razorpay payment line is not allowed under the current "
 "conditions."
-msgstr ""
+msgstr "現在の状況では、Razorpayの新しい支払明細を追加することはできません。"
 
 #. module: pos_razorpay
 #: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__all
@@ -190,7 +191,7 @@ msgstr "Razorpayユーザ名"
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_p2p_request_id
 msgid "Razorpay p2pRequestId"
-msgstr ""
+msgstr "Razorpay p2pRequestId"
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -201,14 +202,14 @@ msgstr "参照番号が不一致です"
 #. module: pos_razorpay
 #: model:ir.model.fields,help:pos_razorpay.field_pos_payment__razorpay_p2p_request_id
 msgid "Required to fetch payment status during the refund order process"
-msgstr ""
+msgstr "返金オーダ処理中に支払状況を取得する必要があります。"
 
 #. module: pos_razorpay
 #. odoo-python
 #: code:addons/pos_razorpay/models/pos_payment_method.py:0
 msgid ""
 "The Razorpay POS refund request has encountered an unexpected error code."
-msgstr ""
+msgstr "Razorpay POSの返金リクエストで予期しないエラーコードが発生しました。"
 
 #. module: pos_razorpay
 #. odoo-python
@@ -254,7 +255,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_razorpay/static/src/app/utls/payment/payment_razorpay.js:0
 msgid "Void Payment Confirmation"
-msgstr ""
+msgstr "支払無効の確認"
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -269,3 +270,5 @@ msgid ""
 "Your transaction isn't settled yet, and the refund is less than the amount paid.\n"
 "The full amount will be cancelled, do you want to proceed?"
 msgstr ""
+"お客様の取引はまだ決済されておらず、払戻金額は支払金額より少なくなります。\n"
+"全額が取消されますが、手続きを続行しますか?"

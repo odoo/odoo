@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-24 15:31+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -332,7 +333,7 @@ msgstr "<span class=\"text-muted\">開始</span>"
 msgid ""
 "<span>The allocated days cannot be used, because the allocation is set to "
 "finish in the past.</span>"
-msgstr ""
+msgstr "<span>割当てられた休暇が使用できません。割当てが過去に終了するように設定されているためです。</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -712,7 +713,7 @@ msgstr "割当タイプ"
 msgid ""
 "Allocation must be \"To Approve\" or \"Second Approval\" in order to approve"
 " it."
-msgstr ""
+msgstr "承認するためには、休暇割当が \"未承認\"または\"2次承認\"でなければなりません。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1700,7 +1701,7 @@ msgstr "終了日"
 msgid ""
 "End date has been updated because the employee will leave the company on "
 "%(departure_date)s."
-msgstr ""
+msgstr "従業員が%(departure_date)sに会社を退職するため、終了日が更新されました。"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__employee_requests__yes
@@ -2098,7 +2099,7 @@ msgstr "未払いです"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__is_used
 msgid "Is Used"
-msgstr ""
+msgstr "使用済"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__jan
@@ -2709,6 +2710,14 @@ msgstr "只今"
 
 #. module: hr_holidays
 #. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"Only %s's Time Off Approver, a time off Officer/Responsible or Administrator"
+" can approve or refuse allocation requests."
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Manager can reset a refused leave."
 msgstr "否認された休暇をリセットできるのは、タイムオフマネージャーのみです。"
@@ -2741,16 +2750,16 @@ msgstr "取消済休暇を変更できるのはマネジャーのみです。"
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid "Only a time off Manager can approve its own requests."
-msgstr "休暇管理者のみが自身の申請を承認できます。"
+msgid "Only a time off Administrator can approve their own requests."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"Only a time off Officer/Responsible or Manager can approve or refuse time "
-"off requests."
-msgstr "休暇の要求を承認または否認できるのは、休暇担当者/責任者またはマネージャーのみです。"
+"Only a time off Officer/Responsible or Administrator can approve or refuse "
+"allocation requests."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -3397,7 +3406,7 @@ msgstr "期間は0より大きくなければなりません。"
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_departure_wizard.py:0
 msgid "The employee will leave the company on %(departure_date)s."
-msgstr ""
+msgstr "従業員は %(departure_date)sに退職予定です。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4065,7 +4074,7 @@ msgstr "検証タイプ"
 msgid ""
 "Validity End date has been updated because the employee will leave the "
 "company on %(departure_date)s."
-msgstr ""
+msgstr "従業員が%(departure_date)sに会社を退職するため、有効期限終了日が更新されました。"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
@@ -4328,6 +4337,14 @@ msgstr "休暇申請時に2回目の承認を申請する権利がありませ�
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You must be %s's Manager to approve this leave"
 msgstr "この休暇の承認には%sのマネジャーである必要があります。"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"You must be either %s's Time Off Approver or Time off Administrator to "
+"validate this allocation request."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python

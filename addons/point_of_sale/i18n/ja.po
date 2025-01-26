@@ -3,16 +3,17 @@
 # 	* point_of_sale
 # 
 # Translators:
-# Wil Odoo, 2024
-# Junko Augias, 2024
+# Junko Augias, 2025
+# Martin Trigaux, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Junko Augias, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +34,15 @@ msgid ""
 "            * OOOO is the sequence number.\n"
 "    "
 msgstr ""
+"\n"
+"        このオーダ用の読取可能な参照番号。\n"
+"            * フォーマット: YYLL-SSS-FOOOO\n"
+"            * YYは年\n"
+"            * LLはログイン番号 (デバイスへのプロキシ)\n"
+"            * SSSはセッションID\n"
+"            * F は 1 または 0 (シーケンス番号が顧客から生成された場合は1)\n"
+"            * OOOO はシーケンス番号です。\n"
+"    "
 
 #. module: point_of_sale
 #. odoo-python
@@ -137,12 +147,6 @@ msgstr "%s: 削除済明細"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
-msgid "'Select an order'"
-msgstr "'オーダを選択して下さい'"
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "(as of opening)"
 msgstr "(オープニング時点で)"
@@ -153,12 +157,6 @@ msgid "+ New Shop"
 msgstr "+ 新規のショップ"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
-msgid "/pos/ticket"
-msgstr "/pos/ticket"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "0.00"
 msgstr "0.00"
@@ -166,7 +164,7 @@ msgstr "0.00"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_request_with_code
 msgid "0014-001-00001"
-msgstr ""
+msgstr "0014-001-00001"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -447,7 +445,7 @@ msgstr "現在、このPoSのセッションが開かれています。一部の
 msgid ""
 "A session-unique sequence number for the order. Negative if generated from "
 "the client"
-msgstr ""
+msgstr "オーダ用のセッション固有のシーケンス番号。クライアントから生成された場合は負の値です。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__receipt_footer
@@ -571,19 +569,14 @@ msgid "Action Needed"
 msgstr "要アクション"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/product_screen/action_pad/action_pad.xml:0
-#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
-msgid "Actions"
-msgstr "アクション"
-
-#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_sms
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_module_pos_sms
 msgid "Activate SMS feature for point_of_sale"
 msgstr "point_of_sale用のSMS機能を有効化する"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__active
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__active
 msgid "Active"
@@ -660,7 +653,7 @@ msgstr "新しい支払い方法を追加する"
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_preset_form
 msgid "Add a new preset"
-msgstr ""
+msgstr "新規プリセットを追加"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_printer_form
@@ -706,8 +699,6 @@ msgid "Additional required user information:"
 msgstr "追加必要ユーザ情報:"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.xml:0
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__identification__address
 msgid "Address"
 msgstr "住所"
@@ -751,12 +742,6 @@ msgid "All Orders"
 msgstr "全てのオーダ"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
-msgid "All active orders"
-msgstr "全ての有効オーダ"
-
-#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
@@ -782,7 +767,7 @@ msgstr "すべての支払い方法は、販売仕訳帳と同じ通貨である
 #: model:ir.model.fields,help:point_of_sale.field_pos_preset__is_return
 msgid ""
 "All quantity in the cart will be in negative. Ideal for return managment."
-msgstr ""
+msgstr "カート内の数量はすべてマイナス表示になります。返品管理に最適です。"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_all_sales_lines
@@ -878,6 +863,14 @@ msgid ""
 "An error occurred when loading product prices. Make sure all pricelists are "
 "available in the POS."
 msgstr "プロダクト価格の読み込み中にエラーが発生しました。すべての価格表がPOSで利用可能であることを確認してください。"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid ""
+"An error occurred while closing the session. Unsynced orders will be "
+"available in the next session. The page will be reloaded."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1060,7 +1053,7 @@ msgstr "使用可能なPOSプロダクトカテゴリ"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__available_preset_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_available_preset_ids
 msgid "Available Presets"
-msgstr ""
+msgstr "利用可能なプリセット"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__available_pricelist_ids
@@ -1123,13 +1116,10 @@ msgstr "製パン店"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
-#: model:pos.config,name:point_of_sale.pos_config_bakery
 msgid "Bakery Shop"
 msgstr "製パン店 店舗"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_tree
 msgid "Balance"
 msgstr "残高"
@@ -1172,6 +1162,7 @@ msgstr "バーコード規則"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Barcode Scanner"
 msgstr "バーコードスキャナ"
@@ -1278,6 +1269,12 @@ msgstr "ブラウザの印刷をバイパスし、ハードウェアプロキシ
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "CANCELLED"
+msgstr "キャンセル済"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_receipt/cash_move_receipt.xml:0
 msgid "CASH"
 msgstr "現金"
@@ -1287,6 +1284,12 @@ msgstr "現金"
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 msgid "CHANGE"
 msgstr "お釣り"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
+msgid "CUSTOMER NOTE"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1379,7 +1382,6 @@ msgstr "カードブランド"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
-#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Cardholder Name"
 msgstr "クレジットカード名義人氏名"
 
@@ -1406,10 +1408,28 @@ msgid "Cash %(session_name)s"
 msgstr "現金 %(session_name)s"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Cash Bakery"
+msgstr "現金 製パン店"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Cash Clothes Shop"
+msgstr "現金 洋服店"
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Cash Count"
 msgstr "現金カウント"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Cash Furn. Shop"
+msgstr "現金 家具屋"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1530,8 +1550,6 @@ msgid "Cashdrawer"
 msgstr "現金箱"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 #: model:ir.model.fields.selection,name:point_of_sale.selection__barcode_rule__type__cashier
 msgid "Cashier"
 msgstr "キャッシャー"
@@ -1627,11 +1645,10 @@ msgid "Check if you want this product to appear in the Point of Sale."
 msgstr "このプロダクトをPOSに表示するかどうかを確認します。"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_uom_category__is_pos_groupable
 #: model:ir.model.fields,help:point_of_sale.field_uom_uom__is_pos_groupable
 msgid ""
-"Check if you want to group products of this category in point of sale orders"
-msgstr "このカテゴリのプロダクトをPOS注文でグループ化するかどうかを確認します"
+"Check if you want to group products of this unit in point of sale orders"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__cash_control
@@ -1673,6 +1690,12 @@ msgid ""
 "Choose a specific fiscal position at the order depending on the kind of "
 "customer (tax exempt, onsite vs. takeaway, etc.)."
 msgstr "顧客の種類 (免税、イートインとお持ち帰りなど)に応じて、注文時に特定の会計ポジションを選択します。"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.xml:0
+msgid "Choose customer"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_ticket_portal_url_display_mode
@@ -1719,6 +1742,7 @@ msgstr "顧客"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Close"
@@ -1793,6 +1817,12 @@ msgid "Closing Register"
 msgstr "レジ締め中"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "Closing Session"
+msgstr "セッション終了"
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Closing difference in %(payment_method)s (%(session)s)"
@@ -1819,7 +1849,6 @@ msgstr "服"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
-#: model:pos.config,name:point_of_sale.pos_config_clothes
 msgid "Clothes Shop"
 msgstr "服屋"
 
@@ -1898,12 +1927,6 @@ msgstr "会社"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_company_has_template
 msgid "Company has chart of accounts"
 msgstr "会社には勘定科目表があります"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/combo_configurator_popup/combo_configurator_popup.xml:0
-msgid "Complete the selection to proceed"
-msgstr "選択を完了して次に進む"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_config_settings
@@ -2008,8 +2031,6 @@ msgid ""
 msgstr "サーバーへの接続が切断されました。インターネット接続を確認して下さい。"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.xml:0
 #: model:ir.model,name:point_of_sale.model_res_partner
 msgid "Contact"
 msgstr "連絡先"
@@ -2064,12 +2085,12 @@ msgstr "カウント"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__count_linked_config
 msgid "Count Linked Config"
-msgstr ""
+msgstr "数量関連設定"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__count_linked_orders
 msgid "Count Linked Orders"
-msgstr ""
+msgstr "関連オーダ数"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2237,7 +2258,6 @@ msgstr "カスタム値"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/select_partner_button/select_partner_button.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
-#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__partner_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__partner_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__partner_id
@@ -2307,7 +2327,7 @@ msgstr "%s決済方法用に顧客が必要です"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Customer required"
-msgstr ""
+msgstr "顧客が必要です"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2319,6 +2339,12 @@ msgstr "顧客ヒントは直接修正できません。"
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_customer
 msgid "Customers"
 msgstr "顧客"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
+msgid "DUPLICATA !"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2344,7 +2370,6 @@ msgstr "ダッシュボード"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
-#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__date_order
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__payment_date
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_request_with_code
@@ -2399,13 +2424,13 @@ msgstr "デフォルト仕訳帳"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Default POS Receivable Account"
-msgstr ""
+msgstr "デフォルトPOS売掛勘定"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_preset_id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_default_preset_id
 msgid "Default Preset"
-msgstr ""
+msgstr "デフォルトプリセット"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2427,7 +2452,7 @@ msgstr "デフォルトQR"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__default_pos_receivable_account_name
 msgid "Default Receivable Account Name"
-msgstr ""
+msgstr "デフォルト売掛勘定名"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__sale_tax_id
@@ -2463,7 +2488,7 @@ msgstr "新規カテゴリを定義"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "Define presets to manage taxes & prices for eat in, take out, members..."
-msgstr ""
+msgstr "プリセットを定義して、店内飲食、テイクアウト、会員など、税や価格を管理します。"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_template_action_pos_product
@@ -2490,7 +2515,6 @@ msgstr "検証の遅延"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
-#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Delete"
 msgstr "削除"
 
@@ -2516,7 +2540,7 @@ msgstr "未払いの注文を削除する"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.xml:0
 msgid "Delivery to:"
-msgstr ""
+msgstr "配送先:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -2561,6 +2585,7 @@ msgid ""
 "identity of the device where the UI is opened. And as such, it is the LL "
 "part of the pos_reference field of the pos.order model."
 msgstr ""
+"UIが何回開かれるかを決定します。UIが開かれるデバイスのIDのプロキシとして使用されます。そのため、pos.orderモデルのpos_referenceフィールドのLL部分となります。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2693,7 +2718,6 @@ msgstr "閉じる"
 #: model:ir.model.fields,field_description:point_of_sale.field_product_category__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_combo__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_combo_item__display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_product_packaging__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_pricelist__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_pricelist_item__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__display_name
@@ -2701,6 +2725,7 @@ msgstr "閉じる"
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_attribute_line__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_attribute_value__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_product_uom__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_invoice__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_saledetails__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__display_name
@@ -2718,7 +2743,6 @@ msgstr "閉じる"
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_picking_type__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_rule__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_warehouse__display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_uom_category__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_uom_uom__display_name
 msgid "Display Name"
 msgstr "表示名"
@@ -2788,7 +2812,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_preset
 msgid "Easily load a set of configuration options"
-msgstr ""
+msgstr "設定オプションのセットを簡単に読み込みます。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2907,6 +2931,7 @@ msgstr "既存の銀行仕訳帳があることを確認して下さい。御社
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Error"
 msgstr "エラー"
 
@@ -3058,7 +3083,7 @@ msgstr "フッタ"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_bill_tree
 msgid "For all point of sale."
-msgstr ""
+msgstr "全てのPOS用。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_big_scrollbars
@@ -3118,7 +3143,7 @@ msgstr "完全なプロダクト名"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
 msgid "Full synchronization"
-msgstr ""
+msgstr "全て同期"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order__invoice_status__invoiced
@@ -3134,14 +3159,13 @@ msgstr "家具"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
-#: model:pos.config,name:point_of_sale.pos_config_main
 msgid "Furniture Shop"
 msgstr "家具屋"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__general_customer_note
 msgid "General Customer Note"
-msgstr ""
+msgstr "一般顧客メモ"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3216,7 +3240,6 @@ msgid "Group By"
 msgstr "グループ化"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_uom_category__is_pos_groupable
 #: model:ir.model.fields,field_description:point_of_sale.field_uom_uom__is_pos_groupable
 msgid "Group Products in POS"
 msgstr "POSでプロダクトをグループ化する"
@@ -3315,7 +3338,7 @@ msgstr "時間"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__preset_time
 msgid "Hour of the day for the order"
-msgstr ""
+msgstr "オーダの時間帯"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3362,7 +3385,6 @@ msgstr "税込価格の管理方法"
 #: model:ir.model.fields,field_description:point_of_sale.field_product_category__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_combo__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_combo_item__id
-#: model:ir.model.fields,field_description:point_of_sale.field_product_packaging__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_pricelist__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_pricelist_item__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__id
@@ -3370,6 +3392,7 @@ msgstr "税込価格の管理方法"
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_attribute_line__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_attribute_value__id
+#: model:ir.model.fields,field_description:point_of_sale.field_product_uom__id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_invoice__id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_saledetails__id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__id
@@ -3387,10 +3410,15 @@ msgstr "税込価格の管理方法"
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_picking_type__id
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_rule__id
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_warehouse__id
-#: model:ir.model.fields,field_description:point_of_sale.field_uom_category__id
 #: model:ir.model.fields,field_description:point_of_sale.field_uom_uom__id
 msgid "ID"
 msgstr "ID"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
+msgid "INTERNAL NOTE"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__proxy_ip
@@ -3558,7 +3586,7 @@ msgstr "内部注記"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__interval_time
 msgid "Interval time (in min)"
-msgstr ""
+msgstr "インターバル時間 (分)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3652,7 +3680,7 @@ msgstr "IoTボックスのIPアドレス"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/customer_display/customer_display_data_service.js:0
 msgid "IoT Customer Display Error"
-msgstr ""
+msgstr "IoT 顧客表示エラー"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_is_follower
@@ -3737,6 +3765,8 @@ msgid ""
 "It seems that the data we have is oudtaded. You could quickly update it by selecting \"Limited Synchronisation\" or reload all the data by choosing \" Full synchronisation\".\n"
 "                    Otherwise, you can keep going with the data we have in the memory by clicking on \"Discard\""
 msgstr ""
+"データが古いようです。\"限定同期\"を選択すると、データをすばやく更新できます。または、\"完全同期\"を選択すると、すべてのデータを再読み込みできます。\n"
+"                    それ以外の場合は、\"破棄\"をクリックして、メモリ内のデータを使用し続けることができます。"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.jean_jacket_product_template
@@ -3858,7 +3888,7 @@ msgstr "最終更新日"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_data_change
 msgid "Last Write Date"
-msgstr ""
+msgstr "最終更新日"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__last_order_preparation_change
@@ -3931,7 +3961,7 @@ msgstr "リネン製の軽量ボンバージャケット。リブ編みのスタ
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
 msgid "Limited synchronization"
-msgstr ""
+msgstr "限定的な同期"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__manual_discount
@@ -3945,16 +3975,21 @@ msgid "Line No"
 msgstr "行番号"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_preset.py:0
-msgid "Linked Orders"
+#: model:ir.model,name:point_of_sale.model_product_uom
+msgid "Link between products and their UoMs"
 msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_preset.py:0
+msgid "Linked Orders"
+msgstr "リンク済オーダ"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_preset.py:0
 msgid "Linked POS Configurations"
-msgstr ""
+msgstr "リンク済POS設定"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3976,13 +4011,13 @@ msgstr "従業員でログイン"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__login_number_seq_id
 msgid "Login Number Sequence"
-msgstr ""
+msgstr "ログイン番号シーケンス"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Login Number Sequence of Session %s"
-msgstr ""
+msgstr "セッションのログイン番号シーケンス %s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3990,6 +4025,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/components/navbar/sale_details_button/sales_detail_report.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/login_screen/login_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.xml:0
+#: code:addons/point_of_sale/static/src/app/screens/saver_screen/saver_screen.xml:0
 msgid "Logo"
 msgstr "ロゴ"
 
@@ -4046,7 +4082,7 @@ msgstr ""
 msgid ""
 "Make sure there is an IoT Box subscription associated with your Odoo "
 "database, then restart the IoT Box."
-msgstr ""
+msgstr "Odooデータベースに関連付けられたIoT Boxサブスクリプションがあることを確認し、その後IoT Boxを再起動します。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4206,7 +4242,17 @@ msgstr "N/A"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.xml:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "NEW"
+msgstr "NEW"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "NOTE UPDATE"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_note__name
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__identification__name
@@ -4325,7 +4371,7 @@ msgstr "PoS設定が見つかりません"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
 msgid "No Point of Sale"
-msgstr ""
+msgstr "POSなし"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4360,6 +4406,12 @@ msgid ""
 "No chart of account configured, go to the \"configuration / settings\" menu,"
 " and install one from the Invoicing tab."
 msgstr "勘定科目表が設定されていません。\" 設定 / 管理設定 \"メニューの \"請求\"タブからインストールして下さい。"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.xml:0
+msgid "No customers found, press enter to load more."
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_sale_graph
@@ -4433,12 +4485,17 @@ msgstr "セッションが見つかりません"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/preset_slots_popup/preset_slots_popup.xml:0
 msgid "No slot available for this day"
-msgstr ""
+msgstr "その日に空きがありません"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__barcode_nomenclature_id
 msgid "Nomenclature"
 msgstr "体系"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
+msgid "Not Cancelled"
+msgstr "未取消"
 
 #. module: point_of_sale
 #. odoo-python
@@ -4454,7 +4511,7 @@ msgstr "請求外"
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__identification__none
 msgid "Not required"
-msgstr ""
+msgstr "不要です"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4476,6 +4533,12 @@ msgstr "ノートモデル"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Notes"
 msgstr "ノート"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
+msgid "Number by page"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_needaction_counter
@@ -4550,7 +4613,6 @@ msgstr "オフライン注文"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_lot_popup/select_lot_popup.xml:0
 msgid "Ok"
 msgstr "OK"
@@ -4559,7 +4621,7 @@ msgstr "OK"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/product_info_banner/product_info_banner.xml:0
 msgid "On hand:"
-msgstr "手元:"
+msgstr "手持在庫:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4607,12 +4669,6 @@ msgid ""
 "Only users with Manager access rights for PoS app can modify the product "
 "prices on orders."
 msgstr "PoSアプリのマネージャーアクセス権を持つユーザのみが、オーダのプロダクト価格を変更できます。"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
-msgid "Open Barcode Scanner"
-msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4721,11 +4777,10 @@ msgstr "オペレーションタイプは在庫ダッシュボードに表示さ
 
 #. module: point_of_sale
 #. odoo-javascript
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+#: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__pos_order_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__order_id
 msgid "Order"
@@ -4811,7 +4866,7 @@ msgstr "オーダ参照"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__order_seq_id
 msgid "Order Sequence"
-msgstr ""
+msgstr "オーダシーケンス"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__orderlines_sequence_in_cart_by_category
@@ -4832,7 +4887,7 @@ msgstr "オーダ明細"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
 msgid "Order(s)"
-msgstr ""
+msgstr "オーダ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__refund_orderline_ids
@@ -4869,12 +4924,12 @@ msgstr "オーダ分析"
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 msgid "Orders status"
-msgstr ""
+msgstr "オーダステータス"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__origin_order_id
 msgid "Origin Order"
-msgstr ""
+msgstr "元のオーダ"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order_line__price_type__original
@@ -5246,7 +5301,7 @@ msgstr "大量に確認してください"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
-msgid "Please add a customer to the order."
+msgid "Please add a valid customer to the order."
 msgstr ""
 
 #. module: point_of_sale
@@ -5364,7 +5419,7 @@ msgstr "お客様を選択してください"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
 msgid "PoS Config"
-msgstr ""
+msgstr "POS設定"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5385,7 +5440,7 @@ msgstr "POSオーダ明細"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "PoS Order Sequence of Session %s"
-msgstr ""
+msgstr "セッションの%sPOSオーダシーケンス"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5706,7 +5761,6 @@ msgstr "準備"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_preparation_display
-#: model:ir.ui.menu,name:point_of_sale.menu_pos_preparation_display
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Preparation Display"
 msgstr "準備画面"
@@ -5720,8 +5774,6 @@ msgid "Preparation Printers"
 msgstr "準備プリンタ"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__preset_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
 msgid "Preset"
@@ -5730,14 +5782,14 @@ msgstr "プリセット"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Preset time"
-msgstr ""
+msgstr "プリセット時間"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_preset_form
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_preset
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_tree
 msgid "Presets"
-msgstr ""
+msgstr "プリセット"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5778,6 +5830,12 @@ msgstr "税抜価格:"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_extra
 msgid "Price extra"
 msgstr "価格追加"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
+msgid "Price incl. Tax:"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6032,11 +6090,6 @@ msgid "Product Note"
 msgstr "プロダクトメモ"
 
 #. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_product_packaging
-msgid "Product Packaging"
-msgstr "プロダクトパッケージング"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Product Prices"
 msgstr "プロダクト価格"
@@ -6072,19 +6125,14 @@ msgid "Product Template Attribute Value"
 msgstr "プロダクトテンプレート属性値"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__product_uom_id
+msgid "Product Unit"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_uom_uom
 msgid "Product Unit of Measure"
 msgstr "プロダクト単位"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__product_uom_id
-msgid "Product UoM"
-msgstr "プロダクト単位"
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_uom_category
-msgid "Product UoM Categories"
-msgstr "プロダクト単位カテゴリ"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_product
@@ -6096,12 +6144,6 @@ msgstr "プロダクトバリアント"
 #: model:ir.ui.menu,name:point_of_sale.pos_config_menu_action_product_product
 msgid "Product Variants"
 msgstr "プロダクトバリアント"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
-msgid "Product information"
-msgstr "プロダクト情報"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6285,7 +6327,6 @@ msgstr "レシートヘッダ"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
-#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__pos_reference
 msgid "Receipt Number"
 msgstr "領収書番号"
@@ -6309,7 +6350,6 @@ msgstr "回復セッション"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
-#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Reference"
 msgstr "参照"
 
@@ -6331,7 +6371,7 @@ msgstr "返金"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "Refund Initiated"
-msgstr ""
+msgstr "返金が開始されました"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__refund_orderline_ids
@@ -6348,7 +6388,7 @@ msgstr "返金オーダ"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Refund Successful"
-msgstr ""
+msgstr "返金完了"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6417,13 +6457,13 @@ msgstr "POSメニューを再ロード"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
 msgid "Reload Products"
-msgstr ""
+msgstr "プロダクトをリロード"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 msgid "Reload products"
-msgstr ""
+msgstr "プロダクトをリロード"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6533,7 +6573,7 @@ msgstr "プロダクト返品"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__is_return
 msgid "Return mode"
-msgstr ""
+msgstr "返品モード"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_return
@@ -6738,13 +6778,18 @@ msgid "Search Orders..."
 msgstr "オーダを検索..."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/search_bar/search_bar.xml:0
+msgid "Search Products"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 msgid "Search Sales Order"
 msgstr "販売オーダ検索"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "Search more"
 msgstr "更に検索"
@@ -6783,13 +6828,19 @@ msgstr "支払方法を選択してオーダを検証して下さい。"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/preset_slots_popup/preset_slots_popup.xml:0
 msgid "Select a preset"
-msgstr ""
+msgstr "プリセットを選択"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
+msgid "Select an order"
+msgstr "注文を選択してください"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Select preset"
-msgstr ""
+msgstr "プリセットを選択"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6817,7 +6868,7 @@ msgstr "選択された属性"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
 msgid "Selection of outstanding account is required"
-msgstr ""
+msgstr "未消込勘定を選択して下さい。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6857,7 +6908,7 @@ msgstr "支払い要求を送信する"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Send Refund Request"
-msgstr ""
+msgstr "返金要求を送信する"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6898,7 +6949,7 @@ msgstr "担当 %s"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.xml:0
 msgid "Served by:"
-msgstr ""
+msgstr "担当者:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7247,8 +7298,6 @@ msgid "Starting Balance"
 msgstr "開始残高"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__state
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__state
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__state
@@ -7313,7 +7362,7 @@ msgstr "停止"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 msgid "Stop Barcode Scanner"
-msgstr ""
+msgstr "バーコードスキャナを止める"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__order_edit_tracking
@@ -7376,12 +7425,6 @@ msgid ""
 msgstr "ピーカンがたっぷり入った甘いパイ。濃厚なバター風味のフィリングとフレーク状の塩味が特徴。"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
-msgid "Switch Product View"
-msgstr "プロダクトビューを編集"
-
-#. module: point_of_sale
 #: model:product.template,name:point_of_sale.t_shirt_slim_product_template
 msgid "T shirt slim"
 msgstr "Tシャツスリム"
@@ -7399,12 +7442,6 @@ msgstr "合計"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
-msgid "Table"
-msgstr "テーブル"
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Tables, menus, kitchen display, etc."
 msgstr "テーブル、メニュー、キッチンディスプレイなど"
@@ -7412,13 +7449,13 @@ msgstr "テーブル、メニュー、キッチンディスプレイなど"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Take out / Delivery / Members"
-msgstr ""
+msgstr "テイクアウト / 配送 / メンバー"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.xml:0
 msgid "Takeout for:"
-msgstr ""
+msgstr "テイクアウト 顧客名:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7657,7 +7694,7 @@ msgstr "ハードウェアプロキシのホスト名またはIPアドレス。�
 #: code:addons/point_of_sale/models/pos_preset.py:0
 msgid ""
 "The identification method should be set to \"None\" for the default preset."
-msgstr ""
+msgstr "識別方法は、デフォルトのプリセットでは \"なし\" に設定して下さい。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7713,7 +7750,7 @@ msgstr "不明なエラーのため、注文をサーバーに送信できませ
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
 "The order delivery / pickup date is in the future. You cannot cancel it."
-msgstr ""
+msgstr "オーダの配送/ピックアップ日は未来の日付です。取消はできません。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7848,9 +7885,24 @@ msgid ""
 msgstr "セッションは異常に長い間開かれました。閉鎖をご検討ください。"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid ""
+"The session is being closed by another user. The page will be reloaded."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_preset.py:0
 msgid "The start time must be before the end time."
+msgstr "開始時間は終了時間より前にして下さい。"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+msgid ""
+"The tip has been added to the order. However,the selected payment line does "
+"not allow tips to be added."
 msgstr ""
 
 #. module: point_of_sale
@@ -8247,9 +8299,14 @@ msgstr "製品を返品するには、POS%sでセッションを開く必要が�
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
+msgid "Today"
+msgstr "今日"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/order_display/order_display.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/money_details_popup/money_details_popup.xml:0
-#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_total
 msgid "Total"
@@ -8294,6 +8351,18 @@ msgid "Total Price excl. Tax:"
 msgstr "合計税抜価格:"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
+msgid "Total Price incl. Tax:"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
+msgid "Total VAT:"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__amount
 msgid "Total amount of the payment."
 msgstr "支払総額。"
@@ -8331,7 +8400,7 @@ msgstr "オーダ編集を追跡"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__origin_order_id
 msgid "Tracks the original order from which this orderline was created."
-msgstr ""
+msgstr "このオーダ明細が作成された元のオーダを追跡します。"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_odoo_sneakers_product_template
@@ -8505,11 +8574,6 @@ msgid ""
 msgstr "接続が再確立されるまで、OdooPOSの機能は制限されます。"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
-msgid "UoM"
-msgstr "測定単位"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_company__point_of_sale_update_stock_quantities
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__update_stock_quantities
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8525,7 +8589,7 @@ msgstr "上半身"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__use_presets
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_use_presets
 msgid "Use Presets"
-msgstr ""
+msgstr "プリセットを使用"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__use_payment_terminal
@@ -8564,7 +8628,7 @@ msgstr "会計ポジションを使って、オーダごとに異なる税を取
 msgid ""
 "Used to generate the OOOO part of the pos_reference field of the pos.order "
 "model."
-msgstr ""
+msgstr "pos.orderモデルのpos_referenceフィールドのOOOO部分を生成するために使用されます。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8598,6 +8662,7 @@ msgstr "UUID"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/product_info_banner/product_info_banner.xml:0
 msgid "VAT:"
 msgstr "消費税:"
@@ -9016,7 +9081,7 @@ msgstr "セッションにPOSを割り当てる必要があります。"
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 msgid "You still have"
-msgstr ""
+msgstr "まだ"
 
 #. module: point_of_sale
 #. odoo-python
@@ -9200,7 +9265,7 @@ msgstr "on"
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 msgid "open orders for the next few days."
-msgstr ""
+msgstr "今後、数日間のオープンオーダがあります。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9211,7 +9276,7 @@ msgstr "又は"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
 msgid "orders per"
-msgstr ""
+msgstr "オーダ数、以下ごと:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9270,3 +9335,4 @@ msgstr "{{ !barcodeReader ? 'No nomenclature' : '' }}"
 msgid ""
 "{{ line.hasValidProductLot() ? 'Valid product lot' : 'Invalid product lot'}}"
 msgstr ""
+"{{ line.hasValidProductLot() ? '有効なプロダクトロット' : 'Invalid product lot'}}"

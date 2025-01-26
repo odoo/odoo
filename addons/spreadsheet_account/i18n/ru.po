@@ -3,15 +3,15 @@
 # 	* spreadsheet_account
 # 
 # Translators:
-# Wil Odoo, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,9 +41,75 @@ msgid "Account"
 msgstr "Счёт"
 
 #. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Bank and Cash"
+msgstr "Банк и касса"
+
+#. module: spreadsheet_account
 #: model:ir.model,name:spreadsheet_account.model_res_company
 msgid "Companies"
 msgstr "Компании"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Cost of Revenue"
+msgstr "Себестоимость"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Credit Card"
+msgstr "Кредитная карта"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Current Assets"
+msgstr "Текущие активы"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Current Liabilities"
+msgstr "Краткосрочные обязательства"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Current Year Earnings"
+msgstr "Прибыль текущего года"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Depreciation"
+msgstr "Амортизация"
+
+#. module: spreadsheet_account
+#: model:ir.model.fields,field_description:spreadsheet_account.field_account_account__display_name
+#: model:ir.model.fields,field_description:spreadsheet_account.field_res_company__display_name
+msgid "Display Name"
+msgstr "Отображаемое имя"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Equity"
+msgstr "Капитал"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Expenses"
+msgstr "Расходы"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Fixed Assets"
+msgstr "Основные средства"
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -64,6 +130,18 @@ msgid "Get the total debit for the specified account(s) and period."
 msgstr "Получите общую сумму дебета по указанному счету (счетам) и периоду."
 
 #. module: spreadsheet_account
+#: model:ir.model.fields,field_description:spreadsheet_account.field_account_account__id
+#: model:ir.model.fields,field_description:spreadsheet_account.field_res_company__id
+msgid "ID"
+msgstr "ID"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Income"
+msgstr "Доходы"
+
+#. module: spreadsheet_account
 #. odoo-python
 #: code:addons/spreadsheet_account/models/account.py:0
 msgid "Journal items for account prefix %s"
@@ -71,9 +149,51 @@ msgstr "Статьи журнала для префикса счета %s"
 
 #. module: spreadsheet_account
 #. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Non-current Assets"
+msgstr "Внеоборотные активы"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Non-current Liabilities"
+msgstr "Долгосрочные обязательства"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Off-Balance Sheet"
+msgstr "Внебалансовый лист"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Other Income"
+msgstr "Прочий доход"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Payable"
+msgstr "К оплате"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Prepayments"
+msgstr "Предоплата"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Receivable"
+msgstr "Дебиторская задолженность"
+
+#. module: spreadsheet_account
+#. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-msgid "Returns the account ids of a given group."
-msgstr "Возвращает идентификаторы учетных записей заданной группы."
+msgid "Returns the account codes of a given group."
+msgstr ""
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -102,12 +222,6 @@ msgstr "Смотрите записи"
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 msgid "Set to TRUE to include unposted entries."
 msgstr "Установите значение TRUE, чтобы включить непомещенные записи."
-
-#. module: spreadsheet_account
-#. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-msgid "The account type (income, expense, asset_current,...)."
-msgstr "Тип счета (доход, расход, актив_оборотный,...)."
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -154,6 +268,12 @@ msgstr "День, с которого следует отсчитывать на
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 msgid "The prefix of the accounts."
 msgstr "Префикс учетных записей."
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "The technical account type (possible values are: %s)."
+msgstr ""
 
 #. module: spreadsheet_account
 #. odoo-javascript

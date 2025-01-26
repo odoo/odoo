@@ -3,15 +3,15 @@
 # 	* repair
 # 
 # Translators:
-# Wil Odoo, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-20 08:41+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -209,6 +209,11 @@ msgid "Allowed Lot"
 msgstr "Erlaubtes Los"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__allowed_uom_ids
+msgid "Allowed Uom"
+msgstr ""
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__reserve_visible
 msgid "Allowed to Reserve Production"
 msgstr "Reservierung der Produktion erlaubt"
@@ -275,11 +280,6 @@ msgid "Catalog"
 msgstr "Katalog"
 
 #. module: repair
-#: model:ir.model.fields,field_description:repair.field_repair_order__product_uom_category_id
-msgid "Category"
-msgstr "Kategorie"
-
-#. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Check availability"
 msgstr "Verfügbarkeit prüfen"
@@ -339,15 +339,6 @@ msgstr "Reparatur bestätigen"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Confirmed"
 msgstr "Bestätigt"
-
-#. module: repair
-#: model:ir.model.fields,help:repair.field_repair_order__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"Die Umrechnung zwischen Maßeinheiten kann nur erfolgen, wenn sie derselben "
-"Kategorie angehören. Die Umrechnung erfolgt auf Basis der Kennzahlen."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -956,11 +947,6 @@ msgid "Product Tracking"
 msgstr "Produktverfolgung"
 
 #. module: repair
-#: model:ir.model.fields,field_description:repair.field_repair_order__product_uom
-msgid "Product Unit of Measure"
-msgstr "Maßeinheit des Produkts"
-
-#. module: repair
 #: model:ir.model,name:repair.model_product_product
 msgid "Product Variant"
 msgstr "Produktvariante"
@@ -1365,16 +1351,6 @@ msgid "The day after tomorrow"
 msgstr "Übermorgen"
 
 #. module: repair
-#. odoo-python
-#: code:addons/repair/models/repair.py:0
-msgid ""
-"The product unit of measure you chose has a different category than the "
-"product unit of measure."
-msgstr ""
-"Die von Ihnen gewählte Maßeinheit des Produkts hat eine andere Kategorie als"
-" die Maßeinheit des Produkts."
-
-#. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "This is a repair note."
 msgstr "Dies ist eine Reparaturnotiz"
@@ -1508,11 +1484,10 @@ msgid "Under Warranty"
 msgstr "Unter Garantie"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__product_uom
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__product_uom_name
-#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
-#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_tree
-msgid "Unit of Measure"
-msgstr "Maßeinheit"
+msgid "Unit"
+msgstr "Einheit"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder

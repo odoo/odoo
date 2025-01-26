@@ -3,15 +3,16 @@
 # 	* website_blog
 # 
 # Translators:
-# Wil Odoo, 2024
+# Thi Huong Nguyen, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-01-20 08:43+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,11 +45,6 @@ msgstr "'."
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "'. Showing results for '"
 msgstr "'. Đang hiện kết quả cho '"
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.date_selector
-msgid "-- All dates"
-msgstr "-- Tất cả các ngày"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_6
@@ -373,6 +369,11 @@ msgstr "Tất cả blog"
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
 msgid "All blogs"
 msgstr "Tất cả blog"
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.date_selector
+msgid "All dates"
+msgstr "Tất cả ngày"
 
 #. module: website_blog
 #. odoo-python
@@ -875,6 +876,8 @@ msgstr "Dexter"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__display_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__display_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__display_name
+#: model:ir.model.fields,field_description:website_blog.field_website__display_name
+#: model:ir.model.fields,field_description:website_blog.field_website_snippet_filter__display_name
 msgid "Display Name"
 msgstr "Tên hiển thị"
 
@@ -1098,6 +1101,8 @@ msgstr "Cách chọn khách sạn ưng ý"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__id
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__id
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__id
+#: model:ir.model.fields,field_description:website_blog.field_website__id
+#: model:ir.model.fields,field_description:website_blog.field_website_snippet_filter__id
 msgid "ID"
 msgstr "ID"
 
@@ -1320,10 +1325,10 @@ msgid ""
 "whether or not they are smart or informal. A good hotel report should tell "
 "you this, and particularly about breakfast facilities."
 msgstr ""
-"Các cửa hàng ở địa phương rất tuyệt nhưng nhà hàng và quán bar của khách sạn"
-" cũng khá quan trọng. Bạn cần tìm hiểu các lựa chọn, phong cách lịch sự hay "
-"suồng sã. Bản thông tin khách sạn nên cho bạn biết những thông tin này, đặc "
-"biệt là về thông tin bữa sáng. "
+"Các cửa hàng ở địa phương rất tuyệt nhưng nhà hàng và bar của khách sạn cũng"
+" khá quan trọng. Bạn cần tìm hiểu các lựa chọn, phong cách lịch sự hay suồng"
+" sã. Bản thông tin khách sạn nên cho bạn biết những thông tin này, đặc biệt "
+"là về thông tin bữa sáng. "
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_3
@@ -1731,7 +1736,7 @@ msgstr "Đọc thêm <i class=\"oi oi-chevron-right ms-2\"/>"
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_3
 msgid "Restaurants, Cafes and Bars"
-msgstr "Nhà hàng, quán cafe và quán bar"
+msgstr "Nhà hàng, quán cafe và bar"
 
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_blog__website_id
@@ -1827,6 +1832,11 @@ msgstr "Tên Seo"
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Separate every keyword with a comma"
 msgstr "Ngăn cách mỗi từ khóa bằng dấu phẩy"
+
+#. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog__sequence
+msgid "Sequence"
+msgstr "Trình tự"
 
 #. module: website_blog
 #. odoo-javascript

@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-01-20 08:41+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
@@ -146,6 +146,13 @@ msgid "Archived"
 msgstr "Archyvuotas"
 
 #. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
+msgid ""
+"Are you sure you want the delivery to be free for this order? You might have"
+" forgotten to compute the rates."
+msgstr ""
+
+#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Availability"
 msgstr "Pasiekiamumas"
@@ -195,7 +202,7 @@ msgstr ""
 #. module: delivery
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
-#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.xml:0
+#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
 msgid "Choose this location"
 msgstr ""
 
@@ -268,12 +275,6 @@ msgstr "Klientas"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__debug_logging
 msgid "Debug logging"
 msgstr "Klaidų registravimas"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
-#: model:ir.model.fields,help:delivery.field_res_users__property_delivery_carrier_id
-msgid "Default delivery method used in sales orders."
-msgstr ""
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -379,6 +380,10 @@ msgstr "Atmesti"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__display_name
+#: model:ir.model.fields,field_description:delivery.field_product_category__display_name
+#: model:ir.model.fields,field_description:delivery.field_res_partner__display_name
+#: model:ir.model.fields,field_description:delivery.field_sale_order__display_name
+#: model:ir.model.fields,field_description:delivery.field_sale_order_line__display_name
 msgid "Display Name"
 msgstr "Rodomas pavadinimas"
 
@@ -479,6 +484,10 @@ msgstr "Grupuoti pagal"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__id
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__id
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__id
+#: model:ir.model.fields,field_description:delivery.field_product_category__id
+#: model:ir.model.fields,field_description:delivery.field_res_partner__id
+#: model:ir.model.fields,field_description:delivery.field_sale_order__id
+#: model:ir.model.fields,field_description:delivery.field_sale_order_line__id
 msgid "ID"
 msgstr "ID"
 
@@ -551,21 +560,15 @@ msgstr "Paskutinį kartą atnaujino"
 msgid "Last Updated on"
 msgstr "Paskutinį kartą atnaujinta"
 
-#. module: stock_delivery
-#. odoo-python
-#: code:addons/stock_delivery/models/stock_picking.py:0
-msgid "Manual actions might be needed."
-msgstr ""
-
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "List view"
 msgstr "Sąrašo peržiūra"
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Loading..."
 msgstr "Vykdoma..."
 
@@ -586,7 +589,7 @@ msgstr ""
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Map view"
 msgstr ""
 
@@ -644,7 +647,7 @@ msgstr ""
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "No result"
 msgstr "Jokių rezultatų"
 
@@ -656,8 +659,8 @@ msgstr ""
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/location/location.xml:0
-#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.xml:0
+#: code:addons/delivery/static/src/js/location_selector/location/location.js:0
+#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
 msgid "Opening hours"
 msgstr ""
 
@@ -882,7 +885,7 @@ msgstr ""
 
 #. module: delivery
 #. odoo-javascript
-#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.xml:0
+#: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
 msgid "There was an error loading the map"
 msgstr ""
 
@@ -931,6 +934,12 @@ msgstr "Atnaujinti"
 #: code:addons/delivery/models/sale_order.py:0
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "Update shipping cost"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
+#: model:ir.model.fields,help:delivery.field_res_users__property_delivery_carrier_id
+msgid "Used in sales orders."
 msgstr ""
 
 #. module: delivery

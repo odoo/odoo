@@ -3,15 +3,16 @@
 # 	* pos_restaurant
 # 
 # Translators:
-# Wil Odoo, 2024
+# Daye Jeong, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:30+0000\n"
+"POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -181,7 +182,6 @@ msgstr "할당"
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 #: code:addons/pos_restaurant/static/src/app/screens/tip_screen/tip_screen.xml:0
 msgid "Back"
 msgstr "뒤로"
@@ -200,11 +200,6 @@ msgstr "배경 이미지"
 #: model:product.template,name:pos_restaurant.pos_food_bacon_product_template
 msgid "Bacon Burger"
 msgstr "베이컨 버거"
-
-#. module: pos_restaurant
-#: model:pos.config,name:pos_restaurant.pos_config_main_bar
-msgid "Bar"
-msgstr "막대그래프"
 
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.product_attribute_fries
@@ -354,7 +349,7 @@ msgstr "작성일자"
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__default_screen
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_default_screen
 msgid "Default Screen"
-msgstr ""
+msgstr "기본 화면"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -377,7 +372,7 @@ msgstr "플로어 디자인 및 테이블에 주문 배정"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/models/pos_order.js:0
 msgid "Direct Sale"
-msgstr ""
+msgstr "직접 판매"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -502,13 +497,13 @@ msgstr "평면도"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__floor_prefix
 msgid "Floor Prefix"
-msgstr ""
+msgstr "플로어 접두사"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
 msgid "Floor edit"
-msgstr ""
+msgstr "플로어 편집"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -811,7 +806,7 @@ msgstr "주문"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__origin_table_id
 msgid "Original Table"
-msgstr ""
+msgstr "원본 테이블"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__parent_id
@@ -832,6 +827,7 @@ msgstr "파스타 볼로냐"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
 #: code:addons/pos_restaurant/static/src/app/screens/receipt_screen/receipt_screen.xml:0
+#: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "Pay"
 msgstr "지불"
 
@@ -886,6 +882,8 @@ msgid ""
 "Please close and validate the following open PoS Session before modifying this floor.\n"
 "Open session: %(session_names)s"
 msgstr ""
+"이 플로어를 변경하시려면 열려 있는 다음 POS 세션을 종료 후 승인하시기 바랍니다.\n"
+"열려 있는 세션: %s"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_config
@@ -993,7 +991,6 @@ msgstr "영수증 재인쇄"
 #. module: pos_restaurant
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_config.py:0
-#: model:pos.config,name:pos_restaurant.pos_config_main_restaurant
 msgid "Restaurant"
 msgstr "식당"
 
@@ -1093,13 +1090,13 @@ msgstr "순서"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
 msgid "Set Tab"
-msgstr ""
+msgstr "탭 설정"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
 msgid "Set Table"
-msgstr ""
+msgstr "테이블 설정"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__set_tip_after_payment
@@ -1356,6 +1353,12 @@ msgstr "합계 :"
 
 #. module: pos_restaurant
 #. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
+msgid "Transfer"
+msgstr "전송"
+
+#. module: pos_restaurant
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Transfer / Merge"
 msgstr "이전 / 병합"
@@ -1481,12 +1484,6 @@ msgstr "______________________________________________"
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
-msgid "changes"
-msgstr "거스름돈"
-
-#. module: pos_restaurant
-#. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "items"
 msgstr "항목"
 
@@ -1500,4 +1497,4 @@ msgstr "또는 나중에 테이블을 예약할 수 있습니다."
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "product(s) selected"
-msgstr ""
+msgstr "선택된 제품"

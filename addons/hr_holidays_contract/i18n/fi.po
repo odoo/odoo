@@ -3,15 +3,16 @@
 # 	* hr_holidays_contract
 # 
 # Translators:
-# Wil Odoo, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-01-20 08:41+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +34,15 @@ msgid ""
 "Contracts:\n"
 "%(contracts)s"
 msgstr ""
+"Vapaata ei voi asettaa useisiin sopimuksiin, joissa on eri työaikajärjestelyt.\n"
+"\n"
+"Luo yksi vapaapäivä kutakin sopimusta varten.\n"
+"\n"
+"Vapaa:\n"
+"%(time_off)s\n"
+"\n"
+"Sopimukset:\n"
+"%(contracts)s"
 
 #. module: hr_holidays_contract
 #: model:ir.model,name:hr_holidays_contract.model_hr_employee_base
@@ -56,9 +66,23 @@ msgstr ""
 "määrärahat ennen sopimuksen muuttamista."
 
 #. module: hr_holidays_contract
+#: model:ir.model.fields,field_description:hr_holidays_contract.field_hr_contract__display_name
+#: model:ir.model.fields,field_description:hr_holidays_contract.field_hr_employee_base__display_name
+#: model:ir.model.fields,field_description:hr_holidays_contract.field_hr_leave__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: hr_holidays_contract
 #: model:ir.model,name:hr_holidays_contract.model_hr_contract
 msgid "Employee Contract"
 msgstr "Työsopimus"
+
+#. module: hr_holidays_contract
+#: model:ir.model.fields,field_description:hr_holidays_contract.field_hr_contract__id
+#: model:ir.model.fields,field_description:hr_holidays_contract.field_hr_employee_base__id
+#: model:ir.model.fields,field_description:hr_holidays_contract.field_hr_leave__id
+msgid "ID"
+msgstr "ID"
 
 #. module: hr_holidays_contract
 #: model:ir.model,name:hr_holidays_contract.model_hr_leave

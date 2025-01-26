@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +37,8 @@ msgid ""
 "(<i class=\"fa fa-long-arrow-right me-1\" aria-label=\"Assigned Partner\" "
 "title=\"Assigned Partner\"/>"
 msgstr ""
+"(<i class=\"fa fa-long-arrow-right me-1\" aria-label=\"Vastuutettu "
+"partneri\" title=\"Vastuutettu partneri\"/>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.partner
@@ -49,6 +51,8 @@ msgid ""
 "<i class=\"fa fa-info-circle me-2\"/>\n"
 "                There are no matching partners found for the selected country. Displaying results across all countries instead."
 msgstr ""
+"<i class=\"fa fa-info-circle me-2\"/>\n"
+"                Valitusta maasta ei löytynyt sopivia kumppaneita. Sen sijaan näytetään tulokset kaikista maista."
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.ref_country
@@ -96,6 +100,9 @@ msgid ""
 "                                                        <span class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>\n"
 "                                                    </span>"
 msgstr ""
+"<span class=\"input-group-text o_input_group_date_icon\">\n"
+"                                                        <span class=\"fa fa-calendar\" role=\"img\" aria-label=\"Kalenteri\" title=\"Kalenteri\"/>\n"
+"                                                    </span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -104,31 +111,29 @@ msgid ""
 "                                                        <span class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\"/>\n"
 "                                                    </span>"
 msgstr ""
+"<span class=\"input-group-text o_input_group_date_icon\">\n"
+"                                                        <span class=\"fa fa-calendar\" role=\"img\" aria-label=\"Kalenteri\"/>\n"
+"                                                    </span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_opportunity_geo_assign_form
 msgid ""
-"<span class=\"oe_grey\" invisible=\"partner_latitude &lt;= 0\">N </span>\n"
-"                                    <span class=\"oe_grey\" invisible=\"partner_latitude &gt;= 0\">S </span>"
+"<span class=\"opacity-50\" invisible=\"partner_latitude &lt;= 0\">N </span>\n"
+"                                    <span class=\"opacity-50\" invisible=\"partner_latitude &gt;= 0\">S </span>"
 msgstr ""
-"<span class=\"oe_grey\" invisible=\"partner_latitude &lt;= 0\">P </span>\n"
-"                                    <span class=\"oe_grey\" invisible=\"partner_latitude &gt;= 0\">E </span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_opportunity_geo_assign_form
 msgid ""
-"<span class=\"oe_grey\" invisible=\"partner_longitude &lt;= 0\">E </span>\n"
-"                                    <span class=\"oe_grey\" invisible=\"partner_longitude &gt;= 0\">W </span>\n"
-"                                    <span class=\"oe_grey ps-1\">) </span>"
+"<span class=\"opacity-50\" invisible=\"partner_longitude &lt;= 0\">E </span>\n"
+"                                    <span class=\"opacity-50\" invisible=\"partner_longitude &gt;= 0\">W </span>\n"
+"                                    <span class=\"opacity-50 ps-1\">) </span>"
 msgstr ""
-"<span class=\"oe_grey\" invisible=\"partner_longitude &lt;= 0\">I </span>\n"
-"                                    <span class=\"oe_grey\" invisible=\"partner_longitude &gt;= 0\">L </span>\n"
-"                                    <span class=\"oe_grey ps-1\">) </span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_opportunity_geo_assign_form
-msgid "<span class=\"oe_grey\">( </span>"
-msgstr "<span class=\"oe_grey\">( </span>"
+msgid "<span class=\"opacity-50\">( </span>"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -193,12 +198,12 @@ msgid ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Your leads</span><br>\n"
+"                    <span style=\"font-size: 10px;\">Your leads</span><br/>\n"
 "                </td><td valign=\"middle\" align=\"right\" t-if=\"not user.company_id.uses_default_logo\">\n"
-"                    <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\"/>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -210,22 +215,22 @@ msgid ""
 "                <tr>\n"
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <div>\n"
-"                            Hello,<br>\n"
-"                            We have been contacted by those prospects that are in your region. Thus, the following leads have been assigned to <t t-out=\"ctx['partner_id'].name or ''\"></t>:<br>\n"
+"                            Hello,<br/>\n"
+"                            We have been contacted by those prospects that are in your region. Thus, the following leads have been assigned to <t t-out=\"ctx['partner_id'].name or ''\"/>:<br/>\n"
 "                            <ol>\n"
-"                                <li t-foreach=\"ctx['partner_leads']\" t-as=\"lead\"><a t-att-href=\"lead['lead_link']\" t-out=\"lead['lead_id'].name or 'Subject Undefined'\">Subject Undefined</a>, <t t-out=\"lead['lead_id'].partner_name or lead['lead_id'].contact_name or 'Contact Name Undefined'\">Contact Name Undefined</t>, <t t-out=\"lead['lead_id'].country_id and lead['lead_id'].country_id.name or 'Country Undefined'\">Country Undefined</t>, <t t-out=\"lead['lead_id'].email_from or 'Email Undefined' or ''\">Email Undefined</t>, <t t-out=\"lead['lead_id'].phone or ''\">+1 650-123-4567</t> </li><br>\n"
+"                                <li t-foreach=\"ctx['partner_leads']\" t-as=\"lead\"><a t-att-href=\"lead['lead_link']\" t-out=\"lead['lead_id'].name or 'Subject Undefined'\">Subject Undefined</a>, <t t-out=\"lead['lead_id'].partner_name or lead['lead_id'].contact_name or 'Contact Name Undefined'\">Contact Name Undefined</t>, <t t-out=\"lead['lead_id'].country_id and lead['lead_id'].country_id.name or 'Country Undefined'\">Country Undefined</t>, <t t-out=\"lead['lead_id'].email_from or 'Email Undefined' or ''\">Email Undefined</t>, <t t-out=\"lead['lead_id'].phone or ''\">+1 650-123-4567</t> </li><br/>\n"
 "                            </ol>\n"
 "                            <t t-if=\"ctx.get('partner_in_portal')\">\n"
-"                                Please connect to your <a t-att-href=\"'%s?db=%s' % (object.get_base_url(), object.env.cr.dbname)\">Partner Portal</a> to get details. On each lead are two buttons on the top left corner that you should press after having contacted the lead: \"I'm interested\" &amp; \"I'm not interested\".<br>\n"
+"                                Please connect to your <a t-att-href=\"'%s?db=%s' % (object.get_base_url(), object.env.cr.dbname)\">Partner Portal</a> to get details. On each lead are two buttons on the top left corner that you should press after having contacted the lead: \"I'm interested\" &amp; \"I'm not interested\".<br/>\n"
 "                            </t>\n"
 "                            <t t-else=\"\">\n"
 "                                You do not have yet a portal access to our database. Please contact\n"
-"                                <t t-out=\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'\">us</t>.<br>\n"
+"                                <t t-out=\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'\">us</t>.<br/>\n"
 "                            </t>\n"
-"                            The lead will be sent to another partner if you do not contact the lead before 20 days.<br><br>\n"
-"                            Thank you,<br>\n"
-"                            <t t-out=\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature or ''\"></t>\n"
-"                            <br>\n"
+"                            The lead will be sent to another partner if you do not contact the lead before 20 days.<br/><br/>\n"
+"                            Thank you,<br/>\n"
+"                            <t t-out=\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature or ''\"/>\n"
+"                            <br/>\n"
 "                            <t t-if=\"not ctx['partner_id'].user_id\">\n"
 "                                PS: It looks like you do not have an account manager assigned to you, please contact us.\n"
 "                            </t>\n"
@@ -234,7 +239,7 @@ msgid ""
 "                </tr>\n"
 "                <tr>\n"
 "                    <td style=\"text-align:center;\">\n"
-"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                    </td>\n"
 "                </tr>\n"
 "            </table>\n"
@@ -279,12 +284,12 @@ msgstr ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Liidisi</span><br>\n"
+"                    <span style=\"font-size: 10px;\">Sinun liidisi</span><br/>\n"
 "                </td><td valign=\"middle\" align=\"right\" t-if=\"not user.company_id.uses_default_logo\">\n"
-"                    <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\"/>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -296,31 +301,31 @@ msgstr ""
 "                <tr>\n"
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <div>\n"
-"                            Hei,<br>\n"
-"                            Meihin on otettu yhteyttä alueellanne sijaitsevista potentiaalisista asiakkaista. Näin ollen seuraavat liidit on annettu osoitteeseen <t t-out=\"ctx['partner_id'].name or ''\"></t>:<br>\n"
+"                            Hei,<br/>\n"
+"                            Meihin on otettu yhteyttä alueellanne sijaitsevista potentiaalisista asiakkaista. Näin ollen seuraavat liidit on annettu osoitteeseen <t t-out=\"ctx['partner_id'].name or ''\"/>:<br/>\n"
 "                            <ol>\n"
-"                                <li t-foreach=\"ctx['partner_leads']\" t-as=\"lead\"><a t-att-href=\"lead['lead_link']\" t-out=\"lead['lead_id'].name or 'Subject Undefined'\">Aihe Määrittelemätön</a>, <t t-out=\"lead['lead_id'].partner_name or lead['lead_id'].contact_name or 'Contact Name Undefined'\">Yhteyshenkilön nimi Määrittelemätön</t>, <t t-out=\"lead['lead_id'].country_id and lead['lead_id'].country_id.name or 'Country Undefined'\">Maa Määrittelemätön</t>, <t t-out=\"lead['lead_id'].email_from or 'Email Undefined' or ''\">Sähköposti Määrittelemätön</t>, <t t-out=\"lead['lead_id'].phone or ''\">+1 650-123-4567</t> </li><br>\n"
+"                                <li t-foreach=\"ctx['partner_leads']\" t-as=\"lead\"><a t-att-href=\"lead['lead_link']\" t-out=\"lead['lead_id'].name or 'Subject Undefined'\">Aihe Määrittelemätön</a>, <t t-out=\"lead['lead_id'].partner_name or lead['lead_id'].contact_name or 'Contact Name Undefined'\">Yhteyshenkilön nimi Määrittelemätön</t>, <t t-out=\"lead['lead_id'].country_id and lead['lead_id'].country_id.name or 'Country Undefined'\">Maa Määrittelemätön</t>, <t t-out=\"lead['lead_id'].email_from or 'Email Undefined' or ''\">Sähköposti Määrittelemätön</t>, <t t-out=\"lead['lead_id'].phone or ''\">+1 650-123-4567</t> </li><br/>\n"
 "                            </ol>\n"
 "                           <t t-if=\"ctx.get('partner_in_portal')\">\n"
-"                                Ota yhteys <a t-att-href=\"'%s?db=%s' % (object.get_base_url(), object.env.cr.dbname)\">kumppaniportaaliin</a> saadaksesi lisätietoja. Jokaisessa liidissä on vasemmassa yläkulmassa kaksi painiketta, joita sinun tulee painaa, kun olet ottanut yhteyttä liidiin: \"Olen kiinnostunut\" ja \"En ole kiinnostunut\".<br>\n"
+"                                Ota yhteys <a t-att-href=\"'%s?db=%s' % (object.get_base_url(), object.env.cr.dbname)\">kumppaniportaaliin</a> saadaksesi lisätietoja. Jokaisessa liidissä on vasemmassa yläkulmassa kaksi painiketta, joita sinun tulee painaa, kun olet ottanut yhteyttä liidiin: \"Olen kiinnostunut\" ja \"En ole kiinnostunut\".<br/>\n"
 "                           </t>\n"
 "                           <t t-else=\"\">\n"
 "                                Sinulla ei ole vielä portaaliyhteyttä tietokantaamme. Ota yhteyttä\n"
-"                               <t t-out=\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'\">meihin</t>.<br>\n"
+"                               <t t-out=\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'\">meihin</t>.<br/>\n"
 "                           </t>\n"
-"                            Liidi lähetetään toiselle kumppanille, jos et ota yhteyttä johtoon ennen 20 päivää.<br><br>\n"
-"                            Kiitos,<br>\n"
-"                            <t t-out=\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature or ''\"></t>\n"
-"                            <br>\n"
+"                            Liidi lähetetään toiselle kumppanille, jos et ota yhteyttä liidiin ennen kuin 20 päivää on kulunut.<br/><br/>\n"
+"                            Kiitos,<br/>\n"
+"                            <t t-out=\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature or ''\"/>\n"
+"                            <br/>\n"
 "                           <t t-if=\"not ctx['partner_id'].user_id\">\n"
-"                                PS: Näyttää siltä, että sinulle ei ole nimetty asiakaspäällikköä, ota yhteyttä.\n"
+"                                PS: Näyttää siltä, että sinulle ei ole nimetty asiakaspäällikköä, ota meihin yhteyttä.\n"
 "                           </t>\n"
 "                        </div>\n"
 "                    </td>\n"
 "                </tr>\n"
 "                <tr>\n"
 "                    <td style=\"text-align:center;\">\n"
-"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                    </td>\n"
 "                </tr>\n"
 "            </table>\n"
@@ -584,6 +589,8 @@ msgstr "Asiakas:"
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.layout
 msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL RESELLERS"
 msgstr ""
+"PUDOTA RAKENNUSPALIKAT TÄNNE, JOTTA NE OVAT SAATAVILLA KAIKILLA "
+"JÄLLEENMYYJILLÄ"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
@@ -612,11 +619,14 @@ msgid "Details Next Activity"
 msgstr "Seuraavan aktiviteetin yksityiskohdat"
 
 #. module: website_crm_partner_assign
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__display_name
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__display_name
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__display_name
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__display_name
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__display_name
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation__display_name
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__display_name
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_website__display_name
 msgid "Display Name"
 msgstr "Näyttönimi"
 
@@ -800,19 +810,22 @@ msgstr "Olen ottanut yhteyttä asiakkaaseen"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "I'm interested"
-msgstr ""
+msgstr "Olen kiinnostunut"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "I'm not interested"
-msgstr ""
+msgstr "En ole kiinnostunut"
 
 #. module: website_crm_partner_assign
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation__id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_website__id
 msgid "ID"
 msgstr "ID"
 
@@ -874,12 +887,17 @@ msgstr "Myöhässä olevat toimenpiteet"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__date_review
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__date_review
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__date_review
 msgid "Latest Partner Review"
 msgstr "Viimeisin kumppanin katselmointi"
 
 #. module: website_crm_partner_assign
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__date_review
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__date_review
+msgid "Latest Review"
+msgstr ""
+
+#. module: website_crm_partner_assign
+#: model:ir.model,name:website_crm_partner_assign.model_crm_lead
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__lead_id
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
 msgid "Lead"
@@ -914,11 +932,6 @@ msgstr "Liidin sijainti"
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead_forward_to_partner
 msgid "Lead forward to partner"
 msgstr "Liidin edelleenlähetys kumppanille"
-
-#. module: website_crm_partner_assign
-#: model:ir.model,name:website_crm_partner_assign.model_crm_lead
-msgid "Lead/Opportunity"
-msgstr "Liidi/mahdollisuus"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
@@ -1002,14 +1015,14 @@ msgstr "Toimenpiteen määräaika"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__date_review_next
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__date_review_next
-msgid "Next Partner Review"
-msgstr "Seuraava kumppanin katselmointi"
+msgid "Next Review"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #. odoo-python
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
 msgid "No Activities"
-msgstr ""
+msgstr "Ei toimintaa"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.actions.act_window,help:website_crm_partner_assign.action_report_crm_partner_assign
@@ -1528,7 +1541,7 @@ msgstr "viite"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "references"
-msgstr ""
+msgstr "referenssit"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields.selection,name:website_crm_partner_assign.selection__crm_lead_forward_to_partner__forward_type__assigned

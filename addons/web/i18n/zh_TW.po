@@ -3,16 +3,16 @@
 # 	* web
 # 
 # Translators:
-# Wil Odoo, 2024
 # Tony Ng, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -806,6 +806,12 @@ msgstr "動作"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/search/cog_menu/cog_menu.xml:0
+msgid "Actions menu"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu_items.js:0
 msgid "Activate Test Mode"
 msgstr "啟動測試模式"
@@ -1120,12 +1126,6 @@ msgstr "是否確實要存檔此記錄？"
 #: code:addons/web/static/src/search/control_panel/control_panel.js:0
 msgid "Are you sure that you want to remove this embedded action?"
 msgstr "確定要移除此嵌入操作嗎？"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.js:0
-msgid "Are you sure that you want to remove this filter?"
-msgstr "您確定要移除此篩選嗎？"
 
 #. module: web
 #. odoo-javascript
@@ -1812,12 +1812,6 @@ msgstr "公司標語，包含在打印文檔的頁眉或頁腳（取決於所選
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.xml:0
-msgid "Comparison"
-msgstr "比較"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/views/debug_items.js:0
 msgid "Computed Arch"
 msgstr "計算得出的結構"
@@ -1989,6 +1983,12 @@ msgstr "無法顯示選取的 PDF"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.js:0
+msgid "Could not display the selected spreadsheet"
+msgstr "無法顯示選定的試算表"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/image_url/image_url_field.js:0
 msgid "Could not display the specified image url."
 msgstr "無法顯示指定的圖片網址。"
@@ -2090,8 +2090,8 @@ msgstr "貨幣"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
-msgid "Current state"
-msgstr "目前狀態"
+msgid "Current state is %s"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -2301,12 +2301,6 @@ msgstr "刪除"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.js:0
-msgid "Delete Filter"
-msgstr "刪除篩選器"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid "Delete Property Field"
 msgstr "刪除屬性欄位"
@@ -2314,7 +2308,6 @@ msgstr "刪除屬性欄位"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/search/control_panel/control_panel.xml:0
-#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.xml:0
 msgid "Delete item"
 msgstr "刪除項目"
 
@@ -2420,6 +2413,16 @@ msgstr "捨棄變更"
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_record_quick_create.js:0
 #: model:ir.model.fields,field_description:web.field_base_document_layout__display_name
+#: model:ir.model.fields,field_description:web.field_ir_http__display_name
+#: model:ir.model.fields,field_description:web.field_ir_model__display_name
+#: model:ir.model.fields,field_description:web.field_ir_qweb_field_image__display_name
+#: model:ir.model.fields,field_description:web.field_ir_qweb_field_image_url__display_name
+#: model:ir.model.fields,field_description:web.field_ir_ui_menu__display_name
+#: model:ir.model.fields,field_description:web.field_ir_ui_view__display_name
+#: model:ir.model.fields,field_description:web.field_res_company__display_name
+#: model:ir.model.fields,field_description:web.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:web.field_res_partner__display_name
+#: model:ir.model.fields,field_description:web.field_res_users__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
 
@@ -2636,6 +2639,12 @@ msgstr "編輯標籤"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.xml:0
+msgid "Edit favorite"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/domain/domain_field.js:0
 msgid "Edit in dialog"
 msgstr "在對話框中編輯"
@@ -2702,6 +2711,12 @@ msgstr "輸入電郵"
 #: code:addons/web/static/src/webclient/settings_form_view/highlight_text/form_label_highlight_text.xml:0
 msgid "Enterprise"
 msgstr "企業"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/webclient/debug/profiling/profiling_item.xml:0
+msgid "Entry Count"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -2885,6 +2900,12 @@ msgstr "摩天輪"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/field_selector/field_selector_field.js:0
+msgid "Field Selector"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 msgid "Field Type"
 msgstr "欄位類型"
@@ -2967,7 +2988,7 @@ msgstr "可折疊的"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/dynamic_widget/dynamic_model_field_selector_char.js:0
+#: code:addons/web/static/src/views/fields/field_selector/field_selector_field.js:0
 msgid "Follow relations"
 msgstr "追隨關係"
 
@@ -3113,17 +3134,10 @@ msgstr "前往網址"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/google_slide_viewer.js:0
-#: code:addons/web/static/src/views/fields/google_slide_viewer.xml:0
-#, python-format
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.js:0
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.xml:0
 msgid "Google Slide Viewer"
 msgstr "Google 簡報檢視器"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/graph/graph_view.js:0
-msgid "Graph"
-msgstr "圖形"
 
 #. module: web
 #. odoo-javascript
@@ -3243,6 +3257,16 @@ msgstr "我想更新資料（匯入相容匯出）"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #: model:ir.model.fields,field_description:web.field_base_document_layout__id
+#: model:ir.model.fields,field_description:web.field_ir_http__id
+#: model:ir.model.fields,field_description:web.field_ir_model__id
+#: model:ir.model.fields,field_description:web.field_ir_qweb_field_image__id
+#: model:ir.model.fields,field_description:web.field_ir_qweb_field_image_url__id
+#: model:ir.model.fields,field_description:web.field_ir_ui_menu__id
+#: model:ir.model.fields,field_description:web.field_ir_ui_view__id
+#: model:ir.model.fields,field_description:web.field_res_company__id
+#: model:ir.model.fields,field_description:web.field_res_config_settings__id
+#: model:ir.model.fields,field_description:web.field_res_partner__id
+#: model:ir.model.fields,field_description:web.field_res_users__id
 msgid "ID"
 msgstr "識別號"
 
@@ -3730,7 +3754,7 @@ msgstr "海盜旗"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/jsonb/jsonb.js:0
+#: code:addons/web/static/src/views/fields/json/json_field.js:0
 msgid "Json"
 msgstr "Json"
 
@@ -4177,7 +4201,7 @@ msgstr "模式"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/domain/domain_field.js:0
-#: code:addons/web/static/src/views/fields/dynamic_widget/dynamic_model_field_selector_char.js:0
+#: code:addons/web/static/src/views/fields/field_selector/field_selector_field.js:0
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 msgid "Model"
 msgstr "模型"
@@ -4266,6 +4290,12 @@ msgstr "更多"
 #: code:addons/web/static/src/webclient/navbar/navbar.xml:0
 msgid "More Menu"
 msgstr "更多選單"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
+msgid "More..."
+msgstr "更多⋯"
 
 #. module: web
 #. odoo-javascript
@@ -4477,9 +4507,8 @@ msgstr "明年"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/model/relational_model/utils.js:0
 #: code:addons/web/static/src/search/search_bar/search_bar.js:0
-#: code:addons/web/static/src/views/kanban/kanban_header.js:0
-#: code:addons/web/static/src/views/list/list_renderer.js:0
 #: code:addons/web/static/src/views/pivot/pivot_model.js:0
 msgid "No"
 msgstr "否"
@@ -4549,8 +4578,8 @@ msgstr "找不到任何裝置。"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
-msgid "No emoji match your search"
-msgstr "找不到相符的表情符號"
+msgid "No emoji matches your search"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -4622,10 +4651,10 @@ msgstr "不，保留它"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/model/relational_model/utils.js:0
 #: code:addons/web/static/src/views/graph/graph_model.js:0
-#: code:addons/web/static/src/views/kanban/kanban_header.js:0
-#: code:addons/web/static/src/views/list/list_renderer.js:0
 #: code:addons/web/static/src/views/pivot/pivot_model.js:0
+#: code:addons/web/static/src/webclient/debug/profiling/profiling_item.xml:0
 msgid "None"
 msgstr "無"
 
@@ -4644,14 +4673,8 @@ msgstr "非有效 %s"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
-msgid "Not active state"
-msgstr "歸檔狀態"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
-msgid "Not active state, click to change it"
-msgstr "處於歸檔狀態，點選以更改它"
+msgid "Not active state, click to change it to %s"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -4846,7 +4869,7 @@ msgstr "只有員工可以存取此資料庫。請聯繫管理員。"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/dynamic_widget/dynamic_model_field_selector_char.js:0
+#: code:addons/web/static/src/views/fields/field_selector/field_selector_field.js:0
 msgid "Only searchable"
 msgstr "只可搜尋"
 
@@ -5210,18 +5233,6 @@ msgstr "上一個（左箭嘴鍵）"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/search/utils/dates.js:0
-msgid "Previous Period"
-msgstr "前一期間"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/search/utils/dates.js:0
-msgid "Previous Year"
-msgstr "前一年"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/core/datetime/datetime_picker.js:0
 msgid "Previous century"
 msgstr "上世紀"
@@ -5256,6 +5267,12 @@ msgstr "主要色彩"
 #: code:addons/web/static/src/webclient/actions/reports/report_action.xml:0
 msgid "Print"
 msgstr "列印"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/cog_menu/cog_menu.js:0
+msgid "Print report: %s"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -5364,13 +5381,13 @@ msgstr "Qweb 圖像欄位"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/colorpicker/colorpicker.xml:0
+#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
 msgid "RGB"
 msgstr "RGB"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/colorpicker/colorpicker.xml:0
+#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
 msgid "RGBA"
 msgstr "RGBA"
 
@@ -5790,6 +5807,12 @@ msgstr "搜尋更多⋯"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
+msgid "Search emoji"
+msgstr "搜尋表情符號"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 msgid "Search for a command..."
 msgstr "搜尋指令⋯"
@@ -5799,12 +5822,6 @@ msgstr "搜尋指令⋯"
 #: code:addons/web/static/src/webclient/menus/menu_providers.js:0
 msgid "Search for a menu..."
 msgstr "搜尋選單⋯"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
-msgid "Search for an emoji"
-msgstr "搜尋表情符號"
 
 #. module: web
 #. odoo-javascript
@@ -6236,6 +6253,12 @@ msgstr "狀態"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
+msgid "Statusbar"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/settings_confirmation_dialog.xml:0
 msgid "Stay Here"
 msgstr "留在此頁"
@@ -6583,12 +6606,6 @@ msgid "This file is invalid. Please select an image."
 msgstr "此檔無效。請選擇圖像。"
 
 #. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.js:0
-msgid "This filter is global and will be removed for everyone."
-msgstr "這是全域篩選器，將會為每個人都移除。"
-
-#. module: web
 #: model_terms:ir.ui.view,arch_db:web.preview_externalreport
 msgid "This is a sample of an external report."
 msgstr "這是外部報表的一個例子。"
@@ -6664,6 +6681,18 @@ msgstr "二氧化鈦"
 #: code:addons/web/static/src/views/widgets/ribbon/ribbon.js:0
 msgid "Title"
 msgstr "稱謂"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
+msgid "To next categories"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/emoji_picker/emoji_picker.xml:0
+msgid "To previous categories"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6928,6 +6957,12 @@ msgstr "未儲存的變更"
 #: code:addons/web/static/src/views/list/list_controller.xml:0
 msgid "Unselect All"
 msgstr "取消全選"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
+msgid "Unselected state is %s"
+msgstr ""
 
 #. module: web
 #. odoo-python
@@ -7214,7 +7249,6 @@ msgstr "WC"
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 #: code:addons/web/static/src/model/relational_model/dynamic_list.js:0
 #: code:addons/web/static/src/search/control_panel/control_panel.js:0
-#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.js:0
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 msgid "Warning"
 msgstr "警告"
@@ -7241,11 +7275,6 @@ msgstr "方向"
 #: model:ir.model.fields,field_description:web.field_res_config_settings__web_app_name
 msgid "Web App Name"
 msgstr "網絡應用程式名稱"
-
-#. module: web
-#: model_terms:ir.ui.view,arch_db:web.qunit_mobile_suite
-msgid "Web Mobile Tests"
-msgstr "網路手機端測試"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.qunit_suite
@@ -7364,10 +7393,9 @@ msgstr "黃色"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/model/relational_model/utils.js:0
 #: code:addons/web/static/src/search/search_bar/search_bar.js:0
 #: code:addons/web/static/src/views/fields/field_tooltip.xml:0
-#: code:addons/web/static/src/views/kanban/kanban_header.js:0
-#: code:addons/web/static/src/views/list/list_renderer.js:0
 #: code:addons/web/static/src/views/pivot/pivot_model.js:0
 msgid "Yes"
 msgstr "是"
@@ -14692,7 +14720,7 @@ msgstr "女主角"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/colorpicker/colorpicker.xml:0
+#: code:addons/web/static/src/core/color_picker/color_picker.xml:0
 msgid "hex"
 msgstr "hex"
 
@@ -15461,14 +15489,50 @@ msgstr "介乎"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
+msgid "is equal"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
+msgid "is greater"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
+msgid "is greater or equal"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "is in"
 msgstr "存在於"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
+msgid "is lower"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
+msgid "is lower or equal"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "is not"
 msgstr "不是"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
+msgid "is not equal"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -24908,6 +24972,12 @@ msgstr "處女"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "virus"
 msgstr "病毒"
+
+#. module: web
+#. odoo-python
+#: code:addons/web/controllers/vcard.py:0
+msgid "vobject library is not installed"
+msgstr ""
 
 #. module: web
 #. odoo-javascript

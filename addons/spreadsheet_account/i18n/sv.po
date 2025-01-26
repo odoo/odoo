@@ -3,15 +3,15 @@
 # 	* spreadsheet_account
 # 
 # Translators:
-# Wil Odoo, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,9 +41,75 @@ msgid "Account"
 msgstr "Konto"
 
 #. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Bank and Cash"
+msgstr "Bank och kassa"
+
+#. module: spreadsheet_account
 #: model:ir.model,name:spreadsheet_account.model_res_company
 msgid "Companies"
 msgstr "Företag"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Cost of Revenue"
+msgstr "Kostnad för intäkter"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Credit Card"
+msgstr "Kreditkort"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Current Assets"
+msgstr "Omsättningstillgångar"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Current Liabilities"
+msgstr "Kortfristiga skulder"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Current Year Earnings"
+msgstr "Intäkter för innevarande år"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Depreciation"
+msgstr "Avskrivningar"
+
+#. module: spreadsheet_account
+#: model:ir.model.fields,field_description:spreadsheet_account.field_account_account__display_name
+#: model:ir.model.fields,field_description:spreadsheet_account.field_res_company__display_name
+msgid "Display Name"
+msgstr "Visningsnamn"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Equity"
+msgstr "Eget kapital"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Expenses"
+msgstr "Kostnader"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Fixed Assets"
+msgstr "Anläggningstillgångar"
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -68,6 +134,18 @@ msgstr ""
 "perioden."
 
 #. module: spreadsheet_account
+#: model:ir.model.fields,field_description:spreadsheet_account.field_account_account__id
+#: model:ir.model.fields,field_description:spreadsheet_account.field_res_company__id
+msgid "ID"
+msgstr "ID"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Income"
+msgstr "Inkomster"
+
+#. module: spreadsheet_account
 #. odoo-python
 #: code:addons/spreadsheet_account/models/account.py:0
 msgid "Journal items for account prefix %s"
@@ -75,9 +153,51 @@ msgstr "Verifikat för kontoprefix %s"
 
 #. module: spreadsheet_account
 #. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Non-current Assets"
+msgstr "Anläggningstillgångar"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Non-current Liabilities"
+msgstr "Långfristiga skulder"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Off-Balance Sheet"
+msgstr "Utanför balansräkningen"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Other Income"
+msgstr "Övriga intäkter"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Payable"
+msgstr "Betalbara"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Prepayments"
+msgstr "Förskottsbetalningar"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Receivable"
+msgstr "Fordringar"
+
+#. module: spreadsheet_account
+#. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-msgid "Returns the account ids of a given group."
-msgstr "Returnerar konto-id:n för en given grupp."
+msgid "Returns the account codes of a given group."
+msgstr ""
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -108,12 +228,6 @@ msgstr "Se register"
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 msgid "Set to TRUE to include unposted entries."
 msgstr "Ställ in på SANT för att inkludera poster som inte har lagts upp."
-
-#. module: spreadsheet_account
-#. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-msgid "The account type (income, expense, asset_current,...)."
-msgstr "Kontotypen (inkomst, utgift, asset_current,...)."
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -160,6 +274,12 @@ msgstr "Dagen från vilken räkenskapsåret börjar."
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 msgid "The prefix of the accounts."
 msgstr "Prefixet för kontona."
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "The technical account type (possible values are: %s)."
+msgstr ""
 
 #. module: spreadsheet_account
 #. odoo-javascript

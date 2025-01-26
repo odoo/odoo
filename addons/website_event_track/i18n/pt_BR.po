@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-01-20 08:43+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -100,40 +100,23 @@ msgstr "<b>Introdução da palestra</b>:"
 #: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
 msgid ""
 "<div>\n"
-"    Dear <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br>\n"
+"    Dear <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br/>\n"
 "    We are pleased to inform you that your proposal <t t-out=\"object.name or ''\">What This Event Is All About</t> has been accepted and confirmed for the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.\n"
-"    <br>\n"
+"    <br/>\n"
 "    You will find more details here:\n"
 "    <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
 "            View Talk\n"
 "        </a>\n"
 "    </div>\n"
-"    <br><br>\n"
+"    <br/><br/>\n"
 "    Thank you,\n"
-"    <t t-if=\"user.signature\">\n"
-"        <br>\n"
-"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "    </t>\n"
 "</div>"
 msgstr ""
-"<div>\n"
-"    Caro <t t-out=\"object.partner_id.name or object.partner_name or ''\">Breno Oliveira</t><br>\n"
-"    Temos o prazer de informar que a sua proposta <t t-out=\"object.name or ''\">Sobre o que este evento é</t> foi aceita e confirmada para o evento <t t-out=\"object.event_id.name or ''\">Revelação Online da Coleção OpenWood</t>.\n"
-"    <br>\n"
-"    Encontre mais detalhes aqui:\n"
-"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
-"            Ver sessão\n"
-"        </a>\n"
-"    </div>\n"
-"    <br><br>\n"
-"    Obrigado,\n"
-"    <t t-if=\"user.signature\">\n"
-"        <br>\n"
-"        <t t-out=\"user.signature or ''\">--<br>Michel Admin</t>\n"
-"    </t>\n"
-"</div>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
@@ -746,12 +729,19 @@ msgid "Discover our new design team"
 msgstr "Conheça a nossa nova equipe de design"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_type__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_website__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_website_menu__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__display_name
 msgid "Display Name"
 msgstr "Nome exibido"
 
@@ -1091,12 +1081,19 @@ msgid "How to optimize your sales, from leads to sales orders"
 msgstr "Como otimizar suas vendas, de leads a pedidos de venda"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_type__id
+#: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website_event_track.field_website__id
+#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__id
+#: model:ir.model.fields,field_description:website_event_track.field_website_menu__id
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__id
 msgid "ID"
 msgstr "ID"
 
@@ -2628,3 +2625,8 @@ msgstr "começa em"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "starts on"
 msgstr "começa no dia"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "track"
+msgstr ""

@@ -3,15 +3,15 @@
 # 	* website_mass_mailing
 # 
 # Translators:
-# Wil Odoo, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:50+0000\n"
+"POT-Creation-Date: 2025-01-20 08:43+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +33,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
 msgid ""
 ".s_newsletter_block .s_newsletter_list, .o_newsletter_popup "
-".s_newsletter_list"
+".s_newsletter_list, .s_newsletter_box .s_newsletter_list"
 msgstr ""
 
 #. module: website_mass_mailing
@@ -104,10 +104,25 @@ msgid "Contact"
 msgstr "Kontaktas"
 
 #. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_res_company__display_name
+msgid "Display Name"
+msgstr "Rodomas pavadinimas"
+
+#. module: website_mass_mailing
 #. odoo-javascript
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:0
 msgid "Display Thanks Message"
 msgstr ""
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_box
+msgid "Don't miss our upcoming updates"
+msgstr ""
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
+msgid "Email Address"
+msgstr "El. pašto adresas"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
@@ -132,10 +147,16 @@ msgstr ""
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block_default_template
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_box
 msgid ""
 "Get all the latest news, blog posts and product updates from our company, "
 "delivered directly to your inbox."
 msgstr ""
+
+#. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_res_company__id
+msgid "ID"
+msgstr "ID"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block_form_template
@@ -166,6 +187,11 @@ msgstr ""
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
+msgid "Newsletter Box"
+msgstr ""
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
 msgid "Newsletter Popup"
 msgstr "Iššokantis naujienlaikraščio pranešimas"
 
@@ -176,6 +202,11 @@ msgid ""
 "No mailing list found, do you want to create a new one? This will save all "
 "your changes, are you sure you want to proceed?"
 msgstr ""
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form_options
+msgid "Placeholder"
+msgstr "Vietaženklis"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options_common
@@ -206,12 +237,6 @@ msgid "Success"
 msgstr "Pavyko"
 
 #. module: website_mass_mailing
-#. odoo-python
-#: code:addons/website_mass_mailing/controllers/main.py:0
-msgid "Suspicious activity detected by Google reCaptcha."
-msgstr "\"Google reCaptcha\" aptiko įtartina veikla."
-
-#. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
 msgid "Template"
 msgstr "Šablonas"
@@ -219,6 +244,11 @@ msgstr "Šablonas"
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block_form_template
 msgid "Thank you for subscribing!"
+msgstr ""
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_box
+msgid "Thanks for registering!"
 msgstr ""
 
 #. module: website_mass_mailing
@@ -266,6 +296,13 @@ msgstr ""
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block_form_template
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
 msgid "johnsmith@example.com"
+msgstr ""
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
+msgid ""
+"updates, digest, bulletin, announcements, notifications, communication, "
+"promotional, email, alert, dialog, prompt, subscription, subscribe, mailing-"
+"list, news, box, image, picture"
 msgstr ""

@@ -3,16 +3,16 @@
 # 	* website_mass_mailing
 # 
 # Translators:
-# Wil Odoo, 2024
 # Manon Rondou, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:50+0000\n"
+"POT-Creation-Date: 2025-01-20 08:43+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Manon Rondou, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,10 +34,8 @@ msgstr ".o_newsletter_popup"
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
 msgid ""
 ".s_newsletter_block .s_newsletter_list, .o_newsletter_popup "
-".s_newsletter_list"
+".s_newsletter_list, .s_newsletter_box .s_newsletter_list"
 msgstr ""
-".s_newsletter_block .s_newsletter_list, .o_newsletter_popup "
-".s_newsletter_list"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
@@ -119,10 +117,25 @@ msgid "Contact"
 msgstr "Contact"
 
 #. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_res_company__display_name
+msgid "Display Name"
+msgstr "Nom d'affichage"
+
+#. module: website_mass_mailing
 #. odoo-javascript
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:0
 msgid "Display Thanks Message"
 msgstr "Afficher le message de remerciement"
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_box
+msgid "Don't miss our upcoming updates"
+msgstr ""
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
+msgid "Email Address"
+msgstr "Adresse e-mail"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
@@ -147,12 +160,18 @@ msgstr "Abonnement par formulaire"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block_default_template
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_box
 msgid ""
 "Get all the latest news, blog posts and product updates from our company, "
 "delivered directly to your inbox."
 msgstr ""
 "Recevez toutes les dernières nouvelles, articles de blog et mises à jour de "
 "produits de notre entreprise, directement dans votre boîte de réception."
+
+#. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_res_company__id
+msgid "ID"
+msgstr "ID"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block_form_template
@@ -183,6 +202,11 @@ msgstr "Bloc newsletter"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
+msgid "Newsletter Box"
+msgstr ""
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
 msgid "Newsletter Popup"
 msgstr "Fenêtre contextuelle newsletter"
 
@@ -195,6 +219,11 @@ msgid ""
 msgstr ""
 "Aucune liste de diffusion trouvée, voulez-vous en créer une nouvelle ? Cela "
 "enregistrera toutes vos modifications, êtes-vous sûr de vouloir continuer ?"
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form_options
+msgid "Placeholder"
+msgstr "Placeholder"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options_common
@@ -225,12 +254,6 @@ msgid "Success"
 msgstr "Réussite"
 
 #. module: website_mass_mailing
-#. odoo-python
-#: code:addons/website_mass_mailing/controllers/main.py:0
-msgid "Suspicious activity detected by Google reCaptcha."
-msgstr "Activité suspecte détectée par Google reCaptcha."
-
-#. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
 msgid "Template"
 msgstr "Modèle"
@@ -239,6 +262,11 @@ msgstr "Modèle"
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block_form_template
 msgid "Thank you for subscribing!"
 msgstr "Merci de vous être abonné !"
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_box
+msgid "Thanks for registering!"
+msgstr ""
 
 #. module: website_mass_mailing
 #. odoo-python
@@ -289,6 +317,13 @@ msgstr ""
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block_form_template
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
 msgid "johnsmith@example.com"
 msgstr "johnsmith@example.com"
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.snippets
+msgid ""
+"updates, digest, bulletin, announcements, notifications, communication, "
+"promotional, email, alert, dialog, prompt, subscription, subscribe, mailing-"
+"list, news, box, image, picture"
+msgstr ""

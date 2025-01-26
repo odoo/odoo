@@ -3,17 +3,17 @@
 # 	* mrp
 # 
 # Translators:
-# Wil Odoo, 2024
 # a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2024
 # Maitê Dietze, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Maitê Dietze, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -88,6 +88,12 @@ msgstr "Nº de ordens de trabalho"
 #: model:ir.model.fields,field_description:mrp.field_product_template__used_in_bom_count
 msgid "# of BoM Where is Used"
 msgstr "Nº de LMs onde são usadas"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_bom.py:0
+msgid "%(display_name)s"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -611,6 +617,7 @@ msgid "Action Needed"
 msgstr "Requer ação"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__active
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__active
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__active
 msgid "Active"
@@ -761,6 +768,12 @@ msgstr "Permite criar novos números de série/lote para os componentes"
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__consumption__flexible
 msgid "Allowed"
 msgstr "Permitido"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__allowed_uom_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__allowed_uom_ids
+msgid "Allowed Uom"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reserve_visible
@@ -1349,10 +1362,6 @@ msgid "Catalog"
 msgstr "Catálogo"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_uom_category_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__product_uom_category_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_uom_category_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_production__product_uom_category_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__loss_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_type__loss_type
 #: model_terms:ir.ui.view,arch_db:mrp.oee_loss_tree_view
@@ -1595,18 +1604,6 @@ msgstr "Consumo"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
 msgid "Consumption Warning"
 msgstr "Aviso de consumo"
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_bom__product_uom_category_id
-#: model:ir.model.fields,help:mrp.field_mrp_bom_byproduct__product_uom_category_id
-#: model:ir.model.fields,help:mrp.field_mrp_bom_line__product_uom_category_id
-#: model:ir.model.fields,help:mrp.field_mrp_production__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"A conversão entre unidades de medida só pode ocorrer se elas pertencerem à "
-"mesma categoria. A conversão será feita com base nas proporções."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_bom_tree_view
@@ -1938,17 +1935,12 @@ msgstr "Lead time padrão de produção"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__default_capacity
 msgid ""
-"Default number of pieces (in product UoM) that can be produced in parallel "
+"Default number of pieces (in product unit) that can be produced in parallel "
 "(at the same time) at this work center. For example: the capacity is 5 and "
 "you need to produce 10 units, then the operation time listed on the BOM will"
 " be multiplied by two. However, note that both time before and after "
 "production will only be counted once."
 msgstr ""
-"Número padrão de peças (na UM do produto) que podem ser produzidas em "
-"paralelo (ao mesmo tempo) nesse centro de trabalho. Por exemplo: a "
-"capacidade é 5 e você precisa produzir 10 unidades, então o tempo de "
-"operação listado na LM será multiplicado por dois. No entanto, observe que o"
-" tempo antes e depois da produção só será contado uma vez."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_consumption_warning_line__product_uom_id
@@ -4530,16 +4522,9 @@ msgid "Product Template"
 msgstr "Modelo de produto"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_uom_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_production__product_uom_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_split__product_uom_id
-msgid "Product Unit of Measure"
-msgstr "Unidade de medida do produto"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__product_uom_id
-msgid "Product UoM"
-msgstr "UM do produto"
+msgid "Product Unit"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
@@ -4608,11 +4593,6 @@ msgstr "Ordem de produção para componentes"
 #: model:ir.model.fields,field_description:mrp.field_stock_move__production_id
 msgid "Production Order for finished products"
 msgstr "Ordem de produção para produtos acabados"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom__active
-msgid "Production Ready"
-msgstr "Pronto para produção"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_state
@@ -5551,16 +5531,6 @@ msgstr "A LM foi atualizada desde a criação da OP"
 
 #. module: mrp
 #. odoo-python
-#: code:addons/mrp/models/mrp_bom.py:0
-msgid ""
-"The Product Unit of Measure you chose has a different category than in the "
-"product form."
-msgstr ""
-"A unidade de medida do produto que você escolheu tem uma categoria diferente"
-" da que está no formulário do produto."
-
-#. module: mrp
-#. odoo-python
 #: code:addons/mrp/models/mrp_workcenter.py:0
 msgid "The Workorder (%s) cannot be started twice!"
 msgstr "A ordem de trabalho (%s) não pode ser iniciada duas vezes."
@@ -6158,7 +6128,17 @@ msgid "Unfold"
 msgstr "Desdobrar"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_split__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__product_uom_id
+#: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__product_uom_name
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "Unit"
 msgstr "Unidade"
 
@@ -6184,21 +6164,12 @@ msgstr "Fator unitário"
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_uom_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__product_uom_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__product_uom_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__product_uom_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__product_uom_id
-#: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__product_uom_name
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_tree_view
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "Unit of Measure"
 msgstr "Unidade de medida"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__product_uom_id
-#: model:ir.model.fields,help:mrp.field_mrp_bom_line__product_uom_id
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
@@ -6229,11 +6200,6 @@ msgstr "Desplanejar"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Unreserve"
 msgstr "Cancelar reserva"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
-msgid "UoM"
-msgstr "UM"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -6268,21 +6234,6 @@ msgstr "Usar dependências de operação"
 #: model:res.groups,name:mrp.group_mrp_reception_report
 msgid "Use Reception Report with Manufacturing Orders"
 msgstr "Usar relatório de recepção com ordens de produção"
-
-#. module: mrp
-#: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
-#: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production_specific
-#: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
-#: model_terms:ir.actions.act_window,help:mrp.action_work_orders
-#: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
-msgid ""
-"Use the table work center control panel to register operations in the shop floor directly.\n"
-"            The tablet provides worksheets for your workers and allow them to scrap products, track time,\n"
-"            launch a maintenance request, perform quality tests, etc."
-msgstr ""
-"Use o painel de controle do tablet do centro de trabalho para registrar diretamente as operações no chão da fábrica.\n"
-"O tablet fornece planilhas para seus funcionários e permite que eles descartem produtos, cronometrem o tempo,\n"
-"lancem uma solicitação de manutenção, realizem testes de qualidade etc."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
@@ -6668,10 +6619,18 @@ msgid "Work center"
 msgstr "Centro de trabalho"
 
 #. module: mrp
+#: model_terms:ir.actions.act_window,help:mrp.action_work_orders
+msgid ""
+"Work orders are operations to do as part of a manufacturing order.\n"
+"                    Operations are defined in the bill of materials or added in the manufacturing order directly."
+msgstr ""
+"Ordens de trabalho são operações a serem realizadas como parte de uma ordem de produção.\n"
+"                    As operações são definidas na lista de materiais ou adicionadas diretamente na ordem de produção."
+
+#. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production_specific
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
-#: model_terms:ir.actions.act_window,help:mrp.action_work_orders
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
 msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"

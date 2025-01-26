@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-15 08:33+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -448,7 +449,7 @@ msgstr "コード"
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_im_livechat_channel_max_sessions_mode_greater_than_zero
 msgid "Concurrent session number should be greater than zero."
-msgstr ""
+msgstr "同時進行セッション数はゼロより大きい値でなければなりません。"
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.livechat_config
@@ -470,12 +471,6 @@ msgstr "連絡先"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__channel_id
 msgid "Conversation"
 msgstr "会話"
-
-#. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
-msgid "Conversation ended..."
-msgstr "会話が終了しました。"
 
 #. module: im_livechat
 #. odoo-python
@@ -720,7 +715,7 @@ msgstr "オペレーターがいない場合のみ有効"
 #: model:ir.actions.act_window,name:im_livechat.expertise_action
 #: model:ir.ui.menu,name:im_livechat.expertise_menu
 msgid "Expertise"
-msgstr ""
+msgstr "専門知識"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -777,6 +772,12 @@ msgstr "自由入力"
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__free_input_multi
 msgid "Free Input (Multi-Line)"
 msgstr "自由入力 (複数行)"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/chat_window_patch.xml:0
+msgid "Give your feedback"
+msgstr "フィードバックを送る"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__sequence
@@ -914,7 +915,7 @@ msgstr "チェックした場合は、一部のメッセージに配信エラー
 msgid ""
 "If limited, operators will only handle the selected number of sessions at a "
 "time. While on a call, they will not receive new conversations."
-msgstr ""
+msgstr "制限されている場合、オペレーターは一度に選択された数のセッションのみを処理します。通話中は、新しい会話は受信しません。"
 
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_documentation_exit
@@ -955,7 +956,7 @@ msgstr "フォロー中　"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__is_forward_operator
 msgid "Is Forward Operator"
-msgstr ""
+msgstr "転送オペレータ"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__is_forward_operator_child
@@ -965,7 +966,7 @@ msgstr "オペレーター子に転送"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__is_in_call
 msgid "Is in call"
-msgstr ""
+msgstr "通話中"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_active
@@ -1064,12 +1065,12 @@ msgstr "チャネルから退席"
 #: code:addons/im_livechat/static/src/core/common/close_confirmation.xml:0
 #: code:addons/im_livechat/static/src/core/public_web/thread_model_patch.js:0
 msgid "Leaving will end the livechat. Proceed leaving?"
-msgstr ""
+msgstr "退出するとチャットは終了します。退出しますか?"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel__max_sessions_mode__limited
 msgid "Limited"
-msgstr ""
+msgstr "制限付き"
 
 #. module: im_livechat
 #: model:ir.module.category,name:im_livechat.module_category_im_livechat
@@ -1088,7 +1089,7 @@ msgstr "Webチャットボタン"
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_expertise_ids
 #: model:ir.model.fields,field_description:im_livechat.field_res_users_settings__livechat_expertise_ids
 msgid "Live Chat Expertise"
-msgstr ""
+msgstr "ライブチャットの専門知識"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_search
@@ -1196,8 +1197,10 @@ msgstr "ライブチャット言語"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__livechat_active
-msgid "Livechat session is active until visitor leaves the conversation."
-msgstr "ライブチャットセッションは、訪問者が会話を離れるまで有効です。"
+msgid ""
+"Livechat session is active until visitor or operator leaves the "
+"conversation."
+msgstr "ライブチャットセッションは、訪問者またはオペレータが会話を終了するまで有効です。"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__sequence
@@ -1207,12 +1210,12 @@ msgstr "一致するオーダ"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__max_sessions
 msgid "Maximum Sessions"
-msgstr ""
+msgstr "最大セッション"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__max_sessions
 msgid "Maximum number of concurrent sessions per operator."
-msgstr ""
+msgstr "オペレータ1人あたりの同時セッションの最大数。"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_mail_message
@@ -1381,7 +1384,7 @@ msgstr "オペレーター分析"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__operator_expertise_ids
 msgid "Operator Expertise"
-msgstr ""
+msgstr "オペレータの専門知識"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__user_ids
@@ -1594,7 +1597,7 @@ msgstr "チャネルを保存すると、設定ウィジェットが表示され
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
+#: code:addons/im_livechat/static/src/embed/common/thread_model_patch.js:0
 msgid "Say something"
 msgstr "何かお話し下さい"
 
@@ -1643,7 +1646,7 @@ msgstr "最後に訪問された15ページを見る"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
+#: code:addons/im_livechat/static/src/embed/common/thread_model_patch.js:0
 msgid "Select an option above"
 msgstr "上記のオプションを選択"
 
@@ -1704,7 +1707,7 @@ msgstr "セッション履歴"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__max_sessions_mode
 msgid "Sessions per Operator"
-msgstr ""
+msgstr "オペレータごとのセッション"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__display_button
@@ -1849,9 +1852,10 @@ msgstr "これは、訪問者が新しい会話を始めたときに表示され
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/common/chat_window_patch.xml:0
+#: code:addons/im_livechat/static/src/core/common/thread_model_patch.js:0
+#: code:addons/im_livechat/static/src/embed/common/thread_model_patch.js:0
 msgid "This livechat conversation has ended"
-msgstr ""
+msgstr "ライブチャットは終了しました"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_res_users_settings__livechat_username
@@ -2022,7 +2026,7 @@ msgstr "何かお探しでしょうか。"
 msgid ""
 "When forwarding live chat conversations, the chatbot will prioritize users "
 "with matching expertise."
-msgstr ""
+msgstr "ライブチャットの会話を転送する際、チャットボットは専門知識が一致するユーザを優先します。"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -2069,6 +2073,12 @@ msgstr ""
 "ウェブサイトライブチャットウィジェットを統合したい各ウェブサイトに\n"
 "チャネルを作成することができます。\n"
 "これにより、ウェブサイト訪問者は、オペレータとリアルタイムで会話することができます。"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/common/thread_model_patch.js:0
+msgid "You ended the conversation with %(name)s."
+msgstr "%(name)sとの会話を終了しました。"
 
 #. module: im_livechat
 #. odoo-javascript

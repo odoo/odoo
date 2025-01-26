@@ -3,15 +3,16 @@
 # 	* pos_restaurant
 # 
 # Translators:
-# Wil Odoo, 2024
+# Malaz Abuidris <msea@odoo.com>, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:30+0000\n"
+"POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -186,7 +187,6 @@ msgstr "تعيين "
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 #: code:addons/pos_restaurant/static/src/app/screens/tip_screen/tip_screen.xml:0
 msgid "Back"
 msgstr "العودة"
@@ -205,11 +205,6 @@ msgstr "صورة الخلفية"
 #: model:product.template,name:pos_restaurant.pos_food_bacon_product_template
 msgid "Bacon Burger"
 msgstr "برجر لحم مقدد "
-
-#. module: pos_restaurant
-#: model:pos.config,name:pos_restaurant.pos_config_main_bar
-msgid "Bar"
-msgstr "الشريط "
 
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.product_attribute_fries
@@ -837,6 +832,7 @@ msgstr "معكرونة بولونيز "
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
 #: code:addons/pos_restaurant/static/src/app/screens/receipt_screen/receipt_screen.xml:0
+#: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "Pay"
 msgstr "الدفع "
 
@@ -998,7 +994,6 @@ msgstr "طباعةالإيصالات "
 #. module: pos_restaurant
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_config.py:0
-#: model:pos.config,name:pos_restaurant.pos_config_main_restaurant
 msgid "Restaurant"
 msgstr "مطعم "
 
@@ -1258,7 +1253,7 @@ msgstr "عدد العملاء الافتراضي المقدم لهم خدمة ع
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__table_number
 msgid "The number of the table as displayed on the floor plan"
-msgstr ""
+msgstr "رقم الطاولة كما هو معروض على مخطط الطابق "
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__parent_id
@@ -1359,6 +1354,12 @@ msgstr "صلصة الطماطم، موزاريلا أججيرولا \"فيور �
 #: code:addons/pos_restaurant/static/src/app/components/tip_receipt/tip_receipt.xml:0
 msgid "Total:"
 msgstr "الإجمالي:"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
+msgid "Transfer"
+msgstr "تحويل "
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1490,12 +1491,6 @@ msgstr "________________________"
 #: code:addons/pos_restaurant/static/src/app/components/tip_receipt/tip_receipt.xml:0
 msgid "______________________________________________"
 msgstr "______________________________________________"
-
-#. module: pos_restaurant
-#. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
-msgid "changes"
-msgstr "التغييرات "
 
 #. module: pos_restaurant
 #. odoo-javascript

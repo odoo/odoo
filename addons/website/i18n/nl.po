@@ -3,16 +3,17 @@
 # 	* website
 # 
 # Translators:
-# Wil Odoo, 2024
 # Martin Trigaux, 2024
+# Manon Rondou, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5951,12 +5952,6 @@ msgid "E.g. https://www.mydomain.com"
 msgstr "bijv. https://www.mijndomein.com"
 
 #. module: website
-#. odoo-python
-#: code:addons/website/controllers/form.py:0
-msgid "EXTERNAL SUBMISSION - Customer not verified"
-msgstr "EXTERNE INDIENING - Klant niet geverifieerd"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_horizontal
 msgid ""
 "Each update is thoroughly tested to guarantee compatibility and reliability,"
@@ -9849,7 +9844,7 @@ msgstr "Menu's"
 #. module: website
 #: model:ir.model,name:website.model_base_partner_merge_automatic_wizard
 msgid "Merge Partner Wizard"
-msgstr "Contacten samenvoegen wizard"
+msgstr "Wizard Samenvoegen Partners"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
@@ -12096,6 +12091,11 @@ msgid "Recipient Email"
 msgstr "E-mail ontvanger"
 
 #. module: website
+#: model:ir.model,name:website.model_ir_rule
+msgid "Record Rule"
+msgstr "Recordregel"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_controller_page__record_view_id
 msgid "Record view"
 msgstr "Recordweergave"
@@ -12472,11 +12472,6 @@ msgstr "Afgerond boxmenu"
 #: model:ir.model.fields,field_description:website.field_website_route__path
 msgid "Route"
 msgstr "Route"
-
-#. module: website
-#: model:ir.model,name:website.model_ir_rule
-msgid "Rule"
-msgstr "Regel"
 
 #. module: website
 #. odoo-javascript
@@ -14063,6 +14058,14 @@ msgid "The message will be visible once the countdown ends"
 msgstr "Het bericht is zichtbaar zodra het aftellen is afgelopen"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_website_controller_page__name
+msgid ""
+"The name is used to generate the URL and is shown in the browser title bar"
+msgstr ""
+"De naam wordt gebruikt om de URL te genereren en wordt weergegeven in de "
+"titelbalk van de browser"
+
+#. module: website
 #: model:ir.model.fields,help:website.field_website_controller_page__name_slugified
 msgid "The name of the page usable in a URL"
 msgstr "De naam van de pagina die bruikbaar is in een URL"
@@ -14211,16 +14214,6 @@ msgstr "Derde functie"
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_multi_menus
 msgid "Third Menu"
 msgstr "Derde menu"
-
-#. module: website
-#. odoo-python
-#: code:addons/website/controllers/form.py:0
-msgid ""
-"This %(model_name)s was submitted by %(user_name)s (%(user_email)s) on "
-"behalf of %(form_email)s"
-msgstr ""
-"Het model %(model_name)s is ingediend door %(user_name)s (%(user_email)s) "
-"namens %(form_email)s"
 
 #. module: website
 #. odoo-javascript
@@ -15312,7 +15305,6 @@ msgid "View Hierarchy"
 msgstr "Zie hiërarchie"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_controller_page__name
 #: model:ir.model.fields,field_description:website.field_website_page__name
 #: model:ir.model.fields,field_description:website.field_website_page_properties__name
 msgid "View Name"

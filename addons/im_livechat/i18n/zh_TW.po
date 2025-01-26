@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-15 08:33+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -470,12 +470,6 @@ msgid "Conversation"
 msgstr "對話"
 
 #. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
-msgid "Conversation ended..."
-msgstr "對話已結束⋯"
-
-#. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "Conversation with %s"
@@ -774,6 +768,12 @@ msgstr "自由輸入"
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__free_input_multi
 msgid "Free Input (Multi-Line)"
 msgstr "自由輸入（多行）"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/chat_window_patch.xml:0
+msgid "Give your feedback"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__sequence
@@ -1192,8 +1192,10 @@ msgstr "實時聊天語言"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__livechat_active
-msgid "Livechat session is active until visitor leaves the conversation."
-msgstr "實時聊天對話時段處於活動狀態，直至訪問者離開對話。"
+msgid ""
+"Livechat session is active until visitor or operator leaves the "
+"conversation."
+msgstr "實時聊天對話時段會一直生效，直至訪客或操作員離開對話。"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__sequence
@@ -1590,7 +1592,7 @@ msgstr "儲存您的頻道以獲得您的配置小工具。"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
+#: code:addons/im_livechat/static/src/embed/common/thread_model_patch.js:0
 msgid "Say something"
 msgstr "說些東西⋯"
 
@@ -1639,7 +1641,7 @@ msgstr "查看最近訪問的 15 個頁面"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
+#: code:addons/im_livechat/static/src/embed/common/thread_model_patch.js:0
 msgid "Select an option above"
 msgstr "選擇上方一個選項"
 
@@ -1842,7 +1844,8 @@ msgstr "這是一個自動的『歡迎』訊息，當初始化新的對話窗口
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/common/chat_window_patch.xml:0
+#: code:addons/im_livechat/static/src/core/common/thread_model_patch.js:0
+#: code:addons/im_livechat/static/src/embed/common/thread_model_patch.js:0
 msgid "This livechat conversation has ended"
 msgstr ""
 
@@ -2013,7 +2016,7 @@ msgstr "你在找什麼？"
 msgid ""
 "When forwarding live chat conversations, the chatbot will prioritize users "
 "with matching expertise."
-msgstr ""
+msgstr "即時聊天對話轉交他人跟進時，聊天機器人會優先考慮專業知識能匹配查詢內容的使用者。"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -2059,6 +2062,12 @@ msgid ""
 msgstr ""
 "您可以為每個想要\n"
 " 整合網站線上客服小工具的網站建立頻道，這樣您的網站訪客便能夠與操作人員及時交流。"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/common/thread_model_patch.js:0
+msgid "You ended the conversation with %(name)s."
+msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript

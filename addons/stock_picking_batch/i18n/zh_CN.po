@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -407,8 +407,13 @@ msgstr "作业详情"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__display_name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_move__display_name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__display_name
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__display_name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__display_name
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_warehouse__display_name
 msgid "Display Name"
 msgstr "显示名称"
 
@@ -472,8 +477,13 @@ msgstr "有消息"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_move__id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_move_line__id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking__id
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__id
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_warehouse__id
 msgid "ID"
 msgstr "ID"
 
@@ -708,13 +718,6 @@ msgid "Picking Type"
 msgstr "拣货类型"
 
 #. module: stock_picking_batch
-#. odoo-python
-#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
-msgid ""
-"Please add 'Done' quantities to the batch picking to create a new pack."
-msgstr "在批量拣货上添加 '完成' 数量来创建一个新的包裹。"
-
-#. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
 msgid "Prepare Batch"
 msgstr "准备批次"
@@ -945,11 +948,6 @@ msgid "Stock Move"
 msgstr "库存移动"
 
 #. module: stock_picking_batch
-#: model:ir.model,name:stock_picking_batch.model_stock_package_destination
-msgid "Stock Package Destination"
-msgstr "包裹目的地"
-
-#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__move_line_ids
 msgid "Stock move lines"
 msgstr "库存移动明细"
@@ -1070,6 +1068,7 @@ msgstr "验证"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_warehouse
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__warehouse_id
 msgid "Warehouse"
 msgstr "仓库"
 

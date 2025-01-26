@@ -3,15 +3,16 @@
 # 	* crm_livechat
 # 
 # Translators:
-# Wil Odoo, 2024
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-01-20 08:41+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,28 +24,33 @@ msgstr ""
 #. odoo-python
 #: code:addons/crm_livechat/models/chatbot_script_step.py:0
 msgid "%s's New Lead"
-msgstr "%s:s nya kundämnen"
+msgstr "%ss nya leads"
 
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_chatbot_script
 msgid "Chatbot Script"
-msgstr "Chatbot Script"
+msgstr "Chatbot script"
 
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_chatbot_script_step
 msgid "Chatbot Script Step"
-msgstr "Steg för skript för chatbot"
+msgstr "Steg för script för chatbot"
 
 #. module: crm_livechat
 #: model:ir.model.fields.selection,name:crm_livechat.selection__chatbot_script_step__step_type__create_lead
 msgid "Create Lead"
-msgstr "Skapa kundämne"
+msgstr "Skapa lead"
+
+#. module: crm_livechat
+#: model:ir.model.fields.selection,name:crm_livechat.selection__chatbot_script_step__step_type__create_lead_and_forward
+msgid "Create Lead & Forward"
+msgstr ""
 
 #. module: crm_livechat
 #. odoo-javascript
 #: code:addons/crm_livechat/static/src/core/channel_commands.js:0
 msgid "Create a new lead (/lead lead title)"
-msgstr "Skapa nytt kundämne/kundämnestitel"
+msgstr "Skapa nytt lead(/titel på lead)"
 
 #. module: crm_livechat
 #. odoo-python
@@ -53,14 +59,15 @@ msgid ""
 "Create a new lead: %(pre_start)s%(lead_command)s %(i_start)slead "
 "title%(i_end)s%(pre_end)s"
 msgstr ""
-"Skapa ett nytt kundämne: %(pre_start)s%(lead_command)s "
+"Skapa ett nytt lead: %(pre_start)s%(lead_command)s "
 "%(i_start)skundämnestitel%(i_end)s%(pre_end)s"
 
 #. module: crm_livechat
 #. odoo-python
+#: code:addons/crm_livechat/models/chatbot_script_step.py:0
 #: code:addons/crm_livechat/models/discuss_channel.py:0
 msgid "Created a new lead: %s"
-msgstr "Skapade ett nytt kundämne: %s"
+msgstr "Skapade ett nytt lead: %s"
 
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_discuss_channel
@@ -68,44 +75,60 @@ msgid "Discussion Channel"
 msgstr "Diskussionskanal"
 
 #. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script__display_name
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__display_name
+#: model:ir.model.fields,field_description:crm_livechat.field_discuss_channel__display_name
+msgid "Display Name"
+msgstr "Visningsnamn"
+
+#. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script__lead_count
 msgid "Generated Lead Count"
-msgstr "Genererat antal kundämnen"
+msgstr "Antal leads genererade"
 
 #. module: crm_livechat
 #: model:chatbot.script.step,message:crm_livechat.chatbot_script_lead_generation_step_welcome
 msgid "Hi there, what brings you to our website today? 👋"
-msgstr "Hej, vad tar dig till vår hemsida idag? 👋"
+msgstr "Hejsan! Vad för dig till vår hemsida idag? 👋"
 
 #. module: crm_livechat
 #: model:chatbot.script.step,message:crm_livechat.chatbot_script_lead_generation_step_noone_available
 msgid "Hu-ho, it looks like none of our operators are available 🙁"
-msgstr "Hu-ho, det verkar som att ingen av våra operatörer är tillgängliga 🙁"
+msgstr ""
+"Aj, aj, aj! Det verkar inte som att vi har någon som är tillgänglig just nu!"
+" 🙁"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script__id
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__id
+#: model:ir.model.fields,field_description:crm_livechat.field_discuss_channel__id
+msgid "ID"
+msgstr "ID"
 
 #. module: crm_livechat
 #: model:chatbot.script,title:crm_livechat.chatbot_script_lead_generation_bot
 msgid "Lead Generation Bot"
-msgstr "Kundämnesgenerator Bot"
+msgstr "Leadgenerator bott"
 
 #. module: crm_livechat
 #: model_terms:ir.ui.view,arch_db:crm_livechat.chatbot_script_view_form
 msgid "Leads"
-msgstr "Kundämnen"
+msgstr "Leads"
 
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__crm_team_id
 msgid "Sales Team"
-msgstr "Säljlag"
+msgstr "Säljteam"
 
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__step_type
 msgid "Step Type"
-msgstr "Stegtyp"
+msgstr "Etapptyp"
 
 #. module: crm_livechat
 #: model:chatbot.script.step,message:crm_livechat.chatbot_script_welcome_step_just_looking
 msgid "Thank you, you should hear back from us very soon!"
-msgstr "Tack, du bör höra från oss mycket snart!"
+msgstr "Tack! Vi återkommer så fort som möjligt!"
 
 #. module: crm_livechat
 #: model:ir.model.fields,help:crm_livechat.field_chatbot_script_step__crm_team_id
@@ -113,11 +136,11 @@ msgid ""
 "Used in combination with 'create_lead' step type in order to automatically "
 "assign the created lead/opportunity to the defined team"
 msgstr ""
-"Används i kombination med 'create_lead' stegtyp för att automatiskt tilldela"
-" den skapade kundämnet/möjligheten till det definierade laget"
+"Används i kombination med etapptypen 'create_lead' för att automatiskt "
+"tilldela den skapade lead/möjligheten till det angivna teamet"
 
 #. module: crm_livechat
 #: model:chatbot.script.step,message:crm_livechat.chatbot_script_welcome_step_pricing_email
 msgid ""
 "Would you mind leaving your email address so that we can reach you back?"
-msgstr "Skulle du vilja lämna din e-postadress så att vi kan nå dig tillbaka?"
+msgstr "Skulle du vilja lämna din e-postadress så att vi kan nå dig?"

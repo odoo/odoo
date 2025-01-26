@@ -2751,6 +2751,14 @@ msgstr "فقط"
 
 #. module: hr_holidays
 #. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"Only %s's Time Off Approver, a time off Officer/Responsible or Administrator"
+" can approve or refuse allocation requests."
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Manager can reset a refused leave."
 msgstr "وحده مدير الإجازات بإمكانه إعادة تعيين طلب إجازة مرفوض. "
@@ -2783,17 +2791,16 @@ msgstr "وحده المدير بمقدوره تعديل إجازة ملغية. "
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid "Only a time off Manager can approve its own requests."
-msgstr "وحده مدير الإجازات بإمكانه الموافقة على طلباته الخاصة. "
+msgid "Only a time off Administrator can approve their own requests."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"Only a time off Officer/Responsible or Manager can approve or refuse time "
-"off requests."
+"Only a time off Officer/Responsible or Administrator can approve or refuse "
+"allocation requests."
 msgstr ""
-"وحده موظف / مسؤول الإجازات بإمكانه الموافقة على أو رفض طلبات الإجازات. "
 
 #. module: hr_holidays
 #. odoo-python
@@ -4416,6 +4423,14 @@ msgstr "لا تملك صلاحيات تطبيق الموافقة الثانية 
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You must be %s's Manager to approve this leave"
 msgstr "يجب أن تكون مدير %s لتتمكن من الموافقة على هذه الإجازة "
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"You must be either %s's Time Off Approver or Time off Administrator to "
+"validate this allocation request."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python

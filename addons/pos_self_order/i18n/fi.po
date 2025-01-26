@@ -3,15 +3,16 @@
 # 	* pos_self_order
 # 
 # Translators:
-# Wil Odoo, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +27,7 @@ msgstr "\"QR-koodit\""
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid ""
 "%s is not available anymore, it has thus been removed from your order. "
 "Please review your order and validate it again."
@@ -52,7 +53,7 @@ msgstr ""
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_product_pos_category_form_view
 msgid "<sup title=\"Only works for kiosk and mobile\">?</sup>"
-msgstr ""
+msgstr "<sup title=\"Toimii vain kioskitilassa ja mobiilissa\">?</sup>"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_user_id
@@ -105,18 +106,8 @@ msgid "All the items will be removed from the cart."
 msgstr "Kaikki tuotteet poistetaan ostoskorista."
 
 #. module: pos_self_order
-#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
-msgid "Allow self-order customers to set their order for takeout."
-msgstr ""
-
-#. module: pos_self_order
-#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
-msgid "Allow takeout order"
-msgstr ""
-
-#. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "An error has occurred"
 msgstr "Virhe on tapahtunut"
 
@@ -124,7 +115,7 @@ msgstr "Virhe on tapahtunut"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/cancel_popup/cancel_popup.xml:0
 msgid "Any items already sent will not be cancelled"
-msgstr ""
+msgstr "Jo lähetettyjä tuotteita ei peruuteta"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -135,16 +126,16 @@ msgstr "Haluatko varmasti peruuttaa tämän tilauksen?"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_category__hour_after
 msgid "Availability After"
-msgstr ""
+msgstr "Saatavuus jälkeen"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_category__hour_until
 msgid "Availability Until"
-msgstr ""
+msgstr "Saatavuus asti"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/overrides/components/product_info_banner/product_info_banner.xml:0
+#: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Available"
 msgstr "Saatavilla"
@@ -158,7 +149,7 @@ msgstr "Saatavilla olevat kielet"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_product_pos_category_form_view
 msgid "Available between"
-msgstr ""
+msgstr "Saatavilla välillä"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_search_view_pos
@@ -170,6 +161,11 @@ msgstr "Saatavana hyllyssä"
 #: model:ir.model.fields,field_description:pos_self_order.field_product_template__self_order_available
 msgid "Available in Self Order"
 msgstr "Saatavana itsepalvelutilauksessa"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__available_in_self
+msgid "Available in self"
+msgstr ""
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -256,7 +252,7 @@ msgstr "Yhdistelmä"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__combo_id
 msgid "Combo reference"
-msgstr ""
+msgstr "Combo-viite"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_res_config_settings
@@ -265,12 +261,13 @@ msgstr "Asetukset"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Connection lost, please try again later"
 msgstr "Yhteys katkesi, yritä myöhemmin uudelleen"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
 #: code:addons/pos_self_order/static/src/app/components/timeout_popup/timeout_popup.xml:0
 msgid "Continue"
 msgstr "Jatka"
@@ -279,7 +276,7 @@ msgstr "Jatka"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
 msgid "Continue with table"
-msgstr ""
+msgstr "Jatka pöydän kanssa"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -357,6 +354,11 @@ msgid "Default language for the kiosk mode"
 msgstr "Kioskitilan oletuskieli"
 
 #. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_preset__service_at__delivery
+msgid "Delivery"
+msgstr "Toimitus"
+
+#. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__nothing
 msgid "Disable"
 msgstr "Poista käytöstä"
@@ -371,7 +373,22 @@ msgid "Discard"
 msgstr "Hylkää"
 
 #. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_account_fiscal_position__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_ir_http__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_category__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_load_mixin__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_payment_method__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__display_name
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_session__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_product_product__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_product_template__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_restaurant_floor__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_restaurant_table__display_name
 msgid "Display Name"
 msgstr "Näyttönimi"
 
@@ -384,7 +401,7 @@ msgstr "Lataa QR-koodit"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "Download your receipt here"
-msgstr ""
+msgstr "Lataa kuittisi"
 
 #. module: pos_self_order
 #. odoo-python
@@ -402,10 +419,9 @@ msgstr ""
 "                    sekä myyntipisteen että pöytien nimet salataan luodussa URL-osoitteessa, kuten alla olevassa esimerkissä näkyy:."
 
 #. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
-msgid "Eat In"
-msgstr "Syö ravintolassa"
+#: model:ir.model,name:pos_self_order.model_pos_preset
+msgid "Easily load a set of configuration options"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -427,11 +443,6 @@ msgid ""
 msgstr ""
 "Voit vapaasti käyttää ja tulostaa tätä QR-koodia niin monta kertaa kuin "
 "tarvitset tarpeidesi mukaan."
-
-#. module: pos_self_order
-#: model:ir.model,name:pos_self_order.model_ir_binary
-msgid "File streaming helper model for controllers"
-msgstr "Tiedoston suoratoistomalli ohjaimille"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_account_fiscal_position
@@ -464,7 +475,7 @@ msgstr "HTTP-reititys"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__has_paper
 msgid "Has paper"
-msgstr ""
+msgstr "On paperia"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -498,7 +509,22 @@ msgid "How to use"
 msgstr "Näin käytät lomaketta"
 
 #. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_account_fiscal_position__id
+#: model:ir.model.fields,field_description:pos_self_order.field_ir_http__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_category__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_load_mixin__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_payment_method__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__id
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_session__id
+#: model:ir.model.fields,field_description:pos_self_order.field_product_product__id
+#: model:ir.model.fields,field_description:pos_self_order.field_product_template__id
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__id
+#: model:ir.model.fields,field_description:pos_self_order.field_restaurant_floor__id
+#: model:ir.model.fields,field_description:pos_self_order.field_restaurant_table__id
 msgid "ID"
 msgstr "ID"
 
@@ -551,6 +577,8 @@ msgid ""
 "It seems there hasn't been any activity on this kiosk. Would you like to "
 "continue?"
 msgstr ""
+"Näyttää siltä, että kioskilla ei ole ollut mitään toimintaa. Haluatko "
+"jatkaa?"
 
 #. module: pos_self_order
 #. odoo-python
@@ -693,7 +721,7 @@ msgstr "Etsittyä tuotetta ei löytynyt"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/overrides/components/product_info_banner/product_info_banner.xml:0
+#: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
 msgid "Not available"
 msgstr "Ei saatavilla"
 
@@ -740,7 +768,7 @@ msgstr "Tilaa nouto tiskiltä"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Orders not found on server"
 msgstr "Tilauksia ei löydy palvelimelta"
 
@@ -792,14 +820,9 @@ msgstr "Nouto tiskiltä"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_service_mode__counter
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_preset__service_at__counter
 msgid "Pickup zone"
 msgstr "Noutovyöhyke"
-
-#. module: pos_self_order
-#. odoo-python
-#: code:addons/pos_self_order/models/pos_session.py:0
-msgid "PoS Order by Session"
-msgstr "Kassan tilaus istuntokohtaisesti"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_load_mixin
@@ -895,13 +918,13 @@ msgstr "Tuotekuva"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Product is not available"
 msgstr "Tuote ei ole saatavilla"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Product not found"
 msgstr "Tuotetta ei löydy"
 
@@ -972,9 +995,15 @@ msgstr "Turvatunnus"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
+msgid "Select a hour"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
 msgid "Select a table"
-msgstr ""
+msgstr "Valitse pöytä"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
@@ -1006,6 +1035,7 @@ msgstr "Itsepalvelutilaus"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+#: model_terms:ir.ui.view,arch_db:pos_self_order.view_pos_preset_form
 msgid "Self Ordering"
 msgstr "Itsepalvelutilaaminen"
 
@@ -1024,7 +1054,7 @@ msgstr "Itsepalvelutilaustila"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_service_mode
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_service_mode
 msgid "Self Ordering Service Mode"
-msgstr ""
+msgstr "Itsetilauspalvelun tilaustila"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_url
@@ -1032,22 +1062,10 @@ msgid "Self Ordering Url"
 msgstr "Itsepalvelutilaaminen URL"
 
 #. module: pos_self_order
-#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_takeaway
-#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_takeaway
-msgid "Self Takeaway"
-msgstr ""
-
-#. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
-msgid "Self-Order"
-msgstr ""
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/overrides/components/product_info_banner/product_info_banner.xml:0
+#: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
 msgid "Self-ordering:"
-msgstr ""
+msgstr "Itsepalvelutilaaminen:"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__sequence
@@ -1055,6 +1073,7 @@ msgid "Sequence"
 msgstr "Järjestys"
 
 #. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__service_at
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Service at"
 msgstr "Palvelu osoitteessa"
@@ -1098,6 +1117,7 @@ msgstr "Onnistuminen"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_service_mode__table
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_preset__service_at__table
 msgid "Table"
 msgstr "Pöytä"
 
@@ -1125,12 +1145,6 @@ msgstr "Pöytä:"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
-msgid "Take Out"
-msgstr "Ota mukaan"
-
-#. module: pos_self_order
-#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 msgid "Tax:"
 msgstr "Vero:"
@@ -1144,6 +1158,7 @@ msgstr "Verot:"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
+#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
 msgid "Thanks a lot!"
 msgstr "Kiitos paljon!"
 
@@ -1151,19 +1166,19 @@ msgstr "Kiitos paljon!"
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_category.py:0
 msgid "The Availability After must be set between 00:00 and 24:00"
-msgstr ""
+msgstr "Saatavuus jälkeen on asetettava klo 00:00 ja 24:00 välille"
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_category.py:0
 msgid "The Availability Until must be greater than Availability After."
-msgstr ""
+msgstr "Saatavilla asti on oltava suurempi kuin saatavuus jälkeen."
 
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_category.py:0
 msgid "The Availability Until must be set between 00:00 and 24:00"
-msgstr ""
+msgstr "Saatavuus kunnes on asetettava 00:00 ja 24:00 välille"
 
 #. module: pos_self_order
 #. odoo-python
@@ -1174,12 +1189,12 @@ msgstr "Itsepalvelutilauksen oletuskäyttäjän on oltava kassakäyttäjä"
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_category__hour_after
 msgid "The product will be available after this hour."
-msgstr ""
+msgstr "Tuote on saatavilla tämän tunnin jälkeen."
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_category__hour_until
 msgid "The product will be available until this hour."
-msgstr ""
+msgstr "Tuote on saatavilla tähän tuntiin asti."
 
 #. module: pos_self_order
 #. odoo-python
@@ -1220,11 +1235,11 @@ msgstr "Ei saatavilla"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
 msgid "Unavailable at this time of the day"
-msgstr ""
+msgstr "Ei käytettävissä tähän aikaan päivästä"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Uncategorised"
 msgstr "Luokittelematon"
 
@@ -1235,7 +1250,13 @@ msgstr "Varoitus"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
+msgid "We'll do everything to be on time!"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "We're currently closed"
 msgstr "Olemme tällä hetkellä suljettu"
 
@@ -1252,6 +1273,12 @@ msgid "We're preparing your order!"
 msgstr "Valmistelemme tilaustasi!"
 
 #. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
+msgid "When would you like to receive your orders ?"
+msgstr ""
+
+#. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid "Yes"
 msgstr "Kyllä"
@@ -1261,7 +1288,7 @@ msgstr "Kyllä"
 #: code:addons/pos_self_order/models/pos_config.py:0
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 msgid "You cannot add cash payment methods in kiosk mode."
-msgstr ""
+msgstr "Käteismaksutapoja ei voi lisätä kioskitilassa."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1271,7 +1298,7 @@ msgstr "Lähetettyä tilausriviä ei voi muokata !"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "You're not authorized to perform this action"
 msgstr "Sinulla ei ole valtuuksia suorittaa tätä toimintoa"
 
@@ -1290,13 +1317,13 @@ msgstr "Sinun valintasi"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Your order has been cancelled"
-msgstr ""
+msgstr "Tilauksesi on peruttu"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Your order has been paid"
 msgstr "Tilauksesi on maksettu"
 
@@ -1308,7 +1335,7 @@ msgstr "Tilausnumerosi"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Your order status has been changed"
 msgstr "Tilauksesi tilaa on muutettu"
 

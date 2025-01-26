@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Ronald Kung, 2025\n"
 "Language-Team: Hindi (https://app.transifex.com/odoo/teams/41243/hi/)\n"
@@ -53,6 +53,12 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_phone_view_form
 msgid "+1 555-555-555"
+msgstr ""
+
+#. module: sms
+#. odoo-javascript
+#: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
+msgid ", fits in"
 msgstr ""
 
 #. module: sms
@@ -173,6 +179,12 @@ msgid "An error occurred when sending an SMS"
 msgstr ""
 
 #. module: sms
+#. odoo-javascript
+#: code:addons/sms/static/src/core/failure_model_patch.js:0
+msgid "An error occurred when sending an SMS on “%(record_name)s”"
+msgstr ""
+
+#. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid ""
@@ -196,6 +208,12 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_attachment_count
 msgid "Attachment Count"
+msgstr ""
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/controllers/main.py:0
+msgid "Bad parameters"
 msgstr ""
 
 #. module: sms
@@ -379,6 +397,14 @@ msgid "Discard"
 msgstr ""
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_iap_account__display_name
+#: model:ir.model.fields,field_description:sms.field_ir_actions_server__display_name
+#: model:ir.model.fields,field_description:sms.field_ir_model__display_name
+#: model:ir.model.fields,field_description:sms.field_mail_followers__display_name
+#: model:ir.model.fields,field_description:sms.field_mail_message__display_name
+#: model:ir.model.fields,field_description:sms.field_mail_notification__display_name
+#: model:ir.model.fields,field_description:sms.field_mail_thread__display_name
+#: model:ir.model.fields,field_description:sms.field_res_partner__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_account_phone__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_account_sender__display_name
@@ -525,6 +551,14 @@ msgid "IAP Account"
 msgstr ""
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_iap_account__id
+#: model:ir.model.fields,field_description:sms.field_ir_actions_server__id
+#: model:ir.model.fields,field_description:sms.field_ir_model__id
+#: model:ir.model.fields,field_description:sms.field_mail_followers__id
+#: model:ir.model.fields,field_description:sms.field_mail_message__id
+#: model:ir.model.fields,field_description:sms.field_mail_notification__id
+#: model:ir.model.fields,field_description:sms.field_mail_thread__id
+#: model:ir.model.fields,field_description:sms.field_res_partner__id
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__id
 #: model:ir.model.fields,field_description:sms.field_sms_account_phone__id
 #: model:ir.model.fields,field_description:sms.field_sms_account_sender__id
@@ -1100,6 +1134,12 @@ msgstr ""
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/messaging_menu/messaging_menu_patch.js:0
+msgid "SMS Failure: %(modelName)s"
+msgstr ""
+
+#. module: sms
+#. odoo-javascript
+#: code:addons/sms/static/src/messaging_menu/messaging_menu_patch.js:0
 msgid "SMS Failures"
 msgstr ""
 
@@ -1640,6 +1680,7 @@ msgstr ""
 #. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
+#: code:addons/sms/wizard/sms_account_sender.py:0
 msgid ""
 "Your sender name must be between 3 and 11 characters long and only contain "
 "alphanumeric characters."
@@ -1661,7 +1702,7 @@ msgstr ""
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
-msgid "characters, fits in"
+msgid "characters"
 msgstr ""
 
 #. module: sms

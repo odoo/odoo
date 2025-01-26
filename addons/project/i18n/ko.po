@@ -483,6 +483,19 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    안녕하세요, <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>님.<br/><br/>\n"
+"    먼저 저희 제품 및 서비스에 관심 가져주셔서 감사합니다.<br/>\n"
+"    현재 문의하신 내용을 검토 중이며, 최대한 빠른 시일 내에 답변드리겠습니다.<br/>\n"
+"    추가 질문이나 우려사항이 있으실 경우 언제든지 알려주시면 도움드릴 수 있도록 최선을 다하겠습니다.<br/><br/>\n"
+"    기다려 주셔서 감사합니다.<br/>\n"
+"    감사합니다.\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -785,7 +798,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 msgid "Add Milestones"
-msgstr ""
+msgstr "마일스톤 추가"
 
 #. module: project
 #. odoo-javascript
@@ -1957,7 +1970,7 @@ msgstr "편집"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 msgid "Edit Milestones"
-msgstr ""
+msgstr "마일스톤 변경"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__edit_limited
@@ -4149,7 +4162,7 @@ msgstr "작업 공유"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Show Sub-tasks"
-msgstr ""
+msgstr "하위 작업 표시"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -4609,7 +4622,7 @@ msgstr "반복되는 자겅ㅂ"
 #. module: project
 #: model:ir.actions.act_window,name:project.project_milestone_action_view_tasks
 msgid "Tasks.test"
-msgstr ""
+msgstr "Tasks.test"
 
 #. module: project
 #. odoo-javascript
@@ -4982,6 +4995,8 @@ msgid ""
 "To give portal users access to your project, add them as followers. For task"
 " access, add them as followers for each task."
 msgstr ""
+"포털 사용자에게 프로젝트에 대한 접근 권한을 부여하려면 팔로워로 추가하십시오. 개별 작업에 대한 접근 권한을 부여하려면, 각 특정 작업에"
+" 대한 팔로워로 추가하십시오."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_convert_to_subtask_view_form
@@ -5501,7 +5516,7 @@ msgstr "별칭"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "analytic"
-msgstr ""
+msgstr "분석"
 
 #. module: project
 #. odoo-javascript

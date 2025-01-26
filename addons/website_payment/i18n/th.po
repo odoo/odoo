@@ -3,15 +3,16 @@
 # 	* website_payment
 # 
 # Translators:
-# Wil Odoo, 2024
+# Rasareeyar Lappiam, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-01-20 08:43+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -72,27 +73,27 @@ msgstr "<option value=\"\">ประเทศ...</option>"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "<span class=\"s_donation_currency pe-1\">$</span>"
-msgstr ""
+msgstr "<span class=\"s_donation_currency pe-1\">$</span>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "<span class=\"s_donation_currency pe-1\">$</span>10"
-msgstr ""
+msgstr "<span class=\"s_donation_currency pe-1\">$</span>10"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "<span class=\"s_donation_currency pe-1\">$</span>100"
-msgstr ""
+msgstr "<span class=\"s_donation_currency pe-1\">$</span>100"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "<span class=\"s_donation_currency pe-1\">$</span>25"
-msgstr ""
+msgstr "<span class=\"s_donation_currency pe-1\">$</span>25"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "<span class=\"s_donation_currency pe-1\">$</span>50"
-msgstr ""
+msgstr "<span class=\"s_donation_currency pe-1\">$</span>50"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
@@ -217,6 +218,14 @@ msgid "Descriptions"
 msgstr "รายละเอียด"
 
 #. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_account_payment__display_name
+#: model:ir.model.fields,field_description:website_payment.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:website_payment.field_payment_transaction__display_name
+#: model:ir.model.fields,field_description:website_payment.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "แสดงชื่อ"
+
+#. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "Display Options"
 msgstr "ตัวเลือกการแสดง"
@@ -298,6 +307,14 @@ msgstr "ช่อง '%s' เป็นช่องบังคับ"
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__first_provider_label
 msgid "First Provider Label"
 msgstr "ป้ายกำกับผู้ให้บริการรายแรก"
+
+#. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_account_payment__id
+#: model:ir.model.fields,field_description:website_payment.field_payment_provider__id
+#: model:ir.model.fields,field_description:website_payment.field_payment_transaction__id
+#: model:ir.model.fields,field_description:website_payment.field_res_config_settings__id
+msgid "ID"
+msgstr "ไอดี"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -508,11 +525,6 @@ msgstr "ดูผู้ให้บริการรายอื่น"
 #: model:ir.model.fields,field_description:website_payment.field_payment_provider__website_id
 msgid "Website"
 msgstr "เว็บไซต์"
-
-#. module: website_payment
-#: model:mail.template,name:website_payment.mail_template_donation
-msgid "Website: Donation"
-msgstr "เว็บไซต์: บริจาค"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_information

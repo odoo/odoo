@@ -3,15 +3,16 @@
 # 	* pos_restaurant
 # 
 # Translators:
-# Wil Odoo, 2024
+# Junko Augias, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:30+0000\n"
+"POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -182,7 +183,6 @@ msgstr "割当"
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 #: code:addons/pos_restaurant/static/src/app/screens/tip_screen/tip_screen.xml:0
 msgid "Back"
 msgstr "戻る"
@@ -201,11 +201,6 @@ msgstr "背景画像"
 #: model:product.template,name:pos_restaurant.pos_food_bacon_product_template
 msgid "Bacon Burger"
 msgstr "ベーコンバーガー"
-
-#. module: pos_restaurant
-#: model:pos.config,name:pos_restaurant.pos_config_main_bar
-msgid "Bar"
-msgstr "バー"
 
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.product_attribute_fries
@@ -355,7 +350,7 @@ msgstr "作成日"
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__default_screen
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_default_screen
 msgid "Default Screen"
-msgstr ""
+msgstr "デフォルトスクリーン"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -378,7 +373,7 @@ msgstr "フロアのデザイン、オーダをテーブルへ割り当て"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/models/pos_order.js:0
 msgid "Direct Sale"
-msgstr ""
+msgstr "ダイレクト販売"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -503,13 +498,13 @@ msgstr "フロアプラン"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__floor_prefix
 msgid "Floor Prefix"
-msgstr ""
+msgstr "フロアプレフィクス"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
 msgid "Floor edit"
-msgstr ""
+msgstr "フロア編集"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -812,7 +807,7 @@ msgstr "オーダ"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__origin_table_id
 msgid "Original Table"
-msgstr ""
+msgstr "元のテーブル"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__parent_id
@@ -833,6 +828,7 @@ msgstr "パスタボロネーゼ"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
 #: code:addons/pos_restaurant/static/src/app/screens/receipt_screen/receipt_screen.xml:0
+#: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "Pay"
 msgstr "支払"
 
@@ -887,6 +883,8 @@ msgid ""
 "Please close and validate the following open PoS Session before modifying this floor.\n"
 "Open session: %(session_names)s"
 msgstr ""
+"このフロアを変更する前に、以下の未確定のPoSセッションを閉じて検証して下さい。\n"
+"未確定セッション: %(session_names)s"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_config
@@ -943,7 +941,7 @@ msgstr "印刷"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
 msgid "Pro forma receipt"
-msgstr ""
+msgstr "伝票レシート"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_aperol_spritz_product_template
@@ -994,7 +992,6 @@ msgstr "レシート再印刷"
 #. module: pos_restaurant
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_config.py:0
-#: model:pos.config,name:pos_restaurant.pos_config_main_restaurant
 msgid "Restaurant"
 msgstr "レストラン"
 
@@ -1083,7 +1080,7 @@ msgstr "テーブルを選択してオーダを転送する"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Select the table first or after registering the order"
-msgstr ""
+msgstr "テーブルを最初に選択するか、オーダを登録した後で選択します。"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__sequence
@@ -1094,13 +1091,13 @@ msgstr "シーケンス"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
 msgid "Set Tab"
-msgstr ""
+msgstr "タブを設定"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
 msgid "Set Table"
-msgstr ""
+msgstr "テーブルを設定"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__set_tip_after_payment
@@ -1214,13 +1211,13 @@ msgstr "テーブル番号"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/components/popups/floor_editing_popup/floor_editing_popup.xml:0
 msgid "Table Prefix Number"
-msgstr ""
+msgstr "テーブルプレフィクス番号"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/components/popups/floor_editing_popup/floor_editing_popup.xml:0
 msgid "Table prefix number must be a number"
-msgstr ""
+msgstr "テーブルプレフィクス番号は数字にして下さい"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1265,7 +1262,7 @@ msgstr "このテーブルがテーブルグループの一部である場合の
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__floor_prefix
 msgid ""
 "The prefix will be used when creating a new table in the PoS interface."
-msgstr ""
+msgstr "この接頭辞は、POSインターフェースで新しいテーブルを作成する際に使用されます。"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__floor_ids
@@ -1276,7 +1273,7 @@ msgstr "このPOSで接客されるレストランフロア"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__origin_table_id
 msgid "The table where the order was originally created"
-msgstr ""
+msgstr "オーダが最初に作成されたテーブル"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__table_id
@@ -1357,6 +1354,12 @@ msgstr "合計:"
 
 #. module: pos_restaurant
 #. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
+msgid "Transfer"
+msgstr "転送"
+
+#. module: pos_restaurant
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Transfer / Merge"
 msgstr "転送 / マージ"
@@ -1393,7 +1396,7 @@ msgstr "ウォッカ42以下、ライム、砂糖、ジンジャービール"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
 msgid "Warning, table number %s is already taken"
-msgstr ""
+msgstr "警告: テーブル番号 %s はすでに使用されています"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.water_product_template
@@ -1482,12 +1485,6 @@ msgstr "______________________________________________"
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
-msgid "changes"
-msgstr "お釣り"
-
-#. module: pos_restaurant
-#. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "items"
 msgstr "アイテム"
 
@@ -1501,4 +1498,4 @@ msgstr "または後用にテーブルを予約"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "product(s) selected"
-msgstr ""
+msgstr "プロダクトが選択されました"

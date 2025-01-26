@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Fernanda Alvarez, 2024
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
 # Wil Odoo, 2025
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-15 08:33+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -486,12 +486,6 @@ msgid "Conversation"
 msgstr "Conversación"
 
 #. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
-msgid "Conversation ended..."
-msgstr "La conversación terminó..."
-
-#. module: im_livechat
 #. odoo-python
 #: code:addons/im_livechat/models/discuss_channel.py:0
 msgid "Conversation with %s"
@@ -804,6 +798,12 @@ msgid "Free Input (Multi-Line)"
 msgstr "Entrada libre (multilínea)"
 
 #. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/chat_window_patch.xml:0
+msgid "Give your feedback"
+msgstr "Deje su scomentarios"
+
+#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__sequence
 msgid ""
 "Given the order to find a matching rule. If 2 rules are matching for the "
@@ -1098,7 +1098,7 @@ msgstr "Abandonar canal"
 #: code:addons/im_livechat/static/src/core/common/close_confirmation.xml:0
 #: code:addons/im_livechat/static/src/core/public_web/thread_model_patch.js:0
 msgid "Leaving will end the livechat. Proceed leaving?"
-msgstr ""
+msgstr "Si deja la página cerrará el chat en vivo, ¿quiere continuar?"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel__max_sessions_mode__limited
@@ -1234,10 +1234,12 @@ msgstr "Idiomas del chat en vivo"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__livechat_active
-msgid "Livechat session is active until visitor leaves the conversation."
+msgid ""
+"Livechat session is active until visitor or operator leaves the "
+"conversation."
 msgstr ""
-"La sesión de Chat en vivo está activa hasta que el visitante deje la "
-"conversación."
+"La sesión del chat en vivo estará activa hasta que un visitante u operador "
+"deje la conversación"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__sequence
@@ -1639,7 +1641,7 @@ msgstr "Guarde su canal para obtener su widget de configuración."
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
+#: code:addons/im_livechat/static/src/embed/common/thread_model_patch.js:0
 msgid "Say something"
 msgstr "Diga algo"
 
@@ -1688,7 +1690,7 @@ msgstr "Ver las últimas 15 páginas visitadas"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/chatbot/chatbot_service.js:0
+#: code:addons/im_livechat/static/src/embed/common/thread_model_patch.js:0
 msgid "Select an option above"
 msgstr "Seleccione una de las opciones anteriores"
 
@@ -1902,9 +1904,10 @@ msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/core/common/chat_window_patch.xml:0
+#: code:addons/im_livechat/static/src/core/common/thread_model_patch.js:0
+#: code:addons/im_livechat/static/src/embed/common/thread_model_patch.js:0
 msgid "This livechat conversation has ended"
-msgstr ""
+msgstr "Esta conversación de chat en vivo terminó."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_res_users_settings__livechat_username
@@ -2132,6 +2135,12 @@ msgstr ""
 "Puede crear canales para cada sitio web en el que desee\n"
 "                integrar el widget de Chat en vivo del sitio web, así los visitantes\n"
 "                de su sitio web podrán hablar en tiempo real con sus operadores."
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/common/thread_model_patch.js:0
+msgid "You ended the conversation with %(name)s."
+msgstr "Terminó la conversación con %(name)s."
 
 #. module: im_livechat
 #. odoo-javascript

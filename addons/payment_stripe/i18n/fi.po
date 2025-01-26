@@ -3,15 +3,15 @@
 # 	* payment_stripe
 # 
 # Translators:
-# Wil Odoo, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-01-20 08:43+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,6 +48,13 @@ msgid "Delivery"
 msgstr "Toimitus"
 
 #. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_token__display_name
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Enable Apple Pay"
 msgstr "Ota Apple Pay käyttöön"
@@ -67,6 +74,13 @@ msgstr "Luo webhook"
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Get your Secret and Publishable keys"
 msgstr "Hanki salaiset ja julkiset avaimet"
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_token__id
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_provider__stripe_webhook_secret

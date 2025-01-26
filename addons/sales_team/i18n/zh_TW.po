@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -18,6 +18,18 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sales_team
+#. odoo-python
+#: code:addons/sales_team/models/crm_team_member.py:0
+msgid "%(user_name)s already in other teams (%(team_names)s)."
+msgstr ""
+
+#. module: sales_team
+#. odoo-python
+#: code:addons/sales_team/models/crm_team.py:0
+msgid "%(user_names)s already in other teams (%(team_names)s)."
+msgstr ""
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
@@ -47,6 +59,12 @@ msgid "Action Needed"
 msgstr "需要採取行動"
 
 #. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "Activate \"Multi-team\""
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__active
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__active
 msgid "Active"
@@ -69,50 +87,15 @@ msgid ""
 msgstr "添加團隊成員，系統將自動將其檔分配給該銷售團隊。"
 
 #. module: sales_team
-#. odoo-python
-#: code:addons/sales_team/models/crm_team.py:0
-msgid ""
-"Adding %(user_name)s in this team would remove him/her from its current team"
-" %(team_name)s."
-msgstr "在此團隊中添加 %(user_name)s 會將他/她從其當前團隊 %(team_name)s 中刪除。"
-
-#. module: sales_team
-#. odoo-python
-#: code:addons/sales_team/models/crm_team_member.py:0
-msgid ""
-"Adding %(user_name)s in this team would remove him/her from its current "
-"teams %(team_names)s."
-msgstr "在此團隊中添加 %(user_name)s 會將他/她從其當前團隊 %(team_names)s 中刪除。"
-
-#. module: sales_team
-#. odoo-python
-#: code:addons/sales_team/models/crm_team.py:0
-msgid ""
-"Adding %(user_names)s in this team would remove them from their current "
-"teams (%(team_names)s)."
-msgstr "在此團隊中添加 %(user_names)s 會將他們從當前團隊 (%(team_names)s) 中刪除。"
-
-#. module: sales_team
-#. odoo-python
-#: code:addons/sales_team/models/crm_team_member.py:0
-msgid ""
-"Adding %(user_name)s in this team will remove them from %(team_names)s. "
-"Working in multiple teams? Activate the option under Configuration>Settings."
-msgstr ""
-"若將 %(user_name)s 加入此團隊，會同時在 %(team_names)s 團隊移除此使用者。要在多個團隊中工作？可在「配置 > "
-"設定」中，啟用相關選項。"
-
-#. module: sales_team
-#. odoo-python
-#: code:addons/sales_team/models/crm_team.py:0
-msgid ""
-"Adding %(user_names)s in this team will remove them from %(team_names)s."
-msgstr "若將 %(user_name)s 加入此團隊，會同時在 %(team_names)s 團隊移除此使用者。"
-
-#. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
 msgid "Administrator"
 msgstr "管理員"
+
+#. module: sales_team
+#. odoo-javascript
+#: code:addons/sales_team/static/src/js/crm_team_form.js:0
+msgid "An error occurred while activating the Multi-Team option."
+msgstr ""
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
@@ -238,6 +221,7 @@ msgstr "設計"
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__display_name
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__display_name
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__display_name
+#: model:ir.model.fields,field_description:sales_team.field_res_users__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
 
@@ -289,6 +273,7 @@ msgstr "有訊息"
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__id
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__id
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__id
+#: model:ir.model.fields,field_description:sales_team.field_res_users__id
 msgid "ID"
 msgstr "識別號"
 
@@ -615,14 +600,6 @@ msgid ""
 msgstr "這些代表您必須做的不同類別的事情（例如“打電話”或“準備會議”）。"
 
 #. module: sales_team
-#. odoo-python
-#: code:addons/sales_team/models/crm_team.py:0
-msgid ""
-"To add a Salesperson into multiple Teams, activate the Multi-Team option in "
-"settings."
-msgstr "要將銷售人員添加到多個團隊中，請在設置中勾選多團隊選項。"
-
-#. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor6
 msgid "Training"
 msgstr "培訓"
@@ -709,11 +686,10 @@ msgid "Website"
 msgstr "網站"
 
 #. module: sales_team
-#. odoo-python
-#: code:addons/sales_team/models/crm_team.py:0
-msgid ""
-"Working in multiple teams? Activate the option under Configuration>Settings."
-msgstr "要在多個團隊中工作？可在「配置 > 設定」中，啟用相關選項。"
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "Working in multiple teams?"
+msgstr ""
 
 #. module: sales_team
 #. odoo-python

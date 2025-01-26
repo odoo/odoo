@@ -80,6 +80,60 @@ msgid ""
 "                noContentHelper: markup(\n"
 "                    "
 msgstr ""
+"\n"
+");\n"
+"\n"
+"export class ProjectTaskFormController extends FormControllerWithHTMLExpander {\n"
+"    setup() {\n"
+"        super.setup();\n"
+"        this.notifications = useService(\"notification\");\n"
+"    }\n"
+"\n"
+"    /**\n"
+"     * @override\n"
+"     */\n"
+"    getStaticActionMenuItems() {\n"
+"        return {\n"
+"            ...super.getStaticActionMenuItems(),\n"
+"            openHistoryDialog: {\n"
+"                sequence: 50,\n"
+"                icon: \"fa fa-history\",\n"
+"                description: _t(\"Version History\"),\n"
+"                callback: () => this.openHistoryDialog(),\n"
+"            },\n"
+"        };\n"
+"    }\n"
+"\n"
+"    get deleteConfirmationDialogProps() {\n"
+"        const deleteConfirmationDialogProps = super.deleteConfirmationDialogProps;\n"
+"        if (!this.model.root.data.subtask_count) {\n"
+"            return deleteConfirmationDialogProps;\n"
+"        }\n"
+"        return {\n"
+"            ...deleteConfirmationDialogProps,\n"
+"            body: subTaskDeleteConfirmationMessage,\n"
+"        }\n"
+"    }\n"
+"\n"
+"    async openHistoryDialog() {\n"
+"        const record = this.model.root;\n"
+"        const versionedFieldName = 'description';\n"
+"        const historyMetadata = record.data[\"html_field_history_metadata\"]?.[versionedFieldName];\n"
+"        if (!historyMetadata) {\n"
+"            this.notifications.add(\n"
+"                escape(_t(\n"
+"                    \"The task description lacks any past content that could be restored at the moment.\"\n"
+"                ))\n"
+"            );\n"
+"            return;\n"
+"        }\n"
+"\n"
+"        this.dialogService.add(\n"
+"            HistoryDialog,\n"
+"            {\n"
+"                title: _t(\"Task Description History\"),\n"
+"                noContentHelper: markup(\n"
+"                    "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -112,7 +166,7 @@ msgstr "#{task.stage_id.name}"
 #. odoo-javascript
 #: code:addons/project/static/src/views/widget/subtask_counter.js:0
 msgid "%(closedCount)s sub-tasks closed out of %(totalCount)s"
-msgstr ""
+msgstr "%(closedCount)s alitehtäviä suljettu %(totalCount)s:stä"
 
 #. module: project
 #. odoo-python
@@ -130,13 +184,13 @@ msgstr "%(closed_task_count)s / %(task_count)s (%(closed_rate)s%%)"
 #. odoo-javascript
 #: code:addons/project/static/src/views/widget/subtask_counter.js:0
 msgid "%(count1)s/%(count2)s"
-msgstr ""
+msgstr "%(count1)s/%(count2)s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "%(name)s Dashboard"
-msgstr ""
+msgstr "%(name)s Kojelauta"
 
 #. module: project
 #. odoo-python
@@ -166,7 +220,7 @@ msgstr "%(name)s:n tehtävien analyysi"
 #. odoo-python
 #: code:addons/project/models/res_partner.py:0
 msgid "%(partner_name)s's Tasks"
-msgstr ""
+msgstr "%(partner_name)s tehtävät"
 
 #. module: project
 #. odoo-python
@@ -181,7 +235,7 @@ msgstr "%s (kopio)"
 #. odoo-javascript
 #: code:addons/project/static/src/components/notebook_task_one2many_field/notebook_task_list_renderer.js:0
 msgid "%s closed tasks"
-msgstr ""
+msgstr "%s suljettuja tehtäviä"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
@@ -197,7 +251,7 @@ msgstr "(projektin viimeinen päivitys),"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/depend_on_ids_one2many/depend_on_ids_list_renderer.xml:0
 msgid "(other) tasks to which you do not have access."
-msgstr ""
+msgstr "(muita) tehtäviä, joihin sinulla ei ole pääsyä."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_message_user_assigned
@@ -313,6 +367,81 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>\n"
+"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
+"    <tbody>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"           <t t-if=\"partner.name\">\n"
+"                Hei <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"           </t>\n"
+"           <t t-else=\"\">\n"
+"                Hei,<br/><br/>\n"
+"           </t>\n"
+"            Ota hetki aikaa ja arvioi <strong t-out=\"object.name or ''\">suunnittelu- ja budjettitehtävään</strong> liittyviä palveluitamme\n"
+"           <t t-if=\"object._rating_get_operator().name\">\n"
+"               <strong t-out=\"object._rating_get_operator().name or ''\">mitchell Admin</strong>.<br/>\n"
+"           </t>\n"
+"           <t t-else=\"\">\n"
+"                .<br/>\n"
+"           </t>\n"
+"        </td></tr>\n"
+"        <tr><td style=\"text-align: center;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin: 32px 0px 32px 0px; display: inline-table;\">\n"
+"                <tr><td style=\"font-size: 13px;text-align:center;\">\n"
+"                    <strong>Kerro meille, mitä mieltä olet palveluistamme</strong><br/>\n"
+"                    <span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(klikkaa yhtä näistä hymiöistä)</span>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <table style=\"width:100%;text-align:center;margin-top:2rem;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/5\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/3\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/1\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td></tr>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            Arvostamme palautettasi. Se auttaa meitä parantamaan jatkuvasti.\n"
+"            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
+"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">Tämä tyytyväisyyskysely on lähetetty, koska tehtäväsi on siirretty <b t-out=\"object.stage_id.name or ''\">keskeneräiseen</b> vaiheeseen <b t-out=\"object.stage_id.name or ''\"></b> </span>\n"
+"            </t>\n"
+"            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
+"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">Tämä tyytyväisyyskysely lähetetään <b t-out=\"object.project_id.rating_status_period or ''\">viikoittain</b> niin kauan kuin tehtävä on <b t-out=\"object.stage_id.name or ''\">keskeneräisessä</b> vaiheessa.</span>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"        <tr><td><br/>Ystävällisin terveisin,</td></tr>\n"
+"        <tr><td>\n"
+"           <t t-out=\"object.project_id.company_id.name or ''\">Yrityksesi</t>\n"
+"        </td></tr>\n"
+"        <tr><td style=\"opacity: 0.5;\">\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\">1 650-123-4567</t>\n"
+"            <t t-if=\"object.project_id.company_id.email\">\n"
+"                | <a t-attf-href=\"mailto:{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.project_id.company_id.email or ''\">info@yourcompany.com</a>\n"
+"            </t>\n"
+"            <t t-if=\"object.project_id.company_id.website\">\n"
+"                | <a t-attf-href=\"{{ object.project_id.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.project_id.company_id.website or ''\">http://www.example.com</a>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"    </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.project_done_email_template
@@ -328,6 +457,16 @@ msgid ""
 "<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    Hyvä <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
+"    Minulla on ilo kertoa, että olemme onnistuneesti saattaneet projektin<strong t-out=\"object.name or ''\">\"Renovations</strong>\" päätökseen.\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">Saat tämän sähköpostiviestin, koska projektisi on siirretty vaiheeseen <b t-out=\"object.stage_id.name or ''\">Valmis</b></span>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -346,6 +485,19 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    Hyvä <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/><br/>\n"
+"    Kiitos, että otit meihin yhteyttä. Arvostamme kiinnostustasi tuotteisiimme/palveluihimme.<br/>\n"
+"    Tiimimme tarkastelee parhaillaan kyselyäsi ja vastaa sähköpostiisi mahdollisimman pian.<br/>\n"
+"    Jos sinulla on tällä välin lisäkysymyksiä tai huolenaiheita, älä epäröi kertoa meille. Olemme täällä auttaaksemme.<br/><br/>\n"
+"    Kiitos kärsivällisyydestäsi.<br/>\n"
+"    Ystävällisin terveisin,\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -440,7 +592,7 @@ msgstr "<span class=\"fw-normal\"> Tehtävät</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "<span class=\"o_stat_text\">Blocked Tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Estyneet tehtävät</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -535,13 +687,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "A new task has been created and is not part of any project."
-msgstr ""
+msgstr "Uusi tehtävä on luotu, eikä se kuulu mihinkään projektiin."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "A new task has been created in the \"%(project_name)s\" project."
-msgstr ""
+msgstr "Projektiin \"%(project_name)s\" on luotu uusi tehtävä."
 
 #. module: project
 #. odoo-python
@@ -650,6 +802,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Progress Report\", \"Stand-up Meeting\", ...)"
 msgstr ""
+"Toimintasuunnitelmien avulla voidaan määrittää luettelo toiminnoista vain muutamalla napsautuksella\n"
+"                    (esim. \"Seurantaraportti\", \"Pystytystapaaminen\", ...)"
 
 #. module: project
 #. odoo-javascript
@@ -661,13 +815,13 @@ msgstr "Lisää Välitavoitteita"
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_create/subtask_kanban_create.js:0
 msgid "Add Sub-tasks"
-msgstr ""
+msgstr "Lisää alitehtäviä"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Add a sub-task"
-msgstr ""
+msgstr "Lisää alitehtävä"
 
 #. module: project
 #. odoo-javascript
@@ -696,6 +850,8 @@ msgid ""
 "Add project-specific property fields on tasks to customize your project "
 "management process."
 msgstr ""
+"Lisää tehtäviin projektikohtaisia ominaisuuskenttiä, jotta voit mukauttaa "
+"projektinhallintaprosessia."
 
 #. module: project
 #. odoo-javascript
@@ -819,6 +975,7 @@ msgstr "Analysoi projektiesi edistymistä ja työntekijöidesi suoritusta."
 #: model:ir.model.fields,help:project.field_project_share_wizard__share_link
 msgid "Anyone with this link can access the project in read mode."
 msgstr ""
+"Kuka tahansa, jolla on tämä linkki, voi käyttää projektia lukutilassa."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__03_approved
@@ -837,13 +994,13 @@ msgstr "Arkkitehtuuri"
 #. odoo-javascript
 #: code:addons/project/static/src/views/analytic_account_form/analytic_account_form_controller.js:0
 msgid "Archive Account"
-msgstr ""
+msgstr "Arkistotili"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/analytic_account_list/analytic_account_list_controller.js:0
 msgid "Archive Accounts"
-msgstr ""
+msgstr "Arkistotilit"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
@@ -885,7 +1042,7 @@ msgstr "Oletko varma että haluat poistaa tämän tietueen?"
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_form/project_task_form_controller.js:0
 msgid "Are you sure you want to restore this version ?"
-msgstr ""
+msgstr "Oletko varma, että haluat palauttaa tämän version?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -978,7 +1135,7 @@ msgstr "Liitteet"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__attachment_ids
 msgid "Attachments that don't come from a message"
-msgstr ""
+msgstr "Liitetiedostot, jotka eivät ole peräisin viestistä"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__user_id
@@ -1012,6 +1169,8 @@ msgid ""
 "Automatically send an email to customers when a task reaches a specific "
 "stage in a project by setting this template on that stage"
 msgstr ""
+"Lähetä automaattisesti sähköpostiviesti asiakkaille, kun tehtävä saavuttaa "
+"tietyn vaiheen projektissa asettamalla tämä malli kyseiseen vaiheeseen"
 
 #. module: project
 #. odoo-python
@@ -1086,7 +1245,7 @@ msgstr "Estäjä"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Blocked Tasks"
-msgstr ""
+msgstr "Estetyt tehtävät"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_action_blocking_tasks
@@ -1164,7 +1323,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Choose one of the following access modes for your collaborators:"
-msgstr ""
+msgstr "Valitse jokin seuraavista käyttötavoista yhteistyökumppaneillesi:"
 
 #. module: project
 #. odoo-javascript
@@ -1176,12 +1335,12 @@ msgstr "Asiakkaan arvostelu"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Close the sub-tasks list"
-msgstr ""
+msgstr "Sulje alitehtävien luettelo"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__closed_depend_on_count
 msgid "Closed Depending on Tasks"
-msgstr ""
+msgstr "Suljettu Tehtävistä riippuen"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
@@ -1203,7 +1362,7 @@ msgstr "Suljettu tila"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__is_closed__closed
 msgid "Closed tasks"
-msgstr ""
+msgstr "Päättyneet tehtävät"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__is_closed
@@ -1376,7 +1535,7 @@ msgstr "Luo projekti"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.mail_activity_plan_action_config_project_task_plan
 msgid "Create a Task Activity Plan"
-msgstr ""
+msgstr "Luo tehtävän toimintasuunnitelma"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form_domain
@@ -1387,7 +1546,7 @@ msgstr "Luo uusi vaihe tehtäväketjuun"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Create a new sub-task"
-msgstr ""
+msgstr "Luo uusi alitehtävä"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_footer
@@ -1701,7 +1860,7 @@ msgstr "Riippuvat tehtävät"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__depend_on_count
 msgid "Depending on Tasks"
-msgstr ""
+msgstr "Tehtävistä riippuen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__description
@@ -1857,7 +2016,7 @@ msgstr "Muokkaa välitavoitteita"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__edit_limited
 msgid "Edit with limited access"
-msgstr ""
+msgstr "Muokkaa rajoitetulla käyttöoikeudella"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -1865,6 +2024,8 @@ msgid ""
 "Edit with limited access: collaborators can view and edit tasks they follow "
 "in the Kanban view."
 msgstr ""
+"Muokkaa rajoitetuin käyttöoikeuksin: Yhteistyökumppanit voivat tarkastella "
+"ja muokata seuraamiaan tehtäviä Kanban-näkymässä."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -1872,6 +2033,9 @@ msgid ""
 "Edit: collaborators can view and edit all tasks in the Kanban view. "
 "Additionally, they can choose which tasks they want to follow."
 msgstr ""
+"Muokkaa: Yhteistyökumppanit voivat tarkastella ja muokata kaikkia tehtäviä "
+"Kanban-näkymässä. Lisäksi he voivat valita, mitä tehtäviä he haluavat "
+"seurata."
 
 #. module: project
 #. odoo-javascript
@@ -2084,7 +2248,7 @@ msgstr "Hanki asiakaspalautetta ja arvioi työntekijöidesi suorituskykyä"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Give the sub-task a <b>name</b>"
-msgstr ""
+msgstr "Anna alitehtävälle <b>nimi</b>"
 
 #. module: project
 #. odoo-javascript
@@ -2155,7 +2319,7 @@ msgstr "Hei"
 #. odoo-javascript
 #: code:addons/project/static/src/components/notebook_task_one2many_field/notebook_task_list_renderer.js:0
 msgid "Hide closed tasks"
-msgstr ""
+msgstr "Piilota suljetut tehtävät"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__1
@@ -2188,7 +2352,7 @@ msgstr "Etusivu"
 #: model:account.analytic.account,name:project.analytic_construction
 #: model:project.project,name:project.project_home_construction
 msgid "Home Construction"
-msgstr ""
+msgstr "Kodin rakentaminen"
 
 #. module: project
 #: model:project.project,name:project.project_project_4
@@ -2357,7 +2521,7 @@ msgstr "Saapuneet"
 #. module: project
 #: model:project.tags,name:project.project_tags_09
 msgid "Interior"
-msgstr ""
+msgstr "Sisustus"
 
 #. module: project
 #: model:project.tags,name:project.project_tags_04
@@ -2406,7 +2570,7 @@ msgstr "Laskutettu"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 msgid "Is Closed (Burn-up Chart)"
-msgstr ""
+msgstr "On suljettu (palamiskaavio)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_is_follower
@@ -2655,19 +2819,19 @@ msgstr "Merkitse tehdyksi"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.xml:0
 msgid "Mark as incomplete"
-msgstr ""
+msgstr "Merkitse keskeneräiseksi"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.xml:0
 msgid "Mark as reached"
-msgstr ""
+msgstr "Merkitse saavutetuksi"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Mark the task as <b>Cancelled</b>"
-msgstr ""
+msgstr "Merkitse tehtävä <b>peruutetuksi</b>"
 
 #. module: project
 #. odoo-javascript
@@ -3096,7 +3260,7 @@ msgstr "Avoimet tehtävät"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Open sub-tasks notebook section"
-msgstr ""
+msgstr "Avaa alitehtävien muistikirjan osio"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__is_closed__open
@@ -3208,7 +3372,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_from_partner
 msgid "Partner's Tasks"
-msgstr ""
+msgstr "Kumppanin tehtävät"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -3237,6 +3401,20 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
+"Henkilöt, joille tämä hanke ja sen tehtävät näkyvät.\n"
+"\n"
+"- Kutsutut sisäiset käyttäjät: Kun projektia seurataan, sisäiset käyttäjät saavat pääsyn kaikkiin sen tehtäviin erottelematta. Muussa tapauksessa he saavat pääsyn vain tiettyihin tehtäviin, joita he seuraavat.\n"
+" Käyttäjä, jolla on projektin > ylläpitäjän käyttöoikeustaso, voi silti käyttää tätä projektia ja sen tehtäviä, vaikka hän ei nimenomaisesti kuuluisi seuraajiin.\n"
+"\n"
+"- Kaikki sisäiset käyttäjät: Kaikki sisäiset käyttäjät voivat käyttää projektia ja kaikkia sen tehtäviä erottelematta.\n"
+"\n"
+"- Kutsutut portaalikäyttäjät ja kaikki sisäiset käyttäjät: Kaikki sisäiset käyttäjät voivat käyttää projektia ja kaikkia sen tehtäviä erottelematta.\n"
+"Kun portaalikäyttäjät seuraavat projektia, he pääsevät käsiksi vain tiettyihin tehtäviin, joita he seuraavat.\n"
+"\n"
+"Kun hanke jaetaan vain lukuoikeudella, portaalikäyttäjä ohjataan omalle portaalilleen. Hän voi tarkastella seuraamiaan tehtäviä, mutta ei muokata niitä.\n"
+"Kun projekti on jaettu muokkaustilassa, portaalin käyttäjä ohjataan tehtävien kanban- ja luettelonäkymiin. Hän voi muokata valittua määrää tehtävien kenttiä.\n"
+"\n"
+"Joka tapauksessa sisäinen käyttäjä, jolla ei ole projektin käyttöoikeuksia, voi silti päästä tehtävään, jos hänelle annetaan vastaava URL-osoite (ja jos hän kuuluu seuraajiin, jos projekti on yksityinen)."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
@@ -3353,6 +3531,8 @@ msgid ""
 "Private tasks cannot be converted into sub-tasks. Please set a project on "
 "the task to gain access to this feature."
 msgstr ""
+"Yksityisiä tehtäviä ei voi muuntaa alitehtäviksi. Aseta tehtävälle projekti,"
+" jotta saat tämän ominaisuuden käyttöösi."
 
 #. module: project
 #. odoo-javascript
@@ -3431,12 +3611,12 @@ msgstr "Projektin jakaminen"
 #. module: project
 #: model:ir.model,name:project.model_project_share_collaborator_wizard
 msgid "Project Sharing Collaborator Wizard"
-msgstr ""
+msgstr "Projektin jakamisen yhteistyökumppanien ohjattu toiminto"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_recurring_tasks_action
 msgid "Project Sharing Recurrence"
-msgstr ""
+msgstr "Hankkeen jakamisen toistuvuus"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -3505,7 +3685,7 @@ msgstr "Projektin kuvaus..."
 #. odoo-python
 #: code:addons/project/wizard/project_share_wizard.py:0
 msgid "Project shared with your collaborators."
-msgstr ""
+msgstr "Hanke on jaettu yhteistyökumppaneidesi kanssa."
 
 #. module: project
 #: model:mail.template,subject:project.project_done_email_template
@@ -3589,7 +3769,7 @@ msgstr "Ominaisuudet"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__share_link
 msgid "Public Link"
-msgstr ""
+msgstr "Julkinen linkki"
 
 #. module: project
 #. odoo-javascript
@@ -3706,6 +3886,8 @@ msgstr "Lue"
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Read: collaborators can view tasks but cannot edit them."
 msgstr ""
+"Lue: Yhteistyökumppanit voivat tarkastella tehtäviä, mutta eivät muokata "
+"niitä."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_collaborator_wizard__access_mode
@@ -3714,6 +3896,9 @@ msgid ""
 "Edit with limited access: collaborators can view and edit tasks they follow in the Kanban view.\n"
 "Edit: collaborators can view and edit all tasks in the Kanban view. Additionally, they can choose which tasks they want to follow."
 msgstr ""
+"Lue: Yhteistyökumppanit voivat tarkastella tehtäviä, mutta eivät muokata niitä.\n"
+"Muokkaa rajoitetulla käyttöoikeudella: Yhteistyökumppanit voivat tarkastella ja muokata seuraamiaan tehtäviä Kanban-näkymässä.\n"
+"Muokkaa: Yhteistyökumppanit voivat tarkastella ja muokata kaikkia tehtäviä Kanban-näkymässä. Lisäksi he voivat valita, mitä tehtäviä he haluavat seurata."
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
@@ -3749,7 +3934,7 @@ msgstr "Toistuva"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
 msgid "Recurrent tasks"
-msgstr ""
+msgstr "Toistuvat tehtävät"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_recurring_tasks
@@ -3783,7 +3968,7 @@ msgstr "Liittyvä dokumenttimalli"
 #. odoo-javascript
 #: code:addons/project/static/src/core/web/follower_list_patch.js:0
 msgid "Remove Collaborator"
-msgstr ""
+msgstr "Poista yhteistyökumppani"
 
 #. module: project
 #. odoo-javascript
@@ -3863,6 +4048,8 @@ msgid ""
 "Restoring will replace the current content with the selected version. Any "
 "unsaved changes will be lost."
 msgstr ""
+"Palauttaminen korvaa nykyisen sisällön valitulla versiolla. Kaikki "
+"tallentamattomat muutokset menetetään."
 
 #. module: project
 #. odoo-javascript
@@ -3894,7 +4081,7 @@ msgstr "Surulliset kasvot"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
 msgid "Save the task to be able to drag images in description"
-msgstr ""
+msgstr "Tallenna tehtävä, jotta voit raahata kuvia kuvauksessa"
 
 #. module: project
 #. odoo-javascript
@@ -3970,7 +4157,7 @@ msgstr "Etsi statuksesta"
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 msgid "Search%(left)s Tasks%(right)s"
-msgstr ""
+msgstr "Haku%(left)s Tehtävät%(right)s"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_token
@@ -3982,7 +4169,7 @@ msgstr "Turvatunnus"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Select an assignee from the menu"
-msgstr ""
+msgstr "Valitse vastaanottaja valikosta"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_send_mail_project_project
@@ -3993,7 +4180,7 @@ msgstr "Lähetä sähköposti"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_collaborator_wizard__send_invitation
 msgid "Send Invitation"
-msgstr ""
+msgstr "Lähetä Kutsu"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__sequence
@@ -4071,7 +4258,7 @@ msgstr "Jaa projekti"
 #: model:ir.actions.act_window,name:project.portal_share_action
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Share Task"
-msgstr ""
+msgstr "Jaa tehtävä"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
@@ -4088,7 +4275,7 @@ msgstr "Näytä kaikki tietueet joissa on toimenpide myöhässä"
 #. odoo-javascript
 #: code:addons/project/static/src/components/notebook_task_one2many_field/notebook_task_list_renderer.js:0
 msgid "Show closed tasks"
-msgstr ""
+msgstr "Näytä suljetut tehtävät"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -4117,6 +4304,12 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
+"Jotkin valituista analyyttisistä tileistä liittyvät projektiin:\n"
+"%(accountList)s\n"
+"\n"
+"Näiden tilien arkistointi poistaa mahdollisuuden kirjata työaikakirjanpitoa vastaavien projektien osalta.\n"
+"\n"
+"Oletko varma, että haluat jatkaa?"
 
 #. module: project
 #. odoo-python
@@ -4133,6 +4326,10 @@ msgid ""
 "move them all at once to the next sprint by editing the milestone, tag, or "
 "property."
 msgstr ""
+"Lajittele tehtävät sprinteittäin käyttämällä virstanpylväitä, tunnisteita "
+"tai omaa ominaisuutta. Kunkin sprintin lopussa voit vain poimia luettelosta "
+"jäljellä olevat tehtävät ja siirtää ne kaikki kerralla seuraavaan sprinttiin"
+" muokkaamalla virstanpylvästä, tagia tai ominaisuutta."
 
 #. module: project
 #. odoo-javascript
@@ -4174,7 +4371,7 @@ msgstr "Vaihe"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 msgid "Stage (Burndown Chart)"
-msgstr ""
+msgstr "Vaihe (Burndown-kaavio)"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
@@ -4219,7 +4416,7 @@ msgstr "Alue"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_stage_state_selection/project_task_stage_with_state_selection.js:0
 msgid "State readonly"
-msgstr ""
+msgstr "State readonly"
 
 #. module: project
 #. odoo-javascript
@@ -4236,7 +4433,7 @@ msgstr "Tila"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "Status Update - %(date)s"
-msgstr ""
+msgstr "Tilapäivitys - %(date)s"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_state
@@ -4342,13 +4539,13 @@ msgstr "Tehtävä peruutettu"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_canceled
 msgid "Task Cancelled"
-msgstr ""
+msgstr "Tehtävä peruutettu"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Task Converted from To-Do"
-msgstr ""
+msgstr "Tehtävä muunnettu tehtävästä"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
@@ -4434,6 +4631,8 @@ msgstr "Tehtävän otsikko..."
 msgid ""
 "Task Transferred from Project %(source_project)s to %(destination_project)s"
 msgstr ""
+"Tehtävä siirretty projektista %(source_project)s kohteeseen "
+"%(destination_project)s"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_waiting
@@ -4450,7 +4649,7 @@ msgstr "Tehtävä hyväksytty"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_canceled
 msgid "Task cancelled"
-msgstr ""
+msgstr "Tehtävä peruutettu"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_done
@@ -4541,7 +4740,7 @@ msgstr "Testit"
 #. odoo-javascript
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_search_model.js:0
 msgid "The Burndown Chart must be grouped by Date"
-msgstr ""
+msgstr "Palokaavio on ryhmiteltävä päivämäärän mukaan"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_id
@@ -4633,12 +4832,16 @@ msgid ""
 "Chart or by \"Is Closed\" to represent a Burn-up chart. Without one of these"
 " groupings applied, the report will not provide relevant information."
 msgstr ""
+"Raportti on ryhmiteltävä joko \"Vaiheen\" mukaan, jos kyseessä on "
+"palokaavio, tai \"On suljettu\" mukaan, jos kyseessä on Burn-up-kaavio. Jos "
+"jompaakumpaa näistä ryhmittelyistä ei käytetä, raportti ei anna "
+"merkityksellisiä tietoja."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "The search does not support operator %(operator)s or value %(value)s."
-msgstr ""
+msgstr "Haku ei tue operaattoria %(operator)s tai arvoa %(value)s."
 
 #. module: project
 #. odoo-python
@@ -4656,12 +4859,16 @@ msgid ""
 "project is too restricted. Set the privacy of the project to "
 "'%(visibility)s' in order to make it accessible by the recipient(s)."
 msgstr ""
+"Tehtävää ei voida jakaa vastaanottajan (vastaanottajien) kanssa, koska "
+"projektin yksityisyys on liian rajoitettu. Aseta projektin "
+"yksityisyydensuojaksi '%(visibility)s', jotta vastaanottaja(t) voivat "
+"käyttää sitä."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_form/project_task_form_controller.js:0
 msgid "The task description was empty at the time."
-msgstr ""
+msgstr "Tehtävän kuvaus oli tuolloin tyhjä."
 
 #. module: project
 #. odoo-python
@@ -4670,6 +4877,8 @@ msgid ""
 "The view must be grouped by date and by Stage - Burndown chart or Is Closed "
 "- Burnup chart"
 msgstr ""
+"Näkymä on ryhmiteltävä päivämäärän ja vaiheen mukaan - Burndown-kaavio tai "
+"Is Closed - Burnup-kaavio"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
@@ -4700,6 +4909,10 @@ msgid ""
 "on your website. This includes leads/opportunities, quotations/sales orders,"
 " purchase orders, invoices and bills, timesheets, and tickets."
 msgstr ""
+"He voivat muokata jaettuja projektitehtäviä ja tarkastella tiettyjä "
+"asiakirjoja lukutilassa verkkosivustollasi. Näihin kuuluvat liidit ja "
+"myyntimahdollisuudet, tarjoukset tai myyntitilaukset, ostotilaukset, laskut "
+"ja laskut, työaikataulut ja tukipyynnöt."
 
 #. module: project
 #. odoo-python
@@ -4730,6 +4943,12 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
+"Tämä analyyttinen tili liittyy seuraaviin hankkeisiin:\n"
+"%(projectList)s\n"
+"\n"
+"Tilin arkistointi poistaa mahdollisuuden kirjata näiden projektien työaikakirjauksia.\n"
+"\n"
+"Oletko varma, että haluat jatkaa?"
 
 #. module: project
 #. odoo-javascript
@@ -4738,6 +4957,9 @@ msgid ""
 "This follower is currently a project collaborator. Removing them will revoke"
 " their portal access to the project. Are you sure you want to proceed?"
 msgstr ""
+"Tämä seuraaja on tällä hetkellä projektin yhteistyökumppani. Hänen "
+"poistamisensa peruuttaa hänen portaaliyhteytensä projektiin. Oletko varma, "
+"että haluat jatkaa?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -4758,6 +4980,11 @@ msgid ""
 " stage. Alternatively, you can update the company information for these "
 "records to align them under the same company."
 msgstr ""
+"Tämä hanke liittyy luokkaan %(project_company)s, kun taas valittu vaihe "
+"kuuluu luokkaan %(stage_company)s. On olemassa pari vaihtoehtoa: joko "
+"poistaa yritysnimitys projektista tai vaiheesta. Vaihtoehtoisesti voit "
+"päivittää näiden tietueiden yritystiedot, jotta ne voidaan yhdistää samaan "
+"yritykseen."
 
 #. module: project
 #. odoo-python
@@ -4767,6 +4994,10 @@ msgid ""
 "project's visibility will be changed to \"invited portal users and all "
 "internal users (public)\" in order to make it accessible to the recipients."
 msgstr ""
+"Tämä hanke on tällä hetkellä rajoitettu \"kutsutuille sisäisille "
+"käyttäjille\". Projektin näkyvyys muutetaan muotoon \"Kutsutut portaalin "
+"käyttäjät ja kaikki sisäiset käyttäjät (julkinen)\", jotta se olisi "
+"vastaanottajien käytettävissä."
 
 #. module: project
 #. odoo-python
@@ -4777,12 +5008,15 @@ msgid ""
 " the project's company to align with the stage's company or remove the "
 "company designation from the stage"
 msgstr ""
+"Tämä projekti ei liity mihinkään yritykseen, kun taas vaihe liittyy %s. "
+"Vaihtoehtona on joko muuttaa projektin yritys vastaamaan vaiheen yritystä "
+"tai poistaa yritysmerkintä vaiheesta"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "This task has sub-tasks, so it can't be private."
-msgstr ""
+msgstr "Tällä tehtävällä on alitehtäviä, joten se ei voi olla yksityinen."
 
 #. module: project
 #. odoo-javascript
@@ -4794,7 +5028,7 @@ msgstr "Tämä tehtävä on estynyt toisen keskeneräisen tehtävän vuoksi"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/depend_on_ids_one2many/depend_on_ids_list_renderer.xml:0
 msgid "This task is currently blocked by"
-msgstr ""
+msgstr "Tämä tehtävä on tällä hetkellä estetty"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -4830,7 +5064,7 @@ msgstr "Vinkki: Luo tehtäviä saapuvista sähköposteista"
 #: model:digest.tip,name:project.digest_tip_project_3
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_3
 msgid "Tip: Project-Specific Fields"
-msgstr ""
+msgstr "Vinkki: Projektikohtaiset kentät"
 
 #. module: project
 #: model:digest.tip,name:project.digest_tip_project_0
@@ -4842,7 +5076,7 @@ msgstr "Vinkki: Tehtävien tilojen avulla voit seurata tehtävien etenemistä"
 #: model:digest.tip,name:project.digest_tip_project_2
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_2
 msgid "Tip: Your Own Personal Kanban"
-msgstr ""
+msgstr "Vinkki: Oma henkilökohtainen Kanban"
 
 #. module: project
 #. odoo-python
@@ -4931,7 +5165,7 @@ msgstr "Yhteensä"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
 msgid "Total Costs"
-msgstr ""
+msgstr "Kokonaiskustannukset"
 
 #. module: project
 #. odoo-javascript
@@ -5105,6 +5339,8 @@ msgstr "Käytä tätä omalle projektini"
 msgid ""
 "Use personal stages to organize your tasks and create your own workflow."
 msgstr ""
+"Käytä henkilökohtaisia vaiheita tehtävien järjestämiseen ja oman työnkulun "
+"luomiseen."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
@@ -5319,7 +5555,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "You can change the sub-task state here!"
-msgstr ""
+msgstr "Voit muuttaa alitehtävän tilaa tässä!"
 
 #. module: project
 #. odoo-python
@@ -5331,7 +5567,7 @@ msgstr "Voit asettaa henkilökohtaisen vaiheen vain yksityiselle tehtävälle."
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "You can open sub-tasks from the kanban card!"
-msgstr ""
+msgstr "Voit avata alitehtäviä kanban-kortista!"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
@@ -5373,13 +5609,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "You cannot read the following fields on tasks: %(field_list)s"
-msgstr ""
+msgstr "Tehtävien seuraavia kenttiä ei voi lukea: %(field_list)s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "You cannot write on the following fields on tasks: %(field_list)s"
-msgstr ""
+msgstr "Tehtävien seuraaviin kenttiin ei voi kirjoittaa: %(field_list)s"
 
 #. module: project
 #. odoo-python
@@ -5401,7 +5637,7 @@ msgstr "Sinut on kutsuttu seuraamaan %s"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_invitation_follower
 msgid "You have been invited to follow Task Document :"
-msgstr ""
+msgstr "Sinua on pyydetty seuraamaan tehtäväasiakirjaa :"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -5534,6 +5770,8 @@ msgid ""
 "icon to see tasks waiting on other ones. Once a task is marked as complete "
 "or cancelled, all of its dependencies will be unblocked."
 msgstr ""
+"kuvaketta nähdäksesi muita tehtäviä odottavat tehtävät. Kun tehtävä on "
+"merkitty valmiiksi tai peruutettu, kaikki sen riippuvuudet vapautuvat."
 
 #. module: project
 #. odoo-javascript
@@ -5580,7 +5818,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "state to mark the task as cancelled."
-msgstr ""
+msgstr "tilassa, jotta tehtävä voidaan merkitä peruutetuksi."
 
 #. module: project
 #. odoo-javascript
@@ -5642,6 +5880,8 @@ msgid ""
 "{{ object.project_id.company_id.name or user.env.company.name }}: "
 "Satisfaction Survey"
 msgstr ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: "
+"Tyytyväisyyskysely"
 
 #. module: project
 #. odoo-python

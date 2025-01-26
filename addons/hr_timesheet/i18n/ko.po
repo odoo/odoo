@@ -3,16 +3,16 @@
 # 	* hr_timesheet
 # 
 # Translators:
-# Wil Odoo, 2024
 # Daye Jeong, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-20 08:41+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Daye Jeong, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -346,6 +346,11 @@ msgid "Config Settings"
 msgstr "환경설정"
 
 #. module: hr_timesheet
+#: model:ir.ui.menu,name:hr_timesheet.hr_timesheet_menu_configuration
+msgid "Configuration"
+msgstr "설정"
+
+#. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_employee.py:0
 msgid "Confirmation"
@@ -587,14 +592,6 @@ msgid "Invalid value: %s"
 msgstr "잘못된 값: %s"
 
 #. module: hr_timesheet
-#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
-#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
-msgid ""
-"Keep track of your working hours by project every day and bill your "
-"customers for that time."
-msgstr "매일 프로젝트별로 작업 시간을 추적하고 해당 시간에 대해 고객에게 청구하세요."
-
-#. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "Last Month"
@@ -700,17 +697,17 @@ msgid "No Task"
 msgstr "작업 없음"
 
 #. module: hr_timesheet
+#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
+#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
+msgid "No activities found. Let's start a new one!"
+msgstr "확인된 활동이 없습니다. 새 활동을 생성합니다!"
+
+#. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_report
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
 msgid "No data yet!"
 msgstr "데이터가 아직 없습니다."
-
-#. module: hr_timesheet
-#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
-#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
-msgid "No timesheets found. Let's create one!"
-msgstr "작업 기록이 없습니다. 새로 작성해 주세요."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -727,6 +724,12 @@ msgstr "할당된 시간에서 실제 소요된 시간을 뺀 값"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid "Ok"
 msgstr "확인"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task__overtime
+#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__overtime
+msgid "Overtime"
+msgstr "초과근무"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -751,6 +754,7 @@ msgstr "품목 단위"
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task__progress
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__progress
 msgid "Progress"
 msgstr "진행"
@@ -881,7 +885,6 @@ msgstr "인코딩할 작업기록이 남아있는 사용자에게 정기적으�
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
-#: model:ir.ui.menu,name:hr_timesheet.hr_timesheet_menu_configuration
 msgid "Settings"
 msgstr "설정"
 
@@ -900,6 +903,7 @@ msgstr "하위 작업 소요 시간"
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #: model:ir.model,name:hr_timesheet.model_project_task
+#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__task_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__task_id
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -1313,7 +1317,9 @@ msgid "Total:"
 msgstr "합계 :"
 
 #. module: hr_timesheet
+#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
+#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
 msgid ""
 "Track your working hours by projects every day and invoice this time to your"
 " customers."

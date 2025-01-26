@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-20 08:41+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -95,14 +95,8 @@ msgstr "Thông báo từ ví Viva Wallet: %s"
 #. module: pos_viva_wallet
 #. odoo-python
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-msgid "Not receive Bearer Token"
-msgstr "Không nhận được Bearer Token"
-
-#. module: pos_viva_wallet
-#. odoo-python
-#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-msgid "Only 'group_pos_user' are allowed to fetch token from Viva Wallet"
-msgstr "Chỉ 'group_pos_user' mới được phép lấy token từ Viva Wallet"
+msgid "Only 'group_pos_user' are allowed to cancel a Viva Wallet payment"
+msgstr ""
 
 #. module: pos_viva_wallet
 #. odoo-python
@@ -111,6 +105,20 @@ msgid "Only 'group_pos_user' are allowed to get latest transaction status"
 msgstr ""
 "Chỉ 'group_pos_user' mới được phép lấy thông tin trạng thái giao dịch mới "
 "nhất"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+msgid ""
+"Only 'group_pos_user' are allowed to get the payment status from Viva Wallet"
+msgstr ""
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+msgid ""
+"Only 'group_pos_user' are allowed to send a Viva Wallet payment request"
+msgstr ""
 
 #. module: pos_viva_wallet
 #: model:ir.model,name:pos_viva_wallet.model_pos_payment_method
@@ -145,6 +153,14 @@ msgstr ""
 msgid "There are some issues between us and Viva Wallet, try again later.%s)"
 msgstr ""
 "Đang có một số vấn đề giữa hệ thống và Viva Wallet, vui lòng thử lại sau.%s)"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+msgid ""
+"Unable to retrieve Viva Wallet Bearer Token: Please verify that the Client "
+"ID and Client Secret are correct"
+msgstr ""
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_api_key

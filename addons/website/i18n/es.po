@@ -3,17 +3,17 @@
 # 	* website
 # 
 # Translators:
-# Wil Odoo, 2024
 # Martin Trigaux, 2024
 # Larissa Manderfeld, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Larissa Manderfeld, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5984,12 +5984,6 @@ msgstr "p. ej. /contáctenos o /tienda"
 #: model:ir.model.fields,help:website.field_website__domain
 msgid "E.g. https://www.mydomain.com"
 msgstr "p. ej. https://www.mydomain.com"
-
-#. module: website
-#. odoo-python
-#: code:addons/website/controllers/form.py:0
-msgid "EXTERNAL SUBMISSION - Customer not verified"
-msgstr "ENVÍO EXTERNO - Cliente no verificado"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_horizontal
@@ -12141,6 +12135,11 @@ msgid "Recipient Email"
 msgstr "Correo electrónico del destinatario"
 
 #. module: website
+#: model:ir.model,name:website.model_ir_rule
+msgid "Record Rule"
+msgstr "Regla de registro"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_controller_page__record_view_id
 msgid "Record view"
 msgstr "Vista de registro"
@@ -12519,11 +12518,6 @@ msgstr "Menú redondeado"
 #: model:ir.model.fields,field_description:website.field_website_route__path
 msgid "Route"
 msgstr "Ruta"
-
-#. module: website
-#: model:ir.model,name:website.model_ir_rule
-msgid "Rule"
-msgstr "Regla"
 
 #. module: website
 #. odoo-javascript
@@ -14114,6 +14108,14 @@ msgid "The message will be visible once the countdown ends"
 msgstr "El mensaje será visible una vez que termine la cuenta atrás"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_website_controller_page__name
+msgid ""
+"The name is used to generate the URL and is shown in the browser title bar"
+msgstr ""
+"El nombre se utiliza para generar la URL y se muestra en la barra de título "
+"del navegador"
+
+#. module: website
 #: model:ir.model.fields,help:website.field_website_controller_page__name_slugified
 msgid "The name of the page usable in a URL"
 msgstr "El nombre de la página que se puede utilizar en una URL"
@@ -14261,16 +14263,6 @@ msgstr "Tercera función"
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_multi_menus
 msgid "Third Menu"
 msgstr "Tercer menú"
-
-#. module: website
-#. odoo-python
-#: code:addons/website/controllers/form.py:0
-msgid ""
-"This %(model_name)s was submitted by %(user_name)s (%(user_email)s) on "
-"behalf of %(form_email)s"
-msgstr ""
-"%(user_name)s (%(user_email)s) envió %(model_name)s a nombre de "
-"%(form_email)s"
 
 #. module: website
 #. odoo-javascript
@@ -15370,7 +15362,6 @@ msgid "View Hierarchy"
 msgstr "Ver jerarquía"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_controller_page__name
 #: model:ir.model.fields,field_description:website.field_website_page__name
 #: model:ir.model.fields,field_description:website.field_website_page_properties__name
 msgid "View Name"

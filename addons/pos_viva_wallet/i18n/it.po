@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Marianna Ciofani, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-01-20 08:41+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Marianna Ciofani, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -94,16 +95,8 @@ msgstr "Messaggio da Viva Wallet: %s"
 #. module: pos_viva_wallet
 #. odoo-python
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-msgid "Not receive Bearer Token"
-msgstr "Token Bearer non ricevuto"
-
-#. module: pos_viva_wallet
-#. odoo-python
-#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-msgid "Only 'group_pos_user' are allowed to fetch token from Viva Wallet"
+msgid "Only 'group_pos_user' are allowed to cancel a Viva Wallet payment"
 msgstr ""
-"Solo gli utenti 'group_pos_user' hanno il permesso di recuperare il token da"
-" Viva Wallet"
 
 #. module: pos_viva_wallet
 #. odoo-python
@@ -112,6 +105,20 @@ msgid "Only 'group_pos_user' are allowed to get latest transaction status"
 msgstr ""
 "Solo gli utenti 'group_pos_user' hanno il permesso per ottenere lo stato "
 "dell'ultima transazione"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+msgid ""
+"Only 'group_pos_user' are allowed to get the payment status from Viva Wallet"
+msgstr ""
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+msgid ""
+"Only 'group_pos_user' are allowed to send a Viva Wallet payment request"
+msgstr ""
 
 #. module: pos_viva_wallet
 #: model:ir.model,name:pos_viva_wallet.model_pos_payment_method
@@ -148,6 +155,16 @@ msgid "There are some issues between us and Viva Wallet, try again later.%s)"
 msgstr ""
 "Si sono verificati alcuni problemi tra noi e Viva Wallet, riprova più "
 "tardi.%s)"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+msgid ""
+"Unable to retrieve Viva Wallet Bearer Token: Please verify that the Client "
+"ID and Client Secret are correct"
+msgstr ""
+"Impossibile recuperare il bearer token di Viva Wallet: verifica che l'ID "
+"client e il segreto client siano corretti"
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_api_key
