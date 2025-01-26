@@ -9,21 +9,21 @@
 # Jonatan Gk, 2022
 # Carles Antoli <carlesantoli@hotmail.com>, 2022
 # RGB Consulting <odoo@rgbconsulting.com>, 2022
-# Harcogourmet, 2022
+# Xavier, 2022
 # Arnau Ros, 2022
-# Quim - eccit <quim@eccit.com>, 2022
+# Quim - coopdevs <quim.rebull@coopdevs.org>, 2022
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
 # Susanna Pujol, 2022
 # Josep Anton Belchi, 2022
 # Martin Trigaux, 2022
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2022
 # jabiri7, 2022
-# Óscar Fonseca <tecnico@pyming.com>, 2023
 # martioodo hola, 2023
 # Ivan Espinola, 2023
 # Albert Parera, 2023
 # marcescu, 2023
 # Bàrbara Partegàs <barbararof@gmail.com>, 2024
+# Óscar Fonseca <tecnico@pyming.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -31,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Bàrbara Partegàs <barbararof@gmail.com>, 2024\n"
+"Last-Translator: Óscar Fonseca <tecnico@pyming.com>, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -819,7 +819,7 @@ msgstr "Descompte"
 #: model:ir.actions.act_window,name:loyalty.loyalty_program_discount_loyalty_action
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Discount & Loyalty"
-msgstr "Lleialtat del descompte"
+msgstr "Descomptes i fidelització"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_applicability
@@ -950,6 +950,13 @@ msgstr "Exclòs"
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__expiration_date
 msgid "Expiration Date"
 msgstr "Data d'expiració "
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_card.py:0
+#, python-format
+msgid "Expiration date cannot be set on a loyalty card."
+msgstr ""
 
 #. module: loyalty
 #. odoo-python
@@ -1309,7 +1316,7 @@ msgstr "Regles de fidelitat "
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Loyalty point(s)"
-msgstr "Punt(s) de lleialtat"
+msgstr "Punt(s) de fidelitat"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_main_attachment_id
@@ -1378,7 +1385,7 @@ msgstr "No s'han trobat cupons."
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_gift_ewallet_action
 msgid "No loyalty program found."
-msgstr "No s'ha trobat cap programa de lleialtat."
+msgstr "No s'ha trobat cap programa de fidelització."
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_discount_loyalty_action

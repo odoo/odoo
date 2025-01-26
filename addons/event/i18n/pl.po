@@ -13,7 +13,7 @@
 # Dariusz Żbikowski <darek@krokus.com.pl>, 2022
 # Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2022
 # Wiktor Kaźmierczak <wik92tor@wp.pl>, 2022
-# Piotr Strębski <strebski@gmail.com>, 2022
+# Piotr Strebski <strebski@gmail.com>, 2022
 # Natalia Gros <nag@odoo.com>, 2022
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2022
 # Grzegorz Krukar <grzegorzgk1@gmail.com>, 2022
@@ -2584,6 +2584,13 @@ msgid "In Progress"
 msgstr "W toku"
 
 #. module: event
+#: model:ir.model.fields,help:event.field_event_event__date_tz
+msgid ""
+"Indicates the timezone in which the event dates/times will be displayed on "
+"the website."
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_nbr
 msgid "Interval"
@@ -4039,6 +4046,14 @@ msgstr "Historia komunikacji"
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_unit__weeks
 msgid "Weeks"
 msgstr "Tygodnie"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__date_begin
+#: model:ir.model.fields,help:event.field_event_registration__event_begin_date
+msgid ""
+"When the event is scheduled to take place (expressed in your local timezone "
+"on the form view)."
+msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
