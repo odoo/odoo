@@ -1,25 +1,5 @@
-import { Component, onWillDestroy, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
-import { useDebounced } from "@web/core/utils/timing";
-
-function onResized(ref, callback) {
-    const _ref = typeof ref === "string" ? useRef(ref) : ref;
-    const resizeObserver = new ResizeObserver(callback);
-
-    useEffect(
-        (el) => {
-            if (el) {
-                resizeObserver.observe(el);
-                return () => resizeObserver.unobserve(el);
-            }
-        },
-        () => [_ref.el]
-    );
-
-    onWillDestroy(() => {
-        resizeObserver.disconnect();
-    });
-}
 
 export class CodeEditor extends Component {
     static template = "web.CodeEditor";
@@ -168,13 +148,5 @@ export class CodeEditor extends Component {
             },
             () => [this.props.sessionId, this.props.mode, this.props.value]
         );
-
-        const debouncedResize = useDebounced(() => {
-            if (this.aceEditor) {
-                this.aceEditor.resize();
-            }
-        }, 250);
-
-        onResized(this.editorRef, debouncedResize);
     }
 }
