@@ -647,6 +647,7 @@ class ResUsers(models.Model):
     @api.ondelete(at_uninstall=True)
     def _unlink_except_master_data(self):
         portal_user_template = self.env.ref('base.template_portal_user_id', False)
+        public_user = self.env.ref('base.public_user', False)
         if SUPERUSER_ID in self.ids:
             raise UserError(_('You can not remove the admin user as it is used internally for resources created by Odoo (updates, module installation, ...)'))
         user_admin = self.env.ref('base.user_admin', raise_if_not_found=False)
@@ -655,6 +656,8 @@ class ResUsers(models.Model):
         self.env.registry.clear_cache()
         if portal_user_template and portal_user_template in self:
             raise UserError(_('Deleting the template users is not allowed. Deleting this profile will compromise critical functionalities.'))
+        if public_user and public_user in self:
+            raise UserError(_("Deleting the public user is not allowed. Deleting this profile will compromise critical functionalities."))
 
     @api.model
     def name_search(self, name='', domain=None, operator='ilike', limit=100):
