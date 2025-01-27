@@ -1,5 +1,6 @@
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
+import { unique } from "@web/core/utils/arrays";
 import { DataPoint } from "./datapoint";
 import { Record } from "./record";
 import { resequence } from "./utils";
@@ -115,7 +116,7 @@ export class DynamicList extends DataPoint {
         } else {
             resIds = this.records.map((r) => r.resId);
         }
-        return resIds;
+        return unique(resIds);
     }
 
     async leaveEditMode({ discard } = {}) {
@@ -217,7 +218,7 @@ export class DynamicList extends DataPoint {
     async _duplicateRecords(records) {
         let resIds;
         if (records.length) {
-            resIds = records.map((r) => r.resId);
+            resIds = unique(records.map((r) => r.resId));
         } else {
             resIds = await this.getResIds(true);
         }
@@ -236,7 +237,7 @@ export class DynamicList extends DataPoint {
     async _deleteRecords(records) {
         let resIds;
         if (records.length) {
-            resIds = records.map((r) => r.resId);
+            resIds = unique(records.map((r) => r.resId));
         } else {
             resIds = await this.getResIds(true);
             records = this.records.filter((r) => resIds.includes(r.resId));
@@ -296,7 +297,7 @@ export class DynamicList extends DataPoint {
             });
             return false;
         } else {
-            const resIds = validSelection.map((r) => r.resId);
+            const resIds = unique(validSelection.map((r) => r.resId));
             const context = this.context;
             try {
                 await this.model.orm.write(this.resModel, resIds, changes, { context });
