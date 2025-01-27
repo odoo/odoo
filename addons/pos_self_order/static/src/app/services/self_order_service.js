@@ -563,6 +563,8 @@ export class SelfOrder extends Reactive {
                         hours,
                         minutes,
                     },
+                    preset_name: order.preset_id?.name || "",
+                    preset_time: order.presetDateTime,
                 };
                 const receipt = renderToElement("pos_self_order.OrderChangeReceipt", {
                     changes: printingChanges,
