@@ -159,7 +159,7 @@
                         <t t-call="mail.Message.expandAction"/>
                         <t t-set-slot="content">
                             <t t-foreach="messageActions.actions.slice(quickActionCount - 1)" t-as="action" t-key="action.id">
-                                <DropdownItem class="'px-2 py-1 d-flex align-items-center rounded-0'" onSelected="action.onClick" attrs="{ title: action.title}">
+                                <DropdownItem class="'px-2 py-1 d-flex align-items-center rounded-0 ' + action.btnClass" onSelected="action.onClick" attrs="{ title: action.title}">
                                     <t t-if="action.component" t-component="action.component" t-props="action.props"/>
                                     <t t-else="">
                                         <i class="fa-fw" t-att-class="action.icon"/>
