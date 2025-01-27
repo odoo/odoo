@@ -305,7 +305,6 @@ class TestIrCron(TransactionCase, CronMixinCase):
                     with mute_logger('odoo.addons.base.models.ir_cron'),\
                             patch.object(self.registry['ir.actions.server'], 'run', cb):
                         self.registry['ir.cron']._process_job(
-                            self.registry.db_name,
                             self.registry.cursor(),
                             {**self.cron.read(load=None)[0], **default_progress_values}
                         )
@@ -344,7 +343,6 @@ class TestIrCron(TransactionCase, CronMixinCase):
             # make each run 2 seconds, so that it is run 10 times, 20 seconds in total
             mocked_run_state['duration'] = 2
             self.registry['ir.cron']._process_job(
-                self.registry.db_name,
                 self.registry.cursor(),
                 {**self.cron.read(load=None)[0], **default_progress_values}
             )
@@ -370,7 +368,6 @@ class TestIrCron(TransactionCase, CronMixinCase):
             # make each run 0.5 seconds, so that it is run 20 times, 10 seconds in total
             mocked_run_state['duration'] = 0.5
             self.registry['ir.cron']._process_job(
-                self.registry.db_name,
                 self.registry.cursor(),
                 {**self.cron.read(load=None)[0], **default_progress_values}
             )
@@ -394,7 +391,6 @@ class TestIrCron(TransactionCase, CronMixinCase):
             patch.object(self.registry['ir.actions.server'], 'run', mocked_run),
         ):
             self.registry['ir.cron']._process_job(
-                self.registry.db_name,
                 self.registry.cursor(),
                 {**self.cron.read(load=None)[0], **default_progress_values}
             )
@@ -423,7 +419,6 @@ class TestIrCron(TransactionCase, CronMixinCase):
                 patch.object(self.registry['ir.cron'], '_notify_admin') as notify,
             ):
                 self.registry['ir.cron']._process_job(
-                    self.registry.db_name,
                     self.registry.cursor(),
                     {**self.cron.read(load=None)[0], **default_progress}
                 )
@@ -443,7 +438,6 @@ class TestIrCron(TransactionCase, CronMixinCase):
             patch.object(self.registry['ir.cron'], '_notify_admin') as notify,
         ):
             self.registry['ir.cron']._process_job(
-                self.registry.db_name,
                 self.registry.cursor(),
                 {**self.cron.read(load=None)[0], **default_progress}
             )
@@ -464,7 +458,6 @@ class TestIrCron(TransactionCase, CronMixinCase):
             patch.object(self.registry['ir.cron'], '_notify_admin') as notify,
         ):
             self.registry['ir.cron']._process_job(
-                self.registry.db_name,
                 self.registry.cursor(),
                 {**self.cron.read(load=None)[0], **default_progress}
             )
@@ -485,7 +478,6 @@ class TestIrCron(TransactionCase, CronMixinCase):
         self.env.flush_all()
         with self.enter_registry_test_mode(), mute_logger('odoo.addons.base.models.ir_cron'):
             self.registry['ir.cron']._process_job(
-                self.registry.db_name,
                 self.registry.cursor(),
                 {**progress.read(fields=['done', 'remaining', 'timed_out_counter'], load=None)[0], 'progress_id': progress.id, **self.cron.read(load=None)[0]}
             )
@@ -497,7 +489,6 @@ class TestIrCron(TransactionCase, CronMixinCase):
         self.cron._trigger()
         with self.enter_registry_test_mode():
             self.registry['ir.cron']._process_job(
-                self.registry.db_name,
                 self.registry.cursor(),
                 {**progress.read(fields=['done', 'remaining', 'timed_out_counter'], load=None)[0], 'progress_id': progress.id, **self.cron.read(load=None)[0]}
             )
@@ -516,7 +507,6 @@ class TestIrCron(TransactionCase, CronMixinCase):
         self.env.flush_all()
         with self.enter_registry_test_mode(), mute_logger('odoo.addons.base.models.ir_cron'):
             self.registry['ir.cron']._process_job(
-                self.registry.db_name,
                 self.registry.cursor(),
                 {**progress.read(fields=['done', 'remaining', 'timed_out_counter'], load=None)[0], 'progress_id': progress.id, **self.cron.read(load=None)[0]}
             )
@@ -528,7 +518,6 @@ class TestIrCron(TransactionCase, CronMixinCase):
         self.cron._trigger()
         with self.enter_registry_test_mode():
             self.registry['ir.cron']._process_job(
-                self.registry.db_name,
                 self.registry.cursor(),
                 {**progress.read(fields=['done', 'remaining', 'timed_out_counter'], load=None)[0], 'progress_id': progress.id, **self.cron.read(load=None)[0]}
             )
@@ -605,7 +594,6 @@ class TestIrCron(TransactionCase, CronMixinCase):
         self.env.flush_all()
         with self.enter_registry_test_mode(), patch.object(self.registry['ir.actions.server'], 'run', mocked_run):
             self.registry['ir.cron']._process_job(
-                self.registry.db_name,
                 self.registry.cursor(),
                 {**self.cron.read(load=None)[0], **default_progress_values}
             )
