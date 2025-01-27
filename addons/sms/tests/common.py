@@ -109,13 +109,10 @@ class MockSMS(common.TransactionCase):
                 return sms_send_origin(records, unlink_failed=unlink_failed, unlink_sent=unlink_sent, raise_exception=raise_exception)
             return sms_send_origin(records, unlink_failed=False, unlink_sent=False, raise_exception=raise_exception)
 
-        try:
-            with patch.object(SmsApi, '_contact_iap', side_effect=_contact_iap), \
-                    patch.object(SmsSms, 'create', autospec=True, wraps=SmsSms, side_effect=_sms_sms_create), \
-                    patch.object(SmsSms, '_send', autospec=True, wraps=SmsSms, side_effect=_sms_sms_send):
-                yield
-        finally:
-            pass
+        with patch.object(SmsApi, '_contact_iap', side_effect=_contact_iap), \
+                patch.object(SmsSms, 'create', autospec=True, wraps=SmsSms, side_effect=_sms_sms_create), \
+                patch.object(SmsSms, '_send', autospec=True, wraps=SmsSms, side_effect=_sms_sms_send):
+            yield
 
     def _clear_sms_sent(self):
         self._sms = []
