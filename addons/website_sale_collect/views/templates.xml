@@ -26,13 +26,14 @@
     <template id="product_page_click_and_collect" inherit_id="website_sale.product">
         <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="before">
             <owl-component
-                t-if="combination_info.get('show_click_and_collect_availability')"
+                t-if="website.in_store_dm_id and product_variant.is_storable"
                 name="website_sale_collect.ClickAndCollectAvailability"
                 t-att-props="json.dumps({
                     'productId': product_variant.id,
                     'zipCode': zip_code,
                     'selectedWhLocation': selected_wh_location or {},
-                    'inStoreStock': combination_info['in_store_stock'],
+                    'inStoreStock': combination_info.get('in_store_stock', {}),
+                    'deliveryStock': combination_info.get('delivery_stock', {}),
                 })"
                 class="d-flex o_not_editable"
             />
