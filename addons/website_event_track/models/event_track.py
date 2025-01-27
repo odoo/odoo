@@ -2,13 +2,31 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
-from pytz import utc
+import logging
+
+from docutils.nodes import warning
+from markupsafe import Markup
 from random import randint
+from textwrap import shorten
+
+from pytz import timezone, utc
+import werkzeug.urls
 
 from odoo import api, fields, models, tools
 from odoo.osv import expression
-from odoo.tools.mail import is_html_empty
+from odoo.tools.mail import html_to_inner_content, is_html_empty
 from odoo.tools.translate import _, html_translate
+
+_logger = logging.getLogger(__name__)
+
+try:
+    import vobject
+except ImportError:
+    _logger.warning("`vobject` Python module not found, iCal file generation disabled. Consider installing this module if you want to generate iCal files")
+    vobject = None
+
+GOOGLE_CALENDAR_URL = 'https://www.google.com/calendar/render?'
+YAHOO_CALENDAR_URL = 'https://calendar.yahoo.com/?v=60&view=d&type=20&'
 
 
 class EventTrack(models.Model):
@@ -636,3 +654,91 @@ class EventTrack(models.Model):
         )
 
         return track_candidates[:limit]
+
+    def _get_reminder_times_warning(self):
+        return Markup('<strong><u>%(warning_title)s</u></strong>: %(warning_content)s') % {
+            'warning_title': _('Note'),
+            'warning_content': _(
+                'The start and end times of the talk were not specified when you asked to add them to your calendar, '
+                'therefore the times indicated in this reminder correspond to those of the event.'
+            )
+        } if not self.date else ''
+
+    def _get_external_description(self):
+        """ Adding the URL of the event track into the description """
+        self.ensure_one()
+        return Markup("<a href='%(event_track_url)s'>%(name)s</a>\n%(shorten_description)s\n\n%(reminder_times_warning)s") % {
+            'event_track_url': werkzeug.urls.url_join(self.get_base_url(), self.website_url),
+            'name': self.name,
+            'shorten_description': shorten(html_to_inner_content(self.description), 1900),
+            'reminder_times_warning': self._get_reminder_times_warning(),
+        }
+
+
+    def _get_event_track_reminder_dates(self):
+        return {
+            'date_begin': self.date or self.event_id.date_begin,
+            'date_end': self.date_end or self.event_id.date_end,
+        }
+
+    def _get_yahoo_resource_url(self):
+        date_tz = self.event_id.date_tz
+        reminder_dates = self._get_event_track_reminder_dates()
+
+        params = {
+            'title':  f'{self.event_id.name}: {self.name}',
+            'in_loc': self.location_id.name,
+            'st': reminder_dates['date_begin'].astimezone(timezone(date_tz)).strftime('%Y%m%dT%H%M%S'),
+            'et': reminder_dates['date_end'].astimezone(timezone(date_tz)).strftime('%Y%m%dT%H%M%S'),
+            'desc': shorten(html_to_inner_content(self.description), 1900) + f'\n\n{html_to_inner_content(self._get_reminder_times_warning())}'
+        }
+        return YAHOO_CALENDAR_URL + werkzeug.urls.url_encode(params)
+
+    def _get_event_track_resource_urls(self):
+        date_tz = self.event_id.date_tz
+        reminder_dates = self._get_event_track_reminder_dates()
+        url_date_begin = reminder_dates['date_begin'].astimezone(timezone(date_tz)).strftime('%Y%m%dT%H%M%S')
+        url_date_end = reminder_dates['date_end'].astimezone(timezone(date_tz)).strftime('%Y%m%dT%H%M%S')
+
+        params = {
+            'action': 'TEMPLATE',
+            'text': f'{self.event_id.name}: {self.name}',
+            'dates': f'{url_date_begin}/{url_date_end}',
+            'ctz': self.event_id.date_tz,
+            'details': self._get_external_description(),
+        }
+
+        if self.location_id:
+            params.update(location=self.location_id.sudo().name)
+
+        encoded_params = werkzeug.urls.url_encode(params)
+        google_url = GOOGLE_CALENDAR_URL + encoded_params
+        iCal_url = f'{self.get_base_url()}/event/{self.event_id.id}/track/{self.id}/ics?{encoded_params}'
+        return {'google_url': google_url, 'iCal_url': iCal_url, 'yahoo_url': self._get_yahoo_resource_url()}
+
+    def _get_ics_file(self):
+        """ Returns iCalendar file for the event track.
+            :returns a dict of .ics file content for each event track
+        """
+        result = {}
+        if not vobject:
+            return result
+
+        for track in self:
+            cal = vobject.iCalendar()
+            cal_track = cal.add('vevent')
+
+            date_tz = track.event_id.date_tz
+
+            reminder_dates = track._get_event_track_reminder_dates()
+
+            cal_track.add('created').value = fields.Datetime.now().replace(tzinfo=timezone('UTC'))
+            cal_track.add('dtstart').value = reminder_dates['date_begin'].astimezone(timezone(date_tz))
+            cal_track.add('dtend').value = reminder_dates['date_end'].astimezone(timezone(date_tz))
+            cal_track.add('summary').value = track.name
+            cal_track.add('description').value = track._get_external_description()
+            if track.location_id:
+                cal_track.add('location').value = track.location_id.name
+
+            result[track.id] = cal.serialize().encode('utf-8')
+        return result
