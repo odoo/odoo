@@ -19,6 +19,10 @@ registry.category("web_tour.tours").add("show_expense_receipt_tour", {
             run: "click",
         },
         {
+            content: "Wait chatter is loaded to avoid lost focus on the next step",
+            trigger: ".o-mail-Chatter:contains(the conversation is empty)",
+        },
+        {
             content: "Click on an expense line 2",
             trigger: '.o_data_row .o_data_cell[data-tooltip="expense_2"]',
             run: "click",
