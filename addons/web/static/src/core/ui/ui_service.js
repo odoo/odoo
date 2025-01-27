@@ -75,7 +75,13 @@ export function useActiveElement(refName) {
                 if (!el.contains(document.activeElement)) {
                     firstTabableEl.focus();
                 }
-                return () => {
+                return async () => {
+                    // Components are destroyed from top to bottom, meaning that this cleanup is
+                    // called before the ones of children. As a consequence, event handlers added on
+                    // the current active element in children aren't removed yet, and can thus be
+                    // executed if we deactivate that active element right away (e.g. the blur and
+                    // change events could be triggered). For that reason, we wait for a micro-tick.
+                    await Promise.resolve();
                     uiService.deactivateElement(el);
                     el.removeEventListener("keydown", trapFocus);
 

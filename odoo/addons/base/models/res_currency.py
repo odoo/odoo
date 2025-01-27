@@ -8,7 +8,7 @@ from lxml import etree
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import parse_date
+from odoo.tools import parse_date, SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -121,15 +121,37 @@ class Currency(models.Model):
         if not self.ids:
             return {}
         self.env['res.currency.rate'].flush_model(['rate', 'currency_id', 'company_id', 'name'])
-        query = """SELECT c.id,
-                          COALESCE((SELECT r.rate FROM res_currency_rate r
-                                  WHERE r.currency_id = c.id AND r.name <= %s
-                                    AND (r.company_id IS NULL OR r.company_id = %s)
-                               ORDER BY r.company_id, r.name DESC
-                                  LIMIT 1), 1.0) AS rate
-                   FROM res_currency c
-                   WHERE c.id IN %s"""
-        self._cr.execute(query, (date, company.root_id.id, tuple(self.ids)))
+        query = SQL(
+            """
+            SELECT c.id,
+                   COALESCE(
+                       (             -- take the first rate before the given date
+                           SELECT r.rate
+                             FROM res_currency_rate r
+                            WHERE r.currency_id = c.id
+                              AND r.name <= %(date)s
+                              AND (r.company_id IS NULL OR r.company_id = %(company_id)s)
+                         ORDER BY r.company_id, r.name DESC
+                            LIMIT 1
+                       ),
+                       (             -- if no rate is found, take the rate for the very first date
+                           SELECT r.rate
+                             FROM res_currency_rate r
+                            WHERE r.currency_id = c.id
+                              AND (r.company_id IS NULL OR r.company_id = %(company_id)s)
+                         ORDER BY r.company_id, r.name ASC
+                            LIMIT 1
+                       ),
+                       1.0           -- fallback to 1
+                   ) AS rate
+              FROM res_currency c
+             WHERE c.id IN %(currency_ids)s
+            """,
+            date=date,
+            company_id=company.root_id.id,
+            currency_ids=tuple(self.ids),
+        )
+        self._cr.execute(query)
         currency_rates = dict(self._cr.fetchall())
         return currency_rates
 
