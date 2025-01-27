@@ -82,13 +82,14 @@ export const errorService = {
 
         browser.addEventListener("error", async (ev) => {
             const { colno, error, filename, lineno, message } = ev;
-            const errorsToIgnore = [
-                // Ignore some unnecessary "ResizeObserver loop limit exceeded" error in Firefox.
-                "ResizeObserver loop completed with undelivered notifications.",
-                // ignore Chrome video internal error: https://crbug.com/809574
-                "ResizeObserver loop limit exceeded",
-            ];
-            if (!(error instanceof Error) && errorsToIgnore.includes(message)) {
+            // We never want to display the following ResizeObserver error to the end-user. It
+            // simply indicates that the browser delayed notifications to the next frame to prevent
+            // infinite loop, which is how he's supposed to behave. However, it would be interesting
+            // to track places from where this error could be thrown, and try to fix them.
+            // https://trackjs.com/javascript-errors/resizeobserver-loop-completed-with-undelivered-notifications/
+            const resizeObserverError =
+                "ResizeObserver loop completed with undelivered notifications.";
+            if (!(error instanceof Error) && message === resizeObserverError) {
                 ev.preventDefault();
                 return;
             }
