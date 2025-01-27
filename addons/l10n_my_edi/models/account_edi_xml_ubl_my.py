@@ -99,10 +99,19 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         vals['vals'].pop('payment_means_vals_list', None)
 
         # We add the company industrial classification to the supplier vals.
-        vals['vals']['accounting_supplier_party_vals']['party_vals'].update({
-            'industry_classification_code_attrs': {'name': invoice.company_id.l10n_my_edi_industrial_classification.name},
-            'industry_classification_code': invoice.company_id.l10n_my_edi_industrial_classification.code,
-        })
+        if vals['vals']['document_type_code'] in ('01', '02', '03'):  # Regular invoices
+            vals['vals']['accounting_supplier_party_vals']['party_vals'].update({
+                'industry_classification_code_attrs': {'name': invoice.company_id.l10n_my_edi_industrial_classification.name},
+                'industry_classification_code': invoice.company_id.l10n_my_edi_industrial_classification.code,
+            })
+        elif vals['vals']['document_type_code'] in ('11', '12', '13'):  # Self billed.
+            vals['vals']['accounting_supplier_party_vals']['party_vals'] = self._get_partner_party_vals(invoice.partner_id, role='supplier')
+            vals['vals']['accounting_customer_party_vals']['party_vals'] = self._get_partner_party_vals(invoice.company_id.partner_id, role='customer')
+            vals['vals']['accounting_supplier_party_vals']['party_vals'].update({
+                'industry_classification_code_attrs': {'name': invoice.partner_id.commercial_partner_id.l10n_my_edi_industrial_classification.name},
+                'industry_classification_code': invoice.partner_id.commercial_partner_id.l10n_my_edi_industrial_classification.code,
+            })
+
         # We ensure that the customer does not have their ttx set (it could be on the record if they're also supplier)
         customer_identification_vals = [
             vals for vals in vals['vals']['accounting_customer_party_vals']['party_vals']['party_identification_vals'] if vals['id_attrs'] != {'schemeID': 'TTX'}
@@ -122,8 +131,9 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
 
     def _get_delivery_vals_list(self, invoice):
         # OVERRIDE 'account_edi_ubl_cii'
+        customer = invoice.company_id.partner_id if invoice.is_purchase_document() else invoice.partner_id
         return [{
-            'accounting_delivery_party_vals': self._l10n_my_edi_get_delivery_party_vals(invoice.partner_id),
+            'accounting_delivery_party_vals': self._l10n_my_edi_get_delivery_party_vals(customer),
         }]
 
     def _get_partner_contact_vals(self, partner):
@@ -272,15 +282,15 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
                 self._l10n_my_edi_make_validation_error(constraints, 'too_many_sst', partner_type, partner.commercial_partner_id.display_name)
 
         for line in invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section')):
-            if line.product_id and not line.product_id.product_tmpl_id.l10n_my_edi_classification_code:
-                self._l10n_my_edi_make_validation_error(constraints, 'class_code_required', line.product_id.id, line.product_id.display_name)
+            if (not line.product_id or not line.product_id.product_tmpl_id.l10n_my_edi_classification_code) and not line.l10n_my_edi_classification_code:
+                self._l10n_my_edi_make_validation_error(constraints, 'class_code_required', line.id, line.display_name)
             if not line.tax_ids:
                 self._l10n_my_edi_make_validation_error(constraints, 'tax_ids_required', line.id, line.display_name)
             elif any(tax.l10n_my_tax_type == 'E' for tax in line.tax_ids) and not invoice.l10n_my_edi_exemption_reason:
                 self._l10n_my_edi_make_validation_error(constraints, 'tax_exemption_required', invoice.id, invoice.display_name)
 
         document_type_code, original_document = self._l10n_my_edi_get_document_type_code(invoice)
-        if document_type_code != '01' and not original_document:
+        if document_type_code not in ('01', '11') and not original_document:
             self._l10n_my_edi_make_validation_error(constraints, 'adjustment_origin', invoice.id, invoice.display_name)
 
         return constraints
@@ -289,7 +299,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         # EXTENDS 'account_edi_ubl_cii'
         vals = super()._get_invoice_line_item_vals(line, taxes_vals)
         vals['commodity_classification_vals'] = [{
-            'item_classification_code': line.product_id.product_tmpl_id.l10n_my_edi_classification_code,
+            'item_classification_code': line.l10n_my_edi_classification_code,
             'item_classification_attrs': {'listID': 'CLASS'},
         }]
         # User the tax_details in order to fill the classified_tax_category_vals as would be expected.
@@ -404,11 +414,14 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
     def _l10n_my_edi_get_document_type_code(self, invoice):
         """ Returns the code matching the invoice type, as well as the original document if any. """
         if 'debit_origin_id' in self.env['account.move']._fields and invoice.debit_origin_id:
-            return '03', invoice.debit_origin_id
+            code = '03' if invoice.move_type == 'out_invoice' else '13'
+            return code, invoice.debit_origin_id
         elif invoice.move_type == 'out_refund':
-            return '02', invoice.reversed_entry_id
+            code = '02' if invoice.move_type == 'out_refund' else '12'
+            return code, invoice.reversed_entry_id
         else:
-            return '01', None
+            code = '01' if invoice.move_type == 'out_invoice' else '11'
+            return code, None
 
     @api.model
     def _l10n_my_edi_get_tax_exchange_rate(self, invoice):
@@ -467,11 +480,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
                 partner_name=record_name
             ),
             'class_code_required': _(
-                "The following product must have their item classification code set: %(product_name)s",
-                product_name=record_name
-            ),
-            'class_code_required_line': _(
-                "The following line must have their item classification code set: %(line_name)s",
+                "You must set a classification code either on the line itself or on the product of line: %(line_name)s",
                 line_name=record_name
             ),
             'adjustment_origin': _(

@@ -52,6 +52,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             'street': 'that other street, 3',
             'city': 'Main city',
             'phone': '+60123456786',
+            'l10n_my_edi_industrial_classification': cls.env['l10n_my_edi.industry_classification'].search([('code', '=', '01111')]).id,
         })
         cls.partner_b.write({
             'vat': 'EI00000000020',
@@ -62,8 +63,17 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             'street': 'that other street, 3',
             'city': 'Main city',
             'phone': '+60123456785',
+            'l10n_my_edi_industrial_classification': cls.env.ref('l10n_my_edi.class_00000', raise_if_not_found=False).id,
         })
         cls.product_a.l10n_my_edi_classification_code = "001"
+
+        cls.purchase_tax = cls.env['account.tax'].create({
+            'name': 'tax_10',
+            'amount_type': 'percent',
+            'amount': 10,
+            'type_tax_use': 'purchase',
+            'country_id': cls.env.ref('base.my').id,
+        })
 
         cls.fakenow = datetime(2024, 7, 15, 10, 00, 00)
         cls.startClassPatcher(freeze_time(cls.fakenow))
@@ -385,10 +395,41 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             invoice.l10n_my_edi_exemption_reason,
         )
 
+    def test_08_self_billing(self):
+        bill = self.init_invoice(
+            'in_invoice', partner=self.partner_b, products=self.product_a, taxes=self.purchase_tax,
+        )
+        bill.action_post()
+
+        file, errors = bill._l10n_my_edi_generate_invoice_xml()
+        self.assertFalse(errors)
+        self.assertTrue(file)
+
+        root = etree.fromstring(file)
+        # We assert that the supplier is the partner of the invoice, with all information present.
+        supplier_root = root.xpath('cac:AccountingSupplierParty/cac:Party', namespaces=NS_MAP)[0]
+        data_to_check = [
+            ('cac:PartyIdentification/cbc:ID[@schemeID="TIN"]', self.partner_b.commercial_partner_id._l10n_my_edi_get_tin_for_myinvois()),  # We set the generic VAT in the new field, it should have been used.
+            ('cac:PartyIdentification/cbc:ID[@schemeID="BRN"]', self.partner_b.commercial_partner_id.l10n_my_identification_number),
+            ('cbc:IndustryClassificationCode', self.partner_b.commercial_partner_id.l10n_my_edi_industrial_classification.code),  # It should use the code on the partner.
+            ('cac:PartyName/cbc:Name', self.partner_b.name),
+        ]
+        for path, expected_value in data_to_check:
+            self._assert_node_values(supplier_root, path, expected_value)
+        # And that the customer is the company.
+        customer_root = root.xpath('cac:AccountingCustomerParty/cac:Party', namespaces=NS_MAP)[0]
+        data_to_check = [
+            ('cac:PartyIdentification/cbc:ID[@schemeID="TIN"]', self.company_data['company'].vat),  # We didn't set the new field as the company is malaysian, the vat should be in use.
+            ('cac:PartyIdentification/cbc:ID[@schemeID="BRN"]', self.company_data['company'].l10n_my_identification_number),
+            ('cac:PartyName/cbc:Name', self.company_data['company'].name),
+        ]
+        for path, expected_value in data_to_check:
+            self._assert_node_values(customer_root, path, expected_value)
+
     def _assert_node_values(self, root, node_path, text, attributes=None):
         node = root.xpath(node_path, namespaces=NS_MAP)
 
-        assert node, 'The requested node has not been found.'
+        assert node, f'The requested node has not been found: {node_path}'
 
         # Ensure that we don't have duplicated nodes. As of writing, all tested nodes are expected to exist only once in the result.
         node = root.xpath(node_path, namespaces=NS_MAP)
