@@ -63,7 +63,6 @@
 }
 
 .o-mail-ChatBubble-counter {
-    padding: 3px 6px;
     z-index: 7;
     top: -3px;
     right: 3px;
@@ -74,16 +73,16 @@
     max-width: 225px;
     right: $o-mail-ChatHub-bubblesWidth;
     z-index: $o-mail-ChatBubble-zindex - 1;
-    border-color: var(--ChatBubble-previewBorderColor, mix($o-gray-300, $o-gray-400)) !important;
+    border-color: mix($o-gray-300, $o-gray-400) !important;
     
     & + .popover-arrow {
         // puts arrow above preview border
         &::before {
-            border-left-color: var(--ChatBubble-previewBorderColor, mix($o-gray-300, $o-gray-400)) !important;
+            border-left-color: mix($o-gray-300, $o-gray-400) !important;
             right: 1px !important;
         }
         &::after {
-            border-left-color: $o-view-background-color !important;
+            border-left-color: $gray-100 !important;
             right: 2px !important;
         }
     }
