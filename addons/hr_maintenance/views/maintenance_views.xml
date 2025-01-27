@@ -84,7 +84,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='owner_user_id']" position="replace">
                 <field name="equipment_assign_to" widget="radio"/>
-                <field name="employee_id" string="Employee" invisible="equipment_assign_to == 'department' or not equipment_assign_to"/>
+                <field name="employee_id" string="Employee" invisible="equipment_assign_to == 'department' or not equipment_assign_to" widget="many2one_avatar_employee"/>
                 <field name="department_id" string="Department" invisible="equipment_assign_to == 'employee' or not equipment_assign_to"/>
             </xpath>
         </field>
