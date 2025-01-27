@@ -15,14 +15,22 @@ class ProductTemplate(models.Model):
         res = super()._get_additionnal_combination_info(
             product_or_template, quantity, date, website
         )
-        order_sudo = request.cart
         if (
             bool(website.sudo().in_store_dm_id)  # Click & Collect is enabled.
-            and len(order_sudo.carrier_id.warehouse_ids) > 1
             and product_or_template.is_product_variant
             and product_or_template.is_storable
         ):
-            res['show_click_and_collect_availability'] = True
+            available_delivery_methods = self.env['delivery.carrier'].sudo().search([
+                '|', ('website_id', '=', website.id), ('website_id', '=', False),
+                ('website_published', '=', True),
+            ])
+            if available_delivery_methods:
+                res['delivery_stock'] = utils.format_product_stock_values(
+                    product_or_template.sudo(), wh_id=website.warehouse_id.id
+                )
+            else:
+                res['delivery_stock'] = {}
+            order_sudo = request.cart
             if (
                 order_sudo
                 and order_sudo.carrier_id.delivery_type == 'in_store'
