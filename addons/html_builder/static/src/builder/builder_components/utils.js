@@ -16,7 +16,10 @@ export function useDomState(getState) {
     const env = useEnv();
     const state = useState(getState(env.getEditingElement()));
     useBus(env.editorBus, "STEP_ADDED", () => {
-        Object.assign(state, getState(env.getEditingElement()));
+        const editingElement = env.getEditingElement();
+        if (!editingElement || editingElement.isConnected) {
+            Object.assign(state, getState(editingElement));
+        }
     });
     return state;
 }

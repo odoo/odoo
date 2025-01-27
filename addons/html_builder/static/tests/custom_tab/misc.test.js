@@ -1,11 +1,13 @@
+import { useDomState } from "@html_builder/builder/builder_components/utils";
+import { setContent, setSelection } from "@html_editor/../tests/_helpers/selection";
+import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 import { Component, onWillStart, xml } from "@odoo/owl";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
 import { defaultBuilderComponents } from "../../src/builder/builder_components/default_builder_components";
 import { OptionsContainer } from "../../src/builder/components/option_container";
-import { setSelection } from "@html_editor/../tests/_helpers/selection";
+import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
 
 defineWebsiteModels();
 
@@ -359,6 +361,44 @@ test("no need to define 'isApplied' method for custom action if the widget alrea
         </div>`);
     await contains(":iframe .s_test").click();
     expect(".options-container .we-bg-options-container button").toHaveText("Info");
+});
+
+test("useDomState callback shouldn't be called when the editingElement is removed", async () => {
+    let count = 0;
+    class TestOption extends Component {
+        static template = xml`<div class="test_option">test</div>`;
+
+        setup() {
+            useDomState(() => {
+                expect.step(`useDomState ${count}`);
+                return {
+                    count: (count = count + 1),
+                };
+            });
+        }
+    }
+    addOption({
+        selector: ".s_test",
+        Component: TestOption,
+    });
+
+    const { getEditor } = await setupWebsiteBuilder(`<div></div>`);
+    const editor = getEditor();
+    setContent(editor.editable, '<div class="s_test alert-info">a</div>');
+    editor.shared.history.addStep();
+    await contains(":iframe .s_test").click();
+    expect(".options-container .test_option").toHaveCount(1);
+    expect.verifySteps(["useDomState 0"]);
+
+    undo(editor);
+    await animationFrame();
+    expect(".options-container .test_option").toHaveCount(0);
+    expect.verifySteps([]);
+
+    redo(editor);
+    await animationFrame();
+    expect(".options-container .test_option").toHaveCount(1);
+    expect.verifySteps(["useDomState 1"]);
 });
 
 describe("dependencies", () => {

@@ -11,16 +11,16 @@ export class BorderConfigurator extends Component {
         applyTo: { type: String },
     };
     setup() {
-        this.state = useDomState(() => ({
-            hasBorder: this.hasBorder(),
+        this.state = useDomState((editingElement) => ({
+            hasBorder: this.hasBorder(editingElement),
         }));
     }
     getStyleActionParam(param) {
         return `border-${this.props.direction ? this.props.direction + "-" : ""}${param}`;
     }
-    hasBorder() {
+    hasBorder(editingElement) {
         const getAction = this.env.editor.shared.builderActions.getAction;
-        const editingElement = this.env.getEditingElement().querySelector(this.props.applyTo);
+        editingElement = editingElement.querySelector(this.props.applyTo);
         const styleActionValue = getAction("styleAction").getValue({
             editingElement,
             param: this.getStyleActionParam("width"),
