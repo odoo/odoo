@@ -91,8 +91,5 @@ class MockIAPPartnerAutocomplete(common.BaseCase):
                     raise ValueError('No account token')
                 return {'company_data': sim_result}
 
-        try:
-            with patch.object(IapAutocompleteApi, '_contact_iap', side_effect=_contact_iap):
-                yield
-        finally:
-            pass
+        with patch.object(IapAutocompleteApi, '_contact_iap', side_effect=_contact_iap):
+            yield
