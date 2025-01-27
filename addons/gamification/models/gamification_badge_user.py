@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
 
 class GamificationBadgeUser(models.Model):
@@ -9,6 +8,7 @@ class GamificationBadgeUser(models.Model):
 
     _name = 'gamification.badge.user'
     _description = 'Gamification User Badge'
+    _inherit = ["mail.thread"]
     _order = "create_date desc"
     _rec_name = "badge_name"
 
@@ -30,19 +30,27 @@ class GamificationBadgeUser(models.Model):
         The stats counters are incremented
         :param ids: list(int) of badge users that will receive the badge
         """
-        template = self.env.ref(
-            'gamification.email_template_badge_received',
-            raise_if_not_found=False
-        )
-        if not template:
-            return
-
+        body_html = self.env.ref('gamification.email_template_badge_received')._render_field('body_html', self.ids)[self.id]
         for badge_user in self:
-            template.send_mail(
-                badge_user.id,
+            badge_user.message_notify(
+                model=badge_user._name,
+                res_id=badge_user.id,
+                body=body_html,
+                partner_ids=[badge_user.user_partner_id.id],
+                subject=_("🎉 You've earned the %(badge)s badge!", badge=badge_user.badge_name),
+                subtype_xmlid='mail.mt_comment',
+                email_layout_xmlid='mail.mail_notification_layout',
             )
 
         return True
+
+    def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
+        groups = super()._notify_get_recipients_groups(message, model_description, msg_vals)
+        self.ensure_one()
+        for group in groups:
+            if group[0] == 'user':
+                group[2]['has_button_access'] = False
+        return groups
 
     @api.model_create_multi
     def create(self, vals_list):
