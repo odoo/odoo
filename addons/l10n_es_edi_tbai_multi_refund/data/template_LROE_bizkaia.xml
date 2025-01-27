@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<data>
+    <template id="template_LROE_240_inner_recibidas" inherit_id="l10n_es_edi_tbai.template_LROE_240_inner_recibidas">
+        <xpath expr="//FacturasRectificadasSustituidas" position="attributes">
+            <attribute name="t-if" value="credit_note_invoices"/>
+        </xpath>
+
+        <xpath expr="//IDFacturaRectificadaSustituida" position="attributes">
+            <attribute name="t-foreach" value="credit_note_invoices"/>
+            <attribute name="t-as" value="credit_note_invoice"/>
+        </xpath>
+    </template>
+</data>
