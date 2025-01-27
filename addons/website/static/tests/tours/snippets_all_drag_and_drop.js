@@ -108,6 +108,13 @@ tour.register("snippets_all_drag_and_drop", {
         content: "check setting are loaded, wait panel is visible",
         trigger: ".o_we_customize_panel"
     },
+    // We hide the header before starting to drop snippets. This prevents
+    // situations where the header's drop zones overlap with those of the #wrap,
+    // ensuring that a snippet is dropped in the #wrap as expected instead of
+    // the header.
+    websiteTourUtils.clickOnSnippet({id: "o_header_standard", name: "Header"}),
+    websiteTourUtils.changeOption("TopMenuVisibility", "we-select:has([data-visibility]) we-toggler"),
+    websiteTourUtils.changeOption("TopMenuVisibility", 'we-button[data-visibility="hidden"]'),
     {
         content: "click on 'BLOCKS' tab",
         trigger: ".o_we_add_snippet_btn"
