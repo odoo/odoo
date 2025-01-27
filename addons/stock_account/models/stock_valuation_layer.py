@@ -132,6 +132,24 @@ class StockValuationLayer(models.Model):
             "context": context,
         }
 
+    def action_stock_adjust_valuation(self):
+        """Perform Stock Valuation Adjustment from the stock valuation layer list view."""
+        if len(self.product_id) > 1:
+            raise UserError(_("You cannot revalue multiple products at once"))
+
+        return {
+            'name': _('Adjust Valuation - %s', self.product_id.display_name),
+            'view_mode': 'form',
+            'res_model': 'stock.valuation.layer.revaluation',
+            'view_id': self.env.ref('stock_account.stock_valuation_layer_revaluation_form_view').id,
+            'type': 'ir.actions.act_window',
+            'context': {
+                'active_model': 'stock.valuation.layer',
+                'active_ids': self.ids,
+            },
+            'target': 'new'
+        }
+
     def action_open_reference(self):
         self.ensure_one()
         if self.stock_move_id:
