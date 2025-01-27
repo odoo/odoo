@@ -38,6 +38,16 @@
     &.o-chatWindow .o-mail-Composer-mainActions {
         margin-top: map-get($spacers, 1) / 2;
     }
+
+    &:not(.o-focused) {
+        .o-mail-Composer-input::placeholder {
+            opacity: 50%;
+        }
+
+        .o-mail-Composer-actions button:not(:hover):not(.o-active):not(.show) {
+            opacity: 25%;
+        }
+    }
 }
 
 .o-mail-Composer-actions {
@@ -82,11 +92,28 @@
         }
         &:hover, &:focus {
             opacity: 100% !important;
+            color: var(--mail-Composer-actionHoverColor, black);
+            backdrop-filter: invert(.025);
         }
         &:disabled {
             --btn-active-color: var(--btn-disabled-color);
             --btn-hover-color: var(--btn-disabled-color);
-            opacity: var(--btn-disabled-opacity);
+            opacity: 25%;
+        }
+        &.o-mail-Composer-send.btn-link:not(:disabled) {
+            background-color: rgba($o-action, .75);
+            opacity: 100% !important;
+            &:focus-visible {
+                outline: darken($o-action, 15%) solid 1px;
+            }
+            i.fa-paper-plane-o {
+                color: #FFF;
+                transform: translate(-1px);
+                scale: .85;
+            }
+        }
+        &.rounded-circle {
+            aspect-ratio: 1;
         }
     }
 }

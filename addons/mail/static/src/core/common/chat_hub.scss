@@ -45,7 +45,7 @@
     border: $border-width solid transparent;
 
     &:hover {
-        border-color: var(--ChatHub-menuBorderColor, mix($o-gray-300, $o-gray-400));
+        border-color: mix($o-gray-300, $o-gray-400);
     }
 }
 
@@ -72,7 +72,7 @@
 }
 
 .o-mail-ChatHub-hiddenMenu {
-    border-color: var(--ChatHub-menuBorderColor, mix($o-gray-300, $o-gray-400)) !important;
+    border-color: mix($o-gray-300, $o-gray-400) !important;
 }
 
 .o-mail-ChatHub-option {
@@ -86,13 +86,10 @@
     font-size: 15px;
     width: 30px !important;
     height: 30px !important;
-    border: $border-width solid var(--ChatHub-menuBorderColor, mix($o-gray-300, $o-gray-400)) !important;
+    border: $border-width solid mix($o-gray-300, $o-gray-400) !important;
 
     &:hover, &.show {
         background-color: $o-gray-300 !important;
+        opacity: 100% !important;
     }
-}
-
-.o-mail-ChatHub-optionsMenu {
-    border-color: var(--ChatHub-menuBorderColor, mix($o-gray-300, $o-gray-400)) !important;
 }

@@ -2,12 +2,12 @@
 <templates xml:space="preserve">
     <t t-name="mail.MessageInReply">
         <div class="o-mail-MessageInReply mx-2 mt-1 p-1 pb-0">
-            <small class="o-mail-MessageInReply-core o-mail-Message-bubble o-muted border position-relative d-flex px-2 py-1 rounded-3 rounded-start-0" t-att-class="{
+            <small class="o-mail-MessageInReply-core o-mail-Message-bubble o-muted border position-relative d-flex px-2 py-1 rounded-3 rounded-start-0 d-inline-flex" t-att-class="{
                 'o-blue': props.message.parentMessage.bubbleColor === 'blue',
                 'o-green': props.message.parentMessage.bubbleColor === 'green',
                 'o-orange': props.message.parentMessage.bubbleColor === 'orange',
             }">
-                <span t-if="!props.message.parentMessage.isEmpty" class="d-inline-flex align-items-center text-muted" t-att-class="{ 'cursor-pointer': props.onClick }" t-on-click="() => this.props.onClick?.()">
+                <span t-if="!props.message.parentMessage.isEmpty" class="d-inline-flex align-items-center text-muted opacity-75" t-att-class="{ 'cursor-pointer opacity-100-hover': props.onClick }" t-on-click="() => this.props.onClick?.()">
                     <img class="o-mail-MessageInReply-avatar me-2 rounded o_object_fit_cover" t-att-src="authorAvatarUrl" t-att-title="props.message.parentMessage.author?.name ?? props.message.parentMessage.email_from" alt="Avatar"/>
                     <span class="o-mail-MessageInReply-content overflow-hidden smaller">
                         <b><t t-out="props.message.parentMessage.author?.name ?? props.message.parentMessage.email_from"/></b>:

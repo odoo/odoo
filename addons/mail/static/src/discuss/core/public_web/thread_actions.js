@@ -24,6 +24,7 @@ threadActionsRegistry.add("show-threads", {
             action.popover = usePopover(SubChannelList, {
                 onClose: () => action.close(),
                 fixedPosition: true,
+                popoverClass: action.panelOuterClass,
             });
         }
         useChildSubEnv({
@@ -36,6 +37,7 @@ threadActionsRegistry.add("show-threads", {
         const thread = component.thread?.parent_channel_id || component.thread;
         action.popover?.open(component.root.el.querySelector(`[name="${action.id}"]`), { thread });
     },
+    panelOuterClass: "bg-100 border border-secondary",
     sequence: (comp) => (comp.props.chatWindow ? 40 : 5),
     sequenceGroup: 10,
     toggle: true,

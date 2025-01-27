@@ -18,7 +18,8 @@
                     'o-hasSelfAvatar': showComposerAvatar,
                     'o-focused': props.composer.isFocused,
                     'o-editing': props.composer.message,
-                    'o-chatWindow mx-2 mb-3': env.inChatWindow,
+                    'o-chatWindow mx-2': env.inChatWindow,
+                    'mb-3': env.inChatWindow and !props.composer.message,
                     'o-discussApp': env.inDiscussApp,
                     'm-1': !env.inDiscussApp,
                 }" t-attf-class="{{ props.className }}">
@@ -49,7 +50,7 @@
                     t-ref="input-container"
                 >
                     <div t-if="!extended" t-attf-class="{{ actionsContainerClass }}">
-                        <Dropdown t-if="partitionedActions.other.length > 0" position="'top-start'" menuClass="'d-flex flex-column py-0'">
+                        <Dropdown t-if="partitionedActions.other.length > 0" position="'top-start'" menuClass="'d-flex flex-column py-0 bg-100 border border-secondary'">
                             <t t-call="mail.Composer.moreActions"/>
                             <t t-set-slot="content">
                                 <t t-call="mail.Composer.dropdownActions"/>
@@ -101,7 +102,7 @@
                     </div>
                     <div t-ref="picker-target"/>
                 </div>
-                <div t-else="" class="d-flex align-items-center gap-1 w-100">
+                <div t-else="" class="d-flex align-items-center gap-1 w-100 pe-2">
                     <div class="pt-1" t-att-class="{ 'mt-2': !props.composer.message }">
                         <span t-if="props.composer.message" class="text-muted px-1 small" t-out="CANCEL_OR_SAVE_EDIT_TEXT" t-on-click="onClickCancelOrSaveEditText"/>
                         <t t-else="">
@@ -122,7 +123,7 @@
     <button class="o-mail-Composer-send btn"
         t-att-class="{
             'btn-primary btn-sm': extended,
-            'btn-link p-1 rounded-pill': !extended,
+            'btn-link rounded-circle p-0': !extended,
             'me-2': env.inDiscussApp,
             'border-start-0': env.inDiscussApp and !props.composer.message,
             'border-0': props.composer.message,
@@ -132,7 +133,7 @@
         t-att-aria-label="SEND_TEXT"
     >
         <t t-if="thread and thread.model !== 'discuss.channel'" t-out="SEND_TEXT"/>
-        <t t-else=""><i class="fa fa-fw fa-paper-plane-o"/></t>
+        <t t-else=""><i class="fa fa-fw fa-lg fa-paper-plane-o"/></t>
     </button>
 </t>
 

@@ -5,6 +5,9 @@
 
 .o-mail-MessageInReply-core {
     border-left: 3px solid transparent !important;
+    border-top: none !important;
+    border-right: none !important;
+    border-bottom: none !important;
     background-color: rgba($o-view-background-color, .5) !important;
 
     &.o-blue {
@@ -15,9 +18,6 @@
     }
     &.o-orange {
         border-left-color: mix($o-view-background-color, $warning, 40%) !important;
-    }
-    &:hover {
-        filter: brightness(.975);
     }
 }
 
