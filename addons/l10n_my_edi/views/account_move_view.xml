@@ -9,15 +9,46 @@
                 <widget name="web_ribbon" title="Processing" bg_color="text-bg-info" invisible="l10n_my_edi_state != 'in_progress'"/>
                 <widget name="web_ribbon" title="Rejected" bg_color="text-bg-warning" invisible="l10n_my_edi_state != 'rejected'"/>
             </xpath>
+            <!-- Hide the original send & print button, as it is difficult to update its invisible condition -->
+            <button name="action_invoice_sent" class="oe_highlight" position="attributes">
+                <attribute name="invisible" add="l10n_my_invoice_need_edi" separator=" or "/>
+            </button>
+            <!-- Instead, we display our own buttons so that we can write the invisible properly for our use case. -->
+            <xpath expr="//button[@name='action_invoice_sent' and not(@class)]" position="after">
+                <button name="action_invoice_sent"
+                        type="object"
+                        string="Send"
+                        invisible="(not l10n_my_invoice_need_edi or l10n_my_edi_state != 'valid') or (state != 'posted' or is_being_sent or invoice_pdf_report_id or move_type not in ('out_invoice', 'out_refund'))"
+                        class="oe_highlight"
+                        data-hotkey="y"/>
+                <button name="action_invoice_sent"
+                        type="object"
+                        string="Send"
+                        invisible="(not l10n_my_invoice_need_edi or l10n_my_edi_state == 'valid') or (state != 'posted' or is_being_sent or invoice_pdf_report_id or move_type not in ('out_invoice', 'out_refund'))"
+                        data-hotkey="y"/>
+            </xpath>
+            <!-- We want the CTA to be primary only on invoices, and secondary on vendor bills. -->
+            <button name="action_invoice_sent" position="before">
+                <button name="action_l10n_my_edi_send_invoice" string="Send To MyInvois" type="object"
+                        groups="account.group_account_invoice"
+                        class="oe_highlight"
+                        invisible="not l10n_my_invoice_need_edi or l10n_my_edi_state or move_type not in ('out_invoice', 'out_refund')"/>
+            </button>
+            <button name="action_register_payment" position="after">
+                <button name="action_l10n_my_edi_send_invoice" string="Send To MyInvois" type="object"
+                        groups="account.group_account_invoice"
+                        invisible="not l10n_my_invoice_need_edi or l10n_my_edi_state or move_type not in ('in_invoice', 'in_refund')"/>
+            </button>
             <xpath expr="//header" position="inside">
                 <!-- The invalid/cancelled states should be final. -->
                 <!-- This button is not needed on rejected invoices as it expects an action from the user -->
                 <button name="action_l10n_my_edi_update_status" string="Update MyInvois Status" type="object"
                         groups="account.group_account_invoice"
                         invisible="not l10n_my_edi_state or (l10n_my_edi_state not in ['in_progress', 'valid']) or (l10n_my_edi_state == 'rejected' and move_type not in ('out_invoice', 'out_refund'))"/>
-                <button name="action_l10n_my_edi_reject_bill" string="Reject" type="object"
-                        groups="account.group_account_invoice"
-                        invisible="l10n_my_edi_state != 'valid' or move_type not in ('in_invoice', 'in_refund')"/>
+            </xpath>
+            <!-- Add the classification code to the invoice lines -->
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='name']" position="after">
+                <field name="l10n_my_edi_classification_code" optional="hide"/>
             </xpath>
             <!-- There are quite a few fields, and with other modules adding some too it would be too messy to not put them in a tab. -->
             <xpath expr="//notebook" position="inside">
@@ -26,6 +57,7 @@
                         <group>
                             <!-- Only displayed if the invoice contains a tax of type Exempt -->
                             <field name="l10n_my_edi_display_tax_exemption_reason" invisible="1"/>
+                            <field name="l10n_my_invoice_need_edi" invisible="1"/>
                             <field name="l10n_my_edi_exemption_reason" invisible="not l10n_my_edi_display_tax_exemption_reason" readonly="l10n_my_edi_state != False"/>
                             <field name="l10n_my_edi_custom_form_reference" readonly="l10n_my_edi_state != False"/>
                         </group>
@@ -34,6 +66,7 @@
                             <field name="l10n_my_edi_state" invisible="not l10n_my_edi_state"/>
                             <field name="l10n_my_edi_submission_uid" invisible="not l10n_my_edi_submission_uid"/>
                             <field name="l10n_my_edi_external_uuid" invisible="not l10n_my_edi_external_uuid"/>
+                            <field name="l10n_my_edi_invoice_long_id" invisible="not l10n_my_edi_external_uuid"/>
                             <field name="l10n_my_edi_validation_time" invisible="not l10n_my_edi_validation_time"/>
                         </group>
                     </group>
@@ -50,6 +83,18 @@
             <field name="status_in_payment" position="before">
                 <field name="l10n_my_edi_state" optional="hide"/>
             </field>
+        </field>
+    </record>
+
+    <record id="invoice_send_to_myinvois" model="ir.actions.server">
+        <field name="name">Send To MyInvois</field>
+        <field name="state">code</field>
+        <field name="model_id" ref="model_account_move"/>
+        <field name="binding_model_id" ref="model_account_move"/>
+        <field name="binding_view_types">list,kanban</field>
+        <field name="code">
+            if records:
+                action = records.action_l10n_my_edi_send_invoice()
         </field>
     </record>
 </odoo>
