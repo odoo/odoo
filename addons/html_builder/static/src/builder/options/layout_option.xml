@@ -29,14 +29,11 @@
         <SpacingOption />
     </t>
     <t t-else="">
-        <BuilderRow label.translate="Hor. Alignment" level="1">
-            <BuilderButtonGroup applyTo="'.row'">
-                <BuilderButton classAction="'align-items-start'" title="'Align Top'" iconImg="'/website/static/src/img/snippets_options/align_top.svg'"  />
-                <BuilderButton classAction="'align-items-center'" title="'Align Middle'" iconImg="'/website/static/src/img/snippets_options/align_middle.svg'" />
-                <BuilderButton classAction="'align-items-end'" title="'Align Bottom'" iconImg="'/website/static/src/img/snippets_options/align_bottom.svg'" />
-                <BuilderButton classAction="'align-items-stretch'" title="'Stretch'" iconImg="'/website/static/src/img/snippets_options/align_stretch.svg'" />
-            </BuilderButtonGroup>
-        </BuilderRow>
+        <BuilderContext applyTo="'.row'">
+            <t t-call="html_builder.VerticalAlignmentOption">
+                <t t-set="level" t-value="1"/>
+            </t>
+        </BuilderContext>
     </t>
 </t>
 

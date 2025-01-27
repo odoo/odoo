@@ -1,5 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
+import { coreBuilderActions } from "../core_builder_action_plugin";
 
 class AlignmentOptionPlugin extends Plugin {
     static id = "AlignmentOption";
@@ -10,6 +11,26 @@ class AlignmentOptionPlugin extends Plugin {
                 selector: ".s_share, .s_text_highlight, .s_social_media",
             },
         ],
+        builder_actions: this.getActions(),
     };
+
+    getActions() {
+        const classAction = coreBuilderActions.classAction;
+        return {
+            setVerticalAlignment: {
+                ...classAction,
+                getPriority: ({ param: classNames = "" }) =>
+                    classNames === "align-items-stretch" ? 0 : 1,
+                isApplied: ({ editingElement, param: classNames }) => {
+                    if (classNames === "align-items-stretch") {
+                        return true;
+                    }
+                    return classNames
+                        .split(" ")
+                        .every((className) => editingElement.classList.contains(className));
+                },
+            },
+        };
+    }
 }
 registry.category("website-plugins").add(AlignmentOptionPlugin.id, AlignmentOptionPlugin);

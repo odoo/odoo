@@ -11,4 +11,16 @@
     </BuilderRow>
 </t>
 
+<t t-name="html_builder.VerticalAlignmentOption">
+    <!-- TODO add title tooltip row Vertical Alignment-->
+    <BuilderRow label.translate="Vert. Alignment" level='level'>
+        <BuilderButtonGroup action="'setVerticalAlignment'">
+            <BuilderButton title.translate="Align Top" actionParam="'align-items-start'" iconImg="'/website/static/src/img/snippets_options/align_top.svg'"/>
+            <BuilderButton title.translate="Align Middle" actionParam="'align-items-center'" iconImg="'/website/static/src/img/snippets_options/align_middle.svg'"/>
+            <BuilderButton title.translate="Align Bottom" actionParam="'align-items-end'" iconImg="'/website/static/src/img/snippets_options/align_bottom.svg'"/>
+            <BuilderButton title.translate="Stretch to Equal Height" actionParam="'align-items-stretch'" iconImg="'/website/static/src/img/snippets_options/align_stretch.svg'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+</t>
+
 </templates>

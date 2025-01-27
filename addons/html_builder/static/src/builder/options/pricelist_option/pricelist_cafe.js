@@ -16,6 +16,11 @@ class PriceListCafeOptionPlugin extends Plugin {
                     productSelector: ".s_pricelist_cafe_item",
                 },
             }),
+            withSequence(6, {
+                selector: ".s_pricelist_cafe",
+                template: "html_builder.VerticalAlignmentOption",
+                applyTo: ".row:has(.s_pricelist_cafe_col)",
+            }),
             withSequence(5, {
                 selector: ".s_pricelist_cafe .row > div",
                 OptionComponent: AddProductButton,
