@@ -68,10 +68,7 @@ export class CartPage extends Component {
             return;
         }
 
-        if (
-            !this.selfOrder.currentOrder.presetRequirementsFilled &&
-            this.selfOrder.config.self_ordering_mode === "mobile"
-        ) {
+        if (!this.selfOrder.currentOrder.presetRequirementsFilled && orderingMode !== "table") {
             this.state.fillInformations = true;
             return;
         }

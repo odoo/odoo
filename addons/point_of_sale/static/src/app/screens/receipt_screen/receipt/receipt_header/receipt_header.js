@@ -12,7 +12,7 @@ export class ReceiptHeader extends Component {
     }
 
     get partnerAddress() {
-        return this.order.partner_id.pos_contact_address.split("\n");
+        return this.order.partner_id?.pos_contact_address.split(/\n\n+/).join("\n").split("\n");
     }
 
     get vatText() {
