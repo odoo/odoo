@@ -20,6 +20,9 @@ export class PhoneField extends Component {
     get phoneHref() {
         return "tel:" + this.props.record.data[this.props.name].replace(/\s+/g, "");
     }
+    async saveRecord() {
+        await this.props.record.save();
+    }
 }
 
 export const phoneField = {
