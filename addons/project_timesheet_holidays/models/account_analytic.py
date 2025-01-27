@@ -29,7 +29,9 @@ class AccountAnalyticLine(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_linked_leave(self):
-        if any(line.holiday_id for line in self):
+        if any(line.global_leave_id for line in self):
+            raise UserError(_('You cannot delete timesheets that are linked to global time off.'))
+        elif any(line.holiday_id for line in self):
             if not self.env.user.has_group('hr_holidays.group_hr_holidays_user') and self.env.user not in self.holiday_id.sudo().user_id:
                 raise UserError(_('You cannot delete timesheets that are linked to time off requests. Please cancel your time off request from the Time Off application instead.'))
             warning_msg = _('You cannot delete timesheets linked to time off. Please, cancel the time off instead.')
