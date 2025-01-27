@@ -2,6 +2,7 @@
 
 from odoo import _
 from odoo.exceptions import ValidationError
+from odoo.tools import float_compare
 
 from odoo.addons.website_sale.controllers import payment
 
@@ -19,7 +20,10 @@ class PaymentPortal(payment.PaymentPortal):
         if sale_order.exists():
             initial_amount = sale_order.amount_total
             sale_order._update_programs_and_rewards()
-            if initial_amount != sale_order.amount_total:
+            rounding = sale_order.currency_id.rounding
+            if float_compare(
+                sale_order.amount_total, initial_amount, precision_rounding=rounding
+            ) != 0:
                 raise ValidationError(
                     _("Cannot process payment: applied reward was changed or has expired.")
                 )
