@@ -26,7 +26,7 @@ FormEditorRegistry.add('apply_job', {
         string: _t('LinkedIn Profile'),
     }, {
         type: 'text',
-        name: 'description',
+        name: 'applicant_notes',
         string: _t('Short Introduction'),
     }, {
         type: 'binary',
