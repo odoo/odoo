@@ -3780,7 +3780,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsOnce(target, ".o_form_view button[data-hotkey=v]");
-        triggerHotkey("alt+v");
+        await triggerHotkey("alt+v");
         await nextTick();
         assert.verifySteps(["validate"]);
     });
@@ -5969,7 +5969,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelector(".o_pager_counter").textContent, "1 / 2");
 
         await editInput(target, ".o_field_widget[name=foo] input", "");
-        triggerHotkey("alt+n");
+        await triggerHotkey("alt+n");
         await nextTick();
         assert.strictEqual(target.querySelector(".o_breadcrumb").innerText, "first record");
         assert.strictEqual(
@@ -6078,7 +6078,7 @@ QUnit.module("Views", (hooks) => {
         await triggerEvent(input, null, "input");
 
         // trigger the pager hotkey to switch to the next record (will save record)
-        triggerHotkey("alt+n");
+        await triggerHotkey("alt+n");
         await nextTick();
         assert.containsNone(document.body, ".modal", "no confirm modal should be displayed");
         assert.strictEqual(target.querySelector(".o_pager_counter").textContent, "2 / 2");
@@ -6088,7 +6088,7 @@ QUnit.module("Views", (hooks) => {
             "input should contain blip"
         );
 
-        triggerHotkey("alt+p");
+        await triggerHotkey("alt+p");
         await nextTick();
         assert.containsNone(document.body, ".modal", "no confirm modal should be displayed");
         assert.strictEqual(target.querySelector(".o_pager_counter").textContent, "1 / 2");
