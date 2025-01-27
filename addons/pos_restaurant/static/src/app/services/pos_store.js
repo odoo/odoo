@@ -404,7 +404,7 @@ patch(PosStore.prototype, {
     async setTableFromUi(table, orderUuid = null) {
         try {
             if (!orderUuid && this.getOrder()?.isFilledDirectSale) {
-                this.transferOrder(this.getOrder().uuid, table);
+                await this.transferOrder(this.getOrder().uuid, table);
                 return;
             }
             this.tableSyncing = true;
@@ -429,7 +429,7 @@ patch(PosStore.prototype, {
                 }
                 this.showScreen(orders[0].getScreenData().name, props);
             } else {
-                this.addNewOrder({ table_id: table });
+                await this.addNewOrder({ table_id: table });
                 this.showScreen("ProductScreen");
             }
         }

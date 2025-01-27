@@ -3,3 +3,4 @@
 
 from . import test_frontend
 from . import test_pos_restaurant_flow
+from . import test_transfer_order
