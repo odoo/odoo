@@ -475,7 +475,10 @@ export class PaymentScreen extends Component {
         }
 
         if (
-            this.currentOrder.get_total_with_tax() != 0 &&
+            !floatIsZero(
+                this.currentOrder.get_total_with_tax(),
+                this.pos.currency.decimal_places
+            ) &&
             this.currentOrder.payment_ids.length === 0
         ) {
             this.notification.add(_t("Select a payment method to validate the order."));
