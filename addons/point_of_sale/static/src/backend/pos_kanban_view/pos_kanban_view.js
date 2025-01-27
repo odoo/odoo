@@ -85,25 +85,43 @@ export class PosKanbanRenderer extends KanbanRenderer {
         this.posState.show_predefined_scenarios = this.props.list.count === 0;
     }
 
+<<<<<<< 877aa39252fdeb3c960fc425fbb803dec9c7bed2
     get isDarkTheme() {
         return cookie.get("color_scheme") === "dark";
+||||||| 4d4110092406afe2b9c3be6558c4d741135c64a4
+=======
+    showAccessDeniedDialog(body) {
+        this.dialog.add(AlertDialog, {
+            title: _t("Access Denied"),
+            body: body,
+        });
+>>>>>>> b0d124cf0c3ac415a198bcc7e8c37042f9416fbc
     }
 
     async callWithViewUpdate(func) {
         try {
             const isPosManager = await user.hasGroup("point_of_sale.group_pos_manager");
             if (!isPosManager) {
-                this.dialog.add(AlertDialog, {
-                    title: _t("Access Denied"),
-                    body: _t(
+                this.showAccessDeniedDialog(
+                    _t(
                         "It seems like you don't have enough rights to create point of sale configurations."
-                    ),
-                });
+                    )
+                );
                 return;
             }
             const result = await func();
             await updatePosKanbanViewState(this.orm, this.posState);
+<<<<<<< 877aa39252fdeb3c960fc425fbb803dec9c7bed2
             return result;
+||||||| 4d4110092406afe2b9c3be6558c4d741135c64a4
+=======
+        } catch (e) {
+            if (e.exceptionName === "odoo.exceptions.AccessError") {
+                this.showAccessDeniedDialog(e.data.message);
+            } else {
+                throw e;
+            }
+>>>>>>> b0d124cf0c3ac415a198bcc7e8c37042f9416fbc
         } finally {
             this.env.searchModel.clearQuery();
         }

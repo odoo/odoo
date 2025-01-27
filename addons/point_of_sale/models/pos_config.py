@@ -872,7 +872,35 @@ class PosConfig(models.Model):
 
         return journal, payment_methods.ids
 
+<<<<<<< 877aa39252fdeb3c960fc425fbb803dec9c7bed2
     def get_record_by_ref(self, recordRefs):
+||||||| 4d4110092406afe2b9c3be6558c4d741135c64a4
+    @api.model
+    def _load_furniture_data(self):
+        product_module = self.env['ir.module.module'].search([('name', '=', 'product')])
+        if not product_module.demo:
+            convert.convert_file(self.env, 'product', 'data/product_category_demo.xml', None, noupdate=True, mode='init', kind='data')
+            convert.convert_file(self.env, 'product', 'data/product_attribute_demo.xml', None, noupdate=True, mode='init', kind='data')
+            convert.convert_file(self.env, 'product', 'data/product_demo.xml', None, noupdate=True, mode='init', kind='data')
+
+        convert.convert_file(self.env, 'point_of_sale', 'data/scenarios/furniture_data.xml', None, noupdate=True, mode='init', kind='data')
+
+    def get_categories(self, categories):
+=======
+    @api.model
+    def _load_furniture_data(self):
+        if not self.env.user.has_group('base.group_system'):
+            raise AccessError(_("You must have 'Administration Settings' access to load furniture data."))
+        product_module = self.env['ir.module.module'].search([('name', '=', 'product')])
+        if not product_module.demo:
+            convert.convert_file(self.env, 'product', 'data/product_category_demo.xml', None, noupdate=True, mode='init', kind='data')
+            convert.convert_file(self.env, 'product', 'data/product_attribute_demo.xml', None, noupdate=True, mode='init', kind='data')
+            convert.convert_file(self.env, 'product', 'data/product_demo.xml', None, noupdate=True, mode='init', kind='data')
+
+        convert.convert_file(self.env, 'point_of_sale', 'data/scenarios/furniture_data.xml', None, noupdate=True, mode='init', kind='data')
+
+    def get_categories(self, categories):
+>>>>>>> b0d124cf0c3ac415a198bcc7e8c37042f9416fbc
         # filters out unavailable external id
         return [self.env.ref(record).id for record in recordRefs if self.env.ref(record, raise_if_not_found=False)]
 
@@ -896,9 +924,37 @@ class PosConfig(models.Model):
         return 'point_of_sale.pos_config_main'
 
     @api.model
+<<<<<<< 877aa39252fdeb3c960fc425fbb803dec9c7bed2
     def load_onboarding_clothes_scenario(self, with_demo_data=True):
         journal, payment_methods_ids = self._create_journal_and_payment_methods(
             cash_journal_vals={'name': _('Cash Clothes Shop'), 'show_on_dashboard': False})
+||||||| 4d4110092406afe2b9c3be6558c4d741135c64a4
+    def load_onboarding_clothes_scenario(self):
+        ref_name = 'point_of_sale.pos_config_clothes'
+        if not self.env.ref(ref_name, raise_if_not_found=False):
+            convert.convert_file(self.env, 'point_of_sale', 'data/scenarios/clothes_data.xml', None, noupdate=True, mode='init', kind='data')
+
+        clothes_categories = self.get_categories([
+            'point_of_sale.pos_category_upper',
+            'point_of_sale.pos_category_lower',
+            'point_of_sale.pos_category_others'
+        ])
+        journal, payment_methods_ids = self._create_journal_and_payment_methods(cash_journal_vals={'name': _("Cash Clothes Shop"), 'show_on_dashboard': False})
+=======
+    def load_onboarding_clothes_scenario(self):
+        if not self.env.user.has_group('base.group_system'):
+            raise AccessError(_("You must have 'Administration Settings' access to load clothes data."))
+        ref_name = 'point_of_sale.pos_config_clothes'
+        if not self.env.ref(ref_name, raise_if_not_found=False):
+            convert.convert_file(self.env, 'point_of_sale', 'data/scenarios/clothes_data.xml', None, noupdate=True, mode='init', kind='data')
+
+        clothes_categories = self.get_categories([
+            'point_of_sale.pos_category_upper',
+            'point_of_sale.pos_category_lower',
+            'point_of_sale.pos_category_others'
+        ])
+        journal, payment_methods_ids = self._create_journal_and_payment_methods(cash_journal_vals={'name': _("Cash Clothes Shop"), 'show_on_dashboard': False})
+>>>>>>> b0d124cf0c3ac415a198bcc7e8c37042f9416fbc
         config = self.env['pos.config'].create([{
             'name': _('Clothes Shop'),
             'company_id': self.env.company.id,
