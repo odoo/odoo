@@ -4,7 +4,6 @@ from werkzeug.exceptions import NotFound
 
 from odoo import http
 from odoo.http import request
-from odoo.models import check_method_name
 from odoo.service.model import call_kw
 
 from .utils import clean_action
@@ -27,12 +26,10 @@ class DataSet(http.Controller):
 
     @http.route(['/web/dataset/call_kw', '/web/dataset/call_kw/<path:path>'], type='jsonrpc', auth="user", readonly=_call_kw_readonly)
     def call_kw(self, model, method, args, kwargs, path=None):
-        check_method_name(method)
         return call_kw(request.env[model], method, args, kwargs)
 
     @http.route(['/web/dataset/call_button', '/web/dataset/call_button/<path:path>'], type='jsonrpc', auth="user", readonly=_call_kw_readonly)
     def call_button(self, model, method, args, kwargs, path=None):
-        check_method_name(method)
         action = call_kw(request.env[model], method, args, kwargs)
         if isinstance(action, dict) and action.get('type') != '':
             return clean_action(action, env=request.env)

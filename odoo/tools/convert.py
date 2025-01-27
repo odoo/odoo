@@ -187,8 +187,8 @@ def _eval_xml(self, node, env):
         if 'context' in kwargs:
             model = model.with_context(**kwargs.pop('context'))
         method = getattr(model, method_name)
-        api = getattr(method, '_api', None)
-        if api and api.startswith('model'):
+        is_model_method = getattr(method, '_api_model', False)
+        if is_model_method:
             pass  # already bound to an empty recordset
         else:
             record_ids, *args = args

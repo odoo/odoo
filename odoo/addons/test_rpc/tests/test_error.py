@@ -16,6 +16,16 @@ class TestError(common.HttpCase):
         # Reset the admin's lang to avoid breaking tests due to admin not in English
         self.rpc("res.users", "write", [uid], {"lang": False})
 
+    def test_01_private(self):
+        with self.assertRaisesRegex(Exception, r"Private method"), mute_logger('odoo.http'):
+            self.rpc('test_rpc.model_a', '_create')
+        with self.assertRaisesRegex(Exception, r"Private method"), mute_logger('odoo.http'):
+            self.rpc('test_rpc.model_a', 'private_method')
+        with self.assertRaisesRegex(Exception, r"Private method"), mute_logger('odoo.http'):
+            self.rpc('test_rpc.model_a', 'init')
+        with self.assertRaisesRegex(Exception, r"Private method"), mute_logger('odoo.http'):
+            self.rpc('test_rpc.model_a', 'filtered', ['id'])
+
     def test_01_create(self):
         """ Create: mandatory field not provided """
         self.rpc("test_rpc.model_b", "create", {"name": "B1"})
@@ -75,3 +85,7 @@ class TestError(common.HttpCase):
         self.patch(http, 'db_list', db_list)  # this is just to ensure that the request won't have a db, breaking monodb behaviour
 
         self.rpc("test_rpc.model_b", "create", {"name": "B1"})
+
+    def test_05_model(self):
+        res = self.rpc("test_rpc.model_a", "not_depending_on_id", [1])
+        self.assertEqual(res, "got [1]")
