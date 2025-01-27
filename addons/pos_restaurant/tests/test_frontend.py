@@ -401,6 +401,42 @@ class TestFrontend(TestFrontendCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PreparationPrinterContent', login="pos_user")
 
+    def test_transfer_table_last_preparation_change(self):
+        """This test will check if the last preparation change is correctly transferred to the new table with 6 possible cases:
+            - Transfer sent product on table with same product sent
+            - Transfer sent product on table with same product not sent
+            - Transfer sent product on table without the same product
+            - Transfer not sent product on table with same product not sent
+            - Transfer not sent product on table with same product sent
+            - Transfer not sent product on table without the same product"""
+        self.env['pos.printer'].create({
+            'name': 'Printer',
+            'printer_type': 'epson_epos',
+            'epson_printer_ip': '0.0.0.0',
+            'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
+        })
+
+        self.main_pos_config.write({
+            'is_order_printer' : True,
+            'printer_ids': [Command.set(self.env['pos.printer'].search([]).ids)],
+        })
+
+        self.product_test = self.env['product.product'].create({
+            'name': 'Product Test',
+            'available_in_pos': True,
+            'list_price': 10,
+            'pos_categ_ids': [(6, 0, [self.env['pos.category'].search([], limit=1).id])],
+            'taxes_id': False,
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'TableTransferPreparationChange1', login="pos_user")
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'TableTransferPreparationChange2', login="pos_user")
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'TableTransferPreparationChange3', login="pos_user")
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'TableTransferPreparationChange4', login="pos_user")
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'TableTransferPreparationChange5', login="pos_user")
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'TableTransferPreparationChange6', login="pos_user")
+
     def test_combo_preparation_receipt(self):
         setup_product_combo_items(self)
         pos_printer = self.env['pos.printer'].create({
