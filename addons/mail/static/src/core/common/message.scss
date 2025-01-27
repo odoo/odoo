@@ -5,6 +5,7 @@
         outline: $border-width solid rgba($border-color, .35);
         outline-offset: -$border-width;
         background-color: $o-view-background-color;
+        --border-opacity: .5;
     }
 
     &.o-highlighted {
@@ -139,6 +140,7 @@
 
         &:hover, &.focus, &.show {
             opacity: 100%;
+            color: var(--mail-Message-actionIconHoveredColor, black);
         }
     }
 }

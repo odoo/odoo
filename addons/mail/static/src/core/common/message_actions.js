@@ -130,6 +130,7 @@ messageActionsRegistry
     })
     .add("delete", {
         condition: (component) => component.props.message.editable,
+        btnClass: "text-danger",
         icon: "fa fa-trash",
         title: _t("Delete"),
         onClick: async (component) => {
@@ -190,6 +191,11 @@ messageActionsRegistry
 
 function transformAction(component, id, action) {
     return {
+        get btnClass() {
+            return typeof action.btnClass === "function"
+                ? action.btnClass(component)
+                : action.btnClass;
+        },
         component: action.component,
         id,
         mobileCloseAfterClick: action.mobileCloseAfterClick ?? true,
