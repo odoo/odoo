@@ -2906,6 +2906,19 @@
                     </h5>
                 </div>
             </t>
+            <t t-if="tx_sudo.state != 'done'">
+                <div class="mb-4">
+                    <h5>
+                        <em>
+                            <span>Order</span>
+                            <span t-field="order.name" />
+                            <t t-if="order.state == 'sale'">
+                                <i class="fa fa-check-circle ms-1"/>
+                            </t>
+                        </em>
+                    </h5>
+                </div>
+            </t>
             <t t-if="request.env['res.users']._get_signup_invitation_scope() == 'b2c' and request.website.is_public_user()">
                 <p class="alert alert-info mt-3" role="status">
                     <a role="button" t-att-href="order.partner_id.signup_prepare() and order.partner_id.with_context(relative_url=True)._get_signup_url()" class="btn btn-primary">Sign Up</a>
