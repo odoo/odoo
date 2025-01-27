@@ -11,3 +11,4 @@ from . import l10n_ar_partner_tax
 from . import l10n_ar_earnings_scale
 from . import account_fiscal_position_l10n_ar_tax
 from . import account_fiscal_position
+from . import account_move_line

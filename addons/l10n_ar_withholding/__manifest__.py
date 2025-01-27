@@ -3,7 +3,7 @@
 {
     'name': 'Argentina - Payment Withholdings',
     'version': "1.0",
-    'description': """Allows to register withholdings during the payment of an invoice.""",
+    'description': """Argentina - Perceptions & Payment Withholdings.""",
     'author': 'ADHOC SA',
     'countries': ['ar'],
     'category': 'Accounting/Localizations',
@@ -18,6 +18,7 @@
         'views/res_config_settings.xml',
         'views/res_partner_view.xml',
         'views/l10n_ar_earnings_scale_view.xml',
+        'views/account_fiscal_position_view.xml',
         'wizards/res_config_settings_views.xml',
         'wizards/account_payment_register_views.xml',
         'security/ir.model.access.csv',
