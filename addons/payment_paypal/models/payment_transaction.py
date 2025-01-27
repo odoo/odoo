@@ -46,10 +46,6 @@ class PaymentTransaction(models.Model):
                         'value': self.amount,
                     },
                     'payee':  {
-                        'display_data': {
-                            'business_email':  self.provider_id.company_id.email,
-                            'brand_name': self.provider_id.company_id.name,
-                        },
                         'email_address': paypal_utils.get_normalized_email_account(self.provider_id)
                     },
                 },
