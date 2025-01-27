@@ -1881,6 +1881,13 @@ export class OdooEditor extends EventTarget {
         let range = getDeepRange(this.editable, { sel, correctTripleClick: true });
         if (!range) return;
         for (const node of descendants(closestBlock(range.commonAncestorContainer))) {
+            // Text nodes inside Knowledge Behavior should never be removed.
+            // TODO: `data-oe-protected` concept can't be used here since its scope is still
+            // too restrictive to work in this case. This has to be updated in further versions.
+            const closestBehavior = closestElement(node, '.o_knowledge_behavior_anchor');
+            if (closestBehavior) {
+                continue;
+            }
             if (node.nodeType === Node.TEXT_NODE && [...node.textContent].every(char => char === '\uFEFF')) {
                 const restore = prepareUpdate(...leftPos(node));
                 node.remove();
