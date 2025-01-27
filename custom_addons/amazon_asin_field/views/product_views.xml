@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit the product.template form view -->
+    <record id="view_product_template_form_inherit" model="ir.ui.view">
+        <field name="name">product.template.form.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='default_code']" position="before">
+                <field name="amazon_asin"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit the product.product form view -->
+    <record id="view_product_form_inherit" model="ir.ui.view">
+        <field name="name">product.product.form.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='default_code']" position="before">
+                <field name="amazon_asin"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit the product.template list view -->
+    <record id="view_product_template_tree_inherit" model="ir.ui.view">
+        <field name="name">product.template.tree.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='default_code']" position="after">
+                <field name="amazon_asin" optional="show" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit the product.product list view -->
+    <record id="view_product_tree_inherit" model="ir.ui.view">
+        <field name="name">product.product.tree.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='default_code']" position="after">
+                <field name="amazon_asin" optional="show" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
