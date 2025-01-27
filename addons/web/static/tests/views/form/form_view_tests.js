@@ -3781,7 +3781,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsOnce(target, ".o_form_view button[data-hotkey=v]");
-        triggerHotkey("alt+v");
+        await triggerHotkey("alt+v");
         await nextTick();
         assert.verifySteps(["validate"]);
     });
@@ -5962,7 +5962,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelector(".o_pager_counter").textContent, "1 / 2");
 
         await editInput(target, ".o_field_widget[name=foo] input", "");
-        triggerHotkey("alt+n");
+        await triggerHotkey("alt+n");
         await nextTick();
         assert.strictEqual(target.querySelector(".o_breadcrumb").innerText, "first record");
         assert.strictEqual(
@@ -6071,7 +6071,7 @@ QUnit.module("Views", (hooks) => {
         await triggerEvent(input, null, "input");
 
         // trigger the pager hotkey to switch to the next record (will save record)
-        triggerHotkey("alt+n");
+        await triggerHotkey("alt+n");
         await nextTick();
         assert.containsNone(document.body, ".modal", "no confirm modal should be displayed");
         assert.strictEqual(target.querySelector(".o_pager_counter").textContent, "2 / 2");
@@ -6081,7 +6081,7 @@ QUnit.module("Views", (hooks) => {
             "input should contain blip"
         );
 
-        triggerHotkey("alt+p");
+        await triggerHotkey("alt+p");
         await nextTick();
         assert.containsNone(document.body, ".modal", "no confirm modal should be displayed");
         assert.strictEqual(target.querySelector(".o_pager_counter").textContent, "1 / 2");
@@ -12054,7 +12054,7 @@ QUnit.module("Views", (hooks) => {
                 if (obj.display_name === "first line") {
                     if (onChangeCount === 0) {
                         onChangeCount += 1;
-                        assert.step("resequence onChange crash")
+                        assert.step("resequence onChange crash");
                         throw makeErrorFromResponse({
                             code: 200,
                             message: "Odoo Server Error",
@@ -12098,8 +12098,9 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_form_button_save"));
         await nextTick();
 
-        let getNames = () => [...target.querySelectorAll(".o_list_char")].map((el) => el.textContent)
-        assert.deepEqual(getNames(), ["first line", "second line"])
+        const getNames = () =>
+            [...target.querySelectorAll(".o_list_char")].map((el) => el.textContent);
+        assert.deepEqual(getNames(), ["first line", "second line"]);
 
         // drag and drop first line to the second, should crash because of onchange
         await dragAndDrop(
@@ -12107,7 +12108,7 @@ QUnit.module("Views", (hooks) => {
             "tbody.ui-sortable tr:nth-child(2)"
         );
         await nextTick();
-        assert.deepEqual(getNames(), ["first line", "second line"])
+        assert.deepEqual(getNames(), ["first line", "second line"]);
 
         // drag and drop first line to the second, should work
         await dragAndDrop(
@@ -12115,7 +12116,7 @@ QUnit.module("Views", (hooks) => {
             "tbody.ui-sortable tr:nth-child(2)"
         );
         await nextTick();
-        assert.deepEqual(getNames(), ["second line", "first line"])
+        assert.deepEqual(getNames(), ["second line", "first line"]);
 
         assert.verifySteps(["resequence onChange crash", "resequence onChange ok"]);
     });
