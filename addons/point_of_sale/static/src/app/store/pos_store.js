@@ -245,7 +245,7 @@ export class PosStore extends Reactive {
     }
 
     async closingSessionNotification(data) {
-        if (data.login_number === this.session.login_number) {
+        if (data.login_number == this.session.login_number) {
             return;
         }
 
