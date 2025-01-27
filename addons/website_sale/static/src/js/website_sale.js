@@ -821,6 +821,16 @@ publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+        const cta_navigation = document.querySelector('.o_cta_navigation_container');
+        const placeholder = document.querySelector('.o_cta_navigation_placeholder');
+        placeholder.style.height = `${cta_navigation.offsetHeight}px`;
+        cta_navigation.style.top = `calc(100% - ${cta_navigation.offsetHeight}px)`;
+    },
+    /**
      * @private
      * @param {Event} ev
      */
