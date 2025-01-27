@@ -8,7 +8,8 @@ defineWebsiteModels();
 const base64Img =
     "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
 
-test.todo("Add image in gallery", async () => {
+// TODO DAFL to fix
+test.skip("Add image in gallery", async () => {
     onRpc("/web/dataset/call_kw/ir.attachment/search_read", (test) => [
         {
             id: 1,

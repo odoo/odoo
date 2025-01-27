@@ -367,6 +367,7 @@ test("useDomState callback shouldn't be called when the editingElement is remove
     let count = 0;
     class TestOption extends Component {
         static template = xml`<div class="test_option">test</div>`;
+        static props = {};
 
         setup() {
             useDomState(() => {
