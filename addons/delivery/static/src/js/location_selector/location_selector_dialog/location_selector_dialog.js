@@ -103,6 +103,10 @@ export class LocationSelectorDialog extends Component {
         }
     }
 
+    get showListView() {
+        return this.state.locations.length !== 1;
+    }
+
     /**
      * Find the selected location based on its id.
      *
@@ -154,6 +158,9 @@ export class LocationSelectorDialog extends Component {
     }
 
     get title() {
+        if (this.state.locations.length === 1) {
+            return _t("Pickup Location")
+        }
         return _t("Choose a pick-up point");
     }
 
