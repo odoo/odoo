@@ -5,6 +5,7 @@ import { random5Chars, uuidv4, gte, lt } from "@point_of_sale/utils";
 import { floatIsZero, roundPrecision } from "@web/core/utils/numbers";
 import { computeComboItems } from "./utils/compute_combo_items";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
+import { localization } from "@web/core/l10n/localization";
 
 const formatCurrency = registry.subRegistries.formatters.content.monetary[1];
 const { DateTime } = luxon;
@@ -108,6 +109,15 @@ export class PosOrder extends Base {
     get presetTime() {
         return this.preset_time && this.preset_time.isValid
             ? this.preset_time.toFormat("HH:mm")
+            : false;
+    }
+    get presetDateTime() {
+        return this.preset_time?.isValid
+            ? this.preset_time.hasSame(this.date_order, "day")
+                ? this.preset_time.toFormat(localization.shortTimeFormat)
+                : this.preset_time.toFormat(
+                      `${localization.dateFormat} ${localization.shortTimeFormat}`
+                  )
             : false;
     }
 
