@@ -60,7 +60,7 @@
                     <field name="project_id" string="Project"/>
                 </field>
                 <field name="partner_id" position="after">
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
                     <filter string="My Tasks" name="my_tasks" domain="[('user_ids', 'in', uid)]"/>
                 </field>
                 <filter name="stage" position="before">
@@ -544,7 +544,7 @@
                             <group>
                                 <group>
                                     <field name="parent_id" groups="base.group_no_one" context="{'search_view_ref' : 'project.view_task_search_form','search_default_project_id': project_id, 'search_default_open_tasks': 1}"/>
-                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" placeholder="Visible to all"/>
                                     <field name="sequence" groups="base.group_no_one"/>
                                     <field name="email_cc" groups="base.group_no_one"/>
                                     <field name="displayed_image_id" groups="base.group_no_one" options="{'no_create': True}"/>
@@ -1229,6 +1229,16 @@
                     Collaborate efficiently by chatting in real-time or via email.
                 </p>
             </field>
+        </record>
+
+        <record id="mail_followers_edit_action_from_task" model="ir.actions.act_window">
+            <field name="name">Add/Remove Followers</field>
+            <field name="res_model">mail.followers.edit</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'default_res_model': 'project.task', 'default_res_ids': active_ids}</field>
+            <field name="binding_model_id" ref="project.model_project_task"/>
+            <field name="binding_view_types">list</field>
         </record>
 
         <record id="project_milestone_action_view_tasks" model="ir.actions.act_window">

@@ -16,11 +16,12 @@ export class PosOrder extends Base {
     setup(vals) {
         super.setup(vals);
 
-        if (!this.session_id && typeof this.id === "string") {
+        if (!this.session_id && (!this.finalized || typeof this.id !== "number")) {
             this.session_id = this.session;
         }
 
         // Data present in python model
+        this.nb_print = vals.nb_print || 0;
         this.to_invoice = vals.to_invoice || false;
         this.state = vals.state || "draft";
         this.uuid = vals.uuid ? vals.uuid : uuidv4();
@@ -334,10 +335,7 @@ export class PosOrder extends Base {
     hasSkippedChanges() {
         return Boolean(
             this.lines.find(
-                (orderline) =>
-                    orderline.skip_change &&
-                    !orderline.uiState.hideSkipChangeClass &&
-                    !orderline.origin_order_id
+                (orderline) => orderline.skip_change && !orderline.uiState.hideSkipChangeClass
             )
         );
     }
@@ -649,7 +647,10 @@ export class PosOrder extends Base {
     }
 
     getTotalWithoutTax() {
-        return this.taxTotals.order_sign * this.taxTotals.base_amount_currency;
+        const base_amount =
+            this.taxTotals.base_amount_currency +
+            (this.taxTotals.cash_rounding_base_amount_currency || 0.0);
+        return this.taxTotals.order_sign * base_amount;
     }
 
     _getIgnoredProductIdsTotalDiscount() {

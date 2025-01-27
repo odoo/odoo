@@ -715,7 +715,15 @@ def route(route=None, **routing):
         fname = f"<function {endpoint.__module__}.{endpoint.__name__}>"
 
         # Sanitize the routing
-        assert routing.get('type', 'http') in _dispatchers.keys()
+        if routing.get('type') == 'json':
+            warnings.warn(
+                "Since 19.0, @route(type='json') is a deprecated alias to @route(type='jsonrpc')",
+                DeprecationWarning,
+                stacklevel=3,
+            )
+            routing['type'] = 'jsonrpc'
+        assert routing.get('type', 'http') in _dispatchers.keys(), \
+            f"@route(type={routing['type']!r}) is not one of {_dispatchers.keys()}"
         if route:
             routing['routes'] = [route] if isinstance(route, str) else route
         wrong = routing.pop('method', None)
@@ -1944,6 +1952,7 @@ class Request:
         provided a response, a generic 404 - Not Found page is returned.
         """
         self.params = self.get_http_params()
+        self.registry['ir.http']._auth_method_public()
         response = self.registry['ir.http']._serve_fallback()
         if response:
             self.registry['ir.http']._post_dispatch(response)

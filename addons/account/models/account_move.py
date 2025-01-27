@@ -984,6 +984,7 @@ class AccountMove(models.Model):
     @api.depends('partner_id')
     def _compute_invoice_payment_term_id(self):
         for move in self:
+            move = move.with_company(move.company_id)
             if move.is_sale_document(include_receipts=True) and move.partner_id.property_payment_term_id:
                 move.invoice_payment_term_id = move.partner_id.property_payment_term_id
             elif move.is_purchase_document(include_receipts=True) and move.partner_id.property_supplier_payment_term_id:
@@ -3518,6 +3519,8 @@ class AccountMove(models.Model):
         last_month = int(self.company_id.fiscalyear_last_month)
         is_staggered_year = last_month != 12 or last_day != 31
         if is_staggered_year:
+            max_last_day = calendar.monthrange(self.date.year, last_month)[1]
+            last_day = min(last_day, max_last_day)
             if self.date > date(self.date.year, last_month, last_day):
                 year_part = "%s-%s" % (self.date.strftime('%y'), (self.date + relativedelta(years=1)).strftime('%y'))
             else:
@@ -4164,6 +4167,7 @@ class AccountMove(models.Model):
                 continue
 
             decoder = (current_invoice or current_invoice.new(self.default_get(['move_type', 'journal_id'])))._get_edi_decoder(file_data, new=new)
+            current_invoice.flush_recordset()
             if decoder or file_data['type'] in ('pdf', 'binary'):
                 try:
                     with self.env.cr.savepoint():

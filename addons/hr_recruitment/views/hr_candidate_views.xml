@@ -76,7 +76,7 @@
                             <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             <field name="employee_id" invisible="1"/>
                             <field name="emp_is_active" invisible="1"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
                         </group>
                     </group>
                     <field name="candidate_properties" columns="2"/>

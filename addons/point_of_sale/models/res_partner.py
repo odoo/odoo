@@ -13,6 +13,7 @@ class ResPartner(models.Model):
     )
     pos_order_ids = fields.One2many('pos.order', 'partner_id', readonly=True)
     pos_contact_address = fields.Char('PoS Address', compute='_compute_contact_address')
+    invoice_emails = fields.Char(compute='_compute_invoice_emails', readonly=True)
 
     def _compute_contact_address(self):
         super()._compute_contact_address()
@@ -22,8 +23,13 @@ class ResPartner(models.Model):
     @api.model
     def get_new_partner(self, config_id, domain, offset):
         config = self.env['pos.config'].browse(config_id)
-        limited_partner_ids = {partner[0] for partner in config.get_limited_partners_loading(offset)}
-        new_partner = self.search_read(domain + [('id', 'in', list(limited_partner_ids))], self._load_pos_data_fields(config_id), load=False)
+        if len(domain) == 0:
+            limited_partner_ids = {partner[0] for partner in config.get_limited_partners_loading(offset)}
+            domain += [('id', 'in', list(limited_partner_ids))]
+            new_partner = self.search_read(domain, self._load_pos_data_fields(config_id), load=False)
+        else:
+            # If search domain is not empty, we need to search inside all partners
+            new_partner = self.search_read(domain, self._load_pos_data_fields(config_id), offset=offset, limit=100, load=False)
         return {
             'res.partner': new_partner,
         }
@@ -46,7 +52,7 @@ class ResPartner(models.Model):
     def _load_pos_data_fields(self, config_id):
         return [
             'id', 'name', 'street', 'city', 'state_id', 'country_id', 'vat', 'lang', 'phone', 'zip', 'mobile', 'email',
-            'barcode', 'write_date', 'property_account_position_id', 'property_product_pricelist', 'parent_name', 'pos_contact_address'
+            'barcode', 'write_date', 'property_account_position_id', 'property_product_pricelist', 'parent_name', 'pos_contact_address', 'invoice_emails'
         ]
 
     def _compute_pos_order(self):
@@ -67,6 +73,13 @@ class ResPartner(models.Model):
                 if partner.id in self_ids:
                     partner.pos_order_count += count
                 partner = partner.parent_id
+
+    @api.depends('email', 'child_ids.type', 'child_ids.email')
+    def _compute_invoice_emails(self):
+        for record in self:
+            emails = [record.email] if record.email else []
+            emails.extend([child.email for child in record.child_ids if child.type == "invoice" and child.email])
+            record.invoice_emails = ', '.join(emails) if emails else ''
 
     def action_view_pos_order(self):
         '''

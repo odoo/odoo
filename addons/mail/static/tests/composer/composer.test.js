@@ -482,7 +482,6 @@ test("leave command on channel", async () => {
     triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "general" });
     await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
-    await contains(".o_notification", { text: "You left general." });
 });
 
 test("Can handle leave notification from unknown member", async () => {
@@ -1096,4 +1095,31 @@ test("Tab to select of canned response suggestion works in chat window", async (
     await contains(".o-mail-ChatWindow:eq(0) .o-mail-Composer-input", {
         value: "Hello! How are you? ",
     });
+});
+
+test('can quickly add emoji with ":" keyword', async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Mario" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "test",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ guest_id: guestId }),
+        ],
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer-input");
+    await insertText(".o-mail-Composer-input", ":sweat");
+    await contains(".o-mail-Composer-suggestionList .o-open");
+    await contains(".o-mail-NavigableList-item", { text: "😅:sweat_smile:" });
+    await click(".o-mail-NavigableList-item", { text: "😅:sweat_smile:" });
+    await contains(".o-mail-Composer-input", { value: "😅 " });
+    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    // check at least 2 chars to trigger it, so that emoji substitution like :p are still easy to use
+    await insertText(".o-mail-Composer-input", ":sw");
+    await contains(".o-mail-Composer-suggestionList .o-open");
+    await contains(".o-mail-NavigableList-item", { text: "😅:sweat_smile:" });
+    await insertText(".o-mail-Composer-input", ":s", { replace: true });
+    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
 });

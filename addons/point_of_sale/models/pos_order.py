@@ -996,6 +996,9 @@ class PosOrder(models.Model):
         next_days_orders = self.filtered(lambda order: order.preset_time and order.preset_time.date() > fields.Date.today() and order.state == 'draft')
         next_days_orders.session_id = False
         today_orders.write({'state': 'cancel'})
+        return {
+            'pos.order': today_orders.read(self._load_pos_data_fields(self.config_id.ids[0]), load=False)
+        }
 
     def _apply_invoice_payments(self, is_reverse=False):
         receivable_account = self.env["res.partner"]._find_accounting_partner(self.partner_id).with_company(self.company_id).property_account_receivable_id
@@ -1066,13 +1069,15 @@ class PosOrder(models.Model):
 
         # If the previous session is closed, the order will get a new session_id due to _get_valid_session in _process_order
         is_new_session = any(order.get('session_id') not in session_ids for order in orders)
+        refunded_lines = pos_order_ids.lines.mapped('refunded_orderline_id')
+        lines = pos_order_ids.lines + refunded_lines
 
         _logger.info("PoS synchronisation #%d finished", sync_token)
         return {
             'pos.order': pos_order_ids.read(pos_order_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
             'pos.session': pos_order_ids.session_id._load_pos_data({}) if config_id and is_new_session else [],
             'pos.payment': pos_order_ids.payment_ids.read(pos_order_ids.payment_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
-            'pos.order.line': pos_order_ids.lines.read(pos_order_ids.lines._load_pos_data_fields(config_id), load=False) if config_id else [],
+            'pos.order.line': lines.read(pos_order_ids.lines._load_pos_data_fields(config_id), load=False) if config_id else [],
             'pos.pack.operation.lot': pos_order_ids.lines.pack_lot_ids.read(pos_order_ids.lines.pack_lot_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
             "product.attribute.custom.value": pos_order_ids.lines.custom_attribute_value_ids.read(pos_order_ids.lines.custom_attribute_value_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
         }
@@ -1193,49 +1198,53 @@ class PosOrder(models.Model):
             'target': 'new'
         }
 
-    def _add_mail_attachment(self, name, ticket, basic_ticket):
-        attachment = []
-        filename = 'Receipt-' + name + '.jpg'
+    def action_send_receipt(self, email, ticket_image, basic_image):
+        self.ensure_one()
+        self.email = email
+        mail_template_id = 'point_of_sale.email_template_pos_receipt'
+        mail_template = self.env.ref(mail_template_id, raise_if_not_found=False)
+        if not mail_template:
+            raise UserError(_("The mail template with xmlid %s has been deleted.", mail_template_id))
+        mail_template.send_mail(self.id, force_send=True, email_values={'email_to': email,
+                                                                        'attachment_ids': self._get_mail_attachments(self.name, ticket_image, basic_image)})
+
+    def _get_mail_attachments(self, name, ticket, basic_ticket):
+        attachments = []
         receipt = self.env['ir.attachment'].create({
-            'name': filename,
+            'name': 'Receipt-' + name + '.jpg',
             'type': 'binary',
             'datas': ticket,
             'res_model': 'pos.order',
             'res_id': self.ids[0],
             'mimetype': 'image/jpeg',
         })
-        attachment += [(4, receipt.id)]
+        attachments += [(4, receipt.id)]
+
         if basic_ticket:
-            filename = 'Receipt-' + name + '-1' + '.jpg'
             basic_receipt = self.env['ir.attachment'].create({
-                'name': filename,
+                'name': 'Receipt-' + name + '-1' + '.jpg',
                 'type': 'binary',
                 'datas': basic_ticket,
                 'res_model': 'pos.order',
                 'res_id': self.ids[0],
                 'mimetype': 'image/jpeg',
             })
-            attachment += [(4, basic_receipt.id)]
-
+            attachments += [(4, basic_receipt.id)]
 
         if self.mapped('account_move'):
             report = self.env['ir.actions.report']._render_qweb_pdf("account.account_invoices", self.account_move.ids[0])
-            filename = name + '.pdf'
             invoice = self.env['ir.attachment'].create({
-                'name': filename,
+                'name': name + '.pdf',
                 'type': 'binary',
                 'datas': base64.b64encode(report[0]),
                 'res_model': 'pos.order',
                 'res_id': self.ids[0],
-                'mimetype': 'application/x-pdf'
+                'mimetype': 'application/pdf'
             })
-            attachment += [(4, invoice.id)]
+            attachments += [(4, invoice.id)]
 
-        return attachment
+        return attachments
 
-    def action_send_receipt(self, email, ticket_image, basic_image):
-        self.env['mail.mail'].sudo().create(self._prepare_mail_values(email, ticket_image, basic_image)).send()
-        self.email = email
 
     @api.model
     def remove_from_ui(self, server_ids):
@@ -1337,7 +1346,6 @@ class PosOrderLine(models.Model):
     refunded_qty = fields.Float('Refunded Quantity', compute='_compute_refund_qty', help='Number of items refunded in this orderline.')
     uuid = fields.Char(string='Uuid', readonly=True, default=lambda self: str(uuid4()), copy=False)
     note = fields.Char('Product Note')
-    origin_order_id = fields.Many2one('pos.order', string='Origin Order', help='Tracks the original order from which this orderline was created.', readonly=True, ondelete="set null")
 
     combo_parent_id = fields.Many2one('pos.order.line', string='Combo Parent') # FIXME rename to parent_line_id
     combo_line_ids = fields.One2many('pos.order.line', 'combo_parent_id', string='Combo Lines') # FIXME rename to child_line_ids
@@ -1352,7 +1360,7 @@ class PosOrderLine(models.Model):
     @api.model
     def _load_pos_data_fields(self, config_id):
         return [
-            'qty', 'attribute_value_ids', 'custom_attribute_value_ids', 'price_unit', 'skip_change', 'uuid', 'price_subtotal', 'price_subtotal_incl', 'order_id', 'origin_order_id', 'note', 'price_type',
+            'qty', 'attribute_value_ids', 'custom_attribute_value_ids', 'price_unit', 'skip_change', 'uuid', 'price_subtotal', 'price_subtotal_incl', 'order_id', 'note', 'price_type',
             'product_id', 'discount', 'tax_ids', 'pack_lot_ids', 'customer_note', 'refunded_qty', 'price_extra', 'full_product_name', 'refunded_orderline_id', 'combo_parent_id', 'combo_line_ids', 'combo_item_id', 'refund_orderline_ids'
         ]
 

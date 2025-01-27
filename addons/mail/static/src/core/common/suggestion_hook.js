@@ -108,10 +108,12 @@ class UseSuggestion {
 
             const findAppropriateDelimiter = () => {
                 let goodCandidate;
-                for (const [delimiter, allowedPosition] of supportedDelimiters) {
+                for (const [delimiter, allowedPosition, minCharCountAfter] of supportedDelimiters) {
                     if (
                         text.substring(candidatePosition).startsWith(delimiter) && // delimiter is used
-                        (allowedPosition === undefined || allowedPosition === candidatePosition) && // delimiter is allowed
+                        (allowedPosition === undefined || allowedPosition === candidatePosition) && // delimiter is allowed position
+                        (minCharCountAfter === undefined ||
+                            start - candidatePosition - delimiter.length + 1 > minCharCountAfter) && // delimiter is allowed (enough custom char typed after)
                         (!goodCandidate || delimiter.length > goodCandidate) // delimiter is more specific
                     ) {
                         goodCandidate = delimiter;
@@ -146,7 +148,7 @@ class UseSuggestion {
         const text = this.composer.text;
         let before = text.substring(0, this.search.position + 1);
         let after = text.substring(position, text.length);
-        if (this.search.delimiter === "::") {
+        if ([":", "::"].includes(this.search.delimiter)) {
             before = text.substring(0, this.search.position);
             after = text.substring(position, text.length);
         }
@@ -201,11 +203,12 @@ class UseSuggestion {
                 abortSignal: this.abortController.signal,
             });
         } catch (e) {
+            this.lastFetchedSearch = null;
             if (e instanceof ConnectionAbortedError) {
                 resetFetchingState = false;
                 return;
             }
-            this.lastFetchedSearch = null;
+            throw e;
         } finally {
             if (resetFetchingState) {
                 this.state.isFetching = false;

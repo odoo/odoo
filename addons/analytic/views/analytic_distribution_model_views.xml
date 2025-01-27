@@ -9,7 +9,7 @@
                 <field name="partner_id" optional="show"/>
                 <field name="partner_category_id" optional="hide"/>
                 <field name="company_id" column_invisible="True"/>
-                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show" placeholder="Visible to all"/>
                 <field name="analytic_distribution" widget="analytic_distribution" optional="show"
                        options="{'force_applicability': 'optional', 'disable_save': true}"/>
             </list>
@@ -29,7 +29,7 @@
                                 <field name="partner_category_id"/>
                             </group>
                             <group>
-                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
                                 <field name="company_id" invisible="1"/>
                             </group>
                         </group>

@@ -375,7 +375,7 @@ export class Store extends BaseStore {
             ev.preventDefault();
             this.Thread.getOrFetch({ model, id }).then((thread) => {
                 if (thread) {
-                    thread.open();
+                    thread.open({ focus: true });
                 }
             });
             return true;
@@ -591,14 +591,14 @@ export class Store extends BaseStore {
         this.store.insert(data);
         const thread = this.store.Thread.get({ id: channel_id, model: "discuss.channel" });
         if (forceOpen) {
-            thread.openChatWindow();
+            thread.openChatWindow({ focus: true });
         }
         return thread;
     }
 
     async openChat(person) {
         const chat = await this.getChat(person);
-        chat?.open();
+        chat?.open({ focus: true });
     }
 
     openDocument({ id, model }) {

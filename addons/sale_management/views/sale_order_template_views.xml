@@ -37,7 +37,7 @@
                                 <div class="d-inline-block">days</div>
                             </div>
                             <field name="mail_template_id" context="{'default_model': 'sale.order'}"/>
-                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" placeholder="Visible to all"/>
                             <field name="journal_id"/>
                         </group>
                         <group name="so_confirmation">

@@ -74,6 +74,15 @@ export class Thread extends Record {
     get canUnpin() {
         return this.channel_type === "chat" && this.importantCounter === 0;
     }
+    close_chat_window = Record.attr(undefined, {
+        /** @this {import("models").Thread} */
+        onUpdate() {
+            if (this.close_chat_window) {
+                this.closeChatWindow();
+                this.close_chat_window = undefined;
+            }
+        },
+    });
     composer = Record.one("Composer", {
         compute: () => ({}),
         inverse: "thread",
@@ -674,15 +683,20 @@ export class Thread extends Record {
     /** @param {Object} [options] */
     open(options) {}
 
-    openChatWindow({ focus = true, fromMessagingMenu } = {}) {
+    openChatWindow({ focus = false, fromMessagingMenu } = {}) {
         const cw = this.store.ChatWindow.insert(
             assignDefined({ thread: this }, { fromMessagingMenu })
         );
-        cw.open({ focus: focus && !isMobileOS() });
+        cw.open({ focus: focus });
         if (isMobileOS()) {
             this.markAsRead();
         }
         return cw;
+    }
+
+    closeChatWindow(options = {}) {
+        const chatWindow = this.store.ChatWindow.get({ thread: this });
+        chatWindow?.close({ notifyState: false, ...options });
     }
 
     pin() {

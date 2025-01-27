@@ -102,7 +102,7 @@
                     <t t-component="threadActions.activeAction.component" t-props="{ ...threadActions.activeAction.componentProps, thread }"/>
                 </div>
                 <t t-elif="thread">
-                    <Thread isInChatWindow="true" thread="thread" t-key="thread.localId" jumpPresent="state.jumpThreadPresent" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo"/>
+                    <Thread isInChatWindow="true" thread="thread" t-key="thread.localId" jumpPresent="state.jumpThreadPresent" jumpToNewMessage="props.chatWindow.jumpToNewMessage" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo"/>
                     <div t-if="thread.hasOtherMembersTyping" class="d-flex bg-view position-relative">
                         <div class="o-mail-ChatWindow-typing d-flex px-2 position-absolute bottom-0 start-0 w-100 bg-view align-items-center">
                             <Typing channel="thread" size="'medium'"/>
@@ -136,7 +136,7 @@
     }">
         <img t-if="thread" class="rounded o_object_fit_cover" t-att-src="thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl" alt="Thread Image"/>
         <t t-if="thread?.parent_channel_id">
-            <span class="fw-bolder small ms-1 p-1 opacity-75 opacity-100-hover cursor-pointer o-hover-text-underline rounded" t-esc="thread.parent_channel_id.displayName" title="Open Channel" t-ref="parentChannel" t-on-click.stop="() => this.thread.parent_channel_id.open()"/>
+            <span class="fw-bolder small ms-1 p-1 opacity-75 opacity-100-hover cursor-pointer o-hover-text-underline rounded" t-esc="thread.parent_channel_id.displayName" title="Open Channel" t-ref="parentChannel" t-on-click.stop="() => this.thread.parent_channel_id.open({ focus: true })"/>
             <i class="fa fa-chevron-right o-xsmaller ms-1 text-muted"/>
         </t>
     </div>

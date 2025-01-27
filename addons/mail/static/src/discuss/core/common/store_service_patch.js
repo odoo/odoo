@@ -33,7 +33,7 @@ const storeServicePatch = {
         });
         const { Thread } = this.insert(data);
         const [channel] = Thread;
-        channel.open();
+        channel.open({ focus: true });
         return channel;
     },
     async fetchChannel(channelId) {
@@ -59,12 +59,6 @@ const storeServicePatch = {
             .sort((a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id)
             .map((thread) => thread.correspondent.persona.id);
     },
-    onLinkFollowed(fromThread) {
-        super.onLinkFollowed(...arguments);
-        if (!this.env.isSmall && fromThread?.model === "discuss.channel") {
-            fromThread.open(true, { autofocus: false });
-        }
-    },
     sortMembers(m1, m2) {
         return m1.persona.name?.localeCompare(m2.persona.name) || m1.id - m2.id;
     },
@@ -73,13 +67,13 @@ const storeServicePatch = {
         const partners_to = [...new Set([this.self.id, ...partnerIds])];
         if (partners_to.length === 1) {
             const chat = await this.joinChat(partners_to[0], true);
-            chat.open();
+            chat.open({ focus: true });
         } else if (partners_to.length === 2) {
             const correspondentId = partners_to.find(
                 (partnerId) => partnerId !== this.store.self.id
             );
             const chat = await this.joinChat(correspondentId, true);
-            chat.open();
+            chat.open({ focus: true });
         } else {
             await this.createGroupChat({ partners_to });
         }

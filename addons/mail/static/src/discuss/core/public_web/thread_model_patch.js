@@ -109,9 +109,6 @@ const threadPatch = {
     get isEmpty() {
         return !this.from_message_id && super.isEmpty;
     },
-    get notifyOnLeave() {
-        return super.notifyOnLeave && !this.parent_channel_id;
-    },
     /**
      * @param {Object} [param0={}]
      * @param {import("models").Message} [param0.initialMessage]
@@ -124,7 +121,7 @@ const threadPatch = {
             name,
         });
         this.store.insert(data, { html: true });
-        this.store.Thread.get({ model: "discuss.channel", id: sub_channel }).open();
+        this.store.Thread.get({ model: "discuss.channel", id: sub_channel }).open({ focus: true });
     },
     /**
      * @param {*} param0

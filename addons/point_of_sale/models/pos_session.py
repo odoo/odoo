@@ -99,7 +99,7 @@ class PosSession(models.Model):
         relations = {}
 
         for name, params in model_fields.items():
-            if name not in fields and len(fields) != 0:
+            if (name not in fields and len(fields)) or (params.manual and not len(fields)):
                 continue
 
             if params.comodel_name:
@@ -599,7 +599,7 @@ class PosSession(models.Model):
             }
 
         self.post_close_register_message()
-
+        self.config_id._notify(('CLOSING_SESSION', {'login_number': self.env.context.get('login_number', False)}))
         return {'successful': True}
 
     def post_close_register_message(self):
@@ -1803,36 +1803,6 @@ class PosSession(models.Model):
 
         return res
 
-    def _get_pos_fallback_nomenclature_id(self):
-        """
-        Retrieve the fallback barcode nomenclature.
-        If a fallback_nomenclature_id is specified in the config parameters,
-        it retrieves the nomenclature with that ID. Otherwise, it retrieves
-        the first non-GS1 nomenclature if the main nomenclature is GS1.
-        """
-        def convert_to_int(string_value):
-            try:
-                return int(string_value)
-            except (TypeError, ValueError, OverflowError):
-                return None
-
-        fallback_nomenclature_id = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.fallback_nomenclature_id')
-
-        if not self.company_id.nomenclature_id.is_gs1_nomenclature and not fallback_nomenclature_id:
-            return None
-
-        if fallback_nomenclature_id:
-            fallback_nomenclature_id = convert_to_int(fallback_nomenclature_id)
-            if not fallback_nomenclature_id or self.company_id.nomenclature_id.id == fallback_nomenclature_id:
-                return None
-            domain = [('id', '=', fallback_nomenclature_id)]
-        else:
-            domain = [('is_gs1_nomenclature', '=', False)]
-
-        record = self.env['barcode.nomenclature'].search(domain=domain, limit=1)
-
-        return record.id if record else None
-
     def _get_partners_domain(self):
         return []
 
@@ -1926,5 +1896,15 @@ class ProcurementGroup(models.Model):
     def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):
         super(ProcurementGroup, self)._run_scheduler_tasks(use_new_cursor=use_new_cursor, company_id=company_id)
         self.env['pos.session']._alert_old_session()
+        if 'scheduler_task_done' in self._context:
+            task_done = self._context.get('scheduler_task_done', {'task_done': 0})['task_done'] + 1
+            self._context['scheduler_task_done']['task_done'] = task_done
+        else:
+            task_done = self._get_scheduler_tasks_to_do()
         if use_new_cursor:
+            self.env['ir.cron']._notify_progress(done=task_done, remaining=self._get_scheduler_tasks_to_do() - task_done)
             self.env.cr.commit()
+
+    @api.model
+    def _get_scheduler_tasks_to_do(self):
+        return super()._get_scheduler_tasks_to_do() + 1

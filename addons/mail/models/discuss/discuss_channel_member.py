@@ -44,7 +44,12 @@ class DiscussChannelMember(models.Model):
     mute_until_dt = fields.Datetime("Mute notifications until", help="If set, the member will not receive notifications from the channel until this date.")
     is_pinned = fields.Boolean("Is pinned on the interface", compute="_compute_is_pinned", search="_search_is_pinned")
     unpin_dt = fields.Datetime("Unpin date", index=True, help="Contains the date and time when the channel was unpinned by the user.")
-    last_interest_dt = fields.Datetime("Last Interest", index=True, default=fields.Datetime.now, help="Contains the date and time of the last interesting event that happened in this channel for this user. This includes: creating, joining, pinning")
+    last_interest_dt = fields.Datetime(
+        "Last Interest",
+        default=lambda self: fields.Datetime.now() - timedelta(seconds=1),
+        index=True,
+        help="Contains the date and time of the last interesting event that happened in this channel for this user. This includes: creating, joining, pinning",
+    )
     last_seen_dt = fields.Datetime("Last seen date")
     # RTC
     rtc_session_ids = fields.One2many(string="RTC Sessions", comodel_name='discuss.channel.rtc.session', inverse_name='channel_member_id')
@@ -72,7 +77,9 @@ class DiscussChannelMember(models.Model):
         members = self.env["discuss.channel.member"].search(domain)
         members.unpin_dt = fields.Datetime.now()
         for member in members:
-            member._bus_send("discuss.channel/unpin", {"id": member.channel_id.id})
+            member._bus_send_store(
+                member.channel_id, {"close_chat_window": True, "is_pinned": False}
+            )
 
     @api.constrains('partner_id')
     def _contrains_no_public_member(self):

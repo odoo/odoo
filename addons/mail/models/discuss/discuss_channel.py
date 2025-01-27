@@ -74,7 +74,12 @@ class DiscussChannel(models.Model):
     # sudo: discuss.channel - sudo for performance, invited members can be accessed on accessible channel
     invited_member_ids = fields.One2many("discuss.channel.member", compute="_compute_invited_member_ids", compute_sudo=True)
     member_count = fields.Integer(string="Member Count", compute='_compute_member_count', compute_sudo=True)
-    last_interest_dt = fields.Datetime("Last Interest", index=True, help="Contains the date and time of the last interesting event that happened in this channel. This updates itself when new message posted.")
+    last_interest_dt = fields.Datetime(
+        "Last Interest",
+        default=lambda self: fields.Datetime.now() - timedelta(seconds=1),
+        index=True,
+        help="Contains the date and time of the last interesting event that happened in this channel. This updates itself when new message posted.",
+    )
     group_ids = fields.Many2many(
         'res.groups', string='Auto Subscription',
         help="Members of those groups will automatically added as followers. "
@@ -435,7 +440,9 @@ class DiscussChannel(models.Model):
     def _action_unfollow(self, partner=None, guest=None):
         self.ensure_one()
         self.message_unsubscribe(partner.ids)
-        custom_store = Store(self, {"is_pinned": False, "isLocallyPinned": False})
+        custom_store = Store(
+            self, {"close_chat_window": True, "is_pinned": False, "isLocallyPinned": False}
+        )
         member = self.env["discuss.channel.member"].search(
             [
                 ("channel_id", "=", self.id),
@@ -443,8 +450,7 @@ class DiscussChannel(models.Model):
             ]
         )
         if not member:
-            target = partner or guest
-            target._bus_send_store(custom_store, notification_type="discuss.channel/leave")
+            (partner or guest)._bus_send_store(custom_store)
             return
         notification = Markup('<div class="o_mail_notification">%s</div>') % _(
             "left the channel"
@@ -454,7 +460,7 @@ class DiscussChannel(models.Model):
             body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id
         )
         # send custom store after message_post to avoid is_pinned reset to True
-        member._bus_send_store(custom_store, notification_type="discuss.channel/leave")
+        member._bus_send_store(custom_store)
         member.unlink()
         self._bus_send_store(
             self,
@@ -1084,9 +1090,7 @@ class DiscussChannel(models.Model):
                     Command.create({
                         'partner_id': partner_id,
                         # only pin for the current user, so the chat does not show up for the correspondent until a message has been sent
-                        # manually set the last_interest_dt to make sure that it works well with the default last_interest_dt (datetime.now())
                         'unpin_dt': False if partner_id == self.env.user.partner_id.id else fields.Datetime.now(),
-                        'last_interest_dt': fields.Datetime.now() if partner_id == self.env.user.partner_id.id else fields.Datetime.now() - timedelta(seconds=30),
                     }) for partner_id in partners_to
                 ],
                 'channel_type': 'chat',
@@ -1102,7 +1106,7 @@ class DiscussChannel(models.Model):
         if member:
             member.write({'unpin_dt': False if pinned else fields.Datetime.now()})
         if not pinned:
-            self.env.user._bus_send("discuss.channel/unpin", {"id": self.id})
+            self.env.user._bus_send_store(self, {"close_chat_window": True, "is_pinned": False})
         else:
             self.env.user._bus_send_store(self)
 

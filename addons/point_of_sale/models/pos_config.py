@@ -204,6 +204,20 @@ class PosConfig(models.Model):
     orderlines_sequence_in_cart_by_category = fields.Boolean(string="Order cart by category's sequence", default=False,
         help="When active, orderlines will be sorted based on product category and sequence in the product screen's order cart.")
     last_data_change = fields.Datetime(string='Last Write Date', readonly=True, compute='_compute_local_data_integrity', store=True)
+    fallback_nomenclature_id = fields.Many2one('barcode.nomenclature', string="Fallback Nomenclature")
+
+    def dispatch_record_ids(self, session_id, records, login_number):
+        self._notify('SYNCHRONISATION', {
+            'records': records,
+            'session_id': session_id,
+            'login_number': login_number
+        })
+
+    def get_records(self, data):
+        records = {}
+        for model, ids in data.items():
+            records[model] = self.env[model].browse(ids).read(self.env[model]._load_pos_data_fields(self.id), load=False)
+        return records
 
     @api.model
     def _load_pos_data_domain(self, data):
