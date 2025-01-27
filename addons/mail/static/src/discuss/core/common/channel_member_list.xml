@@ -38,7 +38,7 @@
         <div class="o-discuss-ChannelMember d-flex align-items-center p-1 bg-inherit rounded" t-att-class="{ 'cursor-pointer': canOpenChatWith(member), 'o-offline': offline }" t-on-click.stop="(ev) => this.onClickAvatar(ev, member)">
             <div class="bg-inherit o-discuss-ChannelMember-avatar position-relative d-flex flex-shrink-0">
                 <img class="w-100 h-100 rounded o_object_fit_cover" t-att-src="member.persona.avatarUrl"/>
-                <ImStatus member="member" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
+                <ImStatus member="member" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'" size="'md'"/>
             </div>
             <span t-ref="displayName" class="ms-2 text-truncate text-muted fw-bold" t-esc="member.name"/>
             <span class="ms-auto">
