@@ -430,7 +430,8 @@ class TestLotValuation(TestStockValuationCommon):
             'default_product_id': self.product1.id,
             'default_company_id': self.env.company.id,
             'default_added_value': 8.0,
-            'default_lot_id': self.lot1.id,
+            'active_ids': self.lot1.ids,
+            'active_model': 'stock.lot',
         })).save().action_validate_revaluation()
 
         layers = self.lot1.stock_valuation_layer_ids
