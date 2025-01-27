@@ -18,7 +18,15 @@ registry.category("web_tour.tours").add('website_reset_password', {
         run: "click",
     },
     {
-        content: "check that we're logged in",
-        trigger: '.o_user_menu .dropdown-toggle',
+        content: "check that we get the success alert",
+        trigger: '.alert-success',
+    },
+    {
+        content: "check that we get the success alert",
+        trigger: '.btn-link',
+    },
+    {
+        content: "check that we're on the login page",
+        trigger: '.oe_login_form',
     },
 ]});
