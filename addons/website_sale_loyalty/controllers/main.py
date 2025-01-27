@@ -2,6 +2,7 @@
 from odoo import http, _
 from odoo.addons.website_sale.controllers import main
 from odoo.exceptions import UserError, ValidationError
+from odoo.fields import Date
 from odoo.http import request
 
 from werkzeug.urls import url_encode, url_parse
@@ -144,10 +145,9 @@ class PaymentPortal(main.PaymentPortal):
         super()._validate_transaction_for_order(transaction, sale_order_id)
         order_sudo = request.env['sale.order'].sudo().browse(sale_order_id)
         if order_sudo.exists():
-            initial_amount = order_sudo.amount_total
-            order_sudo._update_programs_and_rewards()
-            order_sudo.validate_taxes_on_sales_order()  # re-applies taxcloud taxes if necessary
-            if initial_amount != order_sudo.amount_total:
+            today = Date.today()
+            temporal_programs = order_sudo._get_applied_programs().filtered('date_to')
+            if any(p.date_to < today for p in temporal_programs):
                 raise ValidationError(
                     _("Cannot process payment: applied reward was changed or has expired.")
                 )
