@@ -20,6 +20,7 @@
                 <div class="col-lg-5 d-flex flex-column justify-content-between">
                     <div class="d-flex gap-2">
                         <strong
+                            t-if="this.props.locations.length !== 1"
                             class="o_location_selector_number flex-shrink-0 h5 fw-bold text-center"
                             t-out="this.props.locations.indexOf(selectedLocation) + 1"
                         />

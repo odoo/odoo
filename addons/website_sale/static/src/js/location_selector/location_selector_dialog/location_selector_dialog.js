@@ -23,6 +23,9 @@ patch(LocationSelectorDialog.prototype, {
 
     get title() {
         // The original definition of this getter is in `delivery` module which is not a frontend module. This problem happens in the context of the website. So, it should be repeated here as translations are only fetched in the context of a frontend module, which is `website_sale` in this case.
+        if (this.state.locations.length === 1) {
+            return _t("Pickup Location")
+        }
         return _t("Choose a pick-up point");
     },
 

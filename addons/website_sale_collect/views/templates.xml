@@ -31,8 +31,10 @@
                 t-att-props="json.dumps({
                     'productId': product_variant.id,
                     'zipCode': zip_code,
-                    'selectedWhLocation': selected_wh_location or {},
-                    'inStoreStock': combination_info['in_store_stock'],
+                    'showSelectStoreButton': show_select_store_button,
+                    'selectedLocationData': selected_location_data or {},
+                    'inStoreStockData': combination_info.get('in_store_stock_data', {}),
+                    'deliveryStockData': combination_info.get('delivery_stock_data', {}),
                 })"
                 class="d-flex o_not_editable"
             />

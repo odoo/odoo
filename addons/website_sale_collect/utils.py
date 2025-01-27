@@ -6,8 +6,8 @@ def format_product_stock_values(product, wh_id=None, free_qty=None):
 
     :param product.product|product.template product: The product whose stock values to format.
     :param int wh_id: The warehouse whose stock to check for the given product.
-    :param bool free_qty: The free quantity of the product. If not given, calculated from the
-                          warehouse.
+    :param int free_qty: The free quantity of the product. If not given, calculated from the
+                         warehouse.
     :return: The formatted product stock values.
     :rtype: dict
     """
