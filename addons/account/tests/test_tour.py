@@ -88,3 +88,10 @@ class TestUi(AccountTestInvoicingHttpCommon):
         product.supplier_taxes_id = new_tax
 
         self.start_tour("/odoo", 'account_tax_group', login="admin")
+
+    def test_use_product_catalog_on_invoice(self):
+        self.product.write({
+            'is_favorite': True,
+            'default_code': '0',
+        })
+        self.start_tour("/odoo/customer-invoices/new", 'test_use_product_catalog_on_invoice', login="admin")
