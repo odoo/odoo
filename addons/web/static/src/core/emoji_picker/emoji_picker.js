@@ -186,7 +186,7 @@ export class EmojiPicker extends Component {
         onWillDestroy(() => {
             browser.removeEventListener("storage", onStorage);
         });
-        useAutofocus();
+        this.searchInputRef = useAutofocus();
         onWillStart(async () => {
             const { categories, emojis } = await loadEmoji();
             this.categories = categories;
@@ -389,6 +389,10 @@ export class EmojiPicker extends Component {
         const emojiEls = Array.from(this.gridRef.el.querySelectorAll(".o-Emoji"));
         const emojiRects = emojiEls.map((el) => el.getBoundingClientRect());
         this.emojiMatrix = [];
+        this.codepointsToIndex = {};
+        for (const emojiEl of emojiEls) {
+            this.codepointsToIndex[emojiEl.dataset.codepoints] = parseInt(emojiEl.dataset.index);
+        }
         for (const [index, pos] of emojiRects.entries()) {
             const emojiIndex = emojiEls[index].dataset.index;
             if (this.emojiMatrix.length === 0 || pos.top > emojiRects[index - 1].top) {
@@ -506,10 +510,22 @@ export class EmojiPicker extends Component {
         return [...this.recentEmojis, ...this.getEmojis()];
     }
 
+    onKeydownCategory(ev, categoryId) {
+        if (["Enter", "Space"].includes(ev.code)) {
+            this.selectCategory(categoryId);
+        }
+    }
+
     selectCategory(categoryId) {
         this.searchTerm = "";
         this.state.categoryId = categoryId;
         this.shouldScrollElem = true;
+        this.searchInputRef.el.focus();
+        const categoryName = this.categories.find((c) => c.sortId === categoryId)?.name;
+        const firstEmoji = this.emojis.find((e) => e.category === categoryName);
+        if (firstEmoji) {
+            this.state.activeEmojiIndex = this.codepointsToIndex[firstEmoji.codepoints];
+        }
     }
 
     selectEmoji(ev) {
