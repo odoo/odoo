@@ -613,6 +613,7 @@ test("registrations and elements belong to the correct UI owner", async () => {
     expect.verifySteps(["MyComponent2 subscription", "MyComponent2 [data-hotkey]"]);
 
     destroy(comp2);
+    await Promise.resolve();
     await press("a");
     await press(["alt", "b"]);
     await tick();
