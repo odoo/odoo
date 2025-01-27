@@ -1,4 +1,3 @@
-import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import MailGroup from "@mail_group/js/mail_group";
@@ -12,33 +11,38 @@ MailGroup.include({
         // for the first time, we make a RPC call to setup the widget properly
         const email = (new URL(document.location.href)).searchParams.get('email');
         const response = await rpc('/group/is_member', {
-            'group_id': this.mailgroupId,
+            "group_id": this.mailGroupId,
             'email': email,
             'token': this.token,
         });
 
         if (!response) {
             // We do not access to the mail group, just remove the widget
-            this.$el.empty();
+            this.el.remove();
             return;
         }
 
-        this.$el.removeClass('d-none');
+        this.el.classList.remove("d-none");
 
         const userEmail = response.email;
         this.isMember = response.is_member;
 
+        const inputGroup = this.el.querySelector(".o_mg_email_input_group")
+
         if (userEmail && userEmail.length) {
-            const emailInput = this.$el.find('.o_mg_subscribe_email');
-            emailInput.val(userEmail);
-            emailInput.attr('readonly', 1);
+            inputGroup.classList.remove("input-group")
+            inputGroup.classList.add("d-flex", "justify-content-end");
+            const emailInput = inputGroup.querySelector(".o_mg_subscribe_email");
+            emailInput.value = userEmail;
+            emailInput.classList.add("d-none");
         }
 
-        if (this.isMember) {
-            this.$el.find('.o_mg_subscribe_btn').text(_t('Unsubscribe')).removeClass('btn-primary').addClass('btn-outline-primary');
+        if (this.isMember){
+            this.el.querySelector(".o_mg_unsubscribe_btn").classList.remove("d-none");
+            inputGroup.classList.add("d-none");
         }
 
-        this.$el.data('isMember', this.isMember);
+        this.el.dataset.isMember = this.isMember;
     },
     /**
      * @override
