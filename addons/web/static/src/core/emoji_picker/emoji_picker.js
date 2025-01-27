@@ -190,7 +190,7 @@ export class EmojiPicker extends Component {
         onWillDestroy(() => {
             browser.removeEventListener("storage", onStorage);
         });
-        useAutofocus();
+        this.searchInputRef = useAutofocus();
         onWillStart(async () => {
             const { categories, emojis } = await loadEmoji();
             this.categories = categories;
@@ -393,12 +393,20 @@ export class EmojiPicker extends Component {
         const emojiEls = Array.from(this.gridRef.el.querySelectorAll(".o-Emoji"));
         const emojiRects = emojiEls.map((el) => el.getBoundingClientRect());
         this.emojiMatrix = [];
+        this.categoryIdToFirstEmojiIndex = {};
         for (const [index, pos] of emojiRects.entries()) {
             const emojiIndex = emojiEls[index].dataset.index;
             if (this.emojiMatrix.length === 0 || pos.top > emojiRects[index - 1].top) {
                 this.emojiMatrix.push([]);
             }
             this.emojiMatrix.at(-1).push(parseInt(emojiIndex));
+        }
+        const firstEmojiEls = Array.from(
+            this.gridRef.el.querySelectorAll(".o-EmojiPicker-category + .o-Emoji")
+        );
+        for (const index in firstEmojiEls) {
+            this.categoryIdToFirstEmojiIndex[parseInt(firstEmojiEls[index].dataset.category)] =
+                parseInt(firstEmojiEls[index].dataset.index);
         }
     }
 
@@ -510,10 +518,21 @@ export class EmojiPicker extends Component {
         return [...this.recentEmojis, ...this.getEmojis()];
     }
 
+    onKeydownCategory(ev, categoryId) {
+        if (["Enter", "Space"].includes(ev.code)) {
+            this.selectCategory(categoryId);
+        }
+    }
+
     selectCategory(categoryId) {
         this.searchTerm = "";
         this.state.categoryId = categoryId;
         this.shouldScrollElem = true;
+        this.searchInputRef.el.focus();
+        const firstEmojiIndex = this.categoryIdToFirstEmojiIndex[categoryId] ?? null;
+        if (firstEmojiIndex !== null) {
+            this.state.activeEmojiIndex = this.categoryIdToFirstEmojiIndex[categoryId];
+        }
     }
 
     selectEmoji(ev) {
