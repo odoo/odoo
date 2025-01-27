@@ -9,8 +9,8 @@ from functools import partial
 from psycopg2 import IntegrityError, OperationalError, errorcodes, errors
 
 from odoo import api, http
-from odoo.exceptions import UserError, ValidationError
-from odoo.models import BaseModel, check_method_name
+from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.models import BaseModel
 from odoo.modules.registry import Registry
 from odoo.tools import lazy
 
@@ -35,15 +35,37 @@ class Params:
         return ', '.join(params)
 
 
+def get_public_method(model: BaseModel, name: str):
+    """ Get the public unbound method from a model.
+
+    When the method does not exist or is inaccessible, raise appropriate errors.
+    Accessible methods are public (in sense that python defined it:
+    not prefixed with "_") and are not decorated with `@api.private`.
+    """
+    assert isinstance(model, BaseModel)
+    cls = type(model)
+    method = getattr(cls, name, None)
+    if not callable(method):
+        raise AttributeError(f"The method '{model._name}.{name}' does not exist")  # noqa: TRY004
+
+    for mro_cls in cls.mro():
+        if not (cla_method := getattr(mro_cls, name, None)):
+            continue
+        if name.startswith('_') or getattr(cla_method, '_api_private', False):
+            raise AccessError(f"Private methods (such as '{model._name}.{name}') cannot be called remotely.")  # pylint: disable=missing-gettext
+
+    return method
+
+
 def call_kw(model: BaseModel, name: str, args: list, kwargs: Mapping):
-    """ Invoke the given method ``name`` on the recordset ``model``. """
-    method = getattr(model, name, None)
-    if not method:
-        raise AttributeError(f"The method '{name}' does not exist on the model '{model._name}'")
+    """ Invoke the given method ``name`` on the recordset ``model``.
+
+    Private methods cannot be called, only ones returned by `get_public_method`.
+    """
+    method = get_public_method(model, name)
 
     # get the records and context
-    api = getattr(method, '_api', None)
-    if api and api.startswith('model'):
+    if getattr(method, '_api_model', False):
         # @api.model -> no ids
         recs = model
     else:
@@ -58,7 +80,7 @@ def call_kw(model: BaseModel, name: str, args: list, kwargs: Mapping):
 
     # call
     _logger.debug("call %s.%s(%s)", recs, method.__name__, Params(args, kwargs))
-    result = getattr(recs, name)(*args, **kwargs)
+    result = method(recs, *args, **kwargs)
 
     # adapt the result
     if name == "create":
@@ -98,7 +120,7 @@ def execute_cr(cr, uid, obj, method, *args, **kw):
     env.transaction.default_env = env  # ensure this is the default env for the call
     recs = env.get(obj)
     if recs is None:
-        raise UserError(env._("Object %s doesn't exist", obj))
+        raise UserError(f"Object {obj} doesn't exist")  # pylint: disable=missing-gettext
     result = retrying(partial(call_kw, recs, method, args, kw), env)
     # force evaluation of lazy values before the cursor is closed, as it would
     # error afterwards if the lazy isn't already evaluated (and cached)
@@ -114,7 +136,6 @@ def execute_kw(db, uid, obj, method, args, kw=None):
 def execute(db, uid, obj, method, *args, **kw):
     # TODO could be conditionnaly readonly as in _call_kw_readonly
     with Registry(db).cursor() as cr:
-        check_method_name(method)
         res = execute_cr(cr, uid, obj, method, *args, **kw)
         if res is None:
             _logger.info('The method %s of the object %s can not return `None`!', method, obj)
