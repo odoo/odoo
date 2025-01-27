@@ -5,6 +5,9 @@ import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
 
 patch(Composer.prototype, {
+    get autofocus() {
+        return true;
+    },
     get placeholder() {
         if (this.thread?.channel_type !== "livechat") {
             return super.placeholder;
