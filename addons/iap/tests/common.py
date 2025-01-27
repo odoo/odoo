@@ -49,11 +49,8 @@ class MockIAPEnrich(common.TransactionCase):
                         result[str(lead_id)].update(email_data[email])
                 return result
 
-        try:
-            with patch.object(IapEnrichApi, '_contact_iap', side_effect=_contact_iap):
-                yield
-        finally:
-            pass
+        with patch.object(IapEnrichApi, '_contact_iap', side_effect=_contact_iap):
+            yield
 
     @classmethod
     def _init_iap_mock(cls):
