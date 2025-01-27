@@ -83,7 +83,7 @@ class AccountAnalyticPlan(models.Model):
         'account.analytic.applicability',
         'analytic_plan_id',
         string='Applicability',
-        domain="[('company_id', '=', current_company_id)]",
+        domain="[('company_id', '=', companies.active_id)]",
     )
 
     def _auto_init(self):
