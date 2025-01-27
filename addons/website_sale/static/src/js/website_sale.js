@@ -816,6 +816,19 @@ publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
         'click .js_delete_product': '_onClickDeleteProduct',
     },
 
+    /**
+     * @override
+     */
+    async start() {
+        document.querySelector('.o_cta_navigation_placeholder')?.classList.remove('d-none')
+        const ctaContainer = document.querySelector('.o_cta_navigation_container');
+        if (ctaContainer) {
+            const placeholder = document.querySelector('.o_cta_navigation_placeholder');
+            placeholder.style.height = `${ctaContainer.offsetHeight}px`;
+            ctaContainer.style.top = `calc(100% - ${ctaContainer.offsetHeight}px)`;
+        }
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
