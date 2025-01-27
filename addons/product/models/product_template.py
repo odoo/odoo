@@ -458,7 +458,7 @@ class ProductTemplate(models.Model):
     @api.constrains('type', 'combo_ids')
     def _check_combo_ids_not_empty(self):
         for template in self:
-            if template.type == 'combo' and not template.combo_ids:
+            if template.type == 'combo' and not template.combo_ids and not self.env.context.get('load_data'):
                 raise ValidationError(_("A combo product must contain at least 1 combo choice."))
 
     @api.constrains('type', 'combo_ids', 'sale_ok')
