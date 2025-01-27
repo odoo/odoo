@@ -198,7 +198,7 @@ class HrEmployeeBase(models.AbstractModel):
             elif not employee.coach_id:
                 employee.coach_id = False
 
-    @api.depends('job_id')
+    @api.depends('job_id.name')
     def _compute_job_title(self):
         for employee in self.filtered('job_id'):
             employee.job_title = employee.job_id.name
