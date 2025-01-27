@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
@@ -22,12 +23,6 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        # We can reuse this invoice for the flow tests.
-        cls.basic_invoice = cls.init_invoice(
-            'out_invoice', amounts=[100],
-        )
-        cls.basic_invoice.action_post()
-
         # TIN number is required
         cls.company_data['company'].write({
             'vat': 'C2584563200',
@@ -36,19 +31,35 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
             'l10n_my_identification_type': 'BRN',
             'l10n_my_identification_number': '202001234567',
             'state_id': cls.env.ref('base.state_my_jhr').id,
+            'street': 'that one street, 5',
+            'city': 'Main city',
             'phone': '+60123456789',
         })
         cls.partner_a.write({
             'vat': 'C2584563201',
             'l10n_my_identification_type': 'BRN',
             'l10n_my_identification_number': '202001234568',
+            'country_id': cls.env.ref('base.my').id,
             'state_id': cls.env.ref('base.state_my_jhr').id,
+            'street': 'that other street, 3',
+            'city': 'Main city',
             'phone': '+60123456786',
         })
+        cls.product_a.l10n_my_edi_classification_code = "001"
+
+        # We can reuse this invoice for the flow tests.
+        cls.basic_invoice = cls.init_invoice(
+            'out_invoice', products=cls.product_a
+        )
+        cls.basic_invoice.action_post()
 
         # For simplicity, we will test everything using a 'test' mode user, but we create it using demo to avoid triggering any api calls.
         cls.proxy_user = cls.env['account_edi_proxy_client.user']._register_proxy_user(cls.company_data['company'], 'l10n_my_edi', 'demo')
         cls.proxy_user.edi_mode = 'test'
+
+        # This will allow to still use the send and print flow when testing, even if the new module is installed.
+        # It's best to keep the code tested even if we expect users to use the new flow.
+        cls.env['ir.config_parameter'].set_param('l10n_my_edi.disable.send_and_print.first', 'False')
 
         cls.fakenow = datetime(2024, 7, 15, 10, 00, 00)
         cls.startClassPatcher(freeze_time(cls.fakenow))
@@ -59,7 +70,10 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
         """
         send_and_print = self.create_send_and_print(self.basic_invoice)
         with patch(CONTACT_PROXY_METHOD, new=self._test_01_mock):
-            send_and_print.action_send_and_print()
+            send_and_print._generate_and_send_invoices(
+                self.basic_invoice,
+                invoice_edi_format='my_myinvois',
+            )
 
         # Now that the invoice has been sent successfully, we assert that some info have been saved correctly.
         self.assertRecordValues(
@@ -85,7 +99,10 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
         send_and_print = self.create_send_and_print(self.basic_invoice)
         with patch(CONTACT_PROXY_METHOD, new=self._test_02_mock):
             with self.assertRaises(UserError, msg='Server error; If the problem persists, please contact the Odoo support.'):
-                send_and_print.action_send_and_print()
+                send_and_print._generate_and_send_invoices(
+                    self.basic_invoice,
+                    invoice_edi_format='my_myinvois',
+                )
 
     def test_03_failed_document_submission(self):
         """
@@ -99,7 +116,10 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
             # We want to assert that some values are saved during the commit, which won't happen during a test if we raise all the way.
             # So instead of doing an assertRaises, we will catch the error (ensuring that it does happen) then continue.
             try:
-                send_and_print.action_send_and_print()
+                send_and_print._generate_and_send_invoices(
+                    self.basic_invoice,
+                    invoice_edi_format='my_myinvois',
+                )
             except UserError:
                 pass  # We expect a user error to be raised here.
             else:
@@ -123,7 +143,10 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
         """
         send_and_print = self.create_send_and_print(self.basic_invoice)
         with patch(CONTACT_PROXY_METHOD, new=self._test_04_mock):
-            send_and_print.action_send_and_print()
+            send_and_print._generate_and_send_invoices(
+                self.basic_invoice,
+                invoice_edi_format='my_myinvois',
+            )
 
             # Open the wizard successfully, 72h did not pass
             action = self.basic_invoice.button_request_cancel()
@@ -147,7 +170,10 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
         """
         send_and_print = self.create_send_and_print(self.basic_invoice)
         with patch(CONTACT_PROXY_METHOD, new=self._test_05_mock):
-            send_and_print.action_send_and_print()
+            send_and_print._generate_and_send_invoices(
+                self.basic_invoice,
+                invoice_edi_format='my_myinvois',
+            )
 
             self.basic_invoice.l10n_my_edi_validation_time = datetime.strptime('2024-07-12 10:00:00', '%Y-%m-%d %H:%M:%S')
 
@@ -174,7 +200,10 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
             # We want to assert that some values are saved during the commit, which won't happen during a test if we raise all the way.
             # So instead of doing an assertRaises, we will catch the error (ensuring that it does happen) then continue.
             try:
-                send_and_print.action_send_and_print()
+                send_and_print._generate_and_send_invoices(
+                    self.basic_invoice,
+                    invoice_edi_format='my_myinvois',
+                )
             except UserError:
                 pass  # We expect a user error to be raised here.
             else:
@@ -200,7 +229,10 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
             self.basic_invoice.action_post()
 
             send_and_print = self.create_send_and_print(self.basic_invoice)
-            send_and_print.action_send_and_print()
+            send_and_print._generate_and_send_invoices(
+                self.basic_invoice,
+                invoice_edi_format='my_myinvois',
+            )
 
             self.assertRecordValues(
                 self.basic_invoice,
@@ -217,7 +249,10 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
         self.get_submission_status_count = 0  # Needed for the mock; we get it twice. Once during submission and once from the cron.
         send_and_print = self.create_send_and_print(self.basic_invoice)
         with patch(CONTACT_PROXY_METHOD, new=self._test_07_mock):
-            send_and_print.action_send_and_print()
+            send_and_print._generate_and_send_invoices(
+                self.basic_invoice,
+                invoice_edi_format='my_myinvois',
+            )
 
             self.assertRecordValues(
                 self.basic_invoice,
@@ -243,9 +278,8 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
             invoice_vals.append({
                 'move_type': 'out_invoice',
                 'partner_id': self.partner_a.id,
-                'line_ids': [
-                    Command.create({'debit': 100.0 + i, 'credit': 0.0}),
-                    Command.create({'debit': 0.0, 'credit': 100.0 + i}),
+                'invoice_line_ids': [
+                    Command.create({'product_id': self.product_a.id}),
                 ],
             })
 
@@ -256,7 +290,10 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
         send_and_print = self.create_send_and_print(self.submission_invoice)
         with patch(CONTACT_PROXY_METHOD, new=self._test_08_mock), \
              patch('odoo.addons.l10n_my_edi.models.account_move.SUBMISSION_MAX_SIZE', 2):
-            send_and_print.action_send_and_print(force_synchronous=True)
+            send_and_print._generate_and_send_invoices(
+                self.submission_invoice,
+                invoice_edi_format='my_myinvois',
+            )
 
         # we have 10 invoices, with a max size of 2 we expect 5 different submissions.
         self.assertEqual(self.submission_count, 5)
@@ -265,7 +302,10 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
         """ After pushing an invoice, we can optionally fetch the status manually if needed. """
         send_and_print = self.create_send_and_print(self.basic_invoice)
         with patch(CONTACT_PROXY_METHOD, new=self._test_09_mock):
-            send_and_print.action_send_and_print()
+            send_and_print._generate_and_send_invoices(
+                self.basic_invoice,
+                invoice_edi_format='my_myinvois',
+            )
 
             self.assertRecordValues(
                 self.basic_invoice,
@@ -288,7 +328,7 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
         Test the cancellation flow when it works well.
         """
         bill = self.init_invoice(
-            'in_invoice', amounts=[100],
+            'in_invoice', products=self.product_a
         )
         bill.action_post()
 
@@ -320,7 +360,10 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
         send_and_print = self.create_send_and_print(self.basic_invoice)
         with patch(CONTACT_PROXY_METHOD, new=self._test_11_mock):
             # Issue the invoice, and get a valid status.
-            send_and_print.action_send_and_print()
+            send_and_print._generate_and_send_invoices(
+                self.basic_invoice,
+                invoice_edi_format='my_myinvois',
+            )
             # Update the status, and receive a rejection request.
             self.basic_invoice.action_l10n_my_edi_update_status()
             self.assertEqual(self.basic_invoice.l10n_my_edi_state, 'rejected')
@@ -354,6 +397,7 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
                     '123458974513518': {
                         'status': 'valid',
                         'reason': '',
+                        'long_id': '',
                         'valid_datetime': '2024-07-15T05:00:00Z',
                     }
                 },
@@ -410,6 +454,7 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
                     '123458974513518': {
                         'status': 'valid',
                         'reason': '',
+                        'long_id': '',
                         'valid_datetime': '2024-07-15T13:15:10Z',
                     }
                 },
@@ -439,6 +484,7 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
                     '123458974513518': {
                         'status': 'valid',
                         'reason': '',
+                        'long_id': '',
                         'valid_datetime': '2024-07-15T13:15:10Z',
                     }
                 },
@@ -485,6 +531,7 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
                     '123458974513518': {
                         'status': 'valid',
                         'reason': '',
+                        'long_id': '',
                         'valid_datetime': '2024-07-15T05:00:00Z',
                     }
                 },
@@ -511,6 +558,7 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
                     '123458974513518': {
                         'status': 'in_progress',
                         'reason': '',
+                        'long_id': '',
                         'valid_datetime': '',
                     }
                 },
@@ -523,6 +571,7 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
                     '123458974513518': {
                         'status': 'valid',
                         'reason': '',
+                        'long_id': '',
                         'valid_datetime': '2024-07-15T05:00:00Z',
                     }
                 },
@@ -551,6 +600,7 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
                     invoice.l10n_my_edi_external_uuid: {
                         'status': 'valid',
                         'reason': '',
+                        'long_id': '',
                         'valid_datetime': '2024-07-15T05:00:00Z',
                     } for invoice in invoices
                 },
@@ -576,6 +626,7 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
                     '123458974513518': {
                         'status': 'in_progress',
                         'reason': '',
+                        'long_id': '',
                         'valid_datetime': '',
                     }
                 },
@@ -585,6 +636,8 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
             return {
                 'status': 'valid',
                 'status_reason': '',
+                'long_id': '',
+                'valid_datetime': '2024-07-15T05:00:00Z',
             }
         else:
             raise UserError('Unexpected endpoint called during a test: %s with params %s.' % (endpoint, params))
@@ -615,6 +668,7 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
                     '123458974513518': {
                         'status': 'valid',
                         'reason': '',
+                        'long_id': '',
                         'valid_datetime': '2024-07-15T05:00:00Z',
                     }
                 },
@@ -624,6 +678,8 @@ class L10nMyEDITestSubmission(TestAccountMoveSendCommon):
             return {
                 'status': 'rejected',
                 'status_reason': 'Wrong address',
+                'long_id': '',
+                'valid_datetime': '',
             }
         elif endpoint == 'api/l10n_my_edi/1/update_status':
             return {

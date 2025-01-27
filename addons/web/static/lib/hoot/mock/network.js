@@ -5,7 +5,7 @@ import {
     mockedRequestAnimationFrame,
 } from "@web/../lib/hoot-dom/helpers/time";
 import { makeNetworkLogger } from "../core/logger";
-import { ensureArray, makePublicListeners } from "../hoot_utils";
+import { ensureArray, makePublicListeners, MIME_TYPE } from "../hoot_utils";
 import { getSyncValue, MockBlob, setSyncValue } from "./sync_values";
 
 //-----------------------------------------------------------------------------
@@ -71,10 +71,7 @@ const makeWorkerScope = (worker) => {
 
 const DEFAULT_URL = "https://www.hoot.test/";
 const HEADER = {
-    blob: "application/octet-stream",
     contentType: "Content-Type",
-    json: "application/json",
-    text: "text/plain",
 };
 const R_INTERNAL_URL = /^(blob|file):/;
 
@@ -176,13 +173,13 @@ export async function mockedFetch(input, init) {
         headers = new Headers(init.headers);
     }
 
+    let contentType = headers.get(HEADER.contentType);
+
     if (result instanceof MockResponse) {
         // Mocked response
         logResponse(async () => {
             const textValue = getSyncValue(result);
-            return headers.get(HEADER.contentType) === HEADER.json
-                ? JSON.parse(textValue)
-                : textValue;
+            return contentType === MIME_TYPE.json ? JSON.parse(textValue) : textValue;
         });
         return result;
     }
@@ -193,28 +190,30 @@ export async function mockedFetch(input, init) {
         return result;
     }
 
-    if (typeof init.body === "string" && !headers.get(HEADER.contentType)) {
-        // String response: considered as plain text
-        logResponse(() => init.body);
-        return new MockResponse(result, {
-            headers: { [HEADER.contentType]: HEADER.text },
-        });
+    // Not a response object:
+    // Determine the return type based on:
+    // - the content type header
+    // - or the type of the returned value
+    if (!contentType) {
+        if (typeof result === "string") {
+            contentType = MIME_TYPE.text;
+        } else if (result instanceof Blob) {
+            contentType = MIME_TYPE.blob;
+        } else {
+            contentType = MIME_TYPE.json;
+        }
     }
 
-    if (result instanceof Blob) {
-        // Blob response
+    if (contentType === MIME_TYPE.json) {
+        // JSON response
+        const strBody = JSON.stringify(result ?? null);
         logResponse(() => result);
-        return new MockResponse(result, {
-            headers: { [HEADER.contentType]: HEADER.blob },
-        });
+        return new MockResponse(strBody, { [HEADER.contentType]: contentType });
     }
 
-    // Default case: JSON response (i.e. anything that isn't a string)
-    const strBody = JSON.stringify(result === undefined ? null : result);
-    logResponse(() => JSON.parse(strBody));
-    return new MockResponse(strBody, {
-        headers: { [HEADER.contentType]: headers.get(HEADER.contentType) || HEADER.json },
-    });
+    // Any other type (blob / text)
+    logResponse(() => result);
+    return new MockResponse(result, { [HEADER.contentType]: contentType });
 }
 
 /**
@@ -223,8 +222,6 @@ export async function mockedFetch(input, init) {
  * The return value of `fetchFn` is used as the response of the mocked fetch, or
  * wrapped in a {@link MockResponse} object if it does not meet the required format.
  *
- * Returns the function to restore the original behavior.
- *
  * @param {typeof mockFetchFn} [fetchFn]
  * @example
  *  mockFetch((input, init) => {
@@ -232,7 +229,7 @@ export async function mockedFetch(input, init) {
  *          return { records: [{ id: 3, name: "john" }] };
  *      }
  *      // ...
- *  }));
+ *  });
  * @example
  *  mockFetch((input, init) => {
  *      if (input === "/translations") {
@@ -242,7 +239,7 @@ export async function mockedFetch(input, init) {
  *          };
  *          return new Response(JSON.stringify(translations));
  *      }
- *  }));
+ *  });
  */
 export function mockFetch(fetchFn) {
     mockFetchFn = fetchFn;
@@ -252,9 +249,6 @@ export function mockFetch(fetchFn) {
  * Activates mock WebSocket classe:
  *  - websocket connections will be handled by `window.fetch` (see {@link mockFetch});
  *  - the `onWebSocketConnected` callback will be called after a websocket has been created.
- *
- * Returns a function to close all remaining websockets and to restore the original
- * behavior.
  *
  * @param {typeof mockWebSocketConnection} [onWebSocketConnected]
  */
@@ -267,8 +261,6 @@ export function mockWebSocket(onWebSocketConnected) {
  *  - actual code fetched by worker URLs will then be handled by `window.fetch`
  *  (see {@link mockFetch});
  *  - the `onWorkerConnected` callback will be called after a worker has been created.
- *
- * Returns a function to close all remaining workers and restore the original behavior.
  *
  * @param {typeof mockWorkerConnection} [onWorkerConnected]
  * @example

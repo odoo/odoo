@@ -84,8 +84,6 @@ defineActions([
         xml_id: "action_3",
         name: "Partners",
         res_model: "partner",
-        mobile_view_mode: "kanban",
-        type: "ir.actions.act_window",
         views: [
             [false, "list"],
             [1, "kanban"],
@@ -97,7 +95,6 @@ defineActions([
         xml_id: "action_4",
         name: "Partners Action 4",
         res_model: "partner",
-        type: "ir.actions.act_window",
         views: [
             [1, "kanban"],
             [2, "list"],
@@ -110,7 +107,6 @@ defineActions([
         name: "Create a Partner",
         res_model: "partner",
         target: "new",
-        type: "ir.actions.act_window",
         views: [[false, "form"]],
     },
     {
@@ -118,7 +114,6 @@ defineActions([
         xml_id: "action_8",
         name: "Favorite Ponies",
         res_model: "pony",
-        type: "ir.actions.act_window",
         views: [
             [false, "list"],
             [false, "form"],
@@ -149,9 +144,10 @@ test("drop previous actions if possible", async () => {
     ]);
 });
 
-test.tags("desktop")("handle switching view and switching back on slow network", async () => {
+test.tags("desktop");
+test("handle switching view and switching back on slow network", async () => {
     const def = new Deferred();
-    const defs = [Promise.resolve(), def, Promise.resolve()];
+    const defs = [null, def, null];
     stepAllNetworkCalls();
     onRpc("web_search_read", () => defs.shift());
 
@@ -181,7 +177,8 @@ test.tags("desktop")("handle switching view and switching back on slow network",
     expect(".o_list_view").toHaveCount(0, { message: "there should not be a list view in dom" });
 });
 
-test.tags("desktop")("clicking quickly on breadcrumbs...", async () => {
+test.tags("desktop");
+test("clicking quickly on breadcrumbs...", async () => {
     let def;
     onRpc("web_read", () => def);
 
@@ -205,7 +202,8 @@ test.tags("desktop")("clicking quickly on breadcrumbs...", async () => {
     expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners Action 4"]);
 });
 
-test.tags("desktop")("execute a new action while loading a lazy-loaded controller", async () => {
+test.tags("desktop");
+test("execute a new action while loading a lazy-loaded controller", async () => {
     redirect("/odoo/action-4/2?cids=1");
 
     let def;
@@ -250,14 +248,14 @@ test.tags("desktop")("execute a new action while loading a lazy-loaded controlle
     expect.verifySteps([]);
 });
 
-test.tags("desktop")("execute a new action while handling a call_button", async () => {
+test.tags("desktop");
+test("execute a new action while handling a call_button", async () => {
     const def = new Deferred();
-    onRpc("/web/dataset/call_button", async () => {
+    onRpc("/web/dataset/call_button/*", async () => {
         await def;
         return {
             name: "Partners Action 1",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[1, "kanban"]],
         };
     });
@@ -303,7 +301,8 @@ test.tags("desktop")("execute a new action while handling a call_button", async 
     expect.verifySteps([]);
 });
 
-test.tags("desktop")("execute a new action while switching to another controller", async () => {
+test.tags("desktop");
+test("execute a new action while switching to another controller", async () => {
     // This test's bottom line is that a doAction always has priority
     // over a switch controller (clicking on a record row to go to form view).
     // In general, the last actionManager's operation has priority because we want
@@ -394,7 +393,8 @@ test("execute a new action while loading views", async () => {
     ]);
 });
 
-test.tags("desktop")("execute a new action while loading data of default view", async () => {
+test.tags("desktop");
+test("execute a new action while loading data of default view", async () => {
     const def = new Deferred();
     stepAllNetworkCalls();
     onRpc("web_search_read", () => def);
@@ -431,7 +431,8 @@ test.tags("desktop")("execute a new action while loading data of default view", 
     ]);
 });
 
-test.tags("desktop")("open a record while reloading the list view", async () => {
+test.tags("desktop");
+test("open a record while reloading the list view", async () => {
     let def;
     onRpc("web_search_read", () => def);
 
@@ -485,46 +486,45 @@ test("properly drop client actions after new action is initiated", async () => {
     expect(".o_kanban_view").toHaveCount(1, { message: "should still display the kanban view" });
 });
 
-test.tags("desktop")(
-    "restoring a controller when doing an action -- load_action slow",
-    async () => {
-        let def;
-        onRpc("/web/action/load", () => def);
-        stepAllNetworkCalls();
+test.tags("desktop");
+test("restoring a controller when doing an action -- load_action slow", async () => {
+    let def;
+    onRpc("/web/action/load", () => def);
+    stepAllNetworkCalls();
 
-        await mountWithCleanup(WebClient);
-        await getService("action").doAction(3);
-        expect(".o_list_view").toHaveCount(1);
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(3);
+    expect(".o_list_view").toHaveCount(1);
 
-        await contains(".o_list_view .o_data_cell").click();
-        expect(".o_form_view").toHaveCount(1);
+    await contains(".o_list_view .o_data_cell").click();
+    expect(".o_form_view").toHaveCount(1);
 
-        def = new Deferred();
-        getService("action").doAction(4, { clearBreadcrumbs: true });
-        await animationFrame();
-        expect(".o_form_view").toHaveCount(1, { message: "should still contain the form view" });
+    def = new Deferred();
+    getService("action").doAction(4, { clearBreadcrumbs: true });
+    await animationFrame();
+    expect(".o_form_view").toHaveCount(1, { message: "should still contain the form view" });
 
-        await contains(".o_control_panel .breadcrumb-item a").click();
-        def.resolve();
-        await animationFrame();
-        expect(".o_list_view").toHaveCount(1);
-        expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners"]);
-        expect(".o_form_view").toHaveCount(0);
-        expect.verifySteps([
-            "/web/webclient/translations",
-            "/web/webclient/load_menus",
-            "/web/action/load",
-            "get_views",
-            "web_search_read",
-            "has_group",
-            "web_read",
-            "/web/action/load",
-            "web_search_read",
-        ]);
-    }
-);
+    await contains(".o_control_panel .breadcrumb-item a").click();
+    def.resolve();
+    await animationFrame();
+    expect(".o_list_view").toHaveCount(1);
+    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners"]);
+    expect(".o_form_view").toHaveCount(0);
+    expect.verifySteps([
+        "/web/webclient/translations",
+        "/web/webclient/load_menus",
+        "/web/action/load",
+        "get_views",
+        "web_search_read",
+        "has_group",
+        "web_read",
+        "/web/action/load",
+        "web_search_read",
+    ]);
+});
 
-test.tags("desktop")("switching when doing an action -- load_action slow", async () => {
+test.tags("desktop");
+test("switching when doing an action -- load_action slow", async () => {
     let def;
     onRpc("/web/action/load", () => def);
     stepAllNetworkCalls();
@@ -556,7 +556,8 @@ test.tags("desktop")("switching when doing an action -- load_action slow", async
     ]);
 });
 
-test.tags("desktop")("switching when doing an action -- get_views slow", async () => {
+test.tags("desktop");
+test("switching when doing an action -- get_views slow", async () => {
     let def;
     onRpc("get_views", () => def);
     stepAllNetworkCalls();
@@ -589,7 +590,8 @@ test.tags("desktop")("switching when doing an action -- get_views slow", async (
     ]);
 });
 
-test.tags("desktop")("switching when doing an action -- search_read slow", async () => {
+test.tags("desktop");
+test("switching when doing an action -- search_read slow", async () => {
     const def = new Deferred();
     const defs = [null, def, null];
     onRpc("web_search_read", () => defs.shift());
@@ -621,7 +623,8 @@ test.tags("desktop")("switching when doing an action -- search_read slow", async
     ]);
 });
 
-test.tags("desktop")("click multiple times to open a record", async () => {
+test.tags("desktop");
+test("click multiple times to open a record", async () => {
     const def = new Deferred();
     const defs = [null, def];
     onRpc("web_read", () => defs.shift());
@@ -673,7 +676,8 @@ test("dialog will only open once for two rapid actions with the target new", asy
     expect(".o_dialog .o_form_view").toHaveCount(1);
 });
 
-test.tags("desktop")("local state, global state, and race conditions", async () => {
+test.tags("desktop");
+test("local state, global state, and race conditions", async () => {
     patchWithCleanup(serverState.view_info, {
         toy: { multi_record: true, display_name: "Toy", icon: "fab fa-android" },
     });

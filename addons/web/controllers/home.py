@@ -61,6 +61,8 @@ class Home(http.Controller):
         # Restore the user on the environment, it was lost due to auth="none"
         request.update_env(user=request.session.uid)
         try:
+            if request.env.user:
+                request.env.user._on_webclient_bootstrap()
             context = request.env['ir.http'].webclient_rendering_context()
             response = request.render('web.webclient_bootstrap', qcontext=context)
             response.headers['X-Frame-Options'] = 'DENY'
@@ -138,6 +140,7 @@ class Home(http.Controller):
             values['disable_database_manager'] = True
 
         response = request.render('web.login', values)
+        response.headers['Cache-Control'] = 'no-cache'
         response.headers['X-Frame-Options'] = 'SAMEORIGIN'
         response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
         return response

@@ -32,7 +32,7 @@ export class ConfirmationPage extends Component {
                     try {
                         await this.printer.print(OrderReceipt, {
                             data: this.selfOrder.orderExportForPrinting(this.confirmedOrder),
-                            formatCurrency: this.selfOrder.formatMonetary,
+                            formatCurrency: this.selfOrder.formatMonetary.bind(this.selfOrder),
                         });
                         if (!this.selfOrder.has_paper) {
                             this.updateHasPaper(true);
@@ -77,9 +77,9 @@ export class ConfirmationPage extends Component {
         order.tracking_number = "S" + order.tracking_number;
         this.confirmedOrder = order;
 
-        const paymentMethods = this.selfOrder.models["pos.payment.method"].filter(
-            (p) => p.is_online_payment
-        );
+        const paymentMethods = this.selfOrder.filterPaymentMethods(
+            this.selfOrder.models["pos.payment.method"].getAll()
+        ); // Stripe, Adyen, Online
 
         if (
             !order ||

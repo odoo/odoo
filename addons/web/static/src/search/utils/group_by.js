@@ -21,10 +21,10 @@ export function getGroupBy(descr, fields) {
         throw Error();
     }
     if (fields) {
-        if (!fields[fieldName]) {
+        if (!fields[fieldName] && !fieldName.includes(".")) {
             throw Error(errorMsg(descr));
         }
-        const fieldType = fields[fieldName].type;
+        const fieldType = fields[fieldName]?.type;
         if (["date", "datetime"].includes(fieldType)) {
             if (!interval) {
                 interval = DEFAULT_INTERVAL;

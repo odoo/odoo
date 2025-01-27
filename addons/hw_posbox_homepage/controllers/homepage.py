@@ -1,16 +1,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
-import subprocess
-import threading
-import logging
-import platform
 import jinja2
+import json
+import logging
 import os
+import platform
+import subprocess
 import sys
+import threading
+import time
 
 from pathlib import Path
-from odoo import http, tools
+from odoo import http
 from odoo.addons.hw_drivers.tools import helpers
 from odoo.addons.hw_drivers.main import iot_devices
 from odoo.addons.web.controllers.home import Home
@@ -67,14 +68,6 @@ class IotBoxOwlHomePage(Home):
         return json.dumps({
             'status': 'success',
             'message': 'Odoo service restarted',
-        })
-
-    @http.route('/hw_posbox_homepage/restart_iotbox', auth='none', type='http', cors='*')
-    def iotbox_restart(self):
-        subprocess.call(['sudo', 'reboot'])
-        return json.dumps({
-            'status': 'success',
-            'message': 'IoT Box is restarting',
         })
 
     @http.route('/hw_posbox_homepage/iot_logs', auth='none', type='http', cors='*')
@@ -151,7 +144,8 @@ class IotBoxOwlHomePage(Home):
         iot_device = []
         for device in iot_devices:
             iot_device.append({
-                'name': iot_devices[device].device_name + ' : ' + str(iot_devices[device].data['value']),
+                'name': iot_devices[device].device_name,
+                'value': str(iot_devices[device].data['value']),
                 'type': iot_devices[device].device_type.replace('_', ' '),
                 'identifier': iot_devices[device].device_identifier,
             })
@@ -186,24 +180,33 @@ class IotBoxOwlHomePage(Home):
             'password': helpers.generate_password(),
         })
 
-    @http.route('/hw_posbox_homepage/upgrade', auth="none", type="http", cors='*')
-    def upgrade_iotbox(self):
-        commit = subprocess.check_output(
-            ["git", "--work-tree=/home/pi/odoo/", "--git-dir=/home/pi/odoo/.git", "log", "-1"]).decode('utf-8').replace("\n", "<br/>")
-        flashToVersion = helpers.check_image()
-        actualVersion = helpers.get_version()
+    @http.route('/hw_posbox_homepage/version_info', auth="none", type="http", cors='*')
+    def get_version_info(self):
+        git = ["git", "--work-tree=/home/pi/odoo/", "--git-dir=/home/pi/odoo/.git"]
+        # Check branch name and last commit hash on IoT Box
+        current_commit = subprocess.run([*git, "rev-parse", "HEAD"], capture_output=True, check=False, text=True)
+        current_branch = subprocess.run(
+            [*git, "rev-parse", "--abbrev-ref", "HEAD"], capture_output=True, check=False, text=True
+        )
+        if current_commit.returncode != 0 or current_branch.returncode != 0:
+            return
+        current_commit = current_commit.stdout.strip()
+        current_branch = current_branch.stdout.strip()
 
-        if flashToVersion:
-            flashToVersion = '%s.%s' % (flashToVersion.get(
-                'major', ''), flashToVersion.get('minor', ''))
+        last_available_commit = subprocess.run(
+            [*git, "ls-remote", "origin", current_branch], capture_output=True, check=False, text=True
+        )
+        if last_available_commit.returncode != 0:
+            _logger.error("Failed to retrieve last commit available for branch origin/%s", current_branch)
+            return
+        last_available_commit = last_available_commit.stdout.split()[0].strip()
 
         return json.dumps({
-            'title': "Odoo's IoTBox - Software Upgrade",
-            'breadcrumb': 'IoT Box Software Upgrade',
-            'loading_message': 'Updating IoT box',
-            'commit': commit,
-            'flashToVersion': flashToVersion,
-            'actualVersion': actualVersion,
+            'status': 'success',
+            # Checkout requires db to align with its version (=branch)
+            'odooIsUpToDate': current_commit == last_available_commit or not bool(helpers.get_odoo_server_url()),
+            'imageIsUpToDate': not bool(helpers.check_image()),
+            'currentCommitHash': current_commit,
         })
 
     @http.route('/hw_posbox_homepage/log_levels', auth="none", type="http", cors='*')
@@ -297,7 +300,7 @@ class IotBoxOwlHomePage(Home):
     @http.route('/hw_posbox_homepage/enable_ngrok', auth="none", type="json", methods=['POST'], cors='*')
     def enable_remote_connection(self, auth_token):
         if subprocess.call(['pgrep', 'ngrok']) == 1:
-            subprocess.Popen(['ngrok', 'tcp', '--authtoken', auth_token, '--log', '/tmp/ngrok.log', '22'])
+            subprocess.Popen(['sudo', 'systemd-run', 'ngrok', 'tcp', '--authtoken', auth_token, '--log', '/tmp/ngrok.log', '22'])
 
         return {
             'status': 'success',
@@ -349,39 +352,35 @@ class IotBoxOwlHomePage(Home):
                 'message': 'Invalid logger name',
             }
 
-        need_config_save = False
         if name == 'log-to-server':
-            need_config_save |= check_and_update_odoo_config_log_to_server_option(
-                value
-            )
+            check_and_update_odoo_config_log_to_server_option(value)
 
         name = name[len(IOT_LOGGING_PREFIX):]
         if name == 'root':
-            need_config_save |= self._update_logger_level(
-                '', value, AVAILABLE_LOG_LEVELS)
+            self._update_logger_level('', value, AVAILABLE_LOG_LEVELS)
         elif name == 'odoo':
-            need_config_save |= self._update_logger_level(
-                'odoo', value, AVAILABLE_LOG_LEVELS)
-            need_config_save |= self._update_logger_level(
-                'werkzeug', value if value != 'debug' else 'info', AVAILABLE_LOG_LEVELS)
+            self._update_logger_level('odoo', value, AVAILABLE_LOG_LEVELS)
+            self._update_logger_level('werkzeug', value if value != 'debug' else 'info', AVAILABLE_LOG_LEVELS)
         elif name.startswith(INTERFACE_PREFIX):
             logger_name = name[len(INTERFACE_PREFIX):]
-            need_config_save |= self._update_logger_level(
-                logger_name, value, AVAILABLE_LOG_LEVELS_WITH_PARENT, 'interfaces')
+            self._update_logger_level(logger_name, value, AVAILABLE_LOG_LEVELS_WITH_PARENT, 'interfaces')
         elif name.startswith(DRIVER_PREFIX):
             logger_name = name[len(DRIVER_PREFIX):]
-            need_config_save |= self._update_logger_level(
-                logger_name, value, AVAILABLE_LOG_LEVELS_WITH_PARENT, 'drivers')
+            self._update_logger_level(logger_name, value, AVAILABLE_LOG_LEVELS_WITH_PARENT, 'drivers')
         else:
             _logger.warning('Unhandled iot logger: %s', name)
-
-        if need_config_save:
-            with helpers.writable():
-                tools.config.save()
 
         return {
             'status': 'success',
             'message': 'Logger level updated',
+        }
+
+    @http.route('/hw_posbox_homepage/update_git_tree', auth="none", type="json", methods=['POST'], cors='*')
+    def update_git_tree(self):
+        helpers.check_git_branch()
+        return {
+            'status': 'success',
+            'message': 'Successfully updated the IoT Box',
         }
 
     # ---------------------------------------------------------- #
@@ -406,28 +405,31 @@ class IotBoxOwlHomePage(Home):
         return handlers_loggers_level
 
     def _update_logger_level(self, logger_name, new_level, available_log_levels, handler_folder=False):
-        """
-        Update (if necessary) Odoo's configuration and logger to the given logger_name to the given level.
+        """Update (if necessary) Odoo's configuration and logger to the given logger_name to the given level.
         The responsibility of saving the config file is not managed here.
+
         :param logger_name: name of the logging logger to change level
         :param new_level: new log level to set for this logger
         :param available_log_levels: iterable of logs levels allowed (for initial check)
-        :param handler_folder: optional string of the IoT handler folder name ('interfaces' or 'drivers')
-        :return: wherever some changes were performed or not on the config
+        :param str handler_folder: optional string of the IoT handler folder name ('interfaces' or 'drivers')
         """
+        # We store the timestamp to reset the log level to warning after a week (7 days * 24 hours * 3600 seconds)
+        # This is to avoid sending polluted logs with debug messages to the db
+        conf = {'log_level_reset_timestamp': str(time.time() + 7 * 24 * 3600)}
+
         if new_level not in available_log_levels:
             _logger.warning('Unknown level to set on logger %s: %s', logger_name, new_level)
-            return False
+            return
 
         if handler_folder:
             logger = self._get_iot_handler_logger(logger_name, handler_folder)
             if not logger:
                 _logger.warning('Unable to change log level for logger %s as logger missing', logger_name)
-                return False
+                return
             logger_name = logger.name
 
         ODOO_TOOL_CONFIG_HANDLER_NAME = 'log_handler'
-        LOG_HANDLERS = tools.config[ODOO_TOOL_CONFIG_HANDLER_NAME]
+        LOG_HANDLERS = (helpers.get_conf(ODOO_TOOL_CONFIG_HANDLER_NAME, section='options') or []).split(',')
         LOGGER_PREFIX = logger_name + ':'
         IS_NEW_LEVEL_PARENT = new_level == 'parent'
 
@@ -435,7 +437,7 @@ class IotBoxOwlHomePage(Home):
             intended_to_find = LOGGER_PREFIX + new_level.upper()
             if intended_to_find in LOG_HANDLERS:
                 # There is nothing to do, the entry is already inside
-                return False
+                return
 
         # We remove every occurrence for the given logger
         log_handlers_without_logger = [
@@ -445,24 +447,25 @@ class IotBoxOwlHomePage(Home):
         if IS_NEW_LEVEL_PARENT:
             # We must check that there is no existing entries using this logger (whatever the level)
             if len(log_handlers_without_logger) == len(LOG_HANDLERS):
-                return False
+                return
 
         # We add if necessary new logger entry
         # If it is "parent" it means we want it to inherit from the parent logger.
         # In order to do this we have to make sure that no entries for the logger exists in the
         # `log_handler` (which is the case at this point as long as we don't re-add an entry)
-        tools.config[ODOO_TOOL_CONFIG_HANDLER_NAME] = log_handlers_without_logger
         new_level_upper_case = new_level.upper()
         if not IS_NEW_LEVEL_PARENT:
-            new_entry = [LOGGER_PREFIX + new_level_upper_case]
-            tools.config[ODOO_TOOL_CONFIG_HANDLER_NAME] += new_entry
+            new_entry = LOGGER_PREFIX + new_level_upper_case
+            log_handlers_without_logger.append(new_entry)
             _logger.debug('Adding to odoo config log_handler: %s', new_entry)
+        conf[ODOO_TOOL_CONFIG_HANDLER_NAME] = ','.join(log_handlers_without_logger)
 
         # Update the logger dynamically
         real_new_level = logging.NOTSET if IS_NEW_LEVEL_PARENT else new_level_upper_case
         _logger.debug('Change logger %s level to %s', logger_name, real_new_level)
         logging.getLogger(logger_name).setLevel(real_new_level)
-        return True
+
+        helpers.update_conf(conf, section='options')
 
     def _get_logger_effective_level_str(self, logger):
         return logging.getLevelName(logger.getEffectiveLevel()).lower()

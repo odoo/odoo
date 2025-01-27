@@ -1,7 +1,7 @@
 /** @odoo-module */
 // @ts-check
 
-import { LOADING_ERROR, LoadableDataSource } from "./data_source";
+import { LOADING_ERROR, LoadableDataSource, getFields } from "./data_source";
 import { Domain } from "@web/core/domain";
 import { user } from "@web/core/user";
 import { omit } from "@web/core/utils/objects";
@@ -57,10 +57,7 @@ export class OdooViewsDataSource extends LoadableDataSource {
 
     async loadMetadata() {
         if (!this._metaData.fields) {
-            this._metaData.fields = await this.serverData.fetch(
-                this._metaData.resModel,
-                "fields_get"
-            );
+            this._metaData.fields = await getFields(this.serverData, this._metaData.resModel);
         }
         this._metaDataLoaded = true;
     }
@@ -69,6 +66,9 @@ export class OdooViewsDataSource extends LoadableDataSource {
      * Ensure that the metadata are loaded. If not, throw an error
      */
     _assertMetaDataLoaded() {
+        if (!this._isModelValid) {
+            throw this.loadError;
+        }
         if (!this._metaDataLoaded) {
             this.loadMetadata();
             throw LOADING_ERROR;

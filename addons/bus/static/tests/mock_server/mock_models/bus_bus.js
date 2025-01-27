@@ -96,4 +96,14 @@ export class BusBus extends models.Model {
         }
         this.wsWorker.broadcast("notification", values);
     }
+
+    /**
+     * Close the current websocket with the given reason and code.
+     *
+     * @param {number} closeCode the code to close the connection with.
+     * @param {string} [reason] the reason to close the connection with.
+     */
+    _simulateDisconnection(closeCode, reason) {
+        this.wsWorker.websocket.close(closeCode, reason);
+    }
 }

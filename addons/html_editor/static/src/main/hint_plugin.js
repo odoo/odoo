@@ -23,23 +23,23 @@ function target(selectionData, editable) {
 }
 
 export class HintPlugin extends Plugin {
-    static name = "hint";
+    static id = "hint";
     static dependencies = ["history", "selection"];
     resources = {
-        mutation_filtered_classes: ["o-we-hint"],
-        is_mutation_record_savable: isMutationRecordSavable,
-        onSelectionChange: this.updateHints.bind(this),
-        onExternalHistorySteps: () => {
+        /** Handlers */
+        selectionchange_handlers: this.updateHints.bind(this),
+        external_history_step_handlers: () => {
             this.clearHints();
             this.updateHints();
         },
+        clean_handlers: this.clearHints.bind(this),
+        clean_for_save_handlers: ({ root }) => this.clearHints(root),
+        content_updated_handlers: this.updateHints.bind(this),
+
+        savable_mutation_record_predicates: isMutationRecordSavable,
+        system_classes: ["o-we-hint"],
         ...(this.config.placeholder && {
-            hints: [
-                {
-                    text: this.config.placeholder,
-                    target,
-                },
-            ],
+            hints: { text: this.config.placeholder, target },
         }),
     };
 
@@ -53,24 +53,11 @@ export class HintPlugin extends Plugin {
         this.clearHints();
     }
 
-    handleCommand(command, payload) {
-        switch (command) {
-            case "CONTENT_UPDATED": {
-                this.updateHints(payload.root);
-                break;
-            }
-            case "CLEAN":
-            case "CLEAN_FOR_SAVE":
-                this.clearHints(payload.root);
-                break;
-        }
-    }
-
     /**
      * @param {HTMLElement} [root]
      */
     updateHints() {
-        const selectionData = this.shared.getSelectionData();
+        const selectionData = this.dependencies.selection.getSelectionData();
         const editableSelection = selectionData.editableSelection;
         if (this.hint) {
             const blockEl = closestBlock(editableSelection.anchorNode);

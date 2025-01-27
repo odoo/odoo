@@ -289,7 +289,7 @@ class SaleOrderLine(models.Model):
         compute='_compute_untaxed_amount_to_invoice',
         store=True)
     amount_to_invoice = fields.Monetary(
-        string="Amount to invoice",
+        string="Un-invoiced Balance",
         compute='_compute_amount_to_invoice')
 
     # Technical computed fields for UX purposes (hide/make fields readonly, ...)
@@ -532,7 +532,7 @@ class SaleOrderLine(models.Model):
                     line.product_id,
                     quantity=line.product_uom_qty or 1.0,
                     uom=line.product_uom,
-                    date=line.order_id.date_order,
+                    date=line._get_order_date(),
                 )
 
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
@@ -544,13 +544,15 @@ class SaleOrderLine(models.Model):
             # check if the price has been manually set or there is already invoiced amount.
             # if so, the price shouldn't change as it might have been manually edited.
             if (
-                line.technical_price_unit not in (0.0, line.price_unit)
+                (line.technical_price_unit != line.price_unit and not line.env.context.get('force_price_recomputation'))
                 or line.qty_invoiced > 0
                 or (line.product_id.expense_policy == 'cost' and line.is_expense)
             ):
                 continue
+            line = line.with_context(sale_write_from_compute=True)
             if not line.product_uom or not line.product_id:
                 line.price_unit = 0.0
+                line.technical_price_unit = 0.0
             else:
                 line = line.with_company(line.company_id)
                 price = line._get_display_price()
@@ -562,6 +564,10 @@ class SaleOrderLine(models.Model):
                     fiscal_position=line.order_id.fiscal_position_id,
                 )
                 line.technical_price_unit = line.price_unit
+
+    def _get_order_date(self):
+        self.ensure_one()
+        return self.order_id.date_order
 
     def _get_display_price(self):
         """Compute the displayed unit price for a given line.
@@ -591,7 +597,7 @@ class SaleOrderLine(models.Model):
 
         pricelist_price = self._get_pricelist_price()
 
-        if not self.pricelist_item_id or not self.pricelist_item_id._show_discount():
+        if not self.pricelist_item_id._show_discount():
             # No pricelist rule found => no discount from pricelist
             return pricelist_price
 
@@ -613,7 +619,7 @@ class SaleOrderLine(models.Model):
             product=self.product_id.with_context(**self._get_product_price_context()),
             quantity=self.product_uom_qty or 1.0,
             uom=self.product_uom,
-            date=self.order_id.date_order,
+            date=self._get_order_date(),
             currency=self.currency_id,
         )
 
@@ -637,7 +643,7 @@ class SaleOrderLine(models.Model):
             'pricelist': self.order_id.pricelist_id.id,
             'uom': self.product_uom.id,
             'quantity': self.product_uom_qty,
-            'date': self.order_id.date_order,
+            'date': self._get_order_date(),
         }
 
     def _get_pricelist_price_before_discount(self):
@@ -653,7 +659,7 @@ class SaleOrderLine(models.Model):
             product=self.product_id.with_context(**self._get_product_price_context()),
             quantity=self.product_uom_qty or 1.0,
             uom=self.product_uom,
-            date=self.order_id.date_order,
+            date=self._get_order_date(),
             currency=self.currency_id,
         )
 
@@ -720,7 +726,7 @@ class SaleOrderLine(models.Model):
 
             line.discount = 0.0
 
-            if not (line.pricelist_item_id and line.pricelist_item_id._show_discount()):
+            if not line.pricelist_item_id._show_discount():
                 # No pricelist rule was found for the product
                 # therefore, the pricelist didn't apply any discount/change
                 # to the existing sales price.
@@ -761,8 +767,8 @@ class SaleOrderLine(models.Model):
         for line in self:
             base_line = line._prepare_base_line_for_taxes_computation()
             self.env['account.tax']._add_tax_details_in_base_line(base_line, line.company_id)
-            line.price_subtotal = base_line['tax_details']['total_excluded_currency']
-            line.price_total = base_line['tax_details']['total_included_currency']
+            line.price_subtotal = base_line['tax_details']['raw_total_excluded_currency']
+            line.price_total = base_line['tax_details']['raw_total_included_currency']
             line.price_tax = line.price_total - line.price_subtotal
 
     @api.depends('price_subtotal', 'product_uom_qty')
@@ -913,7 +919,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             qty_invoiced_posted = 0.0
             for invoice_line in line._get_invoice_lines():
-                if invoice_line.move_id.state == 'posted':
+                if invoice_line.move_id.state == 'posted' or invoice_line.move_id.payment_state == 'invoicing_legacy':
                     qty_unsigned = invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
                     qty_signed = qty_unsigned * -invoice_line.move_id.direction_sign
                     qty_invoiced_posted += qty_signed
@@ -997,7 +1003,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             amount_invoiced = 0.0
             for invoice_line in line._get_invoice_lines():
-                if invoice_line.move_id.state == 'posted':
+                if invoice_line.move_id.state == 'posted' or invoice_line.move_id.payment_state == 'invoicing_legacy':
                     invoice_date = invoice_line.move_id.invoice_date or fields.Date.today()
                     if invoice_line.move_id.move_type == 'out_invoice':
                         amount_invoiced += invoice_line.currency_id._convert(invoice_line.price_subtotal, line.currency_id, line.company_id, invoice_date)
@@ -1011,7 +1017,7 @@ class SaleOrderLine(models.Model):
             amount_invoiced = 0.0
             for invoice_line in line._get_invoice_lines():
                 invoice = invoice_line.move_id
-                if invoice.state == 'posted':
+                if invoice.state == 'posted' or invoice_line.move_id.payment_state == 'invoicing_legacy':
                     invoice_date = invoice.invoice_date or fields.Date.context_today(self)
                     amount_invoiced_unsigned = invoice_line.currency_id._convert(invoice_line.price_total, line.currency_id, line.company_id, invoice_date)
                     amount_invoiced += amount_invoiced_unsigned * -invoice.direction_sign
@@ -1176,6 +1182,12 @@ class SaleOrderLine(models.Model):
             if vals.get('display_type') or self.default_get(['display_type']).get('display_type'):
                 vals['product_uom_qty'] = 0.0
 
+            if 'technical_price_unit' in vals and 'price_unit' not in vals:
+                # price_unit field was set as readonly in the view (but technical_price_unit not)
+                # the field is not sent by the client and expected to be recomputed, but isn't
+                # because technical_price_unit is set.
+                vals.pop('technical_price_unit')
+
         lines = super().create(vals_list)
         for line in lines:
             linked_line = line._get_linked_line()
@@ -1205,6 +1217,16 @@ class SaleOrderLine(models.Model):
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             self.filtered(
                 lambda r: r.state == 'sale' and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) != 0)._update_line_quantity(values)
+
+        if (
+            'technical_price_unit' in values
+            and 'price_unit' not in values
+            and not self.env.context.get('sale_write_from_compute')
+        ):
+            # price_unit field was set as readonly in the view (but technical_price_unit not)
+            # the field is not sent by the client and expected to be recomputed, but isn't
+            # because technical_price_unit is set.
+            values.pop('technical_price_unit')
 
         # Prevent writing on a locked SO.
         protected_fields = self._get_protected_fields()
@@ -1367,11 +1389,18 @@ class SaleOrderLine(models.Model):
                 'company_id': line.company_id.id,
             })
 
+    def _get_downpayment_line_price_unit(self, invoices):
+        return sum(
+            l.price_unit if l.move_id.move_type == 'out_invoice' else -l.price_unit
+            for l in self.invoice_lines
+            if l.move_id.state == 'posted' and l.move_id not in invoices  # don't recompute with the final invoice
+        )
+
     #=== CORE METHODS OVERRIDES ===#
 
     def _get_partner_display(self):
         self.ensure_one()
-        commercial_partner = self.order_partner_id.commercial_partner_id
+        commercial_partner = self.sudo().order_partner_id.commercial_partner_id
         return f'({commercial_partner.ref or commercial_partner.name})'
 
     def _additional_name_per_id(self):

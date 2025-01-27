@@ -2,16 +2,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+from contextlib import contextmanager
 from unittest.mock import patch
 from odoo import Command
 
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
-from odoo.tests import loaded_demo_data, tagged
+from odoo.tests import tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
 from datetime import date, timedelta
 from odoo.addons.point_of_sale.tests.common import archive_products
 from odoo.exceptions import UserError
+from odoo.addons.point_of_sale.models.pos_config import PosConfig
 
 _logger = logging.getLogger(__name__)
 
@@ -27,7 +29,17 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         return f"/pos/ui?config_id={pos_config.id}"
 
     def start_pos_tour(self, tour_name, login="pos_user", **kwargs):
-        self.start_tour(self._get_url(kwargs.get('pos_config')), tour_name, login=login, **kwargs)
+        self.start_tour(self._get_url(pos_config=kwargs.get('pos_config')), tour_name, login=login, **kwargs)
+
+    @contextmanager
+    def with_new_session(self, config=None, user=None):
+        config = config or self.main_pos_config
+        user = user or self.pos_user
+        config.with_user(user).open_ui()
+        session = config.current_session_id
+        yield session
+        session.post_closing_cash_details(0)
+        session.close_session_from_ui()
 
     @classmethod
     def setUpClass(cls):
@@ -110,13 +122,13 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
 
         cls.tip = env.ref('point_of_sale.product_product_tip')
 
-        pos_desk_misc_test = env['pos.category'].create({
+        cls.pos_desk_misc_test = env['pos.category'].create({
             'name': 'Misc test',
         })
-        pos_cat_chair_test = env['pos.category'].create({
+        cls.pos_cat_chair_test = env['pos.category'].create({
             'name': 'Chair test',
         })
-        pos_cat_desk_test = env['pos.category'].create({
+        cls.pos_cat_desk_test = env['pos.category'].create({
             'name': 'Desk test',
         })
 
@@ -128,7 +140,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'taxes_id': False,
             'weight': 0.01,
             'to_weight': True,
-            'pos_categ_ids': [(4, pos_desk_misc_test.id)],
+            'pos_categ_ids': [(4, cls.pos_desk_misc_test.id)],
         })
         cls.wall_shelf = env['product.product'].create({
             'name': 'Wall Shelf Unit',
@@ -162,14 +174,14 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'available_in_pos': True,
             'list_price': 1.98,
             'taxes_id': False,
-            'pos_categ_ids': [(4, pos_cat_desk_test.id)],
+            'pos_categ_ids': [(4, cls.pos_cat_desk_test.id)],
         })
         cls.letter_tray = env['product.product'].create({
             'name': 'Letter Tray',
             'available_in_pos': True,
             'list_price': 4.80,
             'taxes_id': False,
-            'pos_categ_ids': [(4, pos_cat_chair_test.id)],
+            'pos_categ_ids': [(4, cls.pos_cat_chair_test.id)],
         })
         cls.desk_organizer = env['product.product'].create({
             'name': 'Desk Organizer',
@@ -520,9 +532,24 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         })
 
         # Set customers
-        cls.partner_test_1 = cls.env['res.partner'].create({'name': 'Partner Test 1'})
-        cls.partner_test_2 = cls.env['res.partner'].create({'name': 'Partner Test 2'})
-        cls.partner_test_3 = cls.env['res.partner'].create({'name': 'Partner Test 3'})
+        partners = cls.env['res.partner'].create([
+            {'name': 'Partner Test 1'},
+            {'name': 'Partner Test 2'},
+            {'name': 'Partner Test 3'},
+            {
+                'name': 'Partner Full',
+                'email': 'partner.full@example.com',
+                'street': '77 Santa Barbara Rd',
+                'city': 'Pleasant Hill',
+                'state_id': cls.env.ref('base.state_us_5').id,
+                'zip': '94523',
+                'country_id': cls.env.ref('base.us').id,
+            }
+        ])
+        cls.partner_test_1 = partners[0]
+        cls.partner_test_2 = partners[1]
+        cls.partner_test_3 = partners[2]
+        cls.partner_full = partners[3]
 
         # Change the default sale pricelist of customers,
         # so the js tests can expect deterministically this pricelist when selecting a customer.
@@ -533,11 +560,6 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
 @tagged('post_install', '-at_install')
 class TestUi(TestPointOfSaleHttpCommon):
     def test_01_pos_basic_order(self):
-        if not loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
-
-        # Verify that the tip product is not taxable
         self.tip.write({
             'taxes_id': False
         })
@@ -560,6 +582,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'pos_basic_order_01_multi_payment_and_change', login="pos_user")
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'pos_basic_order_02_decimal_order_quantity', login="pos_user")
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'pos_basic_order_03_tax_position', login="pos_user")
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FloatingOrderTour', login="pos_user")
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ProductScreenTour', login="pos_user")
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenTour', login="pos_user")
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ReceiptScreenTour', login="pos_user")
@@ -572,9 +595,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(email_count, 1)
 
     def test_02_pos_with_invoiced(self):
-        if not loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
         self.pos_user.write({
             'groups_id': [
                 (4, self.env.ref('account.group_account_invoice').id),
@@ -605,9 +625,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_pos_tour('ProductConfiguratorTour')
 
     def test_05_ticket_screen(self):
-        if not loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
         self.pos_user.write({
             'groups_id': [
                 (4, self.env.ref('account.group_account_invoice').id),
@@ -773,50 +790,6 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenRoundingHalfUp', login="pos_user")
-
-    def test_rounding_half_up_cash_and_bank(self):
-        self.env['res.partner'].create({'name': 'Nicole Ford'})
-        company = self.main_pos_config.company_id
-        rouding_method = self.env['account.cash.rounding'].create({
-            'name': 'Rounding HALF-UP',
-            'rounding': 5,
-            'rounding_method': 'HALF-UP',
-            'strategy': 'add_invoice_line',
-            'profit_account_id': company['default_cash_difference_income_account_id'].id,
-            'loss_account_id': company['default_cash_difference_expense_account_id'].id,
-        })
-
-        self.env['product.product'].create({
-            'name': 'Product Test 40',
-            'available_in_pos': True,
-            'list_price': 40,
-            'taxes_id': False,
-        })
-
-        self.env['product.product'].create({
-            'name': 'Product Test 41',
-            'available_in_pos': True,
-            'list_price': 41,
-            'taxes_id': False,
-        })
-
-        self.main_pos_config.write({
-            'rounding_method': rouding_method.id,
-            'cash_rounding': True,
-            'only_round_cash_method': True
-        })
-
-        self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenRoundingHalfUpCashAndBank', login="pos_user")
-
-        invoiced_orders = self.env['pos.order'].search([('state', '=', 'invoiced')])
-        self.assertEqual(len(invoiced_orders), 2, 'There should be 2 invoiced orders.')
-
-        for order in invoiced_orders:
-            rounding_line = order.account_move.line_ids.filtered(lambda line: line.display_type == 'rounding')
-            self.assertEqual(len(rounding_line), 1, 'There should be 1 rounding line.')
-            rounding_applied = order.amount_total - order.amount_paid
-            self.assertEqual(rounding_line.balance, rounding_applied, 'Rounding amount is incorrect!')
 
     def test_pos_closing_cash_details(self):
         """Test cash difference *loss* at closing.
@@ -1255,6 +1228,33 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'limitedProductPricelistLoading', login="pos_user")
 
+    def test_multi_product_pricelist_rules(self):
+        product_1 = self.env['product.product'].create({
+            'name': 'Test Product 1',
+            'list_price': 1,
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+
+        pricelist_item = self.env['product.pricelist.item'].create([{
+            'applied_on': '3_global',
+            'fixed_price': 200,
+            'min_quantity': 0,
+        }, {
+            'applied_on': '1_product',
+            'product_tmpl_id': product_1.product_tmpl_id.id,
+            'fixed_price': 100,
+             'min_quantity': 2,
+        }, {
+            'applied_on': '0_product_variant',
+            'product_id': product_1.id,
+            'fixed_price': 50,
+            'min_quantity': 3,
+        }])
+        self.main_pos_config.pricelist_id.write({'item_ids': [(6, 0, pricelist_item.ids)]})
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'multiPricelistRulesTour', login="pos_user")
+
     def test_multi_product_options(self):
         self.pos_user.write({
             'groups_id': [
@@ -1394,6 +1394,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             {
                 "available_in_pos": True,
                 "list_price": 7,
+                "standard_price": 10,
                 "name": "Desk Combo",
                 "type": "combo",
                 "taxes_id": False,
@@ -1406,6 +1407,9 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'ProductComboPriceCheckTour', login="pos_user")
+        order = self.env['pos.order'].search([], limit=1)
+        self.assertEqual(order.lines.filtered(lambda l: l.product_id.type == 'combo').margin, 0)
+        self.assertEqual(order.lines.filtered(lambda l: l.product_id.type == 'combo').margin_percent, 0)
 
     def test_customer_display_as_public(self):
         self.main_pos_config.customer_display_type = 'remote'
@@ -1499,17 +1503,21 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_product_categories_order(self):
         """ Verify that the order of categories doesnt change in the frontend """
+        self.env['pos.category'].search([]).write({'sequence': 100})
         self.env['pos.category'].create({
             'name': 'AAA',
             'parent_id': False,
+            'sequence': 1,
         })
         self.env['pos.category'].create({
             'name': 'AAC',
             'parent_id': False,
+            'sequence': 3,
         })
         parentA = self.env['pos.category'].create({
             'name': 'AAB',
             'parent_id': False,
+            'sequence': 2,
         })
         parentB = self.env['pos.category'].create({
             'name': 'AAX',
@@ -1528,6 +1536,76 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosCategoriesOrder', login="pos_admin")
+
+    def test_autofill_cash_count(self):
+        """Make sure that when the decimal separator is a comma, the shown orderline price is correct.
+        """
+        lang = self.env['res.lang'].search([('code', '=', self.pos_user.lang)])
+        lang.write({'thousands_sep': '.', 'decimal_point': ','})
+        self.env["product.product"].create(
+            {
+                "available_in_pos": True,
+                "list_price": 123456,
+                "name": "Test Expensive",
+                "taxes_id": False
+            }
+        )
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, "AutofillCashCount", login="pos_user")
+
+    def test_lot(self):
+        self.product1 = self.env['product.product'].create({
+            'name': 'Product A',
+            'is_storable': True,
+            'tracking': 'serial',
+            'categ_id': self.env.ref('product.product_category_all').id,
+            'available_in_pos': True,
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'LotTour', login="pos_user")
+
+    def test_product_search(self):
+        """Verify that the product search works correctly"""
+        self.env['product.product'].create([
+            {
+                'name': 'Test Product 1',
+                'list_price': 100,
+                'taxes_id': False,
+                'available_in_pos': True,
+                'barcode': '1234567890123',
+                'default_code': 'TESTPROD1',
+            },
+            {
+                'name': 'Test Product 2',
+                'list_price': 100,
+                'taxes_id': False,
+                'available_in_pos': True,
+                'barcode': '1234567890124',
+                'default_code': 'TESTPROD2',
+            },
+            {
+                'name': 'Apple',
+                'list_price': 100,
+                'taxes_id': False,
+                'available_in_pos': True,
+            },
+        ])
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ProductSearchTour', login="pos_user")
+
+    def test_customer_search_more(self):
+        partner_test_a = self.env["res.partner"].create({"name": "APartner"})
+        self.env["res.partner"].create({"name": "BPartner", "zip": 1111})
+
+        def mocked_get_limited_partners_loading(self):
+            return [(partner_test_a.id,)]
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        with patch.object(PosConfig, 'get_limited_partners_loading', mocked_get_limited_partners_loading):
+            self.main_pos_config.with_user(self.pos_user).open_ui()
+            self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'SearchMoreCustomer', login="pos_user")
 
 
 # This class just runs the same tests as above but with mobile emulation

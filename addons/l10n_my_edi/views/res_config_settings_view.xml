@@ -12,11 +12,6 @@
                         <div class="content-group">
                             <field name="l10n_my_edi_mode" widget="radio"/>
                         </div>
-                        <!-- we don't import unless in production (sandbox api doesn't have a real test API for the search) -->
-                        <div class="mt8 content-group col-9" invisible="l10n_my_edi_mode != 'prod' or l10n_my_edi_proxy_user_id">
-                            <label for="l10n_my_edi_default_import_journal_id" class="me-1"/>
-                            <field name="l10n_my_edi_default_import_journal_id" required="l10n_my_edi_mode == 'prod'"/>
-                        </div>
                         <div class="mt8 content-group col-9" invisible="l10n_my_edi_mode == 'prod'">
                             <span invisible="l10n_my_edi_mode != 'test'">• In Pre-Production mode Odoo will send the invoices to a non-production service.</span>
                         </div>

@@ -26,10 +26,10 @@ setRunner(runner);
 //-----------------------------------------------------------------------------
 
 /**
- * @param {unknown} value
+ * @param {...unknown} values
  */
-export function registerDebugInfo(value) {
-    logger.logDebug("debug context provided:", value);
+export function registerDebugInfo(...values) {
+    logger.logDebug("debug context provided:", ...values);
 }
 
 // Main test API
@@ -46,7 +46,6 @@ export const onError = makeRuntimeHook("onError");
 
 // Fixture
 export const getFixture = runner.fixture.get;
-export const mountOnFixture = runner.fixture.mount;
 
 // Other functions
 export const dryRun = runner.exportFn(runner.dryRun);

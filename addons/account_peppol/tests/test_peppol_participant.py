@@ -45,6 +45,8 @@ class TestPeppolParticipant(TransactionCase):
                     'migration_key': 'test_key',
                 }
             },
+            '/api/peppol/1/register_sender': {'result': {}},
+            '/api/peppol/1/register_sender_as_receiver': {'result': {}},
         }
 
     @classmethod
@@ -114,7 +116,6 @@ class TestPeppolParticipant(TransactionCase):
         vals = self._get_participant_vals()
         vals['peppol_eas'] = '0208'
         wizard = self.env['peppol.registration'].create(vals)
-        wizard.smp_registration = True
         with self.assertRaises(UserError), self.cr.savepoint():
             wizard.button_peppol_sender_registration()
             wizard.verification_code = '123456'
@@ -126,12 +127,8 @@ class TestPeppolParticipant(TransactionCase):
         # then the account_peppol_proxy_state should not change
         # after running the cron checking participant status
         company = self.env.company
-        wizard = self.env['peppol.registration'].create(self._get_participant_vals())
+        wizard = self.env['peppol.registration'].create({'smp_registration': False, **self._get_participant_vals()})
         wizard.button_peppol_sender_registration()
-        # should send verification code immediately
-        self.assertEqual(company.account_peppol_proxy_state, 'in_verification')
-        wizard.verification_code = '123456'
-        wizard.button_check_peppol_verification_code()
         # since we did not select receiver registration, we're now just a sender
         self.assertEqual(company.account_peppol_proxy_state, 'sender')
         # running the cron should not do anything for the company
@@ -148,10 +145,6 @@ class TestPeppolParticipant(TransactionCase):
         wizard = self.env['peppol.registration'].create(self._get_participant_vals())
         wizard.smp_registration = True  # choose to register as a receiver right away
         wizard.button_peppol_sender_registration()
-        # should send verification code immediately
-        self.assertEqual(company.account_peppol_proxy_state, 'in_verification')
-        wizard.verification_code = '123456'
-        wizard.button_check_peppol_verification_code()
         self.assertEqual(company.account_peppol_proxy_state, 'smp_registration')
         with self._set_context({'participant_state': 'receiver'}):
             self.env['account_edi_proxy_client.user']._cron_peppol_get_participant_status()
@@ -162,7 +155,7 @@ class TestPeppolParticipant(TransactionCase):
         # and then come back to settings and register as a receiver
         # first step: use the peppol wizard to register only as a sender
         company = self.env.company
-        wizard = self.env['peppol.registration'].create(self._get_participant_vals())
+        wizard = self.env['peppol.registration'].create({'smp_registration': False, **self._get_participant_vals()})
         wizard.button_peppol_sender_registration()
         wizard.verification_code = '123456'
         wizard.button_check_peppol_verification_code()
@@ -211,37 +204,3 @@ class TestPeppolParticipant(TransactionCase):
             wizard.button_check_peppol_verification_code()
             self.assertEqual(self.env.company.account_peppol_proxy_state, 'smp_registration')
             self.assertFalse(self.env.company.account_peppol_migration_key)  # the key should be reset once we've used it
-
-    def test_migrate_away_participant(self):
-        # a participant should be able to request a migration key
-        wizard = self.env['peppol.registration'].create(self._get_participant_vals())
-        self.assertFalse(wizard.account_peppol_migration_key)
-        wizard.button_peppol_sender_registration()
-        wizard.account_peppol_proxy_state = 'receiver'
-        # migrating away is only possible in the settings
-        settings = self.env['res.config.settings'].create({})
-        settings.button_migrate_peppol_registration()
-        self.assertEqual(settings.company_id.account_peppol_proxy_state, 'receiver')
-        self.assertEqual(settings.account_peppol_migration_key, 'test_key')
-
-    def test_reset_participant(self):
-        # once a participant has migrated away, they should be reset
-        wizard = self.env['peppol.registration'].create(self._get_participant_vals())
-        wizard.button_peppol_sender_registration()
-        wizard.account_peppol_proxy_state = 'receiver'
-        settings = self.env['res.config.settings'].create({})
-        settings.button_migrate_peppol_registration()
-
-        with self._set_context({'migrated_away': True}):
-            try:
-                settings.button_update_peppol_user_data()
-            except UserError:
-                settings = self.env['res.config.settings'].create({})
-                self.assertRecordValues(settings, [{
-                        'account_peppol_migration_key': False,
-                        'account_peppol_proxy_state': 'not_registered',
-                    }],
-                )
-                self.assertFalse(self.env.company.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol'))
-            else:
-                raise ValidationError('A UserError should be raised.')

@@ -7,6 +7,7 @@ export class BootstrapDialog extends Component {
         identifier: String,
         slots: Object,
         btnName: { type: String, optional: true },
+        isLarge: { type: Boolean, optional: true },
         onOpen: { type: Function, optional: true },
         onClose: { type: Function, optional: true },
     };
@@ -39,7 +40,7 @@ export class BootstrapDialog extends Component {
 
     static template = xml`
         <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" t-att-data-bs-target="'#'+this.props.identifier" t-esc="this.props.btnName" />
-        <div t-ref="dialog" t-att-id="this.props.identifier" class="modal modal-dialog-scrollable fade" tabindex="-1" aria-hidden="true">
+        <div t-ref="dialog" t-att-id="this.props.identifier" class="modal modal-dialog-scrollable fade" t-att-class="{'modal-lg': props.isLarge}" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">

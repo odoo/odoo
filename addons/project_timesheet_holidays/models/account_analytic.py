@@ -11,7 +11,7 @@ class AccountAnalyticLine(models.Model):
 
     holiday_id = fields.Many2one("hr.leave", string='Time Off Request', copy=False, index='btree_not_null', export_string_translation=False)
     global_leave_id = fields.Many2one("resource.calendar.leaves", string="Global Time Off", index='btree_not_null', ondelete='cascade', export_string_translation=False)
-    task_id = fields.Many2one(domain="[('allow_timesheets', '=', True), ('project_id', '=?', project_id), ('is_timeoff_task', '=', False)]", export_string_translation=False)
+    task_id = fields.Many2one(domain="[('allow_timesheets', '=', True), ('project_id', '=?', project_id), ('is_timeoff_task', '=', False)]")
 
     def _get_redirect_action(self):
         leave_form_view_id = self.env.ref('hr_holidays.hr_leave_view_form').id

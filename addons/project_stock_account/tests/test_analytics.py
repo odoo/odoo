@@ -84,6 +84,12 @@ class TestAnalytics(TestStockCommon):
         self.assertEqual(analytic_line2[self.plan2_name], self.analytic_account2)
 
     def test_analytic_lines_generation_receipt(self):
+        """
+            In this module, the project profitability should be computed while checking the AAL data from the pickings.
+            When the 'analytic costs' option from delivery order is enabled, it is expected for picking to generate
+            an aal for the move line created. These aals should be taken into account when computing the 'project
+            profitability' right side panel and displayed under the 'costs -> materials' section.
+        """
         picking_in = self.PickingObj.create({
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
@@ -125,6 +131,17 @@ class TestAnalytics(TestStockCommon):
         self.assertEqual(analytic_line2.amount, 1000.0)
         self.assertEqual(analytic_line2[self.plan1_name], self.analytic_account1)
         self.assertEqual(analytic_line2[self.plan2_name], self.analytic_account2)
+
+        self.assertDictEqual(
+            self.project._get_profitability_items(False),
+            {
+                'revenues': {'data': [], 'total': {'invoiced': 0.0, 'to_invoice': 0.0}},
+                'costs': {
+                    'data': [{'id': 'other_costs', 'sequence': 15, 'billed': 1300.0, 'to_bill': 0.0}],
+                    'total': {'billed': 1300.0, 'to_bill': 0.0}
+                }
+            }
+        )
 
     def test_mandatory_analytic_plan_picking(self):
         self.env['account.analytic.applicability'].create({

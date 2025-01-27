@@ -730,7 +730,9 @@ class Message(models.Model):
         messages_by_partner = defaultdict(lambda: self.env['mail.message'])
         partners_with_user = self.partner_ids.filtered('user_ids')
         for elem in self:
-            for partner in elem.partner_ids & partners_with_user:
+            for partner in (
+                elem.partner_ids & partners_with_user | elem.notification_ids.author_id
+            ):
                 messages_by_partner[partner] |= elem
         # Notify front-end of messages deletion for partners having a user
         for partner, messages in messages_by_partner.items():
@@ -1026,7 +1028,7 @@ class Message(models.Model):
                 # sudo: mail.message.subtype - reading description on accessible message is allowed
                 "subtype_description": message.subtype_id.sudo().description,
                 # sudo: res.partner: reading limited data of recipients is acceptable
-                "recipients": Store.many(message.sudo().partner_ids, fields=["name", "write_date"]),
+                "recipients": Store.many(message.sudo().partner_ids, fields=["avatar_128", "name"]),
                 "scheduledDatetime": scheduled_dt_by_msg_id.get(message.id, False),
                 "thread": Store.one(record, as_thread=True, only_id=True),
             }
@@ -1068,11 +1070,11 @@ class Message(models.Model):
             }
             # sudo: mail.message: access to author is allowed
             if guest_author := message.sudo().author_guest_id:
-                data["author"] = Store.one(guest_author, fields=["name", "write_date"])
+                data["author"] = Store.one(guest_author, fields=["avatar_128", "name"])
             # sudo: mail.message: access to author is allowed
             elif author := message.sudo().author_id:
                 data["author"] = Store.one(
-                    author, fields=["name", "is_company", "user", "write_date"]
+                    author, fields=["avatar_128", "is_company", "name", "user"]
                 )
             store.add(message, data)
 
@@ -1125,7 +1127,7 @@ class Message(models.Model):
                     Store.one(
                         self.env[message.model].browse(message.res_id) if message.model else False,
                         as_thread=True,
-                        fields=["modelName"],
+                        fields=["modelName", "name" if message.model == "discuss.channel" else "display_name"],
                     )
                 ),
             }
@@ -1225,7 +1227,7 @@ class Message(models.Model):
             records = self.env[model].browse([res_id])
         else:
             records = self.env[model] if model else self.env['mail.thread']
-        return records._notify_get_reply_to(default=email_from)[res_id]
+        return records.sudo()._notify_get_reply_to(default=email_from)[res_id]
 
     @api.model
     def _get_message_id(self, values):

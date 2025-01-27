@@ -130,7 +130,7 @@
                     <we-title class="o_short_title"></we-title>
                     <div class="o_url_input">
                         <input name="url" id="o_link_dialog_url_input" type="text" placeholder="Your URL"/>
-                        <we-button class="o_we_user_value_widget fa fa-file" t-on-click="this.openDocumentDialog" data-tooltip="Link to an uploaded document"></we-button>
+                        <we-button class="o_we_user_value_widget fa fa-upload" t-on-click="this.uploadFile" data-tooltip="Link to an uploaded document"></we-button>
                     </div>
                 </we-input>
             </we-row>
@@ -304,7 +304,7 @@
                     </div>
                 </we-select>
             </we-row>
-            <we-row  t-if="!state.isButton and !props.forceNewWindow">
+            <we-row t-if="!state.isButton and !props.forceNewWindow and !state.isDocument">
                 <we-button t-attf-class="o_we_user_value_widget o_we_checkbox_wrapper o_we_sublevel_1 #{this.initialNewWindow ? 'active' : ''}">
                     <we-title class="o_long_title">Open in New Window</we-title>
                         <div class="o_switch">

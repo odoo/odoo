@@ -110,8 +110,8 @@ class SaleOrderDiscount(models.TransientModel):
             for line in self.sale_order_id.order_line:
                 if not line.product_uom_qty or not line.price_unit:
                     continue
-
-                total_price_per_tax_groups[line.tax_id] += (line.price_unit * line.product_uom_qty)
+                discounted_price = line.price_unit * (1 - (line.discount or 0.0)/100)
+                total_price_per_tax_groups[line.tax_id] += (discounted_price * line.product_uom_qty)
 
             if not total_price_per_tax_groups:
                 # No valid lines on which the discount can be applied

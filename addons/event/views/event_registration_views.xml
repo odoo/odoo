@@ -316,7 +316,7 @@
         <field name="name">Attendees</field>
         <field name="view_mode">kanban,list,form</field>
         <field name="domain">[('event_id', '=', active_id)]</field>
-        <field name="context">{'default_event_id': active_id}</field>
+        <field name="context">{'default_event_id': active_id, 'is_registration_desk_view': True}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No Attendees yet!
@@ -330,7 +330,7 @@
         <field name="res_model">event.registration</field>
         <field name="name">Attendees</field>
         <field name="view_mode">kanban,list,form</field>
-        <field name="context">{'search_default_filter_is_ongoing': True}</field>
+        <field name="context">{'search_default_filter_is_ongoing': True, 'is_registration_desk_view': True}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No Attendees expected yet!

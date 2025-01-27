@@ -55,8 +55,7 @@ test("BinaryField is correctly rendered (readonly)", async () => {
             message: "we should download the correct data",
         });
 
-        const responseBody = new Blob([body.get("data")], { type: "text/plain" });
-        return new Response(responseBody, { status: 200 });
+        return new Blob([body.get("data")], { type: "text/plain" });
     });
 
     await mountView({
@@ -113,8 +112,7 @@ test("BinaryField is correctly rendered", async () => {
             message: "we should download the correct data",
         });
 
-        const responseBody = new Blob([body.get("data")], { type: "text/plain" });
-        return new Response(responseBody, { status: 200 });
+        return new Blob([body.get("data")], { type: "text/plain" });
     });
 
     await mountView({
@@ -288,7 +286,8 @@ test("option accepted_file_extensions", async () => {
     });
 });
 
-test.tags("desktop")("readonly in create mode does not download", async () => {
+test.tags("desktop");
+test("readonly in create mode does not download", async () => {
     onRpc("/web/content", () => {
         expect.step("We shouldn't be getting the file.");
     });

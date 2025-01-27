@@ -17,10 +17,10 @@
                 <t t-if="state.mountedAndLoaded" t-foreach="messages" t-as="msg" t-key="msg.id">
                     <t t-set="prevMsg" t-value="messages[msg_index -1]"/>
                     <t t-if="msg.dateDay !== currentDay and props.showDates">
-                        <DateSection date="msg.dateDay" className="'pt-2'"/>
+                        <DateSection date="msg.dateDay" className="'pt-2 px-2'"/>
                         <t t-set="currentDay" t-value="msg.dateDay"/>
                     </t>
-                    <div t-if="msg.threadAsFirstUnread?.eq(props.thread)" class="o-mail-Thread-newMessage d-flex align-items-center fw-bolder z-1">
+                    <div t-if="msg.threadAsFirstUnread?.eq(props.thread)" class="o-mail-Thread-newMessage d-flex align-items-center fw-bolder z-1 px-2">
                         <hr class="flex-grow-1 border-danger opacity-100"/><span class="ps-2 pe-1 bg-danger o-text-white rounded text-uppercase">New</span>
                     </div>
                     <Message
@@ -62,12 +62,12 @@
 </t>
 
 <t t-name="mail.Thread.jumpPresent">
-    <button t-if="props.showJumpPresent and state.showJumpPresent" class="o-mail-Thread-jumpPresent position-fixed p-2 rounded-circle lh-1 m-n3 user-select-none btn btn-light border" t-ref="jump-present" t-on-click="() => this.jumpToPresent()" title="Jump to Present"><i class="oi" t-att-class="{ 'oi-chevron-down': props.order === 'asc', 'oi-chevron-up': props.order !== 'asc' }"/></button>
+    <button t-if="props.showJumpPresent and state.showJumpPresent" class="o-mail-Thread-jumpPresent position-fixed p-2 rounded-circle lh-1 m-n3 user-select-none btn btn-light shadow-sm border border-secondary" t-ref="jump-present" t-on-click="() => this.jumpToPresent()" title="Jump to Present"><i class="oi text-muted" t-att-class="{ 'oi-chevron-down': props.order === 'asc', 'oi-chevron-up': props.order !== 'asc' }"/></button>
 </t>
 
 <t t-name="mail.Thread.jumpUnread">
-    <span t-if="props.thread.showUnreadBanner" class="o-mail-Thread-banner d-flex cursor-pointer shadow-sm small fw-bold">
-        <t t-set="alertClass" t-value="'alert alert-info m-0 border-start-0 o-mail-Thread-bannerHover rounded-0 py-1'"/>
+    <span t-if="props.thread.showUnreadBanner" class="o-mail-Thread-banner d-flex cursor-pointer border-bottom border-warning smaller fw-bolder">
+        <t t-set="alertClass" t-value="'alert alert-warning m-0 border-start-0 o-mail-Thread-bannerHover rounded-0 px-2 py-1 smaller'"/>
         <span t-attf-class="{{ alertClass }} flex-grow-1" t-on-click="onClickUnreadMessagesBanner" t-esc="newMessageBannerText"/>
         <span t-attf-class="{{ alertClass }}" t-on-click="() => props.thread.markAsRead({ sync: true })">Mark as Read<i class="ms-2 fa fa-check-square"/></span>
     </span>

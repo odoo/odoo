@@ -1,28 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* product_margin
-#
+# 
 # Translators:
-# Arnau Ros, 2022
-# jabelchi, 2022
-# Martin Trigaux, 2022
-# RGB Consulting <odoo@rgbconsulting.com>, 2022
-# Quim - eccit <quim@eccit.com>, 2022
-# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2022
-# Ivan Espinola, 2022
-#
+# Albert Parera, 2024
+# Josep Anton Belchi, 2024
+# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2024
+# Arnau Ros, 2024
+# Ivan Espinola, 2024
+# Óscar Fonseca <tecnico@pyming.com>, 2024
+# Quim - eccit <quim@eccit.com>, 2024
+# RGB Consulting <odoo@rgbconsulting.com>, 2024
+# Martin Trigaux, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Ivan Espinola, 2022\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
-"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: product_margin
@@ -73,7 +75,7 @@ msgstr "Preu unitat mig"
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.product_margin_form_view
 msgid "Cancel"
-msgstr "Cancel·lar"
+msgstr "Cancel·la"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -93,7 +95,7 @@ msgstr "Creat el"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__display_name
 msgid "Display Name"
-msgstr "Nom a mostrar"
+msgstr "Nom mostrat"
 
 #. module: product_margin
 #: model:ir.model.fields.selection,name:product_margin.selection__product_margin__invoice_state__draft_open_paid
@@ -153,11 +155,6 @@ msgid "Invoice State"
 msgstr "Estat factura"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_margin____last_update
-msgid "Last Modified on"
-msgstr "Última modificació el "
-
-#. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__write_uid
 msgid "Last Updated by"
 msgstr "Última actualització per"
@@ -215,6 +212,7 @@ msgid "Product Margin"
 msgstr "Marge producte"
 
 #. module: product_margin
+#. odoo-python
 #: code:addons/product_margin/wizard/product_margin.py:0
 #: model:ir.actions.act_window,name:product_margin.product_margin_act_window
 #: model:ir.ui.menu,name:product_margin.menu_action_product_margin
@@ -227,7 +225,7 @@ msgstr "Marges de producte"
 #. module: product_margin
 #: model:ir.model,name:product_margin.model_product_product
 msgid "Product Variant"
-msgstr "Variants de producte"
+msgstr "Variant de producte"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.product_margin_form_view
@@ -263,22 +261,31 @@ msgstr "Preu estàndard"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__normal_cost
 msgid "Sum of Multiplication of Cost price and quantity of Vendor Bills"
-msgstr "Suma de la multiplicació del preu de Cost i quantiat de factures de Venedor."
+msgstr ""
+"Suma de la multiplicació del preu de Cost i quantiat de factures de Venedor."
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__turnover
-msgid "Sum of Multiplication of Invoice price and quantity of Customer Invoices"
-msgstr "Suma de la multiplicació del preu de factura i la quantitat de les factures del client."
+msgid ""
+"Sum of Multiplication of Invoice price and quantity of Customer Invoices"
+msgstr ""
+"Suma de la multiplicació del preu de factura i la quantitat de les factures "
+"del client."
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__total_cost
 msgid "Sum of Multiplication of Invoice price and quantity of Vendor Bills "
-msgstr "Suma de la multiplicació del preu de la factura i la quantitat de factures de venedors"
+msgstr ""
+"Suma de la multiplicació del preu de la factura i la quantitat de factures "
+"de venedors"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__sale_expected
-msgid "Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"
-msgstr "Suma de la multiplicació del PVP i la quantitat de les factures de client."
+msgid ""
+"Sum of Multiplication of Sale Catalog price and quantity of Customer "
+"Invoices"
+msgstr ""
+"Suma de la multiplicació del PVP i la quantitat de les factures de client."
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__sale_num_invoiced
@@ -325,5 +332,5 @@ msgstr "Volum de negoci"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__total_margin
-msgid "Turnover - Standard price"
-msgstr "Volum de negoci - Preu estàndard"
+msgid "Turnover - Total cost"
+msgstr ""

@@ -101,16 +101,23 @@ test("should insert a paragraph before the table, then one after it", async () =
     );
 });
 
-test.tags("desktop")(
-    "should have collapsed selection when mouse down on a table cell",
-    async () => {
-        const { el } = await setupEditor(
-            `<table class="table table-bordered o_table"><tbody><tr><td><p><br></p></td><td><p><br>[</p></td><td><p>]<br></p></td></tr></tbody></table>`
-        );
-        const lastCell = el.querySelector("td:last-child");
-        pointerDown(lastCell);
-        await waitUntil(() => !document.querySelector(".o-we-toolbar"));
-        const selection = document.getSelection();
-        expect(selection.isCollapsed).toBe(true);
-    }
-);
+test("should reset selection when empty", async () => {
+    const { el } = await setupEditor("<p>[<br>]</p>");
+    const p = el.querySelector("p");
+    await simulateMouseClick(p, true);
+    expect(getContent(el)).toBe(
+        `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
+    );
+});
+
+test.tags("desktop");
+test("should have collapsed selection when mouse down on a table cell", async () => {
+    const { el } = await setupEditor(
+        `<table class="table table-bordered o_table"><tbody><tr><td><p><br></p></td><td><p><br>[</p></td><td><p>]<br></p></td></tr></tbody></table>`
+    );
+    const lastCell = el.querySelector("td:last-child");
+    pointerDown(lastCell);
+    await waitUntil(() => !document.querySelector(".o-we-toolbar"));
+    const selection = document.getSelection();
+    expect(selection.isCollapsed).toBe(true);
+});

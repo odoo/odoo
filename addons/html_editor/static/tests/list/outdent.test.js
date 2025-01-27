@@ -1,7 +1,8 @@
-import { describe, test } from "@odoo/hoot";
-import { testEditor } from "../_helpers/editor";
+import { describe, expect, test } from "@odoo/hoot";
+import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
-import { keydownShiftTab } from "../_helpers/user_actions";
+import { bold, deleteBackward, keydownShiftTab } from "../_helpers/user_actions";
+import { getContent } from "../_helpers/selection";
 
 describe("Regular list", () => {
     test("should remove the list-style when outdent the list", async () => {
@@ -482,6 +483,43 @@ describe("with selection collapsed", () => {
                 </ul>
                 <h1>[]b</h1>
                 <h2>c</h2>`),
+        });
+    });
+    test("should not crash when outdenting a list item with empty nodes", async () => {
+        const { el, editor } = await setupEditor(
+            unformat(`
+                <ul>
+                    <li>a</li>
+                    <li>[]</li>
+                </ul>`)
+        );
+        // add an empty text node to the list item
+        el.firstChild.lastChild.append(editor.document.createTextNode(""));
+        keydownShiftTab(editor);
+        expect(getContent(el)).toBe(
+            unformat(`
+                <ul>
+                    <li>a</li>
+                </ul>
+                <p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`)
+        );
+    });
+    test("should not crash when outdenting a list item with invisible nodes", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <ul>
+                    <li>a</li>
+                    <li>[]<br></li>
+                </ul>`),
+            stepFunction: (editor) => {
+                bold(editor); // produces a <strong> tag with zws inside
+                deleteBackward(editor); // outdents the list item
+            },
+            contentAfter: unformat(`
+                <ul>
+                    <li>a</li>
+                </ul>
+                <p>[]<br></p>`),
         });
     });
 });

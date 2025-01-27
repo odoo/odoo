@@ -120,6 +120,7 @@ Help your customers with this chat, and analyse their feedback.
             'bus/static/src/services/**/*.js',
             'bus/static/src/workers/websocket_worker.js',
             'bus/static/src/workers/websocket_worker_utils.js',
+            ('remove', 'bus/static/src/outdated_page_watcher_service.js'),
             ('remove', 'bus/static/src/services/assets_watchdog_service.js'),
             ('remove', 'bus/static/src/simple_notification_service.js'),
             ('include', 'im_livechat.assets_embed_core'),

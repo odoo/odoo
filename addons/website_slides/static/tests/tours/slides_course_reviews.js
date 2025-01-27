@@ -19,7 +19,8 @@ registry.category("web_tour.tours").add("course_reviews", {
             run: "click",
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Chatter-content:not(:has(.o-mail-Message-content))",
+            trigger:
+                "#chatterRoot:shadow .o-mail-Chatter-content:not(:has(.o-mail-Message-content))",
         },
         {
             // If it fails here, it means the log note is considered as a review
@@ -27,11 +28,11 @@ registry.category("web_tour.tours").add("course_reviews", {
             run: "click",
         },
         {
-            trigger: ".modal div.o_portal_chatter_composer_body textarea",
+            trigger: ".modal.modal_shown.show div.o_portal_chatter_composer_body textarea",
             run: "edit Great course!",
         },
         {
-            trigger: ".modal button.o_portal_chatter_composer_btn",
+            trigger: ".modal.modal_shown.show button.o_portal_chatter_composer_btn",
             run: "click",
         },
         {

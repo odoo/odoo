@@ -17,23 +17,24 @@
 # ExcaliberX <excaliberx@gmail.com>, 2024
 # Jonathan Spier, 2024
 # Lilach Gilliam <lilach@apprcase.com>, 2024
-# Lilach Gilliam <lilach.gilliam@gmail.com>, 2024
 # Yihya Hugirat <hugirat@gmail.com>, 2024
 # Netta Waizer, 2024
-# hed shefer <hed@laylinetech.com>, 2024
+# Hed Shefer <hed@laylinetech.com>, 2024
 # MichaelHadar, 2024
 # yael terner, 2024
-# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024
 # Uri Segman, 2024
 # Martin Trigaux, 2024
+# tomerlayline, 2024
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -705,14 +706,8 @@ msgstr "סוג הקצאה"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"Allocation must be \"To Approve\" or \"Second Approval\" in order to "
-"validate it."
-msgstr ""
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid "Allocation must be confirmed (\"To Approve\") in order to approve it."
+"Allocation must be confirmed \"To Approve\" or validated once \"Second "
+"Approval\" in order to approve it."
 msgstr ""
 
 #. module: hr_holidays
@@ -783,11 +778,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
 msgid "Amount"
 msgstr "סכום כולל"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__max_allowed_negative
-msgid "Amount in Negative"
-msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -2036,7 +2026,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__transition_mode__immediately
 msgid "Immediately"
-msgstr "מיד"
+msgstr "מידי"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2257,6 +2247,11 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__max_leaves
 msgid "Maximum Allowed"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__max_allowed_negative
+msgid "Maximum Excess Amount"
 msgstr ""
 
 #. module: hr_holidays
@@ -3369,8 +3364,8 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_type_check_negative
 msgid ""
-"The negative amount must be greater than 0. If you want to set 0, disable "
-"the negative cap instead."
+"The maximum excess amount should be greater than 0. If you want to set 0, "
+"disable the negative cap instead."
 msgstr ""
 
 #. module: hr_holidays
@@ -3436,6 +3431,14 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__sequence
 msgid ""
 "The type with the smallest sequence is the default value in time off request"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"There is no employee set on the time off. Please make sure you're logged in "
+"the correct company."
 msgstr ""
 
 #. module: hr_holidays
@@ -3912,7 +3915,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "Unlimited"
-msgstr ""
+msgstr "בלתי מוגבל"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_unpaid
@@ -4395,13 +4398,13 @@ msgstr "ימים"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "days of the months"
-msgstr ""
+msgstr "ימים בחודש"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
 msgid "days)"
-msgstr ""
+msgstr "ימים)"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form

@@ -119,45 +119,17 @@ publicWidget.registry.RevokeSessionsButton = publicWidget.Widget.extend({
     init() {
         this._super(...arguments);
         this.orm = this.bindService("orm");
+        this.dialog = this.bindService("dialog")
     },
 
     async _onClick() {
-        const { res_id: checkId } = await this.orm.call("res.users", "api_key_wizard", [
-            user.userId,
-        ]);
-        this.call("dialog", "add", InputConfirmationDialog, {
-            title: _t("Log out from all devices?"),
-            body: renderToMarkup("portal.revoke_all_devices_popup_template"),
-            confirmLabel: _t("Log out from all devices"),
-            confirm: async ({ inputEl }) => {
-                if (!inputEl.reportValidity()) {
-                    inputEl.classList.add("is-invalid");
-                    return false;
-                }
-
-                await this.orm.write("res.users.identitycheck", [checkId], { password: inputEl.value });
-                try {
-                    await this.orm.call(
-                        "res.users.identitycheck",
-                        "revoke_all_devices",
-                        [checkId]
-                    );
-                } catch {
-                    inputEl.classList.add("is-invalid");
-                    inputEl.setCustomValidity(_t("Check failed"));
-                    inputEl.reportValidity();
-                    return false;
-                }
-
-                window.location.href = "/web/session/logout?redirect=/";
-                return true;
-            },
-            cancel: () => {},
-            onInput: ({ inputEl }) => {
-                inputEl.classList.remove("is-invalid");
-                inputEl.setCustomValidity("");
-            },
-        });
+        await handleCheckIdentity(
+            this.orm.call("res.users", "action_revoke_all_devices", [user.userId]),
+            this.orm,
+            this.dialog
+        );
+        window.location = window.location;
+        return true;
     },
 });
 
@@ -177,7 +149,7 @@ publicWidget.registry.RevokeSessionsButton = publicWidget.Widget.extend({
  */
 export async function handleCheckIdentity(wrapped, ormService, dialogService) {
     return wrapped.then((r) => {
-        if (!(r.type === "ir.actions.act_window" && r.res_model === "res.users.identitycheck")) {
+        if (!(r.type && r.type === "ir.actions.act_window" && r.res_model === "res.users.identitycheck")) {
             return r;
         }
         const checkId = r.res_id;

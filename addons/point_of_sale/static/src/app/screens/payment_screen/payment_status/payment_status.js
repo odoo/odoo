@@ -11,7 +11,9 @@ export class PaymentScreenStatus extends Component {
     }
     get remainingText() {
         return this.env.utils.formatCurrency(
-            this.props.order.get_due() > 0 ? this.props.order.get_due() : 0
+            this.props.order.taxTotals.order_sign * this.props.order.get_due() > 0
+                ? this.props.order.get_due()
+                : 0
         );
     }
 }

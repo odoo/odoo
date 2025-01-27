@@ -151,7 +151,7 @@ class SaleOrderLine(models.Model):
         remaining.free_qty_today = False
         remaining.qty_available_today = False
 
-    @api.depends('product_id', 'route_id', 'order_id.warehouse_id', 'product_id.route_ids')
+    @api.depends('product_id', 'route_id', 'warehouse_id', 'product_id.route_ids')
     def _compute_is_mto(self):
         """ Verify the route of the product based on the warehouse
             set 'is_available' at True if the product availability in stock does
@@ -165,7 +165,7 @@ class SaleOrderLine(models.Model):
             product_routes = line.route_id or (product.route_ids + product.categ_id.total_route_ids)
 
             # Check MTO
-            mto_route = line.order_id.warehouse_id.mto_pull_id.route_id
+            mto_route = line.warehouse_id.mto_pull_id.route_id
             if not mto_route:
                 try:
                     mto_route = self.env['stock.warehouse']._find_or_create_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)'), create=False)

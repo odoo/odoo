@@ -9,20 +9,20 @@
 # Triine Aavik <triine@avalah.ee>, 2024
 # Martin Trigaux, 2024
 # JanaAvalah, 2024
-# Stevin Lilla, 2024
 # Arma Gedonsky <armagedonsky@hot.ee>, 2024
 # Leaanika Randmets, 2024
 # Eneli Õigus <enelioigus@gmail.com>, 2024
 # Siim Raasuke, 2024
 # Anna, 2024
+# Stevin Lilla, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Anna, 2024\n"
+"Last-Translator: Stevin Lilla, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,12 +71,6 @@ msgstr "% õnnest"
 #: code:addons/im_livechat/models/chatbot_script.py:0
 msgid "%s (copy)"
 msgstr "%s (koopia)"
-
-#. module: im_livechat
-#. odoo-python
-#: code:addons/im_livechat/models/chatbot_script_step.py:0
-msgid "%s has joined"
-msgstr "%s liitus"
 
 #. module: im_livechat
 #. odoo-python
@@ -133,7 +127,7 @@ msgstr "<i title=\"Remove operator\" class=\"fa fa-fw fa-lg fa-close\"/>"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
 msgid "<span class=\"fw-bold\">Country: </span>"
-msgstr ""
+msgstr "<span class=\"fw-bold\">Riik:</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
@@ -165,6 +159,8 @@ msgid ""
 "<span>Tip: At least one interaction (Question, Email, ...) is needed before the Bot can perform more complex actions (Forward to an Operator, ...). </span>\n"
 "                    <span>Use Channel Rules if you want the Bot to interact with visitors only when no operator is available.</span>"
 msgstr ""
+"<span>Vihje: Enne roboti poolseid keerulisi tegevusi (operaatorile edastamine, ...) on vajalik lihtsamad tegevused (küsimus, email, ...).</span>\n"
+"<span>Kasuta kanali reegleid kui soovite, et robot oleks aktiivne ainult siis kui ühtegi operaatorit pole saadaval.</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_form
@@ -173,6 +169,9 @@ msgid ""
 "the Bot can perform more complex actions (Forward to an Operator, "
 "...).</span>"
 msgstr ""
+"<span>1Vihje: Enne roboti poolseid keerulisi tegevusi (operaatorile "
+"edastamine, ...) on vajalik lihtsamad tegevused (küsimus, email, "
+"...).</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_step_view_form
@@ -180,6 +179,8 @@ msgid ""
 "<span>Tip: Plan further steps for the Bot in case no operator is "
 "available.</span>"
 msgstr ""
+"<span>Vihje: Planeeri järgnevaid tegevusi robotile kui operaatorit pole "
+"saadaval.</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
@@ -189,7 +190,7 @@ msgstr "<span>Testite praegu</span>"
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_chatbot_message__unique_mail_message_id
 msgid "A mail.message can only be linked to a single chatbot message"
-msgstr ""
+msgstr "mail.message saab olla ühendatud ainult ühe juturoboti sõnumiga"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__is_without_answer
@@ -197,6 +198,8 @@ msgid ""
 "A session is without answer if the operator did not answer. \n"
 "                                       If the visitor is also the operator, the session will always be answered."
 msgstr ""
+"Sessioon on vastuseta kui operaator ei vastanud.\n"
+"Kui külastaja on ka operaator, siis sessioon on alati vastatud."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_needaction
@@ -316,12 +319,12 @@ msgstr "Bot operaator"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__button_background_color
 msgid "Button Background Color"
-msgstr ""
+msgstr "Nupu taustavärv"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__button_text_color
 msgid "Button Text Color"
-msgstr ""
+msgstr "Nupu teksti värv"
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.canned_responses
@@ -381,7 +384,7 @@ msgstr "Kanalid"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__input_placeholder
 msgid "Chat Input Placeholder"
-msgstr ""
+msgstr "Vestluse sisendi kohatäitja"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__channel_type
@@ -405,7 +408,7 @@ msgstr "Vestlusrobot"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__chatbot_current_step_id
 msgid "Chatbot Current Step"
-msgstr ""
+msgstr "Juturoboti praegune samm"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_chatbot_message
@@ -430,7 +433,7 @@ msgstr "Chatboti skript"
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_chatbot_script_answer
 msgid "Chatbot Script Answer"
-msgstr ""
+msgstr "Juturoboti skript vastus"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_chatbot_script_step
@@ -588,32 +591,32 @@ msgstr "Päeva arv"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__days_of_activity
 msgid "Days of activity"
-msgstr ""
+msgstr "Tegevuste päevad"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__button_background_color
 msgid "Default background color of the Livechat button"
-msgstr ""
+msgstr "Vaikimisi Livechat nupu taustavärv"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__header_background_color
 msgid "Default background color of the channel header once open"
-msgstr ""
+msgstr "Vaikimisi kanali päise taustavärv peale kanali avamist"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__button_text_color
 msgid "Default text color of the Livechat button"
-msgstr ""
+msgstr "Vaikimisi Livechat nupu teksti värv"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__button_text
 msgid "Default text displayed on the Livechat Support Button"
-msgstr ""
+msgstr "Vaikimisi Livechat toe nupul kuvatav tekst"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__title_color
 msgid "Default title color of the channel once open"
-msgstr ""
+msgstr "Vaikimisi aktiivse kanali pealkirja värv"
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
@@ -1393,7 +1396,7 @@ msgstr ""
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "Powered by"
-msgstr "Tootja"
+msgstr "Kiri saadetud läbi"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__question_selection

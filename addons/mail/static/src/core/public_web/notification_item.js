@@ -24,6 +24,8 @@ export class NotificationItem extends Component {
         "onSwipeRight?",
         "slots?",
         "isActive?",
+        "nameMaxLine?",
+        "textMaxLine?",
     ];
     static defaultProps = {
         counter: 0,
@@ -44,10 +46,22 @@ export class NotificationItem extends Component {
         if (isToday(this.props.datetime)) {
             return this.props.datetime?.toLocaleString(DateTime.TIME_SIMPLE);
         }
+        if (this.props.datetime?.year === DateTime.now().year) {
+            return this.props.datetime?.toLocaleString({ month: "short", day: "numeric" });
+        }
         return this.props.datetime?.toLocaleString(DateTime.DATE_MED);
     }
 
     onClick(ev) {
         this.props.onClick(ev.target === this.markAsReadRef.el);
+    }
+
+    webkitLineClamp(maxLine) {
+        return `
+            display: -webkit-box;
+            overflow: hidden;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: ${maxLine};
+        `;
     }
 }

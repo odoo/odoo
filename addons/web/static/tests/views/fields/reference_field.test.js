@@ -5,14 +5,12 @@ import {
     clickSave,
     defineModels,
     fields,
+    mockService,
     models,
     mountView,
     mountViewInDialog,
     onRpc,
-    patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-
-import { actionService } from "@web/webclient/actions/action_service";
 
 class Partner extends models.Model {
     name = fields.Char();
@@ -291,18 +289,18 @@ test("reference in form view", async () => {
             expect(args[0]).toEqual([37], {
                 message: "should call get_formview_action with correct id",
             });
-            return Promise.resolve({
+            return {
                 res_id: 17,
                 type: "ir.actions.act_window",
                 target: "current",
                 res_model: "res.partner",
-            });
+            };
         }
         if (method === "get_formview_id") {
             expect(args[0]).toEqual([37], {
                 message: "should call get_formview_id with correct id",
             });
-            return Promise.resolve(false);
+            return false;
         }
         if (method === "name_search") {
             expect(model).toBe("partner.type", {
@@ -317,17 +315,11 @@ test("reference in form view", async () => {
         }
     });
 
-    patchWithCleanup(actionService, {
-        start() {
-            const service = super.start(...arguments);
-            return {
-                ...service,
-                doAction(action) {
-                    expect(action.res_id).toEqual(17, {
-                        message: "should do a do_action with correct parameters",
-                    });
-                },
-            };
+    mockService("action", {
+        doAction(action) {
+            expect(action.res_id).toBe(17, {
+                message: "should do a do_action with correct parameters",
+            });
         },
     });
 
@@ -584,13 +576,8 @@ test("ReferenceField on char field, reset by onchange", async () => {
     Partner._records[0].foo = "product,37";
     Partner._onChanges.int_field = (obj) => (obj.foo = "product," + obj.int_field);
     let nbNameGet = 0;
-    onRpc(({ model, method, args }) => {
-        if (
-            model === "product" &&
-            method === "read" &&
-            args[1].length === 1 &&
-            args[1][0] === "display_name"
-        ) {
+    onRpc("product", "read", ({ args }) => {
+        if (args[1].length === 1 && args[1][0] === "display_name") {
             nbNameGet++;
         }
     });
@@ -982,4 +969,20 @@ test("do not ask for display_name if field is invisible", async () => {
         resId: 1,
         arch: `<form><field name="reference" invisible="1"/></form>`,
     });
+});
+
+test("reference char with list view pager navigation", async () => {
+    Partner._records[0].reference_char = "product,37";
+    Partner._records[1].reference_char = "product,41";
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        resIds: [1, 2],
+        arch: `<form edit="0"><field name="reference_char" widget="reference" string="Record"/></form>`,
+    });
+    expect(".o_field_reference").toHaveText("xphone");
+    await click(".o_pager_next");
+    await animationFrame();
+    expect(".o_field_reference").toHaveText("xpad");
 });

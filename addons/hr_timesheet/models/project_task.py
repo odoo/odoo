@@ -39,8 +39,8 @@ class Task(models.Model):
     remaining_hours_percentage = fields.Float(compute='_compute_remaining_hours_percentage', search='_search_remaining_hours_percentage', export_string_translation=False)
     effective_hours = fields.Float("Time Spent", compute='_compute_effective_hours', compute_sudo=True, store=True)
     total_hours_spent = fields.Float("Total Time Spent", compute='_compute_total_hours_spent', store=True, help="Time spent on this task and its sub-tasks (and their own sub-tasks).")
-    progress = fields.Float("Progress", compute='_compute_progress_hours', store=True, aggregator="avg", export_string_translation=False)
-    overtime = fields.Float(compute='_compute_progress_hours', store=True, export_string_translation=False)
+    progress = fields.Float("Progress", compute='_compute_progress_hours', store=True, aggregator="avg")
+    overtime = fields.Float(compute='_compute_progress_hours', store=True)
     subtask_effective_hours = fields.Float("Time Spent on Sub-tasks", compute='_compute_subtask_effective_hours', recursive=True, store=True, help="Time spent on the sub-tasks (and their own sub-tasks) of this task.")
     timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets', export_string_translation=False)
     encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days', default=lambda self: self._uom_in_days(), export_string_translation=False)
@@ -123,7 +123,10 @@ class Task(models.Model):
     @api.depends('effective_hours', 'subtask_effective_hours', 'allocated_hours')
     def _compute_remaining_hours(self):
         for task in self:
-            task.remaining_hours = task.allocated_hours - task.effective_hours - task.subtask_effective_hours
+            if not task.allocated_hours:
+                task.remaining_hours = 0.0
+            else:
+                task.remaining_hours = task.allocated_hours - task.effective_hours - task.subtask_effective_hours
 
     @api.depends('effective_hours', 'subtask_effective_hours')
     def _compute_total_hours_spent(self):

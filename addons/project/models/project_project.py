@@ -428,7 +428,13 @@ class Project(models.Model):
         default = dict(default or {})
         # Since we dont want to copy the milestones if the original project has the feature disabled, we set the milestones to False by default.
         default['milestone_ids'] = False
-        new_projects = super(Project, self.with_context(mail_auto_subscribe_no_notify=True, mail_create_nosubscribe=True)).copy(default=default)
+        copy_context = dict(
+             self.env.context,
+             mail_auto_subscribe_no_notify=True,
+             mail_create_nosubscribe=True,
+         )
+        copy_context.pop("default_stage_id", None)
+        new_projects = super(Project, self.with_context(copy_context)).copy(default=default)
         if 'milestone_mapping' not in self.env.context:
             self = self.with_context(milestone_mapping={})
         actions_per_project = dict(self.env['ir.embedded.actions']._read_group(
@@ -474,13 +480,22 @@ class Project(models.Model):
             for vals in vals_list:
                 if 'label_tasks' in vals and not vals['label_tasks']:
                     vals['label_tasks'] = task_label
-        if len(self.env.companies) > 1 and self.env.user.has_group('project.group_project_stages'):
-            # Select the stage whether the default_stage_id field is set in context (quick create) or if it is not (normal create)
-            stage = self.env['project.project.stage'].browse(self._context['default_stage_id']) if 'default_stage_id' in self._context else self._default_stage_id()
-            # The project's company_id must be the same as the stage's company_id
-            if stage.company_id:
+        if self.env.user.has_group('project.group_project_stages'):
+            if 'default_stage_id' in self._context:
+                stage = self.env['project.project.stage'].browse(self._context['default_stage_id'])
+                # The project's company_id must be the same as the stage's company_id
+                if stage.company_id:
+                    for vals in vals_list:
+                        vals['company_id'] = stage.company_id.id
+            else:
+                companies_ids = [vals.get('company_id', False) for vals in vals_list] + [False]
+                stages = self.env['project.project.stage'].search([('company_id', 'in', companies_ids)])
                 for vals in vals_list:
-                    vals['company_id'] = stage.company_id.id
+                    # Pick the stage with the lowest sequence with no company or project's company
+                    stage_domain = [False] if 'company_id' not in vals else [False, vals.get('company_id')]
+                    stage = stages.filtered(lambda s: s.company_id.id in stage_domain)[:1]
+                    vals['stage_id'] = stage.id
+
         for vals in vals_list:
             if vals.pop('is_favorite', False):
                 vals['favorite_user_ids'] = [self.env.uid]
@@ -488,6 +503,11 @@ class Project(models.Model):
         return projects
 
     def write(self, vals):
+        if vals.get('access_token'):
+            self.ensure_one()  # We are not supposed to add a single access token to multiple project
+            if self.privacy_visibility != 'portal':
+                vals['access_token'] = ''
+
         # Here we modify the project's stage according to the selected company (selecting the first
         # stage in sequence that is linked to the company).
         company_id = vals.get('company_id')
@@ -956,6 +976,12 @@ class Project(models.Model):
     def _get_plan_domain(self, plan):
         return AND([super()._get_plan_domain(plan), ['|', ('company_id', '=', False), ('company_id', '=?', unquote('company_id'))]])
 
+    def _get_account_node_context(self, plan):
+        return {
+            **super()._get_account_node_context(plan),
+            'default_company_id': unquote('company_id'),
+        }
+
     # ---------------------------------------------------
     # Rating business
     # ---------------------------------------------------
@@ -994,6 +1020,9 @@ class Project(models.Model):
                 portal_users = project.message_partner_ids.user_ids.filtered('share')
                 project.message_unsubscribe(partner_ids=portal_users.partner_id.ids)
                 project.tasks._unsubscribe_portal_users()
+                # revoke access_token since the project and its tasks are no longer accessible for portal/public users
+                project.tasks.access_token = ''
+                project.access_token = ''
 
     # ---------------------------------------------------
     # Project sharing

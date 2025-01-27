@@ -1,31 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* digest
-#
+# 
 # Translators:
+# Wil Odoo, 2024
+# Ilya Rozhkov, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Ilya Rozhkov, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: digest
-#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
-msgid "<i class=\"oi oi-arrow-right\"/> Check our Documentation"
-msgstr "<i class=\"oi oi-arrow-right\"/> Ознакомьтесь с нашей документацией"
-
-#. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
-msgid "<span class=\"button\" id=\"button_open_report\">Open Report</span>"
-msgstr "<span class=\"button\" id=\"button_open_report\">Открытый отчет</span>"
+msgid "<span class=\"button\" id=\"button_open_report\">➔ Open Report</span>"
+msgstr "<span class=\"button\" id=\"button_open_report\">➔ Открыть отчет</span>"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
@@ -34,8 +32,8 @@ msgstr "<span class=\"odoo_link_text\">Odoo</span>"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
-msgid "<span style=\"color: #8f8f8f;\">Unsubscribe</span>"
-msgstr "<span style=\"color: #8f8f8f;\">Отписаться от рассылки</span>"
+msgid "<span style=\"color: #878d97;\">Unsubscribe</span>"
+msgstr "<span style=\"color: #878d97;\">Отписаться</span>"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -51,7 +49,9 @@ msgstr "Активировано"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Add new users as recipient of a periodic email with key metrics"
-msgstr "Добавляйте новых пользователей в качестве получателей периодических электронных писем с ключевыми показателями"
+msgstr ""
+"Добавляйте новых пользователей в качестве получателей периодических "
+"электронных писем с ключевыми показателями"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__group_id
@@ -64,10 +64,20 @@ msgid "Available Fields"
 msgstr "Доступные поля"
 
 #. module: digest
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
+msgid "Check our Documentation"
+msgstr ""
+
+#. module: digest
 #. odoo-python
 #: code:addons/digest/models/digest.py:0
 msgid "Choose the metrics you care about"
 msgstr "Выберите показатели, которые вам важны"
+
+#. module: digest
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_6
+msgid "Click and hold on a Menu Item to reorder your Apps to your liking."
+msgstr ""
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__company_id
@@ -181,6 +191,11 @@ msgid "Email Address"
 msgstr "Адрес электронной почты"
 
 #. module: digest
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_5
+msgid "Feeling eye strain? Give your eyes a break by switching to Dark Mode."
+msgstr ""
+
+#. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "General"
 msgstr "Общие"
@@ -192,8 +207,13 @@ msgstr "Сортировать"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_1
-msgid "Have a question about a document? Click on the responsible user's picture to start a conversation. If his avatar has a green dot, he is online."
-msgstr "У вас есть вопрос о документе? Нажмите на изображение ответственного пользователя, чтобы начать разговор. Если на его аватаре есть зеленая точка, значит, он в сети."
+msgid ""
+"Have a question about a document? Click on the responsible user's picture to"
+" start a conversation. If his avatar has a green dot, he is online."
+msgstr ""
+"У вас есть вопрос о документе? Нажмите на изображение ответственного "
+"пользователя, чтобы начать разговор. Если на его аватаре есть зеленая точка,"
+" значит, он в сети."
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__id
@@ -291,8 +311,12 @@ msgstr "Имя"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
-msgid "New users are automatically added as recipient of the following digest email."
-msgstr "Новые пользователи автоматически добавляются в качестве получателей следующего дайджеста электронной почты."
+msgid ""
+"New users are automatically added as recipient of the following digest "
+"email."
+msgstr ""
+"Новые пользователи автоматически добавляются в качестве получателей "
+"следующего дайджеста электронной почты."
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__next_run_date
@@ -323,8 +347,12 @@ msgstr "Предпочитаете более широкий обзор?"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_0
-msgid "Press ALT in any screen to highlight shortcuts for every button in the screen. It is useful to process multiple documents in batch."
-msgstr "Нажмите ALT на любом экране, чтобы выделить ярлыки для каждой кнопки на экране. Это удобно для пакетной обработки нескольких документов."
+msgid ""
+"Press ALT in any screen to highlight shortcuts for every button in the "
+"screen. It is useful to process multiple documents in batch."
+msgstr ""
+"Нажмите ALT на любом экране, чтобы выделить ярлыки для каждой кнопки на "
+"экране. Это удобно для пакетной обработки нескольких документов."
 
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__periodicity__quarterly
@@ -341,7 +369,8 @@ msgstr "Получатели"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_section_mobile
 msgid "Run your business from anywhere with <b>Odoo Mobile</b>."
-msgstr "Управляйте своим бизнесом из любого места с помощью <b>Odoo Mobile</b>."
+msgstr ""
+"Управляйте своим бизнесом из любого места с помощью <b>Odoo Mobile</b>."
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -357,11 +386,6 @@ msgstr "Отправлено от"
 #: model:ir.model.fields,field_description:digest.field_digest_tip__sequence
 msgid "Sequence"
 msgstr "Последовательность"
-
-#. module: digest
-#: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
-msgid "Statistics"
-msgstr "Статистика"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__state
@@ -395,9 +419,21 @@ msgid "Tip: How to ping users in internal notes?"
 msgstr "Совет: Как пинговать пользователей во внутренних заметках?"
 
 #. module: digest
+#: model:digest.tip,name:digest.digest_tip_digest_5
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_5
+msgid "Tip: Join the Dark Side"
+msgstr ""
+
+#. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_4
 msgid "Tip: Knowledge is power"
 msgstr "Совет: Знание - сила"
+
+#. module: digest
+#: model:digest.tip,name:digest.digest_tip_digest_6
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_6
+msgid "Tip: Personalize your Home Menu"
+msgstr ""
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_0
@@ -436,13 +472,20 @@ msgstr "Заголовок"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_3
-msgid "Type \"@\" to notify someone in a message, or \"#\" to link to a channel. Try to notify @OdooBot to test the feature."
-msgstr "Введите \"@\", чтобы уведомить кого-то в сообщении, или \"#\", чтобы дать ссылку на канал. Попробуйте уведомить @OdooBot, чтобы протестировать функцию."
+msgid ""
+"Type \"@\" to notify someone in a message, or \"#\" to link to a channel. "
+"Try to notify @OdooBot to test the feature."
+msgstr ""
+"Введите \"@\", чтобы уведомить кого-то в сообщении, или \"#\", чтобы дать "
+"ссылку на канал. Попробуйте уведомить @OdooBot, чтобы протестировать "
+"функцию."
 
 #. module: digest
 #: model:ir.model.fields,help:digest.field_digest_tip__sequence
 msgid "Used to display digest tip in email template base on order"
-msgstr "Используется для отображения дайджеста подсказок в шаблоне письма на основе заказа"
+msgstr ""
+"Используется для отображения дайджеста подсказок в шаблоне письма на основе "
+"заказа"
 
 #. module: digest
 #: model:ir.model,name:digest.model_res_users
@@ -468,8 +511,13 @@ msgstr "Хотите настроить это письмо?"
 #. module: digest
 #. odoo-python
 #: code:addons/digest/models/digest.py:0
-msgid "We have noticed you did not connect these last few days. We have automatically switched your preference to %(new_perioridicy_str)s Digests."
-msgstr "Мы заметили, что в последние несколько дней вы не подключались. Мы автоматически переключили ваши предпочтения на %(new_perioridicy_str)s Дайджесты."
+msgid ""
+"We have noticed you did not connect these last few days. We have "
+"automatically switched your preference to %(new_perioridicy_str)s Digests."
+msgstr ""
+"Мы заметили, что в последние несколько дней вы не подключались. Мы "
+"автоматически переключили ваши предпочтения на %(new_perioridicy_str)s "
+"Дайджесты."
 
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__periodicity__weekly
@@ -478,8 +526,14 @@ msgstr "Еженедельно"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_2
-msgid "When editing a number, you can use formulae by typing the `=` character. This is useful when computing a margin or a discount on a quotation, sale order or invoice."
-msgstr "При редактировании числа можно использовать формулы, введя символ `=`. Это полезно при расчете маржи или скидки по котировке, заказу на продажу или счету-фактуре."
+msgid ""
+"When editing a number, you can use formulae by typing the `=` character. "
+"This is useful when computing a margin or a discount on a quotation, sale "
+"order or invoice."
+msgstr ""
+"При редактировании числа можно использовать формулы, введя символ `=`. Это "
+"полезно при расчете маржи или скидок на коммерческое предложение, заказы на "
+"продажу или при рассчете счет-фактуры."
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_4

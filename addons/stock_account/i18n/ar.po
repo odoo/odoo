@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Malaz Abuidris <msea@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,6 +27,8 @@ msgid ""
 "\n"
 "Affected valuation layers: %s"
 msgstr ""
+"\n"
+"طبقات التقييم المتأثرة: %s "
 
 #. module: stock_account
 #. odoo-python
@@ -44,6 +47,8 @@ msgstr " [تمت المحاسبة في %s] "
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid " lot/serial number cost updated from %(previous)s to %(new_cost)s."
 msgstr ""
+"تم تحديث تكلفة رقم المجموعة/الرقم التسلسلي من %(previous)s إلى %(new_cost)s."
+" "
 
 #. module: stock_account
 #. odoo-python
@@ -155,7 +160,7 @@ msgstr "القيمة المضافة "
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.action_revalue_layers
 msgid "Adjust Valuation"
-msgstr ""
+msgstr "تعديل تقييم المخزون "
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -290,7 +295,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Correction of %s (modification of past move)"
-msgstr ""
+msgstr "تصحيح %s (تعديل حركة سابقة) "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__standard_price
@@ -527,7 +532,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_account/models/stock_lot.py:0
 msgid "Lot value manually modified (from %(old)s to %(new)s)"
-msgstr ""
+msgstr "تم تعديل قيمة المجموعة يدوياً (من %(old)s إلى %(new)s) "
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_lot
@@ -544,7 +549,7 @@ msgstr "رقم المجموعة/الرقم التسلسلي "
 #. odoo-python
 #: code:addons/stock_account/models/stock_lot.py:0
 msgid "Lot/Serial number Revaluation"
-msgstr ""
+msgstr "إعاجة تقييم رقم المجموعة/الرقم التسلسلي "
 
 #. module: stock_account
 #. odoo-python
@@ -596,7 +601,7 @@ msgstr "القيمة الجديدة حسب الكمية "
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "No Reason Given"
-msgstr ""
+msgstr "لا يوجد سبب "
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
@@ -702,7 +707,7 @@ msgstr "الرقم المرجعي "
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__lot_id
 msgid "Related lot/serial number"
-msgstr ""
+msgstr "رقم المجموعة/الرقم التسلسلي ذو الصلة "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_id
@@ -739,7 +744,7 @@ msgstr "إعادة تقييم "
 #. odoo-python
 #: code:addons/stock_account/models/stock_lot.py:0
 msgid "Select an existing lot/serial number to be reevaluated"
-msgstr ""
+msgstr "قم بتحديد رقم مجموعة/رقم تسلسلي موجود لإعادة تقييمه "
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__standard
@@ -921,6 +926,19 @@ msgstr ""
 
 #. module: stock_account
 #. odoo-python
+#: code:addons/stock_account/models/stock_move_line.py:0
+msgid ""
+"The stock valuation of a move is based on the type of the source and "
+"destination locations. As the move is already processed, you cannot modify "
+"the locations in a way that changes the valuation logic defined during the "
+"initial processing."
+msgstr ""
+"يعتمد تقييم المخزون الخاص بالحركة على نوع الموقعين المصدر والوجهة. وبما أن "
+"الحركة قد تمت معالجتها بالفعل، لا يمكنك تعديل المواقع بطريقة تغير منطق "
+"التقييم الذي تم تحديده أثناء المعالجة الأولية. "
+
+#. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid ""
 "The value of a stock valuation layer cannot be negative. Landed cost could "
@@ -1028,7 +1046,7 @@ msgstr "تحديث الكميات في أمر البيع/أمر الشراء  "
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid "Updating lot valuation for product %s."
-msgstr ""
+msgstr "جاري تحديث تقييم المجموعة للمنتج %s. "
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_in_account_id
@@ -1075,7 +1093,7 @@ msgstr "عملة التقييم "
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__adjusted_layer_ids
 msgid "Valuation Layers"
-msgstr ""
+msgstr "طبقات تعديل المخزون "
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
@@ -1092,7 +1110,7 @@ msgstr "القييم بتاريخ "
 #: model:ir.model.fields,field_description:stock_account.field_product_product__lot_valuated
 #: model:ir.model.fields,field_description:stock_account.field_product_template__lot_valuated
 msgid "Valuation by Lot/Serial number"
-msgstr ""
+msgstr "التقييم حسب رقم المجموعة / الرقم التسلسلي "
 
 #. module: stock_account
 #. odoo-python
@@ -1107,7 +1125,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__adjusted_layer_ids
 msgid "Valuations layers being adjusted"
-msgstr ""
+msgstr "يتم تعديل طبقات التقييم "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__value
@@ -1184,7 +1202,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot adjust valuation without a product"
-msgstr ""
+msgstr "لا يمكنك تعديل التقييم دون وجود منتج "
 
 #. module: stock_account
 #. odoo-python
@@ -1218,7 +1236,7 @@ msgstr "لا يمكنك إعادة تحديد قيمة منتج ذو مخزون 
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot revalue multiple products at once"
-msgstr ""
+msgstr "لا يمكنك إعادة تقييم عدو منتجات في آن واحد "
 
 #. module: stock_account
 #. odoo-python

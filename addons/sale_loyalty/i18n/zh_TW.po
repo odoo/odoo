@@ -23,8 +23,8 @@ msgstr ""
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
-msgid " - On product with the following taxes: %(taxes)s"
-msgstr " - 對於具有以下稅項產品： %(taxes)s"
+msgid " - On products with the following taxes: %(taxes)s"
+msgstr " - 適用於有以下稅項的產品：%(taxes)s"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
@@ -34,7 +34,7 @@ msgstr "<span class=\"fa fa-clipboard\"/> 複製"
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
 msgid "<strong>Loyalty Card</strong>"
-msgstr ""
+msgstr "<strong>會員卡</strong>"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -124,15 +124,15 @@ msgid "Discard"
 msgstr "捨棄"
 
 #. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid "Discount %(desc)s%(tax_str)s"
+msgstr "折扣（%(desc)s %(tax_str)s）"
+
+#. module: sale_loyalty
 #: model:ir.ui.menu,name:sale_loyalty.menu_discount_loyalty_type_config
 msgid "Discount & Loyalty"
 msgstr "折扣及會員計劃"
-
-#. module: sale_loyalty
-#. odoo-python
-#: code:addons/sale_loyalty/models/sale_order.py:0
-msgid "Discount: %(desc)s%(tax_str)s"
-msgstr "折扣： %(desc)s %(tax_str)s"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__display_name
@@ -175,7 +175,7 @@ msgstr "禮品卡及電子錢包"
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_history
 msgid "History for Loyalty cards and Ewallets"
-msgstr ""
+msgstr "會員卡及電子錢包歷程記錄"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,help:sale_loyalty.field_sale_order_line__points_cost
@@ -284,7 +284,7 @@ msgstr "找不到此忠誠度計劃的卡，此訂單不會獲得任何積分。
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "No product is compatible with this promotion."
-msgstr ""
+msgstr "沒有產品適用於此促銷活動。"
 
 #. module: sale_loyalty
 #. odoo-python

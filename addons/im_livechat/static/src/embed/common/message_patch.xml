@@ -7,7 +7,7 @@
             </div>
             <t t-else="">$0</t>
         </xpath>
-        <xpath expr="//*[@t-ref='body']" position="inside">
+        <xpath expr="//*[hasclass('o-mail-Message-textContent')]" position="after">
             <ul class="p-0 m-0" t-if="props.message.chatbotStep?.answers and !props.message.chatbotStep.selectedAnswer">
                 <li
                     t-foreach="props.message.chatbotStep?.answers" t-as="answer" t-key="answer.id"

@@ -10,6 +10,9 @@ export class RestaurantTable extends Base {
         this.table_number = vals.table_number || 0;
         this.uiState = {
             initialPosition: {},
+            orderCount: 0,
+            changeCount: 0,
+            skipCount: 0,
         };
     }
     isParent(t) {

@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { createMock, HootError, makePublicListeners } from "../hoot_utils";
+import { createMock, HootError, makePublicListeners, MIME_TYPE } from "../hoot_utils";
 import { getSyncValue, setSyncValue } from "./sync_values";
 
 /**
@@ -13,7 +13,7 @@ import { getSyncValue, setSyncValue } from "./sync_values";
 
 const {
     Blob,
-    ClipboardItem,
+    ClipboardItem = class NonSecureClipboardItem {},
     EventTarget,
     navigator,
     Object: { assign: $assign },
@@ -192,7 +192,7 @@ export class MockClipboard {
     }
 
     async readText() {
-        return String(getClipboardValue(this._value, "text/plain") ?? "");
+        return String(getClipboardValue(this._value, MIME_TYPE.text) ?? "");
     }
 
     async write(value) {
@@ -200,7 +200,7 @@ export class MockClipboard {
     }
 
     async writeText(value) {
-        this._value = String(getClipboardValue(value, "text/plain") ?? "");
+        this._value = String(getClipboardValue(value, MIME_TYPE.text) ?? "");
     }
 }
 

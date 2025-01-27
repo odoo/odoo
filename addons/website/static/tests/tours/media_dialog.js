@@ -71,6 +71,26 @@ registerWebsitePreviewTour("website_media_dialog_external_library", {
             }
         },
     },
+    {
+        content: "Click on the first illustration image",
+        trigger: ".o_select_media_dialog .o_we_attachment_highlight",
+        run: "click",
+    },
+    {
+        content: "Select the image",
+        trigger: ":iframe .s_text_image img",
+        run: "click",
+    },
+    {
+        content: "Try to crop the image",
+        trigger: "#oe_snippets .o_we_customize_panel .o_we_user_value_widget[data-crop='true']",
+        run: "click",
+    },
+    {
+        content: "Observe the crop is denied for illustration image",
+        trigger: ".o_notification_manager .o_notification",
+    },
+    ...clickOnSave(),
 ]);
 
 registerWebsitePreviewTour('website_media_dialog_icons', {
@@ -146,5 +166,40 @@ registerWebsitePreviewTour("website_media_dialog_image_shape", {
     {
         content: "Checks that the icon doesn't have a shape",
         trigger: ":iframe .s_text_image .fa-heart:not([data-shape])",
+    },
+]);
+
+registerWebsitePreviewTour("website_media_dialog_insert_media", {
+    url: "/",
+    edition: true,
+}, () => [
+    ...insertSnippet({
+        id: "s_text_block",
+        name: "Text",
+        groupName: "Text",
+    }),
+    {
+        content: "Click on the first paragraph",
+        trigger: ":iframe .s_text_block p",
+        run: "click",
+    },
+    {
+        content: "Click on the toolbar's 'insert media' button",
+        trigger: ".oe-toolbar #media-insert",
+        run: "click",
+    },
+    {
+        content: "Click on the 'Icons' tab",
+        trigger: ".o_select_media_dialog a.nav-link:contains('Icons')",
+        run: "click",
+    },
+    {
+        content: "Click on the first icon",
+        trigger: ".o_select_media_dialog .font-icons-icon",
+        run: "click",
+    },
+    {
+        content: "Verify that the icon was inserted",
+        trigger: ":iframe .s_text_block p > span.fa",
     },
 ]);

@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 import base64
 import io
+import re
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import RedirectWarning
 from odoo.tools import pdf
 from odoo.tests import tagged
 from odoo.tools import file_open
+from odoo.tools.pdf import PdfFileReader, PdfFileWriter
 
-from PyPDF2 import PdfFileReader, PdfFileWriter
 
 @tagged('post_install', '-at_install')
 class TestIrActionsReport(AccountTestInvoicingCommon):
@@ -56,17 +57,20 @@ class TestIrActionsReport(AccountTestInvoicingCommon):
             for page_num in range(pdf_reader.getNumPages()):
                 pdf_writer.addPage(pdf_reader.getPage(page_num))
             # Encrypt the PDF
-            pdf_writer.encrypt('', use_128bit=True)
+            pdf_writer.encrypt('')
             # Get the binary
             output_buffer = io.BytesIO()
             pdf_writer.write(output_buffer)
             encrypted_file = output_buffer.getvalue()
 
-        # we need to change the encryption value from 4 to 5 to simulate an encryption not used by PyPDF2
-        encrypt_start = encrypted_file.find(b'/Encrypt')
-        encrypt_end = encrypted_file.find(b'>>', encrypt_start)
-        encrypt_version = encrypted_file[encrypt_start : encrypt_end]
-        encrypted_file = encrypted_file.replace(encrypt_version, encrypt_version.replace(b'4', b'5'))
+        # corrupt encryption: point the /Encrypt xref as a non-encrypt
+        # (but valid otherwise pypdf skips it)
+        encrypted_file, n = re.subn(
+            b'/Encrypt (?P<index>\\d+) (?P<gen>\\d+) R',
+            b'/Encrypt 1 \\g<gen> R',
+            encrypted_file,
+        )
+        self.assertEqual(n, 1, "should have updated the /Encrypt entry")
 
         in_invoice_1 = self.env['account.move'].create({
             'move_type': 'in_invoice',
@@ -75,7 +79,7 @@ class TestIrActionsReport(AccountTestInvoicingCommon):
         })
 
         in_invoice_1.message_main_attachment_id = self.env['ir.attachment'].create({
-            'datas': base64.b64encode(encrypted_file),
+            'raw': encrypted_file,
             'name': attach_name,
             'mimetype': 'application/pdf',
             'res_model': 'account.move',
@@ -87,7 +91,7 @@ class TestIrActionsReport(AccountTestInvoicingCommon):
         in_invoice_2 = in_invoice_1.copy()
 
         in_invoice_2.message_main_attachment_id = self.env['ir.attachment'].create({
-            'datas': base64.b64encode(self.file),
+            'raw': self.file,
             'name': attach_name,
             'mimetype': 'application/pdf',
             'res_model': 'account.move',

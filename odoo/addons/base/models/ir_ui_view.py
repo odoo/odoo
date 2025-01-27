@@ -360,7 +360,7 @@ actual arch.
             try:
                 # verify the view is valid xml and that the inheritance resolves
                 if view.inherit_id:
-                    view_arch = etree.fromstring(view.arch)
+                    view_arch = etree.fromstring(view.arch or '<data/>')
                     view._valid_inheritance(view_arch)
                 combined_arch = view._get_combined_arch()
                 if view.type == 'qweb':
@@ -896,7 +896,7 @@ actual arch.
         queue = collections.deque(sorted(hierarchy[self], key=lambda v: v.mode))
         while queue:
             view = queue.popleft()
-            arch = etree.fromstring(view.arch)
+            arch = etree.fromstring(view.arch or '<data/>')
             if view.env.context.get('inherit_branding'):
                 view.inherit_branding(arch)
             self._add_validation_flag(combined_arch, view, arch)
@@ -1480,7 +1480,11 @@ actual arch.
     # Node validator
     #------------------------------------------------------
     def _validate_tag_form(self, node, name_manager, node_info):
-        pass
+        self._validate_tag_kanban(node, name_manager, node_info)
+
+    def _validate_tag_kanban(self, node, name_manager, node_info):
+        if node.xpath("//t[@t-name='kanban-box']"):
+            _logger.warning("'kanban-box' is deprecated, define a 'card' template instead")
 
     def _validate_tag_list(self, node, name_manager, node_info):
         # reuse form view validation

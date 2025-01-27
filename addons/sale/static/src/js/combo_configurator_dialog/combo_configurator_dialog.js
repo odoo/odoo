@@ -60,8 +60,7 @@ export class ComboConfiguratorDialog extends Component {
         // Use up-to-date selected PTAVs and custom values to populate the product configurator.
         comboItem = this.getSelectedOrProvidedComboItem(comboId, comboItem);
         let product = comboItem.product;
-        if (product.hasNoVariantPtals) {
-            // TODO(loti): replace content instead of stacking dialogs?
+        if (comboItem.is_configurable) {
             this.dialog.add(ProductConfiguratorDialog, {
                 productTemplateId: product.product_tmpl_id,
                 ptavIds: product.selectedPtavIds,
@@ -71,7 +70,7 @@ export class ComboConfiguratorDialog extends Component {
                 pricelistId: this.props.pricelist_id,
                 currencyId: this.props.currency_id,
                 soDate: this.props.date,
-                edit: true, // TODO(loti): this "disables" optional products. Rename variable for clarity?
+                edit: true, // Hide the optional products, if any.
                 options: { canChangeVariant: false, showQuantityAndPrice: false },
                 save: async configuredProduct => {
                     const selectedComboItem = comboItem.deepCopy();
@@ -94,6 +93,7 @@ export class ComboConfiguratorDialog extends Component {
      * @param {Number} quantity The new quantity of this combo product.
      */
     async setQuantity(quantity) {
+        if (quantity <= 0) quantity = 1;
         this.state.quantity = quantity;
         this.state.basePrice = await rpc(this.getPriceUrl, {
             product_tmpl_id: this.props.product_tmpl_id,
@@ -165,7 +165,7 @@ export class ComboConfiguratorDialog extends Component {
      */
     _initSelectedComboItems() {
         for (const combo of this.props.combos) {
-            const comboItem = combo.selectedComboItem ?? combo.preselectedComboItem;
+            const comboItem = combo.selectedComboItem;
             if (comboItem) {
                 this.state.selectedComboItems.set(combo.id, comboItem.deepCopy());
             }

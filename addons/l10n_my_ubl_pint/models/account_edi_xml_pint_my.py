@@ -12,11 +12,6 @@ class AccountEdiXmlUBLPINTMY(models.AbstractModel):
     * PINT MY Official documentation: https://docs.peppol.eu/poac/my/pint-my
     """
 
-    def _get_customization_ids(self):
-        vals = super()._get_customization_ids()
-        vals['pint_my'] = 'urn:peppol:pint:billing-1@my-1'
-        return vals
-
     def _export_invoice_filename(self, invoice):
         # EXTENDS account_edi_ubl_cii
         return f"{invoice.name.replace('/', '_')}_pint_my.xml"

@@ -8,7 +8,7 @@ class Lead(models.Model):
     _inherit = 'crm.lead'
 
     event_lead_rule_id = fields.Many2one('event.lead.rule', string="Registration Rule", help="Rule that created this lead")
-    event_id = fields.Many2one('event.event', string="Source Event", help="Event triggering the rule that created this lead")
+    event_id = fields.Many2one('event.event', string="Source Event", help="Event triggering the rule that created this lead", index='btree_not_null')
     registration_ids = fields.Many2many(
         'event.registration', string="Source Registrations",
         groups='event.group_event_registration_desk',

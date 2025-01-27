@@ -331,9 +331,9 @@ class StockMove(models.Model):
                 move.display_import_lot = False
                 move.display_assign_serial = False
 
-    @api.onchange('product_uom_qty')
+    @api.onchange('product_uom_qty', 'product_uom')
     def _onchange_product_uom_qty(self):
-        if self.raw_material_production_id and self.has_tracking == 'none':
+        if self.product_uom and self.raw_material_production_id and self.has_tracking == 'none':
             mo = self.raw_material_production_id
             new_qty = float_round((mo.qty_producing - mo.qty_produced) * self.unit_factor, precision_rounding=self.product_uom.rounding)
             self.quantity = new_qty
@@ -399,6 +399,8 @@ class StockMove(models.Model):
                     values['location_dest_id'] = mo.production_location_id.id
                     if not values.get('location_id'):
                         values['location_id'] = mo.location_src_id.id
+                    if mo.state in ['progress', 'to_close'] and mo.qty_producing > 0:
+                        values['picked'] = True
                     continue
                 # produced products + byproducts
                 values['location_id'] = mo.production_location_id.id
@@ -625,6 +627,12 @@ class StockMove(models.Model):
         if float_is_zero(self.product_uom_qty, precision_rounding=self.product_uom.rounding):
             return True
         return False
+
+    def _prepare_move_line_vals(self, quantity=None, reserved_quant=None):
+        vals = super()._prepare_move_line_vals(quantity, reserved_quant)
+        if self.production_id.product_tracking == 'lot' and self.product_id == self.production_id.product_id:
+            vals['lot_id'] = self.production_id.lot_producing_id.id
+        return vals
 
     def _key_assign_picking(self):
         keys = super(StockMove, self)._key_assign_picking()

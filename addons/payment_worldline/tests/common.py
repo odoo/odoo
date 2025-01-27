@@ -35,9 +35,7 @@ class WorldlineCommon(AccountTestInvoicingCommon, PaymentCommon):
                         'token': 'whateverToken'
                     },
                 },
-                'hostedCheckoutSpecificOutput': {
-                    'hostedCheckoutId': '123456789',
-                },
+                'id': '1234567890_0',
                 'status': 'CAPTURED',
             },
         }

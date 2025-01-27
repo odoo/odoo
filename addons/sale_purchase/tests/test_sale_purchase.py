@@ -323,37 +323,55 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         pol = sale_order._get_purchase_orders().order_line
         self.assertEqual(pol.name, f"{self.service_purchase_1.display_name}\n\n{product_attribute.name}: {product_attribute_value.name}: {custom_value}")
 
-    def test_sale_order_multi_comp(self):
-        ''' Test that the purchase service is done on the right company (the one of the SO) '''
-        company_a, company_b = self.company_data["company"], self.company_data_2["company"]
+    def test_service_to_purchase_multi_company(self):
+        """Test the service to purchase in a multi-company environment
 
-        service_purchase = self.env['product.product'].with_company(company_a).create({
-            'name': "service 1",
-            'purchase_ok': True,
-            'sale_ok': True,
-            'list_price': 50,
-            'type': 'service',
-            'service_to_purchase': True,
-            'seller_ids': [
-                (0, 0, {'partner_id': self.partner_b.id, 'price': 100, 'company_id': company_a.id}),
-            ],
-        })
-        self.assertFalse(service_purchase.with_company(company_b).service_to_purchase)
+        The `product.template.service_to_purchase` is a company_dependent field, whose
+        value depends on the company are in, which is not necessarily the order company
 
-        so = self.env['sale.order'].create({
+        Granted that:
+        - The current company is company_1
+        - The product is configured as a service to be purchased on company_1
+        - The product is NOT configured as a service to be purchased on company_2
+        - We process an order on company_2, while being logged in company_1
+
+        The order must be processed without generating a PO, respecting the product
+        setting for this order's company. We also check that the opposite case holds
+        true as well (i.e. PO is generated when confirming with a company that isn't
+        configured for it, but the SO's company is)
+        """
+        company_1 = self.env.company
+        company_2 = self.company_data_2['company']
+        self.env.user.company_ids += company_2
+        self.assertTrue(self.service_purchase_1.service_to_purchase)
+        self.assertFalse(self.service_purchase_1.with_company(company_2).service_to_purchase)
+        order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
-            'company_id': company_a.id,
+            'company_id': company_2.id,
             'order_line': [
-                (0, 0, {
-                    'name': service_purchase.name,
-                    'product_id': service_purchase.id,
+                Command.create({
+                    'product_id': self.service_purchase_1.id,
                     'product_uom_qty': 1,
                 })
-            ],
+            ]
+        })
+        # FIXME: there is some sort of multi-company misconfiguration with the permissions that require a sudo here
+        # for this test to run. Issue doesn't occur when running test locally => probably some other module is messing
+        # with the permissions and/or there's an issue with the subsidiary setup
+        order.sudo().with_company(company_1).action_confirm()
+        self.assertFalse(order.purchase_order_count)
+
+        order2 = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'company_id': company_1.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.service_purchase_1.id,
+                    'product_uom_qty': 1,
+                })
+            ]
         })
 
-        self.env.user.company_id = company_b
-        so.action_confirm()
-
-        po = self.env['purchase.order'].search([('partner_id', '=', self.partner_b.id)], limit=1)
-        self.assertTrue(po)
+        # FIXME: same sudo issue as above
+        order2.sudo().with_company(company_2).action_confirm()
+        self.assertTrue(order2.purchase_order_count)

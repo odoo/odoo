@@ -7,6 +7,7 @@ import {
     manuallyDispatchProgrammaticEvent,
     press,
     queryAllTexts,
+    scroll,
     waitFor,
 } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
@@ -24,6 +25,7 @@ import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { PowerboxPlugin } from "@html_editor/main/powerbox/powerbox_plugin";
 import { SearchPowerboxPlugin } from "@html_editor/main/powerbox/search_powerbox_plugin";
 import { withSequence } from "@html_editor/utils/resource";
+import { execCommand } from "./_helpers/userCommands";
 
 function commandNames() {
     return queryAllTexts(".o-we-command-name");
@@ -38,7 +40,8 @@ test("should open the Powerbox on type `/`", async () => {
     expect(".o-we-powerbox").toHaveCount(1);
 });
 
-test.tags("iframe")("in iframe: should open the Powerbox on type `/`", async () => {
+test.tags("iframe");
+test("in iframe: should open the Powerbox on type `/`", async () => {
     const { el, editor } = await setupEditor("<p>ab[]</p>", { props: { iframe: true } });
     expect("iframe").toHaveCount(1);
     expect(".o-we-powerbox").toHaveCount(0);
@@ -101,7 +104,8 @@ describe("search", () => {
         expect(".o-we-category").toHaveCount(0);
     });
 
-    test.tags("iframe")("should filter the Powerbox contents with term, in iframe", async () => {
+    test.tags("iframe");
+    test("should filter the Powerbox contents with term, in iframe", async () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>", { props: { iframe: true } });
         await insertText(editor, "/");
         await animationFrame();
@@ -113,19 +117,22 @@ describe("search", () => {
 
     test("press 'backspace' should adapt adapt the search in the Powerbox", async () => {
         class TestPlugin extends Plugin {
-            static name = "test";
+            static id = "test";
             resources = {
-                powerboxCategory: { id: "test", name: "Test" },
-                powerboxItems: [
+                user_commands: { id: "testCommand", run: () => {} },
+                powerbox_categories: { id: "test", name: "Test" },
+                powerbox_items: [
                     {
-                        name: "Test1",
+                        title: "Test1",
                         description: "Test1",
-                        category: "test",
+                        categoryId: "test",
+                        commandId: "testCommand",
                     },
                     {
-                        name: "Test12",
+                        title: "Test12",
                         description: "Test12",
-                        category: "test",
+                        categoryId: "test",
+                        commandId: "testCommand",
                     },
                 ],
             };
@@ -253,20 +260,23 @@ describe("search", () => {
     describe("search keywords", () => {
         test("should search commands by optional keywords", async () => {
             class TestPlugin extends Plugin {
-                static name = "test";
+                static id = "test";
                 resources = {
-                    powerboxCategory: { id: "test", name: "Test" },
-                    powerboxItems: [
+                    user_commands: { id: "testCommand", run: () => {} },
+                    powerbox_categories: { id: "test", name: "Test" },
+                    powerbox_items: [
                         {
-                            name: "Test1",
+                            title: "Test1",
                             description: "Test1",
-                            category: "test",
-                            searchKeywords: ["apple", "orange"],
+                            categoryId: "test",
+                            commandId: "testCommand",
+                            keywords: ["apple", "orange"],
                         },
                         {
-                            name: "Test2",
+                            title: "Test2",
                             description: "Test2 has apples and oranges in its description",
-                            category: "test",
+                            categoryId: "test",
+                            commandId: "testCommand",
                         },
                     ],
                 };
@@ -300,25 +310,29 @@ describe("search", () => {
 
         test("match order: full match on keyword should come before partial matches on names or descriptions", async () => {
             class TestPlugin extends Plugin {
-                static name = "test";
+                static id = "test";
                 resources = {
-                    powerboxCategory: { id: "test", name: "Test" },
-                    powerboxItems: [
+                    user_commands: { id: "testCommand", run: () => {} },
+                    powerbox_categories: { id: "test", name: "Test" },
+                    powerbox_items: [
                         {
-                            name: "Change direction", // "icon" fuzzy matches this
+                            title: "Change direction", // "icon" fuzzy matches this
                             description: "test",
-                            category: "test",
+                            categoryId: "test",
+                            commandId: "testCommand",
                         },
                         {
-                            name: "Some command",
+                            title: "Some command",
                             description: "add a big section", // "icon" fuzzy matches this
-                            category: "test",
+                            categoryId: "test",
+                            commandId: "testCommand",
                         },
                         {
-                            name: "Insert a pictogram",
+                            title: "Insert a pictogram",
                             description: "test",
-                            category: "test",
-                            searchKeywords: ["icon"],
+                            categoryId: "test",
+                            commandId: "testCommand",
+                            keywords: ["icon"],
                         },
                     ],
                 };
@@ -443,7 +457,8 @@ test.todo("should close the powerbox if keyup event is called on other block", a
     expect(".o-we-powerbox").toHaveCount(0);
 });
 
-test.tags("desktop")("should insert a 3x3 table on type `/table`", async () => {
+test.tags("desktop");
+test("should insert a 3x3 table on type `/table`", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>");
     expect(getContent(el)).toBe(`<p placeholder='Type "/" for commands' class="o-we-hint">[]</p>`);
 
@@ -460,7 +475,8 @@ test.tags("desktop")("should insert a 3x3 table on type `/table`", async () => {
     );
 });
 
-test.tags("mobile")("should insert a 3x3 table on type `/table` in mobile view", async () => {
+test.tags("mobile");
+test("should insert a 3x3 table on type `/table` in mobile view", async () => {
     const { el, editor } = await setupEditor("<p>[]<br></p>");
     await insertText(editor, "/table");
     await waitFor(".o-we-powerbox ");
@@ -496,18 +512,22 @@ test("should toggle list on empty paragraph", async () => {
 });
 
 class NoOpPlugin extends Plugin {
-    static name = "no_op";
+    static id = "noOp";
     resources = {
-        powerboxCategory: { id: "no_op", name: "No-op" },
-        powerboxItems: [
+        user_commands: [
             {
-                name: "No-op",
+                id: "noOp",
+                run: () => {},
+            },
+        ],
+        powerbox_categories: { id: "no_op", name: "No-op" },
+        powerbox_items: [
+            {
+                title: "No-op",
                 description: "No-op",
-                category: "no_op",
-                fontawesome: "fa-header",
-                action(dispatch) {
-                    dispatch("NO_OP");
-                },
+                categoryId: "no_op",
+                icon: "fa-header",
+                commandId: "noOp",
             },
         ],
     };
@@ -571,17 +591,17 @@ test("should discard /command insertion from history when command is executed", 
     expect(commandNames(el)).toEqual(["Heading 1"]);
     await press("Enter");
     expect(getContent(el)).toBe("<h1>abc[]</h1>");
-    editor.dispatch("HISTORY_UNDO");
+    execCommand(editor, "historyUndo");
     expect(getContent(el)).toBe("<p>abc[]</p>");
-    editor.dispatch("HISTORY_REDO");
+    execCommand(editor, "historyRedo");
     expect(getContent(el)).toBe("<h1>abc[]</h1>");
-    editor.dispatch("HISTORY_UNDO");
+    execCommand(editor, "historyUndo");
     expect(getContent(el)).toBe("<p>abc[]</p>");
-    editor.dispatch("HISTORY_UNDO");
+    execCommand(editor, "historyUndo");
     expect(getContent(el)).toBe("<p>ab[]</p>");
-    editor.dispatch("HISTORY_UNDO");
+    execCommand(editor, "historyUndo");
     expect(getContent(el)).toBe("<p>a[]</p>");
-    editor.dispatch("HISTORY_UNDO");
+    execCommand(editor, "historyUndo");
     expect(getContent(el)).toBe(
         `<p class="o-we-hint" placeholder='Type "/" for commands'>[]<br></p>`
     );
@@ -673,7 +693,8 @@ test("press 'arrowright' should close PowerBox", async () => {
     expect(".o-we-powerbox").toHaveCount(0);
 });
 
-test.tags("desktop")("select command with 'mouseenter'", async () => {
+test.tags("desktop");
+test("select command with 'mouseenter'", async () => {
     const { editor, el } = await setupEditor("<p>ab[]</p>");
 
     // Hoot don't trigger a mousemove event at the start of an hover, if we don't hover
@@ -691,6 +712,27 @@ test.tags("desktop")("select command with 'mouseenter'", async () => {
 
     await press("enter");
     expect(getContent(el)).toBe("<h3>ab[]</h3>");
+});
+
+test.tags("desktop");
+test("select command with 'mouseenter' after scroll -- doc in iframe", async () => {
+    const { editor } = await setupEditor("<p>ab[]</p>", { props: { iframe: true } });
+
+    // Hoot don't trigger a mousemove event at the start of an hover, if we don't hover
+    // another element before. So we need to do a first hover to set a previous element.
+    await hover("body"); // Hover on main document's body
+
+    await insertText(editor, "/");
+    await animationFrame();
+
+    await hover(".o-we-command-name:eq(1)");
+    await scroll(".o-we-powerbox", { y: 1000 }); // Scroll to bottom
+    await animationFrame();
+    await scroll(".o-we-powerbox", { y: 0 }); // Scroll back to top
+
+    await hover(".o-we-command-name:eq(3)");
+    await animationFrame();
+    expect(".active .o-we-command-name").toHaveText("4 columns");
 });
 
 test("click on a command", async () => {
@@ -724,12 +766,12 @@ test.todo("add plugins with the same powerboxCategory should crash", async () =>
     });
     class Plugin1 extends Plugin {
         resources = {
-            powerboxCategory: withSequence(10, { id: "test", name: "Test" }),
+            powerbox_categories: withSequence(10, { id: "test", name: "Test" }),
         };
     }
     class Plugin2 extends Plugin {
         resources = {
-            powerboxCategory: withSequence(10, { id: "test", name: "Test" }),
+            powerbox_categories: withSequence(10, { id: "test", name: "Test" }),
         };
     }
     await expect(

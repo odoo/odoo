@@ -21,8 +21,8 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         super.setup();
         this.titleField = "name";
         useEffect(
-            () => this.focusToName(this.props.list.editedRecord),
-            () => [this.props.list.editedRecord]
+            (editedRecord) => this.focusToName(editedRecord),
+            () => [this.editedRecord]
         )
     }
 

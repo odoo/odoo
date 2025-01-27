@@ -27,6 +27,9 @@ VALID_XML_2 = """<?xml version="1.0" encoding="UTF-8"?>
             </div>
         </t>
     </template>
+    <record id="base.view_company_form" model="ir.ui.view">
+        <field name="active" eval="True"/>
+    </record>
 </odoo>
 """
 
@@ -252,6 +255,8 @@ class TestClocFields(test_cloc.TestClocCustomization):
         # Import test module
         self.env['ir.module.module']._import_zipfile(stream)
 
+        # Import a second time to upgrade, test that it does not raise error
+        self.env['ir.module.module']._import_zipfile(stream)
 
         cl = cloc.Cloc()
         cl.count_customization(self.env)

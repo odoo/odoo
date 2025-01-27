@@ -4,14 +4,16 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Marta Wacławek, 2024
+# Paweł Wodyński <pw@myodoo.pl>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Paweł Wodyński <pw@myodoo.pl>, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,18 +39,18 @@ msgstr "<b>Kontakty</b>"
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p>Dear,</p>\n"
-"    <p>There are no more credits on your IAP Lead Generation account.<br>\n"
-"    You can charge your IAP Lead Generation account in the settings of the CRM app.<br></p>\n"
+"    <p>There are no more credits on your IAP Lead Generation account.<br/>\n"
+"    You can charge your IAP Lead Generation account in the settings of the CRM app.<br/></p>\n"
 "    <p>Best regards,</p>\n"
 "    <p>Odoo S.A.</p>\n"
 "</div>"
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"<p>Szanowny,</p>\n"
-"<p>Na koncie IAP Lead Generation nie ma już żadnych sygnałów.<br>\n"
-"Konto IAP Lead Generation można doładować w ustawieniach aplikacji CRM.<br></p>\n"
-"<p>Pozdrawiam,</p>\n"
-"<p>Odoo S.A.</p>\n"
+"    <p>Szanowny, </p>\n"
+"    <p>Kredyt został wyczerpany na Twoim koncie IAP Lead Generation.<br/>\n"
+"    Możesz doładować swoje konto IAP Lead Generation w ustawieniach modułu CRM.<br/></p>\n"
+"    <p>Z poważaniem,</p>\n"
+"    <p>Odoo S.A.</p>\n"
 "</div>"
 
 #. module: crm_iap_mine
@@ -59,7 +61,7 @@ msgstr "<span class=\"col-md-6\">Dodatkowe kontakty w firmie</span>"
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "<span class=\"o_stat_text\">Leads</span>"
-msgstr "<span class=\"o_stat_text\">Sygnały</span>"
+msgstr "<span class=\"o_stat_text\">Leady</span>"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
@@ -101,7 +103,7 @@ msgstr "Prezes zarządu"
 #. module: crm_iap_mine
 #: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_industry
 msgid "CRM IAP Lead Industry"
-msgstr "Branża sygnałów CRM IAP"
+msgstr "Branża leadów CRM IAP"
 
 #. module: crm_iap_mine
 #: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_mining_request
@@ -314,20 +316,19 @@ msgstr "Od"
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_lead_view_tree_opportunity
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.view_crm_lead_kanban
 msgid "Generate Leads"
-msgstr "Wygeneruj potencjalne sygnały"
+msgstr "Wygeneruj potencjalne leady"
 
 #. module: crm_iap_mine
 #. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 msgid "Generate new leads based on their country, industry, size, etc."
 msgstr ""
-"Wygeneruj potencjalne sygnały bazując na ich kraju, sektorze, rozmiarze, "
-"itp."
+"Wygeneruj potencjalne leady bazując na ich kraju, sektorze, rozmiarze, itp."
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_ids
 msgid "Generated Lead / Opportunity"
-msgstr "Wygenerowany sygnał/szansa"
+msgstr "Wygenerowany lead/okazja"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
@@ -363,7 +364,7 @@ msgstr "Kadry"
 #: model:mail.template,name:crm_iap_mine.lead_generation_no_credits
 #: model:mail.template,subject:crm_iap_mine.lead_generation_no_credits
 msgid "IAP Lead Generation Notification"
-msgstr "Powiadomienie o generowaniu potencjalnych sygnałów IAP"
+msgstr "Powiadomienie o generowaniu potencjalnych leadów IAP"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__id
@@ -425,17 +426,17 @@ msgstr "Data ostatniej aktualizacji"
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_contacts_credits
 msgid "Lead Contacts Credits"
-msgstr "Kredyty kontaktów sygnałów"
+msgstr "Kredyty kontaktów leadów"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_credits
 msgid "Lead Credits"
-msgstr "Kredyty sygnałów"
+msgstr "Kredyty leadów"
 
 #. module: crm_iap_mine
 #: model:ir.ui.menu,name:crm_iap_mine.crm_menu_lead_generation
 msgid "Lead Generation"
-msgstr "Generacja sygnałów"
+msgstr "Generacja leadów"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_lead__lead_mining_request_id
@@ -452,18 +453,18 @@ msgstr "Żądania wydobycia informacji o potencjalnych klientach"
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_total_credits
 msgid "Lead Total Credits"
-msgstr "Całość kredytów potencjalnych sygnałów"
+msgstr "Całość kredytów potencjalnych leadów"
 
 #. module: crm_iap_mine
 #: model:ir.model,name:crm_iap_mine.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "Sygnał/Szansa"
+msgstr "Lead/Okazja"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__lead_type__lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
 msgid "Leads"
-msgstr "Sygnały"
+msgstr "Leady"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_12
@@ -534,13 +535,13 @@ msgstr "Liczba kontaktów"
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_count
 msgid "Number of Generated Leads"
-msgstr "Liczba wygenerowanych sygnałów"
+msgstr "Liczba wygenerowanych leadów"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_number
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_tree
 msgid "Number of Leads"
-msgstr "Liczba sygnałów"
+msgstr "Liczba leadów"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_14
@@ -557,7 +558,7 @@ msgstr "Szanse"
 #. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 msgid "Opportunity created by Odoo Lead Generation"
-msgstr "Szansa utworzona przez generowanie potencjalnych sygnałów Odoo "
+msgstr "Okazja utworzona przez generowanie potencjalnych leadów Odoo "
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__role_ids

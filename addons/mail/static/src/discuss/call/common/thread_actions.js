@@ -26,6 +26,25 @@ threadActionsRegistry
             component.rtc = useState(useService("discuss.rtc"));
         },
     })
+    .add("camera-call", {
+        condition(component) {
+            return (
+                component.thread?.allowCalls && !component.thread?.eq(component.rtc.state.channel)
+            );
+        },
+        icon: "fa fa-fw fa-video-camera",
+        iconLarge: "fa fa-fw fa-lg fa-video-camera",
+        name: _t("Start a Video Call"),
+        open(component) {
+            component.rtc.toggleCall(component.thread, { camera: true });
+        },
+        sequence: 5,
+        sequenceQuick: (component) => (component.env.inDiscussApp ? 25 : 35),
+        setup() {
+            const component = useComponent();
+            component.rtc = useState(useService("discuss.rtc"));
+        },
+    })
     .add("settings", {
         component: CallSettings,
         componentProps(action) {

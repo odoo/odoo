@@ -42,7 +42,7 @@ class IoTboxHomepage(Home):
         except subprocess.CalledProcessError as e:
             raise Exception(e.output)
         except Exception as e:
-            _logger.error('A error encountered : %s ' % e)
+            _logger.exception("Flashing create partition failed")
             return Response(str(e), status=500)
 
     @http.route('/hw_proxy/perform_flashing_download_raspios', type='http', auth='none')
@@ -56,7 +56,7 @@ class IoTboxHomepage(Home):
             raise Exception(e.output)
         except Exception as e:
             self.clean_partition()
-            _logger.error('A error encountered : %s ' % e)
+            _logger.exception("Flashing download raspios failed")
             return Response(str(e), status=500)
 
     @http.route('/hw_proxy/perform_flashing_copy_raspios', type='http', auth='none')
@@ -70,5 +70,5 @@ class IoTboxHomepage(Home):
             raise Exception(e.output)
         except Exception as e:
             self.clean_partition()
-            _logger.error('A error encountered : %s ' % e)
+            _logger.exception("Flashing copy raspios failed")
             return Response(str(e), status=500)

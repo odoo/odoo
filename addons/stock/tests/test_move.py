@@ -6859,3 +6859,63 @@ class StockMove(TransactionCase):
             })
 
             self.assertEqual(picking.move_type, move_type)
+
+    def test_autocomplete_sml_location_based_on_sm_lot_ids(self):
+        """
+        When the user sets the lots on the SM, we will create the related SML. But in
+        case of serial number, we can also guess the source location
+        """
+        subloc = self.stock_location.child_ids[0]
+
+        lots = self.env['stock.lot'].create([{
+            'name': name,
+            'product_id': self.product_serial.id,
+        } for name in ['sn01', 'sn02', 'sn03']])
+
+        pack = self.env['stock.quant.package'].create({
+            'name': 'Pack A',
+        })
+
+        self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_location, 1, lot_id=lots[0])
+        self.env['stock.quant']._update_available_quantity(self.product_serial, subloc, 1, lot_id=lots[1], package_id=pack)
+        # Third SN is at a wrong location -> we will fallback on SM loc
+        self.env['stock.quant']._update_available_quantity(self.product_serial, self.pack_location, 1, lot_id=lots[2])
+        sm = self.env['stock.move'].create({
+            'name': self.product_serial.name,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product_serial.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 3.0,
+        })
+        sm._action_confirm()
+
+        sm.lot_ids = [(6, 0, lots.ids)]
+
+        self.assertRecordValues(sm.move_line_ids, [
+            {'location_id': self.stock_location.id, 'lot_id': lots[0].id, 'package_id': False},
+            {'location_id': subloc.id, 'lot_id': lots[1].id, 'package_id': pack.id},
+            {'location_id': self.stock_location.id, 'lot_id': lots[2].id, 'package_id': False},
+        ])
+
+    def test_change_dest_loc_after_sm_creation(self):
+        form = Form(self.env['stock.picking'].with_context(restricted_picking_type_code="incoming"))
+        with form.move_ids_without_package.new() as move:
+            move.product_id = self.product
+            move.product_uom_qty = 1
+        form.location_dest_id = self.customer_location
+        self.assertEqual(form.move_ids_without_package.edit(0).location_dest_id, self.customer_location)
+
+        picking = form.save()
+        self.assertEqual(picking.move_ids_without_package.location_dest_id, self.customer_location)
+
+        form = Form(picking)
+        with form.move_ids_without_package.new() as move:
+            move.product_id = self.product_consu
+            move.product_uom_qty = 1
+        form.location_dest_id = self.stock_location
+        self.assertEqual(form.move_ids_without_package.edit(0).location_dest_id, self.stock_location)
+        self.assertEqual(form.move_ids_without_package.edit(1).location_dest_id, self.stock_location)
+
+        picking = form.save()
+        self.assertEqual(picking.move_ids_without_package.location_dest_id, self.stock_location)

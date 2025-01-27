@@ -7,6 +7,7 @@ import {
     formatHumanReadable,
     formatTechnical,
     generateHash,
+    levenshtein,
     lookup,
     match,
     title,
@@ -96,7 +97,34 @@ describe(parseUrl(import.meta.url), () => {
             `{
   a: true,
   b: 2,
-}`
+}`.trim()
+        );
+
+        expect(formatTechnical(["a", "b"])).toBe(
+            `[
+  "a",
+  "b",
+]`.trim()
+        );
+
+        class List extends Array {}
+
+        expect(formatTechnical(new List("a", "b"))).toBe(
+            `List [
+  "a",
+  "b",
+]`.trim()
+        );
+
+        function toArguments() {
+            return arguments;
+        }
+
+        expect(formatTechnical(toArguments("a", "b"))).toBe(
+            `Arguments [
+  "a",
+  "b",
+]`.trim()
         );
     });
 
@@ -123,6 +151,13 @@ describe(parseUrl(import.meta.url), () => {
 
         expect(isRegExpFilter("/abc")).toBe(false);
         expect(isRegExpFilter("abc/")).toBe(false);
+    });
+
+    test("levenshtein", () => {
+        expect(levenshtein("abc", "àbc ", { normalize: true })).toBe(0);
+        expect(levenshtein("abc", "àbc ")).toBe(2);
+        expect(levenshtein("abc", "def")).toBe(3);
+        expect(levenshtein("abc", "adc")).toBe(1);
     });
 
     test("lookup", () => {

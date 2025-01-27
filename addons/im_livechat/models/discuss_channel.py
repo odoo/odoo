@@ -70,7 +70,7 @@ class DiscussChannel(models.Model):
             } if channel.country_id else False
             if channel.channel_type == "livechat":
                 channel_info["operator"] = Store.one(
-                    channel.livechat_operator_id, fields=["user_livechat_username", "write_date"]
+                    channel.livechat_operator_id, fields=["avatar_128", "user_livechat_username"]
                 )
             if channel.channel_type == "livechat" and self.env.user._is_internal():
                 channel_info["livechatChannel"] = Store.one(
@@ -216,14 +216,41 @@ class DiscussChannel(models.Model):
         """
         This method is called just before _notify_thread() method which is calling the _to_store()
         method. We need a 'chatbot.message' record before it happens to correctly display the message.
-        It's created only if the mail channel is linked to a chatbot step.
+        It's created only if the mail channel is linked to a chatbot step. We also need to save the
+        user answer if the current step is a question selection.
         """
         if self.chatbot_current_step_id:
-            self.env['chatbot.message'].sudo().create({
-                'mail_message_id': message.id,
-                'discuss_channel_id': self.id,
-                'script_step_id': self.chatbot_current_step_id.id,
-            })
+            selected_answer = (
+                self.env["chatbot.script.answer"]
+                .browse(self.env.context.get("selected_answer_id"))
+                .exists()
+            )
+            if selected_answer in self.chatbot_current_step_id.answer_ids:
+                # sudo - chatbot.message: finding the question message to update the user answer is allowed.
+                question_msg = (
+                    self.env["chatbot.message"]
+                    .sudo()
+                    .search(
+                        [
+                            ("discuss_channel_id", "=", self.id),
+                            ("script_step_id", "=", self.chatbot_current_step_id.id),
+                        ],
+                        order="id DESC",
+                        limit=1,
+                    )
+                )
+                question_msg.user_script_answer_id = selected_answer
+                if store := self.env.context.get("message_post_store"):
+                    store.add(message, for_current_user=True).add(question_msg.mail_message_id)
+
+            self.env["chatbot.message"].sudo().create(
+                {
+                    "mail_message_id": message.id,
+                    "discuss_channel_id": self.id,
+                    "script_step_id": self.chatbot_current_step_id.id,
+                }
+            )
+
         return super()._message_post_after_hook(message, msg_vals)
 
     def _chatbot_restart(self, chatbot_script):

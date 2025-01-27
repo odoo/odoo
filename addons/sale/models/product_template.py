@@ -268,8 +268,8 @@ class ProductTemplate(models.Model):
         :param res.currency currency: The currency to use to compute the price.
         :param product.pricelist pricelist: The pricelist to use to compute the price.
         :param dict kwargs: Locally unused data passed to `_get_configurator_price`.
-        :rtype: float
-        :return: The specified product's display price.
+        :rtype: tuple(float, int or False)
+        :return: The specified product's display price (and the applied pricelist rule)
         """
         return self._get_configurator_price(
             product_or_template, quantity, date, currency, pricelist, **kwargs
@@ -301,10 +301,10 @@ class ProductTemplate(models.Model):
         :param res.currency currency: The currency to use to compute the price.
         :param product.pricelist pricelist: The pricelist to use to compute the price.
         :param dict kwargs: Locally unused data passed to `_get_product_price`.
-        :rtype: float
-        :return: The specified product's price.
+        :rtype: tuple(float, int or False)
+        :return: The specified product's price (and the applied pricelist rule)
         """
-        return pricelist._get_product_price(
+        return pricelist._get_product_price_rule(
             product_or_template, quantity=quantity, currency=currency, date=date, **kwargs
         )
 

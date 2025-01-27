@@ -18,10 +18,12 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
         if self.provider_id.so_reference_type == 'so_name':
             order_reference = order.name
-        else:
-            # self.provider_id.so_reference_type == 'partner'
+        elif self.provider_id.so_reference_type == 'partner':
             identification_number = order.partner_id.id
             order_reference = '%s/%s' % ('CUST', str(identification_number % 97).rjust(2, '0'))
+        else:
+            # self.provider_id.so_reference_type is empty
+            order_reference = False
 
         invoice_journal = self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.company.id)], limit=1)
         if invoice_journal:
@@ -71,7 +73,10 @@ class PaymentTransaction(models.Model):
         for authorized_tx in self.filtered(lambda tx: tx.state == 'authorized'):
             super(PaymentTransaction, authorized_tx)._post_process()
             confirmed_orders = authorized_tx._check_amount_and_confirm_order()
-            (self.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
+            if authorized_tx.operation == 'validation':
+                continue
+            if remaining_orders := (authorized_tx.sale_order_ids - confirmed_orders):
+                remaining_orders._send_payment_succeeded_for_order_mail()
 
         super(PaymentTransaction, self.filtered(
             lambda tx: tx.state not in ['pending', 'authorized', 'done'])
@@ -79,6 +84,8 @@ class PaymentTransaction(models.Model):
 
         for done_tx in self.filtered(lambda tx: tx.state == 'done'):
             confirmed_orders = done_tx._check_amount_and_confirm_order()
+            if done_tx.operation == 'validation':
+                continue
             (done_tx.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
 
             auto_invoice = str2bool(

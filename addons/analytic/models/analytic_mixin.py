@@ -20,6 +20,7 @@ class AnalyticMixin(models.AbstractModel):
     distribution_analytic_account_ids = fields.Many2many(
         comodel_name='account.analytic.account',
         compute='_compute_distribution_analytic_account_ids',
+        search='_search_distribution_analytic_account_ids',
     )
 
     def init(self):
@@ -53,6 +54,9 @@ class AnalyticMixin(models.AbstractModel):
             ids = list(unique(int(_id) for key in (rec.analytic_distribution or {}) for _id in key.split(',') if int(_id) in existing_accounts_ids))
             rec.distribution_analytic_account_ids = self.env['account.analytic.account'].browse(ids)
 
+    def _search_distribution_analytic_account_ids(self, operator, value):
+        return [('analytic_distribution', operator, value)]
+
     def _condition_to_sql(self, alias: str, fname: str, operator: str, value, query: Query) -> SQL:
         # Don't use this override when account_report_analytic_groupby is truly in the context
         # Indeed, when account_report_analytic_groupby is in the context it means that `analytic_distribution`
@@ -71,6 +75,10 @@ class AnalyticMixin(models.AbstractModel):
                 [('display_name', '=' if operator in ('=', '!=') else 'ilike', value)]
             ))
             operator = 'in' if operator in ('=', 'ilike') else 'not in'
+
+        if isinstance(value, int) and operator in ('=', '!='):
+            value = [value]
+            operator = 'in' if operator == '=' else 'not in'
 
         # keys can be comma-separated ids, we will split those into an array and then make an array comparison with the list of ids to check
         analytic_accounts_query = self._query_analytic_accounts()

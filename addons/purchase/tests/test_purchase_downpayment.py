@@ -1,4 +1,4 @@
-from odoo import fields
+from odoo import Command, fields
 
 from odoo.addons.purchase.tests.test_purchase_invoice import TestPurchaseToInvoiceCommon
 from odoo.tests import tagged
@@ -55,3 +55,34 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
         }])
         self.env.flush_all()
         self.assertFalse(self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)]))
+
+    def test_product_supplierinfo_downpayment(self):
+        """Check that the creation of a downpayment does not affect already existing lines"""
+        self.product_a.seller_ids = [Command.create({
+            'partner_id': self.partner_a.id,
+            'price': 750.0,
+            'min_qty': 10
+        })]
+
+        down_po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'product_qty': 10,
+            })]
+        })
+
+        product_line = down_po.order_line
+        self.assertEqual(product_line.price_unit, 750.0)
+        down_po.order_line.price_unit = 800
+        down_po.button_confirm()
+
+        self.init_invoice('in_invoice', amounts=[1600.00], post=True)
+
+        match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
+        action = match_lines.action_add_to_po()
+
+        wizard = self.env['bill.to.po.wizard'].with_context({**action['context'], 'active_ids': match_lines.ids}).create({})
+        wizard.action_add_downpayment()
+
+        self.assertEqual(product_line.price_unit, 800.0)

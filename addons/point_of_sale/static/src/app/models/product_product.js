@@ -90,26 +90,30 @@ export class ProductProduct extends Base {
     getApplicablePricelistRules(pricelistRules) {
         const applicableRules = {};
         for (const pricelistId in pricelistRules) {
-            if (pricelistRules[pricelistId].productItems[this.id]) {
-                applicableRules[pricelistId] = pricelistRules[pricelistId].productItems[this.id];
-                continue;
-            }
-            const productTmplId = this.raw.product_tmpl_id;
-            if (pricelistRules[pricelistId].productTmlpItems[productTmplId]) {
-                applicableRules[pricelistId] =
-                    pricelistRules[pricelistId].productTmlpItems[productTmplId];
-                continue;
-            }
-            for (const category of this.parentCategories) {
-                if (pricelistRules[pricelistId].categoryItems[category]) {
-                    applicableRules[pricelistId] =
-                        pricelistRules[pricelistId].categoryItems[category];
-                    break;
+            applicableRules[pricelistId] = [];
+            const rules = pricelistRules[pricelistId];
+            if (rules.productItems[this.id]) {
+                applicableRules[pricelistId].push(...rules.productItems[this.id]);
+                if (!rules.productItems[this.id][0].min_quantity) {
+                    continue;
                 }
             }
-            if (!applicableRules[pricelistId]) {
-                applicableRules[pricelistId] = pricelistRules[pricelistId].globalItems;
+            const productTmplId = this.raw.product_tmpl_id;
+            if (rules.productTmlpItems[productTmplId]) {
+                applicableRules[pricelistId].push(...rules.productTmlpItems[productTmplId]);
+                if (!rules.productTmlpItems[productTmplId][0].min_quantity) {
+                    continue;
+                }
             }
+            for (const category of this.parentCategories) {
+                if (rules.categoryItems[category]) {
+                    applicableRules[pricelistId].push(...rules.categoryItems[category]);
+                    if (!rules.categoryItems[category][0].min_quantity) {
+                        break;
+                    }
+                }
+            }
+            applicableRules[pricelistId].push(...rules.globalItems);
         }
         return applicableRules;
     }
@@ -124,7 +128,7 @@ export class ProductProduct extends Base {
     // product.pricelist.item records are loaded with a search_read
     // and were automatically sorted based on their _order by the
     // ORM. After that they are added in this order to the pricelists.
-    get_price(pricelist, quantity, price_extra = 0, recurring = false) {
+    get_price(pricelist, quantity, price_extra = 0, recurring = false, list_price = false) {
         // In case of nested pricelists, it is necessary that all pricelists are made available in
         // the POS. Display a basic alert to the user in the case where there is a pricelist item
         // but we can't load the base pricelist to get the price when calling this method again.
@@ -139,16 +143,15 @@ export class ProductProduct extends Base {
             );
         }
 
-        const rules = !pricelist ? [] : this.cachedPricelistRules[pricelist?.id] || [];
-        let price = this.lst_price + (price_extra || 0);
-        const rule = rules.find((rule) => !rule.min_quantity || quantity >= rule.min_quantity);
+        let price = (list_price || this.lst_price) + (price_extra || 0);
+        const rule = this.getPricelistRule(pricelist, quantity);
         if (!rule) {
             return price;
         }
 
         if (rule.base === "pricelist") {
             if (rule.base_pricelist_id) {
-                price = this.get_price(rule.base_pricelist_id, quantity, 0, true);
+                price = this.get_price(rule.base_pricelist_id, quantity, 0, true, list_price);
             }
         } else if (rule.base === "standard_price") {
             price = this.standard_price;
@@ -182,6 +185,10 @@ export class ProductProduct extends Base {
         return price;
     }
 
+    getPricelistRule(pricelist, quantity) {
+        const rules = !pricelist ? [] : this.cachedPricelistRules[pricelist?.id] || [];
+        return rules.find((rule) => !rule.min_quantity || quantity >= rule.min_quantity);
+    }
     getImageUrl() {
         return (
             (this.image_128 &&
@@ -199,7 +206,7 @@ export class ProductProduct extends Base {
     }
 
     get searchString() {
-        const fields = ["display_name", "description_sale", "description", "default_code"];
+        const fields = ["display_name", "description_sale", "description"];
         return fields
             .map((field) => this[field] || "")
             .filter(Boolean)
@@ -215,15 +222,36 @@ export class ProductProduct extends Base {
         if (!this._archived_combinations) {
             return false;
         }
+        const excludedPTAV = new Set();
+        let isCombinationArchived = false;
         for (const archivedCombination of this._archived_combinations) {
             const ptavCommon = archivedCombination.filter((ptav) =>
                 attributeValueIds.includes(ptav)
             );
             if (ptavCommon.length === attributeValueIds.length) {
-                return true;
+                // all attributes must be disabled from each other
+                archivedCombination.forEach((ptav) => excludedPTAV.add(ptav));
+            } else if (ptavCommon.length === attributeValueIds.length - 1) {
+                // In this case we only need to disable the remaining ptav
+                const disablePTAV = archivedCombination.find(
+                    (ptav) => !attributeValueIds.includes(ptav)
+                );
+                excludedPTAV.add(disablePTAV);
+            }
+            if (ptavCommon.length === attributeValueIds.length) {
+                isCombinationArchived = true;
             }
         }
-        return false;
+        this.attribute_line_ids.forEach((attribute_line) => {
+            attribute_line.product_template_value_ids.forEach((ptav) => {
+                ptav["excluded"] = excludedPTAV.has(ptav.id);
+            });
+        });
+        return isCombinationArchived;
+    }
+
+    get productDisplayName() {
+        return this.default_code ? `[${this.default_code}] ${this.name}` : this.name;
     }
 }
 registry.category("pos_available_models").add(ProductProduct.pythonModel, ProductProduct);

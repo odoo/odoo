@@ -94,6 +94,7 @@ This module contains all the common features of Sales Management and eCommerce.
         ],
         'web.assets_tests': [
             'sale/static/tests/tours/**/*',
+            'sale/static/src/js/tours/combo_configurator_tour_utils.js',
             'sale/static/src/js/tours/product_configurator_tour_utils.js',
             'sale/static/src/js/tours/tour_utils.js',
         ],

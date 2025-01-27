@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Thi Huong Nguyen, 2024
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -209,7 +209,7 @@ msgstr "%(count1)s/%(count2)s"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "%(name)s Dashboard"
-msgstr ""
+msgstr "Trang chủ %(name)s "
 
 #. module: project
 #. odoo-python
@@ -254,7 +254,7 @@ msgstr "%s (sao chép)"
 #. odoo-javascript
 #: code:addons/project/static/src/components/notebook_task_one2many_field/notebook_task_list_renderer.js:0
 msgid "%s closed tasks"
-msgstr ""
+msgstr "%s nhiệm vụ đã đóng"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
@@ -311,29 +311,29 @@ msgstr ""
 #: model:mail.template,body_html:project.rating_project_request_email_template
 msgid ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"></t>\n"
-"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"></t>\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>\n"
+"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            <t t-if=\"partner.name\">\n"
-"                Hello <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br><br>\n"
+"                Hello <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                Hello,<br><br>\n"
+"                Hello,<br/><br/>\n"
 "            </t>\n"
 "            Please take a moment to rate our services related to the <strong t-out=\"object.name or ''\">Planning and budget</strong> task\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                assigned to <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br>\n"
+"                assigned to <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                .<br>\n"
+"                .<br/>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"text-align: center;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin: 32px 0px 32px 0px; display: inline-table;\">\n"
 "                <tr><td style=\"font-size: 13px;text-align:center;\">\n"
-"                    <strong>Tell us how you feel about our services</strong><br>\n"
+"                    <strong>Tell us how you feel about our services</strong><br/>\n"
 "                    <span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(click on one of these smileys)</span>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
@@ -341,17 +341,17 @@ msgid ""
 "                        <tr>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/rate/{{ access_token }}/5\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
-"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\">\n"
+"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/rate/{{ access_token }}/3\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
-"                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\">\n"
+"                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/rate/{{ access_token }}/1\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
-"                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\">\n"
+"                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                        </tr>\n"
@@ -362,13 +362,13 @@ msgid ""
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            We appreciate your feedback. It helps us improve continuously.\n"
 "            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
-"                <br><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">This satisfaction survey has been sent because your task has been moved to the <b t-out=\"object.stage_id.name or ''\">In progress</b> stage</span>\n"
+"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">This satisfaction survey has been sent because your task has been moved to the <b t-out=\"object.stage_id.name or ''\">In progress</b> stage</span>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
-"                <br><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">This satisfaction survey is sent <b t-out=\"object.project_id.rating_status_period or ''\">weekly</b> as long as the task is in the <b t-out=\"object.stage_id.name or ''\">In progress</b> stage.</span>\n"
+"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">This satisfaction survey is sent <b t-out=\"object.project_id.rating_status_period or ''\">weekly</b> as long as the task is in the <b t-out=\"object.stage_id.name or ''\">In progress</b> stage.</span>\n"
 "            </t>\n"
 "        </td></tr>\n"
-"        <tr><td><br>Best regards,</td></tr>\n"
+"        <tr><td><br/>Best regards,</td></tr>\n"
 "        <tr><td>\n"
 "           <t t-out=\"object.project_id.company_id.name or ''\">YourCompany</t>\n"
 "        </td></tr>\n"
@@ -387,47 +387,47 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"></t>\n"
-"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"></t>\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>\n"
+"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            <t t-if=\"partner.name\">\n"
-"                Xin chào <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br><br>\n"
+"                Xin chào <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                Xin chào,<br><br>\n"
+"                Xin chào,<br/><br/>\n"
 "            </t>\n"
-"            Vui lòng dành chút thời gian để đánh giá dịch vụ <strong t-out=\"object.name or ''\">Lập kế hoạch và ngân sách</strong>\n"
+"            Vui lòng dành chút thời gian để đánh giá dịch vụ <strong t-out=\"object.name or ''\">Lập kế hoạch và ngân sách</strong>  \n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                đã được giao cho <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong> của chúng tôi.<br>\n"
+"                đã được giao cho <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong> của chúng tôi.<br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                .<br>\n"
+"                .<br/>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"text-align: center;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin: 32px 0px 32px 0px; display: inline-table;\">\n"
 "                <tr><td style=\"font-size: 13px;text-align:center;\">\n"
-"                    <strong>Vui lòng cho biết bạn cảm thấy thế nào về dịch vụ của chúng tôi</strong><br>\n"
-"                    <span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(nhấp vào một trong những biểu tượng mặt cười này)</span>\n"
+"                    <strong>Vui lòng cho biết cảm nghĩ của bạn về dịch vụ của chúng tôi</strong><br/>\n"
+"                    <span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(nhấp vào một trong những biểu tượng cảm xúc này)</span>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
 "                    <table style=\"width:100%;text-align:center;margin-top:2rem;\">\n"
 "                        <tr>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/rate/{{ access_token }}/5\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
-"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\">\n"
+"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/rate/{{ access_token }}/3\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
-"                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\">\n"
+"                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/rate/{{ access_token }}/1\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
-"                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\">\n"
+"                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                        </tr>\n"
@@ -438,13 +438,13 @@ msgstr ""
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            Chúng tôi rất trân trọng phản hồi từ bạn, vì nhờ đó chúng tôi có thể liên tục cải thiện dịch vụ của mình.\n"
 "            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
-"                <br><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">Bản khảo sát mức độ hài lòng này được gửi tới bạn vì nhiệm vụ của bạn đã được chuyển sang giai đoạn <b t-out=\"object.stage_id.name or ''\">Đang thực hiện</b></span>\n"
+"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">Bản khảo sát mức độ hài lòng này được gửi tới bạn vì nhiệm vụ của bạn đã được chuyển sang giai đoạn <b t-out=\"object.stage_id.name or ''\">Đang thực hiện</b></span>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
-"                <br><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">Bản khảo sát mức độ hài lòng này sẽ được <b t-out=\"object.project_id.rating_status_period or ''\">hàng tuần</b> nếu nhiệm vụ vẫn còn trong giai đoạn <b t-out=\"object.stage_id.name or ''\">Đang thực hiện</b>.</span>\n"
+"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">Bản khảo sát mức độ hài lòng này sẽ được gửi <b t-out=\"object.project_id.rating_status_period or ''\">hàng tuần</b> nếu nhiệm vụ vẫn còn trong giai đoạn <b t-out=\"object.stage_id.name or ''\">Đang thực hiện</b>.</span>\n"
 "            </t>\n"
 "        </td></tr>\n"
-"        <tr><td><br>Trân trọng,</td></tr>\n"
+"        <tr><td><br/>Trân trọng,</td></tr>\n"
 "        <tr><td>\n"
 "           <t t-out=\"object.project_id.company_id.name or ''\">YourCompany</t>\n"
 "        </td></tr>\n"
@@ -466,54 +466,54 @@ msgstr ""
 #: model:mail.template,body_html:project.project_done_email_template
 msgid ""
 "<div>\n"
-"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br>\n"
+"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
 "    It is my pleasure to let you know that we have successfully completed the project \"<strong t-out=\"object.name or ''\">Renovations</strong>\".\n"
-"    <t t-if=\"user.signature\">\n"
-"        <br>\n"
-"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "    </t>\n"
 "</div>\n"
-"<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
+"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
 "            "
 msgstr ""
 "<div>\n"
-"    Xin chào <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br>\n"
+"    Xin chào <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
 "    Tôi rất vui mừng được thông báo với bạn rằng chúng tôi đã hoàn thành dự án \"<strong t-out=\"object.name or ''\">Cải tiến</strong>\" thành công .\n"
-"    <t t-if=\"user.signature\">\n"
-"        <br>\n"
-"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "    </t>\n"
 "</div>\n"
-"<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">Bạn nhận được email này vì dự án của bạn đã được chuyển sang giai đoạn <b t-out=\"object.stage_id.name or ''\">Hoàn tất</b></span>\n"
+"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">Bạn nhận được email này vì dự án của bạn đã được chuyển sang giai đoạn <b t-out=\"object.stage_id.name or ''\">Hoàn tất</b></span>\n"
 "            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
 msgid ""
 "<div>\n"
-"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br><br>\n"
-"    Thank you for contacting us. We appreciate your interest in our products/services.<br>\n"
-"    Our team is currently reviewing your inquiry and will respond to your email as soon as possible.<br>\n"
-"    If you have any further questions or concerns in the meantime, please do not hesitate to let us know. We are here to help.<br><br>\n"
-"    Thank you for your patience.<br>\n"
+"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/><br/>\n"
+"    Thank you for contacting us. We appreciate your interest in our products/services.<br/>\n"
+"    Our team is currently reviewing your inquiry and will respond to your email as soon as possible.<br/>\n"
+"    If you have any further questions or concerns in the meantime, please do not hesitate to let us know. We are here to help.<br/><br/>\n"
+"    Thank you for your patience.<br/>\n"
 "    Best regards,\n"
-"    <t t-if=\"user.signature\">\n"
-"        <br>\n"
-"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "    </t>\n"
 "</div>\n"
 "        "
 msgstr ""
 "<div>\n"
-"    Xin chào <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br><br>\n"
-"    Cảm ơn bạn đã liên lạc và quan tâm đến sản phẩm/dịch vụ của chúng tôi.<br>\n"
-"    Chúng tôi hiện đang xem xét trường hợp này và sẽ trả lời email của bạn sớm nhất có thể.<br>\n"
-"    Nếu bạn có thêm bất kỳ câu hỏi hoặc thắc mắc nào trong thời gian này, xin vui lòng liên hệ lại. Chúng tôi luôn sẵn sàng trợ giúp bạn.<br><br>\n"
-"    Cảm ơn bạn đã kiên nhẫn chờ đợi.<br>\n"
+"    Xin chào <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/><br/>\n"
+"    Cảm ơn bạn đã liên lạc và quan tâm đến sản phẩm/dịch vụ của chúng tôi.<br/>\n"
+"    Chúng tôi hiện đang xem xét trường hợp này và sẽ trả lời email của bạn sớm nhất có thể.<br/>\n"
+"    Nếu bạn có thêm bất kỳ câu hỏi hoặc thắc mắc nào trong thời gian này, xin vui lòng liên hệ lại. Chúng tôi luôn sẵn sàng trợ giúp bạn.<br/><br/>\n"
+"    Cảm ơn bạn đã kiên nhẫn chờ đợi.<br/>\n"
 "    Trân trọng,\n"
-"    <t t-if=\"user.signature\">\n"
-"        <br>\n"
-"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "    </t>\n"
 "</div>\n"
 "        "
@@ -610,7 +610,7 @@ msgstr "<span class=\"fw-normal\"> Nhiệm vụ</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "<span class=\"o_stat_text\">Blocked Tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Nhiệm vụ đã chặn</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -873,6 +873,8 @@ msgid ""
 "Add project-specific property fields on tasks to customize your project "
 "management process."
 msgstr ""
+"Thêm những trường thuộc tính cụ thể theo dự án vào các nhiệm vụ để tùy chỉnh"
+" quy trình quản lý dự án của bạn."
 
 #. module: project
 #. odoo-javascript
@@ -1000,7 +1002,7 @@ msgstr "Phân tích tiến độ dự án và hiệu quả làm việc của nh�
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_wizard__share_link
 msgid "Anyone with this link can access the project in read mode."
-msgstr ""
+msgstr "Bất kỳ ai có liên kết này đều có thể truy cập dự án ở chế độ đọc."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__03_approved
@@ -1163,6 +1165,11 @@ msgid "Attachments"
 msgstr "Tệp đính kèm"
 
 #. module: project
+#: model:ir.model.fields,help:project.field_project_task__attachment_ids
+msgid "Attachments that don't come from a message"
+msgstr "Tệp đính kèm không gắn với tin nhắn."
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__user_id
 msgid "Author"
 msgstr "Tác giả"
@@ -1276,7 +1283,7 @@ msgstr "Đã chặn bởi"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Blocked Tasks"
-msgstr ""
+msgstr "Nhiệm vụ đã chặn"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_action_blocking_tasks
@@ -1369,7 +1376,7 @@ msgstr "Đóng danh sách nhiệm vụ phụ"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__closed_depend_on_count
 msgid "Closed Depending on Tasks"
-msgstr ""
+msgstr "Đã đóng tuỳ thuộc vào Nhiệm vụ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
@@ -1711,7 +1718,7 @@ msgstr "Email khách hàng"
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 msgid "Customer Feedback"
-msgstr "Phản hồi khách hàng"
+msgstr "Phản hồi của khách hàng"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__access_url
@@ -2383,7 +2390,7 @@ msgstr "Xin chào"
 #. odoo-javascript
 #: code:addons/project/static/src/components/notebook_task_one2many_field/notebook_task_list_renderer.js:0
 msgid "Hide closed tasks"
-msgstr ""
+msgstr "Ẩn nhiệm vụ đã đóng"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -3005,7 +3012,7 @@ msgstr "Hạn chót của tôi"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "My Favorites"
-msgstr "Mục yêu thích của tôi"
+msgstr "Danh sách yêu thích của tôi"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -3992,6 +3999,7 @@ msgstr "Đọc"
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Read: collaborators can view tasks but cannot edit them."
 msgstr ""
+"Đọc: cộng tác viên có thể xem nhiệm vụ nhưng không thể chỉnh sửa chúng."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_collaborator_wizard__access_mode
@@ -4000,6 +4008,9 @@ msgid ""
 "Edit with limited access: collaborators can view and edit tasks they follow in the Kanban view.\n"
 "Edit: collaborators can view and edit all tasks in the Kanban view. Additionally, they can choose which tasks they want to follow."
 msgstr ""
+"Đọc: cộng tác viên có thể xem nhiệm vụ nhưng không thể chỉnh sửa chúng.\n"
+"Chỉnh sửa với quyền truy cập hạn chế: cộng tác viên có thể xem và chỉnh sửa các nhiệm vụ mà họ theo dõi trong chế độ xem Kanban.\n"
+"Chỉnh sửa: cộng tác viên có thể xem và chỉnh sửa tất cả nhiệm vụ trong chế độ xem Kanban. Ngoài ra, họ có thể chọn nhiệm vụ mà họ muốn theo dõi."
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
@@ -4042,7 +4053,7 @@ msgstr "Nhiệm vụ định kỳ"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Recurring Tasks"
-msgstr "Công việc định kỳ"
+msgstr "Nhiệm vụ định kỳ"
 
 #. module: project
 #. odoo-javascript
@@ -4381,7 +4392,7 @@ msgstr "Hiển thị tất cả bản ghi có ngày xử lý tiếp theo trướ
 #. odoo-javascript
 #: code:addons/project/static/src/components/notebook_task_one2many_field/notebook_task_list_renderer.js:0
 msgid "Show closed tasks"
-msgstr ""
+msgstr "Hiện nhiệm vụ đã đóng"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -4524,7 +4535,7 @@ msgstr "Trạng thái"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_stage_state_selection/project_task_stage_with_state_selection.js:0
 msgid "State readonly"
-msgstr ""
+msgstr "Trạng thái chỉ đọc"
 
 #. module: project
 #. odoo-javascript
@@ -4541,7 +4552,7 @@ msgstr "Trạng thái"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "Status Update - %(date)s"
-msgstr ""
+msgstr "Cập nhật trạng thái - %(date)s"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_state
@@ -4739,6 +4750,8 @@ msgstr "Tiêu đề nhiệm vụ..."
 msgid ""
 "Task Transferred from Project %(source_project)s to %(destination_project)s"
 msgstr ""
+"Nhiệm vụ được chuyển từ Dự án %(source_project)s sang "
+"%(destination_project)s"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_waiting
@@ -5013,6 +5026,10 @@ msgid ""
 "on your website. This includes leads/opportunities, quotations/sales orders,"
 " purchase orders, invoices and bills, timesheets, and tickets."
 msgstr ""
+"Họ có thể chỉnh sửa các nhiệm vụ dự án được chia sẻ và xem các tài liệu cụ "
+"thể ở chế độ đọc trên trang web của bạn. Những tài liệu này bao gồm lead/cơ "
+"hội, báo giá/đơn bán hàng, đơn mua hàng, hóa đơn và hóa đơn thanh toán, bảng"
+" chấm công và phiếu hỗ trợ."
 
 #. module: project
 #. odoo-python
@@ -5164,7 +5181,7 @@ msgstr "Mẹo: Tạo nhiệm vụ từ email đến"
 #: model:digest.tip,name:project.digest_tip_project_3
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_3
 msgid "Tip: Project-Specific Fields"
-msgstr ""
+msgstr "Mẹo: Các trường cụ thể của dự án"
 
 #. module: project
 #: model:digest.tip,name:project.digest_tip_project_0
@@ -5177,7 +5194,7 @@ msgstr ""
 #: model:digest.tip,name:project.digest_tip_project_2
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_2
 msgid "Tip: Your Own Personal Kanban"
-msgstr ""
+msgstr "Mẹo: Kanban cá nhân của bạn"
 
 #. module: project
 #. odoo-python
@@ -5197,7 +5214,7 @@ msgstr "Cần tính phí"
 #. module: project
 #: model:project.project.stage,name:project.project_project_stage_0
 msgid "To Do"
-msgstr "Cần làm"
+msgstr "Việc cần làm"
 
 #. module: project
 #. odoo-javascript
@@ -5258,7 +5275,7 @@ msgstr "Tổng"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
 msgid "Total Costs"
-msgstr ""
+msgstr "Tổng phí"
 
 #. module: project
 #. odoo-javascript
@@ -5405,7 +5422,7 @@ msgstr "Sử dụng đánh giá cho dự án"
 #. module: project
 #: model:res.groups,name:project.group_project_recurring_tasks
 msgid "Use Recurring Tasks"
-msgstr "Sử dụng công việc định kỳ"
+msgstr "Sử dụng nhiệm vụ định kỳ"
 
 #. module: project
 #: model:res.groups,name:project.group_project_stages
@@ -5433,6 +5450,8 @@ msgstr "Sử dụng cái này cho dự án của tôi"
 msgid ""
 "Use personal stages to organize your tasks and create your own workflow."
 msgstr ""
+"Sử dụng các giai đoạn cá nhân để sắp xếp các nhiệm vụ và tạo quy trình làm "
+"việc của riêng bạn."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
@@ -5723,12 +5742,12 @@ msgstr "Bạn không thể điền vào các trường sau trong nhiệm vụ: %
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "You have been assigned to %s"
-msgstr "Bạn đã được phân công/gán cho %s"
+msgstr "Bạn đã được phân công cho %s"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_message_user_assigned
 msgid "You have been assigned to the"
-msgstr "Bạn đã được phân công/gán cho"
+msgstr "Bạn đã được phân công cho"
 
 #. module: project
 #. odoo-python

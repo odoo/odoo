@@ -7,8 +7,7 @@ from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.addons.stock_account.tests.test_account_move import TestAccountMoveStockCommon
 from odoo.tests import Form, tagged
 from odoo.tests.common import new_test_user
-from odoo import fields
-from odoo import Command
+from odoo import fields, Command
 
 
 class TestMrpAccount(TestMrpCommon):
@@ -483,6 +482,9 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
         decremented by 0.01.
         """
         # Setup
+        self.env.ref('base.group_user').implied_ids += (
+            self.env.ref('mrp.group_mrp_routings')
+        )
         self.workcenter.write({'costs_hour': 10})
         self.bom.write({
             'operation_ids': [
@@ -510,9 +512,13 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
 
         account_move = production.move_finished_ids.stock_valuation_layer_ids.account_move_id
         self.assertRecordValues(account_move.line_ids, [
-            {'credit': 9.99, 'debit': 0.00},  # Credit Line
+            {'credit': 10.0, 'debit': 0.00},  # Credit Line
             {'credit': 0.00, 'debit': 10.00},  # Debit Line
-            {'credit': 0.01, 'debit': 0.00},  # Labor Credit Line
+        ])
+        labour_move = workorder.time_ids.account_move_line_id.move_id
+        self.assertRecordValues(labour_move.line_ids, [
+            {'credit': 0.01, 'debit': 0.00},
+            {'credit': 0.00, 'debit': 0.01},
         ])
 
     def test_labor_cost_balancing_with_cost_share(self):
@@ -520,6 +526,9 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
         we have it at 0.01, and it is the cost_share that bring it back to 0.005 before rounding it back up to 0.01.
         """
         # Setup
+        self.env.ref('base.group_user').implied_ids += (
+            self.env.ref('mrp.group_mrp_routings')
+        )
         self.workcenter.write({'costs_hour': 20})
         self.bom.write({
             'operation_ids': [
@@ -546,10 +555,14 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
         production._post_inventory()
         production.button_mark_done()
 
-        account_move = production.move_finished_ids.filtered(lambda fm: fm.product_id == self.product_A)\
+        account_move = production.move_finished_ids.filtered(lambda fm: fm.product_id == self.product_A) \
             .stock_valuation_layer_ids.account_move_id
         self.assertRecordValues(account_move.line_ids, [
-            {'credit': 9.99, 'debit': 0.00},  # Credit Line
+            {'credit': 10.0, 'debit': 0.00},  # Credit Line
             {'credit': 0.00, 'debit': 10.00},  # Debit Line
-            {'credit': 0.01, 'debit': 0.00},  # Labor Credit Line
+        ])
+        labour_move = workorder.time_ids.account_move_line_id.move_id
+        self.assertRecordValues(labour_move.line_ids, [
+            {'credit': 0.01, 'debit': 0.00},
+            {'credit': 0.00, 'debit': 0.01},
         ])

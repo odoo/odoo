@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Tiffany Chang, 2024
+# Rasareeyar Lappiam, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2024-12-16 13:41+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -23,8 +24,8 @@ msgstr ""
 #. module: website_sale_collect
 #: model_terms:payment.provider,pending_msg:website_sale_collect.payment_provider_on_site
 msgid ""
-"<i>Your order has been saved.</i> Please come to the store to pay for your "
-"products."
+"<i>Your order has been confirmed.</i><br>Please come to the store to pay for"
+" your products."
 msgstr ""
 
 #. module: website_sale_collect
@@ -85,6 +86,12 @@ msgid "Only"
 msgstr "เท่านั้น"
 
 #. module: website_sale_collect
+#. odoo-python
+#: code:addons/website_sale_collect/models/sale_order.py:0
+msgid "Only %(new_qty)s available"
+msgstr ""
+
+#. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_stock_warehouse__opening_hours
 msgid "Opening Hours"
 msgstr "เวลาทำการ"
@@ -104,12 +111,17 @@ msgstr ""
 #: model:ir.model.fields.selection,name:website_sale_collect.selection__payment_provider__custom_mode__on_site
 #: model:payment.method,name:website_sale_collect.payment_method_pay_on_site
 msgid "Pay on site"
-msgstr ""
+msgstr "ชำระเงิน ณ สถานที่"
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_payment_provider
 msgid "Payment Provider"
 msgstr "ผู้ให้บริการชำระเงิน"
+
+#. module: website_sale_collect
+#: model:ir.model,name:website_sale_collect.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "ธุรกรรมสำหรับการชำระเงิน"
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -118,7 +130,7 @@ msgstr "ผู้ให้บริการชำระเงิน"
 #: model:ir.model.fields.selection,name:website_sale_collect.selection__delivery_carrier__delivery_type__in_store
 #: model:product.template,name:website_sale_collect.product_pick_up_in_store_product_template
 msgid "Pick up in store"
-msgstr ""
+msgstr "รับสินค้าที่ร้านค้า"
 
 #. module: website_sale_collect
 #. odoo-python
@@ -173,19 +185,19 @@ msgstr "ขออภัย เราไม่สามารถจัดส่�
 #: model:ir.model.fields,field_description:website_sale_collect.field_delivery_carrier__warehouse_ids
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.delivery_carrier_form
 msgid "Stores"
-msgstr ""
+msgstr "ร้านค้า"
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/models/delivery_carrier.py:0
 msgid "The delivery method and a warehouse must share the same company"
-msgstr ""
+msgstr "วิธีจัดส่งและคลังสินค้าจะต้องอยู่ในบริษัทเดียวกัน"
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/models/delivery_carrier.py:0
 msgid "The delivery method must have at least one warehouse to be published."
-msgstr ""
+msgstr "วิธีการจัดส่งจะต้องมีคลังสินค้าอย่างน้อยหนึ่งแห่งจึงจะเผยแพร่ได้"
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_stock_warehouse
@@ -204,6 +216,7 @@ msgid ""
 "You can only pay on site when selecting the pick up in store delivery "
 "method."
 msgstr ""
+"คุณสามารถชำระเงินได้เฉพาะที่หน้างานเท่านั้นเมื่อเลือกวิธีการจัดส่งให้ไปรับสินค้าที่ร้าน"
 
 #. module: website_sale_collect
 #: model_terms:payment.provider,auth_msg:website_sale_collect.payment_provider_on_site

@@ -12,12 +12,13 @@ import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/
 import { CenteredIcon } from "@point_of_sale/app/generic_components/centered_icon/centered_icon";
 import { SearchBar } from "@point_of_sale/app/screens/ticket_screen/search_bar/search_bar";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
-import { Component, onMounted, useState } from "@odoo/owl";
+import { Component, onMounted, onWillStart, useState } from "@odoo/owl";
 import {
     BACKSPACE,
     Numpad,
     getButtons,
-    DEFAULT_LAST_ROW,
+    ZERO,
+    DECIMAL,
 } from "@point_of_sale/app/generic_components/numpad/numpad";
 import { PosOrderLineRefund } from "@point_of_sale/app/models/pos_order_line_refund";
 import { fuzzyLookup } from "@web/core/utils/search";
@@ -69,12 +70,22 @@ export class TicketScreen extends Component {
             nbrPage: 1,
             filter: null,
             search: this.pos.getDefaultSearchDetails(),
-            selectedOrder: this.pos.get_order() || null,
+            selectedOrderUuid: this.pos.get_order()?.uuid || null,
             selectedOrderlineIds: {},
         });
         Object.assign(this.state, this.props.stateOverride || {});
 
         onMounted(this.onMounted);
+        onWillStart(async () => {
+            if (this.pos._shouldLoadOrders()) {
+                try {
+                    this.pos.setLoadingOrderState(true);
+                    await this.pos.getServerOrders();
+                } finally {
+                    this.pos.setLoadingOrderState(false);
+                }
+            }
+        });
     }
     onMounted() {
         setTimeout(() => {
@@ -93,23 +104,29 @@ export class TicketScreen extends Component {
         }
     }
     getNumpadButtons() {
-        return getButtons(DEFAULT_LAST_ROW, [
-            { value: "quantity", text: _t("Qty"), class: "active border-primary" },
-            { value: "discount", text: _t("% Disc"), disabled: true },
-            { value: "price", text: _t("Price"), disabled: true },
-            BACKSPACE,
-        ]);
+        return getButtons(
+            [{ value: "-", text: "+/-", disabled: true }, ZERO, DECIMAL],
+            [
+                { value: "quantity", text: _t("Qty"), class: "active border-primary" },
+                { value: "discount", text: _t("% Disc"), disabled: true },
+                { value: "price", text: _t("Price"), disabled: true },
+                BACKSPACE,
+            ]
+        );
     }
     async onSearch(search) {
         this.state.search = search;
         this.state.page = 1;
+        if (this.state.filter == "SYNCED") {
+            await this._fetchSyncedOrders();
+        }
     }
     onClickOrder(clickedOrder) {
-        this.state.selectedOrder = clickedOrder;
+        this.setSelectedOrder(clickedOrder);
         this.numberBuffer.reset();
         if ((!clickedOrder || clickedOrder.uiState.locked) && !this.getSelectedOrderlineId()) {
             // Automatically select the first orderline of the selected order.
-            const firstLine = this.state.selectedOrder.get_orderlines()[0];
+            const firstLine = this.getSelectedOrder().get_orderlines()[0];
             if (firstLine) {
                 this.state.selectedOrderlineIds[clickedOrder.id] = firstLine.id;
             }
@@ -129,10 +146,10 @@ export class TicketScreen extends Component {
     }
     async onInvoiceOrder(orderId) {
         const order = this.pos.models["pos.order"].get(orderId);
-        this.state.selectedOrder = order;
+        this.setSelectedOrder(order);
     }
     onClickOrderline(orderline) {
-        if (this.state.selectedOrder.uiState.locked) {
+        if (this.getSelectedOrder()?.uiState.locked) {
             const order = this.getSelectedOrder();
             this.state.selectedOrderlineIds[order.id] = orderline.id;
             this.numberBuffer.reset();
@@ -239,7 +256,10 @@ export class TicketScreen extends Component {
                 discount: refundLine.discount,
                 tax_ids: refundLine.tax_ids.map((tax) => ["link", tax]),
                 refunded_orderline_id: refundLine,
-                pack_lot_ids: refundLine.pack_lot_ids.map((packLot) => ["link", packLot]),
+                pack_lot_ids: refundLine.pack_lot_ids.map((packLot) => [
+                    "create",
+                    { lot_name: packLot.lot_name },
+                ]),
                 price_type: "automatic",
             });
             lines.push(line);
@@ -292,23 +312,26 @@ export class TicketScreen extends Component {
             destinationOrder.set_partner(partner);
         }
     }
+    setSelectedOrder(order) {
+        this.state.selectedOrderUuid = order?.uuid || null;
+    }
     getSelectedOrder() {
-        return this.state.selectedOrder;
+        return this.pos.models["pos.order"].getBy("uuid", this.state.selectedOrderUuid) || null;
     }
     getSelectedOrderlineId() {
-        if (this.state.selectedOrder) {
-            return this.state.selectedOrderlineIds[this.state.selectedOrder.id];
+        if (this.getSelectedOrder()) {
+            return this.state.selectedOrderlineIds[this.getSelectedOrder().id];
         }
     }
     get isOrderSynced() {
         return (
-            this.state.selectedOrder?.uiState.locked &&
-            (this.state.selectedOrder.get_screen_data().name === "" ||
+            this.getSelectedOrder()?.uiState.locked &&
+            (this.getSelectedOrder().get_screen_data().name === "" ||
                 this.state.filter === "SYNCED")
         );
     }
     activeOrderFilter(o) {
-        const screen = ["PaymentScreen", "ProductScreen", "ReceiptScreen", "TipScreen"];
+        const screen = ["ReceiptScreen", "TipScreen"];
         const oScreen = o.get_screen_data();
         return (!o.finalized || screen.includes(oScreen.name)) && o.uiState.displayed;
     }
@@ -331,8 +354,8 @@ export class TicketScreen extends Component {
             orders = fuzzyLookup(this.state.search.searchTerm, orders, repr);
         }
 
-        const sortOrders = (orders, ascending = false) => {
-            return orders.sort((a, b) => {
+        const sortOrders = (orders, ascending = false) =>
+            orders.sort((a, b) => {
                 const dateA = parseUTCString(a.date_order, "yyyy-MM-dd HH:mm:ss");
                 const dateB = parseUTCString(b.date_order, "yyyy-MM-dd HH:mm:ss");
 
@@ -344,7 +367,6 @@ export class TicketScreen extends Component {
                     return ascending ? nameA - nameB : nameB - nameA;
                 }
             });
-        };
 
         if (this.state.filter === "SYNCED") {
             return sortOrders(orders).slice(
@@ -401,8 +423,9 @@ export class TicketScreen extends Component {
         const orders = this.pos.models["pos.order"].filter((o) => !o.finalized);
         return (
             (orders.length === 1 && orders[0].lines.length === 0) ||
-            (this.ui.isSmall && order != this.state.selectedOrder) ||
+            (this.ui.isSmall && order != this.getSelectedOrder()) ||
             this.isDefaultOrderEmpty(order) ||
+            order.finalized ||
             order.payment_ids.some(
                 (payment) => payment.is_electronic() && payment.get_payment_status() === "done"
             ) ||

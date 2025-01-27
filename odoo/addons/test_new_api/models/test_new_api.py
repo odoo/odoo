@@ -506,6 +506,10 @@ class ComputeInverse(models.Model):
     foo = fields.Char()
     bar = fields.Char(compute='_compute_bar', inverse='_inverse_bar', store=True)
     baz = fields.Char()
+    child_ids = fields.One2many(
+        'test_new_api.compute.inverse', 'parent_id',
+        compute='_compute_child_ids', inverse='_inverse_child_ids', store=True)
+    parent_id = fields.Many2one('test_new_api.compute.inverse')
 
     @api.depends('foo')
     def _compute_bar(self):
@@ -522,6 +526,20 @@ class ComputeInverse(models.Model):
     def _check_constraint(self):
         if self._context.get('log_constraint'):
             self._context.get('log', []).append('constraint')
+
+    @api.depends('foo')
+    def _compute_child_ids(self):
+        for rec in self:
+            if rec.foo == 'has one child':
+                rec.child_ids = [
+                    Command.clear(),
+                    Command.create({'foo': 'child'}),
+                ]
+
+    def _inverse_child_ids(self):
+        for rec in self:
+            if any(child.foo == 'child' for child in self.child_ids):
+                rec.foo = 'has one child'
 
 
 class ComputeSudo(models.Model):
@@ -1243,19 +1261,31 @@ class ModelMany2oneReference(models.Model):
 
     res_model = fields.Char('Resource Model')
     res_id = fields.Many2oneReference('Resource ID', model_field='res_model')
+    const = fields.Boolean(default=True)
 
 
 class InverseM2oRef(models.Model):
     _name = 'test_new_api.inverse_m2o_ref'
     _description = 'dummy m2oref inverse model'
 
-    model_ids = fields.One2many('test_new_api.model_many2one_reference', 'res_id', string="Models")
+    model_ids = fields.One2many(
+        'test_new_api.model_many2one_reference', 'res_id',
+        string="Models",
+    )
     model_ids_count = fields.Integer("Count", compute='_compute_model_ids_count')
+    model_computed_ids = fields.One2many(
+        'test_new_api.model_many2one_reference',
+        string="Models Computed",
+        compute='_compute_model_computed_ids',
+    )
 
     @api.depends('model_ids')
     def _compute_model_ids_count(self):
         for rec in self:
             rec.model_ids_count = len(rec.model_ids)
+
+    def _compute_model_computed_ids(self):
+        self.model_computed_ids = []
 
 
 class ModelChildM2o(models.Model):

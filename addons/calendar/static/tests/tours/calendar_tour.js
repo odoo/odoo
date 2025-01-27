@@ -109,10 +109,7 @@ registry.category("web_tour.tours").add("test_calendar_delete_tour", {
         {
             content: "Validate the deletion",
             trigger: 'button:contains("Delete")',
-            async run() {
-                this.anchor.click();
-                await new Promise((r) => setTimeout(r, 1000));
-            },
+            run: "click",
         },
     ],
 });

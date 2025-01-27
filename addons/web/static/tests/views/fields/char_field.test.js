@@ -175,7 +175,8 @@ test("char field with size attribute", async () => {
     });
 });
 
-test.tags("desktop")("char field in editable list view", async () => {
+test.tags("desktop");
+test("char field in editable list view", async () => {
     await mountView({
         type: "list",
         resModel: "res.partner",
@@ -494,7 +495,8 @@ test("char field trim (or not) characters", async () => {
     expect(".o_field_widget[name='foo2'] input:only").toHaveValue("  def  ");
 });
 
-test.tags("desktop")("input field: change value before pending onchange returns", async () => {
+test.tags("desktop");
+test("input field: change value before pending onchange returns", async () => {
     await mountView({
         type: "form",
         resModel: "res.partner",
@@ -580,21 +582,20 @@ test("input field: change value before pending onchange returns (2)", async () =
     });
 });
 
-test.tags("desktop")(
-    "input field: change value before pending onchange returns (with fieldDebounce)",
-    async () => {
-        // this test is exactly the same as the previous one, except that in
-        // this scenario the onchange return *before* we validate the change
-        // on the input field (before the "change" event is triggered).
-        Partner._onChanges.product_id = (obj) => {
-            obj.int_field = obj.product_id ? 7 : false;
-        };
-        let def;
+test.tags("desktop");
+test("input field: change value before pending onchange returns (with fieldDebounce)", async () => {
+    // this test is exactly the same as the previous one, except that in
+    // this scenario the onchange return *before* we validate the change
+    // on the input field (before the "change" event is triggered).
+    Partner._onChanges.product_id = (obj) => {
+        obj.int_field = obj.product_id ? 7 : false;
+    };
+    let def;
 
-        await mountView({
-            type: "form",
-            resModel: "res.partner",
-            arch: `
+    await mountView({
+        type: "form",
+        resModel: "res.partner",
+        arch: `
         <form>
             <field name="partner_ids">
                 <list editable="bottom">
@@ -604,33 +605,32 @@ test.tags("desktop")(
                 </list>
             </field>
         </form>`,
-        });
+    });
 
-        onRpc("onchange", () => def);
+    onRpc("onchange", () => def);
 
-        await contains(".o_field_x2many_list_row_add a").click();
-        expect(".o_field_widget[name='name'] input").toHaveValue("My little Name Value", {
-            message: "should contain the default value",
-        });
+    await contains(".o_field_x2many_list_row_add a").click();
+    expect(".o_field_widget[name='name'] input").toHaveValue("My little Name Value", {
+        message: "should contain the default value",
+    });
 
-        def = new Deferred();
-        await contains(".o-autocomplete--input").click();
-        await contains(".o-autocomplete--dropdown-item").click();
-        await fieldInput("name").edit("tralala", { confirm: false });
-        expect(".o_field_widget[name='name'] input").toHaveValue("tralala", {
-            message: "should contain tralala",
-        });
-        expect(".o_field_widget[name='int_field'] input").toHaveValue("");
-        def.resolve();
-        await animationFrame();
-        expect(".o_field_widget[name='name'] input").toHaveValue("tralala", {
-            message: "should contain the same value as before onchange",
-        });
-        expect(".o_field_widget[name='int_field'] input").toHaveValue("7", {
-            message: "should contain the value returned by the onchange",
-        });
-    }
-);
+    def = new Deferred();
+    await contains(".o-autocomplete--input").click();
+    await contains(".o-autocomplete--dropdown-item").click();
+    await fieldInput("name").edit("tralala", { confirm: false });
+    expect(".o_field_widget[name='name'] input").toHaveValue("tralala", {
+        message: "should contain tralala",
+    });
+    expect(".o_field_widget[name='int_field'] input").toHaveValue("");
+    def.resolve();
+    await animationFrame();
+    expect(".o_field_widget[name='name'] input").toHaveValue("tralala", {
+        message: "should contain the same value as before onchange",
+    });
+    expect(".o_field_widget[name='int_field'] input").toHaveValue("7", {
+        message: "should contain the value returned by the onchange",
+    });
+});
 
 test("onchange return value before editing input", async () => {
     Partner._onChanges.name = (obj) => {
@@ -642,7 +642,8 @@ test("onchange return value before editing input", async () => {
     await expect("[name='name'] input").toHaveValue("yop");
 });
 
-test.tags("desktop")("input field: change value before pending onchange renaming", async () => {
+test.tags("desktop");
+test("input field: change value before pending onchange renaming", async () => {
     Partner._onChanges.product_id = (obj) => {
         obj.name = "on change value";
     };
@@ -789,7 +790,8 @@ test("input field: empty password", async () => {
     });
 });
 
-test.tags("desktop")("input field: set and remove value, then wait for onchange", async () => {
+test.tags("desktop");
+test("input field: set and remove value, then wait for onchange", async () => {
     Partner._onChanges.product_id = (obj) => {
         obj.name = obj.product_id ? "onchange value" : false;
     };

@@ -100,7 +100,10 @@ export function setContent(el, content) {
         textNode.textContent = textNode.textContent.replace("[", "").replace("]", "");
     }
     // remove extra empty text nodes
-    el.innerHTML = div.innerHTML;
+    const innerHTML = div.innerHTML;
+    if (el.innerHTML !== innerHTML) {
+        el.innerHTML = innerHTML;
+    }
 
     const configSelection = getSelection(el, content);
     if (configSelection) {

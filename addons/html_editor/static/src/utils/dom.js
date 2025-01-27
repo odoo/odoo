@@ -3,6 +3,7 @@ import { isShrunkBlock, isVisible, paragraphRelatedElements } from "./dom_info";
 import { callbacksForCursorUpdate } from "./selection";
 import { isEmptyBlock, isPhrasingContent } from "../utils/dom_info";
 import { childNodes } from "./dom_traversal";
+import { childNodeIndex, DIRECTIONS } from "./position";
 
 /** @typedef {import("@html_editor/core/selection_plugin").Cursors} Cursors */
 
@@ -73,12 +74,15 @@ export function wrapInlinesInBlocks(element, cursors = { update: () => {} }) {
         node.remove();
     };
 
+    const children = childNodes(element);
+    const visibleNodes = new Set(children.filter(isVisible));
+
     let currentBlock;
     let shouldBreakLine = true;
-    for (const node of [...element.childNodes]) {
+    for (const node of children) {
         if (isBlock(node)) {
             shouldBreakLine = true;
-        } else if (!isVisible(node)) {
+        } else if (!visibleNodes.has(node)) {
             removeNode(node, cursors);
         } else if (node.nodeName === "BR") {
             if (shouldBreakLine) {
@@ -221,6 +225,12 @@ export function toggleClass(node, className) {
  * Remove all occurrences of a character from a text node and optionally update
  * cursors for later selection restore.
  *
+ * In web_editor the text nodes used to be replaced by new ones with the updated
+ * text rather than just changing the text content of the node because it
+ * creates different mutations and it used to break the tour system. In
+ * html_editor the text content is changed instead because other plugins rely on
+ * the reference to the text node.
+ *
  * @param {Node} node text node
  * @param {String} char character to remove (string of length 1)
  * @param {Cursors} [cursors]
@@ -236,4 +246,44 @@ export function cleanTextNode(node, char, cursors) {
             cursor.offset -= removedIndexes.filter((index) => cursor.offset > index).length;
         }
     });
+}
+
+/**
+ * Splits a text node in two parts.
+ * If the split occurs at the beginning or the end, the text node stays
+ * untouched and unsplit. If a split actually occurs, the original text node
+ * still exists and become the right part of the split.
+ *
+ * Note: if split after or before whitespace, that whitespace may become
+ * invisible, it is up to the caller to replace it by nbsp if needed.
+ *
+ * @param {Text} textNode
+ * @param {number} offset
+ * @param {boolean} originalNodeSide Whether the original node ends up on left
+ * or right after the split
+ * @returns {number} The parentOffset if the cursor was between the two text
+ *          node parts after the split.
+ */
+export function splitTextNode(textNode, offset, originalNodeSide = DIRECTIONS.RIGHT) {
+    const document = textNode.ownerDocument;
+    let parentOffset = childNodeIndex(textNode);
+
+    if (offset > 0) {
+        parentOffset++;
+
+        if (offset < textNode.length) {
+            const left = textNode.nodeValue.substring(0, offset);
+            const right = textNode.nodeValue.substring(offset);
+            if (originalNodeSide === DIRECTIONS.LEFT) {
+                const newTextNode = document.createTextNode(right);
+                textNode.after(newTextNode);
+                textNode.nodeValue = left;
+            } else {
+                const newTextNode = document.createTextNode(left);
+                textNode.before(newTextNode);
+                textNode.nodeValue = right;
+            }
+        }
+    }
+    return parentOffset;
 }

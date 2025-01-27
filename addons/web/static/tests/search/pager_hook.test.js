@@ -44,7 +44,8 @@ test("pager is correctly displayed", async () => {
     expect(".o_pager button.o_pager_previous").toHaveCount(1);
 });
 
-test.tags("desktop")("pager is correctly displayed on desktop", async () => {
+test.tags("desktop");
+test("pager is correctly displayed on desktop", async () => {
     class TestComponent extends Component {
         static components = { ControlPanel };
         static template = xml`<ControlPanel />`;
@@ -103,7 +104,8 @@ test("pager is correctly updated", async () => {
     expect(component.state).toEqual({ offset: 20, limit: 10 });
 });
 
-test.tags("desktop")("pager is correctly updated on desktop", async () => {
+test.tags("desktop");
+test("pager is correctly updated on desktop", async () => {
     class TestComponent extends Component {
         static components = { ControlPanel };
         static template = xml`<ControlPanel />`;

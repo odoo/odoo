@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='lines']/list/field[@name='full_product_name']" position="after">
-                <field name="l10n_in_hsn_code"/>
+                <field name="l10n_in_hsn_code" optional="hide"/>
             </xpath>
         </field>
     </record>

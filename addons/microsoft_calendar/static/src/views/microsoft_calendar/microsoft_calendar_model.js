@@ -10,8 +10,9 @@ patch(AttendeeCalendarModel, {
 });
 
 patch(AttendeeCalendarModel.prototype, {
-    setup() {
+    setup(params) {
         super.setup(...arguments);
+        this.isAlive = params.isAlive;
         this.microsoftPendingSync = false;
         this.state = useState({
             microsoftIsSync: true,
@@ -38,7 +39,10 @@ patch(AttendeeCalendarModel.prototype, {
             console.error("Could not synchronize microsoft events now.", error);
             this.microsoftPendingSync = false;
         }
-        return super.updateData(...arguments);
+        if (this.isAlive()) {
+            return super.updateData(...arguments);
+        }
+        return new Promise(() => {});
     },
 
     async syncMicrosoftCalendar(silent = false) {

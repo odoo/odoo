@@ -2,10 +2,11 @@ import { describe, expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { deleteBackward, deleteForward, insertText, undo } from "./_helpers/user_actions";
 import { getContent } from "./_helpers/selection";
+import { execCommand } from "./_helpers/userCommands";
 
 function insertFontAwesome(faClass) {
     return (editor) => {
-        editor.dispatch("INSERT_FONT_AWESOME", { faClass });
+        execCommand(editor, "insertFontAwesome", { faClass });
     };
 }
 
@@ -520,8 +521,8 @@ describe("FontAwesome insertion", () => {
         await testEditor({
             contentBefore: "<p>[]<br></p>",
             stepFunction: async (editor) => {
-                editor.dispatch("INSERT_FONT_AWESOME", { faClass: "fa fa-star" });
-                editor.dispatch("INSERT_FONT_AWESOME", { faClass: "fa fa-glass" });
+                execCommand(editor, "insertFontAwesome", { faClass: "fa fa-star" });
+                execCommand(editor, "insertFontAwesome", { faClass: "fa fa-glass" });
             },
             contentAfterEdit:
                 '<p><i class="fa fa-star" contenteditable="false">\u200b</i><i class="fa fa-glass" contenteditable="false">\u200b</i>[]</p>',

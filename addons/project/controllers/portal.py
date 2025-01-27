@@ -23,7 +23,7 @@ class ProjectCustomerPortal(CustomerPortal):
             values['project_count'] = request.env['project.project'].search_count([]) \
                 if request.env['project.project'].has_access('read') else 0
         if 'task_count' in counters:
-            values['task_count'] = request.env['project.task'].sudo().search_count([('project_id', '!=', False), ('message_partner_ids', 'in', request.env.user.partner_id.ids), ('project_privacy_visibility', '=', 'portal')]) \
+            values['task_count'] = request.env['project.task'].search_count([('project_id', '!=', False)])\
                 if request.env['project.task'].has_access('read') else 0
         return values
 
@@ -35,7 +35,7 @@ class ProjectCustomerPortal(CustomerPortal):
         domain = [('project_id', '=', project.id)]
         # pager
         url = "/my/projects/%s" % project.id
-        values = self._prepare_tasks_values(page, date_begin, date_end, sortby, search, search_in, groupby, url, domain, su=bool(access_token), project=project)
+        values = self._prepare_tasks_values(page, date_begin, date_end, sortby, search, search_in, groupby, url, domain, su=bool(access_token) and request.env.user.has_group('base.group_public'), project=project)
         # adding the access_token to the pager's url args,
         # so we are not prompted for loging when switching pages
         # if access_token is None, the arg is not present in the URL
@@ -380,7 +380,7 @@ class ProjectCustomerPortal(CustomerPortal):
         elif search_in in self._task_get_searchbar_inputs(milestones_allowed, project):
             return [(search_in, 'ilike', search)]
         else:
-            return FALSE_DOMAIN
+            return ['|', ('name', 'ilike', search), ('id', 'ilike', search)]
 
     def _prepare_tasks_values(self, page, date_begin, date_end, sortby, search, search_in, groupby, url="/my/tasks", domain=None, su=False, project=False):
         values = self._prepare_portal_layout_values()
@@ -510,7 +510,7 @@ class ProjectCustomerPortal(CustomerPortal):
         return searchbar_filters
 
     @http.route(['/my/tasks', '/my/tasks/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_tasks(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, search=None, search_in='content', groupby=None, **kw):
+    def portal_my_tasks(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, search=None, search_in='name', groupby=None, **kw):
         searchbar_filters = self._get_my_tasks_searchbar_filters()
 
         if not filterby:

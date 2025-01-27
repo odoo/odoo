@@ -6,8 +6,9 @@ import { patch } from "@web/core/utils/patch";
 import { useState } from "@odoo/owl";
 
 patch(AttendeeCalendarModel.prototype, {
-    setup() {
+    setup(params) {
         super.setup(...arguments);
+        this.isAlive = params.isAlive;
         this.googlePendingSync = false;
         this.state = useState({
             googleIsSync: true,
@@ -34,7 +35,10 @@ patch(AttendeeCalendarModel.prototype, {
             console.error("Could not synchronize Google events now.", error);
             this.googlePendingSync = false;
         }
-        return super.updateData(...arguments);
+        if (this.isAlive()) {
+            return super.updateData(...arguments);
+        }
+        return new Promise(() => {});
     },
 
     async syncGoogleCalendar(silent = false) {

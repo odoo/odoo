@@ -16,11 +16,11 @@ import {
     Component,
     onMounted,
     onWillUnmount,
-    useChildSubEnv,
     useRef,
     useState,
     useExternalListener,
     useEffect,
+    useSubEnv,
 } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
@@ -59,7 +59,7 @@ export class Discuss extends Component {
         this.orm = useService("orm");
         this.effect = useService("effect");
         this.ui = useState(useService("ui"));
-        useChildSubEnv({
+        useSubEnv({
             inDiscussApp: true,
             messageHighlight: this.messageHighlight,
         });
@@ -94,6 +94,23 @@ export class Discuss extends Component {
         }
         onMounted(() => (this.store.discuss.isActive = true));
         onWillUnmount(() => (this.store.discuss.isActive = false));
+        useEffect(
+            (memberListAction) => {
+                if (!memberListAction) {
+                    return;
+                }
+                if (this.store.discuss.isMemberPanelOpenByDefault) {
+                    if (!this.threadActions.activeAction) {
+                        memberListAction.open();
+                    } else if (this.threadActions.activeAction === memberListAction) {
+                        return; // no-op (already open)
+                    } else {
+                        this.store.discuss.isMemberPanelOpenByDefault = false;
+                    }
+                }
+            },
+            () => [this.threadActions.actions.find((a) => a.id === "member-list")]
+        );
     }
 
     get thread() {

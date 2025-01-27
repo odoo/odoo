@@ -5,7 +5,6 @@ import {
     clearRegistry,
     contains,
     defineMenus,
-    defineParams,
     getService,
     makeMockEnv,
     mountWithCleanup,
@@ -41,14 +40,16 @@ beforeEach(async () => {
     };
 });
 
-test.tags("desktop")("can be rendered", async () => {
+test.tags("desktop");
+test("can be rendered", async () => {
     await mountWithCleanup(NavBar);
     expect(".o_navbar_apps_menu button.dropdown-toggle").toHaveCount(1, {
         message: "1 apps menu toggler present",
     });
 });
 
-test.tags("desktop")("dropdown menu can be toggled", async () => {
+test.tags("desktop");
+test("dropdown menu can be toggled", async () => {
     await mountWithCleanup(NavBar);
     await contains(".o_navbar_apps_menu button.dropdown-toggle").click();
     expect(".dropdown-menu").toHaveCount(1);
@@ -56,7 +57,8 @@ test.tags("desktop")("dropdown menu can be toggled", async () => {
     expect(".dropdown-menu").toHaveCount(0);
 });
 
-test.tags("desktop")("href attribute on apps menu items", async () => {
+test.tags("desktop");
+test("href attribute on apps menu items", async () => {
     defineMenus([
         {
             id: "root",
@@ -70,7 +72,8 @@ test.tags("desktop")("href attribute on apps menu items", async () => {
     expect(".o-dropdown--menu .dropdown-item").toHaveAttribute("href", "/odoo/action-339");
 });
 
-test.tags("desktop")("href attribute with path on apps menu items", async () => {
+test.tags("desktop");
+test("href attribute with path on apps menu items", async () => {
     defineMenus([
         {
             id: "root",
@@ -93,7 +96,8 @@ test.tags("desktop")("href attribute with path on apps menu items", async () => 
     expect(".o-dropdown--menu .dropdown-item").toHaveAttribute("href", "/odoo/my-path");
 });
 
-test.tags("desktop")("many sublevels in app menu items", async () => {
+test.tags("desktop");
+test("many sublevels in app menu items", async () => {
     defineMenus([
         {
             id: "root",
@@ -186,10 +190,11 @@ test.tags("desktop")("many sublevels in app menu items", async () => {
     ]);
 });
 
-test.tags("desktop")("data-menu-xmlid attribute on AppsMenu items", async () => {
+test.tags("desktop");
+test("data-menu-xmlid attribute on AppsMenu items", async () => {
     // Replace all default menus and setting new one
-    defineParams({
-        menus: [
+    defineMenus(
+        [
             {
                 id: 1,
                 children: [
@@ -222,7 +227,8 @@ test.tags("desktop")("data-menu-xmlid attribute on AppsMenu items", async () => 
             },
             { id: 2, children: [], name: "App1 without xmlid", appID: 2 },
         ],
-    });
+        { mode: "replace" }
+    );
     await mountWithCleanup(NavBar);
 
     // check apps
@@ -245,7 +251,8 @@ test.tags("desktop")("data-menu-xmlid attribute on AppsMenu items", async () => 
     expect(".o-dropdown--menu .dropdown-item[data-menu-xmlid=menu_5]").toHaveCount(1);
 });
 
-test.tags("desktop")("navbar can display current active app", async () => {
+test.tags("desktop");
+test("navbar can display current active app", async () => {
     await mountWithCleanup(NavBar);
     // Open apps menu
     await contains(".o_navbar_apps_menu button.dropdown-toggle").click();
@@ -339,7 +346,8 @@ test("navbar updates after adding a systray item", async () => {
     });
 });
 
-test.tags("desktop")("can adapt with 'more' menu sections behavior", async () => {
+test.tags("desktop");
+test("can adapt with 'more' menu sections behavior", async () => {
     class MyNavbar extends NavBar {
         async adapt() {
             await super.adapt();
@@ -417,131 +425,129 @@ test.tags("desktop")("can adapt with 'more' menu sections behavior", async () =>
     ]);
 });
 
-test.tags("desktop")(
-    "'more' menu sections adaptations do not trigger render in some cases",
-    async () => {
-        let adaptRunning = false;
-        let adaptCount = 0;
-        let adaptRenderCount = 0;
-        class MyNavbar extends NavBar {
-            async adapt() {
-                adaptRunning = true;
-                adaptCount++;
-                await super.adapt();
-                adaptRunning = false;
-            }
-            async render() {
-                if (adaptRunning) {
-                    adaptRenderCount++;
-                }
-                await super.render(...arguments);
-            }
+test.tags("desktop");
+test("'more' menu sections adaptations do not trigger render in some cases", async () => {
+    let adaptRunning = false;
+    let adaptCount = 0;
+    let adaptRenderCount = 0;
+    class MyNavbar extends NavBar {
+        async adapt() {
+            adaptRunning = true;
+            adaptCount++;
+            await super.adapt();
+            adaptRunning = false;
         }
-
-        defineMenus([
-            {
-                id: "root",
-                children: [
-                    {
-                        id: 1,
-                        children: [
-                            {
-                                id: 11,
-                                children: [],
-                                name: "Section with a very long name 1",
-                                appID: 1,
-                            },
-                            {
-                                id: 12,
-                                children: [],
-                                name: "Section with a very long name 2",
-                                appID: 1,
-                            },
-                            {
-                                id: 13,
-                                children: [],
-                                name: "Section with a very long name 3",
-                                appID: 1,
-                            },
-                        ],
-                        name: "App1",
-                        appID: 1,
-                    },
-                ],
-                name: "root",
-                appID: "root",
-            },
-        ]);
-
-        // Force the parent width, to make this test independent of screen size
-        await resize({ width: 600 });
-
-        // TODO: this test case doesn't make sense since it relies on small widths
-        // with `env.isSmall` still returning `false`.
-        const env = await makeMockEnv();
-        Object.defineProperty(env, "isSmall", { get: () => false });
-
-        const navbar = await mountWithCleanup(MyNavbar);
-
-        expect(navbar.currentAppSections).toHaveLength(0, { message: "0 app sub menus" });
-        expect(".o_navbar").toHaveRect({ width: 600 });
-        expect(adaptCount).toBe(1);
-        expect(adaptRenderCount).toBe(0, {
-            message: "during adapt, render not triggered as the navbar has no app sub menus",
-        });
-
-        await resize({ width: 0 });
-        await waitNavbarAdaptation();
-
-        expect(".o_navbar").toHaveRect({ width: 0 });
-        expect(adaptCount).toBe(2);
-        expect(adaptRenderCount).toBe(0, {
-            message: "during adapt, render not triggered as the navbar has no app sub menus",
-        });
-
-        // Set menu
-        getService("menu").setCurrentMenu(1);
-        await animationFrame();
-
-        expect(navbar.currentAppSections).toHaveLength(3, { message: "3 app sub menus" });
-        expect(navbar.currentAppSectionsExtra).toHaveLength(3, {
-            message: "all app sub menus are inside the more menu",
-        });
-        expect(adaptCount).toBe(3);
-        expect(adaptRenderCount).toBe(1, {
-            message:
-                "during adapt, render triggered as the navbar does not have enough space for app sub menus",
-        });
-
-        // Force small width
-        await resize({ width: 240 });
-        await waitNavbarAdaptation();
-
-        expect(navbar.currentAppSectionsExtra).toHaveLength(3, {
-            message: "all app sub menus are inside the more menu",
-        });
-        expect(adaptCount).toBe(4);
-        expect(adaptRenderCount).toBe(1, {
-            message:
-                "during adapt, render not triggered as the more menu dropdown is STILL the same",
-        });
-
-        // Reset to full width
-        await resize({ width: 1366 });
-        await waitNavbarAdaptation();
-
-        expect(navbar.currentAppSections).toHaveLength(3, { message: "still 3 app sub menus" });
-        expect(navbar.currentAppSectionsExtra).toHaveLength(0, {
-            message: "all app sub menus are NO MORE inside the more menu",
-        });
-        expect(adaptCount).toBe(5);
-        expect(adaptRenderCount).toBe(2, {
-            message: "during adapt, render triggered as the more menu dropdown is NO MORE the same",
-        });
+        async render() {
+            if (adaptRunning) {
+                adaptRenderCount++;
+            }
+            await super.render(...arguments);
+        }
     }
-);
 
-test.tags("desktop")("'more' menu sections properly updated on app change", async () => {
+    defineMenus([
+        {
+            id: "root",
+            children: [
+                {
+                    id: 1,
+                    children: [
+                        {
+                            id: 11,
+                            children: [],
+                            name: "Section with a very long name 1",
+                            appID: 1,
+                        },
+                        {
+                            id: 12,
+                            children: [],
+                            name: "Section with a very long name 2",
+                            appID: 1,
+                        },
+                        {
+                            id: 13,
+                            children: [],
+                            name: "Section with a very long name 3",
+                            appID: 1,
+                        },
+                    ],
+                    name: "App1",
+                    appID: 1,
+                },
+            ],
+            name: "root",
+            appID: "root",
+        },
+    ]);
+
+    // Force the parent width, to make this test independent of screen size
+    await resize({ width: 600 });
+
+    // TODO: this test case doesn't make sense since it relies on small widths
+    // with `env.isSmall` still returning `false`.
+    const env = await makeMockEnv();
+    Object.defineProperty(env, "isSmall", { get: () => false });
+
+    const navbar = await mountWithCleanup(MyNavbar);
+
+    expect(navbar.currentAppSections).toHaveLength(0, { message: "0 app sub menus" });
+    expect(".o_navbar").toHaveRect({ width: 600 });
+    expect(adaptCount).toBe(1);
+    expect(adaptRenderCount).toBe(0, {
+        message: "during adapt, render not triggered as the navbar has no app sub menus",
+    });
+
+    await resize({ width: 0 });
+    await waitNavbarAdaptation();
+
+    expect(".o_navbar").toHaveRect({ width: 0 });
+    expect(adaptCount).toBe(2);
+    expect(adaptRenderCount).toBe(0, {
+        message: "during adapt, render not triggered as the navbar has no app sub menus",
+    });
+
+    // Set menu
+    getService("menu").setCurrentMenu(1);
+    await animationFrame();
+
+    expect(navbar.currentAppSections).toHaveLength(3, { message: "3 app sub menus" });
+    expect(navbar.currentAppSectionsExtra).toHaveLength(3, {
+        message: "all app sub menus are inside the more menu",
+    });
+    expect(adaptCount).toBe(3);
+    expect(adaptRenderCount).toBe(1, {
+        message:
+            "during adapt, render triggered as the navbar does not have enough space for app sub menus",
+    });
+
+    // Force small width
+    await resize({ width: 240 });
+    await waitNavbarAdaptation();
+
+    expect(navbar.currentAppSectionsExtra).toHaveLength(3, {
+        message: "all app sub menus are inside the more menu",
+    });
+    expect(adaptCount).toBe(4);
+    expect(adaptRenderCount).toBe(1, {
+        message: "during adapt, render not triggered as the more menu dropdown is STILL the same",
+    });
+
+    // Reset to full width
+    await resize({ width: 1366 });
+    await waitNavbarAdaptation();
+
+    expect(navbar.currentAppSections).toHaveLength(3, { message: "still 3 app sub menus" });
+    expect(navbar.currentAppSectionsExtra).toHaveLength(0, {
+        message: "all app sub menus are NO MORE inside the more menu",
+    });
+    expect(adaptCount).toBe(5);
+    expect(adaptRenderCount).toBe(2, {
+        message: "during adapt, render triggered as the more menu dropdown is NO MORE the same",
+    });
+});
+
+test.tags("desktop");
+test("'more' menu sections properly updated on app change", async () => {
     defineMenus([
         {
             id: "root",

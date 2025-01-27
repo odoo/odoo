@@ -31,4 +31,7 @@ patch(PosData.prototype, {
             ? await super.loadIndexedDBData(...arguments)
             : {};
     },
+    async missingRecursive(recordMap) {
+        return recordMap;
+    },
 });

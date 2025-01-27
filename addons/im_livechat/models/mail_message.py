@@ -74,7 +74,7 @@ class MailMessage(models.Model):
                 {
                     "author": Store.one(
                         message.author_id,
-                        fields=["is_company", "user_livechat_username", "user", "write_date"],
+                        fields=["avatar_128", "is_company", "user_livechat_username", "user"],
                     ),
                 },
             )

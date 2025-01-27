@@ -476,6 +476,7 @@ class PurchaseOrder(models.Model):
             'default_template_id': template_id,
             'default_composition_mode': 'comment',
             'default_email_layout_xmlid': "mail.mail_notification_layout_with_responsible_signature",
+            'email_notification_allow_footer': True,
             'force_email': True,
             'mark_rfq_as_sent': True,
         })
@@ -635,7 +636,10 @@ class PurchaseOrder(models.Model):
             for i, line_val in enumerate(line_vals, start=1)
         ]
         downpayment_lines = self.env['purchase.order.line'].create(vals)
-        self.order_line += downpayment_lines
+        self.order_line = [
+            Command.link(line_id)
+            for line_id in downpayment_lines.ids
+        ]  # a simple concatenation would cause all order_line to recompute, we do not want it to happen
         return downpayment_lines
 
     def action_create_invoice(self):

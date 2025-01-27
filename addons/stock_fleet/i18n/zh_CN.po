@@ -3,16 +3,17 @@
 # 	* stock_fleet
 # 
 # Translators:
-# Wil Odoo, 2024
 # Chloe Wang, 2024
+# Wil Odoo, 2024
+# Raymond Yu <cl_yu@hotmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2024-10-25 07:49+0000\n"
 "PO-Revision-Date: 2024-09-29 00:00+0000\n"
-"Last-Translator: Chloe Wang, 2024\n"
+"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,7 +37,7 @@ msgstr "%(volume_capacity)s %(volume_uom)s"
 #. odoo-python
 #: code:addons/stock_fleet/models/fleet_vehicle_model.py:0
 msgid "%(weight_capacity)s %(weight_uom)s"
-msgstr ""
+msgstr "%(weight_capacity)s%(weight_uom)s"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_picking_batch_inherit
@@ -143,7 +144,7 @@ msgstr "作业类型"
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
 msgid "Own Fleet"
-msgstr ""
+msgstr "自有车队"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
@@ -158,12 +159,12 @@ msgstr "序列"
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.vpicktree
 msgid "Shipping Volume"
-msgstr ""
+msgstr "运输体积"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.vpicktree
 msgid "Shipping Weight"
-msgstr "发货重量"
+msgstr "运输重量"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
@@ -173,7 +174,7 @@ msgstr "统计"
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
 msgid "Third Party Carrier"
-msgstr "第三方货运商"
+msgstr "第三方承运商"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_form
@@ -193,12 +194,12 @@ msgstr "明天"
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.vpicktree
 msgid "Total Shipping Volume"
-msgstr ""
+msgstr "运输体积总量"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.vpicktree
 msgid "Total Shipping Weight"
-msgstr ""
+msgstr "运输重量总量"
 
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_stock_picking
@@ -213,15 +214,16 @@ msgstr "物流"
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
 msgid "Transport Management"
-msgstr ""
+msgstr "运输管理"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__vehicle_weight_capacity
 msgid "Vehcilce Payload Capacity"
-msgstr ""
+msgstr "车辆负载能力"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__vehicle_id
+#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
 msgid "Vehicle"
 msgstr "车辆"
 

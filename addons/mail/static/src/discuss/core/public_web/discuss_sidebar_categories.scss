@@ -35,7 +35,7 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .1;
         display: flex !important;
         .btn-group .btn {
             &:hover {
-                border-color: rgba($o-action, .25);
+                border-color: var(--mail-DiscussSidebarChannel-commandsHover, rgba($o-action, .15));
                 background-color: $o-view-background-color !important;
             }
             &:not(:hover) {
@@ -44,6 +44,10 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .1;
             }
         }
     }
+}
+
+.o-mail-DiscussSidebarCategory-chevronCompact {
+    left: map-get($spacers, 1);
 }
 
 .o-mail-DiscussSidebarCategory-toggler {
@@ -65,8 +69,8 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .1;
 
 .o-mail-DiscussSidebarChannel-threadIcon {
     font-size: xx-small;
-    width: 13px;
-    height: 13px;
+    width: 14px;
+    height: 14px;
 }
 
 .o-mail-DiscussSidebarChannel-indicatorCompact {
@@ -75,20 +79,15 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .1;
 }
 
 .o-mail-DiscussSidebarChannel-subChannel.o-nonCompact {
-    margin-left: map-get($spacers, 4) + map-get($spacers, 2) + map-get($spacers, 1);
+    margin-left: map-get($spacers, 4) + map-get($spacers, 2);
 }
 
 .o-mail-DiscussSidebar-unreadIndicator {
     font-size: 0.35rem;
-    left: 6px;
-    opacity: 35%;
-
-    &.o-compact {
-        left: 1px;
-    }
+    left: 1px;
 
     .o-mail-DiscussSidebarSubchannel &:not(.o-compact) {
-        left: 12px;
+        left: map-get($spacers, 2);
     }
 }
 
@@ -113,4 +112,6 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .1;
 
 .o-mail-DiscussSidebarSubchannel svg {
     color: var(--mail-DiscussSidebarSubchannel-svgColor, $gray-300);
+    left: 20px;
+    transform: scaleX(1) #{"/* rtl:scaleX(-1) */"};
 }

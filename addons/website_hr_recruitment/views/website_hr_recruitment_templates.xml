@@ -126,9 +126,15 @@
                     <meta itemprop="name" t-att-content="job.company_id.name"/>
                     <meta itemprop="logo" t-attf-content="/logo.png?company=#{job.company_id.id}"/>
                 </span>
-                <span itemprop="jobLocation" itemscope="itemscope" itemtype="https://schema.org/Place">
+                <span t-if="job.address_id.sudo().contact_address" itemprop="jobLocation" itemscope="itemscope" itemtype="https://schema.org/Place">
                     <meta itemprop="address" t-att-content="job.address_id.sudo().contact_address"/>
                 </span>
+                <t t-else="">
+                    <meta itemprop="jobLocationType" content="TELECOMMUTE"/>
+                    <span itemprop="applicantLocationRequirements" itemscope="itemscope" itemtype="https://schema.org/Country">
+                        <meta itemprop="name" t-att-content="job.company_id.country_id.name"/>
+                    </span>
+                </t>
                 <!-- Job name -->
                 <section class="pb32">
                     <div class="container">

@@ -52,21 +52,50 @@ const { loader } = odoo;
 
 /**
  * @param {string} name
- * @param {OdooModule} module
+ * @param {OdooModuleFactory} factory
  */
-export function makeTemplateFactory(name, module) {
+export function makeTemplateFactory(name, factory) {
     return () => {
-        if (!loader.modules.has(name)) {
-            const factory = module.fn;
-            module.fn = (...args) => {
-                const exports = factory(...args);
-
-                exports.registerTemplateProcessor(replaceAttributes);
-
-                return exports;
-            };
-            loader.startModule(name);
+        if (loader.modules.has(name)) {
+            return loader.modules.get(name);
         }
-        return loader.modules.get(name);
+
+        /** @type {Map<string, function>} */
+        const compiledTemplates = new Map();
+
+        const factoryFn = factory.fn;
+        factory.fn = (...args) => {
+            const exports = factoryFn(...args);
+            const { clearProcessedTemplates, getTemplate } = exports;
+
+            // Patch "getTemplates" to access local cache
+            exports.getTemplate = function mockedGetTemplate(name) {
+                if (!this) {
+                    // Used outside of Owl.
+                    return getTemplate(name);
+                }
+                const rawTemplate = getTemplate(name) || this.rawTemplates[name];
+                if (typeof rawTemplate === "function" && !(rawTemplate instanceof Element)) {
+                    return rawTemplate;
+                }
+                if (!compiledTemplates.has(rawTemplate)) {
+                    compiledTemplates.set(rawTemplate, this._compileTemplate(name, rawTemplate));
+                }
+                return compiledTemplates.get(rawTemplate);
+            };
+
+            // Patch "clearProcessedTemplates" to clear local template cache
+            exports.clearProcessedTemplates = function mockedClearProcessedTemplates() {
+                compiledTemplates.clear();
+                return clearProcessedTemplates(...arguments);
+            };
+
+            // Replace alt & src attributes by default on all templates
+            exports.registerTemplateProcessor(replaceAttributes);
+
+            return exports;
+        };
+
+        return loader.startModule(name);
     };
 }

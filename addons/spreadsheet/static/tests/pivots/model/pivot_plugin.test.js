@@ -1,18 +1,24 @@
-import { Deferred } from "@web/core/utils/concurrency";
-import { animationFrame } from "@odoo/hoot-mock";
-import {
-    MockServer,
-    makeServerError,
-    patchTranslations,
-    serverState,
-} from "@web/../tests/web_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-mock";
 import {
     defineSpreadsheetActions,
     defineSpreadsheetModels,
     getBasicServerData,
 } from "@spreadsheet/../tests/helpers/data";
+import {
+    makeServerError,
+    onRpc,
+    patchTranslations,
+    serverState,
+} from "@web/../tests/web_test_helpers";
+import { Deferred } from "@web/core/utils/concurrency";
 
+import {
+    addGlobalFilter,
+    setCellContent,
+    updatePivot,
+    updatePivotMeasureDisplay,
+} from "@spreadsheet/../tests/helpers/commands";
 import {
     getCell,
     getCellContent,
@@ -21,15 +27,9 @@ import {
     getEvaluatedCell,
     getFormattedValueGrid,
 } from "@spreadsheet/../tests/helpers/getters";
+import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/helpers/pivot";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
-import {
-    addGlobalFilter,
-    setCellContent,
-    updatePivot,
-    updatePivotMeasureDisplay,
-} from "@spreadsheet/../tests/helpers/commands";
-import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 
 import { user } from "@web/core/user";
 
@@ -435,6 +435,28 @@ test("fetch metadata only once per model", async function () {
     expect.verifySteps(["partner/fields_get"]);
 });
 
+test("An error is displayed if the pivot has invalid model", async function () {
+    const { model, env, pivotId } = await createSpreadsheetWithPivot({
+        mockRPC: async function (route, { model, method, kwargs }) {
+            if (model === "unknown" && method === "fields_get") {
+                throw makeServerError({ code: 404 });
+            }
+        },
+    });
+    const pivot = model.getters.getPivotCoreDefinition(pivotId);
+    env.model.dispatch("UPDATE_PIVOT", {
+        pivotId,
+        pivot: {
+            ...pivot,
+            model: "unknown",
+        },
+    });
+    setCellContent(model, "A1", `=PIVOT.VALUE("1", "probability:avg")`);
+    await animationFrame();
+    expect(getCellValue(model, "A1")).toBe("#ERROR");
+    expect(getEvaluatedCell(model, "A1").message).toBe(`The model "unknown" does not exist.`);
+});
+
 test("don't fetch pivot data if no formula use it", async function () {
     const spreadsheetData = {
         pivots: {
@@ -469,6 +491,22 @@ test("don't fetch pivot data if no formula use it", async function () {
         "partner/read_group",
     ]);
     expect(getCellValue(model, "A1")).toBe(131);
+});
+
+test("An error is displayed if the pivot has invalid field", async function () {
+    const { model, pivotId } = await createSpreadsheetWithPivot();
+    const pivot = model.getters.getPivotCoreDefinition(pivotId);
+    model.dispatch("UPDATE_PIVOT", {
+        pivotId,
+        pivot: {
+            ...pivot,
+            columns: [{ fieldName: "unknown" }],
+        },
+    });
+    setCellContent(model, "A1", `=PIVOT.VALUE("1", "probability:avg")`);
+    await animationFrame();
+    expect(getCellValue(model, "A1")).toBe("#ERROR");
+    expect(getEvaluatedCell(model, "A1").message).toBe(`Field unknown does not exist`);
 });
 
 test("evaluates only once when two pivots are loading", async function () {
@@ -561,31 +599,21 @@ test("display loading while data is not fully available", async function () {
             },
         },
     };
-    const model = await createModelWithDataSource({
-        spreadsheetData,
-        mockRPC: async function (route, args, performRPC) {
-            const { model, method, kwargs } = args;
-            const result = MockServer.current.callOrm(args);
-            if (model === "partner" && method === "fields_get") {
-                expect.step(`${model}/${method}`);
-                await metadataPromise;
-            }
-            if (
-                model === "partner" &&
-                method === "read_group" &&
-                kwargs.groupby[0] === "product_id"
-            ) {
-                expect.step(`${model}/${method}`);
-                await dataPromise;
-            }
-            if (model === "product" && method === "read") {
-                expect(false).toBe(true, {
-                    message: "should not be called because data is put in cache",
-                });
-            }
-            return result;
-        },
+    onRpc(async ({ kwargs, model, method, parent }) => {
+        if (model === "partner" && method === "fields_get") {
+            expect.step(`${model}/${method}`);
+            await metadataPromise;
+        }
+        if (model === "partner" && method === "read_group" && kwargs.groupby[0] === "product_id") {
+            expect.step(`${model}/${method}`);
+            await dataPromise;
+        }
+        if (model === "product" && method === "read") {
+            throw new Error("should not be called because data is put in cache");
+        }
+        return parent();
     });
+    const model = await createModelWithDataSource({ spreadsheetData });
     expect(getCellValue(model, "A1")).toBe("Loading...");
     expect(getCellValue(model, "A2")).toBe("Loading...");
     expect(getCellValue(model, "A3")).toBe("Loading...");

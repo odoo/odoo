@@ -1,36 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_razorpay
-#
+# 
 # Translators:
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-12 10:38+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
-
-#. module: payment_razorpay
-#: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
-msgid ""
-"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
-"                        Enable recurring payments on Razorpay"
-msgstr ""
-"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
-"                        Включите повторяющиеся платежи на Razorpay"
 
 #. module: payment_razorpay
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_transaction.py:0
-msgid "An error occurred during the processing of your payment. Please try again."
-msgstr "Во время обработки вашего платежа произошла ошибка. Пожалуйста, попробуйте еще раз."
+msgid ""
+"An error occurred during the processing of your payment. Please try again."
+msgstr ""
+"Во время обработки вашего платежа произошла ошибка. Пожалуйста, попробуйте "
+"еще раз."
 
 #. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__code
@@ -42,6 +38,11 @@ msgstr "Код"
 #: code:addons/payment_razorpay/models/payment_provider.py:0
 msgid "Could not establish the connection to the API."
 msgstr "Не удалось установить соединение с API."
+
+#. module: payment_razorpay
+#: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
+msgid "Enable recurring payments on Razorpay"
+msgstr ""
 
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
@@ -65,9 +66,14 @@ msgid "Payment Provider"
 msgstr "Поставщик платежей"
 
 #. module: payment_razorpay
+#: model:ir.model,name:payment_razorpay.model_payment_token
+msgid "Payment Token"
+msgstr "Платежный токен"
+
+#. module: payment_razorpay
 #: model:ir.model,name:payment_razorpay.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "платеж"
+msgstr "Платеж"
 
 #. module: payment_razorpay
 #. odoo-javascript
@@ -163,9 +169,19 @@ msgstr "Транзакция не привязана к токену."
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_transaction.py:0
 msgid "Transactions processed by Razorpay can't be manually voided from Odoo."
-msgstr "Транзакции, обработанные Razorpay, не могут быть вручную аннулированы из Odoo."
+msgstr ""
+"Транзакции, обработанные Razorpay, не могут быть вручную аннулированы из "
+"Odoo."
 
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
 msgid "Webhook Secret"
 msgstr "Секрет вебхука"
+
+#. module: payment_razorpay
+#. odoo-python
+#: code:addons/payment_razorpay/models/payment_token.py:0
+msgid ""
+"You can not pay amounts greater than %(currency_symbol)s %(max_amount)s with"
+" this payment method"
+msgstr ""

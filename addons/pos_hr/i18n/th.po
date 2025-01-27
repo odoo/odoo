@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -71,6 +71,8 @@ msgid ""
 "Can't generate a report per employee! as selected session has no orders "
 "associated with any employee."
 msgstr ""
+"ไม่สามารถสร้างรายงานต่อพนักงานได้! "
+"เนื่องจากเซสชันที่เลือกไม่มีคำสั่งซื้อใดที่เกี่ยวข้องกับพนักงาน"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -224,6 +226,12 @@ msgid "Opening"
 msgstr "เปิด"
 
 #. module: pos_hr
+#. odoo-python
+#: code:addons/pos_hr/models/pos_session.py:0
+msgid "Others"
+msgstr "อื่นๆ "
+
+#. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
 msgid "PIN not found"
@@ -337,7 +345,7 @@ msgstr "PIN ผิด"
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/overrides/screens/product_screen/order_summary/order_summary.js:0
 msgid "You are not allowed to change the price of a product."
-msgstr ""
+msgstr "คุณไม่มีสิทธิเปลี่ยนแปลงราคาของผลิตภัณฑ์"
 
 #. module: pos_hr
 #. odoo-python

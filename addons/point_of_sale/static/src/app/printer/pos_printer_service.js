@@ -38,10 +38,10 @@ export class PosPrinterService extends PrinterService {
         try {
             return await super.printHtml(...arguments);
         } catch (error) {
-            return this.printHtmlAlternative(error);
+            return this.printHtmlAlternative(error, ...arguments);
         }
     }
-    async printHtmlAlternative(error) {
+    async printHtmlAlternative(error, ...printArguments) {
         const confirmed = await ask(this.dialog, {
             title: error.title || _t("Printing error"),
             body: error.body + _t("Do you want to print using the web printer? "),
@@ -50,7 +50,7 @@ export class PosPrinterService extends PrinterService {
             // We want to call the _printWeb when the dialog is fully gone
             // from the screen which happens after the next animation frame.
             await new Promise(requestAnimationFrame);
-            this.printWeb(...arguments);
+            this.printWeb(...printArguments);
         }
     }
 }

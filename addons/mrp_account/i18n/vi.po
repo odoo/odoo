@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Thi Huong Nguyen, 2024
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:55+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -89,7 +89,7 @@ msgstr "<span>Đơn vị tính</span>"
 #. module: mrp_account
 #: model:ir.model.constraint,message:mrp_account.constraint_mrp_account_wip_accounting_line_check_debit_credit
 msgid "A single line cannot be both credit and debit."
-msgstr ""
+msgstr "Một dòng không thể vừa là nợ vừa là có."
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__account_id
@@ -104,7 +104,7 @@ msgstr "Dòng bút toán kế toán"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting_line
 msgid "Account move line to be created when posting WIP account move"
-msgstr ""
+msgstr "Dòng bút toán kế toán được tạo khi ghi sổ bút toán kế toán WIP"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -141,17 +141,17 @@ msgstr "Độ chính xác phân tích"
 #: code:addons/mrp_account/models/analytic_account.py:0
 #: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
 msgid "Bills of Materials"
-msgstr "Định mức nguyên liệu"
+msgstr "Danh mục vật tư"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_count
 msgid "BoM Count"
-msgstr "Số ĐMNL"
+msgstr "Số DMVT"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_ids
 msgid "Bom"
-msgstr "ĐMNL"
+msgstr "DMVT"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_line__category
@@ -165,7 +165,7 @@ msgstr "Danh mục"
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_view_form_normal_inherit_extended
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_variant_easy_edit_view_bom_inherit
 msgid "Compute Price from BoM"
-msgstr "Tính giá từ ĐMNL"
+msgstr "Tính giá từ DMVT"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_ext_form_view2
@@ -175,8 +175,8 @@ msgid ""
 "Compute the price of the product using products and operations of related "
 "bill of materials, for manufactured products only."
 msgstr ""
-"Tính toán giá của sản phẩm bằng cách sử dụng sản phẩm và hoạt động của định "
-"mức nguyên liệu liên quan, chỉ áp dụng cho sản phẩm được sản xuất. "
+"Tính toán giá của sản phẩm bằng cách sử dụng sản phẩm và hoạt động của danh "
+"mục vật tư liên quan, chỉ áp dụng cho sản phẩm được sản xuất. "
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__costs_hour_account_ids
@@ -298,7 +298,7 @@ msgstr "Báo cáo tổng quan ĐMNL"
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "Manual Entry"
-msgstr ""
+msgstr "Bút toán thủ công"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_production
@@ -325,7 +325,7 @@ msgstr "Số lệnh sản xuất"
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "Manufacturing WIP - %(orders_list)s"
-msgstr ""
+msgstr "WIP sản xuất - %(orders_list)s"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__mo_ids
@@ -342,22 +342,22 @@ msgstr "Dòng tài khoản phân tích LSX"
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid ""
 "Please make sure the total credit amount equals the total debit amount."
-msgstr ""
+msgstr "Hãy đảm bảo tổng số tiền ghi có bằng tổng số tiền ghi nợ."
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
 msgid "Post Manufacturing WIP"
-msgstr ""
+msgstr "Ghi sổ WIP sản xuất"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
 msgid "Post WIP"
-msgstr ""
+msgstr "Ghi sổ WIP"
 
 #. module: mrp_account
 #: model:ir.actions.act_window,name:mrp_account.action_wip_accounting
 msgid "Post WIP Accounting Entry"
-msgstr ""
+msgstr "Ghi sổ bút toán WIP"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_template
@@ -392,13 +392,13 @@ msgstr "REF123"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__reference
 msgid "Reference"
-msgstr "Mã tham chiếu"
+msgstr "Tham chiếu"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_bank_statement_line__wip_production_ids
 #: model:ir.model.fields,field_description:mrp_account.field_account_move__wip_production_ids
 msgid "Relevant WIP MOs"
-msgstr ""
+msgstr "LSX WIP liên quan"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__reversal_date
@@ -409,7 +409,7 @@ msgstr "Ngày đảo"
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "Reversal date must be after the posting date."
-msgstr ""
+msgstr "Ngày đảo phải sau ngày ghi sổ."
 
 #. module: mrp_account
 #. odoo-python
@@ -425,7 +425,7 @@ msgstr "Hiển thị định giá"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_stock_move
 msgid "Stock Move"
-msgstr "Dịch chuyển tồn kho"
+msgstr "Điều chuyển tồn kho"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_account_bank_statement_line__wip_production_ids
@@ -434,6 +434,8 @@ msgid ""
 "The MOs that this WIP entry was based on. Expected to be set at time of WIP "
 "entry creation."
 msgstr ""
+"LSX mà bút toán WIP này dựa trên. Dự kiến ​​sẽ được thiết lập tại thời điểm "
+"tạo bút toán WIP."
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__expense_account_id
@@ -474,19 +476,19 @@ msgstr "Đơn vị"
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "WIP - Component Value"
-msgstr ""
+msgstr "WIP - Giá trị nguyên liệu"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "WIP - Overhead"
-msgstr ""
+msgstr "WIP - Chung"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/account_move.py:0
 msgid "WIP MOs of %s"
-msgstr ""
+msgstr "LSX WIP của %s"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -496,12 +498,12 @@ msgstr "Báo cáo WIP cho"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__line_ids
 msgid "WIP accounting lines"
-msgstr ""
+msgstr "Dòng kế toán WIP"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__wip_accounting_id
 msgid "WIP accounting wizard"
-msgstr ""
+msgstr "Công cụ kế toán WIP"
 
 #. module: mrp_account
 #: model:ir.actions.report,name:mrp_account.wip_report
@@ -516,7 +518,7 @@ msgstr "Dòng tài khoản phân tích khu vực sản xuất"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting
 msgid "Wizard to post Manufacturing WIP account move"
-msgstr ""
+msgstr "Công cụ ghi sổ bút toán kế toán WIP sản xuất"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter

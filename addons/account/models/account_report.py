@@ -56,7 +56,7 @@ class AccountReport(models.Model):
     load_more_limit = fields.Integer(string="Load More Limit")
     search_bar = fields.Boolean(string="Search Bar")
     prefix_groups_threshold = fields.Integer(string="Prefix Groups Threshold", default=4000)
-    integer_rounding = fields.Selection(string="Integer Rounding", selection=[('HALF-UP', "Half-up (away from 0)"), ('UP', "Up"), ('DOWN', "Down")])
+    integer_rounding = fields.Selection(string="Integer Rounding", selection=[('HALF-UP', "Nearest"), ('UP', "Up"), ('DOWN', "Down")])
 
     default_opening_date_filter = fields.Selection(
         string="Default Opening",
@@ -166,9 +166,13 @@ class AccountReport(models.Model):
         for report in self.sorted(lambda x: not x.section_report_ids):
             # Reports are sorted in order to first treat the composite reports, in case they need to compute their filters a the same time
             # as their sections
+            is_accessible = self.env['ir.actions.client'].search_count([('context', 'ilike', f"'report_id': {report.id}"), ('tag', '=', 'account_report')])
+            is_variant = bool(report.root_report_id)
+            if (is_accessible or is_variant) and report.section_main_report_ids:
+                continue  # prevent updating the filters of a report when being added as a section of a report
             if report.root_report_id:
                 report[field_name] = report.root_report_id[field_name]
-            elif len(report.section_main_report_ids) == 1 and not self.env['ir.actions.client'].search_count([('context', 'ilike', f"'report_id': {report.id}"), ('tag', '=', 'account_report')]):
+            elif len(report.section_main_report_ids) == 1 and not is_accessible:
                 report[field_name] = report.section_main_report_ids[field_name]
             else:
                 report[field_name] = default_value

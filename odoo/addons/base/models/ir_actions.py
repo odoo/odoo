@@ -730,7 +730,11 @@ class IrActionsServer(models.Model):
             return ''
         model = self.env[self.model_id.model]
         pretty_path = []
+        field = None
         for field_name in path.split('.'):
+            if field and field.type == 'properties':
+                pretty_path.append(field_name)
+                continue
             field = model._fields[field_name]
             field_id = self.env['ir.model.fields']._get(model._name, field_name)
             if field.relational:
@@ -973,7 +977,7 @@ class IrActionsServer(models.Model):
             eval_context = self._get_eval_context(action)
             records = eval_context.get('record') or eval_context['model']
             records |= eval_context.get('records') or eval_context['model']
-            if records.ids:
+            if not action_groups and records.ids:
                 # check access rules on real records only; base automations of
                 # type 'onchange' can run server actions on new records
                 try:
@@ -1028,8 +1032,7 @@ class IrActionsServer(models.Model):
 
     @api.constrains('update_field_id', 'evaluation_type')
     def _raise_many2many_error(self):
-        if self.filtered(lambda line: line.update_field_id.ttype == 'many2many' and line.evaluation_type == 'reference'):
-            raise ValidationError(_('many2many fields cannot be evaluated by reference'))
+        pass  # TODO: remove in master
 
     @api.onchange('resource_ref')
     def _set_resource_ref(self):
@@ -1073,6 +1076,12 @@ class IrActionsServer(models.Model):
                     expr = float(action.value)
             result[action.id] = expr
         return result
+
+    def copy_data(self, default=None):
+        default = default or {}
+        if not default.get('name'):
+            default['name'] = _('%s (copy)', self.name)
+        return super().copy_data(default=default)
 
 class IrActionsTodo(models.Model):
     """

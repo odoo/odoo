@@ -23,7 +23,7 @@
         run: "click",
     }, {
         content: 'Choose Booth',
-        trigger: '.o_wbooth_booths div:contains("OpenWood Demonstrator 2") input',
+        trigger: ".o_wbooth_booths div:contains(OpenWood Demonstrator 2) input:not(:visible)",
         run: "click",
     }, {
         content: "Validate attendees details",

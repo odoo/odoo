@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-11 07:03+0000\n"
-"PO-Revision-Date: 2023-04-11 07:03+0000\n"
+"POT-Creation-Date: 2024-11-04 08:46+0000\n"
+"PO-Revision-Date: 2024-11-04 08:46+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr ""
 #. module: l10n_fr_pos_cert
 #. odoo-javascript
 #: code:addons/l10n_fr_pos_cert/static/src/xml/OrderReceipt.xml:0
-#: code:addons/l10n_fr_pos_cert/static/src/xml/Orderline.xml:0
+#: code:addons/l10n_fr_pos_cert/static/src/xml/OrderSummary.xml:0
 msgid "/ Units"
 msgstr ""
 
@@ -32,13 +32,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_fr_pos_cert/models/pos.py:0
 msgid "According to French law, you cannot delete a point of sale order."
-msgstr ""
-
-#. module: l10n_fr_pos_cert
-#. odoo-python
-#: code:addons/l10n_fr_pos_cert/models/pos.py:0
-msgid ""
-"According to the French law, you cannot modify a %s. Forbidden fields: %s."
 msgstr ""
 
 #. module: l10n_fr_pos_cert
@@ -79,12 +72,6 @@ msgid ""
 msgstr ""
 
 #. module: l10n_fr_pos_cert
-#. odoo-javascript
-#: code:addons/l10n_fr_pos_cert/static/src/js/Chrome.js:0
-msgid "An unknown error prevents us from getting closing information."
-msgstr ""
-
-#. module: l10n_fr_pos_cert
 #: model:ir.model.fields.selection,name:l10n_fr_pos_cert.selection__account_sale_closing__frequency__annually
 msgid "Annual"
 msgstr ""
@@ -93,6 +80,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_fr_pos_cert/models/account_closing.py:0
 msgid "Annual Closing"
+msgstr ""
+
+#. module: l10n_fr_pos_cert
+#: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
+msgid "Aucune donnée corrompue n'a été détectée."
 msgstr ""
 
 #. module: l10n_fr_pos_cert
@@ -113,6 +105,11 @@ msgstr ""
 #. module: l10n_fr_pos_cert
 #: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_account_sale_closing__company_id
 msgid "Company"
+msgstr ""
+
+#. module: l10n_fr_pos_cert
+#: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
+msgid "Contexte"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
@@ -158,6 +155,11 @@ msgid "Daily Closing"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
+#: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
+msgid "Date"
+msgstr ""
+
+#. module: l10n_fr_pos_cert
 #: model:ir.model.fields,help:l10n_fr_pos_cert.field_account_sale_closing__date_closing_start
 msgid "Date from which the total interval is computed"
 msgstr ""
@@ -168,9 +170,8 @@ msgid "Date to which the values are computed"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
-#. odoo-javascript
-#: code:addons/l10n_fr_pos_cert/static/src/js/pos.js:0
-msgid "Deleting of orders is not allowed."
+#: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
+msgid "Dernière transaction"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
@@ -181,22 +182,6 @@ msgstr ""
 #. module: l10n_fr_pos_cert
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
 msgid "Données corrompues sur la commande du point de vente:"
-msgstr ""
-
-#. module: l10n_fr_pos_cert
-#: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
-msgid "First Entry"
-msgstr ""
-
-#. module: l10n_fr_pos_cert
-#: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
-msgid "First Hash"
-msgstr ""
-
-#. module: l10n_fr_pos_cert
-#. odoo-javascript
-#: code:addons/l10n_fr_pos_cert/static/src/js/pos.js:0
-msgid "Fiscal Data Module error"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
@@ -216,25 +201,27 @@ msgstr ""
 
 #. module: l10n_fr_pos_cert
 #: model:ir.actions.server,name:l10n_fr_pos_cert.account_sale_closing_annually_ir_actions_server
-#: model:ir.cron,cron_name:l10n_fr_pos_cert.account_sale_closing_annually
 msgid "Generate Annual Sales Closing"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
 #: model:ir.actions.server,name:l10n_fr_pos_cert.account_sale_closing_daily_ir_actions_server
-#: model:ir.cron,cron_name:l10n_fr_pos_cert.account_sale_closing_daily
 msgid "Generate Daily Sales Closing"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
 #: model:ir.actions.server,name:l10n_fr_pos_cert.account_sale_closing_monthly_ir_actions_server
-#: model:ir.cron,cron_name:l10n_fr_pos_cert.account_sale_closing_monthly
 msgid "Generate Monthly Sales Closing"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
 #: model:ir.model,name:l10n_fr_pos_cert.model_report_l10n_fr_pos_cert_report_pos_hash_integrity
 msgid "Get french pos hash integrity result as PDF."
+msgstr ""
+
+#. module: l10n_fr_pos_cert
+#: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
+msgid "Hachage"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
@@ -275,23 +262,20 @@ msgstr ""
 #. module: l10n_fr_pos_cert
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
 msgid ""
-"La chaîne de hachage est conforme: il n’est pas possible d’altérer les données\n"
-"                                            sans casser la chaîne de hachage pour les pièces ultérieures."
+"La chaîne de hachage est conforme: il n'est pas possible d'altérer les "
+"données sans casser la chaîne de hachage pour les pièces ultérieurs"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
-msgid "Last Entry"
+msgid "La date (année-mois-jour-heure-minute)"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
-msgid "Last Hash"
-msgstr ""
-
-#. module: l10n_fr_pos_cert
-#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_account_sale_closing____last_update
-msgid "Last Modified on"
+msgid ""
+"La fonction de hachage garantit que les données suivates des transactions "
+"sont inaltérables:"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
@@ -320,6 +304,28 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
+#: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
+msgid ""
+"Le détail des articles ou prestations (libellé, quantité, prix unitaire, "
+"total hors taxes de la ligne, taux de TVA associé)"
+msgstr ""
+
+#. module: l10n_fr_pos_cert
+#: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
+msgid "Le montant total toutes taxes comprises"
+msgstr ""
+
+#. module: l10n_fr_pos_cert
+#: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
+msgid "Le numéro de caisse"
+msgstr ""
+
+#. module: l10n_fr_pos_cert
+#: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
+msgid "Le numéro du justificatif"
+msgstr ""
+
+#. module: l10n_fr_pos_cert
 #. odoo-javascript
 #: code:addons/l10n_fr_pos_cert/static/src/js/pos.js:0
 msgid "Missing Country"
@@ -343,14 +349,8 @@ msgstr ""
 
 #. module: l10n_fr_pos_cert
 #. odoo-javascript
-#: code:addons/l10n_fr_pos_cert/static/src/js/Chrome.js:0
-msgid "Network Error"
-msgstr ""
-
-#. module: l10n_fr_pos_cert
-#. odoo-javascript
 #: code:addons/l10n_fr_pos_cert/static/src/xml/OrderReceipt.xml:0
-#: code:addons/l10n_fr_pos_cert/static/src/xml/Orderline.xml:0
+#: code:addons/l10n_fr_pos_cert/static/src/xml/OrderSummary.xml:0
 msgid "Old unit price:"
 msgstr ""
 
@@ -363,12 +363,6 @@ msgstr ""
 #. module: l10n_fr_pos_cert
 #: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_account_sale_closing__total_interval
 msgid "Period Total"
-msgstr ""
-
-#. module: l10n_fr_pos_cert
-#. odoo-javascript
-#: code:addons/l10n_fr_pos_cert/static/src/js/Chrome.js:0
-msgid "Please check your internet connection and try again."
 msgstr ""
 
 #. module: l10n_fr_pos_cert
@@ -392,6 +386,31 @@ msgid "Point of Sale Session"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
+#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_pos_order__pos_version
+msgid "Pos Version"
+msgstr ""
+
+#. module: l10n_fr_pos_cert
+#: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
+msgid "Première transaction"
+msgstr ""
+
+#. module: l10n_fr_pos_cert
+#: model:ir.model.fields,field_description:l10n_fr_pos_cert.field_pos_order__previous_order_id
+msgid "Previous Order"
+msgstr ""
+
+#. module: l10n_fr_pos_cert
+#: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
+msgid "Réf. Commande"
+msgstr ""
+
+#. module: l10n_fr_pos_cert
+#: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
+msgid "Résultat du test"
+msgstr ""
+
+#. module: l10n_fr_pos_cert
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
 msgid "Résultat du test d'intégrité -"
 msgstr ""
@@ -403,7 +422,6 @@ msgstr ""
 
 #. module: l10n_fr_pos_cert
 #. odoo-python
-#: code:addons/l10n_fr_pos_cert/models/account_closing.py:0
 #: code:addons/l10n_fr_pos_cert/models/account_closing.py:0
 msgid ""
 "Sale Closings are not meant to be written or deleted under any "
@@ -428,10 +446,10 @@ msgstr ""
 #. module: l10n_fr_pos_cert
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
 msgid ""
-"Selon l’article 286 du code général des impôts français, toute livraison de bien ou prestation\n"
-"                                        de services ne donnant pas lieu à facturation et étant enregistrée au moyen d’un logiciel ou\n"
-"                                        d’un système de caisse doit satisfaire à des conditions d’inaltérabilité et de sécurisation des\n"
-"                                        données en vue d’un contrôle de l’administration fiscale.\n"
+"Selon l'article 286 du code général des impôts français, toute livraison de bien ou prestation\n"
+"                                        de services ne donnant pas lieu à facturation et étant enregistrée au moyen d'un logiciel ou\n"
+"                                        d'un système de caisse doit satisfaire à des conditions d'inaltérabilité et de sécurisation des\n"
+"                                        données en vue d'un contrôle de l'administration fiscale.\n"
 "                                        <br/>\n"
 "                                        <br/>\n"
 "                                        Ces conditions sont respectées via une fonction de hachage des ventes du Point de Vente.\n"
@@ -489,14 +507,20 @@ msgstr ""
 #. module: l10n_fr_pos_cert
 #: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
 msgid ""
-"Toutes les ventes effectuées via le Point de Vente\n"
-"                                                sont bien dans la chaîne de hachage."
+"Toutes les données liées à la réception du paiement en contrepartie (mode de"
+" réglement notamment)"
 msgstr ""
 
 #. module: l10n_fr_pos_cert
-#. odoo-javascript
-#: code:addons/l10n_fr_pos_cert/static/src/js/Chrome.js:0
-msgid "Unknown Error"
+#: model_terms:ir.ui.view,arch_db:l10n_fr_pos_cert.report_pos_hash_integrity
+msgid ""
+"Toutes les ventes effectuées via le Point de Vente sont bien dans la chaîne "
+"de hachage."
+msgstr ""
+
+#. module: l10n_fr_pos_cert
+#: model:ir.model.fields,help:l10n_fr_pos_cert.field_pos_order__pos_version
+msgid "Version of Odoo that created the order"
 msgstr ""
 
 #. module: l10n_fr_pos_cert

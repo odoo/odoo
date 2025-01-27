@@ -3,6 +3,7 @@ import { setupEditor, testEditor } from "../_helpers/editor";
 import { getContent } from "../_helpers/selection";
 import { em, span } from "../_helpers/tags";
 import { italic, tripleClick } from "../_helpers/user_actions";
+import { unformat } from "../_helpers/format";
 
 test("should make a few characters italic", async () => {
     await testEditor({
@@ -106,5 +107,53 @@ test("should not format non-editable text (italic)", async () => {
         contentBefore: '<p>[a</p><p contenteditable="false">b</p><p>c]</p>',
         stepFunction: italic,
         contentAfter: `<p>${em("[a")}</p><p contenteditable="false">b</p><p>${em("c]")}</p>`,
+    });
+});
+
+test("should make a few characters italic inside table (italic)", async () => {
+    await testEditor({
+        contentBefore: unformat(`
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="o_selected_td"><p>[abc</p></td>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                    <tr>
+                        <td class="o_selected_td"><p>def</p></td>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                    <tr>
+                        <td class="o_selected_td"><p>]<br></p></td>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                </tbody>
+            </table>`
+        ),
+        stepFunction: italic,
+        contentAfterEdit: unformat(`
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="o_selected_td"><p>${em(`[abc`)}</p></td>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                    <tr>
+                        <td class="o_selected_td"><p>${em(`def`)}</p></td>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                    <tr>
+                        <td class="o_selected_td"><p>${em(`]<br>`)}</p></td>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                </tbody>
+            </table>`
+        ),
     });
 });

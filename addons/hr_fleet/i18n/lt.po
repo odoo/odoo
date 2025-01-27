@@ -1,28 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_fleet
-#
+# 
 # Translators:
-# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022
-# Antanas Muliuolis <an.muliuolis@gmail.com>, 2022
-# Linas Versada <linaskrisiukenas@gmail.com>, 2022
-# Monika Raciunaite <monika.raciunaite@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Jonas Zinkevicius <jozi@odoo.com>, 2022
-#
+# Antanas Muliuolis <an.muliuolis@gmail.com>, 2024
+# Greta Šeštokė, 2024
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2024
+# Linas Versada <linaskrisiukenas@gmail.com>, 2024
+# Monika Raciunaite <monika.raciunaite@gmail.com>, 2024
+# Jonas Zinkevicius <jozi@odoo.com>, 2024
+# Martin Trigaux, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 17.1alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Jonas Zinkevicius <jozi@odoo.com>, 2022\n"
+"POT-Creation-Date: 2024-01-08 06:51+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
-"Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: lt\n"
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#. module: hr_fleet
+#: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_log_contract_view_form_inherit_hr
+msgid "<span class=\"o_stat_text\">Employee</span>"
+msgstr "<span class=\"o_stat_text\">Darbuotojas</span>"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_view_form_inherit_hr
@@ -30,6 +36,16 @@ msgid ""
 "<span class=\"o_stat_value\">1</span>\n"
 "                        <span class=\"o_stat_text\">Employee</span>"
 msgstr ""
+
+#. module: hr_fleet
+#: model:ir.model,name:hr_fleet.model_mail_activity_plan_template
+msgid "Activity plan template"
+msgstr ""
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_mail_activity_plan_template__responsible_type
+msgid "Assignment"
+msgstr "Priskyrimas"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_assignation_log_employee_view_list
@@ -58,11 +74,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_assignation_log_employee_view_list
 msgid "Current Driver"
 msgstr "Dabartinis vairuotojas"
-
-#. module: hr_fleet
-#: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_view_search_inherit_hr
-msgid "Current Driver (Employee)"
-msgstr "Dabartinis vairuotojas (Darbuotojas)"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_departure_wizard
@@ -97,7 +108,7 @@ msgstr "Darbuotojas"
 
 #. module: hr_fleet
 #. odoo-python
-#: code:addons/hr_fleet/models/hr_plan_activity_type.py:0
+#: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
 msgid "Employee %s is not linked to a vehicle."
 msgstr ""
 
@@ -107,14 +118,14 @@ msgid "Employee Name"
 msgstr "Darbuotojo vardas"
 
 #. module: hr_fleet
-#. odoo-python
-#: code:addons/hr_fleet/models/hr_plan_activity_type.py:0
-msgid "Employee's vehicle %s is not linked to a fleet manager."
-msgstr ""
+#: model:ir.model.fields.selection,name:hr_fleet.selection__mail_activity_plan_template__responsible_type__fleet_manager
+msgid "Fleet Manager"
+msgstr "Automobilių parko vadovas"
 
 #. module: hr_fleet
-#: model:ir.model.fields.selection,name:hr_fleet.selection__hr_plan_activity_type__responsible__fleet_manager
-msgid "Fleet Manager"
+#. odoo-python
+#: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
+msgid "Fleet Manager is limited to Employee plans."
 msgstr ""
 
 #. module: hr_fleet
@@ -150,11 +161,6 @@ msgid "Odometer log for a vehicle"
 msgstr "Automobilio odometro žurnalas"
 
 #. module: hr_fleet
-#: model:ir.model,name:hr_fleet.model_hr_plan_activity_type
-msgid "Plan activity type"
-msgstr ""
-
-#. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_employee_public
 msgid "Public Employee"
 msgstr ""
@@ -162,6 +168,7 @@ msgstr ""
 #. module: hr_fleet
 #. odoo-python
 #: code:addons/hr_fleet/models/fleet_vehicle.py:0
+#: code:addons/hr_fleet/models/fleet_vehicle_log_contract.py:0
 msgid "Related Employee"
 msgstr ""
 
@@ -171,14 +178,15 @@ msgid "Release Company Car"
 msgstr ""
 
 #. module: hr_fleet
-#: model:ir.model.fields,field_description:hr_fleet.field_hr_plan_activity_type__responsible
-msgid "Responsible"
-msgstr ""
-
-#. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_log_services
 msgid "Services for vehicles"
 msgstr "Paslaugos automobiliams"
+
+#. module: hr_fleet
+#. odoo-python
+#: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
+msgid "The vehicle of employee %(employee)s is not linked to a fleet manager."
+msgstr ""
 
 #. module: hr_fleet
 #. odoo-javascript

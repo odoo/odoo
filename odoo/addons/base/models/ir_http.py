@@ -371,7 +371,7 @@ class IrHttp(models.AbstractModel):
         for url, endpoint in self._generate_routing_rules(mods, converters=self._get_converters()):
             routing = submap(endpoint.routing, ROUTING_KEYS)
             if routing['methods'] is not None and 'OPTIONS' not in routing['methods']:
-                routing['methods'] = routing['methods'] + ['OPTIONS']
+                routing['methods'] = [*routing['methods'], 'OPTIONS']
             rule = FasterRule(url, endpoint=endpoint, **routing)
             rule.merge_slashes = False
             routing_map.add(rule)

@@ -99,7 +99,7 @@ class AccountChartTemplate(models.AbstractModel):
         field = self.env['ir.module.module']._fields['account_templates']
         modules = (
             self.env.cache.get_records(self.env['ir.module.module'], field)
-            or self.env['ir.module.module'].search([])
+            or self.env['ir.module.module'].sudo().search([])
         )
 
         return {
@@ -143,7 +143,7 @@ class AccountChartTemplate(models.AbstractModel):
         """
         if not company:
             return
-        if not self.env.registry.ready and not install_demo and not hasattr(self.env.registry, '_auto_install_template'):
+        if not self.env.registry.loaded and not install_demo and not hasattr(self.env.registry, '_auto_install_template'):
             _logger.warning(
                 'Incorrect usage of try_loading without a fully loaded registry. This could lead to issues. (%s-%s)',
                 company.name,
@@ -154,8 +154,8 @@ class AccountChartTemplate(models.AbstractModel):
 
         template_code = template_code or company and self._guess_chart_template(company.country_id)
 
-        if template_code == 'syscohada' and template_code != company.chart_template:
-            raise UserError(_("The Syscohada chart template shouldn't be selected directly. Instead, you should directly select the chart template related to your country."))
+        if template_code in {'syscohada', 'syscebnl'} and template_code != company.chart_template:
+            raise UserError(_("The %s chart template shouldn't be selected directly. Instead, you should directly select the chart template related to your country.", template_code))
 
         return self._load(template_code, company, install_demo)
 
@@ -201,10 +201,17 @@ class AccountChartTemplate(models.AbstractModel):
         company.chart_template = template_code
 
         if not reload_template and (not company.root_id._existing_accounting() or self.env.ref('base.module_account').demo):
+            children_companies = self.env['res.company'].search([('id', 'child_of', company.id)])
             for model in ('account.move',) + TEMPLATE_MODELS[::-1]:
                 if not company.parent_id:
                     company_field = 'company_id' if 'company_id' in self.env[model] else 'company_ids'
-                    self.env[model].sudo().with_context(active_test=False).search([(company_field, 'child_of', company.id)]).with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
+                    records = self.env[model].sudo().with_context(active_test=False).search([(company_field, 'child_of', company.id)])
+                    if company_field == 'company_ids':
+                        records_to_keep = records.filtered(lambda r: r.company_ids - children_companies)
+                        records -= records_to_keep
+                        for records_for_companies in records_to_keep.grouped('company_ids').values():
+                            records_for_companies.company_ids -= children_companies
+                    records.with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
 
         data = self._get_chart_template_data(template_code)
         template_data = data.pop('template_data')
@@ -341,10 +348,12 @@ class AccountChartTemplate(models.AbstractModel):
                                       and t.type_tax_use == values.get('type_tax_use')\
                                       and t.tax_scope == values.get('tax_scope', False)
                             )
-                        uniq_key = unique_tax_name_key(oldtax)
-                        rename_idx = len(list(filter(lambda t: re.match(fr"^(?:\[old\d*\] |){uniq_key[0]}$", t[0]) and t[1:] == uniq_key[1:], unique_tax_name_keys)))
-                        if rename_idx:
-                            oldtax.name = f"[old{rename_idx - 1 if rename_idx > 1 else ''}] {oldtax.name}"
+                        uniq_key = unique_tax_name_key(oldtax[0] if len(oldtax) > 1 else oldtax)
+                        matching_names = len(list(filter(lambda t: re.match(fr"^(?:\[old\d*\] |){uniq_key[0]}$", t[0]) and t[1:] == uniq_key[1:], unique_tax_name_keys)))
+                        for index, tax_to_rename in enumerate(oldtax):
+                            rename_idx = index + matching_names
+                            if rename_idx:
+                                tax_to_rename.name = f"[old{rename_idx - 1 if rename_idx > 1 else ''}] {tax_to_rename.name}"
                     else:
                         repartition_lines = values.get('repartition_line_ids')
                         values.clear()
@@ -461,11 +470,12 @@ class AccountChartTemplate(models.AbstractModel):
             if model in data:
                 data[model] = data.pop(model)
 
-        # Remove data of unknown fields present in the company template
-        company_data = data.get('res.company')
-        if company_data and not self.env.context.get('l10n_check_fields_complete'):
-            for fname in list(company_data.get(company.id)):
-                if fname not in company._fields:
+        if data.get('res.company', {}).get(company.id):
+            # Filter out default values that we don't want to ignore if the field is not present, in any case.
+            company_data_to_filter = {'account_production_wip_account_id', 'account_production_wip_overhead_account_id'}
+            # Remove data of unknown fields present in the company template
+            for fname in list(data['res.company'][company.id]):
+                if fname not in company._fields and (not self.env.context.get('l10n_check_fields_complete') or fname in company_data_to_filter):
                     del data['res.company'][company.id][fname]
 
         # Translate the untranslatable fields we want to translate anyway
@@ -514,9 +524,14 @@ class AccountChartTemplate(models.AbstractModel):
                 ):
                     try:
                         values[fname] = self.ref(value).id if value not in ('', 'False', 'None') else False
-                    except ValueError as e:
-                        _logger.warning("Failed when trying to recover %s for field=%s", value, field)
-                        failed_fields.append(fname)
+                    except ValueError:
+                        if model._name == 'res.company':
+                            # Try a fallback on the company when reloading/loading on a branch
+                            values[fname] = self.env.company[fname] or self.env.company.root_id[fname] or False
+                        else:
+                            _logger.warning("Failed when trying to recover %s for field=%s", value, field)
+                            failed_fields.append(fname)
+                            values[fname] = False
                 elif field.type in ('one2many', 'many2many') and isinstance(value[0], (list, tuple)):
                     for i, (command, _id, *last_part) in enumerate(value):
                         if last_part:
@@ -791,6 +806,34 @@ class AccountChartTemplate(models.AbstractModel):
             ])
             for company_attr_name, account in zip(accounts_data.keys(), accounts):
                 company[company_attr_name] = account
+
+        # No fields on company
+        is_accounting_installed_next = self.env["ir.module.module"].search([('name', '=', 'accountant')]).state in ('to install', 'installed')
+        if not company.parent_id and not is_accounting_installed_next:
+            accounts_data_no_fields = {
+                'account_journal_payment_debit_account_id': {
+                    'name': _("Outstanding Receipts"),
+                    'prefix': bank_prefix,
+                    'code_digits': code_digits,
+                    'account_type': 'asset_current',
+                    'reconcile': True,
+                },
+                'account_journal_payment_credit_account_id': {
+                    'name': _("Outstanding Payments"),
+                    'prefix': bank_prefix,
+                    'code_digits': code_digits,
+                    'account_type': 'asset_current',
+                    'reconcile': True,
+                },
+            }
+            self.env['account.account']._load_records([
+                {
+                    'xml_id': f"account.{company.id}_{xml_id}",
+                    'values': values,
+                    'noupdate': True,
+                }
+                for xml_id, values in accounts_data_no_fields.items()
+            ])
 
     @api.model
     def _instantiate_foreign_taxes(self, country, company):

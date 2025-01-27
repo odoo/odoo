@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="external_layout_din5008_account_move" inherit_id="l10n_din5008.external_layout_din5008">
+            <xpath expr="//div[@id='din5008_report_main_address']" position="before">
+                <t t-if="o and o._name == 'account.move' and o.partner_id">
+                    <t t-set="address">
+                        <address class="mb-0" t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
+                        <div t-if="o.partner_id.commercial_partner_id == o.partner_id and o.partner_id.commercial_partner_id.vat" id="partner_vat_address_same_as_shipping">
+                            <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                            <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
+                        </div>
+                    </t>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

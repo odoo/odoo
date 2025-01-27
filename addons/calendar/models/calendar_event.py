@@ -533,7 +533,7 @@ class Meeting(models.Model):
         # get list of models ids and filter out None values directly
         model_ids = list(filter(None, {values.get('res_model_id', defaults.get('res_model_id')) for values in vals_list}))
         model_name = defaults.get('res_model')
-        valid_activity_model_ids = model_name and self.env[model_name].sudo().browse(model_ids).filtered(lambda m: 'activity_ids' in m).ids or []
+        valid_activity_model_ids = model_name and model_name not in self._get_activity_excluded_models() and self.env[model_name].sudo().browse(model_ids).filtered(lambda m: 'activity_ids' in m).ids or []
         if meeting_activity_type and not defaults.get('activity_ids'):
             for values in vals_list:
                 # created from calendar: try to create an activity on the related record
@@ -752,9 +752,10 @@ class Meeting(models.Model):
     def _check_private_event_conditions(self):
         """ Checks if the event is private, returning True if the conditions match and False otherwise. """
         self.ensure_one()
-        event_is_private = (self.privacy == 'private' or (not self.privacy and self.user_id and self.user_id.calendar_default_privacy == 'private'))
+        event_is_private = self.privacy == 'private'
+        calendar_is_private = not self.privacy and self.sudo().user_id.calendar_default_privacy == 'private'
         user_is_not_partner = self.user_id.id != self.env.uid and self.env.user.partner_id not in self.partner_ids
-        return event_is_private and user_is_not_partner
+        return (event_is_private or calendar_is_private) and user_is_not_partner
 
     @api.depends('privacy', 'user_id')
     def _compute_display_name(self):
@@ -1336,6 +1337,16 @@ class Meeting(models.Model):
     # ------------------------------------------------------------
     # TOOLS
     # ------------------------------------------------------------
+
+    @api.model
+    def _get_activity_excluded_models(self):
+        """
+        For some models, we don't want to automatically create activities when a calendar.event is created.
+        (This is the case notably for appointment.types)
+        This hook method allows to specify those models.
+        See calendar.event create method for details.
+        """
+        return []
 
     def _reset_attendees_status(self):
         """ Reset attendees status to pending and accept event for current user. """

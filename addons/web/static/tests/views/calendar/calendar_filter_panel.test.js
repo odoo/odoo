@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { click, queryAllTexts } from "@odoo/hoot-dom";
-import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, mountWithCleanup, preloadBundle } from "@web/../tests/web_test_helpers";
 import { FAKE_MODEL } from "./calendar_test_helpers";
 
 import { CalendarFilterPanel } from "@web/views/calendar/filter_panel/calendar_filter_panel";
@@ -15,6 +15,8 @@ async function start(props = {}) {
         props: { ...FAKE_PROPS, ...props },
     });
 }
+
+preloadBundle("web.fullcalendar_lib");
 
 test(`render filter panel`, async () => {
     await start({});

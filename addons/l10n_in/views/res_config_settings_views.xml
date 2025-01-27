@@ -47,7 +47,8 @@
                         </setting>
                         <setting name="india_gstin_status_api_settings"
                                  string="Check GST Number Status"
-                                 help="Enable this to check the GST Number status">
+                                 help="Enable this to check the GST Number status"
+                                 documentation="/applications/finance/fiscal_localizations/india.html#indian-check-gstin-status">
                             <field name="module_l10n_in_gstin_status" class="oe_inline"/>
                         </setting>
                     </block>
@@ -56,7 +57,7 @@
             </xpath>
             <app name="account" position="inside">
                 <block title="Product" name="l10n_in_product_setting_container" invisible="country_code != 'IN'">
-                    <setting string="Enable HSN/SAC Validation" help="HSN/SAC Digit Validation for GST Compliance based on your Aggregate Annual Turnover (AATO).">
+                    <setting string="HSN/SAC Validation" help="HSN/SAC Digit Validation for GST Compliance based on your Aggregate Annual Turnover (AATO).">
                         <field name="l10n_in_hsn_code_digit"/>
                     </setting>
                 </block>

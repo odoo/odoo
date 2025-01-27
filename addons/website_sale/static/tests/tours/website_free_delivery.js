@@ -5,6 +5,7 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add("check_free_delivery", {
     url: "/shop",
+    checkDelay: 50,
     steps: () => [
         // Part 1: Check free delivery
         ...tourUtils.addToCart({ productName: "Office Chair Black TEST" }),

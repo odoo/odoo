@@ -88,12 +88,6 @@ export class AttributeSelection extends Component {
             : attribute.product_template_value_ids;
     }
 
-    availableAttributes() {
-        return this.props.product.attribute_line_ids.filter(
-            (a) => a.attribute_id.create_variant !== "always"
-        );
-    }
-
     initAttribute() {
         const initCustomValue = (value) => {
             const selectedValue = this.selfOrder.editedLine?.custom_attribute_value_ids.find(
@@ -115,7 +109,7 @@ export class AttributeSelection extends Component {
             return false;
         };
 
-        for (const attr of this.availableAttributes()) {
+        for (const attr of this.props.product.attribute_line_ids) {
             this.selectedValues[attr.id] = {};
 
             for (const value of attr.product_template_value_ids) {

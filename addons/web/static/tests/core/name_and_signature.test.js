@@ -96,3 +96,18 @@ test("test name_and_signature widget default signature", async function () {
     const res = await mountWithCleanup(NameAndSignature, { props });
     expect(res.isSignatureEmpty).toBe(false);
 });
+
+test("test name_and_signature widget update signmode with onSignatureChange prop", async function () {
+    let currentSignMode = "";
+    const props = {
+        signature: { name: "Test Owner" },
+        onSignatureChange: function (signMode) {
+            if (currentSignMode !== signMode) {
+                currentSignMode = signMode;
+            }
+        },
+    };
+    await mountWithCleanup(NameAndSignature, { props });
+    await contains(".o_web_sign_draw_button").click();
+    expect(currentSignMode).toBe("draw");
+});

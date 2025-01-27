@@ -8,6 +8,7 @@ import {
     makeContentsInline,
     removeClass,
     setTagName,
+    splitTextNode,
     unwrapContents,
 } from "../utils/dom";
 import {
@@ -24,92 +25,63 @@ import { DIRECTIONS, childNodeIndex, nodeSize, rightPos } from "../utils/positio
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { convertList, getListMode } from "@html_editor/utils/list";
 
+/**
+ * @typedef {Object} DomShared
+ * @property { DomPlugin['insert'] } insert
+ * @property { DomPlugin['copyAttributes'] } copyAttributes
+ */
+
 export class DomPlugin extends Plugin {
-    static name = "dom";
-    static dependencies = ["selection", "split"];
-    static shared = ["domInsert", "copyAttributes"];
+    static id = "dom";
+    static dependencies = ["selection", "history", "split", "delete", "lineBreak"];
+    static shared = ["insert", "copyAttributes", "setTag"];
     resources = {
-        powerboxItems: {
-            name: _t("Separator"),
-            description: _t("Insert a horizontal rule separator"),
-            category: "structure",
-            fontawesome: "fa-minus",
-            action(dispatch) {
-                dispatch("INSERT_SEPARATOR");
+        user_commands: [
+            { id: "insertFontAwesome", run: this.insertFontAwesome.bind(this) },
+            { id: "setTag", run: this.setTag.bind(this) },
+            {
+                id: "insertSeparator",
+                title: _t("Separator"),
+                description: _t("Insert a horizontal rule separator"),
+                icon: "fa-minus",
+                run: this.insertSeparator.bind(this),
             },
+        ],
+        powerbox_items: {
+            categoryId: "structure",
+            commandId: "insertSeparator",
         },
+        /** Handlers */
+        clean_handlers: this.removeEmptyClassAndStyleAttributes.bind(this),
+        clean_for_save_handlers: ({ root }) => {
+            this.removeEmptyClassAndStyleAttributes(root);
+            for (const el of root.querySelectorAll("hr[contenteditable]")) {
+                el.removeAttribute("contenteditable");
+            }
+        },
+        normalize_handlers: this.normalize.bind(this),
     };
     contentEditableToRemove = new Set();
-
-    handleCommand(command, payload) {
-        switch (command) {
-            case "SET_TAG":
-                this.setTag(payload);
-                break;
-            case "INSERT_FONT_AWESOME":
-                this.insertFontAwesome(payload.faClass);
-                break;
-            case "INSERT_SEPARATOR":
-                this.insertSeparator();
-                break;
-            case "CLEAN":
-                this.removeEmptyClassAndStyleAttributes(payload.root);
-                break;
-            case "CLEAN_FOR_SAVE": {
-                this.removeEmptyClassAndStyleAttributes(payload.root);
-                for (const el of payload.root.querySelectorAll("hr[contenteditable]")) {
-                    el.removeAttribute("contenteditable");
-                }
-                break;
-            }
-            case "NORMALIZE": {
-                // TODO @phoenix: payload.node is expected to be an Element, rename ?
-                if (payload.node.tagName === "HR") {
-                    const node = payload.node;
-                    node.setAttribute(
-                        "contenteditable",
-                        node.hasAttribute("contenteditable")
-                            ? node.getAttribute("contenteditable")
-                            : "false"
-                    );
-                } else {
-                    for (const separator of payload.node.querySelectorAll("hr")) {
-                        separator.setAttribute(
-                            "contenteditable",
-                            separator.hasAttribute("contenteditable")
-                                ? separator.getAttribute("contenteditable")
-                                : "false"
-                        );
-                    }
-                }
-                break;
-            }
-        }
-    }
 
     // Shared
 
     /**
      * @param {string | DocumentFragment | null} content
      */
-    domInsert(content) {
+    insert(content) {
         if (!content) {
             return;
         }
-        let selection = this.shared.getEditableSelection();
+        let selection = this.dependencies.selection.getEditableSelection();
         let startNode;
         let insertBefore = false;
         if (!selection.isCollapsed) {
-            this.dispatch("DELETE_SELECTION", { selection });
-            selection = this.shared.getEditableSelection();
+            this.dependencies.delete.deleteSelection();
+            selection = this.dependencies.selection.getEditableSelection();
         }
         if (selection.startContainer.nodeType === Node.TEXT_NODE) {
             insertBefore = !selection.startOffset;
-            this.shared.splitTextNode(
-                selection.startContainer,
-                selection.startOffset,
-                DIRECTIONS.LEFT
-            );
+            splitTextNode(selection.startContainer, selection.startOffset, DIRECTIONS.LEFT);
             startNode = selection.startContainer;
         }
 
@@ -121,7 +93,7 @@ export class DomPlugin extends Plugin {
             container.textContent = content;
         } else {
             for (const child of content.children) {
-                this.dispatch("NORMALIZE", { node: child });
+                this.dispatchTo("normalize_handlers", child);
             }
             container.replaceChildren(content);
         }
@@ -142,7 +114,7 @@ export class DomPlugin extends Plugin {
             unwrapContents(container.lastChild);
         }
 
-        startNode = startNode || this.shared.getEditableSelection().anchorNode;
+        startNode = startNode || this.dependencies.selection.getEditableSelection().anchorNode;
         const block = closestBlock(selection.anchorNode);
 
         const shouldUnwrap = (node) =>
@@ -186,7 +158,7 @@ export class DomPlugin extends Plugin {
                 // container to extract and paste the text content of the list.
                 if (container.firstChild.nodeName === "LI") {
                     const deepestBlock = closestBlock(firstLeaf(container.firstChild));
-                    this.shared.splitAroundUntil(deepestBlock, container.firstChild);
+                    this.dependencies.split.splitAroundUntil(deepestBlock, container.firstChild);
                     container.firstElementChild.replaceChildren(...deepestBlock.childNodes);
                 }
                 containerFirstChild.replaceChildren(...container.firstElementChild.childNodes);
@@ -198,7 +170,7 @@ export class DomPlugin extends Plugin {
                 // to extract and paste the text content of the list.
                 if (container.lastChild.nodeName === "LI") {
                     const deepestBlock = closestBlock(lastLeaf(container.lastChild));
-                    this.shared.splitAroundUntil(deepestBlock, container.lastChild);
+                    this.dependencies.split.splitAroundUntil(deepestBlock, container.lastChild);
                     container.lastElementChild.replaceChildren(...deepestBlock.childNodes);
                 }
                 containerLastChild.replaceChildren(...container.lastElementChild.childNodes);
@@ -251,8 +223,8 @@ export class DomPlugin extends Plugin {
         // If all the Html have been isolated, We force a split of the parent element
         // to have the need new line in the final result
         if (!container.hasChildNodes()) {
-            if (this.shared.isUnsplittable(closestBlock(currentNode.nextSibling))) {
-                this.dispatch("INSERT_LINEBREAK_NODE", {
+            if (this.dependencies.split.isUnsplittable(closestBlock(currentNode.nextSibling))) {
+                this.dependencies.lineBreak.insertLineBreakNode({
                     targetNode: currentNode.nextSibling,
                     targetOffset: 0,
                 });
@@ -260,7 +232,7 @@ export class DomPlugin extends Plugin {
                 // If we arrive here, the o_enter index should always be 0.
                 const parent = currentNode.nextSibling.parentElement;
                 const index = [...parent.childNodes].indexOf(currentNode.nextSibling);
-                this.dispatch("SPLIT_BLOCK_NODE", {
+                this.dependencies.split.splitBlockNode({
                     targetNode: parent,
                     targetOffset: index,
                 });
@@ -278,9 +250,9 @@ export class DomPlugin extends Plugin {
                     !this.isEditionBoundary(currentNode.parentElement) &&
                     (!allowsParagraphRelatedElements(currentNode.parentElement) ||
                         (currentNode.parentElement.nodeName === "LI" &&
-                            !this.shared.isUnsplittable(nodeToInsert)))
+                            !this.dependencies.split.isUnsplittable(nodeToInsert)))
                 ) {
-                    if (this.shared.isUnsplittable(currentNode.parentElement)) {
+                    if (this.dependencies.split.isUnsplittable(currentNode.parentElement)) {
                         // If we have to insert a table, we cannot afford to unwrap it
                         // we need to search for a more suitable spot to put the table in
                         if (nodeToInsert.nodeName === "TABLE") {
@@ -298,14 +270,14 @@ export class DomPlugin extends Plugin {
                         offset += 1;
                     }
                     if (offset) {
-                        const [left, right] = this.shared.splitElement(
+                        const [left, right] = this.dependencies.split.splitElement(
                             currentNode.parentElement,
                             offset
                         );
                         currentNode = insertBefore ? right : left;
                         const otherNode = insertBefore ? left : right;
                         if (
-                            this.shared.isUnsplittable(nodeToInsert) &&
+                            this.dependencies.split.isUnsplittable(nodeToInsert) &&
                             container.childNodes.length === 1
                         ) {
                             fillShrunkPhrasingParent(otherNode);
@@ -329,7 +301,7 @@ export class DomPlugin extends Plugin {
                 if (
                     currentNode.parentElement.nodeName === "LI" &&
                     isBlock(nodeToInsert) &&
-                    this.shared.isUnsplittable(nodeToInsert)
+                    this.dependencies.split.isUnsplittable(nodeToInsert)
                 ) {
                     const br = document.createElement("br");
                     currentNode[currentNode.textContent ? "after" : "before"](br);
@@ -361,7 +333,7 @@ export class DomPlugin extends Plugin {
                 (nodeToInsert.nodeType !== Node.ELEMENT_NODE ||
                     nodeToInsert.tagName !== "BR" ||
                     nodeToInsert.nextSibling) &&
-                !(isBlock(nodeToInsert) && this.shared.isUnsplittable(nodeToInsert))
+                !(isBlock(nodeToInsert) && this.dependencies.split.isUnsplittable(nodeToInsert))
             ) {
                 // Avoid cleaning the trailing BR if it is nodeToInsert
                 cleanTrailingBR(currentNode.parentElement);
@@ -373,7 +345,7 @@ export class DomPlugin extends Plugin {
         }
         const previousNode = currentNode.previousSibling;
         if (
-            !(isBlock(currentNode) && this.shared.isUnsplittable(currentNode)) &&
+            !(isBlock(currentNode) && this.dependencies.split.isUnsplittable(currentNode)) &&
             cleanTrailingBR(currentNode.parentElement)
         ) {
             // Clean the last inserted trailing BR if any
@@ -390,7 +362,7 @@ export class DomPlugin extends Plugin {
             // Correct the position if it happens to be in the editable root.
             lastPosition = getDeepestPosition(...lastPosition);
         }
-        this.shared.setSelection(
+        this.dependencies.selection.setSelection(
             { anchorNode: lastPosition[0], anchorOffset: lastPosition[1] },
             { normalize: false }
         );
@@ -404,8 +376,12 @@ export class DomPlugin extends Plugin {
         return node.hasAttribute("contenteditable");
     }
 
+    /**
+     * @param {HTMLElement} source
+     * @param {HTMLElement} target
+     */
     copyAttributes(source, target) {
-        this.dispatch("CLEAN", { root: source });
+        this.dispatchTo("clean_handlers", source);
         for (const attr of source.attributes) {
             if (attr.name === "class") {
                 target.classList.add(...source.classList);
@@ -419,19 +395,24 @@ export class DomPlugin extends Plugin {
     // commands
     // --------------------------------------------------------------------------
 
-    insertFontAwesome(faClass = "fa fa-star") {
+    insertFontAwesome({ faClass = "fa fa-star" } = {}) {
         const fontAwesomeNode = document.createElement("i");
         fontAwesomeNode.className = faClass;
-        this.domInsert(fontAwesomeNode);
-        this.dispatch("ADD_STEP");
+        this.insert(fontAwesomeNode);
+        this.dependencies.history.addStep();
         const [anchorNode, anchorOffset] = rightPos(fontAwesomeNode);
-        this.shared.setSelection({ anchorNode, anchorOffset });
+        this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
     }
 
+    /**
+     * @param {Object} param0
+     * @param {string} param0.tagName
+     * @param {string} [param0.extraClass]
+     */
     setTag({ tagName, extraClass = "" }) {
         tagName = tagName.toUpperCase();
-        const cursors = this.shared.preserveSelection();
-        const selectedBlocks = [...this.shared.getTraversedBlocks()];
+        const cursors = this.dependencies.selection.preserveSelection();
+        const selectedBlocks = [...this.dependencies.selection.getTraversedBlocks()];
         const deepestSelectedBlocks = selectedBlocks.filter(
             (block) =>
                 !descendants(block).some((descendant) => selectedBlocks.includes(descendant)) &&
@@ -476,11 +457,11 @@ export class DomPlugin extends Plugin {
             }
         }
         cursors.restore();
-        this.dispatch("ADD_STEP");
+        this.dependencies.history.addStep();
     }
 
     insertSeparator() {
-        const selection = this.shared.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
         const sep = this.document.createElement("hr");
         const block = closestBlock(selection.startContainer);
         const element =
@@ -491,7 +472,7 @@ export class DomPlugin extends Plugin {
         if (element && element !== this.editable) {
             element.before(sep);
         }
-        this.dispatch("ADD_STEP");
+        this.dependencies.history.addStep();
     }
 
     removeEmptyClassAndStyleAttributes(root) {
@@ -501,6 +482,24 @@ export class DomPlugin extends Plugin {
             }
             if (node.style && !node.style.length) {
                 node.removeAttribute("style");
+            }
+        }
+    }
+
+    normalize(el) {
+        if (el.tagName === "HR") {
+            el.setAttribute(
+                "contenteditable",
+                el.hasAttribute("contenteditable") ? el.getAttribute("contenteditable") : "false"
+            );
+        } else {
+            for (const separator of el.querySelectorAll("hr")) {
+                separator.setAttribute(
+                    "contenteditable",
+                    separator.hasAttribute("contenteditable")
+                        ? separator.getAttribute("contenteditable")
+                        : "false"
+                );
             }
         }
     }

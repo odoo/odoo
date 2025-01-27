@@ -1,7 +1,10 @@
 .o-discuss-CallMenu-buttonContent {
     max-width: 150px;
+    @include o-mail-call-bordered;
 }
 
-.o-discuss-CallMenu-dot {
-    animation: flash 3s ease infinite;
+.o-discuss-CallMenu-animation {
+    animation: flash 2s;
+    animation-direction: alternate;
+    animation-iteration-count: 2;
 }

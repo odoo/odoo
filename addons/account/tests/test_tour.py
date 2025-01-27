@@ -40,6 +40,7 @@ class TestUi(AccountTestInvoicingHttpCommon):
             'country_id': None, # Also resets account_fiscal_country_id
             'account_sale_tax_id': None,
             'account_purchase_tax_id': None,
+            'external_report_layout_id': self.env.ref('web.external_layout_standard').id,
         })
 
         account_with_taxes = self.env['account.account'].search([('tax_ids', '!=', False), ('company_ids', '=', self.env.company.id)])

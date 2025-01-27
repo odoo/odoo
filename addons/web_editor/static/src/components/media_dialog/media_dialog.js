@@ -204,6 +204,17 @@ export class MediaDialog extends Component {
                     if (this.props.media.dataset.shapeAnimationSpeed) {
                         element.dataset.shapeAnimationSpeed = this.props.media.dataset.shapeAnimationSpeed;
                     }
+                } else if ([TABS.VIDEOS.id, TABS.DOCUMENTS.id].includes(this.state.activeTab)) {
+                    const parentEl = this.props.media.parentElement;
+                    if (
+                        parentEl &&
+                        parentEl.tagName === "A" &&
+                        parentEl.children.length === 1 &&
+                        this.props.media.tagName === "IMG"
+                    ) {
+                        // If an image is wrapped in an <a> tag, we remove the link when replacing it with a video or document
+                        parentEl.replaceWith(parentEl.firstElementChild);
+                    }
                 }
             }
             for (const otherTab of Object.keys(TABS).filter(key => key !== this.state.activeTab)) {
@@ -278,9 +289,9 @@ export class MediaDialog extends Component {
         if (saveSelectedMedia) {
             const elements = await this.renderMedia(selectedMedia);
             if (this.props.multiImages) {
-                this.props.save(elements);
+                await this.props.save(elements);
             } else {
-                this.props.save(elements[0]);
+                await this.props.save(elements[0]);
             }
         }
         this.props.close();

@@ -228,6 +228,9 @@ export class PeerToPeer extends EventTarget {
         [LOG_LEVEL.WARN]: () => {},
         [LOG_LEVEL.ERROR]: () => {},
     };
+    get isActive() {
+        return Boolean(this.selfId !== undefined && this.channelId !== undefined);
+    }
     /**
      * @param {object} [options]
      * @param {String} [options.notificationRoute] the route used to communicate with the odoo server
@@ -281,6 +284,8 @@ export class PeerToPeer extends EventTarget {
         this.removeALlPeers();
         this.selfId = undefined;
         this.channelId = undefined;
+        this._isPendingNotify = false;
+        this._notificationsToSend.clear();
         this._localInfo = Object.assign(this._localInfo, {
             isSelfMuted: false,
             isRaisingHand: false,
@@ -549,6 +554,9 @@ export class PeerToPeer extends EventTarget {
                     return;
                 }
                 peer.isBuildingAnswer = false;
+                if (!this.isActive) {
+                    return;
+                }
                 this._emitLog(id, `sending answer`, LOG_LEVEL.DEBUG);
                 await this._busNotify(INTERNAL_EVENT.ANSWER, {
                     payload: {
@@ -663,6 +671,10 @@ export class PeerToPeer extends EventTarget {
         }
         this._isPendingNotify = true;
         await new Promise((resolve) => setTimeout(resolve, this._batchDelay));
+        if (!this.isActive) {
+            this._isPendingNotify = false;
+            return;
+        }
         const ids = [];
         const notifications = [];
         this._notificationsToSend.forEach((notification, id) => {
@@ -769,6 +781,9 @@ export class PeerToPeer extends EventTarget {
             if (!event.candidate) {
                 return;
             }
+            if (!this.isActive) {
+                return;
+            }
             await this._busNotify(INTERNAL_EVENT.ICE_CANDIDATE, {
                 payload: {
                     candidate: event.candidate,
@@ -818,6 +833,9 @@ export class PeerToPeer extends EventTarget {
                 return;
             }
             peer.isBuildingOffer = false;
+            if (!this.isActive) {
+                return;
+            }
             await this._busNotify(INTERNAL_EVENT.OFFER, {
                 payload: {
                     sdp: peerConnection.localDescription,

@@ -198,7 +198,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             trigger: '.my_wish_quantity:contains(1)',
         },
         {
-            trigger: '.oe_product_cart:contains("Bottle") .o_add_wishlist.disabled',
+            trigger: '.oe_product_cart:contains("Bottle") .o_add_wishlist.disabled:not(:visible)',
         },
         {
             content: "Click on product",
@@ -207,7 +207,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         },
         {
             content: "Select Bottle with second variant from /product",
-            trigger: '.js_variant_change[data-value_name="blue"]',
+            trigger: "input.js_variant_change[data-value_name=blue]:not(:visible)",
             run: "click",
         },
         {
@@ -220,7 +220,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         },
         {
             content: "Select Bottle with third variant from /product",
-            trigger: '.js_variant_change[data-value_name="black"]',
+            trigger: "input.js_variant_change[data-value_name=black]:not(:visible)",
             run: "click",
         },
         {
@@ -292,7 +292,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         },
         {
             content: "Check there is wishlist button on product from /shop",
-            trigger: '.oe_product_cart:contains("Bottle") .o_add_wishlist',
+            trigger: ".oe_product_cart:contains(Bottle) .o_add_wishlist:not(:visible)",
         },
         {
             content: "Click on product",
@@ -301,7 +301,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         },
         {
             content: "Select Bottle with first variant (red) from /product",
-            trigger: '.js_variant_change[data-value_name="red"]',
+            trigger: "input.js_variant_change[data-value_name=red]:not(:visible)",
             run: "click",
         },
         {
@@ -310,7 +310,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         },
         {
             content: "Select Bottle with second variant (blue) from /product",
-            trigger: '.js_variant_change[data-value_name="blue"]',
+            trigger: "input.js_variant_change[data-value_name=blue]:not(:visible)",
             run: "click",
         },
         {

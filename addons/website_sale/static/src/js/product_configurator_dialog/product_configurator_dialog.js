@@ -49,4 +49,13 @@ patch(ProductConfiguratorDialog.prototype, {
     canBeSold() {
         return this.state.products.every(p => p.can_be_sold);
     },
+
+    /**
+     * Check whether to show the "shop" buttons in the dialog footer.
+     *
+     * @return {Boolean} - Whether to show the "shop" buttons in the dialog footer.
+     */
+    showShopButtons() {
+        return this.props.isFrontend && !this.props.edit;
+    },
 });

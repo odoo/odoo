@@ -77,6 +77,27 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
             'currency': tx.currency_id.name,
         })
 
+    def test_processing_values_contain_rounded_amount_idr(self):
+        """ Ensure that for IDR currency, processing_values should contain converted_amount
+        which is the amount rounded down to the nearest 0."""
+        currency_idr = self.env.ref('base.IDR')
+        tx = self._create_transaction('redirect', amount=1000.50, currency_id=currency_idr.id)
+        processing_values = tx._get_specific_processing_values({})
+        self.assertEqual(processing_values.get('rounded_amount'), 1000)
+
+    def test_charge_request_contains_rounded_amount_idr(self):
+        """ Ensure that for IDR currency, when creating charge API, the amount in payload
+        should be rounded down to the nearest 0 """
+        currency_idr = self.env.ref('base.IDR')
+        tx = self._create_transaction('redirect', amount=1000.50, currency_id=currency_idr.id)
+        with patch(
+            'odoo.addons.payment_xendit.models.payment_provider.PaymentProvider'
+            '._xendit_make_request', return_value=self.charge_notification_data
+        ) as mock_req:
+            tx._xendit_create_charge('dummytoken')
+            payload = mock_req.call_args.kwargs.get('payload')
+            self.assertEqual(payload['amount'], 1000)
+
     def test_get_tx_from_notification_data_returns_tx(self):
         """ Test that the transaction is found based on the notification data. """
         tx = self._create_transaction('redirect')

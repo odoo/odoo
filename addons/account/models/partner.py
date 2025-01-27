@@ -600,6 +600,7 @@ class ResPartner(models.Model):
     duplicated_bank_account_partners_count = fields.Integer(
         compute='_compute_duplicated_bank_account_partners_count',
     )
+    is_coa_installed = fields.Boolean(store=False, default=lambda partner: bool(partner.env.company.chart_template))
 
     property_outbound_payment_method_line_id = fields.Many2one(
         comodel_name='account.payment.method.line',
@@ -639,10 +640,10 @@ class ResPartner(models.Model):
     @api.depends_context('company')
     def _compute_invoice_edi_format(self):
         for partner in self:
-            if partner.invoice_edi_format_store == 'none':
+            if partner.commercial_partner_id.invoice_edi_format_store == 'none':
                 partner.invoice_edi_format = False
             else:
-                partner.invoice_edi_format = partner.invoice_edi_format_store or partner._get_suggested_invoice_edi_format()
+                partner.invoice_edi_format = partner.commercial_partner_id.invoice_edi_format_store or partner.commercial_partner_id._get_suggested_invoice_edi_format()
 
     def _inverse_invoice_edi_format(self):
         for partner in self:
@@ -792,6 +793,7 @@ class ResPartner(models.Model):
                         n=n,
                     ))
                     self.invalidate_recordset([field])
+                    self.modified([field])
             except (pgerrors.LockNotAvailable, pgerrors.SerializationFailure):
                 _logger.debug('Another transaction already locked partner rows. Cannot update partner ranks.')
 

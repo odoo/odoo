@@ -3,17 +3,17 @@
 # 	* mail
 # 
 # Translators:
-# Larissa Manderfeld, 2024
 # Wil Odoo, 2024
 # Martin Trigaux, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:48+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -253,25 +253,13 @@ msgstr "%s Tage überfällig"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
-msgid "%s has a request"
-msgstr "%s hat eine Anfrage"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
-msgid "%s has a suggestion"
-msgstr "%s hat einen Vorschlag"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/discuss/typing/common/typing.js:0
 msgid "%s is typing..."
 msgstr "%s schreibt..."
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/search_messages_panel.js:0
+#: code:addons/mail/static/src/core/common/search_message_result.js:0
 msgid "%s messages found"
 msgstr "%s Nachrichten gefunden"
 
@@ -465,12 +453,6 @@ msgstr "<p>Erstellen Sie hier einen Kanal.</p>"
 #: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
 msgid "<p>Create a public or private channel.</p>"
 msgstr "<p>Erstellen Sie einen öffentlichen oder privaten Kanal.</p>"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/composer.js:0
-msgid "<samp>%(send_keybind)s</samp><i> to send</i>"
-msgstr "<samp>%(send_keybind)s</samp><i> zum Senden</i>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -681,6 +663,13 @@ msgstr "KI"
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
 msgid "Accept"
 msgstr "Akzeptieren"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_action_list.xml:0
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
+msgid "Accept with camera"
+msgstr "Mit Kamera annehmen"
 
 #. module: mail
 #. odoo-python
@@ -1313,6 +1302,13 @@ msgstr "Beim Senden einer E-Mail ist ein Fehler aufgetreten"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/failure_model.js:0
+msgid "An error occurred when sending an email on “%(record_name)s”"
+msgstr ""
+"Beim Senden einer E-Mail auf „%(record_name)s“ ist ein Fehler aufgetreten"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.xml:0
 msgid "An error occurred while fetching messages."
 msgstr "Beim Abrufen der Nachrichten ist ein Fehler aufgetreten."
@@ -1741,6 +1737,12 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+msgid "Blur Background"
+msgstr "Hintergrund unscharf machen"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 msgid "Blur video background"
 msgstr "Video-Hintergrund trüben"
@@ -1839,6 +1841,8 @@ msgid ""
 "Brave: enable 'Google Services for Push Messaging' to enable push "
 "notifications"
 msgstr ""
+"Brave: Aktivieren Sie „Google-Services für Push-Benachrichtigungen“, um "
+"Push-Benachrichtigungen zu aktivieren"
 
 #. module: mail
 #. odoo-javascript
@@ -1865,8 +1869,8 @@ msgstr "E-mail-CC"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
-msgid "CTRL-Enter"
-msgstr "STRG-Enter"
+msgid "CTRL"
+msgstr "STRG"
 
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_call
@@ -2271,6 +2275,7 @@ msgstr "Klicken, um die Anhänge zu sehen"
 #: code:addons/mail/static/src/chatter/web/chatter.xml:0
 #: code:addons/mail/static/src/chatter/web/mail_composer_schedule_dialog.xml:0
 #: code:addons/mail/static/src/chatter/web/scheduled_message.js:0
+#: code:addons/mail/static/src/core/common/search_message_input.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Close"
@@ -2308,7 +2313,7 @@ msgstr "Banner schließen"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/search_messages_panel.xml:0
+#: code:addons/mail/static/src/core/common/search_message_input.xml:0
 msgid "Close button"
 msgstr "Schließen-Schaltfläche"
 
@@ -2320,7 +2325,7 @@ msgstr "Panel schließen"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/search_messages_panel.xml:0
+#: code:addons/mail/static/src/core/common/search_message_input.xml:0
 #: code:addons/mail/static/src/core/web/messaging_menu_quick_search.xml:0
 msgid "Close search"
 msgstr "Suche schließen"
@@ -2344,8 +2349,10 @@ msgstr "Antworten auf einer bestimmten E-Mail-Adresse sammeln"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
-msgid "Come here often? Install Odoo on your device!"
-msgstr "Sind Sie oft hier? Installieren Sie Odoo auf Ihrem Gerät!"
+msgid "Come here often? Install the app for quick and easy access!"
+msgstr ""
+"Sind Sie oft hier? Installieren Sie die App für schnellen und einfachen "
+"Zugriff!"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -3390,6 +3397,7 @@ msgstr "Erledigt und nächste Aktivität planen"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_list.js:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "Download"
@@ -3412,6 +3420,12 @@ msgstr "Protokolle herunterladen"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 msgid "Download:"
 msgstr "Herunterladen:"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/mail_attachment_dropzone.xml:0
+msgid "Drop Files here"
+msgstr "Dateien hier ablegen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__date_deadline
@@ -3595,6 +3609,12 @@ msgid "Email Domain"
 msgstr "E-Mail-Domain"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
+msgid "Email Failure: %(modelName)s"
+msgstr "E-Mail-Fehler %(modelName)s"
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_primary_color
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__email_primary_color
 msgid "Email Header Color"
@@ -3717,7 +3737,7 @@ msgstr "Assistent für die E-Mail-Erstellung"
 #: model:ir.model.fields,help:mail.field_mail_alias_mixin_optional__alias_domain
 #: model:ir.model.fields,help:mail.field_res_company__alias_domain_name
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr "E-Mail-Domain z. B. 'example.com' in 'odoo@example.com'"
+msgstr "E-Mail-Domain z. B. 'beispiel.com' in 'odoo@beispiel.com'"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -3765,15 +3785,15 @@ msgid "Employee Only"
 msgstr "Nur Mitarbeiter"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
+msgid "Enable"
+msgstr "Aktivieren"
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model_fields__tracking
 msgid "Enable Ordered Tracking"
 msgstr "Auftragsverfolgung aktivieren"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
-msgid "Enable desktop notifications to chat"
-msgstr "Desktop-Benachrichtigungen für den Chat aktivieren"
 
 #. module: mail
 #. odoo-javascript
@@ -3916,7 +3936,7 @@ msgstr "Aufklappen"
 #. odoo-javascript
 #: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
 msgid "Expand options"
-msgstr ""
+msgstr "Klappen Sie die Optionen aus."
 
 #. module: mail
 #. odoo-javascript
@@ -3953,7 +3973,7 @@ msgstr "Fehlgeschlagen"
 #. odoo-javascript
 #: code:addons/mail/static/src/webclient/web/webclient.js:0
 msgid "Failed to enable push notifications"
-msgstr ""
+msgstr "Push-Benachrichtigungen konnten nicht aktiviert werden"
 
 #. module: mail
 #. odoo-javascript
@@ -3991,9 +4011,9 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-msgid "Failed to render inline_template template: %(template_txt)s)"
+msgid "Failed to render inline_template template: %(template_txt)s"
 msgstr ""
-"Die Vorlage inline_template konnte nicht gerendert werden: %(template_txt)s)"
+"Die Vorlage inline_template konnte nicht gerendert werden: %(template_txt)s"
 
 #. module: mail
 #. odoo-python
@@ -4028,6 +4048,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_notification__failure_type
 msgid "Failure type"
 msgstr "Fehlertyp"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
+msgid "Failure: %(modelName)s"
+msgstr "Fehler: %(modelName)s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__starred_partner_ids
@@ -4437,8 +4463,10 @@ msgid "Groups"
 msgstr "Gruppen"
 
 #. module: mail
+#. odoo-javascript
 #. odoo-python
 #: code:addons/mail/controllers/discuss/public_page.py:0
+#: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
 #: model:ir.model,name:mail.model_mail_guest
 #: model:ir.model.fields,field_description:mail.field_bus_presence__guest_id
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__guest_id
@@ -4996,6 +5024,12 @@ msgid "Incoming Mail Servers"
 msgstr "Posteingangsserver"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
+msgid "Incoming Video Call..."
+msgstr "Eingehender Videoanruf ..."
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__automated
 msgid ""
 "Indicates this activity has been created automatically and not by any user."
@@ -5043,6 +5077,12 @@ msgstr "Vorlagen einfügen"
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
 msgid "Install"
 msgstr "Installieren"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
+msgid "Install Odoo"
+msgstr "Odoo installieren"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.discuss_channel_integrations_menu
@@ -5468,12 +5508,6 @@ msgstr "LIVE"
 #: model:ir.model.fields,field_description:mail.field_mail_template__lang
 msgid "Language"
 msgstr "Sprache"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/chat_hub.xml:0
-msgid "Large windows"
-msgstr "Große Fenster"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__date
@@ -5995,18 +6029,6 @@ msgstr "Mails"
 #: model:ir.model.fields,field_description:mail.field_mail_thread_main_attachment__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "Hauptanhang"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/chat_hub.js:0
-msgid "Make chats bigger"
-msgstr "Chats größer machen"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/chat_hub.js:0
-msgid "Make chats smaller"
-msgstr "Chats kleiner machen"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__reply_to_force_new
@@ -6827,6 +6849,7 @@ msgstr "Kein vorhandener Datensatz oder falsches Token."
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_patch.js:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__category__default
+#: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
 msgid "None"
 msgstr "Keine"
 
@@ -7225,6 +7248,12 @@ msgid "Open Channel"
 msgstr "Kanal öffnen"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "Open Discuss App"
+msgstr "Dialog-App öffnen"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_tree
 msgid "Open Document"
@@ -7235,6 +7264,12 @@ msgstr "Dokument öffnen"
 #: code:addons/mail/static/src/core/web/thread_actions.js:0
 msgid "Open Form View"
 msgstr "Formularansicht öffnen"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+msgid "Open Link"
+msgstr "Link öffnen"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_tree
@@ -7817,6 +7852,12 @@ msgid "Pop out Attachments"
 msgstr "Pop-out-Anhänge"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_view.xml:0
+msgid "Open preview in a separate window."
+msgstr "Öffnen Sie die Vorschau in einem separaten Fenster."
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__port
 msgid "Port"
 msgstr "Port"
@@ -7924,6 +7965,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Preview"
 msgstr "Vorschau"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
+msgid "Preview my camera"
+msgstr "Vorschau meiner Kamera"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -8279,11 +8326,18 @@ msgstr "Beziehungsfeld"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_list.js:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: code:addons/mail/static/src/core/common/link_preview.xml:0
 #: code:addons/mail/static/src/core/common/message_reaction_menu.xml:0
 msgid "Remove"
 msgstr "Entfernen"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+msgid "Remove Blur"
+msgstr "Unschärfe entfernen"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -8705,7 +8759,7 @@ msgstr "Skript"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/search_messages_panel.xml:0
+#: code:addons/mail/static/src/core/common/search_message_input.xml:0
 msgid "Search"
 msgstr "Suchen"
 
@@ -8726,8 +8780,14 @@ msgstr "Posteingangsserver suchen"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/search_messages_panel.js:0
+msgid "Search Message"
+msgstr "Nachricht suchen"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/chatter.xml:0
-#: code:addons/mail/static/src/core/common/search_messages_panel.xml:0
+#: code:addons/mail/static/src/core/common/search_message_input.xml:0
 #: code:addons/mail/static/src/core/common/thread_actions.js:0
 msgid "Search Messages"
 msgstr "Nachrichten suchen"
@@ -8751,7 +8811,7 @@ msgstr "Unterkanäle durchsuchen"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/search_messages_panel.xml:0
+#: code:addons/mail/static/src/core/common/search_message_input.xml:0
 #: code:addons/mail/static/src/discuss/core/public_web/sub_channel_list.xml:0
 msgid "Search button"
 msgstr "Suchschaltfläche"
@@ -8784,16 +8844,10 @@ msgstr "Nach einem Benutzer suchen ..."
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/search_messages_panel.xml:0
+#: code:addons/mail/static/src/core/common/search_message_input.xml:0
 #: code:addons/mail/static/src/discuss/core/public_web/sub_channel_list.xml:0
 msgid "Search in progress"
 msgstr "Suche im Gange"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/search_messages_panel.js:0
-msgid "Search messages"
-msgstr "Nachrichten suchen"
 
 #. module: mail
 #. odoo-javascript
@@ -9277,6 +9331,12 @@ msgstr "Eine Unterhaltung beginnen"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
+msgid "Start a Video Call"
+msgstr "Einen Videoanruf beginnen"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss_app_model.js:0
 #: code:addons/mail/static/src/discuss/core/web/messaging_menu_patch.xml:0
 msgid "Start a conversation"
@@ -9330,6 +9390,14 @@ msgstr "Statuszeit"
 #: code:addons/mail/static/src/views/fields/statusbar_duration/statusbar_duration_field.js:0
 msgid "Status with time"
 msgstr "Status mit Zeit"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
+msgid "Stay tuned! Enable push notifications to never miss a message."
+msgstr ""
+"Bleiben Sie am Ball! Aktivieren Sie Push-Benachrichtigungen, um keine "
+"Nachricht zu verpassen."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__steps_count
@@ -9494,7 +9562,7 @@ msgstr "Systembenachrichtigung"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "Tab to select"
-msgstr "Reiter zum Auswählen"
+msgstr "Zum Auswählen tippen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_translation__target_lang
@@ -9809,7 +9877,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_limit_email
 msgid "The message below could not be accepted by the address"
 msgstr ""
-"Die untenstehende Nachricht konnte nicht akzeptiert werden von der Adresse"
+"Die unten stehende Nachricht konnte nicht akzeptiert werden von der Adresse"
 
 #. module: mail
 #. odoo-python
@@ -9819,7 +9887,7 @@ msgid ""
 "                 Only %(contact_description)s are allowed to contact it.<br /><br />\n"
 "                 Please make sure you are using the correct address or contact us at %(default_email)s instead."
 msgstr ""
-"Die untenstehende Nachricht konnte von der Adresse %(alias_display_name)s nicht akzeptiert werden.\n"
+"Die unten stehende Nachricht konnte von der Adresse %(alias_display_name)s nicht akzeptiert werden.\n"
 "                 Nur %(contact_description)s ist es gestattet, diese zu kontaktieren.<br /><br />\n"
 "                 Bitte stellen Sie sicher, dass Sie die korrekte Adresse verwenden, oder kontaktieren Sie uns stattdessen unter %(default_email)s."
 
@@ -9830,7 +9898,7 @@ msgid ""
 "The message below could not be accepted by the address %(alias_display_name)s.\n"
 "Please try again later or contact %(company_name)s instead."
 msgstr ""
-"Die untenstehende Nachricht konnte von der Adresse %(alias_display_name)s nicht aktzeptiert werden.\n"
+"Die unten stehende Nachricht konnte von der Adresse %(alias_display_name)s nicht aktzeptiert werden.\n"
 "Bitte versuchen Sie es später erneut oder kontaktieren Sie stattdessen %(company_name)s."
 
 #. module: mail
@@ -9859,7 +9927,7 @@ msgid ""
 "<jobs@example.odoo.com>"
 msgstr ""
 "Die Bezeichnung des E-Mail-Alias, z. B. „Jobs“, falls Sie E-Mails für "
-"<jobs@example.odoo.com> erhalten möchten"
+"<jobs@beispiel.odoo.com> erhalten möchten"
 
 #. module: mail
 #. odoo-python
@@ -10243,6 +10311,12 @@ msgstr "Heutige Aktivitäten"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_model.js:0
+msgid "Today at %(time)s"
+msgstr "Heute um %(time)s"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.xml:0
 msgid "Today:"
 msgstr "Heute:"
@@ -10353,6 +10427,12 @@ msgstr "Erneut versuchen"
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Turn camera on"
 msgstr "Kamera einschalten"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
+msgid "Turn on notifications"
+msgstr "Benachrichtigungen aktivieren"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__twilio_account_token
@@ -10562,7 +10642,7 @@ msgstr "Nachricht losheften"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
 msgid "Unpin Thread"
-msgstr ""
+msgstr "Thread losheften"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__unpin_dt
@@ -10672,12 +10752,6 @@ msgstr "Hochgeladen"
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 msgid "Uploading"
 msgstr "Lädt hoch"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/mail_composer_attachment_selector.js:0
-msgid "Uploading error"
-msgstr "Uploadfehler"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__activity_user_type
@@ -10924,7 +10998,7 @@ msgid ""
 "It should be a comma separated list of domains e.g. example.com,example.org."
 msgstr ""
 "Wert %(allowed_domains)s für `mail.catchall.domain.allowed` kann nicht validiert werden.\n"
-"Es sollte eine durch Kommata getrennte Liste von Domains sein, z. B. example.com,example.org."
+"Es sollte eine durch Kommata getrennte Liste von Domains sein, z. B. beispiel.com,beispiel.org."
 
 #. module: mail
 #. odoo-javascript
@@ -11167,6 +11241,11 @@ msgid "Whether to display all the recipients or only the important ones."
 msgstr "Ob alle Empfänger oder nur die wichtigen angezeigt werden sollen."
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.email_template_form
+msgid "Write /field to insert dynamic content"
+msgstr "Schreiben Sie /Feld, um dynamische Inhalte einzufügen"
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_markasdone_popover.xml:0
 msgid "Write Feedback"
@@ -11212,6 +11291,12 @@ msgstr "Ja, bitte entfernen"
 #: code:addons/mail/static/src/core/web/activity_list_popover_item.js:0
 msgid "Yesterday"
 msgstr "Gestern"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_model.js:0
+msgid "Yesterday at %(time)s"
+msgstr "Gestern um %(time)s"
 
 #. module: mail
 #. odoo-javascript
@@ -11401,13 +11486,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
 msgid "You unpinned %(conversation_name)s"
-msgstr ""
+msgstr "%(conversation_name)s ist nicht länger angeheftet"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
 msgid "You unpinned your conversation with %(user_name)s"
-msgstr ""
+msgstr "Ihre Unterhaltung mit %(user_name)s ist nicht länger angeheftet"
 
 #. module: mail
 #. odoo-javascript
@@ -11589,12 +11674,6 @@ msgstr "Kanäle"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 msgid "clock rate:"
 msgstr "Schaltfrequenz:"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/search_messages_panel.xml:0
-msgid "close"
-msgstr "Schließen"
 
 #. module: mail
 #. odoo-javascript
@@ -11966,6 +12045,12 @@ msgstr "am:"
 #: code:addons/mail/static/src/core/web/activity_mail_template.xml:0
 msgid "or"
 msgstr "oder"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.js:0
+msgid "or press %(send_keybind)s"
+msgstr "oder %(send_keybind)s drücken"
 
 #. module: mail
 #. odoo-javascript

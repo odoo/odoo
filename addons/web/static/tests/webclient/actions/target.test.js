@@ -64,7 +64,6 @@ defineActions([
         xml_id: "action_1",
         name: "Partners Action 1",
         res_model: "partner",
-        type: "ir.actions.act_window",
         views: [[1, "kanban"]],
     },
     {
@@ -72,7 +71,6 @@ defineActions([
         xml_id: "action_4",
         name: "Partners Action 4",
         res_model: "partner",
-        type: "ir.actions.act_window",
         views: [
             [1, "kanban"],
             [2, "list"],
@@ -85,7 +83,6 @@ defineActions([
         name: "Create a Partner",
         res_model: "partner",
         target: "new",
-        type: "ir.actions.act_window",
         views: [[false, "form"]],
     },
     {
@@ -93,7 +90,6 @@ defineActions([
         name: "Partners Action Fullscreen",
         res_model: "partner",
         target: "fullscreen",
-        type: "ir.actions.act_window",
         views: [[1, "kanban"]],
     },
 ]);
@@ -162,7 +158,8 @@ describe("new", () => {
         });
     });
 
-    test.tags("desktop")("Button with `close` attribute closes dialog on desktop", async () => {
+    test.tags("desktop");
+    test("Button with `close` attribute closes dialog on desktop", async () => {
         Partner._views = {
             "form,false": `
                 <form>
@@ -178,25 +175,26 @@ describe("new", () => {
                 </form>`,
             "search,false": "<search></search>",
         };
-        defineActions([
-            {
-                id: 4,
-                name: "Partners Action 4",
-                res_model: "partner",
-                type: "ir.actions.act_window",
-                views: [[false, "form"]],
-            },
-            {
-                id: 5,
-                name: "Create a Partner",
-                res_model: "partner",
-                target: "new",
-                type: "ir.actions.act_window",
-                views: [[17, "form"]],
-            },
-        ]);
+        defineActions(
+            [
+                {
+                    id: 4,
+                    name: "Partners Action 4",
+                    res_model: "partner",
+                    views: [[false, "form"]],
+                },
+                {
+                    id: 5,
+                    name: "Create a Partner",
+                    res_model: "partner",
+                    target: "new",
+                    views: [[17, "form"]],
+                },
+            ],
+            { mode: "replace" }
+        );
 
-        onRpc("/web/dataset/call_button", async (request) => {
+        onRpc("/web/dataset/call_button/*", async (request) => {
             const { params } = await request.json();
             if (params.method === "some_method") {
                 return {
@@ -219,7 +217,8 @@ describe("new", () => {
         expect(".modal").toHaveCount(0);
     });
 
-    test.tags("mobile")("Button with `close` attribute closes dialog on mobile", async () => {
+    test.tags("mobile");
+    test("Button with `close` attribute closes dialog on mobile", async () => {
         Partner._views = {
             "form,false": `
                 <form>
@@ -235,25 +234,26 @@ describe("new", () => {
                 </form>`,
             "search,false": "<search></search>",
         };
-        defineActions([
-            {
-                id: 4,
-                name: "Partners Action 4",
-                res_model: "partner",
-                type: "ir.actions.act_window",
-                views: [[false, "form"]],
-            },
-            {
-                id: 5,
-                name: "Create a Partner",
-                res_model: "partner",
-                target: "new",
-                type: "ir.actions.act_window",
-                views: [[17, "form"]],
-            },
-        ]);
+        defineActions(
+            [
+                {
+                    id: 4,
+                    name: "Partners Action 4",
+                    res_model: "partner",
+                    views: [[false, "form"]],
+                },
+                {
+                    id: 5,
+                    name: "Create a Partner",
+                    res_model: "partner",
+                    target: "new",
+                    views: [[17, "form"]],
+                },
+            ],
+            { mode: "replace" }
+        );
 
-        onRpc("/web/dataset/call_button", async (request) => {
+        onRpc("/web/dataset/call_button/*", async (request) => {
             const { params } = await request.json();
             if (params.method === "some_method") {
                 return {
@@ -284,7 +284,6 @@ describe("new", () => {
                 name: "Create a Partner",
                 res_model: "partner",
                 target: "new",
-                type: "ir.actions.act_window",
                 views: [[3, "form"]],
             },
         ]);
@@ -325,7 +324,6 @@ describe("new", () => {
                 name: "A window action",
                 res_model: "partner",
                 target: "new",
-                type: "ir.actions.act_window",
                 views: [[999, "form"]],
             },
         ]);
@@ -336,14 +334,14 @@ describe("new", () => {
         Partner._views["form,1000"] = `<form>Another action</form>`;
 
         onRpc("method", () => {
-            return Promise.resolve({
+            return {
                 id: 1000,
                 name: "Another window action",
                 res_model: "partner",
                 target: "new",
                 type: "ir.actions.act_window",
                 views: [[1000, "form"]],
-            });
+            };
         });
 
         await mountWithCleanup(WebClient);
@@ -352,7 +350,7 @@ describe("new", () => {
 
         await contains(".modal button[name=method]").click();
         expect(".modal").toHaveCount(2);
-        expect($(".modal:last .modal-body").text()).toBe("Are you sure?");
+        expect(".modal:last .modal-body").toHaveText("Are you sure?");
 
         await contains(".modal:last .modal-footer .btn-primary").click();
         // needs two renderings to close the ConfirmationDialog:
@@ -573,7 +571,8 @@ describe("fullscreen", () => {
         expect(".o_main_navbar").toHaveCount(1);
     });
 
-    test.tags("desktop")('fullscreen on action change: back to a "current" action', async () => {
+    test.tags("desktop");
+    test('fullscreen on action change: back to a "current" action', async () => {
         defineActions([
             {
                 id: 6,
@@ -582,7 +581,6 @@ describe("fullscreen", () => {
                 res_id: 2,
                 res_model: "partner",
                 target: "current",
-                type: "ir.actions.act_window",
                 views: [[false, "form"]],
             },
         ]);
@@ -604,7 +602,8 @@ describe("fullscreen", () => {
         expect(".o_main_navbar").toHaveCount(1);
     });
 
-    test.tags("desktop")('fullscreen on action change: all "fullscreen" actions', async () => {
+    test.tags("desktop");
+    test('fullscreen on action change: all "fullscreen" actions', async () => {
         defineActions([
             {
                 id: 6,
@@ -613,7 +612,6 @@ describe("fullscreen", () => {
                 res_id: 2,
                 res_model: "partner",
                 target: "fullscreen",
-                type: "ir.actions.act_window",
                 views: [[false, "form"]],
             },
         ]);
@@ -636,69 +634,66 @@ describe("fullscreen", () => {
         expect(".o_main_navbar").not.toBeVisible();
     });
 
-    test.tags("desktop")(
-        'fullscreen on action change: back to another "current" action',
-        async () => {
-            defineActions([
-                {
-                    id: 6,
-                    name: "Partner",
-                    res_id: 2,
-                    res_model: "partner",
-                    target: "current",
-                    type: "ir.actions.act_window",
-                    views: [[false, "form"]],
-                },
-                {
-                    id: 24,
-                    name: "Partner",
-                    res_id: 2,
-                    res_model: "partner",
-                    type: "ir.actions.act_window",
-                    views: [[666, "form"]],
-                },
-            ]);
-            defineMenus([
-                {
-                    id: "root",
-                    children: [{ id: 1, children: [], name: "MAIN APP", appID: 1, actionID: 6 }],
-                    name: "root",
-                    appID: "root",
-                },
-            ]);
-            Partner._views["form,false"] = `
+    test.tags("desktop");
+    test('fullscreen on action change: back to another "current" action', async () => {
+        defineActions([
+            {
+                id: 6,
+                name: "Partner",
+                res_id: 2,
+                res_model: "partner",
+                target: "current",
+                views: [[false, "form"]],
+            },
+            {
+                id: 24,
+                name: "Partner",
+                res_id: 2,
+                res_model: "partner",
+                views: [[666, "form"]],
+            },
+        ]);
+        defineMenus([
+            {
+                id: "root",
+                children: [{ id: 1, children: [], name: "MAIN APP", appID: 1, actionID: 6 }],
+                name: "root",
+                appID: "root",
+            },
+        ]);
+        Partner._views["form,false"] = `
             <form>
                 <button name="24" type="action" string="Execute action 24" class="oe_stat_button"/>
             </form>`;
-            Partner._views["form,666"] = `
+        Partner._views["form,666"] = `
             <form>
                 <button type="action" name="15" icon="fa-star" context="{'default_partner': id}" class="oe_stat_button"/>
             </form>`;
 
-            await mountWithCleanup(WebClient);
-            await animationFrame(); // wait for the load state (default app)
-            await animationFrame(); // wait for the action to be mounted
-            expect("nav .o_menu_brand").toHaveCount(1);
-            expect("nav .o_menu_brand").toHaveText("MAIN APP");
+        await mountWithCleanup(WebClient);
+        await animationFrame(); // wait for the load state (default app)
+        await animationFrame(); // wait for the action to be mounted
+        expect("nav .o_menu_brand").toHaveCount(1);
+        expect("nav .o_menu_brand").toHaveText("MAIN APP");
 
-            await contains("button[name='24']").click();
-            await animationFrame(); // wait for the webclient template to be re-rendered
-            expect("nav .o_menu_brand").toHaveCount(1);
+        await contains("button[name='24']").click();
+        await animationFrame(); // wait for the webclient template to be re-rendered
+        expect("nav .o_menu_brand").toHaveCount(1);
 
-            await contains("button[name='15']").click();
-            await animationFrame(); // wait for the webclient template to be re-rendered
-            expect("nav.o_main_navbar").toHaveCount(0);
+        await contains("button[name='15']").click();
+        await animationFrame(); // wait for the webclient template to be re-rendered
+        expect("nav.o_main_navbar").toHaveCount(0);
 
-            await contains(queryAll(".breadcrumb li a")[1]).click();
-            await animationFrame(); // wait for the webclient template to be re-rendered
-            expect("nav .o_menu_brand").toHaveCount(1);
-            expect("nav .o_menu_brand").toHaveText("MAIN APP");
-        }
-    );
+        await contains(queryAll(".breadcrumb li a")[1]).click();
+        await animationFrame(); // wait for the webclient template to be re-rendered
+        expect("nav .o_menu_brand").toHaveCount(1);
+        expect("nav .o_menu_brand").toHaveText("MAIN APP");
+    });
 });
 
 describe("main", () => {
-    test.tags("desktop")('can execute act_window actions in target="main"', async () => {
+    test.tags("desktop");
+    test('can execute act_window actions in target="main"', async () => {
         await mountWithCleanup(WebClient);
         await getService("action").doAction(1);
         expect(".o_kanban_view").toHaveCount(1);
@@ -717,7 +712,8 @@ describe("main", () => {
         expect(".o_control_panel .o_breadcrumb").toHaveText("Another Partner Action");
     });
 
-    test.tags("desktop")('can switch view in an action in target="main"', async () => {
+    test.tags("desktop");
+    test('can switch view in an action in target="main"', async () => {
         await mountWithCleanup(WebClient);
         await getService("action").doAction({
             name: "Partner Action",
@@ -741,7 +737,8 @@ describe("main", () => {
         expect(".o_control_panel .o_breadcrumb").toHaveText("Partner Action\nFirst record");
     });
 
-    test.tags("desktop")('can restore an action in target="main"', async () => {
+    test.tags("desktop");
+    test('can restore an action in target="main"', async () => {
         await mountWithCleanup(WebClient);
         await getService("action").doAction({
             name: "Partner Action",

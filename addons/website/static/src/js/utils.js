@@ -480,7 +480,7 @@ export function checkAndNotifySEO(seo_data, OptimizeSEODialog, services) {
             message = _t("Page description not set.");
         }
         if (message) {
-            services.notification.add(message, {
+            const closeNotification = services.notification.add(message, {
                 type: "warning",
                 sticky: false,
                 buttons: [
@@ -488,6 +488,7 @@ export function checkAndNotifySEO(seo_data, OptimizeSEODialog, services) {
                         name: _t("Optimize SEO"),
                         onClick: () => {
                             services.dialog.add(OptimizeSEODialog);
+                            closeNotification();
                         },
                     },
                 ],

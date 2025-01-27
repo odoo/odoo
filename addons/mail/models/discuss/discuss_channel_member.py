@@ -327,12 +327,12 @@ class ChannelMember(models.Model):
     # RTC (voice/video)
     # --------------------------------------------------------------------------
 
-    def _rtc_join_call(self, store=None, check_rtc_session_ids=None):
+    def _rtc_join_call(self, store=None, check_rtc_session_ids=None, camera=False):
         self.ensure_one()
         check_rtc_session_ids = (check_rtc_session_ids or []) + self.rtc_session_ids.ids
         self.channel_id._rtc_cancel_invitations(member_ids=self.ids)
         self.rtc_session_ids.unlink()
-        rtc_session = self.env['discuss.channel.rtc.session'].create({'channel_member_id': self.id})
+        rtc_session = self.env['discuss.channel.rtc.session'].create({'channel_member_id': self.id, 'is_camera_on': camera})
         current_rtc_sessions, outdated_rtc_sessions = self._rtc_sync_sessions(check_rtc_session_ids=check_rtc_session_ids)
         ice_servers = self.env["mail.ice.server"]._get_ice_servers()
         self._join_sfu(ice_servers)
@@ -429,6 +429,22 @@ class ChannelMember(models.Model):
         check_rtc_sessions = self.env['discuss.channel.rtc.session'].browse([int(check_rtc_session_id) for check_rtc_session_id in (check_rtc_session_ids or [])])
         return self.channel_id.rtc_session_ids, check_rtc_sessions - self.channel_id.rtc_session_ids
 
+    def _get_rtc_invite_members_domain(self, member_ids=None):
+        """ Get the domain used to get the members to invite to and RTC call on
+        the member's channel.
+
+        :param list member_ids: List of the partner ids to invite.
+        """
+        self.ensure_one()
+        domain = [
+            ('channel_id', '=', self.channel_id.id),
+            ('rtc_inviting_session_id', '=', False),
+            ('rtc_session_ids', '=', False),
+        ]
+        if member_ids:
+            domain = expression.AND([domain, [('id', 'in', member_ids)]])
+        return domain
+
     def _rtc_invite_members(self, member_ids=None):
         """ Sends invitations to join the RTC call to all connected members of the thread who are not already invited,
             if member_ids is set, only the specified ids will be invited.
@@ -436,18 +452,13 @@ class ChannelMember(models.Model):
             :param list member_ids: list of the partner ids to invite
         """
         self.ensure_one()
-        channel_member_domain = [
-            ('channel_id', '=', self.channel_id.id),
-            ('rtc_inviting_session_id', '=', False),
-            ('rtc_session_ids', '=', False),
-        ]
-        if member_ids:
-            channel_member_domain = expression.AND([channel_member_domain, [('id', 'in', member_ids)]])
-        members = self.env['discuss.channel.member'].search(channel_member_domain)
+        members = self.env["discuss.channel.member"].search(
+            self._get_rtc_invite_members_domain(member_ids)
+        )
         for member in members:
             member.rtc_inviting_session_id = self.rtc_session_ids.id
             member._bus_send_store(
-                self.channel_id, {"rtcInvitingSession": Store.one(member.rtc_inviting_session_id)}
+                self.channel_id, {"rtcInvitingSession": Store.one(member.rtc_inviting_session_id, extra=True)}
             )
         if members:
             self.channel_id._bus_send_store(

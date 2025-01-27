@@ -5,7 +5,7 @@ from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_repr, format_list
 from odoo.tools.float_utils import float_round
-from odoo.tools.misc import formatLang, html_escape
+from odoo.tools.misc import clean_context, formatLang, html_escape
 from odoo.tools.xml_utils import find_xml_value
 
 # -------------------------------------------------------------------------
@@ -51,7 +51,7 @@ EAS_MAPPING = {
     'CY': {'9928': 'vat'},
     'CZ': {'9929': 'vat'},
     'DE': {'9930': 'vat'},
-    'DK': {'0184': 'company_registry', '0198': 'vat'},
+    'DK': {'0184': 'vat', '0198': 'vat'},
     'EE': {'9931': 'vat'},
     'ES': {'9920': 'vat'},
     'FI': {'0216': None},
@@ -60,7 +60,7 @@ EAS_MAPPING = {
     'GB': {'9932': 'vat'},
     'GR': {'9933': 'vat'},
     'HR': {'9934': 'vat'},
-    'HU': {'9910': 'vat'},
+    'HU': {'9910': 'l10n_hu_eu_vat'},
     'IE': {'9935': 'vat'},
     'IS': {'0196': 'vat'},
     'IT': {'0211': 'vat', '0210': 'l10n_it_codice_fiscale'},
@@ -388,17 +388,19 @@ class AccountEdiCommon(models.AbstractModel):
 
     def _import_partner_bank(self, invoice, bank_details):
         """ Retrieve the bank account, if no matching bank account is found, create it """
-        bank_details = map(sanitize_account_number, bank_details)
+        # clear the context, because creation of partner when importing should not depend on the context default values
+        ResPartnerBank = self.env['res.partner.bank'].with_env(self.env(context=clean_context(self.env.context)))
+        bank_details = list(map(sanitize_account_number, bank_details))
         partner = self.env.company.partner_id if invoice.is_inbound() else invoice.partner_id
         banks_to_create = []
         acc_number_partner_bank_dict = {
             bank.sanitized_acc_number: bank
-            for bank in self.env['res.partner.bank'].search(
+            for bank in ResPartnerBank.search(
                 [('company_id', 'in', [False, invoice.company_id.id]), ('acc_number', 'in', bank_details)]
             )
         }
         for account_number in bank_details:
-            partner_bank = acc_number_partner_bank_dict.get(account_number, self.env['res.partner.bank'])
+            partner_bank = acc_number_partner_bank_dict.get(account_number, ResPartnerBank)
             if partner_bank.partner_id == partner:
                 invoice.partner_bank_id = partner_bank
                 return
@@ -408,7 +410,7 @@ class AccountEdiCommon(models.AbstractModel):
                     'partner_id': partner.id,
                 })
         if banks_to_create:
-            invoice.partner_bank_id = self.env['res.partner.bank'].create(banks_to_create)[0]
+            invoice.partner_bank_id = ResPartnerBank.create(banks_to_create)[0]
 
     def _import_document_allowance_charges(self, tree, record, tax_type, qty_factor=1):
         logs = []
@@ -456,7 +458,7 @@ class AccountEdiCommon(models.AbstractModel):
     def _import_currency(self, tree, xpath):
         logs = []
         currency_name = tree.findtext(xpath)
-        currency = self.env['res.currency']
+        currency = self.env.company.currency_id
         if currency_name is not None:
             currency = currency.with_context(active_test=False).search([
                 ('name', '=', currency_name),
@@ -490,7 +492,7 @@ class AccountEdiCommon(models.AbstractModel):
         logs = []
         lines_values = []
         for line_tree in tree.iterfind(xpath):
-            line_values = self._retrieve_line_vals(line_tree, invoice.move_type, qty_factor)
+            line_values = self.with_company(invoice.company_id)._retrieve_invoice_line_vals(line_tree, invoice.move_type, qty_factor)
             line_values['tax_ids'], tax_logs = self._retrieve_taxes(
                 invoice, line_values, invoice.journal_id.type,
             )
@@ -500,6 +502,26 @@ class AccountEdiCommon(models.AbstractModel):
             lines_values.append(line_values)
             lines_values += self._retrieve_line_charges(invoice, line_values, line_values['tax_ids'])
         return lines_values, logs
+
+    def _retrieve_invoice_line_vals(self, tree, document_type=False, qty_factor=1):
+        # Start and End date (enterprise fields)
+        deferred_values = {}
+        start_date = end_date = None
+        if self.env['account.move.line']._fields.get('deferred_start_date'):
+            start_date_node = tree.find('./{*}InvoicePeriod/{*}StartDate')
+            end_date_node = tree.find('./{*}InvoicePeriod/{*}EndDate')
+            if start_date_node is not None and end_date_node is not None:  # there is a constraint forcing none or the two to be set
+                start_date = start_date_node.text
+                end_date = end_date_node.text
+            deferred_values = {
+                'deferred_start_date': start_date,
+                'deferred_end_date': end_date,
+            }
+
+        return {
+            **self._retrieve_line_vals(tree, document_type, qty_factor),
+            **deferred_values,
+        }
 
     def _retrieve_line_vals(self, tree, document_type=False, qty_factor=1):
         """

@@ -121,7 +121,9 @@ export class AutoComplete extends Component {
         }
         const [sourceIndex, optionIndex] = this.state.activeSourceOption;
         const source = this.sources[sourceIndex];
-        return `${this.props.id || "autocomplete"}_${sourceIndex}_${source.isLoading ? "loading" : optionIndex}`;
+        return `${this.props.id || "autocomplete"}_${sourceIndex}_${
+            source.isLoading ? "loading" : optionIndex
+        }`;
     }
 
     get dropdownOptions() {
@@ -141,6 +143,11 @@ export class AutoComplete extends Component {
             }
         }
         return false;
+    }
+
+    get activeOption() {
+        const [sourceIndex, optionIndex] = this.state.activeSourceOption;
+        return this.sources[sourceIndex].options[optionIndex];
     }
 
     open(useInput = false) {
@@ -223,8 +230,8 @@ export class AutoComplete extends Component {
             this.state.activeSourceOption[1] === optionIndex
         );
     }
-    selectOption(indices, params = {}) {
-        const option = this.sources[indices[0]].options[indices[1]];
+
+    selectOption(option, params = {}) {
         this.inEdition = false;
         if (option.unselectable) {
             this.inputRef.el.value = "";
@@ -303,7 +310,7 @@ export class AutoComplete extends Component {
     }
     onInputClick() {
         if (!this.isOpened) {
-            this.open(this.inputRef.el.value.trim() !== this.props.value);
+            this.open(this.inputRef.el.value.trim() !== this.props.value.trim());
         } else {
             this.close();
         }
@@ -367,7 +374,7 @@ export class AutoComplete extends Component {
                 if (!this.isOpened || !this.state.activeSourceOption) {
                     return;
                 }
-                this.selectOption(this.state.activeSourceOption);
+                this.selectOption(this.activeOption);
                 break;
             case "escape":
                 if (!this.isOpened) {
@@ -384,7 +391,7 @@ export class AutoComplete extends Component {
                     this.state.activeSourceOption &&
                     (this.state.navigationRev > 0 || this.inputRef.el.value.length > 0)
                 ) {
-                    this.selectOption(this.state.activeSourceOption);
+                    this.selectOption(this.activeOption);
                 }
                 this.close();
                 return;
@@ -414,8 +421,8 @@ export class AutoComplete extends Component {
     onOptionMouseLeave() {
         this.state.activeSourceOption = null;
     }
-    onOptionClick(indices) {
-        this.selectOption(indices);
+    onOptionClick(option) {
+        this.selectOption(option);
         this.inputRef.el.focus();
     }
 

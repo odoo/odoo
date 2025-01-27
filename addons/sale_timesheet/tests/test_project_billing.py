@@ -172,8 +172,9 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         task2 = Task.with_context(default_project_id=self.project_employee_rate.id).create({
             'name': 'first task',
             'partner_id': self.partner_a.id,
-            'sale_line_id': False
         })
+        # This needs to be done after creation because setting partner_id causes _get_last_sol_of_customer to recompute the sale_line_id
+        task2.update({'sale_line_id': False})
 
         # log timesheet on task in 'employee rate' project without any fallback (no map, no SOL on task, no SOL on project)
         timesheet3 = Timesheet.create({

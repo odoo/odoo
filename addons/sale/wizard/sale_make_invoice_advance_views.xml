@@ -39,7 +39,8 @@
                             class="oe_inline"/>
                         <span invisible="advance_payment_method != 'percentage'"
                             class="oe_inline">% </span>
-                        <span invisible="not display_invoice_amount_warning"
+                        <!-- To be removed in master -->
+                        <span invisible="1"
                               class="oe_inline text-danger"
                               title="The Down Payment is greater than the amount remaining to be invoiced.">
                             <i class="fa fa-warning"/>
@@ -48,7 +49,7 @@
                 </group>
                 <group invisible="not has_down_payments">
                     <field name="amount_invoiced"/>
-                    <field name="amount_to_invoice"/>
+                    <field name="amount_to_invoice" invisible="1"/> <!-- To be removed in master -->
                 </group>
                 <footer>
                     <button name="create_invoices" type="object"

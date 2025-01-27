@@ -36,8 +36,10 @@ patch(accountTaxHelpers, {
             const gst_tax_amounts = taxes_computation.taxes_data
                 .filter((x) => ["igst", "cgst", "sgst"].includes(x.tax.l10n_in_tax_type))
                 .map((x) => [x.tax.id, x.tax.amount]);
+            const unique_gst_tax_amounts = Array.from(new Set(gst_tax_amounts.map(JSON.stringify)))
+                .map(JSON.parse);
             let rate = 0;
-            for (const [, tax_amount] of gst_tax_amounts) {
+            for (const [, tax_amount] of unique_gst_tax_amounts) {
                 rate += tax_amount;
             }
 

@@ -711,7 +711,7 @@ def route(route=None, **routing):
         # Sanitize the routing
         assert routing.get('type', 'http') in _dispatchers.keys()
         if route:
-            routing['routes'] = route if isinstance(route, list) else [route]
+            routing['routes'] = [route] if isinstance(route, str) else route
         wrong = routing.pop('method', None)
         if wrong is not None:
             _logger.warning("%s defined with invalid routing parameter 'method', assuming 'methods'", fname)
@@ -1483,11 +1483,13 @@ class Request:
     def _open_registry(self):
         try:
             registry = Registry(self.db)
-            cr_readonly = registry.cursor(readonly=True)
-            registry = registry.check_signaling(cr_readonly)
+            # use a RW cursor! Sequence data is not replicated and would
+            # be invalid if accessed on a readonly replica. Cfr task-4399456
+            cr_readwrite = registry.cursor(readonly=False)
+            registry = registry.check_signaling(cr_readwrite)
         except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError) as e:
             raise RegistryError(f"Cannot get registry {self.db}") from e
-        return registry, cr_readonly
+        return registry, cr_readwrite
 
     # =====================================================
     # Getters and setters
@@ -1737,7 +1739,7 @@ class Request:
         if isinstance(location, URL):
             location = location.to_url()
         if local:
-            location = '/' + url_parse(location).replace(scheme='', netloc='').to_url().lstrip('/')
+            location = '/' + url_parse(location).replace(scheme='', netloc='').to_url().lstrip('/\\')
         if self.db:
             return self.env['ir.http']._redirect(location, code)
         return werkzeug.utils.redirect(location, code, Response=Response)
@@ -1858,7 +1860,7 @@ class Request:
         Prepare the user session and load the ORM before forwarding the
         request to ``_serve_ir_http``.
         """
-        cr_readonly = None
+        cr_readwrite = None
         rule = None
         args = None
         not_found = None
@@ -1866,15 +1868,16 @@ class Request:
         # reuse the same cursor for building+checking the registry and
         # for matching the controller endpoint
         try:
-            self.registry, cr_readonly = self._open_registry()
-            self.env = odoo.api.Environment(cr_readonly, self.session.uid, self.session.context)
+            self.registry, cr_readwrite = self._open_registry()
+            threading.current_thread().dbname = self.registry.db_name
+            self.env = odoo.api.Environment(cr_readwrite, self.session.uid, self.session.context)
             try:
                 rule, args = self.registry['ir.http']._match(self.httprequest.path)
             except NotFound as not_found_exc:
                 not_found = not_found_exc
         finally:
-            if cr_readonly is not None:
-                cr_readonly.close()
+            if cr_readwrite is not None:
+                cr_readwrite.close()
 
         if not_found:
             # no controller endpoint matched -> fallback or 404
@@ -2268,7 +2271,7 @@ class Application:
         for url, endpoint in _generate_routing_rules([''] + odoo.conf.server_wide_modules, nodb_only=True):
             routing = submap(endpoint.routing, ROUTING_KEYS)
             if routing['methods'] is not None and 'OPTIONS' not in routing['methods']:
-                routing['methods'] = routing['methods'] + ['OPTIONS']
+                routing['methods'] = [*routing['methods'], 'OPTIONS']
             rule = werkzeug.routing.Rule(url, endpoint=endpoint, **routing)
             rule.merge_slashes = False
             nodb_routing_map.add(rule)

@@ -2,14 +2,15 @@ import { Plugin } from "@html_editor/plugin";
 import { isBlock } from "@html_editor/utils/blocks";
 
 export class OdooLinkSelectionPlugin extends Plugin {
+    static id = "odooLinkSelection";
     resources = {
-        excludeLinkZwnbsp: [
+        ineligible_link_for_zwnbsp_predicates: [
             (link) =>
                 [link, ...link.querySelectorAll("*")].some(
                     (el) => el.nodeName === "IMG" || isBlock(el)
                 ),
             (link) => link.matches("nav a, a.nav-link"),
         ],
-        excludeLinkVisualIndication: (link) => link.matches(".btn"),
+        ineligible_link_for_selection_indication_predicates: (link) => link.matches(".btn"),
     };
 }

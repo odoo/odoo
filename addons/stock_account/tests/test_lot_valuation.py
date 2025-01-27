@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
 from odoo.addons.stock_account.tests.test_stockvaluationlayer import TestStockValuationCommon
 from odoo.exceptions import UserError
 from odoo.tests import Form
@@ -83,6 +84,13 @@ class TestLotValuation(TestStockValuationCommon):
 
     def test_real_time_valuation(self):
         """ Test account move lines contains lot """
+        self.stock_input_account, self.stock_output_account, self.stock_valuation_account, self.expense_account, self.stock_journal = _create_accounting_data(self.env)
+        self.product1.categ_id.write({
+            'property_stock_account_input_categ_id': self.stock_input_account.id,
+            'property_stock_account_output_categ_id': self.stock_output_account.id,
+            'property_stock_valuation_account_id': self.stock_valuation_account.id,
+            'property_stock_journal': self.stock_journal.id,
+        })
         self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
         self._make_in_move(self.product1, 10, 5, lot_ids=[self.lot1, self.lot2])
         self._make_in_move(self.product1, 10, 7, lot_ids=[self.lot3])
@@ -340,7 +348,9 @@ class TestLotValuation(TestStockValuationCommon):
     def test_value_multicompanies(self):
         """ Test having multiple layers on different companies give a correct value"""
         c1 = self.env.company
-        c2 = self.env.companies - c1
+        c2 = self.env['res.company'].create({
+            'name': 'Test Company',
+        })
         self.product1.product_tmpl_id.with_company(c2).categ_id.property_cost_method = 'average'
         # c1 moves
         self._make_in_move(self.product1, 10, 5, lot_ids=[self.lot1, self.lot2])
@@ -566,3 +576,100 @@ class TestLotValuation(TestStockValuationCommon):
         quant.action_apply_inventory()
         self.assertEqual(lot.standard_price, 9)
         self.assertEqual(lot.value_svl, 27)
+
+    def test_lot_valuation_after_tracking_update(self):
+        """
+        Test that 'lot_valuated' is set to False when the tracking is changed to 'none'.
+        """
+        # update the tracking from product.product
+        self.assertEqual(self.product1.tracking, 'lot')
+        self.product1.lot_valuated = True
+        self.assertTrue(self.product1.lot_valuated)
+        self.product1.tracking = 'none'
+        self.assertFalse(self.product1.lot_valuated)
+        # update the tracking from product.template
+        self.product1.tracking = 'lot'
+        self.product1.lot_valuated = True
+        self.product1.product_tmpl_id.tracking = 'none'
+        self.assertFalse(self.product1.product_tmpl_id.lot_valuated)
+
+    def test_lot_valuation_lot_product_price_diff(self):
+        """
+        This test ensure that when the product.standard_price and the lot.standard_price differ,
+        no discrepancy is created when setting lot_valuated to True.
+        When lot_valuated is set to True, the lot.standard_price is updated to match with the product.standard_price
+        """
+        self.product1.categ_id.property_cost_method = 'average'
+        self.product1.lot_valuated = False
+        self.product1.standard_price = 1
+
+        lot = self.env['stock.lot'].create({
+            'product_id': self.product1.id,
+            'name': 'LOT-WITH-COST',
+            'standard_price': 2,
+        })
+        lot2 = self.env['stock.lot'].create({
+            'product_id': self.product1.id,
+            'name': 'LOT-NO-COST',
+        })
+        quant = self.env['stock.quant'].create({
+            'product_id': self.product1.id,
+            'lot_id': lot.id,
+            'location_id': self.stock_location.id,
+            'inventory_quantity': 10,
+        })
+        quant.action_apply_inventory()
+
+        self.assertEqual(self.product1.value_svl, 10)  # 10 units with product standard_price = $1
+        self.assertEqual(lot.standard_price, 2)
+        self.assertEqual(lot2.standard_price, 0)
+
+        self.product1.lot_valuated = True
+
+        self.assertEqual(lot2.standard_price, 1)
+        self.assertEqual(lot.standard_price, 1)  # lot.standard_price was updated
+        self.assertEqual(lot.value_svl, 10)
+
+        quant.inventory_quantity = 0
+        quant.action_apply_inventory()
+
+        self.assertEqual(lot.value_svl, 0)
+
+    def test_lot_valuated_update_from_product_product(self):
+        tmpl1 = self.product1.product_tmpl_id
+        tmpl1.categ_id.property_cost_method = 'average'
+        tmpl1.standard_price = 1
+        tmpl1.tracking = 'lot'
+        tmpl1.lot_valuated = False
+
+        lot = self.env['stock.lot'].create({
+            'product_id': self.product1.id,
+            'name': 'test',
+        })
+        quant = self.env['stock.quant'].create({
+            'product_id': self.product1.id,
+            'lot_id': lot.id,
+            'location_id': self.stock_location.id,
+            'inventory_quantity': 1
+        })
+        quant.action_apply_inventory()
+
+        self.assertEqual(self.product1.quantity_svl, 1)
+        self.assertEqual(self.product1.value_svl, 1)
+        self.assertEqual(lot.quantity_svl, 0)
+        self.assertEqual(lot.value_svl, 0)
+
+        self.product1.lot_valuated = True  # The update is done from the ProductProduct model
+        self.env.cr.flush()
+        self.assertEqual(lot.quantity_svl, 1)
+        self.assertEqual(lot.value_svl, 1)
+        self.assertEqual(self.product1.quantity_svl, 1)
+        self.assertEqual(self.product1.value_svl, 1)
+
+        self.product1.lot_valuated = False  # Check that
+        self.env.cr.flush()
+
+        self.assertEqual(self.product1.quantity_svl, 1)
+        self.assertEqual(self.product1.value_svl, 1)
+        self.assertEqual(lot.quantity_svl, 0)
+        self.assertEqual(lot.value_svl, 0)

@@ -1,29 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale_comparison
-#
+# 
 # Translators:
-# jabelchi, 2022
-# Jonatan Gk, 2022
-# marcescu, 2022
-# Martin Trigaux, 2022
-# Quim - eccit <quim@eccit.com>, 2022
-# Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
-# Carles Antoli <carlesantoli@hotmail.com>, 2022
-# Ivan Espinola, 2023
-#
+# Óscar Fonseca <tecnico@pyming.com>, 2024
+# Jonatan Gk, 2024
+# Manel Fernandez Ramirez <manelfera@outlook.com>, 2024
+# Martin Trigaux, 2024
+# Ivan Espinola, 2024
+# Josep Anton Belchi, 2024
+# Quim - eccit <quim@eccit.com>, 2024
+# marcescu, 2024
+# Arnau Ros, 2024
+# Carles Antoli <carlesantoli@hotmail.com>, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Ivan Espinola, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:42+0000\n"
+"Last-Translator: Carles Antoli <carlesantoli@hotmail.com>, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
-"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_comparison
@@ -149,7 +151,7 @@ msgstr "Dimensions"
 #. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__display_name
 msgid "Display Name"
-msgstr "Nom a mostrar"
+msgstr "Nom mostrat"
 
 #. module: website_sale_comparison
 #: model:product.attribute.category,name:website_sale_comparison.product_attribute_category_duration
@@ -176,6 +178,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
+msgid "In accordion"
+msgstr ""
+
+#. module: website_sale_comparison
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute_category__write_uid
 msgid "Last Updated by"
 msgstr "Última actualització per"
@@ -189,6 +196,12 @@ msgstr "Última actualització el"
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.snippet_options
 msgid "None"
 msgstr "Cap"
+
+#. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.accordion_specs_item
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.specifications_table
+msgid "Others"
+msgstr "Altres"
 
 #. module: website_sale_comparison
 #. odoo-javascript
@@ -215,7 +228,7 @@ msgstr "Línia d' atributs de plantilla de producte"
 #. module: website_sale_comparison
 #: model:ir.model,name:website_sale_comparison.model_product_product
 msgid "Product Variant"
-msgstr "Variants de producte"
+msgstr "Variant de producte"
 
 #. module: website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
@@ -256,12 +269,12 @@ msgid "Specification"
 msgstr "Especificació"
 
 #. module: website_sale_comparison
+#: model_terms:ir.ui.view,arch_db:website_sale_comparison.accordion_specs_item
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
 msgid "Specifications"
 msgstr "Especificacions"
 
 #. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
 #: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_compare
 msgid "Uncategorized"
 msgstr "Sense categoria"
@@ -287,8 +300,3 @@ msgstr "Podeu comparar com màxim 4 productes."
 #: model:ir.model.fields,field_description:website_sale_comparison.field_product_attribute__category_id
 msgid "eCommerce Category"
 msgstr ""
-
-#. module: website_sale_comparison
-#: model_terms:ir.ui.view,arch_db:website_sale_comparison.product_attributes_body
-msgid "or"
-msgstr "o"

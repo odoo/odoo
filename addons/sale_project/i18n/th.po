@@ -125,7 +125,7 @@ msgstr "<span class=\"o_stat_text\">คำสั่งขาย</span>"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 msgid "<span class=\"o_stat_text\">Tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">งาน</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -139,6 +139,8 @@ msgid ""
 "A project must be defined on the quotation or on the form of products creating a task on order.\n"
 "The following products need a project in which to put their task: %(product_names)s"
 msgstr ""
+"โปรเจ็กต์จะต้องกำหนดไว้ในใบเสนอราคาหรือแบบฟอร์มของผลิตภัณฑ์ โดยต้องสร้างงานตามคำสั่งซื้อ\n"
+"ผลิตภัณฑ์ต่อไปนี้จำเป็นต้องมีโปรเจ็กต์ที่จะดำเนินงาน:%(product_names)s"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -147,6 +149,8 @@ msgid ""
 "analytic distribution of this project will also serve as a reference for "
 "newly created sales order items."
 msgstr ""
+"งานจะถูกสร้างขึ้นสำหรับโปรเจ็กต์เมื่อได้รับการยืนยันคำสั่งซื้อ "
+"การกระจายเชิงวิเคราะห์ของโปรเจ็กต์นี้ยังทำหน้าที่เป็นข้อมูลอ้างอิงสำหรับรายการคำสั่งซื้อที่เพิ่งสร้างขึ้นอีกด้วย"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
@@ -216,12 +220,13 @@ msgid ""
 "Create a project for the order with a task for each sales order line to "
 "track the time spent."
 msgstr ""
+"สร้างโปรเจ็กต์สำหรับคำสั่งซื้อโดยมีงานสำหรับบรรทัดคำสั่งซื้อแต่ละรายการเพื่อติดตามเวลาที่ใช้ไป"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Create a task in an existing project to track the time spent."
-msgstr ""
+msgstr "สร้างงานในโปรเจ็กต์ที่มีอยู่เพื่อติดตามเวลาที่ใช้ไป"
 
 #. module: sale_project
 #. odoo-python
@@ -233,7 +238,7 @@ msgstr "สร้างใบเรียกเก็บเงินของผ
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Create an empty project for the order to track the time spent."
-msgstr ""
+msgstr "สร้างโปรเจ็กต์เปล่าสำหรับการสั่งซื้อเพื่อติดตามเวลาที่ใช้ไป"
 
 #. module: sale_project
 #. odoo-python
@@ -265,6 +270,8 @@ msgid ""
 "Create projects or tasks later, and link them to order to track the time "
 "spent."
 msgstr ""
+"สร้างโปรเจ็กต์หรืองานในภายหลัง "
+"และเชื่อมโยงเข้ากับคำสั่งซื้อเพื่อติดตามเวลาที่ใช้ไป"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__partner_id
@@ -433,7 +440,7 @@ msgstr "ชุดเฟอร์นิเจอร์สำนักงาน (�
 #: code:addons/sale_project/models/project_project.py:0
 msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales order."
-msgstr ""
+msgstr "เมื่อลูกค้ายืนยันใบเสนอราคาแล้ว ใบเสนอราคาดังกล่าวจะกลายเป็นใบสั่งขาย"
 
 #. module: sale_project
 #. odoo-python
@@ -482,6 +489,9 @@ msgid ""
 "generate analytic costs, will be re-invoiced in this sales order if they are"
 " set up for it."
 msgstr ""
+"ผลิตภัณฑ์ที่เพิ่มเข้าในการเลือกสินค้า "
+"ซึ่งประเภทการดำเนินการได้รับการกำหนดค่าให้สร้างต้นทุนการวิเคราะห์ "
+"จะมีการเรียกเก็บเงินใหม่ในใบสั่งขายนี้ หากมีการตั้งค่าไว้"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_project
@@ -799,4 +809,4 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "You will be able to create an invoice and collect the payment."
-msgstr ""
+msgstr "คุณจะสามารถสร้างใบแจ้งหนี้และรับชำระเงินได้"

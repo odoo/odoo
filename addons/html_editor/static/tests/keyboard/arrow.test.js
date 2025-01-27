@@ -1,8 +1,10 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { tick } from "@odoo/hoot-mock";
+import { press } from "@odoo/hoot-dom";
 import { simulateArrowKeyPress } from "../_helpers/user_actions";
 import { getContent, setSelection } from "../_helpers/selection";
+import { unformat } from "../_helpers/format";
 
 const keyPress = (keys) => async (editor) => {
     await simulateArrowKeyPress(editor, keys);
@@ -24,6 +26,7 @@ describe("Around ZWS", () => {
         });
     });
 
+    test.tags("focus required");
     test("should move past a zws (collapsed - ArrowLeft)", async () => {
         await testEditor({
             contentBefore: '<p>ab<span class="a">\u200B[]</span>cd</p>',
@@ -384,6 +387,7 @@ describe("Selection correction when it lands at the editable root", () => {
         });
     });
 
+    test.tags("focus required");
     test("should place cursor in the table above", async () => {
         await testEditor({
             contentBefore:
@@ -445,6 +449,7 @@ describe("Selection correction when it lands at the editable root", () => {
         });
     });
 
+    test.tags("focus required");
     test("should place cursor before the first separator", async () => {
         await testEditor({
             contentBefore:
@@ -456,6 +461,7 @@ describe("Selection correction when it lands at the editable root", () => {
     });
 });
 
+describe.tags("focus required");
 describe("Around invisible chars in RTL languages", () => {
     describe("ZWS", () => {
         const content = "<p>" + "الرجال" + '<span class="a">\u200B</span>' + "هؤلاء" + "</p>";
@@ -576,6 +582,117 @@ describe("Around invisible chars in RTL languages", () => {
             expect(getContent(el)).toBe(
                 '<p>الرجال[]\uFEFF<a href="#">\uFEFFاءيتجنب\uFEFF</a>\uFEFFهؤلاء</p>'
             );
+        });
+    });
+});
+
+describe("Around contenteditable false elements containing contenteditable true elements", () => {
+    test("should select contenteditable false element (ArrowRight)", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <p>abc</p>
+                <p>de[f]</p>
+                <div contenteditable="false">
+                    <div contenteditable="true">
+                        <p>ghi</p>
+                        <p>jkl</p>
+                    </div>
+                </div>
+                <p>mno</p>
+            `),
+            stepFunction: () => press(["shift", "arrowright"]),
+            contentAfterEdit: unformat(`
+                <p>abc</p>
+                <p>de[f</p>
+                <div contenteditable="false">
+                    <div contenteditable="true">
+                        <p>ghi</p>
+                        <p>jkl</p>
+                    </div>
+                </div>
+                <p>]mno</p>
+            `),
+        });
+    });
+    test("should select contenteditable false element (ArrowLeft)", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <p>abc</p>
+                <p>def</p>
+                <div contenteditable="false">
+                    <div contenteditable="true">
+                        <p>ghi</p>
+                        <p>jkl</p>
+                    </div>
+                </div>
+                <p>]m[no</p>
+            `),
+            stepFunction: () => press(["shift", "arrowleft"]),
+            contentAfter: unformat(`
+                <p>abc</p>
+                <p>def]</p>
+                <div contenteditable="false">
+                    <div contenteditable="true">
+                        <p>ghi</p>
+                        <p>jkl</p>
+                    </div>
+                </div>
+                <p>m[no</p>
+            `),
+        });
+    });
+    test("should select contenteditable false element (ArrowUp)", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <p>abc</p>
+                <p>def</p>
+                <div contenteditable="false">
+                    <div contenteditable="true">
+                        <p>ghi</p>
+                        <p>jkl</p>
+                    </div>
+                </div>
+                <p>]mno[</p>
+            `),
+            stepFunction: () => press(["shift", "arrowup"]),
+            contentAfter: unformat(`
+                <p>abc</p>
+                <p>def]</p>
+                <div contenteditable="false">
+                    <div contenteditable="true">
+                        <p>ghi</p>
+                        <p>jkl</p>
+                    </div>
+                </div>
+                <p>mno[</p>
+            `),
+        });
+    });
+    test("should select contenteditable false element (ArrowDown)", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <p>abc</p>
+                <p>[def]</p>
+                <div contenteditable="false">
+                    <div contenteditable="true">
+                        <p>ghi</p>
+                        <p>jkl</p>
+                    </div>
+                </div>
+                <p>mno</p>
+            `),
+            stepFunction: () => press(["shift", "arrowdown"]),
+            contentAfter: unformat(`
+                <p>abc</p>
+                <p>[def</p>
+                <div contenteditable="false">
+                    <div contenteditable="true">
+                        <p>ghi</p>
+                        <p>jkl</p>
+                    </div>
+                </div>
+                <p>]mno</p>
+            `),
         });
     });
 });

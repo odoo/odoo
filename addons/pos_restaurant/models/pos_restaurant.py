@@ -130,7 +130,3 @@ class RestaurantTable(models.Model):
             error_msg = _("You cannot remove a table that is used in a PoS session, close the session(s) first.")
             if confs:
                 raise UserError(error_msg)
-
-    def update_tables(self, tables_by_id):
-        for table in self:
-            table.write(tables_by_id[str(table.id)])

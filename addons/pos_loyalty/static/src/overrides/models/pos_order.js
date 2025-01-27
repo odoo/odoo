@@ -75,12 +75,12 @@ patch(PosOrder.prototype, {
         this.invalidCoupons = true;
         this.uiState = {
             ...this.uiState,
-            disabledRewards: new Set(),
-            codeActivatedProgramRules: [],
-            couponPointChanges: {},
+            disabledRewards: this.uiState.disabledRewards || new Set(),
+            codeActivatedProgramRules: this.uiState.codeActivatedProgramRules || [],
+            couponPointChanges: this.uiState.couponPointChanges || {},
         };
         const oldCouponMapping = {};
-        if (this.uiState.couponPointChanges) {
+        if (Object.keys(this.uiState.couponPointChanges).length === 0) {
             for (const [key, pe] of Object.entries(this.uiState.couponPointChanges)) {
                 if (!this.models["loyalty.program"].get(pe.program_id)) {
                     // Remove points changes for programs that are not available anymore.
@@ -99,11 +99,11 @@ patch(PosOrder.prototype, {
     },
     setupState(vals) {
         super.setupState(...arguments);
-        this.uiState.disabledRewards = new Set(vals.disabledRewards);
+        this.uiState.disabledRewards = new Set(vals?.disabledRewards || []);
     },
     serializeState() {
         const state = super.serializeState(...arguments);
-        state.disabledRewards = [...this.uiState.disabledRewards];
+        state.disabledRewards = [...(this.uiState.disabledRewards || [])];
         return state;
     },
     /** @override */
@@ -598,9 +598,9 @@ patch(PosOrder.prototype, {
                     // In this case we count the points per rule
                     if (rule.reward_point_mode === "unit") {
                         splitPoints.push(
-                            ...Array.apply(null, Array(totalProductQty)).map((_) => {
-                                return { points: rule.reward_point_amount };
-                            })
+                            ...Array.apply(null, Array(totalProductQty)).map((_) => ({
+                                points: rule.reward_point_amount,
+                            }))
                         );
                     } else if (rule.reward_point_mode === "money") {
                         for (const line of orderLines) {
@@ -709,19 +709,15 @@ patch(PosOrder.prototype, {
 
         const allCouponPrograms = Object.values(this.uiState.couponPointChanges)
             .filter((pe) => !excludedCouponIds.includes(pe.coupon_id))
-            .map((pe) => {
-                return {
-                    program_id: pe.program_id,
-                    coupon_id: pe.coupon_id,
-                };
-            })
+            .map((pe) => ({
+                program_id: pe.program_id,
+                coupon_id: pe.coupon_id,
+            }))
             .concat(
-                this._code_activated_coupon_ids.map((coupon) => {
-                    return {
-                        program_id: coupon.program_id.id,
-                        coupon_id: coupon.id,
-                    };
-                })
+                this._code_activated_coupon_ids.map((coupon) => ({
+                    program_id: coupon.program_id.id,
+                    coupon_id: coupon.id,
+                }))
             );
         const result = [];
         const totalWithTax = this.get_total_with_tax();
@@ -988,8 +984,9 @@ patch(PosOrder.prototype, {
                 continue;
             }
             remainingAmountPerLine[line.uuid] = line.get_price_with_tax();
+            const product_id = line.combo_parent_id?.product_id.id || line.get_product().id;
             if (
-                applicableProductIds.has(line.get_product().id) ||
+                applicableProductIds.has(product_id) ||
                 (line._reward_product_id && applicableProductIds.has(line._reward_product_id.id))
             ) {
                 linesToDiscount.push(line);
@@ -1005,7 +1002,8 @@ patch(PosOrder.prototype, {
                             lineRewardApplicableProductsIds.has(product) &&
                             applicableProductIds.has(product)
                     ) &&
-                        lineReward.reward_type === "discount")
+                        lineReward.reward_type === "discount" &&
+                        lineReward.discount_mode != "percent")
                 ) {
                     linesToDiscount.push(line);
                 }
@@ -1032,26 +1030,19 @@ patch(PosOrder.prototype, {
             if (!discountedLines.length) {
                 continue;
             }
-            const commonLines = linesToDiscount.filter((line) => discountedLines.includes(line));
-            const nonCommonLines = discountedLines.filter(
-                (line) => !linesToDiscount.includes(line)
-            );
-            const discountedAmounts = lines.reduce((map, line) => {
-                map[line.tax_ids.map((t) => t.id)];
-                return map;
-            }, {});
-            const process = (line) => {
-                const key = line.tax_ids.map((t) => t.id);
-                if (!discountedAmounts[key] || line.reward_id) {
-                    return;
+            if (lineReward.discount_mode === "percent") {
+                const discount = lineReward.discount / 100;
+                for (const line of discountedLines) {
+                    if (line.reward_id) {
+                        continue;
+                    }
+                    if (lineReward.discount_applicability === "cheapest") {
+                        remainingAmountPerLine[line.uuid] *= 1 - discount / line.get_quantity();
+                    } else {
+                        remainingAmountPerLine[line.uuid] *= 1 - discount;
+                    }
                 }
-                const remaining = remainingAmountPerLine[line.uuid];
-                const consumed = Math.min(remaining, discountedAmounts[key]);
-                discountedAmounts[key] -= consumed;
-                remainingAmountPerLine[line.uuid] -= consumed;
-            };
-            nonCommonLines.forEach(process);
-            commonLines.forEach(process);
+            }
         }
 
         let discountable = 0;
@@ -1440,13 +1431,12 @@ patch(PosOrder.prototype, {
     removeOrderline(lineToRemove) {
         if (lineToRemove.is_reward_line) {
             // Remove any line that is part of that same reward aswell.
-            const linesToRemove = this.get_orderlines().filter((line) => {
-                return (
+            const linesToRemove = this.get_orderlines().filter(
+                (line) =>
                     line.reward_id === lineToRemove.reward_id &&
                     line.coupon_id === lineToRemove.coupon_id &&
                     line.reward_identifier_code === lineToRemove.reward_identifier_code
-                );
-            });
+            );
             for (const line of linesToRemove) {
                 line.delete();
             }

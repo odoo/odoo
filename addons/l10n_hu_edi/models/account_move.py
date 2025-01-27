@@ -124,6 +124,16 @@ class AccountMove(models.Model):
                 raise ValidationError(_('Cannot reset to draft or cancel invoice %s because an electronic document was already sent to NAV!', move.name))
 
     # === Computes === #
+    @api.depends('delivery_date')
+    def _compute_invoice_currency_rate(self):
+        # In Hungary, the currency rate should be based on the delivery date.
+        super()._compute_invoice_currency_rate()
+
+    def _get_invoice_currency_rate_date(self):
+        self.ensure_one()
+        if self.country_code == 'HU' and self.delivery_date:
+            return self.delivery_date
+        return super()._get_invoice_currency_rate_date()
 
     @api.depends('l10n_hu_edi_messages')
     def _compute_message_html(self):
@@ -1008,7 +1018,7 @@ class AccountMove(models.Model):
 
         self.ensure_one()
         tax_totals = self.tax_totals
-        if not tax_totals or self.move_type not in ('out_refund', 'in_refund'):
+        if not tax_totals:
             return tax_totals
 
         fields_to_reverse = (
@@ -1019,34 +1029,19 @@ class AccountMove(models.Model):
             'cash_rounding_base_amount_currency', 'cash_rounding_base_amount',
         )
 
-        invert_dict(tax_totals, fields_to_reverse)
-        for subtotal in tax_totals['subtotals']:
-            invert_dict(subtotal, fields_to_reverse)
-            for tax_group in subtotal['tax_groups']:
-                invert_dict(tax_group, fields_to_reverse)
+        if self.move_type in ('out_refund', 'in_refund'):
+            invert_dict(tax_totals, fields_to_reverse)
+            for subtotal in tax_totals['subtotals']:
+                invert_dict(subtotal, fields_to_reverse)
+                for tax_group in subtotal['tax_groups']:
+                    invert_dict(tax_group, fields_to_reverse)
 
         currency_huf = self.env.ref('base.HUF')
         tax_totals['total_vat_amount_in_huf'] = sum(
-            -line.balance for line in self.line_ids.filtered(lambda l: l.tax_line_id.l10n_hu_tax_type)
-        )
+            line.balance for line in self.line_ids.filtered(lambda l: l.tax_line_id.l10n_hu_tax_type)
+        ) * (1 if self.is_purchase_document() else -1)
         tax_totals['formatted_total_vat_amount_in_huf'] = formatLang(
             self.env, tax_totals['total_vat_amount_in_huf'], currency_obj=currency_huf
         )
 
         return tax_totals
-
-
-class AccountInvoiceLine(models.Model):
-    _inherit = 'account.move.line'
-
-    @api.depends('move_id.delivery_date')
-    def _compute_currency_rate(self):
-        super()._compute_currency_rate()
-        # In Hungary, the currency rate should be based on the delivery date.
-        for line in self.filtered(lambda l: l.move_id.country_code == 'HU' and l.currency_id):
-            line.currency_rate = self.env['res.currency']._get_conversion_rate(
-                from_currency=line.company_currency_id,
-                to_currency=line.currency_id,
-                company=line.company_id,
-                date=line.move_id.delivery_date or line.move_id.invoice_date or line.move_id.date or fields.Date.context_today(line),
-            )

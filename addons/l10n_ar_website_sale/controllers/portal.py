@@ -27,6 +27,7 @@ class L10nARCustomerPortal(CustomerPortal):
             portal_layout_values.update({
                 'responsibility': partner.l10n_ar_afip_responsibility_type_id,
                 'identification': partner.l10n_latam_identification_type_id,
+                'partner_sudo': partner,
                 'responsibility_types': request.env['l10n_ar.afip.responsibility.type'].search([]),
                 'identification_types': request.env['l10n_latam.identification.type'].search(
                     ['|', ('country_id', '=', False), ('country_id.code', '=', 'AR')]),

@@ -51,7 +51,6 @@ registry.category("web_tour.tours").add('delete_product_attribute_value_tour', {
         {
             content: 'Check test finished',
             trigger: 'a:contains("Attributes")',
-            run: () => { }, // check
         }
     ]
 });

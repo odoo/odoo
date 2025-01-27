@@ -109,7 +109,8 @@ describe("Wysiwyg Component", () => {
         expect(":iframe .test.odoo-editor-editable").toHaveCount(1);
     });
 
-    test.tags("desktop")("wysiwyg in iframe: toolbar should be well positioned", async () => {
+    test.tags("desktop");
+    test("wysiwyg in iframe: toolbar should be well positioned", async () => {
         const CLOSE_ENOUGH = 10;
         const { el } = await setupWysiwyg({
             iframe: true,

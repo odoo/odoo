@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import re
 from pytz import timezone, UTC
 from datetime import datetime, time
 from random import choice
@@ -242,7 +243,7 @@ class HrEmployeePrivate(models.Model):
 
     def _inverse_km_home_work(self):
         for employee in self:
-            employee.distance_home_work = employee.km_home_work / 1.609 if employee.distance_home_work_unit == "miles" else employee.distance_home_work
+            employee.distance_home_work = employee.km_home_work / 1.609 if employee.distance_home_work_unit == "miles" else employee.km_home_work
 
     def _get_partner_count_depends(self):
         return ['user_id']
@@ -427,8 +428,9 @@ class HrEmployeePrivate(models.Model):
     @api.constrains('barcode')
     def _verify_barcode(self):
         for employee in self:
-            if employee.barcode and not employee.barcode.isdigit():
-                raise ValidationError(_("The Badge ID must be a sequence of digits."))
+            if employee.barcode:
+                if not (re.match(r'^[A-Za-z0-9]+$', employee.barcode) and len(employee.barcode) <= 18):
+                    raise ValidationError(_("The Badge ID must be alphanumeric without any accents and no longer than 18 characters."))
 
     @api.constrains('ssnid')
     def _check_ssnid(self):
@@ -447,9 +449,20 @@ class HrEmployeePrivate(models.Model):
         if self.resource_calendar_id and not self.tz:
             self.tz = self.resource_calendar_id.tz
 
+    def _remove_work_contact_id(self, user, employee_company):
+        """ Remove work_contact_id for previous employee if the user is assigned to a new employee """
+        employee_company = employee_company or self.company_id.id
+        # For employees with a user_id, the constraint (user can't be linked to multiple employees) is triggered
+        old_partner_employee_ids = user.partner_id.employee_ids.filtered(lambda e:
+            not e.user_id
+            and e.company_id.id == employee_company
+            and e != self
+        )
+        old_partner_employee_ids.work_contact_id = None
+
     def _sync_user(self, user, employee_has_image=False):
         vals = dict(
-            work_contact_id=user.partner_id.id,
+            work_contact_id=user.partner_id.id if user else self.work_contact_id.id,
             user_id=user.id,
         )
         if not employee_has_image:
@@ -478,11 +491,13 @@ class HrEmployeePrivate(models.Model):
                 user = self.env['res.users'].browse(vals['user_id'])
                 vals.update(self._sync_user(user, bool(vals.get('image_1920'))))
                 vals['name'] = vals.get('name', user.name)
+                self._remove_work_contact_id(user, vals.get('company_id'))
         employees = super().create(vals_list)
         # Sudo in case HR officer doesn't have the Contact Creation group
         employees.filtered(lambda e: not e.work_contact_id).sudo()._create_work_contacts()
         for employee_sudo in employees.sudo():
-            if not employee_sudo.image_1920:
+            # creating 'svg/xml' attachments requires specific rights
+            if not employee_sudo.image_1920 and self.env['ir.ui.view'].sudo(False).has_access('write'):
                 employee_sudo.image_1920 = employee_sudo._avatar_generate_svg()
                 employee_sudo.work_contact_id.image_1920 = employee_sudo.image_1920
         if self.env.context.get('salary_simulation'):
@@ -517,10 +532,11 @@ class HrEmployeePrivate(models.Model):
             self.message_unsubscribe(self.work_contact_id.ids)
             if vals['work_contact_id']:
                 self._message_subscribe([vals['work_contact_id']])
-        if 'user_id' in vals:
+        if vals.get('user_id'):
             # Update the profile pictures with user, except if provided
-            vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id']),
-                                        (bool(all(emp.image_1920 for emp in self)))))
+            user = self.env['res.users'].browse(vals['user_id'])
+            vals.update(self._sync_user(user, (bool(all(emp.image_1920 for emp in self)))))
+            self._remove_work_contact_id(user, vals.get('company_id'))
         if 'work_permit_expiration_date' in vals:
             vals['work_permit_scheduled_activity'] = False
         res = super(HrEmployeePrivate, self).write(vals)
@@ -645,11 +661,11 @@ class HrEmployeePrivate(models.Model):
 
     def _get_marital_status_selection(self):
         return [
-            ('single', 'Single'),
-            ('married', 'Married'),
-            ('cohabitant', 'Legal Cohabitant'),
-            ('widower', 'Widower'),
-            ('divorced', 'Divorced')
+            ('single', _('Single')),
+            ('married', _('Married')),
+            ('cohabitant', _('Legal Cohabitant')),
+            ('widower', _('Widower')),
+            ('divorced', _('Divorced')),
         ]
 
     def _load_scenario(self):

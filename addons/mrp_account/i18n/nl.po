@@ -96,7 +96,7 @@ msgstr "Eén regel kan niet zowel credit als debet zijn."
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__account_id
 msgid "Account"
-msgstr "Account"
+msgstr "Rekening"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__account_move_line_id
@@ -107,8 +107,7 @@ msgstr "Boekingsregel"
 #: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting_line
 msgid "Account move line to be created when posting WIP account move"
 msgstr ""
-"Regel voor accountverplaatsing die moet worden aangemaakt bij het boeken van"
-" een WIP-rekeningverplaatsing"
+"Boekingsregel die moet worden aangemaakt bij het boeken van een WIP-boeking"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -185,7 +184,7 @@ msgstr ""
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__costs_hour_account_ids
 msgid "Costs Hour Account"
-msgstr "Uurkosten account"
+msgstr "Kosten per uur rekening"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__create_uid
@@ -233,7 +232,7 @@ msgstr "Schermnaam"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__distribution_analytic_account_ids
 msgid "Distribution Analytic Account"
-msgstr "Distributie analytisch account"
+msgstr "Distributie analytisch rekening"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_applicability__business_domain
@@ -296,7 +295,7 @@ msgstr "Laatst bijgewerkt op"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_report_mrp_report_mo_overview
 msgid "MO Overview Report"
-msgstr "Stuklijstoverzichtsrapport"
+msgstr "Productieorderoverzicht"
 
 #. module: mrp_account
 #. odoo-python
@@ -353,17 +352,17 @@ msgstr ""
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
 msgid "Post Manufacturing WIP"
-msgstr "WIP na productie"
+msgstr "Boek WIP productie"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
 msgid "Post WIP"
-msgstr "WIP plaatsen"
+msgstr "Boek WIP"
 
 #. module: mrp_account
 #: model:ir.actions.act_window,name:mrp_account.action_wip_accounting
 msgid "Post WIP Accounting Entry"
-msgstr "Boeking na WIP"
+msgstr "Boek WIP-boeking"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_template
@@ -388,7 +387,7 @@ msgstr "Productie"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_product_category__property_stock_account_production_cost_id
 msgid "Production Account"
-msgstr "Productie account"
+msgstr "Productierekening"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -404,7 +403,7 @@ msgstr "Referentie"
 #: model:ir.model.fields,field_description:mrp_account.field_account_bank_statement_line__wip_production_ids
 #: model:ir.model.fields,field_description:mrp_account.field_account_move__wip_production_ids
 msgid "Relevant WIP MOs"
-msgstr "Relevante WIP MO's"
+msgstr "Relevante WIP productieorders"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__reversal_date
@@ -450,9 +449,9 @@ msgid ""
 " If not set, it is the expense account of the final product that will be "
 "used instead."
 msgstr ""
-"De uitgave wordt geboekt wanneer de productieorder als gereed wordt "
-"gemarkeerd. De kostenrekening van het eindproduct wordt gebruikt als dit "
-"niet is ingesteld."
+"De kosten worden geboekt wanneer de productieorder gereed wordt gemeld. De "
+"kostenrekening van het eindproduct wordt gebruikt als deze niet is "
+"ingesteld."
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_product_category__property_stock_account_production_cost_id
@@ -460,8 +459,8 @@ msgid ""
 "This account will be used as a valuation counterpart for both components and final products for manufacturing orders.\n"
 "                If there are any workcenter/employee costs, this value will remain on the account once the production is completed."
 msgstr ""
-"Dit account wordt gebruikt als een waarderingstegenhangen voor onderdelen en eindproducten voor productieorders. \n"
-"Als er werkplek-/werknemerkosten zijn blijft deze waarde op het account eens de productie voltooid is."
+"Deze rekening wordt gebruikt als een waarderingstegenrekening voor onderdelen en eindproducten voor productieorders. \n"
+"Als er werkplek-/werknemerskosten zijn, blijft deze waarde op de rekening totdat de productie voltooid is."
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
@@ -494,7 +493,7 @@ msgstr "WIP - Overhead"
 #. odoo-python
 #: code:addons/mrp_account/models/account_move.py:0
 msgid "WIP MOs of %s"
-msgstr "WIP MO's van %s"
+msgstr "WIP productieorders van %s"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip

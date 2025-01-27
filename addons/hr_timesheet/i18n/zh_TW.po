@@ -3,16 +3,16 @@
 # 	* hr_timesheet
 # 
 # Translators:
-# Wil Odoo, 2024
-# Tony Ng, 2024
+# Tony Ng, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 08:17+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Tony Ng, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -73,7 +73,7 @@ msgstr "%(name)s 的工時表"
 msgid ""
 "'%(missing_plan_names)s' analytic plan(s) required on the project "
 "'%(project_name)s' linked to the timesheet."
-msgstr ""
+msgstr "缺漏「%(missing_plan_names)s」。已連結至工時表的專案「%(project_name)s」，需要此分析計劃。"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -345,6 +345,11 @@ msgid "Config Settings"
 msgstr "配置設定"
 
 #. module: hr_timesheet
+#: model:ir.ui.menu,name:hr_timesheet.hr_timesheet_menu_configuration
+msgid "Configuration"
+msgstr "配置"
+
+#. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_employee.py:0
 msgid "Confirmation"
@@ -531,6 +536,11 @@ msgid "Hours / Minutes"
 msgstr "小時/分鐘"
 
 #. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
+msgid "Hours By Task (Including Subtasks)"
+msgstr "總花費工時，按任務劃分（包括子任務）"
+
+#. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__id
 msgid "ID"
@@ -559,14 +569,6 @@ msgstr "運算符無效： %s"
 #: code:addons/hr_timesheet/models/project_project.py:0
 msgid "Invalid value: %s"
 msgstr "該值無效： %s"
-
-#. module: hr_timesheet
-#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
-#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
-msgid ""
-"Keep track of your working hours by project every day and bill your "
-"customers for that time."
-msgstr ""
 
 #. module: hr_timesheet
 #. odoo-python
@@ -674,17 +676,17 @@ msgid "No Task"
 msgstr "沒有任務"
 
 #. module: hr_timesheet
+#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
+#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
+msgid "No activities found. Let's start a new one!"
+msgstr "未找到任何活動。讓我們新增一個！"
+
+#. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_report
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
 msgid "No data yet!"
 msgstr "暫無資料！"
-
-#. module: hr_timesheet
-#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
-#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
-msgid "No timesheets found. Let's create one!"
-msgstr ""
 
 #. module: hr_timesheet
 #. odoo-python
@@ -701,6 +703,11 @@ msgstr "分配的小時數減去花費的小時數。"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid "Ok"
 msgstr "確定"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task__overtime
+msgid "Overtime"
+msgstr "逾時"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -855,14 +862,13 @@ msgstr "向需要為工時表編碼的工時表用戶發送定期電子郵件提
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
-#: model:ir.ui.menu,name:hr_timesheet.hr_timesheet_menu_configuration
 msgid "Settings"
 msgstr "設定"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_report_subtask
-msgid "Sub-Task:"
-msgstr "子任務："
+msgid "Sub-Task of '"
+msgstr "以下項目的子任務："
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -874,6 +880,7 @@ msgstr "子任務已花費時間"
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #: model:ir.model,name:hr_timesheet.model_project_task
+#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__task_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__task_id
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -903,7 +910,7 @@ msgstr "該公司的休假用內部專案應該在這家公司。"
 msgid ""
 "The project, the task and the analytic accounts of the timesheet must belong"
 " to the same company."
-msgstr ""
+msgstr "工時表的專案、任務及分析賬戶，必須全部屬於同一間公司。"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -1227,7 +1234,7 @@ msgstr "必須使用所選公司的在職員工創建工時表。"
 msgid ""
 "Timesheets must be created with at least an active analytic account defined "
 "in the plan '%(plan_name)s'."
-msgstr ""
+msgstr "建立工時表時，計劃「%(plan_name)s」內必須最少有一個生效的分析賬戶。"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1247,7 +1254,7 @@ msgid ""
 "To use the timesheets feature, you need an analytic account for your "
 "project. Please set one up in the plan '%(plan_name)s' or turn off the "
 "timesheets feature."
-msgstr ""
+msgstr "要使用工時表功能，專案需要有一個分析賬戶。請為計劃「%(plan_name)s」設定一個分析賬戶，或關閉工時表功能。"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1276,7 +1283,6 @@ msgstr "已花費總日數"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__total_hours_spent
-#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
@@ -1289,7 +1295,9 @@ msgid "Total:"
 msgstr "總計:"
 
 #. module: hr_timesheet
+#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
+#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
 msgid ""
 "Track your working hours by projects every day and invoice this time to your"
 " customers."

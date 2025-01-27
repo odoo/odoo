@@ -23,8 +23,8 @@ registry.category("web_tour.tours").add("event_sale_pricelists_different_currenc
             run: "click",
         },
         {
-            trigger:
-                '.modal#modal_attendees_registration:not(.o_inactive_modal) form[id="attendee_registration"]',
+            content: "Wait the modal is shown before continue",
+            trigger: ".modal.modal_shown.show form[id=attendee_registration]",
         },
         {
             trigger:

@@ -39,14 +39,32 @@ registerWebsitePreviewTour('snippet_translation_changing_lang', {
     url: '/',
 }, () => [
     {
-        content: "Change language to Parseltongue",
+        content: "Open dropdown language selector",
         trigger: ':iframe .js_language_selector button',
         run: "click",
     },
     {
-        content: "Change the language to English",
-        trigger: ':iframe .js_language_selector .js_change_lang[data-url_code="en"]',
+        content: "Select the language to Parseltongue",
+        trigger: ":iframe .js_language_selector .js_change_lang[data-url_code=pa_GB]",
         run: "click",
+    },
+    {
+        content: "Wait the language has changed.",
+        trigger: ":iframe nav li:contains(parseltongue)",
+    },
+    {
+        content: "Open dropdown language selector",
+        trigger: ':iframe .js_language_selector button',
+        run: "click",
+    },
+    {
+        content: "Select the language to English",
+        trigger: ":iframe .js_language_selector .js_change_lang[data-url_code=en]",
+        run: "click",
+    },
+    {
+        content: "Wait the language has changed.",
+        trigger: ":iframe nav li:contains(english)",
     },
     {
         content: "Open Edit dropdown",

@@ -28,18 +28,9 @@ registry.category("web_tour.tours").add('skip_website_configurator', {
         run: "click",
     },
     {
-        content: "make hover button appear",
-        trigger: '.o_theme_preview',
-        run() {
-            const el = document.querySelector(".o_theme_preview .o_button_area");
-            el.style.visibility = "visible";
-            el.style.opacity = 1;
-        },
-    },
-    {
         content: "Install a theme",
-        trigger: 'button[name="button_choose_theme"]',
-        run: "click",
+        trigger: ".o_theme_preview_top",
+        run: "hover && click button[name=button_choose_theme]",
     },
     {
         trigger: ".o_menu_systray .o_user_menu",
@@ -49,4 +40,8 @@ registry.category("web_tour.tours").add('skip_website_configurator', {
         trigger: ".o_website_preview[data-view-xmlid='website.homepage']",
         timeout: 30000,
     },
+    {
+        content: "Wait title is present before close tour",
+        trigger: ":iframe h2:contains(/^welcome to your/)",
+    }
 ]});

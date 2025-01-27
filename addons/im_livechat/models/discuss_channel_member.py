@@ -3,6 +3,7 @@
 from datetime import datetime, timedelta
 
 from odoo import api, models, fields
+from odoo.osv import expression
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -38,5 +39,17 @@ class ChannelMember(models.Model):
     def _get_store_partner_fields(self, fields):
         self.ensure_one()
         if self.channel_id.channel_type == 'livechat':
-            return ["active", "country", "is_public", "user_livechat_username", "write_date"]
+            return ["active", "avatar_128", "country", "is_public", "user_livechat_username"]
         return super()._get_store_partner_fields(fields)
+
+    def _get_rtc_invite_members_domain(self, *a, **kw):
+        domain = super()._get_rtc_invite_members_domain(*a, **kw)
+        chatbot = self.channel_id.chatbot_current_step_id.chatbot_script_id
+        if self.channel_id.channel_type == "livechat" and chatbot:
+            domain = expression.AND(
+                [
+                    domain,
+                    [("partner_id", "!=", chatbot.operator_partner_id.id)],
+                ]
+            )
+        return domain

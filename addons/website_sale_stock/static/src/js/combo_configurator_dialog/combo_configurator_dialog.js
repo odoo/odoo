@@ -11,6 +11,17 @@ patch(ComboConfiguratorDialog.prototype, {
         super.selectComboItem(...arguments);
     },
 
+    async setQuantity(quantity) {
+        if (!this.isComboQuantityAllowed(quantity)) {
+            quantity = Math.min(
+                ...this._selectedComboItems
+                    .map(comboItem => comboItem.product.free_qty)
+                    .filter(freeQty => freeQty !== undefined)
+            );
+        }
+        return super.setQuantity(quantity);
+    },
+
     /**
      * Check whether the provided combo quantity can be added to the cart.
      *

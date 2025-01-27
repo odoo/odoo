@@ -41,7 +41,8 @@ test("StatInfoField formats decimal precision", async () => {
     });
 });
 
-test.tags("desktop")("StatInfoField in form view on desktop", async () => {
+test.tags("desktop");
+test("StatInfoField in form view on desktop", async () => {
     await mountView({
         type: "form",
         resModel: "partner",
@@ -68,7 +69,8 @@ test.tags("desktop")("StatInfoField in form view on desktop", async () => {
     });
 });
 
-test.tags("mobile")("StatInfoField in form view on mobile", async () => {
+test.tags("mobile");
+test("StatInfoField in form view on mobile", async () => {
     await mountView({
         type: "form",
         resModel: "partner",
@@ -96,14 +98,13 @@ test.tags("mobile")("StatInfoField in form view on mobile", async () => {
     });
 });
 
-test.tags("desktop")(
-    "StatInfoField in form view with specific label_field on desktop",
-    async () => {
-        await mountView({
-            type: "form",
-            resModel: "partner",
-            resId: 1,
-            arch: /* xml */ `
+test.tags("desktop");
+test("StatInfoField in form view with specific label_field on desktop", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
             <form>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -117,21 +118,21 @@ test.tags("desktop")(
                 </sheet>
             </form>
         `,
-        });
+    });
 
-        expect("button.oe_stat_button .o_field_widget .o_stat_info").toHaveCount(1, {
-            message: "should have one stat button",
-        });
-        expect("button.oe_stat_button .o_field_widget .o_stat_value").toHaveText("10", {
-            message: "should have 10 as value",
-        });
-        expect("button.oe_stat_button .o_field_widget .o_stat_text").toHaveText("yop", {
-            message: "should have 'yop' as text, since it is the value of field foo",
-        });
-    }
-);
+    expect("button.oe_stat_button .o_field_widget .o_stat_info").toHaveCount(1, {
+        message: "should have one stat button",
+    });
+    expect("button.oe_stat_button .o_field_widget .o_stat_value").toHaveText("10", {
+        message: "should have 10 as value",
+    });
+    expect("button.oe_stat_button .o_field_widget .o_stat_text").toHaveText("yop", {
+        message: "should have 'yop' as text, since it is the value of field foo",
+    });
+});
 
-test.tags("mobile")("StatInfoField in form view with specific label_field on mobile", async () => {
+test.tags("mobile");
+test("StatInfoField in form view with specific label_field on mobile", async () => {
     await mountView({
         type: "form",
         resModel: "partner",
@@ -164,7 +165,8 @@ test.tags("mobile")("StatInfoField in form view with specific label_field on mob
     });
 });
 
-test.tags("desktop")("StatInfoField in form view with no label on desktop", async () => {
+test.tags("desktop");
+test("StatInfoField in form view with no label on desktop", async () => {
     await mountView({
         type: "form",
         resModel: "partner",
@@ -192,7 +194,8 @@ test.tags("desktop")("StatInfoField in form view with no label on desktop", asyn
     });
 });
 
-test.tags("mobile")("StatInfoField in form view with no label on mobile", async () => {
+test.tags("mobile");
+test("StatInfoField in form view with no label on mobile", async () => {
     await mountView({
         type: "form",
         resModel: "partner",

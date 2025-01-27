@@ -5,19 +5,23 @@ import { user } from "@web/core/user";
 import { withSequence } from "@html_editor/utils/resource";
 
 export class SignaturePlugin extends Plugin {
-    static name = "signature";
-    static dependencies = ["dom"];
+    static id = "signature";
+    static dependencies = ["dom", "history"];
     resources = {
-        powerboxCategory: withSequence(100, { id: "basic_block", name: _t("Basic Bloc") }),
-        powerboxItems: [
+        user_commands: [
             {
-                category: "basic_block",
-                name: _t("Signature"),
+                id: "insertSignature",
+                title: _t("Signature"),
                 description: _t("Insert your signature"),
-                fontawesome: "fa-pencil-square-o",
-                action: () => {
-                    return this.insertSignature();
-                },
+                icon: "fa-pencil-square-o",
+                run: this.insertSignature.bind(this),
+            },
+        ],
+        powerbox_categories: withSequence(100, { id: "basic_block", name: _t("Basic Bloc") }),
+        powerbox_items: [
+            {
+                categoryId: "basic_block",
+                commandId: "insertSignature",
             },
         ],
     };
@@ -29,8 +33,8 @@ export class SignaturePlugin extends Plugin {
             ["signature"]
         );
         if (currentUser && currentUser.signature) {
-            this.shared.domInsert(parseHTML(this.document, currentUser.signature));
-            this.dispatch("ADD_STEP");
+            this.dependencies.dom.insert(parseHTML(this.document, currentUser.signature));
+            this.dependencies.history.addStep();
         }
     }
 }

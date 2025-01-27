@@ -24,7 +24,6 @@ export class LocationSelectorDialog extends Component {
     };
 
     setup() {
-        this.title = _t("Choose a pick-up point");
         this.state = useState({
             locations: [],
             error: false,
@@ -154,6 +153,34 @@ export class LocationSelectorDialog extends Component {
     get mobileComponent() {
         if (this.state.viewMode === 'map') return MapContainer;
         return LocationList;
+    }
+
+    get title() {
+        return _t("Choose a pick-up point");
+    }
+
+    get validationButtonLabel() {
+        return _t("Choose this location");
+    }
+
+    get postalCodePlaceholder() {
+        return _t("Your postal code");
+    }
+
+    get listViewButtonLabel() {
+        return _t("List view");
+    }
+
+    get mapViewButtonLabel() {
+        return _t("Map view");
+    }
+
+    get errorMessage() {
+        return _t("No result");
+    }
+
+    get loadingMessage() {
+        return _t("Loading...");
     }
 
     /**

@@ -5,9 +5,11 @@ import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
 import { RPCError } from "@web/core/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { CellErrorType, EvaluationError } from "@odoo/o-spreadsheet";
+import { _t } from "@web/core/l10n/translation";
 
 /**
  * @typedef {import("./odoo_data_provider").OdooDataProvider} OdooDataProvider
+ * @typedef {import("./server_data").ServerData} ServerData
  */
 
 /**
@@ -42,6 +44,7 @@ export class LoadableDataSource {
         this._isFullyLoaded = false;
         this._isValid = true;
         this._loadError = undefined;
+        this._isModelValid = true;
     }
 
     get _orm() {
@@ -72,6 +75,18 @@ export class LoadableDataSource {
                 .add(this._load())
                 .catch((e) => {
                     this._isValid = false;
+                    if (e instanceof ModelNotFoundError) {
+                        this._isModelValid = false;
+                        this._loadError = Object.assign(
+                            new EvaluationError(
+                                _t(`The model "%(model)s" does not exist.`, { model: e.message })
+                            ),
+                            {
+                                cause: e,
+                            }
+                        );
+                        return;
+                    }
                     this._loadError = Object.assign(
                         new EvaluationError(e instanceof RPCError ? e.data.message : e.message),
                         { cause: e }
@@ -105,6 +120,10 @@ export class LoadableDataSource {
         return this.isReady() && this._isValid;
     }
 
+    isModelValid() {
+        return this.isReady() && this._isModelValid;
+    }
+
     assertIsValid({ throwOnError } = { throwOnError: true }) {
         if (!this._isFullyLoaded) {
             this.load();
@@ -131,3 +150,25 @@ export class LoadableDataSource {
 }
 
 export const LOADING_ERROR = new LoadingDataError();
+
+export class ModelNotFoundError extends Error {}
+
+/**
+ * Perform a `fields_get` on the given model and return the fields.
+ * If the model is not found, a `ModelNotFoundError` is thrown.
+ *
+ * @param {ServerData} serverData
+ * @param {string} model
+ * @returns {Promise<import("@spreadsheet").OdooFields>}
+ */
+export async function getFields(serverData, model) {
+    try {
+        const fields = await serverData.fetch(model, "fields_get");
+        return fields;
+    } catch (e) {
+        if (e instanceof RPCError && e.code === 404) {
+            throw new ModelNotFoundError(model);
+        }
+        throw e;
+    }
+}

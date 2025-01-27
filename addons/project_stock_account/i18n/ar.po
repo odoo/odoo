@@ -3,6 +3,7 @@
 # 	* project_stock_account
 # 
 # Translators:
+# Malaz Abuidris <msea@odoo.com>, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
@@ -30,7 +31,12 @@ msgstr ""
 #. module: project_stock_account
 #: model:ir.model.fields,field_description:project_stock_account.field_stock_picking_type__analytic_costs
 msgid "Analytic Costs"
-msgstr ""
+msgstr "التكاليف التحليلية "
+
+#. module: project_stock_account
+#: model:ir.model,name:project_stock_account.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "البند التحليلي"
 
 #. module: project_stock_account
 #: model:ir.model,name:project_stock_account.model_account_analytic_applicability
@@ -38,14 +44,35 @@ msgid "Analytic Plan's Applicabilities"
 msgstr "إمكانية تطبيق الخطة التحليلية "
 
 #. module: project_stock_account
+#: model:ir.model.fields,field_description:project_stock_account.field_account_analytic_line__category
+msgid "Category"
+msgstr "الفئة "
+
+#. module: project_stock_account
 #: model:ir.model.fields,field_description:project_stock_account.field_account_analytic_applicability__business_domain
 msgid "Domain"
 msgstr "النطاق"
 
 #. module: project_stock_account
+#: model:ir.model.fields.selection,name:project_stock_account.selection__account_analytic_line__category__picking_entry
+msgid "Inventory Transfer"
+msgstr ""
+
+#. module: project_stock_account
+#. odoo-python
+#: code:addons/project_stock_account/models/project_project.py:0
+msgid "Materials"
+msgstr "المواد"
+
+#. module: project_stock_account
 #: model:ir.model,name:project_stock_account.model_stock_picking_type
 msgid "Picking Type"
 msgstr "نوع الانتقاء "
+
+#. module: project_stock_account
+#: model:ir.model,name:project_stock_account.model_project_project
+msgid "Project"
+msgstr "المشروع"
 
 #. module: project_stock_account
 #: model:ir.model,name:project_stock_account.model_stock_move

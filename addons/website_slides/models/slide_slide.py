@@ -7,7 +7,6 @@ import io
 import logging
 import re
 import requests
-import PyPDF2
 
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
@@ -17,6 +16,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import RedirectWarning, UserError, AccessError
 from odoo.http import request
 from odoo.tools import html2plaintext, sql
+from odoo.tools.pdf import PdfFileReader
 
 _logger = logging.getLogger(__name__)
 
@@ -109,7 +109,7 @@ class Slide(models.Model):
     _order = 'sequence asc, is_category asc, id asc'
     _partner_unfollow_enabled = True
 
-    YOUTUBE_VIDEO_ID_REGEX = r'^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*'
+    YOUTUBE_VIDEO_ID_REGEX = r'^(?:(?:https?:)?//)?(?:www\.|m\.)?(?:youtu\.be/|youtube(-nocookie)?\.com/(?:embed/|v/|shorts/|live/|watch\?v=|watch\?.+&v=))((?:\w|-){11})\S*$'
     GOOGLE_DRIVE_DOCUMENT_ID_REGEX = r'(^https:\/\/docs.google.com|^https:\/\/drive.google.com).*\/d\/([^\/]*)'
     VIMEO_VIDEO_ID_REGEX = r'\/\/(player.)?vimeo.com\/(?:[a-z]*\/)*([0-9]{6,11})\/?([0-9a-z]{6,11})?[?]?.*'
 
@@ -119,7 +119,7 @@ class Slide(models.Model):
     active = fields.Boolean(default=True, tracking=100)
     sequence = fields.Integer('Sequence', default=0)
     user_id = fields.Many2one('res.users', string='Uploaded by', default=lambda self: self.env.uid)
-    description = fields.Html('Description', translate=True, sanitize_attributes=False)
+    description = fields.Html('Description', translate=True, sanitize_attributes=False, sanitize_overridable=True)
     channel_id = fields.Many2one('slide.channel', string="Course", required=True, ondelete='cascade')
     tag_ids = fields.Many2many('slide.tag', 'rel_slide_tag', 'slide_id', 'tag_id', string='Tags')
     is_preview = fields.Boolean('Allow Preview', default=False, help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.")
@@ -698,7 +698,8 @@ class Slide(models.Model):
         """Sets the sequence to zero so that it always lands at the beginning
         of the newly selected course as an uncategorized slide"""
         default = dict(default or {})
-        default['sequence'] = 0
+        if 'slide.channel' not in self._context.get('__copy_data_seen', {}) and 'sequence' not in default:
+            default['sequence'] = 0
         return super().copy_data(default=default)
 
     def unlink(self):
@@ -1325,7 +1326,7 @@ class Slide(models.Model):
 
         if data_bytes.startswith(b'%PDF-'):
             try:
-                pdf = PyPDF2.PdfFileReader(io.BytesIO(data_bytes), overwriteWarnings=False)
+                pdf = PdfFileReader(io.BytesIO(data_bytes), overwriteWarnings=False)
                 return (5 * len(pdf.pages)) / 60
             except Exception:
                 pass  # as this is a nice to have, fail silently

@@ -93,7 +93,6 @@ defineActions([
         xml_id: "action_1",
         name: "Partners Action 1",
         res_model: "partner",
-        type: "ir.actions.act_window",
         views: [[1, "kanban"]],
     },
     {
@@ -101,8 +100,6 @@ defineActions([
         xml_id: "action_3",
         name: "Partners",
         res_model: "partner",
-        mobile_view_mode: "kanban",
-        type: "ir.actions.act_window",
         views: [
             [false, "list"],
             [1, "kanban"],
@@ -115,7 +112,6 @@ defineActions([
         name: "Create a Partner",
         res_model: "partner",
         target: "new",
-        type: "ir.actions.act_window",
         views: [[false, "form"]],
     },
     {
@@ -123,7 +119,6 @@ defineActions([
         xml_id: "action_4",
         name: "Partners Action 4",
         res_model: "partner",
-        type: "ir.actions.act_window",
         views: [
             [1, "kanban"],
             [2, "list"],
@@ -135,7 +130,6 @@ defineActions([
         xml_id: "action_8",
         name: "Favorite Ponies",
         res_model: "pony",
-        type: "ir.actions.act_window",
         views: [
             [false, "list"],
             [false, "form"],
@@ -149,20 +143,20 @@ const actionHandlersRegistry = registry.category("action_handlers");
 test("can execute actions from id, xmlid and tag", async () => {
     defineActions([
         {
-            id: 1,
+            id: 10,
             tag: "client_action_by_db_id",
             target: "main",
             type: "ir.actions.client",
         },
         {
-            id: 2,
+            id: 20,
             xml_id: "some_action",
             tag: "client_action_by_xml_id",
             target: "main",
             type: "ir.actions.client",
         },
         {
-            id: 3,
+            id: 30,
             path: "my_action",
             tag: "client_action_by_path",
             target: "main",
@@ -177,7 +171,7 @@ test("can execute actions from id, xmlid and tag", async () => {
         .add("client_action_by_object", () => expect.step("client_action_object"));
 
     await makeMockEnv();
-    await getService("action").doAction(1);
+    await getService("action").doAction(10);
     expect.verifySteps(["client_action_db_id"]);
     await getService("action").doAction("some_action");
     expect.verifySteps(["client_action_xml_id"]);
@@ -228,9 +222,7 @@ test("properly handle case when action id does not exist", async () => {
     getService("action").doAction(4448);
     await animationFrame();
     expect(`.modal .o_error_dialog`).toHaveCount(1);
-    expect(queryOne(".o_error_dialog .modal-body").innerText).toBe(
-        "The action 4448 does not exist"
-    );
+    expect(".o_error_dialog .modal-body").toHaveText("The action 4448 does not exist");
 });
 
 test("properly handle case when action path does not exist", async () => {
@@ -239,9 +231,7 @@ test("properly handle case when action path does not exist", async () => {
     getService("action").doAction("plop");
     await animationFrame();
     expect(`.modal .o_error_dialog`).toHaveCount(1);
-    expect(queryOne(".o_error_dialog .modal-body").innerText).toBe(
-        'The action "plop" does not exist'
-    );
+    expect(".o_error_dialog .modal-body").toHaveText('The action "plop" does not exist');
 });
 
 test("properly handle case when action xmlId does not exist", async () => {
@@ -250,7 +240,7 @@ test("properly handle case when action xmlId does not exist", async () => {
     getService("action").doAction("not.found.action");
     await animationFrame();
     expect(`.modal .o_error_dialog`).toHaveCount(1);
-    expect(queryOne(".o_error_dialog .modal-body").innerText).toBe(
+    expect(".o_error_dialog .modal-body").toHaveText(
         'The action "not.found.action" does not exist'
     );
 });
@@ -337,7 +327,6 @@ test('action with "no_breadcrumbs" set to true', async () => {
         {
             id: 42,
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[1, "kanban"]],
             context: { no_breadcrumbs: true },
         },
@@ -422,7 +411,8 @@ test("document's title is updated when an action is executed", async () => {
     });
 });
 
-test.tags("desktop")('handles "history_back" event', async () => {
+test.tags("desktop");
+test('handles "history_back" event', async () => {
     let list;
     patchWithCleanup(listView.Controller.prototype, {
         setup() {
@@ -443,13 +433,13 @@ test.tags("desktop")('handles "history_back" event', async () => {
     });
 });
 
-test.tags("desktop")("stores and restores scroll position (in kanban)", async () => {
+test.tags("desktop");
+test("stores and restores scroll position (in kanban)", async () => {
     defineActions([
         {
-            id: 3,
+            id: 10,
             name: "Partners",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[false, "kanban"]],
         },
     ]);
@@ -462,7 +452,7 @@ test.tags("desktop")("stores and restores scroll position (in kanban)", async ()
     getFixture().appendChild(container);
     await mountWithCleanup(WebClient, { target: container });
     // execute a first action
-    await getService("action").doAction(3);
+    await getService("action").doAction(10);
     expect(".o_content").toHaveProperty("scrollTop", 0);
     // simulate a scroll
     await scroll(".o_content", { top: 100 });
@@ -474,7 +464,8 @@ test.tags("desktop")("stores and restores scroll position (in kanban)", async ()
     expect(".o_content").toHaveProperty("scrollTop", 100);
 });
 
-test.tags("desktop")("stores and restores scroll position (in list)", async () => {
+test.tags("desktop");
+test("stores and restores scroll position (in list)", async () => {
     for (let i = 0; i < 60; i++) {
         Partner._records.push({ id: 100 + i, display_name: `Record ${i}` });
     }
@@ -498,7 +489,8 @@ test.tags("desktop")("stores and restores scroll position (in list)", async () =
     expect(queryOne(".o_list_renderer").scrollTop).toBe(100);
 });
 
-test.tags("desktop")('executing an action with target != "new" closes all dialogs', async () => {
+test.tags("desktop");
+test('executing an action with target != "new" closes all dialogs', async () => {
     Partner._views["form,false"] = `
         <form>
             <field name="o2m">
@@ -518,7 +510,8 @@ test.tags("desktop")('executing an action with target != "new" closes all dialog
     expect(".modal").toHaveCount(0);
 });
 
-test.tags("desktop")('executing an action with target "new" does not close dialogs', async () => {
+test.tags("desktop");
+test('executing an action with target "new" does not close dialogs', async () => {
     Partner._views["form,false"] = `
         <form>
             <field name="o2m">
@@ -537,7 +530,8 @@ test.tags("desktop")('executing an action with target "new" does not close dialo
     expect(".modal .o_form_view").toHaveCount(2);
 });
 
-test.tags("desktop")("search defaults are removed from context when switching view", async () => {
+test.tags("desktop");
+test("search defaults are removed from context when switching view", async () => {
     expect.assertions(1);
     Partner._views["pivot,false"] = `<pivot/>`;
     Partner._views["list,false"] = `<list/>`;
@@ -579,19 +573,15 @@ test("retrieving a stored action should remove 'allowed_company_ids' from its co
         { id: 1, name: "Heroes TM", sequence: 3 },
     ];
 
-    const action = {
-        id: 1,
-        name: "Partners Action 1",
-        res_model: "partner",
-        type: "ir.actions.act_window",
-        views: [[1, "kanban"]],
-    };
-
     // Prepare a stored action
     browser.sessionStorage.setItem(
         "current_action",
         JSON.stringify({
-            ...action,
+            id: 1,
+            name: "Partners Action 1",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [[1, "kanban"]],
             context: {
                 someKey: 44,
                 allowed_company_ids: [1, 2],
@@ -620,49 +610,45 @@ test("retrieving a stored action should remove 'allowed_company_ids' from its co
     });
 });
 
-test.tags("desktop")(
-    "action is removed while waiting for another action with selectMenu",
-    async () => {
-        let def;
-        class SlowClientAction extends Component {
-            static template = xml`<div>My client action</div>`;
-            static props = ["*"];
+test.tags("desktop");
+test("action is removed while waiting for another action with selectMenu", async () => {
+    let def;
+    class SlowClientAction extends Component {
+        static template = xml`<div>My client action</div>`;
+        static props = ["*"];
 
-            setup() {
-                onWillStart(() => def);
-            }
+        setup() {
+            onWillStart(() => def);
         }
-        actionRegistry.add("slow_client_action", SlowClientAction);
-        defineActions([
-            {
-                id: 1001,
-                tag: "slow_client_action",
-                target: "main",
-                type: "ir.actions.client",
-                params: { description: "Id 1" },
-            },
-        ]);
-        defineMenus([
-            { id: 1, children: [], name: "App1", appID: 1, actionID: 1001, xmlid: "menu_1" },
-        ]);
-
-        await mountWithCleanup(WebClient);
-        // starting point: a kanban view
-        await getService("action").doAction(4);
-        expect(".o_kanban_view").toHaveCount(1);
-
-        // select app in navbar menu
-        def = new Deferred();
-        await contains(".o_navbar_apps_menu .dropdown-toggle").click();
-        const appsMenu = getDropdownMenu(".o_navbar_apps_menu");
-        await contains(".o_app:contains(App1)", { root: appsMenu }).click();
-
-        // check that the action manager is empty, even though client action is loading
-        expect(".o_action_manager").toHaveText("");
-
-        // resolve onwillstart so client action is ready
-        def.resolve();
-        await animationFrame();
-        expect(".o_action_manager").toHaveText("My client action");
     }
-);
+    actionRegistry.add("slow_client_action", SlowClientAction);
+    defineActions([
+        {
+            id: 1001,
+            tag: "slow_client_action",
+            target: "main",
+            type: "ir.actions.client",
+            params: { description: "Id 1" },
+        },
+    ]);
+    defineMenus([{ id: 1, children: [], name: "App1", appID: 1, actionID: 1001, xmlid: "menu_1" }]);
+
+    await mountWithCleanup(WebClient);
+    // starting point: a kanban view
+    await getService("action").doAction(4);
+    expect(".o_kanban_view").toHaveCount(1);
+
+    // select app in navbar menu
+    def = new Deferred();
+    await contains(".o_navbar_apps_menu .dropdown-toggle").click();
+    const appsMenu = getDropdownMenu(".o_navbar_apps_menu");
+    await contains(".o_app:contains(App1)", { root: appsMenu }).click();
+
+    // check that the action manager is empty, even though client action is loading
+    expect(".o_action_manager").toHaveText("");
+
+    // resolve onwillstart so client action is ready
+    def.resolve();
+    await animationFrame();
+    expect(".o_action_manager").toHaveText("My client action");
+});

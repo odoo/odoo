@@ -9,14 +9,17 @@
             <div t-ref="div">
                 <textarea
                     class="o_input"
-                    t-att-class="{'o_field_translate': isTranslatable}"
+                    t-att-class="{
+                        'o_field_translate': isTranslatable,
+                        'o_field_placeholder': props.dynamicPlaceholder,
+                    }"
                     t-att-id="props.id"
                     t-att-placeholder="props.placeholder"
                     t-att-rows="rowCount"
                     t-ref="textarea"
                     t-on-blur="onBlur"
                 />
-                <div class="o_field_text_buttons d-flex flex-row align-items-baseline">
+                <div class="o_field_input_buttons">
                     <TranslationButton
                         t-if="isTranslatable"
                         fieldName="props.name"

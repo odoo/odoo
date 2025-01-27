@@ -3,16 +3,17 @@
 # 	* mrp
 # 
 # Translators:
-# Tony Ng, 2024
+# Chill Liao <chill421@qq.com>, 2024
 # Wil Odoo, 2024
+# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 08:17+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,6 +44,17 @@ msgstr ""
 #: code:addons/mrp/models/stock_rule.py:0
 msgid " <br/><br/> The components will be taken from <b>%s</b>."
 msgstr " <br/><br/> 物料將取自 <b>%s</b>."
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_rule.py:0
+msgid ""
+" <br/><br/> The manufactured products will be moved towards "
+"<b>%(destination)s</b>, <br/> as specified from <b>%(operation)s</b> "
+"destination."
+msgstr ""
+" <br/><br/>製成的產品將會移至 <b>%(destination)s</b>，<br/>即 <b>%(operation)s</b> "
+"所指定之目的地。"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__all_available
@@ -104,7 +116,7 @@ msgstr "%(producible_qty)s 已準備好"
 #. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
 msgid "%(product)s: Insufficient Quantity To Unbuild"
-msgstr ""
+msgstr "%(product)s：數量不足以進行拆解"
 
 #. module: mrp
 #. odoo-python
@@ -264,7 +276,7 @@ msgstr "<i class=\"fa fa-pause\" role=\"img\" aria-label=\"暫停\" title=\"暫�
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "<i class=\"fa fa-play fs-6\" role=\"img\" aria-label=\"Run\" title=\"Run\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-play fs-6\" role=\"img\" aria-label=\"運行\" title=\"運行\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
@@ -309,8 +321,8 @@ msgstr "<span class=\"col-6\">等待中</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "<span class=\"fw-bold\">To Produce</span>"
-msgstr "<span class=\"fw-bold\">待生產</span>"
+msgid "<span class=\"fw-bold text-nowrap\">To Produce</span>"
+msgstr "<span class=\"fw-bold text-nowrap\">待生產</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -758,12 +770,12 @@ msgstr "允許"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reserve_visible
 msgid "Allowed to Reserve Production"
-msgstr "允許保留生產"
+msgstr "允許保留配件"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__unreserve_visible
 msgid "Allowed to Unreserve Production"
-msgstr "允許取消保留生產"
+msgstr "允許取消配件保留"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__consumption__warning
@@ -822,11 +834,6 @@ msgstr "您確定要取消此製造訂單嗎？"
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Assembling"
 msgstr "組裝"
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_ir_attachment
-msgid "Attachment"
-msgstr "附件"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_attachment_count
@@ -1122,15 +1129,11 @@ msgstr ""
 "包括工單或包裝."
 
 #. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/wo_list_view_dropdown/wo_list_view_dropdown.js:0
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
 msgid "Block"
 msgstr "區塊"
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/components/wo_list_view_dropdown/wo_list_view_dropdown.xml:0
-msgid "Block WC"
-msgstr "封鎖WC"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_block_workcenter
@@ -1201,7 +1204,7 @@ msgstr "物料清單成本"
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
 msgid "BoM Costs"
-msgstr ""
+msgstr "物料清單成本"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__bom_line_id
@@ -1615,13 +1618,13 @@ msgstr "成本分攤 (%)"
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 msgid "Cost as it is currently accumulated"
-msgstr ""
+msgstr "成本，按目前已累積金額"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 msgid "Cost based on cost projection"
-msgstr ""
+msgstr "成本，按照成本預測"
 
 #. module: mrp
 #. odoo-javascript
@@ -1633,7 +1636,7 @@ msgstr "基於相關補貨的成本。否則按產品表單計算成本"
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 msgid "Cost based on the BoM"
-msgstr ""
+msgstr "成本，按照物料清單"
 
 #. module: mrp
 #. odoo-javascript
@@ -1665,12 +1668,6 @@ msgstr "成本資訊"
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.js:0
 msgid "Costs"
 msgstr "費用"
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/fields/google_slides_viewer.js:0
-msgid "Could not display the selected spreadsheet"
-msgstr "無法顯示選定的試算表"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__production_count
@@ -1951,6 +1948,11 @@ msgid ""
 "  Note that in the case of component Highlight Consumption, where consumption is registered manually exclusively, consumption warnings will still be issued when appropriate also.\n"
 "  * Blocked: only a manager can close a manufacturing order when the BoM consumption is not respected."
 msgstr ""
+"定義你相比物料清單上定義的數量，可否消耗更多或更少組件：\n"
+"  * 允許：允許所有製造管理使用者進行此操作。\n"
+"  * 允許但附有警告：允許所有製造管理使用者進行此操作，並在關閉製造訂單時，提供消耗差異摘要。\n"
+"  請留意，若有組件突出消耗（當中的消耗只有手動登記），系統仍會在適當時候發出消耗警告。\n"
+"  * 封鎖：若不用考慮物料清單消耗時，只限經理可關閉製造訂單。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delay_alert_date
@@ -2461,12 +2463,6 @@ msgid "Google Slide Link"
 msgstr "Google 幻燈片連結"
 
 #. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/fields/google_slides_viewer.js:0
-msgid "Google Slides Viewer"
-msgstr "Google 幻燈片顯示器"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Group By"
 msgstr "分組依據"
@@ -2483,7 +2479,7 @@ msgstr "分組依據..."
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Group by..."
-msgstr "分組由..."
+msgstr "分組依據⋯"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
@@ -2522,7 +2518,7 @@ msgstr "隱藏"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__manual_consumption
 msgid "Highlight Consumption"
-msgstr ""
+msgstr "突出消耗"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__costs_hour
@@ -2673,13 +2669,13 @@ msgstr "物料清單的匯入用範本"
 msgid ""
 "Impossible to plan the workorder. Please check the workcenter "
 "availabilities."
-msgstr "無法計畫生產工單.請檢查工作中心可用性."
+msgstr "未能規劃生產工作單。請檢查工作中心的可用空檔。"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 msgid "Impossible to plan. Please check the workcenter availabilities."
-msgstr ""
+msgstr "未能安排規劃。請檢查工作中心的可用情況。"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__progress
@@ -2702,12 +2698,12 @@ msgstr "運送中"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_view_search_catalog
 msgid "In the BoM"
-msgstr ""
+msgstr "在物料清單內"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_view_search_catalog
 msgid "In the MO"
-msgstr ""
+msgstr "在製造單內"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_deadline
@@ -3472,7 +3468,7 @@ msgstr "我的活動截止時間"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "My MOs"
-msgstr ""
+msgstr "我的製造訂單"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__never_product_template_attribute_value_ids
@@ -4405,7 +4401,7 @@ msgstr "每個工作中心的產品產能應該是唯一的."
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Product to build..."
-msgstr "待構建產品......"
+msgstr "要製造的產品⋯"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_batch_produce__production_id
@@ -4577,7 +4573,7 @@ msgstr "已生產數量"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 msgid "Quantity Remaining"
-msgstr ""
+msgstr "剩餘數量"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_remaining
@@ -5036,15 +5032,9 @@ msgid "Show backorder lines"
 msgstr "顯示製造延期交貨明細"
 
 #. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/fields/google_slides_viewer.xml:0
-msgid "Slides viewer"
-msgstr "幻燈片顯示器"
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__leave_id
 msgid "Slot into workcenter calendar once planned"
-msgstr "計畫後插入工作中心日曆"
+msgstr "進行規劃後，插入工作中心日曆"
 
 #. module: mrp
 #: model_terms:product.template,description:mrp.product_product_computer_desk_head_product_template
@@ -5459,7 +5449,7 @@ msgstr "此副產品在最終生產成本中的百分比.所有副產品的總�
 msgid ""
 "The planned end date of the work order cannot be prior to the planned start "
 "date, please correct this to save the work order."
-msgstr "生產工單的計畫結束日期不能早于計畫開始日期,請更正此日期以儲存生產工單."
+msgstr "生產工作單的計劃結束日期，不可早過計劃開始日期。請更正此項資料，才可儲存生產工作單。"
 
 #. module: mrp
 #. odoo-python
@@ -5808,7 +5798,7 @@ msgstr "數量總計"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_progress_count
 msgid "Total Running Orders"
-msgstr "執行的訂單合計"
+msgstr "運行中訂單總計"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_stock_move_operations_raw
@@ -5883,7 +5873,8 @@ msgid "Unable to split with more than the quantity to produce."
 msgstr "無法拆分超過生產數量."
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/wo_list_view_dropdown/wo_list_view_dropdown.js:0
 msgid "Unblock"
 msgstr "解除阻塞"
 
@@ -6043,21 +6034,6 @@ msgid "Use Reception Report with Manufacturing Orders"
 msgstr "將接收報告與製造訂單一起使用"
 
 #. module: mrp
-#: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
-#: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production_specific
-#: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
-#: model_terms:ir.actions.act_window,help:mrp.action_work_orders
-#: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
-msgid ""
-"Use the table work center control panel to register operations in the shop floor directly.\n"
-"            The tablet provides worksheets for your workers and allow them to scrap products, track time,\n"
-"            launch a maintenance request, perform quality tests, etc."
-msgstr ""
-"使用桌面工作中心控制面板，直接在車間登記操作。\n"
-"            平板電腦為工人提供工作表，用於報廢產品、追蹤日期、\n"
-"            發送維護保養請求、進行品質測試等。"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
 #: model_terms:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
 msgid "Used In"
@@ -6100,7 +6076,7 @@ msgid ""
 "Values cannot be set and validated because a Lot/Serial Number needs to be "
 "specified for a tracked product that is having its consumed amount "
 "increased:%(products)s"
-msgstr ""
+msgstr "未能設定及驗證數值，因為對於消耗量增加的追蹤產品，需要指定其批次/序號：%(products)s"
 
 #. module: mrp
 #. odoo-javascript
@@ -6231,7 +6207,7 @@ msgid ""
 "If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also."
 msgstr ""
 "啟用後, 將專門手動記錄該物料的消耗記錄.\n"
-"如果未啟用, 並且任何物料消耗在製造訂單上手動編輯, ERP 也假設手動消耗."
+"如果未啟用, 並且任何物料消耗在製造訂單上手動編輯, ERP 也會視其為手動消耗."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__asap
@@ -6421,10 +6397,18 @@ msgid "Work center"
 msgstr "工作中心"
 
 #. module: mrp
+#: model_terms:ir.actions.act_window,help:mrp.action_work_orders
+msgid ""
+"Work orders are operations to do as part of a manufacturing order.\n"
+"                    Operations are defined in the bill of materials or added in the manufacturing order directly."
+msgstr ""
+"生產工單是作為製造訂單的一部分執行的製程.\n"
+"                     製程在物料清單中定義或直接增加到製造訂單中."
+
+#. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production_specific
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
-#: model_terms:ir.actions.act_window,help:mrp.action_work_orders
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
 msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"
@@ -6721,7 +6705,7 @@ msgstr "您需要為完工產品提供批號."
 msgid ""
 "You need to supply Lot/Serial Number for products and 'consume' them: "
 "%(missing_products)s"
-msgstr ""
+msgstr "你需要為產品提供批次/序號，並「消耗」它們：%(missing_products)s"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder

@@ -1,0 +1,501 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* event_crm
+# 
+# Translators:
+# Jorunn D. Newth, 2024
+# Thor Arne Hvidsten <thor.arne.hvidsten@gmail.com>, 2024
+# Marius Stedjan <marius@stedjan.com>, 2024
+# Martin Trigaux, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Martin Trigaux, 2024\n"
+"Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: nb\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_event__lead_count
+#: model:ir.model.fields,field_description:event_crm.field_event_registration__lead_count
+msgid "# Leads"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_crm_lead__registration_count
+msgid "# Registrations"
+msgstr ""
+
+#. module: event_crm
+#. odoo-python
+#: code:addons/event_crm/models/event_registration.py:0
+msgid "(updated)"
+msgstr ""
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.crm_lead_view_form
+msgid "<span class=\"o_stat_text\"> Attendees</span>"
+msgstr ""
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_registration_view_form
+msgid "<span class=\"o_stat_text\"> Leads</span>"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__active
+msgid "Active"
+msgstr "Aktiv"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
+msgid "Archived"
+msgstr "Arkivert"
+
+#. module: event_crm
+#: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_trigger__create
+msgid "Attendees are created"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_trigger__confirm
+msgid "Attendees are registered"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_trigger__done
+msgid "Attendees attended"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_tag_ids
+msgid "Automatically add these tags to the created leads."
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_sales_team_id
+msgid "Automatically assign the created leads to this Sales Team."
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_user_id
+msgid "Automatically assign the created leads to this Salesperson."
+msgstr ""
+
+#. module: event_crm
+#. odoo-python
+#: code:addons/event_crm/models/event_event.py:0
+msgid "Aww! No Leads created, check your Lead Generation Rules and try again."
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__company_id
+msgid "Company"
+msgstr "Firma"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_crm_lead__registration_count
+msgid "Counter for the registrations linked to this lead"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_creation_basis
+msgid "Create"
+msgstr "Opprett"
+
+#. module: event_crm
+#: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
+msgid "Create a Lead Generation Rule"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_ids
+msgid "Created Leads"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__create_uid
+msgid "Created by"
+msgstr "Opprettet av"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__create_date
+msgid "Created on"
+msgstr "Opprettet den"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
+msgid "Creation Type"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_creation_trigger
+msgid ""
+"Creation: at attendee creation;\n"
+"Registered: at attendee registration, manually or automatically;\n"
+"Attended: when attendance is confirmed and registration set to done;"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_type
+msgid "Default lead type when this rule is applied."
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_request__display_name
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__display_name
+msgid "Display Name"
+msgstr "Visningsnavn"
+
+#. module: event_crm
+#: model:ir.model,name:event_crm.model_event_event
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_request__event_id
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__event_id
+msgid "Event"
+msgstr "Arrangement"
+
+#. module: event_crm
+#: model:ir.actions.server,name:event_crm.ir_cron_generate_leads_ir_actions_server
+msgid "Event CRM: Generate Leads based on Rules"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model,name:event_crm.model_event_lead_request
+msgid "Event Lead Request"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model,name:event_crm.model_event_lead_rule
+msgid "Event Lead Rules"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model,name:event_crm.model_event_registration
+msgid "Event Registration"
+msgstr "Arrangementregistrering"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__event_type_ids
+msgid "Event Templates"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.actions.act_window,name:event_crm.event_registration_action_from_lead
+msgid "Event registrations"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_crm_lead__event_id
+msgid "Event triggering the rule that created this lead"
+msgstr ""
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.crm_lead_merge_summary_inherit_event_crm
+msgid "Event:"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_registration_filter
+msgid "Filter the attendees that will or not generate leads."
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_type_ids
+msgid ""
+"Filter the attendees to include those of this specific event category. If "
+"not set, no event category restriction will be applied."
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_id
+msgid ""
+"Filter the attendees to include those of this specific event. If not set, no"
+" event restriction will be applied."
+msgstr ""
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "For any of these Events"
+msgstr ""
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_view_form
+msgid "Generate Leads"
+msgstr ""
+
+#. module: event_crm
+#. odoo-python
+#: code:addons/event_crm/models/event_event.py:0
+msgid "Got it! We've noted your request. Your leads will be created soon!"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_request__id
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__id
+msgid "ID"
+msgstr "ID"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "If the Attendees meet these Conditions"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__write_uid
+msgid "Last Updated by"
+msgstr "Sist oppdatert av"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__write_date
+msgid "Last Updated on"
+msgstr "Sist oppdatert"
+
+#. module: event_crm
+#: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_type__lead
+msgid "Lead"
+msgstr "Lead"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_tree
+msgid "Lead Creation Type"
+msgstr ""
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "Lead Default Values"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.ui.menu,name:event_crm.event_lead_rule_menu
+msgid "Lead Generation"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.actions.act_window,name:event_crm.event_lead_rule_action
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "Lead Generation Rule"
+msgstr ""
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_tree
+msgid "Lead Generation Rules"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_type
+msgid "Lead Type"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model,name:event_crm.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "Lead/mulighet"
+
+#. module: event_crm
+#: model:ir.actions.act_window,name:event_crm.crm_lead_action_from_event
+#: model:ir.actions.act_window,name:event_crm.crm_lead_action_from_registration
+#: model:ir.model.fields,field_description:event_crm.field_event_event__lead_ids
+#: model:ir.model.fields,field_description:event_crm.field_event_registration__lead_ids
+#: model_terms:ir.ui.view,arch_db:event_crm.event_view_form
+msgid "Leads"
+msgstr "Leads"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_event__lead_ids
+msgid "Leads generated from this event"
+msgstr ""
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
+msgid "Name"
+msgstr "Navn"
+
+#. module: event_crm
+#. odoo-python
+#: code:addons/event_crm/models/event_lead_rule.py:0
+msgid "New registrations"
+msgstr ""
+
+#. module: event_crm
+#: model_terms:ir.actions.act_window,help:event_crm.crm_lead_action_from_event
+#: model_terms:ir.actions.act_window,help:event_crm.crm_lead_action_from_registration
+msgid "No leads found"
+msgstr ""
+
+#. module: event_crm
+#: model_terms:ir.actions.act_window,help:event_crm.event_registration_action_from_lead
+msgid "No registration found"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_event__has_lead_request
+msgid "Ongoing Generation Request"
+msgstr ""
+
+#. module: event_crm
+#. odoo-python
+#: code:addons/event_crm/models/event_event.py:0
+msgid "Only Event Managers are allowed to re-generate all leads."
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_type__opportunity
+msgid "Opportunity"
+msgstr "Salgsmulighet"
+
+#. module: event_crm
+#. odoo-python
+#: code:addons/event_crm/models/event_registration.py:0
+msgid "Participants"
+msgstr "Deltakere"
+
+#. module: event_crm
+#: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_basis__attendee
+msgid "Per Attendee"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_creation_basis
+msgid ""
+"Per Attendee: A Lead is created for each Attendee (B2C).\n"
+"Per Order: A single Lead is created per Ticket Batch/Sale Order (B2B)"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_basis__order
+msgid "Per Order"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_request__processed_registration_id
+msgid "Processed Registration"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_lead_rule_id
+msgid "Registration Rule"
+msgstr ""
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.crm_lead_merge_summary_inherit_event_crm
+msgid "Registration Rule:"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__event_registration_filter
+msgid "Registrations Domain"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_crm_lead__registration_ids
+msgid "Registrations triggering the rule that created this lead"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_rule__company_id
+msgid ""
+"Restrict the trigger of this rule to events belonging to a specific company.\n"
+"If not set, no company restriction will be applied."
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__name
+msgid "Rule Name"
+msgstr "Regelnavn"
+
+#. module: event_crm
+#: model:event.lead.rule,name:event_crm.event_lead_rule_0
+msgid "Rule on @example.com"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_crm_lead__event_lead_rule_id
+msgid "Rule that created this lead"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_sales_team_id
+msgid "Sales Team"
+msgstr "Salgsteam"
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_user_id
+msgid "Salesperson"
+msgstr "Selger"
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
+msgid "Search Lead Generation Rules"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_event__has_lead_request
+msgid "Set to True when a Lead Generation Request is currently running."
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_id
+msgid "Source Event"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_crm_lead__registration_ids
+msgid "Source Registrations"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_tag_ids
+msgid "Tags"
+msgstr "Etiketter"
+
+#. module: event_crm
+#: model:ir.model.fields,help:event_crm.field_event_lead_request__processed_registration_id
+msgid ""
+"The ID of the last processed event.registration, used to know where to "
+"resume."
+msgstr ""
+
+#. module: event_crm
+#: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
+msgid "Those automatically create leads when attendees register."
+msgstr ""
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
+msgid "Trigger Type"
+msgstr "Triggertype"
+
+#. module: event_crm
+#. odoo-python
+#: code:addons/event_crm/models/event_registration.py:0
+msgid "Updated registrations"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_creation_trigger
+msgid "When"
+msgstr "Når"
+
+#. module: event_crm
+#. odoo-python
+#: code:addons/event_crm/models/event_event.py:0
+msgid "Yee-ha, %(leads_count)s Leads have been created!"
+msgstr ""
+
+#. module: event_crm
+#: model:ir.model.constraint,message:event_crm.constraint_event_lead_request_uniq_event
+msgid "You can only have one generation request per event at a time."
+msgstr ""
+
+#. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "e.g. B2B Fairs"
+msgstr ""

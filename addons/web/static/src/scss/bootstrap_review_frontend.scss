@@ -15,6 +15,11 @@
     @include text-emphasis-variant(".text-#{$color}", $value);
 }
 
+// TODO: To be removed in master (18.1)
+// Define `text-primary-emphasis` class here in order to take priority when in
+// conjunction with other text-[x] classes
+@include text-emphasis-variant(".text-primary-emphasis", $primary-text-emphasis);
+
 // Cards
 
 .card {

@@ -6,7 +6,7 @@ import * as wsTourUtils from "@website_sale/js/tours/tour_utils";
 registry.category("web_tour.tours").add('shop_sale_loyalty_delivery', {
     url: '/shop',
     steps: () => [
-        ...wsTourUtils.addToCart({productName: "Acoustic Bloc Screens"}),
+        ...wsTourUtils.addToCart({productName: "Plumbus"}),
         wsTourUtils.goToCart(1),
         wsTourUtils.goToCheckout(),
         {
@@ -19,12 +19,12 @@ registry.category("web_tour.tours").add('shop_sale_loyalty_delivery', {
             trigger: "form[name='coupon_code'] input[name='promo']",
             run: "edit 123456",
         },
-        wsTourUtils.confirmOrder(),
         {
-            content: "click on 'Pay'",
+            content: "click on 'Apply'",
             trigger: "a[role='button'].a-submit:contains(Apply)",
             run: "click",
         },
+        wsTourUtils.confirmOrder(),
         ...wsTourUtils.assertCartAmounts({
             total: '0.00',
             delivery: '5.00'

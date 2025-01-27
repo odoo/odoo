@@ -44,7 +44,7 @@
                 <div name="right-upper-side" class="col-4">
                     <div class="row">
                         <div name="right-upper-side" class="col-12">
-                            <div class="row border border-4 border-dark">
+                            <div class="row border border-4 border-dark" style="max-width: 100%;">
                                 <div class="col-12 text-center">
                                     <h6 style="color: black;">
                                         <strong>
@@ -247,7 +247,7 @@
             </t>
             <t t-if="subtotal_amounts['vat_amount'] != 0.0">
                 <tr>
-                    <td t-out="'VAT %s' % subtotal_amounts['vat_percent']"/>
+                    <td>VAT <t t-esc="subtotal_amounts['vat_percent']"/></td>
                     <td class="text-end" t-out="subtotal_amounts['vat_amount']"
                         t-options="{'widget': 'monetary', 'display_currency': subtotal_amounts['main_currency']}"/></tr>
             </t>

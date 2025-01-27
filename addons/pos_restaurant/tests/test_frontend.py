@@ -5,7 +5,7 @@ import odoo.tests
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
 from odoo.addons.point_of_sale.tests.common import archive_products
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
-
+from odoo import Command
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestFrontendCommon(TestPointOfSaleHttpCommon):
@@ -272,6 +272,8 @@ class TestFrontend(TestFrontendCommon):
         self.start_pos_tour('SplitBillScreenTour2')
 
     def test_07_split_bill_screen(self):
+        # disable kitchen printer to avoid printing errors
+        self.pos_config.is_order_printer = False
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SplitBillScreenTour3')
 
@@ -282,6 +284,7 @@ class TestFrontend(TestFrontendCommon):
     def test_09_combo_split_bill(self):
         setup_product_combo_items(self)
         self.office_combo.write({'lst_price': 40})
+        self.pos_config.is_order_printer = False
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SplitBillScreenTour4ProductCombo')
 
@@ -308,3 +311,91 @@ class TestFrontend(TestFrontendCommon):
     def test_13_category_check(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('CategLabelCheck')
+
+    def test_14_change_synced_order(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('OrderChange')
+
+    def test_13_crm_team(self):
+        if self.env['ir.module.module']._get('pos_sale').state != 'installed':
+            self.skipTest("'pos_sale' module is required")
+        sale_team = self.env['crm.team'].search([], limit=1)
+        self.pos_config.crm_team_id = sale_team
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('CrmTeamTour')
+        order = self.env['pos.order'].search([], limit=1)
+        self.assertEqual(order.crm_team_id.id, sale_team.id)
+
+    def test_14_pos_payment_sync(self):
+        self.pos_config.write({'printer_ids': False})
+        self.pos_config.with_user(self.pos_user).open_ui()
+        def assert_payment(lines_count, amount):
+            self.assertEqual(len(order.payment_ids), lines_count)
+            self.assertEqual(round(sum(payment.amount for payment in order.payment_ids), 2), amount)
+        self.start_pos_tour('PoSPaymentSyncTour1')
+        order = self.pos_config.current_session_id.order_ids
+        self.assertEqual(len(order), 1)
+        assert_payment(1, 2.2)
+        self.start_pos_tour('PoSPaymentSyncTour2')
+        assert_payment(1, 4.4)
+        self.start_pos_tour('PoSPaymentSyncTour3')
+        assert_payment(2, 6.6)
+
+    def test_preparation_printer_content(self):
+        self.env['pos.printer'].create({
+            'name': 'Printer',
+            'printer_type': 'epson_epos',
+            'epson_printer_ip': '0.0.0.0',
+            'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
+        })
+
+        self.main_pos_config.write({
+            'is_order_printer' : True,
+            'printer_ids': [Command.set(self.env['pos.printer'].search([]).ids)],
+        })
+
+        self.product_test = self.env['product.product'].create({
+            'name': 'Product Test',
+            'available_in_pos': True,
+            'list_price': 10,
+            'pos_categ_ids': [(6, 0, [self.env['pos.category'].search([], limit=1).id])],
+            'taxes_id': False,
+        })
+
+        attribute = self.env['product.attribute'].create({
+            'name': 'Attribute 1',
+            'create_variant': 'no_variant',
+        })
+        attribute_value = self.env['product.attribute.value'].create({
+            'name': 'Value 1',
+            'attribute_id': attribute.id,
+        })
+        attribute_value_2 = self.env['product.attribute.value'].create({
+            'name': 'Value 2',
+            'attribute_id': attribute.id,
+        })
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': self.product_test.product_tmpl_id.id,
+            'attribute_id': attribute.id,
+            'value_ids': [(6, 0, [attribute_value.id, attribute_value_2.id])],
+        })
+
+        attribute_2 = self.env['product.attribute'].create({
+            'name': 'Attribute 1',
+            'create_variant': 'always',
+        })
+        attribute_2_value = self.env['product.attribute.value'].create({
+            'name': 'Value 1',
+            'attribute_id': attribute_2.id,
+        })
+        attribute_2_value_2 = self.env['product.attribute.value'].create({
+            'name': 'Value 2',
+            'attribute_id': attribute_2.id,
+        })
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': self.product_test.product_tmpl_id.id,
+            'attribute_id': attribute_2.id,
+            'value_ids': [(6, 0, [attribute_2_value.id, attribute_2_value_2.id])],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PreparationPrinterContent', login="pos_user")

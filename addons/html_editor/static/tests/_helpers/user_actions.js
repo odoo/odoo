@@ -4,6 +4,7 @@ import { findInSelection } from "@html_editor/utils/selection";
 import { click, manuallyDispatchProgrammaticEvent, press, waitFor } from "@odoo/hoot-dom";
 import { tick } from "@odoo/hoot-mock";
 import { setSelection } from "./selection";
+import { execCommand } from "./userCommands";
 
 /** @typedef {import("@html_editor/plugin").Editor} Editor */
 
@@ -57,7 +58,7 @@ export async function insertText(editor, text) {
 
 /** @param {Editor} editor */
 export function deleteForward(editor) {
-    editor.dispatch("DELETE_FORWARD");
+    execCommand(editor, "deleteForward");
 }
 
 /**
@@ -67,34 +68,34 @@ export function deleteForward(editor) {
 export function deleteBackward(editor, isMobileTest = false) {
     // TODO phoenix: find a strategy for test mobile and desktop. (check legacy code)
 
-    editor.dispatch("DELETE_BACKWARD");
+    execCommand(editor, "deleteBackward");
 }
 
 // history
 /** @param {Editor} editor */
 export function addStep(editor) {
-    editor.dispatch("ADD_STEP");
+    editor.shared.history.addStep();
 }
 /** @param {Editor} editor */
 export function undo(editor) {
-    editor.dispatch("HISTORY_UNDO");
+    execCommand(editor, "historyUndo");
 }
 /** @param {Editor} editor */
 export function redo(editor) {
-    editor.dispatch("HISTORY_REDO");
+    execCommand(editor, "historyRedo");
 }
 
 // list
 export function toggleOrderedList(editor) {
-    editor.dispatch("TOGGLE_LIST", { mode: "OL" });
+    execCommand(editor, "toggleListOL");
 }
 /** @param {Editor} editor */
 export function toggleUnorderedList(editor) {
-    editor.dispatch("TOGGLE_LIST", { mode: "UL" });
+    execCommand(editor, "toggleListUL");
 }
 /** @param {Editor} editor */
 export function toggleCheckList(editor) {
-    editor.dispatch("TOGGLE_LIST", { mode: "CL" });
+    execCommand(editor, "toggleListCL");
 }
 
 /**
@@ -115,37 +116,38 @@ export async function clickCheckbox(li) {
 
 /** @param {Editor} editor */
 export function insertLineBreak(editor) {
-    editor.dispatch("INSERT_LINEBREAK");
+    editor.shared.lineBreak.insertLineBreak();
 }
 
 // Format commands
 
 /** @param {Editor} editor */
 export function bold(editor) {
-    editor.dispatch("FORMAT_BOLD");
+    execCommand(editor, "formatBold");
 }
 /** @param {Editor} editor */
 export function italic(editor) {
-    editor.dispatch("FORMAT_ITALIC");
+    execCommand(editor, "formatItalic");
 }
 /** @param {Editor} editor */
 export function underline(editor) {
-    editor.dispatch("FORMAT_UNDERLINE");
+    execCommand(editor, "formatUnderline");
 }
 /** @param {Editor} editor */
 export function strikeThrough(editor) {
-    editor.dispatch("FORMAT_STRIKETHROUGH");
+    execCommand(editor, "formatStrikethrough");
 }
 export function setFontSize(size) {
-    return (editor) => editor.dispatch("FORMAT_FONT_SIZE", { size });
+    return (editor) => execCommand(editor, "formatFontSize", { size });
 }
 /** @param {Editor} editor */
 export function switchDirection(editor) {
-    return editor.dispatch("SWITCH_DIRECTION");
+    return execCommand(editor, "switchDirection");
 }
 /** @param {Editor} editor */
 export function splitBlock(editor) {
-    editor.dispatch("SPLIT_BLOCK");
+    editor.shared.split.splitBlock();
+    editor.shared.history.addStep();
 }
 
 export async function simulateArrowKeyPress(editor, keys) {
@@ -161,7 +163,7 @@ export async function simulateArrowKeyPress(editor, keys) {
 }
 
 export function unlinkByCommand(editor) {
-    editor.dispatch("REMOVE_LINK_FROM_SELECTION");
+    execCommand(editor, "removeLinkFromSelection");
 }
 
 export async function unlinkFromToolbar() {
@@ -187,24 +189,24 @@ export async function keydownShiftTab(editor) {
 }
 /** @param {Editor} editor */
 export function resetSize(editor) {
-    const selection = editor.shared.getEditableSelection();
-    editor.dispatch("RESET_SIZE", { table: findInSelection(selection, "table") });
+    const selection = editor.shared.selection.getEditableSelection();
+    editor.shared.table.resetTableSize(findInSelection(selection, "table"));
 }
 /** @param {Editor} editor */
-export function justifyLeft(editor) {
-    editor.dispatch("JUSTIFY_LEFT");
+export function alignLeft(editor) {
+    execCommand(editor, "alignLeft");
 }
 /** @param {Editor} editor */
-export function justifyCenter(editor) {
-    editor.dispatch("JUSTIFY_CENTER");
+export function alignCenter(editor) {
+    execCommand(editor, "alignCenter");
 }
 /** @param {Editor} editor */
-export function justifyRight(editor) {
-    editor.dispatch("JUSTIFY_RIGHT");
+export function alignRight(editor) {
+    execCommand(editor, "alignRight");
 }
 /** @param {Editor} editor */
-export function justifyFull(editor) {
-    editor.dispatch("JUSTIFY_FULL");
+export function justify(editor) {
+    execCommand(editor, "justify");
 }
 
 /**
@@ -214,7 +216,7 @@ export function justifyFull(editor) {
 export function setColor(color, mode) {
     /** @param {Editor} editor */
     return (editor) => {
-        editor.dispatch("APPLY_COLOR", { color, mode });
+        execCommand(editor, "applyColor", { color, mode });
     };
 }
 

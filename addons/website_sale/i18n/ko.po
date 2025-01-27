@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Sarah Park, 2024
-# Wil Odoo, 2024
 # Daye Jeong, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Daye Jeong, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,6 +52,11 @@ msgstr "%s 리뷰"
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "&amp; Delivery"
 msgstr "&amp; 배송"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products_item
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
@@ -202,6 +207,8 @@ msgid ""
 "<i class=\"fa fa-plus me-md-2\"/>\n"
 "                    <span class=\"d-none d-md-inline\">Add address</span>"
 msgstr ""
+"<i class=\"fa fa-plus me-md-2\"/>\n"
+"                    <span class=\"d-none d-md-inline\">주소 추가</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -236,12 +243,12 @@ msgstr "<i class=\"fw-light fa fa-angle-left me-2\"/>취소"
 msgid ""
 "<i class=\"oi oi-chevron-left d-lg-none me-1\" role=\"presentation\"/>All "
 "Products"
-msgstr ""
+msgstr "<i class=\"oi oi-chevron-left d-lg-none me-1\" role=\"프레젠테이션\"/>모든 품목"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "<i class=\"oi oi-chevron-left me-1\" role=\"presentation\"/>All Products"
-msgstr ""
+msgstr "<i class=\"oi oi-chevron-left me-1\" role=\"프레젠테이션\"/>모든 품목"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
@@ -249,6 +256,8 @@ msgid ""
 "<i class=\"oi oi-chevron-left oe_unmovable border bg-white text-900\" "
 "role=\"img\" aria-label=\"Previous\" title=\"Previous\"/>"
 msgstr ""
+"<i class=\"oi oi-chevron-left oe_unmovable border bg-white text-900\" "
+"role=\"img\" aria-label=\"이전\" title=\"이전\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
@@ -256,6 +265,8 @@ msgid ""
 "<i class=\"oi oi-chevron-right oe_unmovable border bg-white text-900\" "
 "role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
 msgstr ""
+"<i class=\"oi oi-chevron-right oe_unmovable border bg-white text-900\" "
+"role=\"img\" aria-label=\"다음\" title=\"다음\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -303,6 +314,8 @@ msgid ""
 "<small class=\"mx-auto\"><b>Clear Filters</b></small>\n"
 "                            <i class=\"oi oi-close\" role=\"presentation\"/>"
 msgstr ""
+"<small class=\"mx-auto\"><b>필터 제거</b></small>\n"
+"                            <i class=\"oi oi-close\" role=\"프레젠테이션\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
@@ -484,17 +497,17 @@ msgid ""
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 0px 0px 0px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <h1 style=\"color:#A9A9A9;\">THERE'S SOMETHING IN YOUR CART.</h1>\n"
-"                    Would you like to complete your purchase?<br><br>\n"
+"                    Would you like to complete your purchase?<br/><br/>\n"
 "                    <t t-if=\"object.order_line\">\n"
 "                        <t t-foreach=\"object.website_order_line\" t-as=\"line\">\n"
-"                            <hr>\n"
+"                            <hr/>\n"
 "                            <table width=\"100%\">\n"
 "                                <tr>\n"
 "                                    <td style=\"padding: 10px; width:150px;\">\n"
-"                                        <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"Product image\">\n"
+"                                        <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
 "                                    </td>\n"
 "                                    <td>\n"
-"                                        <strong t-out=\"line.product_id.display_name or ''\">[FURN_7800] Desk Combination</strong><br><t t-out=\"line.name or ''\">[FURN_7800] Desk Combination Desk combination, black-brown: chair + desk + drawer.</t>\n"
+"                                        <strong t-out=\"line.product_id.display_name or ''\">[FURN_7800] Desk Combination</strong><br/><t t-out=\"line.name or ''\">[FURN_7800] Desk Combination Desk combination, black-brown: chair + desk + drawer.</t>\n"
 "                                    </td>\n"
 "                                    <td width=\"100px\" align=\"right\">\n"
 "                                        <t t-out=\"int(line.product_uom_qty) or ''\">10000</t> <t t-out=\"line.product_uom.name or ''\">Units</t>\n"
@@ -502,14 +515,14 @@ msgid ""
 "                                </tr>\n"
 "                            </table>\n"
 "                        </t>\n"
-"                        <hr>\n"
+"                        <hr/>\n"
 "                    </t>\n"
 "                    <div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;\">\n"
 "                        <a t-attf-href=\"{{ object.get_base_url() }}/shop/cart?access_token={{ object.access_token }}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                            Resume order\n"
 "                        </a>\n"
 "                    </div>\n"
-"                    <t t-set=\"company\" t-value=\"object.company_id or object.user_id.company_id or user.company_id\"></t>\n"
+"                    <t t-set=\"company\" t-value=\"object.company_id or object.user_id.company_id or user.company_id\"/>\n"
 "                    <div style=\"text-align: center;\"><strong>Thank you for shopping with <t t-out=\"company.name or ''\">My Company (San Francisco)</t>!</strong></div>\n"
 "                </td></tr>\n"
 "            </table>\n"
@@ -527,17 +540,17 @@ msgstr ""
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 0px 0px 0px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <h1 style=\"color:#A9A9A9;\">장바구니에 담겨 있는 상품이 있습니다.</h1>\n"
-"                    결제를 진행하시겠습니까?<br><br>\n"
+"                    결제 단계를 진행하시겠습니까?<br/><br/>\n"
 "                    <t t-if=\"object.order_line\">\n"
 "                        <t t-foreach=\"object.website_order_line\" t-as=\"line\">\n"
-"                            <hr>\n"
+"                            <hr/>\n"
 "                            <table width=\"100%\">\n"
 "                                <tr>\n"
 "                                    <td style=\"padding: 10px; width:150px;\">\n"
-"                                        <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"Product image\">\n"
+"                                        <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
 "                                    </td>\n"
 "                                    <td>\n"
-"                                        <strong t-out=\"line.product_id.display_name or ''\">[FURN_7800] 책상 세트</strong><br><t t-out=\"line.name or ''\">[FURN_7800] 책상 세트, 다크 브라운: 의자 + 책상 + 서랍.</t>\n"
+"                                        <strong t-out=\"line.product_id.display_name or ''\">[FURN_7800] 책상 세트</strong><br/><t t-out=\"line.name or ''\">[FURN_7800] 책상 세트 책상 세트, 검정-갈색: 의자 + 책상 + 서랍.</t>\n"
 "                                    </td>\n"
 "                                    <td width=\"100px\" align=\"right\">\n"
 "                                        <t t-out=\"int(line.product_uom_qty) or ''\">10000</t> <t t-out=\"line.product_uom.name or ''\">개</t>\n"
@@ -545,14 +558,14 @@ msgstr ""
 "                                </tr>\n"
 "                            </table>\n"
 "                        </t>\n"
-"                        <hr>\n"
+"                        <hr/>\n"
 "                    </t>\n"
 "                    <div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;\">\n"
 "                        <a t-attf-href=\"{{ object.get_base_url() }}/shop/cart?access_token={{ object.access_token }}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                            주문으로 돌아가기\n"
 "                        </a>\n"
 "                    </div>\n"
-"                    <t t-set=\"company\" t-value=\"object.company_id or object.user_id.company_id or user.company_id\"></t>\n"
+"                    <t t-set=\"company\" t-value=\"object.company_id or object.user_id.company_id or user.company_id\"/>\n"
 "                    <div style=\"text-align: center;\"><strong>저희 <t t-out=\"company.name or ''\">My Company (San Francisco)</t> 제품을 이용해주셔서 감사합니다!</strong></div>\n"
 "                </td></tr>\n"
 "            </table>\n"
@@ -588,7 +601,7 @@ msgid ""
 "A detailed,formatted description to promote your product on"
 "                                      this page. Use '/' to discover more "
 "features."
-msgstr ""
+msgstr "이 페이지에서 제품을 홍보하기 위한 상세하고 형식화된 설명입니다. 더 많은 기능을 찾으려면 '/'를 사용하세요."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -781,7 +794,6 @@ msgstr "모든 사용자"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_delivery_carrier_form_website_delivery
-#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
 msgid "All websites"
 msgstr "모든 웹사이트"
 
@@ -790,7 +802,7 @@ msgstr "모든 웹사이트"
 msgid ""
 "Allow customers to pick up their online purchases at your store and pay in "
 "person"
-msgstr ""
+msgstr "고객이 온라인 구매 제품을 스토어에서 수령하고 직접 결제할 수 있도록 허용"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -872,7 +884,7 @@ msgstr "속성"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_multimedia_augmented_reality
 msgid "Augmented Reality Tools"
-msgstr ""
+msgstr "증강 현실 도구"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1233,6 +1245,19 @@ msgid "Choose a delivery method"
 msgstr "배송 방법을 선택하십시오"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+msgid "Choose a pick-up point"
+msgstr "픽업 지점 선택"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+#: code:addons/website_sale/static/src/js/location_selector/map_container/map_container.js:0
+msgid "Choose this location"
+msgstr "이 위치를 선택하세요."
+
+#. module: website_sale
 #: model:product.pricelist,name:website_sale.list_christmas
 msgid "Christmas"
 msgstr "크리스마스"
@@ -1288,6 +1313,12 @@ msgstr "고객이 볼 수 있도록 이 버튼을 클릭하십시오."
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
 msgid "Close"
 msgstr "닫기"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/location_selector/location_schedule/location_schedule.js:0
+msgid "Closed"
+msgstr "마감됨"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1409,6 +1440,12 @@ msgstr "환경 설정"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Configure Form"
 msgstr "양식 설정"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/product_configurator_dialog/product_configurator_dialog.js:0
+msgid "Configure your product"
+msgstr "품목 구성"
 
 #. module: website_sale
 #. odoo-python
@@ -1722,7 +1759,7 @@ msgstr "배송 주소"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_services_delivery_and_installation
 msgid "Delivery and Installation"
-msgstr ""
+msgstr "배송 및 설치"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
@@ -1742,7 +1779,7 @@ msgstr "전자 상거래 및 온라인 견적서에 표시되는 설명."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_form_view
 msgid "Description displayed on the eCommerce categories page."
-msgstr ""
+msgstr "이커머스 카테고리 페이지에 표시되는 설명입니다."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__website_description
@@ -1758,7 +1795,7 @@ msgstr "웹 사이트에 대한 설명"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_services_design_and_planning
 msgid "Design and Planning"
-msgstr ""
+msgstr "디자인 및 계획"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_lamps_desk
@@ -1885,6 +1922,8 @@ msgid ""
 "Drag building blocks here to customize the footer for\n"
 "                                    \""
 msgstr ""
+"빌딩 블록을 여기로 드래그하여 다음과 같은 바닥글을 사용자 지정합니다.\n"
+"                                    \""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -1892,6 +1931,8 @@ msgid ""
 "Drag building blocks here to customize the header for\n"
 "                                    \""
 msgstr ""
+"빌딩 블록을 여기로 드래그하여 다음과 같은 머리글을 사용자 지정합니다.\n"
+"                                    \""
 
 #. module: website_sale
 #. odoo-python
@@ -2002,6 +2043,12 @@ msgstr "퍼가기 코드"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Enforce a customer to be logged in to access 'Shop'"
 msgstr "고객이 '쇼핑'에 액세스하려면 로그인하도록 강제 적용"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/product_template_attribute_line/product_template_attribute_line.js:0
+msgid "Enter a customized value"
+msgstr "사용자 지정 값 입력"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2131,7 +2178,7 @@ msgstr "팔로워 (협력사)"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_bins_storage
 msgid "Food Storage Bins"
-msgstr ""
+msgstr "식품 보관함"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2193,7 +2240,7 @@ msgstr "그리드"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_gap
 msgid "Grid-gap on the shop"
-msgstr ""
+msgstr "상점의 그리드 간격"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -2454,7 +2501,7 @@ msgstr "주방 캐비닛"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_drawers_kitchen
 msgid "Kitchen Drawer Units"
-msgstr ""
+msgstr "주방 서랍 유닛"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total_value
@@ -2541,7 +2588,7 @@ msgstr "왼쪽"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Let the customer enter a delivery address"
-msgstr ""
+msgstr "고객이 배송 주소를 입력하도록 합니다."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2594,6 +2641,18 @@ msgstr "목록"
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Little Icons"
 msgstr "작은 아이콘"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+msgid "List view"
+msgstr "목록 보기"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+msgid "Loading..."
+msgstr "불러오는 중..."
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__ecommerce_access__logged_in
@@ -2649,6 +2708,12 @@ msgstr "필수 (손님으로 결제 불가)"
 #: model:product.public.category,name:website_sale.public_category_cabinets_medicine
 msgid "Medicine Cabinets"
 msgstr "약품 캐비닛"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+msgid "Map view"
+msgstr "지도 보기"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__medium
@@ -2812,6 +2877,12 @@ msgid "No product views yet for this visitor"
 msgstr "이 방문자에 대한 제품 보기가 아직 없습니다"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+msgid "No result"
+msgstr "결과 없음"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No results"
 msgstr "결과가 없습니다"
@@ -2960,6 +3031,13 @@ msgstr "진행 중인 판매 주문"
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
 msgid "Open Source eCommerce"
 msgstr "오픈 소스 이커머스"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/location_selector/location/location.js:0
+#: code:addons/website_sale/static/src/js/location_selector/map_container/map_container.js:0
+msgid "Opening hours"
+msgstr "영업 시간"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
@@ -3186,6 +3264,11 @@ msgstr "이 전자 상거래/웹 사이트에서 사용할 수있는 가격표"
 #: model:ir.model,name:website_sale.model_product_pricelist
 msgid "Pricelist"
 msgstr "가격표"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_product_pricelist_item
+msgid "Pricelist Rule"
+msgstr "가격표 규칙"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_catalog_pricelists
@@ -3603,7 +3686,7 @@ msgstr "물량이 과다할 경우 보충"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_services_relocation_and_moving
 msgid "Relocation and Moving"
-msgstr ""
+msgstr "이전 및 이사"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -3632,7 +3715,7 @@ msgstr "하나만 제거하기"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_services_repair_and_maintenance
 msgid "Repair and Maintenance"
-msgstr ""
+msgstr "수리 및 유지보수"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3755,7 +3838,7 @@ msgstr "영업사원"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_row
 msgid "Same as delivery address"
-msgstr ""
+msgstr "배송 주소와 동일"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_add_to_cart
@@ -3810,6 +3893,11 @@ msgstr "수량 선택"
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_method
 msgid "Select a location"
 msgstr "위치 선택"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
+msgid "Select a website"
+msgstr "웹사이트 선택"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__selectable
@@ -4271,6 +4359,12 @@ msgid "There is no unpaid order from the website yet"
 msgstr "웹사이트에서 아직 지불하지 않은 주문이 없습니다."
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/location_selector/map_container/map_container.js:0
+msgid "There was an error loading the map"
+msgstr "지도를 불러오는 동안 오류가 발생했습니다."
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "This combination does not exist."
 msgstr "이 조합은 존재하지 않습니다."
@@ -4278,7 +4372,7 @@ msgstr "이 조합은 존재하지 않습니다."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.accordion_more_information
 msgid "This content will be shared across all product pages."
-msgstr ""
+msgstr "이 콘텐츠는 모든 제품 페이지에서 공유됩니다."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -4373,6 +4467,13 @@ msgstr "상품 총조회수"
 #: model:ir.model.fields,help:website_sale.field_website_visitor__visitor_product_count
 msgid "Total number of views on products"
 msgstr "제품 총조회수"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.js:0
+#: code:addons/website_sale/static/src/js/product_list/product_list.js:0
+msgid "Total: %s"
+msgstr "합계: %s"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_lamps_touch
@@ -4518,7 +4619,7 @@ msgstr "빈티지 박스"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_multimedia_virtual_design
 msgid "Virtual Design Tools"
-msgstr ""
+msgstr "가상 설계 도구"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__visibility
@@ -4585,7 +4686,7 @@ msgstr "품질 보증서"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
 msgid "Warranty (2 year)"
-msgstr ""
+msgstr "보증 (2년)"
 
 #. module: website_sale
 #: model:product.template,description_sale:website_sale.product_product_1_product_template
@@ -4848,6 +4949,12 @@ msgstr "장바구니를 결제할 준비가 되지 않았습니다. 이전 단�
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
 msgid "Your payment has been authorized."
 msgstr "귀하의 결제가 승인되었습니다."
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+msgid "Your postal code"
+msgstr "우편 번호"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart

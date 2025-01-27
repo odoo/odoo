@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Léonie Bouchat <lbo@odoo.com>, 2024
-# Marianna Ciofani, 2024
 # Wil Odoo, 2024
+# Marianna Ciofani, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Marianna Ciofani, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,6 +74,9 @@ msgid ""
 "distribution of the sale order item '%(so_line_name)s' linked to the "
 "timesheet."
 msgstr ""
+"Piano/i analitico/i \"%(missing_plan_names)s\" richiesto/i per la "
+"distribuzione analitica dell'articolo dell'ordine di vendita "
+"\"%(so_line_name)s\" collegato al foglio ore."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
@@ -553,6 +556,11 @@ msgid ""
 "                    Several activities are often organized all over the year, such as weekly\n"
 "                    sports sessions, team building events, monthly drink, and much more"
 msgstr ""
+"Ciascun dipendente ha la possibilità di vedere l'impatto del proprio lavoro.\n"
+"                    Puoi dare un reale contributo al successo dell'azienda.\n"
+"                    <br>\n"
+"                    Spesso durante l'anno vengono organizzate alcune attività, come sessioni\n"
+"                    sportive settimanali, eventi formativi di gruppo, consumazioni mensili e molto altro"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -1156,6 +1164,17 @@ msgid "Sales Orders"
 msgstr "Ordini di vendita"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_employee_ids
+msgid ""
+"Sales order item that will be selected by default on the timesheets of the corresponding employee. It bypasses the sales order item defined on the project and the task, and can be modified on each timesheet entry if necessary. In other words, it defines the rate at which an employee's time is billed based on their expertise, skills or experience, for instance.\n"
+"If you would like to bill the same service at a different rate, you need to create two separate sales order items as each sales order item can only have a single unit price at a time.\n"
+"You can also define the hourly company cost of your employees for their timesheets on this project specifically. It will bypass the timesheet cost set on the employee."
+msgstr ""
+"Articolo dell'ordine di vendita che verrà selezionato di default nei fogli ore del dipendente corrispondente. Esso sostituisce l'articolo dell'ordine di vendita indicato nel progetto e nel lavoro per essere modificato nella voce corrispondente in ogni foglio ore, se necessario. In altre parole, definisce la tariffa di fatturazione del tempo di un dipendente in base alla specializzazione, alle competenze o all'esperienza.\n"
+"Se vuoi fatturare lo stesso servizio con una tariffa diversa devi creare due articoli diversi in quanto ognuno può avere solamente una singola unità di prezzo per volta.\n"
+"Inoltre, puoi definire il costo orario aziendale dei dipendenti per i fogli ore, sul progetto specifico. Il costo stabilito andrà a sostituire quello stabilito per il dipendente."
+
+#. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__so_line
 msgid ""
 "Sales order item to which the time spent will be added in order to be "
@@ -1280,8 +1299,19 @@ msgstr "Competenze tecniche"
 
 #. module: sale_timesheet
 #. odoo-python
-#: code:addons/sale_timesheet/models/product_product.py:0
-#: code:addons/sale_timesheet/models/product_template.py:0
+#: code:addons/sale_timesheet/models/product.py:0
+#, python-format
+msgid ""
+"The %s product is required by the Timesheets app and cannot be linked to a "
+"company."
+msgstr ""
+"Il prodotto %s è richiesto dall'app Fogli ore e non può essere collegato ad "
+"un'azienda:"
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
+#, python-format
 msgid ""
 "The %s product is required by the Timesheets app and cannot be archived nor "
 "deleted."
@@ -1503,6 +1533,7 @@ msgstr "Fogli ore utilizzati per la fatturazione del tempo speso"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Timesheets without a sales order item are reported as"
 msgstr ""
+"I fogli ore privi di articoli degli ordini di vendita sono indicati come"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description

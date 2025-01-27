@@ -251,19 +251,22 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "edit Newer Sub-task && click body",
 }, {
     isActive: ["auto"],
-    trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_list_row:first-child .o_field_project_task_state_selection button",
+    trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_list_row:contains(newer sub-task) .o_field_project_task_state_selection button",
     content: _t("You can change the sub-task state here!"),
     run: "click",
 },
 {
     isActive: ["auto"],
-    trigger: ".dropdown-menu",
+    trigger: ".project_task_state_selection_menu.dropdown-menu",
 },
 {
     isActive: ["auto"],
-    trigger: ".dropdown-menu span.text-danger",
+    trigger: ".project_task_state_selection_menu.dropdown-menu span.text-danger",
     content: markup(_t("Mark the task as <b>Cancelled</b>")),
     run: "click",
+}, {
+    isActive: ["auto"],
+    trigger: ".o-overlay-container:not(:visible):not(:has(.project_task_state_selection_menu))",
 }, {
     isActive: ["auto"],
     trigger: ".o_kanban_record .o_widget_subtask_counter .subtask_list_button:contains('1/2')",

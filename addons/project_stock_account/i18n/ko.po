@@ -27,11 +27,17 @@ msgid ""
 "'%(missing_plan_names)s' analytic plan(s) required on the project "
 "'%(project_name)s' linked to the stock picking."
 msgstr ""
+"'%(missing_plan_names)s'의 분석 계획이 재고 피킹에 연결된 프로젝트 '%(project_name)s'에 필요합니다."
 
 #. module: project_stock_account
 #: model:ir.model.fields,field_description:project_stock_account.field_stock_picking_type__analytic_costs
 msgid "Analytic Costs"
-msgstr ""
+msgstr "분석 비용"
+
+#. module: project_stock_account
+#: model:ir.model,name:project_stock_account.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "분석 라인"
 
 #. module: project_stock_account
 #: model:ir.model,name:project_stock_account.model_account_analytic_applicability
@@ -39,14 +45,35 @@ msgid "Analytic Plan's Applicabilities"
 msgstr "분석 계획에 대한 적용 가능성"
 
 #. module: project_stock_account
+#: model:ir.model.fields,field_description:project_stock_account.field_account_analytic_line__category
+msgid "Category"
+msgstr "카테고리"
+
+#. module: project_stock_account
 #: model:ir.model.fields,field_description:project_stock_account.field_account_analytic_applicability__business_domain
 msgid "Domain"
 msgstr "도메인"
 
 #. module: project_stock_account
+#: model:ir.model.fields.selection,name:project_stock_account.selection__account_analytic_line__category__picking_entry
+msgid "Inventory Transfer"
+msgstr "재고 이전"
+
+#. module: project_stock_account
+#. odoo-python
+#: code:addons/project_stock_account/models/project_project.py:0
+msgid "Materials"
+msgstr "자재류"
+
+#. module: project_stock_account
 #: model:ir.model,name:project_stock_account.model_stock_picking_type
 msgid "Picking Type"
 msgstr "선별 유형"
+
+#. module: project_stock_account
+#: model:ir.model,name:project_stock_account.model_project_project
+msgid "Project"
+msgstr "프로젝트"
 
 #. module: project_stock_account
 #: model:ir.model,name:project_stock_account.model_stock_move

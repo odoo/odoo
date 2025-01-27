@@ -105,7 +105,7 @@ export class AttachmentUploadService {
         this.deferredByAttachmentId.delete(tmpId);
         this.uploadingAttachmentIds.delete(tmpId);
         this.targetsByTmpId.delete(tmpId);
-        this.store.Attachment.get(tmpId).remove();
+        this.store.Attachment.get(tmpId)?.remove();
     }
 
     getUploadURL(thread) {

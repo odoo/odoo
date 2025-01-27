@@ -5,15 +5,16 @@
 # Translators:
 # Martin Trigaux, 2024
 # Wil Odoo, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Manon Rondou, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -108,7 +109,7 @@ msgid ""
 "        <t t-if=\"object.partner_id.parent_id\">\n"
 "            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
 "        </t>\n"
-"        <br><br>\n"
+"        <br/><br/>\n"
 "        Here is a reminder that the delivery of the purchase order <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
 "            <span style=\"font-weight:bold;\">(<t t-out=\"object.partner_ref or ''\">REF_XXX</t>)</span>\n"
@@ -121,38 +122,38 @@ msgid ""
 "            <span style=\"font-weight:bold;\">undefined</span>.\n"
 "        </t>\n"
 "        Could you please confirm it will be delivered on time?\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
-"            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "        </t>\n"
-"        <br><br>\n"
+"        <br/><br/>\n"
 "    </p>\n"
 "</div>"
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Beste <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
-"        <t t-if=\"object.partner_id.parent_id\">\n"
-"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
-"        </t>\n"
-"        <br><br>\n"
-"        Hier is een herinnering dat de levering van inkooporder <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"       <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azuur interieur</t>)\n"
+"       </t>\n"
+"       <br/><br/>\n"
+"        Hierbij een herinnering dat de levering van de inkooporder <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            <span style=\"font-weight:bold;\">(<t t-out=\"object.partner_ref or ''\">REF_XXX</t>)</span>\n"
+"            <span style=\"font-weight:bold;\"><t t-out=\"object.partner_ref or ''\">(REF_XXX</t>)</span>\n"
 "        </t>\n"
-"        voorzien is op \n"
-"        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"        wordt verwacht voor \n"
+"       <t t-if=\"object.date_planned\">\n"
+"           <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"       </t>\n"
+"        <t t-else=\"\">\n"
+"           <span style=\"font-weight:bold;\">ongedefinieerd</span>.\n"
+"       </t>\n"
+"        Kun je alstublieft bevestigen dat het op tijd geleverd zal worden?\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "        </t>\n"
-"         <t t-else=\"\">\n"
-"            <span style=\"font-weight:bold;\">onbepaald</span>.\n"
-"        </t>\n"
-"        Kan je bevestigen dat de levering tijdig zal gebeuren?\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
-"            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
-"        </t>\n"
-"        <br><br>\n"
+"       <br/><br/>\n"
 "    </p>\n"
 "</div>"
 
@@ -165,51 +166,51 @@ msgid ""
 "        <t t-if=\"object.partner_id.parent_id\">\n"
 "            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
 "        </t>\n"
-"        <br><br>\n"
+"        <br/><br/>\n"
 "        Here is in attachment a purchase order <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
 "            with reference: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
 "        </t>\n"
 "        amounting in <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
 "        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>. \n"
-"        <br><br>\n"
+"        <br/><br/>\n"
 "        <t t-if=\"object.date_planned\">\n"
 "            The receipt is expected for <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
-"            <br><br>\n"
+"            <br/><br/>\n"
 "            Could you please acknowledge the receipt of this order?\n"
 "        </t>\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
-"            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "        </t>\n"
-"        <br><br>\n"
+"        <br/><br/>\n"
 "    </p>\n"
 "</div>"
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Beste <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
-"        <t t-if=\"object.partner_id.parent_id\">\n"
-"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
-"        </t>\n"
-"        <br><br>\n"
-"        Als bijlage kan je een inkooporder <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span> vinden\n"
-"        <t t-if=\"object.partner_ref\">\n"
+"       <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azuur interieur</t>)\n"
+"       </t>\n"
+"       <br/><br/>\n"
+"        Hier is in bijlage een inkooporder <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"       <t t-if=\"object.partner_ref\">\n"
 "            met referentie: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
-"        </t>\n"
-"        voor het bedrag van <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
-"        van <t t-out=\"object.company_id.name or ''\">YourCompany</t>. \n"
-"        <br><br>\n"
-"        <t t-if=\"object.date_planned\">\n"
+"       </t>\n"
+"        voor een bedrag van <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10,00</span>\n"
+"        van <t t-out=\"object.company_id.name or ''\">UwBedrijf</t>. \n"
+"       <br/><br/>\n"
+"       <t t-if=\"object.date_planned\">\n"
 "            De ontvangst wordt verwacht op <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
-"            <br><br>\n"
-"            Kan je de ontvangst van deze bestelling bevestigen?\n"
+"           <br/><br/>\n"
+"            Kun je alstublieft de ontvangst van deze order bevestigen?\n"
+"       </t>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "        </t>\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
-"            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
-"        </t>\n"
-"        <br><br>\n"
+"       <br/><br/>\n"
 "    </p>\n"
 "</div>"
 
@@ -222,25 +223,25 @@ msgid ""
 "        <t t-if=\"object.partner_id.parent_id\">\n"
 "            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
 "        </t>\n"
-"        <br><br>\n"
+"        <br/><br/>\n"
 "        Here is in attachment a request for quotation <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
 "            with reference: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
 "        </t>\n"
 "        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
-"        <br><br>\n"
+"        <br/><br/>\n"
 "        If you have any questions, please do not hesitate to contact us.\n"
-"        <br><br>\n"
+"        <br/><br/>\n"
 "            <a t-att-href=\"object.get_confirm_url(confirm_type='reception')\" target=\"_blank\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
 "                Accept</a>\n"
 "\n"
 "            <a t-att-href=\"object.get_confirm_url(confirm_type='decline')\" target=\"_blank\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
 "                Decline</a>\n"
-"        <br><br>\n"
+"        <br/><br/>\n"
 "        Best regards,\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
-"            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>"
@@ -251,25 +252,25 @@ msgstr ""
 "       <t t-if=\"object.partner_id.parent_id\">\n"
 "            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azuur interieur</t>)\n"
 "       </t>\n"
-"       <br><br>\n"
+"       <br/><br/>\n"
 "        Hierbij in bijlage een offerteaanvraag <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
 "       <t t-if=\"object.partner_ref\">\n"
 "            met referentie: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
 "       </t>\n"
 "        van <t t-out=\"object.company_id.name or ''\">UwBedrijf</t>.\n"
-"       <br><br>\n"
+"       <br/><br/>\n"
 "        Als je vragen hebt, aarzel dan niet om contact met ons op te nemen.\n"
-"       <br><br>\n"
+"       <br/><br/>\n"
 "           <a t-att-href=\"object.get_confirm_url(confirm_type='reception')\" target=\"_blank\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
 "                Accepteer</a>\n"
 "\n"
 "           <a t-att-href=\"object.get_confirm_url(confirm_type='decline')\" target=\"_blank\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
 "                Weigeren</a>\n"
-"       <br><br>\n"
+"       <br/><br/>\n"
 "        Vriendelijke groeten,\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
-"            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>"
@@ -366,7 +367,7 @@ msgid ""
 "                        <span class=\"o_form_label\" invisible=\"state in ('draft', 'sent')\">Purchase Order </span>"
 msgstr ""
 "<span class=\"o_form_label\" invisible=\"state not in ('draft', "
-"'sent')\">Offerteaanvraag</span> <span class=\"o_form_label\" "
+"'sent')\">Inkoopofferte </span><span class=\"o_form_label\" "
 "invisible=\"state in ('draft', 'sent')\">Inkooporder</span>"
 
 #. module: purchase
@@ -419,7 +420,7 @@ msgstr "<span>Vraag bevestiging</span>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<span>Taxes</span>"
-msgstr "<span>BTW </span>"
+msgstr "<span>Btw </span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -443,6 +444,11 @@ msgid "<strong>Amount</strong>"
 msgstr "<strong>Bedrag</strong>"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "<strong>Buyer</strong>"
+msgstr "<strong>Koper</strong>"
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<strong>Confirmation Date:</strong>"
 msgstr "<strong>Bevestigingsdatum:</strong>"
@@ -456,7 +462,7 @@ msgstr "<strong>Omschrijving</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Disc.</strong>"
-msgstr "<strong>Schijf.</strong>"
+msgstr "<strong>Kort.</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -483,11 +489,6 @@ msgstr "<strong>Order deadline:</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Payment Terms: </strong>"
 msgstr "<strong>Betalingsvoorwaarden: </strong>"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
-msgid "<strong>Purchase Representative</strong>"
-msgstr "<strong>Inkoopvertegenwoordiger</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -518,17 +519,17 @@ msgstr "<strong>Afleveradres</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Taxes</strong>"
-msgstr "<strong>BTW</strong>"
+msgstr "<strong>Btw</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "<strong>The ordered quantity has been updated.</strong>"
-msgstr "<strong>De bestelde hoeveelheid is bijgewerkt.</strong>"
+msgstr "<strong>Het bestelde aantal is bijgewerkt.</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_qty_received_template
 msgid "<strong>The received quantity has been updated.</strong>"
-msgstr "<strong>De ontvangen hoeveelheid is bijgewerkt.</strong>"
+msgstr "<strong>Het ontvangen aantal is bijgewerkt.</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -548,7 +549,7 @@ msgstr "<strong>Deze offerte is afgewezen.</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Unit Price</strong>"
-msgstr "<strong>Eenheidsprijs</strong>"
+msgstr "<strong>Prijs</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -585,8 +586,7 @@ msgid ""
 "that is a multiple of the number of units per package."
 msgstr ""
 "Mogelijkheid om een verpakkingssoort te selecteren in inkooporders en een "
-"hoeveelheid te forceren die een veelvoud is van het aantal stuks per "
-"verpakking."
+"aantal te forceren die een veelvoud is van het aantal stuks per verpakking."
 
 #. module: purchase
 #. odoo-python
@@ -607,9 +607,9 @@ msgid ""
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Afhankelijk van de productconfiguratie kan de ontvangen hoeveelheid automatisch berekend worden door een mechanisme:\n"
+"Afhankelijk van de productconfiguratie kan het ontvangen aantal automatisch berekend worden door een mechanisme:\n"
 "  - Handmatig: het aantal wordt handmatig op de regel ingesteld\n"
-"  - Voorraadbewegingen: het aantal is berekend op basis van de bevestigde ontvangesten\n"
+"  - Voorraadbewegingen: het aantal is berekend op basis van de bevestigde ontvangsten\n"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__account_move_id
@@ -709,25 +709,25 @@ msgstr "Alle"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Draft RFQs"
-msgstr "Alle concept offerteaanvragen"
+msgstr "Alle concept inkoopoffertes"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Late RFQs"
-msgstr "Alle late offerteaanvragen"
+msgstr "Alle late inkoopoffertes"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All RFQs"
-msgstr "Alle offerteaanvragen"
+msgstr "Alle inkoopoffertes"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Waiting RFQs"
-msgstr "Alle wachtende offerteaanvragen"
+msgstr "Alle wachtende inkoopoffertes"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__group_send_reminder
@@ -796,7 +796,7 @@ msgstr "Order goedkeuren"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 msgid "Are you sure you want to cancel the selected RFQs/Orders?"
 msgstr ""
-"Weet je zeker dat je de geselecteerde RFQ's/bestellingen wilt annuleren?"
+"Weet je zeker dat je de geselecteerde Inkoopoffertes/orders wilt annuleren?"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_attachment_count
@@ -915,12 +915,12 @@ msgstr "Aantal gefactureerd"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Billed Quantity"
-msgstr "Gefactureerde hoeveelheid"
+msgstr "Gefactureerde aantal"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "Billed Quantity:"
-msgstr "Gefactureerde hoeveelheid:"
+msgstr "Gefactureerde aantal:"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__invoice_status
@@ -945,10 +945,15 @@ msgstr "Blokkerend bericht"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__user_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__user_id
 #: model:ir.model.fields,field_description:purchase.field_res_partner__buyer_id
 #: model:ir.model.fields,field_description:purchase.field_res_users__buyer_id
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Buyer"
-msgstr "Koper"
+msgstr "Inkoper"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_calendar
@@ -979,7 +984,7 @@ msgstr "Geannuleerde inkooporder #"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order_line.py:0
 msgid "Cannot delete a purchase order line which is in state “%s”."
-msgstr "Je kan geen inkooporder met de status “%s” verwijderen."
+msgstr "Je kunt geen inkooporder met de status “%s” verwijderen."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1056,7 +1061,7 @@ msgstr "Bevestig order"
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_confirm_rfqs
 msgid "Confirm RFQ"
-msgstr "RFQ bevestigen"
+msgstr "Inkoopofferte bevestigen"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1359,12 +1364,12 @@ msgstr "Aanbetalingen"
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__draft
 msgid "Draft RFQ"
-msgstr "Concept offerteaanvraag"
+msgstr "Concept inkoopofferte"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Draft RFQs"
-msgstr "Concept offerteaanvragen"
+msgstr "Concept inkoopoffertes"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -1372,7 +1377,7 @@ msgid ""
 "Drag and drop the request for quotation PDF file into your list of "
 "quotations in Odoo. Enjoy the automation!"
 msgstr ""
-"Sleep het PDF-bestand met de offerteaanvraag naar je offertelijst in Odoo. "
+"Sleep het PDF-bestand met de inkoopofferte naar je offertelijst in Odoo. "
 "Geniet van de automatisering!"
 
 #. module: purchase
@@ -1411,7 +1416,7 @@ msgstr "Volg de orders die je moet vervullen"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
 msgid "Follow your Requests for Quotation"
-msgstr "Volg je offerteaanvragen"
+msgstr "Volg je inkoopoffertes"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_follower_ids
@@ -1421,7 +1426,7 @@ msgstr "Volgers"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Relaties)"
+msgstr "Volgers (Contacten)"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_type_icon
@@ -1672,7 +1677,7 @@ msgstr "Te late activiteiten"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Late RFQs"
-msgstr "Late offerteaanvragen"
+msgstr "Late inkoopoffertes"
 
 #. module: purchase
 #. odoo-javascript
@@ -1684,7 +1689,7 @@ msgstr "Doorlooptijd tot inkopen"
 #. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 msgid "Let's create your first request for quotation."
-msgstr "Laten we je eerste offerteaanvraag maken."
+msgstr "Laten we je eerste inkoopofferte maken."
 
 #. module: purchase
 #. odoo-javascript
@@ -1729,14 +1734,14 @@ msgstr "Vergrendelen"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__lock_confirmed_po
 msgid "Lock Confirmed Orders"
-msgstr "Bevestigde orders blokkeren"
+msgstr "Bevestigde orders vergrendelen"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__done
 msgid "Locked"
-msgstr "Geblokkeerd"
+msgstr "Vergrendeld"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1837,7 +1842,7 @@ msgstr "Minimaal aantal waarvoor een dubbele validatie nodig is"
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_accountable_required_fields
 msgid "Missing required fields on accountable purchase order line."
-msgstr "Ontbrekende verplichte velden op facturabele inkooporderregel."
+msgstr "Vereiste velden ontbreken op de verantwoordelijke inkooporderregel."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__my_activity_date_deadline
@@ -1848,13 +1853,13 @@ msgstr "Mijn activiteit deadline"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "My Draft RFQs"
-msgstr "Mijn concept offerteaanvragen"
+msgstr "Mijn concept inkoopoffertes"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "My Late RFQs"
-msgstr "Mijn late offerteaanvragen"
+msgstr "Mijn late inkoopoffertes"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -1870,13 +1875,13 @@ msgstr "Mijn inkopen"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "My RFQs"
-msgstr "Mijn offerteaanvragen"
+msgstr "Mijn inkoopoffertes"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "My Waiting RFQs"
-msgstr "Mijn wachtende offerteaanvragen"
+msgstr "Mijn wachtende inkoopoffertes"
 
 #. module: purchase
 #. odoo-python
@@ -1887,7 +1892,7 @@ msgstr "Naam"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Name, TIN, Email, or Reference"
-msgstr "Naam, BTW-nr, e-mail, of referentie"
+msgstr "Naam, btw-nr, e-mail, of referentie"
 
 #. module: purchase
 #. odoo-python
@@ -1939,12 +1944,12 @@ msgstr "Geen inkooporder gevonden. Laten we er één maken!"
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_history
 msgid "No purchase order were made for this product yet!"
-msgstr "Er is nog geen bestelling geplaatst voor dit product!"
+msgstr "Er is nog geen order geplaatst voor dit product!"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_rfq
 msgid "No request for quotation found. Let's create one!"
-msgstr "Geen offerteaanvraag gevonden. Laten we er één maken!"
+msgstr "Geen inkoopofferte gevonden. Laten we er één maken!"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__priority__0
@@ -2047,7 +2052,7 @@ msgid ""
 "quotation and it will turn into a purchase order."
 msgstr ""
 "Nadat je je producten bij je leverancier heeft besteld, bevestig je je "
-"offerteaanvraag en wordt het een inkooporder."
+"inkoopofferte en wordt het een inkooporder."
 
 #. module: purchase
 #. odoo-python
@@ -2098,7 +2103,7 @@ msgstr "Orderreferentie"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "Ordered Quantity:"
-msgstr "Bestelde hoeveelheid:"
+msgstr "Bestelde aantal:"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_config_settings__default_purchase_method__purchase
@@ -2115,7 +2120,7 @@ msgstr "Orders"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Order due %(date)s"
-msgstr "Bestelling verwacht op %(date)s"
+msgstr "Order verwacht op %(date)s"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2125,7 +2130,7 @@ msgstr "Overige informatie"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
 msgid "Our Orders"
-msgstr "Onze bestellingen"
+msgstr "Onze orders"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_packaging_id
@@ -2135,19 +2140,19 @@ msgstr "Verpakking"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_packaging_qty
 msgid "Packaging Quantity"
-msgstr "Verpakkingshoeveelheid"
+msgstr "Verpakkingsaantal"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__partner_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__partner_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__partner_id
 msgid "Partner"
-msgstr "Relatie"
+msgstr "Contact"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__country_id
 msgid "Partner Country"
-msgstr "Land relatie"
+msgstr "Land contact"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__payment_term_id
@@ -2166,8 +2171,8 @@ msgid ""
 "Please select at least two purchase orders with state RFQ and RFQ sent to "
 "merge."
 msgstr ""
-"Selecteer ten minste twee inkooporders met staat RFQ en RFQ verzonden om "
-"samen te voegen."
+"Selecteer ten minste twee inkooporders met de status Inkoopofferte en "
+"inkoopofferte verzonden om samen te voegen."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__pol_id
@@ -2205,7 +2210,7 @@ msgstr "Prijzen"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Print RFQ"
-msgstr "Offerteaanvraag afdrukken"
+msgstr "Inkoopofferte afdrukken"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__priority
@@ -2314,7 +2319,7 @@ msgstr "Inkoopovereenkomsten"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__purchase_amount_untaxed
 msgid "Purchase Amount Untaxed"
-msgstr "Inkoopbedrag excl. BTW"
+msgstr "Inkoopbedrag excl. btw"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
@@ -2380,8 +2385,6 @@ msgstr "Inkoopmatching"
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__purchase_order_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__purchase_order_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__purchase_order_id
-#: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_warn
-#: model:ir.model.fields,field_description:purchase.field_res_users__purchase_warn
 #: model:ir.model.fields.selection,name:purchase.selection__account_analytic_applicability__business_domain__purchase_order
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__purchase
@@ -2463,6 +2466,12 @@ msgid "Purchase Order Name"
 msgstr "Naam inkooporder"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_warn
+#: model:ir.model.fields,field_description:purchase.field_res_users__purchase_warn
+msgid "Purchase Order Warning"
+msgstr "Waarschuwing inkooporder"
+
+#. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/analytic_account.py:0
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
@@ -2480,15 +2489,6 @@ msgstr "Inkooporders"
 #: model:ir.model,name:purchase.model_purchase_report
 msgid "Purchase Report"
 msgstr "Inkooprapport"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report__user_id
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
-#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
-msgid "Purchase Representative"
-msgstr "Inkoopvertegenwoordiger"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_warning_purchase
@@ -2529,7 +2529,7 @@ msgstr "Inkoop: Inkooporder"
 #. module: purchase
 #: model:mail.template,name:purchase.email_template_edi_purchase
 msgid "Purchase: Request For Quotation"
-msgstr "Inkoop: Offerteaanvraag"
+msgstr "Inkoop: Inkoopofferte"
 
 #. module: purchase
 #: model:mail.template,name:purchase.email_template_edi_purchase_reminder
@@ -2615,77 +2615,73 @@ msgstr "Hoeveelheden gefactureerd door leveranciers"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "Quantity"
-msgstr "Hoeveelheid"
+msgstr "Aantal"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Quantity:"
-msgstr "Hoeveelheid:"
+msgstr "Aantal:"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__draft
 msgid "RFQ"
-msgstr "Offerteaanvraag"
+msgstr "Inkoopofferte"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
 msgid "RFQ Approved"
-msgstr "Offerteaanvraag goedgekeurd"
+msgstr "Inkoopofferte goedgekeurd"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_confirmed
 msgid "RFQ Confirmed"
-msgstr "Offerteaanvraag bevestigd"
+msgstr "Inkoopofferte bevestigd"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_done
 msgid "RFQ Done"
-msgstr "Offerteaanvraag gereed"
+msgstr "Inkoopofferte gereed"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__sent
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__sent
 #: model:mail.message.subtype,name:purchase.mt_rfq_sent
 msgid "RFQ Sent"
-msgstr "Offerteaanvraag verzonden"
+msgstr "Inkoopofferte verzonden"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "RFQ merged with %(oldest_rfq_name)s and %(cancelled_rfq)s"
-msgstr "RFQ samengevoegd met %(oldest_rfq_name)s en %(cancelled_rfq)s"
+msgstr ""
+"Inkoopofferte samengevoegd met %(oldest_rfq_name)s en %(cancelled_rfq)s"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "RFQ merged with %s"
-msgstr "RFQ samengevoegd met %s"
+msgstr "Inkoopofferte samengevoegd met %s"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "RFQs"
-msgstr "Offerteaanvragen"
+msgstr "Inkoopoffertes"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "RFQs Sent Last 7 Days"
-msgstr "Offerteaanvragen verzonden laatste 7 dagen"
+msgstr "Inkoopoffertes verzonden laatste 7 dagen"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 msgid "RFQs and Purchases"
-msgstr "Offerteaanvragen en inkooporders"
+msgstr "Inkoopoffertes en inkooporders"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__rating_ids
 msgid "Ratings"
 msgstr "Beoordelingen"
-
-#. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order__currency_rate
-msgid "Ratio between the purchase order currency and the company currency"
-msgstr "Verhouding tussen de valuta van de inkoop en de bedrijfsvaluta"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2727,13 +2723,13 @@ msgstr "Ontvangen hoeveelheid methode"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Received Quantity"
-msgstr "Ontvangen hoeveelheid"
+msgstr "Ontvangen aantal"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_qty_received_template
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "Received Quantity:"
-msgstr "Ontvangen hoeveelheid:"
+msgstr "Ontvangen aantal:"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_config_settings__default_purchase_method__receive
@@ -2817,12 +2813,12 @@ msgstr "Rapportages"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "Request for Quotation"
-msgstr "Offerteaanvraag"
+msgstr "Inkoopofferte"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Request for Quotation #"
-msgstr "Offerteaanvraag #"
+msgstr "Inkoopofferte #"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2842,7 +2838,7 @@ msgstr "Aanvragen voor offerte"
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Requests for Quotation"
-msgstr "Offerteaanvraag"
+msgstr "Inkoopofferte"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_rfq
@@ -2850,7 +2846,7 @@ msgid ""
 "Requests for quotation are documents that will be sent to your suppliers to request prices for different products you consider buying.\n"
 "                Once an agreement has been found with the supplier, they will be confirmed and turned into purchase orders."
 msgstr ""
-"Offerteaanvragen zijn documenten die naar je leveranciers worden gestuurd om prijzen op te vragen voor verschillende producten die je overweegt te kopen.\n"
+"Inkoopoffertes zijn documenten die naar je leveranciers worden gestuurd om prijzen op te vragen voor verschillende producten die je overweegt te kopen.\n"
 "                Zodra er overeenstemming is bereikt met de leverancier, worden deze bevestigd en omgezet in inkooporders."
 
 #. module: purchase
@@ -2969,7 +2965,7 @@ msgstr "Verzenden per e-mail"
 #. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 msgid "Send the request for quotation to your vendor."
-msgstr "Stuur de offerteaanvraag naar je leverancier."
+msgstr "Stuur de inkoopofferte naar je leverancier."
 
 #. module: purchase
 #: model:mail.template,description:purchase.email_template_edi_purchase
@@ -3109,39 +3105,39 @@ msgstr "Prijslijst leverancier"
 #: model:ir.model,name:purchase.model_account_tax
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_tax
 msgid "Tax"
-msgstr "BTW"
+msgstr "Btw"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_country_id
 msgid "Tax Country"
-msgstr "BTW land"
+msgstr "Btw land"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_totals
 msgid "Tax Totals"
-msgstr "Totaal BTW"
+msgstr "Totaal btw"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_calculation_rounding_method
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__tax_calculation_rounding_method
 msgid "Tax calculation rounding method"
-msgstr "BTW afrondingsmethode"
+msgstr "Btw-afrondingsmethode"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Tax excl.:"
-msgstr "Excl. BTW:"
+msgstr "Excl. btw:"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Tax incl.:"
-msgstr "Incl. BTW:"
+msgstr "Incl. btw:"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_tax
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__taxes_id
 msgid "Taxes"
-msgstr "BTW"
+msgstr "Btw"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__display_type
@@ -3154,7 +3150,7 @@ msgid ""
 "Technical field to filter the available taxes depending on the fiscal "
 "country and fiscal position."
 msgstr ""
-"Technisch veld om de beschikbare BTW te filteren, afhankelijk van het "
+"Technisch veld om de beschikbare btw te filteren, afhankelijk van het "
 "fiscale land en de fiscale positie."
 
 #. module: purchase
@@ -3180,13 +3176,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "The RFQ has been acknowledged by %s."
-msgstr "De RFQ is bevestigd door %s."
+msgstr "De inkoopofferte is bevestigd door %s."
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "The RFQ has been declined by %s."
-msgstr "De RFQ is afgewezen door %s."
+msgstr "De inkoopofferte is afgewezen door %s."
 
 #. module: purchase
 #. odoo-python
@@ -3207,8 +3203,8 @@ msgid ""
 "                    converted into a purchase order, you will be able to control the receipt\n"
 "                    of the products and the vendor bill."
 msgstr ""
-"De offerteaanvraag is de eerste stap in de inkoop flow. Eenmaal\n"
-"geconverteerd in een inkooporder kun je de ontvangen producten beheren en de leveranciersfactuur."
+"De inkoopofferte is de eerste stap in de inkoop flow. Eenmaal\n"
+"omgezet in een inkooporder kun je de ontvangen producten beheren en de leveranciersfactuur."
 
 #. module: purchase
 #. odoo-python
@@ -3217,8 +3213,8 @@ msgid ""
 "The vendor asked to decline this confirmed RfQ, if you agree on that, cancel"
 " this PO"
 msgstr ""
-"De verkoper heeft gevraagd om deze bevestigde RfQ te weigeren. Als je het "
-"daarmee eens bent, annuleer deze PO dan"
+"De verkoper heeft gevraagd om deze bevestigde inkoopofferte te weigeren. Als"
+" je het daarmee eens bent, annuleer deze inkooporder dan"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -3228,7 +3224,7 @@ msgstr "Er zijn momenteel geen inkooporders voor je account."
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
 msgid "There are currently no requests for quotation for your account."
-msgstr "Er zijn momenteel geen offerteaanvragen voor je account."
+msgstr "Er zijn momenteel geen inkoopoffertes voor je account."
 
 #. module: purchase
 #. odoo-python
@@ -3247,8 +3243,8 @@ msgid ""
 "received quantity, please make sure that a quantity has been received."
 msgstr ""
 "Er is geen factureerbare regel. Als een product een controlebeleid heeft op "
-"basis van de ontvangen hoeveelheid, zorg er dan voor dat er een hoeveelheid "
-"is ontvangen."
+"basis van het ontvangen aantal, zorg er dan voor dat er een aantal is "
+"ontvangen."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -3267,7 +3263,7 @@ msgid ""
 "the current partner"
 msgstr ""
 "De valuta wordt gebruikt, in plaats van de standaard valuta, voor inkopen "
-"van de huidige relatie"
+"van de huidige contact"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__default_purchase_method
@@ -3310,7 +3306,7 @@ msgstr "Deze leveranciersfactuur is aangepast van: "
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid "This vendor has no purchase order. Create a new RfQ"
 msgstr ""
-"Deze leverancier heeft geen inkooporder. Maak een nieuwe offerteaanvraag aan"
+"Deze leverancier heeft geen inkooporder. Maak een nieuwe inkoopofferte aan"
 
 #. module: purchase
 #: model:digest.tip,name:purchase.digest_tip_purchase_0
@@ -3334,7 +3330,7 @@ msgstr "Goed te keuren"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_to_invoice
 msgid "To Invoice Quantity"
-msgstr "Te factureren hoeveelheid"
+msgstr "Te factureren aantal"
 
 #. module: purchase
 #. odoo-javascript
@@ -3377,19 +3373,19 @@ msgstr "Totaal gekochte hoeveelheid"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_qty
 msgid "Total Quantity"
-msgstr "Totale hoeveelheid"
+msgstr "Totale aantal"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_tree
 msgid "Total Untaxed"
-msgstr "Totaal excl. BTW"
+msgstr "Totaal excl. btw"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 msgid "Total Untaxed amount"
-msgstr "Totaalbedrag excl. BTW"
+msgstr "Totaalbedrag excl. btw"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
@@ -3448,17 +3444,17 @@ msgstr "Eenheid"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_unit
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "Unit Price"
-msgstr "Eenheidsprijs"
+msgstr "Prijs"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_unit_discounted
 msgid "Unit Price (Discounted)"
-msgstr "Eenheidsprijs (met korting)"
+msgstr "Prijs (met korting)"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Unit Price:"
-msgstr "Eenheidsprijs:"
+msgstr "Prijs:"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_id
@@ -3496,17 +3492,17 @@ msgstr "Ontgrendel"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 msgid "Untaxed"
-msgstr "Excl. BTW"
+msgstr "Excl. btw"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_untaxed
 msgid "Untaxed Amount"
-msgstr "Excl. BTW"
+msgstr "Excl. btw"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__untaxed_total
 msgid "Untaxed Total"
-msgstr "Totaal excl. BTW"
+msgstr "Totaal excl. btw"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3656,7 +3652,7 @@ msgstr "Wachten op factuur"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Waiting RFQs"
-msgstr "Offerteaanvragen in afwachting"
+msgstr "Inkoopoffertes in afwachting"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -3741,7 +3737,7 @@ msgstr ""
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__partner_id
 msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
 msgstr ""
-"Je kunt een leverancier, een contactpersoon, vinden op naam, BTW, e-mail of "
+"Je kunt een leverancier, een contactpersoon, vinden op naam, btw, e-mail of "
 "interne referentie."
 
 #. module: purchase
@@ -3800,7 +3796,7 @@ msgid ""
 "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
 " Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
-"Jouw offerte bevat producten van het bedrijf %(product_company)s terwijl je "
+"Je offerte bevat producten van het bedrijf %(product_company)s terwijl je "
 "offerte bij het bedrijf %(quote_company)s behoort. Wijzig het bedrijf van je"
 " offerte of verwijder de producten van andere bedrijven (%(bad_products)s)."
 

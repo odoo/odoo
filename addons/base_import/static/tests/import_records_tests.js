@@ -4,7 +4,13 @@ import { importRecordsItem } from "@base_import/import_records/import_records";
 
 import { registry } from "@web/core/registry";
 
-import { click, getFixture, selectDropdownItem, triggerHotkey } from "@web/../tests/helpers/utils";
+import {
+    click,
+    getFixture,
+    selectDropdownItem,
+    triggerHotkey,
+    nextTick,
+} from "@web/../tests/helpers/utils";
 import { toggleActionMenu } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { clearRegistryWithCleanup } from "@web/../tests/helpers/mock_env";
@@ -110,6 +116,7 @@ QUnit.module("Base Import Tests", (hooks) => {
             },
         });
         await triggerHotkey("alt+u");
+        await nextTick();
         assert.containsOnce(target, ".o-dropdown--menu");
     });
 

@@ -4,7 +4,6 @@ import re
 import base64
 import io
 
-from PyPDF2 import PdfFileReader, PdfFileWriter
 from reportlab.platypus import Frame, Paragraph, KeepInFrame
 from reportlab.lib.units import mm
 from reportlab.lib.pagesizes import A4
@@ -14,6 +13,7 @@ from reportlab.pdfgen.canvas import Canvas
 from odoo import fields, models, api, _
 from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import AccessError, UserError
+from odoo.tools.pdf import PdfFileReader, PdfFileWriter
 from odoo.tools.safe_eval import safe_eval
 
 DEFAULT_ENDPOINT = 'https://iap-snailmail.odoo.com'
@@ -59,7 +59,7 @@ class SnailmailLetter(models.Model):
              "If the letter is correctly sent, the status goes in 'Sent',\n"
              "If not, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'.")
     error_code = fields.Selection([(err_code, err_code) for err_code in ERROR_CODES], string="Error")
-    info_msg = fields.Char('Information')
+    info_msg = fields.Html('Information')
 
     reference = fields.Char(string='Related Record', compute='_compute_reference', readonly=True, store=False)
 

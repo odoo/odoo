@@ -8,24 +8,25 @@
 # yael terner, 2024
 # Ofir Blum <ofir.blum@gmail.com>, 2024
 # MichaelHadar, 2024
-# hed shefer <hed@laylinetech.com>, 2024
-# Yihya Hugirat <hugirat@gmail.com>, 2024
 # שהאב חוסיין <shhab89@gmail.com>, 2024
 # דודי מלכה <Dudimalka6@gmail.com>, 2024
 # Orel Nahmany, 2024
-# Martin Trigaux, 2024
 # Ha Ketem <haketem@gmail.com>, 2024
-# ExcaliberX <excaliberx@gmail.com>, 2024
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024
 # NoaFarkash, 2024
+# Martin Trigaux, 2024
+# Hed Shefer <hed@laylinetech.com>, 2024
+# tomerlayline, 2024
+# Yihya Hugirat <hugirat@gmail.com>, 2024
+# ExcaliberX <excaliberx@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: NoaFarkash, 2024\n"
+"Last-Translator: ExcaliberX <excaliberx@gmail.com>, 2024\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -256,7 +257,7 @@ msgstr "פיצול חשבון"
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.product_attribute_value_black_olives
 msgid "Black olives"
-msgstr ""
+msgstr "זיתים שחורים"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -283,7 +284,7 @@ msgstr "כרטיס"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/product_screen/product_screen.xml:0
 msgid "Cart"
-msgstr ""
+msgstr "עגלה;"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -332,7 +333,7 @@ msgstr "קוקה-קולה"
 #. module: pos_restaurant
 #: model:pos.category,name:pos_restaurant.pos_category_cocktails
 msgid "Cocktails"
-msgstr ""
+msgstr "קוקטיילים"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__color
@@ -353,7 +354,7 @@ msgstr "המשך"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_cosmopolitan_product_template
 msgid "Cosmopolitan"
-msgstr ""
+msgstr "קוסמופוליטן"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_cosmopolitan_product_template
@@ -390,6 +391,12 @@ msgid "Design floors and assign orders to tables"
 msgstr "עיצוב קומות והגדרת הזמנות לשולחנות"
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
+msgid "Dine in"
+msgstr ""
+
+#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__display_name
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__display_name
 msgid "Display Name"
@@ -415,7 +422,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/app/control_buttons/control_buttons.js:0
 #: code:addons/pos_restaurant/static/src/app/control_buttons/control_buttons.xml:0
 msgid "Edit Order Name"
-msgstr ""
+msgstr "ערוך את שם ההזמנה"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -442,21 +449,15 @@ msgid "Enter a table number"
 msgstr ""
 
 #. module: pos_restaurant
-#. odoo-javascript
-#: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.js:0
-msgid "Error"
-msgstr "שגיאה"
-
-#. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.espresso_product_template
 msgid "Espresso"
-msgstr ""
+msgstr "אפסרסוD"
 
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.product_attribute_value_extra_cheese
 #: model:product.attribute.value,name:pos_restaurant.product_attribute_value_extra_cheese_pasta
 msgid "Extra cheese"
-msgstr ""
+msgstr "תוספת גבינה "
 
 #. module: pos_restaurant
 #: model:product.attribute,name:pos_restaurant.product_extra_pasta
@@ -557,12 +558,6 @@ msgid "Funghi"
 msgstr "פטריות"
 
 #. module: pos_restaurant
-#. odoo-javascript
-#: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
-msgid "General Note"
-msgstr ""
-
-#. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_negroni_product_template
 msgid "Gin, vermouth rosso, Campari, and an orange peel."
 msgstr ""
@@ -621,7 +616,7 @@ msgstr "אם מסומן 'לא נכון', השולחן לא פעיל ולא יה�
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.js:0
-msgid "Jump to table"
+msgid "Jump"
 msgstr ""
 
 #. module: pos_restaurant
@@ -641,6 +636,12 @@ msgstr "עודכן לאחרונה על-ידי"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__write_date
 msgid "Last Updated on"
 msgstr "עדכון אחרון ב"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
+msgid "Loading"
+msgstr "טוען"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -684,6 +685,12 @@ msgstr ""
 #: model:product.template,name:pos_restaurant.product_margarita_product_template
 msgid "Margarita"
 msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
+msgid "Message"
+msgstr "הודעה"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.milkshake_banana_product_template
@@ -735,9 +742,9 @@ msgstr "ללא טיפ"
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.js:0
-msgid "No table or floating order found with this number"
-msgstr ""
+#: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
+msgid "Note"
+msgstr "הערה"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -790,7 +797,7 @@ msgstr "הזמנה"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/receipt_screen/order_receipt/order_receipt.xml:0
 msgid "PRO FORMA"
-msgstr "פרו פורמה"
+msgstr "חשבונית עסקה"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__parent_id
@@ -1182,6 +1189,12 @@ msgstr "שולחנות"
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__takeaway
 msgid "Take Away"
 msgstr "לקחת"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
+msgid "Take out"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__takeaway

@@ -313,6 +313,28 @@ class TestSanitizer(BaseCase):
             for text in in_lst:
                 self.assertIn(text, new_html)
 
+    def test_quote_signature_container_propagation(self):
+        """Test that applying normalization twice doesn't quote more than wanted."""
+        # quote signature with bare signature in main block
+        bare_signature_body = (
+            "<div>"
+            "<div><p>Hello</p><p>Here is your document</p></div>"
+            "<div>--<br>Mark Demo</div>"
+            "<div class=\"bg-300\"></div>"
+            "</div>"
+        )
+        expected_result = (
+            "<div data-o-mail-quote-container=\"1\">"
+            "<div><p>Hello</p><p>Here is your document</p></div>"
+            "<div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\">Mark Demo</div>"
+            "<div class=\"bg-300\" data-o-mail-quote=\"1\"></div>"
+            "</div>"
+        )
+        sanitized_once = html_sanitize(bare_signature_body)
+        sanitized_twice = html_sanitize(sanitized_once)
+        self.assertEqual(sanitized_once, expected_result)
+        self.assertEqual(sanitized_twice, expected_result)
+
     def test_quote_gmail(self):
         html = html_sanitize(test_mail_examples.GMAIL_1)
         for ext in test_mail_examples.GMAIL_1_IN:
@@ -809,14 +831,24 @@ class TestEmailTools(BaseCase):
             ('admin@example.com', ['admin@example.com']),
             ('"Admin" <admin@example.com>, Demo <malformed email>', ['admin@example.com']),
             ('admin@éxample.com', ['admin@xn--xample-9ua.com']),
-            # formatted input containing email
-            ('"admin@éxample.com" <admin@éxample.com>', ['admin@xn--xample-9ua.com', 'admin@xn--xample-9ua.com']),
+            # email-like names
+            (
+                '"admin@éxample.com" <admin@éxample.com>',
+                ['admin@xn--xample-9ua.com', 'admin@xn--xample-9ua.com'],
+            ),
             ('"Robert Le Grand" <robert@notgmail.com>', ['robert@notgmail.com']),
             ('"robert@notgmail.com" <robert@notgmail.com>', ['robert@notgmail.com', 'robert@notgmail.com']),
+            # "@' in names
+            ('"Bike @ Home" <bike@example.com>', ['bike@example.com']),
+            ('"Bike@Home" <bike@example.com>', ['Bike@Home', 'bike@example.com']),
+            # combo @ in names + multi email
+            (
+                '"Not an Email" <robert@notgmail.com>, "robert@notgmail.com" <robert@notgmail.com>',
+                ['robert@notgmail.com', 'robert@notgmail.com', 'robert@notgmail.com'],
+            ),
             # accents
             ('DéBoulonneur@examplé.com', ['DéBoulonneur@xn--exampl-gva.com']),
         ]
-
         for source, expected in cases:
             with self.subTest(source=source):
                 self.assertEqual(extract_rfc2822_addresses(source), expected)

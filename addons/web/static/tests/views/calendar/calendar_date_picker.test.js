@@ -10,6 +10,7 @@ import {
     models,
     mountView,
     patchWithCleanup,
+    preloadBundle,
 } from "@web/../tests/web_test_helpers";
 
 import { CalendarController } from "@web/views/calendar/calendar_controller";
@@ -27,7 +28,7 @@ class Event extends models.Model {
 }
 
 defineModels([Event]);
-
+preloadBundle("web.fullcalendar_lib");
 beforeEach(() => {
     mockDate("2021-08-14T08:00:00");
 });
@@ -59,10 +60,8 @@ test(`Scale: init with day`, async () => {
         type: "calendar",
         arch: `<calendar date_start="start" mode="day"/>`,
     });
-    expect(`.o_datetime_picker .o_highlighted`).toHaveCount(1);
-    expect(`.o_datetime_picker .o_highlight_start`).toHaveCount(1);
-    expect(`.o_datetime_picker .o_highlight_end`).toHaveCount(1);
-    expect(`.o_datetime_picker .o_highlighted`).toHaveText("14");
+    expect(`.o_datetime_picker .o_selected`).toHaveCount(1);
+    expect(`.o_datetime_picker .o_selected`).toHaveText("14");
 });
 
 test(`Scale: init with week`, async () => {
@@ -71,10 +70,8 @@ test(`Scale: init with week`, async () => {
         type: "calendar",
         arch: `<calendar date_start="start" mode="week"/>`,
     });
-    expect(`.o_datetime_picker .o_highlighted`).toHaveCount(1);
-    expect(`.o_datetime_picker .o_highlight_start`).toHaveCount(1);
-    expect(`.o_datetime_picker .o_highlight_end`).toHaveCount(1);
-    expect(`.o_datetime_picker .o_highlighted`).toHaveText("14");
+    expect(`.o_datetime_picker .o_selected`).toHaveCount(1);
+    expect(`.o_datetime_picker .o_selected`).toHaveText("14");
 });
 
 test(`Scale: init with month`, async () => {
@@ -83,10 +80,8 @@ test(`Scale: init with month`, async () => {
         type: "calendar",
         arch: `<calendar date_start="start" mode="month"/>`,
     });
-    expect(`.o_datetime_picker .o_highlighted`).toHaveCount(1);
-    expect(`.o_datetime_picker .o_highlight_start`).toHaveCount(1);
-    expect(`.o_datetime_picker .o_highlight_end`).toHaveCount(1);
-    expect(`.o_datetime_picker .o_highlighted`).toHaveText("14");
+    expect(`.o_datetime_picker .o_selected`).toHaveCount(1);
+    expect(`.o_datetime_picker .o_selected`).toHaveText("14");
 });
 
 test(`Scale: init with year`, async () => {
@@ -95,10 +90,8 @@ test(`Scale: init with year`, async () => {
         type: "calendar",
         arch: `<calendar date_start="start" mode="year"/>`,
     });
-    expect(`.o_datetime_picker .o_highlighted`).toHaveCount(1);
-    expect(`.o_datetime_picker .o_highlight_start`).toHaveCount(1);
-    expect(`.o_datetime_picker .o_highlight_end`).toHaveCount(1);
-    expect(`.o_datetime_picker .o_highlighted`).toHaveText("14");
+    expect(`.o_datetime_picker .o_selected`).toHaveCount(1);
+    expect(`.o_datetime_picker .o_selected`).toHaveText("14");
 });
 
 test(`First day: 0 = Sunday`, async () => {
@@ -186,7 +179,7 @@ test(`Scale: today is correctly highlighted`, async () => {
         type: "calendar",
         arch: `<calendar date_start="start" mode="month"/>`,
     });
-    expect(`.o_datetime_picker .o_today`).toHaveClass("o_highlighted");
+    expect(`.o_datetime_picker .o_today`).toHaveClass("o_selected");
     expect(`.o_datetime_picker .o_today`).toHaveText("4");
 });
 

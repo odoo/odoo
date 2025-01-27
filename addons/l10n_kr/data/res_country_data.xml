@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="kr_partner_address_form" model="ir.ui.view">
+        <field name="name">kr.partner.form.address</field>
+        <field name="model">res.partner</field>
+        <field name="priority" eval="900"/>
+        <field name="arch" type="xml">
+            <form>
+                <div>
+                    <div class="o_address_format">
+                        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'
+                               readonly="type == 'contact' and parent_id"/>
+                        <field name="state_id" class="o_address_state" placeholder="city/-do" options='{"no_open": True}'
+                                readonly="type == 'contact' and parent_id"/>
+                        <field name="city" placeholder="-city/-gun/-gu, -eup/myun" class="o_address_city"
+                                readonly="type == 'contact' and parent_id"/>
+                        <field name="street2" placeholder="Building number, Road name" class="o_address_street"
+                                readonly="type == 'contact' and parent_id"/>
+                        <field name="street" placeholder="Apartment Name, -dong/-floor" class="o_address_street"
+                                readonly="type == 'contact' and parent_id"/>
+                        <field name="zip" placeholder="ZIP" class="o_address_zip"
+                               readonly="type == 'contact' and parent_id"/>
+                    </div>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="base.kr" model="res.country">
+        <field name="address_view_id" ref="kr_partner_address_form" />
+        <field name="address_format" eval="'%(country_name)s %(state_name)s\n%(city)s %(street2)s %(street)s %(zip)s'"/>
+    </record>
+</odoo>

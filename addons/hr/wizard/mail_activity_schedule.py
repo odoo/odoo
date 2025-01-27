@@ -16,7 +16,7 @@ class MailActivitySchedule(models.TransientModel):
     def _compute_plan_available_ids(self):
         todo = self.filtered(lambda s: s.plan_department_filterable)
         for scheduler in todo:
-            base_domain = self._get_plan_available_base_domain()
+            base_domain = scheduler._get_plan_available_base_domain()
             if not scheduler.department_id:
                 final_domain = expression.AND([base_domain, [('department_id', '=', False)]])
             else:
@@ -31,7 +31,7 @@ class MailActivitySchedule(models.TransientModel):
 
     @api.depends('plan_date', 'plan_id')
     def _compute_plan_summary(self):
-        if not self.env.context.get('sort_by_responsible', False):
+        if not self.env.context.get('sort_by_responsible', False) and self.env.context.get('active_model', False) != 'hr.employee':
             return super()._compute_plan_summary()
         self.plan_summary = False
         responsible_value_to_label = dict(

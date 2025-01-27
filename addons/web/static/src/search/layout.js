@@ -30,6 +30,9 @@ export class Layout extends Component {
     }
     get controlPanelSlots() {
         const slots = { ...this.props.slots };
+        if (this.env.inDialog) {
+            delete slots["layout-buttons"];
+        }
         delete slots.default;
         return slots;
     }

@@ -408,10 +408,10 @@ class L10nEsEdiTbaiDocument(models.Model):
     def _get_regime_code_value(self, taxes, is_simplified):
         regime_key = []
 
-        regime_key.append(taxes._l10n_es_get_regime_code())
-
         if is_simplified and self.company_id.l10n_es_tbai_tax_agency != 'bizkaia':
             regime_key.append('52')  # code for simplified invoices
+        else:
+            regime_key.append(taxes._l10n_es_get_regime_code())
 
         return {'regime_key': regime_key}
 
@@ -534,7 +534,7 @@ class L10nEsEdiTbaiDocument(models.Model):
         total_amount = 0.0
         total_retention = 0.0
         for values in values_per_grouping_key.values():
-            if values['grouping_key'] and values['grouping_key']['l10n_es_type'] == 'retention':
+            if values['grouping_key'] and values['grouping_key']['l10n_es_type'] == 'retencion':
                 total_retention += values['tax_amount']
             else:
                 total_amount += values['base_amount'] + values['tax_amount']

@@ -58,7 +58,7 @@ class EventTrackController(http.Controller):
     @http.route([
         '''/event/<model("event.event"):event>/track''',
         '''/event/<model("event.event"):event>/track/tag/<model("event.track.tag"):tag>'''
-    ], type='http', auth="public", website=True, sitemap=False)
+    ], type='http', auth="public", website=True, sitemap=False, readonly=True)
     def event_tracks(self, event, tag=None, **searches):
         """ Main route
 
@@ -355,7 +355,7 @@ class EventTrackController(http.Controller):
     # ------------------------------------------------------------
 
     @http.route('''/event/<model("event.event", "[('website_track', '=', True)]"):event>/track/<model("event.track", "[('event_id', '=', event.id)]"):track>''',
-                type='http', auth="public", website=True, sitemap=True)
+                type='http', auth="public", website=True, sitemap=True, readonly=True)
     def event_track_page(self, event, track, **options):
         track = self._fetch_track(track.id, allow_sudo=False)
 

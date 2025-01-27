@@ -89,9 +89,8 @@
                                 <field name="expression_ids">
                                     <record id="mod_390_casilla_110_balance" model="account.report.expression">
                                         <field name="label">balance</field>
-                                        <field name="engine">external</field>
-                                        <field name="formula">sum</field>
-                                        <field name="subformula">editable;rounding=2</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">mod390[110]</field>
                                     </record>
                                 </field>
                             </record>

@@ -119,7 +119,7 @@ export class MailMessage extends models.ServerModel {
             MailNotification._filter([["mail_message_id", "in", ids]]).map((n) => n.id)
         );
         for (const message of MailMessage.browse(ids)) {
-            const [data] = this._read_format(message.id, fields, makeKwArgs({ load: false }));
+            const [data] = this._read_format(message.id, fields, false);
             const thread = message.model && this.env[message.model].browse(message.res_id)[0];
             if (thread) {
                 const thread_data = { module_icon: "/base/static/description/icon.png" };
@@ -218,12 +218,12 @@ export class MailMessage extends models.ServerModel {
             if (message.author_guest_id) {
                 data.author = mailDataHelpers.Store.one(
                     MailGuest.browse(message.author_guest_id),
-                    makeKwArgs({ fields: ["name", "write_date"] })
+                    makeKwArgs({ fields: ["avatar_128", "name"] })
                 );
             } else if (message.author_id) {
                 data.author = mailDataHelpers.Store.one(
                     ResPartner.browse(message.author_id),
-                    makeKwArgs({ fields: ["name", "is_company", "user", "write_date"] })
+                    makeKwArgs({ fields: ["avatar_128", "is_company", "name", "user"] })
                 );
             }
             store.add(this.browse(message.id), data);
@@ -275,6 +275,31 @@ export class MailMessage extends models.ServerModel {
                 ),
             });
         }
+    }
+
+    unlink() {
+        const messageByPartnerId = {};
+        for (const message of this) {
+            for (const partnerId of message.partner_ids) {
+                messageByPartnerId[partnerId] ??= [];
+                messageByPartnerId[partnerId].push(message);
+            }
+            if (
+                this.env["mail.notification"]
+                    .browse(message.notification_ids)
+                    .some(({ failure_type }) => Boolean(failure_type))
+            ) {
+                messageByPartnerId[message.author_id] ??= [];
+                messageByPartnerId[message.author_id].push(message);
+            }
+        }
+        for (const [partnerId, messages] of Object.entries(messageByPartnerId)) {
+            const [partner] = this.env["res.partner"].browse(parseInt(partnerId));
+            this.env["bus.bus"]._sendone(partner, "mail.message/delete", {
+                message_ids: messages.map(({ id }) => id),
+            });
+        }
+        return super.unlink(...arguments);
     }
 
     /** @param {number[]} ids */
@@ -488,7 +513,13 @@ export class MailMessage extends models.ServerModel {
                 ),
                 thread: mailDataHelpers.Store.one(
                     message.model ? this.env[message.model].browse(message.res_id) : false,
-                    makeKwArgs({ as_thread: true, fields: ["modelName"] })
+                    makeKwArgs({
+                        as_thread: true,
+                        fields: [
+                            "modelName",
+                            message.model === "discuss.channel" ? "name" : "display_name",
+                        ],
+                    })
                 ),
             });
         }

@@ -5,7 +5,10 @@ import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 
 export class ImagePadding extends Component {
     static components = { Dropdown, DropdownItem };
-    static props = toolbarButtonProps;
+    static props = {
+        ...toolbarButtonProps,
+        onSelected: Function,
+    };
     static template = "html_editor.ImagePadding";
 
     setup() {
@@ -13,6 +16,6 @@ export class ImagePadding extends Component {
     }
 
     onSelected(padding) {
-        this.props.dispatch("SET_IMAGE_PADDING", { padding: this.paddings[padding] });
+        this.props.onSelected({ size: this.paddings[padding] });
     }
 }

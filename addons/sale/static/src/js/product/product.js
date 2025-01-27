@@ -6,6 +6,7 @@ import {
     ProductTemplateAttributeLine as PTAL
 } from "../product_template_attribute_line/product_template_attribute_line";
 import { QuantityButtons } from '../quantity_buttons/quantity_buttons';
+import { getSelectedCustomPtav } from "../sale_utils";
 
 export class Product extends Component {
     static components = { PTAL, QuantityButtons };
@@ -67,6 +68,8 @@ export class Product extends Component {
      * @return {Boolean} Whether the PTAL should be shown.
      */
     shouldShowPtal(ptal) {
-        return this.env.canChangeVariant || ptal.create_variant === 'no_variant' ;
+        return this.env.canChangeVariant
+            || ptal.create_variant === 'no_variant'
+            || !!getSelectedCustomPtav(ptal);
     }
 }

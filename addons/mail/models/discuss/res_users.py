@@ -42,19 +42,6 @@ class ResUsers(models.Model):
             lambda cm: (cm.channel_id.channel_type == "channel" and cm.channel_id.group_public_id)
         ).unlink()
 
-    def _init_store_data(self, store):
-        super()._init_store_data(store)
-        # sudo: ir.config_parameter - reading hard-coded keys to check their existence, safe to
-        # return whether the features are enabled
-        get_param = self.env["ir.config_parameter"].sudo().get_param
-        store.add(
-            {
-                "hasGifPickerFeature": get_param("discuss.tenor_api_key"),
-                "hasMessageTranslationFeature": get_param("mail.google_translate_api_key"),
-                "channel_types_with_seen_infos": sorted(self.env["discuss.channel"]._types_allowing_seen_infos()),
-            }
-        )
-
     def _init_messaging(self, store):
         self = self.with_user(self)
         channels = self.env["discuss.channel"]._get_channels_as_member()
@@ -65,3 +52,14 @@ class ResUsers(models.Model):
         # prefetch a lot of data that super could use, about the current user in particular)
         super()._init_messaging(store)
         store.add({"initChannelsUnreadCounter": len(members_with_unread)})
+
+    def _init_store_data(self, store):
+        super()._init_store_data(store)
+        # sudo: ir.config_parameter - reading hard-coded keys to check their existence, safe to
+        # return whether the features are enabled
+        get_param = self.env["ir.config_parameter"].sudo().get_param
+        store.add({
+            "hasGifPickerFeature": bool(get_param("discuss.tenor_api_key")),
+            "hasMessageTranslationFeature": bool(get_param("mail.google_translate_api_key")),
+            "channel_types_with_seen_infos": sorted(self.env["discuss.channel"]._types_allowing_seen_infos()),
+        })

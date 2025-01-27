@@ -140,19 +140,42 @@ export function parseAccountingDate(dateRange, locale) {
     }
 }
 
+const YEAR_OFFSET_ARG = arg("offset (number, default=0)", _t("Offset applied to the years."))
+const COMPANY_ARG = arg("company_id (number, optional)", _t("The company to target (Advanced)."))
+const POSTED_ARG = arg(
+    "include_unposted (boolean, default=FALSE)",
+    _t("Set to TRUE to include unposted entries.")
+)
+
 const ODOO_FIN_ARGS = () => [
     arg("account_codes (string)", _t("The prefix of the accounts.")),
     arg(
         "date_range (string, date)",
         _t(`The date range. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`)
     ),
-    arg("offset (number, default=0)", _t("Year offset applied to date_range.")),
-    arg("company_id (number, optional)", _t("The company to target (Advanced).")),
-    arg(
-        "include_unposted (boolean, default=FALSE)",
-        _t("Set to TRUE to include unposted entries.")
-    ),
+    YEAR_OFFSET_ARG,
+    COMPANY_ARG,
+    POSTED_ARG,
 ];
+
+const ODOO_RESIDUAL_ARGS = () => [
+    arg(
+        "account_codes (string, optional)",
+        _t("The prefix of the accounts. If none provided, all receivable and payable accounts will be used.")
+    ),
+    arg(
+        "date_range (string, date, optional)",
+        _t(`The date range. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`)
+    ),
+    YEAR_OFFSET_ARG,
+    COMPANY_ARG,
+    POSTED_ARG,
+];
+
+const ODOO_PARTNER_BALANCE_ARGS = () => {
+    const partner_arg = arg("partner_ids (string)", _t("The partner ids (separated by a comma)."));
+    return [partner_arg, ...ODOO_RESIDUAL_ARGS()];
+}
 
 functionRegistry.add("ODOO.CREDIT", {
     description: _t("Get the total credit for the specified account(s) and period."),
@@ -299,9 +322,35 @@ functionRegistry.add("ODOO.FISCALYEAR.END", {
     },
 });
 
+const ACCOUNT_TYPES = [
+    "asset_receivable",
+    "asset_cash",
+    "asset_current",
+    "asset_non_current",
+    "asset_prepayments",
+    "asset_fixed",
+    "liability_payable",
+    "liability_credit_card",
+    "liability_current",
+    "liability_non_current",
+    "equity",
+    "equity_unaffected",
+    "income",
+    "income_other",
+    "expense",
+    "expense_depreciation",
+    "expense_direct_cost",
+    "off_balance",
+];
+
 functionRegistry.add("ODOO.ACCOUNT.GROUP", {
-    description: _t("Returns the account ids of a given group."),
-    args: [arg("type (string)", _t("The account type (income, expense, asset_current,...)."))],
+    description: _t("Returns the account codes of a given group."),
+    args: [
+        arg(
+            "type (string)",
+            _t("The technical account type (possible values are: %s).", ACCOUNT_TYPES.join(", "))
+        ),
+    ],
     category: "Odoo",
     returns: ["NUMBER"],
     compute: function (accountType) {
@@ -309,3 +358,82 @@ functionRegistry.add("ODOO.ACCOUNT.GROUP", {
         return accountTypes.join(",");
     },
 });
+
+functionRegistry.add("ODOO.RESIDUAL", {
+    description: _t("Return the residual amount for the specified account(s) and period"),
+    args: ODOO_RESIDUAL_ARGS(),
+    category: "Odoo",
+    returns: ["NUMBER"],
+    compute: function (
+        accountCodes,
+        dateRange,
+        offset = { value: 0 },
+        companyId = { value: null },
+        includeUnposted = { value: false }
+    ) {
+        const _accountCodes = toString(accountCodes)
+            .split(",")
+            .map((code) => code.trim())
+            .sort();
+        const _offset = toNumber(offset, this.locale);
+        if ( !dateRange?.value ) {
+            dateRange = { value: new Date().getFullYear() }
+        }
+        const _dateRange = parseAccountingDate(dateRange, this.locale);
+        const _companyId = toNumber(companyId, this.locale);
+        const _includeUnposted = toBoolean(includeUnposted);
+        return {
+            value: this.getters.getAccountResidual(
+                _accountCodes,
+                _dateRange,
+                _offset,
+                _companyId,
+                _includeUnposted
+            ),
+            format: this.getters.getCompanyCurrencyFormat(_companyId) || "#,##0.00",
+        };
+    },
+})
+
+functionRegistry.add("ODOO.PARTNER.BALANCE", {
+    description: _t("Return the partner balance for the specified account(s) and period"),
+    args: ODOO_PARTNER_BALANCE_ARGS(),
+    category: "Odoo",
+    returns: ["NUMBER"],
+    compute: function (
+        partnerIds,
+        accountCodes,
+        dateRange,
+        offset = { value: 0 },
+        companyId = { value: null },
+        includeUnposted = { value: false }
+    ) {
+        const _partnerIds = toString(partnerIds)
+            .split(",")
+            .map((partnerId) => toNumber(partnerId, this.locale))
+            .sort();
+        const _accountCodes = toString(accountCodes)
+            .split(",")
+            .map((code) => code.trim())
+            .sort();
+        const _offset = toNumber(offset, this.locale);
+
+        if ( !dateRange?.value ) {
+            dateRange = { value: new Date().getFullYear() }
+        }
+        const _dateRange = parseAccountingDate(dateRange, this.locale);
+        const _companyId = toNumber(companyId, this.locale);
+        const _includeUnposted = toBoolean(includeUnposted);
+        return {
+            value: this.getters.getAccountPartnerData(
+                _accountCodes,
+                _dateRange,
+                _offset,
+                _companyId,
+                _includeUnposted,
+                _partnerIds
+            ),
+            format: this.getters.getCompanyCurrencyFormat(_companyId) || "#,##0.00",
+        };
+    },
+})

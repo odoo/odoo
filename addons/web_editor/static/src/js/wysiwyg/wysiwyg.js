@@ -174,8 +174,8 @@ export class Wysiwyg extends Component {
                 // Deselect tables so the applied color can be seen
                 // without using `!important` (otherwise the selection
                 // hides it).
-                if (this.odooEditor.deselectTable() && hasValidSelection(this.odooEditor.editable)) {
-                    this.odooEditor.document.getSelection().collapseToStart();
+                if (hasValidSelection(this.odooEditor.editable)) {
+                    this.odooEditor.deselectTable();
                 }
                 this._updateEditorUI(this.lastMediaClicked && { target: this.lastMediaClicked });
             };
@@ -455,7 +455,7 @@ export class Wysiwyg extends Component {
                     const [deepestNode] = getDeepestPosition(selection.anchorNode, selection.anchorOffset);
                     const elementSelectors = [
                         'LI:not([t-field])',
-                        'DIV:not([t-field]):not(.o_not_editable)',
+                        "DIV:not([t-field]):not(.o_not_editable):not([contenteditable='false'])",
                         ...paragraphRelatedElements.map(tag => `${tag}:not([t-field])`),
                     ];
                     const baseNode = closestElement(deepestNode, elementSelectors.join(', '));
@@ -1478,7 +1478,7 @@ export class Wysiwyg extends Component {
                     if (
                         !ev.target.closest('#create-link') &&
                         !ev.target.closest(".o_technical_modal") &&
-                        (!ev.target.closest('.oe-toolbar') || !ev.target.closest('we-customizeblock-option')) &&
+                        !ev.target.closest('.oe-toolbar') &&
                         !ev.target.closest('.ui-autocomplete') &&
                         (!this.state.linkToolProps || ![ev.target, ...wysiwygUtils.ancestors(ev.target)].includes(this.linkToolsInfos.link))
                     ) {
@@ -1633,9 +1633,13 @@ export class Wysiwyg extends Component {
                     }
                 } else {
                     const commonBlock = selection.rangeCount && closestBlock(selection.getRangeAt(0).commonAncestorContainer);
-                    [anchorNode, focusNode] = commonBlock && link.contains(commonBlock) ? [commonBlock, commonBlock] : [link, link];
+                    if (commonBlock && link.contains(commonBlock)) {
+                        [anchorNode, focusNode] = [commonBlock, commonBlock];
+                    } else if (!this.$editable[0].contains(selection.anchorNode)) {
+                        [anchorNode, focusNode] = [link, link];
+                    }
                 }
-                if (!focusOffset) {
+                if (!focusOffset && focusNode) {
                     focusOffset = focusNode.childNodes.length || focusNode.length;
                 }
             }
@@ -1711,6 +1715,7 @@ export class Wysiwyg extends Component {
             close: () => restoreSelection(),
             ...this.options.mediaModalParams,
             ...params,
+            noVideos: !this.options.allowCommandVideo || params.noVideos,
         });
     }
     // todo: test me
@@ -1787,11 +1792,29 @@ export class Wysiwyg extends Component {
                 params.node.replaceWith(element);
             }
             this.odooEditor.unbreakableStepUnactive();
-            this.odooEditor.historyStep();
+
+            if (params.node.matches(".oe_unremovable")) {
+                // The "oe_unremovable" class prevents element deletion and must
+                // be removed during the "historyStep" to allow media
+                // replacement. If the class remains, the "sanitize" function in
+                // "historyStep" will block the replacement.
+                params.node.classList.remove("oe_unremovable");
+                element.classList.remove("oe_unremovable");
+                this.odooEditor.historyStep();
+                this.odooEditor.observerUnactive("unremovable");
+                element.classList.add("oe_unremovable");
+                this.odooEditor.observerActive("unremovable");
+            } else {
+                this.odooEditor.historyStep();
+            }
+
             // Refocus again to save updates when calling `_onWysiwygBlur`
             this.odooEditor.editable.focus();
         } else {
-            return this.odooEditor.execCommand('insert', element);
+            const result = this.odooEditor.execCommand('insert', element);
+            // Refocus again to save updates when calling `_onWysiwygBlur`
+            this.odooEditor.editable.focus();
+            return result;
         }
 
         if (this.state.showSnippetsMenu) {
@@ -1993,6 +2016,7 @@ export class Wysiwyg extends Component {
                 return;
             }
             const $image = $(this.lastMediaClicked);
+            const imgTransformBtn = this.toolbarEl.querySelector('#image-transform');
             if ($image.data('transfo-destroy')) {
                 $image.removeData('transfo-destroy');
                 return;
@@ -2004,7 +2028,7 @@ export class Wysiwyg extends Component {
                 this.odooEditor.document.removeEventListener('keydown', keydown);
             }
             const mouseup = () => {
-                $('#image-transform').toggleClass('active', $image.is('[style*="transform"]'));
+                imgTransformBtn.classList.toggle('active', $image[0].matches('[style*="transform"]'));
             };
             $(this.odooEditor.document).on('mouseup', mouseup);
             const mousedown = mousedownEvent => {
@@ -2013,6 +2037,7 @@ export class Wysiwyg extends Component {
                 }
                 if ($(mousedownEvent.target).closest('#image-transform').length) {
                     $image.data('transfo-destroy', true).attr('style', ($image.attr('style') || '').replace(/[^;]*transform[\w:]*;?/g, ''));
+                    imgTransformBtn.classList.remove('active');
                 }
                 $image.trigger('content_changed');
             };
@@ -2307,6 +2332,7 @@ export class Wysiwyg extends Component {
             for (const button of this.toolbarEl.querySelectorAll('#image-width div')) {
                 button.classList.toggle('active', e.target.style.width === button.id);
             }
+            this.toolbarEl.querySelector('#image-transform').classList.toggle('active', e.target.matches('[style*="transform"]'));
             this._updateMediaJustifyButton();
             this._updateFaResizeButtons();
         }
@@ -2896,14 +2922,25 @@ export class Wysiwyg extends Component {
         }
     }
     _onSelectionChange() {
-        if (this.odooEditor.autohideToolbar && this.linkPopover) {
+        if (this.linkPopover && this.isSelectionInEditable()) {
             const selectionInLink = getInSelection(this.odooEditor.document, 'a') === this.linkPopover.target;
             const isVisible = this.linkPopover.el.offsetParent;
-            if (isVisible && !selectionInLink) {
+            if (
+                isVisible &&
+                (
+                    (this.options.autohideToolbar && !this.odooEditor.document.getSelection().isCollapsed) ||
+                    !selectionInLink
+                )
+            ) {
                 this.linkPopover.hide();
             }
         }
     }
+
+    _getDelayBlurSelectors() {
+        return [".oe-toolbar", ".oe-powerbox-wrapper", ".o_we_crop_widget"];
+    }
+
     _onDocumentMousedown(e) {
         if (!e.target.classList.contains('o_editable_date_field_linked')) {
             this.$editable.find('.o_editable_date_field_linked').removeClass('o_editable_date_field_linked');
@@ -2911,7 +2948,7 @@ export class Wysiwyg extends Component {
         const closestDialog = e.target.closest('.o_dialog, .o_web_editor_dialog');
         if (
             e.target.closest("#oe_snippets") ||
-            e.target.closest('.oe-toolbar,.oe-powerbox-wrapper,.o_we_crop_widget') ||
+            e.target.closest(this._getDelayBlurSelectors().join(",")) ||
             (closestDialog && closestDialog.querySelector('.o_select_media_dialog, .o_link_dialog'))
         ) {
             this._shouldDelayBlur = true;

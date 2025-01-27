@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Abe Manyo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
@@ -157,6 +157,18 @@ msgstr "<span>Dibayar oleh:</span>"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
 msgid "<span>The total amount doesn't match the original amount.</span>"
 msgstr "<span>Jumlah total tidak cocok dengan jumlah original.</span>"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+msgid ""
+"A default outstanding account must be defined in the settings for company-"
+"paid expenses. Or specify one in the Journal for the %(method)s payment "
+"method."
+msgstr ""
+"Akun hutang default harus didefinisikan di pengaturan untuk pengeluaran yang"
+" dibayar perusahaan. Atau tentukan akun di Jurnal untuk metode pembayaran "
+"%(method)s."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__account_id
@@ -600,8 +612,8 @@ msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
-msgid "Default outstanding account for expenses paid by employees."
-msgstr "Akun hutang standar untuk pengeluaran yang dibayar oleh karyawan."
+msgid "Default outstanding account for expenses paid by company."
+msgstr "Akun hutang default untuk pengeluaran yang dibayar oleh perusahaan."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
@@ -709,11 +721,6 @@ msgid "Employee Expense Journal"
 msgstr "Jurnal Pengeluaran Karyawan"
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
-msgid "Employee Expense Oustanding Account"
-msgstr "Akun Piutang Pengeluaran Karyawan"
-
-#. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_account
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_account_employee_expenses
 msgid "Employee Expenses"
@@ -797,6 +804,11 @@ msgstr "Baris Pengeluaran Dapat Diedit Oleh User Saat Ini"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__expense_manager_id
 msgid "Expense Manager"
 msgstr "Manajer Pengeluaran"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "Expense Outstanding Account"
+msgstr "Akun Hutang Pengeluaran"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
@@ -1036,6 +1048,12 @@ msgstr "Hadiah"
 #: model_terms:product.template,description:hr_expense.expense_product_gift_product_template
 msgid "Gifts to customers or vendors"
 msgstr "Hadiah ke pelanggan atau vendor"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+msgid "Go to settings"
+msgstr "Pergi ke pengaturan"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1607,6 +1625,13 @@ msgstr "Tagihan telepon, ongkos kirim, dsb."
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 msgid ""
+"Please specify an expense journal in order to generate accounting entries."
+msgstr "Mohon tentukan jurnal pengeluaran agar dapat membuat entri akuntansi"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+msgid ""
 "Please specify if the expenses for this report were paid by the company, or "
 "the employee"
 msgstr ""
@@ -1884,12 +1909,6 @@ msgid "Show missing work email employees"
 msgstr "Tunjukkan karyawan yang kurang email kerja"
 
 #. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-msgid "Specify expense journal to generate accounting entries."
-msgstr "Tentukan jurnal pengeluaran untuk membuat entri-entri akuntansi."
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__accounting_date
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__accounting_date
 msgid "Specify the bill date of the related vendor bill."
@@ -2031,9 +2050,9 @@ msgstr "Approver TIm"
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_outstanding_account_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_outstanding_account_id
 msgid ""
-"The account used to record the outstanding amount of the employee expenses."
+"The account used to record the outstanding amount of the company expenses."
 msgstr ""
-"Akun yang digunakan untuk merekam jumlah hutang dari pengeluaran karyawan."
+"Akun yang digunakan untuk merekam jumlah hutang pengeluaran perusahaan."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
@@ -2078,16 +2097,6 @@ msgstr "Jurnal harus ditetapkan pada pengeluaran yang di-post"
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__employee_journal_id
 msgid "The journal used when the expense is paid by employee."
 msgstr "Jurnal yang digunakan saat pengeluaran dibayar oleh karyawan."
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-msgid ""
-"The payment method %(method)s needs an account, or a default outstanding "
-"account must be defined in the settings."
-msgstr ""
-"Metode pembayaran %(method)s membutuhkan akun, atau akun hutang standar "
-"harus didefinisikan di pengaturan."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__payment_method_line_id

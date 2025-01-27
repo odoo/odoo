@@ -769,15 +769,15 @@ class TestMailAliasMixin(TestMailAliasCommon):
         """ Various base checks on alias mixin behavior """
         self.assertEqual(self.env.company.alias_domain_id, self.mail_alias_domain)
 
-        record = self.env['mail.test.container'].create({
+        record = self.env['mail.test.gateway.groups'].create({
             'name': 'Test Record',
             'alias_name': 'alias.test',
             'alias_contact': 'followers',
         })
         self.assertEqual(record.alias_id.alias_domain_id, self.mail_alias_domain)
-        self.assertEqual(record.alias_id.alias_model_id, self.env['ir.model']._get('mail.test.container'))
+        self.assertEqual(record.alias_id.alias_model_id, self.env['ir.model']._get('mail.test.gateway.groups'))
         self.assertEqual(record.alias_id.alias_force_thread_id, record.id)
-        self.assertEqual(record.alias_id.alias_parent_model_id, self.env['ir.model']._get('mail.test.container'))
+        self.assertEqual(record.alias_id.alias_parent_model_id, self.env['ir.model']._get('mail.test.gateway.groups'))
         self.assertEqual(record.alias_id.alias_parent_thread_id, record.id)
         self.assertEqual(record.alias_id.alias_name, 'alias.test')
         self.assertEqual(record.alias_id.alias_contact, 'followers')
@@ -803,6 +803,13 @@ class TestMailAliasMixin(TestMailAliasCommon):
 
         with self.assertRaises(exceptions.ValidationError):
             record.write({'alias_defaults': "{'custom_field': brokendict"})
+
+        rec = self.env['mail.test.gateway.groups'].create({
+            'name': 'Test Record2',
+            'alias_name': 'alias.test',
+            'alias_domain_id': self.mail_alias_domain_c2.id,
+        })
+        self.assertEqual(rec.alias_id.alias_domain_id, self.mail_alias_domain_c2, "Should use the provided alias domain in priority")
 
     @users('erp_manager')
     def test_alias_mixin_alias_email(self):
@@ -890,7 +897,7 @@ class TestMailAliasMixin(TestMailAliasCommon):
             self.env.user.has_group('base.group_system'),
             'Test user should not have Administrator access')
 
-        record = self.env['mail.test.container'].create({
+        record = self.env['mail.test.gateway.groups'].create({
             'name': 'Test Record',
             'alias_name': 'test.record',
             'alias_contact': 'followers',

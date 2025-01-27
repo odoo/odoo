@@ -133,7 +133,7 @@ class Task(models.Model):
     @api.model
     def _read_group_stage_ids(self, stages, domain):
         search_domain = [('id', 'in', stages.ids)]
-        if 'default_project_id' in self.env.context and not self._context.get('subtask_action'):
+        if 'default_project_id' in self.env.context and not self._context.get('subtask_action') and 'project_kanban' in self.env.context:
             search_domain = ['|', ('project_ids', '=', self.env.context['default_project_id'])] + search_domain
 
         stage_ids = stages.sudo()._search(search_domain, order=stages._order)
@@ -216,8 +216,13 @@ class Task(models.Model):
     company_id = fields.Many2one('res.company', string='Company', compute='_compute_company_id', store=True, readonly=False, recursive=True, copy=True, default=_default_company_id)
     color = fields.Integer(string='Color Index', export_string_translation=False)
     rating_active = fields.Boolean(string='Project Rating Status', related="project_id.rating_active")
-    attachment_ids = fields.One2many('ir.attachment', compute='_compute_attachment_ids', string="Attachments that don't come from a message",
-        export_string_translation=False)
+    attachment_ids = fields.One2many(
+        'ir.attachment',
+        compute='_compute_attachment_ids',
+        string="Attachments",
+        export_string_translation=False,
+        help="Attachments that don't come from a message",
+    )
     # In the domain of displayed_image_id, we couln't use attachment_ids because a one2many is represented as a list of commands so we used res_model & res_id
     displayed_image_id = fields.Many2one('ir.attachment', domain="[('res_model', '=', 'project.task'), ('res_id', '=', id), ('mimetype', 'ilike', 'image')]", string='Cover Image')
 
@@ -961,7 +966,7 @@ class Task(models.Model):
         if project_id:
             project = self.env['project.project'].browse(project_id)
             if 'company_id' in default_fields and 'default_project_id' not in self.env.context:
-                vals['company_id'] = project.sudo().company_id
+                vals['company_id'] = project.sudo().company_id.id
         elif 'default_user_ids' not in self.env.context and 'user_ids' in default_fields:
             user_ids = vals.get('user_ids', [])
             user_ids.append(Command.link(self.env.user.id))
@@ -1274,6 +1279,8 @@ class Task(models.Model):
                         if not project_link:
                             project_link = link_per_project_id[task.project_id.id] = task.project_id._get_html_link(title=task.project_id.display_name)
                         project_link_per_task_id[task.id] = project_link
+        if vals.get('parent_id') is False:
+            vals['display_in_project'] = True
         result = super().write(vals)
         if portal_can_write:
             super(Task, self_no_sudo).write(vals_no_sudo)
@@ -1644,6 +1651,7 @@ class Task(models.Model):
         # found.
         create_context = dict(self.env.context or {})
         create_context['default_user_ids'] = False
+        create_context['mail_notify_author'] = True  # Allows sending stage updates to the author
         if custom_values is None:
             custom_values = {}
         # Auto create partner if not existant when the task is created from email

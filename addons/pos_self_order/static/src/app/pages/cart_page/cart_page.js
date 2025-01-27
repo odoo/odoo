@@ -140,7 +140,7 @@ export class CartPage extends Component {
         }
         increase ? line.qty++ : line.qty--;
         for (const cline of this.selfOrder.currentOrder.lines) {
-            if (cline.combo_parent_uuid === line.uuid) {
+            if (cline.combo_parent_id?.uuid === line.uuid) {
                 this._changeQuantity(cline, increase);
                 cline.setDirty();
             }

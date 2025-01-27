@@ -730,6 +730,8 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                 if mapped_validation_type[leave_type_id] == 'both':
                     self._check_double_validation_rules(employee_id, values.get('state', False))
 
+        if any(not vals.get('employee_id') for vals in vals_list):
+            raise UserError(_("There is no employee set on the time off. Please make sure you're logged in the correct company."))
         holidays = super(HolidaysRequest, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
         holidays._check_validity()
 
@@ -755,7 +757,8 @@ Attempting to double-book your time off won't magically make your vacation 2x be
     def write(self, values):
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.env.is_superuser()
         if not is_officer and values.keys() - {'attachment_ids', 'supported_attachment_ids', 'message_main_attachment_id'}:
-            if any(hol.date_from.date() < fields.Date.today() and hol.employee_id.leave_manager_id != self.env.user for hol in self):
+            if any(hol.date_from.date() < fields.Date.today() and hol.employee_id.leave_manager_id != self.env.user
+                   and hol.state not in ('confirm', 'draft') for hol in self):
                 raise UserError(_('You must have manager rights to modify/validate a time off that already begun'))
             if any(leave.state == 'cancel' for leave in self):
                 raise UserError(_('Only a manager can modify a canceled leave.'))
@@ -1057,6 +1060,8 @@ Attempting to double-book your time off won't magically make your vacation 2x be
 
         split_leaves.filtered(lambda l: l.state in 'validate')._validate_leave_request()
 
+        return split_leaves
+
     def action_validate(self, check_state=True):
         current_employee = self.env.user.employee_id
         leaves = self._get_leaves_on_public_holiday()
@@ -1255,7 +1260,8 @@ Attempting to double-book your time off won't magically make your vacation 2x be
 
     def _get_responsible_for_approval(self):
         self.ensure_one()
-        responsible = self.env.user
+
+        responsible = self.env['res.users']
         if self.validation_type == 'manager' or (self.validation_type == 'both' and self.state == 'confirm'):
             if self.employee_id.leave_manager_id:
                 responsible = self.employee_id.leave_manager_id
@@ -1267,6 +1273,9 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         return responsible
 
     def activity_update(self):
+        if self.env.context.get('mail_activity_automation_skip'):
+            return False
+
         to_clean, to_do, to_do_confirm_activity = self.env['hr.leave'], self.env['hr.leave'], self.env['hr.leave']
         activity_vals = []
         today = fields.Date.today()
@@ -1290,7 +1299,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                             leave_type=holiday.holiday_status_id.name,
                         )
                         to_do_confirm_activity |= holiday
-                    user_ids = holiday.sudo()._get_responsible_for_approval().ids or self.env.user.ids
+                    user_ids = holiday.sudo()._get_responsible_for_approval().ids
                     for user_id in user_ids:
                         date_deadline = (
                             (holiday.date_from -

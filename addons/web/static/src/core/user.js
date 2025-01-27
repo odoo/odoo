@@ -62,8 +62,12 @@ export function _makeUser(session) {
     };
     const getGroupCacheKey = (group) => group;
     const groupCache = new Cache(getGroupCacheValue, getGroupCacheKey);
-    groupCache.cache["base.group_user"] = Promise.resolve(isInternalUser);
-    groupCache.cache["base.group_system"] = Promise.resolve(isSystem);
+    if (isInternalUser !== undefined) {
+        groupCache.cache["base.group_user"] = Promise.resolve(isInternalUser);
+    }
+    if (isSystem !== undefined) {
+        groupCache.cache["base.group_system"] = Promise.resolve(isSystem);
+    }
     const getAccessRightCacheValue = (model, operation, ids, context) => {
         const url = `/web/dataset/call_kw/${model}/has_access`;
         return rpc(url, {

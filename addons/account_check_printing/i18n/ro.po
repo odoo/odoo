@@ -1,31 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_check_printing
-#
+# 
 # Translators:
-# Dorin Hongu <dhongu@gmail.com>, 2022
-# Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2022
-# Martin Trigaux, 2022
-# Foldi Robert <foldirobert@nexterp.ro>, 2022
-#
+# Lyall Kindmurr, 2024
+# Wil Odoo, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2022\n"
+"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
-"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ro\n"
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
-msgid ": Check Number Sequence"
+msgid "%(journal)s: Check Number Sequence"
+msgstr ""
+
+#. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
+msgid "<span>&amp;nbsp;</span>"
 msgstr ""
 
 #. module: account_check_printing
@@ -35,8 +38,12 @@ msgstr ""
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_left
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_right
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_top
-msgid "Adjust the margins of generated checks to make it fit your printer's settings."
-msgstr "Reglați marginile verificărilor generate pentru a se potrivi cu setările imprimantei."
+msgid ""
+"Adjust the margins of generated checks to make it fit your printer's "
+"settings."
+msgstr ""
+"Reglați marginile verificărilor generate pentru a se potrivi cu setările "
+"imprimantei."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_amount_in_words
@@ -49,6 +56,7 @@ msgid "Cancel"
 msgstr "Anulează"
 
 #. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__bank_check_printing_layout
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_layout
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_layout
 msgid "Check Layout"
@@ -104,9 +112,11 @@ msgid "Check to print"
 msgstr "Cec de tipărit"
 
 #. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
 #: model:account.payment.method,name:account_check_printing.account_payment_method_check
 msgid "Checks"
-msgstr "Cecuri"
+msgstr "Verificări"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_sequence_id
@@ -136,11 +146,6 @@ msgid "Config Settings"
 msgstr "Setări de configurare"
 
 #. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_res_partner
-msgid "Contact"
-msgstr "Contact"
-
-#. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_uid
 msgid "Created by"
 msgstr "Creat de"
@@ -148,7 +153,12 @@ msgstr "Creat de"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_date
 msgid "Created on"
-msgstr "Creat în"
+msgstr "Creat pe"
+
+#. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_journal_form_inherited
+msgid "Default"
+msgstr "Implicit"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__display_name
@@ -169,18 +179,17 @@ msgstr "ID"
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
-msgid "In order to print multiple checks at once, they must belong to the same bank journal."
-msgstr "Pentru a tipări mai multe cecuri simultan, acestea trebuie să aparțină aceluiași jurnal bancar."
+msgid ""
+"In order to print multiple checks at once, they must belong to the same bank"
+" journal."
+msgstr ""
+"Pentru a tipări mai multe cecuri simultan, acestea trebuie să aparțină "
+"aceluiași jurnal bancar."
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_journal
 msgid "Journal"
 msgstr "Jurnal"
-
-#. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_account_move
-msgid "Journal Entry"
-msgstr "Notă contabilă"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__write_uid
@@ -208,6 +217,12 @@ msgid ""
 "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
+"Manual: plătiți sau primiți plăți prin orice metodă în afara Odoo.\n"
+"Furnizori de plată: Fiecare furnizor de plată are propria sa Metodă de plată. Solicitați o tranzacție pe/pe un card datorită unui simbol de plată salvat de partener atunci când cumpărați sau vă abonați online.\n"
+"Cec: plătiți facturile prin cec și imprimați-l de la Odoo.\n"
+"Depunere în loturi: Colectați mai multe cecuri ale clienților simultan, generând și depunând o depunere în lot la banca dvs. Modulul account_batch_payment este necesar.\n"
+"Transfer de credit SEPA: plătiți în zona SEPA trimițând un fișier de transfer de credit SEPA la banca dumneavoastră. Modulul account_sepa este necesar.\n"
+"Debit direct SEPA: Fii plătit în zona SEPA datorită unui mandat pe care ți l-a acordat partenerul tău. Modulul account_sepa este necesar.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -235,10 +250,8 @@ msgstr "Fără"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__payment_method_line_id
-#: model:ir.model.fields,field_description:account_check_printing.field_res_partner__property_payment_method_id
-#: model:ir.model.fields,field_description:account_check_printing.field_res_users__property_payment_method_id
 msgid "Payment Method"
-msgstr "Metoda de plată"
+msgstr "Metodă de plată"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment_method
@@ -253,26 +266,21 @@ msgstr "Plăți"
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
-msgid "Payments to print as a checks must have 'Check' selected as payment method and not have already been reconciled"
-msgstr "Plățile de tipărit ca cecuri trebuie să aibă selectat 'Check' ca metodă de plată și să nu fi fost deja reconciliate"
+msgid ""
+"Payments to print as a checks must have 'Check' selected as payment method "
+"and not have already been reconciled"
+msgstr ""
+"Plățile de tipărit ca cecuri trebuie să aibă selectat 'Check' ca metodă de "
+"plată și să nu fi fost deja reconciliate"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
-msgid "Please enter the number of the first pre-printed check that you are about to print on."
-msgstr "Vă rugăm să introduceți numărul primului cec pre-tipărit pe care urmează să imprimați."
-
-#. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_bank_statement_line__preferred_payment_method_id
-#: model:ir.model.fields,field_description:account_check_printing.field_account_move__preferred_payment_method_id
-#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__preferred_payment_method_id
-msgid "Preferred Payment Method"
-msgstr "Metodă de plată preferată"
-
-#. module: account_check_printing
-#: model:ir.model.fields,help:account_check_printing.field_res_partner__property_payment_method_id
-#: model:ir.model.fields,help:account_check_printing.field_res_users__property_payment_method_id
-msgid "Preferred payment method when paying this vendor. This is used to filter vendor bills by preferred payment method to register payments in mass. Use cases: create bank files for batch wires, check runs."
-msgstr "Metoda de plată preferată la plata acestui furnizor. Aceasta este utilizată pentru a filtra facturile furnizorului prin metoda de plată preferată pentru a înregistra plățile în masă. Utilizați cazuri: creați fișiere bancare pentru firele lot, cecuri."
+msgid ""
+"Please enter the number of the first pre-printed check that you are about to"
+" print on."
+msgstr ""
+"Vă rugăm să introduceți numărul primului cec pre-tipărit pe care urmează să "
+"imprimați."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -304,11 +312,6 @@ msgid "Print Pre-numbered Checks"
 msgstr "Tipăriți cecuri numerotate în prealabil"
 
 #. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_account_payment_register
-msgid "Register Payment"
-msgstr "Înregistrează Plată"
-
-#. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right
 msgid "Right Margin"
 msgstr "Magine Dreapta"
@@ -336,13 +339,17 @@ msgstr "Numărul secvenței pentru următoarele cecuri tipărite."
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__show_check_number
 msgid "Show Check Number"
-msgstr ""
+msgstr "Afișați numărul de cec"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
-msgid "Something went wrong with Check Layout, please select another layout in Invoicing/Accounting Settings and try again."
-msgstr "A apărut o eroare la aspectul cecului, selectați un alt aspect din setările de facturare / contabilitate și încercați din nou."
+msgid ""
+"Something went wrong with Check Layout, please select another layout in "
+"Invoicing/Accounting Settings and try again."
+msgstr ""
+"A apărut o eroare la aspectul cecului, selectați un alt aspect din setările "
+"de facturare / contabilitate și încercați din nou."
 
 #. module: account_check_printing
 #. odoo-python
@@ -357,19 +364,33 @@ msgstr ""
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
-msgid "The last check number was %s. In order to avoid a check being rejected by the bank, you can only use a greater number."
-msgstr "Ultimul număr de cec a fost%s. Pentru a evita ca un cec să fie respins de bancă, puteți utiliza doar un număr mai mare."
+msgid ""
+"The last check number was %s. In order to avoid a check being rejected by "
+"the bank, you can only use a greater number."
+msgstr ""
+"Ultimul număr de cec a fost%s. Pentru a evita ca un cec să fie respins de "
+"bancă, puteți utiliza doar un număr mai mare."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_number
-msgid "The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers or if the current numbering is wrong, you can change it in the journal configuration page."
-msgstr "Jurnalul selectat este configurat pentru a imprima numerele de cec. Dacă hârtia dvs. de cec preimprimat are deja numere sau dacă numerotarea curentă este greșită, o puteți modifica în pagina de configurare a jurnalului."
+msgid ""
+"The selected journal is configured to print check numbers. If your pre-"
+"printed check paper already has numbers or if the current numbering is "
+"wrong, you can change it in the journal configuration page."
+msgstr ""
+"Jurnalul selectat este configurat pentru a imprima numerele de cec. Dacă "
+"hârtia dvs. de cec preimprimat are deja numere sau dacă numerotarea curentă "
+"este greșită, o puteți modifica în pagina de configurare a jurnalului."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_multi_stub
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
-msgid "This option allows you to print check details (stub) on multiple pages if they don't fit on a single page."
-msgstr "Această opțiune vă permite să imprimați detalii de cec (stub) pe mai multe pagini dacă acestea nu se potrivesc pe o singură pagină."
+msgid ""
+"This option allows you to print check details (stub) on multiple pages if "
+"they don't fit on a single page."
+msgstr ""
+"Această opțiune vă permite să imprimați detalii de cec (stub) pe mai multe "
+"pagini dacă acestea nu se potrivesc pe o singură pagină."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
@@ -383,8 +404,11 @@ msgstr ""
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
-msgid "This will allow to save on payments the number of the corresponding check."
-msgstr "Acest lucru va permite să economisiți la plăți numărul cecului corespunzător."
+msgid ""
+"This will allow to save on payments the number of the corresponding check."
+msgstr ""
+"Acest lucru va permite să economisiți la plăți numărul cecului "
+"corespunzător."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
@@ -399,5 +423,9 @@ msgstr "Cec Nul"
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
-msgid "You have to choose a check layout. For this, go in Invoicing/Accounting Settings, search for 'Checks layout' and set one."
-msgstr "Trebuie să alegeți un aspect de cec. Pentru aceasta, accesați Setări de facturare / contabilitate, căutați 'Checks Layout' și setați unul."
+msgid ""
+"You have to choose a check layout. For this, go in Invoicing/Accounting "
+"Settings, search for 'Checks layout' and set one."
+msgstr ""
+"Trebuie să alegeți un aspect de cec. Pentru aceasta, accesați Setări de "
+"facturare / contabilitate, căutați 'Checks Layout' și setați unul."

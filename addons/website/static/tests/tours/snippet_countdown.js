@@ -21,10 +21,7 @@ registerWebsitePreviewTour('snippet_countdown', {
     {
         content: "Hover an option which has a preview",
         trigger: '[data-select-class="o_half_screen_height"]',
-        run() {
-            this.anchor.dispatchEvent(new MouseEvent("mouseover", {bubbles: true}));
-            this.anchor.dispatchEvent(new MouseEvent("mouseenter"));
-        },
+        run: "hover",
     },
     {
         content: "Check that the countdown message is still displayed",

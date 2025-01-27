@@ -247,7 +247,8 @@ test("Backspace do nothing when the input is currently edited", async () => {
 });
 
 // Desktop only because a kanban view is used instead of a list in mobile
-test.tags("desktop")("Can pass domain to search more", async () => {
+test.tags("desktop");
+test("Can pass domain to search more", async () => {
     Partner._records.push(
         { id: 4, name: "David" },
         { id: 5, name: "Eve" },

@@ -31,7 +31,7 @@ registry.category("web_tour.tours").add('shop_zoom', {
     },
     {
         content: "change variant",
-        trigger: 'input[data-attribute_name="Beautiful Color"][data-value_name="' + nameGreen + '"]',
+        trigger: `input[data-attribute_name='Beautiful Color'][data-value_name='${nameGreen}']:not(:visible)`,
         run: 'click',
     },
     {

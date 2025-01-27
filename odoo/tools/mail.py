@@ -101,6 +101,7 @@ class _Cleaner(clean.Cleaner):
 
     strip_classes = False
     sanitize_style = False
+    conditional_comments = True
 
     def __call__(self, doc):
         super(_Cleaner, self).__call__(doc)
@@ -132,6 +133,24 @@ class _Cleaner(clean.Cleaner):
                 el.attrib['style'] = '; '.join('%s:%s' % (key, val) for (key, val) in valid_styles.items())
             else:
                 del el.attrib['style']
+
+    def kill_conditional_comments(self, doc):
+        """Override the default behavior of lxml.
+
+        https://github.com/lxml/lxml/blob/e82c9153c4a7d505480b94c60b9a84d79d948efb/src/lxml/html/clean.py#L501-L510
+
+        In some use cases, e.g. templates used for mass mailing,
+        we send emails containing conditional comments targeting Microsoft Outlook,
+        to give special styling instructions.
+        https://github.com/odoo/odoo/pull/119325/files#r1301064789
+
+        Within these conditional comments, unsanitized HTML can lie.
+        However, in modern browser, these comments are considered as simple comments,
+        their content is not executed.
+        https://caniuse.com/sr_ie-features
+        """
+        if self.conditional_comments:
+            super().kill_conditional_comments(doc)
 
 
 def tag_quote(el):
@@ -170,7 +189,6 @@ def tag_quote(el):
 
     # gmail or yahoo // # outlook, html // # msoffice
     if 'gmail_extra' in el_class or \
-            'divRplyFwdMsg' in el_id or \
             ('SkyDrivePlaceholder' in el_class or 'SkyDrivePlaceholder' in el_class):
         el.set('data-o-mail-quote', '1')
         if el.getparent() is not None:
@@ -182,6 +200,32 @@ def tag_quote(el):
         el.set('data-o-mail-quote', '1')
         for sibling in el.itersiblings(preceding=False):
             sibling.set('data-o-mail-quote', '1')
+
+    # odoo, gmail and outlook automatic signature wrapper
+    is_signature_wrapper = 'odoo_signature_wrapper' in el_class or 'gmail_signature' in el_class or el_id == "Signature"
+    is_outlook_auto_message = 'appendonsend' in el_id
+    # gmail and outlook reply quote
+    is_outlook_reply_quote = 'divRplyFwdMsg' in el_id
+    is_gmail_quote = 'gmail_quote' in el_class
+    is_quote_wrapper = is_signature_wrapper or is_gmail_quote or is_outlook_reply_quote
+    if is_quote_wrapper:
+        el.set('data-o-mail-quote-container', '1')
+        el.set('data-o-mail-quote', '1')
+
+    # outlook reply wrapper is preceded with <hr> and a div containing recipient info
+    if is_outlook_reply_quote:
+        hr = el.getprevious()
+        reply_quote = el.getnext()
+        if hr is not None and hr.tag == 'hr':
+            hr.set('data-o-mail-quote', '1')
+        if reply_quote is not None:
+            reply_quote.set('data-o-mail-quote-container', '1')
+            reply_quote.set('data-o-mail-quote', '1')
+
+    if is_outlook_auto_message:
+        if not el.text or not el.text.strip():
+            el.set('data-o-mail-quote-container', '1')
+            el.set('data-o-mail-quote', '1')
 
     # html signature (-- <br />blah)
     signature_begin = re.compile(r"((?:(?:^|\n)[-]{2}[\s]?$))")
@@ -199,11 +243,23 @@ def tag_quote(el):
         # remove single node
         el.set('data-o-mail-quote-node', '1')
         el.set('data-o-mail-quote', '1')
-    if el.getparent() is not None and (el.getparent().get('data-o-mail-quote') or el.getparent().get('data-o-mail-quote-container')) and not el.getparent().get('data-o-mail-quote-node'):
+    if el.getparent() is not None and not el.getparent().get('data-o-mail-quote-node'):
+        if el.getparent().get('data-o-mail-quote'):
+            el.set('data-o-mail-quote', '1')
+        # only quoting the elements following the first quote in the container
+        # avoids issues with repeated calls to html_normalize
+        elif el.getparent().get('data-o-mail-quote-container'):
+            if (first_sibling_quote := el.getparent().find("*[@data-o-mail-quote]")) is not None:
+                siblings = el.getparent().getchildren()
+                quote_index = siblings.index(first_sibling_quote)
+                element_index = siblings.index(el)
+                if quote_index < element_index:
+                    el.set('data-o-mail-quote', '1')
+    if el.getprevious() is not None and el.getprevious().get('data-o-mail-quote') and not el.text_content().strip():
         el.set('data-o-mail-quote', '1')
 
 
-def html_normalize(src, filter_callback=None):
+def html_normalize(src, filter_callback=None, output_method="html"):
     """ Normalize `src` for storage as an html field value.
 
     The string is parsed as an html tag soup, made valid, then decorated for
@@ -216,12 +272,14 @@ def html_normalize(src, filter_callback=None):
     :param filter_callback: optional callable taking a single `etree._Element`
         document parameter, to be called during normalization in order to
         filter the output document
+    :param output_method: defines the output method to pass to `html.tostring`.
+        It defaults to 'html', but can also be 'xml' for xhtml output.
     """
     if not src:
         return src
 
     # html: remove encoding attribute inside tags
-    src = re.sub(r'(<[^>]*\s)(encoding=(["\'][^"\']*?["\']|[^\s\n\r>]+)(\s[^>]*|/)?>)', "", src, re.IGNORECASE | re.DOTALL)
+    src = re.sub(r'(<[^>]*\s)(encoding=(["\'][^"\']*?["\']|[^\s\n\r>]+)(\s[^>]*|/)?>)', "", src, flags=re.IGNORECASE | re.DOTALL)
 
     src = src.replace('--!>', '-->')
     src = re.sub(r'(<!-->|<!--->)', '<!-- -->', src)
@@ -245,7 +303,7 @@ def html_normalize(src, filter_callback=None):
     if filter_callback:
         doc = filter_callback(doc)
 
-    src = html.tostring(doc, encoding='unicode')
+    src = html.tostring(doc, encoding='unicode', method=output_method)
 
     # this is ugly, but lxml/etree tostring want to put everything in a
     # 'div' that breaks the editor -> remove that
@@ -258,7 +316,7 @@ def html_normalize(src, filter_callback=None):
     return src
 
 
-def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=False, sanitize_style=False, sanitize_form=True, strip_style=False, strip_classes=False):
+def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=False, sanitize_style=False, sanitize_form=True, sanitize_conditional_comments=True, strip_style=False, strip_classes=False, output_method="html"):
     if not src:
         return src
 
@@ -272,6 +330,7 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
             'forms': sanitize_form,            # True = remove form tags
             'remove_unknown_tags': False,
             'comments': False,
+            'conditional_comments': sanitize_conditional_comments,   # True = remove conditional comments
             'processing_instructions': False
         }
         if sanitize_tags:
@@ -297,7 +356,7 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
         return doc
 
     try:
-        sanitized = html_normalize(src, filter_callback=sanitize_handler)
+        sanitized = html_normalize(src, filter_callback=sanitize_handler, output_method=output_method)
     except etree.ParserError:
         if not silent:
             raise
@@ -345,6 +404,7 @@ def is_html_empty(html_content):
     tag_re = r'<\s*\/?(?:p|div|section|span|br|b|i|font)\b(?:(\s+[A-Za-z_-][A-Za-z0-9-_]*(\s*=\s*[\'"][^"\']*[\'"]))*)(?:\s*>|\s*\/\s*>)'
     return not bool(re.sub(tag_re, '', html_content).strip()) and not re.search(icon_re, html_content)
 
+
 def html_keep_url(text):
     """ Transform the url into clickable link with <a/> tag """
     idx = 0
@@ -352,7 +412,7 @@ def html_keep_url(text):
     link_tags = re.compile(r"""(?<!["'])((ftp|http|https):\/\/(\w+:{0,1}\w*@)?([^\s<"']+)(:[0-9]+)?(\/|\/([^\s<"']))?)(?![^\s<"']*["']|[^\s<"']*</a>)""")
     for item in re.finditer(link_tags, text):
         final += text[idx:item.start()]
-        final += '<a href="%s" target="_blank" rel="noreferrer noopener">%s</a>' % (item.group(0), item.group(0))
+        final += create_link(item.group(0), item.group(0))
         idx = item.end()
     final += text[idx:]
     return final
@@ -374,10 +434,16 @@ def html_to_inner_content(html):
     return processed
 
 
-def html2plaintext(html, body_id=None, encoding='utf-8'):
+def create_link(url, label):
+    return f'<a href="{url}" target="_blank" rel="noreferrer noopener">{label}</a>'
+
+
+def html2plaintext(html, body_id=None, encoding='utf-8', include_references=True):
     """ From an HTML text, convert the HTML to plain text.
     If @param body_id is provided then this is the tag where the
     body (not necessarily <body>) starts.
+    :param include_references: If False, numbered references and
+        URLs for links and images will not be included.
     """
     ## (c) Fry-IT, www.fry-it.com, 2007
     ## <peter@fry-it.com>
@@ -401,18 +467,19 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
 
     url_index = []
     linkrefs = itertools.count(1)
-    for link in tree.findall('.//a'):
-        if url := link.get('href'):
-            link.tag = 'span'
-            link.text = f'{link.text} [{next(linkrefs)}]'
-            url_index.append(url)
+    if include_references:
+        for link in tree.findall('.//a'):
+            if url := link.get('href'):
+                link.tag = 'span'
+                link.text = f'{link.text} [{next(linkrefs)}]'
+                url_index.append(url)
 
-    for img in tree.findall('.//img'):
-        if src := img.get('src'):
-            img.tag = 'span'
-            img_name = re.search(r'[^/]+(?=\.[a-zA-Z]+(?:\?|$))', src)
-            img.text = '%s [%s]' % (img_name[0] if img_name else 'Image', next(linkrefs))
-            url_index.append(src)
+        for img in tree.findall('.//img'):
+            if src := img.get('src'):
+                img.tag = 'span'
+                img_name = re.search(r'[^/]+(?=\.[a-zA-Z]+(?:\?|$))', src)
+                img.text = '%s [%s]' % (img_name[0] if img_name else 'Image', next(linkrefs))
+                url_index.append(src)
 
     html = etree.tostring(tree, encoding="unicode")
     # \r char is converted into &#13;, must remove it
@@ -622,6 +689,14 @@ def email_split_and_format(text):
         return []
     return [formataddr((name, email)) for (name, email) in email_split_tuples(text)]
 
+def email_split_and_format_normalize(text):
+    """ Same as 'email_split_and_format' but normalizing email. """
+    return [
+        formataddr(
+            (name, _normalize_email(email))
+        ) for (name, email) in email_split_tuples(text)
+    ]
+
 def email_normalize(text, strict=True):
     """ Sanitize and standardize email address entries. As of rfc5322 section
     3.4.1 local-part is case-sensitive. However most main providers do consider
@@ -657,15 +732,7 @@ def email_normalize(text, strict=True):
     if not emails or (strict and len(emails) != 1):
         return False
 
-    local_part, at, domain = emails[0].rpartition('@')
-    try:
-        local_part.encode('ascii')
-    except UnicodeEncodeError:
-        pass
-    else:
-        local_part = local_part.lower()
-
-    return local_part + at + domain.lower()
+    return _normalize_email(emails[0])
 
 def email_normalize_all(text):
     """ Tool method allowing to extract email addresses from a text input and returning
@@ -679,7 +746,37 @@ def email_normalize_all(text):
     if not text:
         return []
     emails = email_split(text)
-    return list(filter(None, [email_normalize(email) for email in emails]))
+    return list(filter(None, [_normalize_email(email) for email in emails]))
+
+def _normalize_email(email):
+    """ As of rfc5322 section 3.4.1 local-part is case-sensitive. However most
+    main providers do consider the local-part as case insensitive. With the
+    introduction of smtp-utf8 within odoo, this assumption is certain to fall
+    short for international emails. We now consider that
+
+      * if local part is ascii: normalize still 'lower' ;
+      * else: use as it, SMTP-UF8 is made for non-ascii local parts;
+
+    Concerning domain part of the address, as of v14 international domain (IDNA)
+    are handled fine. The domain is always lowercase, lowering it is fine as it
+    is probably an error. With the introduction of IDNA, there is an encoding
+    that allow non-ascii characters to be encoded to ascii ones, using 'idna.encode'.
+
+    A normalized email is considered as :
+    - having a left part + @ + a right part (the domain can be without '.something')
+    - having no name before the address. Typically, having no 'Name <>'
+    Ex:
+    - Possible Input Email : 'Name <NaMe@DoMaIn.CoM>'
+    - Normalized Output Email : 'name@domain.com'
+    """
+    local_part, at, domain = email.rpartition('@')
+    try:
+        local_part.encode('ascii')
+    except UnicodeEncodeError:
+        pass
+    else:
+        local_part = local_part.lower()
+    return local_part + at + domain.lower()
 
 def email_domain_extract(email):
     """ Extract the company domain to be used by IAP services notably. Domain
@@ -762,7 +859,6 @@ def formataddr(pair, charset='utf-8'):
             return f'"{name}" <{local}@{domain}>'
     return f"{local}@{domain}"
 
-
 def encapsulate_email(old_email, new_email):
     """Change the FROM of the message and use the old one as name.
 
@@ -816,3 +912,14 @@ def parse_contact_from_email(text):
         name, email_normalized = text, ''
 
     return name, email_normalized
+
+def unfold_references(msg_references):
+    """ As it declared in [RFC2822] long header bodies can be "folded" using
+    CRLF+WSP. Some mail clients split References header body which contains
+    Message Ids by "\n ".
+
+    RFC2882: https://tools.ietf.org/html/rfc2822#section-2.2.3 """
+    return [
+        re.sub(r'[\r\n\t ]+', r'', ref)  # "Unfold" buggy references
+        for ref in mail_header_msgid_re.findall(msg_references)
+    ]

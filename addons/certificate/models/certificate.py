@@ -185,22 +185,15 @@ class Certificate(models.Model):
 
                 try:
                     common_name = cert.subject.get_attributes_for_oid(x509.NameOID.COMMON_NAME)
+                    certificate.subject_common_name = common_name[0].value if common_name else ""
                 except ValueError:
-                    certificate.pem_certificate = None
                     certificate.subject_common_name = None
-                    certificate.content_format = None
-                    certificate.date_start = None
-                    certificate.date_end = None
-                    certificate.serial_number = None
-                    certificate.loading_error = _("The certificate subject field contains invalid characters. Make sure all characters are unicode valid.")
-                    continue
 
                 certificate.loading_error = ""
 
                 # Extract certificate data
                 certificate.pem_certificate = base64.b64encode(cert.public_bytes(Encoding.PEM))
                 certificate.serial_number = cert.serial_number
-                certificate.subject_common_name = common_name and common_name[0].value or ""
                 if parse_version(metadata.version('cryptography')) < parse_version('42.0.0'):
                     certificate.date_start = cert.not_valid_before
                     certificate.date_end = cert.not_valid_after
@@ -298,7 +291,7 @@ class Certificate(models.Model):
             return (self.public_key_id or self.private_key_id)._get_public_key_numbers_bytes(formatting=formatting)
 
         # When no keys are set to the certificate, use the self-contained public key from the content
-        return self.env['certificate.key']._get_public_key_numbers_bytes_with_key(
+        return self.env['certificate.key']._numbers_public_key_bytes_with_key(
             self._get_public_key_bytes(encoding='pem'),
             formatting=formatting,
         )

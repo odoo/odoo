@@ -162,7 +162,7 @@ class MailActivityMixin(models.AbstractModel):
 
         search_states_int = {integer_state_value.get(s or False) for s in search_states}
 
-        self.env['mail.activity'].flush_model(['active', 'date_deadline', 'res_model', 'user_id'])
+        self.env['mail.activity'].flush_model(['active', 'date_deadline', 'res_model', 'user_id', 'user_tz'])
         query = SQL(
             """(
             SELECT res_id

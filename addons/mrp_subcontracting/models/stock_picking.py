@@ -144,6 +144,9 @@ class StockPicking(models.Model):
         })
         product = subcontract_move.product_id
         warehouse = self._get_warehouse(subcontract_move)
+        subcontracting_location = \
+            subcontract_move.picking_id.partner_id.with_company(subcontract_move.company_id).property_stock_subcontractor \
+            or subcontract_move.company_id.subcontracting_location_id
         vals = {
             'company_id': subcontract_move.company_id.id,
             'procurement_group_id': group.id,
@@ -152,8 +155,8 @@ class StockPicking(models.Model):
             'product_id': product.id,
             'product_uom_id': subcontract_move.product_uom.id,
             'bom_id': bom.id,
-            'location_src_id': subcontract_move.picking_id.partner_id.with_company(subcontract_move.company_id).property_stock_subcontractor.id,
-            'location_dest_id': subcontract_move.picking_id.partner_id.with_company(subcontract_move.company_id).property_stock_subcontractor.id,
+            'location_src_id': subcontracting_location.id,
+            'location_dest_id': subcontracting_location.id,
             'product_qty': subcontract_move.product_uom_qty or subcontract_move.quantity,
             'picking_type_id': warehouse.subcontracting_type_id.id,
             'date_start': subcontract_move.date - relativedelta(days=bom.produce_delay)

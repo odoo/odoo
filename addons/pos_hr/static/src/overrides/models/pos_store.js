@@ -37,11 +37,6 @@ patch(PosStore.prototype, {
             super.checkPreviousLoggedCashier(...arguments);
         }
     },
-    async actionAfterIdle() {
-        if (this.mainScreen.component?.name !== "LoginScreen") {
-            return super.actionAfterIdle();
-        }
-    },
     async afterProcessServerData() {
         await super.afterProcessServerData(...arguments);
         if (this.config.module_pos_hr) {
@@ -141,5 +136,11 @@ patch(PosStore.prototype, {
             return super.shouldShowOpeningControl(...arguments) && this.hasLoggedIn;
         }
         return super.shouldShowOpeningControl(...arguments);
+    },
+    async allowProductCreation() {
+        if (this.config.module_pos_hr) {
+            return this.employeeIsAdmin;
+        }
+        return await super.allowProductCreation();
     },
 });

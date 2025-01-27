@@ -1,8 +1,9 @@
-import { expect } from "@odoo/hoot";
+import { before, expect } from "@odoo/hoot";
 import { queryAllTexts, queryOne } from "@odoo/hoot-dom";
+import { contains, findComponent, preloadBundle } from "@web/../tests/web_test_helpers";
 
-import { contains, findComponent } from "@web/../tests/web_test_helpers";
 import { ensureArray } from "@web/core/utils/arrays";
+import { patch } from "@web/core/utils/patch";
 import { GraphController } from "@web/views/graph/graph_controller";
 import { GraphRenderer } from "@web/views/graph/graph_renderer";
 
@@ -196,4 +197,16 @@ export async function clickOnLegend(view, text) {
         y: top + height / 2,
     };
     return contains(chart.canvas).click({ position: point, relative: true });
+}
+
+/**
+ * Helper to call at the start of a test suite using the Chart.js lib.
+ *
+ * It will:
+ * - pre-load the Chart.js lib before tests are run;
+ * - disable all animations in the lib.
+ */
+export function setupChartJsForTests() {
+    preloadBundle("web.chartjs_lib");
+    before(() => patch(Chart.defaults, { animation: false }));
 }

@@ -19,6 +19,16 @@
     }
 }
 
+.o-mail-NotificationItem-avatarContainer {
+    height: 40px;
+    aspect-ratio: 1;
+    margin-top: map-get($spacers, 1) / 2;
+    margin-bottom: map-get($spacers, 1) / 2;
+
+    &.o-small {
+        margin: map-get($spacers, 1);
+    }
+}
 
 .o-mail-NotificationItem-badge {
     padding: 3px 6px !important;
@@ -40,13 +50,23 @@
     }
 }
 
-.o-mail-NotificationItem-text:before {
-    // invisible character so that typing status bar has constant height, regardless of text content.
-    content: "\200b"; /* unicode zero width space character */
+.o-mail-NotificationItem-text {
+    font-family: "text-emoji", $font-family-base;
+
+    &:before {
+        // invisible character so that typing status bar has constant height, regardless of text content.
+        content: "\200b"; /* unicode zero width space character */
+    }
 }
 
 .o-mail-NotificationItem-unreadIndicator {
     color: darken($info, 5%);
     font-size: 0.5rem;
-    left: map-get($spacers, 2);
+    left: map-get($spacers, 1);
+    top: 40px;
+    transform: translateY(-125%);
+
+    .o-mail-NotificationItem.o-small & {
+        left: map-get($spacers, 1) / 2;
+    }
 }

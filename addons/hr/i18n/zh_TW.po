@@ -3,16 +3,16 @@
 # 	* hr
 # 
 # Translators:
-# Wil Odoo, 2024
-# Tony Ng, 2024
+# Wil Odoo, 2025
+# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Tony Ng, 2024\n"
+"Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,12 +68,7 @@ msgstr "1 電話"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "12 days / year, including <br>6 of your choice."
-msgstr "12 天/年，包括<br>6 任你選擇。"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "12345678901"
-msgstr "12345678901"
+msgstr "每年 12 天，包括 <br>6 天由你選擇。"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -103,7 +98,7 @@ msgstr "面試後 4 天"
 msgid ""
 "<b>Congratulations!</b> May I recommend you to setup an <a "
 "href=\"%s\">onboarding plan?</a>"
-msgstr "<b>恭喜你！</b>我可以協助您設置<a href=\"%s\">到職計畫嗎？</a>"
+msgstr "<b>恭喜！</b>現在，你需要設置<a href=\"%s\">入職計劃</a>嗎？"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -136,12 +131,12 @@ msgstr "<small><b>讀取</b></small>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"flex-shrink-0 ml8 me-2\">IP Addresses</span>"
-msgstr ""
+msgstr "<span class=\"flex-shrink-0 ml8 me-2\">IP 位址</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"flex-shrink-0 ml8 me-2\">Sent Emails</span>"
-msgstr ""
+msgstr "<span class=\"flex-shrink-0 ml8 me-2\">已傳送電郵</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
@@ -286,7 +281,7 @@ msgstr "需要採取行動"
 #: model_terms:digest.tip,tip_description:hr.digest_tip_hr_0
 msgid ""
 "Activate Remote Work to let Employees specify where they are working from."
-msgstr ""
+msgstr "啟動遙距工作功能，讓員工指定自己的工作地點。"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__active
@@ -415,7 +410,7 @@ msgstr "管理員"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_presence
 msgid "Advanced Presence Control"
-msgstr "高級狀態控制"
+msgstr "進階出勤管理"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -620,6 +615,11 @@ msgid "Bank Account"
 msgstr "銀行帳戶"
 
 #. module: hr
+#: model:ir.model,name:hr.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "銀行帳戶"
+
+#. module: hr
 #: model:ir.model,name:hr.model_base
 msgid "Base"
 msgstr "計稅基數"
@@ -697,12 +697,12 @@ msgstr "聊天"
 #. module: hr
 #: model:hr.job,name:hr.job_ceo
 msgid "Chief Executive Officer"
-msgstr "首席執行官"
+msgstr "行政總裁"
 
 #. module: hr
 #: model:hr.job,name:hr.job_cto
 msgid "Chief Technical Officer"
-msgstr "首席技術官"
+msgstr "技術總監"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__child_ids
@@ -818,7 +818,7 @@ msgstr "配置"
 #. module: hr
 #: model:hr.job,name:hr.job_consultant
 msgid "Consultant"
-msgstr "主辦會計"
+msgstr "顧問"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_partner
@@ -997,12 +997,12 @@ msgstr "預設離職原因無法刪除."
 msgid ""
 "Define the allowed IP to be displayed as Present. In case of multiple "
 "addresses, separate them by a coma."
-msgstr ""
+msgstr "定義允許哪些 IP 位址以顯示為「出席」。如果有多個位址，請用逗號分隔它們。"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Define the minimum number of sent emails to be displayed as Present."
-msgstr ""
+msgstr "定義要顯示為「出席」的已傳送電郵的最小數量。"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__resource_calendar_id
@@ -1166,6 +1166,12 @@ msgid ""
 msgstr "顯示每位員工的遠程工作設置和專用報告。存在圖標將更新為遠程工作位置。"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Divorced"
+msgstr "離異"
+
+#. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__doctor
 msgid "Doctor"
 msgstr "博士"
@@ -1190,6 +1196,11 @@ msgid ""
 "                            Several activities are often organized all over the year, such as weekly\n"
 "                            sports sessions, team building events, monthly drink, and much more."
 msgstr ""
+"每個員工都有機會看到自己工作的影響。\n"
+"                            你可以為公司的成功，作出真正的貢獻。\n"
+"                            <br>\n"
+"                            全年通常會舉辦多項活動，\n"
+"                            例如每週運動時段、團隊建設活動、每月飲酒等等。"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1536,7 +1547,7 @@ msgstr "提供更多封存該員工的詳細原因。"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Google Adwords experience"
-msgstr "google Adwords 體驗"
+msgstr "Google Adwords 經驗"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__graduate
@@ -1575,7 +1586,7 @@ msgstr "人力資源員工：檢查工作簽證的有效性"
 #. odoo-javascript
 #: code:addons/hr/static/src/components/hr_presence_status/hr_presence_status.js:0
 msgid "HR Presence Status"
-msgstr "人力資源存在狀態"
+msgstr "人力資源出勤狀態"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1642,7 +1653,7 @@ msgstr "小時圖示顯示"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_manager_department_report
 msgid "Hr Manager Department Report"
-msgstr ""
+msgstr "人力資源經理部門報告"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_presence_state
@@ -1650,7 +1661,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__hr_presence_state
 #: model:ir.model.fields,field_description:hr.field_res_users__hr_presence_state
 msgid "Hr Presence State"
-msgstr "Hr 出席狀態"
+msgstr "人力資源出勤狀態"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -1944,6 +1955,12 @@ msgid "Lead the entire sales cycle"
 msgstr "帶領整個銷售循環"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Legal Cohabitant"
+msgstr "法定同居人"
+
+#. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Let's create a job position."
 msgstr "讓我們建立一個工作職位."
@@ -2016,11 +2033,6 @@ msgid "Manager of employee %s is not set."
 msgstr "未設置員工 %s 的經理。"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "Marc Demo"
-msgstr "Marc Demo"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
 #: model:ir.model.fields,field_description:hr.field_res_users__marital
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2031,6 +2043,12 @@ msgstr "婚姻狀況"
 #: model:hr.job,name:hr.job_marketing
 msgid "Marketing and Community Manager"
 msgstr "市場及社區經理"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Married"
+msgstr "已婚"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__master
@@ -2197,7 +2215,7 @@ msgstr "擇優條件"
 #: code:addons/hr/static/src/views/hr_graph_controller.xml:0
 #: code:addons/hr/static/src/views/hr_pivot_controller.xml:0
 msgid "No Data"
-msgstr ""
+msgstr "沒有資料"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_view_categ_form
@@ -2313,6 +2331,8 @@ msgid ""
 "that loop is linked to a user.                        Please double-check "
 "that everyone reports to the correct manager."
 msgstr ""
+"哎唷！你的團隊結構似乎有問題。                        我們發現了一個循環報告的迴圈，而且當中沒有人連結至使用者帳戶。"
+"                        請仔細檢查，確保每個人都是向正確的經理報告。"
 
 #. module: hr
 #. odoo-javascript
@@ -2540,12 +2560,12 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence Condition"
-msgstr ""
+msgstr "出勤狀況"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence Display"
-msgstr ""
+msgstr "出勤情況顯示"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -2900,7 +2920,7 @@ msgstr "序列號"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Set default company schedule to manage your employees working time"
-msgstr "設置預設公司計畫以管理員工工作時間"
+msgstr "設置預設公司計劃，以管理員工工作時間"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_config_settings_action
@@ -2931,6 +2951,12 @@ msgid "Show employees"
 msgstr "顯示員工"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Single"
+msgstr "單身"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_skills
 msgid "Skills Management"
 msgstr "技能管理"
@@ -2945,11 +2971,6 @@ msgstr "社會保險號"
 #: model:ir.model.fields,help:hr.field_res_users__ssnid
 msgid "Social Security Number"
 msgstr "社會保障號"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
-msgid "Software Developer"
-msgstr "軟件開發員"
 
 #. module: hr
 #. odoo-python
@@ -3046,6 +3067,8 @@ msgid ""
 "Structure Employees per department and have an overview of e.g.\n"
 "                    expenses, timesheets, time off, recruitment, etc."
 msgstr ""
+"將員工按部門分類，概覽所有人力資源概況，\n"
+"                    例如開支報銷、工時表、休假、招聘等。"
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_student
@@ -3105,8 +3128,10 @@ msgstr "臨時工"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
-msgid "The Badge ID must be a sequence of digits."
-msgstr "識別證編號必須是一串數字。"
+msgid ""
+"The Badge ID must be alphanumeric without any accents and no longer than 18 "
+"characters."
+msgstr "識別證編號必須是沒有任何變音符號的英數字元，長度不可超過 18 個字元。"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
@@ -3146,7 +3171,7 @@ msgstr "密碼必須是一串數字序列。"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "The default working hours are set in configuration."
-msgstr ""
+msgstr "預設工時數目可在配置中設定。"
 
 #. module: hr
 #. odoo-python
@@ -3211,7 +3236,7 @@ msgstr "%(employee)s 的工作簽證將於 %(date)s 到期。"
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_thesis
 msgid "Thesis"
-msgstr ""
+msgstr "畢業論文"
 
 #. module: hr
 #. odoo-python
@@ -3235,12 +3260,12 @@ msgstr "此欄位用於定義員工在哪個時區工作。"
 msgid ""
 "This report gives you an overview of your employees based on the measures of"
 " your choice."
-msgstr ""
+msgstr "此報告可根據你選擇的量度標準，提供員工資料概覽。"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "This setting block is utilized to manage the frontend design."
-msgstr ""
+msgstr "此設定區塊是用於管理前端介面的設計。"
 
 #. module: hr
 #. odoo-python
@@ -3259,7 +3284,7 @@ msgstr "時區"
 #: model:digest.tip,name:hr.digest_tip_hr_0
 #: model_terms:digest.tip,tip_description:hr.digest_tip_hr_0
 msgid "Tip: Where's Bryan?"
-msgstr ""
+msgstr "提示：小張去了哪裏？"
 
 #. module: hr
 #. odoo-python
@@ -3431,7 +3456,7 @@ msgstr "福利制度"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "What's great in the job?"
-msgstr "這份工作的優點?"
+msgstr "這份工作的優點？"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__member_of_department
@@ -3441,6 +3466,12 @@ msgid ""
 "Whether the employee is a member of the active user's department or one of "
 "it's child department."
 msgstr "員工是生效用戶部門的成員還是其子部門之一的成員。"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "Widower"
+msgstr "喪偶"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_id
@@ -3663,7 +3694,7 @@ msgstr "部門"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. Building 2, Remote, etc."
-msgstr ""
+msgstr "例：2 號大樓、遙距等"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -3679,7 +3710,7 @@ msgstr "例如：銷售經理"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Summarize the position in one or two lines..."
-msgstr ""
+msgstr "例：請用一兩行文字概括介紹該職位⋯"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form

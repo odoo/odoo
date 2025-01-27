@@ -11,7 +11,7 @@
                     class="d-inline-block mt-4 mb-3 h4"
                     t-out="combo.name"
                 />
-                <div class="combo-item-grid d-grid gap-4">
+                <div class="combo-item-grid d-flex d-md-grid gap-4 pb-2 pb-md-0 overflow-x-auto">
                     <t t-foreach="combo.combo_items" t-as="comboItem" t-key="comboItem.id">
                         <ProductCard
                             product="getSelectedOrProvidedComboItem(combo.id, comboItem).product"
@@ -40,12 +40,13 @@
                 </button>
                 <!-- This div acts as a spacer to left-align the elements before it and right-align
                 the elements after it. -->
-                <div style="flex: 1"/>
-                <div class="mx-2">
+                <div style="flex: 1" class="d-none d-md-block"/>
+                <div class="w-100 w-md-auto mx-0 mx-md-2">
                     <QuantityButtons
                         quantity="state.quantity"
                         setQuantity="quantity => this.setQuantity(quantity)"
                         isMinusButtonDisabled="state.quantity === 1"
+                        btnClasses="'d-inline-block w-auto'"
                     />
                 </div>
                 <div class="d-flex flex-column justify-content-center">

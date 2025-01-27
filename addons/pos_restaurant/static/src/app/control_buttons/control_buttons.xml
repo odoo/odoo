@@ -4,11 +4,13 @@
         <xpath expr="//t[@t-if='props.showRemainingButtons']/div/OrderlineNoteButton" position="after">
             <t t-if="pos.config.module_pos_restaurant">
                 <!-- All buttons always displayed -->
-                <button t-att-class="buttonClass"
-                    t-att-disabled="!pos.get_order()?.get_orderlines()?.length"
-                    t-on-click="clickPrintBill">
-                    <i class="fa fa-print me-1"></i>Bill
-                </button>
+                <t t-if="pos.config.iface_printbill">
+                    <button t-att-class="buttonClass"
+                        t-att-disabled="!pos.get_order()?.get_orderlines()?.length"
+                        t-on-click="clickPrintBill">
+                        <i class="fa fa-print me-1"></i>Bill
+                    </button>
+                </t>
                 <button t-att-class="buttonClass" t-on-click="clickTableGuests">
                     <span t-esc="currentOrder?.getCustomerCount() || 0" class="px-2 py-1 rounded-circle text-bg-dark fw-bolder small me-1"/>
                     <span>Guests</span>

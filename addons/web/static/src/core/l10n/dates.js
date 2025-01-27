@@ -129,14 +129,25 @@ export function clampDate(desired, minDate, maxDate) {
 }
 
 /**
- * Get the week number of a given date.
- * Returns the ISO week number of the Monday nearest to the first day of the week.
+ * Get the week number of a given date, in the user's locale settings.
  *
  * @param {Date | luxon.DateTime} date
  * @returns {number}
- *  the ISO week number (1-53) of the nearest Monday of the given date's week's start
+ *  the ISO week number (1-53) of the Monday nearest to the locale's first day of the week
  */
 export function getLocalWeekNumber(date) {
+    return getLocalYearAndWeek(date).week;
+}
+
+/**
+ * Get the week year and week number of a given date, in the user's locale settings.
+ *
+ * @param {Date | luxon.DateTime} date
+ * @returns {{ year: number, week: number }}
+ *  the year the week is part of, and
+ *  the ISO week number (1-53) of the Monday nearest to the locale's first day of the week
+ */
+export function getLocalYearAndWeek(date) {
     if (!date.isLuxonDateTime) {
         date = DateTime.fromJSDate(date);
     }
@@ -153,7 +164,7 @@ export function getLocalWeekNumber(date) {
     // count from previous year if week falls before Jan 4
     const diffDays =
         date < jan4 ? date.diff(jan4.minus({ years: 1 }), "day").days : date.diff(jan4, "day").days;
-    return Math.trunc(diffDays / 7) + 1;
+    return { year: date.year, week: Math.trunc(diffDays / 7) + 1 };
 }
 
 /**

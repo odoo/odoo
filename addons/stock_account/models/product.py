@@ -17,8 +17,15 @@ class ProductTemplate(models.Model):
     valuation = fields.Selection(related="categ_id.property_valuation", readonly=True)
     lot_valuated = fields.Boolean(
         "Valuation by Lot/Serial number",
+        compute='_compute_lot_valuated', store=True, readonly=False,
         help="If checked, the valuation will be specific by Lot/Serial number.",
     )
+
+    @api.depends('tracking')
+    def _compute_lot_valuated(self):
+        for product in self:
+            if product.tracking == 'none':
+                product.lot_valuated = False
 
     @api.onchange('standard_price')
     def _onchange_standard_price(self):
@@ -67,7 +74,7 @@ will update the cost of every lot/serial number in stock."),
                     ._svl_empty_stock(description, product_template=product_template)
                 out_stock_valuation_layers = SVL.create(out_svl_vals_list)
                 if product_template.valuation == 'real_time':
-                    move_vals_list += Product._svl_empty_stock_am(out_stock_valuation_layers)
+                    move_vals_list += Product.with_context(products_orig_quantity_svl=products_orig_quantity_svl)._svl_empty_stock_am(out_stock_valuation_layers)
                 impacted_templates[product_template] = (products, description, products_orig_quantity_svl)
 
         if 'lot_valuated' in vals:
@@ -89,6 +96,7 @@ will update the cost of every lot/serial number in stock."),
             in_stock_valuation_layers = SVL.create(in_svl_vals_list)
             if product_template.valuation == 'real_time':
                 move_vals_list += Product._svl_replenish_stock_am(in_stock_valuation_layers)
+            products._update_lots_standard_price()
 
         # Check access right
         if move_vals_list and not self.env['stock.valuation.layer'].has_access('read'):
@@ -142,6 +150,9 @@ class ProductProduct(models.Model):
     def write(self, vals):
         if 'standard_price' in vals and not self.env.context.get('disable_auto_svl'):
             self.filtered(lambda p: p.cost_method != 'fifo')._change_standard_price(vals['standard_price'])
+        if 'lot_valuated' in vals:
+            # lot_valuated must be updated from the ProductTemplate
+            self.product_tmpl_id.write({'lot_valuated': vals.pop('lot_valuated')})
         return super().write(vals)
 
     @api.onchange('standard_price')
@@ -162,7 +173,7 @@ will update the cost of every lot/serial number in stock."),
         company_id = self.env.company
         self.company_currency_id = company_id.currency_id
         domain = [
-            *self._check_company_domain(company_id),
+            *self.env['stock.valuation.layer']._check_company_domain(company_id),
             ('product_id', 'in', self.ids),
         ]
         if self.env.context.get('to_date'):
@@ -625,6 +636,14 @@ will update the cost of every lot/serial number in stock."),
         to_reconcile_account_move_lines += new_account_move.line_ids.filtered(lambda l: not l.reconciled and l.account_id == accounts['stock_output'] and l.account_id.reconcile)
         return to_reconcile_account_move_lines.reconcile()
 
+    def _update_lots_standard_price(self):
+        grouped_lots = self.env['stock.lot']._read_group(
+            [('product_id', 'in', self.ids), ('product_id.lot_valuated', '=', True)],
+            ['product_id'], ['id:recordset']
+        )
+        for product, lots in grouped_lots:
+            lots.with_context(disable_auto_svl=True).write({"standard_price": product.standard_price})
+
     @api.model
     def _svl_empty_stock(self, description, product_category=None, product_template=None):
         impacted_product_ids = []
@@ -738,12 +757,12 @@ will update the cost of every lot/serial number in stock."),
 
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             orig_qtys = self.env.context.get('products_orig_quantity_svl')
-            if orig_qtys and float_compare(orig_qtys[product.id], 0, precision_digits=precision) == 1:
-                debit_account_id = stock_input_account.id
-                credit_account_id = product_accounts[product.id]['stock_valuation'].id
-            else:
+            if orig_qtys and float_compare(orig_qtys[product.id], 0, precision_digits=precision) < 1:
                 debit_account_id = product_accounts[product.id]['stock_valuation'].id
                 credit_account_id = product_accounts[product.id]['stock_output'].id
+            else:
+                debit_account_id = stock_input_account.id
+                credit_account_id = product_accounts[product.id]['stock_valuation'].id
             value = out_stock_valuation_layer.value
             move_vals = {
                 'journal_id': product_accounts[product.id]['stock_journal'].id,
@@ -1027,7 +1046,8 @@ class ProductCategory(models.Model):
                     ._svl_empty_stock(description, product_category=product_category)
                 out_stock_valuation_layers = SVL.sudo().create(out_svl_vals_list)
                 if product_category.property_valuation == 'real_time':
-                    move_vals_list += Product.with_context(product_orig_quantity_svl=products_orig_quantity_svl)._svl_empty_stock_am(out_stock_valuation_layers)
+
+                    move_vals_list += Product.with_context(products_orig_quantity_svl=products_orig_quantity_svl)._svl_empty_stock_am(out_stock_valuation_layers)
                 impacted_categories[product_category] = (products, description, products_orig_quantity_svl)
 
         res = super(ProductCategory, self).write(vals)
@@ -1038,6 +1058,7 @@ class ProductCategory(models.Model):
             in_stock_valuation_layers = SVL.sudo().create(in_svl_vals_list)
             if product_category.property_valuation == 'real_time':
                 move_vals_list += Product._svl_replenish_stock_am(in_stock_valuation_layers)
+            products._update_lots_standard_price()
 
         # Check access right
         if move_vals_list and not self.env['stock.valuation.layer'].has_access('read'):

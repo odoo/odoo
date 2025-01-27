@@ -30,16 +30,17 @@ export class OpeningControlPopup extends Component {
             ),
         });
         this.hardwareProxy = useService("hardware_proxy");
+        this.ui = useService("ui");
     }
-    confirm() {
-        this.pos.session.state = "opened";
-        this.pos.data.call(
+    async confirm() {
+        await this.pos.data.call(
             "pos.session",
             "set_opening_control",
             [this.pos.session.id, parseFloat(this.state.openingCash), this.state.notes],
             {},
             true
         );
+        this.pos.session.state = "opened";
         this.props.close();
     }
     async openDetailsPopup() {

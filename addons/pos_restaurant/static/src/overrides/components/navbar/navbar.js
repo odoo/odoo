@@ -1,7 +1,6 @@
 import { Navbar } from "@point_of_sale/app/navbar/navbar";
 import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import {
     getButtons,
     EMPTY,
@@ -15,7 +14,6 @@ patch(Navbar.prototype, {
      * If no table is set to pos, which means the current main screen
      * is floor screen, then the order count should be based on all the orders.
      */
-
     get orderCount() {
         if (this.pos.config.module_pos_restaurant && this.pos.selectedTable) {
             return this.pos.getTableOrders(this.pos.selectedTable.id).length;
@@ -61,11 +59,11 @@ patch(Navbar.prototype, {
                     return this.setFloatingOrder(floating_order);
                 }
                 if (!table && !floating_order) {
-                    this.dialog.add(AlertDialog, {
-                        title: _t("Error"),
-                        body: _t("No table or floating order found with this number"),
-                    });
-                    return;
+                    this.pos.selectedTable = null;
+                    const newOrder = this.pos.add_new_order();
+                    newOrder.floating_order_name = table_number;
+                    newOrder.setBooked(true);
+                    return this.setFloatingOrder(newOrder);
                 }
             },
         });

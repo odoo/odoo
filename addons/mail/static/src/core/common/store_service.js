@@ -10,6 +10,7 @@ import { debounce } from "@web/core/utils/timing";
 import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
 import { cleanTerm, prettifyMessageContent } from "@mail/utils/common/format";
+import { browser } from "@web/core/browser/browser";
 
 /**
  * @typedef {{isSpecial: boolean, channel_types: string[], label: string, displayName: string, description: string}} SpecialMention
@@ -78,6 +79,8 @@ export class Store extends BaseStore {
     Notification;
     /** @type {typeof import("@mail/core/common/persona_model").Persona} */
     Persona;
+    /** @type {typeof import("@mail/core/common/res_groups_model").ResGroups} */
+    ["res.groups"];
     /** @type {typeof import "@mail/chatter/web/scheduled_message_model).ScheduledMessage"} */
     ScheduledMessage;
     /** @type {typeof import("@mail/core/common/settings_model").Settings} */
@@ -102,8 +105,6 @@ export class Store extends BaseStore {
      */
     inPublicPage = false;
     odoobot = Record.one("Persona");
-    /** @type {boolean} */
-    odoobotOnboarding;
     users = {};
     /** @type {number} */
     internalUserGroupId;
@@ -151,6 +152,26 @@ export class Store extends BaseStore {
         };
     }
 
+    isNotificationPermissionDismissed = Record.attr(false, {
+        compute() {
+            return (
+                browser.localStorage.getItem("mail.user_setting.push_notification_dismissed") ===
+                "true"
+            );
+        },
+        /** @this {import("models").DiscussApp} */
+        onUpdate() {
+            if (this.isNotificationPermissionDismissed) {
+                browser.localStorage.setItem(
+                    "mail.user_setting.push_notification_dismissed",
+                    "true"
+                );
+            } else {
+                browser.localStorage.removeItem("mail.user_setting.push_notification_dismissed");
+            }
+        },
+    });
+
     messagePostMutex = new Mutex();
 
     menuThreads = Record.many("Thread", {
@@ -187,18 +208,9 @@ export class Store extends BaseStore {
              * - threads with needaction
              * - unread channels
              * - read channels
-             * - odoobot chat
              *
              * In each group, thread with most recent message comes first
              */
-            const aOdooBot = a.isCorrespondentOdooBot;
-            const bOdooBot = b.isCorrespondentOdooBot;
-            if (aOdooBot && !bOdooBot) {
-                return 1;
-            }
-            if (bOdooBot && !aOdooBot) {
-                return -1;
-            }
             const aNeedaction = a.needactionMessages.length;
             const bNeedaction = b.needactionMessages.length;
             if (aNeedaction > 0 && bNeedaction === 0) {
@@ -268,7 +280,7 @@ export class Store extends BaseStore {
 
     /** Import data received from init_messaging */
     async initialize() {
-        await this.fetchData(this.initMessagingParams, { readonly: false });
+        await this.fetchData(this.initMessagingParams);
         this.isReady.resolve();
     }
 
@@ -417,22 +429,9 @@ export class Store extends BaseStore {
             ev.preventDefault();
             this.openChat({ partnerId: id });
             return true;
-        } else if (ev.target.tagName === "A" && model && id) {
-            ev.preventDefault();
-            Promise.resolve(
-                this.env.services.action.doAction({
-                    type: "ir.actions.act_window",
-                    res_model: model,
-                    views: [[false, "form"]],
-                    res_id: id,
-                })
-            ).then(() => this.onLinkFollowed(thread));
-            return true;
         }
         return false;
     }
-
-    onLinkFollowed(fromThread) {}
 
     setup() {
         super.setup();
@@ -506,8 +505,14 @@ export class Store extends BaseStore {
      * Get the parameters to pass to the message post route.
      */
     async getMessagePostParams({ body, postData, thread }) {
-        const { attachments, cannedResponseIds, isNote, mentionedChannels, mentionedPartners } =
-            postData;
+        const {
+            attachments,
+            cannedResponseIds,
+            emailAddSignature,
+            isNote,
+            mentionedChannels,
+            mentionedPartners,
+        } = postData;
         const subtype = isNote ? "mail.mt_note" : "mail.mt_comment";
         const validMentions = this.getMentionsFromText(body, {
             mentionedChannels,
@@ -530,6 +535,7 @@ export class Store extends BaseStore {
         }
         postData = {
             body: await prettifyMessageContent(body, validMentions),
+            email_add_signature: emailAddSignature,
             message_type: "comment",
             subtype_xmlid: subtype,
         };
@@ -747,7 +753,7 @@ export class Store extends BaseStore {
 Store.register();
 
 export const storeService = {
-    dependencies: ["bus_service", "ui"],
+    dependencies: ["bus_service", "im_status", "ui"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services

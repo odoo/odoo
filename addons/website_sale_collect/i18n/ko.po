@@ -5,15 +5,15 @@
 # Translators:
 # Tiffany Chang, 2024
 # Wil Odoo, 2024
-# Daye Jeong, 2024
+# Daye Jeong, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2024-12-16 13:41+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Daye Jeong, 2024\n"
+"Last-Translator: Daye Jeong, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,14 +24,14 @@ msgstr ""
 #. module: website_sale_collect
 #: model_terms:payment.provider,pending_msg:website_sale_collect.payment_provider_on_site
 msgid ""
-"<i>Your order has been saved.</i> Please come to the store to pay for your "
-"products."
-msgstr ""
+"<i>Your order has been confirmed.</i><br>Please come to the store to pay for"
+" your products."
+msgstr "<i>주문이 확인되었습니다. </i><br>매장을 방문하여 결제를 완료하시기 바랍니다."
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.payment_confirmation_status
 msgid "<span class=\"text-muted\"> (In-store pickup)</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">(매장 내 픽업)</span>"
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -54,7 +54,7 @@ msgstr "환경설정"
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.res_config_settings_form
 msgid "Configure Pickup Locations"
-msgstr ""
+msgstr "픽업 위치 설정"
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_payment_provider__custom_mode
@@ -70,7 +70,7 @@ msgstr "배송 방법"
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_website__in_store_dm_id
 msgid "In-store Delivery Method"
-msgstr ""
+msgstr "매장 내 배송 방법"
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -86,6 +86,12 @@ msgid "Only"
 msgstr "한정"
 
 #. module: website_sale_collect
+#. odoo-python
+#: code:addons/website_sale_collect/models/sale_order.py:0
+msgid "Only %(new_qty)s available"
+msgstr "%(new_qty)s만 사용 가능"
+
+#. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_stock_warehouse__opening_hours
 msgid "Opening Hours"
 msgstr "영업 시간"
@@ -99,7 +105,7 @@ msgstr "품절"
 #. module: website_sale_collect
 #: model:payment.provider,name:website_sale_collect.payment_provider_on_site
 msgid "Pay on Site"
-msgstr ""
+msgstr "현장에서 결제"
 
 #. module: website_sale_collect
 #: model:ir.model.fields.selection,name:website_sale_collect.selection__payment_provider__custom_mode__on_site
@@ -113,19 +119,24 @@ msgid "Payment Provider"
 msgstr "결제대행업체"
 
 #. module: website_sale_collect
+#: model:ir.model,name:website_sale_collect.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "지불 거래"
+
+#. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 #: model:delivery.carrier,name:website_sale_collect.carrier_pick_up_in_store
 #: model:ir.model.fields.selection,name:website_sale_collect.selection__delivery_carrier__delivery_type__in_store
 #: model:product.template,name:website_sale_collect.product_pick_up_in_store_product_template
 msgid "Pick up in store"
-msgstr ""
+msgstr "매장 수령"
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/controllers/main.py:0
 msgid "Please choose a store to collect your order."
-msgstr ""
+msgstr "주문 수령 매장을 선택해 주세요."
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_product_template
@@ -155,14 +166,14 @@ msgstr "배송 방법"
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
 msgid "Some of the products are not available at"
-msgstr ""
+msgstr "일부 품목은 다음에서 사용할 수 없습니다."
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/controllers/main.py:0
 #: code:addons/website_sale_collect/models/sale_order.py:0
 msgid "Some products are not available in the selected store."
-msgstr ""
+msgstr "선택한 스토어에서는 특정 제품을 구매할 수 없습니다."
 
 #. module: website_sale_collect
 #. odoo-python
@@ -180,13 +191,13 @@ msgstr "매장"
 #. odoo-python
 #: code:addons/website_sale_collect/models/delivery_carrier.py:0
 msgid "The delivery method and a warehouse must share the same company"
-msgstr ""
+msgstr "배송 방법과 배송 창고가 같은 회사에 속해 있어야 합니다."
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/models/delivery_carrier.py:0
 msgid "The delivery method must have at least one warehouse to be published."
-msgstr ""
+msgstr "배송 방법은 하나 이상의 창고를 등록해야 합니다."
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_stock_warehouse
@@ -204,7 +215,7 @@ msgstr "웹사이트"
 msgid ""
 "You can only pay on site when selecting the pick up in store delivery "
 "method."
-msgstr ""
+msgstr "현장 결제는 매장 픽업 옵션을 선택한 경우에만 가능합니다."
 
 #. module: website_sale_collect
 #: model_terms:payment.provider,auth_msg:website_sale_collect.payment_provider_on_site
@@ -232,4 +243,4 @@ msgstr "사용가능"
 #. odoo-python
 #: code:addons/website_sale_collect/models/payment_provider.py:0
 msgid "no in-store delivery methods available"
-msgstr ""
+msgstr "매장 내 배송 옵션 없음"

@@ -77,11 +77,28 @@ class ResPartner(models.Model):
                 [("channel_ids", "in", channel.id)],
             ]
         )
-        partners = self._search_mention_suggestions(domain, limit)
+        extra_domain = expression.AND([
+            [('user_ids', '!=', False)],
+            [('user_ids.active', '=', True)],
+            [('partner_share', '=', False)]
+        ])
+        allowed_group = (channel.parent_channel_id or channel).group_public_id
+        if allowed_group:
+            extra_domain = expression.AND(
+                [
+                    extra_domain,
+                    [("user_ids.groups_id", "in", allowed_group.id)],
+                ]
+            )
+        partners = self._search_mention_suggestions(domain, limit, extra_domain)
         members = self.env["discuss.channel.member"].search(
             [
                 ("channel_id", "=", channel.id),
                 ("partner_id", "in", partners.ids),
             ]
         )
-        return Store(members, fields={"channel": [], "persona": []}).add(partners).get_result()
+        store = Store(members, fields={"channel": [], "persona": []})
+        if allowed_group:
+            for p in partners:
+                store.add(p, {"groups_id": [("ADD", (allowed_group & p.user_ids.groups_id).ids)]})
+        return store.get_result()

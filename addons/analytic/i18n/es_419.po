@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Fernanda Alvarez, 2024
 # 
 msgid ""
@@ -801,9 +802,9 @@ msgid ""
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
 "Los ingresos se crearán de manera automática al generar facturas para el\n"
-"cliente. Las facturas de cliente se pueden crear a partir de las órdenes de venta\n"
+"cliente. Las facturas de cliente se pueden crear desde las órdenes de venta\n"
 "(facturas de precio fijo), en las hojas de horas (depende del trabajo realizado) o\n"
-"en los gastos (por ejemplo, refacturación de gastos de viaje)."
+"en los gastos (como refacturación de gastos de viaje)."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__root_id
@@ -838,10 +839,9 @@ msgid ""
 "create new customer invoice or Sales order if we select this company, it "
 "will automatically take this as an analytic account)"
 msgstr ""
-"Seleccione una empresa para la que se utilizará la distribución analítica "
+"Seleccione la empresa para la que se utilizará la distribución analítica "
 "(por ejemplo, al crear una nueva factura de cliente o una orden de venta si "
-"seleccionamos esta empresa, la tomará automáticamente como cuenta "
-"analítica)."
+"seleccionamos esta empresas se tomará solo como cuenta analítica)."
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_category_id
@@ -926,6 +926,13 @@ msgstr ""
 
 #. module: analytic
 #. odoo-python
+#: code:addons/analytic/models/analytic_plan.py:0
+#, python-format
+msgid "You cannot add a parent to the base plan '%s'"
+msgstr "No puede agregar un plan principal al plan base \"%s\""
+
+#. module: analytic
+#. odoo-python
 #: code:addons/analytic/models/analytic_distribution_model.py:0
 msgid ""
 "You defined a distribution with analytic account(s) belonging to a specific "
@@ -938,4 +945,4 @@ msgstr ""
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "e.g. Project XYZ"
-msgstr "Ej. Proyecto XYZ"
+msgstr "p. ej. Proyecto XYZ"

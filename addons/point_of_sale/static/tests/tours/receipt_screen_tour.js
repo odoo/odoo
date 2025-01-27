@@ -5,6 +5,7 @@ import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import * as NumberPopup from "@point_of_sale/../tests/tours/utils/number_popup_util";
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
+import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
 import { registry } from "@web/core/registry";
 import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
 
@@ -16,7 +17,7 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
             Chrome.startPoS(),
             ProductScreen.addOrderline("Letter Tray", "10", "5"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Addison Olson"),
+            ProductScreen.clickCustomer("Partner Full"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.validateButtonIsHighlighted(true),
@@ -78,6 +79,25 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             Order.hasLine({ customerNote: "Test customer note" }),
+            ReceiptScreen.clickNextOrder(),
+
+            // Test discount and original price
+            ProductScreen.addOrderline("Desk Pad", "1", "20"),
+            inLeftSide([
+                { ...ProductScreen.clickLine("Desk Pad")[0], isActive: ["mobile"] },
+                Numpad.click("%"),
+                ...ProductScreen.selectedOrderlineHasDirect("Desk Pad", "1", "20"),
+                Numpad.click("5"),
+                ...ProductScreen.selectedOrderlineHasDirect("Desk Pad", "1", "19.0"),
+                Numpad.click("."),
+            ]),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.receiptIsThere(),
+            Order.hasLine({ productName: "Desk Pad", priceNoDiscount: "20" }),
+            ReceiptScreen.totalAmountContains("19.00"),
+            ReceiptScreen.clickNextOrder(),
         ].flat(),
 });
 
@@ -94,6 +114,19 @@ registry.category("web_tour.tours").add("ReceiptScreenDiscountWithPricelistTour"
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
             Order.hasLine({ oldPrice: "7" }),
+
+            ReceiptScreen.clickNextOrder(),
+            ProductScreen.addOrderline("Test Product", "1"),
+            inLeftSide([
+                { ...ProductScreen.clickLine("Test Product")[0], isActive: ["mobile"] },
+                Numpad.click("Price"),
+                Numpad.isActive("Price"),
+                Numpad.click("9"),
+            ]),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.noDiscountAmount(),
         ].flat(),
 });
 

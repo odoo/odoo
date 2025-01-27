@@ -3,17 +3,17 @@
 # 	* sale_stock
 # 
 # Translators:
-# Manon Rondou, 2024
 # Wil Odoo, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Manon Rondou, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -107,7 +107,7 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Afhankelijk van de productinstellingen, kan de geleverde hoeveelheid automatisch worden berekend met behulp van het mechanisme:\n"
+"Afhankelijk van de productinstellingen, kan het geleverde aantal automatisch worden berekend met behulp van het mechanisme:\n"
 "  - Handmatig: het aantal wordt handmatig op de regel ingesteld\n"
 "  - Analytisch van declaraties: het aantal is de som van de geboekte declaraties\n"
 "  - Urenstaat: het aantal is de som van de uren die zijn vastgelegd voor taken die aan deze verkoopregel zijn gekoppeld\n"
@@ -146,6 +146,17 @@ msgstr "Beschikbaar"
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "Available in stock"
 msgstr "Beschikbaar in voorraad"
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_sale_order__delivery_status
+msgid ""
+"Blue: Not Delivered/Started\n"
+"            Orange: Partially Delivered\n"
+"            Green: Fully Delivered"
+msgstr ""
+"Blauw: Niet geleverd/gestart\n"
+"            Oranje: Gedeeltelijk Geleverd\n"
+"            Groen: Volledig geleverd"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -314,7 +325,7 @@ msgstr "Leveringscondities"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm_location
 msgid "Incoterm Location"
-msgstr "Incoterm locatie"
+msgstr "Incotermlocatie"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -505,17 +516,6 @@ msgid "RETURN"
 msgstr "RETOUR"
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_sale_order__delivery_status
-msgid ""
-"Red: Late\n"
-"            Orange: To process today\n"
-"            Green: On time"
-msgstr ""
-"Rood: Te laat\n"
-"            Oranje: Vandaag verwerken\n"
-"            Groen: Op tijd"
-
-#. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
 msgid ""
 "Reduce back orders with reservations, locations management, smart\n"
@@ -541,6 +541,11 @@ msgstr "Aanvullen per order (MTO)"
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "Reserved"
 msgstr "Gereserveerd"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_return_picking
+msgid "Return Picking"
+msgstr "Retour picking"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -701,7 +706,7 @@ msgid ""
 msgstr ""
 "Het afleveradres is gewijzigd op de verkooporder <br/>\n"
 " Van \"<strong>\" %(old_address)s\"</strong> naar <strong>\"%(new_address)s\"</strong>,\n"
-" Je moet waarschijnlijk de relatie in dit document bijwerken."
+" Je moet waarschijnlijk het contact in dit document bijwerken."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -710,8 +715,8 @@ msgid ""
 "The ordered quantity cannot be decreased below the amount already delivered."
 " Instead, create a return in your inventory."
 msgstr ""
-"De bestelde hoeveelheid kan niet lager worden dan de reeds geleverde "
-"hoeveelheid. Maak in plaats daarvan een retour aan."
+"Het bestelde aantal kan niet lager worden dan het reeds geleverde aantal. "
+"Maak in plaats daarvan een retour aan."
 
 #. module: sale_stock
 #. odoo-python
@@ -720,8 +725,8 @@ msgid ""
 "The ordered quantity of a sale order line cannot be decreased below the "
 "amount already delivered. Instead, create a return in your inventory."
 msgstr ""
-"De bestelde hoeveelheid kan niet lager zijn dan de reeds geleverde "
-"hoeveelheid. Maak liever een retourzending aan."
+"Het bestelde aantal kan niet lager zijn dan het reeds geleverde aantal. Maak"
+" liever een retourzending aan."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -791,6 +796,13 @@ msgid ""
 msgstr ""
 "Je moet een magazijn hebben voor een regel met een leveringsdienst bij een "
 "ander bedrijf."
+
+#. module: sale_stock
+#. odoo-python
+#: code:addons/sale_stock/models/sale_order.py:0
+msgid "You must set a warehouse on your sale order to proceed."
+msgstr ""
+"Je moet een magazijn op de verkooporder instellen om verder te kunnen gaan."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so

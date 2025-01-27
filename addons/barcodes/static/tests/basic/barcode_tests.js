@@ -201,8 +201,8 @@ QUnit.module("Barcodes", (hooks) => {
         // OCDPAGERLAST
         simulateBarCode(["O","C","D","P","A","G","E","R","L","A","S","T","Enter"]);
         // need to await 2 macro steps
-        await mock.advanceTime(20);
-        await mock.advanceTime(20);
+        await mock.advanceTime(50);
+        await mock.advanceTime(50);
         assert.strictEqual(
             target.querySelector(".o_field_widget input").value,
             "Cabinet with Doors"
@@ -211,8 +211,8 @@ QUnit.module("Barcodes", (hooks) => {
         // OCDPAGERFIRST
         simulateBarCode(["O","C","D","P","A","G","E","R","F","I","R","S","T","Enter"]);
         // need to await 2 macro steps
-        await mock.advanceTime(20);
-        await mock.advanceTime(20);
+        await mock.advanceTime(50);
+        await mock.advanceTime(50);
         assert.strictEqual(target.querySelector(".o_field_widget input").value, "Large Cabinet");
     });
 });

@@ -21,7 +21,7 @@ export function isBrowserFirefox() {
  * @returns {boolean}
  */
 export function isBrowserSafari() {
-    return !isBrowserChrome() && browser.navigator.userAgent.includes("Safari");
+    return !isBrowserChrome() && browser.navigator.userAgent?.includes("Safari");
 }
 
 export function isAndroid() {

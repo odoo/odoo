@@ -32,7 +32,7 @@ registry.category("web_tour.tours").add('autocomplete_tour', {
 //     content: "Verify the autocomplete box disappeared",
 //     trigger: `body:not(:has(.dropdown-menu .js_autocomplete_result))`,
 // },
-, { // Verify test data has been input
+{ // Verify test data has been input
     content: 'Check Street & number have been set',
     trigger: "input[name=street]:value(/^42 A fictional Street$/)",
 }, {

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2024-12-16 13:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -97,13 +97,13 @@ msgstr "%(hour_number)s St."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%(matches)s matches in %(sheetName)s"
-msgstr "%(matches)s passt in %(sheetName)s"
+msgstr "%(matches)s Übereinstimmungen in %(sheetName)s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%(matches)s matches in range %(range)s of %(sheetName)s"
-msgstr "%(matches)s passt in Bereich %(range)s von %(sheetName)s"
+msgstr "%(matches)s Übereinstimmungen in Bereich %(range)s von %(sheetName)s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -260,7 +260,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%s matches in all sheets"
-msgstr "%s passt in alle Blätter"
+msgstr "%s Übereinstimmungen in allen Blättern"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -916,12 +916,6 @@ msgid ""
 msgstr ""
 "Alle Daten sollten größer oder gleich dem ersten Datum in cashflow_dates "
 "sein (%s)."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "All the ranges and the range values must have the same size"
-msgstr "Alle Bereiche und Bereichswerte müssen dieselbe Größe haben"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3368,6 +3362,7 @@ msgstr "Feld %(field)s wird wegen seines Typs (%(type)s) nicht unterstützt."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/odoo_pivot.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_helpers.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 msgid "Field %s does not exist"
 msgstr "Feld %s existiert nicht"
 
@@ -3958,6 +3953,11 @@ msgstr "Zeile %s gruppieren"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Group rows %s - %s"
 msgstr "Zeilen %s - %s gruppieren"
+
+#. module: spreadsheet
+#: model:ir.model,name:spreadsheet.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP-Routing"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6575,6 +6575,12 @@ msgstr "September"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "Serie type"
+msgstr "Serientyp"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Series"
 msgstr "Serien"
@@ -6735,6 +6741,12 @@ msgstr "Einfarbig"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Single value from a table-like range."
 msgstr "Einzelwert aus einem tabellenartigen Bereich."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
+msgid "Some measures are not available: %s"
+msgstr "Einige Werte sind nicht verfügbar: %s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6901,6 +6913,12 @@ msgstr "Gestapeltes Bereichsdiagramm"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Stacked bar chart"
 msgstr "Gestapeltes Balkendiagramm"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "Stacked column chart"
+msgstr "Gestapeltes Spaltendiagramm"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7080,7 +7098,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Table"
-msgstr "Tisch"
+msgstr "Tabelle"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8656,6 +8674,23 @@ msgstr "Der Minuend oder die Zahl, von der subtrahiert werden soll."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The minute component of the time."
 msgstr "Die Minutenkomponente des Datums."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/data_sources/data_source.js:0
+#: code:addons/spreadsheet/static/src/pivot/odoo_pivot_loader.js:0
+msgid "The model \"%(model)s\" does not exist."
+msgstr "Das Modell „%s“ existiert nicht."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/global_filters/components/filter_value/filter_value.js:0
+msgid ""
+"The model (%(model)s) of this global filter is not valid (it may have been "
+"renamed/deleted)."
+msgstr ""
+"Das Modell (%(model)s) dieses globalen Filters ist nicht gültig (es könnte "
+"umbenannt oder gelöscht worden sein)."
 
 #. module: spreadsheet
 #. odoo-javascript

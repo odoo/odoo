@@ -38,6 +38,28 @@ class TestAllocations(TestHrHolidaysCommon):
             'allocation_validation_type': 'no_validation',
         })
 
+        cls.calendar_35h = cls.env['resource.calendar'].create({
+            'name': 'Calendar - 35H',
+            'company_id': cls.company.id,
+            'attendance_ids': [(5, 0, 0),
+                    (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Monday Lunch', 'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                    (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Tuesday Lunch', 'dayofweek': '1', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                    (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Wednesday Lunch', 'dayofweek': '2', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                    (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Thursday Lunch', 'dayofweek': '3', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                    (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                    (0, 0, {'name': 'Friday Lunch', 'dayofweek': '4', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                    (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'})
+                ]
+        })
+
     def test_allocation_whole_company(self):
         company_allocation = self.env['hr.leave.allocation.generate.multi.wizard'].create({
             'name': 'Bank Holiday',
@@ -157,7 +179,7 @@ class TestAllocations(TestHrHolidaysCommon):
 
     def test_allocation_type_hours_with_resource_calendar(self):
         self.leave_type.request_unit = 'hour'
-        self.employee.resource_calendar_id = self.ref('resource.resource_calendar_std_35h')
+        self.employee.resource_calendar_id = self.calendar_35h
 
         hour_type_allocation = self.env['hr.leave.allocation.generate.multi.wizard'].create({
             'name': 'Hours Allocation',
@@ -313,7 +335,7 @@ class TestAllocations(TestHrHolidaysCommon):
         employee = self.env['hr.employee'].create({
             'name': 'My Employee',
             'company_id': self.company.id,
-            'resource_calendar_id': self.ref('resource.resource_calendar_std_35h'),
+            'resource_calendar_id': self.calendar_35h.id,
         })
 
         leave_type = self.env['hr.leave.type'].create({

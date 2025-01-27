@@ -4,53 +4,19 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 import { useSelectCreate, useOpenMany2XRecord} from "@web/views/fields/relational_utils";
-import { onMounted } from "@odoo/owl"
+import { useService } from "@web/core/utils/hooks";
 import { Domain } from "@web/core/domain";
 
 export class SMLX2ManyField extends X2ManyField {
     setup() {
         super.setup();
-
+        this.orm = useService("orm");
+        this.dirtyQuantsData = new Map();
         const selectCreate = useSelectCreate({
             resModel: "stock.quant",
             activeActions: this.activeActions,
             onSelected: (resIds) => this.selectRecord(resIds),
             onCreateEdit: () => this.createOpenRecord(),
-        });
-
-        onMounted(async () => {
-            const orm = this.env.model.orm;
-            this.quantsData = [];
-            const usedByQuant = {};
-            if (this.props.record.data.move_line_ids.records.length) {
-                const domains = [];
-                for (const ml of this.props.record.data.move_line_ids.records) {
-                    domains.push([
-                        ["product_id", "=", ml.data.product_id[0]],
-                        ["lot_id", "=", ml.data.lot_id?.[0] || false],
-                        ["location_id", "=", ml.data.location_id[0]],
-                        ["package_id", "=", ml.data.package_id?.[0] || false],
-                        ["owner_id", "=", ml.data.owner_id?.[0] || false],
-                    ]);
-                }
-                if (domains.length) {
-                    const quant_fields = ['display_name', 'product_id', 'lot_id', 'location_id', 'package_id', 'owner_id', 'available_quantity'];
-                    const quants = await orm.searchRead("stock.quant", Domain.or(domains).toList(), quant_fields);
-                    const quants_by_key = Object.fromEntries(quants.map(x => [
-                        [x.product_id[0], x.lot_id?.[0] || false, x.location_id[0], x.package_id?.[0] || false, x.owner_id?.[0] || false],
-                        [x.id, x.display_name, x.available_quantity]
-                    ]));
-                    for (const ml of this.props.record.data.move_line_ids.records) {
-                        const entry = quants_by_key[[ml.data.product_id[0], ml.data.lot_id?.[0] || false, ml.data.location_id[0], ml.data.package_id?.[0] || false, ml.data.owner_id?.[0] || false].toString()];
-                        if (!entry) {  // product not storable or has no quant yet
-                            continue;
-                        }
-                        ml.data.quant_id = [entry[0], entry[1]];
-                        usedByQuant[ml.data.quant_id[0]] = (usedByQuant[ml.data.quant_id[0]] || 0) + ml.data.quantity;
-                    }
-                    this.quantsData = quants.map(x => [x.id, x.available_quantity + (usedByQuant[x.id] || 0)]);
-                }
-            }
         });
 
         this.selectCreate = (params) => {
@@ -69,6 +35,9 @@ export class SMLX2ManyField extends X2ManyField {
         if (!this.props.record.data.show_quant) {
             return super.onAdd(...arguments);
         }
+        // Compute the quant offset from move lines quantity changes that were not saved yet.
+        // Hence, did not yet affect quant's quantity in DB.
+        await this.updateDirtyQuantsData();
         context = {
             ...context,
             single_product: true,
@@ -76,43 +45,115 @@ export class SMLX2ManyField extends X2ManyField {
             search_default_on_hand: true,
             search_default_in_stock: true,
         };
-        const data = this.props.record.data;
-        const productName = data.product_id[1];
+        const productName = this.props.record.data.product_id[1];
         const title = _t("Add line: %s", productName);
-        const domain = [
+        let domain = [
             ["product_id", "=", this.props.record.data.product_id[0]],
             ["location_id", "child_of", this.props.context.default_location_id],
         ];
-        const usedByQuant = this.props.record.data.move_line_ids.records.reduce((result, current) => {
-            const quant_id = current.data.quant_id[0];
-            if (!quant_id)
-                return result;
-            result[quant_id] = (result[quant_id] || 0) + current.data.quantity;
-            return result;
-        }, {});
-        const fullyUsed = this.quantsData
-            .filter(([id, available_quantity]) => (usedByQuant[id] || 0) >= available_quantity)
-            .map(([id]) => id);
-
-        if (fullyUsed.length)
-            domain.push(["id", "not in", fullyUsed]);
-
+        if (this.dirtyQuantsData.size) {
+            const notFullyUsed = [];
+            const fullyUsed = [];
+            for (const [quantId, quantData] of this.dirtyQuantsData.entries()) {
+                if (quantData.available_quantity > 0) {
+                    notFullyUsed.push(quantId);
+                } else {
+                    fullyUsed.push(quantId);
+                }
+            }
+            if (fullyUsed.length) {
+                domain = Domain.and([domain, [["id", "not in", fullyUsed]]]).toList();
+            }
+            if (notFullyUsed.length) {
+                domain = Domain.or([domain, [["id", "in", notFullyUsed]]]).toList();
+            }
+        }
         return this.selectCreate({ domain, context, title });
     }
 
-    selectRecord(res_ids) {
+    async updateDirtyQuantsData() {
+        // Since changes of move line quantities will not affect the available quantity of the quant before
+        // the record has been saved, it is necessary to determine the offset of the DB quant data.
+        this.dirtyQuantsData.clear();
+        const dirtyQuantityMoveLines = this.props.record.data.move_line_ids.records.filter(
+            (ml) => !ml.data.quant_id && ml._values.quantity - ml._changes.quantity
+        );
+        const dirtyQuantMoveLines = this.props.record.data.move_line_ids.records.filter(
+            (ml) => ml.data.quant_id[0]
+        );
+        const dirtyMoveLines = [...dirtyQuantityMoveLines, ...dirtyQuantMoveLines];
+        if (!dirtyMoveLines.length) {
+            return;
+        }
+        const match = await this.orm.call(
+            "stock.move.line",
+            "get_move_line_quant_match",
+            [
+                this.props.record.data.move_line_ids.records
+                    .filter((rec) => rec.resId)
+                    .map((rec) => rec.resId),
+                this.props.record.resId,
+                dirtyMoveLines.filter((rec) => rec.resId).map((rec) => rec.resId),
+                dirtyQuantMoveLines.map((ml) => ml.data.quant_id[0]),
+            ],
+            {}
+        );
+        const quants = match[0];
+        if (!quants.length) {
+            return;
+        }
+        const dbMoveLinesData = new Map();
+        for (const data of match[1]) {
+            dbMoveLinesData.set(data[0], { quantity: data[1].quantity, quantId: data[1].quant_id });
+        }
+        const offsetByQuant = new Map();
+        for (const ml of dirtyQuantMoveLines) {
+            const quantId = ml.data.quant_id[0];
+            offsetByQuant.set(quantId, (offsetByQuant.get(quantId) || 0) - ml.data.quantity);
+            const dbQuantId = dbMoveLinesData.get(ml.resId)?.quantId;
+            if (dbQuantId && quantId != dbQuantId) {
+                offsetByQuant.set(
+                    dbQuantId,
+                    (offsetByQuant.get(dbQuantId) || 0) + dbMoveLinesData.get(ml.resId).quantity
+                );
+            }
+        }
+        const offsetByQuantity = new Map();
+        for (const ml of dirtyQuantityMoveLines) {
+            offsetByQuantity.set(ml.resId, ml._values.quantity - ml._changes.quantity);
+        }
+        for (const quant of quants) {
+            const quantityOffest = quant[1].move_line_ids
+                .map((ml) => offsetByQuantity.get(ml) || 0)
+                .reduce((val, sum) => val + sum, 0);
+            const quantOffest = offsetByQuant.get(quant[0]) || 0;
+            this.dirtyQuantsData.set(quant[0], {
+                available_quantity: quant[1].available_quantity + quantityOffest + quantOffest,
+            });
+        }
+    }
+
+    async selectRecord(res_ids) {
+        const demand =
+            this.props.record.data.product_uom_qty -
+            this.props.record.data.move_line_ids.records
+                .map((ml) => ml.data.quantity)
+                .reduce((val, sum) => val + sum, 0);
         const params = {
             context: { default_quant_id: res_ids[0] },
         };
-        this.list.addNewRecord(params).then(async (record) => {
+        if (demand <= 0) {
+            params.context.default_quantity = 0;
+        } else if (this.dirtyQuantsData.has(res_ids[0])) {
+            params.context.default_quantity = Math.min(
+                this.dirtyQuantsData.get(res_ids[0]).available_quantity,
+                demand
+            );
+        }
+        this.list.addNewRecord(params).then((record) => {
             // Make it dirty to force the save of the record. addNewRecord make
             // the new record dirty === False by default to remove them at unfocus event
             record.dirty = true;
-            if (record.data.quant_id[0] && this.quantsData.every(a => a[0] != record.data.quant_id[0])) {
-                const orm = this.env.model.orm;
-                const quants = await orm.searchRead("stock.quant", [["id", "=", record.data.quant_id[0]]], ['available_quantity']);
-                this.quantsData.push([quants[0].id, quants[0].available_quantity]);
-            }
         });
     }
 

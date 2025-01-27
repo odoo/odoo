@@ -113,9 +113,9 @@ class MassMailing(models.Model):
         copy=False,
         help="Date at which the mailing was or will be sent.")
     # don't translate 'body_arch', the translations are only on 'body_html'
-    body_arch = fields.Html(string='Body', translate=False, sanitize=False)
+    body_arch = fields.Html(string='Body', translate=False, sanitize='email_outgoing', sanitize_output_method="html")
     body_html = fields.Html(
-        string='Body converted to be sent by mail', sanitize=False,
+        string='Body converted to be sent by mail', sanitize='email_outgoing',
         render_engine='qweb', render_options={'post_process': True})
     is_body_empty = fields.Boolean(compute="_compute_is_body_empty")
     attachment_ids = fields.Many2many(
@@ -168,7 +168,7 @@ class MassMailing(models.Model):
         compute='_compute_mailing_on_mailing_list')
     mailing_domain = fields.Char(
         string='Domain',
-        compute='_compute_mailing_domain', readonly=False, store=True)
+        compute='_compute_mailing_domain', readonly=False, store=True, compute_sudo=False)
     mail_server_available = fields.Boolean(
         compute='_compute_mail_server_available',
         help="Technical field used to know if the user has activated the outgoing mail server option in the settings")
@@ -336,10 +336,11 @@ class MassMailing(models.Model):
             }
             total = (values['expected'] - values['canceled']) or 1
             total_no_error = (values['expected'] - values['canceled'] - values['bounced'] - values['failed']) or 1
+            total_sent = (values['expected'] - values['canceled'] - values['failed']) or 1
             values['received_ratio'] = float_round(100.0 * values['delivered'] / total, precision_digits=2)
             values['opened_ratio'] = float_round(100.0 * values['opened'] / total_no_error, precision_digits=2)
             values['replied_ratio'] = float_round(100.0 * values['replied'] / total_no_error, precision_digits=2)
-            values['bounced_ratio'] = float_round(100.0 * values['bounced'] / total, precision_digits=2)
+            values['bounced_ratio'] = float_round(100.0 * values['bounced'] / total_sent, precision_digits=2)
             mailing.update(values)
 
     @api.depends('schedule_date', 'state')

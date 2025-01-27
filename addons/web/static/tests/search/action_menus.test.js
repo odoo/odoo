@@ -44,7 +44,7 @@ class IrActionsReport extends models.Model {
             // new record are initialized with value=False so domain of action 3 is satisfied
             validActionIds.push(3);
         }
-        return Promise.resolve(validActionIds);
+        return validActionIds;
     }
 }
 

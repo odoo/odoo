@@ -3,17 +3,17 @@
 # 	* pos_restaurant
 # 
 # Translators:
-# Wil Odoo, 2024
 # Jolien De Paepe, 2024
-# Manon Rondou, 2024
+# Wil Odoo, 2024
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -386,6 +386,12 @@ msgid "Design floors and assign orders to tables"
 msgstr "Créer un plan de salle et attribuer des commandes à des tables"
 
 #. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
+msgid "Dine in"
+msgstr "Sur place"
+
+#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__display_name
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__display_name
 msgid "Display Name"
@@ -436,12 +442,6 @@ msgstr "Erreur rencontrée lors du chargement de l'image. Veuillez réessayer."
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.js:0
 msgid "Enter a table number"
 msgstr "Saisir un numéro de table"
-
-#. module: pos_restaurant
-#. odoo-javascript
-#: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.js:0
-msgid "Error"
-msgstr "Erreur"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.espresso_product_template
@@ -553,12 +553,6 @@ msgid "Funghi"
 msgstr "Champignons"
 
 #. module: pos_restaurant
-#. odoo-javascript
-#: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
-msgid "General Note"
-msgstr "Note générale"
-
-#. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_negroni_product_template
 msgid "Gin, vermouth rosso, Campari, and an orange peel."
 msgstr "Gin, vermouth rosso, Campari et zeste d'orange."
@@ -619,8 +613,8 @@ msgstr ""
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.js:0
-msgid "Jump to table"
-msgstr "Aller à la table"
+msgid "Jump"
+msgstr "Sauter"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -639,6 +633,12 @@ msgstr "Mis à jour par"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__write_date
 msgid "Last Updated on"
 msgstr "Mis à jour le"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
+msgid "Loading"
+msgstr "En cours de chargement..."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -682,6 +682,12 @@ msgstr "En forme carrée"
 #: model:product.template,name:pos_restaurant.product_margarita_product_template
 msgid "Margarita"
 msgstr "Margarita"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
+msgid "Message"
+msgstr "Message"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.milkshake_banana_product_template
@@ -733,9 +739,9 @@ msgstr "Aucun pourboire"
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.js:0
-msgid "No table or floating order found with this number"
-msgstr "Aucune table ou commande flottante n'a été trouvé avec ce numéro"
+#: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
+msgid "Note"
+msgstr "Note"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -784,7 +790,7 @@ msgstr "Ouvert"
 #: code:addons/pos_restaurant/static/src/overrides/components/product_screen/actionpad_widget/actionpad_widget.xml:0
 #: code:addons/pos_restaurant/static/src/overrides/components/product_screen/product_screen.xml:0
 msgid "Order"
-msgstr "Ordre"
+msgstr "Commander"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1137,7 +1143,7 @@ msgstr "Basculer vers la vue de salle"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/control_buttons/control_buttons.xml:0
 msgid "Switch to Dine in"
-msgstr "Restauration sur place"
+msgstr "Sur place"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1184,6 +1190,12 @@ msgstr "Tables"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__takeaway
 msgid "Take Away"
+msgstr "À emporter"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
+msgid "Take out"
 msgstr "À emporter"
 
 #. module: pos_restaurant

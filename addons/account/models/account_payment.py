@@ -394,16 +394,19 @@ class AccountPayment(models.Model):
             if payment.journal_id.company_id not in payment.company_id.parent_ids:
                 payment.company_id = (payment.journal_id.company_id or self.env.company)._accessible_branches()[:1]
 
-    @api.depends('invoice_ids.payment_state')
+    @api.depends('invoice_ids.payment_state', 'move_id.line_ids.amount_residual')
     def _compute_state(self):
         for payment in self:
             if not payment.state:
                 payment.state = 'draft'
-            if (
-                not payment.outstanding_account_id
-                and payment.invoice_ids
-                and all(invoice.payment_state == 'paid' for invoice in payment.invoice_ids)
-            ):
+            # in_process --> paid
+            if payment.state == 'in_process' and payment.outstanding_account_id:
+                move = payment.move_id
+                liquidity, _counterpart, _writeoff = payment._seek_for_lines()
+                if move and move.currency_id.is_zero(sum(liquidity.mapped('amount_residual'))):
+                    payment.state = 'paid'
+                    continue
+            if payment.state == 'in_process' and payment.invoice_ids and all(invoice.payment_state == 'paid' for invoice in payment.invoice_ids):
                 payment.state = 'paid'
 
     @api.depends('move_id.line_ids.amount_residual', 'move_id.line_ids.amount_residual_currency', 'move_id.line_ids.account_id', 'state')
@@ -443,6 +446,15 @@ class AccountPayment(models.Model):
     @api.model
     def _get_method_codes_needing_bank_account(self):
         return []
+
+    def action_open_business_doc(self):
+        return {
+            'name': _("Payment"),
+            'type': 'ir.actions.act_window',
+            'views': [(False, 'form')],
+            'res_model': 'account.payment',
+            'res_id': self.id,
+        }
 
     @api.depends('payment_method_code')
     def _compute_show_require_partner_bank(self):
@@ -855,7 +867,15 @@ class AccountPayment(models.Model):
 
         payments = super().create(vals_list)
 
+        # Outstanding account should be set on the payment in community edition to force the generation of journal entries on the payment
+        # This is required because no reconciliation is possible in community, which would prevent the user to reconcile the bank statement with the invoice
+        accounting_installed = self.env['account.move']._get_invoice_in_payment_state() == 'in_payment'
+
         for i, (pay, vals) in enumerate(zip(payments, vals_list)):
+            if not accounting_installed and not pay.outstanding_account_id:
+                outstanding_account = pay._get_outstanding_account(pay.payment_type)
+                pay.outstanding_account_id = outstanding_account.id
+
             if (
                 write_off_line_vals_list[i] is not None
                 or force_balance_vals_list[i] is not None
@@ -875,10 +895,21 @@ class AccountPayment(models.Model):
                     pay.move_id.write(move_vals)
         return payments
 
+    def _get_outstanding_account(self, payment_type):
+        account_ref = 'account_journal_payment_debit_account_id' if payment_type == 'inbound' else 'account_journal_payment_credit_account_id'
+        chart_template = self.with_context(allowed_company_ids=self.company_id.root_id.ids).env['account.chart.template']
+        outstanding_account = (
+            chart_template.ref(account_ref, raise_if_not_found=False)
+            or self.company_id.transfer_account_id
+        )
+        if not outstanding_account:
+            raise UserError(_("No outstanding account could be found to make the payment"))
+        return outstanding_account
+
     def write(self, vals):
-        if vals.get('state') == 'in_process' and not vals.get('move_id'):
+        if vals.get('state') in ('in_process', 'paid') and not vals.get('move_id'):
             self.filtered(lambda p: not p.move_id)._generate_journal_entry()
-            self.move_id.action_post()
+            self.move_id.filtered(lambda m: m.state == 'draft').action_post()
 
         res = super().write(vals)
         if self.move_id:
@@ -1025,6 +1056,7 @@ class AccountPayment(models.Model):
                     method_name=self.payment_method_line_id.name,
                     partner=payment.partner_id.display_name,
                 ))
+        self.filtered(lambda pay: pay.outstanding_account_id.account_type == 'asset_cash').state = 'paid'
         # Avoid going back one state when clicking on the confirm action in the payment list view and having paid expenses selected
         # We need to set values to each payment to avoid recomputation later
         self.filtered(lambda pay: pay.state in {False, 'draft', 'in_process'}).state = 'in_process'

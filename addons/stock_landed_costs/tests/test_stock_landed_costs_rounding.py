@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsCommon
+from odoo.fields import Date
 from odoo.tests import tagged, Form
 
 
@@ -283,3 +285,45 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
         deliveries.button_validate()
 
         self.assertEqual(self.product_a.value_svl, 0)
+
+    def test_lc_cost_split_cumulative_rounding_diff(self):
+        """ Ensure that the sum total difference of all rounding operations during the splitting of
+        an LC cost allots a sensible value to each cost line.
+        I.e., we don't end up with one line which bears the brunt of this difference.
+        """
+        product = self.env['product.product'].create({
+            'name': 'product',
+            'is_storable': True,
+            'standard_price': 10,
+            'categ_id': self.categ_real_time.id,
+        })
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_qty': 1,
+            }) for _ in range(6)],
+        })
+        purchase_order.button_confirm()
+        purchase_order.picking_ids.button_validate()
+        purchase_order.action_create_invoice()
+        bill = purchase_order.invoice_ids
+        bill.invoice_date = Date.today()
+        with Form(bill) as bill_form:
+            with bill_form.invoice_line_ids.new() as inv_line:
+                inv_line.product_id = self.landed_cost
+                inv_line.price_unit = 6.85
+                inv_line.is_landed_costs_line = True
+        bill.action_post()
+        action = bill.button_create_landed_costs()
+        lc = Form(self.env[action['res_model']].browse(action['res_id'])).save()
+        lc.picking_ids = [Command.link(purchase_order.picking_ids.id)]
+        lc.cost_lines.split_method = 'equal'
+        lc.button_validate()
+        line_costs = lc.valuation_adjustment_lines.mapped('additional_landed_cost')
+        for line_cost, expected_cost in zip(line_costs, [1.14, 1.14, 1.14, 1.14, 1.14, 1.15]):
+            self.assertAlmostEqual(
+                line_cost,
+                expected_cost,
+                delta=lc.currency_id.rounding * 0.1
+            )

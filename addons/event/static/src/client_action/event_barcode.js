@@ -120,14 +120,14 @@ export class EventScanView extends Component {
         if (this.isMultiEvent) {
             this.actionService.doAction("event.event_registration_action", {
                 additionalContext: {
-                    is_registration_desk_view: true,
+                    is_registration_desk_view: true, // To remove in master
                 },
             });
         } else {
             this.actionService.doAction("event.event_registration_action_kanban", {
                 additionalContext: {
                     active_id: this.eventId,
-                    is_registration_desk_view: true,
+                    is_registration_desk_view: true, // To remove in master
                     search_default_unconfirmed: true,
                     search_default_confirmed: true,
                 },
@@ -137,8 +137,6 @@ export class EventScanView extends Component {
 
     onClickBackToEvents() {
         if (this.isMultiEvent) {
-            // define action from scratch instead of using existing 'action_event_view' to avoid
-            // messing with menu bar
             this.actionService.doAction("event.action_event_view", { clearBreadcrumbs: true });
         } else {
             this.actionService.restore();

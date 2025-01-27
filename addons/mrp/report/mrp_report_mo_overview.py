@@ -149,7 +149,7 @@ class ReportMoOverview(models.AbstractModel):
             if bp_move.state == 'cancel' or float_is_zero(bp_move.cost_share, precision_digits=2):
                 continue
             # As UoMs can vary, we use the default UoM of each product
-            quantities_by_product[bp_move.product_id] += bp_move.product_qty
+            quantities_by_product[bp_move.product_id] += bp_move.product_uom._compute_quantity(bp_move.quantity, bp_move.product_id.uom_id, rounding_method='HALF-UP')
             cost_share = bp_move.cost_share / 100
             total_cost_by_product[bp_move.product_id] += extras['total_real_cost'] * cost_share
             component_cost_by_product[bp_move.product_id] += extras['total_real_cost_components'] * cost_share

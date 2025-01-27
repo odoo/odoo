@@ -279,8 +279,10 @@ function bootstrapToTable(editable) {
                 } else if (gridIndex + columnSize === 12) {
                     // Finish the row.
                     currentCol = grid[gridIndex];
-                    _applyColspan(currentCol, columnSize, containerWidth);
-                    currentRow.append(...grid.filter(td => td.getAttribute('colspan')));
+                    if (currentCol) {
+                        _applyColspan(currentCol, columnSize, containerWidth);
+                    }
+                    currentRow.append(...grid.filter(td => td.getAttribute('colspan')));    
                     if (columnIndex !== bootstrapColumns.length - 1) {
                         // The row was filled before we handled all of its
                         // columns. Create a new one and start again from there.
@@ -1645,13 +1647,6 @@ function _getMatchedCSSRules(node, cssRules, checkBlacklisted = false) {
         delete processedStyle['border-bottom-right-radius'];
         delete processedStyle['border-top-left-radius'];
         delete processedStyle['border-top-right-radius'];
-    }
-    if (processedStyle['border-left-width']) {
-        processedStyle['border-width'] = processedStyle['border-left-width'];
-        delete processedStyle['border-right-width'];
-        delete processedStyle['border-bottom-width'];
-        delete processedStyle['border-top-width'];
-        delete processedStyle['border-left-width'];
     }
 
     // If the border styling is initial we remove it to simplify the css tags

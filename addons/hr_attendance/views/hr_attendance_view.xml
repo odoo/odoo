@@ -229,6 +229,16 @@
                         domain="[('out_mode', '=', 'auto_check_out')]"/>
                 <separator/>
                 <filter string="Date" name="check_in_filter" date="check_in"/>
+                <separator/>
+                <filter
+                    string="Active Employees"
+                    name="activeemployees"
+                    domain="[('employee_id.active', '=', True)]"/>
+                <filter
+                    string="Archived Employees"
+                    name="archivedemployees"
+                    domain="[('employee_id.active', '=', False)]"/>
+                <separator invisible="1"/>
                 <filter string="Last 3 Months" invisible="1" name="last_three_months" domain="[(
                     'check_in','&gt;=', (
                         context_today() + datetime.timedelta(days=-90)
@@ -286,6 +296,7 @@
             {
                 "search_default_groupby_name" : 1,
                 "search_default_employee": 2,
+                "search_default_activeemployees": 1,
                 "search_default_last_three_months": 1
             }
         </field>
@@ -311,6 +322,15 @@
                 <filter string="To Approve" name="to_approve" domain="[('overtime_status','=', 'to_approve'), ('overtime_hours', '!=', 0)]"/>
                 <filter string="Approved" name="approved" domain="[('overtime_status','=', 'approved')]"/>
                 <filter string="Refused" name="refused" domain="[('overtime_status','=', 'refused')]"/>
+                <separator/>
+                <filter
+                    string="Active Employees"
+                    name="activeemployees"
+                    domain="[('employee_id.active', '=', True)]"/>
+                <filter
+                    string="Archived Employees"
+                    name="archivedemployees"
+                    domain="[('employee_id.active', '=', False)]"/>
                 <group string="Group By">
                     <filter string="Employee" name="employee" context="{'group_by': 'employee_id'}"/>
                 </group>
@@ -349,6 +369,7 @@
         <field name="context">
             {
                 "search_default_to_approve" : 1,
+                "search_default_activeemployees": 1,
             }
         </field>
         <field name="domain">[('check_out', '!=', False)]</field>
