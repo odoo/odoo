@@ -346,6 +346,7 @@ QUnit.module("Components", (hooks) => {
 
         const parent = await mount(Parent, target, { env });
         destroy(parent);
+        await Promise.resolve();
 
         assert.strictEqual(
             env.services.ui.activeElement,
