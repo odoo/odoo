@@ -9,6 +9,25 @@ from odoo import api, SUPERUSER_ID
 from odoo.http import request
 from functools import partial
 
+def pre_init_hook(cr):
+    env = api.Environment(cr, SUPERUSER_ID, {})
+
+    # Ensure the public user exists
+    public_user = env.ref("base.public_user", raise_if_not_found=False)
+    if not public_user:
+        partner = env.ref("base.public_partner", raise_if_not_found=False)
+        public_user = env["res.users"].sudo().create({
+            "name": "Public User",
+            "login": "public",
+            "partner_id": partner.id,
+            "groups_id": [(6, 0, [env.ref("base.group_public").id])],
+        })
+        # Update the XML ID of the public user
+        env["ir.model.data"]._update_xmlids([{
+            "xml_id": "base.public_user",
+            "record": public_user,
+            "noupdate": True,
+        }])
 
 def uninstall_hook(cr, registry):
     # Force remove ondelete='cascade' elements,

@@ -190,6 +190,31 @@ class TestUsers(TransactionCase):
         self.assertTrue(portal_partner_2.exists(), 'Should have kept the partner')
         self.assertEqual(asked_deletion_2.state, 'fail', 'Should have marked the deletion as failed')
 
+    @mute_logger('odoo.sql_db')
+    def test_deactivate_public_user(self):
+        """Test that the public user cannot be deleted."""
+        User = self.env['res.users']
+        public_user = self.env.ref('base.public_user')
+        public_partner = public_user.partner_id
+
+        # Attempt to archive the public user
+        try:
+            public_user.toggle_active()
+            self.assertFalse(public_user.active, 'Public user should be archived')
+            # Reactivate the public user for further tests
+            public_user.toggle_active()
+            self.assertTrue(public_user.active, 'Public user should be reactivated')
+        except Exception as e:
+            self.assertTrue(public_user.active, 'Public user cannot be archived')
+
+        # Attempt to delete the public user
+        with self.assertRaises(UserError, msg='Public user should not be deletable'):
+            public_user.unlink()
+
+        # Ensure the public user still exists and is active
+        self.assertTrue(public_user.exists() and public_user.active, 'Public user should still exist and be active')
+        self.assertTrue(public_partner.exists() and public_partner.active, 'Public partner should still exist and be active')
+
     def test_user_home_action_restriction(self):
         test_user = new_test_user(self.env, 'hello world')
 
