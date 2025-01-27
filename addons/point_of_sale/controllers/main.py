@@ -86,6 +86,7 @@ class PosController(PortalAccount):
         session_info['fallback_nomenclature_id'] = pos_session.config_id.fallback_nomenclature_id.id
         context = {
             'from_backend': 1 if from_backend else 0,
+            'use_pos_fake_tours': True if k.get('tours', False) else False,
             'session_info': session_info,
             'login_number': pos_session.with_company(pos_session.company_id).login(),
             'pos_session_id': pos_session.id,
