@@ -126,7 +126,7 @@
                                     <button
                                         class="oe_stat_button"
                                         string="Refuse"
-                                        invisible="not is_manager or overtime_status not in ['to_approve', 'approved']"
+                                        invisible="not is_manager or overtime_status not in ['to_approve', 'approved'] or validated_overtime_hours == 0"
                                         name="action_refuse_overtime"
                                         icon="fa-times"
                                         type="object"
