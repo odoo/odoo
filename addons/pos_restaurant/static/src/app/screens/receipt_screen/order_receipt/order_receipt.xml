@@ -39,14 +39,6 @@
             <t t-if="order.table_id">Table <t t-esc="order.table_id.table_number" /></t>
             <t t-if="order.table_id and order.customer_count">, Guests: <t t-esc="order.customer_count" /></t>
         </xpath>
-        <xpath expr="//div[hasclass('pos-receipt-contact')]" position="before">
-            <h1 class="tracking-number text-center" style="font-size: 100px" t-if="order.tracking_number and order.config.self_ordering_mode !== 'nothing'" t-esc="order.tracking_number" />
-        </xpath>
-        <xpath expr="//div[hasclass('pos-receipt-contact')]" position="after">
-            <div t-if="order.tracking_number and order.config.self_ordering_mode === 'nothing'">
-                <span class="tracking-number fs-1" t-esc="order.tracking_number" />
-            </div>
-        </xpath>
     </t>
 
 </templates>

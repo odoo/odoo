@@ -23,11 +23,16 @@
                 <div t-if="order.preset_id?.identification !== 'none'">
                     <div>--------------------------------</div>
                     <t t-if="order.preset_id?.identification === 'name'"> Takeout for: <t t-esc="order.floatingOrderName" /><br/></t>
-                    <t t-elif="order.preset_id?.identification === 'address'"> Delivery to: <br/><span t-foreach="partnerAddress" t-as="line" t-key="line_index">
-                        <t t-esc="line"/><br/>
-                    </span>
+                    <t t-elif="order.preset_id?.identification === 'address'"> Delivery to: <t t-esc="order.floatingOrderName" /><br/>
+                        <span t-foreach="partnerAddress" t-as="line" t-key="line_index">
+                            <t t-esc="line"/><br/>
+                        </span>
                     </t>
+                    <t t-if="order.presetDateTime" t-out="order.presetDateTime" />
                 </div>
+            </div>
+            <div t-if="order.tracking_number">
+                <span class="tracking-number fs-1" t-esc="order.tracking_number" />
             </div>
         </div>
         <br />
