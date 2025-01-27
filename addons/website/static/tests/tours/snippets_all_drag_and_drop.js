@@ -2,6 +2,8 @@ import {
     clickOnEditAndWaitEditMode,
     insertSnippet,
     goBackToBlocks,
+    clickOnSnippet,
+    changeOption,
 } from "@website/js/tours/tour_utils";
 import { patch } from "@web/core/utils/patch";
 
@@ -148,6 +150,13 @@ registry.category("web_tour.tours").add("snippets_all_drag_and_drop", {
         trigger: ".o_we_customize_panel",
         run: "click",
     },
+    // We hide the header before starting to drop snippets. This prevents
+    // situations where the header's drop zones overlap with those of the #wrap,
+    // ensuring that a snippet is dropped in the #wrap as expected instead of
+    // the header.
+    ...clickOnSnippet({id: "o_header_standard", name: "Header"}),
+    changeOption("TopMenuVisibility", "we-select:has([data-visibility]) we-toggler"),
+    changeOption("TopMenuVisibility", 'we-button[data-visibility="hidden"]'),
     goBackToBlocks(),
 ].concat(steps).concat([
     {
