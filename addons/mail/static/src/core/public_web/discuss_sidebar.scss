@@ -45,6 +45,9 @@
     &.o-active, &:hover {
         background-color: var(--mail-DiscussSidebar-itemActiveBgColor, mix($o-view-background-color, $o-action, 90%)) !important;
         outline-color: var(--mail-DiscussSidebar-itemActiveOutlineColor, rgba($o-action, .15)) !important;
-        filter: brightness(1.1);
+
+        .o-mail-DiscussSidebarChannel-itemName {
+            filter: brightness(1.1);
+        }
     }
 }
