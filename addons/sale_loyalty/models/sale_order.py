@@ -587,18 +587,21 @@ class SaleOrder(models.Model):
                 if not matching_lines:
                     raise ValidationError(_("No product is compatible with this promotion."))
 
-                untaxed_amount = sum(line.price_subtotal for line in matching_lines)
-                # Discount amount should not exceed total untaxed amount of the matching lines
+                applicable_amount = sum(
+                    line.price_total if any(mapped_taxes.mapped('price_include'))
+                    else line.price_subtotal for line in matching_lines
+                )
+                # Discount amount should not exceed applicable amount
                 reward_line_values['price_unit'] = max(
-                    -untaxed_amount,
+                    -applicable_amount,
                     reward_line_values['price_unit']
                 )
 
                 reward_line_values['tax_id'] = [Command.set(mapped_taxes.ids)]
-
-            # Discount amount should not exceed the untaxed amount on the order
-            if abs(reward_line_values['price_unit']) > self.amount_untaxed:
-                reward_line_values['price_unit'] = -self.amount_untaxed
+            else:
+                # Discount amount should not exceed the untaxed amount on the order
+                if abs(reward_line_values['price_unit']) > self.amount_untaxed:
+                    reward_line_values['price_unit'] = -self.amount_untaxed
 
             return [reward_line_values]
 

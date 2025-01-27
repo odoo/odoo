@@ -1186,21 +1186,25 @@ patch(PosOrder.prototype, {
                     return _t("No product is compatible with this promotion.");
                 }
 
-                const untaxedAmount = matchingLines.reduce(
-                    (sum, line) => sum + line.get_price_without_tax(),
-                    0
-                );
-                // Discount amount should not exceed total untaxed amount of the matching lines
+                const applicableAmount = matchingLines.reduce((sum, line) => {
+                    const lineAmount = line.tax_ids.some((tax) => tax.price_include)
+                        ? line.get_price_with_tax()
+                        : line.get_price_without_tax();
+                    return sum + lineAmount;
+                }, 0);
+
+                // Discount amount should not exceed applicable amount
                 rewardLineValues[0].price_unit = Math.max(
-                    -untaxedAmount,
+                    -applicableAmount,
                     rewardLineValues[0].price_unit
                 );
 
                 rewardLineValues[0].tax_ids = rewardTaxes;
-            }
-            // Discount amount should not exceed the untaxed amount on the order
-            if (Math.abs(rewardLineValues[0].price_unit) > this.amount_untaxed) {
-                rewardLineValues[0].price_unit = -this.amount_untaxed;
+            } else {
+                // Discount amount should not exceed the untaxed amount on the order
+                if (Math.abs(rewardLineValues[0].price_unit) > this.amount_untaxed) {
+                    rewardLineValues[0].price_unit = -this.amount_untaxed;
+                }
             }
             return rewardLineValues;
         }
