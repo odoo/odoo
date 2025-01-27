@@ -127,7 +127,7 @@ class IrCron(models.Model):
         job = self._acquire_one_job(cron_cr, self.id, include_not_ready=True)
         if not job:
             raise UserError(_("Job '%s' already executing", self.name))
-        self._process_job(cron_cr.dbname, cron_cr, job)
+        self._process_job(cron_cr, job)
         return True
 
     @staticmethod
@@ -180,7 +180,7 @@ class IrCron(models.Model):
             _logger.debug("job %s acquired", job_id)
             # take into account overridings of _process_job() on that database
             registry = Registry(db_name)
-            registry[IrCron._name]._process_job(db_name, cron_cr, job)
+            registry[IrCron._name]._process_job(cron_cr, job)
             cron_cr.commit()
             _logger.debug("job %s updated and released", job_id)
 
@@ -340,7 +340,7 @@ class IrCron(models.Model):
         _logger.warning(message)
 
     @classmethod
-    def _process_job(cls, db, cron_cr: BaseCursor, job) -> None:
+    def _process_job(cls, cron_cr: BaseCursor, job) -> None:
         """
         Execute the cron's server action in a dedicated transaction.
 
