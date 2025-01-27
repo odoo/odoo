@@ -126,9 +126,10 @@ class StockLot(models.Model):
         if not self:
             raise UserError(_("Select an existing lot/serial number to be reevaluated"))
         self.ensure_one()
-        ctx = dict(self._context, default_lot_id=self.id, default_company_id=self.env.company.id)
+        ctx = dict(self._context, default_lot_id=self.id, default_company_id=self.env.company.id, show_lot=self.lot_valuated)
+        title = _('Lot/Serial number Revaluation - %s', f"[{self.product_id.default_code}] {self.product_id.name}" if self.product_id.default_code else self.product_id.name)
         return {
-            'name': _("Lot/Serial number Revaluation"),
+            'name': title,
             'view_mode': 'form',
             'res_model': 'stock.valuation.layer.revaluation',
             'view_id': self.env.ref('stock_account.stock_valuation_layer_revaluation_form_view').id,
