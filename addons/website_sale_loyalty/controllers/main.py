@@ -5,6 +5,7 @@ from werkzeug.urls import url_encode, url_parse
 from odoo import http, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
+from odoo.tools import float_compare
 
 from odoo.addons.website_sale.controllers import main
 
@@ -158,7 +159,8 @@ class PaymentPortal(main.PaymentPortal):
             initial_amount = order_sudo.amount_total
             order_sudo._update_programs_and_rewards()
             order_sudo.validate_taxes_on_sales_order()  # re-applies taxcloud taxes if necessary
-            if initial_amount != order_sudo.amount_total:
+            rounding = order_sudo.currency_id.rounding
+            if float_compare(order_sudo.amount_total, initial_amount, precision_rounding=rounding) != 0:
                 raise ValidationError(
                     _("Cannot process payment: applied reward was changed or has expired.")
                 )
