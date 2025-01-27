@@ -1,0 +1,10 @@
+<odoo>
+    <record model="ir.cron" id="l10n_pt_stock_cron_missing_hashes">
+        <field name="name">Generate the missing hashes of stock pickings</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="model_id" ref="model_stock_picking"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_l10n_pt_stock_compute_missing_hashes()</field>
+    </record>
+</odoo>

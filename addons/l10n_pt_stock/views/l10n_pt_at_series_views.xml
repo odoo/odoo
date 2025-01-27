@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_pt_at_series_series_tree" model="ir.ui.view">
+        <field name="name">stock.pt.at.series.tree</field>
+        <field name="model">l10n_pt.at.series</field>
+        <field name="inherit_id" ref="l10n_pt.view_l10n_pt_at_series_series_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='at_code']" position="after">
+                <field name="picking_type_id" optional="hide" domain="picking_type_id_domain"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

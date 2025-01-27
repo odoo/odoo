@@ -203,7 +203,7 @@
                                                 <span t-field="line.name" t-options="{'widget': 'text'}">A section title</span>
                                             </td>
                                             <t t-set="current_section" t-value="line"/>
-                                            <t t-set="current_subtotal" t-value="0"/>
+                                            <t id="reset_current_subtotal" t-set="current_subtotal" t-value="0"/>
                                         </t>
                                         <t t-elif="line.display_type == 'line_note'">
                                             <td colspan="99">
@@ -385,7 +385,7 @@
                             <td>
                                 <span class="text-nowrap" t-out="tax_group['group_name']">Tax 15%</span>
                             </td>
-                            <td class="text-end o_price_total">
+                            <td name="td_subtotal" class="text-end o_price_total">
                                 <span class="text-nowrap"
                                       t-out="tax_group['tax_amount_currency']"
                                       t-options='{"widget": "monetary", "display_currency": currency}'
@@ -401,7 +401,7 @@
                                       t-options='{"widget": "monetary", "display_currency": currency}'
                                 >27.00</span>
                             </td>
-                            <td class="text-end o_price_total">
+                            <td name="td_subtotal" class="text-end o_price_total">
                                 <span class="text-nowrap"
                                       t-out="tax_group['tax_amount_currency']"
                                       t-options='{"widget": "monetary", "display_currency": currency}'

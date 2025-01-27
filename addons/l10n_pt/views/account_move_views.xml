@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_move_form" model="ir.ui.view">
+            <field name="name">account.move.form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('alert')]" position="after">
+                    <field name="l10n_pt_show_future_date_warning" invisible="1"/>
+                    <div class="alert alert-warning mb-0" role="alert"
+                         invisible="not l10n_pt_show_future_date_warning">
+                        Setting the invoice date in the future will prevent new documents with an invoice date before
+                        or on the <field name="invoice_date" readonly="1"/> from being posted.
+                    </div>
+                </xpath>
+                <xpath expr="//page[@id='other_tab']//field[@name='inalterable_hash']" position="after">
+                    <field name="l10n_pt_atcud" invisible="country_code != 'PT' or move_type not in ('out_invoice', 'out_refund')"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1430,6 +1430,7 @@
                                         <field name="incoterm_location"/>
                                         <field name="fiscal_position_id" readonly="state in ['cancel', 'posted']"/>
                                         <field name="secured" groups="account.group_account_secured,base.group_no_one"/>
+                                        <field name="inalterable_hash" groups="base.group_no_one" invisible="not secured"/>
                                         <field name="preferred_payment_method_line_id"
                                                string="Payment Method"
                                                domain="[('payment_type', '=', 'inbound'), ('company_id', '=', company_id)]"

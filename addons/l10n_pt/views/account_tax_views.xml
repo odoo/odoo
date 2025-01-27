@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_tax_form" model="ir.ui.view">
+            <field name="name">account.tax.form</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='advanced_options']" position="inside">
+                    <group invisible="country_code != 'PT'">
+                        <group>
+                            <field name="l10n_pt_tax_exemption_reason" required="country_code == 'PT' and amount == 0"/>
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_account_tax_group_form_pt" model="ir.ui.view">
+            <field name="name">account.tax.group.tree</field>
+            <field name="model">account.tax.group</field>
+            <field name="inherit_id" ref="account.view_tax_group_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='tax_payable_account_id']" position="after">
+                    <field name="country_code" invisible="1"/>
+                    <field name="l10n_pt_tax_region" invisible="country_code != 'PT'" required="country_code == 'PT'"/>
+                    <field name="l10n_pt_tax_category" invisible="country_code != 'PT'" required="country_code == 'PT'"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

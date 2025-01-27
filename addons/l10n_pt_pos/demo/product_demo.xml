@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Bakery products -->
+    <record id="point_of_sale.product_wholemeal_loaf" model="product.product">
+        <field name="default_code">BAKE_0001</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.product_tiger_white_loaf" model="product.product">
+        <field name="default_code">BAKE_0002</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.product_butter_croissant" model="product.product">
+        <field name="default_code">BAKE_0003</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.product_apple_pie" model="product.product">
+        <field name="default_code">BAKE_0004</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.product_cherry_pie" model="product.product">
+        <field name="default_code">BAKE_0005</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.product_sourdough_loaf" model="product.product">
+        <field name="default_code">BAKE_0006</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.product_multigrain_bread" model="product.product">
+        <field name="default_code">BAKE_0007</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.product_rye_bread" model="product.product">
+        <field name="default_code">BAKE_0008</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.product_cinnamon_roll" model="product.product">
+        <field name="default_code">BAKE_0009</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.product_pain_au_chocolat" model="product.product">
+        <field name="default_code">BAKE_0010</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.product_blueberry_muffin" model="product.product">
+        <field name="default_code">BAKE_0011</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.product_bagel" model="product.product">
+        <field name="default_code">BAKE_0012</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.product_cheese_croissant" model="product.product">
+        <field name="default_code">BAKE_0013</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.product_pecan_pie" model="product.product">
+        <field name="default_code">BAKE_0014</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+
+    <!-- Clothes products -->
+    <record id="point_of_sale.casual_denim_short" model="product.product">
+        <field name="default_code">CLOTHES_0001</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.classic_leather_belt" model="product.product">
+        <field name="default_code">CLOTHES_0002</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.cozy_sweater" model="product.product">
+        <field name="default_code">CLOTHES_0003</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.leather_jacket" model="product.product">
+        <field name="default_code">CLOTHES_0004</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.summer_hat" model="product.product">
+        <field name="default_code">CLOTHES_0005</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.jean_jacket" model="product.product">
+        <field name="default_code">CLOTHES_0006</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.sport_shoes" model="product.product">
+        <field name="default_code">CLOTHES_0007</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.product_green_hood" model="product.product">
+        <field name="default_code">CLOTHES_0008</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.product_crocheted_poncho_unisize" model="product.product">
+        <field name="default_code">CLOTHES_0009</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.product_odoo_sneakers" model="product.product">
+        <field name="default_code">CLOTHES_0010</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.product_t_shirt_pants" model="product.product">
+        <field name="default_code">CLOTHES_0011</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.t_shirt_black_embroidered" model="product.product">
+        <field name="default_code">CLOTHES_0012</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.product_blue_denim_jeans" model="product.product">
+        <field name="default_code">CLOTHES_0013</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.casual_t_shirt" model="product.product">
+        <field name="default_code">CLOTHES_0014</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.product_classic_brown_jacket" model="product.product">
+        <field name="default_code">CLOTHES_0015</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.product_blue_denim_jeans_slim" model="product.product">
+        <field name="default_code">CLOTHES_0016</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.casual_denim_short" model="product.product">
+        <field name="default_code">CLOTHES_0017</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.t_shirt_slim" model="product.product">
+        <field name="default_code">CLOTHES_0018</field>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+
+    <!-- Furniture products -->
+    <record id="point_of_sale.whiteboard_pen" model="product.product">
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.whiteboard" model="product.product">
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.small_shelf" model="product.product">
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.wall_shelf" model="product.product">
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.led_lamp" model="product.product">
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.letter_tray" model="product.product">
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.magnetic_board" model="product.product">
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+    <record id="point_of_sale.newspaper_rack" model="product.product">
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 23%')]"/>
+    </record>
+
+</odoo>

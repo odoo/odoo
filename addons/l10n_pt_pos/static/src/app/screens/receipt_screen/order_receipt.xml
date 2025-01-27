@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_pt_pos.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+<!--    Add tax exemption reason codes to each line with an exempt tax -->
+        <xpath expr="//Orderline" position="inside">
+            <t t-if="line.taxExemptionReasons" t-out="line.taxExemptionReasons"/>
+        </xpath>
+<!--    Add summary of tax exemption reasons below order total -->
+        <xpath expr="//div[hasclass('paymentlines')]" position="after">
+            <span class="pos-receipt-center-align">
+                <div>--------------------------------</div>
+            </span>
+            <t t-set="pt_tax_exemption_reasons" t-value="order.taxExemptionReasons"/>
+            <t t-if="order.isPortugueseCompany() and pt_tax_exemption_reasons">
+                <div class=" rounded-3 bg-white overflow-hidden pb-2">
+                    <span class="fw-bolder text-nowrap mw-100">Motivos de isenção de IVA:</span>
+                    <t t-foreach="pt_tax_exemption_reasons" t-as="reason" t-key="reason_index">
+                        <div><t t-out="reason"/></div>
+                    </t>
+                </div>
+            </t>
+        </xpath>
+<!--    Add Portuguese disclaimers and information mandatory for the certification (software number, QR code, ATCUD) -->
+        <xpath expr="//div[hasclass('before-footer')]" position="inside">
+            <div t-if="order.isPortugueseCompany()" class="pos-receipt-center-align">
+                <t t-if="order.session_id.l10nPtTrainingMode">
+                    Documento emitido para fins de Formação
+                </t>
+                <t t-if="!order.l10nPtPosInalterableHashShort">
+                    <div>
+                        Este documento não serve de fatura
+                    </div>
+                    <div>
+                        Emitido por programa certificado n.º <t t-out="order.l10nPtCertificationNumber"/>/AT
+                    </div>
+                </t>
+                <t t-else="">
+                    <img id="pos_pt_qrcode" t-att-src="order.l10nPtPosGetQrCodeData(order.l10nPtPosQrCodeStr)" class="pos-receipt-logo"/>
+                    <div>
+                        ATCUD: <t t-esc="order.l10nPtPosAtcud"/>
+                    </div>
+                    <div>
+                        <t t-out="order.l10nPtPosInalterableHashShort"/> - Processado por programa certificado n.º <t t-out="order.l10nPtCertificationNumber"/>/AT
+                    </div>
+                </t>
+            </div>
+        </xpath>
+    </t>
+</templates>

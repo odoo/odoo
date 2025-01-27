@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_pt_stock</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <block name="request_vendor_setting_container" position="after">
+                <block title="Reporting" id="l10n_pt_stock_reports_settings" groups="account.group_account_user" invisible="not module_account_reports">
+                    <setting>
+                        <button name="%(l10n_pt_stock.action_l10n_pt_stock_check_hash_integrity)d" type="action" string="Download the Stock Data Inalterability Check Report" class="oe_link" id="action_l10n_pt_stock_hash_integrity"/>
+                    </setting>
+                </block>
+            </block>
+
+        </field>
+    </record>
+
+</odoo>
