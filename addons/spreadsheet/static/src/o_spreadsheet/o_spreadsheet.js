@@ -11565,15 +11565,18 @@
         let currentIndex;
         let currentVal;
         let currentType;
+        const getValue = sortOrder === "desc"
+            ? (i) => getValueInData(data, rangeLength - i - 1)
+            : (i) => getValueInData(data, i);
         while (indexRight - indexLeft >= 0) {
             indexMedian = Math.floor((indexLeft + indexRight) / 2);
             currentIndex = indexMedian;
-            currentVal = getValueInData(data, currentIndex);
+            currentVal = getValue(currentIndex);
             currentType = typeof currentVal;
             // 1 - linear search to find value with the same type
             while (indexLeft < currentIndex && targetType !== currentType) {
                 currentIndex--;
-                currentVal = getValueInData(data, currentIndex);
+                currentVal = getValue(currentIndex);
                 currentType = typeof currentVal;
             }
             if (currentType !== targetType || currentVal === undefined) {
@@ -11588,8 +11591,7 @@
             else if (mode === "nextSmaller" && currentVal <= target) {
                 if (matchVal === undefined ||
                     matchVal < currentVal ||
-                    (matchVal === currentVal && sortOrder === "asc" && matchValIndex < currentIndex) ||
-                    (matchVal === currentVal && sortOrder === "desc" && matchValIndex > currentIndex)) {
+                    (matchVal === currentVal && matchValIndex < currentIndex)) {
                     matchVal = currentVal;
                     matchValIndex = currentIndex;
                 }
@@ -11597,15 +11599,13 @@
             else if (mode === "nextGreater" && currentVal >= target) {
                 if (matchVal === undefined ||
                     matchVal > currentVal ||
-                    (matchVal === currentVal && sortOrder === "asc" && matchValIndex < currentIndex) ||
-                    (matchVal === currentVal && sortOrder === "desc" && matchValIndex > currentIndex)) {
+                    (matchVal === currentVal && matchValIndex < currentIndex)) {
                     matchVal = currentVal;
                     matchValIndex = currentIndex;
                 }
             }
             // 3 - give new indexes for the Binary search
-            if ((sortOrder === "asc" && currentVal > target) ||
-                (sortOrder === "desc" && currentVal <= target)) {
+            if (currentVal > target || (mode === "strict" && currentVal === target)) {
                 indexRight = currentIndex - 1;
             }
             else {
@@ -11613,7 +11613,10 @@
             }
         }
         // note that valMinIndex could be 0
-        return matchValIndex !== undefined ? matchValIndex : -1;
+        if (matchValIndex === undefined) {
+            return -1;
+        }
+        return sortOrder === "desc" ? rangeLength - matchValIndex - 1 : matchValIndex;
     }
     /**
      * Perform a linear search and return the index of the match.
@@ -34416,12 +34419,21 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         drawGrid(renderingContext, layer) {
             switch (layer) {
                 case 0 /* LAYERS.Background */:
-                    this.boxes = this.getGridBoxes();
                     this.drawBackground(renderingContext);
-                    this.drawCellBackground(renderingContext);
-                    this.drawBorders(renderingContext);
-                    this.drawTexts(renderingContext);
-                    this.drawIcon(renderingContext);
+                    for (const zone of this.getters.getAllActiveViewportsZones()) {
+                        const { ctx } = renderingContext;
+                        ctx.save();
+                        ctx.beginPath();
+                        const rect = this.getters.getVisibleRect(zone);
+                        ctx.rect(rect.x, rect.y, rect.width, rect.height);
+                        ctx.clip();
+                        this.boxes = this.getGridBoxes(zone);
+                        this.drawCellBackground(renderingContext);
+                        this.drawBorders(renderingContext);
+                        this.drawTexts(renderingContext);
+                        this.drawIcon(renderingContext);
+                        ctx.restore();
+                    }
                     this.drawFrozenPanes(renderingContext);
                     break;
                 case 7 /* LAYERS.Headers */:
@@ -34786,7 +34798,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const row = zone.top;
             const cell = this.getters.getCell(sheetId, col, row);
             const showFormula = this.getters.shouldShowFormulas();
-            const { x, y, width, height } = this.getters.getVisibleRect(zone);
+            const { x, y, width, height } = this.getters.getRect(zone);
             const box = {
                 x,
                 y,
@@ -34898,12 +34910,16 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             return box;
         }
-        getGridBoxes() {
+        getGridBoxes(zone) {
             const boxes = [];
-            const visibleCols = this.getters.getSheetViewVisibleCols();
+            const visibleCols = this.getters
+                .getSheetViewVisibleCols()
+                .filter((col) => col >= zone.left && col <= zone.right);
             const left = visibleCols[0];
             const right = visibleCols[visibleCols.length - 1];
-            const visibleRows = this.getters.getSheetViewVisibleRows();
+            const visibleRows = this.getters
+                .getSheetViewVisibleRows()
+                .filter((row) => row >= zone.top && row <= zone.bottom);
             const top = visibleRows[0];
             const bottom = visibleRows[visibleRows.length - 1];
             const viewport = { left, right, top, bottom };
@@ -35433,7 +35449,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             ];
             state.paste(pasteTarget, { selectTarget: true });
             const toRemove = isBasedBefore ? cmd.elements.map((el) => el + thickness) : cmd.elements;
-            let currentIndex = cmd.base;
+            let currentIndex = isBasedBefore ? cmd.base : cmd.base + 1;
             for (const element of toRemove) {
                 const size = cmd.dimension === "COL"
                     ? this.getters.getColSize(cmd.sheetId, element)
@@ -36940,7 +36956,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * @param zone
          * @returns Computes the absolute coordinate of a given zone inside the viewport
          */
-        getRect(zone) {
+        getVisibleRect(zone) {
             const targetZone = intersection(zone, this.zone);
             if (targetZone) {
                 const x = this.getters.getColRowOffset("COL", this.zone.left, targetZone.left) +
@@ -36948,12 +36964,20 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 const y = this.getters.getColRowOffset("ROW", this.zone.top, targetZone.top) + this.offsetCorrectionY;
                 const width = Math.min(this.getters.getColRowOffset("COL", targetZone.left, targetZone.right + 1), this.viewportWidth);
                 const height = Math.min(this.getters.getColRowOffset("ROW", targetZone.top, targetZone.bottom + 1), this.viewportHeight);
-                return {
-                    x,
-                    y,
-                    width,
-                    height,
-                };
+                return { x, y, width, height };
+            }
+            else {
+                return undefined;
+            }
+        }
+        getFullRect(zone) {
+            const targetZone = intersection(zone, this.zone);
+            if (targetZone) {
+                const x = this.getters.getColRowOffset("COL", this.zone.left, zone.left) + this.offsetCorrectionX;
+                const y = this.getters.getColRowOffset("ROW", this.zone.top, zone.top) + this.offsetCorrectionY;
+                const width = this.getters.getColRowOffset("COL", zone.left, zone.right + 1);
+                const height = this.getters.getColRowOffset("ROW", zone.top, zone.bottom + 1);
+                return { x, y, width, height };
             }
             else {
                 return undefined;
@@ -37447,21 +37471,26 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         getVisibleRect(zone) {
             const sheetId = this.getters.getActiveSheetId();
             const viewportRects = this.getSubViewports(sheetId)
-                .map((viewport) => viewport.getRect(zone))
+                .map((viewport) => viewport.getVisibleRect(zone))
                 .filter(isDefined$1);
             if (viewportRects.length === 0) {
                 return { x: 0, y: 0, width: 0, height: 0 };
             }
-            const x = Math.min(...viewportRects.map((rect) => rect.x));
-            const y = Math.min(...viewportRects.map((rect) => rect.y));
-            const width = Math.max(...viewportRects.map((rect) => rect.x + rect.width)) - x;
-            const height = Math.max(...viewportRects.map((rect) => rect.y + rect.height)) - y;
-            return {
-                x: x + this.gridOffsetX,
-                y: y + this.gridOffsetY,
-                width,
-                height,
-            };
+            return this.recomposeRect(viewportRects);
+        }
+        /**
+         * Computes the actual size and position (:Rect) of the zone on the canvas
+         * regardless of the viewport dimensions.
+         */
+        getRect(zone) {
+            const sheetId = this.getters.getActiveSheetId();
+            const viewportRects = this.getSubViewports(sheetId)
+                .map((viewport) => viewport.getFullRect(zone))
+                .filter(isDefined$1);
+            if (viewportRects.length === 0) {
+                return { x: 0, y: 0, width: 0, height: 0 };
+            }
+            return this.recomposeRect(viewportRects);
         }
         /**
          * Returns the position of the MainViewport relatively to the start of the grid (without headers)
@@ -37474,6 +37503,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const x = this.getters.getColDimensions(sheetId, xSplit).start;
             const y = this.getters.getRowDimensions(sheetId, ySplit).start;
             return { x, y };
+        }
+        getAllActiveViewportsZones() {
+            const sheetId = this.getters.getActiveSheetId();
+            return this.getSubViewports(sheetId);
         }
         // ---------------------------------------------------------------------------
         // Private
@@ -37657,6 +37690,18 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const height = this.sheetViewHeight + this.gridOffsetY;
             return { xRatio: offsetCorrectionX / width, yRatio: offsetCorrectionY / height };
         }
+        recomposeRect(viewportRects) {
+            const x = Math.min(...viewportRects.map((rect) => rect.x));
+            const y = Math.min(...viewportRects.map((rect) => rect.y));
+            const width = Math.max(...viewportRects.map((rect) => rect.x + rect.width)) - x;
+            const height = Math.max(...viewportRects.map((rect) => rect.y + rect.height)) - y;
+            return {
+                x: x + this.gridOffsetX,
+                y: y + this.gridOffsetY,
+                width,
+                height,
+            };
+        }
     }
     SheetViewPlugin.getters = [
         "getColIndex",
@@ -37677,6 +37722,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         "getSheetViewVisibleCols",
         "getSheetViewVisibleRows",
         "getFrozenSheetViewRatio",
+        "getAllActiveViewportsZones",
+        "getRect",
     ];
 
     class SortPlugin extends UIPlugin {
@@ -43522,9 +43569,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.57';
-    __info__.date = '2025-01-14T11:48:39.776Z';
-    __info__.hash = '5c7bf6e';
+    __info__.version = '16.0.58';
+    __info__.date = '2025-01-27T10:55:15.353Z';
+    __info__.hash = '4886b0b';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
