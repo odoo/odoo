@@ -134,10 +134,15 @@ export class Composer extends Component {
         });
         useExternalListener(window, "beforeunload", this.saveContent.bind(this));
         if (this.props.dropzoneRef) {
-            useCustomDropzone(this.props.dropzoneRef, MailAttachmentDropzone, {
-                extraClass: "o-mail-Composer-dropzone",
-                onDrop: this.onDropFile,
-            }, () => this.allowUpload);
+            useCustomDropzone(
+                this.props.dropzoneRef,
+                MailAttachmentDropzone,
+                {
+                    extraClass: "o-mail-Composer-dropzone",
+                    onDrop: this.onDropFile,
+                },
+                () => this.allowUpload
+            );
         }
         if (this.props.messageEdition) {
             this.props.messageEdition.composerOfThread = this;
@@ -328,7 +333,7 @@ export class Composer extends Component {
     }
 
     get hasSendButtonNonEditing() {
-        return !this.extended;
+        return !this.extended && !this.props.composer.message;
     }
 
     get hasSuggestions() {
@@ -534,8 +539,9 @@ export class Composer extends Component {
             mentionedPartners: this.props.composer.mentionedPartners,
         });
         const signature = this.store.self.signature;
-        const default_body = await prettifyMessageContent(body, validMentions) +
-            ((this.props.composer.emailAddSignature && signature) ? ("<br>" + signature) : "");
+        const default_body =
+            (await prettifyMessageContent(body, validMentions)) +
+            (this.props.composer.emailAddSignature && signature ? "<br>" + signature : "");
         const context = {
             default_attachment_ids: attachmentIds,
             default_body,
@@ -751,7 +757,7 @@ export class Composer extends Component {
         } else {
             Object.assign(config, {
                 emailAddSignature: true,
-                text: composer.text
+                text: composer.text,
             });
         }
         browser.localStorage.setItem(composer.localId, JSON.stringify(config));
@@ -767,6 +773,6 @@ export class Composer extends Component {
             }
         } catch {
             browser.localStorage.removeItem(composer.localId);
-        };
+        }
     }
 }
