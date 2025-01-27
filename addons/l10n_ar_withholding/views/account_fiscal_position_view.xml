@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="account.view_account_position_form"/>
         <field name="arch" type="xml">
             <notebook>
-                <page string="Perceptions and Withholdings" invisible="'AR'not in fiscal_country_codes">
+                <page string="Perceptions and Withholdings" invisible="'AR' not in fiscal_country_codes">
                     <field name="l10n_ar_tax_ids">
                         <list editable="bottom">
                             <field name="tax_type"/>
