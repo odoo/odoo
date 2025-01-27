@@ -65,15 +65,7 @@
                         </div>
                         <group class="o_label_nowrap">
                             <field name="active" invisible="1"/>
-                            <field name="channel_type" groups="base.group_no_one"/>
                             <field name="description" placeholder="Topics discussed in this group..." readonly="not is_editable"/>
-                            <field name="parent_channel_id" groups="base.group_no_one"/>
-                            <field name="sub_channel_ids" groups="base.group_no_one"/>
-                            <field name="from_message_id" groups="base.group_no_one"/>
-                        </group>
-                        <group class="o_label_nowrap" groups="base.group_no_one">
-                            <field name="sfu_channel_uuid"/>
-                            <field name="sfu_server_url"/>
                         </group>
                         <notebook>
                             <page string="Privacy" name="privacy">
@@ -93,6 +85,16 @@
                                         <field name="guest_id" readonly="id or partner_id" required="not partner_id"/>
                                     </list>
                                 </field>
+                            </page>
+                            <page string="Extra info" name="extra_info" groups="base.group_no_one">
+                                <group class="o_label_nowrap">
+                                    <field name="channel_type"/>
+                                    <field name="parent_channel_id"/>
+                                    <field name="sub_channel_ids"/>
+                                    <field name="from_message_id"/>
+                                    <field name="sfu_channel_uuid"/>
+                                    <field name="sfu_server_url"/>
+                                </group>
                             </page>
                             <page string="Integrations" invisible="1" name="discuss_channel_integrations"></page>
                         </notebook>
