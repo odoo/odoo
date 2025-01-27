@@ -751,6 +751,7 @@ QUnit.test("registrations and elements belong to the correct UI owner", async (a
     await nextTick();
 
     destroy(comp2);
+    await Promise.resolve();
     triggerHotkey("a");
     triggerHotkey("b", true);
     await nextTick();
