@@ -128,9 +128,9 @@ class StockLot(models.Model):
         elif all(float_is_zero(layer.remaining_qty, precision_rounding=self.product_id.uom_id.rounding) for layer in self.stock_valuation_layer_ids):
             raise UserError(_("You cannot adjust the valuation of a layer with zero quantity"))
         self.ensure_one()
-        ctx = dict(self._context, default_lot_id=self.id, default_company_id=self.env.company.id)
+        ctx = dict(self._context, default_lot_ids=self.ids, default_company_id=self.env.company.id)
         return {
-            'name': _("Lot/Serial number Revaluation"),
+            'name': _('Lot/Serial number Revaluation - %s', self.product_id.display_name),
             'view_mode': 'form',
             'res_model': 'stock.valuation.layer.revaluation',
             'view_id': self.env.ref('stock_account.stock_valuation_layer_revaluation_form_view').id,

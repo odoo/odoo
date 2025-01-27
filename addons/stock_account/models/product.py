@@ -273,7 +273,7 @@ will update the cost of every lot/serial number in stock."),
         self.ensure_one()
         ctx = dict(self._context, default_product_id=self.id, default_company_id=self.env.company.id)
         return {
-            'name': _("Product Revaluation"),
+            'name': _('Product Revaluation - %s', self.display_name),
             'view_mode': 'form',
             'res_model': 'stock.valuation.layer.revaluation',
             'view_id': self.env.ref('stock_account.stock_valuation_layer_revaluation_form_view').id,

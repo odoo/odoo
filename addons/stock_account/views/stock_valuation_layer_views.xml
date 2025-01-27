@@ -193,6 +193,17 @@
         </field>
     </record>
 
+    <record id="action_stock_adjust_valuation" model="ir.actions.server">
+        <field name="name">Adjust Valuation</field>
+        <field name="model_id" ref="stock_account.model_stock_valuation_layer"/>
+        <field name="binding_model_id" ref="stock_account.model_stock_valuation_layer"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.action_stock_adjust_valuation()
+        </field>
+    </record>
+
     <menuitem id="menu_valuation" name="Valuation" parent="stock.menu_warehouse_report" sequence="250" action="stock_valuation_layer_action"/>
 
     <record id="stock_valuation_layer_picking" model="ir.ui.view">
