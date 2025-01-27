@@ -9,7 +9,7 @@
                     DUPLICATA !
                 </div>
                 <div class="pos-receipt-title" t-if="data.preset_name">
-                    <t t-esc="data.preset_name"/>
+                    <t t-esc="data.preset_name"/> <t t-if="data.preset_time">(<t t-esc="data.preset_time"/>)</t>
                 </div>
                 <div style="font-size: 78%;">
                     <span><t t-esc="data.config_name"/> : <t t-esc="data.time"/></span><br/>

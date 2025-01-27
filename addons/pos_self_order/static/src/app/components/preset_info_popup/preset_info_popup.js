@@ -1,6 +1,7 @@
 import { Component, onWillStart, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { rpc } from "@web/core/network/rpc";
+import { localization } from "@web/core/l10n/localization";
 
 const { DateTime } = luxon;
 export class PresetInfoPopup extends Component {
@@ -43,7 +44,7 @@ export class PresetInfoPopup extends Component {
             this.selfOrder.currentOrder.floating_order_name = `${this.preset.name} - ${partner["res.partner"][0].name}`;
             this.selfOrder.currentOrder.partner_id = partner["res.partner"][0];
         } else {
-            this.selfOrder.currentOrder.floating_order_name = `${this.preset.name} - ${this.state.name}`;
+            this.selfOrder.currentOrder.floating_order_name = this.state.name;
         }
 
         if (this.preset.needsSlot && this.state.selectedSlot) {
@@ -109,5 +110,10 @@ export class PresetInfoPopup extends Component {
             (!this.preset.needsName || this.state.name) &&
             (!this.preset.needsPartner || partnerInfo)
         );
+    }
+
+    formatDate(date) {
+        const dateObj = DateTime.fromFormat(date, "yyyy-MM-dd");
+        return dateObj.toFormat(localization.dateFormat);
     }
 }
