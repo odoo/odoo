@@ -2566,7 +2566,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 
 <template id="one_hybrid" name="Single any Search Results">
     <a t-att-href="result.get('website_url')" class="dropdown-item p-2 text-wrap">
-        <div class="d-flex align-items-center o_search_result_item">
+        <div class="d-flex align-items-center flex-wrap o_search_result_item">
             <img t-if="result.get('image_url')" t-att-src="result.get('image_url')" class="flex-shrink-0 o_image_64_contain"/>
             <i t-else="" t-att-class="'o_image_64_contain text-center pt16 fa %s' % result.get('_fa')" style="font-size: 34px;"/>
             <div class="o_search_result_item_detail px-3">
@@ -2579,7 +2579,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                     t-attf-onclick="location.href='#{result.get('extra_link_url')}';return false;"/>
                 <t t-if="extra_link_html" t-out="extra_link_html"/>
             </div>
-            <div class="flex-shrink-0">
+            <div class="flex-shrink-0 ms-auto">
                 <t t-if="result.get('detail_strike')">
                     <span class="text-danger text-nowrap" style="text-decoration: line-through;">
                         <t t-out="result.get('detail_strike')"/>
