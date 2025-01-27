@@ -18,6 +18,7 @@ from odoo.tools import SQL
 from odoo.tools.constants import GC_UNLINK_LIMIT
 
 if typing.TYPE_CHECKING:
+    from collections.abc import Iterable
     from odoo.sql_db import BaseCursor
 
 _logger = logging.getLogger(__name__)
@@ -142,24 +143,7 @@ class IrCron(models.Model):
                 if not jobs:
                     return
                 cls._check_modules_state(cron_cr, jobs)
-
-                for job_id in (job['id'] for job in jobs):
-                    try:
-                        job = cls._acquire_one_job(cron_cr, job_id)
-                    except psycopg2.extensions.TransactionRollbackError:
-                        cron_cr.rollback()
-                        _logger.debug("job %s has been processed by another worker, skip", job_id)
-                        continue
-                    if not job:
-                        _logger.debug("another worker is processing job %s, skip", job_id)
-                        continue
-                    _logger.debug("job %s acquired", job_id)
-                    # take into account overridings of _process_job() on that database
-                    registry = Registry(db_name)
-                    registry[cls._name]._process_job(db, cron_cr, job)
-                    cron_cr.commit()
-                    _logger.debug("job %s updated and released", job_id)
-
+                cls._process_jobs_loop(cron_cr, job_ids=[job['id'] for job in jobs])
         except BadVersion:
             _logger.warning('Skipping database %s as its base version is not %s.', db_name, BASE_VERSION)
         except BadModuleState:
@@ -174,6 +158,31 @@ class IrCron(models.Model):
         finally:
             if hasattr(threading.current_thread(), 'dbname'):
                 del threading.current_thread().dbname
+
+    @staticmethod
+    def _process_jobs_loop(cron_cr: BaseCursor, *, job_ids: Iterable[int] = ()):
+        """ Process ready jobs to run on this database.
+
+        The `cron_cr` is used to lock the currently processed job and relased
+        by committing after each job.
+        """
+        db_name = cron_cr.dbname
+        for job_id in job_ids:
+            try:
+                job = IrCron._acquire_one_job(cron_cr, job_id)
+            except psycopg2.extensions.TransactionRollbackError:
+                cron_cr.rollback()
+                _logger.debug("job %s has been processed by another worker, skip", job_id)
+                continue
+            if not job:
+                _logger.debug("another worker is processing job %s, skip", job_id)
+                continue
+            _logger.debug("job %s acquired", job_id)
+            # take into account overridings of _process_job() on that database
+            registry = Registry(db_name)
+            registry[IrCron._name]._process_job(db_name, cron_cr, job)
+            cron_cr.commit()
+            _logger.debug("job %s updated and released", job_id)
 
     @staticmethod
     def _check_version(cron_cr):
