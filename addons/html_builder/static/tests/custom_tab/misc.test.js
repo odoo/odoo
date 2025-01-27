@@ -69,6 +69,31 @@ test("Don't display option base on exclude", async () => {
     expect(queryAllTexts(".options-container .hb-row")).toEqual(["Row 3\nc"]);
 });
 
+test("Don't display option base on applyTo", async () => {
+    addOption({
+        selector: ".test-options-target",
+        applyTo: ".test-target",
+        template: xml`<BuilderRow label="'Row 1'">
+            <BuilderButton classAction="'test-target-2'">a</BuilderButton>
+        </BuilderRow>`,
+    });
+    addOption({
+        selector: ".test-options-target",
+        applyTo: ".test-target-2",
+        template: xml`<BuilderRow label="'Row 2'">b</BuilderRow>`,
+    });
+    await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            <div class="test-target">b</div>
+        </div>`);
+    await contains(":iframe .test-options-target").click();
+    expect(queryAllTexts(".options-container .hb-row")).toEqual(["Row 1\na"]);
+
+    await contains("[data-class-action='test-target-2']").click();
+    await animationFrame();
+    expect(queryAllTexts(".options-container .hb-row")).toEqual(["Row 1\na", "Row 2\nb"]);
+});
+
 test("basic multi options containers", async () => {
     addOption({
         selector: ".test-options-target",

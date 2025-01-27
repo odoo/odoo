@@ -135,7 +135,15 @@ export function getEditable(inWrap) {
     return `<div id="wrap" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${inWrap}</div>`;
 }
 
-export function addOption({ selector, exclude, template, Component, sequence, cleanForSave }) {
+export function addOption({
+    selector,
+    exclude,
+    applyTo,
+    template,
+    Component,
+    sequence,
+    cleanForSave,
+}) {
     const pluginId = uniqueId("test-option");
     const Class = makeOptionPlugin({
         pluginId,
@@ -143,6 +151,7 @@ export function addOption({ selector, exclude, template, Component, sequence, cl
         template,
         selector,
         exclude,
+        applyTo,
         sequence,
         cleanForSave,
     });
@@ -156,6 +165,7 @@ function makeOptionPlugin({
     template,
     selector,
     exclude,
+    applyTo,
     sequence,
     OptionComponent,
     cleanForSave,
@@ -165,6 +175,7 @@ function makeOptionPlugin({
         template,
         selector,
         exclude,
+        applyTo,
         cleanForSave,
     };
 
