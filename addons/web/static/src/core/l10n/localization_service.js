@@ -44,12 +44,12 @@ export const localizationService = {
             multi_lang: multiLang,
         } = await response.json();
 
-        // FIXME We flatten the result of the python route.
         // Eventually, we want a new python route to return directly the good result.
         const terms = {};
         for (const addon of Object.keys(modules)) {
+            terms[addon] ??= {};
             for (const message of modules[addon].messages) {
-                terms[message.id] = message.string;
+                terms[addon][message.id] = message.string;
             }
         }
 

@@ -43,7 +43,7 @@ const Markup = markup().constructor;
  */
 export function _t(term, ...values) {
     if (translatedTerms[translationLoaded]) {
-        const translation = translatedTerms[term] ?? term;
+        const translation = translatedTerms[odoo.translationContext]?.[term] ?? term;
         if (values.length === 0) {
             return translation;
         }
@@ -56,12 +56,13 @@ export function _t(term, ...values) {
 class LazyTranslatedString extends String {
     constructor(term, values) {
         super(term);
+        this.translationContext = odoo.translationContext;
         this.values = values;
     }
     valueOf() {
         const term = super.valueOf();
         if (translatedTerms[translationLoaded]) {
-            const translation = translatedTerms[term] ?? term;
+            const translation = translatedTerms[this.translationContext]?.[term] ?? term;
             if (this.values.length === 0) {
                 return translation;
             }
@@ -157,4 +158,25 @@ function _escapeNonMarkup(values) {
         return [sanitized];
     }
     return values.map((x) => htmlEscape(x));
+}
+
+/**
+ * PLEASE DO NOT USE.
+ *
+ * This is a wrapper for gettext (_t) that the transpiler injects in its place
+ * to provide the knowledge of the module from which it was called.
+ *
+ * Providing the context of the module is useful to avoid conflicting
+ * translations, e.g. "table" has a different meaning depending on the module:
+ * the table of a restaurant (POS module) vs. a spreadsheet table.
+ *
+ * @param {string} moduleName The name of the module, used as a context key to
+ * retrieve the translation.
+ * @param  {...any} args The arguments passed to gettext (_t).
+ */
+export function __namespacedGettext(moduleName, ...args) {
+    odoo.translationContext = moduleName;
+    const translatedTerms = _t(...args);
+    odoo.translationContext = null;
+    return translatedTerms;
 }

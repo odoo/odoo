@@ -1,4 +1,4 @@
-import { applyInheritance } from "@web/core/template_inheritance";
+import { applyContextToTextNode, applyInheritance } from "@web/core/template_inheritance";
 
 const parser = new DOMParser();
 /** @type {((document: Document) => void)[]} */
@@ -93,6 +93,11 @@ function _getTemplate(name, blockId = null) {
         }
         const templateString = templates[name];
         parsedTemplates[name] = getParsedTemplate(templateString);
+        const inheritFrom = parsedTemplates[name].getAttribute("t-inherit");
+        if (!inheritFrom) {
+            const addon = info[name].url.split("/")[1];
+            parsedTemplates[name].setAttribute("t-translation-context", addon);
+        }
     }
     let processedTemplate = parsedTemplates[name];
 
@@ -158,6 +163,7 @@ let processedTemplates = {};
 export function getTemplate(name) {
     if (!processedTemplates[name]) {
         processedTemplates[name] = _getTemplate(name);
+        applyContextToTextNode();
     }
     return processedTemplates[name];
 }
