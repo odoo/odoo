@@ -5200,7 +5200,10 @@ test(`pager, ungrouped, with count limit reached, edit pager`, async () => {
 
     expectedCountLimit = 5;
     await contains(`.o_pager_value`).click();
-    await contains(`input.o_pager_value`).edit("2-4");
+    // FIXME: we have to click out instead of confirming, because somehow if the
+    // web_search_read calls come back too fast when pressing "Enter", another
+    // RPC is triggered right after.
+    await contains(`input.o_pager_value`).edit("2-4", { confirm: "blur" });
     expect(`.o_data_row`).toHaveCount(3);
     expect(`.o_pager_value`).toHaveText("2-4");
     expect(`.o_pager_limit`).toHaveText("4+");
@@ -5208,7 +5211,7 @@ test(`pager, ungrouped, with count limit reached, edit pager`, async () => {
 
     expectedCountLimit = 15;
     await contains(`.o_pager_value`).click();
-    await contains(`input.o_pager_value`).edit("2-14");
+    await contains(`input.o_pager_value`).edit("2-14", { confirm: "blur" });
     expect(`.o_data_row`).toHaveCount(4);
     expect(`.o_pager_value`).toHaveText("2-5");
     expect(`.o_pager_limit`).toHaveText("5");
