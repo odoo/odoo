@@ -1,19 +1,26 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # ruff: noqa: E201, E272, E301, E306
 
+import contextlib
 import secrets
 import textwrap
+import time
 from contextlib import closing
 from datetime import timedelta
 from unittest.mock import patch
+
 from freezegun import freeze_time
 
 from odoo import fields
-from odoo.tests.common import TransactionCase, RecordCapturer
+from odoo.addons.base.models.ir_cron import (
+    MIN_DELTA_BEFORE_DEACTIVATION,
+    MIN_FAILURE_COUNT_BEFORE_DEACTIVATION,
+    CompletionStatus,
+    IrCron,
+)
+from odoo.tests.common import RecordCapturer, TransactionCase
 from odoo.tools import mute_logger
-from odoo.addons.base.models.ir_cron import MIN_FAILURE_COUNT_BEFORE_DEACTIVATION, MIN_DELTA_BEFORE_DEACTIVATION
 
 
 class CronMixinCase:
@@ -533,6 +540,60 @@ class TestIrCron(TransactionCase, CronMixinCase):
         # Test acquire job on already processed jobs
         job = self.env['ir.cron']._acquire_one_job(self.cr, self.cron.id)
         self.assertEqual(job, None, "No error should be thrown, job should just be none")
+
+    @contextlib.contextmanager
+    def patch_cron_process_jobs_loop(self):
+        """ Yield a simplified function for testing `_process_jobs_loop`. """
+        self.cron.active = True
+        self.cron.search([('id', 'not in', self.cron.ids)]).active = False  # deactivate all other for the test
+        with (
+            self.enter_registry_test_mode(),
+            self.registry.cursor() as cr,
+        ):
+            def process_jobs(**kw):
+                kw.setdefault('job_ids', self.cron.ids)
+                return IrCron._process_jobs_loop(cr, **kw)
+            yield process_jobs
+
+    def patch_run_job(self, return_value=CompletionStatus.FULLY_DONE):
+        return patch.object(self.registry['ir.cron'], '_run_job', return_value=return_value)
+
+    def test_cron_process_jobs_simple(self):
+        with self.patch_cron_process_jobs_loop() as process_jobs, self.patch_run_job() as run:
+            cron = self.cron.create(self._get_cron_data(self.env))
+            cron._trigger()
+            self.cron._trigger()
+            job_ids = cron.ids + self.cron.ids
+            process_jobs(job_ids=job_ids)
+            self.assertTrue(all(
+                any(job_id == call.args[0]['id'] for call in run.mock_calls)
+                for job_id in job_ids
+            ), "all jobs called at least once")
+
+    def test_cron_process_jobs_status_partial(self):
+        with self.patch_cron_process_jobs_loop() as process_jobs, self.patch_run_job(CompletionStatus.PARTIALLY_DONE) as run:
+            self.cron._trigger()
+            process_jobs()
+            run.assert_called_once()
+
+    def test_cron_process_jobs_status_failed(self):
+        with self.patch_cron_process_jobs_loop() as process_jobs, self.patch_run_job(CompletionStatus.FAILED) as run:
+            self.cron._trigger()
+            process_jobs()
+            run.assert_called_once()
+
+    def test_cron_process_jobs_locked(self):
+        with (
+            self.patch_cron_process_jobs_loop() as process_jobs,
+            self.patch_run_job() as run,
+            # simulate that record is locked
+            patch.object(IrCron, '_acquire_one_job', return_value=None) as acquire,
+            patch.object(time, 'monotonic', side_effect=lambda: 42 + run.call_count),
+        ):
+            self.cron._trigger()
+            process_jobs()
+            run.assert_not_called()
+            acquire.assert_called_once()
 
     def test_cron_deactivate(self):
         default_progress_values = {'done': 0, 'remaining': 0, 'timed_out_counter': 0}
