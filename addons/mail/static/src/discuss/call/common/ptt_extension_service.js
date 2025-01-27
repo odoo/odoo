@@ -3,7 +3,6 @@ import { markup, reactive } from "@odoo/owl";
 import { parseVersion } from "@mail/utils/common/misc";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { escape, sprintf } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
 
 export const pttExtensionHookService = {
@@ -30,14 +29,14 @@ export const pttExtensionHookService = {
             },
             downloadURL: `https://chromewebstore.google.com/detail/discuss-push-to-talk/${EXT_ID}`,
             get downloadText() {
-                const translation = _t(
-                    `The Push-to-Talk feature is only accessible within tab focus. To enable the Push-to-Talk functionality outside of this tab, we recommend downloading our %(anchor_start)sextension%(anchor_end)s.`
-                );
-                return markup(
-                    sprintf(escape(translation), {
-                        anchor_start: `<a href="${this.downloadURL}" target="_blank" class="text-reset text-decoration-underline">`,
-                        anchor_end: "</a>",
-                    })
+                return _t(
+                    "The Push-to-Talk feature is only accessible within tab focus. To enable the Push-to-Talk functionality outside of this tab, we recommend downloading our %(anchor_start)sextension%(anchor_end)s.",
+                    {
+                        anchor_start: markup(
+                            `<a href="${this.downloadURL}" target="_blank" class="text-reset text-decoration-underline">`
+                        ),
+                        anchor_end: markup("</a>"),
+                    }
                 );
             },
         });

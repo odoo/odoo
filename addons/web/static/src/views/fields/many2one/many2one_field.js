@@ -6,7 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { useChildRef, useOwnedDialogs, useService } from "@web/core/utils/hooks";
-import { escape, sprintf } from "@web/core/utils/strings";
+import { escape } from "@web/core/utils/strings";
 import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relational_utils";
 import * as BarcodeScanner from "@web/core/barcode/barcode_dialog";
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
@@ -30,12 +30,10 @@ class CreateConfirmationDialog extends Component {
     }
 
     get dialogContent() {
-        return markup(
-            sprintf(escape(_t("Create %(value)s as a new %(field)s?")), {
-                value: `<strong>${escape(this.props.value)}</strong>`,
-                field: escape(this.props.name),
-            })
-        );
+        return _t("Create %(value)s as a new %(field)s?", {
+            value: markup(`<strong>${escape(this.props.value)}</strong>`),
+            field: this.props.name,
+        });
     }
 
     async onCreate() {
