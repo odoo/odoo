@@ -46,11 +46,12 @@ composerActionsRegistry
             return "";
         },
         condition: (component) =>
-            component.props.mode !== "extended" ||
+            (component.props.mode !== "extended" && !component.props.composer.message) ||
             (component.props.messageToReplyTo?.message &&
                 component.props.composer.thread.notEq(
                     component.props.messageToReplyTo.message.thread
-                )),
+                )) ||
+            (component.props.composer.message && component.ui.isSmall),
         disabledCondition: (component) => component.isSendButtonDisabled,
         icon: "fa fa-paper-plane-o",
         name(component) {

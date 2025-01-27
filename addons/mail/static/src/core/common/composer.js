@@ -336,7 +336,7 @@ export class Composer extends Component {
     }
 
     get hasSendButtonNonEditing() {
-        return !this.extended;
+        return !this.extended && !this.props.composer.message;
     }
 
     get hasSuggestions() {
