@@ -179,8 +179,6 @@
             ('remove', 'point_of_sale/static/src/customer_display/**/*'),
             # main.js boots the pos app, it is only included in the prod bundle as tests mount the app themselves
             ('remove', 'point_of_sale/static/src/app/main.js'),
-            # tour system FIXME: can this be added only in test mode? Are there any onboarding tours in PoS?
-            "web_tour/static/src/tour_pointer/**/*",
             ("include", "point_of_sale.base_tests"),
             # account
             'account/static/src/helpers/*.js',
@@ -227,6 +225,16 @@
             "point_of_sale/static/tests/generic_helpers/order_widget_util.js",
             "point_of_sale/static/tests/generic_helpers/utils.js",
             "point_of_sale/static/tests/customer_display/customer_display_tour.js",
+        ],
+        'point_of_sale.assets_debug': [
+            "web_tour/static/src/tour_pointer/**/*.xml",
+            "web_tour/static/src/tour_pointer/**/*.js",
+            "web_tour/static/src/tour_service/**/*",
+            'web/static/tests/legacy/helpers/utils.js',
+            'web/static/tests/legacy/helpers/cleanup.js',
+            'barcodes/static/tests/legacy/helpers.js',
+            'point_of_sale/static/tests/generic_helpers/**',
+            'point_of_sale/static/tests/pos/tours/**/*',
         ],
     },
     'license': 'LGPL-3',
