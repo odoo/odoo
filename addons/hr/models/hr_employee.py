@@ -496,7 +496,8 @@ class HrEmployeePrivate(models.Model):
         # Sudo in case HR officer doesn't have the Contact Creation group
         employees.filtered(lambda e: not e.work_contact_id).sudo()._create_work_contacts()
         for employee_sudo in employees.sudo():
-            if not employee_sudo.image_1920:
+            # creating 'svg/xml' attachments requires specific rights
+            if not employee_sudo.image_1920 and self.env['ir.ui.view'].sudo(False).has_access('write'):
                 employee_sudo.image_1920 = employee_sudo._avatar_generate_svg()
                 employee_sudo.work_contact_id.image_1920 = employee_sudo.image_1920
         if self.env.context.get('salary_simulation'):

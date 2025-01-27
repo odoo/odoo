@@ -2790,6 +2790,7 @@ class AccountMoveLine(models.Model):
 
             caba_rounding_diff_label = _("Cash basis rounding difference")
             move_vals['date'] = max(move_vals['date'], move.date)
+            move_vals['journal_id'] = self.company_id.tax_cash_basis_journal_id.id
             for caba_treatment, line in move_values['to_process_lines']:
 
                 vals = {

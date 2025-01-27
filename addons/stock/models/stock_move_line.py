@@ -725,10 +725,13 @@ class StockMoveLine(models.Model):
 
     def _prepare_new_lot_vals(self):
         self.ensure_one()
-        return {
+        vals =  {
             'name': self.lot_name,
             'product_id': self.product_id.id,
         }
+        if self.product_id.company_id and self.company_id in (self.product_id.company_id.all_child_ids | self.product_id.company_id):
+            vals['company_id'] = self.company_id.id
+        return vals
 
     def _create_and_assign_production_lot(self):
         """ Creates and assign new production lots for move lines."""

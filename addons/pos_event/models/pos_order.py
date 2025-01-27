@@ -17,10 +17,9 @@ class PosOrder(models.Model):
         action['domain'] = [('pos_order_id', 'in', self.ids)]
         return action
 
-    @api.model
-    def sync_from_ui(self, orders):
-        results = super().sync_from_ui(orders)
-        paid_orders = self.browse([order['id'] for order in results['pos.order'] if order['state'] in ['paid', 'done', 'invoiced']])
+    def read_pos_data(self, data, config_id):
+        results = super().read_pos_data(data, config_id)
+        paid_orders = self.filtered_domain([('state', 'in', ['paid', 'done', 'invoiced'])])
 
         if not paid_orders:
             return results
