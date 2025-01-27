@@ -27,6 +27,21 @@ class L10nInEwaybill(models.Model):
                 )
             )
 
+    def _prepare_ewaybill_transportation_json_payload(self):
+        if self.is_process_through_irn:
+            return dict(
+                filter(lambda kv: kv[1], {
+                    "TransId": self.transporter_id.vat,
+                    "TransName": self.transporter_id.name,
+                    "TransMode": self.mode,
+                    "TransDocNo": self.transportation_doc_no,
+                    "TransDocDt": self.transportation_doc_date and self.transportation_doc_date.strftime("%d/%m/%Y"),
+                    "VehNo": self.vehicle_no,
+                    "VehType": self.vehicle_type,
+                }.items())
+            )
+        return super()._prepare_ewaybill_transportation_json_payload()
+
     def _ewaybill_generate_irn_json(self):
         return {
             'Irn': self.account_move_id._get_l10n_in_edi_response_json().get('Irn'),
