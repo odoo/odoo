@@ -12,6 +12,7 @@ import {
     onRpc,
     mockService,
     fieldInput,
+    contains,
 } from "@web/../tests/web_test_helpers";
 
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
@@ -496,4 +497,34 @@ test("expand button with save and new", async () => {
         "save",
         [2, "instrument", "ir.actions.act_window", [[false, "form"]]],
     ]);
+});
+
+test.tags("desktop");
+test("close dialog with escape after modifying a field with onchange (no blur)", async () => {
+    Partner._views["form,false"] = `<form><field name="foo"/></form>`;
+    Partner._onChanges.foo = () => {};
+    onRpc("web_save", () => {
+        throw new Error("should not save");
+    });
+
+    await mountWithCleanup(WebClient);
+
+    // must focus something else than body before opening the form view dialog, such that the ui
+    // service has something to focus on dialog close, which will then blur the input and fire the
+    // change event
+    await contains(".o_navbar_apps_menu button").focus();
+    expect(".o_navbar_apps_menu button").toBeFocused();
+
+    getService("dialog").add(FormViewDialog, {
+        resModel: "partner",
+        resId: 1,
+    });
+    await animationFrame();
+    expect(".o_dialog").toHaveCount(1);
+
+    await contains(".o_field_widget[name=foo] input").edit("new value", { confirm: false });
+    await press("escape");
+    await animationFrame();
+    expect(".o_dialog").toHaveCount(0);
+    expect(".o_navbar_apps_menu button").toBeFocused();
 });
