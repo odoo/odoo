@@ -14,11 +14,20 @@
 
 .o-mail-ChatWindow-command {
     color: inherit !important;
+    &.o-quick {
+        opacity: 15%;
+    }
     &:not(.o-actionsMenu) {
         padding: map-get($spacers, 1) / 2;
     }
-    &:hover:not(.o-actionsMenu), &.o-active, &.o-hover {
-        backdrop-filter: invert(.15);
+    &:hover, &.o-active, &.o-hover {
+        color: var(--mail-ChatWindow-commandHoverColor, black) !important;
+
+        &.o-quick, &.o-actionsMenu {
+            backdrop-filter: invert(.025);
+        }
+    }
+    &:hover, &.o-active, &.o-hover {
         border-color: transparent !important;
     }
     &:not(.o-active):not(.o-hover) .fa-caret-down {
@@ -34,7 +43,6 @@
 }
 
 .o-mail-ChatWindow-counter {
-    padding: 3px 6px;
     margin-bottom: map-get($spacers, 1) / 2;
 }
 

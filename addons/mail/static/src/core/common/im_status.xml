@@ -13,9 +13,9 @@
                 <t t-if="(!props.member or !props.member.isTyping) and persona">
                     <i t-if="persona.im_status === 'online'" class="fa fa-circle text-success" title="Online" role="img" aria-label="User is online"/>
                     <i t-elif="persona.im_status === 'away'" class="fa fa-circle o-away" title="Idle" role="img" aria-label="User is idle"/>
-                    <i t-elif="persona.im_status === 'offline'" class="fa fa-circle-o text-700" title="Offline" role="img" aria-label="User is offline"/>
+                    <i t-elif="persona.im_status === 'offline'" class="fa fa-circle-o text-700 opacity-75" title="Offline" role="img" aria-label="User is offline"/>
                     <i t-elif="persona.im_status === 'bot'" class="fa fa-heart text-success" title="Bot" role="img" aria-label="User is a bot"/>
-                    <i t-else="" class="fa fa-fw fa-question-circle" title="No IM status available"/>
+                    <i t-else="" class="fa fa-fw fa-question-circle opacity-75" title="No IM status available"/>
                 </t>
                 <Typing t-if="props.member?.isTyping" member="props.member" channel="props.member.threadAsTyping" size="'medium'" displayText="false" />
             </span>

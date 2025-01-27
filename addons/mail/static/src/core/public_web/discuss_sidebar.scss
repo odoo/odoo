@@ -18,7 +18,7 @@
 }
 
 .o-mail-DiscussSidebar-badge {
-    padding: 3px 6px;
+    padding: 3px 4px;
 
     &.o-compact {
         right: -2px;
@@ -33,17 +33,17 @@
     .o-mail-DiscussSidebar.o-compact & {
         opacity: 75%;
 
-        &.o-unread {
-            opacity: 87.5%;
-        }
-
-        &.o-active, &:hover {
+        &.o-unread, &.o-active, &:hover {
             opacity: 100%;
         }
     }
 
     &.o-active, &:hover {
         background-color: var(--mail-DiscussSidebar-itemActiveBgColor, mix($o-view-background-color, $o-action, 90%)) !important;
-        outline-color: var(--mail-DiscussSidebar-itemActiveOutlineColor, rgba($o-action, .15)) !important;
+        outline-color: var(--mail-DiscussSidebar-itemActiveOutlineColor, rgba($o-action, .2)) !important;
+
+        .o-mail-DiscussSidebarChannel-itemName {
+            filter: brightness(1.1);
+        }
     }
 }

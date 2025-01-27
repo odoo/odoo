@@ -9,7 +9,7 @@
         </t>
         <t t-else="">
             <div class="o-EmojiPicker-search d-flex align-items-center mx-2 mt-2 rounded">
-                <span class="d-flex mx-1 w-100 rounded o-active align-items-center justify-content-center border border-secondary">
+                <span class="d-flex mx-1 w-100 rounded o-active align-items-center justify-content-center border border-secondary bg-white">
                     <t t-call="web.EmojiPicker.searchInput">
                         <t t-if="props.state" t-set="localState" t-value="props.state"/>
                         <t t-else="" t-set="localState" t-value="state"/>

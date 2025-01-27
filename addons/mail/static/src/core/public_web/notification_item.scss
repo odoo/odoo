@@ -17,6 +17,9 @@
             background-color: mix($o-gray-100, $o-info, 87.5%) !important;
         }
     }
+    &:not(.o-small) {
+        padding-left: (map-get($spacers, 2) + map-get($spacers, 3)) / 2;
+    }
 }
 
 .o-mail-NotificationItem-avatarContainer {
@@ -62,11 +65,7 @@
 .o-mail-NotificationItem-unreadIndicator {
     color: darken($info, 5%);
     font-size: 0.5rem;
-    left: map-get($spacers, 1);
+    left: 1px;
     top: 40px;
     transform: translateY(-125%);
-
-    .o-mail-NotificationItem.o-small & {
-        left: map-get($spacers, 1) / 2;
-    }
 }
