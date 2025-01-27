@@ -37,6 +37,24 @@ class GamificationBadgeUser(models.Model):
             'context': {"dialog_size": "medium"},
         }
 
+    def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
+        groups = super()._notify_get_recipients_groups(message, model_description, msg_vals)
+        self.ensure_one()
+        base_url = self.get_base_url()
+        for group in groups:
+            if group[0] == 'user':
+                if self.employee_id:
+                    employee_form_url = f"{base_url}/web#action=hr.hr_employee_public_action&id={self.employee_id.id}&open_badges_tab=true&user_badge_id={self.id}"
+
+                    group[2]['button_access'] = {
+                        'url': employee_form_url,
+                        'title': _('View Your Badge'),
+                    }
+                    group[2]['has_button_access'] = True
+                else:
+                    group[2]['has_button_access'] = False
+        return groups
+
 
 class GamificationBadge(models.Model):
     _inherit = 'gamification.badge'
