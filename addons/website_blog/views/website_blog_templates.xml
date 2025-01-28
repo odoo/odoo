@@ -6,13 +6,22 @@
 <template id="index" name="Blog Navigation">
     <t t-call="website.layout">
         <div id="wrap" class="js_blog website_blog">
+            <!-- Droppable-area shared across all blog's pages -->
+            <t t-set="oe_structure_description">Visible in all blogs' pages</t>
+            <t t-set="tooltip_message">Shared between all blog pages</t>
+            <div class="oe_structure oe_empty oe_structure_not_nearest"
+                id="oe_structure_above_blog_header"
+                t-att-data-editor-sub-message="oe_structure_description"
+                t-att-data-tooltip-message="tooltip_message"
+            />
             <t t-out="0"/>
 
             <!-- Droppable-area shared across all blog's pages -->
-            <t t-set="oe_structure_blog_footer_description">Visible in all blogs' pages</t>
             <div class="oe_structure oe_empty oe_structure_not_nearest"
                 id="oe_structure_blog_footer"
-                t-att-data-editor-sub-message="oe_structure_blog_footer_description"/>
+                t-att-data-editor-sub-message="oe_structure_description"
+                t-att-data-tooltip-message="tooltip_message"
+            />
         </div>
     </t>
 </template>
@@ -93,6 +102,7 @@ list of filtered posts (by date or tag).
 <template id="opt_blog_cover_post" name="Top banner - Name / Latest Post" inherit_id="website_blog.blog_post_short" active="True" priority="17">
     <xpath expr="//div[@id='o_wblog_blog_top_droppable']" position="replace">
         <div class="container">
+            <div class="oe_structure" id="oe_structure_top_of_title"/>
             <div class="row py-4">
                 <t t-if="blog">
                     <div t-attf-class="mb-3 mb-md-0 #{'col-md-5' if (not opt_blog_list_view and not opt_blog_sidebar_show) else 'col-md-6'}">
@@ -137,6 +147,7 @@ list of filtered posts (by date or tag).
             </div>
         </t>
         <t t-else="">
+            <div class="oe_structure" id="oe_structure_top_of_title_2"/>
             <div class="h1 my-4 o_not_editable" style="text-align:center;">Our Latest Posts</div>
         </t>
     </xpath>
@@ -179,7 +190,7 @@ list of filtered posts (by date or tag).
         <t t-set="opt_blog_post_sidebar" t-value="is_view_active('website_blog.opt_blog_post_sidebar')"/>
         <t t-set="opt_blog_post_regular_cover" t-value="is_view_active('website_blog.opt_blog_post_regular_cover')"/>
         <t t-set="opt_blog_post_breadcrumb" t-value="is_view_active('website_blog.opt_blog_post_breadcrumb')"/>
-        
+
         <section id="o_wblog_post_top">
             <div id="title" class="blog_header" t-ignore="True">
                 <t t-call="website.record_cover">
