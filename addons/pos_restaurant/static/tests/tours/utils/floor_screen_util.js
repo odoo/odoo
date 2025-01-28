@@ -152,7 +152,7 @@ export function isChildTable(child) {
     };
 }
 export function clickNewOrder() {
-    return { trigger: ".left-buttons .new-order", run: "click" };
+    return { trigger: ".new-order", run: "click" };
 }
 
 export function addFloor(floorName) {
