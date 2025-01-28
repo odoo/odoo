@@ -89,7 +89,7 @@
         <div>
             <t t-set="is_custom" t-value="false"/>
 
-            <ul class="color_attribute_list d-flex gap-3">
+            <ul class="color_attribute_list d-flex gap-3 p-0">
                 <li t-foreach="props.attribute.values()" t-as="value" t-key="value.id" class="color_attribute_list_item">
                     <t t-set="is_custom" t-value="is_custom || (value.is_custom and value.id == props.selected.id)"/>
                     <t t-set="img_style" t-value="value.image ? 'background:url(/web/image/product.template.attribute.value/' + value.id + '/image); background-size:cover;' : ''"/>

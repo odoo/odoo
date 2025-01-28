@@ -9,7 +9,7 @@
                     <input class="form-control form-control-lg" t-ref="autofocus"
                     t-model="state.searchInput" t-on-keydown="onSearchInputKeydown" t-on-keyup="onSearchInputKeyup" type="text" t-att-placeholder="props.placeholder" />
                     <div t-if="state.showSearchFields and state.searchInput" class="fields z-1">
-                        <ul class="py-1 bg-light small">
+                        <ul class="py-1 px-0 bg-light small">
                             <t t-foreach="searchFieldsList" t-as="fieldName" t-key="fieldName">
                                 <li class="ps-5 py-1 text-start"
                                     t-att-class="{ highlight: fieldName == searchFieldsList[state.selectedSearchFieldId] }"

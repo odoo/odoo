@@ -7,21 +7,6 @@
     background-repeat: no-repeat;
 }
 
-.pos-leftheader, .pos-rightheader {
-    width: 45%;
-    &.pos-nav-small {
-        width: auto;
-    }
-}
-
-.pos-topheader {
-    flex-shrink: 0;
-}
-
-.pos-centerheader {
-    width: 10%;
-}
-
 .status-buttons {
     .avatar {
         height: 24px;
@@ -50,13 +35,15 @@
     }
 }
 
-@include media-breakpoint-up(sm) {
-    .navbar-menu {
-        grid-auto-columns: minmax(100px, 1fr);
-        grid-auto-flow: column;
-    }
+.o-dropdown--menu .dropdown-item.focus {
+    background-color: $o-gray-200;
 }
 
-.search-input-reduced {
-    width: 30%;
+@include media-breakpoint-up(lg) {
+    .pos-leftheader, .pos-rightheader {
+        max-width: 40%;
+    }
+    .navbar-menu > button {
+        min-width: 96px;
+    }
 }
