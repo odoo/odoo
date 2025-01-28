@@ -17,9 +17,7 @@ Those trackers can be used in Google Analytics to track clicks and visitors, or 
     'auto_install': True,
     'assets': {
         'web.assets_frontend': [
-            'website_links/static/src/js/website_links.js',
-            'website_links/static/src/js/website_links_code_editor.js',
-            'website_links/static/src/js/website_links_charts.js',
+            'website_links/static/src/interactions/**/*',
             'website_links/static/src/css/website_links.css',
             'website_links/static/src/xml/*.xml',
         ],
