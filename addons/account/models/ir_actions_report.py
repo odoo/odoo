@@ -34,7 +34,7 @@ class IrActionsReport(models.Model):
                 if stream:
                     record = self.env[attachment.res_model].browse(attachment.res_id)
                     try:
-                        stream = pdf.add_banner(stream, record.name, logo=True)
+                        stream = pdf.add_banner(stream, record.name or '', logo=True)
                     except (ValueError, PdfStreamError, PdfReadError, TypeError, zlib_error, NotImplementedError):
                         record._message_log(body=_(
                             "There was an error when trying to add the banner to the original PDF.\n"
