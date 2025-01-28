@@ -188,4 +188,5 @@ class MrpRoutingWorkcenter(models.Model):
         return workcenter._get_expected_duration(product) + cycle_number * self.time_cycle * 100.0 / workcenter.time_efficiency
 
     def _compute_operation_cost(self):
-        return (self.time_cycle / 60.0) * (self.workcenter_id.costs_hour)
+        duration = self.env.context.get('op_duration', self.time_cycle)
+        return (duration / 60.0) * (self.workcenter_id.costs_hour)
