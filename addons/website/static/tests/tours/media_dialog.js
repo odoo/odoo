@@ -150,8 +150,8 @@ registerWebsitePreviewTour("website_media_dialog_image_shape", {
     changeOption("ImageTools", "we-button[data-set-img-shape]"),
     {
         content: "Open MediaDialog from an image",
-        trigger: ":iframe .s_text_image img[data-shape]",
-        run: "dblclick",
+        trigger: "we-customizeblock-option:contains(media) we-button:contains(replace)",
+        run: "click",
     },
     {
         content: "Click on the 'Icons' tab",
