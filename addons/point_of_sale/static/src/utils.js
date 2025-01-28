@@ -1,3 +1,5 @@
+import { roundDecimals, floatIsZero } from "@web/core/utils/numbers";
+
 /*
  * comes from o_spreadsheet.js
  * https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
@@ -131,4 +133,33 @@ export class Counter {
         this.value++;
         return this.value;
     }
+}
+
+export function floatCompare(a, b, { decimals } = {}) {
+    if (!decimals) {
+        throw new Error("decimals must be provided");
+    }
+    a = roundDecimals(a, decimals);
+    b = roundDecimals(b, decimals);
+    const delta = a - b;
+    if (floatIsZero(delta, decimals)) {
+        return 0;
+    }
+    return delta < 0 ? -1 : 1;
+}
+
+export function gte(a, b, { decimals } = {}) {
+    return floatCompare(a, b, { decimals }) >= 0;
+}
+
+export function gt(a, b, { decimals } = {}) {
+    return floatCompare(a, b, { decimals }) > 0;
+}
+
+export function lte(a, b, { decimals } = {}) {
+    return floatCompare(a, b, { decimals }) <= 0;
+}
+
+export function lt(a, b, { decimals } = {}) {
+    return floatCompare(a, b, { decimals }) < 0;
 }
