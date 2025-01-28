@@ -1063,13 +1063,11 @@ export class PosStore extends Reactive {
                 order.finalized &&
                 typeof order.id === "string" &&
                 !this.pendingOrder.create.has(order.id) &&
-                !this.pendingOrder.write.has(order.id)
+                !this.pendingOrder.write.has(order.id) &&
+                order.hasItemsOrPayLater
         );
         const orderToCreate = this.models["pos.order"].filter(
-            (order) =>
-                this.pendingOrder.create.has(order.id) &&
-                (order.lines.length > 0 ||
-                    order.payment_ids.some((p) => p.payment_method_id.type === "pay_later"))
+            (order) => this.pendingOrder.create.has(order.id) && order.hasItemsOrPayLater
         );
         const orderToUpdate = this.models["pos.order"].filter((order) =>
             this.pendingOrder.write.has(order.id)
