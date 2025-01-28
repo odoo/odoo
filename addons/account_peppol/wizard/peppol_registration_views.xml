@@ -20,10 +20,12 @@
                         <group col="1">
                             <group>
                                 <field name="smp_registration" string="Allow incoming invoices"/>
-                                <field name="peppol_eas" nolabel="1" class="o_form_label"/>
+                                <field name="peppol_eas"
+                                       nolabel="1"
+                                       class="o_field_peppol_eas_selection"/>
                                 <field name="peppol_endpoint" nolabel="1" placeholder="Your endpoint"/>
                                 <field name="contact_email" string="Email"/>
-                                <field name="phone_number" required="edi_mode not in ('demo', 'test')" string="Your mobile"/>
+                                <field name="phone_number" required="edi_mode not in ('demo', 'test')" string="Phone"/>
                             </group>
 
                             <!-- edi mode info -->
