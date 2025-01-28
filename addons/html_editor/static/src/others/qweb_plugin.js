@@ -82,22 +82,9 @@ export class QWebPlugin extends Plugin {
     /**
      * @param { SelectionData } selectionData
      */
-    onSelectionChange(selectionData) {
-        const selection = selectionData.documentSelection;
-        const qwebNode =
-            selection &&
-            selection.anchorNode &&
-            closestElement(selection.anchorNode, "[t-field],[t-esc],[t-out]");
-        if (qwebNode && this.editable.contains(qwebNode)) {
-            // select the whole qweb node
-            const [anchorNode, anchorOffset] = leftPos(qwebNode);
-            const [focusNode, focusOffset] = rightPos(qwebNode);
-            this.dependencies.selection.setSelection({
-                anchorNode,
-                anchorOffset,
-                focusNode,
-                focusOffset,
-            });
+    onSelectionChange() {
+        if (this.picker.isOpen) {
+            this.picker.close();
         }
     }
 
@@ -160,7 +147,28 @@ export class QWebPlugin extends Plugin {
     }
 
     onClick(ev) {
-        this.picker.close();
+        if (this.picker.isOpen) {
+            this.picker.close();
+        }
+        if (ev.detail > 1) {
+            const selectionData = this.dependencies.selection.getSelectionData();
+            const selection = selectionData.documentSelection;
+            const qwebNode =
+                selection &&
+                selection.anchorNode &&
+                closestElement(selection.anchorNode, "[t-field],[t-esc],[t-out]");
+            if (qwebNode && this.editable.contains(qwebNode)) {
+                // select the whole qweb node
+                const [anchorNode, anchorOffset] = leftPos(qwebNode);
+                const [focusNode, focusOffset] = rightPos(qwebNode);
+                this.dependencies.selection.setSelection({
+                    anchorNode,
+                    anchorOffset,
+                    focusNode,
+                    focusOffset,
+                });
+            }
+        }
         const targetNode = ev.target;
         if (targetNode.closest("[data-oe-t-group]")) {
             this.selectNode(targetNode);
@@ -168,6 +176,10 @@ export class QWebPlugin extends Plugin {
     }
 
     selectNode(node) {
+        const editableSelection = this.dependencies.selection.getSelectionData().editableSelection;
+        if (!editableSelection.isCollapsed) {
+            return;
+        }
         this.selectedNode = node;
         this.picker.open({
             target: node,
