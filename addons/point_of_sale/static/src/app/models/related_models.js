@@ -27,15 +27,6 @@ function mapObj(obj, fn) {
 const RELATION_TYPES = new Set(["many2many", "many2one", "one2many"]);
 const X2MANY_TYPES = new Set(["many2many", "one2many"]);
 const AVAILABLE_EVENT = ["create", "update", "delete"];
-const SERIALIZABLE_MODELS = [
-    "pos.order",
-    "pos.order.line",
-    "pos.payment",
-    "pos.pack.operation.lot",
-    "product.attribute.custom.value",
-    "event.registration", // FIXME should be overrided from pos_event
-    "event.registration.answer",
-];
 
 function processModelDefs(modelDefs) {
     modelDefs = clone(modelDefs);
@@ -142,11 +133,12 @@ function processModelDefs(modelDefs) {
 }
 
 export class Base extends WithLazyGetterTrap {
-    constructor({ models, records, model, traps }) {
+    constructor({ models, records, model, traps, dynamicModels }) {
         super({ traps });
         this.models = models;
         this.records = records;
         this.model = model;
+        this._dynamicModels = dynamicModels;
     }
     /**
      * Called during instantiation when the instance is fully-populated with field values.
@@ -217,11 +209,11 @@ export class Base extends WithLazyGetterTrap {
                             let data = {};
 
                             if (
-                                !SERIALIZABLE_MODELS.includes(params.relation) &&
+                                !this._dynamicModels.includes(params.relation) &&
                                 typeof id === "number"
                             ) {
                                 return [4, id];
-                            } else if (!SERIALIZABLE_MODELS.includes(params.relation)) {
+                            } else if (!this._dynamicModels.includes(params.relation)) {
                                 throw new Error(
                                     "Trying to create a non serializable record" + params.relation
                                 );
@@ -482,6 +474,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             records,
             model: models[model],
             traps: { set: setTrapsCache[model] },
+            dynamicModels: opts.dynamicModels,
         });
     }
 
@@ -1077,10 +1070,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             const fields = getFields(model);
 
             for (const rawRec of rawRecords) {
-                if (ignoreConnection[model].includes(rawRec.id)) {
-                    continue;
-                }
-
                 const recorded = records[model].get(rawRec.id);
 
                 // Check if there are any missing fields for this record
@@ -1091,6 +1080,10 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                         connect(field, record, recorded);
                     }
                     delete missingFields[key];
+                }
+
+                if (ignoreConnection[model].includes(rawRec.id)) {
+                    continue;
                 }
 
                 for (const name in fields) {

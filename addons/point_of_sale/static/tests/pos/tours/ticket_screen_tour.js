@@ -151,7 +151,8 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             ReceiptScreen.isShown(),
             ReceiptScreen.clickNextOrder(),
             // Check refunded quantity.
-            ...ProductScreen.clickRefund(),
+            Chrome.clickOrders(),
+            TicketScreen.selectFilter("Paid"),
             TicketScreen.selectOrder("005"),
             TicketScreen.refundedNoteContains("2.00 Refunded"),
         ].flat(),

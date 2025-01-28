@@ -89,26 +89,6 @@ export class PosData extends Reactive {
         return `data_server_date_${odoo.pos_config_id}`;
     }
 
-    dispatchData(data) {
-        let hasChanges = false;
-        const recordIds = Object.entries(data).reduce((acc, [model, records]) => {
-            acc[model] = records.map((record) => record.id);
-            hasChanges = hasChanges || acc[model].length > 0;
-            return acc;
-        }, {});
-
-        if (!hasChanges) {
-            return;
-        }
-
-        return this.call("pos.config", "dispatch_record_ids", [
-            odoo.pos_config_id,
-            odoo.pos_session_id,
-            recordIds,
-            odoo.login_number,
-        ]);
-    }
-
     async resetIndexedDB() {
         // Remove data_server_date since it's used to determine the last time the data was loaded
         await this.indexedDB.reset();
@@ -732,7 +712,7 @@ export class PosData extends Reactive {
 
     async callRelated(model, method, args = [], kwargs = {}, queue = true) {
         const data = await this.execute({ type: "call", model, method, args, kwargs, queue });
-        this.dispatchData(data);
+        this.deviceSync.dispatch(data);
         this.synchronizeServerDataInIndexedDB(data);
         const results = this.models.loadData(this.models, data, [], true);
         return results;
@@ -744,7 +724,7 @@ export class PosData extends Reactive {
 
     async ormWrite(model, ids, values, queue = true) {
         const result = await this.execute({ type: "write", model, ids, values, queue });
-        this.dispatchData({ [model]: ids.map((id) => ({ id })) });
+        this.deviceSync.dispatch({ [model]: ids.map((id) => ({ id })) });
         return result;
     }
 
