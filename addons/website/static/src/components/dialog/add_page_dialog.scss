@@ -61,6 +61,7 @@
         }
 
         .o_button_area {
+            all: unset;
             opacity: 0;
             outline: $border-width * 2 solid $o-we-handles-accent-color;
             outline-offset: $border-width * -1;
@@ -84,7 +85,7 @@
                 opacity: 1;
             }
 
-            &:hover {
+            &:hover, &:focus-within {
                 box-shadow: 0 .5rem 2rem rgba(0, 0, 0, 0.2);
 
                 .o_button_area {

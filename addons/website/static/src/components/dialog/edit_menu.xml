@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 <t t-name="website.MenuDialog">
-    <WebsiteDialog title.translate="Add a menu item" closeOnClick="false" primaryClick.bind="this.onClickOk" secondaryClick="props.close">
+    <WebsiteDialog title.translate="Add a menu item"
+                   closeOnClick="false"
+                   primaryClick.bind="this.onClickOk"
+                   secondaryClick="props.close"
+                   validateOnEnter.bind="onClickOk">
         <div class="o_menu_dialog_form mb-3 row">
             <label class="col-form-label col-md-3">
                 Name

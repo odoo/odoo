@@ -12,6 +12,7 @@
 
     .o_seo_og_image {
         .o_meta_img {
+            all: unset;
             position: relative;
             transition: border-color 200ms;
             display: inline-block;
@@ -24,7 +25,7 @@
                 cursor: pointer;
             }
 
-            &:hover {
+            &:hover, &:focus-visible {
                 border-color: $o-brand-primary;
             }
 
@@ -58,6 +59,7 @@
         }
 
         .o_meta_img_upload {
+            all: unset;
             cursor: pointer;
             transition: 200ms;
             display: inline-block;
@@ -66,7 +68,7 @@
             vertical-align: top;
             color: lighten(map-get($grays, '600'), 30%);
 
-            &:hover {
+            &:hover, &:focus-visible {
                 border-color: $o-brand-primary;
                 color: $o-brand-primary;
             }
@@ -105,5 +107,11 @@
 
     td.o_seo_keyword_suggestion span.o_seo_suggestion.badge {
         cursor: pointer;
+    }
+
+    // We don't use a specific class here to highlight the fact that the
+    // variable is tied to the bootstrap class.
+    select.btn-outline-primary:focus option {
+        color: var(--btn-color);
     }
 }
