@@ -5,6 +5,7 @@ import { companyStateDialog } from "@l10n_in_pos/app/components/popups/company_s
 
 patch(ClosePosPopup.prototype, {
     async confirm() {
+        await this.pos.data.read("res.company", [this.pos.company.id]);
         if (this.pos.company.country_id?.code === "IN" && !this.pos.company.state_id) {
             this.dialog.add(companyStateDialog);
             return;
