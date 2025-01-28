@@ -1335,7 +1335,8 @@ def _operator_hierarchy(condition, model):
         if field.type == 'many2one':
             field = model._fields['id']
     # Get the initial ids and bind them to comodel_sudo before resolving the hierarchy
-    coids = _value_to_ids(value, comodel, 'in')
+    cooperator = 'ilike' if isinstance(value, str) else 'in'
+    coids = _value_to_ids(value, comodel, cooperator)
     if field.type == 'many2many' or isinstance(coids, (SQL, Query)):
         # always search for many2many
         coids = comodel.search(Domain('id', 'in', coids), order='id').ids

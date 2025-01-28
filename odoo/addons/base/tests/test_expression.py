@@ -699,6 +699,16 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         res_13 = self._search(Currency, [('rate_ids', 'not in', [])])
         self.assertEqual(res_10, res_13)
 
+    def test_15_hierarchy_ilike(self):
+        Company = self.env['res.company']
+        company1 = Company.create({'name': 'Hierarchy Parent'})
+        Company.create({'name': 'Child', 'parent_id': company1.id})
+        base_domain = Domain('id', 'child_of', company1.id)
+        companies = self._search(Company, base_domain)
+
+        self.assertEqual(companies, self._search(Company, base_domain & Domain('id', 'child_of', 'Parent')))
+        self.assertEqual(companies, self._search(Company, base_domain & Domain('id', 'parent_of', 'Chi')))
+
     def test_20_expression_parse(self):
         # TDE note: those tests have been added when refactoring the expression.parse() method.
         # They come in addition to the already existing tests; maybe some tests
