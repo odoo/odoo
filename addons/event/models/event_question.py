@@ -19,7 +19,7 @@ class EventQuestion(models.Model):
         ('phone', 'Phone'),
         ('company_name', 'Company'),
     ], default='simple_choice', string="Question Type", required=True)
-    event_type_id = fields.Many2one('event.type', 'Event Type', ondelete='cascade')
+    event_type_ids = fields.Many2many('event.type', string='Event Type')
     event_ids = fields.Many2many('event.event', string='Event')
     answer_ids = fields.One2many('event.question.answer', 'question_id', "Answers", copy=True)
     sequence = fields.Integer(default=10)
