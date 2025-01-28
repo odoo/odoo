@@ -125,6 +125,9 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
 
         const checkedRadio = this.el.querySelector('input[name="o_payment_radio"]:checked');
 
+        if (!checkedRadio) {
+            return;
+        }
         // Block the entire UI to prevent fiddling with other widgets.
         this._disableButton(true);
 

@@ -22,6 +22,9 @@ PaymentForm.include({
     _updateAmount(ev) {
         if (ev.target.value >= 0) {
             this.paymentContext.amount = ev.target.value;
+            // Update paymentContext of second form as amount is mentioned
+            // on second's dataset.
+            document.querySelector(".o_payment_form").dataset.amount = ev.target.value;
             const otherAmountEl = this.el.querySelector("#other_amount");
             if (ev.target.id === "other_amount_value" && otherAmountEl) {
                 otherAmountEl.value = ev.target.value;
@@ -100,6 +103,12 @@ PaymentForm.include({
      */
     _prepareTransactionRouteParams() {
         const transactionRouteParams = this._super(...arguments);
+        //To update the amount after change it from form.
+        //The paymentContext['amount'] is in second form. So, The amount
+        //doesn't get updated after we change it through form.
+        transactionRouteParams.amount = parseFloat(
+            document.querySelector(".o_payment_form").dataset.amount
+        );
         this.getFormData = (formSelector) => {
             const form = document.querySelector(formSelector);
             if (!form) {

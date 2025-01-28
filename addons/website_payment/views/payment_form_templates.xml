@@ -62,7 +62,7 @@
                     <span class="s_website_form_label_content">Country</span>
                     <span class="s_website_form_mark"> *</span>
                 </label>
-                <select t-att-disabled="'1' if country_id and partner_id else None" id="country_id" name="country_id" t-attf-class="form-select #{error.get('country_id') and 'is-invalid' or ''}">
+                <select t-att-disabled="'1' if country_id and partner_id else None" id="country_id" name="country_id" t-attf-class="form-select s_website_form_input #{error.get('country_id') and 'is-invalid' or ''}">
                     <option value="">Country...</option>
                     <t t-foreach="countries" t-as="c">
                         <option t-att-value="c.id" t-att-selected="c.id == (country_id or -1)">
