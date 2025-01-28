@@ -205,8 +205,8 @@ class ResourceCalendar(models.Model):
 
     def _inverse_flexible_hours(self):
         for calendar in self:
-            if not calendar.schedule_type:
-                calendar.schedule_type = 'flexible' if calendar.flexible_hours else 'fully_fixed'
+            if calendar.flexible_hours:
+                calendar.schedule_type = 'flexible'
 
     @api.depends('attendance_ids', 'attendance_ids.hour_from', 'attendance_ids.hour_to', 'two_weeks_calendar', 'schedule_type', 'fixed_time_with_hours',
                  'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday',
@@ -255,6 +255,7 @@ class ResourceCalendar(models.Model):
 
     def _inverse_hours_per_week(self):
         for calendar in self:
+            # TODO AMAH: check if the codition is needed and if write a comment to explain it
             if not calendar.flexible_hours:
                 calendar.hours_per_week = calendar._get_hours_per_week_value()
 
@@ -290,6 +291,7 @@ class ResourceCalendar(models.Model):
 
     @api.depends('company_id')
     def _compute_attendance_ids(self):
+        # TODO AMAH: rewrite this method to accomdate the new types
         for calendar in self.filtered(lambda c: not c._origin or c._origin.company_id != c.company_id and c.company_id):
             company_calendar = calendar.company_id.resource_calendar_id
             calendar.update({
@@ -339,6 +341,7 @@ class ResourceCalendar(models.Model):
                 calendar.full_time_required_hours = calendar.hours_per_week
 
     def _get_global_attendances(self):
+        # TODO AMAH: recheck this conditions spcially the dates
         return self.attendance_ids.filtered(lambda attendance:
             attendance.day_period != 'lunch'
             and not attendance.date_from and not attendance.date_to
@@ -348,6 +351,7 @@ class ResourceCalendar(models.Model):
         """
         Calculate the average hours worked per workday.
         """
+        # TODO AMAH: rewrite this method to accomdate the new types
         if not attendances:
             return 0
 
@@ -368,6 +372,7 @@ class ResourceCalendar(models.Model):
 
     def _get_days_per_week(self):
         # If the employee didn't work a full day, it is still counted, i.e. 19h / week (M/T/W(half day)) -> 3 days
+        # TODO AMAH: rewrite this method to accomdate the new types
         self.ensure_one()
         days = len(set(self.attendance_ids.filtered(
             lambda attendance_id: attendance_id._is_work_period() and attendance_id.duration_hours)
@@ -404,6 +409,7 @@ class ResourceCalendar(models.Model):
 
     @api.onchange('attendance_ids')
     def _onchange_attendance_ids(self):
+        # TODO AMAH: check if this method is needed anymore (mostly used in another app where list view of 2 weeks still used)
         if not self.two_weeks_calendar:
             return
 
@@ -462,6 +468,7 @@ class ResourceCalendar(models.Model):
     # --------------------------------------------------
 
     def _attendance_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None, lunch=False):
+        # TODO AMAH: rewrite this method to accomdate the new types
         assert start_dt.tzinfo and end_dt.tzinfo
         self.ensure_one()
         if not resources:
@@ -801,6 +808,7 @@ class ResourceCalendar(models.Model):
 
             Counts the number of work hours between two datetimes.
         """
+        # TODO AMAH: rewrite this method to accomdate the new types
         self.ensure_one()
         # Set timezone in UTC if no timezone is explicitly given
         if not start_dt.tzinfo:
@@ -852,6 +860,7 @@ class ResourceCalendar(models.Model):
 
         Return datetime after having planned hours
         """
+        # TODO AMAH: rewrite this method to accomdate the new types
         day_dt, revert = make_aware(day_dt)
 
         if resource is None:
@@ -936,6 +945,7 @@ class ResourceCalendar(models.Model):
         if not self.attendance_ids:
             return 0
         mapped_data = defaultdict(lambda: 0)
+        # TODO AMAH: rewrite this filterd condition
         for attendance in self.attendance_ids.filtered(lambda a: a.day_period != 'lunch' and ((not a.date_from or not a.date_to) or (a.date_from <= end.date() and a.date_to >= start.date()))):
             mapped_data[(attendance.week_type, attendance.dayofweek)] += attendance.hour_to - attendance.hour_from
         return max(mapped_data.values())
@@ -952,6 +962,7 @@ class ResourceCalendar(models.Model):
 
     @ormcache('self.id')
     def _get_working_hours(self):
+        # TODO AMAH: rewrite this method to accomdate the new types
         self.ensure_one()
 
         working_days = defaultdict(lambda: defaultdict(lambda: False))
