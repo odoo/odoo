@@ -18,81 +18,9 @@ msgstr ""
 "X-Generator: Poedit 3.5\n"
 
 #. module: l10n_th
-#: model:account.report.line,name:l10n_th.tax_report_out_tax_sale
-msgid "1. Sales amount"
-msgstr "1. ยอดขาย"
-
-#. module: l10n_th
-#: model:account.report.line,name:l10n_th.tax_report_vat_payment_last_period
-msgid "10. Excess tax payment carried forward from last period"
-msgstr "10. ภาษีส่วนเกินถูกยกมาจากงวดก่อน"
-
-#. module: l10n_th
-#: model:account.report.line,name:l10n_th.tax_report_net_vat_payable
-msgid "11. Net tax payable (if 8. is greater than 10.)"
-msgstr "11. ภาษีสุทธิที่ต้องชำระ (ถ้า 8. มากกว่า 10.)"
-
-#. module: l10n_th
-#: model:account.report.line,name:l10n_th.tax_report_net_vat_excess
-msgid ""
-"12. Net excess tax payable ((if 10. is greater than 8.) or (9. plus 10.))"
-msgstr ""
-"12. ภาษีสุทธิส่วนเกินที่ต้องชำระ ((ถ้า 10. มากกว่า 8.) หรือ (9. บวก 10.))"
-
-#. module: l10n_th
-#: model:account.report.line,name:l10n_th.tax_report_out_tax_less_sales_0_rate
-msgid "2. Less sales subject to 0% tax rate "
-msgstr "2. หักยอดขายโดยคิดอัตราภาษี 0% "
-
-#. module: l10n_th
-#: model:account.report.line,name:l10n_th.tax_report_out_tax_less_exempted_sales
-msgid "3. Less exempted sales"
-msgstr "3. หักยอดขายที่ได้รับการยกเว้น"
-
-#. module: l10n_th
-#: model:account.report.line,name:l10n_th.tax_report_out_tax_taxable_sales_amount
-msgid "4. Taxable sales amount(1. -2. -3.)"
-msgstr "4. ยอดขายที่ต้องเสียภาษี(1. -2. -3.)"
-
-#. module: l10n_th
-#: model:account.report.line,name:l10n_th.tax_report_out_tax
-msgid "5. Output tax"
-msgstr "5. ภาษีขาย"
-
-#. module: l10n_th
-#: model:account.report.line,name:l10n_th.tax_report_input_tax_purchase_from_out_tax
-msgid ""
-"6. Purchase amount that is entitled to deduction of input tax from output "
-"tax in tax computation"
-msgstr ""
-"6. จำนวนเงินซื้อที่มีสิทธิ์ได้รับการหักภาษีซื้อ จากภาษีขายในการคำนวณภาษี"
-
-#. module: l10n_th
-#: model:account.report.line,name:l10n_th.tax_report_input_tax
-msgid "7. Input tax (according to invoice of purchase amount in 6.)"
-msgstr "7. ภาษีซื้อ (ตามใบแจ้งหนี้ของจำนวนการซื้อในข้อ 6. )"
-
-#. module: l10n_th
-#: model:account.report.line,name:l10n_th.tax_report_vat_payable
-msgid "8. Tax payable (5. minus 7. (if 5. is greater than 7.))"
-msgstr "8. ภาษีที่ต้องชำระ (5. ลบ 7. (ถ้า 5. มากกว่า 7. ))"
-
-#. module: l10n_th
-#: model:account.report.line,name:l10n_th.tax_report_vat_excess
-msgid "9. Excess tax payable (7. minus 5. (if 5. is less than 7.))"
-msgstr "9. ภาษีเกินที่ต้องชำระ (7. ลบ 5. (ถ้า 5. น้อยกว่า 7.))"
-
-#. module: l10n_th
 #: model:ir.model,name:l10n_th.model_account_chart_template
 msgid "Account Chart Template"
 msgstr "เทมเพลตแผนภูมิบัญชี"
-
-#. module: l10n_th
-#: model:account.report.column,name:l10n_th.tax_report_balance
-#: model:account.report.column,name:l10n_th.tax_report_pnd3_balance
-#: model:account.report.column,name:l10n_th.tax_report_pnd53_balance
-msgid "Balance"
-msgstr "ยอดคงเหลือ"
 
 #. module: l10n_th
 #: model:ir.model,name:l10n_th.model_res_partner_bank
@@ -140,11 +68,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: l10n_th
-#: model:account.report.line,name:l10n_th.tax_report_input_tax_title
-msgid "Input Tax"
-msgstr "ภาษีซื้อ"
-
-#. module: l10n_th
 #: model:ir.model,name:l10n_th.model_account_move
 msgid "Journal Entry"
 msgstr "รายการสมุดรายวัน"
@@ -166,30 +89,10 @@ msgid "Mobile Number"
 msgstr "หมายเลขโทรศัพท์มือถือ"
 
 #. module: l10n_th
-#: model:account.report.line,name:l10n_th.tax_report_net_vat
-msgid "Net Tax"
-msgstr "ภาษีสุทธิ"
-
-#. module: l10n_th
 #. odoo-python
 #: code:addons/l10n_th/models/ir_actions_report.py:0
 msgid "Only invoices could be printed."
 msgstr "สามารถพิมพ์ได้เฉพาะใบแจ้งหนี้เท่านั้น"
-
-#. module: l10n_th
-#: model:account.report.line,name:l10n_th.tax_report_out_tax_title
-msgid "Output Tax"
-msgstr "ภาษีขาย"
-
-#. module: l10n_th
-#: model:account.report,name:l10n_th.tax_report_pnd3
-msgid "PND3"
-msgstr "ภ.ง.ด. 3"
-
-#. module: l10n_th
-#: model:account.report,name:l10n_th.tax_report_pnd53
-msgid "PND53"
-msgstr "ภ.ง.ด. 53"
 
 #. module: l10n_th
 #: model:ir.model.fields,field_description:l10n_th.field_account_setup_bank_manual_config__proxy_type
@@ -203,20 +106,9 @@ msgid "Report Action"
 msgstr "รายงานการดำเนินการ"
 
 #. module: l10n_th
-#: model:account.report.line,name:l10n_th.tax_report_surcharge_pnd3_line
-#: model:account.report.line,name:l10n_th.tax_report_surcharge_pnd53_line
-msgid "Surcharge"
-msgstr "ค่าธรรมเนียมเพิ่มเติม"
-
-#. module: l10n_th
 #: model_terms:ir.ui.view,arch_db:l10n_th.report_invoice_document
 msgid "Tax Invoice"
 msgstr "ใบกำกับภาษี"
-
-#. module: l10n_th
-#: model:account.report,name:l10n_th.tax_report
-msgid "Tax Report"
-msgstr "รายงานภาษี"
 
 #. module: l10n_th
 #. odoo-python
@@ -255,26 +147,3 @@ msgstr ""
 "ประเภทรหัส QR โค้ดจะต้องเป็นรหัส Ewallet, รหัสผู้เสียภาษีของผู้ค้า "
 "หรือหมายเลขโทรศัพท์มือถือ เพื่อสร้างรหัส QR "
 "โค้ดของธนาคารไทยสำหรับหมายเลขบัญชี %s"
-
-#. module: l10n_th
-#: model:account.report.line,name:l10n_th.tax_report_total_pnd3_line
-#: model:account.report.line,name:l10n_th.tax_report_total_pnd53_line
-msgid "Total"
-msgstr "รวมยอดภาษีที่นำส่งทั้งสิ้น และเงินเพิ่ม (2. + 3.)"
-
-#. module: l10n_th
-#: model:account.report.line,name:l10n_th.tax_report_total_income_pnd3_line
-#: model:account.report.line,name:l10n_th.tax_report_total_income_pnd53_line
-msgid "Total Income"
-msgstr "รวมยอดเงินได้ทั้งสิ้น"
-
-#. module: l10n_th
-#: model:account.report.line,name:l10n_th.tax_report_total_remittance_pnd3_line
-#: model:account.report.line,name:l10n_th.tax_report_total_remittance_pnd53_line
-msgid "Total Remittance"
-msgstr "รวมยอดภาษีที่นำส่งทั้งสิ้น"
-
-#. module: l10n_th
-#: model:account.report.line,name:l10n_th.tax_report_vat
-msgid "Value Added Tax"
-msgstr "ภาษีมูลค่าเพิ่ม"

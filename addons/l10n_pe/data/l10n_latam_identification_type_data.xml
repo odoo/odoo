@@ -12,6 +12,7 @@
 
     <record model='l10n_latam.identification.type' id='it_RUC'>
         <field name='name'>RUC</field>
+        <field name="name@es_419">Número de identificación fiscal</field>
         <field name='description'>Taxpayer Identification Number</field>
         <field name='country_id' ref='base.pe'/>
         <field name='is_vat' eval='True'/>
@@ -20,6 +21,7 @@
     </record>
     <record model='l10n_latam.identification.type' id='it_DNI'>
         <field name='name'>DNI</field>
+        <field name="name@es_419">Documento nacional de identidad</field>
         <field name='description'>National Identity Document</field>
         <field name='country_id' ref='base.pe'/>
         <field name='l10n_pe_vat_code'>1</field>
@@ -27,6 +29,7 @@
     </record>
     <record model='l10n_latam.identification.type' id='it_NDTD'>
         <field name='name'>Non-Domiciled Tax Document</field>
+        <field name="name@es_419">Documento tributario no domiciliado, sin RUC</field>
         <field name='description'>Document without RUC from another country</field>
         <field name='country_id' ref='base.pe'/>
         <field name='l10n_pe_vat_code'>0</field>
@@ -34,18 +37,21 @@
     </record>
     <record model='l10n_latam.identification.type' id='it_DIC'>
         <field name='name'>Diplomatic Identity Card</field>
+        <field name="name@es_419">Cédula Diplomática de identidad</field>
         <field name='country_id' ref='base.pe'/>
         <field name='l10n_pe_vat_code'>A</field>
         <field name='sequence'>105</field>
     </record>
     <record model='l10n_latam.identification.type' id='it_IDCR'>
         <field name='name'>Identity document of the country of residence</field>
+        <field name="name@es_419">Documento de identidad del país de residencia</field>
         <field name='country_id' ref='base.pe'/>
         <field name='l10n_pe_vat_code'>B</field>
         <field name='sequence'>110</field>
     </record>
     <record model='l10n_latam.identification.type' id='it_TIN'>
         <field name='name'>Tax Identification Number</field>
+        <field name="name@es_419">Numero de Identificacion Fiscal</field>
         <field name='description'>TIN – Doc Trib PP.NN</field>
         <field name='country_id' ref='base.pe'/>
         <field name='l10n_pe_vat_code'>C</field>
@@ -53,6 +59,7 @@
     </record>
     <record model='l10n_latam.identification.type' id='it_IN'>
         <field name='name'>Identification Number</field>
+        <field name="name@es_419">Número de identificación</field>
         <field name='description'>IN - Doc Trib PP. JJ</field>
         <field name='country_id' ref='base.pe'/>
         <field name='l10n_pe_vat_code'>D</field>
@@ -60,6 +67,7 @@
     </record>
     <record model='l10n_latam.identification.type' id='it_TAM'>
         <field name='name'>TAM</field>
+        <field name="name@es_419">TAM</field>
         <field name='description'>Andean Immigration Card</field>
         <field name='country_id' ref='base.pe'/>
         <field name='l10n_pe_vat_code'>E</field>
@@ -67,6 +75,7 @@
     </record>
     <record model='l10n_latam.identification.type' id='it_PTP'>
         <field name='name'>PTP</field>
+        <field name="name@es_419">Permiso de residencia temporal</field>
         <field name='description'>Temporary Residence Permit</field>
         <field name='country_id' ref='base.pe'/>
         <field name='l10n_pe_vat_code'>F</field>
@@ -74,12 +83,14 @@
     </record>
     <record model='l10n_latam.identification.type' id='it_SP'>
         <field name='name'>Safe Passage</field>
+        <field name="name@es_419">Salvoconducto</field>
         <field name='country_id' ref='base.pe'/>
         <field name='l10n_pe_vat_code'>G</field>
         <field name='sequence'>135</field>
     </record>
     <record model='l10n_latam.identification.type' id='it_CPP'>
         <field name='name'>License Permit Temp. Perman.</field>
+        <field name="name@es_419">Carné Permiso Temp. Perman.</field>
         <field name='country_id' ref='base.pe'/>
         <field name='l10n_pe_vat_code'>H</field>
         <field name='sequence'>140</field>

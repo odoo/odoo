@@ -2,6 +2,7 @@
 <odoo auto_sequence="1">
     <record id="l10n_bh_tax_report_simplified" model="account.report">
         <field name="name">Simplified VAT Return</field>
+        <field name="name@ar">الإقرار المبسط لضريبة القيمة المضافة</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.bh"/>
         <field name="filter_fiscal_position" eval="True"/>
@@ -9,16 +10,19 @@
         <field name="column_ids">
             <record id="l10n_bh_tax_report_simplified_base" model="account.report.column">
                 <field name="name">Base</field>
+                <field name="name@ar">القاعدة</field>
                 <field name="expression_label">base</field>
             </record>
             <record id="l10n_bh_tax_report_simplified_tax" model="account.report.column">
                 <field name="name">Tax</field>
+                <field name="name@ar">الضريبة</field>
                 <field name="expression_label">tax</field>
             </record>
         </field>
         <field name="line_ids">
             <record id="l10n_bh_tax_report_simplified_1a" model="account.report.line">
                 <field name="name">1(a). Standard rated sales at 10%</field>
+                <field name="name@ar">1(a). المبيعات المقدرة القياسية بنسبة 10%</field>
                 <field name="code">bh_simp_1a</field>
                 <field name="expression_ids">
                     <record id="l10n_bh_tax_report_simplified_1a_base" model="account.report.expression">
@@ -35,6 +39,7 @@
             </record>
             <record id="l10n_bh_tax_report_simplified_2" model="account.report.line">
                 <field name="name">2. Zero rated (including exports)</field>
+                <field name="name@ar">2. التصنيف الصفري (بما في ذلك الصادرات)</field>
                 <field name="code">bh_simp_2</field>
                  <field name="foldable" eval="True"/>
                 <field name="expression_ids">
@@ -47,6 +52,7 @@
                 <field name="children_ids">
                     <record id="l10n_bh_tax_report_simplified_2_1" model="account.report.line">
                         <field name="name">Zero rated</field>
+                        <field name="name@ar">تصنيف صفر</field>
                         <field name="code">bh_simp_2_1</field>
                         <field name="expression_ids">
                             <record id="l10n_bh_tax_report_simplified_2_1_base" model="account.report.expression">
@@ -58,6 +64,7 @@
                     </record>
                     <record id="l10n_bh_tax_report_simplified_2_2" model="account.report.line">
                         <field name="name">Exports</field>
+                        <field name="name@ar">الصادرات</field>
                         <field name="code">bh_simp_2_2</field>
                         <field name="expression_ids">
                             <record id="l10n_bh_tax_report_simplified_2_2_base" model="account.report.expression">
@@ -82,6 +89,7 @@
             </record>
             <record id="l10n_bh_tax_report_simplified_3" model="account.report.line">
                 <field name="name">3. Other and exempt sales</field>
+                <field name="name@ar">3. المبيعات الأخرى والمبيعات المعفاة</field>
                 <field name="code">bh_simp_3</field>
                  <field name="foldable" eval="True"/>
                 <field name="expression_ids">
@@ -94,6 +102,7 @@
                 <field name="children_ids">
                     <record id="l10n_bh_tax_report_simplified_3_1" model="account.report.line">
                         <field name="name">Sales subject to domestic reverse charge mechanism</field>
+                        <field name="name@ar">المبيعات الخاضعة لآلية الرسوم العكسية المحلية</field>
                         <field name="code">bh_3_1</field>
                         <field name="expression_ids">
                             <record id="l10n_bh_tax_report_simplified_3_1_base" model="account.report.expression">
@@ -105,6 +114,7 @@
                     </record>
                     <record id="l10n_bh_tax_report_simplified_3_2" model="account.report.line">
                         <field name="name">Exempt</field>
+                        <field name="name@ar">معفاة</field>
                         <field name="code">bh_3_2</field>
                         <field name="expression_ids">
                             <record id="l10n_bh_tax_report_simplified_3_2_base" model="account.report.expression">
@@ -118,6 +128,7 @@
             </record>
             <record id="l10n_bh_tax_report_simplified_7" model="account.report.line">
                 <field name="name">7.Total sales</field>
+                <field name="name@ar">7- إجمالي المبيعات</field>
                 <field name="code">bh_simp_7</field>
                 <field name="expression_ids">
                     <record id="l10n_bh_tax_report_simplified_7_base" model="account.report.expression">
@@ -134,6 +145,7 @@
             </record>
             <record id="l10n_bh_tax_report_simplified_14" model="account.report.line">
                 <field name="name">14. Total purchases</field>
+                <field name="name@ar">14. إجمالي المشتريات</field>
                 <field name="code">bh_simp_14</field>
                  <field name="foldable" eval="True"/>
                 <field name="expression_ids">
@@ -151,6 +163,7 @@
                 <field name="children_ids">
                     <record id="l10n_bh_tax_report_simplified_8" model="account.report.line">
                         <field name="name">8(a). Standard rated domestic purchases at 10%</field>
+                        <field name="name@ar">8(a). مشتريات محلية مصنفة قياسية بنسبة 10%</field>
                         <field name="code">bh_simp_8a</field>
                         <field name="expression_ids">
                             <record id="l10n_bh_tax_report_simplified_8_base" model="account.report.expression">
@@ -167,6 +180,7 @@
                     </record>
                     <record id="l10n_bh_tax_report_simplified_9" model="account.report.line">
                         <field name="name">9(a). Imports subject to VAT paid at customs</field>
+                        <field name="name@ar">9(a). الواردات الخاضعة لضريبة القيمة المضافة المدفوعة في الجمارك</field>
                         <field name="code">bh_simp_9a</field>
                         <field name="expression_ids">
                             <record id="l10n_bh_tax_report_simplified_9_base" model="account.report.expression">
@@ -183,6 +197,7 @@
                     </record>
                     <record id="l10n_bh_tax_report_simplified_10" model="account.report.line">
                         <field name="name">10. Imports subject to deferral at customs</field>
+                        <field name="name@ar">10. الواردات الخاضعة للتأجيل في الجمارك</field>
                         <field name="code">bh_simp_10</field>
                         <field name="expression_ids">
                             <record id="l10n_bh_tax_report_simplified_10_base" model="account.report.expression">
@@ -199,6 +214,7 @@
                     </record>
                     <record id="l10n_bh_tax_report_simplified_11" model="account.report.line">
                         <field name="name">11(a). Imports subject to VAT accounted for through reverse charge mechanism at 10%</field>
+                        <field name="name@ar">11(a). الواردات الخاضعة لضريبة القيمة المضافة المحسوبة من خلال آلية الرسوم العكسية بنسبة 10%</field>
                         <field name="code">bh_simp_11a</field>
                         <field name="expression_ids">
                             <record id="l10n_bh_tax_report_simplified_11_base" model="account.report.expression">
@@ -215,6 +231,7 @@
                     </record>
                     <record id="l10n_bh_tax_report_simplified_12" model="account.report.line">
                         <field name="name">12. Purchases subject to domestic reverse charge mechanism</field>
+                        <field name="name@ar">12. المشتريات الخاضعة لآلية الرسوم العكسية المحلية</field>
                         <field name="code">bh_simp_12</field>
                         <field name="expression_ids">
                             <record id="l10n_bh_tax_report_simplified_12_base" model="account.report.expression">
@@ -231,6 +248,7 @@
                     </record>
                     <record id="l10n_bh_tax_report_simplified_13" model="account.report.line">
                         <field name="name">13. Purchases from non-registered suppliers, zero rated/ exempt purchases</field>
+                        <field name="name@ar">13. المشتريات من الموردين غير المسجلين، والمشتريات ذات التصنيف الصفري/المشتريات المعفاة</field>
                         <field name="code">bh_simp_13</field>
                         <field name="expression_ids">
                             <record id="l10n_bh_tax_report_simplified_13_base" model="account.report.expression">
@@ -256,6 +274,7 @@
                 <field name="children_ids">
                     <record id="l10n_bh_tax_report_simplified_16" model="account.report.line">
                         <field name="name">16. Corrections from previous period (between BHD +-5,000)</field>
+                        <field name="name@ar">16. التصحيحات من الفترة السابقة (بين +5,000 دينار بحريني)</field>
                         <field name="code">bh_simp_16</field>
                         <field name="expression_ids">
                             <record id="l10n_bh_tax_report_simplified_16_tax" model="account.report.expression">
@@ -268,6 +287,7 @@
                     </record>
                     <record id="l10n_bh_tax_report_simplified_17" model="account.report.line">
                         <field name="name">17. VAT credit carried forward from previous period(s)</field>
+                        <field name="name@ar">17. رصيد ضريبة القيمة المضافة المرحل من الفترة (الفترات) السابقة</field>
                         <field name="code">bh_simp_17</field>
                         <field name="expression_ids">
                             <record id="l10n_bh_tax_report_simplified_17_tax" model="account.report.expression">
@@ -280,6 +300,7 @@
                     </record>
                     <record id="l10n_bh_tax_report_simplified_18" model="account.report.line">
                         <field name="name">18. Net VAT due (or reclaimed)</field>
+                        <field name="name@ar">18. صافي ضريبة القيمة المضافة المستحقة (أو المستردة)</field>
                         <field name="code">bh_simp_18</field>
                         <field name="expression_ids">
                             <record id="l10n_bh_tax_report_simplified_18_tax" model="account.report.expression">

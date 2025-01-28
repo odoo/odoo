@@ -2,6 +2,7 @@
 <odoo>
     <record id="account_tax_report_km" model="account.report">
         <field name="name">VAT Report</field>
+        <field name="name@fr">Déclaration TVA</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.km"/>
         <field name="filter_fiscal_position" eval="True"/>
@@ -9,16 +10,19 @@
         <field name="column_ids">
             <record id="account_tax_report_km_balance" model="account.report.column">
                 <field name="name">Base</field>
+                <field name="name@fr">Base</field>
                 <field name="expression_label">base</field>
             </record>
             <record id="account_tax_report_km_tax" model="account.report.column">
                 <field name="name">Tax</field>
+                <field name="name@fr">Taxe</field>
                 <field name="expression_label">tax</field>
             </record>
         </field>
         <field name="line_ids">
             <record id="account_tax_report_line_km_operations" model="account.report.line">
                 <field name="name">Operations</field>
+                <field name="name@fr">Opérations</field>
                 <field name="code">KM_OPERATIONS</field>
                 <field name="expression_ids">
                     <record id="account_tax_report_line_km_sales_base" model="account.report.expression">
@@ -35,6 +39,7 @@
                 <field name="children_ids">
                     <record id="account_tax_report_line_km_operations_25" model="account.report.line">
                         <field name="name">Taxable at 25%</field>
+                        <field name="name@fr">Taxable à 25%</field>
                         <field name="code">KM_25</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_km_operations_25_base" model="account.report.expression">
@@ -51,6 +56,7 @@
                     </record>
                     <record id="account_tax_report_line_km_operations_10" model="account.report.line">
                         <field name="name">Taxable at 10%</field>
+                        <field name="name@fr">Taxable à 10%</field>
                         <field name="code">KM_10</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_km_operations_10_base" model="account.report.expression">
@@ -67,6 +73,7 @@
                     </record>
                     <record id="account_tax_report_line_km_operations_7_5" model="account.report.line">
                         <field name="name">Taxable at 7.5%</field>
+                        <field name="name@fr">Taxable à 7.5%</field>
                         <field name="code">KM_7_5</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_km_operations_7_5_base" model="account.report.expression">
@@ -83,6 +90,7 @@
                     </record>
                     <record id="account_tax_report_line_km_operations_5" model="account.report.line">
                         <field name="name">Taxable at 5%</field>
+                        <field name="name@fr">Taxable à 5%</field>
                         <field name="code">KM_5</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_km_operations_5_base" model="account.report.expression">
@@ -99,6 +107,7 @@
                     </record>
                     <record id="account_tax_report_line_km_operations_3" model="account.report.line">
                         <field name="name">Taxable at 3%</field>
+                        <field name="name@fr">Taxable à 3%</field>
                         <field name="code">KM_3</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_km_operations_3_base" model="account.report.expression">
@@ -115,6 +124,7 @@
                     </record>
                     <record id="account_tax_report_line_km_operations_exempt" model="account.report.line">
                         <field name="name">Exempt</field>
+                        <field name="name@fr">Exonéré</field>
                         <field name="code">KM_EXEMPT</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_km_operations_exempt_base" model="account.report.expression">
@@ -126,6 +136,7 @@
                     </record>
                     <record id="account_tax_report_line_km_operations_export" model="account.report.line">
                         <field name="name">Export</field>
+                        <field name="name@fr">Exportations</field>
                         <field name="code">KM_EXPORT</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_km_operations_export_base" model="account.report.expression">
@@ -139,6 +150,7 @@
             </record>
             <record id="account_tax_report_line_km_prepayment" model="account.report.line">
                 <field name="name">Prepayments made</field>
+                <field name="name@fr">Avances réalisées</field>
                 <field name="code">KM_PREPAYMENTS</field>
                 <field name="expression_ids">
                     <record id="account_tax_report_line_km_prepayment_tax" model="account.report.expression">
@@ -150,6 +162,7 @@
             </record>
             <record id="account_tax_report_line_km_credit_reported" model="account.report.line">
                 <field name="name">Credit balance from previous return</field>
+                <field name="name@fr">Crédit reporté de la déclaration précédente</field>
                 <field name="code">KM_CREDIT_REPORTED</field>
                 <field name="expression_ids">
                     <record id="account_tax_report_line_km_credit_reported_tax" model="account.report.expression">
@@ -167,6 +180,7 @@
             </record>
             <record id="account_tax_report_line_km_due" model="account.report.line">
                 <field name="name">Due tax for the month</field>
+                <field name="name@fr">Taxe due pour le mois</field>
                 <field name="code">KM_DUE</field>
                 <field name="expression_ids">
                     <record id="account_tax_report_line_km_due_tax" model="account.report.expression">
@@ -179,6 +193,7 @@
             </record>
             <record id="account_tax_report_line_km_credit_to_report" model="account.report.line">
                 <field name="name">Credit balance to report for the next return</field>
+                <field name="name@fr">Credit à reporter pour la prochaine déclaration</field>
                 <field name="code">KM_TO_REPORT</field>
                 <field name="expression_ids">
                     <record id="account_tax_report_line_km_credit_to_report_tax" model="account.report.expression">

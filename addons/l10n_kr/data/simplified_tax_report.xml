@@ -2,6 +2,7 @@
 <odoo auto_sequence="1">
     <record id="l10n_kr_simplified_tp_vat" model="account.report">
         <field name="name">VAT Report - Simplified Taxpayer</field>
+        <field name="name@ko_KR">간이과세자 부가가치세 신고서</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.kr"/>
         <field name="filter_multi_company">tax_units</field>
@@ -12,31 +13,37 @@
         <field name="column_ids">
             <record id="l10n_kr_simplified_tp_vat_column_balance" model="account.report.column">
                 <field name="name">Amount</field>
+                <field name="name@ko_KR">금액</field>
                 <field name="expression_label">balance</field>
             </record>
             <record id="l10n_kr_simplified_tp_vat_column_tax" model="account.report.column">
                 <field name="name">Tax Amount</field>
+                <field name="name@ko_KR">세액</field>
                 <field name="expression_label">tax</field>
             </record>
         </field>
         <field name="line_ids">
             <record id="l10n_kr_simplified_tp_vat_sfi" model="account.report.line">
                 <field name="name">1. Filing Information</field>
+                <field name="name@ko_KR">1. 신고내용</field>
                 <field name="code">KR_SFI</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="l10n_kr_simplified_tp_vat_stbot" model="account.report.line">
                         <field name="name">Tax Base and Output Tax</field>
+                        <field name="name@ko_KR">과세표준 및 매출세액</field>
                         <field name="code">KR_STBOT</field>
                         <field name="hierarchy_level">1</field>
                         <field name="children_ids">
                             <record id="l10n_kr_simplified_tp_vat_stbb" model="account.report.line">
                                 <field name="name">Tax base before 2021.06.30</field>
+                                <field name="name@ko_KR">21.6.30. 이전 과세분</field>
                                 <field name="code">KR_STBB</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_simplified_tp_vat_segsw" model="account.report.line">
                                         <field name="name">(1) Electricity, gas, steam and water supply</field>
+                                        <field name="name@ko_KR">(1) 전기ᆞ가스ᆞ증기 및 수도사업</field>
                                         <field name="code">KR_SEGSW</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="expression_ids">
@@ -58,6 +65,7 @@
                                         <field name="name">(2) Retail trade. collection and wholesale of recycling
                                             materials and restaurants
                                         </field>
+                                        <field name="name@ko_KR">(2) 소매업, 재생용 재료수집 및 판매업, 음식점업</field>
                                         <field name="code">KR_SRTCW</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="expression_ids">
@@ -79,6 +87,7 @@
                                         <field name="name">(3) Manufacture, agriculture, forestry, fishing,
                                             accommodation, transportation and communications
                                         </field>
+                                        <field name="name@ko_KR">(3) 제조업, 농ᆞ임ᆞ어업, 숙박업, 운수 및 통신업</field>
                                         <field name="code">KR_SMGF</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="expression_ids">
@@ -98,6 +107,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_sclo" model="account.report.line">
                                         <field name="name">(4)Construction, leasing and other services</field>
+                                        <field name="name@ko_KR">(4) 건설업, 부동산임대업, 그 밖의 서비스업</field>
                                         <field name="code">KR_SCLO</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="expression_ids">
@@ -119,6 +129,7 @@
                             </record>
                             <record id="l10n_kr_simplified_tp_vat_stba" model="account.report.line">
                                 <field name="name">Tax base after 2021.07.01</field>
+                                <field name="name@ko_KR">21.7.1. 이후 과세분</field>
                                 <field name="code">KR_STBA</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="children_ids">
@@ -126,6 +137,7 @@
                                         <field name="name">(5) Retail trade. collection and wholesale of recycling
                                             materials and restaurants
                                         </field>
+                                        <field name="name@ko_KR">(5) 소매업, 재생용 재료수집 및 판매업, 음식점업</field>
                                         <field name="code">KR_SRTCWR</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="expression_ids">
@@ -147,6 +159,7 @@
                                         <field name="name">(6) Manufacture, agriculture, forestry, fishing and transport
                                             of parcels
                                         </field>
+                                        <field name="name@ko_KR">(6) 제조업, 농ᆞ임ᆞ어업, 소화물 전문 운송업</field>
                                         <field name="code">KR_SMAFFT</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="expression_ids">
@@ -166,6 +179,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_sacc" model="account.report.line">
                                         <field name="name">(7) Accommodations</field>
+                                        <field name="name@ko_KR">(7) 숙박업</field>
                                         <field name="code">KR_SACC</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="expression_ids">
@@ -187,6 +201,7 @@
                                         <field name="name">(8) Construction, transporation and storage (excluding
                                             transportation of parcels), information and communication and other services
                                         </field>
+                                        <field name="name@ko_KR">(8) 건설업, 운수 및 창고업(소화물 전문 운송업 제외), 정보통신업, 그 밖의 서비스업</field>
                                         <field name="code">KR_SCTSIC</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="expression_ids">
@@ -210,6 +225,7 @@
                                             of events services), business facilities management and business support
                                             services, activities related to real estate and leasing
                                         </field>
+                                        <field name="name@ko_KR">(9) 금융 및 보험 관련 서비스업, 전문ᆞ과학 및 기술서비스업(인물사진 및 행사용 영상 촬영업 제외), 사업시설관리ᆞ사업지원 및 임대서비스업, 부동산 관련 서비스업, 부동산임대업</field>
                                         <field name="code">KR_SFIPSCTB</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="expression_ids">
@@ -231,11 +247,13 @@
                             </record>
                             <record id="l10n_kr_simplified_tp_vat_szr" model="account.report.line">
                                 <field name="name">Zero Rate</field>
+                                <field name="name@ko_KR">영세율</field>
                                 <field name="code">KR_SZR</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_simplified_tp_vat_szrti" model="account.report.line">
                                         <field name="name">(10) Tax Invoice Issued</field>
+                                        <field name="name@ko_KR">(10) 세금계산서 발급분</field>
                                         <field name="code">KR_SZRTI</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="expression_ids">
@@ -249,6 +267,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_szro" model="account.report.line">
                                         <field name="name">(11) Others</field>
+                                        <field name="name@ko_KR">(11) 기타</field>
                                         <field name="code">KR_SZRO</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="expression_ids">
@@ -264,6 +283,7 @@
                             </record>
                             <record id="l10n_kr_simplified_tp_vat_stroi" model="account.report.line">
                                 <field name="name">(12) Tax received on inventory</field>
+                                <field name="name@ko_KR">(12) 재고 납부세액</field>
                                 <field name="code">KR_STROI</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
@@ -277,6 +297,7 @@
                             </record>
                             <record id="l10n_kr_simplified_tp_vat_stbott" model="account.report.line">
                                 <field name="name">(13) Total</field>
+                                <field name="name@ko_KR">(13) 합계</field>
                                 <field name="code">KR_STBOTT</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
@@ -302,16 +323,19 @@
                     </record>
                     <record id="l10n_kr_simplified_tp_vat_stred" model="account.report.line">
                         <field name="name">Tax reduction/exemption or deduction</field>
+                        <field name="name@ko_KR">경감ᆞ공제 세액</field>
                         <field name="code">KR_STRED</field>
                         <field name="hierarchy_level">1</field>
                         <field name="children_ids">
                             <record id="l10n_kr_simplified_tp_vat_siticr" model="account.report.line">
                                 <field name="name">Input tax invoice credit received</field>
+                                <field name="name@ko_KR">매입세금계산서등 수취세액공제</field>
                                 <field name="code">KR_SITICR</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_simplified_tp_vat_sticrb" model="account.report.line">
                                         <field name="name">(14) Received before 2021.06.30</field>
+                                        <field name="name@ko_KR">(14) 21.6.30. 이전 공급받은 분</field>
                                         <field name="code">KR_STICRB</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="expression_ids">
@@ -333,6 +357,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_sticra" model="account.report.line">
                                         <field name="name">(15) Received after 2021.07.01</field>
+                                        <field name="name@ko_KR">(15) 21.7.1. 이후 공급받은 분</field>
                                         <field name="code">KR_STICRA</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="expression_ids">
@@ -354,6 +379,7 @@
                             </record>
                             <record id="l10n_kr_simplified_tp_vat_sdit" model="account.report.line">
                                 <field name="name">(16) Deemed input tax</field>
+                                <field name="name@ko_KR">(16) 의제매입세액공제</field>
                                 <field name="code">KR_SDIT</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
@@ -372,11 +398,13 @@
                             </record>
                             <record id="l10n_kr_simplified_tp_vat_stibp" model="account.report.line">
                                 <field name="name">Tax invoice issued by purchaser</field>
+                                <field name="name@ko_KR">매입자발행 세금계산서</field>
                                 <field name="code">KR_STIBP</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_simplified_tp_vat_stibpb" model="account.report.line">
                                         <field name="name">(17) Received before 2021.06.30</field>
+                                        <field name="name@ko_KR">(17) 21.6.30 이전 공급받은 분</field>
                                         <field name="code">KR_STIBPB</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="expression_ids">
@@ -398,6 +426,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_stibpa" model="account.report.line">
                                         <field name="name">(18) Received after 2021.07.01</field>
+                                        <field name="name@ko_KR">(18) 21.7.1. 이후 공급받은 분</field>
                                         <field name="code">KR_STIBPA</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="expression_ids">
@@ -419,6 +448,7 @@
                             </record>
                             <record id="l10n_kr_simplified_tp_vat_stcer" model="account.report.line">
                                 <field name="name">(19) Tax credits for electronic returns</field>
+                                <field name="name@ko_KR">(19) 전자신고 세액공제</field>
                                 <field name="code">KR_STCER</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
@@ -432,6 +462,7 @@
                             </record>
                             <record id="l10n_kr_simplified_tp_vat_stceii" model="account.report.line">
                                 <field name="name">(20) Tax credits for electronic invoice issuance</field>
+                                <field name="name@ko_KR">(20) 전자세금계산서 발급세액 공제</field>
                                 <field name="code">KR_STCEII</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
@@ -445,11 +476,13 @@
                             </record>
                             <record id="l10n_kr_simplified_tp_vat_stccss" model="account.report.line">
                                 <field name="name">Tax credits for credit card sales slip and etc issuance</field>
+                                <field name="name@ko_KR">신용카드매출전표등 발행세액공제</field>
                                 <field name="code">KR_STCCSS</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_simplified_tp_vat_stccssb" model="account.report.line">
                                         <field name="name">(21) Received before 2021.06.30</field>
+                                        <field name="name@ko_KR">(21) 21.6.30. 이전 공급받은 분</field>
                                         <field name="code">KR_STCCSSB</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="expression_ids">
@@ -471,6 +504,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_stccssa" model="account.report.line">
                                         <field name="name">(22) Received after 2021.07.01</field>
+                                        <field name="name@ko_KR">(22) 21.7.1. 이후 공급받은 분</field>
                                         <field name="code">KR_STCCSSA</field>
                                         <field name="hierarchy_level">3</field>
                                         <field name="expression_ids">
@@ -492,6 +526,7 @@
                             </record>
                             <record id="l10n_kr_simplified_tp_vat_siticro" model="account.report.line">
                                 <field name="name">(23) Others</field>
+                                <field name="name@ko_KR">(23) 기타</field>
                                 <field name="code">KR_SITICRO</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
@@ -512,6 +547,7 @@
                             </record>
                             <record id="l10n_kr_simplified_tp_vat_siticrt" model="account.report.line">
                                 <field name="name">(24) Total</field>
+                                <field name="name@ko_KR">(24) 합계</field>
                                 <field name="code">KR_SITICRT</field>
                                 <field name="hierarchy_level">2</field>
                                 <field name="expression_ids">
@@ -530,6 +566,7 @@
                     </record>
                     <record id="l10n_kr_simplified_tp_vat_sptapsp" model="account.report.line">
                         <field name="name">(25) Pre-paid tax amount for purchaser's special payment</field>
+                        <field name="name@ko_KR">(25) 매입자 납부특례 기납부세액</field>
                         <field name="code">KR_SPTAPSP</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
@@ -543,6 +580,7 @@
                     </record>
                     <record id="l10n_kr_simplified_tp_vat_seta" model="account.report.line">
                         <field name="name">(26) Estimated tax amount</field>
+                        <field name="name@ko_KR">(26) 예정 부과(신고) 세액</field>
                         <field name="code">KR_SETA</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
@@ -556,6 +594,7 @@
                     </record>
                     <record id="l10n_kr_simplified_tp_vat_sata" model="account.report.line">
                         <field name="name">(27) Additional tax amount</field>
+                        <field name="name@ko_KR">(27) 가산세액계</field>
                         <field name="code">KR_SATA</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
@@ -568,6 +607,7 @@
                     </record>
                     <record id="l10n_kr_simplified_tp_vat_stpad" model="account.report.line">
                         <field name="name">(28) Tax payable after deduction (tax receivable)</field>
+                        <field name="name@ko_KR">(28) 차감 납부할 세액(환급받을 세액) (가-나-다-라+마)</field>
                         <field name="code">KR_STPAD</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
@@ -583,11 +623,13 @@
             </record>
             <record id="l10n_kr_simplified_tp_vat_stbi" model="account.report.line">
                 <field name="name">2. Tax Base Information</field>
+                <field name="name@ko_KR">2. 과세표준 명세</field>
                 <field name="code">KR_STBI</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="l10n_kr_simplified_tp_vat_sbt1" model="account.report.line">
                         <field name="name">(29)</field>
+                        <field name="name@ko_KR">(29)</field>
                         <field name="code">KR_SBT1</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
@@ -600,6 +642,7 @@
                     </record>
                     <record id="l10n_kr_simplified_tp_vat_sbt2" model="account.report.line">
                         <field name="name">(30)</field>
+                        <field name="name@ko_KR">(30)</field>
                         <field name="code">KR_SBT2</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
@@ -612,6 +655,7 @@
                     </record>
                     <record id="l10n_kr_simplified_tp_vat_sbto" model="account.report.line">
                         <field name="name">(31) Others(Import amount exemption)</field>
+                        <field name="name@ko_KR">(31) 기타(수입금액 제외분)</field>
                         <field name="code">KR_SBTO</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
@@ -624,6 +668,7 @@
                     </record>
                     <record id="l10n_kr_simplified_tp_vat_sbtt" model="account.report.line">
                         <field name="name">(32) Total</field>
+                        <field name="name@ko_KR">(32) 합계</field>
                         <field name="code">KR_SBTT</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
@@ -638,11 +683,13 @@
             </record>
             <record id="l10n_kr_simplified_tp_vat_stosvb" model="account.report.line">
                 <field name="name">3. Turnover of sales of VAT-free business</field>
+                <field name="name@ko_KR">3. 면세수입금액</field>
                 <field name="code">KR_STOSVB</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="l10n_kr_simplified_tp_vat_sbt3" model="account.report.line">
                         <field name="name">(33)</field>
+                        <field name="name@ko_KR">(33)</field>
                         <field name="code">KR_SBT3</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
@@ -655,6 +702,7 @@
                     </record>
                     <record id="l10n_kr_simplified_tp_vat_sbt4" model="account.report.line">
                         <field name="name">(34)</field>
+                        <field name="name@ko_KR">(34)</field>
                         <field name="code">KR_SBT4</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
@@ -667,6 +715,7 @@
                     </record>
                     <record id="l10n_kr_simplified_tp_vat_siae" model="account.report.line">
                         <field name="name">(35) Import amount exemption</field>
+                        <field name="name@ko_KR">(35) 수입금액 제외분</field>
                         <field name="code">KR_SIAE</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
@@ -679,6 +728,7 @@
                     </record>
                     <record id="l10n_kr_simplified_tp_vat_stosvbt" model="account.report.line">
                         <field name="name">(36) Total</field>
+                        <field name="name@ko_KR">(36) 합계</field>
                         <field name="code">KR_STOSVBT</field>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
@@ -693,6 +743,7 @@
             </record>
             <record id="l10n_kr_simplified_tp_vat_sbatr" model="account.report.line">
                 <field name="name">4. Bank Account for Tax Refund</field>
+                <field name="name@ko_KR">4. 국세환급금계좌신고</field>
                 <field name="code">KR_SBATR</field>
                 <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
@@ -712,6 +763,7 @@
             </record>
             <record id="l10n_kr_simplified_tp_vat_srbc" model="account.report.line">
                 <field name="name">5. Report for Business Closure</field>
+                <field name="name@ko_KR">5. 폐업신고</field>
                 <field name="code">KR_SRBC</field>
                 <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
@@ -731,6 +783,7 @@
             </record>
             <record id="l10n_kr_simplified_tp_vat_srzrt" model="account.report.line">
                 <field name="name">6. Reciprocity of Zero Rate Tax</field>
+                <field name="name@ko_KR">6. 영세율상호주의</field>
                 <field name="code">KR_SRZRT</field>
                 <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
@@ -750,11 +803,13 @@
             </record>
             <record id="l10n_kr_simplified_tp_vat_soia" model="account.report.line">
                 <field name="name">Only If Applicable</field>
+                <field name="name@ko_KR">해당 사항이 있는 경우</field>
                 <field name="code">KR_SOIA</field>
                 <field name="hierarchy_level">1</field>
                 <field name="children_ids">
                     <record id="l10n_kr_simplified_tp_vat_soiaa" model="account.report.line">
                         <field name="name">Tax base after 2021.07.01 (5)~(9)</field>
+                        <field name="name@ko_KR">(5)~(9) 21.7.1. 이후 과세분 명세</field>
                         <field name="code">KR_SOIAA</field>
                         <field name="hierarchy_level">2</field>
                         <field name="children_ids">
@@ -762,11 +817,13 @@
                                 <field name="name">(5) Retail trade. collection and wholesale of recycling materials and
                                     restaurants
                                 </field>
+                                <field name="name@ko_KR">(5) 소매업, 재생용 재료수집 및 판매업, 음식점업</field>
                                 <field name="code">KR_S5</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_simplified_tp_vat_s5tii" model="account.report.line">
                                         <field name="name">(37) Tax Invoice Issued</field>
+                                        <field name="name@ko_KR">(37) 세금계산서 발급분</field>
                                         <field name="code">KR_S5TII</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -780,6 +837,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s5tiip" model="account.report.line">
                                         <field name="name">(38) Tax invoice issued by purchasee</field>
+                                        <field name="name@ko_KR">(38) 매입자발행 세금계산서</field>
                                         <field name="code">KR_S5TIIP</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -793,6 +851,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s5tccri" model="account.report.line">
                                         <field name="name">(39) Card or Cash Receipt Issued</field>
+                                        <field name="name@ko_KR">(39) 신용카드ᆞ현금영수증 발행분</field>
                                         <field name="code">KR_S5TCCRI</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -806,6 +865,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s5o" model="account.report.line">
                                         <field name="name">(40) Others</field>
+                                        <field name="name@ko_KR">(40) 기타(정규영수증 외 매출분)</field>
                                         <field name="code">KR_S5O</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -819,6 +879,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s5t" model="account.report.line">
                                         <field name="name">(41) Total</field>
+                                        <field name="name@ko_KR">(41) 합계</field>
                                         <field name="code">KR_S5T</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -838,11 +899,13 @@
                                 <field name="name">(6) Manufacture, agriculture, forestry, fishing and transport of
                                     parcels
                                 </field>
+                                <field name="name@ko_KR">(6) 제조업, 농ᆞ임ᆞ어업, 소화물 전문 운송업</field>
                                 <field name="code">KR_S6</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_simplified_tp_vat_s6tii" model="account.report.line">
                                         <field name="name">(42) Tax Invoice Issued</field>
+                                        <field name="name@ko_KR">(42) 세금계산서 발급분</field>
                                         <field name="code">KR_S6TII</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -856,6 +919,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s6tiip" model="account.report.line">
                                         <field name="name">(43) Tax invoice issued by purchasee</field>
+                                        <field name="name@ko_KR">(43) 매입자발행 세금계산서</field>
                                         <field name="code">KR_S6TIIP</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -869,6 +933,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s6tccri" model="account.report.line">
                                         <field name="name">(44) Card or Cash Receipt Issued</field>
+                                        <field name="name@ko_KR">(44) 신용카드ᆞ현금영수증 발행분</field>
                                         <field name="code">KR_S6TCCRI</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -882,6 +947,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s6o" model="account.report.line">
                                         <field name="name">(45) Others</field>
+                                        <field name="name@ko_KR">(45) 기타(정규영수증 외 매출분)</field>
                                         <field name="code">KR_S6O</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -895,6 +961,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s6t" model="account.report.line">
                                         <field name="name">(46) Total</field>
+                                        <field name="name@ko_KR">(46) 합계</field>
                                         <field name="code">KR_S6T</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -912,11 +979,13 @@
                             </record>
                             <record id="l10n_kr_simplified_tp_vat_s7" model="account.report.line">
                                 <field name="name">(7) Accommodations</field>
+                                <field name="name@ko_KR">(7) 숙박업</field>
                                 <field name="code">KR_S7</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_simplified_tp_vat_s7tii" model="account.report.line">
                                         <field name="name">(47) Tax Invoice Issued</field>
+                                        <field name="name@ko_KR">(47) 세금계산서 발급분</field>
                                         <field name="code">KR_S7TII</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -930,6 +999,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s7tiip" model="account.report.line">
                                         <field name="name">(48) Tax invoice issued by purchasee</field>
+                                        <field name="name@ko_KR">(48) 매입자발행 세금계산서</field>
                                         <field name="code">KR_S7TIIP</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -943,6 +1013,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s7tccri" model="account.report.line">
                                         <field name="name">(49) Card or Cash Receipt Issued</field>
+                                        <field name="name@ko_KR">(49) 신용카드ᆞ현금영수증 발행분</field>
                                         <field name="code">KR_S7TCCRI</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -956,6 +1027,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s7o" model="account.report.line">
                                         <field name="name">(50) Others</field>
+                                        <field name="name@ko_KR">(50) 기타(정규영수증 외 매출분)</field>
                                         <field name="code">KR_S7O</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -969,6 +1041,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s7t" model="account.report.line">
                                         <field name="name">(51) Total</field>
+                                        <field name="name@ko_KR">(51) 합계</field>
                                         <field name="code">KR_S7T</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -988,11 +1061,13 @@
                                 <field name="name">(8) Construction, transporation and storage (excluding transportation
                                     of parcels), information and communication and other services
                                 </field>
+                                <field name="name@ko_KR">(8) 건설업, 운수 및 창고업(소화물 전문 운송업 제외), 정보통신업, 그 밖의 서비스업</field>
                                 <field name="code">KR_S8</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_simplified_tp_vat_s8tii" model="account.report.line">
                                         <field name="name">(52) Tax Invoice Issued</field>
+                                        <field name="name@ko_KR">(52) 세금계산서 발급분</field>
                                         <field name="code">KR_S8TII</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -1006,6 +1081,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s8tiip" model="account.report.line">
                                         <field name="name">(53) Tax invoice issued by purchasee</field>
+                                        <field name="name@ko_KR">(53) 매입자발행 세금계산서</field>
                                         <field name="code">KR_S8TIIP</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -1019,6 +1095,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s8tccri" model="account.report.line">
                                         <field name="name">(54) Card or Cash Receipt Issued</field>
+                                        <field name="name@ko_KR">(54) 신용카드ᆞ현금영수증 발행분</field>
                                         <field name="code">KR_S8TCCRI</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -1032,6 +1109,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s8o" model="account.report.line">
                                         <field name="name">(55) Others</field>
+                                        <field name="name@ko_KR">(55) 기타(정규영수증 외 매출분)</field>
                                         <field name="code">KR_S8O</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -1045,6 +1123,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s8t" model="account.report.line">
                                         <field name="name">(56) Total</field>
+                                        <field name="name@ko_KR">(56) 합계</field>
                                         <field name="code">KR_S8T</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -1066,11 +1145,13 @@
                                     business facilities management and business support services, activities related to
                                     real estate and leasing
                                 </field>
+                                <field name="name@ko_KR">(9) 금융 및 보험 관련 서비스업, 전문ᆞ과학 및 기술서비스업(인물사진 및 행사용 영상 촬영업 제외), 사업시설관리ᆞ사업지원 및 임대서비스업, 부동산 관련 서비스업, 부동산임대업</field>
                                 <field name="code">KR_S9</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_simplified_tp_vat_s9tii" model="account.report.line">
                                         <field name="name">(57) Tax Invoice Issued</field>
+                                        <field name="name@ko_KR">(57) 세금계산서 발급분</field>
                                         <field name="code">KR_S9TII</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -1084,6 +1165,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s9tiip" model="account.report.line">
                                         <field name="name">(58) Tax invoice issued by purchasee</field>
+                                        <field name="name@ko_KR">(58) 매입자발행 세금계산서</field>
                                         <field name="code">KR_S9TIIP</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -1097,6 +1179,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s9tccri" model="account.report.line">
                                         <field name="name">(59) Card or Cash Receipt Issued</field>
+                                        <field name="name@ko_KR">(59) 신용카드ᆞ현금영수증 발행분</field>
                                         <field name="code">KR_S9TCCRI</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -1110,6 +1193,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s9o" model="account.report.line">
                                         <field name="name">(60) Others</field>
+                                        <field name="name@ko_KR">(60) 기타(정규영수증 외 매출분)</field>
                                         <field name="code">KR_S9O</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -1123,6 +1207,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_s9t" model="account.report.line">
                                         <field name="name">(61) Total</field>
+                                        <field name="name@ko_KR">(61) 합계</field>
                                         <field name="code">KR_S9T</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -1142,11 +1227,13 @@
                     </record>
                     <record id="l10n_kr_simplified_tp_vat_sp" model="account.report.line">
                         <field name="name">Penalties</field>
+                        <field name="name@ko_KR">가산세액 계</field>
                         <field name="code">KR_SP</field>
                         <field name="hierarchy_level">2</field>
                         <field name="children_ids">
                             <record id="l10n_kr_simplified_tp_vat_sfiti" model="account.report.line">
                                 <field name="name">(62) Failure to issue tax invoice</field>
+                                <field name="name@ko_KR">(62) 사업자 미등록 등</field>
                                 <field name="code">KR_SFITI</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="expression_ids">
@@ -1166,11 +1253,13 @@
                             </record>
                             <record id="l10n_kr_simplified_tp_vat_sfiei" model="account.report.line">
                                 <field name="name">Failure to issue e-tax invoice</field>
+                                <field name="name@ko_KR">전자세금계산서 발급명세 전송</field>
                                 <field name="code">KR_SFIEI</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_simplified_tp_vat_sfdoi" model="account.report.line">
                                         <field name="name">(63) Delay of issuance</field>
+                                        <field name="name@ko_KR">(63) 지연발급 등</field>
                                         <field name="code">KR_SFDOI</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -1191,6 +1280,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_sffoi" model="account.report.line">
                                         <field name="name">(64) Failure of issuance</field>
+                                        <field name="name@ko_KR">(64) 미발급 등</field>
                                         <field name="code">KR_SFFOI</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -1212,6 +1302,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_sffor" model="account.report.line">
                                         <field name="name">(65) Failure of reception</field>
+                                        <field name="name@ko_KR">(65) 미수취</field>
                                         <field name="code">KR_SFFOR</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -1234,11 +1325,13 @@
                             </record>
                             <record id="l10n_kr_simplified_tp_vat_sfags" model="account.report.line">
                                 <field name="name">Failure to aggregate summary of tax invoice</field>
+                                <field name="name@ko_KR">세금계산서 합계표</field>
                                 <field name="code">KR_SFAGS</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_simplified_tp_vat_sffs" model="account.report.line">
                                         <field name="name">(66) Failure to submit</field>
+                                        <field name="name@ko_KR">(66) 제출 불성실</field>
                                         <field name="code">KR_SFFS</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -1259,6 +1352,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_sfds" model="account.report.line">
                                         <field name="name">(67) Delayed Submission</field>
+                                        <field name="name@ko_KR">(67) 지연제출</field>
                                         <field name="code">KR_SFDS</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -1281,11 +1375,13 @@
                             </record>
                             <record id="l10n_kr_simplified_tp_vat_sffr" model="account.report.line">
                                 <field name="name">Failure to file returns/under-reporting</field>
+                                <field name="name@ko_KR">신고 불성실</field>
                                 <field name="code">KR_SFFR</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_simplified_tp_vat_sfftsg" model="account.report.line">
                                         <field name="name">(68) Failure to submit (General)</field>
+                                        <field name="name@ko_KR">(68) 무신고(일반)</field>
                                         <field name="code">KR_SFFTSG</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -1307,6 +1403,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_sfftsi" model="account.report.line">
                                         <field name="name">(69) Failure to submit (Intentional)</field>
+                                        <field name="name@ko_KR">(69) 무신고(부당)</field>
                                         <field name="code">KR_SFFTSI</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -1328,6 +1425,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_sfurg" model="account.report.line">
                                         <field name="name">(70) Understatement/Excess Report (General)</field>
+                                        <field name="name@ko_KR">(70) 과소신고(일반)</field>
                                         <field name="code">KR_SFURG</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -1349,6 +1447,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_sfuri" model="account.report.line">
                                         <field name="name">(71) Understatement/Excess Report (Intentional)</field>
+                                        <field name="name@ko_KR">(71) 과소신고(부당)</field>
                                         <field name="code">KR_SFURI</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -1372,6 +1471,7 @@
                             </record>
                             <record id="l10n_kr_simplified_tp_vat_sdpot" model="account.report.line">
                                 <field name="name">(72) Delayed Payment of tax</field>
+                                <field name="name@ko_KR">(72) 납부지연</field>
                                 <field name="code">KR_SDPOT</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="expression_ids">
@@ -1393,6 +1493,7 @@
                             <record id="l10n_kr_simplified_tp_vat_scit" model="account.report.line">
                                 <field name="name">(73) Credit for input tax confirmed by decision correction agency
                                 </field>
+                                <field name="name@ko_KR">(73) 결정ᆞ경정기관 확인 매입세액 공제</field>
                                 <field name="code">KR_SCIT</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="expression_ids">
@@ -1414,6 +1515,7 @@
                                 <field name="name">(74) Failure to report or under-reporting of tax base for
                                     zero-rating
                                 </field>
+                                <field name="name@ko_KR">(74) 영세율 과세표준신고 불성실</field>
                                 <field name="code">KR_SFTRUR</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="expression_ids">
@@ -1433,11 +1535,13 @@
                             </record>
                             <record id="l10n_kr_simplified_tp_vat_sstpvtp" model="account.report.line">
                                 <field name="name">Special Taxation for Payment of Value-Added Tax by Purchasers</field>
+                                <field name="name@ko_KR">매입자 납부특례</field>
                                 <field name="code">KR_SSTPVTP</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="children_ids">
                                     <record id="l10n_kr_simplified_tp_vat_sftuta" model="account.report.line">
                                         <field name="name">(75) Failure to use transaction account</field>
+                                        <field name="name@ko_KR">(75) 거래계좌 미사용</field>
                                         <field name="code">KR_SFTUTA</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -1459,6 +1563,7 @@
                                     </record>
                                     <record id="l10n_kr_simplified_tp_vat_sdpta" model="account.report.line">
                                         <field name="name">(76) Delayed payment to the transaction account</field>
+                                        <field name="name@ko_KR">(76) 거래계좌 지연입금</field>
                                         <field name="code">KR_SDPTA</field>
                                         <field name="hierarchy_level">4</field>
                                         <field name="expression_ids">
@@ -1482,6 +1587,7 @@
                             </record>
                             <record id="l10n_kr_simplified_tp_vat_spt" model="account.report.line">
                                 <field name="name">(77) Total</field>
+                                <field name="name@ko_KR">(77) 합계</field>
                                 <field name="code">KR_SPT</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="expression_ids">
