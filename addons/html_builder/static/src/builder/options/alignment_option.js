@@ -21,13 +21,12 @@ class AlignmentOptionPlugin extends Plugin {
                 ...classAction,
                 getPriority: ({ param: classNames = "" }) =>
                     classNames === "align-items-stretch" ? 0 : 1,
-                isApplied: ({ editingElement, param: classNames }) => {
+                isApplied: (...args) => {
+                    const { param: classNames } = args[0];
                     if (classNames === "align-items-stretch") {
                         return true;
                     }
-                    return classNames
-                        .split(" ")
-                        .every((className) => editingElement.classList.contains(className));
+                    return classAction.isApplied(...args);
                 },
             },
         };
