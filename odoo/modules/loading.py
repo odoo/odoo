@@ -281,7 +281,7 @@ def load_module_graph(env, graph, status=None, perform_checks=True,
                     registry.setup_models(env.cr)
                 # Python tests
                 tests_t0, tests_q0 = time.time(), odoo.sql_db.sql_counter
-                test_results = loader.run_suite(suite)
+                test_results = loader.run_suite(suite, global_report=report)
                 report.update(test_results)
                 test_time = time.time() - tests_t0
                 test_queries = odoo.sql_db.sql_counter - tests_q0
