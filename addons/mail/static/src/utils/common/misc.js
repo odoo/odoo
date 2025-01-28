@@ -191,3 +191,25 @@ export function convertToEmbedURL(url) {
     }
     return { url: null, provider: null };
 }
+
+/**
+ * Function that is equivalent to Object.groupBy().
+ * All evergreen browsers in 2024 have it implemented, but some users
+ * upgrade their browsers every 2 years it seems.
+ *
+ * @deprecated
+ */
+export function Object_groupBy() {
+    if (Object.groupBy && typeof Object.groupBy === "function") {
+        return Object.groupBy;
+    } else {
+        return (arr, callback) => {
+            return arr.reduce((acc = {}, ...args) => {
+                const key = callback(...args);
+                acc[key] ??= [];
+                acc[key].push(args[0]);
+                return acc;
+            }, {});
+        };
+    }
+}

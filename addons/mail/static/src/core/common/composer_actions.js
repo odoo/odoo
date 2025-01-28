@@ -1,3 +1,4 @@
+import { Object_groupBy } from "@mail/utils/common/misc";
 import { toRaw, useComponent, useEffect, useRef, useState } from "@odoo/owl";
 import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 
@@ -225,7 +226,7 @@ export function useComposerActions() {
         },
         get partition() {
             const actions = transformedActions.filter((action) => action.condition);
-            const groupedPickers = Object.groupBy(
+            const groupedPickers = Object_groupBy(
                 actions.filter((a) => a.isPicker),
                 (a) => (a.sequenceQuick ? "quick" : "other")
             );
