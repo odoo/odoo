@@ -3,7 +3,7 @@
 
 <t t-name="html_builder.SeparatorOption">
     <t t-set="applyTo" t-value="'hr'" />
-    <BorderConfigurator label.translate="Border" direction="'top'" applyTo="applyTo"/>
+    <BorderConfigurator withRoundCorner="false" label.translate="Border" direction="'top'" applyTo="applyTo"/>
     <BuilderRow label.translate="Width">
         <BuilderSelect applyTo="applyTo">
             <BuilderSelectItem classAction="'w-25'">25%</BuilderSelectItem>

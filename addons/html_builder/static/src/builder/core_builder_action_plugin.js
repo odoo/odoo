@@ -21,7 +21,7 @@ function getNumericStyle(styleName) {
 }
 
 const styleMap = {
-    borderWidth: {
+    "border-width": {
         getValue: (editingElement) =>
             parseInt(getComputedStyle(editingElement).getPropertyValue("border-width")).toString(),
         apply: (editingElement, value) => {
@@ -36,7 +36,25 @@ const styleMap = {
                     editingElement.classList.add("border");
                 }
             }
-            editingElement.style.setProperty("border-width", `${parsedValue}px`, "important");
+            editingElement.style.setProperty("border-width", value, "important");
+        },
+    },
+    "border-radius": {
+        getValue: (editingElement) =>
+            parseInt(getComputedStyle(editingElement).getPropertyValue("border-radius")).toString(),
+        apply: (editingElement, value) => {
+            const parsedValue = parseInt(value);
+            const hasBorderClass = editingElement.classList.contains("rounded");
+            if (!parsedValue || parsedValue < 0) {
+                if (hasBorderClass) {
+                    editingElement.classList.remove("rounded");
+                }
+            } else {
+                if (!hasBorderClass) {
+                    editingElement.classList.add("rounded");
+                }
+            }
+            editingElement.style.setProperty("border-radius", value, "important");
         },
     },
     // todo: handle all the other styles
