@@ -234,7 +234,7 @@ class AccountEdiProxyClientUser(models.Model):
                         # this rare edge case can happen if the participant is not active on the proxy side
                         # in this case we can't get information about the invoices
                         edi_user_moves.peppol_move_state = 'error'
-                        log_message = _("Peppol error: %s", content.get('display_message', content['message']))
+                        log_message = _("Peppol error: %s", content['message'])
                         edi_user_moves._message_log_batch(bodies={move.id: log_message for move in edi_user_moves})
                         break
 
@@ -246,7 +246,7 @@ class AccountEdiProxyClientUser(models.Model):
                             continue
 
                         move.peppol_move_state = 'error'
-                        move._message_log(body=_("Peppol error: %s", content['error'].get('display_message', content['message'])))
+                        move._message_log(body=_("Peppol error: %s", content['error'].get('data', {}).get('message') or content['error']['message']))
                         continue
 
                     move.peppol_move_state = content['state']
