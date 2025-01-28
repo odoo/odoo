@@ -51,23 +51,37 @@ class IrQweb(models.AbstractModel):
             while node is not None and nb_real_elements_in_hierarchy < 2:
                 if node.tag != 't' or 't-call' in node.attrib:
                     nb_real_elements_in_hierarchy += 1
-                node = node.getparent()
-            if nb_real_elements_in_hierarchy == 1:
-                # The first node might be a call to a sub template
-                sub_call = el.get('t-call')
-                if sub_call:
-                    el.set('t-options', f"{{'snippet-key': '{snippet_key}', 'snippet-sub-call-key': '{sub_call}'}}")
-                else:
-                    # If it already has a data-snippet it is a saved or an
-                    # inherited snippet. Do not override it.
-                    if 'data-snippet' not in el.attrib:
-                        el.attrib['data-snippet'] = snippet_key.split('.', 1)[-1]
+                    sub_call = node.get('t-call')
+                    # If the node is a t-call, we create the snippet-sub-call-key to still be able
+                    # to add the "data-snippet" attrib of the sub called snippet
+                    # Then before the childs node are compiled the t-call attrib will be delete by
+                    # the compilation so we have to register it so a child of a t-call is not
+                    # believed to be top level
+                    if sub_call:
+                        node.set(
+                            't-options',
+                            f"{{'snippet-key': '{snippet_key}', 'snippet-sub-call-key': '{sub_call}'}}"
+                        )
+                        for child in node.iter(tag=etree.Element):
+                            child.set("t_call_child", "true")
+                    if "t_call_child" in node.attrib:
+                        nb_real_elements_in_hierarchy += 1
+                        node.attrib.pop("t_call_child")
 
-                    # If it already has a data-name it is a saved or an
-                    # inherited snippet. Do not override it.
-                    snippet_name = compile_context.get('snippet-name')
-                    if snippet_name and 'data-name' not in el.attrib:
-                        el.attrib['data-name'] = snippet_name
+                node = node.getparent()
+
+            if nb_real_elements_in_hierarchy == 1 and el.tag != "t":
+                # If it already has a data-snippet it is a saved or an
+                # inherited snippet. Do not override it.
+                if 'data-snippet' not in el.attrib:
+                    snippet = compile_context['template']
+                    el.attrib['data-snippet'] = snippet.split('.', 1)[-1]
+
+                # If it already has a data-name it is a saved or an
+                # inherited snippet. Do not override it.
+                snippet_name = compile_context.get('snippet-name')
+                if snippet_name and 'data-name' not in el.attrib:
+                    el.attrib['data-name'] = snippet_name
 
         return super()._compile_node(el, compile_context, indent)
 
