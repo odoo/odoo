@@ -1,0 +1,13 @@
+// TODO adapt in master: Allow disabling reCAPTCHA without uninstalling the
+// modules, instead of hiding the toggle.
+.o_settings_container {
+    .o_setting_box {
+        [name="module_google_recaptcha"] {
+            pointer-events: none;
+            display: none;
+        }
+        label[for="module_google_recaptcha"] {
+            pointer-events: none;
+        }
+    }
+}
