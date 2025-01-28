@@ -27,7 +27,7 @@
         <field name="title">Meal Type</field>
         <field name="question_type">simple_choice</field>
         <field name="once_per_order" eval="False"/>
-        <field name="event_id" ref="event.event_0"/>
+        <field name="event_ids" eval="[(5, 0, 0), (4, ref('event.event_0'))]"/>
     </record>
     <record id="event_0_question_0_answer_0" model="event.question.answer">
         <field name="name">Mixed</field>
@@ -48,13 +48,13 @@
         <field name="title">Allergies</field>
         <field name="question_type">text_box</field>
         <field name="once_per_order" eval="False"/>
-        <field name="event_id" ref="event.event_0"/>
+        <field name="event_ids" eval="[(5, 0, 0), (4, ref('event.event_0'))]"/>
     </record>
     <record id="event_0_question_2" model="event.question">
         <field name="title">How did you learn about this event?</field>
         <field name="question_type">simple_choice</field>
         <field name="once_per_order" eval="True"/>
-        <field name="event_id" ref="event.event_0"/>
+        <field name="event_ids" eval="[(5, 0, 0), (4, ref('event.event_0'))]"/>
     </record>
     <record id="event_0_question_2_answer_0" model="event.question.answer">
         <field name="name">Our website</field>
@@ -77,7 +77,7 @@
         <field name="title">How did you learn about this event?</field>
         <field name="question_type">simple_choice</field>
         <field name="once_per_order" eval="True"/>
-        <field name="event_id" ref="event.event_1"/>
+        <field name="event_ids" eval="[(5, 0, 0), (4, ref('event.event_1'))]"/>
     </record>
     <record id="event_1_question_0_answer_0" model="event.question.answer">
         <field name="name">Social Media</field>
@@ -100,7 +100,7 @@
         <field name="title">How did you learn about this event?</field>
         <field name="question_type">simple_choice</field>
         <field name="once_per_order" eval="True"/>
-        <field name="event_id" ref="event.event_5"/>
+        <field name="event_ids" eval="[(5, 0, 0), (4, ref('event.event_5'))]"/>
     </record>
     <record id="event_5_question_0_answer_0" model="event.question.answer">
         <field name="name">Social Media</field>
@@ -121,7 +121,7 @@
         <field name="title">What's your Hockey level?</field>
         <field name="question_type">text_box</field>
         <field name="once_per_order" eval="False"/>
-        <field name="event_id" ref="event.event_5"/>
+        <field name="event_ids" eval="[(5, 0, 0), (4, ref('event.event_5'))]"/>
     </record>
 
     <!-- Questions of: "OpenWood: Furniture Collection Online Reveal" -->
@@ -129,7 +129,7 @@
         <field name="title">Which field are you working in</field>
         <field name="question_type">simple_choice</field>
         <field name="once_per_order" eval="False"/>
-        <field name="event_id" ref="event.event_7"/>
+        <field name="event_ids" eval="[(5, 0, 0), (4, ref('event.event_7'))]"/>
     </record>
     <record id="event_7_question_0_answer_0" model="event.question.answer">
         <field name="name">Consumers</field>
@@ -150,7 +150,7 @@
         <field name="title">How did you hear about us?</field>
         <field name="question_type">text_box</field>
         <field name="once_per_order" eval="True"/>
-        <field name="event_id" ref="event.event_7"/>
+        <field name="event_ids" eval="[(5, 0, 0), (4, ref('event.event_7'))]"/>
     </record>
 
 </data></odoo>
