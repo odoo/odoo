@@ -43,7 +43,9 @@ msgstr "<span>Asiento conciliado</span>"
 msgid ""
 "A payment with any Third Party Check or Own Check payment methods needs an "
 "outstanding account"
-msgstr "Un pago con cualquiera de los métodos de pago Cheque de terceros o Cheque propio requiere una cuenta pendiente"
+msgstr ""
+"Un pago con cualquiera de los métodos de pago Cheque de terceros o Cheque "
+"propio requiere una cuenta pendiente"
 
 #. module: l10n_latam_check
 #. odoo-python
@@ -261,12 +263,6 @@ msgid "Display Name"
 msgstr "Nombre Mostrado"
 
 #. module: l10n_latam_check
-#: model:account.payment.method,name:l10n_latam_check.account_payment_method_in_third_party_checks
-#: model:account.payment.method,name:l10n_latam_check.account_payment_method_out_third_party_checks
-msgid "Existing Third Party Checks"
-msgstr "Cheque de Terceros Existente"
-
-#. module: l10n_latam_check
 #: model:ir.model.fields,field_description:l10n_latam_check.field_l10n_latam_check__message_follower_ids
 msgid "Followers"
 msgstr "Seguidores"
@@ -350,9 +346,9 @@ msgid ""
 "it. By continue, the last operation on the check will remain being %s"
 msgstr ""
 "Parece que quieres mover un cheque con fecha (%s) previo a la última "
-"operación realizada con el cheque (%s). Esto puede ser incorrecto, por "
-"favor chequear. De continuar, la última operación en el cheque continuará "
-"siendo %s"
+"operación realizada con el cheque (%s). Esto puede ser incorrecto, por favor"
+" chequear. De continuar, la última operación en el cheque continuará siendo "
+"%s"
 
 #. module: l10n_latam_check
 #: model:ir.model,name:l10n_latam_check.model_account_journal
@@ -399,17 +395,11 @@ msgstr "Línea de Liquidez"
 #: model:ir.model.fields,help:l10n_latam_check.field_l10n_latam_check__payment_method_line_id
 msgid ""
 "Manual: Pay or Get paid by any method outside of Odoo.\n"
-"Payment Providers: Each payment provider has its own Payment Method. "
-"Request a transaction on/to a card thanks to a payment token saved by the "
-"partner when buying or subscribing online.\n"
+"Payment Providers: Each payment provider has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
 "Check: Pay bills by check and print it from Odoo.\n"
-"Batch Deposit: Collect several customer checks at once generating and "
-"submitting a batch deposit to your bank. Module account_batch_payment is "
-"necessary.\n"
-"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit "
-"Transfer file to your bank. Module account_sepa is necessary.\n"
-"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your "
-"partner will have granted to you. Module account_sepa is necessary.\n"
+"Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
+"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
+"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
 
 #. module: l10n_latam_check
@@ -445,11 +435,6 @@ msgstr "Mi fecha límite de actividad"
 #: model:ir.model.fields,field_description:l10n_latam_check.field_account_payment_register__l10n_latam_new_check_ids
 msgid "New Checks"
 msgstr "Cheques Nuevos"
-
-#. module: l10n_latam_check
-#: model:account.payment.method,name:l10n_latam_check.account_payment_method_new_third_party_checks
-msgid "New Third Party Checks"
-msgstr "Nuevo cheque de Terceros Existente"
 
 #. module: l10n_latam_check
 #: model:ir.model.fields,field_description:l10n_latam_check.field_l10n_latam_check__activity_date_deadline
@@ -532,7 +517,6 @@ msgid "Outstanding Receipts"
 msgstr "Ingresos pendientes"
 
 #. module: l10n_latam_check
-#: model:account.payment.method,name:l10n_latam_check.account_payment_method_own_checks
 #: model:ir.actions.act_window,name:l10n_latam_check.action_own_check
 #: model:ir.ui.menu,name:l10n_latam_check.menu_own_check
 msgid "Own Checks"
@@ -739,12 +723,10 @@ msgstr "Historial de comunicaciones del sitio web"
 #. odoo-python
 #: code:addons/l10n_latam_check/models/account_payment.py:0
 msgid ""
-"You can't cancel or re-open a payment with checks if some check has been "
-"debited or been voided. Checks:\n"
+"You can't cancel or re-open a payment with checks if some check has been debited or been voided. Checks:\n"
 "%s"
 msgstr ""
-"No puede cancelar o reabrir un pago con cheques si algún cheque ha sido "
-"debitado o anulado. Cheques:\n"
+"No puede cancelar o reabrir un pago con cheques si algún cheque ha sido debitado o anulado. Cheques:\n"
 "%s"
 
 #. module: l10n_latam_check

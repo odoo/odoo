@@ -15,11 +15,13 @@
         <field name="line_ids">
             <record id="account_tax_report_line_out_base_title" model="account.report.line">
                 <field name="name">VAT SALES (BASE)</field>
+                <field name="name@he_IL">הכנסות חייבות במע"מ</field>
                 <field name="aggregation_formula">ILTAX_OUT_BASE.balance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_out_base" model="account.report.line">
                         <field name="name">VAT SALES (BASE)</field>
+                        <field name="name@he_IL">הכנסות חייבות במע"מ</field>
                         <field name="code">ILTAX_OUT_BASE</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_out_base_tag" model="account.report.expression">
@@ -33,12 +35,14 @@
             </record>
             <record id="account_tax_report_line_vat_sales_tax" model="account.report.line">
                 <field name="name">VAT SALES (TAX)</field>
+                <field name="name@he_IL">מע"מ עסקאות</field>
                 <field name="code">ILTAX_OUT_BALANCE</field>
                 <field name="aggregation_formula">ILTAX_OUT_BALANCE_00.balance+ILTAX_OUT_BALANCE_PA.balance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_out_balance" model="account.report.line">
                         <field name="name">VAT Sales</field>
+                        <field name="name@he_IL">מע"מ עסקאות</field>
                         <field name="code">ILTAX_OUT_BALANCE_00</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_out_balance_tag" model="account.report.expression">
@@ -50,6 +54,7 @@
                     </record>
                     <record id="account_tax_report_line_out_balance_pa" model="account.report.line">
                         <field name="name">VAT PA Sales</field>
+                        <field name="name@he_IL">מע"מ עסקאות- פלסטין</field>
                         <field name="code">ILTAX_OUT_BALANCE_PA</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_out_balance_pa_tag" model="account.report.expression">
@@ -63,11 +68,13 @@
             </record>
             <record id="account_tax_report_line_out_base_exempt_title" model="account.report.line">
                 <field name="name">VAT Exempt Sales (BASE)</field>
+                <field name="name@he_IL">הכנסות פטורות ממע"מ</field>
                 <field name="aggregation_formula">ILTAX_OUT_BASE_exempt.balance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_out_base_exempt" model="account.report.line">
                         <field name="name">VAT Exempt Sales (BASE)</field>
+                        <field name="name@he_IL">הכנסות פטורות ממע"מ</field>
                         <field name="code">ILTAX_OUT_BASE_exempt</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_out_base_exempt_tag" model="account.report.expression">
@@ -81,12 +88,14 @@
             </record>
             <record id="account_tax_report_line_in_balance" model="account.report.line">
                 <field name="name">VAT INPUTS (TAX)</field>
+                <field name="name@he_IL">מע"מ תשומות</field>
                 <field name="code">ILTAX_IN_BALANCE</field>
                 <field name="aggregation_formula">ILTAX_IN_BALANCE_17.balance+ILTAX_IN_BALANCE_18.balance+ILTAX_IN_BALANCE_2_3.balance+ILTAX_IN_BALANCE_1_4.balance+ILTAX_IN_BALANCE_PA.balance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_in_balance_17" model="account.report.line">
                         <field name="name">VAT Inputs 17%</field>
+                        <field name="name@he_IL">מע"מ תשומות 17%</field>
                         <field name="code">ILTAX_IN_BALANCE_17</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_in_balance_17_tag" model="account.report.expression">
@@ -98,6 +107,7 @@
                     </record>
                     <record id="account_tax_report_line_in_balance_18" model="account.report.line">
                         <field name="name">VAT Inputs 18%</field>
+                        <field name="name@he_IL">מע"מ תשומות 18%</field>
                         <field name="code">ILTAX_IN_BALANCE_18</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_in_balance_18_tag" model="account.report.expression">
@@ -109,6 +119,7 @@
                     </record>
                     <record id="account_tax_report_line_in_balance_pa_16" model="account.report.line">
                         <field name="name">VAT Inputs PA 16%</field>
+                        <field name="name@he_IL">מע"מ תשומות 16%</field>
                         <field name="code">ILTAX_IN_BALANCE_PA</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_in_balance_pa_16_tag" model="account.report.expression">
@@ -120,6 +131,7 @@
                     </record>
                     <record id="account_tax_report_line_in_balance_2_3" model="account.report.line">
                         <field name="name">VAT Inputs 2/3</field>
+                        <field name="name@he_IL">מע"מ תשומות 2/3</field>
                         <field name="code">ILTAX_IN_BALANCE_2_3</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_in_balance_2_3_tag" model="account.report.expression">
@@ -131,6 +143,7 @@
                     </record>
                     <record id="account_tax_report_line_in_balance_1_4" model="account.report.line">
                         <field name="name">VAT Inputs 1/4</field>
+                        <field name="name@he_IL">מע"מ תשומות 1/4</field>
                         <field name="code">ILTAX_IN_BALANCE_1_4</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_in_balance_1_4_tag" model="account.report.expression">
@@ -144,11 +157,13 @@
             </record>
             <record id="account_tax_report_line_vat_in_fa_title" model="account.report.line">
                 <field name="name">VAT INPUTS (fixed assets)</field>
+                <field name="name@he_IL">מע"מ תשומות (רכוש קבוע)</field>
                 <field name="aggregation_formula">ILTAX_VAT_IN_FA.balance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_vat_in_fa" model="account.report.line">
                         <field name="name">VAT INPUTS (fixed assets)</field>
+                        <field name="name@he_IL">מע"מ תשומות (רכוש קבוע)</field>
                         <field name="code">ILTAX_VAT_IN_FA</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_vat_in_fa_tag" model="account.report.expression">
@@ -162,6 +177,7 @@
             </record>
             <record id="account_tax_report_line_vat_due" model="account.report.line">
                 <field name="name">VAT DUE</field>
+                <field name="name@he_IL">מע"מ לתשלום</field>
                 <field name="code">ILTAX_VAT_DUE</field>
                 <field name="aggregation_formula">(ILTAX_OUT_BALANCE_00.balance + ILTAX_OUT_BALANCE_PA.balance) - (ILTAX_IN_BALANCE_17.balance + ILTAX_IN_BALANCE_18.balance + ILTAX_IN_BALANCE_2_3.balance + ILTAX_IN_BALANCE_1_4.balance + ILTAX_IN_BALANCE_PA.balance) - ILTAX_VAT_IN_FA.balance</field>
                 <field name="hierarchy_level">0</field>
