@@ -288,7 +288,7 @@ def load_module_graph(
                     registry._setup_models__(env.cr)
                 # Python tests
                 tests_t0, tests_q0 = time.time(), odoo.sql_db.sql_counter
-                test_results = loader.run_suite(suite)
+                test_results = loader.run_suite(suite, global_report=report)
                 assert report is not None, "Missing report during tests"
                 report.update(test_results)
                 test_time = time.time() - tests_t0
