@@ -28,11 +28,6 @@ class EventQuestion(models.Model):
                                          "If not it will be asked for every attendee of a reservation.")
     is_mandatory_answer = fields.Boolean('Mandatory Answer')
 
-    @api.constrains('event_type_id', 'event_id')
-    def _constrains_event(self):
-        if any(question.event_type_id and question.event_id for question in self):
-            raise UserError(_("Question cannot be linked to both an Event and an Event Type."))
-
     def write(self, vals):
         """ We add a check to prevent changing the question_type of a question that already has answers.
         Indeed, it would mess up the event.registration.answer (answer type not matching the question type). """
