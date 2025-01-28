@@ -192,6 +192,22 @@ var SnippetEditor = publicWidget.Widget.extend({
         // a flickering when not needed.
         this.$target.on('transitionend.snippet_editor, animationend.snippet_editor', this.postAnimationCover);
 
+        // TODO: remove in master, handle the same in respective template.
+        const overlayButtonsTooltips = {
+            "div.o_front_back.o_send_back": _t("Send back"),
+            "div.o_front_back.o_bring_front": _t("Bring forward"),
+            "div.o_move_handle.fa-arrows": _t("Drag and move"),
+            "button.o_snippet_replace.fa-exchange": _t("Exchange with another block"),
+            "button.oe_snippet_remove.fa-trash": _t("Delete"),
+        };
+
+        for (const [selector, tooltip] of Object.entries(overlayButtonsTooltips)) {
+            const buttonEl = this.el.querySelector(selector);
+            if(buttonEl) {
+                buttonEl.dataset.tooltip = tooltip;
+            }
+        }
+
         return Promise.all(defs).then(() => {
             this.__isStartedResolveFunc(this);
         });
@@ -354,6 +370,11 @@ var SnippetEditor = publicWidget.Widget.extend({
         if (handleEReadonlyEl) {
             handleEReadonlyEl.style.width = $(targetEl).hasScrollableContent() ? 0 : '';
         }
+        const optionsOverlay = this.el.querySelector(".o_overlay_options_wrap");
+        const tooltipPosition = this.el.classList.contains("o_top_cover") ? "bottom" : "top";
+        optionsOverlay.querySelectorAll("[data-tooltip]").forEach((el) => {
+            el.dataset.tooltipPosition = tooltipPosition
+        });
     },
     /**
      * DOMElements have a default name which appears in the overlay when they
