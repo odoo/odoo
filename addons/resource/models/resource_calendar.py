@@ -265,7 +265,7 @@ class ResourceCalendar(models.Model):
 
     @api.depends('company_id')
     def _compute_attendance_ids(self):
-        # TODO AMAH: rewrite this method to accomdate the new types
+        # TODO AMAH: Talk with Geoffrey to see if the behavior is correct
         for calendar in self.filtered(lambda c: not c._origin or c._origin.company_id != c.company_id and c.company_id):
             company_calendar = calendar.company_id.resource_calendar_id
             calendar.update({
@@ -936,10 +936,15 @@ class ResourceCalendar(models.Model):
 
     @ormcache('self.id')
     def _get_working_hours(self):
-        # TODO AMAH: rewrite this method to accomdate the new types
         self.ensure_one()
 
         working_days = defaultdict(lambda: defaultdict(lambda: False))
-        for attendance in self.attendance_ids:
-            working_days[attendance.week_type][attendance.dayofweek] = True
+        if self.schedule_type == 'fixed_time':
+            for idx, day in enumerate(['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']):
+                working_days[0 if self.two_weeks_calendar else False][str(idx)] = self[day]
+                working_days[1][str(idx)] = self[day + '_2']
+
+        else:
+            for attendance in self.attendance_ids:
+                working_days[attendance.week_type][attendance.dayofweek] = True
         return working_days
