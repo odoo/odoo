@@ -7894,9 +7894,9 @@ registry.ImageTools = ImageHandlerOption.extend({
             // the "setImgShapeHoverEffect" option, where we trigger it when
             // preview mode is "true".
             if (previewMode === hasSetImgShapeHoverEffectMethod) {
-                this.$target[0].dispatchEvent(new Event("mouseover"));
+                this.$target[0].dispatchEvent(new Event("mouseenter"));
                 this.hoverTimeoutId = setTimeout(() => {
-                    this.$target[0].dispatchEvent(new Event("mouseout"));
+                    this.$target[0].dispatchEvent(new Event("mouseleave"));
                 }, 700);
             } else if (previewMode === "reset") {
                 clearTimeout(this.hoverTimeoutId);

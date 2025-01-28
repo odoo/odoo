@@ -3,7 +3,12 @@ import * as wsTourUtils from '@website_sale/js/tours/tour_utils';
 const closeModal = {
     content: "Close the ticket picking modal",
     trigger: `.modal-content button:contains("Close")`,
-    run: "click",
+    run: ({ anchor }) => {
+        // The delay should not be explicitly needed, but a race condition
+        // occurs where the modal isn't completely open before the step is
+        // triggered, preventing the close button from working.
+        setTimeout(() => anchor.click(), 200);
+    },
 };
 
 export function changePricelist(pricelistName) {
