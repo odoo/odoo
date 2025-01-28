@@ -53,7 +53,7 @@ class PosOrderReport(models.Model):
                 LEFT JOIN pos_payment pm ON (pm.pos_order_id=po.id)
                 GROUP BY pol.id
             )
-            SELECT
+            SELECT DISTINCT ON (l.id)
                 l.id AS id,
                 1 AS nbr_lines, -- number of lines in order line is always 1
                 s.date_order AS date,
