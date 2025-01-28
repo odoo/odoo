@@ -165,6 +165,18 @@ var SnippetEditor = Widget.extend({
         // a flickering when not needed.
         this.$target.on('transitionend.snippet_editor, animationend.snippet_editor', this.postAnimationCover);
 
+        // TODO: remove in master, handle the same in respective template.
+        const overlayButtonsTooltips = {
+            "div.o_front_back.o_send_back": "Send back",
+            "div.o_front_back.o_bring_front": "Bring forward",
+            "div.o_move_handle.fa-arrows": "Drag and move",
+            "button.oe_snippet_remove.fa-trash": "Delete",
+        };
+
+        for (const [selector, tooltip] of Object.entries(overlayButtonsTooltips)) {
+            this.el.querySelector(selector)?.setAttribute("data-tooltip", tooltip);
+        }
+
         return Promise.all(defs).then(() => {
             this.__isStartedResolveFunc(this);
         });
