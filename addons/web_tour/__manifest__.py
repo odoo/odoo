@@ -27,8 +27,7 @@ Odoo Web tours.
             'web/static/lib/hoot-dom/**/*',
         ],
         'web.assets_unit_tests': [
-            # TODO: PIPU/JUM must be reactivated when Script timeout exceeded due to Hoot is fixed.
-            # 'web_tour/static/tests/tour_automatic.test.js',
+            'web_tour/static/tests/tour_automatic.test.js',
             'web_tour/static/tests/tour_interactive.test.js',
             'web_tour/static/tests/tour_recorder.test.js',
         ],
