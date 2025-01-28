@@ -1403,7 +1403,7 @@ const _pointerDown = async (target, options) => {
     }
 
     runTime.touchStartPosition = { ...runTime.position };
-    runTime.touchStartTimeOffset = getTimeOffset();
+    runTime.touchStartTimeOffset = globalThis.Date.now();
     const prevented = await dispatchPointerEvent(pointerDownTarget, "pointerdown", eventInit, {
         mouse: !pointerDownTarget.disabled && [
             "mousedown",
@@ -1437,7 +1437,7 @@ const _pointerDown = async (target, options) => {
  * @param {PointerOptions} options
  */
 const _pointerUp = async (target, options) => {
-    const isLongTap = getTimeOffset() - runTime.touchStartTimeOffset > LONG_TAP_DELAY;
+    const isLongTap = globalThis.Date.now() - runTime.touchStartTimeOffset > LONG_TAP_DELAY;
     const pointerDownTarget = runTime.pointerDownTarget;
     const eventInit = {
         ...runTime.position,
