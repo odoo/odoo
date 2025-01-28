@@ -449,7 +449,9 @@
 <template id="index_sidebar_follow_us" inherit_id="website_event.index_sidebar" active="False" name="Follow us" priority="30">
     <xpath expr="//div[@id='o_wevent_index_sidebar']" position="inside">
         <div class="o_wevent_sidebar_block">
-            <h6 class="o_wevent_sidebar_title">Follow Us</h6>
+            <div>
+                <h6 class="o_wevent_sidebar_title">Follow Us</h6>
+            </div>
             <div class="o_wevent_sidebar_social mx-n1">
                 <a t-if="website.social_facebook" t-att-href="website.social_facebook" class="o_wevent_social_link"><i class="fa fa-facebook text-facebook" aria-label="Facebook" title="Facebook"/></a>
                 <a t-if="website.social_twitter" t-att-href="website.social_twitter" class="o_wevent_social_link"><i class="fa fa-twitter text-twitter" aria-label="X" title="X"/></a>
@@ -467,7 +469,9 @@
 <!-- Index - Sidebar - Photos -->
 <template id="index_sidebar_photos" inherit_id="website_event.index_sidebar" active="True" name="Photos" priority="40">
     <xpath expr="//div[@id='o_wevent_index_sidebar']" position="inside">
-        <h6 class="o_wevent_sidebar_title">Photos</h6>
+        <div>
+            <h6 class="o_wevent_sidebar_title">Photos</h6>
+        </div>
         <a href="/event">
             <figure class="o_wevent_sidebar_block o_wevent_sidebar_figure figure">
                 <img class="figure-img img-fluid rounded oe_unremovable" src="/website_event/static/src/img/event_past_0.jpg" alt=""/>

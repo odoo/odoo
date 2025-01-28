@@ -102,7 +102,9 @@
                         <!-- Location -->
                         <meta itemprop="eventAttendanceMode" t-attf-content="https://schema.org/{{'Offline' if event.address_id else 'Online'}}EventAttendanceMode"/>
                         <div t-if="event.address_id" class="o_wevent_sidebar_block border-bottom pb-3 mb-4" itemprop="location" itemscope="itemscope" itemtype="https://schema.org/Place">
-                            <h6 class="o_wevent_sidebar_title">Location</h6>
+                            <div>
+                                <h6 class="o_wevent_sidebar_title">Location</h6>
+                            </div>
                             <div itemprop="name" class="mb-1" t-field="event.address_id"/>
                             <small class="d-block mb-2" t-field="event.address_id" t-options='{
                                 "widget": "contact",
@@ -128,14 +130,18 @@
                         </div>
                         <!-- Organizer -->
                         <div t-if="event.organizer_id" class="o_wevent_sidebar_block border-bottom pb-3 mb-4" itemprop="organizer" itemscope="itemscope" itemtype="http://schema.org/Organization">
-                            <h6 class="o_wevent_sidebar_title">Organizer</h6>
+                            <div>
+                                <h6 class="o_wevent_sidebar_title">Organizer</h6>
+                            </div>
                             <div itemprop="name" class="mb-1" t-field="event.organizer_id"/>
                             <small t-field="event.organizer_id" t-options="{'widget': 'contact', 'fields': ['phone', 'mobile', 'email'], 'with_microdata': True,}"/>
                         </div>
                         <!-- Social -->
                         <div class="o_wevent_sidebar_block">
-                            <h6 class="o_wevent_sidebar_title">Share</h6>
-                            <p>Find out what people see and say about this event, and join the conversation.</p>
+                            <div>
+                                <h6 class="o_wevent_sidebar_title">Share</h6>
+                                <p>Find out what people see and say about this event, and join the conversation.</p>
+                            </div>
                             <t t-snippet-call="website.s_share">
                                 <t t-set="_no_title" t-value="True"/>
                                 <t t-set="_classes" t-valuef="o_wevent_sidebar_social mx-n1"/>
