@@ -244,7 +244,6 @@ class ResourceCalendar(models.Model):
 
     def _inverse_hours_per_week(self):
         for calendar in self:
-            # TODO AMAH: check if the codition is needed and if write a comment to explain it
             if not calendar.flexible_hours:
                 calendar.hours_per_week = calendar._get_hours_per_week_value()
 
@@ -325,7 +324,6 @@ class ResourceCalendar(models.Model):
         """
         Calculate the average hours worked per workday.
         """
-        # TODO AMAH: rewrite this method to accomdate the new types
         if not attendances:
             return 0
 
@@ -346,11 +344,18 @@ class ResourceCalendar(models.Model):
 
     def _get_days_per_week(self):
         # If the employee didn't work a full day, it is still counted, i.e. 19h / week (M/T/W(half day)) -> 3 days
-        # TODO AMAH: rewrite this method to accomdate the new types
         self.ensure_one()
-        days = len(set(self.attendance_ids.filtered(
-            lambda attendance_id: attendance_id._is_work_period() and attendance_id.duration_hours)
-            .mapped(lambda attendance_id: f"{attendance_id.week_type} {attendance_id.dayofweek}")))
+        days = 0
+        if self.schedule_type == 'fixed_time':
+            for day in ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']:
+                if self[day]:
+                    days += 1
+                if self[f'{day}_2']:
+                    days += 1
+        else:
+            days = len(set(self.attendance_ids.filtered(
+                lambda attendance_id: attendance_id._is_work_period() and attendance_id.duration_hours)
+                .mapped(lambda attendance_id: f"{attendance_id.week_type} {attendance_id.dayofweek}")))
         return days / 2 if self.two_weeks_calendar else days
 
     def switch_calendar_type(self):
@@ -383,7 +388,6 @@ class ResourceCalendar(models.Model):
 
     @api.onchange('attendance_ids')
     def _onchange_attendance_ids(self):
-        # TODO AMAH: check if this method is needed anymore (mostly used in another app where list view of 2 weeks still used)
         if not self.two_weeks_calendar:
             return
 
@@ -782,7 +786,6 @@ class ResourceCalendar(models.Model):
 
             Counts the number of work hours between two datetimes.
         """
-        # TODO AMAH: rewrite this method to accomdate the new types
         self.ensure_one()
         # Set timezone in UTC if no timezone is explicitly given
         if not start_dt.tzinfo:
@@ -834,7 +837,6 @@ class ResourceCalendar(models.Model):
 
         Return datetime after having planned hours
         """
-        # TODO AMAH: rewrite this method to accomdate the new types
         day_dt, revert = make_aware(day_dt)
 
         if resource is None:
@@ -919,7 +921,6 @@ class ResourceCalendar(models.Model):
         if not self.attendance_ids:
             return 0
         mapped_data = defaultdict(lambda: 0)
-        # TODO AMAH: rewrite this filterd condition
         for attendance in self.attendance_ids.filtered(lambda a: a.day_period != 'lunch' and ((not a.date_from or not a.date_to) or (a.date_from <= end.date() and a.date_to >= start.date()))):
             mapped_data[(attendance.week_type, attendance.dayofweek)] += attendance.hour_to - attendance.hour_from
         return max(mapped_data.values())
