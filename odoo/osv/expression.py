@@ -257,7 +257,7 @@ def distribute_not(domain):
          ['|',('user_id','!=',4),('partner_id','not in',[1,2])]
 
     """
-    # TODO warnings.warn("Use Domain() instead of distribute_not()", DeprecationWarning)
+    warnings.warn("Since 19.0, use Domain() instead of distribute_not()", DeprecationWarning)
     return list(orm_domains.Domain(domain))
 
 
