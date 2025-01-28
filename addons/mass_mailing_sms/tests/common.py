@@ -22,7 +22,7 @@ class MassSMSCase(SMSCase, MockLinkTracker):
         return self.assertSMSTraces(recipients_info, mailing, records, check_sms=check_sms)
 
     def assertSMSTraces(self, recipients_info, mailing, records,
-                        check_sms=True, sent_unlink=False,
+                        check_sms=True, is_cancel_not_sent=True, sent_unlink=False,
                         sms_links_info=None):
         """ Check content of traces. Traces are fetched based on a given mailing
         and records. Their content is compared to recipients_info structure that
@@ -47,12 +47,16 @@ class MassSMSCase(SMSCase, MockLinkTracker):
           generated;
         :param records: records given to mailing that generated traces. It is
           used notably to find traces using their IDs;
-        :param check_sms: if set, check sms.sms records that should be linked to traces;
+        :param check_sms: if set, check sms.sms records that should be linked to traces
+          unless not sent (trace_status == 'cancel');
+        :param is_cancel_not_sent: if True, also check that no mail.message
+          related to "cancel trace" have been created and disable check_sms for those.
         :param sent_unlink: it True, sent sms.sms are deleted and we check gateway
           output result instead of actual sms.sms records;
         :param sms_links_info: if given, should follow order of ``recipients_info``
           and give details about links. See ``assertLinkShortenedHtml`` helper for
-          more details about content to give;
+          more details about content to give
+          Not tested for sms with trace status == 'cancel' if is_cancel_not_sent;
         ]
         """
         # map trace state to sms state
@@ -105,9 +109,15 @@ class MassSMSCase(SMSCase, MockLinkTracker):
             )
             self.assertTrue(len(trace) == 1,
                             'SMS: found %s notification for number %s, (status: %s) (1 expected)\n%s' % (len(trace), number, status, debug_info))
-            self.assertTrue(bool(trace.sms_id_int))
+            sms_not_created = is_cancel_not_sent and trace.trace_status == 'cancel'
+            self.assertTrue(sms_not_created or bool(trace.sms_id_int))
+            if sms_not_created:
+                self.assertFalse(trace.sms_id_int)
+                self.assertFalse(self.env['mail.message'].sudo().search(
+                    [('model', '=', record._name), ('res_id', '=', record.id),
+                     ('id', 'in', self._new_sms.mail_message_id.ids)]))
 
-            if check_sms:
+            if check_sms and not sms_not_created:
                 if status in {'process', 'pending', 'sent'}:
                     if sent_unlink:
                         self.assertSMSIapSent([number], content=content)
@@ -120,7 +130,7 @@ class MassSMSCase(SMSCase, MockLinkTracker):
                 else:
                     raise NotImplementedError()
 
-            if link_info:
+            if link_info and not sms_not_created:
                 # shortened links are directly included in sms.sms record as well as
                 # in sent sms (not like mails who are post-processed)
                 sms_sent = self._find_sms_sent(partner, number)
