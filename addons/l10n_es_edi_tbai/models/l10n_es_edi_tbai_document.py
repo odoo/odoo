@@ -537,7 +537,10 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             if values['grouping_key'] and values['grouping_key']['l10n_es_type'] == 'retencion':
                 total_retention += values['tax_amount']
             else:
-                total_amount += values['base_amount'] + values['tax_amount']
+                total_amount += values['tax_amount']
+
+        for line in base_lines:
+            total_amount += line['price_subtotal']
 
         tax_details_info = self._build_tax_details_info(values_per_grouping_key.values())
         invoice_info = {
@@ -578,7 +581,10 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             if values['grouping_key'] and values['grouping_key']['l10n_es_type'] == 'retencion':
                 total_retention += values['tax_amount']
             else:
-                total_amount += values['base_amount'] + values['tax_amount']
+                total_amount += values['tax_amount']
+
+        for line in base_lines:
+            total_amount += line['price_subtotal']
 
         invoice_info = {}
         for scope, target_key in (('service', 'PrestacionServicios'), ('consu', 'Entrega')):
