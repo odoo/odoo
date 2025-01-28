@@ -155,12 +155,6 @@ patch(PosStore.prototype, {
         }
         return res;
     },
-    //@override
-    add_new_order() {
-        const order = super.add_new_order(...arguments);
-        this.addPendingOrder([order.id]);
-        return order;
-    },
     async addLineToCurrentOrder(vals, opts = {}, configure = true) {
         if (this.config.module_pos_restaurant && !this.get_order().uiState.booked) {
             this.get_order().setBooked(true);
@@ -253,9 +247,9 @@ patch(PosStore.prototype, {
             this.removeOrder(order);
         } else if (order && this.previousScreen !== "ReceiptScreen") {
             if (!this.orderToTransferUuid) {
-                this.syncAllOrders({ orders: [order] });
+                this.syncAllOrders();
             } else {
-                await this.syncAllOrders({ orders: [order] });
+                await this.syncAllOrders();
             }
         }
         this.set_order(null);
@@ -287,7 +281,6 @@ patch(PosStore.prototype, {
         if (!this.tableHasOrders(destinationTable)) {
             order.update({ table_id: destinationTable });
             this.set_order(order);
-            this.addPendingOrder([order.id]);
         } else {
             for (const orphanLine of order.lines) {
                 const adoptingLine = destinationOrder.lines.find((l) =>
