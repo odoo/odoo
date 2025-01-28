@@ -22,12 +22,7 @@ class TestSnippets(HttpCase):
         with MockRequest(self.env, website=self.env['website'].browse(1)):
             snippets_template = self.env['ir.ui.view'].render_public_asset('website.snippets')
         html_template = html.fromstring(snippets_template)
-        data_snippet_els = html_template.xpath("//*[snippets and not(hasclass('d-none'))]//*[@data-oe-snippet-key]/*[@data-snippet]")
-
-        # FIXME targeting data-oe-snippet-key should be enough to find actual
-        # snippets, but the current xpath search for inner data-snippet too as
-        # it currently missing on some snippet (e.g. accordion?)
-        data_snippet_els = [el.getparent() for el in data_snippet_els]
+        data_snippet_els = html_template.xpath("//*[snippets and not(hasclass('d-none'))]//*[@data-oe-snippet-key]")
 
         blacklist = [
             's_facebook_page',  # avoid call to external services (facebook.com)
