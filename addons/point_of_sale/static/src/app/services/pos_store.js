@@ -123,7 +123,6 @@ export class PosStore extends WithLazyGetterTrap {
             create: new Set(),
         };
 
-        this.synch = { status: "connected", pending: 0 };
         this.hardwareProxy = hardware_proxy;
         this.hiddenProductIds = new Set();
         this.selectedOrderUuid = null;
@@ -1570,9 +1569,11 @@ export class PosStore extends WithLazyGetterTrap {
             },
             { webPrintFallback: true }
         );
-        if (!printBillActionTriggered && result) {
-            const nbrPrint = order.nb_print;
-            await this.data.write("pos.order", [order.id], { nb_print: nbrPrint + 1 });
+        if (!printBillActionTriggered) {
+            order.nb_print += 1;
+            if (typeof order.id === "number" && result) {
+                await this.data.write("pos.order", [order.id], { nb_print: order.nb_print });
+            }
         }
         return true;
     }
@@ -1616,6 +1617,11 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
     async sendOrderInPreparationUpdateLastChange(o, cancelled = false) {
+        // Always display a "ConnectionLostError" when the user tries to send an order to the kitchen while offline
+        if (this.data.network.offline) {
+            this.data.network.warningTriggered = false;
+            throw new ConnectionLostError();
+        }
         this.addPendingOrder([o.id]);
         const uuid = o.uuid;
         const orders = await this.syncAllOrders({ orders: [o] });
