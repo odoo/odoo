@@ -1560,7 +1560,7 @@ export class PosStore extends Reactive {
         order = this.get_order(),
         printBillActionTriggered = false,
     } = {}) {
-        await this.printer.print(
+        const result = await this.printer.print(
             OrderReceipt,
             {
                 data: this.orderExportForPrinting(order),
@@ -1569,7 +1569,7 @@ export class PosStore extends Reactive {
             },
             { webPrintFallback: true }
         );
-        if (!printBillActionTriggered) {
+        if (!printBillActionTriggered && result) {
             const nbrPrint = order.nb_print;
             await this.data.write("pos.order", [order.id], { nb_print: nbrPrint + 1 });
         }
