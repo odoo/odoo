@@ -90,22 +90,22 @@ class TestActivityRights(TestActivityCommon):
                 searched_activity = self.env['mail.activity'].with_user(self.user_employee)._search(
                     [('id', '=', test_activity.id)])
 
-        # can read_group activities if access to the document
-        read_group_result = self.env['mail.activity'].with_user(self.user_employee).read_group(
+        # can formatted_read_group activities if access to the document
+        read_group_result = self.env['mail.activity'].with_user(self.user_employee).formatted_read_group(
             [('id', '=', test_activity.id)],
             ['summary'],
-            ['summary'],
+            ['__count'],
         )
-        self.assertEqual(1, read_group_result[0]['summary_count'])
+        self.assertEqual(1, read_group_result[0]['__count'])
         self.assertEqual('Summary', read_group_result[0]['summary'])
 
         # cannot read_group activities if no access to the document
         with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_crash):
             with self.assertRaises(exceptions.AccessError):
-                self.env['mail.activity'].with_user(self.user_employee).read_group(
+                self.env['mail.activity'].with_user(self.user_employee).formatted_read_group(
                     [('id', '=', test_activity.id)],
                     ['summary'],
-                    ['summary'],
+                    ['__count'],
                 )
 
         # cannot read activities if no access to the document
@@ -150,12 +150,12 @@ class TestActivityRights(TestActivityCommon):
 
         # user can read_group activities assigned to him even if he has no access to the document
         with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_crash):
-            read_group_result = self.env['mail.activity'].with_user(self.user_employee).read_group(
+            read_group_result = self.env['mail.activity'].with_user(self.user_employee).formatted_read_group(
                 [('id', '=', test_activity.id)],
                 ['summary'],
-                ['summary'],
+                ['__count'],
             )
-            self.assertEqual(1, read_group_result[0]['summary_count'])
+            self.assertEqual(1, read_group_result[0]['__count'])
             self.assertEqual('Summary', read_group_result[0]['summary'])
 
 
@@ -694,16 +694,19 @@ class TestActivityMixin(TestActivityCommon):
             Model = self.env['mail.test.activity']
             search_params = {
                 'domain': [('id', 'in', (origin_1 | origin_2).ids), ('activity_state', '=', 'overdue')]}
-            read_group_params = {'domain': [('id', 'in', (origin_1 | origin_2).ids)], 'fields': ['id:array_agg'],
-                                 'groupby': ['activity_state']}
+            read_group_params = {
+                'domain': [('id', 'in', (origin_1 | origin_2).ids)],
+                'groupby': ['activity_state'],
+                'aggregates': ['__count'],
+            }
             self.assertEqual(Model.search(**search_params), origin_1)
             self.assertEqual(
-                {(e['activity_state'], e['activity_state_count']) for e in Model.read_group(**read_group_params)},
+                {(e['activity_state'], e['__count']) for e in Model.formatted_read_group(**read_group_params)},
                 {('today', 1), ('overdue', 1)})
             origin_1_activity_2.action_feedback(feedback='Done')
             self.assertFalse(Model.search(**search_params))
             self.assertEqual(
-                {(e['activity_state'], e['activity_state_count']) for e in Model.read_group(**read_group_params)},
+                {(e['activity_state'], e['__count']) for e in Model.formatted_read_group(**read_group_params)},
                 {('today', 2)})
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.tests')
@@ -1003,7 +1006,7 @@ class TestORM(TestActivityCommon):
             }
 
             # call read_group to compute group names
-            groups = MailTestActivityCtx.read_group(domain, fields=['date'], groupby=[groupby])
+            groups = MailTestActivityCtx.formatted_read_group(domain, groupby=[groupby])
             progressbars = MailTestActivityCtx.read_progress_bar(domain, group_by=groupby, progress_bar=progress_bar)
             self.assertEqual(len(groups), 3)
             self.assertEqual(len(progressbars), 3)
@@ -1016,9 +1019,9 @@ class TestORM(TestActivityCommon):
             for group_name, data in progressbars.items()
         }
 
-        self.assertEqual(groups[0][groupby], pg_groups["overdue"])
-        self.assertEqual(groups[1][groupby], pg_groups["today"])
-        self.assertEqual(groups[2][groupby], pg_groups["planned"])
+        self.assertEqual(groups[0][groupby][0], pg_groups["overdue"])
+        self.assertEqual(groups[1][groupby][0], pg_groups["today"])
+        self.assertEqual(groups[2][groupby][0], pg_groups["planned"])
 
 
 @tests.tagged('post_install', '-at_install')

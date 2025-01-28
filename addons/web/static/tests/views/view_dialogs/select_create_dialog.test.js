@@ -104,6 +104,7 @@ test("SelectCreateDialog use domain, group_by and search default on desktop", as
                 context: {
                     allowed_company_ids: [1],
                     lang: "en",
+                    read_group_expand: true,
                     tz: "taht",
                     uid: 7,
                 }, // not part of the test, may change
@@ -114,10 +115,9 @@ test("SelectCreateDialog use domain, group_by and search default on desktop", as
                     ["name", "ilike", "piou"],
                     ["foo", "ilike", "piou"],
                 ],
-                fields: [],
+                aggregates: ["__count"],
                 groupby: ["bar"],
-                orderby: "",
-                lazy: true,
+                order: "",
                 limit: 80,
                 offset: 0,
             },
@@ -217,6 +217,7 @@ test("SelectCreateDialog use domain, group_by and search default on mobile", asy
                     lang: "en",
                     tz: "taht",
                     uid: 7,
+                    read_group_expand: true,
                 }, // not part of the test, may change
                 domain: [
                     "&",
@@ -225,12 +226,10 @@ test("SelectCreateDialog use domain, group_by and search default on mobile", asy
                     ["name", "ilike", "piou"],
                     ["foo", "ilike", "piou"],
                 ],
-                fields: [],
                 groupby: ["bar"],
-                lazy: true,
-                limit: Number.MAX_SAFE_INTEGER, // kanban have no limit for groupsLimit
+                aggregates: ["__count"],
                 offset: 0,
-                orderby: "",
+                order: "",
             },
             {
                 message:

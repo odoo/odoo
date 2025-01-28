@@ -127,7 +127,7 @@ test("display child nodes", async () => {
     onRpc("web_search_read", () => {
         expect.step("get child data");
     });
-    onRpc("read_group", () => {
+    onRpc("formatted_read_group", () => {
         expect.step("fetch descendants");
     });
     await mountView({
