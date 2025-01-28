@@ -115,15 +115,6 @@ export class PosStore extends Reactive {
         };
 
         this.loadingOrderState = false; // used to prevent orders fetched to be put in the update set during the reactive change
-
-        // Handle offline mode
-        // All of Set of ids
-        this.pendingOrder = {
-            write: new Set(),
-            delete: new Set(),
-            create: new Set(),
-        };
-
         this.synch = { status: "connected", pending: 0 };
         this.hardwareProxy = hardware_proxy;
         this.hiddenProductIds = new Set();
@@ -250,10 +241,6 @@ export class PosStore extends Reactive {
         }
 
         try {
-            const paidOrderNotSynced = this.models["pos.order"].filter(
-                (order) => order.state === "paid" && order.id !== "number"
-            );
-            this.addPendingOrder(paidOrderNotSynced.map((o) => o.id));
             await this.syncAllOrders({ throw: true });
 
             this.dialog.add(AlertDialog, {
@@ -429,7 +416,6 @@ export class PosStore extends Reactive {
                 }
 
                 const cancelled = this.removeOrder(order, false);
-                this.removePendingOrder(order);
                 if (!cancelled) {
                     return false;
                 } else if (typeof order.id === "number") {
@@ -579,15 +565,6 @@ export class PosStore extends Reactive {
     }
 
     async afterProcessServerData() {
-        // Adding the not synced paid orders to the pending orders
-        const paidUnsyncedOrderIds = this.models["pos.order"]
-            .filter((order) => order.isUnsyncedPaid)
-            .map((order) => order.id);
-
-        if (paidUnsyncedOrderIds.length > 0) {
-            this.addPendingOrder(paidUnsyncedOrderIds);
-        }
-
         const openOrders = this.data.models["pos.order"].filter((order) => !order.finalized);
         this.syncAllOrders();
 
@@ -705,7 +682,6 @@ export class PosStore extends Reactive {
         if (!order) {
             order = this.add_new_order();
         }
-        this.addPendingOrder([order.id]);
         return await this.addLineToOrder(vals, order, opts, configure);
     }
 
@@ -1033,13 +1009,11 @@ export class PosStore extends Reactive {
     removeOrder(order, removeFromServer = true) {
         if (this.isOpenOrderShareable() || removeFromServer) {
             if (typeof order.id === "number" && !order.finalized) {
-                this.addPendingOrder([order.id], true);
                 this.syncAllOrdersDebounced();
             }
         }
 
         if (typeof order.id === "string" && order.finalized) {
-            this.addPendingOrder([order.id]);
             return;
         }
 
@@ -1131,66 +1105,8 @@ export class PosStore extends Reactive {
         }
     }
 
-    addPendingOrder(orderIds, remove = false) {
-        if (remove) {
-            for (const id of orderIds) {
-                this.pendingOrder["create"].delete(id);
-                this.pendingOrder["write"].delete(id);
-            }
-
-            this.pendingOrder["delete"].add(...orderIds);
-            return true;
-        }
-
-        for (const id of orderIds) {
-            if (typeof id === "number") {
-                this.pendingOrder["write"].add(id);
-            } else {
-                this.pendingOrder["create"].add(id);
-            }
-        }
-
-        return true;
-    }
-
-    getPendingOrder() {
-        const orderToCreate = this.models["pos.order"].filter(
-            (order) =>
-                this.pendingOrder.create.has(order.id) &&
-                (order.lines.length > 0 ||
-                    order.payment_ids.some((p) => p.payment_method_id.type === "pay_later"))
-        );
-        const orderToUpdate = this.models["pos.order"].readMany(
-            Array.from(this.pendingOrder.write)
-        );
-        const orderToDelele = this.models["pos.order"].readMany(
-            Array.from(this.pendingOrder.delete)
-        );
-
-        return {
-            orderToDelele,
-            orderToCreate,
-            orderToUpdate,
-        };
-    }
-
-    getOrderIdsToDelete() {
-        return [...this.pendingOrder.delete];
-    }
-
-    removePendingOrder(order) {
-        this.pendingOrder["create"].delete(order.id);
-        this.pendingOrder["write"].delete(order.id);
-        this.pendingOrder["delete"].delete(order.id);
-        return true;
-    }
-
-    clearPendingOrder() {
-        this.pendingOrder = {
-            create: new Set(),
-            write: new Set(),
-            delete: new Set(),
-        };
+    addPendingOrder() {
+        //Kept for be_blackbox_be module
     }
 
     getSyncAllOrdersContext(orders, options = {}) {
@@ -1201,22 +1117,25 @@ export class PosStore extends Reactive {
         };
     }
 
+    getOrderToSync() {
+        // Do not take only open orders in case of unsync paid orders
+        return this.models["pos.order"].filter((o) => o.isToSync);
+    }
+
     // There for override
     async preSyncAllOrders(orders) {}
     postSyncAllOrders(orders) {}
     async syncAllOrders(options = {}) {
-        const { orderToCreate, orderToUpdate } = this.getPendingOrder();
-        let orders = options.orders || [...orderToCreate, ...orderToUpdate];
+        let orders = options.orders || this.getOrderToSync();
+
+        if (odoo.debug === "assets") {
+            console.log("syncAllOrders", orders);
+        }
 
         // Filter out orders that are already being synced
         orders = orders.filter((order) => !this.syncingOrders.has(order.id));
 
         try {
-            const orderIdsToDelete = this.getOrderIdsToDelete();
-            if (orderIdsToDelete.length > 0) {
-                await this.deleteOrders([], orderIdsToDelete);
-            }
-
             const context = this.getSyncAllOrdersContext(orders, options);
             await this.preSyncAllOrders(orders);
 
@@ -1269,7 +1188,10 @@ export class PosStore extends Reactive {
                     .forEach((order) => (order.session_id = this.session));
             }
 
-            this.clearPendingOrder();
+            for (const order of orders) {
+                order.updateLastHash();
+            }
+
             return newData["pos.order"];
         } catch (error) {
             if (options.throw) {

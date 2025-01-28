@@ -181,18 +181,16 @@ export class Base {
      * @param {boolean} options.orm - [true] if result is to be sent to the server
      */
     serialize(options = {}) {
-        const orm = options.orm ?? false;
         const clear = options.clear ?? false;
+        const serializedData = this.model.serialize(this, options);
 
-        const serializedData = this.model.serialize(this, { orm });
-
-        if (orm) {
+        if (options.orm || options.hash) {
             const fields = this.model.modelFields;
             const serializedDataOrm = {};
 
             // We only care about the fields present in python model
             for (const [name, params] of Object.entries(fields)) {
-                if (params.dummy) {
+                if (params.dummy && !options.hash) {
                     continue;
                 }
                 if (params.local || params.related || params.compute) {
@@ -210,16 +208,19 @@ export class Base {
                                 typeof id === "number"
                             ) {
                                 return [4, id];
-                            } else if (!this._dynamicModels.includes(params.relation)) {
+                            } else if (
+                                !this._dynamicModels.includes(params.relation) &&
+                                !options.hash
+                            ) {
                                 throw new Error(
                                     "Trying to create a non serializable record" + params.relation
                                 );
                             }
 
-                            if (params.relation !== params.model) {
+                            if (!options.hash && params.relation !== params.model) {
                                 data = this.records[params.relation].get(id).serialize(options);
                                 data.id = typeof id === "number" ? id : parseInt(id.split("_")[1]);
-                            } else {
+                            } else if (!options.hash) {
                                 return typeof id === "number" ? id : parseInt(id.split("_")[1]);
                             }
 
@@ -252,8 +253,9 @@ export class Base {
                         .filter((s) => s);
 
                     if (
-                        this.models.commands[params.model].unlink.has(name) ||
-                        this.models.commands[params.model].delete.has(name)
+                        !options.hash &&
+                        (this.models.commands[params.model].unlink.has(name) ||
+                            this.models.commands[params.model].delete.has(name))
                     ) {
                         const unlinks = this.models.commands[params.model].unlink.get(name);
                         const deletes = this.models.commands[params.model].delete.get(name);
@@ -799,7 +801,11 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 const result = {};
                 for (const name in fields) {
                     const field = fields[name];
-                    if ((orm && field.local) || (orm && field.related) || (orm && field.compute)) {
+                    if (
+                        (orm && field.local && !options.hash) ||
+                        (orm && field.related) ||
+                        (orm && field.compute)
+                    ) {
                         continue;
                     }
 

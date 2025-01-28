@@ -1,3 +1,5 @@
+/* global Sha1 */
+
 import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 import { _t } from "@web/core/l10n/translation";
@@ -49,6 +51,7 @@ export class PosOrder extends Base {
         // !!Keep all uiState in one object!!
         if (!this.uiState) {
             this.uiState = {
+                lastHash: "",
                 lineToRefund: {},
                 displayed: true,
                 booked: false,
@@ -62,6 +65,16 @@ export class PosOrder extends Base {
                 },
             };
         }
+    }
+
+    get uiHash() {
+        const orderSerialized = this.serialize({ hash: true });
+        const orderStr = JSON.stringify(orderSerialized);
+        return Sha1.hash(orderStr);
+    }
+
+    get isToSync() {
+        return this.uiState.lastHash !== this.uiHash;
     }
 
     get user() {
@@ -213,6 +226,10 @@ export class PosOrder extends Base {
         }
 
         return taxTotals;
+    }
+
+    updateLastHash() {
+        this.uiState.lastHash = this.uiHash;
     }
 
     /**

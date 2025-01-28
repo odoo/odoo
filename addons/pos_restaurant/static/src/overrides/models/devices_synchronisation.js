@@ -55,7 +55,6 @@ patch(DevicesSynchronisation.prototype, {
                 ];
                 if (localIds.includes(this.pos.selectedOrderUuid)) {
                     this.pos.set_order(uniqOrder);
-                    this.pos.addPendingOrder([uniqOrder.id]);
                 }
 
                 this.pos.deleteOrders(syncedOrder);

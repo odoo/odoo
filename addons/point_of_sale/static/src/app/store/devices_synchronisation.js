@@ -132,7 +132,11 @@ export default class DevicesSynchronisation {
      * @param {Object} dynamicRecords - Record write dates by ids and models.
      */
     processDynamicRecords(dynamicRecords) {
-        return this.models.loadData(dynamicRecords, [], false, true);
+        const records = this.models.loadData(dynamicRecords, [], false, true);
+        for (const order of records["pos.order"]) {
+            order.updateLastHash();
+        }
+        return records;
     }
 
     /**
