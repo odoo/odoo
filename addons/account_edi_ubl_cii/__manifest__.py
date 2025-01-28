@@ -28,6 +28,11 @@ Pro rules and show the errors.
         'data/ubl_21_templates.xml',
         'views/res_partner_views.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'account_edi_ubl_cii/static/src/scss/**/*',
+        ],
+    },
     'installable': True,
     'auto_install': True,
     'license': 'LGPL-3',
