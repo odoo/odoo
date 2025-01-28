@@ -22,6 +22,7 @@ This module implements reCaptchaV3 so that you can prevent bot spam on your publ
             # of here and/or adding it in the "website.assets_wysiwyg" bundle,
             # which is lazy loaded.
             'google_recaptcha/static/src/xml/recaptcha.xml',
+            'google_recaptcha/static/src/scss/recaptcha_backend.scss',
         ],
     },
     'license': 'LGPL-3',
