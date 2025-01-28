@@ -1,30 +1,25 @@
-import publicWidget from "@web/legacy/js/public/public_widget";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
 
-publicWidget.registry.portalDetails = publicWidget.Widget.extend({
-    selector: '.o_portal_details',
-    events: {
-        'change select[name="invoice_sending_method"]': '_onSendingMethodChange',
-    },
+export class InvoiceSendingMethod extends Interaction {
+    static selector = ".o_portal_details select[name='invoice_sending_method']";
+    dynamicContent = {
+        _root: { "t-on-change": this.showPeppolConfig },
+    };
 
     start() {
-        this._showPeppolConfig();
-        this.orm = this.bindService("orm");
-        return this._super.apply(this, arguments);
-    },
+        this.showPeppolConfig();
+    }
 
-    _showPeppolConfig() {
-        const method = document.querySelector("select[name='invoice_sending_method']")?.value;
-        const divToToggle = document.querySelectorAll(".portal_peppol_toggle");
-        for (const peppolDiv of divToToggle) {
-            if (method === "peppol") {
-                peppolDiv.classList.remove("d-none")
-            } else {
-                peppolDiv.classList.add("d-none")
-            }
+    showPeppolConfig() {
+        const method = this.el.value;
+        const peppolToggleEls = document.querySelectorAll(".portal_peppol_toggle");
+        for (const peppolToggleEl of peppolToggleEls) {
+            peppolToggleEl.classList.toggle("d-none", method !== "peppol");
         }
-    },
+    }
+}
 
-    _onSendingMethodChange() {
-        this._showPeppolConfig();
-    },
-});
+registry
+    .category("public.interactions")
+    .add("account_peppol.invoice_sending_method", InvoiceSendingMethod);
