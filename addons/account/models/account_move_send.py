@@ -92,9 +92,11 @@ class AccountMoveSend(models.AbstractModel):
         - action the action to run when the link is clicked
         """
         alerts = {}
-        if partners_without_mail := moves.filtered(lambda m: 'email' in moves_data[m]['sending_methods'] and not m.partner_id.email).partner_id:
+        if len(moves) > 1 and (partners_without_mail := moves.filtered(
+                lambda m: 'email' in moves_data[m]['sending_methods'] and not m.partner_id.email).partner_id
+        ):
             alerts['account_missing_email'] = {
-                'level': 'danger' if len(moves) == 1 else 'warning',
+                'level': 'warning',
                 'message': _("Partner(s) should have an email address."),
                 'action_text': _("View Partner(s)"),
                 'action': partners_without_mail._get_records_action(name=_("Check Partner(s) Email(s)")),
@@ -157,7 +159,7 @@ class AccountMoveSend(models.AbstractModel):
             partner_to = self._get_mail_default_field_value_from_template(mail_template, mail_lang, move, 'partner_to')
             partner_ids = mail_template._parse_partner_to(partner_to)
             partners |= self.env['res.partner'].sudo().browse(partner_ids).exists()
-        return partners
+        return partners.filtered('email')
 
     # -------------------------------------------------------------------------
     # ATTACHMENTS
@@ -252,9 +254,9 @@ class AccountMoveSend(models.AbstractModel):
     @api.model
     def _check_move_constrains(self, moves):
         if any(move.state != 'posted' for move in moves):
-            raise UserError(_("You can't Print & Send invoices that are not posted."))
+            raise UserError(_("You can't generate invoices that are not posted."))
         if any(not move.is_sale_document(include_receipts=True) for move in moves):
-            raise UserError(_("You can only Print & Send sales documents."))
+            raise UserError(_("You can only generate sales documents."))
 
     @api.model
     def _check_invoice_report(self, moves, **custom_settings):
@@ -306,10 +308,7 @@ class AccountMoveSend(models.AbstractModel):
     @api.model
     def _is_applicable_to_move(self, method, move):
         """ TO OVERRIDE - """
-        if method == 'email':
-            return bool(move.partner_id.email)
-        else:
-            return method == 'manual'
+        return True
 
     @api.model
     def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
