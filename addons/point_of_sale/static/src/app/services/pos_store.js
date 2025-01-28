@@ -1562,7 +1562,7 @@ export class PosStore extends WithLazyGetterTrap {
         order = this.getOrder(),
         printBillActionTriggered = false,
     } = {}) {
-        await this.printer.print(
+        const result = await this.printer.print(
             OrderReceipt,
             {
                 order,
@@ -1570,7 +1570,7 @@ export class PosStore extends WithLazyGetterTrap {
             },
             { webPrintFallback: true }
         );
-        if (!printBillActionTriggered) {
+        if (!printBillActionTriggered && result) {
             const nbrPrint = order.nb_print;
             await this.data.write("pos.order", [order.id], { nb_print: nbrPrint + 1 });
         }
