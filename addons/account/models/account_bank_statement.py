@@ -426,7 +426,7 @@ class AccountBankStatement(models.Model):
                 statement._set_next_sequence()
 
         self.write({'state': 'posted'})
-        lines_of_moves_to_post = self.line_ids.filtered(lambda line: line.move_id.state != 'posted')
+        lines_of_moves_to_post = self.line_ids.filtered(lambda line: line.move_id.state not in ['posted', 'cancel'])
         if lines_of_moves_to_post:
             lines_of_moves_to_post.move_id._post(soft=False)
 
