@@ -34,10 +34,12 @@ export const getTemplateWithoutHideOnScroll = function (class_name) {
     `
 }
 
+// We use a class to set the height of the hide on scroll element because 
+// otherwise it would be override by the interaction.
 export const getTemplateWithHideOnScroll = function (class_name) {
     return `
     <header class="${class_name}" style="background-color:#CCFFCC">
-        <div class="o_header_hide_on_scroll" style="height: 20px; background-color:#CCFF33;"></div>
+        <div class="o_header_hide_on_scroll h20" style="background-color:#CCFF33;"></div>
         <div style="height: 30px; background-color:#33FFCC;"></div>
     </header>
     <main style="height:2000px;  background-color:#CCCCFF;">
