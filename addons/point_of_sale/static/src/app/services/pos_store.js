@@ -1197,10 +1197,7 @@ export class PosStore extends WithLazyGetterTrap {
 
     getPendingOrder() {
         const orderToCreate = this.models["pos.order"].filter(
-            (order) =>
-                this.pendingOrder.create.has(order.id) &&
-                (order.lines.length > 0 ||
-                    order.payment_ids.some((p) => p.payment_method_id.type === "pay_later"))
+            (order) => this.pendingOrder.create.has(order.id) && order.hasItemsOrPayLater
         );
         const orderToUpdate = this.models["pos.order"].readMany(
             Array.from(this.pendingOrder.write)
