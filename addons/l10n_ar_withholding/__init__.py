@@ -26,6 +26,19 @@ def _l10n_ar_withholding_post_init(env):
         for company in ar_companies.filtered(lambda c: c.chart_template == template_code):
             _logger.info("Company %s already has the Argentinean localization installed, updating...", company.name)
             company_chart_template = env['account.chart.template'].with_company(company)
+
+            # Only update taxes if the related accounts exists.
+            tax_keys = list(data['account.tax'].keys())
+            print(" ---- tax_keys %s" % tax_keys)
+            for tax_key in tax_keys:
+                for line in data['account.tax'][tax_key].get('repartition_line_ids', []):
+                    if tax_account := line[-1].get('account_id'):
+                        exist_account = env.ref('account.%i_%s' % (company.id, tax_account), raise_if_not_found=False)
+                        if not exist_account:
+                            data['account.tax'].pop(tax_key)
+                            _logger.warning("We do not update the tax %s because the account %s does not exist", tax_key, tax_account)
+                            break
+
             company_chart_template._deref_account_tags(template_code, data['account.tax'])
             company_chart_template._pre_reload_data(company, {}, data)
             company_chart_template._load_data(data)
