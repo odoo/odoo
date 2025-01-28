@@ -24,7 +24,6 @@ from unittest import util, BaseTestSuite, TestCase
 
 __unittest = True
 
-
 class TestSuite(BaseTestSuite):
     """A test suite is a composite test consisting of a number of TestCases.
     For use, create an instance of TestSuite, then add test case instances.
@@ -36,6 +35,8 @@ class TestSuite(BaseTestSuite):
 
     def run(self, result, debug=False):
         for test in self:
+            if result.shouldStop:
+                break
             assert isinstance(test, (TestCase))
             odoo.modules.module.current_test = test
             self._tearDownPreviousClass(test, result)
