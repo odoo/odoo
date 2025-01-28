@@ -141,7 +141,7 @@ export function isChildTable(child) {
     };
 }
 export function clickNewOrder() {
-    return { trigger: ".left-buttons .new-order", run: "click" };
+    return { trigger: ".new-order", run: "click" };
 }
 
 import { TourHelpers } from "@web_tour/tour_service/tour_helpers";
