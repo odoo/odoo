@@ -39,7 +39,11 @@ export class WebsiteSaleNavigationButton extends Interaction {
         }
         ev.preventDefault(); // manual override
         rpc('/shop/check_cart', { ready_to_be_paid: END_PATHS.includes(ev.target.pathname) })
-            .then(() => window.location.href = ev.target.href)
+            .then(() => {
+                const url = new URL(ev.target.href);
+                window.location.href =
+                    `${encodeURI(url.pathname)}?${encodeURIComponent(url.search.substring(1))}`;
+            })
             .catch(error => {
                 if (error instanceof RPCError) {
                     wSaleUtils.showWarning(error.data.message);
