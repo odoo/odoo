@@ -24,7 +24,7 @@
                                     </div>
                                     <div class="product-price price fw-bolder" t-esc="line.price" />
                                 </div>
-                                <ul class="info-list d-flex flex-column">
+                                <ul class="info-list d-flex flex-column p-0">
                                     <li class="price-per-unit">
                                         <span class="qty px-1 border rounded text-bg-view fw-bolder me-1" t-esc="line.qty"/>
                                         x
@@ -42,7 +42,7 @@
                                         <i class="fa fa-sticky-note me-1" role="img" aria-label="Customer Note" title="Customer Note"/>
                                         <t t-esc="line.customerNote" />
                                     </li>
-                                    <div class="internal-note-container d-flex gap-2">
+                                    <div class="internal-note-container d-flex gap-2 px-2">
                                         <t t-foreach="line.internalNote?.split?.('\n') or []" t-as="note" t-key="note_index">
                                             <li t-if="note.trim() !== ''" t-esc="note" class="internal-note badge mt-2 p-2 rounded-pill bg-info text-info bg-opacity-25" style="font-size: 0.85rem;" />
                                         </t>
