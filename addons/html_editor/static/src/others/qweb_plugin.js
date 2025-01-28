@@ -89,15 +89,30 @@ export class QWebPlugin extends Plugin {
             selection.anchorNode &&
             closestElement(selection.anchorNode, "[t-field],[t-esc],[t-out]");
         if (qwebNode && this.editable.contains(qwebNode)) {
-            // select the whole qweb node
-            const [anchorNode, anchorOffset] = leftPos(qwebNode);
-            const [focusNode, focusOffset] = rightPos(qwebNode);
-            this.dependencies.selection.setSelection({
-                anchorNode,
-                anchorOffset,
-                focusNode,
-                focusOffset,
-            });
+            if (this.picker.isOpen) {
+                this.picker.close();
+            }
+            if (
+                selection.anchorNode === selection.focusNode &&
+                selection.anchorOffset === selection.focusOffset
+            ) {
+                this.dependencies.selection.setSelection({
+                    anchorNode: selection.anchorNode,
+                    anchorOffset: selection.anchorOffset,
+                    focusNode: selection.focusNode,
+                    focusOffset: selection.focusOffset,
+                });
+            } else {
+                // select the whole qweb node
+                const [anchorNode, anchorOffset] = leftPos(qwebNode);
+                const [focusNode, focusOffset] = rightPos(qwebNode);
+                this.dependencies.selection.setSelection({
+                    anchorNode,
+                    anchorOffset,
+                    focusNode,
+                    focusOffset,
+                });
+            }
         }
     }
 
@@ -168,6 +183,10 @@ export class QWebPlugin extends Plugin {
     }
 
     selectNode(node) {
+        const selection = this.dependencies.selection.getEditableSelection();
+        if (!selection.isCollapsed) {
+            return;
+        }
         this.selectedNode = node;
         this.picker.open({
             target: node,
