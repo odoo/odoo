@@ -20,13 +20,13 @@ CSRF_USER_HEADERS = {
 }
 
 
-def read_group_list(model, domain=None, groupby=(), fields=('__count',)):
-    result = model.web_read_group(domain or [], groupby=groupby, fields=fields, lazy=False)
+def read_group_list(model, domain=None, groupby=(), aggregates=('__count',)):
+    result = model.web_read_group(domain or [], groupby=groupby, aggregates=aggregates)
     # transform result:
     # - tuple into list
-    # - pop '__domain'
+    # - pop '__extra_domain'
     for group in result['groups']:
-        del group['__domain']
+        del group['__extra_domain']
         for k, v in group.items():
             if isinstance(v, tuple):
                 group[k] = list(v)
@@ -275,7 +275,7 @@ class TestHttpWebJson_1(TestHttpBase):
         self.assertEqual(
             res.json(),
             read_group_list(
-                env['test_http.stargate'], [], ['galaxy_id', 'has_galaxy_crystal'], ['availability']),
+                env['test_http.stargate'], [], ['galaxy_id', 'has_galaxy_crystal'], ['availability:avg']),
         )
 
         res = self.url_open_json('/test_http.stargate?view_type=pivot&groupby=has_galaxy_crystal&fields=availability:min')

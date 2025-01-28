@@ -2330,8 +2330,8 @@ test("debugManager is active for views", async () => {
 
 test.tags("desktop");
 test("reload a view via the view switcher keep state", async () => {
-    onRpc("read_group", () => {
-        expect.step("read_group");
+    onRpc("formatted_read_group", () => {
+        expect.step("formatted_read_group");
     });
 
     await mountWithCleanup(WebClient);
@@ -2353,8 +2353,8 @@ test("reload a view via the view switcher keep state", async () => {
     await switchView("pivot");
     expect(".o_pivot_measure_row").toHaveClass("o_pivot_sort_order_asc");
     expect.verifySteps([
-        "read_group", // initial read_group
-        "read_group", // read_group at reload after switch view
+        "formatted_read_group", // initial formatted_read_group
+        "formatted_read_group", // formatted_read_group at reload after switch view
     ]);
 });
 
@@ -2672,15 +2672,9 @@ test("sample server: populate groups", async () => {
     onRpc("web_read_group", () => ({
         groups: [
             {
-                date_count: 0,
-                "write_date:month": "December 2022",
-                __range: {
-                    "write_date:month": {
-                        from: "2022-12-01",
-                        to: "2023-01-01",
-                    },
-                },
-                __domain: [
+                __count: 0,
+                "write_date:month": ["2022-12-01", "December 2022"],
+                __extra_domain: [
                     ["write_date", ">=", "2022-12-01"],
                     ["write_date", "<", "2023-01-01"],
                 ],

@@ -58,10 +58,10 @@ function _mockHierarchyRead({ model, args, kwargs }) {
                 ],
             ],
             groupby: [parentFieldName],
-            fields: ["id:array_agg"],
+            aggregates: ["id:array_agg"],
         });
         for (const group of data.groups) {
-            childrenIdsPerRecordId[group[parentFieldName][0]] = group.id;
+            childrenIdsPerRecordId[group[parentFieldName][0]] = group['id:array_agg'];
         }
     }
     if (focusedRecordId || Object.keys(childrenIdsPerRecordId).length) {
