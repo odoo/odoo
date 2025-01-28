@@ -14,6 +14,7 @@ to minimise the code to maintain
 """
 
 import logging
+import os
 import sys
 
 from . import case
@@ -23,7 +24,9 @@ from unittest import util, BaseTestSuite, TestCase
 from odoo.modules import module
 
 __unittest = True
+_logger = logging.getLogger(__name__)
 
+ODOO_TEST_MAX_FAILED_TESTS = max(1, int(os.environ.get('ODOO_TEST_MAX_FAILED_TESTS', sys.maxsize)))
 
 class TestSuite(BaseTestSuite):
     """A test suite is a composite test consisting of a number of TestCases.
@@ -36,6 +39,18 @@ class TestSuite(BaseTestSuite):
 
     def run(self, result, debug=False):
         for test in self:
+            if result.global_report and (
+                result.global_report.failures_count
+                + result.global_report.errors_count
+                + result.failures_count
+                + result.errors_count
+            ) >= ODOO_TEST_MAX_FAILED_TESTS:
+                if not result.global_report.fail_fast:
+                    _logger.error(
+                        "Test suite halted: max failed tests already reached (%s). "
+                        "Remaining tests will be skipped.", ODOO_TEST_MAX_FAILED_TESTS)
+                    result.global_report.fail_fast = True
+                break
             assert isinstance(test, (TestCase))
             module.current_test = test
             self._tearDownPreviousClass(test, result)
