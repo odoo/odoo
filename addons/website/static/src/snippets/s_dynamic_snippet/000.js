@@ -166,6 +166,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
             unique_id: this.unique_id,
             extraClasses: dataset.extraClasses || '',
             columnClasses: dataset.columnClasses || '',
+            isSnippetSolo: dataset.isSnippetSolo || false,
         };
     },
     /**
