@@ -592,6 +592,7 @@ class ResPartner(models.Model):
         selection=[],  # to extend
         compute='_compute_invoice_edi_format',
         inverse='_inverse_invoice_edi_format',
+        compute_sudo=True,
     )
     invoice_edi_format_store = fields.Char(company_dependent=True)
     display_invoice_edi_format = fields.Boolean(default=lambda self: len(self._fields['invoice_edi_format'].selection), store=False)
