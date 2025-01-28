@@ -684,3 +684,37 @@ class TestAccountPayment(AccountTestInvoicingCommon):
             create_statement_line_and_reconcile(payment=payment, amount=invoice.amount_total / 2)
             payment = register_payment(invoice, line_without_outstanding, invoice.amount_total / 2)
             create_statement_line_and_reconcile(invoice=invoice, amount=invoice.amount_total / 2)
+
+    def test_resequence_change_payment_name(self):
+        """
+        Test that when resequencing the journal entry corresponding to a payment, the payment is also renamed
+        """
+        invoice = self.env['account.move'].create([{
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'date': '2024-01-01',
+            'invoice_line_ids': [Command.create({
+                'name': 'test',
+                'quantity': 1,
+                'price_unit': 100.0,
+            })],
+        }])
+        invoice.action_post()
+
+        payment = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=invoice.ids)\
+            .create({})\
+            ._create_payments()
+
+        payment.action_post()
+
+        wizard = self.env['account.resequence.wizard'].with_context({
+            'active_ids': payment.move_id.ids,
+            'active_model': 'account.move',
+        }).create({
+            'first_name': 'PBNK1/2025/00002',
+        })
+        wizard.resequence()
+
+        self.assertEqual(payment.move_id.name, 'PBNK1/2025/00002')
+        self.assertEqual(payment.name, 'PBNK1/2025/00002')
