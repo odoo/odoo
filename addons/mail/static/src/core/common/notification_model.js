@@ -73,6 +73,12 @@ export class Notification extends Record {
         return "";
     }
 
+    get isFollowerNotification() {
+        return this.mail_message_id.thread.followers.some(
+            (follower) => follower.partner.id === this.persona.id
+        );
+    }
+
     get statusIcon() {
         switch (this.notification_status) {
             case "process":
@@ -86,7 +92,7 @@ export class Notification extends Record {
             case "exception":
                 return "fa fa-exclamation";
             case "ready":
-                return "fa fa-send-o";
+                return `fa ${!this.isFollowerNotification ? "fa-send-o" : "fa-user-o"}`;
             case "canceled":
                 return "fa fa-trash-o";
         }
