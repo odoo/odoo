@@ -6,18 +6,13 @@ Base definition for the masonry snippet, not to be used as a snippet on its own.
 Use t-snippet-call and fill it with its inner grid-mode row.
 -->
 <template id="s_masonry_block" name="Masonry">
-    <section class="s_masonry_block pt48 pb48" data-vcss="001" data-vxml="001" data-snippet="s_masonry_block">
+    <section class="s_masonry_block pt48 pb48" data-vcss="001" data-vxml="001">
         <t t-set="container_class" t-value="container_class if container_class else 'container'"/>
         <div t-attf-class="#{container_class}">
             <t t-out="0"/>
         </div>
     </section>
 </template>
-
-<!--
-FIXME the t-snippet-call adds the wrong data-snippet, which is why is it
-forced in the base s_masonry_block at the moment.
--->
 
 <template id="s_masonry_block_default_template" name="Masonry">
     <t t-snippet-call="website.s_masonry_block">
