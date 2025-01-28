@@ -96,7 +96,6 @@
                     </FacturaRectificativa>
                     <FacturasRectificadasSustituidas>
                         <IDFacturaRectificadaSustituida>
-                            <!-- NOTE: could support issuing a single credit note for multiple invoices (optional) -->
                             <t t-set="seq_and_num" t-value="credit_note_invoice._get_l10n_es_tbai_sequence_and_number()"/>
                             <SerieFactura t-out="seq_and_num[0]"/>
                             <NumFactura t-out="seq_and_num[1]"/>
