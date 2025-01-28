@@ -18,6 +18,7 @@ class HrLeaveMandatoryDay(models.Model):
         'resource.calendar', 'Working Hours',
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     department_ids = fields.Many2many('hr.department', string="Departments")
+    job_ids = fields.Many2many('hr.job', string="Job Position", domain="[('department_id', 'in', department_ids)]")
 
     _date_from_after_day_to = models.Constraint(
         'CHECK(start_date <= end_date)',

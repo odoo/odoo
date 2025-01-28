@@ -198,3 +198,82 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             'request_date_from': datetime(2021, 11, 5),
             'request_date_to': datetime(2021, 11, 5),
         })
+
+    @freeze_time('2021-10-15')
+    def test_job_position_mandatory_days(self):
+        production_department = self.env['hr.department'].create({
+            'name': 'Production Department',
+            'company_id': self.company.id,
+        })
+
+        # Create job positions
+        production_manager = self.env['hr.job'].create({
+            'name': 'Production Manager',
+            'company_id': self.company.id,
+        })
+        post_production_manager = self.env['hr.job'].create({
+        'name': 'Post-Production Manager',
+        'company_id': self.company.id,
+        })
+
+        self.employee_emp.write({
+            'department_id': production_department.id,
+            'job_id': production_manager.id,
+        })
+
+        # Create mandatory leave days for job positions and departments
+        self.env['hr.leave.mandatory.day'].create({
+            'name': 'Production Deadline',
+            'company_id': self.company.id,
+            'start_date': datetime(2021, 11, 3),
+            'end_date': datetime(2021, 11, 3),
+            'color': 1,
+            'resource_calendar_id': self.default_calendar.id,
+            'department_ids': [production_department.id],
+            'job_ids': [production_manager.id],
+        })
+        self.env['hr.leave.mandatory.day'].create({
+            'name': 'Post-Production Deadline',
+            'company_id': self.company.id,
+            'start_date': datetime(2021, 11, 4),
+            'end_date': datetime(2021, 11, 4),
+            'color': 2,
+            'resource_calendar_id': self.default_calendar.id,
+            'department_ids': [production_department.id],
+        })
+        self.env['hr.leave.mandatory.day'].create({
+            'name': 'General Meeting',
+            'company_id': self.company.id,
+            'start_date': datetime(2021, 11, 5),
+            'end_date': datetime(2021, 11, 5),
+            'color': 3,
+            'resource_calendar_id': self.default_calendar.id,
+            'department_ids': [production_department.id],
+            'job_ids': [post_production_manager.id]
+        })
+
+        # The employee should only be able to create a time off on mandatory days
+        # that do not conflict with their job or department restrictions
+        with self.assertRaises(ValidationError):
+            self.env['hr.leave'].with_user(self.employee_user.id).create({
+                'name': 'Vacation during Production Deadline',
+                'holiday_status_id': self.leave_type.id,
+                'employee_id': self.employee_emp.id,
+                'request_date_from': datetime(2021, 11, 3),
+                'request_date_to': datetime(2021, 11, 3),
+            })
+        with self.assertRaises(ValidationError):
+            self.env['hr.leave'].with_user(self.employee_user.id).create({
+                'name': 'Vacation during Post-Production Deadline',
+                'holiday_status_id': self.leave_type.id,
+                'employee_id': self.employee_emp.id,
+                'request_date_from': datetime(2021, 11, 4),
+                'request_date_to': datetime(2021, 11, 4),
+            })
+        self.env['hr.leave'].with_user(self.employee_user.id).create({
+            'name': 'Vacation during General Meeting',
+            'holiday_status_id': self.leave_type.id,
+            'employee_id': self.employee_emp.id,
+            'request_date_from': datetime(2021, 11, 5),
+            'request_date_to': datetime(2021, 11, 5),
+        })
