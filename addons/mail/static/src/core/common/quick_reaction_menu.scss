@@ -117,11 +117,18 @@ $quick-reaction-menu-picker-grow-duration: 0.25s;
     & .popover-arrow {
         z-index: 1 !important;
         transform: translateY(var(--arrowTranslateY));
+
+        &::after {
+            border-bottom-color: $gray-100!important;
+        }
+        &::before {
+            border-bottom-color: var(--secondary)!important;
+        }
     }
 
     & .o-EmojiPicker {
         opacity: 0;
-        border: var(--popover-border-width) solid var(--popover-border-color);
+        border: var(--popover-border-width) solid var(--secondary);
         transform: scale(0.8);
         transform-origin: var(--originY);
         animation: qrm-pickerGrowAnimation $quick-reaction-menu-picker-grow-duration cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
