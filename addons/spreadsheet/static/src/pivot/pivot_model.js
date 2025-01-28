@@ -129,7 +129,7 @@ export class OdooPivotModel extends PivotModel {
         const { cols, rows } = this._getColsRowsValuesFromDomain(domain);
         const group = JSON.stringify([rows, cols]);
         const values = this.data.measurements[group];
-        const measurementId = this._computeMeasurementId(measure);
+        const measurementId = this._getAggregateSpec(measure);
 
         if (values && (values[0][measurementId] || values[0][measurementId] === 0)) {
             return values[0][measurementId];
@@ -560,6 +560,28 @@ export class OdooPivotModel extends PivotModel {
     }
 
     /**
+     * This method is used to compute the aggregate spec of a measurement in the
+     * data of the web model. It's needed since we support to define an
+     * aggregator for a field.
+     */
+    _getAggregateSpec(measure) {
+        if (measure.fieldName === "__count") {
+            return "__count";
+        }
+        if (measure.aggregator) {
+            return `${measure.fieldName}:${measure.aggregator}`;
+        }
+        if (measure.type === "many2one") {
+            return `${measure.fieldName}:count_distinct`;
+        }
+        const field = this.metaData.fields[measure.fieldName];
+        if (!field.aggregator) {
+            throw new Error(`Field ${field} doesn't have a default aggregator`);
+        }
+        return `${measure.fieldName}:${field.aggregator}`;
+    }
+
+    /**
      * @override
      * @protected
      * @return {string[]}
@@ -567,19 +589,7 @@ export class OdooPivotModel extends PivotModel {
     _getMeasureSpecs() {
         return this.getDefinition()
             .measures.filter((measure) => !measure.computedBy)
-            .map((measure) => {
-                const measurementId = `${measure.fieldName}_${measure.aggregator}_id`;
-                if (measure.type === "many2one" && !measure.aggregator) {
-                    return `${measure.fieldName}:count_distinct`;
-                }
-                if (measure.fieldName === "__count") {
-                    // Remove aggregator that is not supported by python
-                    return "__count";
-                }
-                return measure.aggregator
-                    ? `${measurementId}:${measure.aggregator}(${measure.fieldName})`
-                    : measure.fieldName;
-            });
+            .map(this._getAggregateSpec, this);
     }
 
     /**
@@ -594,23 +604,8 @@ export class OdooPivotModel extends PivotModel {
             )
             .map((dimension) => `${dimension.nameWithGranularity} ${dimension.order}`)
             .join(",");
-        params.kwargs.orderby = order;
+        params.kwargs.order = order;
         return super._getSubGroups(groupBys, params);
-    }
-
-    /**
-     * This method is used to compute the identifier of a measurement in the
-     * data of the web model. It's needed since we support to define an
-     * aggregator for a field.
-     */
-    _computeMeasurementId(measure) {
-        if (measure.fieldName === "__count") {
-            return "__count";
-        }
-        if (measure.aggregator) {
-            return `${measure.fieldName}_${measure.aggregator}_id`;
-        }
-        return measure.fieldName;
     }
 
     /**
@@ -622,7 +617,7 @@ export class OdooPivotModel extends PivotModel {
         return this.getDefinition()
             .measures.filter((measure) => !measure.computedBy)
             .reduce((measurements, measure) => {
-                const measurementId = this._computeMeasurementId(measure);
+                const measurementId = this._getAggregateSpec(measure);
                 var measurement = group[measurementId];
                 if (measurement instanceof Array) {
                     // case field is many2one and used as measure and groupBy simultaneously
@@ -643,7 +638,7 @@ export class OdooPivotModel extends PivotModel {
      */
     _getCellValue(groupId, measureName, originIndexes, config) {
         const measure = this.getDefinition().measures.find((m) => m.fieldName === measureName);
-        const measurementId = this._computeMeasurementId(measure);
+        const measurementId = this._getAggregateSpec(measure);
         var key = JSON.stringify(groupId);
         if (!config.data.measurements[key]) {
             return;

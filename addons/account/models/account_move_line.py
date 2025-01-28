@@ -3222,12 +3222,12 @@ class AccountMoveLine(models.Model):
         return res
 
     @api.model
-    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        # Hide total amount_currency from read_group when view is not grouped by currency_id. Avoids mix of currencies
-        res = super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
-        if 'currency_id' not in groupby and 'amount_currency:sum' in fields:
+    def formatted_read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None) -> list[dict]:
+        # Hide total amount_currency from formatted_read_group when view is not grouped by currency_id. Avoids mix of currencies
+        res = super().formatted_read_group(domain, groupby, aggregates, having=having, offset=offset, limit=limit, order=order)
+        if 'currency_id' not in groupby and 'amount_currency:sum' in aggregates:
             for group_line in res:
-                group_line['amount_currency'] = False
+                group_line['amount_currency:sum'] = False
         return res
 
     def _get_journal_items_full_name(self, name, display_name):

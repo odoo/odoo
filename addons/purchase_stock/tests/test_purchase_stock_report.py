@@ -229,14 +229,14 @@ class TestPurchaseStockReports(TestReportsCommon):
         receipt.move_ids.picked = True
         receipt.button_validate()
 
-        data = self.env['vendor.delay.report'].read_group(
+        data = self.env['vendor.delay.report'].formatted_read_group(
             [('partner_id', '=', self.partner.id)],
-            ['product_id', 'on_time_rate', 'qty_on_time', 'qty_total'],
             ['product_id'],
+            ['on_time_rate:sum', 'qty_on_time:sum', 'qty_total:sum'],
         )[0]
-        self.assertEqual(data['qty_on_time'], 12)
-        self.assertEqual(data['qty_total'], 12)
-        self.assertEqual(data['on_time_rate'], 100)
+        self.assertEqual(data['qty_on_time:sum'], 12)
+        self.assertEqual(data['qty_total:sum'], 12)
+        self.assertEqual(data['on_time_rate:sum'], 100)
 
     def test_vendor_delay_report_with_multi_location(self):
         """
@@ -286,14 +286,14 @@ class TestPurchaseStockReports(TestReportsCommon):
         receipt.move_ids.picked = True
         receipt.button_validate()
 
-        data = self.env['vendor.delay.report'].read_group(
+        data = self.env['vendor.delay.report'].web_read_group(
             [('partner_id', '=', self.partner.id)],
-            ['product_id', 'on_time_rate', 'qty_on_time', 'qty_total'],
             ['product_id'],
-        )[0]
-        self.assertEqual(data['qty_on_time'], 10)
-        self.assertEqual(data['qty_total'], 10)
-        self.assertEqual(data['on_time_rate'], 100)
+            ['on_time_rate:sum', 'qty_on_time:sum', 'qty_total:sum'],
+        )['groups'][0]
+        self.assertEqual(data['qty_on_time:sum'], 10)
+        self.assertEqual(data['qty_total:sum'], 10)
+        self.assertEqual(data['on_time_rate:sum'], 100)
 
     def test_vendor_delay_report_with_backorder(self):
         """
@@ -316,14 +316,14 @@ class TestPurchaseStockReports(TestReportsCommon):
         receipt01_move.quantity = 6
         Form.from_action(self.env, receipt01.button_validate()).save().process()
 
-        data = self.env['vendor.delay.report'].read_group(
+        data = self.env['vendor.delay.report'].web_read_group(
             [('partner_id', '=', self.partner.id)],
-            ['product_id', 'on_time_rate', 'qty_on_time', 'qty_total'],
             ['product_id'],
-        )[0]
-        self.assertEqual(data['qty_on_time'], 6)
-        self.assertEqual(data['qty_total'], 10)
-        self.assertEqual(data['on_time_rate'], 60)
+            ['on_time_rate:sum', 'qty_on_time:sum', 'qty_total:sum'],
+        )['groups'][0]
+        self.assertEqual(data['qty_on_time:sum'], 6)
+        self.assertEqual(data['qty_total:sum'], 10)
+        self.assertEqual(data['on_time_rate:sum'], 60)
 
         receipt02 = receipt01.backorder_ids
         receipt02.move_ids.quantity = 4
@@ -331,14 +331,14 @@ class TestPurchaseStockReports(TestReportsCommon):
         receipt02.button_validate()
 
         (receipt01 | receipt02).move_ids.invalidate_recordset()
-        data = self.env['vendor.delay.report'].read_group(
+        data = self.env['vendor.delay.report'].web_read_group(
             [('partner_id', '=', self.partner.id)],
-            ['product_id', 'on_time_rate', 'qty_on_time', 'qty_total'],
             ['product_id'],
-        )[0]
-        self.assertEqual(data['qty_on_time'], 10)
-        self.assertEqual(data['qty_total'], 10)
-        self.assertEqual(data['on_time_rate'], 100)
+            ['on_time_rate:sum', 'qty_on_time:sum', 'qty_total:sum'],
+        )['groups'][0]
+        self.assertEqual(data['qty_on_time:sum'], 10)
+        self.assertEqual(data['qty_total:sum'], 10)
+        self.assertEqual(data['on_time_rate:sum'], 100)
 
     def test_vendor_delay_report_without_backorder(self):
         """
@@ -360,11 +360,11 @@ class TestPurchaseStockReports(TestReportsCommon):
         receipt01_move.picked = True
         Form.from_action(self.env, receipt01.button_validate()).save().process_cancel_backorder()
 
-        data = self.env['vendor.delay.report'].read_group(
+        data = self.env['vendor.delay.report'].web_read_group(
             [('partner_id', '=', self.partner.id)],
-            ['product_id', 'on_time_rate', 'qty_on_time', 'qty_total'],
             ['product_id'],
-        )[0]
-        self.assertEqual(data['qty_on_time'], 6)
-        self.assertEqual(data['qty_total'], 10)
-        self.assertEqual(data['on_time_rate'], 60)
+            ['on_time_rate:sum', 'qty_on_time:sum', 'qty_total:sum'],
+        )['groups'][0]
+        self.assertEqual(data['qty_on_time:sum'], 6)
+        self.assertEqual(data['qty_total:sum'], 10)
+        self.assertEqual(data['on_time_rate:sum'], 60)

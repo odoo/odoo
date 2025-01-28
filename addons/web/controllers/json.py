@@ -155,6 +155,14 @@ class WebJsonController(http.Controller):
 
         # Group by
         groupby, fields = get_groupby(view_tree, kwargs.get('groupby'), kwargs.get('fields'))
+        if fields:
+            aggregates = [
+                f"{fname}:{model._fields[fname].aggregator}" if ':' not in fname else fname
+                for fname in fields
+            ]
+        else:
+            aggregates = ['__count']
+
         if groupby is not None and not kwargs.get('groupby'):
             # add arguments to kwargs
             kwargs['groupby'] = ','.join(groupby)
@@ -173,14 +181,13 @@ class WebJsonController(http.Controller):
         if groupby:
             res = model.web_read_group(
                 domain,
-                fields=fields or ['__count'],
+                aggregates=aggregates,
                 groupby=groupby,
                 limit=limit,
-                lazy=False,
             )
             # pop '__domain' key
             for value in res['groups']:
-                del value['__domain']
+                del value['__extra_domain']
         else:
             res = model.web_search_read(
                 domain,

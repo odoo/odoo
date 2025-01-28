@@ -51,10 +51,10 @@ class TestImLivechatReport(TestImLivechatCommon):
         self.assertEqual(int(report.duration), 9600)
 
     def test_im_livechat_report_operator(self):
-        result = self.env['im_livechat.report.operator'].read_group([], ['time_to_answer:avg', 'duration:avg'], [])
+        result = self.env['im_livechat.report.operator'].formatted_read_group([], aggregates=['time_to_answer:avg', 'duration:avg'])
         self.assertEqual(len(result), 1)
-        self.assertEqual(int(result[0]['time_to_answer']), 7800)
-        self.assertEqual(int(result[0]['duration']), 9600)
+        self.assertEqual(int(result[0]['time_to_answer:avg']), 7800)
+        self.assertEqual(int(result[0]['duration:avg']), 9600)
 
     @classmethod
     def _create_message(cls, channel, author, date):

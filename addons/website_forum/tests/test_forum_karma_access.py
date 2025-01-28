@@ -374,7 +374,7 @@ class TestForumKarma(TestForumCommon):
 
     def test_vote(self):
         def check_vote_records_count_and_integrity(expected_total_votes_count):
-            groups = self.env['forum.post.vote'].read_group([], fields=['__count'], groupby=['post_id', 'user_id'], lazy=False)
+            groups = self.env['forum.post.vote'].formatted_read_group([], groupby=['post_id', 'user_id'], aggregates=['__count'])
             self.assertEqual(len(groups), expected_total_votes_count)
             for post_user_group in groups:
                 self.assertEqual(post_user_group['__count'], 1)

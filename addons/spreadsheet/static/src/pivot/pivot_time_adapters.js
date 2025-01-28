@@ -168,6 +168,16 @@ const odooQuarterAdapter = {
     },
 };
 
+const odooYearAdapter = {
+    normalizeServerValue(groupBy, field, readGroupResult) {
+        const value = readGroupResult[groupBy];
+        return Array.isArray(value) ? Number(value[1]) : false;
+    },
+    increment(normalizedValue, step) {
+        return normalizedValue + step;
+    },
+};
+
 const odooDayOfWeekAdapter = {
     normalizeServerValue(groupBy, field, readGroupResult) {
         /**
@@ -265,9 +275,8 @@ pivotTimeAdapterRegistry.add("month", falseHandlerDecorator(odooMonthAdapter));
 pivotTimeAdapterRegistry.add("quarter", falseHandlerDecorator(odooQuarterAdapter));
 
 extendSpreadsheetAdapter("day", odooDayAdapter);
-extendSpreadsheetAdapter("year", odooNumberDateAdapter);
+extendSpreadsheetAdapter("year", odooYearAdapter);
 extendSpreadsheetAdapter("day_of_month", odooNumberDateAdapter);
-extendSpreadsheetAdapter("day", odooDayAdapter);
 extendSpreadsheetAdapter("iso_week_number", odooNumberDateAdapter);
 extendSpreadsheetAdapter("month_number", odooNumberDateAdapter);
 extendSpreadsheetAdapter("quarter_number", odooNumberDateAdapter);
@@ -281,14 +290,11 @@ extendSpreadsheetAdapter("second_number", odooSecondNumberAdapter);
  * the group starting day (local to the timezone)
  * @param {object} field
  * @param {string} groupBy
- * @param {object} readGroup
+ * @param {object} group
  * @returns {string | undefined}
  */
-function getGroupStartingDay(field, groupBy, readGroup) {
-    if (!readGroup["__range"] || !readGroup["__range"][groupBy]) {
-        return undefined;
-    }
-    const sqlValue = readGroup["__range"][groupBy].from;
+function getGroupStartingDay(field, groupBy, group) {
+    const sqlValue = group[groupBy][0];
     if (field.type === "date") {
         return sqlValue;
     }
@@ -298,14 +304,14 @@ function getGroupStartingDay(field, groupBy, readGroup) {
 
 /**
  * Parses a pivot week header value.
- * @param {string} value
+ * @param {Array} value
  * @example
- * parseServerWeekHeader("W1 2020") // { week: 1, year: 2020 }
+ * parseServerWeekHeader(['2016-04-11', 'W15 2016']) // { week: 15, year: 2016 }
  */
 function parseServerWeekHeader(value) {
-    // Value is always formatted as "W1 2020", no matter the language.
+    // Value is always formatted as "W15 2016", no matter the language.
     // Parsing this formatted value is the only way to ensure we get the same
     // locale aware week number as the one used in the server.
-    const [week, year] = value.split(" ");
+    const [week, year] = value[1].split(" ");
     return { week: Number(week.slice(1)), year: Number(year) };
 }

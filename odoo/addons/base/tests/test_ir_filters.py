@@ -279,10 +279,20 @@ class TestGlobalDefaults(FiltersCase):
 
 @tagged('post_install', '-at_install', 'migration')
 class TestAllFilters(TransactionCase):
-    def check_filter(self, name, model, domain, fields, groupby, order, context):
+    def check_filter(self, name, model, domain, aggregates, groupby, order, context):
         if groupby:
             try:
-                self.env[model].with_context(context).read_group(domain, fields, groupby, orderby=order)
+                Model = self.env[model].with_context(context)
+                groupby = [groupby] if isinstance(groupby, str) else groupby
+                groupby = [
+                    f"{group_spec}:month" if (
+                        ":" not in group_spec and
+                        group_spec in Model._fields and
+                        Model._fields[group_spec].type in ('date, datetime')
+                    ) else group_spec
+                    for group_spec in groupby
+                ]
+                Model.formatted_read_group(domain, groupby, aggregates, order=order)
             except ValueError as e:
                 raise self.failureException("Test filter '%s' failed: %s" % (name, e)) from None
             except KeyError as e:
@@ -304,7 +314,7 @@ class TestAllFilters(TransactionCase):
                     name=filter_.name,
                     model=filter_.model_id,
                     domain=filter_._get_eval_domain(),
-                    fields=[field.split(':')[0] for field in (groupby or [])],
+                    aggregates=['__count'],
                     groupby=groupby,
                     order=','.join(ast.literal_eval(filter_.sort)),
                     context=context,

@@ -102,26 +102,24 @@ class TestAccessRights(TransactionCase):
 
     def test_read_group_public(self):
         event = self.create_event(self.john)
-        data = self.env['calendar.event'].with_user(self.raoul).read_group([('id', '=', event.id)], fields=['start'], groupby='start')
+        data = self.env['calendar.event'].with_user(self.raoul)._read_group([('id', '=', event.id)], groupby=['start:month'])
         self.assertTrue(data, "It should be able to read group")
-        data = self.env['calendar.event'].with_user(self.raoul).read_group([('id', '=', event.id)], fields=['name'],
-                                                                           groupby='name')
+        data = self.env['calendar.event'].with_user(self.raoul)._read_group([('id', '=', event.id)], groupby=['name'])
         self.assertTrue(data, "It should be able to read group")
 
     def test_read_group_private(self):
         event = self.create_event(self.john, privacy='private')
-        result = self.env['calendar.event'].with_user(self.raoul).read_group([('id', '=', event.id)], fields=['name'], groupby='name')
+        result = self.env['calendar.event'].with_user(self.raoul)._read_group([('id', '=', event.id)], groupby=['name'])
         self.assertFalse(result, "Private events should not be fetched")
-
 
     def test_read_group_agg(self):
         event = self.create_event(self.john)
-        data = self.env['calendar.event'].with_user(self.raoul).read_group([('id', '=', event.id)], fields=['start'], groupby='start:week')
+        data = self.env['calendar.event'].with_user(self.raoul)._read_group([('id', '=', event.id)], groupby=['start:week'])
         self.assertTrue(data, "It should be able to read group")
 
     def test_read_group_list(self):
         event = self.create_event(self.john)
-        data = self.env['calendar.event'].with_user(self.raoul).read_group([('id', '=', event.id)], fields=['start'], groupby=['start'])
+        data = self.env['calendar.event'].with_user(self.raoul)._read_group([('id', '=', event.id)], groupby=['start:month'])
         self.assertTrue(data, "It should be able to read group")
 
     def test_private_attendee(self):
@@ -170,10 +168,10 @@ class TestAccessRights(TransactionCase):
         confidential_event = self.create_event(self.george, privacy='confidential')
 
         # With another user who is not an event attendee, try accessing the events.
-        query_default_event = self.env['calendar.event'].with_user(self.raoul).read_group([('id', '=', default_event.id)], fields=['name'], groupby='name')
-        query_public_event = self.env['calendar.event'].with_user(self.raoul).read_group([('id', '=', public_event.id)], fields=['name'], groupby='name')
-        query_private_event = self.env['calendar.event'].with_user(self.raoul).read_group([('id', '=', private_event.id)], fields=['name'], groupby='name')
-        query_confidential_event = self.env['calendar.event'].with_user(self.raoul).read_group([('id', '=', confidential_event.id)], fields=['name'], groupby='name')
+        query_default_event = self.env['calendar.event'].with_user(self.raoul)._read_group([('id', '=', default_event.id)], groupby=['name'])
+        query_public_event = self.env['calendar.event'].with_user(self.raoul)._read_group([('id', '=', public_event.id)], groupby=['name'])
+        query_private_event = self.env['calendar.event'].with_user(self.raoul)._read_group([('id', '=', private_event.id)], groupby=['name'])
+        query_confidential_event = self.env['calendar.event'].with_user(self.raoul)._read_group([('id', '=', confidential_event.id)], groupby=['name'])
 
         # Ensure that each event is accessible or not according to its privacy.
         self.assertFalse(query_default_event, "Event must be inaccessible because the user has default privacy as 'private'.")

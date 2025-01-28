@@ -1515,7 +1515,7 @@ test("reload graph with correct fields", async () => {
     expect.assertions(2);
 
     onRpc("web_read_group", ({ kwargs }) => {
-        expect(kwargs.fields).toEqual(["__count", "foo:sum"]);
+        expect(kwargs.aggregates).toEqual(["__count", "foo:sum"]);
     });
 
     await mountView({
@@ -2313,7 +2313,7 @@ test("fallback on initial groupby when the groupby from control panel has 0 leng
 
 test("change mode, stacked, or order via the graph buttons does not reload datapoints, change measure does", async () => {
     onRpc("web_read_group", ({ kwargs }) => {
-        expect.step(kwargs.fields);
+        expect.step(kwargs.aggregates);
     });
     const view = await mountView({
         type: "graph",
@@ -2690,12 +2690,12 @@ test("missing property field definition is fetched", async function () {
                 groups: [
                     {
                         "properties.my_char": false,
-                        __domain: [["properties.my_char", "=", false]],
+                        __extra_domain: [["properties.my_char", "=", false]],
                         __count: 2,
                     },
                     {
                         "properties.my_char": "aaa",
-                        __domain: [["properties.my_char", "=", "aaa"]],
+                        __extra_domain: [["properties.my_char", "=", "aaa"]],
                         __count: 1,
                     },
                 ],
@@ -2754,12 +2754,12 @@ test("missing deleted property field definition is created", async function () {
                 groups: [
                     {
                         "properties.my_char": false,
-                        __domain: [["properties.my_char", "=", false]],
+                        __extra_domain: [["properties.my_char", "=", false]],
                         __count: 2,
                     },
                     {
                         "properties.my_char": "aaa",
-                        __domain: [["properties.my_char", "=", "aaa"]],
+                        __extra_domain: [["properties.my_char", "=", "aaa"]],
                         __count: 1,
                     },
                 ],
