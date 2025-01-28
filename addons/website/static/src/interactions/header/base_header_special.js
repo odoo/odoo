@@ -78,6 +78,8 @@ export class BaseHeaderSpecial extends BaseHeader {
         }
 
         if (this.hideEl) {
+            this.hideEl.style.height = "";
+            this.hideEl.classList.remove("hidden");
             let elHeight = 0;
             if (this.cssAffixed) {
                 // Close the dropdowns if they are open when scrolling. 
@@ -110,8 +112,8 @@ export class BaseHeaderSpecial extends BaseHeader {
                 } else {
                     this.hideEl.style.paddingBlock = "";
                 }
-                this.adaptToHeaderChange();
             }
+            this.adaptToHeaderChange();
         }
 
         if (!this.cssAffixed && this.dropdownClickedEl) {

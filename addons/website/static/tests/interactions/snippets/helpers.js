@@ -14,6 +14,7 @@ export const setupTest = async function (core, wrapwrap) {
     wrapwrap.style.overflow = "scroll";
     core.interactions[0].interaction.scrollingElement = wrapwrap;
     defineStyle(/* css */`.hidden { display: none !important; }`);
+    defineStyle(/* css */`.h20 { height: 20px; }`);
     await endTransition();
 }
 
