@@ -56,17 +56,16 @@ OPERATOR_MAPPING = {
 
 class GroupsTreeNode:
     """
-    This class builds an ordered tree of groups from the result of a `read_group(lazy=False)`.
-    The `read_group` returns a list of dictionnaries and each dictionnary is used to
+    This class builds an ordered tree of groups from the result of a `web_read_group`.
+    The `formatted_read_group` returns a list of dictionnaries and each dictionnary is used to
     build a leaf. The entire tree is built by inserting all leaves.
     """
 
-    def __init__(self, model, fields, groupby, groupby_type, read_context):
+    def __init__(self, model, fields, groupby, groupby_type):
         self._model = model
         self._export_field_names = fields  # exported field names (e.g. 'journal_id', 'account_id/name', ...)
         self._groupby = groupby
         self._groupby_type = groupby_type
-        self._read_context = read_context
 
         self.count = 0  # Total number of records in the subtree
         self.children = OrderedDict()
@@ -133,24 +132,24 @@ class GroupsTreeNode:
         """
         Return the child identified by `key`.
         If it doesn't exists inserts a default node and returns it.
-        :param key: child key identifier (groupby value as returned by read_group,
+        :param key: child key identifier (groupby value as returned by formatted_read_group,
                     usually (id, display_name))
         :return: the child node
         """
         if key not in self.children:
-            self.children[key] = GroupsTreeNode(self._model, self._export_field_names, self._groupby, self._groupby_type, self._read_context)
+            self.children[key] = GroupsTreeNode(self._model, self._export_field_names, self._groupby, self._groupby_type)
         return self.children[key]
 
     def insert_leaf(self, group):
         """
         Build a leaf from `group` and insert it in the tree.
-        :param group: dict as returned by `read_group(lazy=False)`
+        :param group: dict as returned by `formatted_read_group`
         """
         leaf_path = [group.get(groupby_field) for groupby_field in self._groupby]
-        domain = group.pop('__domain')
         count = group.pop('__count')
 
-        records = self._model.search(domain, offset=0, limit=False, order=False)
+        # reorder the record with the default order (it doesn't respect order from the view/user)
+        records = self._model.with_context(active_test=False).search([('id', 'in', group.pop('id:array_agg'))])
 
         # Follow the path from the top level group to the deepest
         # group which actually contains the records' data.
@@ -162,8 +161,7 @@ class GroupsTreeNode:
             # Update count value and aggregated value.
             node.count += count
 
-        records = records.with_context(self._read_context)
-        node.data = records.export_data(self._export_field_names).get('datas', [])
+        node.data = records.with_env(self._model.env).export_data(self._export_field_names).get('datas', [])
 
 
 class ExportXlsxWriter:
@@ -561,21 +559,22 @@ class ExportFormat(object):
         groupby = params.get('groupby')
         if not import_compat and groupby:
             groupby_type = [Model._fields[x.split(':')[0]].type for x in groupby]
-            domain = [('id', 'in', ids)] if ids else domain
-            read_context = Model.env.context
             if ids:
-                Model = Model.with_context(active_test=False)
-            groups_data = Model.read_group(domain, ['__count'], groupby, lazy=False)
+                domain = [('id', 'in', ids)]
+                SearchModel = Model.with_context(active_test=False)
+            else:
+                SearchModel = Model
+            groups_data = SearchModel.formatted_read_group(domain, groupby, ['__count', 'id:array_agg'])
 
-            # read_group(lazy=False) returns a dict only for final groups (with actual data),
+            # formatted_read_group returns a dict only for final groups (with actual data),
             # not for intermediary groups. The full group tree must be re-constructed.
-            tree = GroupsTreeNode(Model, field_names, groupby, groupby_type, read_context)
+            tree = GroupsTreeNode(Model, field_names, groupby, groupby_type)
             for leaf in groups_data:
                 tree.insert_leaf(leaf)
 
             response_data = self.from_group_data(fields, columns_headers, tree)
         else:
-            records = Model.browse(ids) if ids else Model.search(domain, offset=0, limit=False, order=False)
+            records = Model.browse(ids) if ids else Model.search(domain)
 
             export_data = records.export_data(field_names).get('datas', [])
             response_data = self.from_data(fields, columns_headers, export_data)

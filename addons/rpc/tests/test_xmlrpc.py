@@ -77,9 +77,9 @@ class TestXMLRPC(common.HttpCase):
         self.assertEqual(r['first_activity'], now.isoformat(" ", "seconds"))
 
     def test_xmlrpc_read_group(self):
-        groups = self.xmlrpc_object.execute(
+        self.xmlrpc_object.execute(
             common.get_db_name(), self.admin_uid, 'admin',
-            'res.partner', 'read_group', [], ['is_company', 'color'], ['parent_id']
+            'res.partner', 'formatted_read_group', [], ['parent_id'], ['color:sum'],
         )
 
     def test_xmlrpc_name_search(self):
@@ -130,7 +130,7 @@ class TestXMLRPC(common.HttpCase):
     def test_jsonrpc_read_group(self):
         self._json_call(
             common.get_db_name(), self.admin_uid, 'admin',
-            'res.partner', 'read_group', [], ['is_company', 'color'], ['parent_id']
+            'res.partner', 'formatted_read_group', [], ['parent_id'], ['color:sum'],
         )
 
     def test_jsonrpc_name_search(self):

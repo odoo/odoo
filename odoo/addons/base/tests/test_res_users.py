@@ -386,7 +386,7 @@ class TestUsers2(UsersCommonCase):
 
         # Verify that the read_group is raising an error if reified field is used as groupby
         with self.assertRaises(ValueError):
-            User.read_group([], fnames + [reified_fname], [reified_fname])
+            User._read_group([], fnames + [reified_fname], ['__count'])
 
     def test_reified_groups_on_change(self):
         """Test that a change on a reified fields trigger the onchange of groups_id."""

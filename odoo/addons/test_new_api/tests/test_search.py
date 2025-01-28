@@ -1206,7 +1206,7 @@ class TestNonIntId(TransactionCase):
         self.assertEqual(records.name, 'test')
 
     def test_query_non_int_read_group(self):
-        result = self.env['test_new_api.view.str.id'].read_group([], ['__count'], ['name'], lazy=False)
-        self.assertEqual(result, [{'name': 'test', '__count': 1, '__domain': [('name', '=', 'test')]}])
-        result = self.env['test_new_api.view.str.id'].read_group([], ['name:count'], [], lazy=False)
-        self.assertEqual(result, [{'name': 1, '__count': 1, '__domain': [(1, '=', 1)]}])
+        result = self.env['test_new_api.view.str.id'].formatted_read_group([], ['name'], ['__count'])
+        self.assertEqual(result, [{'name': 'test', '__count': 1, '__extra_domain': [('name', '=', 'test')]}])
+        result = self.env['test_new_api.view.str.id'].formatted_read_group([], [], ['name:count'])
+        self.assertEqual(result, [{'name:count': 1, '__extra_domain': [(1, '=', 1)]}])

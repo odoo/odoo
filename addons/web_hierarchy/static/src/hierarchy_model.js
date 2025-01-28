@@ -984,18 +984,18 @@ export class HierarchyModel extends Model {
     async _fetchDescendants(childrenData) {
         const resIds = childrenData.map((d) => d.id);
         if (resIds.length) {
-            const fetchChildren = await this.orm.readGroup(
+            const fetchChildren = await this.orm.formattedReadGroup(
                 this.resModel,
                 [[this.parentFieldName, "in", resIds]],
-                ["id:array_agg"],
                 [this.parentFieldName],
+                ["id:array_agg"],
                 {
                     context: this.context || {},
-                    orderby: orderByToString(this.config.orderBy),
-                }
+                    order: orderByToString(this.config.orderBy),
+                },
             );
             const childIdsPerId = Object.fromEntries(
-                fetchChildren.map((r) => [r[this.parentFieldName][0], r.id])
+                fetchChildren.map((g) => [g[this.parentFieldName][0], g["id:array_agg"]])
             );
             for (const d of childrenData) {
                 if (d.id.toString() in childIdsPerId) {

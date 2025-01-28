@@ -55,14 +55,13 @@ class ResPartner(models.Model):
 
     @api.depends('employee_ids')
     def _compute_employee(self):
-        employee_data = self.env['hr.employee'].read_group(
+        employee_data = self.env['hr.employee']._read_group(
             domain=[('work_contact_id', 'in', self.ids)],
-            fields=['work_contact_id'],
-            groupby=['work_contact_id']
+            groupby=['work_contact_id'],
         )
-        employee_dict = {data['work_contact_id'][0]: data['work_contact_id_count'] for data in employee_data}
+        employees = {employee for [employee] in employee_data}
         for partner in self:
-            partner.employee = bool(employee_dict.get(partner.id, 0))
+            partner.employee = partner in employees
 
 
 class ResPartnerBank(models.Model):

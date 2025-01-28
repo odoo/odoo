@@ -340,77 +340,76 @@ test("performRPC: search_count with archived records", async () => {
     expect(result).toBe(2);
 });
 
-test("performRPC: read_group, no group", async function (assert) {
+test("performRPC: formatted_read_group, no group", async function (assert) {
     await makeMockServer();
     const result = await ormRequest({
         model: "bar",
-        method: "read_group",
+        method: "formatted_read_group",
         kwargs: {
-            fields: ["foo:count"],
             domain: [["foo", "=", -10]],
             groupby: [],
+            aggregates: ["__count"],
         },
     });
-    expect(result).toEqual([{ __count: 0, foo: false, __domain: [["foo", "=", -10]] }]);
+    expect(result).toEqual([{ __count: 0, __extra_domain: [] }]);
 });
 
-test("performRPC: read_group, group by char", async () => {
+test("performRPC: formatted_read_group, group by char", async () => {
     await makeMockServer();
     const result = await ormRequest({
         model: "bar",
-        method: "read_group",
+        method: "formatted_read_group",
         kwargs: {
-            fields: ["name"],
             domain: [],
             groupby: ["name"],
+            aggregates: ["__count"],
         },
     });
     expect(result).toEqual([
-        { name: "aaa", __domain: [["name", "=", "aaa"]], name_count: 1 },
-        { name: "ddd", __domain: [["name", "=", "ddd"]], name_count: 1 },
-        { name: "mmm", __domain: [["name", "=", "mmm"]], name_count: 1 },
-        { name: "xxx", __domain: [["name", "=", "xxx"]], name_count: 1 },
-        { name: "zzz", __domain: [["name", "=", "zzz"]], name_count: 2 },
+        { name: "aaa", __extra_domain: [["name", "=", "aaa"]], __count: 1 },
+        { name: "ddd", __extra_domain: [["name", "=", "ddd"]], __count: 1 },
+        { name: "mmm", __extra_domain: [["name", "=", "mmm"]], __count: 1 },
+        { name: "xxx", __extra_domain: [["name", "=", "xxx"]], __count: 1 },
+        { name: "zzz", __extra_domain: [["name", "=", "zzz"]], __count: 2 },
     ]);
 });
 
-test("performRPC: read_group, group by boolean", async () => {
+test("performRPC: formatted_read_group, group by boolean", async () => {
     await makeMockServer();
     const result = await ormRequest({
         model: "bar",
-        method: "read_group",
+        method: "formatted_read_group",
         kwargs: {
-            fields: ["bool"],
             domain: [],
             groupby: ["bool"],
+            aggregates: ["__count"],
         },
     });
     expect(result).toEqual([
-        { bool: false, __domain: [["bool", "=", false]], bool_count: 2 },
-        { bool: true, __domain: [["bool", "=", true]], bool_count: 4 },
+        { bool: false, __extra_domain: [["bool", "=", false]], __count: 2 },
+        { bool: true, __extra_domain: [["bool", "=", true]], __count: 4 },
     ]);
 });
 
-test("performRPC: read_group, group by date", async () => {
+test("performRPC: formatted_read_group, group by date", async () => {
     await makeMockServer();
     let result = await ormRequest({
         model: "bar",
-        method: "read_group",
+        method: "formatted_read_group",
         kwargs: {
-            fields: ["foo"],
             domain: [],
-            groupby: ["date"], //Month by default
+            groupby: ["date:month"],
+            aggregates: ["__count"],
         },
     });
-
-    expect(result.map((x) => x.date)).toEqual([
-        "April 2016",
-        "October 2016",
-        "December 2016",
-        "December 2019",
+    expect(result.map((x) => x["date:month"])).toEqual([
+        ["2016-04-01", "April 2016"],
+        ["2016-10-01", "October 2016"],
+        ["2016-12-01", "December 2016"],
+        ["2019-12-01", "December 2019"],
     ]);
-    expect(result.map((x) => x.date_count)).toEqual([1, 1, 3, 1]);
-    expect(result.map((x) => x.__domain)).toEqual([
+    expect(result.map((x) => x.__count)).toEqual([1, 1, 3, 1]);
+    expect(result.map((x) => x.__extra_domain)).toEqual([
         [
             ["date", ">=", "2016-04-01"],
             ["date", "<", "2016-05-01"],
@@ -428,32 +427,26 @@ test("performRPC: read_group, group by date", async () => {
             ["date", "<", "2020-01-01"],
         ],
     ]);
-    expect(result.map((x) => x.__range["date"])).toEqual([
-        { from: "2016-04-01", to: "2016-05-01" },
-        { from: "2016-10-01", to: "2016-11-01" },
-        { from: "2016-12-01", to: "2017-01-01" },
-        { from: "2019-12-01", to: "2020-01-01" },
-    ]);
 
     result = await ormRequest({
         model: "bar",
-        method: "read_group",
+        method: "formatted_read_group",
         kwargs: {
-            fields: ["foo"],
             domain: [],
             groupby: ["date:day"],
+            aggregates: ["__count"],
         },
     });
 
     expect(result.map((x) => x["date:day"])).toEqual([
-        "2016-04-11",
-        "2016-10-26",
-        "2016-12-14",
-        "2016-12-15",
-        "2019-12-30",
+        ["2016-04-11", "2016-04-11"],
+        ["2016-10-26", "2016-10-26"],
+        ["2016-12-14", "2016-12-14"],
+        ["2016-12-15", "2016-12-15"],
+        ["2019-12-30", "2019-12-30"],
     ]);
-    expect(result.map((x) => x.date_count)).toEqual([1, 1, 1, 2, 1]);
-    expect(result.map((x) => x.__domain)).toEqual([
+    expect(result.map((x) => x.__count)).toEqual([1, 1, 1, 2, 1]);
+    expect(result.map((x) => x.__extra_domain)).toEqual([
         [
             ["date", ">=", "2016-04-11"],
             ["date", "<", "2016-04-12"],
@@ -475,32 +468,25 @@ test("performRPC: read_group, group by date", async () => {
             ["date", "<", "2019-12-31"],
         ],
     ]);
-    expect(result.map((x) => x.__range["date:day"])).toEqual([
-        { from: "2016-04-11", to: "2016-04-12" },
-        { from: "2016-10-26", to: "2016-10-27" },
-        { from: "2016-12-14", to: "2016-12-15" },
-        { from: "2016-12-15", to: "2016-12-16" },
-        { from: "2019-12-30", to: "2019-12-31" },
-    ]);
 
     result = await ormRequest({
         model: "bar",
-        method: "read_group",
+        method: "formatted_read_group",
         kwargs: {
-            fields: ["foo"],
             domain: [],
             groupby: ["date:week"],
+            aggregates: ["__count"],
         },
     });
 
     expect(result.map((x) => x["date:week"])).toEqual([
-        "W15 2016",
-        "W43 2016",
-        "W50 2016",
-        "W01 2020",
+        ["2016-04-11", "W15 2016"],
+        ["2016-10-24", "W43 2016"],
+        ["2016-12-12", "W50 2016"],
+        ["2019-12-30", "W01 2020"],
     ]);
-    expect(result.map((x) => x.date_count)).toEqual([1, 1, 3, 1]);
-    expect(result.map((x) => x.__domain)).toEqual([
+    expect(result.map((x) => x.__count)).toEqual([1, 1, 3, 1]);
+    expect(result.map((x) => x.__extra_domain)).toEqual([
         [
             ["date", ">=", "2016-04-11"],
             ["date", "<", "2016-04-18"],
@@ -518,26 +504,24 @@ test("performRPC: read_group, group by date", async () => {
             ["date", "<", "2020-01-06"],
         ],
     ]);
-    expect(result.map((x) => x.__range["date:week"])).toEqual([
-        { from: "2016-04-11", to: "2016-04-18" },
-        { from: "2016-10-24", to: "2016-10-31" },
-        { from: "2016-12-12", to: "2016-12-19" },
-        { from: "2019-12-30", to: "2020-01-06" },
-    ]);
 
     result = await ormRequest({
         model: "bar",
-        method: "read_group",
+        method: "formatted_read_group",
         kwargs: {
-            fields: ["foo"],
             domain: [],
             groupby: ["date:quarter"],
+            aggregates: ["__count"],
         },
     });
 
-    expect(result.map((x) => x["date:quarter"])).toEqual(["Q2 2016", "Q4 2016", "Q4 2019"]);
-    expect(result.map((x) => x.date_count)).toEqual([1, 4, 1]);
-    expect(result.map((x) => x.__domain)).toEqual([
+    expect(result.map((x) => x["date:quarter"])).toEqual([
+        ["2016-04-01", "Q2 2016"],
+        ["2016-10-01", "Q4 2016"],
+        ["2019-10-01", "Q4 2019"],
+    ]);
+    expect(result.map((x) => x.__count)).toEqual([1, 4, 1]);
+    expect(result.map((x) => x.__extra_domain)).toEqual([
         [
             ["date", ">=", "2016-04-01"],
             ["date", "<", "2016-07-01"],
@@ -551,25 +535,23 @@ test("performRPC: read_group, group by date", async () => {
             ["date", "<", "2020-01-01"],
         ],
     ]);
-    expect(result.map((x) => x.__range["date:quarter"])).toEqual([
-        { from: "2016-04-01", to: "2016-07-01" },
-        { from: "2016-10-01", to: "2017-01-01" },
-        { from: "2019-10-01", to: "2020-01-01" },
-    ]);
 
     result = await ormRequest({
         model: "bar",
-        method: "read_group",
+        method: "formatted_read_group",
         kwargs: {
-            fields: ["foo"],
             domain: [],
             groupby: ["date:year"],
+            aggregates: ["__count"],
         },
     });
 
-    expect(result.map((x) => x["date:year"])).toEqual(["2016", "2019"]);
-    expect(result.map((x) => x.date_count)).toEqual([5, 1]);
-    expect(result.map((x) => x.__domain)).toEqual([
+    expect(result.map((x) => x["date:year"])).toEqual([
+        ["2016-01-01", "2016"],
+        ["2019-01-01", "2019"],
+    ]);
+    expect(result.map((x) => x.__count)).toEqual([5, 1]);
+    expect(result.map((x) => x.__extra_domain)).toEqual([
         [
             ["date", ">=", "2016-01-01"],
             ["date", "<", "2017-01-01"],
@@ -579,13 +561,9 @@ test("performRPC: read_group, group by date", async () => {
             ["date", "<", "2020-01-01"],
         ],
     ]);
-    expect(result.map((x) => x.__range["date:year"])).toEqual([
-        { from: "2016-01-01", to: "2017-01-01" },
-        { from: "2019-01-01", to: "2020-01-01" },
-    ]);
 });
 
-test("performRPC: read_group, group by date with number granularity", async () => {
+test("performRPC: formatted_read_group, group by date with number granularity", async () => {
     await makeMockServer();
 
     const allGranularity = [
@@ -629,42 +607,43 @@ test("performRPC: read_group, group by date with number granularity", async () =
     for (const { granularity, result, count } of allGranularity) {
         const response = await ormRequest({
             model: "bar",
-            method: "read_group",
+            method: "formatted_read_group",
             kwargs: {
-                fields: ["foo"],
                 domain: [],
                 groupby: [`date:${granularity}`],
+                aggregates: ["__count"],
             },
         });
 
         expect(response.map((x) => x[`date:${granularity}`])).toEqual(result);
-        expect(response.map((x) => x.date_count)).toEqual(count);
-        expect(response.map((x) => x.__domain)).toEqual(
+        expect(response.map((x) => x.__count)).toEqual(count);
+        expect(response.map((x) => x.__extra_domain)).toEqual(
             result.map((r) => [[`date.${granularity}`, "=", r]])
         );
     }
 });
 
-test("performRPC: read_group, group by datetime", async () => {
+test("performRPC: formatted_read_group, group by datetime", async () => {
     await makeMockServer();
+
     let result = await ormRequest({
         model: "bar",
-        method: "read_group",
+        method: "formatted_read_group",
         kwargs: {
-            fields: ["foo"],
             domain: [],
-            groupby: ["datetime"], //Month by default
+            groupby: ["datetime:month"],
+            aggregates: ["__count"],
         },
     });
 
-    expect(result.map((x) => x.datetime)).toEqual([
-        "April 2016",
-        "October 2016",
-        "December 2016",
-        "December 2019",
+    expect(result.map((x) => x["datetime:month"])).toEqual([
+        ["2016-03-31 23:00:00", "April 2016"],
+        ["2016-09-30 23:00:00", "October 2016"],
+        ["2016-11-30 23:00:00", "December 2016"],
+        ["2019-11-30 23:00:00", "December 2019"],
     ]);
-    expect(result.map((x) => x.datetime_count)).toEqual([1, 1, 3, 1]);
-    expect(result.map((x) => x.__domain)).toEqual([
+    expect(result.map((x) => x.__count)).toEqual([1, 1, 3, 1]);
+    expect(result.map((x) => x.__extra_domain)).toEqual([
         [
             ["datetime", ">=", "2016-03-31 23:00:00"],
             ["datetime", "<", "2016-04-30 23:00:00"],
@@ -682,32 +661,26 @@ test("performRPC: read_group, group by datetime", async () => {
             ["datetime", "<", "2019-12-31 23:00:00"],
         ],
     ]);
-    expect(result.map((x) => x.__range["datetime"])).toEqual([
-        { from: "2016-03-31 23:00:00", to: "2016-04-30 23:00:00" },
-        { from: "2016-09-30 23:00:00", to: "2016-10-31 23:00:00" },
-        { from: "2016-11-30 23:00:00", to: "2016-12-31 23:00:00" },
-        { from: "2019-11-30 23:00:00", to: "2019-12-31 23:00:00" },
-    ]);
 
     result = await ormRequest({
         model: "bar",
-        method: "read_group",
+        method: "formatted_read_group",
         kwargs: {
-            fields: ["foo"],
+            aggregates: ["__count"],
             domain: [],
             groupby: ["datetime:hour"],
         },
     });
 
     expect(result.map((x) => x["datetime:hour"])).toEqual([
-        "13:00 11 Apr",
-        "13:00 26 Oct",
-        "13:00 14 Dec",
-        "13:00 15 Dec",
-        "13:00 30 Dec",
+        ["2016-04-11 12:00:00", "13:00 11 Apr"],
+        ["2016-10-26 12:00:00", "13:00 26 Oct"],
+        ["2016-12-14 12:00:00", "13:00 14 Dec"],
+        ["2016-12-15 12:00:00", "13:00 15 Dec"],
+        ["2019-12-30 12:00:00", "13:00 30 Dec"],
     ]);
-    expect(result.map((x) => x.datetime_count)).toEqual([1, 1, 1, 2, 1]);
-    expect(result.map((x) => x.__domain)).toEqual([
+    expect(result.map((x) => x.__count)).toEqual([1, 1, 1, 2, 1]);
+    expect(result.map((x) => x.__extra_domain)).toEqual([
         [
             ["datetime", ">=", "2016-04-11 12:00:00"],
             ["datetime", "<", "2016-04-11 13:00:00"],
@@ -729,33 +702,26 @@ test("performRPC: read_group, group by datetime", async () => {
             ["datetime", "<", "2019-12-30 13:00:00"],
         ],
     ]);
-    expect(result.map((x) => x.__range["datetime:hour"])).toEqual([
-        { from: "2016-04-11 12:00:00", to: "2016-04-11 13:00:00" },
-        { from: "2016-10-26 12:00:00", to: "2016-10-26 13:00:00" },
-        { from: "2016-12-14 12:00:00", to: "2016-12-14 13:00:00" },
-        { from: "2016-12-15 12:00:00", to: "2016-12-15 13:00:00" },
-        { from: "2019-12-30 12:00:00", to: "2019-12-30 13:00:00" },
-    ]);
 
     result = await ormRequest({
         model: "bar",
-        method: "read_group",
+        method: "formatted_read_group",
         kwargs: {
-            fields: ["foo"],
+            aggregates: ["__count"],
             domain: [],
             groupby: ["datetime:day"],
         },
     });
 
     expect(result.map((x) => x["datetime:day"])).toEqual([
-        "2016-04-11",
-        "2016-10-26",
-        "2016-12-14",
-        "2016-12-15",
-        "2019-12-30",
+        ["2016-04-10 23:00:00", "2016-04-11"],
+        ["2016-10-25 23:00:00", "2016-10-26"],
+        ["2016-12-13 23:00:00", "2016-12-14"],
+        ["2016-12-14 23:00:00", "2016-12-15"],
+        ["2019-12-29 23:00:00", "2019-12-30"],
     ]);
-    expect(result.map((x) => x.datetime_count)).toEqual([1, 1, 1, 2, 1]);
-    expect(result.map((x) => x.__domain)).toEqual([
+    expect(result.map((x) => x.__count)).toEqual([1, 1, 1, 2, 1]);
+    expect(result.map((x) => x.__extra_domain)).toEqual([
         [
             ["datetime", ">=", "2016-04-10 23:00:00"],
             ["datetime", "<", "2016-04-11 23:00:00"],
@@ -777,32 +743,25 @@ test("performRPC: read_group, group by datetime", async () => {
             ["datetime", "<", "2019-12-30 23:00:00"],
         ],
     ]);
-    expect(result.map((x) => x.__range["datetime:day"])).toEqual([
-        { from: "2016-04-10 23:00:00", to: "2016-04-11 23:00:00" },
-        { from: "2016-10-25 23:00:00", to: "2016-10-26 23:00:00" },
-        { from: "2016-12-13 23:00:00", to: "2016-12-14 23:00:00" },
-        { from: "2016-12-14 23:00:00", to: "2016-12-15 23:00:00" },
-        { from: "2019-12-29 23:00:00", to: "2019-12-30 23:00:00" },
-    ]);
 
     result = await ormRequest({
         model: "bar",
-        method: "read_group",
+        method: "formatted_read_group",
         kwargs: {
-            fields: ["foo"],
+            aggregates: ["__count"],
             domain: [],
             groupby: ["datetime:week"],
         },
     });
 
     expect(result.map((x) => x["datetime:week"])).toEqual([
-        "W15 2016",
-        "W43 2016",
-        "W50 2016",
-        "W01 2020",
+        ["2016-04-10 23:00:00", "W15 2016"],
+        ["2016-10-23 23:00:00", "W43 2016"],
+        ["2016-12-11 23:00:00", "W50 2016"],
+        ["2019-12-29 23:00:00", "W01 2020"],
     ]);
-    expect(result.map((x) => x.datetime_count)).toEqual([1, 1, 3, 1]);
-    expect(result.map((x) => x.__domain)).toEqual([
+    expect(result.map((x) => x.__count)).toEqual([1, 1, 3, 1]);
+    expect(result.map((x) => x.__extra_domain)).toEqual([
         [
             ["datetime", ">=", "2016-04-10 23:00:00"],
             ["datetime", "<", "2016-04-17 23:00:00"],
@@ -820,26 +779,24 @@ test("performRPC: read_group, group by datetime", async () => {
             ["datetime", "<", "2020-01-05 23:00:00"],
         ],
     ]);
-    expect(result.map((x) => x.__range["datetime:week"])).toEqual([
-        { from: "2016-04-10 23:00:00", to: "2016-04-17 23:00:00" },
-        { from: "2016-10-23 23:00:00", to: "2016-10-30 23:00:00" },
-        { from: "2016-12-11 23:00:00", to: "2016-12-18 23:00:00" },
-        { from: "2019-12-29 23:00:00", to: "2020-01-05 23:00:00" },
-    ]);
 
     result = await ormRequest({
         model: "bar",
-        method: "read_group",
+        method: "formatted_read_group",
         kwargs: {
-            fields: ["foo"],
+            aggregates: ["__count"],
             domain: [],
             groupby: ["datetime:quarter"],
         },
     });
 
-    expect(result.map((x) => x["datetime:quarter"])).toEqual(["Q2 2016", "Q4 2016", "Q4 2019"]);
-    expect(result.map((x) => x.datetime_count)).toEqual([1, 4, 1]);
-    expect(result.map((x) => x.__domain)).toEqual([
+    expect(result.map((x) => x["datetime:quarter"])).toEqual([
+        ["2016-03-31 23:00:00", "Q2 2016"],
+        ["2016-09-30 23:00:00", "Q4 2016"],
+        ["2019-09-30 23:00:00", "Q4 2019"],
+    ]);
+    expect(result.map((x) => x.__count)).toEqual([1, 4, 1]);
+    expect(result.map((x) => x.__extra_domain)).toEqual([
         [
             ["datetime", ">=", "2016-03-31 23:00:00"],
             ["datetime", "<", "2016-06-30 23:00:00"],
@@ -853,25 +810,23 @@ test("performRPC: read_group, group by datetime", async () => {
             ["datetime", "<", "2019-12-31 23:00:00"],
         ],
     ]);
-    expect(result.map((x) => x.__range["datetime:quarter"])).toEqual([
-        { from: "2016-03-31 23:00:00", to: "2016-06-30 23:00:00" },
-        { from: "2016-09-30 23:00:00", to: "2016-12-31 23:00:00" },
-        { from: "2019-09-30 23:00:00", to: "2019-12-31 23:00:00" },
-    ]);
 
     result = await ormRequest({
         model: "bar",
-        method: "read_group",
+        method: "formatted_read_group",
         kwargs: {
-            fields: ["foo"],
+            aggregates: ["__count"],
             domain: [],
             groupby: ["datetime:year"],
         },
     });
 
-    expect(result.map((x) => x["datetime:year"])).toEqual(["2016", "2019"]);
-    expect(result.map((x) => x.datetime_count)).toEqual([5, 1]);
-    expect(result.map((x) => x.__domain)).toEqual([
+    expect(result.map((x) => x["datetime:year"])).toEqual([
+        ["2015-12-31 23:00:00", "2016"],
+        ["2018-12-31 23:00:00", "2019"],
+    ]);
+    expect(result.map((x) => x.__count)).toEqual([5, 1]);
+    expect(result.map((x) => x.__extra_domain)).toEqual([
         [
             ["datetime", ">=", "2015-12-31 23:00:00"],
             ["datetime", "<", "2016-12-31 23:00:00"],
@@ -881,13 +836,9 @@ test("performRPC: read_group, group by datetime", async () => {
             ["datetime", "<", "2019-12-31 23:00:00"],
         ],
     ]);
-    expect(result.map((x) => x.__range["datetime:year"])).toEqual([
-        { from: "2015-12-31 23:00:00", to: "2016-12-31 23:00:00" },
-        { from: "2018-12-31 23:00:00", to: "2019-12-31 23:00:00" },
-    ]);
 });
 
-test("performRPC: read_group, group by datetime with number granularity", async () => {
+test("performRPC: formatted_read_group, group by datetime with number granularity", async () => {
     await makeMockServer();
 
     const allGranularity = [
@@ -946,94 +897,94 @@ test("performRPC: read_group, group by datetime with number granularity", async 
     for (const { granularity, result, count } of allGranularity) {
         const response = await ormRequest({
             model: "bar",
-            method: "read_group",
+            method: "formatted_read_group",
             kwargs: {
-                fields: ["foo"],
                 domain: [],
                 groupby: [`datetime:${granularity}`],
+                aggregates: ["__count"],
             },
         });
 
         expect(response.map((x) => x[`datetime:${granularity}`])).toEqual(result);
-        expect(response.map((x) => x.datetime_count)).toEqual(count);
-        expect(response.map((x) => x.__domain)).toEqual(
+        expect(response.map((x) => x.__count)).toEqual(count);
+        expect(response.map((x) => x.__extra_domain)).toEqual(
             result.map((r) => [[`datetime.${granularity}`, "=", r]])
         );
     }
 });
 
-test("performRPC: read_group, group by m2m", async () => {
+test("performRPC: formatted_read_group, group by m2m", async () => {
     await makeMockServer();
 
     await expect(
         ormRequest({
             model: "bar",
-            method: "read_group",
+            method: "formatted_read_group",
             kwargs: {
-                fields: ["partner_ids"],
                 domain: [],
                 groupby: ["partner_ids"],
+                aggregates: ["__count"],
             },
         })
     ).resolves.toEqual([
         {
             partner_ids: [1, "Jean-Michel"],
-            __domain: [["partner_ids", "=", 1]],
-            partner_ids_count: 2,
+            __extra_domain: [["partner_ids", "=", 1]],
+            __count: 2,
         },
         {
             partner_ids: [2, "Raoul"],
-            __domain: [["partner_ids", "=", 2]],
-            partner_ids_count: 2,
+            __extra_domain: [["partner_ids", "=", 2]],
+            __count: 2,
         },
         {
             partner_ids: false,
-            __domain: [["partner_ids", "=", false]],
-            partner_ids_count: 3,
+            __extra_domain: [["partner_ids", "=", false]],
+            __count: 3,
         },
     ]);
 });
 
-test("performRPC: read_group, order by date with granularity", async () => {
+test("performRPC: formatted_read_group, order by date with granularity", async () => {
     await makeMockServer();
     let result = await ormRequest({
         model: "bar",
-        method: "read_group",
+        method: "formatted_read_group",
         kwargs: {
-            fields: ["foo"],
             domain: [],
             groupby: ["date:day"],
-            orderby: "date:day ASC",
+            aggregates: ["__count"],
+            order: "date:day ASC",
         },
     });
     expect(result.map((x) => x["date:day"])).toEqual([
-        "2016-04-11",
-        "2016-10-26",
-        "2016-12-14",
-        "2016-12-15",
-        "2019-12-30",
+        ["2016-04-11", "2016-04-11"],
+        ["2016-10-26", "2016-10-26"],
+        ["2016-12-14", "2016-12-14"],
+        ["2016-12-15", "2016-12-15"],
+        ["2019-12-30", "2019-12-30"],
     ]);
 
     result = await ormRequest({
         model: "bar",
-        method: "read_group",
+        method: "formatted_read_group",
         kwargs: {
-            fields: ["foo"],
             domain: [],
             groupby: ["date:day"],
-            orderby: "date:day DESC",
+            aggregates: ["__count"],
+            order: "date:day DESC",
         },
     });
     expect(result.map((x) => x["date:day"])).toEqual([
-        "2019-12-30",
-        "2016-12-15",
-        "2016-12-14",
-        "2016-10-26",
-        "2016-04-11",
+        ["2019-12-30", "2019-12-30"],
+        ["2016-12-15", "2016-12-15"],
+        ["2016-12-14", "2016-12-14"],
+        ["2016-10-26", "2016-10-26"],
+        ["2016-04-11", "2016-04-11"],
     ]);
 });
 
-test("performRPC: read_group, group by m2o", async () => {
+test("performRPC: formatted_read_group, group by m2o", async () => {
     Partner._fields.sequence = fields.Integer();
     Partner._records[0].sequence = 1;
     Partner._records[1].sequence = 0;
@@ -1043,116 +994,114 @@ test("performRPC: read_group, group by m2o", async () => {
     await expect(
         ormRequest({
             model: "bar",
-            method: "read_group",
+            method: "formatted_read_group",
             kwargs: {
-                fields: ["partner_id"],
                 domain: [],
                 groupby: ["partner_id"],
+                aggregates: ["__count"],
             },
         })
     ).resolves.toEqual([
         {
             partner_id: [2, "Raoul"],
-            __domain: [["partner_id", "=", 2]],
-            partner_id_count: 1,
+            __extra_domain: [["partner_id", "=", 2]],
+            __count: 1,
         },
         {
             partner_id: [1, "Jean-Michel"],
-            __domain: [["partner_id", "=", 1]],
-            partner_id_count: 2,
+            __extra_domain: [["partner_id", "=", 1]],
+            __count: 2,
         },
         {
             partner_id: false,
-            __domain: [["partner_id", "=", false]],
-            partner_id_count: 3,
+            __extra_domain: [["partner_id", "=", false]],
+            __count: 3,
         },
     ]);
 });
 
-test("performRPC: read_group, group by integer", async () => {
+test("performRPC: formatted_read_group, group by integer", async () => {
     await makeMockServer();
 
     await expect(
         ormRequest({
             model: "bar",
-            method: "read_group",
+            method: "formatted_read_group",
             kwargs: {
-                fields: ["foo"],
                 domain: [],
                 groupby: ["foo"],
+                aggregates: ["__count"],
             },
         })
     ).resolves.toEqual([
         {
-            __domain: [["foo", "=", 0]],
+            __extra_domain: [["foo", "=", 0]],
             foo: 0,
-            foo_count: 1,
+            __count: 1,
         },
         {
-            __domain: [["foo", "=", 1]],
+            __extra_domain: [["foo", "=", 1]],
             foo: 1,
-            foo_count: 1,
+            __count: 1,
         },
         {
-            __domain: [["foo", "=", 2]],
+            __extra_domain: [["foo", "=", 2]],
             foo: 2,
-            foo_count: 1,
+            __count: 1,
         },
         {
-            __domain: [["foo", "=", 12]],
+            __extra_domain: [["foo", "=", 12]],
             foo: 12,
-            foo_count: 1,
+            __count: 1,
         },
         {
-            __domain: [["foo", "=", 17]],
+            __extra_domain: [["foo", "=", 17]],
             foo: 17,
-            foo_count: 1,
+            __count: 1,
         },
         {
-            __domain: [["foo", "=", 42]],
+            __extra_domain: [["foo", "=", 42]],
             foo: 42,
-            foo_count: 1,
+            __count: 1,
         },
     ]);
 });
 
-test("performRPC: read_group, group by selection", async () => {
+test("performRPC: formatted_read_group, group by selection", async () => {
     await makeMockServer();
 
     await expect(
         ormRequest({
             model: "bar",
-            method: "read_group",
+            method: "formatted_read_group",
             kwargs: {
-                fields: ["select"],
                 domain: [],
                 groupby: ["select"],
+                aggregates: ["__count"],
             },
         })
     ).resolves.toEqual([
-        { select: "new", __domain: [["select", "=", "new"]], select_count: 3 },
-        { select: "dev", __domain: [["select", "=", "dev"]], select_count: 1 },
-        { select: "done", __domain: [["select", "=", "done"]], select_count: 2 },
+        { select: "new", __extra_domain: [["select", "=", "new"]], __count: 3 },
+        { select: "dev", __extra_domain: [["select", "=", "dev"]], __count: 1 },
+        { select: "done", __extra_domain: [["select", "=", "done"]], __count: 2 },
     ]);
 });
 
-test("performRPC: read_group, group by two levels", async () => {
+test("performRPC: formatted_read_group, group by two levels", async () => {
     await makeMockServer();
 
-    await expect(
-        ormRequest({
-            model: "bar",
-            method: "read_group",
-            kwargs: {
-                fields: ["bool", "partner_ids"],
-                domain: [],
-                groupby: ["bool", "partner_ids"],
-                lazy: false,
-            },
-        })
-    ).resolves.toEqual([
+    const result = await ormRequest({
+        model: "bar",
+        method: "formatted_read_group",
+        kwargs: {
+            domain: [],
+            groupby: ["bool", "partner_ids"],
+            aggregates: ["__count"],
+        },
+    });
+    expect(result).toEqual([
         {
-            __domain: [
+            __extra_domain: [
                 ["partner_ids", "=", 2],
                 ["bool", "=", false],
             ],
@@ -1161,7 +1110,7 @@ test("performRPC: read_group, group by two levels", async () => {
             partner_ids: [2, "Raoul"],
         },
         {
-            __domain: [
+            __extra_domain: [
                 ["partner_ids", "=", false],
                 ["bool", "=", false],
             ],
@@ -1170,7 +1119,7 @@ test("performRPC: read_group, group by two levels", async () => {
             partner_ids: false,
         },
         {
-            __domain: [
+            __extra_domain: [
                 ["partner_ids", "=", 1],
                 ["bool", "=", true],
             ],
@@ -1179,7 +1128,7 @@ test("performRPC: read_group, group by two levels", async () => {
             partner_ids: [1, "Jean-Michel"],
         },
         {
-            __domain: [
+            __extra_domain: [
                 ["partner_ids", "=", 2],
                 ["bool", "=", true],
             ],
@@ -1188,7 +1137,7 @@ test("performRPC: read_group, group by two levels", async () => {
             partner_ids: [2, "Raoul"],
         },
         {
-            __domain: [
+            __extra_domain: [
                 ["partner_ids", "=", false],
                 ["bool", "=", true],
             ],
@@ -1199,231 +1148,147 @@ test("performRPC: read_group, group by two levels", async () => {
     ]);
 });
 
-test("performRPC: read_group with special measure specifications", async () => {
+test("performRPC: formatted_read_group with special measure specifications", async () => {
     Bar._fields.float = fields.Float();
     Bar._records[0].float = 2;
 
     await makeMockServer();
 
-    await expect(
-        ormRequest({
-            model: "bar",
-            method: "read_group",
-            kwargs: {
-                fields: ["float:sum", "foo_sum:sum(foo)"],
-                domain: [],
-                groupby: ["bool"],
-                lazy: false,
-            },
-        })
-    ).resolves.toEqual([
+    const result = await ormRequest({
+        model: "bar",
+        method: "formatted_read_group",
+        kwargs: {
+            domain: [],
+            groupby: ["bool"],
+            aggregates: ["float:sum", "__count"],
+        },
+    });
+    expect(result).toEqual([
         {
             __count: 2,
-            __domain: [["bool", "=", false]],
+            __extra_domain: [["bool", "=", false]],
             bool: false,
-            float: 0,
-            foo_sum: 17,
+            "float:sum": 0,
         },
         {
             __count: 4,
-            __domain: [["bool", "=", true]],
+            __extra_domain: [["bool", "=", true]],
             bool: true,
-            float: 2,
-            foo_sum: 57,
+            "float:sum": 2,
         },
     ]);
 });
 
-test("performRPC: read_group with array_agg", async () => {
+test("performRPC: formatted_read_group with array_agg", async () => {
     await makeMockServer();
 
-    const aggregateValue = [null, 2, null, 1, null, 1];
+    const aggregateValue = [false, 2, false, 1, false, 1];
 
-    await expect(
-        ormRequest({
-            model: "bar",
-            method: "read_group",
-            kwargs: {
-                fields: ["aggregateLabel:array_agg(partner_id)"],
-                domain: [],
-                groupby: [],
-            },
-        })
-    ).resolves.toEqual([
-        {
-            __count: 6,
-            __domain: [],
-            aggregateLabel: aggregateValue,
+    const result = await ormRequest({
+        model: "bar",
+        method: "formatted_read_group",
+        kwargs: {
+            domain: [],
+            groupby: [],
+            aggregates: ["partner_id:array_agg"],
         },
-    ]);
-    await expect(
-        ormRequest({
-            model: "bar",
-            method: "read_group",
-            kwargs: {
-                fields: ["partner_id:array_agg"],
-                domain: [],
-                groupby: [],
-            },
-        })
-    ).resolves.toEqual([
+    });
+    expect(result).toEqual([
         {
-            __count: 6,
-            __domain: [],
-            partner_id: aggregateValue,
+            __extra_domain: [],
+            "partner_id:array_agg": aggregateValue,
         },
     ]);
 });
 
-test("performRPC: read_group with array_agg on id", async () => {
+test("performRPC: formatted_read_group with array_agg on id", async () => {
     await makeMockServer();
 
-    await expect(
-        ormRequest({
-            model: "bar",
-            method: "read_group",
-            kwargs: {
-                fields: ["aggregateLabel:array_agg(id)"],
-                domain: [],
-                groupby: [],
-            },
-        })
-    ).resolves.toEqual([
-        {
-            __count: 6,
-            __domain: [],
-            aggregateLabel: [1, 2, 3, 4, 5, 6],
+    const result = await ormRequest({
+        model: "bar",
+        method: "formatted_read_group",
+        kwargs: {
+            domain: [["id", "in", [2, 3, 5]]],
+            groupby: [],
+            aggregates: ["id:array_agg"],
         },
-    ]);
-    await expect(
-        ormRequest({
-            model: "bar",
-            method: "read_group",
-            kwargs: {
-                fields: ["id:array_agg"],
-                domain: [["id", "in", [2, 3, 5]]],
-                groupby: [],
-            },
-        })
-    ).resolves.toEqual([
+    });
+    expect(result).toEqual([
         {
-            __count: 3,
-            __domain: [["id", "in", [2, 3, 5]]],
-            id: [2, 3, 5],
+            __extra_domain: [],
+            "id:array_agg": [2, 3, 5],
         },
     ]);
 });
 
-test("performRPC: read_group with array_agg on an integer field", async () => {
+test("performRPC: formatted_read_group with array_agg on an integer field", async () => {
     await makeMockServer();
 
     const aggregateValue = [12, 1, 17, 2, 0, 42];
 
-    await expect(
-        ormRequest({
-            model: "bar",
-            method: "read_group",
-            kwargs: {
-                fields: ["aggregateLabel:array_agg(foo)"],
-                domain: [],
-                groupby: [],
-            },
-        })
-    ).resolves.toEqual([
-        {
-            __count: 6,
-            __domain: [],
-            aggregateLabel: aggregateValue,
+    const result = await ormRequest({
+        model: "bar",
+        method: "formatted_read_group",
+        kwargs: {
+            domain: [],
+            groupby: [],
+            aggregates: ["foo:array_agg"],
         },
-    ]);
-    await expect(
-        ormRequest({
-            model: "bar",
-            method: "read_group",
-            kwargs: {
-                fields: ["foo:array_agg"],
-                domain: [],
-                groupby: [],
-            },
-        })
-    ).resolves.toEqual([
+    });
+    expect(result).toEqual([
         {
-            __count: 6,
-            __domain: [],
-            foo: aggregateValue,
+            __extra_domain: [],
+            "foo:array_agg": aggregateValue,
         },
     ]);
 });
 
-test("performRPC: read_group with count_distinct", async () => {
+test("performRPC: formatted_read_group with count_distinct", async () => {
     await makeMockServer();
 
-    await expect(
-        ormRequest({
-            model: "bar",
-            method: "read_group",
-            kwargs: {
-                fields: ["aggregateLabel:count_distinct(partner_id)"],
-                domain: [],
-                groupby: [],
-            },
-        })
-    ).resolves.toEqual([
+    let result = await ormRequest({
+        model: "bar",
+        method: "formatted_read_group",
+        kwargs: {
+            aggregates: ["partner_id:count_distinct"],
+            domain: [],
+            groupby: [],
+        },
+    });
+    expect(result).toEqual([
         {
-            __count: 6,
-            __domain: [],
-            aggregateLabel: 2,
+            __extra_domain: [],
+            "partner_id:count_distinct": 2,
         },
     ]);
-    await expect(
-        ormRequest({
-            model: "bar",
-            method: "read_group",
-            kwargs: {
-                fields: ["partner_id:count_distinct"],
-                domain: [],
-                groupby: [],
-            },
-        })
-    ).resolves.toEqual([
+    result = await ormRequest({
+        model: "bar",
+        method: "formatted_read_group",
+        kwargs: {
+            domain: [[0, "=", 1]],
+            groupby: [],
+            aggregates: ["partner_id:count_distinct"],
+        },
+    });
+    expect(result).toEqual([
         {
-            __count: 6,
-            __domain: [],
-            partner_id: 2,
+            __extra_domain: [],
+            "partner_id:count_distinct": 0,
         },
     ]);
-    await expect(
-        ormRequest({
-            model: "bar",
-            method: "read_group",
-            kwargs: {
-                fields: ["partner_id:count_distinct"],
-                domain: [[0, "=", 1]],
-                groupby: [],
-            },
-        })
-    ).resolves.toEqual([
-        {
-            __count: 0,
-            __domain: [[0, "=", 1]],
-            partner_id: 0,
+    result = await ormRequest({
+        model: "bar",
+        method: "formatted_read_group",
+        kwargs: {
+            domain: [],
+            groupby: [],
+            aggregates: ["partner_ref:count_distinct"],
         },
-    ]);
-    await expect(
-        ormRequest({
-            model: "bar",
-            method: "read_group",
-            kwargs: {
-                fields: ["partner_ref:count_distinct"],
-                domain: [],
-                groupby: [],
-            },
-        })
-    ).resolves.toEqual([
+    });
+    expect(result).toEqual([
         {
-            __count: 6,
-            __domain: [],
-            partner_ref: 2,
+            __extra_domain: [],
+            "partner_ref:count_distinct": 2,
         },
     ]);
 });
@@ -1467,10 +1332,10 @@ test("performRPC: read_progress_bar grouped by datetime", async () => {
             },
         })
     ).resolves.toEqual({
-        "W01 2020": { dev: 0, done: 0, new: 1 },
-        "W15 2016": { dev: 0, done: 0, new: 1 },
-        "W43 2016": { dev: 0, done: 0, new: 1 },
-        "W50 2016": { dev: 1, done: 2, new: 0 },
+        "2019-12-29 23:00:00": { dev: 0, done: 0, new: 1 },
+        "2016-04-10 23:00:00": { dev: 0, done: 0, new: 1 },
+        "2016-10-23 23:00:00": { dev: 0, done: 0, new: 1 },
+        "2016-12-11 23:00:00": { dev: 1, done: 2, new: 0 },
     });
 });
 

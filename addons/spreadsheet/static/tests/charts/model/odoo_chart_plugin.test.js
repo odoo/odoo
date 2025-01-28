@@ -675,11 +675,13 @@ test("Odoo chart datasource display name has a default when the chart title is e
 test("See records when clicking on a bar chart bar", async () => {
     const action = {
         domain: [
-            ["date", ">=", "2022-01-01"],
-            ["date", "<", "2022-02-01"],
+            "&",
             "&",
             ["date", ">=", "2022-01-01"],
             ["date", "<=", "2022-12-31"],
+            "&",
+            ["date", ">=", "2022-01-01"],
+            ["date", "<", "2022-02-01"],
         ],
         name: "January 2022 / Probability",
         res_model: "partner",
@@ -758,11 +760,13 @@ test("See records when clicking on a pie chart slice", async () => {
                 expect.step("do-action");
                 expect(request).toEqual({
                     domain: [
-                        ["date", ">=", "2022-01-01"],
-                        ["date", "<", "2022-02-01"],
+                        "&",
                         "&",
                         ["date", ">=", "2022-01-01"],
                         ["date", "<=", "2022-12-31"],
+                        "&",
+                        ["date", ">=", "2022-01-01"],
+                        ["date", "<", "2022-02-01"],
                     ],
                     name: "January 2022",
                     res_model: "partner",
@@ -867,6 +871,8 @@ test("See records when clicking on a waterfall chart bar", async () => {
     await runtime.chartJsConfig.options.onClick(undefined, [{ datasetIndex: 0, index: 0 }]);
     await animationFrame();
     expect(lastActionCalled?.domain).toEqual([
+        "&",
+        "&",
         ["date", ">=", "2020-01-01"],
         ["date", "<", "2020-02-01"],
         ["bar", "=", false],
@@ -887,6 +893,8 @@ test("See records when clicking on a waterfall chart bar", async () => {
     await runtime.chartJsConfig.options.onClick(undefined, [{ datasetIndex: 0, index: 3 }]);
     await animationFrame();
     expect(lastActionCalled?.domain).toEqual([
+        "&",
+        "&",
         ["date", ">=", "2020-02-01"],
         ["date", "<", "2020-03-01"],
         ["bar", "=", false],

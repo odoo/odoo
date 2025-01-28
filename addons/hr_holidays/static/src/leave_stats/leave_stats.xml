@@ -10,11 +10,11 @@
             </div>
             <div t-foreach="state.leaves" t-as="leave" t-key="leave_index" class="d-flex flex-row justify-content-between">
                 <span t-esc="leave.holiday_status_id[1]"/>
-                <t t-if="leave.leave_type_request_unit?.includes('hour')">
-                    <span><t t-esc="leave.number_of_hours"/> hour(s)</span>
+                <t t-if="leave['leave_type_request_unit:array_agg']?.includes('hour')">
+                    <span><t t-esc="leave['number_of_hours:sum']"/> hour(s)</span>
                 </t>
-                <t t-if="!leave.leave_type_request_unit?.includes('hour')">
-                    <span><t t-esc="leave.number_of_days"/> day(s)</span>
+                <t t-if="!leave['leave_type_request_unit:array_agg']?.includes('hour')">
+                    <span><t t-esc="leave['number_of_days:sum']"/> day(s)</span>
                 </t>
             </div>
         </div>

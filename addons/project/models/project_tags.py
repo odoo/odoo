@@ -33,11 +33,11 @@ class ProjectTags(models.Model):
         return domain
 
     @api.model
-    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+    def formatted_read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None) -> list[dict]:
         if 'project_id' in self.env.context:
             tag_ids = [id_ for id_, _label in self.name_search()]
             domain = expression.AND([domain, [('id', 'in', tag_ids)]])
-        return super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+        return super().formatted_read_group(domain, groupby, aggregates, having=having, offset=offset, limit=limit, order=order)
 
     @api.model
     def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
