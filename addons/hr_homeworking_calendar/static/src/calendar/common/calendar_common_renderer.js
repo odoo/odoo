@@ -134,4 +134,3 @@ AttendeeCalendarCommonRenderer.props = {
 
 AttendeeCalendarCommonRenderer.WorklocationTemplate = "hr_homeworking_calendar.CalendarCommonRenderer.worklocation";
 AttendeeCalendarCommonRenderer.ButtonWorklocationTemplate = "hr_homeworking_calendar.CalendarCommonRenderer.buttonWorklocation";
-AttendeeCalendarCommonRenderer.headerTemplate = "hr_homeworking_calendar.CalendarCommonRendererHeader";
