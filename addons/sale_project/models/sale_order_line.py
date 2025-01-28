@@ -260,8 +260,11 @@ class SaleOrderLine(models.Model):
         if self.product_id.service_type not in ['milestones', 'manual']:
             allocated_hours = self._convert_qty_company_hours(self.company_id)
         sale_line_name_parts = self.name.split('\n')
-        title = sale_line_name_parts[0] or self.product_id.name
-        description = '<br/>'.join(sale_line_name_parts[1:])
+        title = sale_line_name_parts[0] if not self.order_id.sale_order_template_id else self.product_id.name
+        # If we have a quotation template we get the description of the template line related to the self sale
+        # order line. If not we fallback on the description in the order line itself.
+        description = (self.order_id.sale_order_template_id.sale_order_template_line_ids.filtered(lambda line: line.product_id == self.product_id).name
+                       or '<br/>'.join(sale_line_name_parts[1:]))
         return {
             'name': title if project.sale_line_id else '%s - %s' % (self.order_id.name or '', title),
             'allocated_hours': allocated_hours,
