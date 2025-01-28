@@ -2,6 +2,7 @@ import { AND, Record } from "@mail/core/common/record";
 import { rpc } from "@web/core/network/rpc";
 import { browser } from "@web/core/browser/browser";
 import { debounce } from "@web/core/utils/timing";
+import { expirableStorage } from "@im_livechat/embed/common/expirable_storage";
 
 export class Chatbot extends Record {
     static id = AND("script", "thread");
@@ -174,8 +175,15 @@ export class Chatbot extends Record {
             isRedirecting = url.pathname !== nextURL.pathname || url.origin !== nextURL.origin;
         }
         const targetURL = new URL(answer.redirect_link, window.location.origin);
-        const redirectionAlreadyDone = targetURL.href === location.href;
+        const redirectionAlreadyDone =
+            targetURL.href === location.href ||
+            expirableStorage.getItem("chatbot_redirect")?.[
+                `${this.currentStep.id}_${answer.redirect_link}`
+            ];
         if (!redirectionAlreadyDone) {
+            expirableStorage.setItem("chatbot_redirect", {
+                [`${this.currentStep.id}_${answer.redirect_link}`]: true,
+            });
             browser.location.assign(answer.redirect_link);
         }
         return redirectionAlreadyDone || !isRedirecting;
@@ -203,6 +211,7 @@ export class Chatbot extends Record {
      * Restart the chatbot script.
      */
     restart() {
+        expirableStorage.removeItem("chatbot_redirect");
         if (this.currentStep) {
             this.currentStep.isLast = false;
         }
