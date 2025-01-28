@@ -754,3 +754,39 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
             'billed': 0.0,
             'to_bill': 0.0,
         })
+
+    def test_expense_from_PO_is_in_profitability(self):
+        product = self.env['product.product'].create([{
+            'name': 'Test Product',
+            'standard_price': 30,
+            'list_price': 90,
+            'type': 'service',
+            'service_tracking': 'task_in_project',
+            'expense_policy': 'sales_price',
+        }])
+
+        purchase_order = self.env['purchase.order'].create({
+            'name': "A Purchase",
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'analytic_distribution': {self.analytic_account.id: 100},
+                'product_id': product.id,
+            })],
+        })
+        purchase_order.button_confirm()
+        vendor_bill = self._create_invoice_for_po(purchase_order)
+        self.assertDictEqual(
+            self.project._get_profitability_items(False)['revenues'],
+            {
+                'data': [{
+                    'id': 'purchase_order',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['purchase_order'],
+                    'to_invoice': 0.0,
+                    'invoiced': product.list_price,
+                }],
+                'total': {
+                    'to_invoice': 0.0,
+                    'invoiced': product.list_price,
+                },
+            },
+        )

@@ -28,6 +28,52 @@ class Project(models.Model):
             ('id', 'not in', purchase_order_line_invoice_line_ids),
         ]
 
+    def _get_revenue_items_from_purchase(self, domain, profitability_items, with_action=True):
+        account_move_lines = self.env['account.move.line'].sudo().search_fetch(
+            domain + [('analytic_distribution', 'in', self.account_id.ids)],
+            ['price_subtotal', 'parent_state', 'currency_id', 'analytic_distribution', 'move_type', 'move_id'],
+        )
+        if account_move_lines:
+            amount_invoiced = amount_to_invoice = 0.0
+            for move_line in account_move_lines:
+                revenue = 0.0
+                price_subtotal = move_line.currency_id._convert(
+                    from_amount=move_line.price_subtotal, to_currency=self.currency_id,
+                )
+                analytic_contribution = sum(
+                    percentage for ids, percentage in move_line.analytic_distribution.items()
+                    if str(self.account_id.id) in ids.split(',')
+                ) / 100.
+                expense_policy = move_line.product_id.expense_policy
+                if expense_policy == 'cost':
+                    revenue = price_subtotal * analytic_contribution
+                elif expense_policy == 'sales_price':
+                    revenue = move_line.product_id.list_price * move_line.quantity
+                if move_line.parent_state == 'draft':
+                    if move_line.move_type == 'in_invoice':
+                        amount_to_invoice += revenue
+                    else:
+                        amount_to_invoice -= revenue
+                else:
+                    if move_line.move_type == 'in_invoice':
+                        amount_invoiced += revenue
+                    else:
+                        amount_invoiced -= revenue
+            if amount_invoiced or amount_to_invoice:
+                revenues = profitability_items['revenues']
+                section_id = 'other_purchase_costs'
+                bills_revenues = {
+                    'id': section_id,
+                    'sequence': self._get_profitability_sequence_per_invoice_type()[section_id],
+                    'invoiced': amount_invoiced,
+                    'to_invoice': amount_to_invoice,
+                }
+                if with_action:
+                    bills_revenues['action'] = self._get_action_for_profitability_section(account_move_lines.move_id.ids, section_id)
+                revenues['data'].append(bills_revenues)
+                revenues['total']['invoiced'] += amount_invoiced
+                revenues['total']['to_invoice'] += amount_to_invoice
+
     def _get_costs_items_from_purchase(self, domain, profitability_items, with_action=True):
         """ This method is used in sale_project and project_purchase. Since project_account is the only common module (except project), we create the method here. """
         # calculate the cost of bills without a purchase order
