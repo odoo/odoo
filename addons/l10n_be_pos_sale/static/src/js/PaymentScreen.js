@@ -13,7 +13,7 @@ patch(PaymentScreen.prototype, {
             }
         });
     },
-    toggleIsToInvoice() {
+    async toggleIsToInvoice() {
         if (this.checkIsToInvoice()) {
             this.dialog.add(AlertDialog, {
                 title: _t("This order needs to be invoiced"),
@@ -22,7 +22,7 @@ patch(PaymentScreen.prototype, {
                 ),
             });
         } else {
-            super.toggleIsToInvoice(...arguments);
+            await super.toggleIsToInvoice(...arguments);
         }
     },
     checkIsToInvoice() {

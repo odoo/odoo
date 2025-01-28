@@ -205,7 +205,7 @@ export class PaymentScreen extends Component {
             this.selectedPaymentLine.setAmount(amount);
         }
     }
-    toggleIsToInvoice() {
+    async toggleIsToInvoice() {
         this.currentOrder.setToInvoice(!this.currentOrder.isToInvoice());
     }
     openCashbox() {
