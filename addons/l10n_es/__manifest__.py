@@ -29,6 +29,7 @@ Spanish charts of accounts (PGCE 2008).
     ],
     'auto_install': ['account'],
     'data': [
+        'data/account.account.tag.csv',
         'data/res_partner_data.xml',
         'data/res_country_group.xml',
         'views/account_move_views.xml',
