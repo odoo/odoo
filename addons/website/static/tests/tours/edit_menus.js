@@ -88,7 +88,7 @@ registerWebsitePreviewTour('edit_menus', {
     },
     {
         content: "It didn't save without a label. Fill label input.",
-            trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input:eq(0)",
+        trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input:eq(0)",
         run: "edit Random!",
     },
     {
@@ -199,7 +199,7 @@ registerWebsitePreviewTour('edit_menus', {
         run: "click",
     },
     // Drag a block to be able to scroll later.
-    ...insertSnippet({id: "s_media_list", name: "Media List", groupName: "Content"}),
+    ...insertSnippet({ id: "s_media_list", name: "Media List", groupName: "Content" }),
     ...clickOnSave(),
     clickOnExtraMenuItem({}, true),
     {
@@ -224,7 +224,7 @@ registerWebsitePreviewTour('edit_menus', {
             return helpers.drag_and_drop('.oe_menu_editor li:contains("Home")', {
                 position: {
                     top: 57,
-                    left:5,
+                    left: 5,
                 },
                 relative: true,
             });
@@ -275,7 +275,7 @@ registerWebsitePreviewTour('edit_menus', {
         run() {
             // Scroll down.
             this.anchor.closest("body").querySelector(".o_footer_copyright_name")
-                .scrollIntoView(true);
+                .scrollIntoView({ block: "start", inline: "nearest", behavior: "smooth" });
         },
     },
     {
@@ -332,7 +332,7 @@ registerWebsitePreviewTour('edit_menus', {
     {
         content: "Check that the mega menu is opened",
         trigger: ':iframe .top_menu .nav-item:has(a.o_mega_menu_toggle:contains("Megaaaaa!")) ' +
-                 '.s_mega_menu_odoo_menu',
+            '.s_mega_menu_odoo_menu',
     },
     ...clickOnEditAndWaitEditMode(),
     {

@@ -55,6 +55,10 @@ const onLoadAndError = (el, onLoad, onError) => {
 
     el.addEventListener("load", onLoadListener);
     el.addEventListener("error", onErrorListener);
+
+    window.addEventListener("pagehide", () => {
+        removeListeners();
+    });
 };
 
 /** @type {typeof assets["getBundle"]} */
@@ -144,7 +148,7 @@ export const assets = {
             })
             .catch((reason) => {
                 cacheMap.delete(bundleName);
-                throw reason;
+                throw new AssetsLoadingError(`The loading of ${url} failed`, { cause: reason });
             });
         cacheMap.set(bundleName, promise);
         return promise;
@@ -201,7 +205,7 @@ export const assets = {
         linkEl.rel = "stylesheet";
         linkEl.href = url;
         const promise = new Promise((resolve, reject) =>
-            onLoadAndError(linkEl, resolve, async () => {
+            onLoadAndError(linkEl, resolve, async (error) => {
                 cacheMap.delete(url);
                 if (retryCount < assets.retries.count) {
                     const delay = assets.retries.delay + assets.retries.extraDelay * retryCount;
@@ -214,7 +218,9 @@ export const assets = {
                             reject(reason);
                         });
                 } else {
-                    reject(new AssetsLoadingError(`The loading of ${url} failed`));
+                    reject(
+                        new AssetsLoadingError(`The loading of ${url} failed`, { cause: error })
+                    );
                 }
             })
         );
@@ -239,9 +245,9 @@ export const assets = {
         scriptEl.type = url.includes("web/static/lib/pdfjs/") ? "module" : "text/javascript";
         scriptEl.src = url;
         const promise = new Promise((resolve, reject) =>
-            onLoadAndError(scriptEl, resolve, () => {
+            onLoadAndError(scriptEl, resolve, (error) => {
                 cacheMap.delete(url);
-                reject(new AssetsLoadingError(`The loading of ${url} failed`));
+                reject(new AssetsLoadingError(`The loading of ${url} failed`, { cause: error }));
             })
         );
         cacheMap.set(url, promise);

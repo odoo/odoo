@@ -34,7 +34,7 @@ Manage your mailing lists from Odoo.
     'assets': {
         'web.assets_frontend': [
             'mail_group/static/src/css/mail_group.scss',
-            'mail_group/static/src/js/*',
+            'mail_group/static/src/interactions/*',
         ],
         'web.assets_backend': [
             'mail_group/static/src/css/mail_group_backend.scss',
