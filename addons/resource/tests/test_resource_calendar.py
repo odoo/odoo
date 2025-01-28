@@ -3,7 +3,7 @@ from datetime import date
 from odoo.tests.common import TransactionCase
 
 
-class TestExternalAPI(TransactionCase):
+class TestResourceCalendar(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -18,6 +18,9 @@ class TestExternalAPI(TransactionCase):
             'thursday': True,
             'friday': True,
         })
+
+    def test_get_days_per_week(self):
+        self.assertEqual(self.calendar_fixed_40h._get_days_per_week(), 5)
 
     def test_works_on_date(self):
         tets_date = date(2025, 1, 1)
