@@ -32,7 +32,7 @@ patch(ReorderDialog.prototype, {
         }
         if (product.max_quantity_available < product.qty) {
             product.qty_warning = _t(
-                'You requested %(desired_qty)s Units, but only %(new_qty)s are available in stock.',
+                "You requested %(desired_qty)s Units, but only %(new_qty)s are available in stock.",
                 {
                     desired_qty: product.qty.toFixed(1),
                     new_qty: product.max_quantity_available.toFixed(1),
@@ -64,7 +64,7 @@ patch(ReorderDialog.prototype, {
     changeProductQty(product, newQty) {
         if (product.max_quantity_available && newQty > product.max_quantity_available) {
             product.qty_warning = _t(
-                'You requested %(desired_qty)s Units, but only %(new_qty)s are available in stock.',
+                "You requested %(desired_qty)s Units, but only %(new_qty)s are available in stock.",
                 {
                     desired_qty: newQty.toFixed(1),
                     new_qty: product.max_quantity_available.toFixed(1),

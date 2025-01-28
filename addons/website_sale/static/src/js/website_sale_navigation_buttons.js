@@ -1,25 +1,29 @@
 import { rpc, RPCError } from '@web/core/network/rpc';
-import publicWidget from '@web/legacy/js/public/public_widget';
-import wSaleUtils from "@website_sale/js/website_sale_utils";
+import { registry } from '@web/core/registry';
+import { Interaction } from '@web/public/interaction';
+import wSaleUtils from '@website_sale/js/website_sale_utils';
 
 
 const PATHS_TO_CHECK = [
-    "/shop/checkout",
-    "/shop/confirm_order",
+    '/shop/checkout',
+    '/shop/confirm_order',
 ];
 const END_PATHS = [
-    "/shop/confirm_order",
+    '/shop/confirm_order',
 ];
 
-publicWidget.registry.WebsiteSaleNavigationButton = publicWidget.Widget.extend({
-    selector: '#navigation_buttons',
-    events: PATHS_TO_CHECK.reduce(
+
+export class WebsiteSaleNavigationButton extends Interaction {
+    static selector = '#navigation_buttons';
+    dynamicContent = PATHS_TO_CHECK.reduce(
         (acc, path) => {
-            acc[`click a[name="website_sale_main_button"][href*="${path}"]`] = '_checkCart';
+            acc[`a[name='website_sale_main_button'][href*='${path}']`] = {
+                't-on-click': this._checkCart
+            };
             return acc;
         },
         {},
-    ),
+    );
 
     /**
      * Calls /shop/check_cart before continuing the flow
@@ -43,7 +47,9 @@ publicWidget.registry.WebsiteSaleNavigationButton = publicWidget.Widget.extend({
                     return Promise.reject(error);
                 }
             });
-    },
-});
+    }
+}
 
-export default publicWidget.registry.WebsiteSaleNavigationButtons;
+registry
+    .category('public.interactions')
+    .add('website_sale.WebsiteSaleNavigationButton', WebsiteSaleNavigationButton);

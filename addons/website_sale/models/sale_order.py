@@ -728,8 +728,8 @@ class SaleOrder(models.Model):
         """
         if warning := self._get_cart_warning():
             raise ValidationError(_(
-                "Your cart is not ready to be paid, please verify previous steps."
-                f"\n{warning}"
+                "Your cart is not ready to be paid, please verify previous steps.\n%(warning)s",
+                warning=warning
             ))
 
         if not self.only_services and not self.carrier_id:
