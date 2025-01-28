@@ -17,7 +17,7 @@
                     <div class="debug-electronic-scale">
                         <h5 class="category">Electronic Scale</h5>
                         <input t-model="state.weightInput" type="text" class="weight form-control"></input>
-                        <ul class="d-flex flex-column align-items-start mb-3">
+                        <ul class="d-flex flex-column align-items-start mb-3 px-0">
                             <li class="set_weight btn btn-link" t-on-click="setWeight">Set Weight</li>
                             <li class="reset_weight btn btn-link" t-on-click="resetWeight">Reset</li>
                         </ul>
@@ -25,7 +25,7 @@
 
                     <div class="debug-barcode-scanner">
                         <h5 class="category">Barcode Scanner</h5>
-                        <ul class="d-flex flex-column align-items-start mb-3">
+                        <ul class="d-flex flex-column align-items-start mb-3 px-0">
                             <li>
                                 <input t-model="state.barcodeInput" type="text" class="ean form-control" t-att-disabled="!barcodeReader" t-attf-placeholder="{{ !barcodeReader ? 'No nomenclature' : '' }}"/>
                             </li>
@@ -36,7 +36,7 @@
 
                     <div class="debug-orders">
                         <h5 class="category">Orders</h5>
-                        <ul class="mb-3">
+                        <ul class="mb-3 p-0">
                             <li class="button btn btn-link" t-on-click="() => this.deleteOrders({ paid: true })">
                                 Delete Paid Orders
                             </li>
@@ -60,7 +60,7 @@
 
                     <div class="debug-hardware-status d-flex flex-column">
                         <h5 class="category">Hardware Status</h5>
-                        <ul class="mb-3">
+                        <ul class="mb-3 p-0">
                             <li class="status weighing">Weighing</li>
                             <li class="button btn btn-link display_refresh" t-on-click="refreshDisplay">
                                 Refresh Display
@@ -70,7 +70,7 @@
 
                     <div class="debug-hardware-events">
                         <h5 class="category">Hardware Events</h5>
-                        <ul class="mb-3">
+                        <ul class="mb-3 p-0">
                             <li class="event" t-ref="open_cashbox">Open Cashbox</li>
                             <li class="event" t-ref="print_receipt">Print Receipt</li>
                             <li class="event" t-ref="scale_read">Read Weighing Scale</li>
@@ -79,7 +79,7 @@
 
                     <div class="debug-others">
                         <h5 class="category">Others</h5>
-                        <ul class="mb-3">
+                        <ul class="mb-3 p-0">
                             <li class="event">
                                 <span>Buffer: </span>
                                 <t t-esc="bufferRepr" />
