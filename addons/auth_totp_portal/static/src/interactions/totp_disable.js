@@ -1,7 +1,7 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
-import { handleCheckIdentity } from "@portal/js/portal_security";
+import { handleCheckIdentity } from "@portal/interactions/tools";
 import { user } from "@web/core/user";
 
 export class TOTPDisable extends Interaction {

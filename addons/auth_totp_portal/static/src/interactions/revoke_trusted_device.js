@@ -1,7 +1,7 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
-import { handleCheckIdentity } from "@portal/js/portal_security";
+import { handleCheckIdentity } from "@portal/interactions/tools";
 
 export class RevokeTrustedDevice extends Interaction {
     static selector = "#totp_wizard_view + * .fa.fa-trash.text-danger";

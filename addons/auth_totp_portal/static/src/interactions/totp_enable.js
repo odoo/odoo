@@ -2,7 +2,7 @@ import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
 import { InputConfirmationDialog } from "@portal/js/components/input_confirmation_dialog/input_confirmation_dialog";
-import { handleCheckIdentity } from "@portal/js/portal_security";
+import { handleCheckIdentity } from "@portal/interactions/tools";
 import { browser } from "@web/core/browser/browser";
 import { user } from "@web/core/user";
 import { _t } from "@web/core/l10n/translation";
