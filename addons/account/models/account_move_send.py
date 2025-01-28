@@ -444,7 +444,10 @@ class AccountMoveSend(models.AbstractModel):
     @api.model
     def _send_mail(self, move, mail_template, **kwargs):
         """ Send the journal entry passed as parameter by mail. """
-        new_message = move.with_context(no_new_invoice=True).message_post(
+        new_message = move.with_context(
+            email_notification_allow_footer=True,
+            no_new_invoice=True,
+        ).message_post(
             message_type='comment',
             **kwargs,
             **{  # noqa: PIE804
