@@ -5190,6 +5190,10 @@ class AccountMove(models.Model):
             'target': 'download',
         }
 
+    def action_print_pdf(self):
+        self.ensure_one()
+        return self.env.ref('account.account_invoices').report_action(self.id)
+
     def preview_invoice(self):
         self.ensure_one()
         return {
