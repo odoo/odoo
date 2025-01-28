@@ -99,6 +99,8 @@ class TestChannelInternals(MailCommon, HttpCase):
                                         "default_subject": "Channel",
                                         "email_from": '"Ernest Employee" <e.e@example.com>',
                                         "id": message.id,
+                                        "incoming_email_cc": False,
+                                        "incoming_email_to": False,
                                         "is_discussion": True,
                                         "is_note": False,
                                         "link_preview_ids": [],
