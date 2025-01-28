@@ -9,7 +9,7 @@ class ProductAttribute(models.Model):
 
     category_id = fields.Many2one(
         comodel_name='product.attribute.category',
-        string="eCommerce Category",
+        string="Specifications Category",
         index=True,
         help="Set a category to regroup similar attributes under the same section in the Comparison"
              " page of eCommerce.",

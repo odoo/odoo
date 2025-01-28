@@ -37,6 +37,59 @@
     }
 }
 
+.attribute_variant_color {
+    position: relative;
+    display: inline-block;
+    border: 1px solid $input-border-color;
+    border-radius: 50%;
+    text-align: center;
+    transition: $input-transition;
+    height:20px;
+    width:20px;
+
+    @include o-field-pointer();
+
+    &:before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        height: 16px;
+        width: 16px;
+        border: 1px solid white;
+        border-radius: 50%;
+        box-shadow: inset 0 0 2px rgba(black, 0.3);
+    }
+
+    input {
+        margin: 8px;
+        height: 13px;
+        width: 13px;
+        opacity: 0;
+    }
+
+    &.active {
+        border: 5px solid map-get($theme-colors, 'primary');
+    }
+
+    &.custom_value {
+        background-image: linear-gradient(to bottom right, #FF0000, #FFF200, #1E9600);
+    }
+
+    &.transparent {
+        background-image: url(/web/static/img/transparent.png);
+    }
+}
+
+.variant_image {
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+    overflow: hidden;
+}
+
 .css_not_available_msg {
     display: none;
 }

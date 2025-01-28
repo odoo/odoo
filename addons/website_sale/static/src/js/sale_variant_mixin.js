@@ -9,6 +9,7 @@ import { throttleForAnimation } from "@web/core/utils/timing";
 var VariantMixin = {
     events: {
         'change .css_attribute_color input': '_onChangeColorAttribute',
+        'change .css_attribute_image input': '_onChangeImageAttribute',
         'click .o_variant_pills': '_onChangePillsAttribute',
     },
 
@@ -558,6 +559,20 @@ var VariantMixin = {
             .removeClass("active")
             .filter(':has(input:checked)')
             .addClass("active");
+    },
+
+    _onChangeImageAttribute: function(ev) {
+        const parent = ev.target.closest('.js_product');
+        if (parent) {
+            parent.querySelectorAll('.css_attribute_image').forEach(element => {
+                element.classList.remove('active');
+            });
+            parent.querySelectorAll('.css_attribute_image').forEach(element => {
+                if (element.querySelector('input:checked')) {
+                    element.classList.add('active');
+                }
+            });
+        }
     },
 
     /**
