@@ -27,6 +27,14 @@ The system is able to add and compute the shipping line.
         'wizard/res_config_settings_views.xml',
         'wizard/choose_delivery_carrier_views.xml',
     ],
+    'assets': {
+        'web.assets_frontend': [
+            'delivery/static/src/**/*',
+        ],
+        'website.assets_wysiwyg': [
+            'delivery/static/src/**/*',
+        ],
+    },
     'demo': ['data/delivery_demo.xml'],
     'installable': True,
     'license': 'LGPL-3',
