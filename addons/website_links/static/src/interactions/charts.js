@@ -1,293 +1,243 @@
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
 import { loadBundle } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
-import publicWidget from "@web/legacy/js/public/public_widget";
+
 const { DateTime } = luxon;
 
-var BarChart = publicWidget.Widget.extend({
-    /**
-     * @constructor
-     * @param {Object} parent
-     * @param {Object} beginDate
-     * @param {Object} endDate
-     * @param {Object} dates
-     */
-    init: function (parent, beginDate, endDate, dates) {
-        this._super.apply(this, arguments);
-        this.beginDate = beginDate.startOf("day");
-        this.endDate = endDate.startOf("day");
-        if (this.beginDate.toISO() === this.endDate.toISO()) {
-            this.endDate = this.endDate.plus({ days: 1 });
-        }
-        this.number_of_days = this.endDate.diff(this.beginDate).as("days");
-        this.dates = dates;
-    },
-    /**
-     * @override
-     */
-    start: function () {
-        // Fill data for each day (with 0 click for days without data)
-        var clicksArray = [];
-        for (var i = 0; i <= this.number_of_days; i++) {
-            var dateKey = this.beginDate.toFormat("yyyy-MM-dd");
-            clicksArray.push([dateKey, (dateKey in this.dates) ? this.dates[dateKey] : 0]);
-            this.beginDate = this.beginDate.plus({ days: 1 });
-        }
+export const createBarChart = function (selector, beginDateA, endDateA, dates) {
+    const el = document.querySelector(selector);
 
-        var nbClicks = 0;
-        var data = [];
-        var labels = [];
-        clicksArray.forEach(function (pt) {
-            labels.push(pt[0]);
-            nbClicks += pt[1];
-            data.push(pt[1]);
-        });
+    let beginDate = beginDateA.startOf("day");
+    let endDate = endDateA.startOf("day");
+    if (beginDate.toISO() === endDate.toISO()) {
+        endDate = endDate.plus({ days: 1 });
+    }
+    const numberOfDays = endDate.diff(beginDate).as("days");
 
-        this.$('.title').text(_t('%(clicks)s clicks', {clicks: nbClicks}));
+    // Fill data for each day (with 0 click for days without data)
+    const clicksArray = [];
+    for (let i = 0; i <= numberOfDays; i++) {
+        const dateKey = beginDate.toFormat("yyyy-MM-dd");
+        clicksArray.push([dateKey, (dateKey in dates) ? dates[dateKey] : 0]);
+        beginDate = beginDate.plus({ days: 1 });
+    }
 
-        var config = {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    data: data,
-                    fill: 'start',
-                    label: _t('# of clicks'),
-                    backgroundColor: '#ebf2f7',
-                    borderColor: '#6aa1ca',
+    let nbClicks = 0;
+    const data = [];
+    const labels = [];
+    clicksArray.forEach(function (pt) {
+        nbClicks += pt[1];
+        data.push(pt[1]);
+        labels.push(pt[0]);
+    });
 
-                }],
-            },
-            options: {
-                scales: {
-                    y: {
-                        ticks: {
-                            callback: function(value) {
-                                if (Number.isInteger(value)) {
-                                    return value;
-                                }
-                            },
-                        }
+    const titleEl = el.querySelector(".title");
+    titleEl.textContent = _t("%(clicks)s clicks", { clicks: nbClicks });
+
+    const config = {
+        type: "line",
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                fill: "start",
+                label: _t("# of clicks"),
+                backgroundColor: "#ebf2f7",
+                borderColor: "#6aa1ca",
+
+            }],
+        },
+        options: {
+            scales: {
+                y: {
+                    ticks: {
+                        callback: function (value) {
+                            if (Number.isInteger(value)) {
+                                return value;
+                            }
+                        },
                     }
                 }
             }
-        };
-        var canvas = this.$('canvas')[0];
-        var context = canvas.getContext('2d');
-        new Chart(context, config);
-    },
-    willStart: async function () {
-        await loadBundle("web.chartjs_lib");
-    },
-});
+        }
+    };
+    const canvasEl = el.querySelector("canvas");
+    new Chart(canvasEl.getContext("2d"), config);
+}
 
-var PieChart = publicWidget.Widget.extend({
-    /**
-     * @override
-     * @param {Object} parent
-     * @param {Object} data
-     */
-    init: function (parent, data) {
-        this._super.apply(this, arguments);
-        this.data = data;
-    },
-    /**
-     * @override
-     */
-    start: function () {
+export const createPieChart = function (selector, countryData) {
+    const el = document.querySelector(selector);
 
-        // Process country data to fit into the ChartJS scheme
-        var labels = [];
-        var data = [];
-        for (var i = 0; i < this.data.length; i++) {
-            var countryName = this.data[i]['country_id'] ? this.data[i]['country_id'][1] : _t('Undefined');
-            labels.push(countryName + ' (' + this.data[i]['country_id_count'] + ')');
-            data.push(this.data[i]['country_id_count']);
+    // Process country data to fit into the ChartJS scheme
+    const data = [];
+    const labels = [];
+    for (let i = 0; i < countryData.length; i++) {
+        const countryName = countryData[i]["country_id"]
+            ? countryData[i]["country_id"][1]
+            : _t("Undefined");
+        data.push(countryData[i]["country_id_count"]);
+        labels.push(countryName + " (" + countryData[i]["country_id_count"] + ")");
+    }
+
+    // Set title
+    const titleEl = el.querySelector(".title");
+    titleEl.textContent = _t("%(count)s countries", { count: countryData.length });
+
+    const config = {
+        type: "pie",
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                label: countryData.length > 0 ? countryData[0].key : _t("No data"),
+            }]
+        },
+        options: {
+            aspectRatio: 2,
+        },
+    };
+    const canvasEl = el.querySelector("canvas");
+    new Chart(canvasEl.getContext("2d"), config);
+}
+
+export class Charts extends Interaction {
+    static selector = ".o_website_links_chart";
+
+    setup() {
+        this.animating_copy = false;
+        this.charts = {};
+        this.links_domain = ["link_id", "=", parseInt(document.querySelector("#link_id").value)];
+    }
+
+    async willStart() {
+        const proms = [];
+        proms.push(this.getTotalClicks());
+        proms.push(this.getClicksByDay());
+        proms.push(this.getClicksByCountry());
+        proms.push(this.getLastWeekClicksByCountry());
+        proms.push(this.getLastMonthClicksByCountry());
+        proms.push(loadBundle("web.chartjs_lib"));
+        this.results = await Promise.all(proms);
+    }
+
+    start() {
+        const totalClicks = this.results[0];
+        const clicksByDay = this.results[1];
+        const clicksByCountry = this.results[2];
+        const lastWeekClicksByCountry = this.results[3];
+        const lastMonthClicksByCountry = this.results[4];
+
+        const noDataMessage = _t("There is no data to show");
+        if (!totalClicks) {
+            const allTimeCharts = document.querySelector("#all_time_charts");
+            const lastMonthCharts = document.querySelector("#last_month_charts");
+            const lastWeekCharts = document.querySelector("#last_week_charts");
+            this.insert(noDataMessage, allTimeCharts, "afterbegin");
+            this.insert(noDataMessage, lastMonthCharts, "afterbegin");
+            this.insert(noDataMessage, lastWeekCharts, "afterbegin");
+            return;
         }
 
-        // Set title
-        this.$('.title').text(_t('%(count)s countries', {count: this.data.length}));
+        const formattedClicksByDay = {};
 
-        var config = {
-            type: 'pie',
-            data: {
-                labels: labels,
-                datasets: [{
-                    data: data,
-                    label: this.data.length > 0 ? this.data[0].key : _t('No data'),
-                }]
-            },
-            options: {
-                aspectRatio: 2,
-            },
-        };
-
-        var canvas = this.$('canvas')[0];
-        var context = canvas.getContext('2d');
-        new Chart(context, config);
-    },
-    willStart: async function () {
-        await loadBundle("web.chartjs_lib");
-    },
-});
-
-publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
-    selector: '.o_website_links_chart',
-
-    init() {
-        this._super(...arguments);
-        this.orm = this.bindService("orm");
-    },
-
-    /**
-     * @override
-     */
-    start: async function () {
-        var self = this;
-        this.charts = {};
-
-        // Get the code of the link
-        var linkID = parseInt($('#link_id').val());
-        this.links_domain = ['link_id', '=', linkID];
-
-        var defs = [];
-        defs.push(this._totalClicks());
-        defs.push(this._clicksByDay());
-        defs.push(this._clicksByCountry());
-        defs.push(this._lastWeekClicksByCountry());
-        defs.push(this._lastMonthClicksByCountry());
-        defs.push(this._super.apply(this, arguments));
-
-        this.animating_copy = false;
-
-        return Promise.all(defs).then(function (results) {
-            var _totalClicks = results[0];
-            var _clicksByDay = results[1];
-            var _clicksByCountry = results[2];
-            var _lastWeekClicksByCountry = results[3];
-            var _lastMonthClicksByCountry = results[4];
-
-            if (!_totalClicks) {
-                $('#all_time_charts').prepend(_t("There is no data to show"));
-                $('#last_month_charts').prepend(_t("There is no data to show"));
-                $('#last_week_charts').prepend(_t("There is no data to show"));
-                return;
+        let beginDate;
+        for (var i = 0; i < clicksByDay.length; i++) {
+            // This is a trick to get the date without the local formatting.
+            // We can't simply do .locale("en") because some Odoo languages
+            // are not supported by moment.js (eg: Arabic Syria).
+            // FIXME this now uses luxon, check if this is still needed? Probably can be replaced by deserializeDate
+            const date = DateTime.fromFormat(
+                clicksByDay[i]["__domain"].find((el) => el.length && el.includes(">="))[2]
+                    .split(" ")[0], "yyyy-MM-dd"
+            );
+            if (i === 0) {
+                beginDate = date;
             }
+            formattedClicksByDay[date.setLocale("en").toFormat("yyyy-MM-dd")] =
+                clicksByDay[i]["create_date_count"];
+        }
 
-            var formattedClicksByDay = {};
-            var beginDate;
-            for (var i = 0; i < _clicksByDay.length; i++) {
-                // This is a trick to get the date without the local formatting.
-                // We can't simply do .locale("en") because some Odoo languages
-                // are not supported by moment.js (eg: Arabic Syria).
-                // FIXME this now uses luxon, check if this is still needed? Probably can be replaced by deserializeDate
-                const date = DateTime.fromFormat(
-                    _clicksByDay[i]["__domain"].find((el) => el.length && el.includes(">="))[2]
-                        .split(" ")[0], "yyyy-MM-dd"
-                );
-                if (i === 0) {
-                    beginDate = date;
-                }
-                formattedClicksByDay[date.setLocale("en").toFormat("yyyy-MM-dd")] =
-                    _clicksByDay[i]["create_date_count"];
-            }
+        const now = DateTime.now();
 
-            // Process all time line chart data
-            var now = DateTime.now();
-            self.charts.all_time_bar = new BarChart(self, beginDate, now, formattedClicksByDay);
-            self.charts.all_time_bar.attachTo($('#all_time_clicks_chart'));
+        // Process bar charts
+        this.charts.all_time_bar = new createBarChart(
+            "#all_time_clicks_chart", beginDate, now, formattedClicksByDay);
+        this.charts.last_month_bar = new createBarChart(
+            "#last_month_clicks_chart", now.minus({ days: 30 }), now, formattedClicksByDay);
+        this.charts.last_week_bar = new createBarChart(
+            "#last_week_clicks_chart", now.minus({ days: 7 }), now, formattedClicksByDay);
 
-            // Process month line chart data
-            beginDate = DateTime.now().minus({ days: 30 });
-            self.charts.last_month_bar = new BarChart(self, beginDate, now, formattedClicksByDay);
-            self.charts.last_month_bar.attachTo($('#last_month_clicks_chart'));
+        // Process pie charts
+        this.charts.all_time_pie = new createPieChart(
+            "#all_time_countries_charts", clicksByCountry);
+        this.charts.last_month_pie = new createPieChart(
+            "#last_month_countries_charts", lastMonthClicksByCountry);
+        this.charts.last_week_pie = new createPieChart(
+            "#last_week_countries_charts", lastWeekClicksByCountry);
 
-            // Process week line chart data
-            beginDate = DateTime.now().minus({ days: 7 });
-            self.charts.last_week_bar = new BarChart(self, beginDate, now, formattedClicksByDay);
-            self.charts.last_week_bar.attachTo($('#last_week_clicks_chart'));
 
-            // Process pie charts
-            self.charts.all_time_pie = new PieChart(self, _clicksByCountry);
-            self.charts.all_time_pie.attachTo($('#all_time_countries_charts'));
+        const chartsContainerEl = document.querySelector("#all_time_countries_charts").parentElement
+        const rowWidth = chartsContainerEl.getBoundingClientRect().width;
+        const chartCanvas = document
+            .querySelector("#all_time_countries_charts,last_month_countries_charts,last_week_countries_charts")
+            .querySelector("canvas");
+        chartCanvas.height = Math.max(clicksByCountry.length * (rowWidth > 750 ? 1 : 2), 20) + "em";
+    }
 
-            self.charts.last_month_pie = new PieChart(self, _lastMonthClicksByCountry);
-            self.charts.last_month_pie.attachTo($('#last_month_countries_charts'));
+    getTotalClicks() {
+        return this.services.orm.searchCount(
+            "link.tracker.click",
+            [this.links_domain],
+        );
+    }
 
-            self.charts.last_week_pie = new PieChart(self, _lastWeekClicksByCountry);
-            self.charts.last_week_pie.attachTo($('#last_week_countries_charts'));
-
-            var rowWidth = $('#all_time_countries_charts').parent().width();
-            var $chartCanvas = $('#all_time_countries_charts,last_month_countries_charts,last_week_countries_charts').find('canvas');
-            $chartCanvas.height(Math.max(_clicksByCountry.length * (rowWidth > 750 ? 1 : 2), 20) + 'em');
-
-        });
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _totalClicks: function () {
-        return this.orm.searchCount("link.tracker.click", [this.links_domain]);
-    },
-    /**
-     * @private
-     */
-    _clicksByDay: function () {
-        return this.orm.readGroup(
+    getClicksByDay() {
+        return this.services.orm.readGroup(
             "link.tracker.click",
             [this.links_domain],
             ["create_date"],
-            ["create_date:day"]
+            ["create_date:day"],
         );
-    },
-    /**
-     * @private
-     */
-    _clicksByCountry: function () {
-        return this.orm.readGroup(
+    }
+
+    getClicksByCountry() {
+        return this.services.orm.readGroup(
             "link.tracker.click",
             [this.links_domain],
             ["country_id"],
-            ["country_id"]
+            ["country_id"],
         );
-    },
-    /**
-     * @private
-     */
-    _lastWeekClicksByCountry: function () {
+    }
+
+    getLastWeekClicksByCountry() {
         // 7 days * 24 hours * 60 minutes * 60 seconds * 1000 milliseconds.
         const aWeekAgoDate = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-        // get the date in the format YYYY-MM-DD.
+        // Convert to date in the format YYYY-MM-DD.
         const aWeekAgoString = aWeekAgoDate.toISOString().split("T")[0];
-        return this.orm.readGroup(
+        return this.services.orm.readGroup(
             "link.tracker.click",
             [this.links_domain, ["create_date", ">", aWeekAgoString]],
             ["country_id"],
-            ["country_id"]
+            ["country_id"],
         );
-    },
-    /**
-     * @private
-     */
-    _lastMonthClicksByCountry: function () {
+    }
+
+    getLastMonthClicksByCountry() {
         // 30 days * 24 hours * 60 minutes * 60 seconds * 1000 milliseconds.
         const aMonthAgoDate = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-        // get the date in the format YYYY-MM-DD.
+        // Convert to date in the format YYYY-MM-DD.
         const aMonthAgoString = aMonthAgoDate.toISOString().split("T")[0];
-        return this.orm.readGroup(
+        return this.services.orm.readGroup(
             "link.tracker.click",
             [this.links_domain, ["create_date", ">", aMonthAgoString]],
             ["country_id"],
-            ["country_id"]
+            ["country_id"],
         );
-    },
-});
+    }
+}
 
-export default {
-    BarChart: BarChart,
-    PieChart: PieChart,
-};
+registry
+    .category("public.interactions")
+    .add("website_links.charts", Charts);

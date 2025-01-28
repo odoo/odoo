@@ -18,6 +18,7 @@ Those trackers can be used in Google Analytics to track clicks and visitors, or 
     'assets': {
         'web.assets_frontend': [
             'website_links/static/src/interactions/**/*',
+            'website_links/static/src/js/tags_wrapper.js',
             'website_links/static/src/css/website_links.css',
             'website_links/static/src/xml/*.xml',
         ],

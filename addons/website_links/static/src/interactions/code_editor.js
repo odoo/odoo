@@ -1,135 +1,127 @@
-import { _t } from "@web/core/l10n/translation";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
 import { browser } from "@web/core/browser/browser";
-import publicWidget from "@web/legacy/js/public/public_widget";
+import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 
-publicWidget.registry.websiteLinksCodeEditor = publicWidget.Widget.extend({
-    selector: '#wrapwrap',
-    selectorHas: '.o_website_links_edit_code',
-    events: {
-        'click .copy-to-clipboard': '_onCopyToClipboardClick',
-        'click .o_website_links_edit_code': '_onEditCodeClick',
-        'click .o_website_links_cancel_edit': '_onCancelEditClick',
-        'submit #edit-code-form': '_onEditCodeFormSubmit',
-        'click .o_website_links_ok_edit': '_onEditCodeFormSubmit',
-    },
+export class CodeEditor extends Interaction {
+    static selector = "#wrapwrap";
+    static selectorHas = ".o_website_links_edit_code";
+    dynamicContent = {
+        ".o_website_links_cancel_edit": {
+            "t-on-click.prevent": this.onEditCancelClick,
+        },
+        ".o_website_links_ok_edit": {
+            "t-on-click.prevent": this.onEditValidate,
+        },
+        "#edit-code-form": {
+            "t-on-submit.prevent": this.onEditValidate,
+        },
+        ".copy-to-clipboard": {
+            "t-on-click.prevent": this.onCopyToClipboardClick,
+            "t-att-class": () => ({ "d-none": this.isEditing }),
+            "t-att-data-clipboard-text": () => this.hostContent + this.codeContent,
+        },
+        ".o_website_links_edit_code": {
+            "t-on-click": this.onEditClick,
+            "t-att-class": () => ({ "d-none": this.isEditing }),
+        },
+        ".o_website_links_code_error": {
+            "t-att-class": () => ({ "d-none": !this.errorMessage }),
+            "t-out": () => this.errorMessage,
+        },
+        "#o_website_links_code": {
+            "t-out": () => this.codeContent,
+        },
+        ".o_website_links_edit_tools": {
+            "t-att-class": () => ({ "d-none": !this.isEditing }),
+        },
+    };
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+    setup() {
+        this.codeContent = "";
+        this.hostContent = "";
+        this.errorMessage = "";
+        this.isEditing = false;
+    }
 
     /**
-     * @private
-     * @param {Event} ev
+     * @param {String} newCode
      */
-    _onCopyToClipboardClick: async function (ev) {
-        ev.preventDefault();
-        const copyBtn = ev.currentTarget;
+    updateCode(newCode) {
+        this.isEditing = false;
+        this.codeContent = newCode;
+        this.hostContent = document.querySelector("#short-url-host").innerHTML;
+        this.errorMessage = "";
+
+        document.querySelector("#o_website_links_code form").remove();
+    }
+
+    async onCopyToClipboardClick() {
+        const copyBtn = this.el.querySelector(".copy-to-clipboard");
         const tooltip = Tooltip.getOrCreateInstance(copyBtn, {
             title: _t("Link Copied!"),
             trigger: "manual",
             placement: "right",
         });
-        setTimeout(
-            async () => await browser.navigator.clipboard.writeText(copyBtn.dataset.clipboardText)
-        );
+        this.waitForTimeout(async () => await this.waitFor(browser.navigator.clipboard.writeText(copyBtn.dataset.clipboardText)));
         tooltip.show();
-        setTimeout(() => tooltip.hide(), 1200);
-    },
+        this.waitForTimeout(() => tooltip.hide(), 1200);
+    }
 
-    /**
-     * @private
-     * @param {String} newCode
-     */
-    _showNewCode: function (newCode) {
-        $('.o_website_links_code_error').html('');
-        $('.o_website_links_code_error').hide();
+    onEditClick() {
+        this.isEditing = true;
 
-        $('#o_website_links_code form').remove();
+        const formEl = document.createElement("form");
+        formEl.style.display = "inline";
+        formEl.setAttribute("id", "edit-code-form");
 
-        // Show new code
-        var host = $('#short-url-host').html();
-        $('#o_website_links_code').html(newCode);
+        const inputOldCodeEl = document.createElement("input");
+        inputOldCodeEl.setAttribute("id", "init_code");
+        inputOldCodeEl.setAttribute("type", "hidden");
+        inputOldCodeEl.setAttribute("value", this.codeContent);
 
-        // Update button copy to clipboard
-        $('.copy-to-clipboard').attr('data-clipboard-text', host + newCode);
+        const inputNewCodeEl = document.createElement("input");
+        inputNewCodeEl.setAttribute("id", "new_code");
+        inputNewCodeEl.setAttribute("type", "text");
+        inputNewCodeEl.setAttribute("value", this.codeContent);
 
-        // Show action again
-        $('.o_website_links_edit_code').show();
-        $('.copy-to-clipboard').show();
-        $('.o_website_links_edit_tools').hide();
-    },
-    /**
-     * @private
-     * @returns {Promise}
-     */
-    _submitCode: function () {
-        var initCode = $('#edit-code-form #init_code').val();
-        var newCode = $('#edit-code-form #new_code').val();
-        var self = this;
+        formEl.append(inputOldCodeEl, inputNewCodeEl);
+        this.codeContent = formEl.toString();
+    }
 
-        if (newCode === '') {
-            self.$('.o_website_links_code_error').html(_t("The code cannot be left empty"));
-            self.$('.o_website_links_code_error').show();
+    onEditCancelClick() {
+        this.isEditing = false;
+        this.updateCode(document.querySelector("#o_website_links_code form #init_code").value);
+    }
+
+    async onEditValidate() {
+        const formEl = document.querySelector("#o_website_links_code form");
+        const initCode = formEl.querySelectr("#init_code").value;
+        const newCode = formEl.querySelectr("#new_code").value;
+
+        if (newCode === "") {
+            this.errorMessage = _t("The code cannot be left empty");
             return;
         }
 
-        this._showNewCode(newCode);
-
         if (initCode === newCode) {
-            this._showNewCode(newCode);
+            this.updateCode(newCode);
         } else {
-            return rpc('/website_links/add_code', {
+            const result = await this.waitFor(rpc("/website_links/add_code", {
                 init_code: initCode,
                 new_code: newCode,
-            }).then(function (result) {
-                self._showNewCode(result[0].code);
-            }, function () {
-                $('.o_website_links_code_error').show();
-                $('.o_website_links_code_error').html(_t("This code is already taken"));
-            });
+            }));
+            if (result) {
+                this.updateCode(result[0].code);
+            } else {
+                this.errorMessage = _t("This code is already taken");
+            }
         }
+    }
+}
 
-        return Promise.resolve();
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onEditCodeClick: function () {
-        var initCode = $('#o_website_links_code').html();
-        $('#o_website_links_code').html('<form style="display:inline;" id="edit-code-form"><input type="hidden" id="init_code" value="' + initCode + '"/><input type="text" id="new_code" value="' + initCode + '"/></form>');
-        $('.o_website_links_edit_code').hide();
-        $('.copy-to-clipboard').hide();
-        $('.o_website_links_edit_tools').show();
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onCancelEditClick: function (ev) {
-        ev.preventDefault();
-        $('.o_website_links_edit_code').show();
-        $('.copy-to-clipboard').show();
-        $('.o_website_links_edit_tools').hide();
-        $('.o_website_links_code_error').hide();
-
-        var oldCode = $('#edit-code-form #init_code').val();
-        $('#o_website_links_code').html(oldCode);
-
-        $('#code-error').remove();
-        $('#o_website_links_code form').remove();
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onEditCodeFormSubmit: function (ev) {
-        ev.preventDefault();
-        this._submitCode();
-    },
-});
+registry
+    .category("public.interactions")
+    .add("website_links.code_editor", CodeEditor);
