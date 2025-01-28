@@ -161,6 +161,19 @@ class ProductTemplate(models.Model):
                     "Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!",
                 ))
 
+    def _used_in_pos(self):
+        open_pos_sessions = self.env['pos.session'].search([('state', '!=', 'closed')])
+        used_products = open_pos_sessions.order_ids.filtered(lambda o: o.state == "draft").lines.product_id.product_tmpl_id
+        return used_products & self
+
+    def action_archive(self):
+        if self._used_in_pos():
+            raise UserError(_(
+                "Hold up! Archiving products while POS sessions are active is like pulling a plate mid-meal.\n"
+                "Make sure to close all sessions first to avoid any issues.",
+            ))
+        return super().action_archive()
+
     @api.onchange('sale_ok')
     def _onchange_sale_ok(self):
         if not self.sale_ok:
