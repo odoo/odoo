@@ -53,9 +53,10 @@ class EventType(models.Model):
 
     def _default_question_ids(self):
         return [
-            # (4, self.env.ref('event_question_name').id, 0),
-            # (4, self.env.ref('event_question_email').id, 0),
-            # (4, self.env.ref('event_question_phone').id, 0),
+            (5, 0, 0),
+            (4, self.env.ref('event.event_question_name').id, 0),
+            (4, self.env.ref('event.event_question_email').id, 0),
+            (4, self.env.ref('event.event_question_phone').id, 0),
         ]
 
     name = fields.Char('Event Template', required=True, translate=True)
@@ -251,7 +252,8 @@ class EventEvent(models.Model):
     # questions
     question_ids = fields.Many2many(
         'event.question', string='Questions', copy=True,
-        compute='_compute_question_ids', readonly=False, store=True)
+        readonly=False, store=True)
+        # compute='_compute_question_ids', readonly=False, store=True)
     general_question_ids = fields.Many2many('event.question', string='General Questions',
                                            compute='_compute_general_question_ids')
     specific_question_ids = fields.Many2many('event.question', string='Specific Questions',
