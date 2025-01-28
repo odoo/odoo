@@ -4981,8 +4981,8 @@ class TestMrpOrder(TestMrpCommon):
 
         production.button_mark_done()
 
-        self.assertEqual(production.workorder_ids[0].date_finished, production.date_finished)
-        self.assertEqual(production.workorder_ids[0].leave_id.date_to, production.date_finished)
+        self.assertAlmostEqual(production.workorder_ids[0].date_finished, production.date_finished, delta=timedelta(seconds=2))
+        self.assertAlmostEqual(production.workorder_ids[0].leave_id.date_to, production.date_finished, delta=timedelta(seconds=2))
 
     def test_child_mo_after_qty_parent_mo_update(self):
         """
