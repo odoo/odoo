@@ -136,6 +136,8 @@ export class CalendarCommonRenderer extends Component {
         if (showWeek && weekColumn) {
             makeWeekColumn({ el, weekText });
         }
+
+        this._addCustomTimeDot(el);
     }
 
     getStartTime(record) {
@@ -393,5 +395,33 @@ export class CalendarCommonRenderer extends Component {
         el.classList.remove("fc-daygrid-more-link");
         el.parentNode.insertBefore(wrapper, el);
         wrapper.appendChild(el);
+    }
+
+    _addCustomTimeDot(el) {
+        const todayCol = el.querySelector(".fc-day-today.fc-timegrid-col");
+        const indicatorLine = el.querySelector(".fc-timegrid-now-indicator-line");
+
+        if (!todayCol || !indicatorLine) {
+            setTimeout(() => this._addCustomTimeDot(el), 100);
+            return;
+        }
+
+        let indicatorToday = todayCol.querySelector(".o_calendar_time_indicator_today");
+        if (!indicatorToday) {
+            indicatorToday = document.createElement("div");
+            indicatorToday.className = "o_calendar_time_indicator_today";
+            todayCol.appendChild(indicatorToday);
+        }
+
+        const updateIndicatorToday = () => {
+            indicatorToday.style.top = indicatorLine.style.top;
+        };
+
+        updateIndicatorToday();
+
+        new MutationObserver(updateIndicatorToday).observe(indicatorLine, {
+            attributes: true,
+            attributeFilter: ["style"],
+        });
     }
 }
