@@ -72,7 +72,7 @@ export class ColorPlugin extends Plugin {
      * @param {'foreground'|'background'} type
      */
     getPropsForColorSelector(type) {
-        const mode = type === "foreground" ? "color" : "background";
+        const mode = type === "foreground" ? "color" : "backgroundColor";
         const title = type === "foreground" ? _t("Font Color") : _t("Background Color");
         return {
             type,

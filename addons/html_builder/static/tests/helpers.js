@@ -23,7 +23,7 @@ import { withSequence } from "@html_editor/utils/resource";
 class Website extends models.Model {
     _name = "website";
     get_current_website() {
-        return "website(1,)";
+        return [1];
     }
 }
 

@@ -15,17 +15,6 @@ import { WebsiteSystrayItem } from "./website_systray_item";
 import { uniqueId } from "@web/core/utils/functions";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 
-function unslugHtmlDataObject(repr) {
-    const match = repr && repr.match(/(.+)\((\d+),(.*)\)/);
-    if (!match) {
-        return null;
-    }
-    return {
-        model: match[1],
-        id: match[2] | 0,
-    };
-}
-
 export class WebsiteBuilder extends Component {
     static template = "html_builder.WebsiteBuilder";
     static components = { LazyComponent, LocalOverlayContainer };
@@ -58,7 +47,7 @@ export class WebsiteBuilder extends Component {
                 this.websiteService.fetchWebsites(),
                 this.websiteService.fetchUserGroups(),
             ]);
-            this.backendWebsiteId = unslugHtmlDataObject(backendWebsiteRepr).id;
+            this.backendWebsiteId = backendWebsiteRepr[0];
             const encodedPath = encodeURIComponent(this.path);
             this.initialUrl = `/website/force/${encodeURIComponent(
                 this.backendWebsiteId

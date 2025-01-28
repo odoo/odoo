@@ -13,7 +13,7 @@ test("modify the steps color", async () => {
     expect(":iframe .s_process_steps .s_process_step path").toHaveStyle({
         stroke: "rgb(255, 0, 0)",
     });
-    expect(":iframe marker.s_process_steps_arrow_head").toHaveStyle({
+    expect(":iframe marker.s_process_steps_arrow_head path").toHaveStyle({
         fill: "rgb(255, 0, 0)",
     });
 });

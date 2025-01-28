@@ -42,7 +42,6 @@ export class BlockTab extends Component {
     setup() {
         this.dialog = useService("dialog");
         this.orm = useService("orm");
-        this.company = useService("company");
 
         const copyOnDrag = copyElementOnDrag();
         useDraggable({

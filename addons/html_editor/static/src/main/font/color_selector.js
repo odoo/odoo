@@ -51,13 +51,14 @@ export class ColorSelector extends Component {
             onClose: () => this.props.applyColorResetPreview(),
         });
 
+        // TODO need to support other color modes (border, etc)
         this.mode = this.props.type === "foreground" ? "color" : "backgroundColor";
 
         this.state = useState({ activeTab: "solid" });
         this.colorWrapperEl = useRef("colorsWrapper");
         this.selectedColors = useState(this.props.getSelectedColors());
         this.defaultColor = this.selectedColors[this.mode];
-        this.currentCustomColor = useState({ color: this.selectedColors[this.mode] });
+        this.currentCustomColor = useState({ color: this.selectedColors[this.mode] || "" });
 
         this.usedCustomColors = this.props.getUsedCustomColors();
     }

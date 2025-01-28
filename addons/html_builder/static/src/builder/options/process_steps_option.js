@@ -1,7 +1,6 @@
 import { defaultBuilderComponents } from "../builder_components/default_builder_components";
 import { coreBuilderActions } from "@html_builder/builder/core_builder_action_plugin";
 import { applyFunDependOnSelectorAndExclude } from "@html_builder/builder/options/utils";
-import { getCSSVariableValue } from "@html_builder/builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
@@ -50,12 +49,11 @@ class ProcessStepsOptionPlugin extends Plugin {
                 },
             },
             changeArrowColor: {
-                apply: ({ editingElement, param: colorValue }) => {
-                    const htmlPropColor = getCSSVariableValue(colorValue);
+                apply: ({ editingElement, value: colorValue }) => {
                     const arrowHeadEl = editingElement
                         .closest(".s_process_steps")
                         .querySelector(".s_process_steps_arrow_head");
-                    arrowHeadEl.querySelector("path").style.fill = htmlPropColor || colorValue;
+                    arrowHeadEl.querySelector("path").style.fill = colorValue;
                 },
             },
         };
