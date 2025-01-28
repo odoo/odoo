@@ -131,6 +131,11 @@
             --fc-today-bg-color: none;
         }
 
+        // Remove time indicator arrow
+        .fc-timegrid-now-indicator-arrow {
+            display: none;
+        }
+
         // ===  Adapt calendar table borders and general layout ===
         // ========================================================
         --fc-page-bg-color: #{$o-view-background-color};
@@ -224,6 +229,9 @@
         // ====== Both Day and Week agenda
         .fc-timeGridDay-view,
         .fc-timeGridWeek-view {
+            --o-cw-bg: #{$o-cw-color-today-accent};
+            --o-cw-color: #{color-contrast($o-cw-color-today-accent)};
+
             .fc-scrollgrid-section-body {
                 &:not(.fc-scrollgrid-section-liquid) .fc-scroller-harness {
                     background-color: $o-view-background-color;
@@ -352,15 +360,38 @@
             }
         }
 
+        .fc-timegrid-now-indicator-container {
+            pointer-events: none;
+            overflow: visible;
+            border: none;
+        }
+
         // ====== Week only
         .fc-timeGridWeek-view {
             // Reset position to keep the "nowIndicator" line visible
             @for $i from 1 through 7 {
-                .fc-timegrid-col:not(.fc-timegrid-axis):nth-child(#{$i + 1}) .fc-timegrid-now-indicator-container {
+                .fc-timegrid-col:not(.fc-timegrid-axis):nth-child(#{$i + 1}) .o_calendar_time_indicator_now {
                     $left: ($i - 1) * -100;
                     $right: (7 - $i) * -100;
                     left: #{$left + '%'};
                     right: #{$right + '%'};
+                    position: absolute;
+                    height: 1px;
+                    background-color: var(--o-cw-bg);
+                    opacity: 0.3;
+                    transform: translateY(-100%);
+                }
+
+                // Add a dot shape at the start of the "Now Indicator" line
+                .fc-timegrid-now-indicator-line::before {
+                    content: "";
+                    position: absolute;
+                    height: .75rem;
+                    width: .75rem;
+                    border: $border-width solid $o-view-background-color;
+                    border-radius: $border-radius-pill;
+                    background-color: var(--o-cw-bg);
+                    transform: translate(-50%, -50%);
                 }
             }
         }

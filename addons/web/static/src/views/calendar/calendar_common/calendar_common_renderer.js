@@ -123,6 +123,11 @@ export class CalendarCommonRenderer extends Component {
             longPressDelay: 500,
             navLinks: false,
             nowIndicator: true,
+            nowIndicatorContent: {
+                html: `
+                    <div class="o_calendar_time_indicator_now"></div>
+                `,
+            },
             select: this.onSelect,
             selectAllow: this.isSelectionAllowed,
             selectMinDistance: 5, // needed to not trigger select when click
