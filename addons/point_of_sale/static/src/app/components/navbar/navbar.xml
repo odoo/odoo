@@ -2,15 +2,15 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.Navbar">
-        <div class="pos-topheader navbar-height position-relative d-flex align-items-center justify-content-between p-2 m-0 bg-view border-bottom">
-            <div class="pos-leftheader d-flex align-items-center gap-2" t-att-class="{ 'flex-grow-1 overflow-auto': ui.isSmall, 'd-none': ui.isSmall and state.searchBarOpen }">
-                <div class="d-flex align-items-center flex-shrink-0 gap-1 position-relative" t-att-class="{ 'w-100': !ui.isSmall }">
-                    <div class="navbar-menu d-flex d-lg-grid position-relative">
-                        <button class="register-label btn btn-lg btn-light lh-lg" t-att-class="{'active fw-bolder': mainButton === 'register'}" t-on-click="() => this.pos.showOrderScreen(true)">
+        <div class="pos-topheader position-relative d-flex align-items-center justify-content-between gap-1 p-2 m-0 bg-view border-bottom">
+            <div class="pos-leftheader d-flex align-items-center flex-grow-1 overflow-auto" t-att-class="{'d-none': ui.isSmall and state.searchBarOpen, 'mw-100': this.pos.getOrder()}">
+                <div class="d-flex flex-shrink-0 align-items-center gap-1 position-relative pe-2" t-att-class="{ 'w-100': !ui.isSmall }">
+                    <div class="navbar-menu d-flex">
+                        <button class="register-label btn btn-lg btn-light lh-lg" t-att-class="{'active': mainButton === 'register'}" t-on-click="() => this.pos.showOrderScreen(true)">
                             <span t-if="!ui.isSmall">Register</span>
                             <i t-else="" class="fa fa-fw fa-pencil" t-att-class="{'fa-lg' : !ui.isSmall}"/>
                         </button>
-                        <button class="orders-button btn btn-lg btn-light lh-lg" t-att-class="{'active fw-bolder': mainButton === 'order'}" t-on-click="() => this.pos.showScreen('TicketScreen')">
+                        <button class="orders-button btn btn-lg btn-light lh-lg" t-att-class="{'active': mainButton === 'order'}" t-on-click="() => this.pos.showScreen('TicketScreen')">
                             <t t-if="!ui.isSmall">
                                 <span>Orders</span>
                             </t>
@@ -19,21 +19,19 @@
                     </div>
                     <div t-if="!ui.isSmall" class="navbar-separator"/>
                     <OrderTabs orders="getOrderTabs()" class="'h-50'"/>
-                    <button class="btn btn-light d-flex align-items-center gap-2 h-100 fs-3" t-on-click="openPresetTiming" t-if="shouldDisplayPresetTime">
-                        <i class="fa fa-clock-o" aria-hidden="true"></i>
-                        <div class="d-inline lh-1" t-esc="this.pos.getOrder()?.presetTime || '--:--'" />
+                    <button class="btn btn-secondary d-flex align-items-center gap-1 h-100 ms-2 p-2" t-on-click="openPresetTiming" t-if="shouldDisplayPresetTime">
+                        <i class="fa fa-clock-o" aria-hidden="true"/>
+                        <span class="fw-bolder lh-1" t-esc="this.pos.getOrder()?.presetTime || '--:--'" />
                     </button>
                 </div>
             </div>
-            <div class="pos-centerheader d-none d-xl-flex position-absolute top-50 start-50 translate-middle w-auto z-1">
-                <div class="pos-logo w-100 flex-shrink-0 z-2" t-on-click="() => debug.toggleWidget()"/>
+            <div t-if="!this.pos.getOrder()" class="pos-centerheader d-none d-xl-flex justify-content-center overflow-hidden">
+                <div class="pos-logo mw-100" t-on-click="() => debug.toggleWidget()"/>
             </div>
-            <div class="pos-rightheader d-flex justify-content-end"
-                t-att-class="{ 'ms-auto': !ui.isSmall, 'end-0 flex-grow-1 pos-nav-small': ui.isSmall }"
-            >
+            <div class="pos-rightheader flex-grow-1">
                 <div class="status-buttons d-flex flex-grow-1 align-items-center justify-content-end gap-1">
                     <Input tModel="[pos, 'searchProductWord']"
-                    class="ui.isSmall ? 'p-0' : 'p-0 search-input-reduced'"
+                    class="ui.isSmall ? 'p-0' : 'w-100 w-xl-50 me-0 me-lg-2'"
                     isSmall="ui.isSmall"
                     placeholder.translate="Search products..."
                     icon="{type: 'fa', value: 'fa-search fa-lg fa-fw'}"
