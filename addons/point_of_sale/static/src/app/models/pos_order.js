@@ -351,7 +351,9 @@ export class PosOrder extends Base {
         // was last sent to the preparation tools or updated. If so we delete older changes.
         for (const [key, change] of Object.entries(this.last_order_preparation_change.lines)) {
             const orderline = this.models["pos.order.line"].getBy("uuid", change.uuid);
-            if (!orderline || change.note.trim() !== orderline.note.trim()) {
+            const lineNote = orderline?.note;
+            const changeNote = change?.note;
+            if (!orderline || (lineNote && changeNote && changeNote.trim() !== lineNote.trim())) {
                 delete this.last_order_preparation_change.lines[key];
             }
         }
