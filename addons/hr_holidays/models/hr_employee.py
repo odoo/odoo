@@ -127,6 +127,10 @@ class HrEmployee(models.Model):
             ('resource_calendar_id', '=', self.resource_calendar_id.id),
         ]
 
+        if self.job_id:
+            domain += [
+                ('job_ids', 'in', [False] + self.job_id.ids),
+            ]
         if self.department_id:
             domain += [
                 '|',
