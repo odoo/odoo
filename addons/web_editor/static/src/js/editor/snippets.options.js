@@ -2277,11 +2277,13 @@ const ListUserValueWidget = UserValueWidget.extend({
             this.containerEl.appendChild(this.addItemButton);
         }
         currentValues.forEach(value => {
+            //TODO : replace display_name with variable
             if (typeof value === 'object') {
                 const recordData = value;
                 const { id, display_name } = recordData;
                 delete recordData.id;
                 delete recordData.display_name;
+                debugger;
                 this._addItemToTable(id, display_name, recordData);
             } else {
                 this._addItemToTable(value, value);
@@ -2800,7 +2802,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
     configAttributes: [
         "model", "fields", "limit", "domain",
         "callWith", "createMethod", "filterInModel", "filterInField", "nullText",
-        "defaultMessage",
+        "defaultMessage", "displayedField"
     ],
 
     /**
@@ -2815,6 +2817,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
             fields: '[]',
             domain: '[]',
             callWith: 'id',
+            displayedField: "display_name",
         });
         this.configAttributes.forEach(attr => {
             if (dataAttributes.hasOwnProperty(attr)) {
@@ -2824,8 +2827,8 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
         });
         options.limit = parseInt(options.limit);
         options.fields = JSON.parse(options.fields);
-        if (!options.fields.includes('display_name')) {
-            options.fields.push('display_name');
+        if (!options.fields.includes(options.displayedField)) {
+            options.fields.push(options.displayedField);
         }
         options.domain = JSON.parse(options.domain);
         options.domainComponents = {};
@@ -2995,11 +2998,15 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
                 this.options.nullText.toLowerCase().includes(needle.toLowerCase())) {
             // Beware of RPC cache.
             if (!records.length || records[0].id) {
-                records.unshift({id: 0, name: this.options.nullText, display_name: this.options.nullText});
+                const objToUnshift = {};
+                objToUnshift[id] = 0;
+                objToUnshift[name] = this.options.nullText;
+                objToUnshift[this.options.displayedField] = this.options.nullText;
+                records.unshift(objToUnshift);
             }
         }
         records.forEach(record => {
-            this.displayNameCache[record.id] = record.display_name;
+            this.displayNameCache[record.id] = record[this.options.displayedField];
         });
 
         await Promise.all(records.slice(0, this.options.limit).map(async record => {
@@ -3014,7 +3021,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
             // write a transformer like there is for JSX?
             const buttonWidget = new ButtonUserValueWidget(this, undefined, {
                 dataAttributes: Object.assign({recordData: JSON.stringify(record)}, buttonDataAttributes),
-                childNodes: [document.createTextNode(record.display_name)],
+                childNodes: [document.createTextNode(record[this.options.displayedField])],
             }, this.$target);
             this.registerSubWidget(buttonWidget);
             await buttonWidget.appendTo(this.menuEl);
@@ -3066,7 +3073,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
      */
     async _getDisplayName(recordId) {
         if (!this.displayNameCache.hasOwnProperty(recordId)) {
-            this.displayNameCache[recordId] = (await this.orm.read(this.options.model, [recordId], ['display_name']))[0].display_name;
+            this.displayNameCache[recordId] = (await this.orm.read(this.options.model, [recordId], [this.options.displayedField]))[0][this.options.displayedField];
         }
         return this.displayNameCache[recordId];
     },
@@ -3159,7 +3166,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
 });
 
 const Many2manyUserValueWidget = UserValueWidget.extend({
-    configAttributes: ['model', 'recordId', 'm2oField', 'createMethod', 'fakem2m', 'filterIn'],
+    configAttributes: ['model', 'recordId', 'm2oField', 'createMethod', 'fakem2m', 'filterIn', 'displayedField'],
 
     /**
      * @override
@@ -3202,7 +3209,7 @@ const Many2manyUserValueWidget = UserValueWidget.extend({
         this.m2oModel = modelData[m2oField].relation;
         this.m2oName = modelData[m2oField].field_description; // Use as string attr?
 
-        const selectedRecords = await this.orm.read(this.m2oModel, selectedRecordIds, ['display_name']);
+        const selectedRecords = await this.orm.read(this.m2oModel, selectedRecordIds, [this.options.displayedField]);
         // TODO: reconcile the fact that this widget sets its own initial value
         // instead of it coming through setValue(_computeWidgetState)
         this._value = JSON.stringify(selectedRecords);
@@ -3219,6 +3226,7 @@ const Many2manyUserValueWidget = UserValueWidget.extend({
             ['model', this.m2oModel],
             ['addRecord', ''],
             ['createMethod', this.options.createMethod],
+            ['displayedField', this.options.displayedField ?? "display_name"],
         );
         // Don't register this one as a subWidget because it will be a subWidget
         // of the listWidget
@@ -3226,6 +3234,7 @@ const Many2manyUserValueWidget = UserValueWidget.extend({
             dataAttributes: Object.fromEntries(m2oDataAttributes),
         }, this.$target);
 
+        debugger;
         this.listWidget = registerUserValueWidget('we-list', this, undefined, {
             dataAttributes: { unsortable: 'true', notEditable: 'true', allowEmpty: 'true' },
             createWidget: this.createWidget,
