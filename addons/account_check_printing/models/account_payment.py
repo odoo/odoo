@@ -171,8 +171,18 @@ class AccountPayment(models.Model):
             self.env.cr.execute("""
                   SELECT payment.id
                     FROM account_payment payment
+<<<<<<< saas-17.4
                    WHERE payment.journal_id = %(journal_id)s
                      AND payment.check_number IS NOT NULL
+||||||| 528a6af445ef16c26bd150398b0a8288535852b9
+                    JOIN account_move move ON movE.id = payment.move_id
+                   WHERE journal_id = %(journal_id)s
+                   AND payment.check_number IS NOT NULL
+=======
+                    JOIN account_move move ON move.id = payment.move_id
+                   WHERE move.journal_id = %(journal_id)s
+                   AND payment.check_number IS NOT NULL
+>>>>>>> af192838003473cbc999feac1c8fdf825e43117f
                 ORDER BY payment.check_number::BIGINT DESC
                    LIMIT 1
             """, {
