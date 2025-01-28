@@ -53,9 +53,9 @@ class EventType(models.Model):
 
     def _default_question_ids(self):
         return [
-            (4, self.env['event.question'].ref('event_question_name').id, 0),
-            (4, self.env['event.question'].ref('event_question_email').id, 0),
-            (4, self.env['event.question'].ref('event_question_phone').id, 0),
+            # (4, self.env.ref('event_question_name').id, 0),
+            # (4, self.env.ref('event_question_email').id, 0),
+            # (4, self.env.ref('event_question_phone').id, 0),
         ]
 
     name = fields.Char('Event Template', required=True, translate=True)
