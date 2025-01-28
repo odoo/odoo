@@ -176,4 +176,4 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
                 'subject': 'About Test NoMailThread',
             }
         )
-        self.assertIn('Powered by', mail.body_html, 'Body should contain the notification layout')
+        self.assertNotIn('Powered by', mail.body_html, 'Body should contain the notification layout')

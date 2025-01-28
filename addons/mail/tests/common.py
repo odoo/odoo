@@ -1116,7 +1116,11 @@ class MailCase(MockEmail):
     def _message_post_and_get_unfollow_urls(self, record, partner_ids):
         """ Post a message on the record for the partners and extract the unfollow URLs. """
         with self.mock_mail_gateway():
-            _message = record.message_post(
+            user_admin = self.env.ref('base.user_admin')
+            _message = record.with_user(user_admin).with_context(
+                email_notification_force_header=True,
+                email_notification_force_footer=True
+            ).message_post(
                 body='test message',
                 partner_ids=partner_ids.ids,
                 subtype_id=self.env.ref('mail.mt_comment').id,
