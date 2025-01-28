@@ -1,10 +1,9 @@
-import { formatCurrency } from "@web/core/currency";
+import { formatCurrency, getCurrency } from "@web/core/currency";
 import { _t } from "@web/core/l10n/translation";
 import publicWidget from '@web/legacy/js/public/public_widget';
-import { rpc } from "@web/core/network/rpc";
+import { session } from "@web/session";
 
 const CUSTOM_BUTTON_EXTRA_WIDTH = 10;
-let cachedCurrency;
 
 publicWidget.registry.DonationSnippet = publicWidget.Widget.extend({
     selector: '.s_donation',
@@ -82,37 +81,28 @@ publicWidget.registry.DonationSnippet = publicWidget.Widget.extend({
      * @private
      */
     _displayCurrencies() {
-        return this._getCachedCurrency().then((result) => {
-            // No need to recreate the elements if the currency is already set.
-            if (this.currency === result) {
-                return;
-            }
-            this.currency = result;
-            this.$('.s_donation_currency').remove();
-            const $prefilledButtons = this.$('.s_donation_btn, .s_range_bubble');
-            $prefilledButtons.toArray().forEach((button) => {
-                const before = result.position === "before";
-                const $currencySymbol = document.createElement('span');
-                $currencySymbol.innerText = result.symbol;
-                $currencySymbol.classList.add('s_donation_currency', before ? "pe-1" : "ps-1");
-                if (before) {
-                    $(button).prepend($currencySymbol);
-                } else {
-                    $(button).append($currencySymbol);
-                }
-            });
+        const result = getCurrency(session['website_currency_id']);
+        // No need to recreate the elements if the currency is already set.
+        if (this.currency === result) {
+            return;
+        }
+        this.currency = result;
+        const donationCurrencies = document.querySelectorAll('.s_donation_currency');
+        donationCurrencies.forEach((currency) => {
+            currency.remove();
         });
-    },
-    /**
-     * @private
-     */
-    _getCachedCurrency() {
-        return cachedCurrency
-            ? Promise.resolve(cachedCurrency)
-            : rpc("/website/get_current_currency").then((result) => {
-                cachedCurrency = result;
-                return result;
-            });
+        const prefilledButtons = document.querySelectorAll('.s_donation_btn, .s_range_bubble');
+        prefilledButtons.forEach((button) => {
+            const before = result.position === "before";
+            const currencySymbol = document.createElement('span');
+            currencySymbol.innerText = result.symbol;
+            currencySymbol.classList.add('s_donation_currency', before ? "pe-1" : "ps-1");
+            if (before) {
+                button.insertBefore(currencySymbol, button.firstChild);
+            } else {
+                button.appendChild(currencySymbol);
+            }
+        });
     },
 
     //--------------------------------------------------------------------------
