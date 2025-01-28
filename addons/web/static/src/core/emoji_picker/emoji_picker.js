@@ -479,7 +479,11 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
             options.onClose?.();
         },
     };
-    const popover = usePopover(PickerComponent, { ...newOptions, animation: false });
+    const popover = usePopover(PickerComponent, {
+        ...newOptions,
+        animation: false,
+        popoverClass: options.popoverClass ?? "" + " bg-100 border border-secondary",
+    });
     props.storeScroll = {
         scrollValue: 0,
         set: (value) => {
