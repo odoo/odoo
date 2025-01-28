@@ -43,18 +43,9 @@
                             <span t-esc="formatCurrency(taxTotals.order_sign * taxTotals.tax_amount_currency)" class="tax"/>
                         </div>
                     </div>
-                    <div t-if="'cash_rounding_base_amount_currency' in taxTotals"
-                         class="subentry d-flex justify-content-between w-100 fs-6 text-muted"
-                    >
-                        Rounding
-                        <div id="order-widget-rounding">
-                            <span t-esc="formatCurrency(taxTotals.order_sign * taxTotals.cash_rounding_base_amount_currency)"
-                                  class="rounding"/>
-                        </div>
-                    </div>
                     <div class="d-flex justify-content-between w-100 fs-3">
                         Total
-                        <span t-esc="formatCurrency(taxTotals.order_sign * taxTotals.total_amount_currency)"
+                        <span t-esc="formatCurrency(taxTotals.order_sign * taxTotals.order_total)"
                               class="total"/>
                     </div>
                 </div>
