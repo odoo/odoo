@@ -24,9 +24,6 @@ class TestSnippets(HttpCase):
         html_template = html.fromstring(snippets_template)
         data_snippet_els = html_template.xpath("//*[snippets and not(hasclass('d-none'))]//*[@data-oe-snippet-key]/*[@data-snippet]")
 
-        # FIXME targeting data-oe-snippet-key should be enough to find actual
-        # snippets, but the current xpath search for inner data-snippet too as
-        # it currently missing on some snippet (e.g. accordion?)
         data_snippet_els = [el.getparent() for el in data_snippet_els]
 
         blacklist = [
