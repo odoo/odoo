@@ -2,6 +2,7 @@
 <odoo>
     <record id="account_tax_report_bf" model="account.report">
         <field name="name">VAT Report</field>
+        <field name="name@fr">Déclaration TVA</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.bf"/>
         <field name="filter_fiscal_position" eval="True"/>
@@ -9,25 +10,30 @@
         <field name="column_ids">
             <record id="account_tax_report_bf_balance" model="account.report.column">
                 <field name="name">Balance</field>
+                <field name="name@fr">Solde</field>
                 <field name="expression_label">balance</field>
             </record>
         </field>
         <field name="line_ids">
             <record id="account_tax_report_line_bf_turnover" model="account.report.line">
                 <field name="name">III. Global Turnover Without VAT</field>
+                <field name="name@fr">III. Chiffre D'Affaires Global Hors TVA</field>
                 <field name="code">BF_TURNOVER</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_bf_taxable" model="account.report.line">
                         <field name="name">C1. Taxable operations</field>
+                        <field name="name@fr">C.1 Opérations taxables</field>
                         <field name="code">BF_TAXABLE</field>
                         <field name="children_ids">
                             <record id="account_tax_report_line_bf_taxable_day" model="account.report.line">
                                 <field name="name">a. Day-to-day operations</field>
+                                <field name="name@fr">a. Opérations courantes</field>
                                 <field name="code">BF_DAY</field>
                                 <field name="children_ids">
                                      <record id="account_tax_report_line_bf_taxable_day_sales" model="account.report.line">
                                         <field name="name">01 Sales, services, building works</field>
+                                        <field name="name@fr">01 Ventes, prestations de services, travaux immobiliers</field>
                                         <field name="code">BF_DAY_SALES</field>
                                         <field name="expression_ids">
                                             <record id="account_tax_report_line_bf_taxable_day_sales_balance" model="account.report.expression">
@@ -39,6 +45,7 @@
                                      </record>
                                      <record id="account_tax_report_line_bf_taxable_day_self" model="account.report.line">
                                         <field name="name">02 Self Delivery (SD)</field>
+                                        <field name="name@fr">02 Livraisons à soi-même (LASM)</field>
                                         <field name="code">BF_SELF</field>
                                         <field name="expression_ids">
                                             <record id="account_tax_report_line_bf_taxable_day_self_balance" model="account.report.expression">
@@ -50,6 +57,7 @@
                                      </record>
                                      <record id="account_tax_report_line_bf_taxable_day_assets" model="account.report.line">
                                         <field name="name">03 Sale of fixed assets</field>
+                                        <field name="name@fr">03 Cessions d’immobilisations</field>
                                         <field name="code">BF_ASSETS</field>
                                         <field name="expression_ids">
                                             <record id="account_tax_report_line_bf_taxable_day_assets_balance" model="account.report.expression">
@@ -61,6 +69,7 @@
                                      </record>
                                      <record id="account_tax_report_line_bf_taxable_day_sales_10" model="account.report.line">
                                         <field name="name">04 Taxable operations at a rate of 10%</field>
+                                        <field name="name@fr">04 Opérations taxables au taux de 10%</field>
                                         <field name="code">BF_DAY_SALES_10</field>
                                         <field name="expression_ids">
                                             <record id="account_tax_report_line_bf_taxable_day_sales_10_balance" model="account.report.expression">
@@ -72,6 +81,7 @@
                                      </record>
                                      <record id="account_tax_report_line_bf_taxable_day_sales_other" model="account.report.line">
                                         <field name="name">05 Other taxable operations</field>
+                                        <field name="name@fr">05 Autres opérations taxables</field>
                                         <field name="code">BF_DAY_SALES_OTHER</field>
                                         <field name="expression_ids">
                                             <record id="account_tax_report_line_bf_taxable_day_sales_other_balance" model="account.report.expression">
@@ -85,10 +95,12 @@
                             </record>
                             <record id="account_tax_report_line_bf_taxable_contract" model="account.report.line">
                                 <field name="name">b. Contracts, order letters, other public and private contracts</field>
+                                <field name="name@fr">b. Marchés, lettres de commande, autres contrats publics et privés</field>
                                 <field name="code">BF_CONTRACT</field>
                                 <field name="children_ids">
                                      <record id="account_tax_report_line_bf_taxable_contract_sales" model="account.report.line">
                                         <field name="name">06 Sales</field>
+                                        <field name="name@fr">06 Ventes</field>
                                         <field name="code">BF_CONTRACT_SALES</field>
                                         <field name="expression_ids">
                                             <record id="account_tax_report_line_bf_taxable_contract_sales_balance" model="account.report.expression">
@@ -100,6 +112,7 @@
                                      </record>
                                      <record id="account_tax_report_line_bf_taxable_contract_services" model="account.report.line">
                                         <field name="name">07 Services</field>
+                                        <field name="name@fr">07 Prestations de services</field>
                                         <field name="code">BF_CONTRACT_SERVICES</field>
                                         <field name="expression_ids">
                                             <record id="account_tax_report_line_bf_taxable_contract_services_balance" model="account.report.expression">
@@ -111,6 +124,7 @@
                                      </record>
                                      <record id="account_tax_report_line_bf_taxable_contract_immo" model="account.report.line">
                                         <field name="name">08 Building works, public works</field>
+                                        <field name="name@fr">08 Travaux immobiliers, travaux publics</field>
                                         <field name="code">BF_CONTRACT_WORKS</field>
                                         <field name="expression_ids">
                                             <record id="account_tax_report_line_bf_taxable_contract_immo_balance" model="account.report.expression">
@@ -122,6 +136,7 @@
                                      </record>
                                      <record id="account_tax_report_line_bf_taxable_contract_sales_10" model="account.report.line">
                                         <field name="name">09 Taxable operations at a rate of 10%</field>
+                                        <field name="name@fr">09 Opération taxable au taux de 10%</field>
                                         <field name="code">BF_CONTRACT_SALES_10</field>
                                         <field name="expression_ids">
                                             <record id="account_tax_report_line_bf_taxable_contract_sales_10_balance" model="account.report.expression">
@@ -133,6 +148,7 @@
                                      </record>
                                      <record id="account_tax_report_line_bf_taxable_contract_sales_other" model="account.report.line">
                                         <field name="name">10 Other taxable operations</field>
+                                        <field name="name@fr">10 Autres opérations taxables</field>
                                         <field name="code">BF_CONTRACT_SALES_OTHER</field>
                                         <field name="expression_ids">
                                             <record id="account_tax_report_line_bf_taxable_contract_sales_other_balance" model="account.report.expression">
@@ -148,10 +164,12 @@
                     </record>
                     <record id="account_tax_report_line_bf_non_taxable" model="account.report.line">
                         <field name="name">C2. Non-taxable operations</field>
+                        <field name="name@fr">C2 Opérations non taxables</field>
                         <field name="code">BF_NON_TAXABLE</field>
                         <field name="children_ids">
                              <record id="account_tax_report_line_bf_non_taxable_export" model="account.report.line">
                                 <field name="name">11 Exports</field>
+                                <field name="name@fr">11 Exportations</field>
                                 <field name="code">BF_EXPORT</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_bf_non_taxable_export_balance" model="account.report.expression">
@@ -163,6 +181,7 @@
                              </record>
                              <record id="account_tax_report_line_bf_non_taxable_foreign" model="account.report.line">
                                 <field name="name">12 Other foreign trade transactions, tax-suspended sales</field>
+                                <field name="name@fr">12 Autres opérations relevant du commerce extérieur, ventes en suspension de taxe</field>
                                 <field name="code">BF_FOREIGN</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_bf_non_taxable_foreign_balance" model="account.report.expression">
@@ -174,6 +193,7 @@
                              </record>
                              <record id="account_tax_report_line_bf_non_taxable_other" model="account.report.line">
                                 <field name="name">13 Other non-taxable operations</field>
+                                <field name="name@fr">13 Autres opérations non taxables</field>
                                 <field name="code">BF_NON_TAXABLE_OTHER</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_bf_non_taxable_other_balance" model="account.report.expression">
@@ -187,6 +207,7 @@
                     </record>
                     <record id="account_tax_report_line_bf_total_operations" model="account.report.line">
                         <field name="name">14 Total amount of operations</field>
+                        <field name="name@fr">14 Montant total des opérations</field>
                         <field name="code">BF_TOTAL_OPERATIONS</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_bf_total_operations_balance" model="account.report.expression">
@@ -200,15 +221,18 @@
             </record>
             <record id="account_tax_report_line_bf_gross" model="account.report.line">
                 <field name="name">IV. Gross VAT</field>
+                <field name="name@fr">IV. TVA Brute</field>
                 <field name="code">BF_GROSS</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                      <record id="account_tax_report_line_bf_taxable_18" model="account.report.line">
                         <field name="name">15 At normal rate (18%)</field>
+                        <field name="name@fr">15 Soumises au taux normal (18%)</field>
                         <field name="code">BF_TAXABLE_18</field>
                         <field name="children_ids">
                             <record id="account_tax_report_line_bf_taxable_18_base" model="account.report.line">
                                 <field name="name">Base tax excluded</field>
+                                <field name="name@fr">Base hors taxe </field>
                                 <field name="code">BF_TAXABLE_18_BASE</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_bf_taxable_18_base_balance" model="account.report.expression">
@@ -220,6 +244,7 @@
                             </record>
                             <record id="account_tax_report_line_bf_taxable_18_tax" model="account.report.line">
                                 <field name="name">Gross VAT amount</field>
+                                <field name="name@fr">Montant TVA brute</field>
                                 <field name="code">BF_TAXABLE_18_TAX</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_bf_taxable_18_tax_balance" model="account.report.expression">
@@ -233,10 +258,12 @@
                      </record>
                      <record id="account_tax_report_line_bf_taxable_10" model="account.report.line">
                         <field name="name">16 At reduced rate (10%)</field>
+                        <field name="name@fr">16 Soumises au taux reduit (10%)</field>
                         <field name="code">BF_TAXABLE_10</field>
                         <field name="children_ids">
                             <record id="account_tax_report_line_bf_taxable_10_base" model="account.report.line">
                                 <field name="name">Base tax excluded</field>
+                                <field name="name@fr">Base hors taxe </field>
                                 <field name="code">BF_TAXABLE_10_BASE</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_bf_taxable_10_base_balance" model="account.report.expression">
@@ -248,6 +275,7 @@
                             </record>
                             <record id="account_tax_report_line_bf_taxable_10_tax" model="account.report.line">
                                 <field name="name">Gross VAT amount</field>
+                                <field name="name@fr">Montant TVA brute</field>
                                 <field name="code">BF_TAXABLE_10_TAX</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_bf_taxable_10_tax_balance" model="account.report.expression">
@@ -261,6 +289,7 @@
                      </record>
                      <record id="account_tax_report_line_bf_tax_omitted" model="account.report.line">
                         <field name="name">17 Previously omitted gross VAT to be repaid</field>
+                        <field name="name@fr">17 TVA brute antérieurement omise à reverser</field>
                         <field name="code">BF_TAX_OMITTED</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_bf_tax_omitted_balance" model="account.report.expression">
@@ -272,6 +301,7 @@
                      </record>
                      <record id="account_tax_report_line_bf_tax_deducted" model="account.report.line">
                         <field name="name">18 VAT previously deducted to be repaid</field>
+                        <field name="name@fr">18 TVA antérieurement déduite à reverser</field>
                         <field name="code">BF_TAX_DEDUCTED</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_bf_tax_deducted_balance" model="account.report.expression">
@@ -283,6 +313,7 @@
                      </record>
                      <record id="account_tax_report_line_bf_gross_total" model="account.report.line">
                         <field name="name">19 Total gross VAT amount</field>
+                        <field name="name@fr">19 Montant total de la TVA Brute</field>
                         <field name="code">BF_GROSS_TOTAL</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_bf_gross_total_balance" model="account.report.expression">
@@ -296,11 +327,13 @@
             </record>
             <record id="account_tax_report_line_bf_net" model="account.report.line">
                 <field name="name">V. Net VAT</field>
+                <field name="name@fr">V. TVA nette</field>
                 <field name="code">BF_NET</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_bf_deductible" model="account.report.line">
                         <field name="name">20 Deductible VAT for the period</field>
+                        <field name="name@fr">20 TVA déductible de la période</field>
                         <field name="code">BF_DEDUCTIBLE</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_bf_deductible_balance" model="account.report.expression">
@@ -312,6 +345,7 @@
                     </record>
                     <record id="account_tax_report_line_bf_credit_reported" model="account.report.line">
                         <field name="name">21 VAT credit from previous period</field>
+                        <field name="name@fr">21 Crédit TVA de la période précédente</field>
                         <field name="code">BF_CREDIT_REPORTED</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_bf_credit_reported_balance" model="account.report.expression">
@@ -329,6 +363,7 @@
                     </record>
                     <record id="account_tax_report_line_bf_credit_asked" model="account.report.line">
                         <field name="name">22 VAT credit claimed for reimbursement</field>
+                        <field name="name@fr">22 Crédit TVA demandé en remboursement</field>
                         <field name="code">BF_CREDIT_ASKED</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_bf_credit_asked_balance" model="account.report.expression">
@@ -341,6 +376,7 @@
                     </record>
                     <record id="account_tax_report_line_bf_credit_not_asked" model="account.report.line">
                         <field name="name">23 VAT credit not claimed for reimbursement</field>
+                        <field name="name@fr">23 Crédit TVA dont le remboursement n'a pas été demandé</field>
                         <field name="code">BF_CREDIT_NOT_ASKED</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_bf_credit_not_asked_balance" model="account.report.expression">
@@ -353,6 +389,7 @@
                     </record>
                     <record id="account_tax_report_line_bf_irrecoverable" model="account.report.line">
                         <field name="name">24 VAT on unpaid sales or services (definitively irrecoverable debts)</field>
+                        <field name="name@fr">24 TVA sur ventes ou services demeurant impayés (créances définitivement irrécouvrables)</field>
                         <field name="code">BF_IRRECOVERABLE</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_bf_irrecoverable_balance" model="account.report.expression">
@@ -364,6 +401,7 @@
                     </record>
                     <record id="account_tax_report_line_bf_cancelled" model="account.report.line">
                         <field name="name">25 VAT paid on terminated or cancelled sales or services</field>
+                        <field name="name@fr">25 TVA acquittée sur ventes ou services résiliés ou annulés</field>
                         <field name="code">BF_CANCELLED</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_bf_cancelled_balance" model="account.report.expression">
@@ -375,6 +413,7 @@
                     </record>
                     <record id="account_tax_report_line_bf_other_deduction" model="account.report.line">
                         <field name="name">26 Other deductions available to the company</field>
+                        <field name="name@fr">26 Autres déductions auxquelles peut prétendre l’entreprise</field>
                         <field name="code">BF_OTHER_DEDUCTION</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_bf_other_deduction_balance" model="account.report.expression">
@@ -386,6 +425,7 @@
                     </record>
                     <record id="account_tax_report_line_bf_unpaid_credit_carried" model="account.report.line">
                         <field name="name">27 Unpaid VAT credit carried forward</field>
+                        <field name="name@fr">27 Crédit TVA non remboursé reportable</field>
                         <field name="code">BF_UNPAID_CREDIT</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_bf_unpaid_credit_carried_balance" model="account.report.expression">
@@ -399,6 +439,7 @@
             </record>
             <record id="account_tax_report_line_bf_net_vat_to_pay" model="account.report.line">
                 <field name="name">Net VAT amount to pay [19 – (20+21-22+25+26+27)]</field>
+                <field name="name@fr">Montant de la TVA nette à payer [19 – (20+21-22+25+26+27)] </field>
                 <field name="code">BF_NET_TO_PAY</field>
                 <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
@@ -412,6 +453,7 @@
             </record>
             <record id="account_tax_report_line_bf_credit_to_report" model="account.report.line">
                 <field name="name">Credit VAT to report [(20+21-22+25+26+27) - 19]</field>
+                <field name="name@fr">Montant du crédit de TVA à reporter [(20+21-22+25+26+27) - 19]</field>
                 <field name="code">BF_CREDIT_TO_REPORT</field>
                 <field name="hierarchy_level">0</field>
                 <field name="expression_ids">

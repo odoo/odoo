@@ -3,6 +3,7 @@
     <data>
         <record id='ec_ruc' model='l10n_latam.identification.type'>
             <field name='name'>RUC</field>
+            <field name="name@es_419">Registre Unico de Contribuyente</field>
             <field name='description'>Single Taxpayer Registration</field>
             <field name='country_id' ref='base.ec'/>
             <field name='is_vat' eval='True'/>
@@ -10,6 +11,7 @@
         </record>
         <record id='ec_dni' model='l10n_latam.identification.type'>
             <field name='name'>Citizenship</field>
+            <field name="name@es_419">Cédula de Ciudadanía o Cédula de Identidad</field>
             <field name='description'>Citizenship card or Identity Card</field>
             <field name='country_id' ref='base.ec'/>
             <field name='sequence'>20</field>
@@ -17,6 +19,7 @@
         <!-- TODO: Remove in master -->
         <record id='ec_passport' model='l10n_latam.identification.type'>
             <field name='name'>Passport</field>
+            <field name="name@es_419">Pasaporte para extranjeros con domicilio en el país</field>
             <field name='description'>Passport for foreigners with domicile in the country (Deprecated)</field>
             <field name='country_id' ref='base.ec'/>
             <field name='active' eval="False"/>
@@ -25,6 +28,7 @@
         <!-- TODO: Remove in master -->
         <record id='ec_unknown' model='l10n_latam.identification.type'>
             <field name='name'>Unknown</field>
+            <field name="name@es_419">Desconocido</field>
             <field name='description'>To identify, useful for quick sales registration (Deprecated)</field>
             <field name='country_id' ref='base.ec'/>
             <field name='active' eval="False"/>

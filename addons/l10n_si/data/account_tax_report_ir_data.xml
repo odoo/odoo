@@ -3,17 +3,20 @@
     <!-- IR -->
     <record id="tax_report_ir" model="account.report">
         <field name="name">Payable VAT (IR)</field>
+        <field name="name@sl">Poročilo IR</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.si"/>
         <field name="column_ids">
             <record id="tax_report_ir_balance" model="account.report.column">
                 <field name="name">Balance</field>
+                <field name="name@sl">Bilanca</field>
                 <field name="expression_label">balance</field>
             </record>
         </field>
         <field name="line_ids">
             <record id="tax_report_ir_7" model="account.report.line">
                 <field name="name">7. SLO Value excluding VAT</field>
+                <field name="name@sl">7. SLO Vrednost brez DDV</field>
                 <field name="code">ir_7</field>
                 <field name="expression_ids">
                     <record id="tax_report_ir_7_tag" model="account.report.expression">
@@ -25,6 +28,7 @@
             </record>
             <record id="tax_report_ir_8" model="account.report.line">
                 <field name="name">8. Self-taxation of supplies Article 76a</field>
+                <field name="name@sl">8. Dobave samo-obdavčitev 76.a člen</field>
                 <field name="code">ir_8</field>
                 <field name="expression_ids">
                     <record id="tax_report_ir_8_tag" model="account.report.expression">
@@ -55,6 +59,7 @@
                 <field name="children_ids">
                     <record id="tax_report_ir_9" model="account.report.line">
                         <field name="name">9. No right to deduct VAT</field>
+                        <field name="name@sl">9. Brez pravice do odbitka DDV</field>
                         <field name="code">ir_9</field>
                         <field name="expression_ids">
                             <record id="tax_report_ir_9_tag" model="account.report.expression">
@@ -66,6 +71,7 @@
                     </record>
                     <record id="tax_report_ir_10a" model="account.report.line">
                         <field name="name">10a. Supplies of goods</field>
+                        <field name="name@sl">10a. Dobave blaga</field>
                         <field name="code">ir_10a</field>
                         <field name="sequence">3200</field>
                         <field name="expression_ids">
@@ -78,6 +84,7 @@
                     </record>
                     <record id="tax_report_ir_10b" model="account.report.line">
                         <field name="name">10b. Custom posts 42 and 43</field>
+                        <field name="name@sl">10b. Carinski post. 42 in 43</field>
                         <field name="code">ir_10b</field>
                         <field name="sequence">3300</field>
                         <field name="expression_ids">
@@ -90,6 +97,7 @@
                     </record>
                     <record id="tax_report_ir_10c" model="account.report.line">
                         <field name="name">10c. Deliveries of bl. after storage on recall</field>
+                        <field name="name@sl">10c. Dobave bl. po skladiščenju na odpoklic</field>
                         <field name="code">ir_10c</field>
                         <field name="expression_ids">
                             <record id="tax_report_ir_10c_tag" model="account.report.expression">
@@ -101,6 +109,7 @@
                     </record>
                     <record id="tax_report_ir_10d" model="account.report.line">
                         <field name="name">10d. Passed st.</field>
+                        <field name="name@sl">10d. Opravljena st.</field>
                         <field name="code">ir_10d</field>
                         <field name="expression_ids">
                             <record id="tax_report_ir_10d_tag" model="account.report.expression">
@@ -112,6 +121,7 @@
                     </record>
                     <record id="tax_report_ir_11" model="account.report.line">
                         <field name="name">11. Three-way delivery</field>
+                        <field name="name@sl">11. Tristranska dobava</field>
                         <field name="code">ir_11</field>
                         <field name="expression_ids">
                             <record id="tax_report_ir_11_tag" model="account.report.expression">
@@ -123,6 +133,7 @@
                     </record>
                     <record id="tax_report_ir_12" model="account.report.line">
                         <field name="name">12. Distance selling</field>
+                        <field name="name@sl">12. Prodaja na daljavo</field>
                         <field name="code">ir_12</field>
                         <field name="expression_ids">
                             <record id="tax_report_ir_12_tag" model="account.report.expression">
@@ -134,6 +145,7 @@
                     </record>
                     <record id="tax_report_ir_13" model="account.report.line">
                         <field name="name">13. Assembly</field>
+                        <field name="name@sl">13. Montaža</field>
                         <field name="code">ir_13</field>
                         <field name="expression_ids">
                             <record id="tax_report_ir_13_tag" model="account.report.expression">
@@ -187,6 +199,7 @@
                          <field name="children_ids">
                             <record id="tax_report_ir_14" model="account.report.line">
                                 <field name="name">14. VAT 22%</field>
+                                <field name="name@sl">14. DDV 22%</field>
                                 <field name="code">ir_14</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_ir_14_tag" model="account.report.expression">
@@ -198,6 +211,7 @@
                             </record>
                              <record id="tax_report_ir_15a" model="account.report.line">
                                 <field name="name">15a. VAT 9,5%</field>
+                                <field name="name@sl">15a. DDV 9,5%</field>
                                 <field name="code">ir_15a</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_ir_15a_tag" model="account.report.expression">
@@ -209,6 +223,7 @@
                             </record>
                              <record id="tax_report_ir_15b" model="account.report.line">
                                 <field name="name">15b. VAT 5%</field>
+                                <field name="name@sl">15b. DDV 5%</field>
                                 <field name="code">ir_15b</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_ir_15b_tag" model="account.report.expression">
@@ -239,6 +254,7 @@
                          <field name="children_ids">
                             <record id="tax_report_ir_16" model="account.report.line">
                                 <field name="name">16. VAT BL 22%</field>
+                                <field name="name@sl">16. DDV BL 22%</field>
                                 <field name="code">ir_16</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_ir_16_tag" model="account.report.expression">
@@ -250,6 +266,7 @@
                             </record>
                             <record id="tax_report_ir_17" model="account.report.line">
                                 <field name="name">17. VAT ST 22%</field>
+                                <field name="name@sl">17. DDV ST 22%</field>
                                 <field name="code">ir_17</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_ir_17_tag" model="account.report.expression">
@@ -261,6 +278,7 @@
                             </record>
                             <record id="tax_report_ir_18a" model="account.report.line">
                                 <field name="name">18a. VAT BL 9.5%</field>
+                                <field name="name@sl">18a. DDV BL 9,5%</field>
                                 <field name="code">ir_18a</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_ir_18a_tag" model="account.report.expression">
@@ -272,6 +290,7 @@
                             </record>
                             <record id="tax_report_ir_19a" model="account.report.line">
                                 <field name="name">19a. VAT ST 9.5%</field>
+                                <field name="name@sl">19a. DDV ST 9,5%</field>
                                 <field name="code">ir_19a</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_ir_19a_tag" model="account.report.expression">
@@ -283,6 +302,7 @@
                             </record>
                             <record id="tax_report_ir_18b" model="account.report.line">
                                 <field name="name">18b. VAT BL 5%</field>
+                                <field name="name@sl">18b. DDV BL 5%</field>
                                 <field name="code">ir_18b</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_ir_18b_tag" model="account.report.expression">
@@ -294,6 +314,7 @@
                             </record>
                             <record id="tax_report_ir_19b" model="account.report.line">
                                 <field name="name">19b. VAT ST 5%</field>
+                                <field name="name@sl">19b. DDV ST 5%</field>
                                 <field name="code">ir_19b</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_ir_19b_tag" model="account.report.expression">
@@ -317,6 +338,7 @@
                          <field name="children_ids">
                              <record id="tax_report_ir_20" model="account.report.line">
                                 <field name="name">20. VAT 22%</field>
+                                <field name="name@sl">20. DDV 22%</field>
                                 <field name="code">ir_20</field>
                                 <field name="sequence">4310</field>
                                 <field name="expression_ids">
@@ -329,6 +351,7 @@
                              </record>
                              <record id="tax_report_ir_21a" model="account.report.line">
                                 <field name="name">21a. VAT 9,5%</field>
+                                <field name="name@sl">21a. DDV 9,5%</field>
                                 <field name="code">ir_21a</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_ir_21a_tag" model="account.report.expression">
@@ -340,6 +363,7 @@
                             </record>
                              <record id="tax_report_ir_21b" model="account.report.line">
                                 <field name="name">21b. VAT 5%</field>
+                                <field name="name@sl">21b. DDV 5%</field>
                                 <field name="code">ir_21b</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_ir_21b_tag" model="account.report.expression">
@@ -363,6 +387,7 @@
                          <field name="children_ids">
                              <record id="tax_report_ir_22" model="account.report.line">
                                 <field name="name">22. VAT 22%</field>
+                                <field name="name@sl">22. DDV 22%</field>
                                 <field name="code">ir_22</field>
                                 <field name="sequence">4410</field>
                                 <field name="expression_ids">
@@ -375,6 +400,7 @@
                              </record>
                              <record id="tax_report_ir_22a" model="account.report.line">
                                 <field name="name">22a. VAT 9,5%</field>
+                                <field name="name@sl">22a. DDV 9,5%</field>
                                 <field name="code">ir_22a</field>
                                 <field name="sequence">4420</field>
                                 <field name="expression_ids">
@@ -387,6 +413,7 @@
                             </record>
                              <record id="tax_report_ir_22b" model="account.report.line">
                                 <field name="name">22b. VAT 5%</field>
+                                <field name="name@sl">22b. DDV 5%</field>
                                 <field name="code">ir_22b</field>
                                 <field name="sequence">4430</field>
                                 <field name="expression_ids">
@@ -434,6 +461,7 @@
                     </record>
                     <record id="tax_report_ir_25b" model="account.report.line">
                         <field name="name">25b. EU services received</field>
+                        <field name="name@sl">25b. Prejete storitve EU</field>
                         <field name="code">ir_25b</field>
                         <field name="expression_ids">
                             <record id="tax_report_ir_25b_tag" model="account.report.expression">
@@ -445,6 +473,7 @@
                     </record>
                     <record id="tax_report_ir_25c" model="account.report.line">
                         <field name="name">25c. Acquisition SLO Article 76a</field>
+                        <field name="name@sl">25c. Nabava SLO 76.a člen</field>
                         <field name="code">ir_25c</field>
                         <field name="expression_ids">
                             <record id="tax_report_ir_25c_tag" model="account.report.expression">
@@ -456,6 +485,7 @@
                     </record>
                     <record id="tax_report_ir_25d" model="account.report.line">
                         <field name="name">25d. Purchases other for self-taxation</field>
+                        <field name="name@sl">25d. Drugi nakupi za samoobdavčitev</field>
                         <field name="code">ir_25d</field>
                         <field name="expression_ids">
                             <record id="tax_report_ir_25d_tag" model="account.report.expression">

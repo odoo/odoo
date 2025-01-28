@@ -2,6 +2,7 @@
 <odoo auto_sequence="1">
     <record id="tax_report" model="account.report">
         <field name="name">Tax Report</field>
+        <field name="name@vi_VN">Báo cáo Thuế</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.vn"/>
         <field name="filter_fiscal_position" eval="True"/>
@@ -9,16 +10,19 @@
         <field name="column_ids">
             <record id="tax_report_amount_untaxed" model="account.report.column">
                 <field name="name">Base Amount</field>
+                <field name="name@vi_VN">Số tiền gốc</field>
                 <field name="expression_label">amount_untaxed</field>
             </record>
             <record id="tax_report_balance" model="account.report.column">
                 <field name="name">Balance</field>
+                <field name="name@vi_VN">Số dư</field>
                 <field name="expression_label">balance</field>
             </record>
         </field>
         <field name="line_ids">
             <record id="account_tax_report_line_01_vn" model="account.report.line">
                 <field name="name">Purchase of Goods and Services</field>
+                <field name="name@vi_VN">HHDV Mua vào</field>
                 <field name="aggregation_formula">VAT_PURCHASE.balance + VAT_PURCHASE_IMPORTED.balance + VAT_PURCHASE_IMPORT_TAX.balance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
@@ -31,6 +35,7 @@
                 <field name="children_ids">
                     <record id="account_tax_report_line_01_01_vn" model="account.report.line">
                         <field name="name">VAT on purchase of goods and services</field>
+                        <field name="name@vi_VN">Thuế GTGT HHDV mua vào</field>
                         <field name="code">VAT_PURCHASE</field>
                         <field name="aggregation_formula">VAT_PURCHASE_0.balance + VAT_PURCHASE_5.balance + VAT_PURCHASE_8.balance + VAT_PURCHASE_10.balance</field>
                         <field name="expression_ids">
@@ -43,6 +48,7 @@
                         <field name="children_ids">
                             <record id="account_tax_report_line_01_01_01_vn" model="account.report.line">
                                 <field name="name">VAT on purchase of goods and services 0%</field>
+                                <field name="name@vi_VN">Thuế GTGT HHDV mua vào chịu thuế 0%</field>
                                 <field name="code">VAT_PURCHASE_0</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_01_01_01_vn_tag_base" model="account.report.expression">
@@ -59,6 +65,7 @@
                             </record>
                             <record id="account_tax_report_line_02_01_01_vn" model="account.report.line">
                                 <field name="name">VAT on purchase of goods and services 5%</field>
+                                <field name="name@vi_VN">Thuế GTGT HHDV mua vào chịu thuế 5%</field>
                                 <field name="code">VAT_PURCHASE_5</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_02_01_01_vn_tag_base" model="account.report.expression">
@@ -75,6 +82,7 @@
                             </record>
                             <record id="account_tax_report_line_04_01_01_vn" model="account.report.line">
                                 <field name="name">VAT on purchase of goods and services 8%</field>
+                                <field name="name@vi_VN">Thuế GTGT HHDV mua vào chịu thuế 8%</field>
                                 <field name="code">VAT_PURCHASE_8</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_04_01_01_vn_tag_base" model="account.report.expression">
@@ -91,6 +99,7 @@
                             </record>
                             <record id="account_tax_report_line_03_01_01_vn" model="account.report.line">
                                 <field name="name">VAT on purchase of goods and services 10%</field>
+                                <field name="name@vi_VN">Thuế GTGT HHDV mua vào chịu thuế 10%</field>
                                 <field name="code">VAT_PURCHASE_10</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_03_01_01_vn_tag_base" model="account.report.expression">
@@ -107,6 +116,7 @@
                             </record>
                             <record id="account_tax_report_line_05_01_01_vn" model="account.report.line">
                                 <field name="name">VAT on purchase of goods and services Exemption</field>
+                                <field name="name@vi_VN">Không chịu thuế HHDV mua vào</field>
                                 <field name="code">VAT_PURCHASE_EXEMPTION</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_05_01_01_vn_tag_base" model="account.report.expression">
@@ -120,6 +130,7 @@
                     </record>
                     <record id="account_tax_report_line_02_01_vn" model="account.report.line">
                         <field name="name">VAT on purchase of imported goods</field>
+                        <field name="name@vi_VN">Giá trị HHDV Mua vào</field>
                         <field name="code">VAT_PURCHASE_IMPORTED</field>
                         <field name="aggregation_formula">VAT_PURCHASE_IMPORTED_0.balance + VAT_PURCHASE_IMPORTED_5.balance + VAT_PURCHASE_IMPORTED_8.balance + VAT_PURCHASE_IMPORTED_10.balance</field>
                         <field name="expression_ids">
@@ -132,6 +143,7 @@
                         <field name="children_ids">
                             <record id="account_tax_report_line_01_02_01_vn" model="account.report.line">
                                 <field name="name">VAT on purchase of imported goods 0%</field>
+                                <field name="name@vi_VN">Giá trị HHDV Mua vào chịu thuế 0%</field>
                                 <field name="code">VAT_PURCHASE_IMPORTED_0</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_01_02_01_vn_tag_base" model="account.report.expression">
@@ -148,6 +160,7 @@
                             </record>
                             <record id="account_tax_report_line_02_02_01_vn" model="account.report.line">
                                 <field name="name">VAT on purchase of imported goods 5%</field>
+                                <field name="name@vi_VN">Giá trị HHDV Mua vào chịu thuế 5%</field>
                                 <field name="code">VAT_PURCHASE_IMPORTED_5</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_02_02_01_vn_tag_base" model="account.report.expression">
@@ -164,6 +177,7 @@
                             </record>
                             <record id="account_tax_report_line_04_02_01_vn" model="account.report.line">
                                 <field name="name">VAT on purchase of imported goods 8%</field>
+                                <field name="name@vi_VN">Giá trị HHDV Mua vào chịu thuế 8%</field>
                                 <field name="code">VAT_PURCHASE_IMPORTED_8</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_04_02_01_vn_tag_base" model="account.report.expression">
@@ -180,6 +194,7 @@
                             </record>
                             <record id="account_tax_report_line_03_02_01_vn" model="account.report.line">
                                 <field name="name">VAT on purchase of imported goods 10%</field>
+                                <field name="name@vi_VN">Giá trị HHDV Mua vào chịu thuế 10%</field>
                                 <field name="code">VAT_PURCHASE_IMPORTED_10</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_03_02_01_vn_tag_base" model="account.report.expression">
@@ -198,6 +213,7 @@
                     </record>
                     <record id="account_tax_report_line_03_01_vn" model="account.report.line">
                         <field name="name">Import Tax</field>
+                        <field name="name@vi_VN">Thuế nhập khẩu</field>
                         <field name="code">VAT_PURCHASE_IMPORT_TAX</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_03_01_vn_tag_base" model="account.report.expression">
@@ -216,6 +232,7 @@
             </record>
             <record id="account_tax_report_line_02_vn" model="account.report.line">
                 <field name="name">Sales of Goods and Services</field>
+                <field name="name@vi_VN">HHDV Bán ra</field>
                 <field name="aggregation_formula">VAT_SALES.balance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
@@ -228,6 +245,7 @@
                 <field name="children_ids">
                     <record id="account_tax_report_line_01_02_vn" model="account.report.line">
                         <field name="name">VAT on sales of goods and services</field>
+                        <field name="name@vi_VN">Thuế GTGT HHDV bán ra</field>
                         <field name="code">VAT_SALES</field>
                         <field name="aggregation_formula">VAT_SALES_0.balance + VAT_SALES_5.balance + VAT_SALES_8.balance + VAT_SALES_10.balance</field>
                         <field name="expression_ids">
@@ -240,6 +258,7 @@
                         <field name="children_ids">
                             <record id="account_tax_report_line_01_01_02_vn" model="account.report.line">
                                 <field name="name">VAT on sales of goods and services 0%</field>
+                                <field name="name@vi_VN">Thuế GTGT HHDV bán ra chịu thuế 0%</field>
                                 <field name="code">VAT_SALES_0</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_01_01_02_vn_tag_base" model="account.report.expression">
@@ -256,6 +275,7 @@
                             </record>
                             <record id="account_tax_report_line_02_01_02_vn" model="account.report.line">
                                 <field name="name">VAT on sales of goods and services 5%</field>
+                                <field name="name@vi_VN">Thuế GTGT HHDV bán ra chịu thuế 5%</field>
                                 <field name="code">VAT_SALES_5</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_02_01_02_vn_tag_base" model="account.report.expression">
@@ -272,6 +292,7 @@
                             </record>
                             <record id="account_tax_report_line_04_01_02_vn" model="account.report.line">
                                 <field name="name">VAT on sales of goods and services 8%</field>
+                                <field name="name@vi_VN">Thuế GTGT HHDV bán ra chịu thuế 8%</field>
                                 <field name="code">VAT_SALES_8</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_04_01_02_vn_tag_base" model="account.report.expression">
@@ -288,6 +309,7 @@
                             </record>
                             <record id="account_tax_report_line_03_01_02_vn" model="account.report.line">
                                 <field name="name">VAT on sales of goods and services 10%</field>
+                                <field name="name@vi_VN">Thuế GTGT HHDV bán ra chịu thuế 10%</field>
                                 <field name="code">VAT_SALES_10</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_03_01_02_vn_tag_base" model="account.report.expression">
@@ -304,6 +326,7 @@
                             </record>
                             <record id="account_tax_report_line_05_01_02_vn" model="account.report.line">
                                 <field name="name">VAT on sales of goods and services Exemption</field>
+                                <field name="name@vi_VN">Không chịu thuế HHDV bán ra</field>
                                 <field name="code">VAT_SALES_EXEMPTION</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_05_01_02_vn_tag_base" model="account.report.expression">
