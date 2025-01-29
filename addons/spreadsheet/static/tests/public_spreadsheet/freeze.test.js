@@ -63,7 +63,7 @@ test("Pivot with a type different of ODOO is not converted", async function () {
             },
         },
     };
-    const model = await createModelWithDataSource({ spreadsheetData });
+    const { model } = await createModelWithDataSource({ spreadsheetData });
     setCellContent(model, "A1", `=PIVOT.VALUE(1, "probability:avg")`);
     setCellContent(model, "A2", `=PIVOT.HEADER(1, "measure", "probability:avg")`);
     const data = await freezeOdooData(model);
@@ -89,7 +89,7 @@ test("values are not exported formatted", async function () {
     expect(getEvaluatedCell(model, "C4").value).toBe(46);
     expect(getEvaluatedCell(model, "C4").formattedValue).toBe("February 1900");
     const data = await freezeOdooData(model);
-    const sharedModel = await createModelWithDataSource({ spreadsheetData: data });
+    const { model: sharedModel } = await createModelWithDataSource({ spreadsheetData: data });
     expect(getEvaluatedCell(sharedModel, "C3").value).toBe(15);
     expect(getEvaluatedCell(sharedModel, "C3").formattedValue).toBe("January 1900");
     expect(getEvaluatedCell(sharedModel, "C4").value).toBe(46);
@@ -130,7 +130,7 @@ test("computed format is exported", async function () {
     const formatId = data.sheets[0].formats.A1;
     const format = data.formats[formatId];
     expect(format).toBe("#,##0.00[$€]");
-    const sharedModel = await createModelWithDataSource({ spreadsheetData: data });
+    const { model: sharedModel } = await createModelWithDataSource({ spreadsheetData: data });
     expect(getCell(sharedModel, "A1").format).toBe("#,##0.00[$€]");
 });
 
@@ -164,7 +164,7 @@ test("geo charts are replaced with an image", async function () {
 });
 
 test("translation function are replaced with their value", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     setCellContent(model, "A1", `=_t("example")`);
     setCellContent(model, "A2", `=CONCATENATE("for",_t(" example"))`);
     expect(getEvaluatedCell(model, "A1").value).toBe("example");
@@ -180,7 +180,7 @@ test("translation function are replaced with their value", async function () {
 });
 
 test("a new sheet is added for global filters", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER);
     const data = await freezeOdooData(model);
     expect(data.sheets.length).toBe(2);
@@ -189,7 +189,7 @@ test("a new sheet is added for global filters", async function () {
 });
 
 test("global filters and their display value are exported", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER);
     const data = await freezeOdooData(model);
     expect(data.globalFilters.length).toBe(1);
@@ -198,7 +198,7 @@ test("global filters and their display value are exported", async function () {
 });
 
 test("from/to global filters are exported", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     await addGlobalFilter(model, {
         id: "42",
         type: "date",
@@ -225,7 +225,7 @@ test("from/to global filters are exported", async function () {
 });
 
 test("from/to global filter without value is exported", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     await addGlobalFilter(model, {
         id: "42",
         type: "date",
@@ -268,7 +268,7 @@ test("odoo links are replaced with their label", async function () {
         ],
     };
 
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData: data,
         serverData: getMenuServerData(),
     });

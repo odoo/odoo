@@ -96,15 +96,13 @@ export async function insertPivotInSpreadsheet(model, pivotId, params) {
  * @returns {Promise<{ model: OdooSpreadsheetModel, env: object, pivotId: string}>}
  */
 export async function createSpreadsheetWithPivot(params = {}) {
-    const model = await createModelWithDataSource({
+    const { model, env } = await createModelWithDataSource({
         mockRPC: params.mockRPC,
         serverData: params.serverData,
     });
     const arch = params.arch || getBasicPivotArch();
     const pivotId = "PIVOT#1";
     await insertPivotInSpreadsheet(model, pivotId, { arch });
-    const env = model.config.custom.env;
-    env.model = model;
     await waitForDataLoaded(model);
     return { model, env, pivotId };
 }

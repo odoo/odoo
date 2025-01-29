@@ -41,12 +41,10 @@ export function insertChartInSpreadsheet(
  * @returns { Promise<{ model: OdooSpreadsheetModel, env: Object }>}
  */
 export async function createSpreadsheetWithChart(params = {}) {
-    const model = await createModelWithDataSource(params);
+    const { model, env } = await createModelWithDataSource(params);
 
     insertChartInSpreadsheet(model, params.type, params.definition);
 
-    const env = model.config.custom.env;
-    env.model = model;
     await animationFrame();
     return { model, env };
 }

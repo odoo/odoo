@@ -9,7 +9,7 @@ describe.current.tags("headless");
 defineSpreadsheetModels();
 
 test("get default currency format when it's in the config", async () => {
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         modelConfig: { defaultCurrency: { position: "after", symbol: "θ", decimalPlaces: 2 } },
         mockRPC: async function (route, args) {
             throw new Error("Should not make any RPC");
@@ -19,7 +19,7 @@ test("get default currency format when it's in the config", async () => {
 });
 
 test("get default currency format when it's not in the config", async () => {
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         mockRPC: async function (route, args) {
             if (args.method === "get_company_currency_for_spreadsheet") {
                 return {
@@ -39,7 +39,7 @@ test("get default currency format when it's not in the config", async () => {
 });
 
 test("get specific currency format", async () => {
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         modelConfig: { defaultCurrency: { position: "after", symbol: "θ", decimalPlaces: 2 } },
         mockRPC: async function (route, args) {
             if (args.method === "get_company_currency_for_spreadsheet" && args.args[0] === 42) {

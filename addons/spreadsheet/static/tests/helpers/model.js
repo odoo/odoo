@@ -27,7 +27,7 @@ export function setupDataSourceEvaluation(model) {
  * @param {object} [params.modelConfig]
  * @param {ServerData} [params.serverData] Data to be injected in the mock server
  * @param {function} [params.mockRPC] Mock rpc function
- * @returns {Promise<OdooSpreadsheetModel>}
+ * @returns {Promise<{ model: OdooSpreadsheetModel, env: Object }>}
  */
 export async function createModelWithDataSource(params = {}) {
     const env = await makeSpreadsheetMockEnv(params);
@@ -41,12 +41,13 @@ export async function createModelWithDataSource(params = {}) {
             ...config?.custom,
         },
     });
+    env.model = model;
     // if (params.serverData) {
     //     await addRecordsFromServerData(params.serverData);
     // }
     setupDataSourceEvaluation(model);
     await animationFrame(); // initial async formulas loading
-    return model;
+    return { model, env };
 }
 
 /**
@@ -82,11 +83,11 @@ export async function makeSpreadsheetMockEnv(params = {}) {
 }
 
 export function createModelFromGrid(grid) {
-  const model = new Model();
-  for (let xc in grid) {
-    if (grid[xc] !== undefined) {
-      setCellContent(model, xc, grid[xc]);
+    const model = new Model();
+    for (const xc in grid) {
+        if (grid[xc] !== undefined) {
+            setCellContent(model, xc, grid[xc]);
+        }
     }
-  }
-  return model;
+    return model;
 }

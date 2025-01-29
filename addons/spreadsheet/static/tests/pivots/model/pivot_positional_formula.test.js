@@ -129,7 +129,7 @@ test("sort first pivot column (ascending)", async () => {
             },
         },
     };
-    const model = await createModelWithDataSource({ spreadsheetData });
+    const { model } = await createModelWithDataSource({ spreadsheetData });
     setCellContent(model, "A1", `=PIVOT.HEADER(1,"#bar",1)`);
     setCellContent(model, "A2", `=PIVOT.HEADER(1,"#bar",2)`);
     setCellContent(model, "B1", `=PIVOT.VALUE(1,"probability:sum","#bar",1,"#foo",1)`);
@@ -167,7 +167,7 @@ test("sort first pivot column (descending)", async () => {
             },
         },
     };
-    const model = await createModelWithDataSource({ spreadsheetData });
+    const { model } = await createModelWithDataSource({ spreadsheetData });
     setCellContent(model, "A1", `=PIVOT.HEADER(1,"#bar",1)`);
     setCellContent(model, "A2", `=PIVOT.HEADER(1,"#bar",2)`);
     setCellContent(model, "B1", `=PIVOT.VALUE(1,"probability:sum","#bar",1,"#foo",1)`);
@@ -206,7 +206,7 @@ test("sort second pivot column (ascending)", async () => {
             },
         },
     };
-    const model = await createModelWithDataSource({ spreadsheetData });
+    const { model } = await createModelWithDataSource({ spreadsheetData });
     setCellContent(model, "A1", `=PIVOT.HEADER(1,"#bar",1)`);
     setCellContent(model, "A2", `=PIVOT.HEADER(1,"#bar",2)`);
     setCellContent(model, "B1", `=PIVOT.VALUE(1,"probability:sum","#bar",1,"#foo",1)`);
@@ -245,7 +245,7 @@ test("sort second pivot column (descending)", async () => {
             },
         },
     };
-    const model = await createModelWithDataSource({ spreadsheetData });
+    const { model } = await createModelWithDataSource({ spreadsheetData });
     setCellContent(model, "A1", `=PIVOT.HEADER(1,"#bar",1)`);
     setCellContent(model, "A2", `=PIVOT.HEADER(1,"#bar",2)`);
     setCellContent(model, "B1", `=PIVOT.VALUE(1,"probability:sum","#bar",1,"#foo",1)`);
@@ -286,7 +286,7 @@ test("sort second pivot measure (ascending)", async () => {
             },
         },
     };
-    const model = await createModelWithDataSource({ spreadsheetData });
+    const { model } = await createModelWithDataSource({ spreadsheetData });
     setCellContent(model, "A10", `=PIVOT.HEADER(1,"#product_id",1)`);
     setCellContent(model, "A11", `=PIVOT.HEADER(1,"#product_id",2)`);
     setCellContent(model, "B10", `=PIVOT.VALUE(1,"probability:sum","#product_id",1)`);
@@ -323,7 +323,7 @@ test("sort second pivot measure (descending)", async () => {
             },
         },
     };
-    const model = await createModelWithDataSource({ spreadsheetData });
+    const { model } = await createModelWithDataSource({ spreadsheetData });
     setCellContent(model, "A10", `=PIVOT.HEADER(1,"#product_id",1)`);
     setCellContent(model, "A11", `=PIVOT.HEADER(1,"#product_id",2)`);
     setCellContent(model, "B10", `=PIVOT.VALUE(1,"probability:sum","#product_id",1)`);
