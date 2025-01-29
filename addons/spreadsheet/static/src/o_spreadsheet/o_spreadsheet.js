@@ -38079,14 +38079,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     }
                     break;
                 case "AUTORESIZE_ROWS":
-                    for (let row of cmd.rows) {
-                        this.dispatch("RESIZE_COLUMNS_ROWS", {
-                            elements: [row],
-                            dimension: "ROW",
-                            size: null,
-                            sheetId: cmd.sheetId,
-                        });
-                    }
+                    this.dispatch("RESIZE_COLUMNS_ROWS", {
+                        elements: cmd.rows,
+                        dimension: "ROW",
+                        size: null,
+                        sheetId: cmd.sheetId,
+                    });
                     break;
             }
         }
@@ -43569,9 +43567,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.58';
-    __info__.date = '2025-01-27T10:55:15.353Z';
-    __info__.hash = '4886b0b';
+    __info__.version = '16.0.59';
+    __info__.date = '2025-01-29T06:32:55.517Z';
+    __info__.hash = '0897f45';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
