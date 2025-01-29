@@ -13,7 +13,7 @@
         <record id="account_tag_2" model="account.account.tag">
             <field name="name">Accommodation costs</field>
             <field name="name@nl">Huisvestingskosten</field>
-            <field name="name@de">Kosten der Unterkunft</field>
+            <field name="name@de">Unterbringungskosten</field>
             <field name="applicability">accounts</field>
             <field name="country_id" ref="base.nl"/>
             <field name="active" eval="False"/>
@@ -21,7 +21,7 @@
         <record id="account_tag_3" model="account.account.tag">
             <field name="name">Financial fixed assets</field>
             <field name="name@nl">Financiële vaste activa</field>
-            <field name="name@de">Finanzielle Anlagewerte</field>
+            <field name="name@de">Finanzanlagen</field>
             <field name="applicability">accounts</field>
             <field name="country_id" ref="base.nl"/>
             <field name="active" eval="False"/>
@@ -72,13 +72,13 @@
         <record id="account_tag_10" model="account.account.tag">
             <field name="name">Cost of Goods Sold</field>
             <field name="name@nl">Kostprijs van de omzet</field>
-            <field name="name@de">Kosten des Umsatzes</field>
+            <field name="name@de">Herstellkosten des Umsatzes</field>
             <field name="applicability">accounts</field>
             <field name="country_id" ref="base.nl"/>
         </record>
         <record id="account_tag_11" model="account.account.tag">
             <field name="name">Net turnover</field>
-            <field name="name@nl">Netto omzet</field>
+            <field name="name@nl">Netto-omzet</field>
             <field name="name@de">Nettoumsatz</field>
             <field name="applicability">accounts</field>
             <field name="country_id" ref="base.nl"/>
@@ -87,7 +87,7 @@
         <record id="account_tag_12" model="account.account.tag">
             <field name="name">Result on other assets</field>
             <field name="name@nl">Resultaat overige activa</field>
-            <field name="name@de">Ergebnis der sonstigen Aktiva</field>
+            <field name="name@de">Ergebnis aus sonstigen Vermögenswerten</field>
             <field name="applicability">accounts</field>
             <field name="country_id" ref="base.nl"/>
             <field name="active" eval="False"/>
@@ -103,7 +103,7 @@
         <record id="account_tag_14" model="account.account.tag">
             <field name="name">Provisions</field>
             <field name="name@nl">Voorzieningen</field>
-            <field name="name@de">Bestimmungen</field>
+            <field name="name@de">Rückstellungen</field>
             <field name="applicability">accounts</field>
             <field name="country_id" ref="base.nl"/>
         </record>
@@ -140,7 +140,7 @@
         <record id="account_tag_19" model="account.account.tag">
             <field name="name">Other personnel costs</field>
             <field name="name@nl">Overige personeelskosten</field>
-            <field name="name@de">Sonstige betriebliche Erträge</field>
+            <field name="name@de">Sonstige Personalkosten</field>
             <field name="applicability">accounts</field>
             <field name="country_id" ref="base.nl"/>
         </record>
@@ -168,7 +168,7 @@
         <record id="account_tag_23" model="account.account.tag">
             <field name="name">Property, plant and equipment</field>
             <field name="name@nl">Materiële vaste activa</field>
-            <field name="name@de">Sachanlagen und Ausrüstung</field>
+            <field name="name@de">Sachanlagen</field>
             <field name="applicability">accounts</field>
             <field name="country_id" ref="base.nl"/>
         </record>
@@ -204,7 +204,7 @@
         <record id="account_tag_28" model="account.account.tag">
             <field name="name">Suspense accounts</field>
             <field name="name@nl">Tussenrekeningen</field>
-            <field name="name@de">Rechnungsabgrenzungsposten</field>
+            <field name="name@de">Zwischenkonten</field>
             <field name="applicability">accounts</field>
             <field name="country_id" ref="base.nl"/>
             <field name="active" eval="False"/>
@@ -212,7 +212,7 @@
         <record id="account_tag_29" model="account.account.tag">
             <field name="name">Error account</field>
             <field name="name@nl">Foutenrekening</field>
-            <field name="name@de">Fehler Konto</field>
+            <field name="name@de">Fehler: Konto</field>
             <field name="applicability">accounts</field>
             <field name="country_id" ref="base.nl"/>
         </record>
@@ -250,14 +250,14 @@
         <record id="account_tag_immat" model="account.account.tag">
             <field name="name">Intangible Fixed Asset</field>
             <field name="name@nl">Immateriële vaste activa</field>
-            <field name="name@de">Immaterielles Anlagevermögen</field>
+            <field name="name@de">Immaterielle Sachanlage</field>
             <field name="applicability">accounts</field>
             <field name="country_id" ref="base.nl"/>
         </record>
         <record id="account_tag_fin" model="account.account.tag">
             <field name="name">Financial Fixed Active</field>
-            <field name="name@nl">Financieel Vast Actief</field>
-            <field name="name@de">Finanziell fixiert Aktiv</field>
+            <field name="name@nl">Financiële vaste activa</field>
+            <field name="name@de">Finanzanlage</field>
             <field name="applicability">accounts</field>
             <field name="country_id" ref="base.nl"/>
         </record>
@@ -270,6 +270,8 @@
         </record>
         <record id="account_tag_premium" model="account.account.tag">
             <field name="name">Premium</field>
+            <field name="name@nl">Agio</field>
+            <field name="name@de">Bonus</field>
             <field name="applicability">accounts</field>
             <field name="country_id" ref="base.nl"/>
         </record>
@@ -290,7 +292,7 @@
         <record id="account_tag_other_res" model="account.account.tag">
             <field name="name">Other Reserves</field>
             <field name="name@nl">Overige reserves</field>
-            <field name="name@de">Sonstige Reserven</field>
+            <field name="name@de">Sonstige Rücklagen</field>
             <field name="applicability">accounts</field>
             <field name="country_id" ref="base.nl"/>
         </record>
@@ -303,7 +305,7 @@
         </record>
         <record id="account_tag_prev_years_earnings" model="account.account.tag">
             <field name="name">Previous Years Profit</field>
-            <field name="name@nl">Winst vorig jaar</field>
+            <field name="name@nl">Winst van voorgaande jaren</field>
             <field name="name@de">Gewinn des Vorjahres</field>
             <field name="applicability">accounts</field>
             <field name="country_id" ref="base.nl"/>
@@ -334,7 +336,7 @@
         <record id="account_tag_net" model="account.account.tag">
             <field name="name">Net sales</field>
             <field name="name@nl">Nettoverkoop</field>
-            <field name="name@de">Nettoumsatz</field>
+            <field name="name@de">Nettoverkäufe</field>
             <field name="applicability">accounts</field>
             <field name="country_id" ref="base.nl"/>
         </record>
@@ -348,7 +350,7 @@
         <record id="account_tag_reso" model="account.account.tag">
             <field name="name">Result other assets</field>
             <field name="name@nl">Resultaat overige activa</field>
-            <field name="name@de">Ergebnis sonstige Vermögenswerte</field>
+            <field name="name@de">Ergebnis sonstiger Vermögenswerte</field>
             <field name="applicability">accounts</field>
             <field name="country_id" ref="base.nl"/>
         </record>
