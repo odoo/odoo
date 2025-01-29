@@ -6490,12 +6490,12 @@ test(`onchanges on date(time) fields`, async () => {
         resId: 1,
     });
     expect(`.o_field_widget[name=date] input`).toHaveValue("01/25/2017");
-    expect(`.o_field_widget[name=datetime] input`).toHaveValue("12/12/2016 12:55:05");
+    expect(`.o_field_widget[name=datetime] input`).toHaveValue("12/12/2016 12:55");
 
     // trigger the onchange
     await contains(`.o_field_widget[name="foo"] input`).edit("coucou");
     expect(`.o_field_widget[name=date] input`).toHaveValue("12/12/2021");
-    expect(`.o_field_widget[name=datetime] input`).toHaveValue("12/12/2021 12:55:05");
+    expect(`.o_field_widget[name=datetime] input`).toHaveValue("12/12/2021 12:55");
 });
 
 test(`onchanges are not sent for invalid values`, async () => {

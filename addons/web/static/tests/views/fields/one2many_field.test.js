@@ -876,7 +876,7 @@ test("one2many with date and datetime", async () => {
         resId: 1,
     });
     expect("td:eq(0)").toHaveText("01/25/2017");
-    expect("td:eq(1)").toHaveText("12/12/2016 12:55:05");
+    expect("td:eq(1)").toHaveText("12/12/2016 12:55");
 });
 
 test("rendering with embedded one2many", async () => {
@@ -9688,7 +9688,7 @@ test("one2many with extra field from server not in form", async () => {
     // Redo asserts in RO mode after saving
     expect(".o_data_row").toHaveCount(1);
     cells = queryAll(".o_data_cell");
-    expect(cells[0]).toHaveText("04/05/2018 13:00:00");
+    expect(cells[0]).toHaveText("04/05/2018 13:00");
     expect(cells[1]).toHaveText("michelangelo");
 });
 

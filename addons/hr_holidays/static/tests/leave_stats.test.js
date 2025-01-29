@@ -135,7 +135,7 @@ test("leave stats reload when employee/department changes", async () => {
 
     // Set date => shouldn't load data yet (no employee nor department defined)
     await click("div[name='date_from'] input");
-    await edit("2016-10-12 09:00:00");
+    await edit("2016-10-12 09:00");
     // Set employee => should load employee's date
     await selectFieldDropdownItem("employee_id", "Jane");
     // Set department => should load department's data
