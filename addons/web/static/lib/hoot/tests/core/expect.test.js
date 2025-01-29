@@ -524,5 +524,21 @@ describe(parseUrl(import.meta.url), () => {
                 </div>
             `);
         });
+
+        test("toHaveStyle", async () => {
+            const documentFontSize = parseFloat(
+                getComputedStyle(document.documentElement).fontSize
+            );
+            await mountForTest(/* xml */ `
+                <div class="div" style="width: 3rem; height: 26px" />
+            `);
+
+            expect(".div").toHaveStyle({ width: `${3 * documentFontSize}px`, height: 26 });
+            expect(".div").toHaveStyle({ display: "block" });
+            expect(".div").not.toHaveStyle({ height: 50 });
+
+            expect(".div").toHaveStyle("height: 26px ; width : 3rem", { inline: true });
+            expect(".div").not.toHaveStyle({ display: "block" }, { inline: true });
+        });
     });
 });
