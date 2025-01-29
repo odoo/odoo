@@ -52,8 +52,7 @@ class HrAttendance(models.Model):
     validated_overtime_hours = fields.Float(string="Extra Hours", compute='_compute_validated_overtime_hours', store=True, readonly=False, tracking=True)
     in_latitude = fields.Float(string="Latitude", digits=(10, 7), readonly=True, aggregator=None)
     in_longitude = fields.Float(string="Longitude", digits=(10, 7), readonly=True, aggregator=None)
-    in_country_name = fields.Char(string="Country", help="Based on IP Address", readonly=True)
-    in_city = fields.Char(string="City", readonly=True)
+    in_location = fields.Char(help="Based on GPS-Coordinates if available or on IP Address")
     in_ip_address = fields.Char(string="IP Address", readonly=True)
     in_browser = fields.Char(string="Browser", readonly=True)
     in_mode = fields.Selection(string="Mode",
@@ -65,8 +64,7 @@ class HrAttendance(models.Model):
                                default='manual')
     out_latitude = fields.Float(digits=(10, 7), readonly=True, aggregator=None)
     out_longitude = fields.Float(digits=(10, 7), readonly=True, aggregator=None)
-    out_country_name = fields.Char(help="Based on IP Address", readonly=True)
-    out_city = fields.Char(readonly=True)
+    out_location = fields.Char(help="Based on GPS-Coordinates if available or on IP Address")
     out_ip_address = fields.Char(readonly=True)
     out_browser = fields.Char(readonly=True)
     out_mode = fields.Selection(selection=[('kiosk', "Kiosk"),

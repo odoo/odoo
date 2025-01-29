@@ -52,9 +52,21 @@ class HrAttendance(http.Controller):
 
     @staticmethod
     def _get_geoip_response(mode, latitude=False, longitude=False):
+        # First try to reverse lookup the country and city through coordinates
+        if latitude and longitude:
+            geo_obj = request.env['base.geocoder']
+            location_request = geo_obj.geo_find_reverse(latitude, longitude)
+            if location_request:
+                location = location_request
+        else:
+            city = request.geoip.city.name
+            country = request.geoip.country.name
+            if city and country:
+                location = f"{city}, {country}"
+            else:
+                location = _('Unknown')
         return {
-            'city': request.geoip.city.name or _('Unknown'),
-            'country_name': request.geoip.country.name or request.geoip.continent.name or _('Unknown'),
+            'location': location,
             'latitude': latitude or request.geoip.location.latitude or False,
             'longitude': longitude or request.geoip.location.longitude or False,
             'ip_address': request.geoip.ip,
