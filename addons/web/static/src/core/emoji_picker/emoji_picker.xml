@@ -110,13 +110,13 @@
 </t>
 
 <t t-name="web.EmojiPicker.emoji">
-    <span class="o-Emoji cursor-pointer d-flex justify-content-center rounded-3 align-items-center align-self-stretch" t-att-class="{ 'o-active': state.activeEmojiIndex === itemIndex, 'fs-2': !ui.isSmall, 'fs-1': ui.isSmall }" t-att-title="emoji.name" t-att-data-codepoints="emoji.codepoints" t-att-data-index="itemIndex" t-att-data-category="inRecent ? recentCategory.sortId : categories.find(c => c.name === emoji.category).sortId" t-on-click="selectEmoji">
+    <span class="o-Emoji cursor-pointer d-flex justify-content-center rounded-3 align-items-center align-self-stretch" t-att-class="{ 'o-active': state.activeEmojiIndex === itemIndex, 'fs-2': !ui.isSmall, 'fs-1': ui.isSmall }" t-att-title="emoji.name" t-att-data-codepoints="emoji.codepoints" t-att-data-index="itemIndex" t-att-data-category="inRecent ? recentCategory.sortId : categories.find(c => c.name === emoji.category).sortId" t-on-click="selectEmoji" t-on-mouseenter="(ev) => this.onMouseenterEmoji(ev, emoji)" t-on-mouseleave="(ev) => this.onMouseleaveEmoji(ev, emoji)">
         <span t-esc="emoji.codepoints"/>
     </span>
 </t>
 
 <t t-name="web.EmojiPicker.searchInput">
-    <input class="form-control border-0 flex-grow-1 rounded-3 rounded-end-0 o-active lh-1" placeholder="Search emoji" t-model="localState.searchTerm" t-ref="autofocus" t-att-model="localState.searchTerm" t-on-input="() => this.state.activeEmojiIndex = 0" t-att-tabindex="isMobileOS ? -1 : 0"/>
+    <input class="form-control border-0 flex-grow-1 rounded-3 rounded-end-0 o-active lh-1" t-att-placeholder="placeholder" t-model="localState.searchTerm" t-ref="autofocus" t-att-model="localState.searchTerm" t-on-input="() => this.state.activeEmojiIndex = 0" t-att-tabindex="isMobileOS ? -1 : 0"/>
 </t>
 
 </templates>
