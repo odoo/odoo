@@ -306,7 +306,7 @@
        >
         <div class="o_we_cropper_wrapper">
             <img class="o_we_cropper_img"/>
-            <div class="o_we_crop_buttons text-center mt16 position-fixed o_we_no_overlay" contenteditable="false">
+            <div class="o_we_crop_buttons text-center mt16 o_we_no_overlay" contenteditable="false">
                 <div class="btn-group btn-group-toggle" title="Aspect Ratio" data-bs-toggle="buttons">
                     <t t-foreach="this.aspectRatios" t-as="ratio" t-key="ratio">
                         <t t-set="is_active" t-value="ratio === this.aspectRatio"/>

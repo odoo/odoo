@@ -26,7 +26,8 @@ class AccountMove(models.Model):
             ('deemed_export', 'Deemed Export'),
             ('uin_holders', 'UIN Holders'),
         ], string="GST Treatment", compute="_compute_l10n_in_gst_treatment", store=True, readonly=False, copy=True, precompute=True)
-    l10n_in_state_id = fields.Many2one('res.country.state', string="Place of supply", compute="_compute_l10n_in_state_id", store=True, readonly=False)
+    l10n_in_state_id = fields.Many2one('res.country.state', string="Place of supply",
+        compute="_compute_l10n_in_state_id", store=True, readonly=False, precompute=True)
     l10n_in_gstin = fields.Char(string="GSTIN")
     # For Export invoice this data is need in GSTR report
     l10n_in_shipping_bill_number = fields.Char('Shipping bill number')
@@ -53,7 +54,7 @@ class AccountMove(models.Model):
     @api.depends('partner_id', 'partner_shipping_id', 'company_id')
     def _compute_l10n_in_state_id(self):
         for move in self:
-            if move.country_code == 'IN' and move.journal_id.type == 'sale':
+            if move.country_code == 'IN' and move.is_sale_document(include_receipts=True):
                 partner_state = (
                     move.partner_id.commercial_partner_id == move.partner_shipping_id.commercial_partner_id
                     and move.partner_shipping_id.state_id
@@ -70,6 +71,58 @@ class AccountMove(models.Model):
                 move.l10n_in_state_id = move.company_id.state_id
             else:
                 move.l10n_in_state_id = False
+
+    @api.depends('l10n_in_state_id')
+    def _compute_fiscal_position_id(self):
+
+        def _get_fiscal_state(move, foreign_state):
+            """
+            Maps each move to its corresponding fiscal state based on its type,
+            fiscal conditions, and the state of the associated partner or company.
+            """
+
+            if (
+                move.country_code != 'IN'
+                or not move.is_invoice(include_receipts=True)
+                # Partner's FP takes precedence through super
+                or move.partner_shipping_id.property_account_position_id
+                or move.partner_id.property_account_position_id
+            ):
+                return False
+            elif move.l10n_in_gst_treatment == 'special_economic_zone':
+                # Special Economic Zone
+                return foreign_state
+            elif move.is_sale_document(include_receipts=True):
+                # In Sales Documents: Compare place of supply with company state
+                return move.l10n_in_state_id if move.l10n_in_state_id.l10n_in_tin != '96' else foreign_state
+            elif move.is_purchase_document(include_receipts=True) and move.partner_id.country_id.code == 'IN':
+                # In Purchases Documents: Compare place of supply with vendor state
+                pos_state_id = move.l10n_in_state_id
+                if pos_state_id.l10n_in_tin == '96':
+                    return foreign_state
+                elif pos_state_id == move.partner_id.state_id:
+                    # Intra-State: Group by state matching the company's state.
+                    return move.company_id.state_id
+                elif pos_state_id != move.partner_id.state_id:
+                    # Inter-State: Group by state that doesn't match the company's state.
+                    return (
+                        pos_state_id == move.company_id.state_id
+                        and move.partner_id.state_id
+                        or pos_state_id
+                    )
+            return False
+
+        # To avoid ORM call in loops, we are passing the `foreign_state` as parameter
+        foreign_state = self.env['res.country.state'].search([('code', '!=', 'IN')], limit=1)
+        for state_id, moves in self.grouped(lambda move: _get_fiscal_state(move, foreign_state)).items():
+            if state_id:
+                virtual_partner = self.env['res.partner'].new({
+                    'state_id': state_id.id,
+                    'country_id': state_id.country_id.id,
+                })
+                moves.fiscal_position_id = self.env['account.fiscal.position']._get_fiscal_position(virtual_partner)
+            else:
+                super(AccountMove, moves)._compute_fiscal_position_id()
 
     def _get_name_invoice_report(self):
         if self.country_code == 'IN':

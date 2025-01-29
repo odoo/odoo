@@ -762,10 +762,13 @@ import wUtils from '@website/js/utils';
         _updateFieldVisibility(fieldEl, haveToBeVisible) {
             const fieldContainerEl = fieldEl.closest('.s_website_form_field');
             fieldContainerEl.classList.toggle('d-none', !haveToBeVisible);
-            for (const inputEl of fieldContainerEl.querySelectorAll('.s_website_form_input')) {
-                // Hidden inputs should also be disabled so that their data are
-                // not sent on form submit.
-                inputEl.disabled = !haveToBeVisible;
+            // Do not disable inputs that are required for the model.
+            if (!fieldContainerEl.matches(".s_website_form_model_required")) {
+                for (const inputEl of fieldContainerEl.querySelectorAll(".s_website_form_input")) {
+                    // Hidden inputs should also be disabled so that their data are
+                    // not sent on form submit.
+                    inputEl.disabled = !haveToBeVisible;
+                }
             }
         },
         /**
