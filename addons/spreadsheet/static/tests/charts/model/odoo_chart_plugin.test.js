@@ -253,7 +253,7 @@ test("Data reloaded strictly upon domain update", async () => {
 });
 
 test("Can import/export an Odoo chart", async () => {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     insertChartInSpreadsheet(model, "odoo_line");
     const data = model.exportData();
     const figures = data.sheets[0].figures;
@@ -261,7 +261,7 @@ test("Can import/export an Odoo chart", async () => {
     const figure = figures[0];
     expect(figure.tag).toBe("chart");
     expect(figure.data.type).toBe("odoo_line");
-    const m1 = await createModelWithDataSource({ spreadsheetData: data });
+    const { model: m1 } = await createModelWithDataSource({ spreadsheetData: data });
     const sheetId = m1.getters.getActiveSheetId();
     expect(m1.getters.getChartIds(sheetId).length).toBe(1);
     const chartId = m1.getters.getChartIds(sheetId)[0];
@@ -303,7 +303,7 @@ test("can import (export) contextual domain", async function () {
             },
         ],
     };
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, args) {
             if (args.method === "web_read_group") {
@@ -322,7 +322,7 @@ test("can import (export) contextual domain", async function () {
 });
 
 test("Can undo/redo an Odoo chart creation", async () => {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     insertChartInSpreadsheet(model, "odoo_line");
     const sheetId = model.getters.getActiveSheetId();
     const chartId = model.getters.getChartIds(sheetId)[0];
@@ -613,7 +613,7 @@ test("cumulative line chart with past data before domain period", async () => {
 });
 
 test("Can insert odoo chart from a different model", async () => {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     insertListInSpreadsheet(model, { model: "product", columns: ["name"] });
     await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER);
     const sheetId = model.getters.getActiveSheetId();
@@ -918,7 +918,7 @@ test("import/export action xml id", async () => {
     const exported = model.exportData();
     expect(exported.sheets[0].figures[0].data.actionXmlId).toBe("test.my_action");
 
-    const model2 = await createModelWithDataSource({ spreadsheetData: exported });
+    const { model: model2 } = await createModelWithDataSource({ spreadsheetData: exported });
     const sheetId = model2.getters.getActiveSheetId();
     const chartId = model2.getters.getChartIds(sheetId)[0];
     expect(model2.getters.getChartDefinition(chartId).actionXmlId).toBe("test.my_action");
