@@ -1,4 +1,7 @@
-from odoo import models
+import math
+from num2words import num2words
+
+from odoo import api, models
 
 
 class AccountEdiXmlUblTr(models.AbstractModel):
@@ -68,6 +71,22 @@ class AccountEdiXmlUblTr(models.AbstractModel):
                 'cbc:IssueDate': {'_text': invoice.invoice_date},
                 'cbc:DocumentTypeCode': {'_text': 'SEND_TYPE'},
             }
+        document_node['cbc:Note'] = [
+            document_node['cbc:Note'],
+            {'_text': self._l10n_tr_get_amount_integer_partn_text_note(invoice.amount_residual_signed, self.env.ref('base.TRY')), 'note_attrs': {}}
+        ]
+        if vals['invoice'].currency_id.name != 'TRY':
+            document_node['cbc:Note'].append({'_text': self._l10n_tr_get_amount_integer_partn_text_note(invoice.amount_residual, vals['invoice'].currency_id), 'note_attrs': {}})
+
+    @api.model
+    def _l10n_tr_get_amount_integer_partn_text_note(self, amount, currency):
+        sign = math.copysign(1.0, amount)
+        amount_integer_part, amount_decimal_part = divmod(abs(amount), 1)
+        amount_decimal_part = int(amount_decimal_part * 100)
+
+        text_i = num2words(amount_integer_part * sign, lang="tr") or 'Sifir'
+        text_d = num2words(amount_decimal_part * sign, lang="tr") or 'Sifir'
+        return f'YALNIZ : {text_i} {currency.name} {text_d} {currency.currency_subunit_label}'.upper()
 
     def _add_invoice_delivery_nodes(self, document_node, vals):
         super()._add_invoice_delivery_nodes(document_node, vals)
