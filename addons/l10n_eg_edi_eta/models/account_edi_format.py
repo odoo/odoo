@@ -243,6 +243,12 @@ class AccountEdiFormat(models.Model):
             return {
                 'tax_type': code_split[0].upper(),
             }
+            
+        def grouping_function_total_amount(base_line, tax_data):
+            return True
+
+        base_lines_aggregated_values_total_amount = AccountTax._aggregate_base_lines_tax_details(base_lines, grouping_function_total_amount)
+        values_per_grouping_key_total_amount = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values_total_amount)
 
         base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, grouping_function_global)
         values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
@@ -269,8 +275,8 @@ class AccountEdiFormat(models.Model):
             ],
             'totalDiscountAmount': self._l10n_eg_edi_round(totals['discount_total']),
             'totalSalesAmount': self._l10n_eg_edi_round(totals['total_price_subtotal_before_discount']),
-            'netAmount': self._l10n_eg_edi_round(sum(x['base_amount'] for x in values_per_grouping_key.values())),
-            'totalAmount': self._l10n_eg_edi_round(sum(x['base_amount'] + x['tax_amount'] for x in values_per_grouping_key.values())),
+            'netAmount': self._l10n_eg_edi_round(sum(x['base_amount'] for x in values_per_grouping_key_total_amount.values())),
+            'totalAmount': self._l10n_eg_edi_round(sum(x['base_amount'] + x['tax_amount'] for x in values_per_grouping_key_total_amount.values())),
             'extraDiscountAmount': 0.0,
             'totalItemsDiscountAmount': 0.0,
         })
