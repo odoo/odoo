@@ -144,7 +144,6 @@ class InteractionService {
         this.activeInteractions.add(el, I);
         if (I.prototype instanceof Interaction) {
             try {
-                // console.log(`[colibri] starting ${I.name}`);
                 const interaction = new Colibri(this, I, el);
                 this.interactions.push(interaction);
                 proms.push(interaction.start());
@@ -160,7 +159,6 @@ class InteractionService {
         const interactions = [];
         for (const interaction of this.interactions.slice().reverse()) {
             if (el === interaction.el || el.contains(interaction.el)) {
-                // console.log(`[colibri] stopping ${interaction.interaction.constructor.name}`);
                 interaction.destroy();
                 this.activeInteractions.delete(interaction.el, interaction.interaction.constructor);
             } else {
