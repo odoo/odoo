@@ -412,7 +412,7 @@ class PosSession(models.Model):
         bank_payment_method_diffs = bank_payment_method_diffs or {}
         for session in self:
             if any(order.state == 'draft' for order in self.get_session_orders()):
-                raise UserError(_("You cannot close the POS when orders are still in draft"))
+                raise UserError(_("You cannot close the POS while there are still draft orders for the day."))
             if session.state == 'closed':
                 raise UserError(_('This session is already closed.'))
             stop_at = self.stop_at or fields.Datetime.now()
@@ -684,7 +684,7 @@ class PosSession(models.Model):
         """
         bank_payment_method_diffs = bank_payment_method_diffs or {}
         if any(order.state == 'draft' for order in self.get_session_orders()):
-            return {'successful': False, 'message': _("You cannot close the POS when orders are still in draft"), 'redirect': False}
+            return {'successful': False, 'message': _("You cannot close the POS while there are still draft orders for the day."), 'redirect': False}
         if self.state == 'closed':
             return {
                 'successful': False,
