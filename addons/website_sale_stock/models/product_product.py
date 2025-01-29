@@ -66,8 +66,7 @@ class ProductProduct(models.Model):
         """ Override of `website_sale` to include the product availability in the offer. """
         markup_data = super()._to_markup_data(website)
         if self.is_product_variant and self.is_storable:
-            free_qty = website._get_product_available_qty(self.sudo())
-            if free_qty or self.allow_out_of_stock_order:
+            if self.allow_out_of_stock_order or not self._is_sold_out():
                 availability = 'https://schema.org/InStock'
             else:
                 availability = 'https://schema.org/OutOfStock'
