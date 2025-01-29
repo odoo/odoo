@@ -27,24 +27,29 @@ class ResCompany(models.Model):
         """
         self.env.company.get_chart_of_accounts_or_fail()
 
-        self._install_modules(['payment_stripe'])
+        provider_code = 'razorpay' if self.currency_id.name == 'INR' else 'stripe'
+        self._install_modules([f'payment_{provider_code}'])
 
         # Create a new env including the freshly installed module(s)
         new_env = api.Environment(self.env.cr, self.env.uid, self.env.context)
 
-        # Configure Stripe
-        stripe_provider = new_env['payment.provider'].search([
+        # Configure Provider
+        provider = new_env['payment.provider'].search([
             *self.env['payment.provider']._check_company_domain(self.env.company),
-            ('code', '=', 'stripe')
+            ('code', '=', provider_code)
         ], limit=1)
-        if not stripe_provider:
-            base_provider = self.env.ref('payment.payment_provider_stripe')
+        if not provider:
+            base_provider = self.env.ref(f'payment.payment_provider_{provider_code}')
             # Use sudo to access payment provider record that can be in different company.
-            stripe_provider = base_provider.sudo().with_context(
-                stripe_connect_onboarding=True,
+            provider = base_provider.sudo().with_context(
+                provider_onboarding=True,
             ).copy(default={'company_id': self.env.company.id})
 
-        return stripe_provider.action_stripe_connect_account(menu_id=menu_id)
+        return (
+            provider.action_razorpay_redirect_to_oauth_url()
+            if provider_code == 'razorpay'
+            else provider.action_stripe_connect_account(menu_id=menu_id)
+        )
 
     def _install_modules(self, module_names):
         modules_sudo = self.env['ir.module.module'].sudo().search([('name', 'in', module_names)])
