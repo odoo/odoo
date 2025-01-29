@@ -58,7 +58,7 @@ export class DateTimeField extends Component {
         condensed: { type: Boolean, optional: true },
     };
     static defaultProps = {
-        showSeconds: true,
+        showSeconds: false,
         showTime: true,
     };
 
@@ -109,7 +109,7 @@ export class DateTimeField extends Component {
             }
             if (!isNaN(this.props.rounding)) {
                 pickerProps.rounding = this.props.rounding;
-            } else if (!this.props.showSeconds) {
+            } else if (this.props.showSeconds) {
                 pickerProps.rounding = 0;
             }
             if (this.props.maxPrecision) {
@@ -403,7 +403,7 @@ export const dateTimeField = {
             label: _t("Show seconds"),
             name: "show_seconds",
             type: "boolean",
-            default: true,
+            default: false,
             help: _t(`Displays or hides the seconds in the datetime value.`),
         },
         {
@@ -416,7 +416,7 @@ export const dateTimeField = {
     ],
     extractProps: ({ attrs, options }, dynamicInfo) => ({
         ...dateField.extractProps({ attrs, options }, dynamicInfo),
-        showSeconds: exprToBoolean(options.show_seconds ?? true),
+        showSeconds: exprToBoolean(options.show_seconds ?? false),
         showTime: exprToBoolean(options.show_time ?? true),
     }),
     supportedTypes: ["datetime"],
