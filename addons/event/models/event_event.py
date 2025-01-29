@@ -53,7 +53,6 @@ class EventType(models.Model):
 
     def _default_question_ids(self):
         return [
-            (5, 0, 0),
             (4, self.env.ref('event.event_question_name').id),
             (4, self.env.ref('event.event_question_email').id),
             (4, self.env.ref('event.event_question_phone').id),
@@ -250,10 +249,8 @@ class EventEvent(models.Model):
         compute='_compute_ticket_instructions', store=True, readonly=False,
         help="This information will be printed on your tickets.")
     # questions
-    question_ids = fields.Many2many(
-        'event.question', string='Questions', copy=True,
-        compute='_compute_question_ids', readonly=False)
-        # compute='_compute_question_ids', readonly=False, store=True)
+    question_ids = fields.Many2many('event.question', string='Questions',
+    compute='_compute_question_ids', readonly=False, store=True)
     general_question_ids = fields.Many2many('event.question', string='General Questions',
                                            compute='_compute_general_question_ids')
     specific_question_ids = fields.Many2many('event.question', string='Specific Questions',
@@ -293,7 +290,7 @@ class EventEvent(models.Model):
         else:
             questions_tokeep_ids = []
         for event in self:
-            if not event.event_type_id and not event.question_ids:
+            if not event.id and not event.event_type_id and not event.question_ids:
                 event.question_ids = self._default_question_ids()
                 continue
 
@@ -307,8 +304,9 @@ class EventEvent(models.Model):
 
             # copy questions so changes in the event don't affect the event type
             event.question_ids += event.event_type_id.question_ids.copy({
-                'event_type_id': False,
+                'event_type_ids': False,
             })
+
 
     @api.depends('stage_id', 'kanban_state')
     def _compute_kanban_state_label(self):

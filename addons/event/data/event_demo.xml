@@ -27,7 +27,7 @@
     <li>If you don't have this ticket, you will <b>not</b> be allowed entry!</li>
 </ul>
         </field>
-        <field name="question_ids" eval="[(5, 0, 0),
+        <field name="question_ids" eval="[
             (4, ref('event.event_question_name')),
             (4, ref('event.event_question_email')),
             (4, ref('event.event_question_phone'))]"/>
@@ -70,7 +70,7 @@
         <field name="stage_id" ref="event_stage_booked"/>
         <field name="kanban_state">blocked</field>
         <field name="tag_ids" eval="[(4, ref('event.event_tag_category_1_tag_4')), (4, ref('event.event_tag_category_2_tag_3'))]"/>
-        <field name="question_ids" eval="[(5, 0, 0),
+        <field name="question_ids" eval="[
             (4, ref('event.event_question_name')),
             (4, ref('event.event_question_email')),
             (4, ref('event.event_question_phone'))]"/>
@@ -127,7 +127,7 @@
         <field name="seats_max">200</field>
         <field name="stage_id" ref="event_stage_booked"/>
         <field name="tag_ids" eval="[(4, ref('event.event_tag_category_1_tag_4')), (4, ref('event.event_tag_category_2_tag_1'))]"/>
-        <field name="question_ids" eval="[(5, 0, 0),
+        <field name="question_ids" eval="[
             (4, ref('event.event_question_name')),
             (4, ref('event.event_question_email')),
             (4, ref('event.event_question_phone'))]"/>
@@ -170,7 +170,7 @@
         <field name="address_id" ref="event.res_partner_location_1"/>
         <field name="stage_id" ref="event_stage_announced"/>
         <field name="tag_ids" eval="[(4, ref('event.event_tag_category_1_tag_3')), (4, ref('event.event_tag_category_2_tag_2'))]"/>
-        <field name="question_ids" eval="[(5, 0, 0),
+        <field name="question_ids" eval="[
             (4, ref('event.event_question_name')),
             (4, ref('event.event_question_email')),
             (4, ref('event.event_question_phone'))]"/>
@@ -217,7 +217,7 @@
         <field name="stage_id" ref="event_stage_done"/>
         <field name="kanban_state">done</field>
         <field name="tag_ids" eval="[(4, ref('event.event_tag_category_1_tag_4')), (4, ref('event.event_tag_category_2_tag_1'))]"/>
-        <field name="question_ids" eval="[(5, 0, 0),
+        <field name="question_ids" eval="[
             (4, ref('event.event_question_name')),
             (4, ref('event.event_question_email')),
             (4, ref('event.event_question_phone'))]"/>
@@ -247,7 +247,7 @@
         <field name="event_type_id" ref="event_type_2"/>
         <field name="address_id" ref="event.res_partner_location_1"/>
         <field name="tag_ids" eval="[(6, 0, [ref('event.event_tag_category_1_tag_2'), ref('event.event_tag_category_2_tag_3')])]"/>
-        <field name="question_ids" eval="[(5, 0, 0),
+        <field name="question_ids" eval="[
             (4, ref('event.event_question_name')),
             (4, ref('event.event_question_email')),
             (4, ref('event.event_question_phone'))]"/>
@@ -260,7 +260,7 @@
         <field eval="(DateTime.today()+ timedelta(days=30)).strftime('%Y-%m-%d 17:30:00')" name="date_end"/>
         <field name="event_type_id" ref="event_type_0"/>
         <field name="address_id" ref="event.res_partner_location_1"/>
-        <field name="question_ids" eval="[(5, 0, 0),
+        <field name="question_ids" eval="[
             (4, ref('event.event_question_name')),
             (4, ref('event.event_question_email')),
             (4, ref('event.event_question_phone'))]"/>
@@ -288,7 +288,7 @@
     </div>
 </div>
         </field>
-        <field name="question_ids" eval="[(5, 0, 0),
+        <field name="question_ids" eval="[
             (4, ref('event.event_question_name')),
             (4, ref('event.event_question_email')),
             (4, ref('event.event_question_phone'))]"/>
