@@ -15,11 +15,14 @@ to minimise the code to maintain
 
 import logging
 import sys
+from datetime import datetime, timezone
+from contextlib import ExitStack
 
 from . import case
-from .common import HttpCase
+from .common import HttpCase, get_db_name
 from .result import stats_logger
-from unittest import util, BaseTestSuite, TestCase
+from unittest import util, BaseTestSuite, TestCase, mock
+from odoo.modules.registry import Registry
 
 __unittest = True
 
@@ -156,35 +159,75 @@ class _ErrorHolder(object):
 
 
 class OdooSuite(TestSuite):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def run(self, result, debug=False):
+        self.registry = Registry(get_db_name())
+        with self.registry.cursor() as cr, \
+            mock.patch.object(cr, 'close', lambda *_: _):
+            self.cr = cr
+            # As psql's NOW() returns the time when the transaction was started
+            # some tests relying on time passed using that function might fail
+            # if the test is ran after a certain time after the transaction is opened.
+            # The following patches overrides psql's NOW method such that it returns
+            # the timestamp at which the class's setUpClass was ran.
+            cr.execute("CREATE SCHEMA IF NOT EXISTS __odoo_overrides")
+            # pg_catalog must appear after our override schema.
+            cr.execute('SET search_path TO "$user", public, __odoo_overrides, pg_catalog')
+            return super().run(result, debug=debug)
+
     def _handleClassSetUp(self, test, result):
         previous_test_class = result._previousTestClass
-        if not (
-            previous_test_class != type(test)
-            and hasattr(result, 'stats')
-            and stats_logger.isEnabledFor(logging.INFO)
-        ):
-            super()._handleClassSetUp(test, result)
-            return
-
         test_class = type(test)
-        test_id = f'{test_class.__module__}.{test_class.__qualname__}.setUpClass'
-        with result.collectStats(test_id):
-            super()._handleClassSetUp(test, result)
+        is_new_class = previous_test_class != test_class
+        with ExitStack() as stack:
+            # Override NOW()
+            if is_new_class:
+                now = datetime.now(timezone.utc)
+                self._cr = now
+                self.cr.execute("SAVEPOINT savepoint_suite")
+                self.cr.execute("""
+                    CREATE OR REPLACE FUNCTION __odoo_overrides.now()
+                    RETURNS TIMESTAMPTZ
+                    AS
+                    $$
+                        BEGIN
+                        RETURN %s::TIMESTAMPTZ;
+                        END;
+                    $$
+                    LANGUAGE plpgsql STABLE PARALLEL SAFE STRICT;
+                """, (now, ))
+            # Enable stat collection
+            if is_new_class and hasattr(result, 'stat') and stats_logger.isEnabledFor(logging.INFO):
+                test_id = f'{test_class.__module__}.{test_class.__qualname__}.setUpClass'
+                stack.enter_context(result.collectStats(test_id))
+            return super()._handleClassSetUp(test, result)
 
     def _tearDownPreviousClass(self, test, result):
         previous_test_class = result._previousTestClass
-        if not (
-                previous_test_class
-            and previous_test_class != type(test)
-            and hasattr(result, 'stats')
-            and stats_logger.isEnabledFor(logging.INFO)
-        ):
-            super()._tearDownPreviousClass(test, result)
-            return
-
-        test_id = f'{previous_test_class.__module__}.{previous_test_class.__qualname__}.tearDownClass'
-        with result.collectStats(test_id):
-            super()._tearDownPreviousClass(test, result)
+        test_class = type(test)
+        is_new_class = previous_test_class and previous_test_class != test_class
+        with ExitStack() as stack:
+            # Enable stat collection
+            if is_new_class and hasattr(result, 'stats') and stats_logger.isEnabledFor(logging.INFO):
+                test_id = f'{previous_test_class.__module__}.{previous_test_class.__qualname__}.tearDownClass'
+                stack.enter_context(result.collectStats(test_id))
+            res = super()._tearDownPreviousClass(test, result)
+            # Cleanup self.cr between tests
+            # The registry itself is cleaned up by TransactionCase
+            if is_new_class:
+                self.cr.clear()
+                self.cr.cache = {}
+                self.cr.transaction = None
+                self.cr.precommit.clear()
+                self.cr.postcommit.clear()
+                self.cr.prerollback.clear()
+                self.cr.postrollback.clear()
+                self.cr.execute('ROLLBACK TO SAVEPOINT savepoint_suite')
+                self.cr._now = None
+            return res
 
     def has_http_case(self):
         return self.countTestCases() and any(isinstance(test_case, HttpCase) for test_case in self)

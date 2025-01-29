@@ -850,10 +850,17 @@ class TransactionCase(BaseCase):
             gc_env['ir.attachment']._gc_file_store_unsafe()
 
     @classmethod
+    def _clean_cls(cls):
+        # cleanup class attributes
+        cls.cr = None
+        cls.registry = None
+
+    @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.addClassCleanup(cls._clean_cls)
         cls.addClassCleanup(cls._gc_filestore)
-        cls.registry = Registry(get_db_name())
+        cls.registry = cls.registry or Registry(get_db_name())
         cls.registry_start_invalidated = cls.registry.registry_invalidated
         cls.registry_start_sequence = cls.registry.registry_sequence
         cls.registry_cache_sequences = dict(cls.registry.cache_sequences)
@@ -885,7 +892,7 @@ class TransactionCase(BaseCase):
         cls._signal_changes_patcher = patch.object(cls.registry, 'signal_changes', signal_changes)
         cls.startClassPatcher(cls._signal_changes_patcher)
 
-        cls.cr = cls.registry.cursor()
+        cls.cr = cls.cr or cls.registry.cursor()
         cls.addClassCleanup(cls.cr.close)
 
         if cls.freeze_time:
