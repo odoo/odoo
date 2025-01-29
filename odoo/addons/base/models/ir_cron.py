@@ -175,7 +175,7 @@ class IrCron(models.Model):
                 _logger.debug("job %s has been processed by another worker, skip", job_id)
                 continue
             if not job:
-                _logger.debug("another worker is processing job %s, skip", job_id)
+                _logger.debug("job %s is being processed by another worker, skip", job_id)
                 continue
             _logger.debug("job %s acquired", job_id)
             # take into account overridings of _process_job() on that database
@@ -433,6 +433,7 @@ class IrCron(models.Model):
             status = None
             loop_count = 0
             start_time = time.monotonic()
+            _logger.info('Job %r (%s) starting', job['cron_name'], job['id'])
 
             # stop after MIN_RUNS_PER_JOB runs and MIN_TIME_PER_JOB seconds, or
             # upon full completion or failure
@@ -447,6 +448,8 @@ class IrCron(models.Model):
                     # signaling check and commit is done inside `_callback`
                     cron._callback(job['cron_name'], job['ir_actions_server_id'])
                 except Exception:  # noqa: BLE001
+                    _logger.exception('Job %r (%s) server action #%s failed',
+                        job['cron_name'], job['id'], job['ir_actions_server_id'])
                     if progress.done and progress.remaining:
                         # we do not consider it a failure if some progress has
                         # been committed
@@ -466,16 +469,22 @@ class IrCron(models.Model):
                     if status == CompletionStatus.FULLY_DONE and progress.deactivate:
                         job['active'] = False
                 finally:
+                    done, remaining = progress.done, progress.remaining
                     loop_count += 1
                     progress.timed_out_counter = 0
                     timed_out_counter = 0
                     job_cr.commit()  # ensure we have no leftovers
 
-                _logger.info('Job %r (%s) processed %s records, %s records remaining',
-                             job['cron_name'], job['id'], progress.done, progress.remaining)
+                    _logger.debug('Job %r (%s) processed %s records, %s records remaining',
+                        job['cron_name'], job['id'], done, remaining)
 
                 if status in (CompletionStatus.FULLY_DONE, CompletionStatus.FAILED):
                     break
+
+            _logger.info(
+                'Job %r (%s) %s (#loop %s; done %s; remaining %s; duration %.2fs)',
+                job['cron_name'], job['id'], status,
+                loop_count, done, remaining, time.monotonic() - start_time)
 
         return status
 
@@ -561,7 +570,6 @@ class IrCron(models.Model):
             nextcall += interval
             nextcall = nextcall.astimezone(timezone.utc).replace(tzinfo=None)
 
-        _logger.info('Job %r (%s) completed', job['cron_name'], job['id'])
         self.env.cr.execute("""
             UPDATE ir_cron
             SET nextcall = %s,
@@ -598,20 +606,12 @@ class IrCron(models.Model):
                 cron_name,
                 server_action_id,
             )
-            _logger.info('Job %r (%s) starting', cron_name, self.id)
-            start_time = time.time()
             self.env['ir.actions.server'].browse(server_action_id).run()
             self.env.flush_all()
-            end_time = time.time()
-            _logger.info('Job %r (%s) done in %.3fs', cron_name, self.id, end_time - start_time)
-            if start_time and _logger.isEnabledFor(logging.DEBUG):
-                _logger.debug('Job %r (%s) server action #%s with uid %s executed in %.3fs',
-                              cron_name, self.id, server_action_id, self.env.uid, end_time - start_time)
             self.pool.signal_changes()
             self.env.cr.commit()
         except Exception:
             self.pool.reset_changes()
-            _logger.exception('Job %r (%s) server action #%s failed', cron_name, self.id, server_action_id)
             self.env.cr.rollback()
             raise
 

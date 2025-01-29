@@ -417,6 +417,7 @@ class TestIrCron(TransactionCase, CronMixinCase):
             with (
                 patch.object(self.registry['ir.cron'], '_callback', side_effect=Exception),
                 patch.object(self.registry['ir.cron'], '_notify_admin') as notify,
+                mute_logger('odoo.addons.base.models.ir_cron'),
             ):
                 self.registry['ir.cron']._process_job(
                     self.registry.cursor(),
@@ -436,6 +437,7 @@ class TestIrCron(TransactionCase, CronMixinCase):
             self.enter_registry_test_mode(),
             patch.object(self.registry['ir.cron'], '_callback', side_effect=Exception),
             patch.object(self.registry['ir.cron'], '_notify_admin') as notify,
+            mute_logger('odoo.addons.base.models.ir_cron'),
         ):
             self.registry['ir.cron']._process_job(
                 self.registry.cursor(),
@@ -456,6 +458,7 @@ class TestIrCron(TransactionCase, CronMixinCase):
             self.enter_registry_test_mode(),
             patch.object(self.registry['ir.cron'], '_callback', side_effect=Exception),
             patch.object(self.registry['ir.cron'], '_notify_admin') as notify,
+            mute_logger('odoo.addons.base.models.ir_cron'),
         ):
             self.registry['ir.cron']._process_job(
                 self.registry.cursor(),
