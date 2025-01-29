@@ -33,7 +33,14 @@ class PartnerType extends models.Model {
     ];
 }
 
-defineModels([Partner, PartnerType]);
+class User extends models.Model {
+    _name = "res.users";
+    has_group() {
+        return true;
+    }
+}
+
+defineModels([Partner, PartnerType, User]);
 
 test("image fields are correctly rendered", async () => {
     await mountView({

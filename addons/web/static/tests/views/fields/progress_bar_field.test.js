@@ -33,7 +33,13 @@ class Partner extends models.Model {
         },
     ];
 }
-defineModels([Partner]);
+class User extends models.Model {
+    _name = "res.users";
+    has_group() {
+        return true;
+    }
+}
+defineModels([Partner, User]);
 
 test("ProgressBarField: max_value should update", async () => {
     expect.assertions(3);
