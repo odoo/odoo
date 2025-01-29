@@ -54,6 +54,14 @@ export class PowerButtonsPlugin extends Plugin {
         this.createPowerButtons();
     }
 
+    handleCommand(command) {
+        switch (command) {
+            case "CONTENT_UPDATED":
+                this.updatePowerButtons();
+                break;
+        }
+    }
+
     createPowerButtons() {
         const composePowerButton = (/**@type {PowerButton} */ item) => {
             const command = this.dependencies.userCommand.getCommand(item.commandId);
