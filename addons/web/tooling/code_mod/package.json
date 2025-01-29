@@ -1,0 +1,29 @@
+{
+  "name": "code_mod",
+  "version": "1.0.0",
+  "author": "Odoo",
+  "license": "LGPL-3.0-only",
+  "dependencies": {
+    "@babel/generator": "^7.25.9",
+    "@babel/parser": "^7.25.9",
+    "@babel/template": "^7.25.9",
+    "@babel/traverse": "^7.25.9",
+    "@babel/types": "^7.25.9",
+    "recast": "^0.23.9"
+  },
+  "scripts": {
+    "prettier": "prettier {src/*.ts,src/**/*.ts} --write",
+    "lint": "eslint src/**/*.ts"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.13.0",
+    "@types/babel__template": "^7.4.4",
+    "@types/babel__traverse": "^7.20.6",
+    "@types/node": "^22.8.4",
+    "eslint": "^9.13.0",
+    "globals": "^15.11.0",
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.12.2"
+  }
+}
