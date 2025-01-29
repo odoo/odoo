@@ -2755,3 +2755,12 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         action = credit_note_wizard.reverse_moves()
         credit_note = self.env['account.move'].browse(action['res_id'])
         self.assertEqual(credit_note.amount_total, invoice.amount_total)
+
+    def test_journal_item_on_payable_account(self):
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+
+        with move_form.line_ids.new() as line_form:
+            line_form.account_id = self.company_data['default_account_payable']
+
+        with self.assertRaisesRegex(UserError, 'Any journal item on a payable account must have a due date and vice versa.'):
+            move_form.save()

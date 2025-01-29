@@ -4623,7 +4623,7 @@ class AccountMove(models.Model):
     def _get_all_reconciled_invoice_partials(self):
         self.ensure_one()
         reconciled_lines = self.line_ids.filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
-        if not reconciled_lines:
+        if not reconciled_lines.ids:
             return {}
 
         self.env['account.partial.reconcile'].flush_model([
