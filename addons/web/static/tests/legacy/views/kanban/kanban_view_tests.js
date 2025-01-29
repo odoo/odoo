@@ -15139,4 +15139,44 @@ QUnit.module("Views", (hooks) => {
             assert.strictEqual(getProgressBars(target, 0)[0].style.width, "100%"); // abc: 1
         }
     );
+
+    QUnit.test("group by numeric field (with aggregator)", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban class="o_kanban_test">
+                    <field name="int_field" />
+                    <field name="qux" />
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo" />
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["int_field"],
+            async mockRPC(route, { method, kwargs }) {
+                if (method === "web_read_group") {
+                    assert.deepEqual(kwargs.groupby, ["int_field"]);
+                    assert.deepEqual(
+                        kwargs.fields,
+                        ["qux:sum"],
+                        "Don't aggregate int_field since it is grouped by itself"
+                    );
+                }
+                assert.step(method);
+            },
+        });
+        assert.verifySteps([
+            "get_views",
+            "web_read_group",
+            "web_search_read",
+            "web_search_read",
+            "web_search_read",
+            "web_search_read",
+        ]);
+    });
 });
