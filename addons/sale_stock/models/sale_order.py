@@ -3,6 +3,7 @@
 
 import json
 import logging
+from datetime import datetime
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -144,9 +145,14 @@ class SaleOrder(models.Model):
         if 'commitment_date' in values:
             # protagate commitment_date as the deadline of the related stock move.
             # TODO: Log a note on each down document
-            deadline_datetime = values.get('commitment_date')
+            commitment_date = values.get('commitment_date')
+            commitment_date = datetime.fromisoformat(commitment_date) if isinstance(commitment_date, str) else commitment_date
             for order in self:
-                order.order_line.move_ids.date_deadline = deadline_datetime or order.expected_date
+                order.order_line.move_ids.date_deadline = commitment_date or order.expected_date
+                if commitment_date:
+                    delta = commitment_date - (order.commitment_date or order.expected_date)
+                    for picking in order.picking_ids.filtered(lambda p: p.state not in ('done', 'cancel')):
+                        picking.scheduled_date += delta
 
         res = super(SaleOrder, self).write(values)
         if values.get('order_line') and self.state == 'sale':
