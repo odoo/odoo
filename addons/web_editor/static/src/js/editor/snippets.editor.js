@@ -1613,6 +1613,14 @@ var SnippetEditor = Widget.extend({
             return;
         }
         ev.data.show = this._toggleVisibilityStatus(ev.data.show);
+        // Toggle the value of ev.data.show so that when trigger_up is called, it passes
+        // the value `true` to its parent. Additionally, in this block, we are calling
+        // `trigger_up` to `activate_snippet` false, which disables options for
+        // that specific block.
+        if (this.$target[0] === ev.target.$target[0] && !ev.data.show) {
+            this.trigger_up("activate_snippet", { $snippet: false });
+            ev.data.show = !ev.data.show;
+        }
     },
     /**
      * @private
@@ -4396,9 +4404,6 @@ var SnippetsMenu = Widget.extend({
         if (this.options.wysiwyg.isSaving()) {
             // Do not update the option visibilities if we are destroying them.
             return;
-        }
-        if (!ev.data.show) {
-            await this._activateSnippet(false);
         }
         await this._updateInvisibleDOM(); // Re-render to update status
     },
