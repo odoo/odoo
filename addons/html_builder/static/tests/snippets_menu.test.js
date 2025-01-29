@@ -69,21 +69,21 @@ test("undo and redo buttons", async () => {
     const editor = getEditor();
     setContent(
         editor.editable,
-        '<div id="wrap" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch" class="o_editable"><p> Text[] </p></div>'
+        '<div id="wrap" class="oe_structure oe_empty o_editable" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch"><p> Text[] </p></div>'
     );
     await insertText(editor, "a");
     expect(editor.editable).toHaveInnerHTML(
-        '<div id="wrap" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch" class="o_editable o_dirty"> <p> Texta </p> </div>'
+        '<div id="wrap" class="oe_structure oe_empty o_editable o_dirty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch"> <p> Texta </p> </div>'
     );
     await animationFrame();
     await click(".o-snippets-menu button.fa-undo");
     await animationFrame();
     expect(editor.editable).toHaveInnerHTML(
-        '<div id="wrap" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch" class="o_editable"> <p> Text </p> </div>'
+        '<div id="wrap" class="oe_structure oe_empty o_editable" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch"> <p> Text </p> </div>'
     );
     await click(".o-snippets-menu button.fa-repeat");
     expect(editor.editable).toHaveInnerHTML(
-        '<div id="wrap" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch" class="o_editable o_dirty"> <p> Texta </p> </div>'
+        '<div id="wrap" class="oe_structure oe_empty o_editable o_dirty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch"> <p> Texta </p> </div>'
     );
 });
 

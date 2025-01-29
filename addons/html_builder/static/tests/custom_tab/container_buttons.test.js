@@ -11,6 +11,7 @@ import {
 } from "../helpers";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { animationFrame } from "@odoo/hoot-mock";
+import { queryText } from "@odoo/hoot-dom";
 
 defineWebsiteModels();
 
@@ -159,6 +160,67 @@ test("Use the sidebar 'save snippet' buttons", async () => {
     expect(
         ".o_add_snippet_dialog .o_add_snippet_iframe:iframe span:contains('Custom Dummy Section')"
     ).toHaveCount(1);
+});
+
+test("Use the sidebar 'create anchor' buttons", async () => {
+    const websiteContent = `
+        <section class="first" data-name="Dummy Section" data-snippet="s_dummy">
+            <h1>Anchor test</h1>
+        </section>
+        <section class="second" data-name="Dummy Section" data-snippet="s_dummy">
+            <p>test<p>
+        </section>
+        <section class="third" data-name="Dummy Section" data-snippet="s_dummy">
+            <p>test<p>
+        </section>
+    `;
+    await setupWebsiteBuilder(getEditable(websiteContent));
+    const anchorSelector =
+        ".o_customize_tab .options-container > div:contains('Dummy Section') button.oe_snippet_anchor";
+    const notificationContentSelector = ".o_notification_manager .o_notification_content";
+    const notificationCloseSelector = ".o_notification_manager .o_notification_close";
+    const notificationEditSelector = ".o_notification_manager .o_notification_buttons button";
+
+    // Section with title should have the title as anchor.
+    await contains(":iframe section.first").click();
+    expect(anchorSelector).toHaveCount(1);
+    await contains(anchorSelector).click();
+    expect(notificationContentSelector).toHaveCount(1);
+    expect(queryText(notificationContentSelector)).toInclude("#Anchor-test");
+    await contains(notificationCloseSelector).click();
+    expect(":iframe section.first").toHaveAttribute("id", "Anchor-test");
+    expect(":iframe section.first").toHaveAttribute("data-anchor", "true");
+
+    // Section without title should have the `data-name` as anchor.
+    await contains(":iframe section.second").click();
+    await contains(anchorSelector).click();
+    expect(queryText(notificationContentSelector)).toInclude("#Dummy-Section");
+    await contains(notificationCloseSelector).click();
+    expect(":iframe section.second").toHaveAttribute("id", "Dummy-Section");
+
+    // Same data-name should be suffixed by a number.
+    await contains(":iframe section.third").click();
+    await contains(anchorSelector).click();
+    expect(queryText(notificationContentSelector)).toInclude("#Dummy-Section2");
+    expect(":iframe section.third").toHaveAttribute("id", "Dummy-Section2");
+
+    // Edit anchor.
+    await contains(notificationEditSelector).click();
+    expect(".o_dialog").toHaveCount(1);
+    await contains(".o_dialog input").edit("Dummy-Section");
+    await contains(".o_dialog button:contains('Save & Copy')").click();
+    expect(".o_dialog input").toHaveClass("is-invalid");
+    await contains(".o_dialog input").edit("new-anchor-name");
+    await contains(".o_dialog button:contains('Save & Copy')").click();
+    expect(".o_dialog").toHaveCount(0);
+    expect(":iframe section.third").toHaveAttribute("id", "new-anchor-name");
+
+    // Delete anchor
+    await contains(anchorSelector).click();
+    await contains(notificationEditSelector).click();
+    await contains(".o_dialog button:contains('Remove')").click();
+    expect(":iframe section.third").not.toHaveAttribute("id");
+    expect(":iframe section.third").not.toHaveAttribute("data-anchor");
 });
 
 test("Clicking on the options container title selects the corresponding element", async () => {

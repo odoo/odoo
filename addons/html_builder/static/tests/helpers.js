@@ -132,7 +132,7 @@ export async function openBuilderSidebar() {
 }
 
 export function getEditable(inWrap) {
-    return `<div id="wrap" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${inWrap}</div>`;
+    return `<div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${inWrap}</div>`;
 }
 
 export function addOption({

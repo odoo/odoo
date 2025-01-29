@@ -62,7 +62,7 @@ test("check invisible element after save", async () => {
     await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
     await contains(".o-snippets-top-actions button:contains(Save)").click();
     expect(resultSave[0]).toBe(
-        `<div id="wrap" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch" class="">
+        `<div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">
         <section>
             <div class="container">
                 <div class="row">
