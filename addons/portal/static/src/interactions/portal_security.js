@@ -1,40 +1,71 @@
-import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_dialog';
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { renderToMarkup } from "@web/core/utils/render";
-import publicWidget from '@web/legacy/js/public/public_widget';
-import { InputConfirmationDialog } from './components/input_confirmation_dialog/input_confirmation_dialog';
+import { InputConfirmationDialog } from "@portal/js/components/input_confirmation_dialog/input_confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 
-publicWidget.registry.NewAPIKeyButton = publicWidget.Widget.extend({
-    selector: '.o_portal_new_api_key',
-    events: {
-        click: '_onClick'
-    },
+export class PortalSecurity extends Interaction {
+    static selector = ".o_portal_security_body";
+    dynamicSelectors = {
+        ...this.dynamicSelectors,
+        _modal: () => document.querySelector(".modal#portal_deactivate_account_modal"),
+    };
+    dynamicContent = {
+        ".o_portal_new_api_key": {
+            "t-on-click.prevent": this.onNewApiKeyClick,
+        },
+        ".o_portal_remove_api_key": {
+            "t-on-click.prevent": this.onRemoveApiKeyClick,
+        },
+        _modal: {
+            "t-on-hide.bs.modal.withTarget": (event, currentTargetEl) => {
+                // Remove the error messages when we close the modal,
+                // so when we re-open it again we get a fresh new form
+                for (const el of currentTargetEl.querySelectorAll(".alert, .invalid-feedback")) {
+                    el.remove();
+                }
+                for (const el of currentTargetEl.querySelectorAll(".is-invalid")) {
+                    el.classList.remove("is-invalid");
+                }
+            },
+        },
+        // Defining what happens when you click the "Log out from all devices"
+        // on the "/my/security" page.
+        "#portal_revoke_all_sessions_popup": {
+            "t-on-click": this.onRevokeAllSessionsClick,
+        },
+    };
 
-    init() {
-        this._super(...arguments);
-        this.orm = this.bindService("orm");
-        this.dialog = this.bindService("dialog");
-    },
+    setup() {
+        // Show the "deactivate your account" modal if needed
+        const modalEl = document.querySelector(".modal.show#portal_deactivate_account_modal");
+        if (modalEl) {
+            modalEl.classList.remove("d-block");
+            window.Modal.getOrCreateInstance(modalEl).show();
+        }
+    }
 
-    async _onClick(e){
-        e.preventDefault();
+    async onNewApiKeyClick() {
         // This call is done just so it asks for the password confirmation before starting displaying the
         // dialog forms, to mimic the behavior from the backend, in which it asks for the password before
         // displaying the wizard.
         // The result of the call is unused. But it's required to call a method with the decorator `@check_identity`
         // in order to use `handleCheckIdentity`.
-        await handleCheckIdentity(
-            this.orm.call("res.users", "api_key_wizard", [user.userId]),
-            this.orm,
-            this.dialog
+        await this.waitFor(
+            handleCheckIdentity(
+                this.waitFor(this.services.orm.call("res.users", "api_key_wizard", [user.userId])),
+                this.services.orm,
+                this.services.dialog
+            )
         );
 
         const { duration } = await this.bindService("field").loadFields("res.users.apikeys.description", {
             fieldNames: ["duration"],
         });
 
-        this.call("dialog", "add", InputConfirmationDialog, {
+        this.services.dialog.add(InputConfirmationDialog, {
             title: _t("New API Key"),
             body: renderToMarkup("portal.keydescription", {
                 // Remove `'Custom Date'` selection for portal user
@@ -43,103 +74,64 @@ publicWidget.registry.NewAPIKeyButton = publicWidget.Widget.extend({
             confirmLabel: _t("Confirm"),
             confirm: async ({ inputEl }) => {
                 const formData = Object.fromEntries(new FormData(inputEl.closest("form")));
-                const wizard_id = await this.orm.create("res.users.apikeys.description", [{
+                const wizardId = await this.sevices.orm.create("res.users.apikeys.description", [{
                     name: formData['description'],
                     duration: formData['duration']
                 }]);
-                const res = await handleCheckIdentity(
-                    this.orm.call("res.users.apikeys.description", "make_key", [wizard_id]),
-                    this.orm,
-                    this.dialog
+                const res = await this.waitFor(
+                    handleCheckIdentity(
+                        this.waitFor(
+                            this.services.orm.call("res.users.apikeys.description", "make_key", [
+                                wizardId,
+                            ])
+                        ),
+                        this.services.orm,
+                        this.services.dialog
+                    )
                 );
 
-                this.call("dialog", "add", ConfirmationDialog, {
-                    title: _t("API Key Ready"),
-                    body: renderToMarkup("portal.keyshow", { key: res.context.default_key }),
-                    confirmLabel: _t("Close"),
-                }, {
-                    onClose: () => {
-                        window.location = window.location;
+                this.services.dialog.add(
+                    ConfirmationDialog,
+                    {
+                        title: _t("API Key Ready"),
+                        body: renderToMarkup("portal.keyshow", { key: res.context.default_key }),
+                        confirmLabel: _t("Close"),
                     },
-                })
-            }
+                    {
+                        onClose: () => {
+                            window.location.reload();
+                        },
+                    }
+                );
+            },
         });
     }
-});
-
-publicWidget.registry.RemoveAPIKeyButton = publicWidget.Widget.extend({
-    selector: '.o_portal_remove_api_key',
-    events: {
-        click: '_onClick'
-    },
-
-    init() {
-        this._super(...arguments);
-        this.orm = this.bindService("orm");
-        this.dialog = this.bindService("dialog");
-    },
-
-    async _onClick(e){
-        e.preventDefault();
+    async onRemoveApiKeyClick(ev) {
         await handleCheckIdentity(
-            this.orm.call("res.users.apikeys", "remove", [parseInt(this.el.id)]),
-            this.orm,
-            this.dialog
+            this.waitFor(
+                this.services.orm.call("res.users.apikeys", "remove", [parseInt(ev.target.id)])
+            ),
+            this.services.orm,
+            this.services.dialog
         );
-        window.location = window.location;
+        window.location.reload();
     }
-});
-
-publicWidget.registry.portalSecurity = publicWidget.Widget.extend({
-    selector: '.o_portal_security_body',
-
-    /**
-     * @override
-     */
-    init: function () {
-        // Show the "deactivate your account" modal if needed
-        $('.modal.show#portal_deactivate_account_modal').removeClass('d-block').modal('show');
-
-        // Remove the error messages when we close the modal,
-        // so when we re-open it again we get a fresh new form
-        $('.modal#portal_deactivate_account_modal').on('hide.bs.modal', (event) => {
-            const $target = $(event.currentTarget);
-            $target.find('.alert').remove();
-            $target.find('.invalid-feedback').remove();
-            $target.find('.is-invalid').removeClass('is-invalid');
-        });
-
-        return this._super(...arguments);
-    },
-
-});
-
-/**
- * Defining what happens when you click the "Log out from all devices"
- * on the "/my/security" page.
- */
-publicWidget.registry.RevokeSessionsButton = publicWidget.Widget.extend({
-    selector: '#portal_revoke_all_sessions_popup',
-    events: {
-        click: '_onClick',
-    },
-
-    init() {
-        this._super(...arguments);
-        this.orm = this.bindService("orm");
-        this.dialog = this.bindService("dialog")
-    },
-
-    async _onClick() {
-        await handleCheckIdentity(
-            this.orm.call("res.users", "action_revoke_all_devices", [user.userId]),
-            this.orm,
-            this.dialog
+    async onRevokeAllSessionsClick() {
+        await this.waitFor(
+            handleCheckIdentity(
+                this.waitFor(
+                    this.services.orm.call("res.users", "action_revoke_all_devices", [user.userId])
+                ),
+                this.services.orm,
+                this.services.dialog
+            )
         );
-        window.location = window.location;
+        window.location.reload();
         return true;
-    },
-});
+    }
+}
+
+registry.category("public.interactions").add("portal.portal_security", PortalSecurity);
 
 /**
  * Wraps an RPC call in a check for the result being an identity check action
@@ -157,7 +149,13 @@ publicWidget.registry.RevokeSessionsButton = publicWidget.Widget.extend({
  */
 export async function handleCheckIdentity(wrapped, ormService, dialogService) {
     return wrapped.then((r) => {
-        if (!(r.type && r.type === "ir.actions.act_window" && r.res_model === "res.users.identitycheck")) {
+        if (
+            !(
+                r.type &&
+                r.type === "ir.actions.act_window" &&
+                r.res_model === "res.users.identitycheck"
+            )
+        ) {
             return r;
         }
         const checkId = r.res_id;
@@ -172,9 +170,13 @@ export async function handleCheckIdentity(wrapped, ormService, dialogService) {
                         return false;
                     }
                     let result;
-                    await ormService.write("res.users.identitycheck", [checkId], { password: inputEl.value });
+                    await ormService.write("res.users.identitycheck", [checkId], {
+                        password: inputEl.value,
+                    });
                     try {
-                        result = await ormService.call("res.users.identitycheck", "run_check", [checkId]);
+                        result = await ormService.call("res.users.identitycheck", "run_check", [
+                            checkId,
+                        ]);
                     } catch {
                         inputEl.classList.add("is-invalid");
                         inputEl.setCustomValidity(_t("Check failed"));
