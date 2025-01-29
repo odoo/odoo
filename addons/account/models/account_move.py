@@ -5339,17 +5339,16 @@ class AccountMove(models.Model):
         )
         record = render_context['record']
         subtitles = [f"{record.name} - {record.partner_id.name}" if record.partner_id else record.name]
-        if (
-            self.invoice_date_due
-            and self.is_invoice(include_receipts=True)
-            and self.payment_state not in ('in_payment', 'paid')
-        ):
-            subtitles.append(_('%(amount)s due\N{NO-BREAK SPACE}%(date)s',
-                           amount=format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')),
-                           date=format_date(self.env, self.invoice_date_due, lang_code=render_context.get('lang'))
-                          ))
-        else:
-            subtitles.append(format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')))
+        if self.is_invoice(include_receipts=True):
+            # Only show the amount in emails for non-miscellaneous moves. It might confuse recipients otherwise.
+            if self.invoice_date_due and self.payment_state not in ('in_payment', 'paid'):
+                subtitles.append(_(
+                    '%(amount)s due\N{NO-BREAK SPACE}%(date)s',
+                    amount=format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')),
+                    date=format_date(self.env, self.invoice_date_due, lang_code=render_context.get('lang')),
+                ))
+            else:
+                subtitles.append(format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')))
         render_context['subtitles'] = subtitles
         return render_context
 
