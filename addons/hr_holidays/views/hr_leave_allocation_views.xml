@@ -289,6 +289,7 @@
                 <field name="date_from" string="Validity Start" optional="hide"/>
                 <field name="date_to" string="Validity Stop" optional="hide" readonly="state in ['refuse', 'validate', 'validate1']"/>
                 <field name="allocation_type" readonly="state not in ['confirm']"/>
+                <field name="accrual_plan_id"/>
                 <field name="notes" string="Reason" optional="hide"/>
                 <field name="message_needaction" column_invisible="True"/>
                 <field name="active_employee" column_invisible="True"/>

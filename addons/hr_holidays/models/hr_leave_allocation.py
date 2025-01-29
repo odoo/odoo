@@ -85,7 +85,7 @@ class HrLeaveAllocation(models.Model):
     number_of_hours_display = fields.Float(
         'Duration (hours)', compute='_compute_number_of_hours_display', store=True,
         help="For an Accrual Allocation, this field contains the theorical amount of time given to the employee, due to a previous start date, on the first run of the plan. This can be manually edited.")
-    duration_display = fields.Char('Allocated (Days/Hours)', compute='_compute_duration_display',
+    duration_display = fields.Char('Allocated (Days/Hours)', compute='_compute_duration_display', inverse='_inverse_duration_display',
         help="Field allowing to see the allocation duration in days or hours depending on the type_request_unit")
     last_executed_carryover_date = fields.Date(export_string_translation=False)
     # details
@@ -223,6 +223,14 @@ class HrLeaveAllocation(models.Model):
                 if allocation.type_request_unit == 'hour'
                 else float_round(allocation.number_of_days_display, precision_digits=2)),
                 _('hours') if allocation.type_request_unit == 'hour' else _('days'))
+
+    def _inverse_duration_display(self):
+        for allocation in self:
+            value = allocation.duration_display.split(' ')[0].replace(',','.')
+            try:
+                allocation.number_of_days = float(value)
+            except:
+                raise ValidationError(_("Cannot convert allocated days/hours value : '%s' to float", value))
 
     @api.depends('state')
     def _compute_can_approve(self):
@@ -686,6 +694,8 @@ class HrLeaveAllocation(models.Model):
             employee_id = values.get('employee_id', False)
             if not values.get('department_id'):
                 values.update({'department_id': self.env['hr.employee'].browse(employee_id).department_id.id})
+            if 'accrual_plan_id' in values and values.get('accrual_plan_id'):
+                values.update({'allocation_type': 'accrual'})
         allocations = super(HrLeaveAllocation, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
         allocations._add_lastcalls()
         for allocation in allocations:
