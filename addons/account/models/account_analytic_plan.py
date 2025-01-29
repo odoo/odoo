@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import re
 
 from odoo import _, fields, models, api
@@ -61,8 +60,8 @@ class AccountAnalyticApplicability(models.Model):
         score = super(AccountAnalyticApplicability, self)._get_score(**kwargs)
         if score == -1:
             return -1
-        product = self.env['product.product'].browse(kwargs.get('product', None))
-        account = self.env['account.account'].browse(kwargs.get('account', None))
+        product = self.env['product.product'].browse(kwargs.get('product'))
+        account = self.env['account.account'].browse(kwargs.get('account'))
         if self.account_prefix:
             account_prefixes = tuple(prefix for prefix in re.split("[,;]", self.account_prefix.replace(" ", "")) if prefix)
             if account and account.code.startswith(account_prefixes):
