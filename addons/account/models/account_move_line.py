@@ -483,23 +483,15 @@ class AccountMoveLine(models.Model):
     @api.depends('product_id', 'move_id.ref', 'move_id.payment_reference')
     def _compute_name(self):
         def get_name(line):
-            values = []
-            if line.partner_id.lang:
-                product = line.product_id.with_context(lang=line.partner_id.lang)
-            else:
-                product = line.product_id
-            if not product:
-                return False
+            product = line.product_id.with_context(lang=line.partner_id.lang)
+            name = product.display_name
 
-            if line.journal_id.type == 'sale':
-                values.append(product.display_name)
-                if product.description_sale:
-                    values.append(product.description_sale)
-            elif line.journal_id.type == 'purchase':
-                values.append(product.display_name)
-                if product.description_purchase:
-                    values.append(product.description_purchase)
-            return '\n'.join(values)
+            if line.journal_id.type == 'sale' and product.description_sale:
+                name += '\n' + product.description_sale
+            elif line.journal_id.type == 'purchase' and product.description_purchase:
+                name += '\n' + product.description_purchase
+
+            return name
 
         term_by_move = (self.move_id.line_ids | self).filtered(lambda l: l.display_type == 'payment_term').sorted(lambda l: l.date_maturity or date.max).grouped('move_id')
         for line in self.filtered(lambda l: l.move_id.inalterable_hash is False):
