@@ -16,6 +16,11 @@ const FacebookPageWidget = publicWidget.Widget.extend({
         var def = this._super.apply(this, arguments);
         this.previousWidth = 0;
 
+        // Making the snippet non-editable.
+        // TODO adapt xml changes by adding "o_not_editable" class
+        // to s_facebook_page snippet in master.
+        this.el.classList.add("o_not_editable");
+
         const params = _.pick(this.$el[0].dataset, 'href', 'id', 'height', 'tabs', 'small_header', 'hide_cover');
         if (!params.href) {
             return def;
