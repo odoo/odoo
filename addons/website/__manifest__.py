@@ -179,6 +179,7 @@
             'website/static/src/scss/website_visitor_views.scss',
             'website/static/src/scss/website.theme_install.scss',
             'website/static/src/js/backend/**/*',
+            'website/static/src/js/web/**/*',
             'website/static/src/client_actions/*/*',
             ('remove', 'website/static/src/client_actions/website_preview/website_preview_test_mode.js'),
             'website/static/src/components/fields/*',
