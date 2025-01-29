@@ -6,7 +6,6 @@
     'category': 'Accounting/Localizations/Point of Sale',
     'summary': """Spanish localization for Point of Sale""",
     'depends': ['point_of_sale', 'l10n_es'],
-    'auto_install': True,
     'license': 'LGPL-3',
     'data': [
         'views/res_config_settings_views.xml',
