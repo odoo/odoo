@@ -615,8 +615,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                     } else if (models[field.relation] && typeof vals[name] === "object") {
                         const newRecord = create(comodelName, vals[name]);
                         connect(field, record, newRecord);
-                    } else {
-                        record[name] = vals[name];
                     }
                 } else if (record[name]) {
                     const linkedRec = record[name];
@@ -884,7 +882,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         const ignoreConnection = {};
 
         for (const model in rawData) {
-            ignoreConnection[model] = [];
+            ignoreConnection[model] = new Set();
             const modelKey = keyByModel[model] || "id";
 
             if (!oldStates[model]) {
@@ -946,7 +944,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
 
                     oldRecord.update(record, { silent: true });
                     oldRecord.setup(record);
-                    ignoreConnection[model].push(record.id);
+                    ignoreConnection[model].add(record.id);
                     results[model].push(oldRecord);
                     continue;
                 }
@@ -977,10 +975,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             const fields = getFields(model);
 
             for (const rawRec of rawRecords) {
-                if (ignoreConnection[model].includes(rawRec.id)) {
-                    continue;
-                }
-
                 const recorded = records[model][rawRec.id];
 
                 // Check if there are any missing fields for this record
@@ -996,6 +990,10 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 for (const name in fields) {
                     const field = fields[name];
                     alreadyLinkedSet.add(field);
+
+                    if (ignoreConnection[model].has(rawRec.id) && recorded[field.mame]) {
+                        continue;
+                    }
 
                     if (X2MANY_TYPES.has(field.type)) {
                         if (name in rawRec) {
