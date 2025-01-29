@@ -29,6 +29,12 @@ class ResUsers(models.Model):
             'display_extra_hours',
         ]
 
+    @property
+    def SELF_WRITEABLE_FIELDS(self):
+        return super().SELF_WRITEABLE_FIELDS + [
+            'attendance_manager_id',
+        ]
+
     def _clean_attendance_officers(self):
         attendance_officers = self.env['hr.employee'].search(
             [('attendance_manager_id', 'in', self.ids)]).attendance_manager_id
