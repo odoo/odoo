@@ -16,15 +16,17 @@ class MailTestSMS(models.Model):
     name = fields.Char()
     subject = fields.Char()
     email_from = fields.Char()
+    guest_ids = fields.Many2many('res.partner')
     phone_nbr = fields.Char()
     mobile_nbr = fields.Char()
     customer_id = fields.Many2one('res.partner', 'Customer')
+    country_id = fields.Many2one('res.country')
 
     def _phone_get_number_fields(self):
         return ['phone_nbr', 'mobile_nbr']
 
     def _mail_get_partner_fields(self, introspect_fields=False):
-        return ['customer_id']
+        return ['customer_id', 'guest_ids']
 
 
 class MailTestSMSBL(models.Model):
