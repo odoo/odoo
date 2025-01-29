@@ -124,3 +124,25 @@ class TestFiscal(AccountTestInvoicingCommon):
             fiscal_position_ref='fiscal_position_in_export_sez_in',
             partner=self.partner_foreign
         )
+    def test_l10n_in_company_with_no_vat(self):
+        """
+        Test the company with no VAT and update the partner and company states as per the GSTIN number
+        """
+        # Default Indian Company
+        company = self.default_company
+        # Remove the company VAT
+        company.write({'vat': False})
+        # Check the VAT is updated
+        self.assertFalse(company.vat)
+        # Update the partner and company states as per the VAT
+        company.action_update_state_as_per_gstin()
+        # As there is no VAT, the partner state is not updated so it should be default state
+        self.assertEqual(company.partner_id.state_id, self.env.ref('base.state_in_gj'))
+        # Add the TEST_GST_NUMBER as VAT
+        company.write({'vat': '36AABCT1332L011'})
+        # Update the state as per the VAT
+        company.action_update_state_as_per_gstin()
+        # Check the partner state is updated as per the VAT
+        self.assertEqual(company.partner_id.state_id, self.env.ref('base.state_in_ts'))
+        # Check the company state is also updated
+        self.assertEqual(company.state_id, self.env.ref('base.state_in_ts'))
