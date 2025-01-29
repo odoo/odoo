@@ -870,7 +870,7 @@ class MrpProduction(models.Model):
 
         date_start_map = dict()
         if 'date_start' in vals:
-            date_start = fields.Datetime.to_datetime(vals['date_start'])
+            date_start = fields.Datetime.to_datetime(vals['date_start'] or fields.Date.today())
             date_start_map = {
                 prod: date_start - datetime.timedelta(days=prod.bom_id.produce_delay)
                 if prod.bom_id else date_start
