@@ -49,6 +49,10 @@ import { Test } from "./test";
  *
  * @typedef {InteractionType | "assertion" | "error" | "step"} CaseEventType
  *
+ * @typedef {{ exact?: boolean }} ClassListOptions
+ *
+ * @typedef {{ exact?: boolean; inline?: boolean }} DOMStyleOptions
+ *
  * @typedef {{
  *  headless: boolean;
  * }} ExpectBuilderParams
@@ -95,9 +99,10 @@ const {
     Error,
     Math: { floor: $floor },
     Object: { assign: $assign, fromEntries: $fromEntries, entries: $entries, keys: $keys },
+    parseFloat,
+    performance,
     Promise,
     TypeError,
-    performance,
 } = globalThis;
 /** @type {Performance["now"]} */
 const $now = performance.now.bind(performance);
@@ -206,15 +211,13 @@ const getStack = (depth) => {
  */
 const getStyleValues = (node, keys) => {
     const nodeStyle = getStyle(node);
-    if (!nodeStyle) {
-        return {};
+    const styleValues = Object.create(null);
+    if (nodeStyle) {
+        for (const key of keys) {
+            styleValues[key] = nodeStyle.getPropertyValue(key) || nodeStyle[key];
+        }
     }
-    return $fromEntries(
-        keys.map((key) => [
-            key,
-            key.includes("-") ? nodeStyle.getPropertyValue(key) : nodeStyle[key],
-        ])
-    );
+    return styleValues;
 };
 
 /**
@@ -252,11 +255,11 @@ const listJoin = (list, separator, lastSeparator) => {
         return list;
     }
 
-    const rSeparator = isLabel(separator) ? separator : makeLabel(separator);
+    const rSeparator = isLabel(separator) ? separator : makeLabel(separator, null);
     const rLastSeparator = lastSeparator
         ? isLabel(lastSeparator)
             ? lastSeparator
-            : makeLabel(lastSeparator)
+            : makeLabel(lastSeparator, null)
         : rSeparator;
 
     const result = [];
@@ -285,21 +288,28 @@ const matcherModifierError = (modifier, message) =>
     new HootError(`cannot use modifier "${modifier}": ${message}`);
 
 /**
- * @param {string} styleString
+ * @param {string | Record<string, any>} style
  * @returns {Record<string, string>}
  */
-const parseStyle = (styleString) =>
-    $fromEntries(styleString.split(";").map((prop) => prop.split(":").map((v) => v.trim())));
+const parseInlineStyle = (style) => {
+    const styleObject = Object.create(null);
+    if (typeof style === "string") {
+        for (const styleProperty of style.split(";")) {
+            const [key, value] = styleProperty.split(":");
+            if (key && value) {
+                styleObject[key.trim()] = value.trim();
+            }
+        }
+    } else {
+        for (const key in style) {
+            styleObject[key] = style[key];
+        }
+    }
+    return styleObject;
+};
 
 /** @type {StringConstructor["raw"]} */
 const r = (template, ...substitutions) => makeLabel(String.raw(template, ...substitutions), null);
-
-/**
- * @param {unknown} value
- * @param {string | RegExp} matcher
- */
-const regexMatchOrStrictEqual = (value, matcher) =>
-    matcher instanceof RegExp ? matcher.test(value) : strictEqual(value, matcher);
 
 /**
  * @param {number} value
@@ -314,6 +324,20 @@ const roundTo = (value, digits) => {
  * @param {string} method
  */
 const scopeError = (method) => new HootError(`cannot call \`${method}()\` outside of a test`);
+
+/**
+ * @param {unknown} value
+ * @param {string | number | RegExp} matcher
+ */
+const valueMatches = (value, matcher) => {
+    if (matcher instanceof RegExp) {
+        return matcher.test(value);
+    }
+    if (typeof matcher === "number") {
+        value = parseFloat(value);
+    }
+    return strictEqual(value, matcher);
+};
 
 const ARROW_RIGHT = makeLabelIcon("fa fa-arrow-right text-sm");
 
@@ -1593,9 +1617,7 @@ export class Matcher {
                 name: "toHaveAttribute",
                 acceptedType: ["string", "node", "node[]"],
                 predicate: each(elMap, ([el, elAttr]) =>
-                    expectsValue
-                        ? regexMatchOrStrictEqual(elAttr, value)
-                        : el.hasAttribute(attribute)
+                    expectsValue ? valueMatches(elAttr, value) : el.hasAttribute(attribute)
                 ),
                 message:
                     options?.message ||
@@ -1629,9 +1651,9 @@ export class Matcher {
      * Expects the received {@link Target} to have the given class name(s).
      *
      * @param {string | string[]} className
-     * @param {ExpectOptions} [options]
+     * @param {ExpectOptions & ClassListOptions} [options]
      * @example
-     *  expect("button").toHaveClass("btn btn-primary");
+     *  expect("inline").toHaveClass("btn btn-primary");
      * @example
      *  expect("body").toHaveClass(["o_webclient", "o_dark"]);
      */
@@ -1641,15 +1663,17 @@ export class Matcher {
         ensureArguments(arguments, ["string", "string[]"], ["object", null]);
 
         const rawClassNames = ensureArray(className);
-        const classNames = rawClassNames.flatMap((cls) => cls.trim().split(R_WHITE_SPACE));
+        const classNames = rawClassNames.flatMap((cls) => cls.trim().split(R_WHITE_SPACE)).sort();
 
         return this._resolve((received) => {
-            const elMap = new ElementMap(received, (el) => [...el.classList]);
+            const elMap = new ElementMap(received, (el) => [...el.classList].sort());
             return {
                 name: "toHaveClass",
                 acceptedType: ["string", "node", "node[]"],
                 predicate: each(elMap.values(), (classes) =>
-                    classNames.every((cls) => classes.includes(cls))
+                    options?.exact
+                        ? deepEqual(classNames, classes)
+                        : classNames.every((cls) => classes.includes(cls))
                 ),
                 message:
                     options?.message ||
@@ -1779,7 +1803,7 @@ export class Matcher {
                 name: "toHaveProperty",
                 acceptedType: ["string", "node", "node[]"],
                 predicate: each(elMap, ([el, elProp]) =>
-                    expectsValue ? regexMatchOrStrictEqual(elProp, value) : property in el
+                    expectsValue ? valueMatches(elProp, value) : property in el
                 ),
                 message:
                     options?.message ||
@@ -1867,7 +1891,7 @@ export class Matcher {
      * Expects the received {@link Target} to match the given style properties.
      *
      * @param {string | Record<string, string | RegExp>} style
-     * @param {ExpectOptions} [options]
+     * @param {ExpectOptions & DOMStyleOptions} [options]
      * @example
      *  expect("button").toHaveStyle({ color: "red" });
      * @example
@@ -1878,16 +1902,23 @@ export class Matcher {
 
         ensureArguments(arguments, ["string", "object"], ["object", null]);
 
-        const styleDef = typeof style === "string" ? parseStyle(style) : style;
-        const entries = $entries(styleDef);
+        const styleDef = parseInlineStyle(style);
+        const styleKeys = $keys(styleDef).sort();
 
         return this._resolve((received) => {
-            const elMap = new ElementMap(received, (el) => getStyleValues(el, $keys(styleDef)));
+            const elMap = new ElementMap(received, (el) =>
+                options?.inline
+                    ? parseInlineStyle(el.getAttribute("style"))
+                    : getStyleValues(el, $keys(styleDef))
+            );
             return {
                 name: "toHaveStyle",
                 acceptedType: ["string", "node", "node[]"],
-                predicate: each(elMap.values(), (elStyle) =>
-                    entries.every(([prop, value]) => regexMatchOrStrictEqual(elStyle[prop], value))
+                predicate: each(
+                    elMap.values(),
+                    (elStyle) =>
+                        styleKeys.every((key) => valueMatches(elStyle[key], styleDef[key])) &&
+                        (!options?.exact || deepEqual(styleKeys, $keys(elStyle)))
                 ),
                 message:
                     options?.message ||
@@ -1906,7 +1937,7 @@ export class Matcher {
                 failedDetails: () =>
                     detailsFromValuesWithDiff(
                         styleDef,
-                        $fromEntries(entries.map(([key]) => [key, elMap.first[key]]))
+                        $fromEntries(styleKeys.map((key) => [key, elMap.first[key]]))
                     ),
             };
         });
@@ -1937,7 +1968,7 @@ export class Matcher {
                 name: "toHaveText",
                 acceptedType: ["string", "node", "node[]"],
                 predicate: each(elMap.values(), (elText) =>
-                    expectsText ? regexMatchOrStrictEqual(elText, text) : elText.length > 0
+                    expectsText ? valueMatches(elText, text) : elText.length > 0
                 ),
                 message:
                     options?.message ||
@@ -1996,7 +2027,7 @@ export class Matcher {
                         }
                         elValue = el.value;
                     }
-                    return regexMatchOrStrictEqual(elValue, value);
+                    return valueMatches(elValue, value);
                 }),
                 message:
                     options?.message ||
@@ -2144,9 +2175,7 @@ export class Matcher {
             return {
                 name,
                 acceptedType: ["string", "node", "node[]"],
-                predicate: each(elMap.values(), (elHtml) =>
-                    regexMatchOrStrictEqual(elHtml, expected)
-                ),
+                predicate: each(elMap.values(), (elHtml) => valueMatches(elHtml, expected)),
                 message:
                     options?.message ||
                     ((pass) =>
