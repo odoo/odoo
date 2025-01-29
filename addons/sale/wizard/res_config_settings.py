@@ -68,6 +68,7 @@ class ResConfigSettings(models.TransientModel):
         compute='_compute_providers_state')
     first_provider_label = fields.Char(
         compute='_compute_providers_state')
+    is_inr_currency = fields.Boolean(compute='_compute_is_inr_currency')
 
     # Modules
     module_delivery = fields.Boolean("Delivery Methods")
@@ -136,6 +137,11 @@ class ResConfigSettings(models.TransientModel):
         if send_invoice_cron and send_invoice_cron.active != self.automatic_invoice:
             send_invoice_cron.active = self.automatic_invoice
 
+    @api.depends('company_id.currency_id')
+    def _compute_is_inr_currency(self):
+        for config in self:
+            config.is_inr_currency = config.company_id.currency_id.name == 'INR'
+
     def _get_activated_providers(self):
         self.ensure_one()
         wire_transfer = self.env.ref('payment.payment_provider_transfer', raise_if_not_found=False)
@@ -147,12 +153,15 @@ class ResConfigSettings(models.TransientModel):
     def _compute_providers_state(self):
         paypal = self.env.ref('payment.payment_provider_paypal', raise_if_not_found=False)
         stripe = self.env.ref('payment.payment_provider_stripe', raise_if_not_found=False)
+        razorpay = self.env.ref('payment.payment_provider_razorpay', raise_if_not_found=False)
         for config in self:
             providers = config._get_activated_providers()
-            first_provider = (stripe if stripe and stripe in providers
-                             else providers[0] if providers
-                             else providers
-                            )
+            first_provider = (
+                razorpay if config.is_inr_currency and razorpay in providers
+                else stripe if stripe in providers
+                else providers[0] if providers
+                else providers
+            )
             config.first_provider_label = _('Configure %s', first_provider.name)
             if len(providers) == 1 and providers == paypal:
                 config.providers_state = 'paypal_only'
@@ -161,9 +170,9 @@ class ResConfigSettings(models.TransientModel):
             else:
                 config.providers_state = 'none'
 
-    def action_activate_stripe(self):
+    def action_activate_payment_provider(self):
         self.ensure_one()
-        if not self.is_stripe_supported_country:
+        if not (self.is_stripe_supported_country or self.is_inr_currency):
             return False
         menu = self.env.ref('sale.menu_sale_general_settings', raise_if_not_found=False)
         menu_id = menu and menu.id
@@ -171,9 +180,10 @@ class ResConfigSettings(models.TransientModel):
 
     def action_configure_first_provider(self):
         self.ensure_one()
-        stripe = self.env['payment.provider'].search([
+        provider_code = 'razorpay' if self.is_inr_currency else 'stripe'
+        provider = self.env['payment.provider'].search([
             *self.env['payment.provider']._check_company_domain(self.env.company),
-            ('code', '=', 'stripe')
+            ('code', '=', provider_code)
         ], limit=1)
         providers = self._get_activated_providers()
         return {
@@ -182,5 +192,5 @@ class ResConfigSettings(models.TransientModel):
             'view_mode': 'form',
             'res_model': 'payment.provider',
             'views': [[False, 'form']],
-            'res_id': stripe.id if stripe in providers else providers[0].id,
+            'res_id': provider.id if provider in providers else providers[0].id,
         }

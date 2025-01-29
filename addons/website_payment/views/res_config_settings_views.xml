@@ -20,11 +20,19 @@
                                 <field name="is_stripe_supported_country" invisible="1"/>
                                 <div class="oe_inline"
                                      invisible="not is_stripe_supported_country">
-                                    <button string="Activate Stripe" name="action_activate_stripe" type="object" class="btn-primary"/>
+                                    <button string="Activate Stripe" name="action_activate_payment_provider" type="object" class="btn-primary"/>
+                                </div>
+                                <div class="oe_inline" invisible="not is_inr_currency">
+                                    <button
+                                        string="Activate Razorpay"
+                                        name="action_activate_payment_provider"
+                                        type="object"
+                                        class="btn-primary"
+                                    />
                                 </div>
                                 <div class="oe_inline"
                                      title="Stripe Connect is not available in your country, please use another payment provider."
-                                     invisible="is_stripe_supported_country">
+                                     invisible="is_stripe_supported_country or is_inr_currency">
                                     <button string="Activate Stripe" class="btn-primary" disabled=""/>
                                 </div>
                                 <button type="action"

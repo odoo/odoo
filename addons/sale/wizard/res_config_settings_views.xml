@@ -72,28 +72,33 @@
                             <div
                                 class="row mt8"
                                 invisible="not portal_confirmation_pay or
-                                    providers_state == 'other_than_paypal'">
-                                <div
-                                    class="oe_inline"
-                                    invisible="not is_stripe_supported_country"
-                                >
+                                    providers_state == 'other_than_paypal'"
+                            >
+                                <div class="oe_inline">
                                     <button
                                         string="Activate Stripe"
-                                        name="action_activate_stripe"
+                                        name="action_activate_payment_provider"
                                         type="object"
                                         class="btn-primary"
+                                        invisible="not is_stripe_supported_country"
                                     />
-                                </div>
-                                <div
-                                    class="oe_inline"
-                                    title="Stripe Connect is not available in your country, please use another payment provider."
-                                    invisible="is_stripe_supported_country"
-                                >
                                     <button
-                                        string="Activate Stripe"
+                                        string="Activate Razorpay"
+                                        name="action_activate_payment_provider"
+                                        type="object"
                                         class="btn-primary"
-                                        disabled=""
+                                        invisible="not is_inr_currency"
                                     />
+                                    <div
+                                        title="Stripe Connect is not available in your country, please use another payment provider."
+                                        invisible="is_stripe_supported_country or is_inr_currency"
+                                    >
+                                        <button
+                                            string="Activate Stripe"
+                                            class="btn-primary"
+                                            disabled=""
+                                        />
+                                    </div>
                                 </div>
                                 <button
                                     name='%(payment.action_payment_provider)d'
