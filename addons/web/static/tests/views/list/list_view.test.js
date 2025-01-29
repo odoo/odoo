@@ -6904,7 +6904,7 @@ test(`empty list with sample data`, async () => {
     expect(cells[5]).toMatch(/\d{2}\/\d{2}\/\d{4}/, {
         message: "Date field should have the right format",
     });
-    expect(cells[6]).toMatch(/\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2}/, {
+    expect(cells[6]).toMatch(/\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}/, {
         message: "Datetime field should have the right format",
     });
 
@@ -7999,7 +7999,7 @@ test(`simple list with date and datetime`, async () => {
     expect(`.o_data_row .o_data_cell:eq(0)`).toHaveText("01/25/2017", {
         message: "should have formatted the date",
     });
-    expect(`.o_data_row .o_data_cell:eq(1)`).toHaveText("12/12/2016 12:55:05", {
+    expect(`.o_data_row .o_data_cell:eq(1)`).toHaveText("12/12/2016 12:55", {
         message: "should have formatted the datetime",
     });
 });
@@ -16370,7 +16370,7 @@ test(`Properties: datetime`, async () => {
     await contains(`.o_field_datetime input`).click();
     await contains(getPickerCell("19")).click();
     await contains(`.o_list_button_save`).click();
-    expect(`.o_field_cell.o_datetime_cell:eq(0)`).toHaveText("12/19/2022 12:12:00");
+    expect(`.o_field_cell.o_datetime_cell:eq(0)`).toHaveText("12/19/2022 12:12");
     expect.verifySteps(["web_save"]);
 });
 
