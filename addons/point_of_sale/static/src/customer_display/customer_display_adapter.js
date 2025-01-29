@@ -23,9 +23,9 @@ export class CustomerDisplayPosAdapter {
 
         if (pos.config.customer_display_type === "remote") {
             pos.data.call("pos.config", "update_customer_display", [
-                [this.pos.config.id],
+                [pos.config.id],
                 this.data,
-                this.pos.config.access_token,
+                pos.config.access_token,
             ]);
         }
 
