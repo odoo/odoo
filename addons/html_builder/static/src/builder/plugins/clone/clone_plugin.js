@@ -30,8 +30,8 @@ export class ClonePlugin extends Plugin {
         const cloneEl = el.cloneNode(true);
         el.insertAdjacentElement(position, cloneEl);
         this.dependencies["builder-options"].updateContainers(cloneEl);
+        this.dispatchTo("on_clone_handlers", { cloneEl: cloneEl, originalEl: el });
         cloneEl.scrollIntoView({ behavior: "smooth", block: "center" });
-        // TODO onClone resource for each option
         // TODO snippet_cloned ?
         this.dependencies.history.addStep();
     }

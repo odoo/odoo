@@ -66,6 +66,7 @@ export class MovePlugin extends Plugin {
     static dependencies = ["history"];
     resources = {
         get_overlay_buttons: this.getActiveOverlayButtons.bind(this),
+        on_clone_handlers: this.onClone.bind(this),
     };
 
     setup() {
@@ -102,6 +103,20 @@ export class MovePlugin extends Plugin {
             }
         }
         return buttons;
+    }
+
+    onClone({ cloneEl, originalEl }) {
+        if (!isMovable(originalEl)) {
+            return;
+        }
+        // If there is a mobile order, the clone must have an order different
+        // than the existing ones.
+        const hasMobileOrder = !!originalEl.style.order;
+        if (hasMobileOrder) {
+            const siblingEls = [...originalEl.parentNode.children];
+            const maxOrder = Math.max(...siblingEls.map((el) => el.style.order));
+            cloneEl.style.order = maxOrder + 1;
+        }
     }
 
     refreshState() {
