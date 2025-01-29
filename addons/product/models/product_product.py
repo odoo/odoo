@@ -62,6 +62,16 @@ class ProductProduct(models.Model):
 
     pricelist_item_count = fields.Integer("Number of price rules", compute="_compute_variant_item_count")
 
+    pricelist_rule_ids = fields.One2many(
+        string="Pricelist Rules",
+        comodel_name='product.pricelist.item',
+        inverse_name='product_id',
+        domain=lambda self: [
+            '|', ('product_id', '=', self.id),
+            '&', ('product_tmpl_id', '=', self.product_tmpl_id.id), ('product_id', '=', False)
+        ]
+    )
+
     product_document_ids = fields.One2many(
         string="Documents",
         comodel_name='product.document',
