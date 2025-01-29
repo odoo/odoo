@@ -52,24 +52,10 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: "press Enter",
         },
         {
-            trigger: ".o-mail-Message",
-            content: _t("Click on your message"),
+            trigger: ".o-mail-Message:contains(today at)",
+            content: _t("Hover on your message and mark as todo"),
             tooltipPosition: "top",
-            run: "click",
-        },
-        {
-            trigger: ".o-mail-Message-expandBtn",
-            content: _t("Expand options"),
-            tooltipPosition: "top",
-            run: "click",
-        },
-        {
-            trigger: ".o-mail-Message button[name='toggle-star']",
-            content: markup(
-                _t("Messages can be <b>starred</b> to remind you to check back later.")
-            ),
-            tooltipPosition: "bottom",
-            run: "click",
+            run: "hover && click .o-mail-Message [title='Mark as Todo']",
         },
         {
             trigger: "button[data-mailbox-id='starred']",
