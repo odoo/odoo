@@ -13922,3 +13922,31 @@ test.tags("desktop")("click on empty kanban must shake the NEW button", async ()
 
     expect("[data-bounce-button]").toHaveClass("o_catch_attention");
 });
+
+test("group by numeric field (with aggregator)", async () => {
+    onRpc("web_read_group", ({ kwargs }) => {
+        expect(kwargs.groupby).toEqual(["int_field"]);
+        expect(kwargs.fields).toEqual(["float_field:sum"], {
+            message: "Don't aggregate int_field since it is grouped by itself",
+        });
+        expect.step("web_read_group");
+    });
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban class="o_kanban_test">
+                <field name="int_field" />
+                <field name="float_field" />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div>
+                            <field name="foo" />
+                        </div>
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["int_field"],
+    });
+    expect.verifySteps(["web_read_group"]);
+});
