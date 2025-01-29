@@ -1,4 +1,5 @@
-import { getLocalYearAndWeek, is24HourFormat } from "@web/core/l10n/dates";
+import { getLocalYearAndWeek } from "@web/core/l10n/dates";
+import { is24HourFormat } from "@web/core/l10n/time";
 import { localization } from "@web/core/l10n/localization";
 import { renderToFragment, renderToString } from "@web/core/utils/render";
 import { getColor } from "../colors";

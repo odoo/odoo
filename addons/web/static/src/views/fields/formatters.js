@@ -78,18 +78,14 @@ export function formatChar(value, options) {
     }
     return value;
 }
-formatChar.extractOptions = ({ attrs }) => {
-    return {
-        isPassword: exprToBoolean(attrs.password),
-    };
-};
+formatChar.extractOptions = ({ attrs }) => ({
+    isPassword: exprToBoolean(attrs.password),
+});
 
 export function formatDate(value, options) {
     return _formatDate(value, options);
 }
-formatDate.extractOptions = ({ options }) => {
-    return { condensed: options.condensed };
-};
+formatDate.extractOptions = ({ options }) => ({ condensed: options.condensed });
 
 export function formatDateTime(value, options = {}) {
     if (options.showTime === false) {
@@ -97,13 +93,11 @@ export function formatDateTime(value, options = {}) {
     }
     return _formatDateTime(value, options);
 }
-formatDateTime.extractOptions = ({ attrs, options }) => {
-    return {
-        ...formatDate.extractOptions({ attrs, options }),
-        showSeconds: exprToBoolean(options.show_seconds ?? true),
-        showTime: exprToBoolean(options.show_time ?? true),
-    };
-};
+formatDateTime.extractOptions = ({ attrs, options }) => ({
+    ...formatDate.extractOptions({ attrs, options }),
+    showSeconds: exprToBoolean(options.show_seconds ?? false),
+    showTime: exprToBoolean(options.show_time ?? true),
+});
 
 /**
  * Returns a string representing a float.  The result takes into account the
@@ -166,12 +160,10 @@ export function formatFloatFactor(value, options = {}) {
     }
     return formatFloatNumber(value * factor, options);
 }
-formatFloatFactor.extractOptions = ({ attrs, options }) => {
-    return {
-        ...formatFloat.extractOptions({ attrs, options }),
-        factor: options.factor,
-    };
-};
+formatFloatFactor.extractOptions = ({ attrs, options }) => ({
+    ...formatFloat.extractOptions({ attrs, options }),
+    factor: options.factor,
+});
 
 /**
  * Returns a string representing a time value, from a float.  The idea is that
@@ -215,11 +207,9 @@ export function formatFloatTime(value, options = {}) {
     }
     return `${isNegative ? "-" : ""}${hour}:${min}${sec}`;
 }
-formatFloatTime.extractOptions = ({ options }) => {
-    return {
-        displaySeconds: options.displaySeconds,
-    };
-};
+formatFloatTime.extractOptions = ({ options }) => ({
+    displaySeconds: options.displaySeconds,
+});
 
 /**
  * Returns a string representing an integer.  If the value is false, then we
@@ -250,13 +240,11 @@ export function formatInteger(value, options = {}) {
     const thousandsSep = "thousandsSep" in options ? options.thousandsSep : l10n.thousandsSep;
     return insertThousandsSep(value.toFixed(0), thousandsSep, grouping);
 }
-formatInteger.extractOptions = ({ attrs, options }) => {
-    return {
-        decimals: options.decimals || 0,
-        humanReadable: !!options.human_readable,
-        isPassword: exprToBoolean(attrs.password),
-    };
-};
+formatInteger.extractOptions = ({ attrs, options }) => ({
+    decimals: options.decimals || 0,
+    humanReadable: !!options.human_readable,
+    isPassword: exprToBoolean(attrs.password),
+});
 
 /**
  * Returns a string representing a many2one value. The value is expected to be
@@ -343,12 +331,10 @@ export function formatMonetary(value, options = {}) {
     }
     return formatCurrency(value, currencyId, options);
 }
-formatMonetary.extractOptions = ({ options }) => {
-    return {
-        noSymbol: options.no_symbol,
-        currencyField: options.currency_field,
-    };
-};
+formatMonetary.extractOptions = ({ options }) => ({
+    noSymbol: options.no_symbol,
+    currencyField: options.currency_field,
+});
 
 /**
  * Returns a string representing the given value (multiplied by 100)

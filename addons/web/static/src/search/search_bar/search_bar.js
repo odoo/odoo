@@ -676,7 +676,7 @@ export class SearchBar extends Component {
                     },
                 },
             },
-            onEnabled: (items) => items[0]?.setActive(),
+            onEnabled: (navigator) => navigator.items[0]?.setActive(),
         };
     }
 

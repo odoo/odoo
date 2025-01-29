@@ -54,36 +54,16 @@
             </t>
         </div>
         <div t-attf-class="position-relative d-flex flex-column flex-md-row gap-4 gap-md-3 {{ props.type === 'datetime' ? 'justify-content-center' : 'justify-content-end' }}">
-            <div t-attf-class="d-flex gap-3 w-100 {{ props.type === 'datetime' ? 'justify-content-center' : 'd-none' }}">
+            <div t-attf-class="d-flex gap-3 w-100 {{ props.type === 'datetime' ? 'justify-content-around' : 'd-none' }}">
                 <t t-if="props.type === 'datetime'">
                     <t t-foreach="state.timeValues" t-as="timeValue" t-key="timeValue_index">
-                        <div
+                        <TimePicker
                             t-if="timeValue"
-                            class="o_time_picker d-flex align-items-center justify-content-center w-lg-50 w-100 gap-1"
-                        >
-                            <t t-call="web.DateTimePicker.Select">
-                                <t t-set="unitIndex" t-value="0" />
-                                <t t-set="unitList" t-value="availableHours" />
-                            </t>
-                            <span>:</span>
-                            <t t-call="web.DateTimePicker.Select">
-                                <t t-set="unitIndex" t-value="1" />
-                                <t t-set="unitList" t-value="availableMinutes" />
-                            </t>
-                            <t t-if="availableSeconds.length">
-                                <span>:</span>
-                                <t t-call="web.DateTimePicker.Select">
-                                    <t t-set="unitIndex" t-value="2" />
-                                    <t t-set="unitList" t-value="availableSeconds" />
-                                </t>
-                            </t>
-                            <t t-if="meridiems">
-                                <t t-call="web.DateTimePicker.Select">
-                                    <t t-set="unitIndex" t-value="3" />
-                                    <t t-set="unitList" t-value="meridiems" />
-                                </t>
-                            </t>
-                        </div>
+                            value="timeValue"
+                            onChange="(newTime) => this.onTimeChange(timeValue_index, newTime)"
+                            minutesRounding="props.rounding"
+                            showSeconds="props.rounding === 0"
+                        />
                     </t>
                 </t>
             </div>
@@ -118,31 +98,6 @@
                 </button>
             </t>
         </div>
-    </t>
-
-    <t t-name="web.DateTimePicker.Select">
-        <!-- Requires: { unitIndex: number, unitList: [any, string][], timeValue_index: number } -->
-        <select
-            class="o_time_picker_select form-control form-control-sm w-auto"
-            tabindex="-1"
-            t-model="timeValue[unitIndex]"
-            t-on-change="() => this.selectTime(timeValue_index)"
-        >
-            <option
-                t-if="unitIndex === 1 and !!(timeValue[unitIndex] % props.rounding)"
-                class="text-center"
-                value=""
-                selected="true"
-            />
-            <t t-foreach="unitList" t-as="unit" t-key="unit[0]">
-                <option
-                    class="text-center"
-                    t-att-value="unit[0]"
-                    t-esc="unit[1]"
-                    t-att-selected="timeValue[unitIndex] === unit[0].toString()"
-                />
-            </t>
-        </select>
     </t>
 
     <t t-name="web.DateTimePicker">
