@@ -4,7 +4,7 @@
     <record id="event_type_data_sports_question_0" model="event.question">
         <field name="title">How did you learn about this event?</field>
         <field name="once_per_order" eval="False"/>
-        <field name="event_type_id" ref="event.event_type_2"/>
+        <field name="event_type_ids" eval="[(5, 0, 0), (4, ref('event.event_type_2'))]"/>
     </record>
     <record id="event_type_data_sports_question_0_answer_0" model="event.question.answer">
         <field name="name">Social Media</field>
