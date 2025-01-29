@@ -144,7 +144,7 @@ export class EmojiPicker extends Component {
             if (this.props.storeScroll) {
                 this.gridRef.el.scrollTop = this.props.storeScroll.get();
             }
-            this.state.hoveredEmoji = this.currentSelectedEmoji;
+            this.state.hoveredEmoji = this.activeEmoji;
         });
         onPatched(() => {
             if (this.emojis.length === 0) {
@@ -181,7 +181,7 @@ export class EmojiPicker extends Component {
                     activeEl.scrollIntoView({ block: "center", behavior: "instant" });
                     this.keyboardNavigated = false;
                 }
-                this.state.hoveredEmoji = this.currentSelectedEmoji;
+                this.state.hoveredEmoji = this.activeEmoji;
             },
             () => [this.state.activeEmojiIndex, this.gridRef?.el]
         );
@@ -297,12 +297,12 @@ export class EmojiPicker extends Component {
         return this.state.hoveredEmoji?.shortcodes.join(" ") ?? _t("Search emoji");
     }
 
-    onMouseEnter(ev, emoji) {
+    onMouseenterEmoji(ev, emoji) {
         this.state.hoveredEmoji = emoji;
     }
 
-    onMouseLeave(ev) {
-        this.state.hoveredEmoji = this.currentSelectedEmoji;
+    onMouseleaveEmoji(ev) {
+        this.state.hoveredEmoji = this.activeEmoji;
     }
 
     onClick(ev) {
@@ -396,11 +396,11 @@ export class EmojiPicker extends Component {
         this.state.activeEmojiIndex = newIdx ?? this.state.activeEmojiIndex;
     }
 
-    get currentSelectedEmoji() {
-        const currentCodepoints = this.gridRef.el.querySelector(
+    get activeEmoji() {
+        const activeCodepoints = this.gridRef.el.querySelector(
             `.o-EmojiPicker-content .o-Emoji[data-index="${this.state.activeEmojiIndex}"]`
         )?.dataset.codepoints;
-        return currentCodepoints ? this.emojiByCodepoints[currentCodepoints] : undefined;
+        return activeCodepoints ? this.emojiByCodepoints[activeCodepoints] : undefined;
     }
 
     onKeydown(ev) {
