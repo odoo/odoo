@@ -42,7 +42,7 @@ var BarChart = publicWidget.Widget.extend({
             data.push(pt[1]);
         });
 
-        this.$('.title').text(_t('%(clicks)s clicks', {clicks: nbClicks}));
+        this.el.querySelector(".title").innerHTML = _t('%(clicks)s clicks', {clicks: nbClicks});
 
         var config = {
             type: 'line',
@@ -71,7 +71,7 @@ var BarChart = publicWidget.Widget.extend({
                 }
             }
         };
-        var canvas = this.$('canvas')[0];
+        const canvas = this.el.querySelector("canvas");
         var context = canvas.getContext('2d');
         new Chart(context, config);
     },
@@ -105,7 +105,7 @@ var PieChart = publicWidget.Widget.extend({
         }
 
         // Set title
-        this.$('.title').text(_t('%(count)s countries', {count: this.data.length}));
+        this.el.querySelector(".title").innerHTML = _t('%(count)s countries', {count: this.data.length});
 
         var config = {
             type: 'pie',
@@ -121,7 +121,7 @@ var PieChart = publicWidget.Widget.extend({
             },
         };
 
-        var canvas = this.$('canvas')[0];
+        const canvas = this.el.querySelector("canvas");
         var context = canvas.getContext('2d');
         new Chart(context, config);
     },
@@ -146,7 +146,7 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
         this.charts = {};
 
         // Get the code of the link
-        var linkID = parseInt($('#link_id').val());
+        const linkID = parseInt(this.el.querySelector("#link_id").value);
         this.links_domain = ['link_id', '=', linkID];
 
         var defs = [];
@@ -167,9 +167,11 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
             var _lastMonthClicksByCountry = results[4];
 
             if (!_totalClicks) {
-                $('#all_time_charts').prepend(_t("There is no data to show"));
-                $('#last_month_charts').prepend(_t("There is no data to show"));
-                $('#last_week_charts').prepend(_t("There is no data to show"));
+                document.querySelector("#all_time_charts").prepend(_t("There is no data to show"));
+                document
+                    .querySelector("#last_month_charts")
+                    .prepend(_t("There is no data to show"));
+                document.querySelector("#last_week_charts").prepend(_t("There is no data to show"));
                 return;
             }
 
@@ -190,36 +192,42 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
                 formattedClicksByDay[date.setLocale("en").toFormat("yyyy-MM-dd")] =
                     _clicksByDay[i]["create_date_count"];
             }
-
             // Process all time line chart data
             var now = DateTime.now();
             self.charts.all_time_bar = new BarChart(self, beginDate, now, formattedClicksByDay);
-            self.charts.all_time_bar.attachTo($('#all_time_clicks_chart'));
+            self.charts.all_time_bar.attachTo(document.getElementById("all_time_clicks_chart"));
 
             // Process month line chart data
             beginDate = DateTime.now().minus({ days: 30 });
             self.charts.last_month_bar = new BarChart(self, beginDate, now, formattedClicksByDay);
-            self.charts.last_month_bar.attachTo($('#last_month_clicks_chart'));
+            self.charts.last_month_bar.attachTo(document.getElementById("last_month_clicks_chart"));
 
             // Process week line chart data
             beginDate = DateTime.now().minus({ days: 7 });
             self.charts.last_week_bar = new BarChart(self, beginDate, now, formattedClicksByDay);
-            self.charts.last_week_bar.attachTo($('#last_week_clicks_chart'));
+            self.charts.last_week_bar.attachTo(document.getElementById("last_week_clicks_chart"));
 
             // Process pie charts
             self.charts.all_time_pie = new PieChart(self, _clicksByCountry);
-            self.charts.all_time_pie.attachTo($('#all_time_countries_charts'));
+            self.charts.all_time_pie.attachTo(document.getElementById("all_time_countries_charts"));
 
             self.charts.last_month_pie = new PieChart(self, _lastMonthClicksByCountry);
-            self.charts.last_month_pie.attachTo($('#last_month_countries_charts'));
+            self.charts.last_month_pie.attachTo(
+                document.getElementById("last_month_countries_charts")
+            );
 
             self.charts.last_week_pie = new PieChart(self, _lastWeekClicksByCountry);
-            self.charts.last_week_pie.attachTo($('#last_week_countries_charts'));
+            self.charts.last_week_pie.attachTo(
+                document.getElementById("last_week_countries_charts")
+            );
+            const rowWidth = document.querySelector('#all_time_countries_charts').parentElement.offsetWidth;
+            const chartCanvases = document.querySelectorAll('#all_time_countries_charts canvas, #last_month_countries_charts canvas, #last_week_countries_charts canvas');
 
-            var rowWidth = $('#all_time_countries_charts').parent().width();
-            var $chartCanvas = $('#all_time_countries_charts,last_month_countries_charts,last_week_countries_charts').find('canvas');
-            $chartCanvas.height(Math.max(_clicksByCountry.length * (rowWidth > 750 ? 1 : 2), 20) + 'em');
+            const newHeight = Math.max(_clicksByCountry.length * (rowWidth > 750 ? 1 : 2), 20) + 'em';
 
+            chartCanvases.forEach(canvas => {
+                canvas.style.height = newHeight;
+            });
         });
     },
 
