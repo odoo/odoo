@@ -23,6 +23,7 @@ import { RPCError } from "@web/core/network/rpc";
 import { escape } from "@web/core/utils/strings";
 import { user } from "@web/core/user";
 import { useSetupAction } from "@web/search/action_hook";
+import { AnchorPlugin } from "../plugins/anchor/anchor_plugin";
 import { BuilderActionsPlugin } from "../plugins/builder_actions_plugin";
 import { BuilderOptionsPlugin } from "../plugins/builder_options_plugin";
 import { BuilderOverlayPlugin } from "../plugins/builder_overlay/builder_overlay_plugin";
@@ -56,6 +57,7 @@ const BUILDER_PLUGIN = [
     ReplacePlugin,
     RemovePlugin,
     ClonePlugin,
+    AnchorPlugin,
     DropZonePlugin,
     MediaWebsitePlugin,
     SetupEditorPlugin,

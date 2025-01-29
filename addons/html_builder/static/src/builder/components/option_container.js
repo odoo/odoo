@@ -15,6 +15,7 @@ export class OptionsContainer extends Component {
         options: { type: Array },
         editingElement: true, // HTMLElement from iframe
         isRemovable: false,
+        canHaveAnchor: false,
     };
 
     setup() {
@@ -90,5 +91,9 @@ export class OptionsContainer extends Component {
                 autocloseDelay: 5000,
             });
         }
+    }
+
+    async createOrEditAnchorLink() {
+        await this.env.editor.shared.anchor.createOrEditAnchorLink(this.props.editingElement);
     }
 }

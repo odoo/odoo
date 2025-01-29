@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { uniqueId } from "@web/core/utils/functions";
 import { isRemovable } from "./remove/remove_plugin";
+import { canHaveAnchor } from "./anchor/anchor_plugin";
 
 export class BuilderOptionsPlugin extends Plugin {
     static id = "builder-options";
@@ -62,6 +63,7 @@ export class BuilderOptionsPlugin extends Plugin {
                 element,
                 options,
                 isRemovable: isRemovable(element),
+                canHaveAnchor: canHaveAnchor(element),
             }));
 
         // Do not update the containers if they did not change.
