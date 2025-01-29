@@ -609,19 +609,13 @@ class BaseModel(metaclass=MetaModel):
 
     @api.model
     def _pop_field(self, name):
-        """ Remove the field with the given ``name`` from the model.
-            This method should only be used for manual fields.
-        """
+        """ Remove the field with the given ``name`` from the model. """
         cls = self.env.registry[self._name]
         field = cls._fields.pop(name, None)
         discardattr(cls, name)
         if cls._rec_name == name:
             # fixup _rec_name and display_name's dependencies
             cls._rec_name = None
-            if cls.display_name in cls.pool.field_depends:
-                cls.pool.field_depends[cls.display_name] = tuple(
-                    dep for dep in cls.pool.field_depends[cls.display_name] if dep != name
-                )
         return field
 
     #
