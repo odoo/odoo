@@ -1628,7 +1628,12 @@ export class SearchModel extends EventBus {
             facets.push(facet);
         }
         const hasAGroupByFacet = facets.some((f) => f.type === "groupBy");
-        if (!hasAGroupByFacet && !this.globalGroupBy.length && this.defaultGroupBy) {
+        if (
+            !hasAGroupByFacet &&
+            !this.globalGroupBy.length &&
+            this.defaultGroupBy &&
+            this.env.config.viewType !== "kanban"
+        ) {
             facets.push({
                 groupId: SPECIAL,
                 type: "groupBy",
