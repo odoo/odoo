@@ -2,7 +2,7 @@
 
 import logging
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import float_is_zero, is_html_empty
@@ -448,6 +448,19 @@ class ProductTemplate(models.Model):
             combination_info['product_tracking_info'] = self._get_google_analytics_data(
                 product,
                 combination_info,
+            )
+
+        if (
+            product_or_template.type == 'combo'
+            and website.show_line_subtotals_tax_selection == 'tax_included'
+            and not all(
+                tax.price_include
+                for tax
+                in product_or_template.combo_ids.sudo().combo_item_ids.product_id.taxes_id
+            )
+        ):
+            combination_info['tax_disclaimer'] = _(
+                "Final price may vary based on selection. Tax will be calculated at checkout."
             )
 
         return combination_info
