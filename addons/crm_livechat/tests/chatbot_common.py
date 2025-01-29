@@ -44,7 +44,7 @@ class CrmChatbotCase(ChatbotCase):
             cls.step_create_lead_email,
             cls.step_create_lead_phone,
             cls.step_create_lead,
-        ] = cls.env['chatbot.script.step'].sudo().create([{
+        ] = cls.env['chatbot.script.step'].with_context(install_mode=True).sudo().create([{
             'step_type': 'question_email',
             'message': 'Could you provide us your email please.',
             'sequence': 20,

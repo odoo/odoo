@@ -43,6 +43,14 @@ class ChatbotScriptStep(models.Model):
     # forward-operator specifics
     is_forward_operator_child = fields.Boolean(compute='_compute_is_forward_operator_child')
 
+    @api.constrains('step_type', 'answer_ids')
+    def _check_question_selection(self):
+        if self.env.context.get('install_mode'):
+            return
+        for step in self:
+            if step.step_type == 'question_selection' and not step.answer_ids:
+                raise ValidationError(_('Step of type "Question" must have answers.'))
+
     @api.depends('sequence')
     def _compute_triggering_answer_ids(self):
         for step in self.filtered('triggering_answer_ids'):

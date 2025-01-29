@@ -14,7 +14,7 @@ class ChatbotCase(common.HttpCase):
             'title': 'Testing Bot',
         })
 
-        ChatbotScriptStep = cls.env['chatbot.script.step'].sudo()
+        ChatbotScriptStep = cls.env['chatbot.script.step'].with_context(install_mode=True).sudo()
 
         [
             cls.step_hello,

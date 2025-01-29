@@ -127,7 +127,7 @@ class TestLivechatChatbotUI(TestImLivechatCommon, TestWebsiteLivechatCommon, Cha
             {"title": "Redirection Bot"}
         )
         question_step, _ = tuple(
-            self.env["chatbot.script.step"].create([
+            self.env["chatbot.script.step"].with_context(install_mode=True).create([
                 {
                     "chatbot_script_id": chatbot_redirect_script.id,
                     "message": "Hello, were do you want to go?",
@@ -169,7 +169,7 @@ class TestLivechatChatbotUI(TestImLivechatCommon, TestWebsiteLivechatCommon, Cha
             {"title": "Trigger question selection bot"}
         )
         question_1, question_2 = tuple(
-            self.env["chatbot.script.step"].create([
+            self.env["chatbot.script.step"].with_context(install_mode=True).create([
                 {
                     "chatbot_script_id": chatbot_trigger_selection.id,
                     "message": "Hello, here is a first question?",
@@ -224,7 +224,7 @@ class TestLivechatChatbotUI(TestImLivechatCommon, TestWebsiteLivechatCommon, Cha
 
     def test_question_selection_overlapping_answers(self):
         chatbot_script = self.env["chatbot.script"].create({"title": "Question selection bot"})
-        question_1 = self.env["chatbot.script.step"].create(
+        question_1 = self.env["chatbot.script.step"].with_context(install_mode=True).create(
             [
                 {
                     "chatbot_script_id": chatbot_script.id,
