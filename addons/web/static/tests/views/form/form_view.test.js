@@ -59,6 +59,7 @@ import { makeErrorFromResponse } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { SIZES } from "@web/core/ui/ui_service";
 import { useBus, useService } from "@web/core/utils/hooks";
+import { redirect } from "@web/core/utils/urls";
 import { session } from "@web/session";
 import { CharField } from "@web/views/fields/char/char_field";
 import { DateTimeField } from "@web/views/fields/datetime/datetime_field";
@@ -5626,6 +5627,28 @@ test(`deleting the last record`, async () => {
     await contains(`.modal-footer button.btn-primary`).click();
     expect(`.modal`).toHaveCount(0);
     expect.verifySteps(["unlink", "history-back"]);
+});
+
+test("delete the last record (without previous action)", async () => {
+    Partner._views = {
+        form: `
+                <form>
+                    <field name="display_name"/>
+                </form>`,
+        search: "<search></search>",
+    };
+
+    redirect("/odoo/m-partner/1");
+    patchWithCleanup(WebClient.prototype, {
+        _loadDefaultApp() {
+            expect.step("__DEFAULT_ACTION__ called");
+        },
+    });
+    await mountWithCleanup(WebClient);
+    await toggleActionMenu();
+    await toggleMenuItem("Delete");
+    await contains(`.modal-footer button.btn-primary`).click();
+    expect.verifySteps(["__DEFAULT_ACTION__ called"]);
 });
 
 test(`empty required fields cannot be saved`, async () => {
