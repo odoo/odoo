@@ -37,6 +37,9 @@ registry.category("web_tour.tours").add("test_favorite_management", {
             run: "click",
         },
         {
+            trigger: ".o_favorite_menu .o-dropdown-item:contains(Apps2)",
+        },
+        {
             trigger: ".o_favorite_menu .o-dropdown-item:contains(Apps1) i",
             run: "click",
         },
@@ -46,6 +49,10 @@ registry.category("web_tour.tours").add("test_favorite_management", {
         },
         {
             trigger: ".o_tree_editor_row:contains(New Rule) > a",
+            run: "click",
+        },
+        {
+            trigger: ".o_form_button_save",
             run: "click",
         },
         {
@@ -67,19 +74,14 @@ registry.category("web_tour.tours").add("test_favorite_management", {
             run: "click",
         },
         {
-            trigger: ".o_kanban_record:not(.o_kanban_ghost)",
-            run() {
-                if (queryAll(".o_kanban_record:not(.o_kanban_ghost)").length > 1) {
-                    throw new Error("There should be only one visible card in the kanban view");
-                }
-            },
+            trigger: ".o_kanban_record:not(.o_kanban_ghost):only",
         },
         {
             trigger: ".o_favorite_menu .o-dropdown-item:contains(Apps1) i",
             run: "click",
         },
         {
-            trigger: ".o_cp_action_menus .o-dropdown",
+            trigger: ".o_form_view .o_cp_action_menus .o-dropdown",
             run: "click",
         },
         {
