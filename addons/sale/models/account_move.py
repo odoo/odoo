@@ -40,7 +40,7 @@ class AccountMove(models.Model):
             key=lambda m: (m.invoice_user_id.id, m.company_id.id, m.partner_id.team_id.id)
         ):
             default_team_id = self.env.context.get('default_team_id', False) or partner_team_id
-            self.concat(*moves).team_id = self.env['crm.team'].with_context(
+            self.env['account.move'].concat(*moves).team_id = self.env['crm.team'].with_context(
                 allowed_company_ids=[company_id],
                 default_team_id=default_team_id,
             )._get_default_team_id(
