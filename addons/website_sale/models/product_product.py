@@ -1,36 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from urllib.parse import urljoin
 from pytz import UTC
+from urllib.parse import urljoin
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools import float_round, lazy
 
-GMC_SUPPORTED_UOM = {
-    'oz',
-    'lb',
-    'mg',
-    'g',
-    'kg',
-    'floz',
-    'pt',
-    'qt',
-    'gal',
-    'ml',
-    'cl',
-    'l',
-    'cbm',
-    'in',
-    'ft',
-    'yd',
-    'cm',
-    'm',
-    'sqft',
-    'sqm',
-}
+from odoo.addons.website_sale.const import GMC_SUPPORTED_UOM
 
 
 class ProductProduct(models.Model):
@@ -212,12 +191,12 @@ class ProductProduct(models.Model):
             }
         return markup_data
 
-    def _get_image_link(self, website_id=None):
+    def _get_image_1920_link(self, website_id=None):
         self.ensure_one()
         website_id = website_id or self.website_id
         return website_id.image_url(self, 'image_1920')
 
-    def _get_extra_image_links(self, website_id=None):
+    def _get_extra_image_1920_links(self, website_id=None):
         self.ensure_one()
         website_id = website_id or self.website_id
         return [
@@ -235,7 +214,7 @@ class ProductProduct(models.Model):
         :return: a dictionary for each non-service product in this recordset.
         :rtype: list[dict]
         """
-        dict_items = super()._get_gmc_items()
+        self = self.with_context(display_default_code=False)
 
         pricelist_id = request.website.pricelist_id.id
         currency = request.website.currency_id
@@ -265,7 +244,10 @@ class ProductProduct(models.Model):
             'order_line': [{'product_uom_qty': 1.0}],
         })
         order_line = dummy_order.order_line[0]
-        for product, items in dict_items.items():
+        dict_items = {}
+        for product in self:
+            if product.type not in ('consu', 'combo'):
+                continue
             combination_info = product.product_tmpl_id._get_combination_info(
                 combination=product.product_template_attribute_value_ids,
             )
@@ -291,13 +273,16 @@ class ProductProduct(models.Model):
                             best_free_shipping_threshold[country],
                             carrier.amount,
                         )
-            items.update({
+            items = {
                 # Required
+                'id': product.default_code or product.id,
+                'title': product.display_name,
+                'availability': 'in_stock',
                 'description': product.website_meta_description or product.description_sale,
                 'link': format_product_link(product.website_url),
                 'image_link': (
                     # don't send any image link if there isn't. Google does not allow placeholder
-                    format_link(product._get_image_link())
+                    format_link(product._get_image_1920_link())
                     if product.image_1920
                     else ""
                 ),
@@ -317,10 +302,10 @@ class ProductProduct(models.Model):
                     for attr in product.product_template_attribute_value_ids
                 ],
                 'is_bundle': "yes" if product.type == 'combo' else "no",
-                'additionnal_image_link': [
+                'additional_image_link': [
                     format_link(link)
                     # supports up to 10 extra images
-                    for link in product._get_extra_image_links()[:10]
+                    for link in product._get_extra_image_1920_links()[:10]
                 ],
                 'product_type': [
                     category.replace('/', '>')  # google uses a different format
@@ -343,7 +328,7 @@ class ProductProduct(models.Model):
                     }
                     for country, best_threshold in best_free_shipping_threshold.items()
                 ],
-            })
+            }
             # prefer barcode over record id
             if product.barcode:
                 items.update({'gtin': product.barcode, 'identifier_exists': "yes"})
@@ -369,5 +354,5 @@ class ProductProduct(models.Model):
                 items['unit_pricing_measure'] = (
                     f"{int(product.base_unit_count)}{combination_info['base_unit_name']}"
                 )
-
+            dict_items[product] = items
         return dict_items

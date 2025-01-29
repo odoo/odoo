@@ -863,24 +863,3 @@ class ProductProduct(models.Model):
         """ Hook to handle an UoM modification. Avoid recomputation and just replace the
         many2one field on the impacted models."""
         return True
-
-    def _get_gmc_items(self):
-        """Compute Google Merchant Center items' fields.
-
-        See [Google](https://support.google.com/merchants/answer/7052112)'s documentation for more
-        information about each field.
-
-        :return: a dictionary for each non-service product in this recordset.
-        :rtype: list[dict]
-        """
-        self = self.with_context(display_default_code=False)
-        return {
-            product: {
-                # Required
-                'id': product.default_code or product.id,
-                'title': product.display_name,
-                'availability': 'in_stock',
-            }
-            for product in self
-            if product.type in ('consu', 'combo')
-        }

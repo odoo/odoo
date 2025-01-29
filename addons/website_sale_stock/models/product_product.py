@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
 from pytz import UTC
 
 from odoo import models, fields, _
@@ -69,20 +70,50 @@ class ProductProduct(models.Model):
             markup_data['offers']['availability'] = availability
         return markup_data
 
-    def _get_replenishment_domain(self):
+    def _get_availability_date(self):
         self.ensure_one()
-        return [
+        StockMoveSudo = self.env['stock.move'].sudo()
+        moves_domain = [
             ('product_id', '=', self.id),
-            ('state', 'not in', ('draft', 'canceled', 'done')),
-            (
-                'location_dest_id',
-                '=',
-                (
-                    (request and request.website.warehouse_id.lot_stock_id.id)
-                    or self.warehouse_id.lot_stock_id.id
-                ),
-            ),
+            ('state', 'not in', ('draft', 'cancel', 'done')),
+            ('date', '>=', datetime.now()),
         ]
+        stock_warehouses_ids = (
+            request.website.warehouse_id.lot_stock_id.ids
+            if request and request.website.warehouse_id.lot_stock_id
+            else self.env['stock.warehouse']
+                    .search([('lot_stock_id', '!=', False)])
+                    .mapped('lot_stock_id.id')
+        )
+        incoming_moves = StockMoveSudo.search(
+            moves_domain + [('location_dest_id', 'in', stock_warehouses_ids)],
+            order='date'
+        )
+        outgoing_moves = StockMoveSudo.search(
+            moves_domain + [('location_id', 'in', stock_warehouses_ids)],
+            order='date'
+        )
+
+        availability_date = datetime.max
+        available_qty = 0
+        i, j = 0, 0
+        while i < len(incoming_moves) or j < len(outgoing_moves):
+            move_date, qty, (ip, jp) = min(
+                (incoming_moves[i].date, incoming_moves[i].product_qty, (1, 0))
+                if i < len(incoming_moves)
+                else (datetime.max,),
+                (outgoing_moves[j].date, -outgoing_moves[j].product_qty, (0, 1))
+                if j < len(outgoing_moves)
+                else (datetime.max,),
+            )
+            available_qty += qty
+            if available_qty > 0:
+                availability_date = min(availability_date, move_date)
+            else:
+                availability_date = datetime.max
+            i += ip
+            j += jp
+        return availability_date if available_qty > 0 else False
 
     def _get_gmc_items(self):
         """Compute Google Merchant Center items' fields.
@@ -94,17 +125,12 @@ class ProductProduct(models.Model):
         :rtype: list[dict]
         """
         dict_items = super()._get_gmc_items()
-        moves_sudo = self.env['stock.move'].sudo()
         for product, items in dict_items.items():
             if product._is_sold_out():
                 if not product.allow_out_of_stock_order:
                     items['availability'] = 'out_of_stock'
                 else:
-                    moves = moves_sudo.search(product._get_replenishment_domain())
-                    availability_date = max(
-                        (move.date for move in moves),
-                        default=False,
-                    )
+                    availability_date = product._get_availability_date()
                     if availability_date:
                         # backorder can only be used with an availability_date
                         items['availability'] = 'backorder'

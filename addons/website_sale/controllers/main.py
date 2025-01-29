@@ -13,6 +13,7 @@ from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.http import request, route
+from odoo.orm.domains import Domain
 from odoo.osv import expression
 from odoo.tools import SQL, clean_context, float_round, groupby, lazy, single_email_re, str2bool
 from odoo.tools.json import scriptsafe as json_scriptsafe
@@ -2050,12 +2051,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
           prices corresponds to the website's prices.
         """
         website = request.website
-        if not website.enabled_gmc_src:
+        if not website.enabled_gmc_src or not website.has_ecommerce_access():
             raise NotFound()
         if pricelist_name_ilike is not None:
             pricelist = request.env['product.pricelist'].sudo().search(
-                [('name', 'ilike', pricelist_name_ilike)]
-                + request.env['product.pricelist']._get_website_pricelists_domain(website),
+                Domain.AND(
+                    [('name', 'ilike', pricelist_name_ilike)]
+                    + request.env['product.pricelist']._get_website_pricelists_domain(website)
+                ),
                 limit=1,
             )
             if not pricelist:
@@ -2077,14 +2080,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
             [('url', '=', homepage_url), ('website_id', '!=', False)],
             limit=1,
         )
-        seo = website_homepage.get_website_meta().get('opengraph_meta', {})
 
         vals = {
-            'title': seo.get('og:title', website.name),
+            'title': website_homepage.website_meta_title or  website.name,
             'link': urljoin(website.get_base_url(), IrHttp._url_lang(homepage_url)),
-            'description': seo.get('og:description', ""),
+            'description': website_homepage.website_meta_description,
             'items': products._get_gmc_items(),
         }
-
         content = View._render_template('website_sale.gmc_xml', vals)
         return request.make_response(content, [('Content-Type', mimetype)])
