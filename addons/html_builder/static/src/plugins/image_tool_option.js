@@ -5,7 +5,6 @@ import {
     loadImage,
 } from "@html_editor/utils/image_processing";
 import { Component } from "@odoo/owl";
-import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { defaultBuilderComponents } from "../core/default_builder_components";
 import { AddElementOption } from "./add_element_option";
@@ -44,7 +43,6 @@ class ImageToolOptionPlugin extends Plugin {
                     // todo: This seems quite heavy for a simple reset. Retrieve some
                     // metadata, to load the image crop, to call processImageCrop, just to
                     // reset the crop. We might want to simplify this.
-                    await loadBundle("html_editor.assets_image_cropper");
                     const croppedImage = editingElement;
 
                     const container = document.createElement("div");
@@ -109,7 +107,6 @@ class ImageToolOptionPlugin extends Plugin {
                     }
                 },
                 load: async ({ editingElement, param: glFilterName }) => {
-                    await loadBundle("html_editor.assets_image_cropper");
                     editingElement.dataset.glFilter = glFilterName;
                     const newSrc = await applyModifications(editingElement, {
                         mimetype: getImageMimetype(editingElement),

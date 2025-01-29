@@ -1,6 +1,7 @@
 import { rpc } from "@web/core/network/rpc";
 import { pick } from "@web/core/utils/objects";
 import { getAffineApproximation, getProjective } from "./perspective_utils";
+import { loadBundle } from "@web/core/assets";
 
 // Fields returned by cropperjs 'getData' method, also need to be passed when
 // initializing the cropper to reuse the previous crop.
@@ -495,6 +496,7 @@ function _getImageSizeFromCache(src) {
  * @param {DOMStringMap} dataset dataset containing the cropperDataFields
  */
 export async function activateCropper(image, aspectRatio, dataset, cropperOptions) {
+    await loadBundle("html_editor.assets_image_cropper");
     const oldSrc = image.src;
     const newSrc = await _loadImageObjectURL(image.getAttribute("src"));
     image.src = newSrc;
