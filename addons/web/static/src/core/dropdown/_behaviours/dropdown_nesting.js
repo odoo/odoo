@@ -111,9 +111,9 @@ export function useDropdownNesting(state) {
         },
         /**@type {import("@web/core/navigation/navigation").NavigationOptions} */
         navigationOptions: {
-            onEnabled: (items) => {
+            onEnabled: (navigator) => {
                 if (current.parent) {
-                    items[0]?.setActive();
+                    navigator.items[0]?.setActive();
                 }
             },
             onMouseEnter: (item) => {
