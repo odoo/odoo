@@ -1788,7 +1788,16 @@
                           t-options="{'widget': 'monetary', 'display_currency': product.currency_id}"/>
                     </bdi>
                 </del>
+<<<<<<< saas-18.2
             </div>
+||||||| 5fd83f021d2ebe058a66a7bee7de99ab97b2a005
+            </h3>
+=======
+            </h3>
+            <small t-if="combination_info.get('tax_disclaimer')" class="text-muted">
+                <t t-out="combination_info['tax_disclaimer']"/>
+            </small>
+>>>>>>> 161be9aa6b44832d85badfeac3a8273caa634587
         </div>
         <div id="product_unavailable" t-attf-class="{{'d-flex' if combination_info['prevent_zero_price_sale'] else 'd-none'}}">
             <h3 class="fst-italic" t-field="website.prevent_zero_price_sale_text"/>
