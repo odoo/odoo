@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-07 13:16+0000\n"
-"PO-Revision-Date: 2024-10-07 13:16+0000\n"
+"POT-Creation-Date: 2025-02-10 15:09+0000\n"
+"PO-Revision-Date: 2025-02-10 15:09+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -133,7 +133,7 @@ msgstr ""
 #. module: l10n_latam_check
 #. odoo-python
 #: code:addons/l10n_latam_check/models/account_payment.py:0
-msgid "Check %s - "
+msgid "Check %(check_number)s - %(suffix)s"
 msgstr ""
 
 #. module: l10n_latam_check
@@ -149,6 +149,7 @@ msgid "Check Transfer"
 msgstr ""
 
 #. module: l10n_latam_check
+#: model:ir.model.fields,field_description:l10n_latam_check.field_account_move_line__l10n_latam_check_ids
 #: model:ir.model.fields,field_description:l10n_latam_check.field_account_payment__l10n_latam_new_check_ids
 #: model:ir.model.fields,field_description:l10n_latam_check.field_account_payment_register__l10n_latam_move_check_ids
 #: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_payment_form_inherited
@@ -176,11 +177,6 @@ msgstr ""
 #. module: l10n_latam_check
 #: model:ir.model.fields,field_description:l10n_latam_check.field_account_payment__l10n_latam_move_check_ids
 msgid "Checks Operations"
-msgstr ""
-
-#. module: l10n_latam_check
-#: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_payment_third_party_checks_search
-msgid "Checks on hand"
 msgstr ""
 
 #. module: l10n_latam_check
@@ -279,6 +275,7 @@ msgstr ""
 
 #. module: l10n_latam_check
 #: model:ir.model.fields.selection,name:l10n_latam_check.selection__l10n_latam_check__issue_state__handed
+#: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_payment_search
 msgid "Handed"
 msgstr ""
 
@@ -335,14 +332,15 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_latam_check/models/account_payment.py:0
 msgid ""
-"It seems you're trying to move a check with a date (%s) prior to last "
-"operation done with the check (%s). This may be wrong, please double check "
-"it. By continue, the last operation on the check will remain being %s"
+"It seems you're trying to move a check with a date (%(date)s) prior to last "
+"operation done with the check (%(last_operation)s). This may be wrong, "
+"please double check it. By continue, the last operation on the check will "
+"remain being %(last_operation)s"
 msgstr ""
 
 #. module: l10n_latam_check
 #: model:ir.model,name:l10n_latam_check.model_account_journal
-#: model:ir.model.fields,field_description:l10n_latam_check.field_l10n_latam_check__journal_id
+#: model:ir.model.fields,field_description:l10n_latam_check.field_l10n_latam_check__original_journal_id
 #: model:ir.model.fields,field_description:l10n_latam_check.field_l10n_latam_payment_mass_transfer__journal_id
 msgid "Journal"
 msgstr ""
@@ -350,6 +348,11 @@ msgstr ""
 #. module: l10n_latam_check
 #: model:ir.model,name:l10n_latam_check.model_account_move
 msgid "Journal Entry"
+msgstr ""
+
+#. module: l10n_latam_check
+#: model:ir.model,name:l10n_latam_check.model_account_move_line
+msgid "Journal Item"
 msgstr ""
 
 #. module: l10n_latam_check
@@ -374,11 +377,6 @@ msgstr ""
 #. module: l10n_latam_check
 #: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_payment_search
 msgid "Late Activities"
-msgstr ""
-
-#. module: l10n_latam_check
-#: model:ir.model.fields,field_description:l10n_latam_check.field_l10n_latam_check__outstanding_line_id
-msgid "Liquidity Line"
 msgstr ""
 
 #. module: l10n_latam_check
@@ -466,13 +464,12 @@ msgid "Number of messages with delivery error"
 msgstr ""
 
 #. module: l10n_latam_check
-#: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_payment_search
+#: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_payment_third_party_checks_search
 msgid "On hand"
 msgstr ""
 
 #. module: l10n_latam_check
 #: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_payment_form_inherited
-#: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_payment_register_form
 msgid "Open"
 msgstr ""
 
@@ -488,6 +485,11 @@ msgid ""
 "Other checks were found with same number, issuer and bank. Please double "
 "check you are not encoding the same check more than once. List of other "
 "payments/checks: %s"
+msgstr ""
+
+#. module: l10n_latam_check
+#: model:ir.model.fields,field_description:l10n_latam_check.field_l10n_latam_check__outstanding_line_id
+msgid "Outstanding Line"
 msgstr ""
 
 #. module: l10n_latam_check
@@ -511,6 +513,11 @@ msgstr ""
 #. module: l10n_latam_check
 #: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_payment_search
 msgid "Partner"
+msgstr ""
+
+#. module: l10n_latam_check
+#: model:ir.model,name:l10n_latam_check.model_account_payment_register
+msgid "Pay"
 msgstr ""
 
 #. module: l10n_latam_check
@@ -559,11 +566,6 @@ msgid "Payments"
 msgstr ""
 
 #. module: l10n_latam_check
-#: model:ir.model,name:l10n_latam_check.model_account_payment_register
-msgid "Register Payment"
-msgstr ""
-
-#. module: l10n_latam_check
 #. odoo-python
 #: code:addons/l10n_latam_check/models/account_chart_template.py:0
 msgid "Rejected Third Party Checks"
@@ -575,6 +577,11 @@ msgid "Responsible User"
 msgstr ""
 
 #. module: l10n_latam_check
+#: model:account.payment.method,name:l10n_latam_check.account_payment_method_return_third_party_checks
+msgid "Return Third Party Checks"
+msgstr ""
+
+#. module: l10n_latam_check
 #: model:ir.model.fields,field_description:l10n_latam_check.field_l10n_latam_check__message_has_sms_error
 msgid "SMS Delivery error"
 msgstr ""
@@ -582,7 +589,7 @@ msgstr ""
 #. module: l10n_latam_check
 #. odoo-python
 #: code:addons/l10n_latam_check/models/account_payment.py:0
-msgid "Selecteds checks \"%s\" are not posted"
+msgid "Selected checks \"%s\" are not posted"
 msgstr ""
 
 #. module: l10n_latam_check
@@ -663,6 +670,12 @@ msgid "Third Party Checks"
 msgstr ""
 
 #. module: l10n_latam_check
+#. odoo-python
+#: code:addons/l10n_latam_check/wizards/l10n_latam_payment_mass_transfer.py:0
+msgid "This payment has been created from: "
+msgstr ""
+
+#. module: l10n_latam_check
 #: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_payment_search
 msgid "Today Activities"
 msgstr ""
@@ -710,6 +723,5 @@ msgstr ""
 
 #. module: l10n_latam_check
 #: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_payment_form_inherited
-#: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_payment_register_form
 msgid "open"
 msgstr ""
