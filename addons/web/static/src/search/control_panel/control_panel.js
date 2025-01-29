@@ -17,7 +17,15 @@ import { Transition } from "@web/core/transition";
 import { Breadcrumbs } from "../breadcrumbs/breadcrumbs";
 import { SearchBar } from "../search_bar/search_bar";
 
-import { Component, useState, onMounted, useExternalListener, useRef, useEffect } from "@odoo/owl";
+import {
+    Component,
+    useState,
+    onMounted,
+    useExternalListener,
+    useRef,
+    useEffect,
+    onWillUpdateProps,
+} from "@odoo/owl";
 
 const STICKY_CLASS = "o_mobile_sticky";
 
@@ -131,6 +139,7 @@ export class ControlPanel extends Component {
                     {},
                 currentEmbeddedAction: this.currentEmbeddedAction,
             },
+            disableDropdown: this.props.display?.disableDropdown,
         });
 
         this.onScrollThrottledBound = this.onScrollThrottled.bind(this);
@@ -204,27 +213,18 @@ export class ControlPanel extends Component {
 
         this.mainButtons = useRef("mainButtons");
 
+        onWillUpdateProps((newProps) => {
+            this.state.disableDropdown = newProps.display?.disableDropdown;
+        });
+
         useEffect(() => {
             // on small screen, clean-up the dropdown elements
             const dropdownButtons = this.mainButtons.el.querySelectorAll(
-                ".o_control_panel_collapsed_create.dropdown-menu button"
+                ".o_control_panel_collapsed_create > .dropdown-menu button"
             );
-            if (!dropdownButtons.length) {
-                this.mainButtons.el
-                    .querySelectorAll(
-                        ".o_control_panel_collapsed_create.dropdown-menu, .o_control_panel_collapsed_create.dropdown-toggle"
-                    )
-                    .forEach((el) => el.classList.add("d-none"));
-                this.mainButtons.el
-                    .querySelectorAll(".o_control_panel_collapsed_create.btn-group")
-                    .forEach((el) => el.classList.remove("btn-group"));
-                return;
-            }
+            this.state.disableDropdown = !dropdownButtons.length;
             for (const button of dropdownButtons) {
-                for (const cl of Array.from(button.classList)) {
-                    button.classList.toggle(cl, !cl.startsWith("btn-"));
-                }
-                button.classList.add("dropdown-item", "btn", "btn-link");
+                button.classList.add("dropdown-item", "o-dropdown-item-unstyled-button");
             }
         });
 
