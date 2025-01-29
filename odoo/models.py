@@ -4270,7 +4270,7 @@ class BaseModel(metaclass=MetaModel):
         """
         if not companies:
             return [('company_id', '=', False)]
-        if isinstance(companies, str):
+        if isinstance(companies, unquote):
             return [('company_id', 'in', unquote(f'{companies} + [False]'))]
         return [('company_id', 'in', to_company_ids(companies) + [False])]
 
@@ -4319,13 +4319,13 @@ class BaseModel(metaclass=MetaModel):
                     _logger.warning(_(
                         "Skipping a company check for model %(model_name)s. Its fields %(field_names)s are set as company-dependent, "
                         "but the model doesn't have a `company_id` or `company_ids` field!",
-                        model_name=self.model_name, field_names=regular_fields
+                        model_name=self._name, field_names=regular_fields
                     ))
                     continue
                 for name in regular_fields:
                     corecord = record.sudo()[name]
                     if corecord:
-                        domain = corecord._check_company_domain(companies)
+                        domain = corecord._check_company_domain(companies) # pylint: disable=0601
                         if domain and not corecord.with_context(active_test=False).filtered_domain(domain):
                             inconsistencies.append((record, name, corecord))
             # The second part of the check (for property / company-dependent fields) verifies that the records

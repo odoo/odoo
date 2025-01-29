@@ -65,7 +65,7 @@ class LoyaltyCard(models.Model):
     @api.onchange('expiration_date')
     def _restrict_expiration_on_loyalty(self):
         for card in self:
-            if card.program_type == 'loyalty':
+            if card.program_type == 'loyalty' and card.expiration_date:
                 raise ValidationError(_("Expiration date cannot be set on a loyalty card."))
 
     def _format_points(self, points):

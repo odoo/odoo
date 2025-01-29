@@ -113,19 +113,17 @@ class IapAccount(models.Model):
             balance = f"{balance_amount} {account_id.service_id.unit_name}"
 
             information.pop('link_to_service_page', None)
-            account_info = {
-                'balance': balance,
-                'warning_threshold': information['warning_threshold'],
-                'state': information['registered'],
-                'service_locked': True,  # The account exist on IAP, prevent the edition of the service
-            }
-
-            if account_id.service_name == 'sms':
-                account_info.update({
-                    'sender_name': information.get('sender_name')
-                })
+            account_info = self._get_account_info(account_id, balance, information)
 
             account_id.with_context(disable_iap_update=True, tracking_disable=True).write(account_info)
+
+    def _get_account_info(self, account_id, balance, information):
+        return {
+            'balance': balance,
+            'warning_threshold': information['warning_threshold'],
+            'state': information['registered'],
+            'service_locked': True,  # The account exist on IAP, prevent the edition of the service
+        }
 
     @api.model_create_multi
     def create(self, vals_list):

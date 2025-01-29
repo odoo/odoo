@@ -5,14 +5,14 @@
     }
 }
 
-$o-mail-DiscussSidebarChannel-borderOpacity: .1;
+$o-mail-DiscussSidebarChannel-borderOpacity: .05;
 
 .o-mail-DiscussSidebarChannel-container {
     --border-opacity: var(--mail-DiscussSidebarChannel-borderOpacity, #{$o-mail-DiscussSidebarChannel-borderOpacity});
     gap: 1px;
 
     &.o-bordered {
-        background-color: var(---mail-DiscussSidebarChannel-borderedBgColor, mix($white, $dark, 99%)) !important;
+        background-color: var(---mail-DiscussSidebarChannel-borderedBgColor, mix($white, $dark, 98%)) !important;
     }
 }
 
@@ -24,7 +24,7 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .1;
 
 .o-mail-DiscussSidebar-floatingMenu {
     max-width: 250px !important;
-    --border-opacity: 0.25;
+    --border-opacity: 0.5;
 }
 
 .o-mail-DiscussSidebar-item {
@@ -84,10 +84,10 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .1;
 
 .o-mail-DiscussSidebar-unreadIndicator {
     font-size: 0.35rem;
-    left: 1px;
+    left: 0px;
 
     .o-mail-DiscussSidebarSubchannel &:not(.o-compact) {
-        left: map-get($spacers, 2);
+        left: map-get($spacers, 2) + map-get($spacers, 1) / 2;
     }
 }
 
@@ -111,7 +111,7 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .1;
 }
 
 .o-mail-DiscussSidebarSubchannel svg {
-    color: var(--mail-DiscussSidebarSubchannel-svgColor, $gray-300);
+    color: var(--mail-DiscussSidebarSubchannel-svgColor, mix($gray-300, $gray-400, 75%));
     left: 20px;
     transform: scaleX(1) #{"/* rtl:scaleX(-1) */"};
 }
