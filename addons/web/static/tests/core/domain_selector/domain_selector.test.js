@@ -162,7 +162,7 @@ test("building a domain with a datetime", async () => {
     expect(".o_datetime_input").toHaveCount(1, { message: "there should be a datepicker" });
 
     // The input field should display the date and time in the user's timezone
-    expect(".o_datetime_input").toHaveValue("03/27/2017 16:42:00");
+    expect(".o_datetime_input").toHaveValue("03/27/2017 16:42");
 
     // Change the date in the datepicker
     await contains(".o_datetime_input").click();
@@ -170,7 +170,7 @@ test("building a domain with a datetime", async () => {
     await contains(getPickerApplyButton()).click();
 
     // The input field should display the date and time in the user's timezone
-    expect(".o_datetime_input").toHaveValue("03/26/2017 16:42:00");
+    expect(".o_datetime_input").toHaveValue("03/26/2017 16:42");
 });
 
 test("building a domain with an invalid path", async () => {
@@ -272,7 +272,7 @@ test("building a domain with an expression for value", async () => {
 
     expect(getCurrentValue()).toBe("context_today()");
     await clearNotSupported();
-    expect(getCurrentValue()).toBe("04/20/2023 17:00:00");
+    expect(getCurrentValue()).toBe("04/20/2023 17:00");
 });
 
 test("building a domain with an expression in value", async () => {

@@ -35,6 +35,7 @@ export class DateTimeInput extends Component {
 
         useDateTimePicker({
             format: this.props.format,
+            showSeconds: this.props.rounding <= 0,
             get pickerProps() {
                 return getPickerProps();
             },
