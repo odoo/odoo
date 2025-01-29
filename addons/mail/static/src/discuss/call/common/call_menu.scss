@@ -1,10 +1,13 @@
 .o-discuss-CallMenu-buttonContent {
     max-width: 150px;
-    @include o-mail-call-bordered;
+    height: $o-navbar-height - 8px !important;
+    outline: 2px solid rgba($o-white, 0.5) !important;
+    background-color: mix($o-navbar-background, $o-action, 95%) !important;
 }
 
 .o-discuss-CallMenu-animation {
     animation: flash 2s;
     animation-direction: alternate;
     animation-iteration-count: 2;
+    transform: translateY(4px);
 }
