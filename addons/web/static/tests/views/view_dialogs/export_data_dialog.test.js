@@ -50,7 +50,7 @@ class Partner extends models.Model {
         { id: 3, foo: "piou piou", display_name: "Jack O'Neill", bar: true },
     ];
 }
-class Users extends models.Model {
+class User extends models.Model {
     _name = "res.users";
     has_group() {
         return true;
@@ -67,7 +67,7 @@ class IrExportsLine extends models.Model {
     name = fields.Char();
     export_id = fields.Many2one({ relation: "ir.exports" });
 }
-defineModels([Partner, Users, IrExports, IrExportsLine]);
+defineModels([Partner, User, IrExports, IrExportsLine]);
 
 const fetchedFields = {
     root: [
@@ -639,14 +639,14 @@ test("ExportDialog: export all records of the domain", async () => {
             }
         },
     });
-    onRpc("/web/export/formats", () => {
-        return [{ tag: "xls", label: "Excel" }];
-    });
-    onRpc("/web/export/get_fields", async (request) =>  {
+    onRpc("/web/export/formats", () => [{ tag: "xls", label: "Excel" }]);
+    onRpc("/web/export/get_fields", async (request) => {
         const { params } = await request.json();
         if (isDomainSelected) {
             const expectedDomain = params.parent_field ? [] : [["bar", "!=", "glou"]];
-            expect(params.domain).toEqual(expectedDomain, {message: "Domain is only applied on the root model"});
+            expect(params.domain).toEqual(expectedDomain, {
+                message: "Domain is only applied on the root model",
+            });
             expect.step("get export fields route called with correct domain");
         }
         return fetchedFields.root;

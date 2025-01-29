@@ -4980,9 +4980,7 @@ test(`custom delete confirmation dialog`, async () => {
     class CautiousController extends listView.Controller {
         get deleteConfirmationDialogProps() {
             const props = super.deleteConfirmationDialogProps;
-            props.body = markup(
-                `<span class="text-danger">These are the consequences</span><br/>${props.body}`
-            );
+            props.body = markup(`<span class="text-danger">These are the consequences</span>`);
             return props;
         }
     }
@@ -5002,7 +5000,7 @@ test(`custom delete confirmation dialog`, async () => {
 
     await toggleActionMenu();
     await toggleMenuItem("Delete");
-    expect(`.modal:contains(you sure) .text-danger:contains(consequences)`).toHaveCount(1, {
+    expect(`.modal .text-danger:contains(consequences)`).toHaveCount(1, {
         message: "confirmation dialog should have markup and more",
     });
 

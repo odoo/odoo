@@ -145,7 +145,14 @@ class Pony extends models.Model {
     };
 }
 
-defineModels([Partner, Pony]);
+class User extends models.Model {
+    _name = "res.users";
+    has_group() {
+        return true;
+    }
+}
+
+defineModels([Partner, Pony, User]);
 
 class TestClientAction extends Component {
     static template = xml`

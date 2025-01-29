@@ -254,7 +254,6 @@ export class ExportDataDialog extends Component {
     }
 
     async loadFields(id, preventLoad = false) {
-        let model = this.props.root.resModel;
         let parentField, parentParams;
         if (id) {
             if (this.expandedFields[id]) {
@@ -262,7 +261,6 @@ export class ExportDataDialog extends Component {
                 return this.expandedFields[id].fields;
             }
             parentField = this.knownFields[id];
-            model = parentField.params && parentField.params.model;
             parentParams = {
                 ...parentField.params,
                 parent_field_type: parentField.field_type,
@@ -274,11 +272,7 @@ export class ExportDataDialog extends Component {
         if (preventLoad) {
             return;
         }
-        const fields = await this.props.getExportedFields(
-            model,
-            this.state.isCompatible,
-            parentParams
-        );
+        const fields = await this.props.getExportedFields(this.state.isCompatible, parentParams);
         for (const field of fields) {
             field.parent = parentField;
             if (!this.knownFields[field.id]) {
@@ -394,9 +388,7 @@ export class ExportDataDialog extends Component {
         if (this.isDebug) {
             lookupResult = unique([
                 ...lookupResult,
-                ...Object.values(this.knownFields).filter((f) => {
-                    return f.id.includes(value);
-                }),
+                ...Object.values(this.knownFields).filter((f) => f.id.includes(value)),
             ]);
         }
         return lookupResult;
