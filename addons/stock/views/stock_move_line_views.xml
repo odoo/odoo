@@ -145,7 +145,7 @@
                 <filter string="Last 3 Months" name="filter_last_3_months" domain="[('date','&gt;=', (context_today() - relativedelta(months=3)).strftime('%Y-%m-%d'))]"/>
                 <filter string="Last 12 Months" name="filter_last_12_months" domain="[('date','&gt;=', (context_today() - relativedelta(years=1)).strftime('%Y-%m-%d'))]"/>
                 <separator/>
-                <filter string="Inventory" name="inventory" domain="[('is_inventory', '=', True)]"/>
+                <filter string="Inventory Adjustments" name="inventory" domain="[('is_inventory', '=', True)]"/>
                 <separator/>
                 <group expand="0" string="Group By" name="groupby">
                     <filter string="Product" name="groupby_product_id" domain="[]" context="{'group_by': 'product_id'}"/>

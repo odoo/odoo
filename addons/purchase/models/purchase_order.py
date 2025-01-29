@@ -155,8 +155,8 @@ class PurchaseOrder(models.Model):
     mail_reception_confirmed = fields.Boolean("Reception Confirmed", default=False, readonly=True, copy=False, help="True if PO reception is confirmed by the vendor.")
     mail_reception_declined = fields.Boolean("Reception Declined", readonly=True, copy=False, help="True if PO reception is declined by the vendor.")
 
-    receipt_reminder_email = fields.Boolean('Receipt Reminder Email', compute='_compute_receipt_reminder_email')
-    reminder_date_before_receipt = fields.Integer('Days Before Receipt', compute='_compute_receipt_reminder_email')
+    receipt_reminder_email = fields.Boolean('Receipt Reminder Email')
+    reminder_date_before_receipt = fields.Integer('Days Before Receipt')
 
     @api.constrains('company_id', 'order_line')
     def _check_order_line_company_id(self):
@@ -221,8 +221,8 @@ class PurchaseOrder(models.Model):
                 name += ': ' + formatLang(self.env, po.amount_total, currency_obj=po.currency_id)
             po.display_name = name
 
-    @api.depends('company_id', 'partner_id')
-    def _compute_receipt_reminder_email(self):
+    @api.onchange('company_id', 'partner_id')
+    def _onchange_partner_id(self):
         for order in self:
             order.receipt_reminder_email = order.partner_id.with_company(order.company_id).receipt_reminder_email
             order.reminder_date_before_receipt = order.partner_id.with_company(order.company_id).reminder_date_before_receipt
@@ -261,7 +261,7 @@ class PurchaseOrder(models.Model):
     def write(self, vals):
         vals, partner_vals = self._write_partner_values(vals)
         res = super().write(vals)
-        if partner_vals:
+        if partner_vals and not self.partner_id.receipt_reminder_email:
             self.partner_id.sudo().write(partner_vals)  # Because the purchase user doesn't have write on `res.partner`
         return res
 
@@ -980,8 +980,7 @@ class PurchaseOrder(models.Model):
             ('partner_id', '!=', False),
             ('state', 'in', ['purchase', 'done']),
             ('mail_reminder_confirmed', '=', False)
-        ]).filtered(lambda p: p.partner_id.with_company(p.company_id).receipt_reminder_email and\
-            p.mapped('order_line.product_id.product_tmpl_id.type') != ['service'])
+        ]).filtered(lambda p: p.receipt_reminder_email and p.mapped('order_line.product_id.product_tmpl_id.type') != ['service'])
 
     def _default_order_line_values(self, child_field=False):
         default_data = super()._default_order_line_values(child_field)
@@ -1219,9 +1218,9 @@ class PurchaseOrder(models.Model):
     def _write_partner_values(self, vals):
         partner_values = {}
         if 'receipt_reminder_email' in vals:
-            partner_values['receipt_reminder_email'] = vals.pop('receipt_reminder_email')
+            partner_values['receipt_reminder_email'] = vals['receipt_reminder_email']
         if 'reminder_date_before_receipt' in vals:
-            partner_values['reminder_date_before_receipt'] = vals.pop('reminder_date_before_receipt')
+            partner_values['reminder_date_before_receipt'] = vals['reminder_date_before_receipt']
         return vals, partner_values
 
     def _is_readonly(self):
