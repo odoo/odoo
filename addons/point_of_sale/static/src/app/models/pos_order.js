@@ -134,14 +134,14 @@ export class PosOrder extends Base {
         const extraValues = { currency_id: currency };
         const orderLines = this.lines;
 
-        // If one of the lines is negative, we assume it's a refund order.
-        // This assumes that we don't mix refunds from normal orders.
-        // TODO: Properly differentiate a refund orders from a normal ones.
-        const documentSign = this.lines.some((l) =>
-            lt(l.qty, 0, { decimals: currency.decimal_places })
-        )
-            ? -1
-            : 1;
+        // If each line is negative, we assume it's a refund order.
+        // It's a normal order if it doesn't contain a line (useful for pos_settle_due).
+        // TODO: Properly differentiate refund orders from normal ones.
+        const documentSign =
+            this.lines.length === 0 ||
+            !this.lines.every((l) => lt(l.qty, 0, { decimals: currency.decimal_places }))
+                ? 1
+                : -1;
 
         const baseLines = [];
         for (const line of orderLines) {
