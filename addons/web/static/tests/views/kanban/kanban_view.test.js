@@ -226,7 +226,14 @@ class Currency extends models.Model {
     ];
 }
 
-defineModels([Partner, Product, Category, Currency, IrAttachment]);
+class User extends models.Model {
+    _name = "res.users";
+    has_group() {
+        return true;
+    }
+}
+
+defineModels([Partner, Product, Category, Currency, IrAttachment, User]);
 
 beforeEach(() => {
     patchWithCleanup(AnimatedNumber, { enableAnimations: false });
@@ -8831,7 +8838,7 @@ test("column progressbars with an active filter are working with load more", asy
     ]);
 });
 
-test.skip("column progressbars on archiving records update counter", async () => {
+test("column progressbars on archiving records update counter", async () => {
     // add active field on partner model and make all records active
     Partner._fields.active = fields.Boolean({ default: true });
 
@@ -8850,6 +8857,7 @@ test.skip("column progressbars on archiving records update counter", async () =>
                 </templates>
             </kanban>`,
         groupBy: ["bar"],
+        loadActionMenus: true,
     });
 
     expect(getKanbanCounters()).toEqual(["-4", "36"]);
@@ -8858,9 +8866,15 @@ test.skip("column progressbars on archiving records update counter", async () =>
     });
 
     // archive all records of the second columns
-    const clickColumnAction = await toggleKanbanColumnActions(1);
-    await clickColumnAction("Archive All");
-    await contains(".o_dialog footer .btn-primary").click(); // confirm
+    await keyDown("alt");
+    await animationFrame();
+    await contains(".o_kanban_group:nth-of-type(2) .o_kanban_record:nth-of-type(1)").click();
+    await keyUp("alt");
+    await contains(".o_kanban_group:nth-of-type(2) .o_kanban_record:nth-of-type(2)").click();
+    await contains(".o_kanban_group:nth-of-type(2) .o_kanban_record:nth-of-type(3)").click();
+    await contains(".o_cp_action_menus button").click();
+    await contains(".o_menu_item:contains(Archive)").click();
+    await contains(".modal-footer .btn-primary").click();
 
     expect(getKanbanCounters()).toEqual(["-4", "0"]);
     expect(queryAll(".progress-bar", { root: getKanbanColumn(1) })).toHaveCount(0, {
@@ -8881,7 +8895,7 @@ test.skip("column progressbars on archiving records update counter", async () =>
     ]);
 });
 
-test.skip("kanban with progressbars: correctly update env when archiving records", async () => {
+test("kanban with progressbars: correctly update env when archiving records", async () => {
     // add active field on partner model and make all records active
     Partner._fields.active = fields.Boolean({ default: true });
 
@@ -8900,14 +8914,19 @@ test.skip("kanban with progressbars: correctly update env when archiving records
                 </templates>
             </kanban>`,
         groupBy: ["bar"],
+        loadActionMenus: true,
     });
 
     expect(getKanbanRecordTexts()).toEqual(["4", "1", "2", "3"]);
 
     // archive all records of the first column
-    const clickColumnAction = await toggleKanbanColumnActions(0);
-    await clickColumnAction("Archive All");
-    await contains(".o_dialog footer .btn-primary").click(); // confirm
+    await keyDown("alt");
+    await animationFrame();
+    await contains(".o_kanban_group:nth-of-type(1) .o_kanban_record:nth-of-type(1)").click();
+    await keyUp("alt");
+    await contains(".o_cp_action_menus button").click();
+    await contains(".o_menu_item:contains(Archive)").click();
+    await contains(".modal-footer .btn-primary").click();
 
     expect(getKanbanRecordTexts()).toEqual(["1", "2", "3"]);
     expect.verifySteps([
@@ -9441,7 +9460,7 @@ test("progress bar with aggregates: activate bars (grouped by date)", async () =
     expect(getKanbanCounters()).toEqual(["15"]);
 });
 
-test.skip("progress bar with aggregates: Archive All in a column", async () => {
+test("progress bar with aggregates: Archive all in a column", async () => {
     Partner._fields.active = fields.Boolean({ default: true });
     Partner._records = [
         { foo: "yop", bar: true, int_field: 1, active: true },
@@ -9465,24 +9484,27 @@ test.skip("progress bar with aggregates: Archive All in a column", async () => {
                 </t></templates>
             </kanban>`,
         groupBy: ["bar"],
+        loadActionMenus: true,
     });
 
     expect(getKanbanColumnTooltips(1)).toEqual(["2 yop", "1 gnap", "1 blip"]);
     expect(getKanbanCounters()).toEqual(["268", "15"]);
-
-    const clickColumnAction = await toggleKanbanColumnActions(1);
-    await clickColumnAction("Archive All");
-
+    await keyDown("alt");
+    await animationFrame();
+    await contains(".o_kanban_group:nth-of-type(2) .o_kanban_record:nth-of-type(1)").click();
+    await keyUp("alt");
+    await contains(".o_kanban_group:nth-of-type(2) .o_kanban_record:nth-of-type(2)").click();
+    await contains(".o_kanban_group:nth-of-type(2) .o_kanban_record:nth-of-type(3)").click();
+    await contains(".o_kanban_group:nth-of-type(2) .o_kanban_record:nth-of-type(4)").click();
+    await contains(".o_cp_action_menus button").click();
+    await contains(".o_menu_item:contains(Archive)").click();
     expect(".o_dialog").toHaveCount(1);
     def = new Deferred();
-    await contains(".o_dialog footer .btn-primary").click();
-
+    await contains(".modal-footer .btn-primary").click();
     expect(getKanbanColumnTooltips(1)).toEqual(["2 yop", "1 gnap", "1 blip"]);
     expect(getKanbanCounters()).toEqual(["268", "15"]);
-
     def.resolve();
     await animationFrame();
-
     expect(getKanbanColumnTooltips(1)).toEqual([]);
     expect(getKanbanCounters()).toEqual(["268", "0"]);
 });
