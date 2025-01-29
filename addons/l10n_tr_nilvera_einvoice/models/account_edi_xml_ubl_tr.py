@@ -1,4 +1,7 @@
-from odoo import models
+import math
+from num2words import num2words
+
+from odoo import api, models
 
 
 class AccountEdiXmlUblTr(models.AbstractModel):
@@ -45,7 +48,21 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         # Nilvera will reject any <BuyerReference> tag, so remove it
         if vals['vals'].get('buyer_reference'):
             del vals['vals']['buyer_reference']
+
+        vals['vals']['note_vals'].append({'note': self._l10n_tr_get_amount_integer_partn_text_note(invoice.amount_residual_signed, self.env.ref('base.TRY')), 'note_attrs': {}})
+        if vals['invoice'].currency_id.name != 'TRY':
+            vals['vals']['note_vals'].append({'note': self._l10n_tr_get_amount_integer_partn_text_note(invoice.amount_residual, vals['invoice'].currency_id), 'note_attrs': {}})
         return vals
+
+    @api.model
+    def _l10n_tr_get_amount_integer_partn_text_note(self, amount, currency):
+        sign = math.copysign(1.0, amount)
+        amount_integer_part, amount_decimal_part = divmod(abs(amount), 1)
+        amount_decimal_part = int(amount_decimal_part * 100)
+
+        text_i = num2words(amount_integer_part * sign, lang="tr") or 'Sifir'
+        text_d = num2words(amount_decimal_part * sign, lang="tr") or 'Sifir'
+        return f'YALNIZ : {text_i} {currency.name} {text_d} {currency.currency_subunit_label}'.upper()
 
     def _get_country_vals(self, country):
         # EXTENDS account.edi.xml.ubl_21
