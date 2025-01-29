@@ -30,7 +30,11 @@ patch(DiscussCommandPalette.prototype, {
                 }
             }
             const limitedRecent = recentChannels
-                .filter((channel) => !mentionedSet.has(channel))
+                .filter(
+                    (channel) =>
+                        !mentionedSet.has(channel) &&
+                        !mentionedSet.has(channel.correspondent?.persona)
+                )
                 .slice(0, CATEGORY_LIMIT);
             for (const channel of limitedRecent) {
                 this.commands.push(this.makeDiscussCommand(channel, DISCUSS_RECENT));
