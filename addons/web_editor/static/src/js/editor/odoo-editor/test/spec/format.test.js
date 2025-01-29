@@ -1045,6 +1045,20 @@ describe('Format', () => {
                 contentAfter: `<h1><span t="unbreakable">some <span style="font-size: 18px;">[text]</span></span></h1>`,
             });
         });
+        it('should apply font size on top of `u` and `s` tags', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>a<u>[b]</u>c</p>`,
+                stepFunction: setFontSize('18px'),
+                contentAfter: `<p>a<span style="font-size: 18px;"><u>[b]</u></span>c</p>`,
+            });
+        });
+        it('should apply font size on topmost `u` or `s` tags if multiple applied', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>a<s><u>[b]</u></s>c</p>`,
+                stepFunction: setFontSize('18px'),
+                contentAfter: `<p>a<span style="font-size: 18px;"><s><u>[b]</u></s></span>c</p>`,
+            });
+        });
     });
 
     it('should add style to a span parent of an inline', async () => {
