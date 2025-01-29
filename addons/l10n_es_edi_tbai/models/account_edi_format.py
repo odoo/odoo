@@ -6,22 +6,17 @@ import json
 from base64 import b64encode
 from datetime import datetime
 from re import sub as regex_sub
-from uuid import uuid4
 from markupsafe import Markup, escape
 
 import requests
-from cryptography.hazmat.primitives import hashes, serialization
-from cryptography.x509.oid import NameOID
 from lxml import etree
 from pytz import timezone
 from requests.exceptions import RequestException
 
 from odoo import _, models, release
-from odoo.addons.l10n_es_edi_sii.models.account_edi_format import PatchedHTTPAdapter
+from odoo.addons.l10n_es.models.http_adapter import PatchedHTTPAdapter
+from odoo.addons.l10n_es.models.xml_utils import get_xades_template_render_values, sign_xades
 from odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_agencies import get_key
-from odoo.addons.l10n_es_edi_tbai.models.xml_utils import (
-    NS_MAP, bytes_as_block, calculate_references_digests,
-    cleanup_xml_signature, fill_signature, int_as_bytes)
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import get_lang
 from odoo.tools.float_utils import float_repr, float_round
@@ -499,48 +494,16 @@ class AccountEdiFormat(models.Model):
         cert_private, cert_public = (
             company.l10n_es_edi_certificate_id.sudo()._get_key_pair()
         )
-        public_key = cert_public.public_key()
-
-        # Identifiers
-        document_id = "Document-" + str(uuid4())
-        signature_id = "Signature-" + document_id
-        keyinfo_id = "KeyInfo-" + document_id
-        sigproperties_id = "SignatureProperties-" + document_id
-
-        # Render digital signature scaffold from QWeb
-        common_name = cert_public.issuer.get_attributes_for_oid(NameOID.COMMON_NAME)[0].value
-        org_unit = cert_public.issuer.get_attributes_for_oid(NameOID.ORGANIZATIONAL_UNIT_NAME)[0].value
-        org_name = cert_public.issuer.get_attributes_for_oid(NameOID.ORGANIZATION_NAME)[0].value
-        country_name = cert_public.issuer.get_attributes_for_oid(NameOID.COUNTRY_NAME)[0].value
-        values = {
-            'dsig': {
-                'document_id': document_id,
-                'x509_certificate': bytes_as_block(cert_public.public_bytes(encoding=serialization.Encoding.DER)),
-                'public_modulus': bytes_as_block(int_as_bytes(public_key.public_numbers().n)),
-                'public_exponent': bytes_as_block(int_as_bytes(public_key.public_numbers().e)),
-                'iso_now': datetime.now().isoformat(),
-                'keyinfo_id': keyinfo_id,
-                'signature_id': signature_id,
-                'sigproperties_id': sigproperties_id,
-                'reference_uri': "Reference-" + document_id,
-                'sigpolicy_url': get_key(company.l10n_es_tbai_tax_agency, 'sigpolicy_url'),
-                'sigpolicy_digest': get_key(company.l10n_es_tbai_tax_agency, 'sigpolicy_digest'),
-                'sigcertif_digest': b64encode(cert_public.fingerprint(hashes.SHA256())).decode(),
-                'x509_issuer_description': 'CN={}, OU={}, O={}, C={}'.format(common_name, org_unit, org_name, country_name),
-                'x509_serial_number': cert_public.serial_number,
-            }
+        sigpolicy = {
+            'url': get_key(company.l10n_es_tbai_tax_agency, 'sigpolicy_url'),
+            'digest': get_key(company.l10n_es_tbai_tax_agency, 'sigpolicy_digest'),
         }
+        values = get_xades_template_render_values(sigpolicy, cert_public)
+        # TODO: in master: move template to 'l10n_es' so that tbai and verifactu can use the same one
         xml_sig_str = self.env['ir.qweb']._render('l10n_es_edi_tbai.template_digital_signature', values)
-        xml_sig = cleanup_xml_signature(xml_sig_str)
-
-        # Complete document with signature template
+        xml_sig = etree.fromstring(xml_sig_str)
         xml_root.append(xml_sig)
-
-        # Compute digest values for references
-        calculate_references_digests(xml_sig.find("SignedInfo", namespaces=NS_MAP))
-
-        # Sign (writes into SignatureValue)
-        fill_signature(xml_sig, cert_private)
+        sign_xades(xml_sig, cert_private)
 
         return xml_root
 
