@@ -157,12 +157,12 @@ class SaleComboConfiguratorController(Controller):
             'extra_price': combo_item.extra_price,
             'is_selected': bool(selected_combo_item) or is_preselected,
             'is_configurable': is_configurable,
-            'image_src': image_src,
             'product': {
                 'id': combo_item.product_id.id,
                 'product_tmpl_id': combo_item.product_id.product_tmpl_id.id,
                 'display_name': combo_item.product_id.display_name,
                 'ptals': self._get_ptals_data(combo_item.product_id, selected_combo_item),
+                'image_src': image_src,
                 **request.env['product.template']._get_additional_configurator_data(
                     combo_item.product_id, date, currency, pricelist, **kwargs
                 ),
