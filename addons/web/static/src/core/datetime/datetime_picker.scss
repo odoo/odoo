@@ -82,15 +82,6 @@
         }
     }
 
-    .o_time_picker_select {
-        background: none;
-
-        &:focus,
-        &:hover {
-            border-color: var(--primary);
-        }
-    }
-
     // Grids
 
     .o_date_picker {
@@ -150,5 +141,21 @@
     .o_time_picker {
         /*rtl:ignore*/
         direction: ltr;
+    }
+}
+
+.o-dropdown--menu.o_time_picker_dropdown {
+    max-height: 15rem;
+    max-width: 6rem;
+}
+
+.o_time_picker_input {
+    transition: all .1s ease-in-out;
+    transition-property: color, background-color, border-bottom-color;
+
+    &.o_invalid {
+        color: o-text-color('danger');
+        border-bottom-color: map-get($theme-colors, 'danger');
+        background-color: $o-input-invalid-bg;
     }
 }
