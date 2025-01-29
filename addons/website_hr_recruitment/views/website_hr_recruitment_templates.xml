@@ -702,6 +702,8 @@
     <t t-set="current_department_param" t-value="'&amp;department_id=%s' % department_id.id if department_id else '&amp;is_other_department=1' if is_other_department else ''"/>
     <t t-set="current_office_param" t-value="'' if is_remote else '&amp;office_id=%s' % office_id.id if office_id else ''"/>
     <t t-set="current_employment_type_param" t-value="'&amp;is_untyped=1' if is_untyped else ('&amp;contract_type_id=%s' % contract_type_id.id if contract_type_id else '')"/>
+    <t t-set="current_industry_param"
+        t-value="'&amp;industry_id=%s' % industry_id if industry_id else '' or '&amp;is_industry_untyped=1' if is_industry_untyped else ''"/>
     <t t-set="opt_jobs_filter_countries" t-value="is_view_active('website_hr_recruitment.job_filter_by_countries')"/>
     <t t-set="opt_jobs_filter_departments" t-value="is_view_active('website_hr_recruitment.job_filter_by_departments')"/>
     <t t-set="opt_jobs_filter_offices" t-value="is_view_active('website_hr_recruitment.job_filter_by_offices')"/>
@@ -716,7 +718,8 @@
 <!-- Filter - Countries -->
 <template id="job_filter_by_countries" inherit_id="website_hr_recruitment.topbar_customizations" active="False" priority="10">
     <xpath expr="//ul[hasclass('o_jobs_topbar_filters')]" position="inside">
-        <t t-set="non_country_params" t-valuef="#{current_department_param}#{current_office_param}#{current_employment_type_param}"/>
+        <t t-set="non_country_params"
+            t-valuef="#{current_department_param}#{current_office_param}#{current_employment_type_param}#{current_industry_param}"/>
         <li t-attf-class="nav-item dropdown w-100 w-md-auto me-2 my-1 flex-fill">
             <button type="button" class="btn btn-light dropdown-toggle w-100" data-bs-toggle="dropdown" id="countriesDropdown">
                 <i class="fa fa-map-marker"/>
@@ -754,7 +757,8 @@
 <!-- Filter - Departments -->
 <template id="job_filter_by_departments" inherit_id="website_hr_recruitment.topbar_customizations" active="False" priority="30">
     <xpath expr="//ul[hasclass('o_jobs_topbar_filters')]" position="inside">
-        <t t-set="non_department_params" t-valuef="#{current_country_param}#{current_office_param}#{current_employment_type_param}"/>
+        <t t-set="non_department_params"
+            t-valuef="#{current_country_param}#{current_office_param}#{current_employment_type_param}#{current_industry_param}"/>
         <li t-attf-class="nav-item dropdown w-100 w-md-auto me-2 my-1 flex-fill">
             <button type="button" class="btn btn-light dropdown-toggle w-100" data-bs-toggle="dropdown" id="departmentsDropdown">
                 <i class="fa fa-sitemap"/>
@@ -792,7 +796,8 @@
 <!-- Filter - Offices -->
 <template id="job_filter_by_offices" inherit_id="website_hr_recruitment.topbar_customizations" active="False" priority="20">
     <xpath expr="//ul[hasclass('o_jobs_topbar_filters')]" position="inside">
-        <t t-set="non_location_params" t-valuef="#{current_department_param}#{current_employment_type_param}"/>
+        <t t-set="non_location_params"
+            t-valuef="#{current_department_param}#{current_employment_type_param}#{current_industry_param}"/>
         <li t-attf-class="nav-item dropdown w-100 w-md-auto me-2 my-1 flex-fill">
             <button type="button" class="btn btn-light dropdown-toggle w-100" data-bs-toggle="dropdown" id="officesDropdown">
                 <i class="fa fa-building"/>
@@ -833,10 +838,61 @@
     </xpath>
 </template>
 
+<!-- Filter - Industries -->
+<template id="job_filter_by_industries"
+    inherit_id="website_hr_recruitment.topbar_customizations"
+    active="False"
+    priority="11">
+    <xpath expr="//ul[hasclass('o_jobs_topbar_filters')]" position="inside">
+        <t t-set="non_industry_params"
+            t-valuef="#{current_department_param}#{current_office_param}#{current_employment_type_param}#{current_country_param}"/>
+        <li t-attf-class="nav-item dropdown w-100 w-md-auto me-2 my-1 flex-fill">
+            <button type="button"
+                    class="btn btn-light dropdown-toggle w-100"
+                    data-bs-toggle="dropdown"
+                    id="industriesDropdown">
+                <i class="fa fa-industry"/>
+                <t t-if="industry_id and industries.browse(industry_id)"
+                    t-out="industries.browse(industry_id).name"/>
+                <t t-elif="is_industry_untyped">Unspecified Industry</t>
+                <t t-else="">All Industries</t>
+            </button>
+            <div class="dropdown-menu w-100 w-md-auto"
+                aria-labelledby="industriesDropdown">
+                <a t-attf-href="/jobs?#{non_industry_params}"
+                    t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link#{'' if (industry_id or is_industry_untyped) else ' active'}">
+                    All Industries
+                    <span t-attf-class="badge text-bg-primary ms-2"
+                        t-out="count_per_industry.get('all', '0')"/>
+                </a>
+                <t t-foreach="industries" t-as="industry">
+                    <t t-if="industry">
+                        <a t-attf-href="/jobs?industry_id=#{industry.id}#{non_industry_params}"
+                            t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link #{' active' if industry_id and industry_id == industry.id else ''}">
+                            <t t-out="industry.name"/>
+                            <span t-attf-class="badge #{' bg-light text-primary' if industry_id and industry_id == industry.id else ' text-bg-primary'} ms-2"
+                                t-out="count_per_industry.get(industry, '0')"/>
+                        </a>
+                    </t>
+                </t>
+                <t t-if="count_per_industry.get(None, 0)">
+                    <a t-attf-href="/jobs?is_industry_untyped=1#{non_industry_params}"
+                        t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link#{' active' if is_industry_untyped else ''}">
+                        Unspecified Industry
+                        <span class="badge text-bg-primary ms-2"
+                            t-out="count_per_industry.get(None, '0')"/>
+                    </a>
+                </t>
+            </div>
+        </li>
+    </xpath>
+</template>
+
 <!-- Filter - Employment Type -->
 <template id="job_filter_by_employment_type" inherit_id="website_hr_recruitment.topbar_customizations" active="False" priority="40">
     <xpath expr="//ul[hasclass('o_jobs_topbar_filters')]" position="inside">
-        <t t-set="non_employment_type_params" t-valuef="#{current_country_param}#{current_department_param}#{current_office_param}"/>
+        <t t-set="non_employment_type_params"
+            t-valuef="#{current_country_param}#{current_department_param}#{current_office_param}#{current_industry_param}"/>
         <li t-attf-class="nav-item dropdown w-100 w-md-auto me-2 my-1 flex-fill">
             <button type="button" class="btn btn-light dropdown-toggle w-100" data-bs-toggle="dropdown" id="officesDropdown">
                 <i class="fa fa-suitcase"/>
