@@ -7,7 +7,7 @@
                     <img t-att-src="persona.avatarUrl" t-att-title="persona.name" class="rounded-circle" t-attf-class="{{props.avatarClass(persona)}}" t-attf-style="{{getStyle(persona_index)}}"/>
                     <t t-slot="avatarExtraInfo" persona="persona"/>
                 </span>
-                <span t-if="props.personas.length > props.max" class="rounded-circle bg-secondary smaller d-flex justify-content-center align-items-center user-select-none" t-attf-style="{{getStyle(props.personas.length)}}">+<t t-esc="props.personas.length - props.max"/></span>
+                <span t-if="props.personas.length > props.max" class="z-1 rounded-circle bg-secondary smaller d-flex justify-content-center align-items-center user-select-none" t-attf-style="{{getStyle(props.personas.length)}}">+<t t-esc="props.personas.length - props.max"/></span>
             </div>
         </div>
     </t>
