@@ -71,6 +71,13 @@ class NavigationItem {
         }
     }
 
+    setInactive(blur = true) {
+        this.target.classList.remove(ACTIVE_ELEMENT_CLASS);
+        if (blur && !this._options.virtualFocus) {
+            this.target.blur();
+        }
+    }
+
     /**
      * @private
      */
@@ -207,7 +214,7 @@ class Navigator {
         this._update();
 
         if (this._options.onEnabled) {
-            this._options.onEnabled(this.items);
+            this._options.onEnabled(this);
         } else if (this.items.length > 0) {
             this.items[0]?.setActive();
         }
@@ -289,9 +296,7 @@ class Navigator {
      * @private
      */
     _setActiveItem(index) {
-        if (this.activeItem) {
-            this.activeItem.el.classList.remove(ACTIVE_ELEMENT_CLASS);
-        }
+        this.activeItem?.setInactive(false);
         this.activeItem = this.items[index];
         this.activeItemIndex = index;
     }
