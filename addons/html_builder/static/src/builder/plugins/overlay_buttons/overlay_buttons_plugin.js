@@ -66,7 +66,7 @@ export class OverlayButtonsPlugin extends Plugin {
                 position: "top-middle",
                 onPositioned: (overlayEl, position) => {
                     const iframeRect = this.iframe.getBoundingClientRect();
-                    if (position.top < iframeRect.top) {
+                    if (this.target && position.top < iframeRect.top) {
                         const targetRect = this.target.getBoundingClientRect();
                         const newTop = iframeRect.top + targetRect.bottom + 15;
                         position.top = newTop;
