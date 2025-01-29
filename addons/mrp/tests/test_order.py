@@ -5106,6 +5106,28 @@ class TestMrpOrder(TestMrpCommon):
         with self.assertRaises(UserError):
             self.workcenter_1.resource_calendar_id, = resource_calendar
 
+    def test_workorder_without_product(self):
+        mo_form = Form(self.env['mrp.production'])
+
+        with mo_form.workorder_ids.new() as wo:
+            wo.name = "Cutting"
+            wo.workcenter_id = self.workcenter_1
+
+        mo_form.product_id = self.product_1
+        mo_form.product_qty = 1.0
+        mo = mo_form.save()
+
+        self.assertFalse(mo.workorder_ids)
+
+        with mo_form.workorder_ids.new() as wo:
+            wo.name = "Cutting"
+            wo.workcenter_id = self.workcenter_1
+        mo = mo_form.save()
+
+        self.assertTrue(mo.workorder_ids)
+        self.assertEqual(len(mo.workorder_ids), 1)
+        self.assertEqual(mo.product_id, wo.product_id)
+
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):
     def test_mrp_order_product_catalog(self):
