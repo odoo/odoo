@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.Message" t-inherit-mode="extension">
         <xpath expr="//div[@name='header']" position="after">
-            <div t-if="message.rating_id?.rating" class="mb-2">
+            <div t-if="message.rating_id?.rating and !state.isEditing" class="mb-2">
                 <t t-call="portal_rating.rating_stars_static">
                     <t t-set="val" t-value="message.rating_id.rating"/>
                 </t>

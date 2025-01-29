@@ -2,7 +2,6 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Composer">
-    <t t-set="isChatterComposer" t-value="extended and !props.composer.message"/>
     <t t-set="partitionedActions" t-value="composerActions.partition"/>
     <t t-set="compact" t-value="props.mode === 'compact'"/>
     <t t-set="normal" t-value="props.mode === 'normal'"/>
@@ -11,7 +10,7 @@
     <div t-ref="root">
         <div class="o-mail-Composer d-grid flex-shrink-0 pt-0"
                 t-att-class="{
-                    'pb-2': extended and !props.composer.message,
+                    'pb-2': inChatterStyle,
                     'o-extended': extended,
                     'o-isUiSmall': ui.isSmall,
                     'px-3 pb-2': normal,
@@ -103,15 +102,15 @@
                     <div t-ref="picker-target"/>
                 </div>
                 <div t-else="" class="d-flex align-items-center gap-1 w-100 pe-2">
-                    <div class="pt-1" t-att-class="{ 'mt-2': !props.composer.message }">
-                        <span t-if="props.composer.message" class="text-muted px-1 small" t-out="CANCEL_OR_SAVE_EDIT_TEXT" t-on-click="onClickCancelOrSaveEditText"/>
+                    <div class="pt-1" t-att-class="{ 'mt-2': inChatterStyle }">
+                        <span t-if="!inChatterStyle" class="text-muted px-1 small" t-out="CANCEL_OR_SAVE_EDIT_TEXT" t-on-click="onClickCancelOrSaveEditText"/>
                         <t t-else="">
                             <t t-call="mail.Composer.sendButton"/>
-                            <span t-if="!isSendButtonDisabled" class="text-muted small ms-1" t-out="OR_PRESS_SEND_KEYBIND"/>
+                            <span t-if="showSendKeybinds" class="text-muted small ms-1" t-out="OR_PRESS_SEND_KEYBIND"/>
                         </t>
                     </div>
                     <span class="flex-grow-1"/>
-                    <t t-if="!props.composer.message" t-call="mail.Composer.extraActions"/>
+                    <t t-if="inChatterStyle" t-call="mail.Composer.extraActions"/>
                 </div>
             </div>
         </div>
@@ -121,18 +120,12 @@
 
 <t t-name="mail.Composer.sendButton">
     <button class="o-mail-Composer-send btn"
-        t-att-class="{
-            'btn-primary btn-sm': extended,
-            'btn-link rounded-circle p-0': !extended,
-            'me-2': env.inDiscussApp,
-            'border-start-0': env.inDiscussApp and !props.composer.message,
-            'border-0': props.composer.message,
-        }"
+        t-att-class="sendButtonAttClass"
         t-on-click="sendMessage"
         t-att-disabled="isSendButtonDisabled"
         t-att-aria-label="SEND_TEXT"
     >
-        <t t-if="thread and thread.model !== 'discuss.channel'" t-out="SEND_TEXT"/>
+        <t t-if="showSendButtonText" t-out="SEND_TEXT"/>
         <t t-else=""><i class="fa fa-fw fa-lg fa-paper-plane-o"/></t>
     </button>
 </t>

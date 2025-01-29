@@ -180,6 +180,9 @@ Featuring
         'portal.assets_chatter': [
             'website_slides/static/src/chatter/frontend/**/*',
         ],
+        'portal.assets_chatter_style': [
+            'website_slides/static/src/chatter/frontend/**/*.scss',
+        ],
         'web.qunit_suite_tests': [
             'website_slides/static/tests/legacy/**/*',
         ],

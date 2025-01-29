@@ -9,9 +9,11 @@ const loader = {
     loadChatter: memoize(() => loadBundle("portal.assets_chatter")),
 };
 export const portalChatterBootService = {
+    get root() {
+        return document.querySelector(".o_portal_chatter");
+    },
     start() {
-        const chatterEl = document.querySelector(".o_portal_chatter");
-        if (chatterEl) {
+        if (this.root) {
             loader.loadChatter();
         }
     },
