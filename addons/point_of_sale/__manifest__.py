@@ -75,7 +75,6 @@
             'point_of_sale/static/src/scss/pos_dashboard.scss',
             'point_of_sale/static/src/backend/tours/point_of_sale.js',
             'point_of_sale/static/src/backend/pos_kanban_view/*',
-            'point_of_sale/static/src/backend/pos_product_list_view/*',
             'point_of_sale/static/src/app/utils/hooks.js',
         ],
         'web.assets_tests': [

@@ -698,6 +698,7 @@ class PosConfig(models.Model):
     def _get_available_product_domain(self):
         domain = [
             *self.env['product.product']._check_company_domain(self.company_id),
+            ('active', '=', True),
             ('available_in_pos', '=', True),
             ('sale_ok', '=', True),
         ]
@@ -755,10 +756,11 @@ class PosConfig(models.Model):
                  FROM %s
             LEFT JOIN pm ON product_product.id=pm.product_id
                 WHERE %s
-             ORDER BY product_product__product_tmpl_id.is_favorite DESC,
+             ORDER BY product_product__product_tmpl_id.is_favorite,
+                      product_product__product_tmpl_id.sequence,
+                      product_product__product_tmpl_id.name,
                       CASE WHEN product_product__product_tmpl_id.type = 'service' THEN 1 ELSE 0 END DESC,
-                      pm.date DESC NULLS LAST,
-                      product_product.write_date DESC
+                      pm.date DESC NULLS LAST
                 LIMIT %s
             """,
             query.from_clause,

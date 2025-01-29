@@ -369,22 +369,9 @@ export class ProductScreen extends Component {
             }
         }
 
-        return this.searchWord !== ""
+        return this.searchWord === ""
             ? filteredList
-            : filteredList.sort((a, b) => {
-                  // -1 indicates a<b
-                  if (a.is_favorite && !b.is_favorite) {
-                      return -1;
-                  }
-                  // 1 indicates a>b
-                  if (!a.is_favorite && b.is_favorite) {
-                      return 1;
-                  }
-                  if (a.sequence !== b.sequence) {
-                      return a.sequence - b.sequence;
-                  }
-                  return a.display_name.localeCompare(b.display_name);
-              });
+            : filteredList.sort((a, b) => a.display_name.localeCompare(b.display_name));
     }
 
     getProductsBySearchWord(searchWord) {
