@@ -1716,6 +1716,9 @@
                     </bdi>
                 </del>
             </h3>
+            <small t-if="combination_info.get('tax_disclaimer')" class="text-muted">
+                <t t-out="combination_info['tax_disclaimer']"/>
+            </small>
         </div>
         <div id="product_unavailable" t-attf-class="{{'d-flex' if combination_info['prevent_zero_price_sale'] else 'd-none'}}">
             <h3 class="fst-italic" t-field="website.prevent_zero_price_sale_text"/>
