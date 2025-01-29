@@ -59,6 +59,8 @@ import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field"
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { FormController } from "@web/views/form/form_controller";
 import { companyService } from "@web/webclient/company_service";
+import { redirect } from "@web/core/utils/urls";
+import { WebClient } from "@web/webclient/webclient";
 
 const fieldRegistry = registry.category("fields");
 const serviceRegistry = registry.category("services");
@@ -6582,6 +6584,27 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(document.body, ".modal", "no confirm modal should be displayed");
 
         assert.verifySteps(["get_views", "web_read", "unlink", "history-back"]);
+    });
+
+    QUnit.test("delete the last record (without previous action)", async function (assert) {
+        serverData.views = {
+            "partner,false,form": `
+                    <form>
+                        <field name="display_name"/>
+                    </form>`,
+            "partner,false,search": "<search></search>",
+        };
+        redirect("/odoo/m-partner/1");
+        patchWithCleanup(WebClient.prototype, {
+            _loadDefaultApp() {
+                assert.step("__DEFAULT_ACTION__ called");
+            },
+        });
+        await createWebClient({ serverData });
+        await toggleActionMenu(target);
+        await toggleMenuItem(target, "Delete");
+        await click(document.body.querySelector(".modal-footer button.btn-primary"));
+        assert.verifySteps(["__DEFAULT_ACTION__ called"]);
     });
 
     QUnit.test("empty required fields cannot be saved", async function (assert) {
