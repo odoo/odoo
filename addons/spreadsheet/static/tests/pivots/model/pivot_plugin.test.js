@@ -322,7 +322,7 @@ test("user context is combined with pivot context to fetch data", async function
         lang: "FR",
         uid: serverState.userId,
     };
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, { model, method, kwargs }) {
             if (model !== "partner") {
@@ -371,7 +371,7 @@ test("Context is purged from PivotView related keys", async function (assert) {
         },
     };
 
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, { model, method, kwargs }) {
             if (model === "partner" && method === "read_group") {
@@ -421,7 +421,7 @@ test("fetch metadata only once per model", async function () {
             },
         },
     };
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, { model, method, kwargs }) {
             if (model === "partner" && method === "fields_get") {
@@ -470,7 +470,7 @@ test("don't fetch pivot data if no formula use it", async function () {
             },
         },
     };
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, { model, method, kwargs }) {
             if (!["partner", "ir.model"].includes(model)) {
@@ -531,7 +531,7 @@ test("evaluates only once when two pivots are loading", async function () {
             },
         },
     };
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData,
     });
     model.config.custom.odooDataProvider.addEventListener("data-source-updated", () =>
@@ -562,7 +562,7 @@ test("concurrently load the same pivot twice", async function () {
             },
         },
     };
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData,
     });
     // the data loads first here, when we insert the first pivot function
@@ -613,7 +613,7 @@ test("display loading while data is not fully available", async function () {
         }
         return parent();
     });
-    const model = await createModelWithDataSource({ spreadsheetData });
+    const { model } = await createModelWithDataSource({ spreadsheetData });
     expect(getCellValue(model, "A1")).toBe("Loading...");
     expect(getCellValue(model, "A2")).toBe("Loading...");
     expect(getCellValue(model, "A3")).toBe("Loading...");
@@ -820,7 +820,7 @@ test("can import (export) contextual domain", async () => {
             },
         },
     };
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, args) {
             if (args.method === "read_group") {
@@ -850,7 +850,7 @@ test("Adding a measure should trigger a reload", async () => {
             },
         },
     };
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, args) {
             if (args.method === "read_group") {
@@ -900,7 +900,7 @@ test("Updating dimensions with undefined values does not trigger a new rpc", asy
             },
         },
     };
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, args) {
             if (args.method === "read_group") {
@@ -1497,7 +1497,7 @@ test("can import a pivot with a calculated field", async function () {
             },
         },
     };
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, { model, method, kwargs }) {
             if (model === "partner" && method === "read_group") {

@@ -12,7 +12,7 @@ defineSpreadsheetModels();
 defineSpreadsheetActions();
 
 test("Basic exchange formula", async () => {
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         mockRPC: async function (route, args) {
             if (args.method === "get_rates_for_spreadsheet") {
                 const info = args.args[0][0];
@@ -32,7 +32,7 @@ test("Basic exchange formula", async () => {
 });
 
 test("rate formula at a given date(time)", async () => {
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         mockRPC: async function (route, args) {
             if (args.method === "get_rates_for_spreadsheet") {
                 const [A1, A2] = args.args[0];
@@ -53,7 +53,7 @@ test("rate formula at a given date(time)", async () => {
 });
 
 test("invalid date", async () => {
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         mockRPC: async function (route, args) {
             if (args.method === "get_rates_for_spreadsheet") {
                 throw new Error("Should not be called");
@@ -69,7 +69,7 @@ test("invalid date", async () => {
 });
 
 test("rate formula at a given company", async () => {
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         mockRPC: async function (route, args) {
             if (args.method === "get_rates_for_spreadsheet") {
                 const [A1, A2] = args.args[0];
@@ -92,7 +92,7 @@ test("rate formula at a given company", async () => {
 });
 
 test("invalid company id", async () => {
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         mockRPC: async function (route, args) {
             if (args.method === "get_rates_for_spreadsheet") {
                 const error = new RPCError();
@@ -108,7 +108,7 @@ test("invalid company id", async () => {
 });
 
 test("Currency rate throw with unknown currency", async () => {
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         mockRPC: async function (route, args) {
             if (args.method === "get_rates_for_spreadsheet") {
                 const info = args.args[0][0];
@@ -122,7 +122,7 @@ test("Currency rate throw with unknown currency", async () => {
 });
 
 test("Currency rates are only loaded once", async () => {
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         mockRPC: async function (route, args) {
             if (args.method === "get_rates_for_spreadsheet") {
                 expect.step("FETCH");
@@ -140,7 +140,7 @@ test("Currency rates are only loaded once", async () => {
 });
 
 test("Currency rates are loaded once by clock", async () => {
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         mockRPC: async function (route, args) {
             if (args.method === "get_rates_for_spreadsheet") {
                 expect.step("FETCH:" + args.args[0].length);

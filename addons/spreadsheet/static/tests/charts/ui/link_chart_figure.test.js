@@ -115,7 +115,7 @@ beforeEach(async () => {
 });
 
 test("icon external link isn't on the chart when its not linked to an odoo menu", async function () {
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         serverData,
     });
     const fixture = await mountSpreadsheet(model);
@@ -129,7 +129,7 @@ test("icon external link isn't on the chart when its not linked to an odoo menu"
 });
 
 test("icon external link is on the chart when its linked to an odoo menu", async function () {
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         serverData,
     });
     await mountSpreadsheet(model);
@@ -146,7 +146,7 @@ test("icon external link is on the chart when its linked to an odoo menu", async
 });
 
 test("icon external link is not on the chart when its linked to a wrong odoo menu", async function () {
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         serverData,
     });
     await mountSpreadsheet(model);
@@ -162,7 +162,7 @@ test("icon external link is not on the chart when its linked to a wrong odoo men
 });
 
 test("icon external link isn't on the chart in dashboard mode", async function () {
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         serverData,
     });
     await mountSpreadsheet(model);
@@ -182,7 +182,7 @@ test("click on icon external link on chart redirect to the odoo menu", async fun
     const doActionStep = "doAction";
     mockActionService(doActionStep);
 
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         serverData,
     });
     const fixture = await mountSpreadsheet(model);
@@ -204,7 +204,7 @@ test("click on icon external link on chart redirect to the odoo menu", async fun
 test("Click on chart in dashboard mode redirect to the odoo menu", async function () {
     const doActionStep = "doAction";
     mockActionService(doActionStep);
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         serverData,
     });
     const fixture = await mountSpreadsheet(model);
@@ -233,7 +233,7 @@ test("Click on chart in dashboard mode redirect to the odoo menu", async functio
 
 test("can use menus xmlIds instead of menu ids", async function () {
     mockActionService("doAction");
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         serverData,
     });
     const fixture = await mountSpreadsheet(model);
@@ -259,7 +259,7 @@ test("Trying to open a menu without an action sends a notification to the user",
         },
     });
 
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         serverData,
     });
     const fixture = await mountSpreadsheet(model);

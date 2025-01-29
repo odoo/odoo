@@ -47,7 +47,7 @@ export function insertListInSpreadsheet(model, params) {
  * @returns { Promise<{ model: OdooSpreadsheetModel, env: Object }>}
  */
 export async function createSpreadsheetWithList(params = {}) {
-    const model = await createModelWithDataSource({
+    const { model, env } = await createModelWithDataSource({
         mockRPC: params.mockRPC,
         serverData: params.serverData,
         modelConfig: params.modelConfig,
@@ -61,8 +61,6 @@ export async function createSpreadsheetWithList(params = {}) {
         sheetId: params.sheetId,
     });
 
-    const env = model.config.custom.env;
-    env.model = model;
     await waitForDataLoaded(model);
     return { model, env };
 }

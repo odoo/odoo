@@ -290,7 +290,7 @@ test("don't fetch list data if no formula use it", async function () {
             },
         },
     };
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, { model, method }) {
             if (!["partner", "ir.model"].includes(model)) {
@@ -355,7 +355,7 @@ test("user context is combined with list context to fetch data", async function 
         lang: "FR",
         uid: serverState.userId,
     };
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, { model, method, kwargs }) {
             if (model !== "partner") {
@@ -856,7 +856,7 @@ test("List record limit is computed during the import and UPDATE_CELL", async fu
             },
         },
     };
-    const model = await createModelWithDataSource({ spreadsheetData });
+    const { model } = await createModelWithDataSource({ spreadsheetData });
     const ds = model.getters.getListDataSource("1");
     expect(ds.maxPosition).toBe(1);
     expect(ds.maxPositionFetched).toBe(1);
@@ -879,7 +879,7 @@ test("Spec of web_search_read is minimal", async function () {
             },
         },
     };
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, args) {
             if (args.method === "web_search_read") {
@@ -920,7 +920,7 @@ test("can import (export) contextual domain", async function () {
             },
         },
     };
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, args) {
             if (args.method === "web_search_read") {
@@ -947,11 +947,11 @@ test("can import (export) action xml id", async function () {
                 domain: [],
                 model: "partner",
                 orderBy: [],
-                actionXmlId: "spreadsheet.test_action"
+                actionXmlId: "spreadsheet.test_action",
             },
         },
     };
-    const model = await createModelWithDataSource({ spreadsheetData });
+    const { model } = await createModelWithDataSource({ spreadsheetData });
     expect(model.getters.getListDefinition(listId).actionXmlId).toBe("spreadsheet.test_action");
     expect(model.exportData().lists[listId].actionXmlId).toBe("spreadsheet.test_action");
 });
