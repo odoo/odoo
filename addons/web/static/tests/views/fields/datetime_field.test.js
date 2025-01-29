@@ -40,7 +40,13 @@ class Partner extends models.Model {
         },
     ];
 }
-defineModels([Partner]);
+class User extends models.Model {
+    _name = "res.users";
+    has_group() {
+        return true;
+    }
+}
+defineModels([Partner, User]);
 
 test("DatetimeField in form view", async () => {
     mockTimeZone(+2); // UTC+2
