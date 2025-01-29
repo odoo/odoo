@@ -21,8 +21,12 @@ On a simple click, your visitors can subscribe to mailing lists managed in the E
         'web.assets_frontend': [
             'website_mass_mailing/static/src/scss/website_mass_mailing.scss',
             'website_mass_mailing/static/src/interactions/**/*',
+            ('remove', 'website_mass_mailing/static/src/interactions/**/*.edit.js'),
             'website_mass_mailing/static/src/scss/website_mass_mailing_popup.scss',
             'website_mass_mailing/static/src/xml/*.xml',
+        ],
+        'website.assets_edit_frontend': [
+            'website_mass_mailing/static/src/**/*.edit.js',
         ],
         'website.assets_wysiwyg': [
             'website_mass_mailing/static/src/js/website_mass_mailing.editor.js',
