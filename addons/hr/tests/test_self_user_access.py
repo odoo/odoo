@@ -48,8 +48,14 @@ class TestSelfAccessProfile(TestHrCommon):
         form = Form(james, view=view)
         for field in employee_related_fields:
             with self.assertRaises(AssertionError, msg="Field '%s' should be readonly in the employee profile when self editing is not allowed." % field):
-                form.__setattr__(field, 'some value')
+                form[field] = 'some value'
 
+        self.env['ir.config_parameter'].sudo().set_param('hr.hr_employee_self_edit', True)
+        hr_settings_fields = ['employee_type', 'pin', 'barcode']
+        form = Form(james, view=view)
+        for field in hr_settings_fields:
+            with self.assertRaises(AssertionError, msg="HR field '%s' should be readonly when self editing is allowed." % field):
+                form[field] = 'some value'
 
     def test_profile_view_fields(self):
         """ A simple user should see all fields in profile view, even if they are protected by groups """
