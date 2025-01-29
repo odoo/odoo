@@ -20,6 +20,8 @@ export class MoOverviewComponentsBlock extends Component {
             shape: {
                 summary: Object,
                 details: Array,
+                simulated : Boolean,
+                expected: String,
             },
             optional: true,
         },
