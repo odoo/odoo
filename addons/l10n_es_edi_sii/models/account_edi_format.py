@@ -589,7 +589,7 @@ class AccountEdiFormat(models.Model):
         return results
 
     def _has_oss_taxes(self, invoice):
-        oss_tax_groups = self.env['ir.model.data'].search([
+        oss_tax_groups = self.env['ir.model.data'].sudo().search([
             ('module', '=', 'l10n_eu_oss'),
             ('model', '=', 'account.tax.group')])
         lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_note'))
