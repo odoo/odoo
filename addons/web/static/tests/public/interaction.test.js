@@ -589,6 +589,16 @@ describe("handling crashes", () => {
             .rejects
             .toThrow("The selector should be defined as a static property on the class Test, not on the instance");
     });
+
+    test("crash if first-level key on dynamicContent is a directive, not a selector", async () => {
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = { "t-on-click": () => {} };
+        }
+        await expect(startInteraction(Test, TemplateTest))
+            .rejects
+            .toThrow("Selector missing for key t-on-click in dynamicContent (interaction 'Test')");
+    });
 });
 
 describe("using qualifiers", () => {
