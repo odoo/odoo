@@ -1,3 +1,5 @@
+/* global Carousel */
+
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -313,6 +315,57 @@ export class AddSnippetDialog extends Component {
                 // Will be sorted in the right columns after
                 containerEl.classList.add("invisible");
                 leftColEl.appendChild(containerEl);
+
+                    // Snippet preview interactions
+                    if (containerEl.dataset.label === "Carousel") {
+                        // Auto-slide carousel snippets on hover
+                        const carouselSnippetEl = containerEl.querySelector(".carousel");
+                        if (carouselSnippetEl) {
+                            containerEl.addEventListener("mouseenter", function () {
+                                const carouselSnippetPreviewEl =
+                                    this.querySelector("[data-bs-ride]");
+                                carouselSnippetPreviewEl.dataset.bsInterval = 1000;
+                                const bsCarousel =
+                                    Carousel.getOrCreateInstance(carouselSnippetPreviewEl);
+                                bsCarousel.cycle();
+                            });
+                            containerEl.addEventListener("mouseleave", function () {
+                                const carouselSnippetPreviewEl =
+                                    this.querySelector("[data-bs-ride]");
+                                const bsCarousel =
+                                    Carousel.getOrCreateInstance(carouselSnippetPreviewEl);
+                                bsCarousel.pause();
+                                bsCarousel.to(0);
+                            });
+                        }
+                    } else if (containerEl.dataset.label === "Parallax") {
+                        // Manual parallax implementation is needed because
+                        // snippet previews are transformed to scale them down
+                        // and `background-attachment: fixed` doesn't work with
+                        // transformed elements.
+                        const parallaxSnippetEl = containerEl.querySelector(".parallax");
+                        const backgroundEl = parallaxSnippetEl.querySelector(".s_parallax_bg");
+                        const { body: iframeBody } = this.iframeDocument;
+
+                        const SCALE = 2.4; // Compensates for container overflow
+                        const PARALLAX_RATE = 0.7;
+                        const START_OFFSET = 400; // Delays effect until element is in view
+
+                        parallaxSnippetEl.style.overflow = "hidden";
+                        backgroundEl.style.transform = `scale(${SCALE})`;
+
+                        iframeBody.addEventListener("scroll", () => {
+                            const { top } = backgroundEl.getBoundingClientRect();
+                            const scrollOffset = window.innerHeight - START_OFFSET - top;
+                            if (scrollOffset > 0) {
+                                backgroundEl.style.transform = `translateY(${
+                                    scrollOffset * PARALLAX_RATE
+                                }px) scale(${SCALE})`;
+                            } else {
+                                backgroundEl.style.transform = `translateY(scale(${SCALE})`;
+                            }
+                        });
+                    }
 
                 // Await images.
                 const imageEls = snippetPreviewWrapEl.querySelectorAll("img");
