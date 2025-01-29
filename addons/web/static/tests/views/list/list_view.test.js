@@ -15943,6 +15943,8 @@ test(`list view with default_group_by`, async () => {
                 return expect(kwargs.groupby).toEqual(["m2m"]);
             case 3:
                 return expect(kwargs.groupby).toEqual(["bar"]);
+            case 4:
+                return expect(kwargs.groupby).toEqual(["bar"]);
         }
     });
 
@@ -15953,6 +15955,11 @@ test(`list view with default_group_by`, async () => {
             <list default_group_by="bar">
                 <field name="bar"/>
             </list>
+        `,
+        searchViewArch: `
+            <search>
+                <filter name="my_filter" string="My Filter" domain="[('id', '>', 1)]"/>
+            </search>
         `,
     });
     expect(`.o_list_renderer table`).toHaveClass("o_list_table_grouped");
@@ -15976,6 +15983,11 @@ test(`list view with default_group_by`, async () => {
     expect(`.o_searchview_facet`).toHaveCount(1);
     expect(`.o_searchview_facet`).toHaveText("Bar");
     expect.verifySteps(["web_read_group3"]);
+
+    await toggleMenuItem("My Filter");
+    expect(`.o_searchview_facet`).toHaveCount(2);
+    expect(queryAllTexts(`.o_searchview_facet`)).toEqual(["Bar", "My Filter"]);
+    expect.verifySteps(["web_read_group4"]);
 });
 
 test(`list view with multi-fields default_group_by`, async () => {

@@ -1634,7 +1634,7 @@ export class SearchModel extends EventBus {
             this.defaultGroupBy &&
             this.env.config.viewType !== "kanban"
         ) {
-            facets.push({
+            facets.unshift({
                 groupId: SPECIAL,
                 type: "groupBy",
                 values: this.defaultGroupBy.map((gb) => {
