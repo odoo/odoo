@@ -21,7 +21,7 @@ const { ModelStore, NotificationStore, DependencyContainer } = stores;
  * @return {Promise<{ store: T, container: InstanceType<DependencyContainer>, model: OdooSpreadsheetModel }>}
  */
 export async function makeStore(Store, ...args) {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     return makeStoreWithModel(model, Store, ...args);
 }
 

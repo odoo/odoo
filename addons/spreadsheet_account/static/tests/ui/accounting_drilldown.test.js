@@ -38,7 +38,7 @@ test("Create drill down domain", async () => {
     };
     mockService("action", fakeActionService);
 
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         serverData,
         mockRPC: async function (route, args) {
             if (args.method === "spreadsheet_move_line_action") {
@@ -89,7 +89,7 @@ test("Create drill down domain", async () => {
 
 test("Create drill down domain when month date is a reference", async () => {
     mockService("action", { doAction: () => {} });
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         serverData,
         mockRPC: async function (route, args) {
             if (args.method === "spreadsheet_move_line_action") {
@@ -122,7 +122,7 @@ test("Create drill down domain when month date is a reference", async () => {
 
 test("Create drill down domain when date uses a non-standard locale", async () => {
     mockService("action", { doAction: () => {} });
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         serverData,
         mockRPC: async function (route, args) {
             if (args.method === "spreadsheet_move_line_action") {

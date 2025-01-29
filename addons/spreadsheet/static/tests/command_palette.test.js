@@ -14,7 +14,7 @@ defineSpreadsheetModels();
 
 test("Command palette is active on spreadsheet", async function () {
     await mountWithCleanup(WebClient);
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         serverData,
     });
     await mountSpreadsheet(model);
@@ -25,7 +25,7 @@ test("Command palette is active on spreadsheet", async function () {
 
 test("First item of command palette is insert link", async function () {
     await mountWithCleanup(WebClient);
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         serverData,
     });
     await mountSpreadsheet(model);
