@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.DiscussSidebar.channelCommands">
+        <div class="btn-group btn-group-sm d-flex flex-column" t-ref="root">
+            <t t-if="this.props.thread">
+                <t t-set="actions" t-value="sidebarChannelActions.actions"/>
+                <t t-foreach="actions" t-as="action" t-key="action.id">
+                    <div
+                        t-attf-title="{{action.name}}"
+                        class="o-mail-DiscussSidebar-channelCommands btn rounded-0 d-flex px-2 m-0 opacity-75 opacity-100-hover"
+                        t-on-click="() => action.onSelect()"
+                    >
+                        <button class="btn" t-att-name="action.id">
+                            <i t-att-class="action.icon" />
+                            <span class="mx-2" t-out="action.name" />
+                            <i t-if="action.subMenu" class="fa fa-fw fa-angle-right" />
+                        </button>
+                    </div>
+                </t>
+            </t>
+        </div>
+    </t>
+</templates>
