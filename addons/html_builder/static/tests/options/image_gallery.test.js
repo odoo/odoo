@@ -2,20 +2,49 @@ import { expect, test } from "@odoo/hoot";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, dummyBase64Img, setupWebsiteBuilder } from "../helpers";
 import { animationFrame, click, queryAll, waitFor } from "@odoo/hoot-dom";
+import { MockResponse } from "@web/../lib/hoot/mock/network";
 
 defineWebsiteModels();
 
 test("Add image in gallery", async () => {
-    onRpc("/web/dataset/call_kw/ir.attachment/search_read", (test) => [
+    onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => [
         {
             id: 1,
             name: "logo",
             mimetype: "image/png",
-            image_src: "/web/static/img/logo2.png",
+            image_src: "/web/image/hoot.png",
             access_token: false,
             public: true,
         },
     ]);
+
+    onRpc("/html_editor/get_image_info", () => {
+        expect.step("get_image_info");
+        return {
+            attachment: {
+                id: 1,
+            },
+            original: {
+                id: 1,
+                image_src: "/web/image/hoot.png",
+                mimetype: "image/png",
+            },
+        };
+    });
+
+    onRpc(
+        "/web/image/hoot.png",
+        () => {
+            const mockResponse = new MockResponse({ ok: 200 });
+            const base64Image =
+                "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
+            const blob = dataURItoBlob(base64Image);
+            mockResponse.blob = () => blob;
+            return mockResponse;
+        },
+        { pure: true }
+    );
+
     await setupWebsiteBuilder(
         `
         <section class="s_image_gallery o_masonry" data-columns="2">
@@ -35,12 +64,13 @@ test("Add image in gallery", async () => {
     );
     await contains(":iframe .first_img").click();
     expect("[data-action-id='addImage']").toHaveCount(1);
-    await click("[data-action-id='addImage']");
-    await animationFrame();
+    await contains("[data-action-id='addImage']").click();
+    // We use "click" instead of contains.click because contains wait for the image to be visible.
+    // In this test we don't want to wait ~800ms for the image to be visible but we can still click on it
     await click("img.o_we_attachment_highlight");
     await animationFrame();
-    await click(".modal-footer button");
-    await waitFor(":iframe img[data-index='6']");
+    await contains(".modal-footer button").click();
+    await waitFor(":iframe .o_masonry_col img[data-index='6']");
 
     const columns = queryAll(":iframe .o_masonry_col");
     const columnImgs = columns.map((column) =>
@@ -48,4 +78,23 @@ test("Add image in gallery", async () => {
     );
 
     expect(columnImgs).toEqual([["1", "3", "4", "5", "6"], ["2"]]);
+    expect.verifySteps(["get_image_info"]);
+    expect(":iframe .o_masonry_col img[data-index='6']").toHaveAttribute(
+        "data-mimetype",
+        "image/webp"
+    );
+    expect(":iframe .o_masonry_col img[data-index='6']").toHaveAttribute(
+        "data-mimetype-before-conversion",
+        "image/png"
+    );
 });
+
+function dataURItoBlob(dataURI) {
+    const binary = atob(dataURI.split(",")[1]);
+    const array = [];
+    const mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
+    for (let i = 0; i < binary.length; i++) {
+        array.push(binary.charCodeAt(i));
+    }
+    return new Blob([new Uint8Array(array)], { type: mimeString });
+}
