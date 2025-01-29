@@ -137,6 +137,8 @@ class Base(models.AbstractModel):
                     continue
 
                 co_records = self[field_name]
+                if 'context' in field_spec:
+                    co_records = co_records.with_context(**field_spec['context'])
 
                 if 'order' in field_spec and field_spec['order']:
                     co_records = co_records.search([('id', 'in', co_records.ids)], order=field_spec['order'])
@@ -148,9 +150,6 @@ class Base(models.AbstractModel):
                         # filter out inaccessible corecords in case of "cache pollution"
                         values[field_name] = [id_ for id_ in values[field_name] if id_ in order_key]
                         values[field_name] = sorted(values[field_name], key=order_key.__getitem__)
-
-                if 'context' in field_spec:
-                    co_records = co_records.with_context(**field_spec['context'])
 
                 if 'fields' in field_spec:
                     if field_spec.get('limit') is not None:
