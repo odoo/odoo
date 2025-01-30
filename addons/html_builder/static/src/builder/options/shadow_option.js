@@ -8,6 +8,7 @@ const shadowClass = "shadow";
 export class ShadowOption extends Component {
     static template = "html_builder.ShadowOption";
     static components = { ...defaultBuilderComponents };
+    static props = {};
 }
 
 class ShadowOptionPlugin extends Plugin {

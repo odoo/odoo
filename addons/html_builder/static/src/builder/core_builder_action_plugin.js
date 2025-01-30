@@ -15,48 +15,35 @@ function getNumericStyle(styleName) {
         getValue: (editingElement) =>
             parseInt(getComputedStyle(editingElement).getPropertyValue(styleName)).toString(),
         apply: (editingElement, value) => {
-            editingElement.style.setProperty(styleName, `${parseInt(value)}px`, "important");
+            editingElement.style.setProperty(styleName, value, "important");
+        },
+    };
+}
+
+function getNumericStyleWithClass(styleName, className) {
+    const action = getNumericStyle(styleName);
+    return {
+        ...action,
+        apply: (editingElement, value) => {
+            const parsedValue = parseInt(value);
+            const hasBorderClass = editingElement.classList.contains(className);
+            if (!parsedValue || parsedValue < 0) {
+                if (hasBorderClass) {
+                    editingElement.classList.remove(className);
+                }
+            } else {
+                if (!hasBorderClass) {
+                    editingElement.classList.add(className);
+                }
+            }
+            action.apply(editingElement, value);
         },
     };
 }
 
 const styleMap = {
-    "border-width": {
-        getValue: (editingElement) =>
-            parseInt(getComputedStyle(editingElement).getPropertyValue("border-width")).toString(),
-        apply: (editingElement, value) => {
-            const parsedValue = parseInt(value);
-            const hasBorderClass = editingElement.classList.contains("border");
-            if (!parsedValue || parsedValue < 0) {
-                if (hasBorderClass) {
-                    editingElement.classList.remove("border");
-                }
-            } else {
-                if (!hasBorderClass) {
-                    editingElement.classList.add("border");
-                }
-            }
-            editingElement.style.setProperty("border-width", value, "important");
-        },
-    },
-    "border-radius": {
-        getValue: (editingElement) =>
-            parseInt(getComputedStyle(editingElement).getPropertyValue("border-radius")).toString(),
-        apply: (editingElement, value) => {
-            const parsedValue = parseInt(value);
-            const hasBorderClass = editingElement.classList.contains("rounded");
-            if (!parsedValue || parsedValue < 0) {
-                if (hasBorderClass) {
-                    editingElement.classList.remove("rounded");
-                }
-            } else {
-                if (!hasBorderClass) {
-                    editingElement.classList.add("rounded");
-                }
-            }
-            editingElement.style.setProperty("border-radius", value, "important");
-        },
-    },
+    "border-width": getNumericStyleWithClass("border-width", "border"),
+    "border-radius": getNumericStyleWithClass("border-radius", "rounded"),
     // todo: handle all the other styles
     padding: getNumericStyle("padding"),
 };

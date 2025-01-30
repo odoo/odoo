@@ -8,7 +8,6 @@ export class BorderConfigurator extends Component {
     static props = {
         label: { type: String },
         direction: { type: String, optional: true },
-        applyTo: { type: String, optional: true },
         withRoundCorner: { type: Boolean, optional: true },
     };
     static defaultProps = {
@@ -24,13 +23,10 @@ export class BorderConfigurator extends Component {
         return `border-${this.props.direction ? this.props.direction + "-" : ""}${param}`;
     }
     hasBorder(editingElement) {
-        const getAction = this.env.editor.shared.builderActions.getAction;
-        if (this.props.applyTo) {
-            editingElement = editingElement.querySelector(this.props.applyTo);
-        }
         if (!editingElement) {
             return false;
         }
+        const getAction = this.env.editor.shared.builderActions.getAction;
         const styleActionValue = getAction("styleAction").getValue({
             editingElement,
             param: this.getStyleActionParam("width"),

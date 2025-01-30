@@ -8,6 +8,7 @@ class SeparatorOptionPlugin extends Plugin {
             {
                 template: "html_builder.SeparatorOption",
                 selector: ".s_hr",
+                applyTo: "hr",
             },
         ],
     };
