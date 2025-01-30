@@ -67,6 +67,12 @@ function parseActiveIds(ids) {
     return activeIds;
 }
 
+const parser = new DOMParser();
+function isHelpEmpty(help) {
+    const doc = parser.parseFromString(help, "text/html");
+    return doc.body.innerText.trim() === "";
+}
+
 // -----------------------------------------------------------------------------
 // Errors
 // -----------------------------------------------------------------------------
@@ -208,9 +214,7 @@ function makeActionManager(env) {
                 ? evaluateExpr(domain, Object.assign({}, env.services.user.context, action.context))
                 : domain;
         if (action.help) {
-            const htmlHelp = document.createElement("div");
-            htmlHelp.innerHTML = action.help;
-            if (!htmlHelp.innerText.trim()) {
+            if (isHelpEmpty(action.help)) {
                 delete action.help;
             }
         }

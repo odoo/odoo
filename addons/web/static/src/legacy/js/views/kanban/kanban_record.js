@@ -119,10 +119,10 @@ var KanbanRecord = Widget.extend(WidgetAdapterMixin, {
      * @param {string} htmlContent
      * @returns {boolean} true if no content found or if containing only formatting tags
      */
-    isHtmlEmpty: function (htmlContent) {
-        let div = document.createElement('div');
-        div.innerHTML = htmlContent || "";
-        return div.innerText.trim() === "";
+    isHtmlEmpty: function (htmlContent = "") {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlContent, "text/html");
+        return doc.body.innerText.trim() === "";
     },
     /**
      * Re-renders the record with a new state
