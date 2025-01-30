@@ -3974,8 +3974,10 @@ export class OdooEditor extends EventTarget {
         } else if (IS_KEYBOARD_EVENT_LEFT_ARROW(ev) || IS_KEYBOARD_EVENT_RIGHT_ARROW(ev)) {
             // Move selection if adjacent character is zero-width space.
             const side = ev.key === 'ArrowLeft' ? 'previous' : 'next';
-            let didSkipFeff = false;
+            let didSkipZWS = false;
             let adjacentCharacter = getAdjacentCharacter(this.editable, side);
+            let originalBlock = closestBlock(this.editable.ownerDocument.getSelection().focusNode);
+            let didChangeBlock = false;
             let previousSelection; // Is used to stop if `modify` doesn't move the selection.
             const hasSelectionChanged = (oldSelection = {}) => {
                 const newSelection = this.document.getSelection();
@@ -3986,7 +3988,7 @@ export class OdooEditor extends EventTarget {
                     oldSelection.focusOffset !== newSelection.focusOffset
                 );
             };
-            while (ZERO_WIDTH_CHARS.includes(adjacentCharacter) && hasSelectionChanged(previousSelection)) {
+            while (ZERO_WIDTH_CHARS.includes(adjacentCharacter) && hasSelectionChanged(previousSelection) && !didChangeBlock) {
                 const selection = this.document.getSelection();
                 previousSelection = {
                     anchorNode: selection.anchorNode,
@@ -3999,14 +4001,17 @@ export class OdooEditor extends EventTarget {
                     side === 'previous' ? 'backward' : 'forward',
                     'character',
                 );
-                didSkipFeff = didSkipFeff || adjacentCharacter === '\ufeff';
+                didSkipZWS = didSkipZWS || ZERO_WIDTH_CHARS.includes(adjacentCharacter);
                 adjacentCharacter = getAdjacentCharacter(this.editable, side);
+                const currentBlock = closestBlock(this.document.getSelection().focusNode);
+                didChangeBlock = originalBlock !== currentBlock;
             }
-            if (didSkipFeff && !ev.shiftKey) {
-                // If moving, just skip the zws then stop. Otherwise, do as if
-                // they weren't there.
-                ev.preventDefault();
-                ev.stopPropagation();
+            if (didSkipZWS && !ev.shiftKey) {
+                if (didChangeBlock) {
+                    // We only stop moving if we change block otherwise we move
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                }
             }
         }
     }
