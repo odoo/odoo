@@ -141,6 +141,10 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
         in_modal: true,
         run: "click",
     },
+    ...tour.stepUtils.saveForm({
+        content: "save Form",
+        extra_trigger: 'td:containsExact("Oh Mary")',
+    }),
     {
         content: "Check if item is added",
         trigger: ".o_data_row td.o_data_cell:contains('Oh Mary')",
