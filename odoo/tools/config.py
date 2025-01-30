@@ -664,7 +664,7 @@ class configmanager(object):
         for opt in sorted(self.options):
             if keys is not None and opt not in keys:
                 continue
-            if opt in ('version', 'language', 'translate_out', 'translate_in', 'overwrite_existing_translations', 'init', 'update'):
+            if opt in ('version', 'language', 'translate_out', 'translate_in', 'overwrite_existing_translations', 'init', 'update', 'demo'):
                 continue
             if opt in self.blacklist_for_save:
                 continue
