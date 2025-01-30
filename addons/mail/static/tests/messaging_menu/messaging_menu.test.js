@@ -714,7 +714,7 @@ test("channel preview: basic rendering", async () => {
     });
     pyEnv["mail.message"].create({
         author_id: partnerId,
-        body: "<p>test</p>",
+        body: "<p>test<br/>hi</p>",
         model: "discuss.channel",
         res_id: channelId,
     });
@@ -723,7 +723,7 @@ test("channel preview: basic rendering", async () => {
     await contains(".o-mail-NotificationItem");
     await contains(".o-mail-NotificationItem img");
     await contains(".o-mail-NotificationItem-name", { text: "General" });
-    await contains(".o-mail-NotificationItem-text", { text: "Demo: test" });
+    await contains(".o-mail-NotificationItem-text", { text: "Demo: test hi" });
 });
 
 test("chat preview should not display correspondent name in body", async () => {
