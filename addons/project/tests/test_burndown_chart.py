@@ -354,6 +354,33 @@ class TestBurndownChart(TestBurndownChartCommon):
         }
         self.check_read_group_is_closed_results(complex_domain, complex_domain_expected_dict)
 
+    def test_burndown_chart_stage_report(self):
+        burndown_chart_domain = [('project_id', '!=', False)]
+        project_domain = [('project_id', '=', self.project_1.id)]
+
+        with freeze_time('%s-01-01' % (self.current_year)):
+            self.task_a.write({'project_id': self.project_1.id})
+            self.task_a.write({'stage_id': self.stage_4.id})
+            self.env.cr.flush()
+        last_year = self.current_year - 1
+        months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
+                  'November', 'December']
+        current_month = datetime.now().month
+        project_expected_dict = {
+            ('January %s' % last_year, self.stage_1.id): 1,
+            ('February %s' % last_year, self.stage_2.id): 1,
+            ('March %s' % last_year, self.stage_3.id): 1,
+        }
+        # add the previous year's stage_4 entries
+        for month in months[3:]:  # starting from April
+            month_key = f"{month} {last_year}"
+            project_expected_dict[month_key, self.stage_4.id] = 1
+        # add the current year's stage_4 entries
+        for i in range(current_month):
+            month_key = f"{months[i]} {self.current_year}"
+            project_expected_dict[month_key, self.stage_4.id] = 2
+        self.check_read_group_results(AND([burndown_chart_domain, project_domain]), project_expected_dict)
+
     def burndown_chart_stage_delete_stage_1(self):
         """
         Currently, this behavior is not working as expected. The key 'Jan year-1, stage_1.id' is not present as expected, but there's an extra unwanted key
