@@ -30,7 +30,7 @@ function isIndentationTab(tab) {
 
 export class TabulationPlugin extends Plugin {
     static id = "tabulation";
-    static dependencies = ["dom", "selection", "history", "delete"];
+    static dependencies = ["dom", "selection", "history", "delete", "split"];
     static shared = ["indentBlocks", "outdentBlocks"];
     resources = {
         user_commands: [
@@ -65,6 +65,7 @@ export class TabulationPlugin extends Plugin {
         if (selection.isCollapsed) {
             this.insertTab();
         } else {
+            this.dependencies.split.splitBlockSegments();
             const traversedBlocks = this.dependencies.selection.getTraversedBlocks();
             this.indentBlocks(traversedBlocks);
         }

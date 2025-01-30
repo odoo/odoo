@@ -19,9 +19,9 @@ import {
 import { childNodeIndex } from "@html_editor/utils/position";
 import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
 import { _t } from "@web/core/l10n/translation";
-import { compareListTypes, createList, insertListAfter, isListItem } from "./utils";
+import { compareListTypes, createList, insertListAfter } from "./utils";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
-import { getListMode, switchListMode } from "@html_editor/utils/list";
+import { getListMode, switchListMode, isListItem } from "@html_editor/utils/list";
 import { withSequence } from "@html_editor/utils/resource";
 import { FONT_SIZE_CLASSES, getFontSizeOrClass } from "@html_editor/utils/formatting";
 import { getTextColorOrClass } from "@html_editor/utils/color";
@@ -214,6 +214,8 @@ export class ListPlugin extends Plugin {
         if (mode === "CL" && !!listStyle) {
             throw new Error(`listStyle is not compatible with "CL" list type`);
         }
+
+        this.dependencies.split.splitBlockSegments();
 
         // @todo @phoenix: original implementation removed whitespace-only text nodes from traversedNodes.
         // Check if this is necessary.
@@ -649,6 +651,7 @@ export class ListPlugin extends Plugin {
     // --------------------------------------------------------------------------
 
     handleTab() {
+        this.dependencies.split.splitBlockSegments();
         const selection = this.dependencies.selection.getEditableSelection();
         const closestLI = closestElement(selection.anchorNode, "LI");
         if (closestLI) {

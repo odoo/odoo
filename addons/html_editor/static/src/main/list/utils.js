@@ -62,7 +62,3 @@ export function compareListTypes(a, b) {
     }
     return true;
 }
-
-export function isListItem(node) {
-    return node.nodeName === "LI" && !node.classList.contains("nav-item");
-}

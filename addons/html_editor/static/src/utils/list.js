@@ -63,3 +63,7 @@ export function convertList(node, newMode) {
     }
     return node;
 }
+
+export function isListItem(node) {
+    return node.nodeName === "LI" && !node.classList.contains("nav-item");
+}

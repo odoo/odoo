@@ -18,6 +18,23 @@ describe("to paragraph", () => {
         });
     });
 
+    test("should turn part of a heading 1 into a paragraph", async () => {
+        await testEditor({
+            contentBefore: "<h1>a<br>b<br>c[]<br>d<br>e</h1>",
+            stepFunction: setTag("p"),
+            contentAfter: "<h1>a<br>b</h1><p>c[]</p><h1>d<br>e</h1>",
+        });
+    });
+
+    test("should turn part of a heading 1 into a paragraph (2)", async () => {
+        await testEditor({
+            contentBefore: "<h1>[<i>a</i>b<br><br>]</h1>",
+            stepFunction: setTag("p"),
+            // The second line remains a h1. It wasn't visibly selected.
+            contentAfter: "<p>[<i>a</i>b</p><h1>]<br></h1>",
+        });
+    });
+
     test("should turn a heading 1 into a paragraph (character selected)", async () => {
         await testEditor({
             contentBefore: "<h1>a[b]c</h1>",
@@ -26,11 +43,35 @@ describe("to paragraph", () => {
         });
     });
 
+    test("should turn part of a heading 1 into a paragraph (character selected)", async () => {
+        await testEditor({
+            contentBefore: "<h1>a<br>b<br>[c]<br>d<br>e</h1>",
+            stepFunction: setTag("p"),
+            contentAfter: "<h1>a<br>b</h1><p>[c]</p><h1>d<br>e</h1>",
+        });
+    });
+
+    test("should turn part of a heading 1 into several paragraphs (characters selected)", async () => {
+        await testEditor({
+            contentBefore: "<h1>a<br>b<br>[c<br><br>d]<br>e<br>f</h1>",
+            stepFunction: setTag("p"),
+            contentAfter: "<h1>a<br>b</h1><p>[c</p><p><br></p><p>d]</p><h1>e<br>f</h1>",
+        });
+    });
+
     test("should turn a heading 1, a paragraph and a heading 2 into three paragraphs", async () => {
         await testEditor({
             contentBefore: "<h1>a[b</h1><p>cd</p><h2>e]f</h2>",
             stepFunction: setTag("p"),
             contentAfter: "<p>a[b</p><p>cd</p><p>e]f</p>",
+        });
+    });
+
+    test("should turn part of a heading 1, a paragraph and part of a heading 2 into three paragraphs", async () => {
+        await testEditor({
+            contentBefore: "<h1>a<br>x<br>y[b</h1><p>cd</p><h2>e]f<br>g<br>h</h2>",
+            stepFunction: setTag("p"),
+            contentAfter: "<h1>a<br>x</h1><p>y[b</p><p>cd</p><p>e]f</p><h2>g<br>h</h2>",
         });
     });
 
@@ -50,6 +91,14 @@ describe("to paragraph", () => {
         });
     });
 
+    test("should not turn a div into a paragraph, with line breaks", async () => {
+        await testEditor({
+            contentBefore: "<div>[a<br>b]</div>",
+            stepFunction: setTag("p"),
+            contentAfter: "<div><p>[a</p></div><div><p>b]</p></div>",
+        });
+    });
+
     test("should not add paragraph tag when selection is changed to normal in list", async () => {
         await testEditor({
             contentBefore: "<ul><li><h1>[abcd]</h1></li></ul>",
@@ -66,11 +115,27 @@ describe("to paragraph", () => {
         });
     });
 
+    test("should not add paragraph tag when selection is changed to normal in list with line breaks", async () => {
+        await testEditor({
+            contentBefore: "<ul><li><h1>[ab<br>cd]</h1></li></ul>",
+            stepFunction: setTag("p"),
+            contentAfter: `<ul><li>[ab<br>cd]</li></ul>`,
+        });
+    });
+
     test("should not add paragraph tag to normal text in list", async () => {
         await testEditor({
             contentBefore: "<ul><li>[abcd]</li></ul>",
             stepFunction: setTag("p"),
             contentAfter: `<ul><li>[abcd]</li></ul>`,
+        });
+    });
+
+    test("should not add paragraph tag to normal text in list, with line breaks", async () => {
+        await testEditor({
+            contentBefore: "<ul><li>[ab<br>cd]</li></ul>",
+            stepFunction: setTag("p"),
+            contentAfter: `<ul><li>[ab<br>cd]</li></ul>`,
         });
     });
 
@@ -85,12 +150,35 @@ describe("to paragraph", () => {
         });
     });
 
+    test("should turn three table cells with heading 1 and line breaks to table cells with paragraphs", async () => {
+        await testEditor({
+            contentBefore:
+                "<table><tbody><tr><td><h1>a<br>b<br>[c<br>d</h1></td><td><h1>e<br>f</h1></td><td><h1>g<br>h]<br>i<br>j</h1></td></tr></tbody></table>",
+            stepFunction: setTag("p"),
+            // Having selected across several table cells, the custom table
+            // selection is set over the whole cells, which means we transform
+            // every line in them and not just the ones we selected.
+            // The custom table selection is removed in cleanForSave and the selection is collapsed.
+            contentAfter:
+                "<table><tbody><tr><td><p>a</p><p>b</p><p>[c</p><p>d</p></td><td><p>e</p><p>f</p></td><td><p>g</p><p>h]</p><p>i</p><p>j</p></td></tr></tbody></table>",
+        });
+    });
+
     test("should not set the tag of non-editable elements", async () => {
         await testEditor({
             contentBefore:
                 '<h1>[before</h1><h1 contenteditable="false">noneditable</h1><h1>after]</h1>',
             stepFunction: setTag("p"),
             contentAfter: '<p>[before</p><h1 contenteditable="false">noneditable</h1><p>after]</p>',
+        });
+    });
+
+    test("should not set the tag of non-editable elements, with line breaks", async () => {
+        await testEditor({
+            contentBefore:
+                '<h1>very<br>much<br>[be<br>fore</h1><h1 contenteditable="false">non<br>editable</h1><h1>after]<br>as<br>well</h1>',
+            stepFunction: setTag("p"),
+            contentAfter: '<h1>very<br>much</h1><p>[be</p><p>fore</p><h1 contenteditable="false">non<br>editable</h1><p>after]</p><h1>as<br>well</h1>',
         });
     });
 
@@ -103,6 +191,26 @@ describe("to paragraph", () => {
         await press("enter");
         expect(getContent(el)).toBe("<p>ab[]cd</p>");
     });
+
+    test("apply 'Text' command, with line breaks", async () => {
+        const { el, editor } = await setupEditor("<h1>a<br>b<br>[]c<br>d<br>e</h1>");
+        await insertText(editor, "/text");
+        await animationFrame();
+        expect(".active .o-we-command-name").toHaveText("Text");
+
+        await press("enter");
+        expect(getContent(el)).toBe("<h1>a<br>b</h1><p>[]c</p><h1>d<br>e</h1>");
+    });
+
+    test("apply 'Text' command to empty line", async () => {
+        const { el, editor } = await setupEditor("<h1>ab<br>[]<br>cd</h1>");
+        await insertText(editor, "/text");
+        await animationFrame();
+        expect(".active .o-we-command-name").toHaveText("Text");
+
+        await press("enter");
+        expect(getContent(el)).toBe(`<h1>ab</h1><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p><h1>cd</h1>`);
+    });
 });
 
 describe("to heading 1", () => {
@@ -114,11 +222,35 @@ describe("to heading 1", () => {
         });
     });
 
+    test("should turn part of a paragraph into a heading 1", async () => {
+        await testEditor({
+            contentBefore: "<p>a<br>b<br>c[]<br>d<br>e</p>",
+            stepFunction: setTag("h1"),
+            contentAfter: "<p>a<br>b</p><h1>c[]</h1><p>d<br>e</p>",
+        });
+    });
+
     test("should turn a paragraph into a heading 1 (character selected)", async () => {
         await testEditor({
             contentBefore: "<p>a[b]c</p>",
             stepFunction: setTag("h1"),
             contentAfter: "<h1>a[b]c</h1>",
+        });
+    });
+
+    test("should turn part of a paragraph into a heading 1 (character selected)", async () => {
+        await testEditor({
+            contentBefore: "<p>a<br>b<br>[c]<br>d<br>e</p>",
+            stepFunction: setTag("h1"),
+            contentAfter: "<p>a<br>b</p><h1>[c]</h1><p>d<br>e</p>",
+        });
+    });
+
+    test("should turn part of a paragraph into several heading 1s (characters selected)", async () => {
+        await testEditor({
+            contentBefore: "<p>a<br>b<br>[c<br><br>d]<br>e<br>f</p>",
+            stepFunction: setTag("h1"),
+            contentAfter: "<p>a<br>b</p><h1>[c</h1><h1><br></h1><h1>d]</h1><p>e<br>f</p>",
         });
     });
 
@@ -162,6 +294,14 @@ describe("to heading 1", () => {
         });
     });
 
+    test("should not turn a div into a heading 1, with line breaks", async () => {
+        await testEditor({
+            contentBefore: "<div>[a<br>b]</div>",
+            stepFunction: setTag("h1"),
+            contentAfter: "<div><h1>[a</h1></div><div><h1>b]</h1></div>",
+        });
+    });
+
     test("should turn three table cells with paragraph to table cells with heading 1", async () => {
         await testEditor({
             contentBefore:
@@ -170,6 +310,20 @@ describe("to heading 1", () => {
             // The custom table selection is removed in cleanForSave and the selection is collapsed.
             contentAfter:
                 "<table><tbody><tr><td><h1>[a</h1></td><td><h1>b</h1></td><td><h1>c]</h1></td></tr></tbody></table>",
+        });
+    });
+
+    test("should turn three table cells with paragraph and line breaks to table cells with heading 1", async () => {
+        await testEditor({
+            contentBefore:
+                "<table><tbody><tr><td><p>a<br>b<br>[c<br>d</p></td><td><p>e<br>f</p></td><td><p>g<br>h]<br>i<br>j</p></td></tr></tbody></table>",
+            stepFunction: setTag("h1"),
+            // Having selected across several table cells, the custom table
+            // selection is set over the whole cells, which means we transform
+            // every line in them and not just the ones we selected.
+            // The custom table selection is removed in cleanForSave and the selection is collapsed.
+            contentAfter:
+                "<table><tbody><tr><td><h1>a</h1><h1>b</h1><h1>[c</h1><h1>d</h1></td><td><h1>e</h1><h1>f</h1></td><td><h1>g</h1><h1>h]</h1><h1>i</h1><h1>j</h1></td></tr></tbody></table>",
         });
     });
 
@@ -191,6 +345,14 @@ describe("to heading 2", () => {
         });
     });
 
+    test("should turn part of a heading 1 into a heading 2", async () => {
+        await testEditor({
+            contentBefore: "<h1>a<br>b<br>c[]<br>d<br>e</h1>",
+            stepFunction: setTag("h2"),
+            contentAfter: "<h1>a<br>b</h1><h2>c[]</h2><h1>d<br>e</h1>",
+        });
+    });
+
     test("should turn a heading 1 into a heading 2 (character selected)", async () => {
         await testEditor({
             contentBefore: "<h1>a[b]c</h1>",
@@ -199,11 +361,35 @@ describe("to heading 2", () => {
         });
     });
 
+    test("should turn part of a heading 1 into a heading 2 (character selected)", async () => {
+        await testEditor({
+            contentBefore: "<h1>a<br>b<br>[c]<br>d<br>e</h1>",
+            stepFunction: setTag("h2"),
+            contentAfter: "<h1>a<br>b</h1><h2>[c]</h2><h1>d<br>e</h1>",
+        });
+    });
+
+    test("should turn part of a heading 1 into several heading 2s (characters selected)", async () => {
+        await testEditor({
+            contentBefore: "<h1>a<br>b<br>[c<br><br>d]<br>e<br>f</h1>",
+            stepFunction: setTag("h2"),
+            contentAfter: "<h1>a<br>b</h1><h2>[c</h2><h2><br></h2><h2>d]</h2><h1>e<br>f</h1>",
+        });
+    });
+
     test("should turn a heading 1, a heading 2 and a paragraph into three headings 2", async () => {
         await testEditor({
             contentBefore: "<h1>a[b</h1><h2>cd</h2><p>e]f</p>",
             stepFunction: setTag("h2"),
             contentAfter: "<h2>a[b</h2><h2>cd</h2><h2>e]f</h2>",
+        });
+    });
+
+    test("should turn parts of a heading 1, a heading 2 and parts of a paragraph into headings 2", async () => {
+        await testEditor({
+            contentBefore: "<h1>a<br>[b</h1><h2>cd</h2><p>e]<br>f</p>",
+            stepFunction: setTag("h2"),
+            contentAfter: "<h1>a</h1><h2>[b</h2><h2>cd</h2><h2>e]</h2><p>f</p>",
         });
     });
 
@@ -223,6 +409,14 @@ describe("to heading 2", () => {
         });
     });
 
+    test("should not turn a div into a heading 2, with line breaks", async () => {
+        await testEditor({
+            contentBefore: "<div>[a<br>b]</div>",
+            stepFunction: setTag("h2"),
+            contentAfter: "<div><h2>[a</h2></div><div><h2>b]</h2></div>",
+        });
+    });
+
     test("should turn three table cells with paragraph to table cells with heading 2", async () => {
         await testEditor({
             contentBefore:
@@ -231,6 +425,20 @@ describe("to heading 2", () => {
             // The custom table selection is removed in cleanForSave and the selection is collapsed.
             contentAfter:
                 "<table><tbody><tr><td><h2>[a</h2></td><td><h2>b</h2></td><td><h2>c]</h2></td></tr></tbody></table>",
+        });
+    });
+
+    test("should turn three table cells with paragraph and line breaks to table cells with heading 2", async () => {
+        await testEditor({
+            contentBefore:
+                "<table><tbody><tr><td><p>a<br>b<br>[c<br>d</p></td><td><p>e<br>f</p></td><td><p>g<br>h]<br>i<br>j</p></td></tr></tbody></table>",
+            stepFunction: setTag("h2"),
+            // Having selected across several table cells, the custom table
+            // selection is set over the whole cells, which means we transform
+            // every line in them and not just the ones we selected.
+            // The custom table selection is removed in cleanForSave and the selection is collapsed.
+            contentAfter:
+                "<table><tbody><tr><td><h2>a</h2><h2>b</h2><h2>[c</h2><h2>d</h2></td><td><h2>e</h2><h2>f</h2></td><td><h2>g</h2><h2>h]</h2><h2>i</h2><h2>j</h2></td></tr></tbody></table>",
         });
     });
 
@@ -252,11 +460,35 @@ describe("to heading 3", () => {
         });
     });
 
+    test("should turn part of a heading 1 into a heading 3", async () => {
+        await testEditor({
+            contentBefore: "<h1>a<br>b<br>c[]<br>d<br>e</h1>",
+            stepFunction: setTag("h3"),
+            contentAfter: "<h1>a<br>b</h1><h3>c[]</h3><h1>d<br>e</h1>",
+        });
+    });
+
     test("should turn a heading 1 into a heading 3 (character selected)", async () => {
         await testEditor({
             contentBefore: "<h1>a[b]c</h1>",
             stepFunction: setTag("h3"),
             contentAfter: "<h3>a[b]c</h3>",
+        });
+    });
+
+    test("should turn part of a heading 1 into a heading 3 (character selected)", async () => {
+        await testEditor({
+            contentBefore: "<h1>a<br>b<br>[c]<br>d<br>e</h1>",
+            stepFunction: setTag("h3"),
+            contentAfter: "<h1>a<br>b</h1><h3>[c]</h3><h1>d<br>e</h1>",
+        });
+    });
+
+    test("should turn part of a heading 1 into several heading 3s (characters selected)", async () => {
+        await testEditor({
+            contentBefore: "<h1>a<br>b<br>[c<br><br>d]<br>e<br>f</h1>",
+            stepFunction: setTag("h3"),
+            contentAfter: "<h1>a<br>b</h1><h3>[c</h3><h3><br></h3><h3>d]</h3><h1>e<br>f</h1>",
         });
     });
 
@@ -284,6 +516,14 @@ describe("to heading 3", () => {
         });
     });
 
+    test("should not turn a div into a heading 3, with line breaks", async () => {
+        await testEditor({
+            contentBefore: "<div>[a<br>b]</div>",
+            stepFunction: setTag("h3"),
+            contentAfter: "<div><h3>[a</h3></div><div><h3>b]</h3></div>",
+        });
+    });
+
     test("should turn three table cells with paragraph to table cells with heading 3", async () => {
         await testEditor({
             contentBefore:
@@ -292,6 +532,20 @@ describe("to heading 3", () => {
             // The custom table selection is removed in cleanForSave and the selection is collapsed.
             contentAfter:
                 "<table><tbody><tr><td><h3>[a</h3></td><td><h3>b</h3></td><td><h3>c]</h3></td></tr></tbody></table>",
+        });
+    });
+
+    test("should turn three table cells with paragraph and line breaks to table cells with heading 1", async () => {
+        await testEditor({
+            contentBefore:
+                "<table><tbody><tr><td><p>a<br>b<br>[c<br>d</p></td><td><p>e<br>f</p></td><td><p>g<br>h]<br>i<br>j</p></td></tr></tbody></table>",
+            stepFunction: setTag("h3"),
+            // Having selected across several table cells, the custom table
+            // selection is set over the whole cells, which means we transform
+            // every line in them and not just the ones we selected.
+            // The custom table selection is removed in cleanForSave and the selection is collapsed.
+            contentAfter:
+                "<table><tbody><tr><td><h3>a</h3><h3>b</h3><h3>[c</h3><h3>d</h3></td><td><h3>e</h3><h3>f</h3></td><td><h3>g</h3><h3>h]</h3><h3>i</h3><h3>j</h3></td></tr></tbody></table>",
         });
     });
 
@@ -313,6 +567,14 @@ describe("to pre", () => {
         });
     });
 
+    test("should turn part of a heading 1 into a pre", async () => {
+        await testEditor({
+            contentBefore: "<h1>a<br>b<br>c[]<br>d<br>e</h1>",
+            stepFunction: setTag("pre"),
+            contentAfter: "<h1>a<br>b</h1><pre>c[]</pre><h1>d<br>e</h1>",
+        });
+    });
+
     test("should turn a heading 1 into a pre (character selected)", async () => {
         await testEditor({
             contentBefore: "<h1>a[b]c</h1>",
@@ -321,11 +583,35 @@ describe("to pre", () => {
         });
     });
 
-    test("should turn a heading 1 a pre and a paragraph into three pres", async () => {
+    test("should turn part of a heading 1 into a pre (character selected)", async () => {
+        await testEditor({
+            contentBefore: "<h1>a<br>b<br>[c]<br>d<br>e</h1>",
+            stepFunction: setTag("pre"),
+            contentAfter: "<h1>a<br>b</h1><pre>[c]</pre><h1>d<br>e</h1>",
+        });
+    });
+
+    test("should turn part of a heading 1 into several pres (characters selected)", async () => {
+        await testEditor({
+            contentBefore: "<h1>a<br>b<br>[c<br><br>d]<br>e<br>f</h1>",
+            stepFunction: setTag("pre"),
+            contentAfter: "<h1>a<br>b</h1><pre>[c</pre><pre><br></pre><pre>d]</pre><h1>e<br>f</h1>",
+        });
+    });
+
+    test("should turn a heading 1, a pre and a paragraph into three pres", async () => {
         await testEditor({
             contentBefore: "<h1>a[b</h1><pre>cd</pre><p>e]f</p>",
             stepFunction: setTag("pre"),
             contentAfter: "<pre>a[b</pre><pre>cd</pre><pre>e]f</pre>",
+        });
+    });
+
+    test("should turn parts of a heading 1, a pre and parts of a paragraph into pres", async () => {
+        await testEditor({
+            contentBefore: "<h1>a<br>[b</h1><pre>cd</pre><p>e]<br>f</p>",
+            stepFunction: setTag("pre"),
+            contentAfter: "<h1>a</h1><pre>[b</pre><pre>cd</pre><pre>e]</pre><p>f</p>",
         });
     });
 
@@ -340,11 +626,25 @@ describe("to pre", () => {
         });
     });
 
+    test("should turn three table cells with paragraph and line breaks to table cells with pre", async () => {
+        await testEditor({
+            contentBefore:
+                "<table><tbody><tr><td><p>a<br>b<br>[c<br>d</p></td><td><p>e<br>f</p></td><td><p>g<br>h]<br>i<br>j</p></td></tr></tbody></table>",
+            stepFunction: setTag("pre"),
+            // Having selected across several table cells, the custom table
+            // selection is set over the whole cells, which means we transform
+            // every line in them and not just the ones we selected.
+            // The custom table selection is removed in cleanForSave and the selection is collapsed.
+            contentAfter:
+                "<table><tbody><tr><td><pre>a</pre><pre>b</pre><pre>[c</pre><pre>d</pre></td><td><pre>e</pre><pre>f</pre></td><td><pre>g</pre><pre>h]</pre><pre>i</pre><pre>j</pre></td></tr></tbody></table>",
+        });
+    });
+
     test("should turn a paragraph into pre preserving the cursor position", async () => {
         await testEditor({
             contentBefore: "<p>abcd<br>[]<br></p>",
             stepFunction: setTag("pre"),
-            contentAfter: "<pre>abcd<br>[]<br></pre>",
+            contentAfter: "<p>abcd</p><pre>[]<br></pre>",
         });
     });
 
@@ -365,14 +665,42 @@ describe("to pre", () => {
         await press("enter");
         expect(getContent(el)).toBe("<pre>ab[]cd</pre>");
     });
+
+    test("apply 'Code' command, with line breaks", async () => {
+        const { el, editor } = await setupEditor("<h1>a<br>b<br>[]c<br>d<br>e</h1>");
+        await insertText(editor, "/code");
+        await animationFrame();
+        expect(".active .o-we-command-name").toHaveText("Code");
+
+        await press("enter");
+        expect(getContent(el)).toBe("<h1>a<br>b</h1><pre>[]c</pre><h1>d<br>e</h1>");
+    });
+
+    test("apply 'Code' command to empty line", async () => {
+        const { el, editor } = await setupEditor("<h1>ab<br>[]<br>cd</h1>");
+        await insertText(editor, "/code");
+        await animationFrame();
+        expect(".active .o-we-command-name").toHaveText("Code");
+
+        await press("enter");
+        expect(getContent(el)).toBe('<h1>ab</h1><pre placeholder="Code" class="o-we-hint">[]<br></pre><h1>cd</h1>');
+    });
 });
 
 describe("to blockquote", () => {
-    test("should turn a blockquote into a paragraph", async () => {
+    test("should turn a heading 1 into a blockquote", async () => {
         await testEditor({
             contentBefore: "<h1>ab[]cd</h1>",
             stepFunction: setTag("blockquote"),
             contentAfter: "<blockquote>ab[]cd</blockquote>",
+        });
+    });
+
+    test("should turn part of a heading 1 into a blockquote", async () => {
+        await testEditor({
+            contentBefore: "<h1>a<br>b<br>c[]<br>d<br>e</h1>",
+            stepFunction: setTag("blockquote"),
+            contentAfter: "<h1>a<br>b</h1><blockquote>c[]</blockquote><h1>d<br>e</h1>",
         });
     });
 
@@ -381,6 +709,22 @@ describe("to blockquote", () => {
             contentBefore: "<h1>a[b]c</h1>",
             stepFunction: setTag("blockquote"),
             contentAfter: "<blockquote>a[b]c</blockquote>",
+        });
+    });
+
+    test("should turn part of a heading 1 into a blockquote (character selected)", async () => {
+        await testEditor({
+            contentBefore: "<h1>a<br>b<br>[c]<br>d<br>e</h1>",
+            stepFunction: setTag("blockquote"),
+            contentAfter: "<h1>a<br>b</h1><blockquote>[c]</blockquote><h1>d<br>e</h1>",
+        });
+    });
+
+    test("should turn part of a heading 1 into several blockquotes (characters selected)", async () => {
+        await testEditor({
+            contentBefore: "<h1>a<br>b<br>[c<br><br>d]<br>e<br>f</h1>",
+            stepFunction: setTag("blockquote"),
+            contentAfter: "<h1>a<br>b</h1><blockquote>[c</blockquote><blockquote><br></blockquote><blockquote>d]</blockquote><h1>e<br>f</h1>",
         });
     });
 
@@ -409,6 +753,14 @@ describe("to blockquote", () => {
         });
     });
 
+    test("should not turn a div into a blockquote, with line breaks", async () => {
+        await testEditor({
+            contentBefore: "<div>[a<br>b]</div>",
+            stepFunction: setTag("blockquote"),
+            contentAfter: "<div><blockquote>[a</blockquote></div><div><blockquote>b]</blockquote></div>",
+        });
+    });
+
     test("should turn three table cells with paragraph to table cells with blockquote", async () => {
         await testEditor({
             contentBefore:
@@ -417,6 +769,20 @@ describe("to blockquote", () => {
             // The custom table selection is removed in cleanForSave and the selection is collapsed.
             contentAfter:
                 "<table><tbody><tr><td><blockquote>[a</blockquote></td><td><blockquote>b</blockquote></td><td><blockquote>c]</blockquote></td></tr></tbody></table>",
+        });
+    });
+
+    test("should turn three table cells with paragraph and line breaks to table cells with blockquotes", async () => {
+        await testEditor({
+            contentBefore:
+                "<table><tbody><tr><td><p>a<br>b<br>[c<br>d</p></td><td><p>e<br>f</p></td><td><p>g<br>h]<br>i<br>j</p></td></tr></tbody></table>",
+            stepFunction: setTag("blockquote"),
+            // Having selected across several table cells, the custom table
+            // selection is set over the whole cells, which means we transform
+            // every line in them and not just the ones we selected.
+            // The custom table selection is removed in cleanForSave and the selection is collapsed.
+            contentAfter:
+                "<table><tbody><tr><td><blockquote>a</blockquote><blockquote>b</blockquote><blockquote>[c</blockquote><blockquote>d</blockquote></td><td><blockquote>e</blockquote><blockquote>f</blockquote></td><td><blockquote>g</blockquote><blockquote>h]</blockquote><blockquote>i</blockquote><blockquote>j</blockquote></td></tr></tbody></table>",
         });
     });
 
