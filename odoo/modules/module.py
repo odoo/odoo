@@ -103,8 +103,8 @@ TYPED_FIELD_DEFINITION_RE = re.compile(r'''
 
 _logger = logging.getLogger(__name__)
 
-current_test: bool = False
-"""Indicates whteher we are in a test mode"""
+current_test = None
+"""Indicates whether we are in a test mode. Holds the currently executed test case"""
 
 
 class UpgradeHook:

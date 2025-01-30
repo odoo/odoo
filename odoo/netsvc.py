@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import contextlib
+import json
 import logging
 import logging.handlers
 import os
@@ -17,6 +18,7 @@ import werkzeug.serving
 from . import release
 from . import sql_db
 from . import tools
+from .modules import module
 
 _logger = logging.getLogger(__name__)
 
@@ -53,23 +55,35 @@ class PostgreSQLHandler(logging.Handler):
         dbname = tools.config['log_db'] if tools.config['log_db'] and tools.config['log_db'] != '%d' else ct_db
         if not dbname:
             return
-        with contextlib.suppress(Exception), tools.mute_logger('odoo.sql_db'), sql_db.db_connect(dbname, allow_uri=True).cursor() as cr:
+        with tools.mute_logger('odoo.sql_db'), sql_db.db_connect(dbname, allow_uri=True).cursor() as cr:
             # preclude risks of deadlocks
             cr.execute("SET LOCAL statement_timeout = 1000")
             msg = str(record.msg)
             if record.args:
                 msg = msg % record.args
-            traceback = getattr(record, 'exc_text', '')
-            if traceback:
-                msg = "%s\n%s" % (msg, traceback)
+            exc_text = getattr(record, 'exc_text', '')
+            if exc_text:
+                msg = "%s\n%s" % (msg, exc_text)
             # we do not use record.levelname because it may have been changed by ColoredFormatter.
             levelname = logging.getLevelName(record.levelno)
+            log_metadata = os.environ.get('ODOO_LOGDB_METADATA', None)
 
-            val = ('server', ct_db, record.name, levelname, msg, record.pathname, record.lineno, record.funcName)
-            cr.execute("""
-                INSERT INTO ir_logging(create_date, type, dbname, name, level, message, path, line, func)
-                VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s)
-            """, val)
+            fields = 'create_date, type, dbname, name, level, message, path, line, func'
+            vals = ['server', ct_db, record.name, levelname, msg, record.pathname, record.lineno, record.funcName]
+            if log_metadata:
+
+                log_metadata = {}
+                if record.levelno > 20:
+                    record['traceback'] = record.stack_info or traceback.format_stack()
+                if module.current_test:
+                    log_metadata['current_test'] = str(module.current_test)
+                log_metadata = json.dumps(log_metadata)
+                fields += ', metadata'
+                vals.append(log_metadata)
+            cr.execute(f"""
+                INSERT INTO ir_logging({fields})
+                VALUES (NOW() at time zone 'UTC' {', %s' * len(vals)})
+            """, vals)
 
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, _NOTHING, DEFAULT = range(10)
 #The background is set with 40 plus the number of the color, and the foreground with 30
