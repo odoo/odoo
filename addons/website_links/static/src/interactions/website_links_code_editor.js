@@ -1,135 +1,146 @@
-import { _t } from "@web/core/l10n/translation";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
 import { browser } from "@web/core/browser/browser";
-import publicWidget from "@web/legacy/js/public/public_widget";
+import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 
-publicWidget.registry.websiteLinksCodeEditor = publicWidget.Widget.extend({
-    selector: '#wrapwrap',
-    selectorHas: '.o_website_links_edit_code',
-    events: {
-        'click .copy-to-clipboard': '_onCopyToClipboardClick',
-        'click .o_website_links_edit_code': '_onEditCodeClick',
-        'click .o_website_links_cancel_edit': '_onCancelEditClick',
-        'submit #edit-code-form': '_onEditCodeFormSubmit',
-        'click .o_website_links_ok_edit': '_onEditCodeFormSubmit',
-    },
+export class WebsiteLinksCodeEditor extends Interaction {
+    static selector = "#wrapwrap";
+    static selectorHas = ".o_website_links_edit_code";
+    dynamicContent = {
+        ".copy-to-clipboard": {
+            "t-on-click.prevent.withTarget": this.onCopyToClipboardClick,
+            "t-att-style": () => ({
+                "display": this.isEditing ? "none" : undefined,
+            }),
+            "t-att-data-clipboard-text": () => this.clipboardContent,
+        },
+        ".o_website_links_edit_code": {
+            "t-on-click": this.onEditCodeClick,
+            "t-att-style": () => ({
+                "display": this.isEditing ? "none" : undefined,
+            }),
+        },
+        ".o_website_links_cancel_edit": {
+            "t-on-click.prevent": this.onCancelEditClick,
+        },
+        ".o_website_links_ok_edit": {
+            "t-on-click.prevent": this.onCodeSubmit,
+        },
+        "#edit-code-form": {
+            "t-on-submit.prevent": this.onCodeSubmit,
+        },
+        ".o_website_links_code_error": {
+            "t-out": () => this.errorMessage,
+            "t-att-style": () => ({
+                "display": this.errorMessage ? "block" : "none",
+            }),
+        },
+        ".o_website_links_edit_tools": {
+            "t-att-style": () => ({
+                "display": this.isEditing ? undefined : "none",
+            }),
+        },
+    };
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+    setup() {
+        this.codeEl = document.getElementById("o_website_links_code");
+        this.clipboardContent = this.el.querySelector(".copy-to-clipboard").dataset.clipboardText || undefined;
+        this.errorMessage = "";
+        this.isEditing = false;
+        this.wasTaken = false;
+    }
 
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onCopyToClipboardClick: async function (ev) {
-        ev.preventDefault();
-        const copyBtn = ev.currentTarget;
-        const tooltip = Tooltip.getOrCreateInstance(copyBtn, {
+    onCopyToClipboardClick(ev, currentTargetEl) {
+        const tooltip = Tooltip.getOrCreateInstance(currentTargetEl, {
             title: _t("Link Copied!"),
             trigger: "manual",
             placement: "right",
         });
-        setTimeout(
-            async () => await browser.navigator.clipboard.writeText(copyBtn.dataset.clipboardText)
-        );
+        const url = currentTargetEl.dataset.clipboardText;
+        setTimeout(async () => await browser.navigator.clipboard.writeText(url));
         tooltip.show();
         setTimeout(() => tooltip.hide(), 1200);
-    },
+    }
 
-    /**
-     * @private
-     * @param {String} newCode
-     */
-    _showNewCode: function (newCode) {
-        $('.o_website_links_code_error').html('');
-        $('.o_website_links_code_error').hide();
+    updateCode(newCode) {
+        const hostURL = document.getElementById("short-url-host").innerText;
+        this.codeEl.querySelector("form").remove();
+        this.codeEl.innerText = newCode;
+        this.clipboardContent = hostURL + newCode;
+        // Update display here because otherwise the switch between the buttons
+        // would be visible.
+        this.updateContent();
+    }
 
-        $('#o_website_links_code form').remove();
+    async onCodeSubmit() {
+        const initCode = document.getElementById("init_code").value.trim();
+        const newCode = document.getElementById("new_code").value.trim();
+        document.getElementById("new_code").value = newCode;
 
-        // Show new code
-        var host = $('#short-url-host').html();
-        $('#o_website_links_code').html(newCode);
-
-        // Update button copy to clipboard
-        $('.copy-to-clipboard').attr('data-clipboard-text', host + newCode);
-
-        // Show action again
-        $('.o_website_links_edit_code').show();
-        $('.copy-to-clipboard').show();
-        $('.o_website_links_edit_tools').hide();
-    },
-    /**
-     * @private
-     * @returns {Promise}
-     */
-    _submitCode: function () {
-        var initCode = $('#edit-code-form #init_code').val();
-        var newCode = $('#edit-code-form #new_code').val();
-        var self = this;
-
-        if (newCode === '') {
-            self.$('.o_website_links_code_error').html(_t("The code cannot be left empty"));
-            self.$('.o_website_links_code_error').show();
+        if (newCode === "") {
+            this.errorMessage = _t("The code cannot be left empty");
             return;
         }
 
-        this._showNewCode(newCode);
+        this.isEditing = false;
+        this.updateCode(newCode);
 
         if (initCode === newCode) {
-            this._showNewCode(newCode);
+            this.errorMessage = this.wasTaken ? _t("This code is already taken") : "";
         } else {
-            return rpc('/website_links/add_code', {
-                init_code: initCode,
-                new_code: newCode,
-            }).then(function (result) {
-                self._showNewCode(result[0].code);
-            }, function () {
-                $('.o_website_links_code_error').show();
-                $('.o_website_links_code_error').html(_t("This code is already taken"));
-            });
+            try {
+                await this.waitFor(rpc("/website_links/add_code", {
+                    init_code: initCode,
+                    new_code: newCode,
+                }));
+                this.wasTaken = false;
+                this.errorMessage = "";
+            } catch {
+                this.wasTaken = true;
+                this.errorMessage = _t("This code is already taken");
+            }
         }
+    }
 
-        return Promise.resolve();
-    },
+    onEditCodeClick() {
+        this.isEditing = true;
+        const initCode = this.codeEl.innerText;
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
+        const formEl = document.createElement("form");
+        formEl.style.display = "inline";
+        formEl.id = "edit-code-form";
 
-    /**
-     * @private
-     */
-    _onEditCodeClick: function () {
-        var initCode = $('#o_website_links_code').html();
-        $('#o_website_links_code').html('<form style="display:inline;" id="edit-code-form"><input type="hidden" id="init_code" value="' + initCode + '"/><input type="text" id="new_code" value="' + initCode + '"/></form>');
-        $('.o_website_links_edit_code').hide();
-        $('.copy-to-clipboard').hide();
-        $('.o_website_links_edit_tools').show();
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onCancelEditClick: function (ev) {
-        ev.preventDefault();
-        $('.o_website_links_edit_code').show();
-        $('.copy-to-clipboard').show();
-        $('.o_website_links_edit_tools').hide();
-        $('.o_website_links_code_error').hide();
+        const initInputEl = document.createElement("input");
+        initInputEl.type = "hidden";
+        initInputEl.id = "init_code";
+        initInputEl.value = initCode;
 
-        var oldCode = $('#edit-code-form #init_code').val();
-        $('#o_website_links_code').html(oldCode);
+        const newInputEl = document.createElement("input");
+        newInputEl.type = "text";
+        newInputEl.id = "new_code";
+        newInputEl.value = initCode;
 
-        $('#code-error').remove();
-        $('#o_website_links_code form').remove();
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onEditCodeFormSubmit: function (ev) {
-        ev.preventDefault();
-        this._submitCode();
-    },
-});
+        formEl.append(initInputEl);
+        formEl.append(newInputEl);
+
+        this.codeEl.innerText = "";
+        this.insert(formEl, this.codeEl);
+    }
+
+    onCancelEditClick() {
+        this.isEditing = false;
+        this.errorMessage = this.wasTaken ? _t("This code is already taken") : "";
+
+        const initCode = document.getElementById("init_code").value;
+        this.codeEl.querySelector("form").remove();
+        this.codeEl.innerText = initCode;
+
+        document.getElementById("code-error")?.remove();
+    }
+}
+
+registry
+    .category("public.interactions")
+    .add("website_links.website_links_code_editor", WebsiteLinksCodeEditor);
