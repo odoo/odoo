@@ -14,6 +14,8 @@ function amountIs(method, amount) {
     };
 }
 const ADD_PRODUCT =
+    '{"lines":[{"productName":"Letter Tray","price":"$ 2,972.75","qty":"1.00","unit":"Units","unitPrice":"$ 2,972.75","oldUnitPrice":"","customerNote":"","internalNote":"","comboParent":"","packLotLines":[],"price_without_discount":"$ 2,972.75","isSelected":false,"imageSrc":"/web/image/product.product/855/image_128"}],"finalized":false,"amount":"2,972.75","paymentLines":[],"change":0,"onlinePaymentData":{}}';
+const ADD_PRODUCT_SELECTED =
     '{"lines":[{"productName":"Letter Tray","price":"$ 2,972.75","qty":"1.00","unit":"Units","unitPrice":"$ 2,972.75","oldUnitPrice":"","customerNote":"","internalNote":"","comboParent":"","packLotLines":[],"price_without_discount":"$ 2,972.75","isSelected":true,"imageSrc":"/web/image/product.product/855/image_128"}],"finalized":false,"amount":"2,972.75","paymentLines":[],"change":0,"onlinePaymentData":{}}';
 const PAY_WITH_CASH =
     '{"lines":[{"productName":"Letter Tray","price":"$ 2,972.75","qty":"1.00","unit":"Units","unitPrice":"$ 2,972.75","oldUnitPrice":"","customerNote":"","internalNote":"","comboParent":"","packLotLines":[],"price_without_discount":"$ 2,972.75","isSelected":true,"imageSrc":"/web/image/product.product/855/image_128"}],"finalized":false,"amount":"2,972.75","paymentLines":[{"name":"Cash","amount":"2,972.75"}],"change":0,"onlinePaymentData":{}}';
@@ -33,6 +35,10 @@ registry.category("web_tour.tours").add("CustomerDisplayTour", {
                 },
             },
             Order.hasLine({ productName: "Letter Tray", price: "2,972.75" }),
+            {
+                content: "An order line with `isSelected: false` should not have 'selected' class",
+                trigger: ".order-container .orderline:last-child:not(.selected)",
+            },
             amountIs("Total", "2,972.75"),
             postMessage(PAY_WITH_CASH, "pay with cash"),
             amountIs("Cash", "2,972.75"),
@@ -47,5 +53,13 @@ registry.category("web_tour.tours").add("CustomerDisplayTour", {
             },
             Order.doesNotHaveLine({}),
             amountIs("Total", "0.00"),
+            {
+                trigger: "body",
+                run: () => postMessage(ADD_PRODUCT_SELECTED, "add products").run(),
+            },
+            {
+                content: "An order line with `isSelected: true` should have 'selected' class",
+                trigger: ".order-container .orderline:last-child.selected",
+            },
         ].flat(),
 });
