@@ -492,12 +492,12 @@ class SaleOrder(models.Model):
 
         if 'invoice_status' in values:
             if values['invoice_status'] == 'upselling':
-                filtered_self = self.search([('id', 'in', self.ids),
+                filtered_self = self.sudo().search([('id', 'in', self.ids),
                                              ('user_id', '!=', False),
                                              ('invoice_status', '!=', 'upselling')])
                 filtered_self.activity_unlink(['sale.mail_act_sale_upsell'])
                 for order in filtered_self:
-                    order.activity_schedule(
+                    order.sudo().activity_schedule(
                         'sale.mail_act_sale_upsell',
                         user_id=order.user_id.id,
                         note=_("Upsell <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> for customer <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>") % (
