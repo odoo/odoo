@@ -29,3 +29,6 @@ class TestWebsiteControllers(TestForumCommon):
 
         locs = website._enumerate_pages(query_string='/forum/%s' % self.env['ir.http']._slug(self.forum))
         self.assertEqual(next(iter(locs))['lastmod'].strftime("%Y-%m-%d"), datetime)
+
+        self.assertFalse([*website._enumerate_pages(query_string='/forum/embed')],
+                         "Sitemap must not contains forum embed links")

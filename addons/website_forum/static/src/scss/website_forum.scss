@@ -303,3 +303,10 @@ $-forum-sidebar-width: map-get($container-max-widths, sm) / 2;
 .o_wforum_background_gradient {
     background-image: linear-gradient(0deg, rgba($body-bg, .75) 30%, rgba($body-bg, 0) 100%);
 }
+
+// Remove website backend and editor buttons for the embedded version
+.o_forum_embed {
+    .o_frontend_to_backend_nav {
+        display: none !important;
+    }
+}
