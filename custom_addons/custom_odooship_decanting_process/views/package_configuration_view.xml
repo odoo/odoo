@@ -10,9 +10,11 @@
                     <group>
                         <group>
                             <field name="name"/>
+                            <field name="box_barcode"/>
                         </group>
                         <group>
-                            <field name="box_barcode"/>
+                            <field name="site_code_id"/>
+                            <field name="tenant_code_id"/>
                         </group>
                     </group>
                     <group string="Configure Measures" col="12">
@@ -48,6 +50,8 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="name"/>
+                <field name="tenant_code_id"/>
+                <field name="site_code_id"/>
                 <field name="length"/>
                 <field name="height"/>
                 <field name="width"/>
