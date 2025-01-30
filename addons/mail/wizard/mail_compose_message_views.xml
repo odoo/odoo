@@ -44,10 +44,10 @@
                             <field name="partner_ids" widget="many2many_tags_email" placeholder="Followers only"
                                 invisible="composition_comment_option == 'forward'"
                                 required="context.get('force_email', False)"
-                                options="{'no_quick_create': True}" context="{'show_email':True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
+                                options="{'no_quick_create': True, 'edit_tags': True}" context="{'show_email':True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
                             <field name="partner_ids" widget="many2many_tags_email" placeholder="Add recipients..."
                                 required="True" invisible="composition_comment_option != 'forward'"
-                                options="{'no_quick_create': True}"
+                                options="{'no_quick_create': True, 'edit_tags': True}"
                                 context="{'show_email':True, 'form_view_ref': 'base.view_partner_simple_form', 'forward_mode': True}"/>
                         </div>
                         <field name="subject" placeholder="Welcome to MyCompany!" required="True"/>
