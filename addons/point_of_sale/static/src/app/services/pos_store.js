@@ -1514,8 +1514,8 @@ export class PosStore extends WithLazyGetterTrap {
         }
         return true;
     }
-    getOrderChanges(skipped = false, order = this.getOrder()) {
-        return getOrderChanges(order, skipped, this.config.preparationCategories);
+    getOrderChanges(order = this.getOrder()) {
+        return getOrderChanges(order, this.config.preparationCategories);
     }
     // Now the printer should work in PoS without restaurant
     async sendOrderInPreparation(order, opts = {}) {
@@ -1524,7 +1524,6 @@ export class PosStore extends WithLazyGetterTrap {
                 let reprint = false;
                 let orderChange = changesToOrder(
                     order,
-                    false,
                     this.config.preparationCategories,
                     opts.cancelled
                 );

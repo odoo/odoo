@@ -19,7 +19,6 @@ export class PosOrderline extends Base {
             return;
         }
         this.uuid = vals.uuid ? vals.uuid : uuidv4();
-        this.skip_change = vals.skip_change || false;
         this.setFullProductName();
 
         // Data that are not saved in the backend
@@ -323,7 +322,6 @@ export class PosOrderline extends Base {
 
         // only orderlines of the same product can be merged
         return (
-            !this.skip_change &&
             orderline.getNote() === this.getNote() &&
             this.getProduct().id === orderline.getProduct().id &&
             this.isPosGroupable() &&

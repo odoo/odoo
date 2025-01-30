@@ -82,6 +82,13 @@ export function selectedFloorIs(name) {
     ];
 }
 export function orderCountSyncedInTableIs(table, count) {
+    if (count === 0 || count === "0") {
+        return [
+            {
+                trigger: `.floor-map .table:has(.label:contains("${table}")):not(:has(.order-count))`,
+            },
+        ];
+    }
     return [
         {
             trigger: `.floor-map .table:has(.label:contains("${table}")):has(.order-count:contains("${count}"))`,

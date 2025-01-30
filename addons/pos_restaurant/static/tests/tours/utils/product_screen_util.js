@@ -21,12 +21,6 @@ export function orderlineIsToOrder(name) {
         withClass: ".orderline.has-change",
     });
 }
-export function orderlineIsToSkip(name) {
-    return Order.hasLine({
-        withClass: ".orderline.skip-change",
-        productName: name,
-    });
-}
 export function guestNumberIs(num) {
     return [
         ...ProductScreen.clickControlButtonMore(),

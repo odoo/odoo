@@ -277,27 +277,25 @@ export class PosOrder extends Base {
     updateLastOrderChange() {
         const orderlineIdx = [];
         this.lines.forEach((line) => {
-            if (!line.skip_change) {
-                orderlineIdx.push(line.preparationKey);
+            orderlineIdx.push(line.preparationKey);
 
-                if (this.last_order_preparation_change.lines[line.preparationKey]) {
-                    this.last_order_preparation_change.lines[line.preparationKey]["quantity"] =
-                        line.getQuantity();
-                } else {
-                    this.last_order_preparation_change.lines[line.preparationKey] = {
-                        attribute_value_names: line.attribute_value_ids.map((a) => a.name),
-                        uuid: line.uuid,
-                        isCombo: line.combo_item_id?.id,
-                        product_id: line.getProduct().id,
-                        name: line.getFullProductName(),
-                        basic_name: line.getProduct().name,
-                        display_name: line.getProduct().display_name,
-                        note: line.getNote(),
-                        quantity: line.getQuantity(),
-                    };
-                }
-                line.setHasChange(false);
+            if (this.last_order_preparation_change.lines[line.preparationKey]) {
+                this.last_order_preparation_change.lines[line.preparationKey]["quantity"] =
+                    line.getQuantity();
+            } else {
+                this.last_order_preparation_change.lines[line.preparationKey] = {
+                    attribute_value_names: line.attribute_value_ids.map((a) => a.name),
+                    uuid: line.uuid,
+                    isCombo: line.combo_item_id?.id,
+                    product_id: line.getProduct().id,
+                    name: line.getFullProductName(),
+                    basic_name: line.getProduct().name,
+                    display_name: line.getProduct().display_name,
+                    note: line.getNote(),
+                    quantity: line.getQuantity(),
+                };
             }
+            line.setHasChange(false);
         });
         // Checks whether an orderline has been deleted from the order since it
         // was last sent to the preparation tools or updated. If so we delete older changes.
@@ -312,14 +310,6 @@ export class PosOrder extends Base {
         this.last_order_preparation_change.general_customer_note = this.general_customer_note;
         this.last_order_preparation_change.internal_note = this.internal_note;
         this.last_order_preparation_change.sittingMode = this.preset_id?.id || 0;
-    }
-
-    hasSkippedChanges() {
-        return Boolean(
-            this.lines.find(
-                (orderline) => orderline.skip_change && !orderline.uiState.hideSkipChangeClass
-            )
-        );
     }
 
     isEmpty() {
