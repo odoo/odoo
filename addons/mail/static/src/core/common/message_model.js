@@ -5,12 +5,14 @@ import {
     htmlToTextContentInline,
     prettifyMessageContent,
 } from "@mail/utils/common/format";
-import { rpc } from "@web/core/network/rpc";
+import { createDocumentFragmentFromContent } from "@mail/utils/common/html";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { pyToJsLocale } from "@web/core/l10n/utils";
+import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
+import { setElementContent } from "@web/core/utils/html";
 import { omit } from "@web/core/utils/objects";
 import { url } from "@web/core/utils/urls";
 
@@ -32,8 +34,7 @@ export class Message extends Record {
     update(data) {
         super.update(data);
         if (this.isNotification && !this.notificationType) {
-            const parser = new DOMParser();
-            const htmlBody = parser.parseFromString(this.body, "text/html");
+            const htmlBody = createDocumentFragmentFromContent(this.body);
             this.notificationType = htmlBody.querySelector(".o_mail_notification")?.dataset.oeType;
         }
     }
@@ -95,7 +96,7 @@ export class Message extends Record {
                 return false;
             }
             const div = document.createElement("div");
-            div.innerHTML = this.body;
+            setElementContent(div, this.body);
             return Boolean(div.querySelector("a:not([data-oe-model])"));
         },
     });
@@ -134,7 +135,7 @@ export class Message extends Record {
     onlyEmojis = Record.attr(false, {
         compute() {
             const div = document.createElement("div");
-            div.innerHTML = this.body;
+            setElementContent(div, this.body);
             const bodyWithoutTags = div.textContent;
             const withoutEmojis = bodyWithoutTags.replace(EMOJI_REGEX, "");
             return bodyWithoutTags.length > 0 && withoutEmojis.trim().length === 0;
