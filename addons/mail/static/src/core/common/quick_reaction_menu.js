@@ -1,4 +1,4 @@
-import { Component, onMounted, onPatched, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onPatched, useExternalListener, useRef, useState } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { loadEmoji, loader, useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
@@ -47,13 +47,24 @@ export class QuickReactionMenu extends Component {
             }
         });
         onPatched(() => void this.state.emojiLoaded);
+        useExternalListener(window, "keydown", async (ev) => {
+            if (
+                !this.dropdown.isOpen ||
+                this.picker.isOpen ||
+                !this.toggle.el?.contains(ev.target) ||
+                ["Shift", "Control", "Meta", "Alt"].includes(ev.key)
+            ) {
+                return;
+            }
+            this.togglePicker(ev.key);
+        });
     }
 
-    togglePicker() {
+    togglePicker(initialSearchTerm) {
         if (this.picker.isOpen) {
             this.picker.close();
         } else {
-            this.picker.open(this.toggle);
+            this.picker.open(this.toggle, { initialSearchTerm });
         }
     }
 
