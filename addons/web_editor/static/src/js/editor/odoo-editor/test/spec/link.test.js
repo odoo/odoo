@@ -701,6 +701,12 @@ describe('Link', () => {
                 contentBeforeEdit: '<p>a<a href="#/" class="nav-link">[]b</a>c</p>',
             });
         });
+        it('should not zwnbsp-pad link if parent is `contenteditable=false`', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<div contenteditable="false">a<a href="#/">[]b</a>c</div>`,
+                contentBeforeEdit: `<div contenteditable="false" data-oe-keep-contenteditable="">a<a href="#/">[]b</a>c</div>`,
+            });
+        });
         it('should not zwnbsp-pad in nav', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<nav>a<a href="#/">[]b</a>c</nav>',
