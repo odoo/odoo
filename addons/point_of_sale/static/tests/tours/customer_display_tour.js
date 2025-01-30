@@ -13,6 +13,23 @@ function amountIs(method, amount) {
         trigger: `div.row:has(div:contains('${method}')):has(div:contains('${amount}'))`,
     };
 }
+function addRandomProducts(count) {
+    return JSON.stringify({
+        lines: Array.from({ length: count }, (_, i) => ({
+            productName: `Product ${i + 1}`,
+            price: "$ 0.00",
+            qty: "1.00",
+            unit: "Units",
+            unitPrice: "$ 0.00",
+            isSelected: i === count - 1,
+        })),
+        finalized: false,
+        amount: "0.00",
+        paymentLines: [],
+        change: 0,
+        onlinePaymentData: {},
+    });
+}
 const ADD_PRODUCT =
     '{"lines":[{"productName":"Letter Tray","price":"$ 2,972.75","qty":"1.00","unit":"Units","unitPrice":"$ 2,972.75","oldUnitPrice":"","customerNote":"","internalNote":"","comboParent":"","packLotLines":[],"price_without_discount":"$ 2,972.75","isSelected":true,"imageSrc":"/web/image/product.product/855/image_128"}],"finalized":false,"amount":"2,972.75","paymentLines":[],"change":0,"onlinePaymentData":{}}';
 const PAY_WITH_CASH =
@@ -47,5 +64,17 @@ registry.category("web_tour.tours").add("CustomerDisplayTour", {
             },
             Order.doesNotHaveLine({}),
             amountIs("Total", "0.00"),
+            ...Array.from({ length: 2 }).map(() => ({
+                trigger: "body",
+                run: () => postMessage(addRandomProducts(20), "add products").run(),
+            })),
+            {
+                trigger: ".order-container",
+                run: function () {
+                    if (this.anchor.scrollTop === 0) {
+                        throw new Error("The container should auto scroll");
+                    }
+                },
+            },
         ].flat(),
 });
