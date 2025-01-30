@@ -40,24 +40,11 @@ test("push notifications are Odoo toaster on Android", async () => {
             Command.create({ guest_id: guestId }),
         ],
     });
-    onRpc("/mail/data", async (request) => {
-        const { params } = await request.json();
-        if (params.fetch_params.includes("init_messaging")) {
-            asyncStep(`/mail/data - ${JSON.stringify(params)}`);
-        }
+    onRpc("/web/dataset/call_kw/ir.http/lazy_session_info", () => {
+        asyncStep("lazy_session_info");
     });
     await start();
-    await waitForSteps([
-        `/mail/data - ${JSON.stringify({
-            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
-            context: {
-                lang: "en",
-                tz: "taht",
-                uid: serverState.userId,
-                allowed_company_ids: [1],
-            },
-        })}`,
-    ]);
+    await waitForSteps([`lazy_session_info`]);
     // send after init_messaging because bus subscription is done after init_messaging
     await withGuest(guestId, () =>
         rpc("/mail/message/post", {

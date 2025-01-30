@@ -1,9 +1,11 @@
 from odoo import Command
+from odoo.http import request
 from odoo.addons.mail.controllers.webclient import WebclientController
 from odoo.addons.mail.tools.discuss import Store
 
 
 class WebClient(WebclientController):
+    @classmethod
     def _process_request_for_all(self, store: Store, name, params):
         if name == "init_livechat" and (
             chat_request_channel := self._link_visitor_to_livechat(params)
@@ -12,18 +14,19 @@ class WebClient(WebclientController):
             chat_request_channel.is_pending_chat_request = False
         super()._process_request_for_all(store, name, params)
 
+    @classmethod
     def _link_visitor_to_livechat(self, livechat_channel_id):
         """ Check if there is an opened chat request for the website livechat
         channel and the current visitor (from request). If so, link the visitor
         to the chat request channel. Channel will then be returned as part of
         the mail store initialization (/mail/data).
         """
-        visitor = self.env['website.visitor']._get_visitor_from_request()
+        visitor = request.env['website.visitor']._get_visitor_from_request()
         if not visitor:
             return
         # get active chat_request linked to visitor
         chat_request_channel = (
-            self.env["discuss.channel"]
+            request.env["discuss.channel"]
             .sudo()
             .search(
                 [
@@ -40,7 +43,7 @@ class WebClient(WebclientController):
         )
         if not chat_request_channel or visitor.partner_id:
             return
-        current_guest = self.env["mail.guest"]._get_guest_from_context()
+        current_guest = request.env["mail.guest"]._get_guest_from_context()
         channel_guest_member = chat_request_channel.channel_member_ids.filtered(lambda m: m.guest_id)
         if current_guest and current_guest != channel_guest_member.guest_id:
             # Channel was created with a guest but the visitor was

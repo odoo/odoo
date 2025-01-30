@@ -165,10 +165,8 @@ test("should display invitations", async () => {
         channel_member_id: memberId,
         channel_id: channelId,
     });
-    onRpcBefore("/mail/data", (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep(`/mail/data - ${JSON.stringify(args)}`);
-        }
+    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", () => {
+        asyncStep(`init_messaging`);
     });
     mockService("mail.sound_effects", {
         play(name) {
@@ -179,12 +177,7 @@ test("should display invitations", async () => {
         },
     });
     await start();
-    await waitForSteps([
-        `/mail/data - ${JSON.stringify({
-            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
-            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
-        })}`,
-    ]);
+    await waitForSteps([`init_messaging`]);
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     // send after init_messaging because bus subscription is done after init_messaging
     pyEnv["bus.bus"]._sendone(

@@ -81,7 +81,7 @@ test("Only necessary requests are made when creating a new chat", async () => {
     const livechatChannelId = await loadDefaultEmbedConfig();
     const operatorPartnerId = serverState.partnerId;
     onRpcBefore((route, args) => {
-        if (!route.includes("assets")) {
+        if (!route.includes("assets") && !route.includes("lazy_session_info")) {
             asyncStep(`${route} - ${JSON.stringify(args)}`);
         }
     });
@@ -89,12 +89,7 @@ test("Only necessary requests are made when creating a new chat", async () => {
     await contains(".o-livechat-LivechatButton");
     await waitForSteps([
         `/mail/action - ${JSON.stringify({
-            fetch_params: [
-                "failures", // called because mail/core/web is loaded in test bundle
-                "systray_get_activities", // called because mail/core/web is loaded in test bundle
-                "init_messaging",
-                ["init_livechat", livechatChannelId],
-            ],
+            fetch_params: [["init_livechat", livechatChannelId]],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
@@ -135,19 +130,6 @@ test("Only necessary requests are made when creating a new chat", async () => {
                 uid: serverState.userId,
                 allowed_company_ids: [1],
                 temporary_id: 0.8200000000000001,
-            },
-        })}`,
-        `/mail/data - ${JSON.stringify({
-            fetch_params: [
-                "failures", // called because mail/core/web is loaded in test bundle
-                "systray_get_activities", // called because mail/core/web is loaded in test bundle
-                "init_messaging",
-            ],
-            context: {
-                lang: "en",
-                tz: "taht",
-                uid: serverState.userId,
-                allowed_company_ids: [1],
             },
         })}`,
     ]);
