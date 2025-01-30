@@ -282,6 +282,8 @@ class SaleOrderLine(models.Model):
         compute='_compute_amount_to_invoice',
         compute_sudo=True,  # ensure same access as `untaxed_amount_to_invoice`
     )
+    # Technical field holding custom data for the taxes computation engine.
+    extra_tax_data = fields.Json()
 
     # Technical computed fields for UX purposes (hide/make fields readonly, ...)
     product_type = fields.Selection(related='product_id.type', depends=['product_id'])
@@ -524,9 +526,11 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id', 'product_uom_id', 'product_uom_qty')
     def _compute_price_unit(self):
         for line in self:
-            # Don't compute the price for deleted lines.
-            if not line.order_id:
+            # Don't compute the price for deleted lines or lines for which the
+            # price unit doesn't come from the product.
+            if not line.order_id or line.is_downpayment or line._is_global_discount():
                 continue
+
             # check if the price has been manually set or there is already invoiced amount.
             # if so, the price shouldn't change as it might have been manually edited.
             if (
@@ -735,17 +739,23 @@ class SaleOrderLine(models.Model):
         :return: A python dictionary.
         """
         self.ensure_one()
-        return self.env['account.tax']._prepare_base_line_for_taxes_computation(
-            self,
-            **{
-                'tax_ids': self.tax_ids,
-                'quantity': self.product_uom_qty,
-                'partner_id': self.order_id.partner_id,
-                'currency_id': self.order_id.currency_id or self.order_id.company_id.currency_id,
-                'rate': self.order_id.currency_rate,
-                **kwargs,
-            },
-        )
+        base_values = {
+            'tax_ids': self.tax_ids,
+            'quantity': self.product_uom_qty,
+            'partner_id': self.order_id.partner_id,
+            'currency_id': self.order_id.currency_id or self.order_id.company_id.currency_id,
+            'rate': self.order_id.currency_rate,
+        }
+        if self._is_global_discount():
+            base_values['special_type'] = 'global_discount'
+        elif self.is_downpayment:
+            base_values['special_type'] = 'down_payment'
+        base_values.update(kwargs)
+        return self.env['account.tax']._prepare_base_line_for_taxes_computation(self, **base_values)
+
+    def _is_global_discount(self):
+        self.ensure_one()
+        return self.extra_tax_data and self.extra_tax_data.get('computation_key', '').startswith('global_discount,')
 
     @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_ids')
     def _compute_amount(self):
@@ -1314,6 +1324,7 @@ class SaleOrderLine(models.Model):
             'tax_ids': [Command.set(self.tax_ids.ids)],
             'sale_line_ids': [Command.link(self.id)],
             'is_downpayment': self.is_downpayment,
+            'extra_tax_data': self.extra_tax_data,
         }
         self._set_analytic_distribution(res, **optional_values)
         downpayment_lines = self.invoice_lines.filtered('is_downpayment')

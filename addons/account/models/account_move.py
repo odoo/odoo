@@ -5430,13 +5430,15 @@ class AccountMove(models.Model):
                 'fiscal_position_id': move.fiscal_position_id.id,
             })
             if move.amount_total < 0:
-                move.write({
-                    'line_ids': [
-                        Command.update(line.id, {'quantity': -line.quantity})
-                        for line in move.line_ids
-                        if line.display_type == 'product'
-                    ]
-                })
+                line_ids_commands = []
+                for line in move.line_ids:
+                    if line.display_type != 'product':
+                        continue
+                    line_ids_commands.append(Command.update(line.id, {
+                        'quantity': -line.quantity,
+                        'extra_tax_data': self.env['account.tax']._reverse_quantity_base_line_extra_tax_data(line.extra_tax_data),
+                    }))
+                move.write({'line_ids': line_ids_commands})
 
     def action_register_payment(self):
         if any(m.state != 'posted' for m in self):

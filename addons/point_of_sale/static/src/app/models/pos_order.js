@@ -344,49 +344,6 @@ export class PosOrder extends Base {
         return null;
     }
 
-    getOrderlinesGroupedByTaxIds() {
-        const orderlines_by_tax_group = {};
-        const lines = this.getOrderlines();
-        for (const line of lines) {
-            const tax_group = this._getTaxGroupKey(line);
-            if (!(tax_group in orderlines_by_tax_group)) {
-                orderlines_by_tax_group[tax_group] = [];
-            }
-            orderlines_by_tax_group[tax_group].push(line);
-        }
-        return orderlines_by_tax_group;
-    }
-
-    _getTaxGroupKey(line) {
-        return line
-            ._getProductTaxesAfterFiscalPosition()
-            .map((tax) => tax.id)
-            .join(",");
-    }
-
-    /**
-     * Calculate the amount that will be used as a base in order to apply a downpayment or discount product in PoS.
-     * In our calculation we take into account taxes that are included in the price.
-     *
-     * @param  {String} tax_ids a string of the tax ids that are applied on the orderlines, in csv format
-     * e.g. if taxes with ids 2, 5 and 6 are applied tax_ids will be "2,5,6"
-     * @param  {Orderline[]} lines an srray of Orderlines
-     * @return {Number} the base amount on which we will apply a percentile reduction
-     */
-    calculateBaseAmount(lines) {
-        const base_amount = lines.reduce(
-            (sum, line) =>
-                sum +
-                line.getAllPrices().priceWithTax -
-                line
-                    .getAllPrices()
-                    .taxesData.filter((taxData) => !taxData.tax.price_include)
-                    .reduce((sum, taxData) => (sum += taxData.tax_amount_currency), 0),
-            0
-        );
-        return base_amount;
-    }
-
     getLastOrderline() {
         const orderlines = this.lines;
         return this.lines.at(orderlines.length - 1);

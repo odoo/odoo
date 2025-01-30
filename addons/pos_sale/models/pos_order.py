@@ -50,57 +50,40 @@ class PosOrder(models.Model):
         if len(orders) == 0:
             return data
 
-        order_ids = self.browse([o['id'] for o in data["pos.order"]])
-        for order in order_ids:
-            used_pos_lines = order.lines.sale_order_origin_id.order_line.pos_order_line_ids.ids
-            lines = order.lines.filtered(
-                lambda l: (
-                    l.id not in used_pos_lines
-                    and l.product_id == order.config_id.down_payment_product_id
-                    and l.qty != 0
-                    and (
-                        l.sale_order_origin_id
-                        or l.refunded_orderline_id.sale_order_origin_id
-                    )
-                )
-            )
-            for line in lines:
-                sale_lines = line.sale_order_origin_id.order_line or line.refunded_orderline_id.sale_order_origin_id.order_line
-                sale_order_origin = line.sale_order_origin_id or line.refunded_orderline_id.sale_order_origin_id
-                if not any(line.display_type and line.is_downpayment for line in sale_lines):
-                    self.env['sale.order.line'].create(
-                        self.env['sale.advance.payment.inv']._prepare_down_payment_section_values(sale_order_origin)
-                    )
-                order_reference = line.name
+        AccountTax = self.env['account.tax']
+        pos_orders = self.browse([o['id'] for o in data["pos.order"]])
+        for pos_order in pos_orders:
+            # TODO: the way to retrieve the sale order in not consistent... is it a bad code or intended?
+            used_pos_lines = pos_order.lines.sale_order_origin_id.order_line.pos_order_line_ids
+            downpayment_pos_order_lines = pos_order.lines.filtered(lambda line: (
+                line not in used_pos_lines
+                and line.product_id == pos_order.config_id.down_payment_product_id
+            ))
+            so_x_pos_order_lines = downpayment_pos_order_lines\
+                .grouped(lambda l: l.sale_order_origin_id or l.refunded_orderline_id.sale_order_origin_id)
+            sale_orders = self.env['sale.order']
+            for sale_order, pos_order_lines in so_x_pos_order_lines.items():
+                if not sale_order:
+                    continue
 
-                if order.partner_id.lang and order.partner_id.lang != line.env.lang:
-                    line = line.with_context(lang=order.partner_id.lang)
+                sale_orders += sale_order
+                down_payment_base_lines = pos_order_lines._prepare_tax_base_line_values()
+                AccountTax._add_tax_details_in_base_lines(down_payment_base_lines, sale_order.company_id)
+                AccountTax._round_base_lines_tax_details(down_payment_base_lines, sale_order.company_id)
 
-                sale_order_line_description = _("Down payment (ref: %(order_reference)s on \n %(date)s)", order_reference=order_reference, date=format_date(line.env, line.order_id.date_order))
-                sale_line = self.env['sale.order.line'].create({
-                    'order_id': sale_order_origin.id,
-                    'product_id': line.product_id.id,
-                    'price_unit': line.price_unit,
-                    'product_uom_qty': 0,
-                    'tax_ids': [(6, 0, line.tax_ids.ids)],
-                    'is_downpayment': True,
-                    'discount': line.discount,
-                    'sequence': sale_lines and sale_lines[-1].sequence + 2 or 10,
-                    'name': sale_order_line_description
-                })
-                line.sale_order_line_id = sale_line
+                sale_order_sudo = sale_order.sudo()
+                sale_order_sudo._create_down_payment_section_line_if_needed()
+                sale_order_sudo._create_down_payment_lines_from_base_lines(down_payment_base_lines)
 
-            so_lines = order.lines.mapped('sale_order_line_id')
-
-            if order.state != 'draft':
-                # confirm the unconfirmed sale orders that are linked to the sale order lines
-                sale_orders = so_lines.mapped('order_id')
+            # Confirm the unconfirmed sale orders that are linked to the sale order lines.
+            if pos_order.state != 'draft':
                 for sale_order in sale_orders.filtered(lambda so: so.state in ['draft', 'sent']):
                     sale_order.action_confirm()
 
             # update the demand qty in the stock moves related to the sale order line
             # flush the qty_delivered to make sure the updated qty_delivered is used when
             # updating the demand value
+            so_lines = pos_order.lines.mapped('sale_order_line_id')
             so_lines.flush_recordset(['qty_delivered'])
             # track the waiting pickings
             waiting_picking_ids = set()
