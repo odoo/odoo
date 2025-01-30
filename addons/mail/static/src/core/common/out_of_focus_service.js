@@ -1,4 +1,4 @@
-import { htmlToTextContentInline } from "@mail/utils/common/format";
+import { formatTrackingOrNone, htmlToTextContentInline } from "@mail/utils/common/format";
 
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
@@ -51,10 +51,9 @@ export class OutOfFocusService {
                 notificationTitle = author.name;
             }
         }
-        const notificationContent = htmlToTextContentInline(message.body).substring(
-            0,
-            PREVIEW_MSG_MAX_SIZE
-        );
+        const notificationContent = (
+            htmlToTextContentInline(message.body) + this.generateTrackingMessage(message)
+        ).substring(0, PREVIEW_MSG_MAX_SIZE);
         this.sendNotification({
             message: notificationContent,
             sound: message.thread?.model === "discuss.channel",
@@ -167,6 +166,30 @@ export class OutOfFocusService {
 
     get canSendNativeNotification() {
         return Boolean(browser.Notification && browser.Notification.permission === "granted");
+    }
+
+    /**
+     * @returns {string}
+     */
+    generateTrackingMessage(message) {
+        const returnLine = "\n";
+        if (!message.trackingValues.length) {
+            return "";
+        }
+        let trackingMessage = "";
+        if (message.subtype_description) {
+            trackingMessage = returnLine + message.subtype_description + returnLine;
+        }
+        for (const trackingValue of message.trackingValues) {
+            const oldValue = formatTrackingOrNone(trackingValue.fieldType, trackingValue.oldValue);
+            const newValue = formatTrackingOrNone(trackingValue.fieldType, trackingValue.newValue);
+            trackingMessage += `${trackingValue.changedField}: ${oldValue}`;
+            if (oldValue !== newValue) {
+                trackingMessage += ` → ${newValue}`;
+            }
+            trackingMessage += returnLine;
+        }
+        return trackingMessage;
     }
 }
 
