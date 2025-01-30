@@ -2041,6 +2041,8 @@ class Application:
             del current_thread.dbname
         if hasattr(current_thread, 'uid'):
             del current_thread.uid
+        if hasattr(current_thread, 'rpc_path'):
+            del current_thread.rpc_path
 
         if odoo.tools.config['proxy_mode'] and environ.get("HTTP_X_FORWARDED_HOST"):
             # The ProxyFix middleware has a side effect of updating the

@@ -24,17 +24,19 @@ MAX_TRIES_ON_CONCURRENCY_FAILURE = 5
 
 
 def dispatch(method, params):
-    db, uid, passwd = params[0], int(params[1]), params[2]
+    db, uid, passwd, model, model_method, *args = params
+    uid = int(uid)
     security.check(db, uid, passwd)
 
     threading.current_thread().dbname = db
     threading.current_thread().uid = uid
+    threading.current_thread().rpc_path = f'/{model}/{model_method}'
     registry = odoo.registry(db).check_signaling()
     with registry.manage_changes():
         if method == 'execute':
-            res = execute(db, uid, *params[3:])
+            res = execute(db, uid, model, model_method, *args)
         elif method == 'execute_kw':
-            res = execute_kw(db, uid, *params[3:])
+            res = execute_kw(db, uid, model, model_method, *args)
         else:
             raise NameError("Method not available %s" % method)
     return res

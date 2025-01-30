@@ -159,6 +159,14 @@ class RequestHandler(werkzeug.serving.WSGIRequestHandler):
             self.rfile = BytesIO()
             self.wfile = BytesIO()
 
+    @property
+    def path(self):
+        return self._opath + getattr(threading.current_thread(), 'rpc_path', '')
+
+    @path.setter
+    def path(self, path):
+        self._opath = path
+
 class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.ThreadedWSGIServer):
     """ werkzeug Threaded WSGI Server patched to allow reusing a listen socket
     given by the environment, this is used by autoreload to keep the listen
