@@ -19,7 +19,7 @@ from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.modules.registry import Registry
 
 _logger = logging.getLogger(__name__)
-_UNFOLLOW_REGEX = re.compile(r'<span\s.*(t-if="\w.*")?\s.*id="mail_unfollow".*?<\/span>', re.DOTALL)
+_UNFOLLOW_REGEX = re.compile(r'<span\s*(t-if="show_unfollow")?\s*id="mail_unfollow".*?<\/span>', re.DOTALL)
 
 
 class MailMail(models.Model):
