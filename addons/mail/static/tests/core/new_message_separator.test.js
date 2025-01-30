@@ -262,8 +262,8 @@ test("show new message separator when message is received while chat window is c
             fetch_params: [
                 "failures",
                 "systray_get_activities",
-                ["discuss.channel", [channelId]],
                 "init_messaging",
+                ["discuss.channel", [channelId]],
             ],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,

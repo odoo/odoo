@@ -28,7 +28,7 @@ const threadPatch = {
         return super.computeIsDisplayed();
     },
     async leave() {
-        this.closeChatWindow();
+        await this.closeChatWindow();
         super.leave(...arguments);
     },
     async loadMoreFollowers() {
@@ -71,6 +71,7 @@ const threadPatch = {
         super.open(...arguments);
     },
     async unpin() {
+        await this.store.chatHub.initPromise;
         const chatWindow = this.store.ChatWindow.get({ thread: this });
         await chatWindow?.close();
         super.unpin(...arguments);
