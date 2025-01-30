@@ -8,11 +8,11 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryFirst } from "@odoo/hoot-dom";
-import { defineResourceModels } from "@resource/../tests/resource_test_helpers";
+import { defineResourceMailModels } from "./resource_mail_test_helpers";
 
 describe.current.tags("desktop");
 const data = {};
-defineResourceModels();
+defineResourceMailModels();
 beforeEach(async () => {
     /* 1. Create data
         3 type of records tested:
