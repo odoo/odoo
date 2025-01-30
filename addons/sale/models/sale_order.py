@@ -466,11 +466,11 @@ class SaleOrder(models.Model):
                     or (self.env.user.has_group('sales_team.group_sale_salesman') and self.env.user)
                 )
 
-    @api.depends('partner_id', 'user_id')
+    @api.depends('user_id')
     def _compute_team_id(self):
         cached_teams = {}
         for order in self:
-            default_team_id = self.env.context.get('default_team_id', False) or order.team_id.id
+            default_team_id = order._default_team_id()
             user_id = order.user_id.id
             company_id = order.company_id.id
             key = (default_team_id, user_id, company_id)
@@ -482,6 +482,9 @@ class SaleOrder(models.Model):
                     domain=self.env['crm.team']._check_company_domain(company_id),
                 )
             order.team_id = cached_teams[key]
+
+    def _default_team_id(self):
+        return self.env.context.get('default_team_id', False) or self.team_id.id
 
     @api.depends('order_line.price_subtotal', 'currency_id', 'company_id')
     def _compute_amounts(self):
