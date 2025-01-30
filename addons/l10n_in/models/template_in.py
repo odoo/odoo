@@ -98,11 +98,12 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_l10n_in_fiscal_tax_vals(self, use_zero_rated_igst=False, trailing_id=False):
         return [Command.clear()] + [
             Command.create({
-                'tax_src_id': f"sgst_{tax_type}_{rate}",
-                'tax_dest_id': f"igst_{tax_type}_{0 if use_zero_rated_igst and tax_type == 'purchase' else rate}{(tax_type == 'sale' and trailing_id) or ''}",
+                'tax_src_id': f"sgst_{tax_type}_{tax_scope + '_' if tax_scope else tax_scope}{rate}",
+                'tax_dest_id': f"igst_{tax_type}_{tax_scope + '_' if tax_scope else tax_scope}{0 if use_zero_rated_igst and tax_type == 'purchase' and not tax_scope == 'consu_cg' else rate}{(tax_type == 'sale' and trailing_id) or ''}",
             })
             for tax_type in ["sale", "purchase"]
             for rate in [1, 2, 5, 12, 18, 28]  # Available existing GST Rates
+            for tax_scope in ([""] if tax_type == 'sale' else (["service", "consu_cg", ""] if rate == 18 else ["service", ""]))
         ]
 
     def _get_l10n_in_zero_rated_with_igst_zero_tax_vals(self):
