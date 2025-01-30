@@ -16,15 +16,17 @@ class WebClient(WebclientController):
             },
         )
 
+    @classmethod
     def _process_request_for_internal_user(self, store: Store, name, params):
         super()._process_request_for_internal_user(store, name, params)
         if name == "im_livechat.channel":
             store.add(request.env["im_livechat.channel"].search([]), ["are_you_inside", "name"])
 
+    @classmethod
     def _process_request_for_all(self, store: Store, name, params):
         super()._process_request_for_all(store, name, params)
         if name == "init_livechat":
-            partner, guest = self.env["res.partner"]._get_current_persona()
+            partner, guest = request.env["res.partner"]._get_current_persona()
             if partner or guest:
                 store.add_global_values(store_self=Store.One(partner or guest))
             # sudo - im_livechat.channel: allow access to live chat channel to

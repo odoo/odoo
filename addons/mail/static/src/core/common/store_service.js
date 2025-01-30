@@ -259,6 +259,10 @@ export class Store extends BaseStore {
             },
             (error) => fetchDeferred.reject(error)
         );
+        this.resetFetchState();
+    }
+
+    resetFetchState() {
         this.fetchDeferred = new Deferred();
         this.fetchParams = [];
         this.fetchReadonly = true;

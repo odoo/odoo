@@ -1,9 +1,13 @@
 import { Record } from "@mail/core/common/record";
-import { Store } from "@mail/core/common/store_service";
+import { Store, storeService } from "@mail/core/common/store_service";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 
 import { patch } from "@web/core/utils/patch";
+
+patch(storeService, {
+    dependencies: [...storeService.dependencies, "lazy_session"],
+});
 
 /** @type {import("models").Store} */
 const StorePatch = {
@@ -30,10 +34,23 @@ const StorePatch = {
         this.starred = Record.one("Thread");
         this.history = Record.one("Thread");
     },
-    async initialize() {
-        this.fetchStoreData("failures");
-        this.fetchStoreData("systray_get_activities");
-        await super.initialize(...arguments);
+    /**
+     * Override to initialise using the lazy_session to initialise the webclient part
+     */
+    _fetchStoreDataDebounced() {
+        if (!this.fetchParams.includes("init_messaging")) {
+            return super._fetchStoreDataDebounced();
+        }
+        this.env.services["lazy_session"].getValue("store_data", (storeData) => {
+            const result = this.insert(storeData);
+            // if the "init_messaging" isn't the only param
+            this.fetchParams = this.fetchParams.filter((param) => param !== "init_messaging");
+            if (this.fetchParams.length > 0) {
+                return super._fetchStoreDataDebounced();
+            }
+            this.fetchDeferred.resolve(result);
+            this.resetFetchState();
+        });
     },
     onStarted() {
         super.onStarted(...arguments);
