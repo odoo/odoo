@@ -23,18 +23,8 @@ describe.current.tags("desktop");
 
 test("list activity widget with no activity", async () => {
     const mailDataDoneDef = new Deferred();
-    onRpc("/mail/data", async (request) => {
-        const { params } = await request.json();
-        expect(params).toEqual({
-            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
-            context: {
-                lang: "en",
-                tz: "taht",
-                uid: serverState.userId,
-                allowed_company_ids: user.allowedCompanies.map((c) => c.id),
-            },
-        });
-        asyncStep("/mail/data");
+    onRpc("/web/dataset/call_kw/ir.http/lazy_session_info", () => {
+        asyncStep("lazy_session_info");
         mailDataDoneDef.resolve();
     });
     onRpc("res.users", "web_search_read", async (params) => {
@@ -68,7 +58,7 @@ test("list activity widget with no activity", async () => {
     await openListView("res.users", {
         arch: `<list><field name="activity_ids" widget="list_activity"/></list>`,
     });
-    await waitForSteps(["/mail/data", "web_search_read"]);
+    await waitForSteps(["lazy_session_info", "web_search_read"]);
     await contains(".o-mail-ActivityButton i.text-muted");
     await contains(".o-mail-ListActivity-summary", { text: "" });
 });

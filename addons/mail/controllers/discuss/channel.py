@@ -12,6 +12,7 @@ from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
 class DiscussChannelWebclientController(WebclientController):
     """Override to add discuss channel specific features."""
 
+    @classmethod
     def _process_request_loop(self, store: Store, fetch_params):
         """Override to add discuss channel specific features."""
         # aggregate of channels to return, to batch them in a single query when all the fetch params
@@ -28,6 +29,7 @@ class DiscussChannelWebclientController(WebclientController):
             # prefetch a lot of data that message format could use)
             store.add(channels._get_last_messages(), for_current_user=True)
 
+    @classmethod
     def _process_request_for_all(self, store: Store, name, params):
         """Override to return channel as member and last messages."""
         super()._process_request_for_all(store, name, params)
