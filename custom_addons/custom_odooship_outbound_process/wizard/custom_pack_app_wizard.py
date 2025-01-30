@@ -159,7 +159,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 "sales_order_number": line.picking_id.sale_id.name if line.picking_id.sale_id else "N/A",
                 "sales_order_carrier": line.picking_id.sale_id.carrier if line.picking_id.sale_id else "N/A",
                 "sales_order_origin": line.picking_id.sale_id.origin if line.picking_id.sale_id else "N/A",
-                "intercom_location":line.picking_id.sale_id.intercom_location if line.picking_id.sale_id else "N/A",
+                "incoterm_location":line.picking_id.sale_id.incoterm_location if line.picking_id.sale_id else "N/A",
             })
 
         # Prepare full payload
