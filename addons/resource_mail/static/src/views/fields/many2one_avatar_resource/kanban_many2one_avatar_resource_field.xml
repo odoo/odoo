@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
 
-    <t t-name="resource_mail.Many2OneAvatarResourceField">
-        <Many2One t-props="m2oProps">
-            <t t-set-slot="start">
-                <t t-if="m2o.value !== false">
-                    <t t-if="resourceType === 'material'">
-                        <span class="o_avatar o_m2o_avatar">
-                            <span class="d-inline-flex align-items-center justify-content-center rounded o_material_resource cursor-default me-1" t-att-title="m2o.displayName">
-                                <i class="fa fa-wrench"/>
-                            </span>
+    <t t-name="resource_mail.KanbanMany2OneAvatarResourceField">
+        <KanbanMany2One t-props="m2oProps">
+            <t t-set-slot="avatar">
+                <t t-if="resourceType === 'material'">
+                    <span class="o_avatar o_m2o_avatar">
+                        <span class="d-inline-flex align-items-center justify-content-center rounded o_material_resource cursor-default me-1" t-att-title="m2o.displayName">
+                            <i class="fa fa-wrench"/>
                         </span>
-                    </t>
-                    <t t-elif="resourceType === 'user'">
-                        <AvatarResource resModel="m2o.relation" resId="m2o.resId"/>
-                    </t>
+                    </span>
+                </t>
+                <t t-elif="resourceType === 'user'">
+                    <AvatarResource resModel="m2o.relation" resId="m2o.resId"/>
                 </t>
             </t>
             <t t-set-slot="items" t-slot-scope="itemsScope">
@@ -30,7 +28,7 @@
                     <t t-esc="itemsScope.record.display_name"/>
                 </span>
             </t>
-        </Many2One>
+        </KanbanMany2One>
     </t>
 
 </templates>

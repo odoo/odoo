@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.KanbanMany2OneAssignPopover">
-        <Many2One t-props="many2oneProps">
-        </Many2One>
-    </t>
-
     <t t-name="web.KanbanMany2One">
         <div class="o-kanban-many2one">
-            <t t-if="value">
-                <t t-slot="input-start"/>
+            <t t-if="props.value">
+                <t t-slot="avatar"/>
             </t>
             <t t-elif="!props.readonly">
                 <a class="o_quick_assign btn-link d-flex align-items-center text-dark" href="#" role="button" tabIndex="-1" aria-label="Assign" data-tooltip="Assign" t-on-click.stop.prevent="(e) => this.openAssignPopover(e.currentTarget)">
@@ -49,7 +44,7 @@
                     <AutoComplete t-props="autoCompleteProps">
                         <t t-set-slot="recordItem" t-slot-scope="recordItemScope">
                             <t t-if="props.slots?.items">
-                                <t t-slot="items" record="recordItemScope.recordItem.record"/>
+                                <t t-slot="items" t-props="recordItemScope.recordItem"/>
                             </t>
                             <t t-else="">
                                 <t t-esc="recordItemScope.recordItem.label"/>

@@ -2,12 +2,17 @@
 <templates>
 
     <t t-name="mail.KanbanMany2OneAvatarUserField">
-        <t t-if="controller.value === false">
-            ??
-        </t>
-        <t t-else="">
-            <Avatar resModel="controller.relation" resId="controller.value[0]" noSpacing="true"/>
-        </t>
+        <KanbanMany2One t-props="m2oProps">
+            <t t-set-slot="avatar">
+                <Avatar resModel="m2o.relation" resId="m2o.resId" noSpacing="true" displayName="props.displayAvatarName"/>
+            </t>
+            <t t-set-slot="items" t-slot-scope="itemsScope">
+                <span class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
+                    <img class="rounded me-1" t-attf-src="/web/image/{{m2o.relation}}/{{itemsScope.record.id}}/avatar_128"/>
+                    <t t-esc="itemsScope.record.display_name"/>
+                </span>
+            </t>
+        </KanbanMany2One>
     </t>
 
 </templates>

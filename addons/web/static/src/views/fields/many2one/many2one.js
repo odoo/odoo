@@ -111,7 +111,7 @@ export function useMany2One(getProps) {
 ///////////////////////////////////////////////////////////////////////////////
 
 export class Many2One extends Component {
-    static template = `web.${this.name}`;
+    static template = "web.Many2One";
     static components = { AutoComplete: Many2XAutocomplete };
     static props = {
         canCreate: { type: Boolean, optional: true },
@@ -125,7 +125,6 @@ export class Many2One extends Component {
         createAction: { type: Function, optional: true },
         cssClass: { type: String, optional: true },
         domain: { type: Function, optional: true },
-        dropdown: { type: Boolean, optional: true }, // Not in final API?
         id: { type: String, optional: true },
         linkCssClass: { type: String, optional: true },
         nameCreateField: { type: String, optional: true },
@@ -135,11 +134,7 @@ export class Many2One extends Component {
         placeholder: { type: String, optional: true },
         readonly: { type: Boolean, optional: true },
         relation: { type: String },
-        slots: {
-            type: Object,
-            optional: true,
-            shape: ["start?", "end?", "items?"],
-        },
+        slots: { type: Object, optional: true },
         specification: { type: Object, optional: true },
         string: { type: String, optional: true },
         update: { type: Function },
@@ -155,7 +150,6 @@ export class Many2One extends Component {
         canWrite: true,
         context: {},
         domain: [],
-        dropdown: true,
         linkCssClass: "",
         nameCreateField: "name",
         otherSources: [],
@@ -210,7 +204,6 @@ export class Many2One extends Component {
             autoSelect: true,
             context: this.props.context,
             createAction: this.props.createAction,
-            dropdown: this.props.dropdown,
             otherSources: this.props.otherSources,
             id: this.props.id,
             fieldString: this.props.string,
@@ -360,38 +353,23 @@ export class Many2One extends Component {
     }
 }
 
-class KanbanMany2OneAssignPopover extends Component {
-    static template = `web.${this.name}`;
-    static components = { Many2One };
-    static props = ["*"];
-    static defaultProps = {};
+class KanbanMany2OneAssignPopover extends Many2One {
+    static props = {
+        ...Many2One.props,
+        close: Function,
+    };
 
-    get many2oneProps() {
+    get autoCompleteProps() {
         return {
-            ...this.props,
-            canCreate: false,
-            canCreateEdit: false,
-            canQuickCreate: false,
+            ...super.autoCompleteProps,
             dropdown: false,
-            placeholder: this.placeholder,
-            readonly: false,
         };
-    }
-
-    get placeholder() {
-        return _t("Search user...");
-    }
-
-    get relation() {
-        return this.props.record.fields[this.props.name].relation;
     }
 }
 
 export class KanbanMany2One extends Component {
-    static template = `web.${this.name}`;
-    static components = {};
-    static props = ["*"];
-    static defaultProps = {};
+    static template = "web.KanbanMany2One";
+    static props = { ...Many2One.props };
 
     setup() {
         this.assignPopover = usePopover(KanbanMany2OneAssignPopover, {
@@ -399,11 +377,14 @@ export class KanbanMany2One extends Component {
         });
     }
 
-    get relation() {
-        return this.props.record.fields[this.props.name].relation;
-    }
-
     openAssignPopover(target) {
-        this.assignPopover.open(target, this.props);
+        this.assignPopover.open(target, {
+            ...this.props,
+            canCreate: false,
+            canCreateEdit: false,
+            canQuickCreate: false,
+            placeholder: this.props.placeholder || _t("Search user..."),
+            readonly: false,
+        });
     }
 }

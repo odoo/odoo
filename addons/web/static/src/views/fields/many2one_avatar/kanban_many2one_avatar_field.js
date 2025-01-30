@@ -1,64 +1,38 @@
 import { Component } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { Many2One } from "../many2one/many2one";
-import { usePopover } from "@web/core/popover/popover_hook";
-
-class KanbanMany2OneAvatarFieldAssignPopover extends Component {
-    static template = `web.${this.name}`;
-    static components = { Many2One };
-    static props = ["*"];
-    static defaultProps = {};
-
-    get many2oneProps() {
-        return {
-            ...this.props,
-            canCreate: false,
-            canCreateEdit: false,
-            canQuickCreate: false,
-            dropdown: false,
-            placeholder: this.placeholder,
-            readonly: false,
-        };
-    }
-
-    get placeholder() {
-        return _t("Search user...");
-    }
-
-    get relation() {
-        return this.props.record.fields[this.props.name].relation;
-    }
-}
+import { KanbanMany2One, useMany2One } from "../many2one/many2one";
+import {
+    buildM2OFieldDescription,
+    extractM2OFieldProps,
+    Many2OneField,
+} from "../many2one/many2one_field";
 
 export class KanbanMany2OneAvatarField extends Component {
-    static template = `web.${this.name}`;
-    static components = { Many2One };
-    static props = ["*"];
-    static defaultProps = {};
+    static template = "web.KanbanMany2OneAvatarField";
+    static components = { KanbanMany2One };
+    static props = {
+        ...Many2OneField.props,
+        isEditable: { type: Boolean, optional: true },
+    };
 
     setup() {
-        this.assignPopover = usePopover(KanbanMany2OneAvatarFieldAssignPopover, {
-            popoverClass: "o_m2o_tags_avatar_field_popover",
-        });
+        this.m2o = useMany2One(() => this.props);
     }
 
-    get relation() {
-        return this.props.record.fields[this.props.name].relation;
-    }
-
-    openAssignPopover(target) {
-        this.assignPopover.open(target, this.props);
+    get m2oProps() {
+        return {
+            ...this.m2o.computeProps(),
+            readonly: this.props.isEditable,
+        };
     }
 }
 
 registry.category("fields").add("kanban.many2one_avatar", {
-    component: KanbanMany2OneAvatarField,
-    displayName: _t("Many2One Avatar"),
-    extractProps(_, { readonly }) {
+    ...buildM2OFieldDescription(KanbanMany2OneAvatarField),
+    extractProps(staticInfo, dynamicInfo) {
         return {
-            isEditable: !readonly,
+            ...extractM2OFieldProps(staticInfo, dynamicInfo),
+            isEditable: !dynamicInfo.readonly,
         };
     },
-    supportedTypes: ["many2one"],
 });

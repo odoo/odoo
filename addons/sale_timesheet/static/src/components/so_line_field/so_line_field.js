@@ -1,7 +1,7 @@
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { Many2One, useMany2One } from "@web/views/fields/many2one/many2one";
-import { Many2OneField } from "@web/views/fields/many2one/many2one_field";
+import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
 
 export class SoLineField extends Component {
     static template = "sale_timesheet.SoLineField";
@@ -31,5 +31,5 @@ export class SoLineField extends Component {
 }
 
 registry.category("fields").add("project", {
-    ...Many2One.buildFieldDescription(SoLineField),
+    ...buildM2OFieldDescription(SoLineField),
 });
