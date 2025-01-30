@@ -917,12 +917,25 @@ class ResourceCalendar(models.Model):
             return revert(day_dt)
 
     def _get_max_number_of_hours(self, start, end):
+        # TODO AMAH: in fixed_time handel the twoweeks case
         self.ensure_one()
-        if not self.attendance_ids:
+        if not self.attendance_ids and self.schedule_type != 'fixed_time':
             return 0
         mapped_data = defaultdict(lambda: 0)
-        for attendance in self.attendance_ids.filtered(lambda a: a.day_period != 'lunch' and ((not a.date_from or not a.date_to) or (a.date_from <= end.date() and a.date_to >= start.date()))):
-            mapped_data[(attendance.week_type, attendance.dayofweek)] += attendance.hour_to - attendance.hour_from
+        if self.schedule_type == 'fixed_time':
+            day_ids = rrule(DAILY, start.date(), until=end.date())
+            days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+            for day_id in day_ids:
+                day = days[day_id.weekday()]
+                if self[day]:
+                    mapped_data[False if not self.two_weeks_calendar else 0, day] = self.hours_per_day if not self.fixed_time_with_hours\
+                                                                                                            else self[day + '_hours']
+                if self[day + '_2']:
+                    mapped_data[1, day] = self.hours_per_day if not self.fixed_time_with_hours\
+                                                                else self[day + '_hours_2']
+        else:
+            for attendance in self.attendance_ids.filtered(lambda a: a.day_period != 'lunch' and ((not a.date_from or not a.date_to) or (a.date_from <= end.date() and a.date_to >= start.date()))):
+                mapped_data[(attendance.week_type, attendance.dayofweek)] += attendance.hour_to - attendance.hour_from
         return max(mapped_data.values())
 
     def _works_on_date(self, date):
