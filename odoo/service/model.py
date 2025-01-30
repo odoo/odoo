@@ -15,6 +15,7 @@ from odoo.modules.registry import Registry
 from odoo.tools import lazy
 
 from . import security
+from .server import thread_local
 
 _logger = logging.getLogger(__name__)
 
@@ -40,6 +41,7 @@ def call_kw(model: BaseModel, name: str, args: list, kwargs: Mapping):
     method = getattr(model, name, None)
     if not method:
         raise AttributeError(f"The method '{name}' does not exist on the model '{model._name}'")
+    thread_local.rpc_model_method = f'{model._name}.{name}'
 
     # get the records and context
     api = getattr(method, '_api', None)
@@ -71,7 +73,8 @@ def call_kw(model: BaseModel, name: str, args: list, kwargs: Mapping):
 
 
 def dispatch(method, params):
-    db, uid, passwd = params[0], int(params[1]), params[2]
+    db, uid, passwd, model, method_, *args = params
+    uid = int(uid)
     security.check(db, uid, passwd)
 
     threading.current_thread().dbname = db
@@ -79,9 +82,9 @@ def dispatch(method, params):
     registry = Registry(db).check_signaling()
     try:
         if method == 'execute':
-            res = execute(db, uid, *params[3:])
+            res = execute(db, uid, model, method_, *args)
         elif method == 'execute_kw':
-            res = execute_kw(db, uid, *params[3:])
+            res = execute_kw(db, uid, model, method_, *args)
         else:
             raise NameError(f"Method not available {method}")  # noqa: TRY301
         registry.signal_changes()
