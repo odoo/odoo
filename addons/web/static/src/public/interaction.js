@@ -170,17 +170,26 @@ export class Interaction {
      * code has acted.
      */
     waitFor(promise) {
-        const prom = new Promise((resolve) => {
-            promise.then((result) => {
-                if (!this.isDestroyed) {
-                    resolve(result);
-                    prom.then(() => {
-                        if (this.isReady) {
+        const prom = new Promise((resolve, reject) => {
+            promise
+                .then((result) => {
+                    if (!this.isDestroyed) {
+                        resolve(result);
+                        prom.then(() => {
+                            if (this.isReady) {
+                                this.updateContent();
+                            }
+                        });
+                    }
+                })
+                .catch((e) => {
+                    reject(e);
+                    prom.catch(() => {
+                        if (this.isReady && !this.isDestroyed) {
                             this.updateContent();
                         }
                     });
-                }
-            });
+                });
         });
         return prom;
     }
