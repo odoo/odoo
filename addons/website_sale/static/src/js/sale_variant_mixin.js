@@ -378,7 +378,7 @@ var VariantMixin = {
             $product.trigger('view_item_event', combination['product_tracking_info']);
         }
         const addToCart = $parent.find('#add_to_cart_wrap');
-        const contactUsButton = $parent.find('#contact_us_wrapper');
+        const contactUsButton = $parent.parents('#product_details').find('#contact_us_wrapper');
         const productPrice = $parent.find('.product_price');
         const quantity = $parent.find('.css_quantity');
         const product_unavailable = $parent.find('#product_unavailable');
