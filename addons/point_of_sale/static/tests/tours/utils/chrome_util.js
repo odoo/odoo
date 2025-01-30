@@ -42,7 +42,7 @@ export function isSyncStatusConnected() {
 export function clickPlanButton() {
     return {
         content: "go back to the floor screen",
-        trigger: ".pos-leftheader .back-button:not(:has(.btn-primary))",
+        trigger: ".pos-leftheader .back-button:not(.btn-primary)",
         run: "click",
     };
 }
