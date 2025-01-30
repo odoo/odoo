@@ -152,7 +152,7 @@ class AccountPayment(models.Model):
     def print_checks(self):
         """ Check that the recordset is valid, set the payments state to sent and call print_checks() """
         # Since this method can be called via a client_action_multi, we need to make sure the received records are what we expect
-        valid_payments = self.filtered(lambda r: r.payment_method_line_id.code == 'check_printing' and r.state != 'paid')
+        valid_payments = self.filtered(lambda r: r.payment_method_line_id.code == 'check_printing' and not r.is_sent)
 
         if len(valid_payments) == 0:
             raise UserError(_("Payments to print as a checks must have 'Check' selected as payment method and "
