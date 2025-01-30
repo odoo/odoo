@@ -12,7 +12,6 @@ export class RestaurantTable extends Base {
             initialPosition: {},
             orderCount: 0,
             changeCount: 0,
-            skipCount: 0,
         };
     }
     isParent(t) {

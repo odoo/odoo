@@ -77,8 +77,11 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             inLeftSide(Order.hasLine({ productName: "Coca-Cola", run: "dblclick" })),
             ProductScreen.clickDisplayedProduct("Water", true),
             ProductScreen.orderlineIsToOrder("Water"),
-            ProductScreen.orderlineIsToSkip("Coca-Cola"),
-            checkOrderChanges([{ name: "Water", quantity: 1 }]),
+            ProductScreen.orderlineIsToOrder("Coca-Cola"),
+            checkOrderChanges([
+                { name: "Water", quantity: 1 },
+                { name: "Coca-Cola", quantity: 1 },
+            ]),
             ProductScreen.clickOrderButton(),
             {
                 ...Dialog.confirm(),
@@ -106,7 +109,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ReceiptScreen.clickNextOrder(),
 
             // order on another table with a product variant
-            FloorScreen.orderCountSyncedInTableIs("105", "1"),
+            FloorScreen.orderCountSyncedInTableIs("105", "0"),
             FloorScreen.clickTable("104"),
             ProductScreen.clickDisplayedProduct("Desk Organizer", false),
             {
@@ -132,7 +135,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
 
             // After clicking next order, floor screen is shown.
             // It should have 1 as number of draft synced order.
-            FloorScreen.orderCountSyncedInTableIs("105", "1"),
+            FloorScreen.orderCountSyncedInTableIs("105", "0"),
             FloorScreen.clickTable("105"),
             ProductScreen.totalAmountIs("4.40"),
 
@@ -142,7 +145,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             ProductScreen.clickDisplayedProduct("Minute Maid", true),
             Chrome.clickPlanButton(),
-            FloorScreen.orderCountSyncedInTableIs("105", "1"),
+            FloorScreen.orderCountSyncedInTableIs("105", "0"),
 
             // Delete the first order then go back to floor
             Chrome.clickOrders(),
