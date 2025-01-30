@@ -317,7 +317,8 @@ class Export(http.Controller):
             # Depends of the records selected to avoid showing useless Properties
             if domain:
                 self_subquery = Model.with_context(active_test=False)._search(domain)
-                domain_definition.append(('id', 'in', self_subquery.subselect(definition_record)))
+                field_to_get = Model._field_to_sql(Model._table, definition_record, self_subquery)
+                domain_definition.append(('id', 'in', self_subquery.subselect(field_to_get)))
 
             definition_records = target_model.search_fetch(
                 domain_definition, [definition_record_field, 'display_name'],
