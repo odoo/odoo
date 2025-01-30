@@ -190,6 +190,7 @@
                 <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
                 <group expand="0" string="Group By">
                     <filter string="Manager" name="group_by_manager" domain="[]" context="{'group_by': 'user_id'}"/>
+                    <filter string="Properties" name="group_by_candidate_properties" context="{'group_by': 'candidate_properties'}"/>
                 </group>
             </search>
         </field>
