@@ -824,11 +824,15 @@ export function makeActionManager(env, router = _router) {
             controller.embeddedActions = embeddedActions;
         };
         controller.config.historyBack = () => {
-            const previousController = controllerStack[controllerStack.length - 2];
-            if (previousController && !dialog) {
-                restore(previousController.jsId);
-            } else {
+            if (dialog) {
                 _executeCloseAction();
+            } else {
+                const previousController = controllerStack[controllerStack.length - 2];
+                if (previousController) {
+                    restore(previousController.jsId);
+                } else {
+                    env.bus.trigger("WEBCLIENT:LOAD_DEFAULT_APP");
+                }
             }
         };
 
