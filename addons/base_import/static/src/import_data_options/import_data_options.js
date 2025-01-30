@@ -11,7 +11,7 @@ export class ImportDataOptions extends Component {
     };
 
     setup() {
-        this.orm = useService("orm");
+        this.fieldService = useService("field");
         this.state = useState({
             options: [],
         });
@@ -39,7 +39,7 @@ export class ImportDataOptions extends Component {
                 options.push(["import_skip_records", _t("Skip record")]);
             }
             if (this.props.fieldInfo.type === "selection") {
-                const fields = await this.orm.call(this.currentModel, "fields_get");
+                const fields = await this.fieldService.loadFields(this.currentModel);
                 const selection = fields[this.props.fieldInfo.name].selection.map((opt) => [
                     opt[0],
                     _t("Set to: %s", opt[1]),

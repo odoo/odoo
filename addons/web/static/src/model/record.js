@@ -42,9 +42,7 @@ class _Record extends Component {
             },
         };
         const modelServices = Object.fromEntries(
-            StandaloneRelationalModel.services.map((servName) => {
-                return [servName, useService(servName)];
-            })
+            StandaloneRelationalModel.services.map((servName) => [servName, useService(servName)])
         );
         modelServices.orm = this.orm;
         this.model = useState(new StandaloneRelationalModel(this.env, modelParams, modelServices));
@@ -169,7 +167,9 @@ export class Record extends Component {
     setup() {
         const { activeFields, fieldNames, fields, resModel } = this.props;
         if (!activeFields && !fieldNames) {
-            throw Error(`Record props should have either a "activeFields" key or a "fieldNames" key`);
+            throw Error(
+                `Record props should have either a "activeFields" key or a "fieldNames" key`
+            );
         }
         if (!fields && (!fieldNames || !resModel)) {
             throw Error(
@@ -179,9 +179,9 @@ export class Record extends Component {
         if (fields) {
             this.fields = fields;
         } else {
-            const orm = useService("orm");
+            const fieldService = useService("field");
             onWillStart(async () => {
-                this.fields = await orm.call(resModel, "fields_get", [fieldNames], {});
+                this.fields = await fieldService.loadFields(resModel, { fieldNames });
             });
         }
     }

@@ -10,6 +10,7 @@ import {
     many2OneField,
 } from "@web/views/fields/many2one/many2one_field";
 import { TaxAutoComplete } from "@account/components/tax_autocomplete/tax_autocomplete";
+import { useService } from "@web/core/utils/hooks";
 
 export class Many2XTaxTagsAutocomplete extends Many2XAutocomplete {
     static components = {
@@ -20,6 +21,11 @@ export class Many2XTaxTagsAutocomplete extends Many2XAutocomplete {
         return _t("Not sure... Help me!");
     }
 
+    setup() {
+        super.setup();
+        this.fieldService = useService("field");
+    }
+
     search(name) {
         return this.orm
             .call(this.props.resModel, "search_read", [], {
@@ -27,8 +33,8 @@ export class Many2XTaxTagsAutocomplete extends Many2XAutocomplete {
                 fields: ["id", "name", "tax_scope"],
             })
             .then((records) => {
-                return this.orm
-                    .call("account.tax", "fields_get", [], { attributes: ["selection"] })
+                return this.fieldService
+                    .loadFields("account.tax", { attributes: ["selection"] })
                     .then((fields) => {
                         const selectionOptions = fields.tax_scope.selection;
 
