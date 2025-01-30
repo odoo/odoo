@@ -195,11 +195,11 @@
                     <t t-if="error or warning" t-call="account.portal_invoice_error"/>
                     <t t-if="success and (not error and not warning)" t-call="account.portal_invoice_success"/>
 
-                    <div class="o_portal_html_view position-relative bg-white shadow p-3 overflow-hidden">
+                    <div class="o_portal_html_view position-relative bg-white shadow overflow-hidden">
                         <div class="o_portal_html_loader text-center">
                             <i class="fa fa-circle-o-notch fa-spin fa-2x fa-fw text-black-50"></i>
                         </div>
-                        <iframe id="invoice_html" class="position-relative my-2" width="100%" height="100%" frameborder="0" scrolling="no" t-att-src="invoice.get_portal_url(report_type='html')"/>
+                        <iframe id="invoice_html" class="position-relative d-block" width="100%" height="100%" frameborder="0" scrolling="no" t-att-src="invoice.get_portal_url(report_type='html')"/>
                     </div>
                     <!-- chatter -->
                     <div id="invoice_communication" class="mt-4">
