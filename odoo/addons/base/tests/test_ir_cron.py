@@ -306,34 +306,66 @@ class TestIrCron(TransactionCase, CronMixinCase):
         Trigger = self.env['ir.cron.trigger']
         Progress = self.env['ir.cron.progress']
         default_progress_values = {'done': 0, 'remaining': 0, 'timed_out_counter': 0}
+        frozen_datetime = self.frozen_datetime
 
-        def make_run(cron):
-            state = {'call_count': 0}
-            CALL_TARGET = 11
+        CALL_TARGET = 31
+        mocked_run_state = {'call_count': 0, 'duration': 0}
 
-            def run(self):
-                state['call_count'] += 1
-                self.env['ir.cron']._notify_progress(done=1, remaining=CALL_TARGET - state['call_count'])
-            return run, state
+        def mocked_run(self):
+            frozen_datetime.tick(delta=timedelta(seconds=mocked_run_state['duration']))
+            mocked_run_state['call_count'] += 1
+            self.env['ir.cron']._notify_progress(
+                done=1,
+                remaining=CALL_TARGET - mocked_run_state['call_count'],
+            )
 
         self.cron._trigger()
         self.env.flush_all()
-        with self.enter_registry_test_mode():
-            mocked_run, mocked_run_state = make_run(self.cron)
-            with patch.object(self.registry['ir.actions.server'], 'run', mocked_run):
-                self.registry['ir.cron']._process_job(
-                    self.registry.db_name,
-                    self.registry.cursor(),
-                    {**self.cron.read(load=None)[0], **default_progress_values}
-                )
+        with (
+            self.enter_registry_test_mode(),
+            patch.object(self.registry['ir.actions.server'], 'run', mocked_run),
+        ):
+            # make each run 2 seconds, so that it is run 10 times, 20 seconds in total
+            mocked_run_state['duration'] = 2
+            self.registry['ir.cron']._process_job(
+                self.registry.db_name,
+                self.registry.cursor(),
+                {**self.cron.read(load=None)[0], **default_progress_values}
+            )
 
         self.assertEqual(
             mocked_run_state['call_count'], 10,
-            '`run` should have been called ten times',
+            '`run` should have been called 10 times',
         )
         self.assertEqual(
             Progress.search_count([('done', '=', 1), ('cron_id', '=', self.cron.id)]), 10,
             'There should be 10 progress log for this cron',
+        )
+        self.assertEqual(
+            Trigger.search_count([('cron_id', '=', self.cron.id)]), 1,
+            "One trigger should have been kept",
+        )
+
+        self.env.flush_all()
+        with (
+            self.enter_registry_test_mode(),
+            patch.object(self.registry['ir.actions.server'], 'run', mocked_run),
+        ):
+            # make each run 0.5 seconds, so that it is run 20 times, 10 seconds in total
+            mocked_run_state['duration'] = 0.5
+            self.registry['ir.cron']._process_job(
+                self.registry.db_name,
+                self.registry.cursor(),
+                {**self.cron.read(load=None)[0], **default_progress_values}
+            )
+
+        self.assertEqual(
+            mocked_run_state['call_count'], 30,
+            '`run` should have been called 10 times',
+        )
+        self.assertEqual(
+            Progress.search_count([('done', '=', 1), ('cron_id', '=', self.cron.id)]), 30,
+            'There should be 30 progress log for this cron',
         )
         self.assertEqual(
             Trigger.search_count([('cron_id', '=', self.cron.id)]), 1,
@@ -357,11 +389,11 @@ class TestIrCron(TransactionCase, CronMixinCase):
             'The cron has finished executing'
         )
         self.assertEqual(
-            mocked_run_state['call_count'], 10 + 1,
+            mocked_run_state['call_count'], 31,
             '`run` should have been called one additional time',
         )
         self.assertEqual(
-            Progress.search_count([('done', '=', 1), ('cron_id', '=', self.cron.id)]), 11,
+            Progress.search_count([('done', '=', 1), ('cron_id', '=', self.cron.id)]), 31,
             'There should be 11 progress log for this cron',
         )
 
