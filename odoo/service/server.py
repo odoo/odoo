@@ -21,6 +21,7 @@ from io import BytesIO
 
 import psutil
 import werkzeug.serving
+from werkzeug .urls import uri_to_iri
 
 if os.name == 'posix':
     # Unix only for workers
@@ -63,6 +64,14 @@ from .db import list_dbs
 _logger = logging.getLogger(__name__)
 
 SLEEP_INTERVAL = 60     # 1 min
+
+
+# A global-ish object, each thread/worker uses its own
+thread_local = threading.local()
+
+# the model and method name that was called via rpc, for logging
+thread_local.rpc_model_method = ''
+
 
 def memory_info(process):
     """
@@ -117,7 +126,7 @@ class BaseWSGIServerNoBind(LoggingBaseWSGIServerMixIn, werkzeug.serving.BaseWSGI
     use this class, sets the socket and calls the process_request() manually
     """
     def __init__(self, app):
-        werkzeug.serving.BaseWSGIServer.__init__(self, "127.0.0.1", 0, app)
+        werkzeug.serving.BaseWSGIServer.__init__(self, "127.0.0.1", 0, app, handler=CommonRequestHandler)
         # Directly close the socket. It will be replaced by WorkerHTTP when processing requests
         if self.socket:
             self.socket.close()
@@ -126,8 +135,39 @@ class BaseWSGIServerNoBind(LoggingBaseWSGIServerMixIn, werkzeug.serving.BaseWSGI
         # dont listen as we use PreforkServer#socket
         pass
 
+class CommonRequestHandler(werkzeug.serving.WSGIRequestHandler):
+    def log_request(self, code = "-", size = "-"):
+        try:
+            path = uri_to_iri(self.path)
+            fragment = thread_local.rpc_model_method
+            if fragment:
+                path += '#' + fragment
+            msg = f"{self.command} {path} {self.request_version}"
+        except AttributeError:
+            # path isn't set if the requestline was bad
+            msg = self.requestline
 
-class RequestHandler(werkzeug.serving.WSGIRequestHandler):
+        code = str(code)
+
+        if code[0] == "1":  # 1xx - Informational
+            msg = werkzeug.serving._ansi_style(msg, "bold")
+        elif code == "200":  # 2xx - Success
+            pass
+        elif code == "304":  # 304 - Resource Not Modified
+            msg = werkzeug.serving._ansi_style(msg, "cyan")
+        elif code[0] == "3":  # 3xx - Redirection
+            msg = werkzeug.serving._ansi_style(msg, "green")
+        elif code == "404":  # 404 - Resource Not Found
+            msg = werkzeug.serving._ansi_style(msg, "yellow")
+        elif code[0] == "4":  # 4xx - Client Error
+            msg = werkzeug.serving._ansi_style(msg, "bold", "red")
+        else:  # 5xx, or any other response
+            msg = werkzeug.serving._ansi_style(msg, "bold", "magenta")
+
+        self.log("info", '"%s" %s %s', msg, code, size)
+
+
+class RequestHandler(CommonRequestHandler):
     def setup(self):
         # timeout to avoid chrome headless preconnect during tests
         if config['test_enable']:
