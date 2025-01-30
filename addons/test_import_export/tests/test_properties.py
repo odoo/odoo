@@ -1,7 +1,8 @@
-from odoo.tests.common import RecordCapturer, TransactionCase
+import json
+from odoo.tests.common import RecordCapturer, HttpCase
 
 
-class TestPropertiesExportImport(TransactionCase):
+class TestPropertiesExportImport(HttpCase):
     maxDiff = None
 
     @classmethod
@@ -10,6 +11,7 @@ class TestPropertiesExportImport(TransactionCase):
 
         cls.ModelDefinition = cls.env['import.properties.definition']
         cls.ModelProperty = cls.env['import.properties']
+        cls.ModelPropertyInherits = cls.env['import.properties.inherits']
         cls.definition_records = cls.ModelDefinition.create(
             [
                 {
@@ -89,6 +91,106 @@ class TestPropertiesExportImport(TransactionCase):
                         'm2m_prop': cls.partners.ids,
                     },
                 },
+            ]
+        )
+
+    def test_export_get_fields(self):
+        self.authenticate('admin', 'admin')
+
+        res = self.url_open(
+            "/web/export/get_fields",
+            data=json.dumps({"params": {"model": 'import.properties',
+                                        'import_compat': True,
+                                        'domain': []}}),
+            headers={"Content-Type": "application/json"}
+        )
+        dict_fields = json.loads(res.content)['result']
+        self.assertEqual(
+            [dict_field['id'] for dict_field in dict_fields], 
+            [
+                'properties.bool_prop',
+                'id',
+                'properties.m2m_prop',
+                'properties.m2o_prop',
+                'properties.selection_prop',
+                'properties',
+                'record_definition_id',
+                'properties.tags_prop',
+                'properties.char_prop',
+            ]
+        )
+
+        res = self.url_open(
+            "/web/export/get_fields",
+            data=json.dumps({"params": {"model": 'import.properties',
+                                        'import_compat': True,
+                                        'domain': [('id', 'in', self.properties_records[0].ids)]}}),
+            headers={"Content-Type": "application/json"}
+        )
+        dict_fields = json.loads(res.content)['result']
+        self.assertEqual(
+            [dict_field['id'] for dict_field in dict_fields],
+            [
+                'id',
+                'properties.m2o_prop',
+                'properties.selection_prop',
+                'properties',
+                'record_definition_id',
+                'properties.char_prop',
+            ]
+        )
+    
+    def test_export_get_fields_inherits(self):
+        self.authenticate('admin', 'admin')
+
+        # FIXME: Put the creation of record here because there is a bug in create
+        # for inherited properties that empties the properties source values
+        inherits_records = self.ModelPropertyInherits.create([
+            {'parent_id': record_parent.id}
+            for record_parent in self.properties_records
+        ])
+        res = self.url_open(
+            "/web/export/get_fields",
+            data=json.dumps({"params": {"model": 'import.properties.inherits',
+                                        'import_compat': True,
+                                        'domain': []}}),
+            headers={"Content-Type": "application/json"}
+        )
+        dict_fields = json.loads(res.content)['result']
+        self.assertEqual(
+            [dict_field['id'] for dict_field in dict_fields], 
+            [
+                'properties.bool_prop',
+                'id',
+                'properties.m2m_prop',
+                'properties.m2o_prop',
+                'properties.selection_prop',
+                'parent_id',
+                'properties',
+                'record_definition_id',
+                'properties.tags_prop',
+                'properties.char_prop',
+            ]
+        )
+
+        res = self.url_open(
+            "/web/export/get_fields",
+            data=json.dumps({"params": {"model": 'import.properties.inherits',
+                                        'import_compat': True,
+                                        'domain': [('id', 'in', inherits_records[0].ids)]}}),
+            headers={"Content-Type": "application/json"}
+        )
+        dict_fields = json.loads(res.content)['result']
+        self.assertEqual(
+            [dict_field['id'] for dict_field in dict_fields],
+            [
+                'id',
+                'properties.m2o_prop',
+                'properties.selection_prop',
+                'parent_id',
+                'properties',
+                'record_definition_id',
+                'properties.char_prop',
             ]
         )
 
