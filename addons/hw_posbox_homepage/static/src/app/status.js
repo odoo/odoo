@@ -35,6 +35,56 @@ class StatusPage extends Component {
         <div class="text-center pt-5">
             <img class="odoo-logo" src="/web/static/img/logo2.png" alt="Odoo logo"/>
         </div>
+        <!-- QR Codes shown on status page -->
+        <div class="qr-code-box">
+            <div class="status-display-box qr-code">
+                <div>
+                    <h4 class="text-center mb-1">IoT Box Configuration</h4>
+                    <hr/>
+                    <!-- If the IoT Box is connected to internet -->
+                    <div t-if="!state.data.is_access_point_up and state.data.qr_code_url">
+                        <p>
+                            1. Connect to
+                            <!-- Only wifi connection is shown as ethernet connections look like "Wired connection 2" -->
+                            <t t-if="state.data.wifi_ssid">
+                                <b>
+                                    <t t-out="state.data.wifi_ssid"/>
+                                </b>
+                            </t>
+                            <t t-else=""> the IoT Box network</t>
+                            <br/>
+                            <br/>
+                            <div t-if="state.data.qr_code_wifi" class="qr-code">
+                                <img t-att-src="state.data.qr_code_wifi" alt="QR Code Wi-FI"/>
+                            </div>
+                        </p>
+                        <p>
+                            2. Open the IoT Box setup page
+                            <br/>
+                            <br/>
+                            <div class="qr-code">
+                                <img t-att-src="state.data.qr_code_url" alt="QR Code Homepage"/>
+                            </div>
+                        </p>
+                    </div>
+                    <!-- If the IoT Box is in access point and not connected to internet yet -->
+                    <div t-elif="state.data.is_access_point_up and state.data.qr_code_url and state.data.qr_code_url"> 
+                        <p>1. Connect to the IoT Box network</p>
+                        <div class="qr-code">
+                            <img t-att-src="state.data.qr_code_wifi" alt="QR Code Access Point"/>
+                        </div>
+                        <br/>
+                        <br/>
+                        <p>2. Configure Wi-Fi connection</p>
+                        <div class="qr-code">
+                            <img t-att-src="state.data.qr_code_url" alt="QR Code Wifi Config"/>
+                        </div>
+                        <br/>
+                        <br/>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="status-display-boxes">
             <div t-if="state.data.pairing_code and !state.data.is_access_point_up" class="status-display-box">
                 <h4 class="text-center mb-3">Pairing Code</h4>

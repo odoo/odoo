@@ -6,6 +6,21 @@ body {
     background-size: cover;
     height: 100vh;
 }
+.qr-code-box {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+}
+.qr-code {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.qr-code img {
+    width: 150px; /* Ensure wifi and url QR code images appear as same size */
+    height: 150px;
+    object-fit: contain; 
+}
 .status-display-boxes {
     position: absolute;
     right: 20px;

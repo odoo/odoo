@@ -155,6 +155,7 @@ class IotBoxOwlHomePage(http.Controller):
         }
 
         six_terminal = helpers.get_conf('six_payment_terminal') or 'Not Configured'
+        network_qr_codes = wifi.generate_network_qr_codes()
 
         return json.dumps({
             'db_uuid': helpers.get_conf('db_uuid'),
@@ -172,6 +173,9 @@ class IotBoxOwlHomePage(http.Controller):
             'system': platform.system(),
             'is_certificate_ok': is_certificate_ok,
             'certificate_details': certificate_details,
+            'wifi_ssid': helpers.get_conf('wifi_ssid'),
+            'qr_code_wifi' : network_qr_codes['qr_wifi'],
+            'qr_code_url' : network_qr_codes['qr_url'],
         })
 
     @http.route('/hw_posbox_homepage/wifi', auth="none", type="http", cors='*')
