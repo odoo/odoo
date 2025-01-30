@@ -41,15 +41,24 @@ export const getTaxesValues = (
     currency,
     special_mode = null
 ) => {
-    const results = accountTaxHelpers.get_tax_details(taxes, priceUnit, quantity, {
-        precision_rounding: currency.rounding,
-        rounding_method: company.tax_calculation_rounding_method,
-        product: accountTaxHelpers.eval_taxes_computation_prepare_product_values(
-            productDefaultValues,
-            product
-        ),
-        special_mode: special_mode,
-    });
+    const baseLine = accountTaxHelpers.prepare_base_line_for_taxes_computation(
+        {},
+        {
+            product_id: accountTaxHelpers.eval_taxes_computation_prepare_product_values(
+                productDefaultValues,
+                product
+            ),
+            tax_ids: taxes,
+            price_unit: priceUnit,
+            quantity: quantity,
+            currency_id: currency,
+            special_mode: special_mode,
+        }
+    );
+    accountTaxHelpers.add_tax_details_in_base_line(baseLine, company);
+    accountTaxHelpers.round_base_lines_tax_details([baseLine], company);
+
+    const results = baseLine.tax_details;
     for (const taxData of results.taxes_data) {
         Object.assign(taxData, taxData.tax);
     }

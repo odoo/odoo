@@ -141,7 +141,14 @@ export class PosOrder extends Base {
                 ? 1
                 : -1;
 
-        const baseLines = orderLines.map((line) => line.prepareBaseLineForTaxesComputation());
+        const baseLines = orderLines.map((line) =>
+            accountTaxHelpers.prepare_base_line_for_taxes_computation(
+                line,
+                line.prepareBaseLineForTaxesComputationExtraValues({
+                    quantity: documentSign * line.qty,
+                })
+            )
+        );
         accountTaxHelpers.add_tax_details_in_base_lines(baseLines, company);
         accountTaxHelpers.round_base_lines_tax_details(baseLines, company);
 
@@ -376,8 +383,8 @@ export class PosOrder extends Base {
                 line.getAllPrices().priceWithTax -
                 line
                     .getAllPrices()
-                    .taxesData.filter((tax) => !tax.price_include)
-                    .reduce((sum, tax) => (sum += tax.tax_amount), 0),
+                    .taxesData.filter((taxData) => !taxData.tax.price_include)
+                    .reduce((sum, taxData) => (sum += taxData.tax_amount_currency), 0),
             0
         );
         return base_amount;
@@ -696,11 +703,11 @@ export class PosOrder extends Base {
                     taxDetails[taxId] = Object.assign({}, taxData, {
                         amount: 0.0,
                         base: 0.0,
-                        tax_percentage: taxData.amount,
+                        tax_percentage: taxData.tax.amount,
                     });
                 }
-                taxDetails[taxId].base += taxData.base_amount;
-                taxDetails[taxId].amount += taxData.tax_amount;
+                taxDetails[taxId].base += taxData.base_amount_currency;
+                taxDetails[taxId].amount += taxData.tax_amount_currency;
             }
         }
         return Object.values(taxDetails);

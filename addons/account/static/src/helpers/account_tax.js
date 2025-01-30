@@ -493,8 +493,9 @@ export const accountTaxHelpers = {
             special_mode: kwargs.special_mode || null,
             special_type: kwargs.special_type || null,
             rate: load("rate", 1.0),
+            computation_key: kwargs.computation_key || null,
             manual_tax_amounts: kwargs.manual_tax_amounts || null,
-        }
+        };
     },
 
     add_tax_details_in_base_line(base_line, company) {
