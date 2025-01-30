@@ -53,7 +53,7 @@ from odoo.tools import (
     DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, format_list,
     frozendict, get_lang, lazy_classproperty, OrderedSet,
     ormcache, partition, Query, split_every, unique,
-    SQL, sql,
+    IdentifierBuilder, SQL, sql,
 )
 from odoo.tools.constants import GC_UNLINK_LIMIT, PREFETCH_MAX
 from odoo.tools.lru import LRU
@@ -64,6 +64,7 @@ from . import domains
 from . import decorators as api
 from .commands import Command
 from .domains import Domain, NEGATIVE_CONDITION_OPERATORS
+from .query_builder import QueryBuilder
 from .fields import Field, determine
 from .fields_misc import Id
 from .fields_temporal import Date, Datetime
@@ -2806,7 +2807,7 @@ class BaseModel(metaclass=MetaModel):
 
         return model, model._fields[last_fname], alias
 
-    def _field_to_sql(self, alias: str, field_expr: str, query: (Query | None) = None, flush: bool = True) -> SQL:
+    def _field_to_sql(self, alias: str, field_expr: str | IdentifierBuilder, query: (Query | None) = None, flush: bool = True) -> SQL:
         """ Return an :class:`SQL` object that represents the value of the given
         field from the given table alias, in the context of the given query.
         The method also checks that the field is accessible for reading.
@@ -2818,6 +2819,8 @@ class BaseModel(metaclass=MetaModel):
         result to make method :meth:`~odoo.api.Environment.execute_query` flush
         the field before executing the query.
         """
+        if isinstance(field_expr, IdentifierBuilder):
+            return SQL("%s", field_expr)
         fname, property_name = parse_field_expr(field_expr)
         field = self._fields.get(fname)
         if not field:
@@ -5289,6 +5292,9 @@ class BaseModel(metaclass=MetaModel):
         imd._update_xmlids(imd_data_list, update)
 
         return original_self.concat(*(data['record'] for data in data_list))
+
+    def _query_builder(self):
+        return QueryBuilder(self)
 
     @api.model
     def _where_calc(self, domain: DomainType, active_test: bool = True) -> Query:

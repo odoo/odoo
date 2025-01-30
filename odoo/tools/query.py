@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from __future__ import annotations
+
 import itertools
 from collections.abc import Iterable, Iterator
 
-from .sql import SQL, make_identifier
+from .sql import SQL, SQLable, make_identifier
 
 
 def _sql_from_table(alias: str, table: SQL) -> SQL:
@@ -20,6 +22,7 @@ def _sql_from_join(kind: SQL, alias: str, table: SQL, condition: SQL) -> SQL:
 _SQL_JOINS = {
     "JOIN": SQL("JOIN"),
     "LEFT JOIN": SQL("LEFT JOIN"),
+    "RIGHT JOIN": SQL("RIGHT JOIN"),
 }
 
 
@@ -43,7 +46,7 @@ def _generate_table_alias(src_table_alias: str, link: str) -> str:
     return make_identifier(f"{src_table_alias}__{link}")
 
 
-class Query:
+class Query(SQLable):
     """ Simple implementation of a query object, managing tables with aliases,
     join clauses (with aliases, condition and parameters), where clauses (with
     parameters), order, limit and offset.
@@ -68,7 +71,7 @@ class Query:
         self._where_clauses: list[SQL] = []
 
         # groupby, having, order, limit, offset
-        self.groupby: SQL | None = None
+        self._groupby: SQL | None = None
         self.having: SQL | None = None
         self._order: SQL | None = None
         self.limit: int | None = None
@@ -139,13 +142,38 @@ class Query:
         self.add_join('LEFT JOIN', rhs_alias, rhs_table, condition)
         return rhs_alias
 
+    def right_join(self, lhs_alias: str, lhs_column: str, rhs_table: str, rhs_column: str, link: str) -> str:
+        """ Add a LEFT JOIN to the current table (if necessary), and return the
+        alias corresponding to ``rhs_table``.
+
+        See the documentation of :meth:`join` for a better overview of the
+        arguments and what they do.
+        """
+        assert lhs_alias in self._tables or lhs_alias in self._joins, "Alias %r not in %s" % (lhs_alias, str(self))
+        rhs_alias = self.make_alias(lhs_alias, link)
+        condition = SQL("%s = %s", SQL.identifier(lhs_alias, lhs_column), SQL.identifier(rhs_alias, rhs_column))
+        self.add_join('RIGHT JOIN', rhs_alias, rhs_table, condition)
+        return rhs_alias
+
     @property
     def order(self) -> SQL | None:
         return self._order
 
     @order.setter
-    def order(self, value: SQL | str | None):
-        self._order = SQL(value) if value is not None else None # pylint: disable = sql-injection
+    def order(self, value: SQLable | str | list[SQLable | str] | None) -> None:
+        if value is not None and not isinstance(value, list | tuple):
+            value = [value]
+        self._order = SQL(', ').join(map(SQL, value)) if value is not None else None
+
+    @property
+    def groupby(self) -> SQL | None:
+        return self._groupby
+
+    @groupby.setter
+    def groupby(self, value: SQLable | list[SQLable] | None) -> None:
+        if value is not None and not isinstance(value, list | tuple):
+            value = [value]
+        self._groupby = SQL(', ').join(value) if value is not None else None
 
     @property
     def table(self) -> str:
@@ -176,7 +204,10 @@ class Query:
         """ Return whether the query is known to return nothing. """
         return self._ids == ()
 
-    def select(self, *args: str | SQL) -> SQL:
+    def to_sql(self) -> SQL:
+        return self.select()
+
+    def select(self, *args: str | SQLable) -> SQL:
         """ Return the SELECT query as an ``SQL`` object. """
         sql_args = map(SQL, args) if args else [SQL.identifier(self.table, 'id')]
         return SQL(
@@ -272,3 +303,55 @@ class Query:
 
     def __iter__(self) -> Iterator[int]:
         return iter(self.get_result_ids())
+
+    @property
+    def get(self) -> IdentifierBuilder:
+        # Mapping could be saved on the registry
+        model = next(model._name for model in self._env.registry.values() if model._table == self.table)
+        return IdentifierBuilder(self, self.table, model, 'id')
+
+
+class IdentifierBuilder(SQLable):
+    def __init__(self, query: Query, alias: str, model: str, fname :str):
+        self.query = query
+        self.env = query._env
+        self.alias = alias
+        self.model = model
+        self.fname = fname
+        self._join_kind = None
+
+    def __getattr__(self, name: str, /) -> IdentifierBuilder:
+        alias, model = self.alias, self.model
+        field = self.env[self.model]._fields[self.fname]
+        if field.type == 'many2one':
+            alias = self.join(self.alias, self.fname, self.env[field.comodel_name]._table, 'id', self.fname)
+            model = field.comodel_name
+        elif field.type == 'one2many':
+            alias = self.join(self.alias, 'id', self.env[field.comodel_name]._table, field.inverse_name, self.fname)
+            model = field.comodel_name
+        elif field.type == 'many2many':
+            alias = self.join(self.alias, 'id', field.relation, field.column1, self.fname)
+            alias = self.query.join(alias, field.column2, self.env[field.comodel_name]._table, 'id', self.fname)
+            model = field.comodel_name
+        return IdentifierBuilder(self.query, alias, model, name)
+
+    @property
+    def join(self):
+        if self._join_kind == 'right':
+            return self.query.right_join
+        if self._join_kind == 'inner':
+            return self.query.join
+        return self.query.left_join
+
+    def __call__(self, *, join) -> IdentifierBuilder:
+        join = join and join.lower()
+        assert join in (None, 'inner', 'left', 'right')
+        self._join_kind = join
+        return self
+
+    def to_sql(self) -> SQL:
+        return self.env[self.model]._field_to_sql(self.alias, self.fname, self.query)
+
+    def __repr__(self) -> str:
+        return f"<IdentifierBuilder: model={self.model!r} alias={self.alias!r} fname={self.fname!r}>"
+

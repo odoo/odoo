@@ -13,7 +13,7 @@ from psycopg2.extras import Json as PsycopgJson
 
 from odoo import SUPERUSER_ID
 from odoo.exceptions import AccessError, MissingError
-from odoo.tools import Query, SQL, lazy_property, sql
+from odoo.tools import Query, SQL, SQLable, lazy_property, sql
 from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.misc import SENTINEL, Sentinel
 
@@ -1189,6 +1189,8 @@ class Field(typing.Generic[T]):
         sql_field = model._field_to_sql(alias, field_expr, query)
 
         def _value_to_column(v):
+            if isinstance(v, SQLable):
+                return v.to_sql()
             return self.convert_to_column(v, model, validate=False)
 
         # support for SQL value

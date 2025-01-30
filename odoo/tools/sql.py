@@ -21,6 +21,7 @@ from .misc import named_to_positional_printf
 
 __all__ = [
     "SQL",
+    "SQLable",
     "create_index",
     "drop_view_if_exists",
     "escape_psql",
@@ -42,8 +43,12 @@ _CONFDELTYPES = {
     'SET DEFAULT': 'd',
 }
 
+class SQLable:
+    def to_sql(self) -> SQL:
+        raise NotImplementedError
 
-class SQL:
+
+class SQL(SQLable):
     """ An object that wraps SQL code with its parameters, like::
 
         sql = SQL("UPDATE TABLE foo SET a = %s, b = %s", 'hello', 42)
@@ -86,8 +91,9 @@ class SQL:
     __to_flush: tuple
 
     # pylint: disable=keyword-arg-before-vararg
-    def __init__(self, code: (str | SQL) = "", /, *args, to_flush: (Field | None) = None, **kwargs):
-        if isinstance(code, SQL):
+    def __init__(self, code: (str | SQLable) = "", /, *args, to_flush: (Field | None) = None, **kwargs):
+        if isinstance(code, SQLable):
+            code = code.to_sql()
             if args or kwargs or to_flush:
                 raise TypeError("SQL() unexpected arguments when code has type SQL")
             self.__code = code.__code
@@ -112,7 +118,8 @@ class SQL:
         params_list = []
         to_flush_list = []
         for arg in args:
-            if isinstance(arg, SQL):
+            if isinstance(arg, SQLable):
+                arg = arg.to_sql()
                 code_list.append(arg.__code)
                 params_list.extend(arg.__params)
                 to_flush_list.extend(arg.__to_flush)
@@ -125,6 +132,9 @@ class SQL:
         self.__code = code.replace('%%', '%%%%') % tuple(code_list)
         self.__params = tuple(params_list)
         self.__to_flush = tuple(to_flush_list)
+
+    def to_sql(self):
+        return self
 
     @property
     def code(self) -> str:

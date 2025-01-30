@@ -9,7 +9,7 @@ from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 from odoo.fields import Command, Domain
 from odoo.osv import expression
 from odoo.tests.common import BaseCase, TransactionCase
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, SQL
 
 _FALSE_LEAF, _TRUE_LEAF = (0, '=', 1), (1, '=', 1)
 
@@ -1788,6 +1788,180 @@ class TestQueries(TransactionCase):
             LIMIT %s
         ''']):
             Model.name_search('foo', operator='not ilike')
+
+
+class TestQueryBuilder(TransactionCase):
+    def test_query_builder_left_hand_condition(self):
+        with self.assertQueries(['''
+            SELECT "res_company"."id",
+                   "res_company__partner_id"."vat"
+              FROM "res_company"
+              JOIN "res_partner" AS "res_company__partner_id"
+                ON ("res_company"."partner_id" = "res_company__partner_id"."id")
+             WHERE "res_company__partner_id"."name" = %s
+        ''']):
+            res_company_qb = self.env['res.company']._query_builder()
+            partner = res_company_qb.partner_id(join='inner')
+            res_company_qb.domain &= Domain([(partner.name, '=', 'Odoo')])
+            res_company_qb.select += [partner.vat]
+            self.env.execute_query(res_company_qb)
+
+    def test_query_builder_right_hand_condition(self):
+        with self.assertQueries(['''
+            SELECT "res_company"."id"
+              FROM "res_company"
+         LEFT JOIN "res_partner" AS "res_company__partner_id"
+                ON ("res_company"."partner_id" = "res_company__partner_id"."id")
+             WHERE "res_company"."name" = "res_company__partner_id"."name"
+        ''']):
+            res_company_qb = self.env['res.company']._query_builder()
+            res_company_qb.domain &= Domain([('name', '=', res_company_qb.partner_id.name)])
+            self.env.execute_query(res_company_qb)
+
+    def test_query_builder_select_alias(self):
+        with self.assertQueries(['''
+            SELECT "res_company"."id",
+                   "res_company"."name" AS "company_name",
+                   "res_company__partner_id"."name" AS "partner_name"
+              FROM "res_company"
+         LEFT JOIN "res_partner" AS "res_company__partner_id"
+                ON ("res_company"."partner_id" = "res_company__partner_id"."id")
+        ''']):
+            res_company_qb = self.env['res.company']._query_builder()
+            res_company_qb.select += [
+                (res_company_qb.name, 'company_name'),
+                (res_company_qb.partner_id.name, 'partner_name'),
+            ]
+            self.env.execute_query(res_company_qb)
+
+    def test_identifier_builder_many2one(self):
+        with self.assertQueries(['''
+            SELECT "res_company"."id",
+                   "res_company"."name",
+                   "res_company"."partner_id",
+                   "res_company__partner_id"."id",
+                   "res_company__partner_id"."name"
+              FROM "res_company"
+         LEFT JOIN "res_partner" AS "res_company__partner_id"
+                ON ("res_company"."partner_id" = "res_company__partner_id"."id")
+             WHERE "res_company"."active" IS TRUE
+        ''']):
+            query = self.env['res.company']._where_calc([])
+            company = query.get
+            self.env.execute_query(query.select(
+                company.id,
+                company.name,
+                company.partner_id,
+                company.partner_id.id,
+                company.partner_id.name,
+            ))
+
+    def test_identifier_builder_one2many(self):
+        with self.assertQueries(['''
+            SELECT "res_company__child_ids"."name"
+              FROM "res_company"
+         LEFT JOIN "res_company" AS "res_company__child_ids"
+                ON ("res_company"."id" = "res_company__child_ids"."parent_id")
+             WHERE "res_company"."active" IS TRUE
+        ''']):
+            res_company = self.env['res.company']._where_calc([])
+            self.env.execute_query(res_company.select(
+                res_company.get.child_ids.name,
+            ))
+
+        with self.assertQueries(['''
+             SELECT "res_company__child_ids"."name"
+               FROM "res_company"
+          LEFT JOIN "res_company" AS "res_company__child_ids"
+                 ON ("res_company"."id" = "res_company__child_ids"."parent_id")
+              WHERE (
+                        "res_company"."active" IS TRUE
+                        AND "res_company"."id" IN (
+                            SELECT "res_company"."parent_id"
+                              FROM "res_company"
+                             WHERE (
+                                       "res_company"."active" IS TRUE
+                                       AND "res_company"."parent_id" IS NOT NULL
+                                   )
+                        )
+                    )
+        ''']):
+            res_company = self.env['res.company']._where_calc([
+                ('child_ids.active', '!=', False),
+            ])
+            self.env.execute_query(res_company.select(
+                res_company.get.child_ids.name,
+            ))
+
+        with self.assertQueries(['''
+             SELECT "res_company__child_ids"."name"
+               FROM "res_company"
+          LEFT JOIN "res_company" AS "res_company__child_ids"
+                 ON ("res_company"."id" = "res_company__child_ids"."parent_id")
+              WHERE (
+                        "res_company__child_ids"."active" IS TRUE
+                        AND "res_company"."active" IS TRUE
+                    )
+        ''']):
+            res_company = self.env['res.company']._where_calc([
+                (res_company.get.child_ids.active, '!=', False),
+            ])
+            self.env.execute_query(res_company.select(
+                res_company.get.child_ids.name,
+            ))
+
+    def test_identifier_builder_many2many(self):
+        with self.assertQueries(['''
+            SELECT "res_company__user_ids__user_ids__partner_id"."name"
+              FROM "res_company"
+         LEFT JOIN "res_company_users_rel" AS "res_company__user_ids"
+                ON ("res_company"."id" = "res_company__user_ids"."cid")
+              JOIN "res_users" AS "res_company__user_ids__user_ids"
+                ON ("res_company__user_ids"."user_id" = "res_company__user_ids__user_ids"."id")
+         LEFT JOIN "res_partner" AS "res_company__user_ids__user_ids__partner_id"
+                ON ("res_company__user_ids__user_ids"."partner_id" = "res_company__user_ids__user_ids__partner_id"."id")
+             WHERE "res_company"."active" IS TRUE
+        ''']):
+            res_company = self.env['res.company']._where_calc([])
+            self.env.execute_query(res_company.select(
+                res_company.get.user_ids.name,
+            ))
+
+    def test_identifier_builder_orderby(self):
+        with self.assertQueries(['''
+            SELECT "res_company"."id"
+              FROM "res_company"
+         LEFT JOIN "res_partner" AS "res_company__partner_id"
+                ON ("res_company"."partner_id" = "res_company__partner_id"."id")
+             WHERE "res_company"."active" IS TRUE
+          ORDER BY "res_company__partner_id"."name",
+                   "res_company__partner_id"."id"
+        ''']):
+            res_company = self.env['res.company']._where_calc([])
+            res_company.order = [
+                res_company.get.partner_id.name,
+                res_company.get.partner_id.id
+            ]
+            self.env.execute_query(res_company.select())
+
+    def test_identifier_builder_groupby(self):
+        with self.assertQueries(['''
+            SELECT "res_company__partner_id"."name",
+                   MAX("res_company"."id")
+              FROM "res_company"
+         LEFT JOIN "res_partner" AS "res_company__partner_id"
+                ON ("res_company"."partner_id" = "res_company__partner_id"."id")
+             WHERE "res_company"."active" IS TRUE
+          GROUP BY "res_company__partner_id"."name"
+        ''']):
+            res_company = self.env['res.company']._where_calc([])
+            res_company.groupby = [
+                res_company.get.partner_id.name,
+            ]
+            self.env.execute_query(res_company.select(
+                res_company.get.partner_id.name,
+                SQL("MAX(%s)", res_company.get.id),
+            ))
 
 
 class TestMany2one(TransactionCase):
