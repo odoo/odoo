@@ -362,8 +362,7 @@ class Field(typing.Generic[T]):
         if self._direct or self._toplevel:
             self._setup_attrs(owner, name)
             if self._toplevel:
-                # free memory, self.args and self._base_fields are no longer useful
-                self.__dict__.pop('args', None)
+                # free memory, self._base_fields are no longer useful
                 self.__dict__.pop('_base_fields', None)
 
     #
@@ -375,6 +374,7 @@ class Field(typing.Generic[T]):
         # determine all inherited field attributes
         attrs = {}
         modules = []
+        args = {}
         for field in self.args.get('_base_fields', ()):
             if not isinstance(self, type(field)):
                 # 'self' overrides 'field' and their types are not compatible;
@@ -383,13 +383,14 @@ class Field(typing.Generic[T]):
                 modules.clear()
                 continue
             attrs.update(field.args)
+            args.update(field.args)
             if field._module:
                 modules.append(field._module)
         attrs.update(self.args)
         if self._module:
             modules.append(self._module)
 
-        attrs['args'] = self.args
+        attrs['args'] = args or self.args
         attrs['model_name'] = model_class._name
         attrs['name'] = name
         attrs['_module'] = modules[-1] if modules else None
@@ -401,11 +402,11 @@ class Field(typing.Generic[T]):
             attrs['copy'] = attrs.get('copy', False)
         if attrs.get('compute'):
             # by default, computed fields are not stored, computed in superuser
-            # mode if stored, not copied (unless stored and explicitly not
+            # mode if stored, not copied (unless not stored or explicitly not
             # readonly), and readonly (unless inversible)
             attrs['store'] = store = attrs.get('store', False)
             attrs['compute_sudo'] = attrs.get('compute_sudo', store)
-            if not (attrs['store'] and not attrs.get('readonly', True)):
+            if not attrs['store'] or attrs.get('readonly', True):
                 attrs['copy'] = attrs.get('copy', False)
             attrs['readonly'] = attrs.get('readonly', not attrs.get('inverse'))
         if attrs.get('related'):
@@ -557,6 +558,7 @@ class Field(typing.Generic[T]):
         """ Setup the attributes of a related field. """
         assert isinstance(self.related, str), self.related
 
+        chain_is_copyable = self.args.get('copy', True)
         # determine the chain of fields, and make sure they are all set up
         model_name = self.model_name
         for name in self.related.split('.'):
@@ -568,7 +570,9 @@ class Field(typing.Generic[T]):
             if not field._setup_done:
                 field.setup(model.env[model_name])
             model_name = field.comodel_name
+            chain_is_copyable &= field.copy
 
+        self.copy = self.store and chain_is_copyable or self.copy
         self.related_field = field
 
         # check type consistency
@@ -576,10 +580,11 @@ class Field(typing.Generic[T]):
             raise TypeError("Type of related field %s is inconsistent with %s" % (self, field))
 
         # determine dependencies, compute, inverse, and search
-        self.compute = self._compute_related
-        if self.inherited or not (self.readonly or field.readonly):
+        if not self.compute:
+            self.compute = self._compute_related
+        if (self.inherited or not (self.readonly or field.readonly)) and not self.inverse:
             self.inverse = self._inverse_related
-        if field._description_searchable:
+        if field._description_searchable and not self.search:
             # allow searching on self only if the related field is searchable
             self.search = self._search_related
 
@@ -607,7 +612,7 @@ class Field(typing.Generic[T]):
             # add modules from delegate and target fields; the first one ensures
             # that inherited fields introduced via an abstract model (_inherits
             # being on the abstract model) are assigned an XML id
-            delegate_field = model._fields[self.related.split('.')[0]]
+            delegate_field = model._fields[self.related.split('.', 1)[0]]
             self._modules = tuple({*self._modules, *delegate_field._modules, *field._modules})
 
         if self.store and self.translate:

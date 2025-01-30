@@ -4868,6 +4868,12 @@ class BaseModel(metaclass=MetaModel):
             if field.precompute and field.readonly
         )
 
+        related_fields = {
+            field: self._fields[field.related.split(".", 1)[0]]
+            for field in self._fields.values()
+            if field.copy and field.related and field.store
+        }
+
         result_vals_list = []
         for vals in vals_list:
             # add default values
@@ -4876,6 +4882,18 @@ class BaseModel(metaclass=MetaModel):
             # add magic fields
             for fname in bad_names:
                 vals.pop(fname, None)
+
+            # handle copyable stored related fields
+            for field, contiguos_related_field in related_fields.items():
+                if field.inherited or (hasattr(contiguos_related_field, 'delegate') and contiguos_related_field.delegate) or (hasattr(contiguos_related_field, 'auto_join') and contiguos_related_field.auto_join):
+                    continue
+                if contiguos_related_field.name not in vals:
+                    vals.pop(field.name, None)
+                elif not vals[contiguos_related_field.name]:
+                    vals.pop(field.name, None)
+                elif field.name in vals and not vals[field.name]:
+                    vals.pop(field.name, None)
+
             if self._log_access:
                 vals.setdefault('create_uid', self.env.uid)
                 vals.setdefault('create_date', self.env.cr.now())
@@ -5535,9 +5553,18 @@ class BaseModel(metaclass=MetaModel):
 
         blacklist_given_fields(self)
 
-        fields_to_copy = {name: field
-                          for name, field in self._fields.items()
-                          if field.copy and name not in default and name not in blacklist}
+        fields_to_copy = {}
+        for name, field in self._fields.items():
+            if not field.copy or name in default or name in blacklist:
+                continue
+            if not field.related:
+                fields_to_copy[name] = field
+                continue
+            # else:
+            #     fields_to_copy[name] = field
+            related_field_name = field.related.split(".", 1)[0]
+            if field.store and related_field_name not in default and related_field_name not in blacklist and self._fields[related_field_name]:
+                fields_to_copy[name] = field
 
         for record in self:
             seen_map = self._context['__copy_data_seen']
@@ -5583,8 +5610,12 @@ class BaseModel(metaclass=MetaModel):
         for name, field in old._fields.items():
             if not field.copy:
                 continue
+            # if field.related:
+            #     related_field_name = field.related.split(".", 1)[0]
+            #     if field.store and related_field_name in excluded or not old[related_field_name]:
+            #         continue
 
-            if field.inherited and field.related.split('.')[0] in excluded:
+            if field.inherited and field.related.split('.', 1)[0] in excluded:
                 # inherited fields that come from a user-provided parent record
                 # must not copy translations, as the parent record is not a copy
                 # of the old parent record

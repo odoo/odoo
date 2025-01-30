@@ -1368,6 +1368,24 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         discussion_field = discussion.fields_get(['name'])['name']
         self.assertEqual(message_field['help'], discussion_field['help'])
 
+    def test_25_related_copyable(self):
+        """ test related copyable fields. """
+        # related is copyable if chained fields are stored copyable
+        record = self.env['test_new_api.related'].create({'name': 'X', 'message': self.env.ref('test_new_api.message_0_1').id})
+        field = record._fields['message_currency']
+        self.assertFalse(field.store)
+        self.assertFalse(field.copy)
+        field = record._fields['stored_message_currency']
+        self.assertTrue(field.store)
+        self.assertTrue(field.copy)
+        field = record._fields['uncopyable_stored_message_currency']
+        self.assertTrue(field.store)
+        self.assertFalse(field.copy)
+
+        # let's duplictate and check copy attributes
+        new_record = record.copy()
+        self.assertEqual(new_record.name, 'XB')
+
     def test_25_related_attributes(self):
         """ test the attributes of related fields """
         text = self.registry['test_new_api.foo'].text

@@ -447,6 +447,8 @@ class Test_New_ApiRelated(models.Model):
     message = fields.Many2one('test_new_api.message')
     message_name = fields.Text(related="message.body", related_sudo=False, string='Message Body')
     message_currency = fields.Many2one(related="message.author", string='Message Author')
+    stored_message_currency = fields.Many2one(related="message.author", string='(Saved) Message Author', store=True)
+    uncopyable_stored_message_currency = fields.Many2one(related="message.author", string='(New) Message Author', store=True, copy=False)
 
     foo_id = fields.Many2one('test_new_api.related_foo')
 
@@ -463,6 +465,18 @@ class Test_New_ApiRelated(models.Model):
 
     foo_bar_sudo_id = fields.Many2one(string='foo_bar_sudo_id', related='foo_id.bar_id', related_sudo=True)
     foo_bar_sudo_id_name = fields.Char('foo_bar_sudo_id_name', related='foo_bar_sudo_id.name', related_sudo=False)
+
+    def copy(self, default=None):
+        new_copy = super().copy(default=default)
+        result = ""
+        if new_copy.message_currency:
+            result += "A"
+        if new_copy.stored_message_currency:
+            result += "B"
+        if new_copy.uncopyable_stored_message_currency:
+            result += "C"
+        new_copy.name += result
+        return new_copy
 
 
 class Test_New_ApiRelated_Foo(models.Model):
