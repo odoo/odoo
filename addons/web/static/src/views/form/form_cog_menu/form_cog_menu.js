@@ -11,4 +11,9 @@ export class FormCogMenu extends CogMenu {
         ...CogMenu.props,
         slots: { type: Object, optional: true },
     };
+    get hasItems() {
+        const { __render, __ctx } = this.props.slots?.default || {};
+        const rendered =  __render?.(__ctx, __ctx.__owl__);
+        return super.hasItems || rendered?.children.filter((c) => c !== undefined).length;
+    }
 }

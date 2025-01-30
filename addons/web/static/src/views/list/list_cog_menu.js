@@ -10,4 +10,9 @@ export class ListCogMenu extends CogMenu {
     _registryItems() {
         return this.props.hasSelectedRecords ? [] : super._registryItems();
     }
+    get hasItems() {
+        const { __render, __ctx } = this.props.slots?.default || {};
+        const rendered =  __render?.(__ctx, __ctx.__owl__);
+        return super.hasItems || rendered?.children.filter((c) => c !== undefined).length;
+    }
 }
