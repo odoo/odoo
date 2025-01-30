@@ -33,8 +33,10 @@ const storePatch = {
             oldestUnreadThread.setAsDiscussThread();
             return true;
         }
-        const chatWindow = this.ChatWindow.insert({ thread: oldestUnreadThread });
-        chatWindow.open({ focus: true, jumpToNewMessage: true });
+        this.store.chatHub.initPromise.then(() => {
+            const chatWindow = this.ChatWindow.insert({ thread: oldestUnreadThread });
+            chatWindow.open({ focus: true, jumpToNewMessage: true });
+        });
         return true;
     },
     /**

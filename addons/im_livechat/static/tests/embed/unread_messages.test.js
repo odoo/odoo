@@ -114,7 +114,6 @@ test("focus on unread livechat marks it as read", async () => {
             fetch_params: [
                 "failures", // called because mail/core/web is loaded in qunit bundle
                 "systray_get_activities", // called because mail/core/web is loaded in qunit bundle
-                ["discuss.channel", [1]],
                 "init_messaging",
             ],
             context: {

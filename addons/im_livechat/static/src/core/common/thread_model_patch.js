@@ -31,8 +31,8 @@ patch(Thread.prototype, {
             /** @this {import("models").Thread} */
             onUpdate() {
                 if (this.open_chat_window) {
-                    this.openChatWindow({ focus: true });
                     this.open_chat_window = undefined;
+                    this.openChatWindow({ focus: true });
                 }
             },
         });
