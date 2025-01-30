@@ -31,6 +31,14 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
         yield
 
     def _test_taxes_l10n_in(self):
+        """ Test suite for the complex GST taxes in l10n_in. This case implies 3 percentage taxes:
+        t1: % tax, include_base_amount
+        t2: same % as t1, include_base_amount, not is_base_affected
+        t3: % tax
+
+        This case is complex because the amounts of t1 and t2 must always be the same.
+        Furthermore, it's a complicated setup due to the usage of include_base_amount / is_base_affected.
+        """
         tax1 = self.percent_tax(6, include_base_amount=True)
         tax2 = self.percent_tax(6, include_base_amount=True, is_base_affected=False)
         tax3 = self.percent_tax(3)
@@ -409,6 +417,10 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
                 self.assert_invoice_tax_totals_summary(invoice, expected_values)
 
     def _test_taxes_l10n_br(self):
+        """ Test suite for the complex division taxes in l10n_be. This case implies 5 division taxes
+        and is quite complicated to handle because they have to be computed all together and are
+        computed as part of the price_unit.
+        """
         tax1 = self.division_tax(5)
         tax2 = self.division_tax(3)
         tax3 = self.division_tax(0.65)
@@ -961,6 +973,10 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
                 self.assert_invoice_tax_totals_summary(invoice, expected_values)
 
     def _test_taxes_l10n_be(self):
+        """ Test suite for the mixing of fixed and percentage taxes in l10n_be. This case implies a fixed tax that affect
+        the base of the following percentage tax. We also have to maintain the case in which the fixed tax is after the percentage
+        one.
+        """
         tax1 = self.fixed_tax(1, include_base_amount=True)
         tax2 = self.percent_tax(21)
         taxes = tax1 + tax2

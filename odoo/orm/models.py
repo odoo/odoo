@@ -6425,6 +6425,9 @@ class BaseModel(metaclass=MetaModel):
     def __hash__(self):
         return hash((self._name, frozenset(self._ids)))
 
+    def __deepcopy__(self, memo):
+        return self
+
     @typing.overload
     def __getitem__(self, key: int | slice) -> Self: ...
 
