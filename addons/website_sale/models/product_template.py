@@ -550,11 +550,11 @@ class ProductTemplate(models.Model):
         monetary_options = {'display_currency': mapping['detail']['display_currency']}
         if combination_info['prevent_zero_price_sale']:
             website = self.env['website'].get_current_website()
-            price = website.prevent_zero_price_sale_text
-        else:
-            price = self.env['ir.qweb.field.monetary'].value_to_html(
-                combination_info['price'], monetary_options
-            )
+            return website.prevent_zero_price_sale_text, None
+
+        price = self.env['ir.qweb.field.monetary'].value_to_html(
+            combination_info['price'], monetary_options
+        )
         if combination_info['has_discounted_price']:
             list_price = self.env['ir.qweb.field.monetary'].value_to_html(
                 combination_info['list_price'], monetary_options
