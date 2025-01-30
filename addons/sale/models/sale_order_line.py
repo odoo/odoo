@@ -162,6 +162,7 @@ class SaleOrderLine(models.Model):
         store=True, readonly=False, precompute=True,
         context={'active_test': False},
         check_company=True)
+    extra_tax_data = fields.Json()
 
     # Tech field caching pricelist rule used for price & discount computation
     pricelist_item_id = fields.Many2one(
@@ -1295,6 +1296,7 @@ class SaleOrderLine(models.Model):
             'tax_ids': [Command.set(self.tax_ids.ids)],
             'sale_line_ids': [Command.link(self.id)],
             'is_downpayment': self.is_downpayment,
+            'extra_tax_data': self.extra_tax_data,
         }
         self._set_analytic_distribution(res, **optional_values)
         downpayment_lines = self.invoice_lines.filtered('is_downpayment')
@@ -1305,6 +1307,21 @@ class SaleOrderLine(models.Model):
         if self.display_type:
             res['account_id'] = False
         return res
+
+    def _prepare_down_payment_line(self, **optional_values):
+        """ After using the down payment wizard in 'percentage' / 'fixed' mode, order lines are added to the SO
+        to reflect the generated invoices but those don't have any impact on the SO total.
+        After that, when using the down payment wizard in 'delivered' mode, those order lines has to be converted
+        into invoice lines. This is done by this current method.
+
+        :param optional_values: Optional additional values to be added to the invoice line values.
+        :return: A python dictionary to be passed to account.move.line's create method.
+        """
+        self.ensure_one()
+        values = self._prepare_invoice_line(**optional_values)
+        # TODO: That's weird to reverse the extra_tax_data here but I don't have to do the same for the quantity itself
+        values['extra_tax_data'] = self.env['account.tax']._reverse_quantity_base_line_extra_tax_data(values['extra_tax_data'])
+        return values
 
     def _set_analytic_distribution(self, inv_line_vals, **optional_values):
         if self.analytic_distribution and not self.display_type:

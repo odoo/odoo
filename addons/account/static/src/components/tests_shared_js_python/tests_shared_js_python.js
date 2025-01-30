@@ -69,6 +69,46 @@ export class TestsSharedJsPython extends Component {
             );
             return {tax_totals: taxTotals, soft_checking: params.soft_checking};
         }
+        if (params.test === "global_discount") {
+            const document = this.populateDocument(params.document);
+            const baseLines = accountTaxHelpers.prepare_global_discount_lines(
+                document.lines,
+                document.company,
+                params.amount_type,
+                params.amount,
+                "global_discount",
+            );
+            document.lines.push(...baseLines);
+            accountTaxHelpers.add_tax_details_in_base_lines(document.lines, document.company);
+            accountTaxHelpers.round_base_lines_tax_details(document.lines, document.company);
+            const taxTotals = accountTaxHelpers.get_tax_totals_summary(
+                document.lines,
+                document.currency,
+                document.company,
+                {cash_rounding: document.cash_rounding}
+            );
+            return {tax_totals: taxTotals, soft_checking: params.soft_checking};
+        }
+        if (params.test === "down_payment") {
+            const document = this.populateDocument(params.document);
+            const baseLines = accountTaxHelpers.prepare_down_payment_lines(
+                document.lines,
+                document.company,
+                params.amount_type,
+                params.amount,
+                "down_payment",
+            );
+            document.lines = baseLines;
+            accountTaxHelpers.add_tax_details_in_base_lines(document.lines, document.company);
+            accountTaxHelpers.round_base_lines_tax_details(document.lines, document.company);
+            const taxTotals = accountTaxHelpers.get_tax_totals_summary(
+                document.lines,
+                document.currency,
+                document.company,
+                {cash_rounding: document.cash_rounding}
+            );
+            return {tax_totals: taxTotals, soft_checking: params.soft_checking};
+        }
     }
 
     async processTests() {

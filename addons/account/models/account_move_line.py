@@ -226,6 +226,8 @@ class AccountMoveLine(models.Model):
         tracking=True,
         help="Tags assigned to this line by the tax creating it, if any. It determines its impact on financial reports.",
     )
+    extra_tax_data = fields.Json()
+
     # Technical field. True if the balance of this move line needs to be
     # inverted when computing its total for each tag (for sales invoices, for # example)
     tax_tag_invert = fields.Boolean(
