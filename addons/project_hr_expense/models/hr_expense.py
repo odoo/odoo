@@ -1,4 +1,6 @@
 from odoo import api, models
+from odoo.tools.query import Query
+from odoo.tools.sql import SQL
 
 
 class HrExpense(models.Model):
@@ -22,3 +24,18 @@ class HrExpense(models.Model):
                 for vals in vals_list:
                     vals['analytic_distribution'] = vals.get('analytic_distribution', analytic_distribution)
         return super().create(vals_list)
+
+    def _read_group_select(self, aggregate_spec, query):
+        _, _, func = models.parse_read_group_spec(aggregate_spec)
+        if func == "analytic_sum":
+            if account_id := self._context["account_id"]:
+                return SQL(
+                    "SUM(%s * ((%s::jsonb ->> %s)::NUMERIC / 100))",
+                    self._field_to_sql(self._table, 'untaxed_amount_currency', query),
+                    self._field_to_sql(self._table, 'analytic_distribution', query),
+                    str(account_id),
+                )
+            else:
+                # fail safe if account_id is not present in context
+                super()._read_group_select('untaxed_amount_currency:sum', query)
+        return super()._read_group_select(aggregate_spec, query)
