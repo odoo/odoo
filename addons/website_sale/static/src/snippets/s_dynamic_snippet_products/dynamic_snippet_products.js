@@ -85,7 +85,7 @@ export class DynamicSnippetProducts extends DynamicSnippetCarousel {
      * @override
      */
     getRpcParameters() {
-        const productTemplateIdEl = document.body.querySelector("#product_details .product_category_id");
+        const productTemplateIdEl = document.body.querySelector("#product_details .product_template_id");
         return Object.assign(super.getRpcParameters(...arguments), {
             productTemplateId: productTemplateIdEl ? productTemplateIdEl.value : undefined,
         });
