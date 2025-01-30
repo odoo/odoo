@@ -16,9 +16,8 @@ class AlarmManager(models.AbstractModel):
         if not events_by_alarm:
             return
 
-        event_ids = list(set(event_id for event_ids in events_by_alarm.values() for event_id in event_ids))
-        events = self.env['calendar.event'].browse(event_ids)
-        alarms = self.env['calendar.alarm'].browse(events_by_alarm.keys())
-        for event in events:
-            alarm = event.alarm_ids.filtered(lambda alarm: alarm.id in alarms.ids)
-            event._do_sms_reminder(alarm)
+        all_events_ids = list({event_id for event_ids in events_by_alarm.values() for event_id in event_ids})
+        for alarm_id, event_ids in events_by_alarm.items():
+            alarm = self.env['calendar.alarm'].browse(alarm_id).with_prefetch(list(events_by_alarm.keys()))
+            events = self.env['calendar.event'].browse(event_ids).with_prefetch(all_events_ids)
+            events._do_sms_reminder(alarm)
