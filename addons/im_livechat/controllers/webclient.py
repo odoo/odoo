@@ -16,6 +16,7 @@ class WebClient(WebclientController):
             },
         )
 
+    @classmethod
     def _process_request_for_internal_user(self, store: Store, name, params):
         super()._process_request_for_internal_user(store, name, params)
         if name == "im_livechat.channel":

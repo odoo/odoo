@@ -36,14 +36,12 @@ test("can create a new channel", async () => {
         ) {
             asyncStep(`${route} - ${JSON.stringify(args)}`);
         }
+        if (route.endsWith("lazy_session_info")) {
+            asyncStep("lazy_session_info");
+        }
     });
     await start();
-    await waitForSteps([
-        `/mail/data - ${JSON.stringify({
-            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
-            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
-        })}`,
-    ]);
+    await waitForSteps([`lazy_session_info`]);
     await openDiscuss();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
@@ -81,6 +79,9 @@ test("can make a DM chat", async () => {
         if (route.startsWith("/mail") || route.startsWith("/discuss")) {
             asyncStep(`${route} - ${JSON.stringify(args)}`);
         }
+        if (route.endsWith("lazy_session_info")) {
+            asyncStep("lazy_session_info");
+        }
     });
     onRpc((params) => {
         if (params.model === "discuss.channel" && ["search_read"].includes(params.method)) {
@@ -92,12 +93,7 @@ test("can make a DM chat", async () => {
         }
     });
     await start();
-    await waitForSteps([
-        `/mail/data - ${JSON.stringify({
-            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
-            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
-        })}`,
-    ]);
+    await waitForSteps([`lazy_session_info`]);
     await openDiscuss();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({

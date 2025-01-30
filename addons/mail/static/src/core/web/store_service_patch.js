@@ -29,11 +29,6 @@ const StorePatch = {
         this.starred = Record.one("Thread");
         this.history = Record.one("Thread");
     },
-    async initialize() {
-        this.fetchStoreData("failures");
-        this.fetchStoreData("systray_get_activities");
-        await super.initialize(...arguments);
-    },
     onStarted() {
         super.onStarted(...arguments);
         this.inbox = {
