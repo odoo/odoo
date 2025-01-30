@@ -310,6 +310,9 @@
                 <t t-snippet="website.s_quotes_carousel_minimal" string="Quotes Minimal" group="people">
                     <keywords>cite, testimonials, endorsements, reviews, feedback, statements, references, sayings, comments, appreciations, citations</keywords>
                 </t>
+                <t t-snippet="website.s_reviews_wall" string="Reviews Wall" group="people">
+                    <keywords>cite, testimonials, endorsements, reviews, feedback, statements, references, sayings, comments, appreciations, citations</keywords>
+                </t>
 
                 <!-- Text group -->
                 <t t-snippet="website.s_title" string="Title" group="text">
@@ -752,18 +755,19 @@
              Note: defined here to be set above all the other options that might
              need it. -->
         <t t-set="card_parent_handlers" t-value="'.s_three_columns .row > div, .s_comparisons .row > div, .s_cards_grid .row > div, .s_cards_soft .row > div, .s_product_list .row > div, .s_newsletter_centered .row > div'"/>
+        <t t-set="blockquote_parent_handlers" t-value="'.s_reviews_wall .row > div'"/>
 
         <!-- Binding the option on the snippet if it is not a s_card with a
              handler parent -->
         <t t-call="web_editor.snippet_options_version_control">
             <t t-set="selector" t-value="'[data-snippet]'"/>
-            <t t-set="exclude" t-valuef="div:is(#{card_parent_handlers}) > .s_card"/>
+            <t t-set="exclude" t-valuef="div:is(#{card_parent_handlers}) > .s_card, div:is(#{blockquote_parent_handlers}) > .s_blockquote"/>
         </t>
 
         <!-- Binding the option on the s_card handler parent -->
         <t t-call="web_editor.snippet_options_version_control">
-            <t t-set="selector" t-valuef="#{card_parent_handlers}"/>
-            <t t-set="target" t-value="'> .s_card'"/>
+            <t t-set="selector" t-valuef="#{card_parent_handlers}, #{blockquote_parent_handlers}"/>
+            <t t-set="target" t-value="'> .s_card, > .s_blockquote'"/>
         </t>
     </xpath>
 
@@ -811,7 +815,7 @@
         <we-checkbox string="Color" data-select-class="no_icon_color|"/>
     </div>
 
-    <div id="so_width" data-selector=".s_alert, .s_blockquote, .s_text_highlight">
+    <div id="so_width" data-selector=".s_alert, .s_text_highlight">
         <we-select string="Width">
             <we-button data-select-class="w-25">25%</we-button>
             <we-button data-select-class="w-50">50%</we-button>
@@ -820,7 +824,7 @@
         </we-select>
     </div>
 
-    <div id="so_block_align" data-selector=".s_alert, .s_blockquote, .s_text_highlight">
+    <div id="so_block_align" data-selector=".s_alert, .s_text_highlight">
         <we-button-group string="Alignment" data-dependencies="!so_width_100">
             <we-button class="fa fa-fw fa-align-left" title="Left" data-select-class="me-auto"/>
             <we-button class="fa fa-fw fa-align-center" title="Center" data-select-class="mx-auto"/>
@@ -918,7 +922,7 @@
 
     <!--  Vertical Alignment -->
     <div data-js="vAlignment" id="row_valign_snippet_option"
-         data-selector=".s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse, .s_references, .s_accordion_image, .s_shape_image"
+         data-selector=".s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse, .s_references, .s_accordion_image, .s_shape_image, .s_reviews_wall"
          data-target=".row">
         <t t-call="website.vertical_alignment_option">
             <t t-set="indent" t-value="True"/>
@@ -940,7 +944,7 @@
 
     <!-- Background -->
     <t t-set="only_bg_color_selector" t-value="'section .row > div, .s_text_highlight, .s_mega_menu_thumbnails_footer, .s_hr, .s_cta_badge'"/>
-    <t t-set="only_bg_color_exclude" t-valuef=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .s_masonry_block .row > div, .s_color_blocks_2 .row > div, .s_image_gallery .row > div, .s_text_cover .row > .o_not_editable, [data-snippet] :not(.oe_structure) > .s_hr, #{card_parent_handlers}"/>
+    <t t-set="only_bg_color_exclude" t-valuef=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .s_masonry_block .row > div, .s_color_blocks_2 .row > div, .s_image_gallery .row > div, .s_text_cover .row > .o_not_editable, [data-snippet] :not(.oe_structure) > .s_hr, #{card_parent_handlers}, #{blockquote_parent_handlers}"/>
 
     <t t-set="base_only_bg_image_selector" t-value="'.s_tabs .oe_structure > *, footer .oe_structure > *'"/>
     <t t-set="only_bg_image_selector" t-value="base_only_bg_image_selector"/>
@@ -990,7 +994,7 @@
     <!-- Border | Columns -->
     <div data-js="Box"
          data-selector="section .row > div"
-         t-attf-data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .s_image_gallery .row > div, .s_masonry_block .s_col_no_resize, .s_text_cover .row > .o_not_editable, #{card_parent_handlers}">
+         t-attf-data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .s_image_gallery .row > div, .s_masonry_block .s_col_no_resize, .s_text_cover .row > .o_not_editable, #{card_parent_handlers}, #{blockquote_parent_handlers}">
         <t t-call="website.snippet_options_border_widgets"/>
         <t t-call="website.snippet_options_shadow_widgets"/>
     </div>
@@ -1017,17 +1021,18 @@
         <!-- TODO should be improved -->
 
     <t t-set="so_content_addition_selector" t-translation="off">
-        blockquote, .s_alert, .o_facebook_page, .s_share, .s_social_media, .s_rating,
+        .s_alert, .o_facebook_page, .s_share, .s_social_media, .s_rating,
         .s_hr, .s_google_map, .s_map, .s_countdown, .s_chart, .s_text_highlight, .s_progress_bar, .s_badge,
         .s_embed_code, .s_donation, .s_add_to_cart, .s_online_appointment, .o_snippet_drop_in_only, .s_image, .s_cta_badge, .s_accordion
     </t>
 
     <t t-set="special_cards_selector" t-valuef=".s_card.s_timeline_card, div:is(#{card_parent_handlers}) > .s_card"/>
+    <t t-set="special_blockquote_selector" t-valuef="div:is(#{blockquote_parent_handlers}) > .s_blockquote"/>
 
     <div id="so_content_addition"
-        t-attf-data-selector="#{so_content_addition_selector}, .s_card"
-        t-attf-data-drop-near="p, h1, h2, h3, ul, ol, div:not(.o_grid_item_image) > img, div:not(.o_grid_item_image) > a:has(img), .btn, #{so_content_addition_selector}, .s_card:not(#{special_cards_selector})"
-        t-attf-data-exclude="#{special_cards_selector}"
+        t-attf-data-selector="#{so_content_addition_selector}, .s_card, .s_blockquote"
+        t-attf-data-drop-near="p, h1, h2, h3, ul, ol, div:not(.o_grid_item_image) > img, div:not(.o_grid_item_image) > a:has(img), .btn, #{so_content_addition_selector}, .s_card:not(#{special_cards_selector}), .s_blockquote:not(#{special_blockquote_selector})"
+        t-attf-data-exclude="#{special_cards_selector}, #{special_blockquote_selector}"
         data-drop-in="nav"/>
 
     <div data-js="SnippetSave"
@@ -1851,7 +1856,7 @@
     <!-- Website Animate -->
     <div data-js="WebsiteAnimate"
          data-selector=".o_animable, section .row > div, img, .fa, .btn, .o_animated_text"
-         data-exclude="[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize"
+         t-attf-data-exclude="[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize, div:is(#{blockquote_parent_handlers}) > .s_blockquote"
          data-text-selector=".o_animated_text">
         <!-- Animation mode -->
         <we-row string="Animation">
