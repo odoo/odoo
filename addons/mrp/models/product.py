@@ -231,7 +231,12 @@ class ProductProduct(models.Model):
         bom_kit = self.env['mrp.bom']._bom_find(self, bom_type='phantom')[self]
         if bom_kit:
             boms, bom_sub_lines = bom_kit.explode(self, 1)
-            return [bom_line.product_id.id for bom_line, data in bom_sub_lines if bom_line.product_id.is_storable]
+            result = []
+            if self.env.context.get('fetch_all_products', False):
+                result = [(bom_line.product_id.id, bom_line.product_qty) for bom_line, _ in bom_sub_lines]
+            else:
+                result = [bom_line.product_id.id for bom_line, data in bom_sub_lines if bom_line.product_id.is_storable]
+            return result
         else:
             return super(ProductProduct, self).get_components()
 
