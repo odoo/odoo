@@ -1,7 +1,7 @@
 import { browser } from "@web/core/browser/browser";
 import { Record } from "./record";
 
-import { Mutex } from "@web/core/utils/concurrency";
+import { Deferred, Mutex } from "@web/core/utils/concurrency";
 
 export const CHAT_HUB_KEY = "mail.ChatHub";
 
@@ -22,18 +22,20 @@ export class ChatHub extends Record {
     static insert(data) {
         return super.insert(...arguments);
     }
+    /** @returns {import("models").ChatHub} */
     static new() {
+        /** @type {import("models").ChatHub} */
         const chatHub = super.new(...arguments);
-        this.store.isReady.then(() => {
-            browser.addEventListener("storage", (ev) => {
-                if (ev.key === CHAT_HUB_KEY) {
-                    chatHub.load(ev.newValue);
-                } else if (ev.key === null) {
-                    chatHub.load();
-                }
-            });
-            chatHub.load(browser.localStorage.getItem(CHAT_HUB_KEY) ?? undefined);
+        browser.addEventListener("storage", (ev) => {
+            if (ev.key === CHAT_HUB_KEY) {
+                chatHub.load(ev.newValue);
+            } else if (ev.key === null) {
+                chatHub.load();
+            }
         });
+        chatHub
+            .load(browser.localStorage.getItem(CHAT_HUB_KEY) ?? undefined)
+            .then(() => chatHub.initPromise.resolve());
         return chatHub;
     }
 
@@ -48,30 +50,17 @@ export class ChatHub extends Record {
     });
     /** From top to bottom. Bottom-most will actually be hidden */
     folded = Record.many("ChatWindow", { inverse: "hubAsFolded" });
+    initPromise = new Deferred();
     loadMutex = new Mutex();
 
-    closeAll() {
+    async closeAll() {
+        await this.initPromise;
+        const promises = [];
         for (const cw of [...this.opened, ...this.folded]) {
-            cw.close({ notifyState: false });
+            promises.push(cw.close({ notifyState: false }));
         }
+        await Promise.all(promises);
         this.save(); // sync only once at the end
-    }
-
-    init() {
-        const { opened = [], folded = [] } = JSON.parse(
-            browser.localStorage.getItem(CHAT_HUB_KEY) ?? "{}"
-        );
-        for (const threadData of [...opened, ...folded]) {
-            this.initThread(threadData);
-        }
-    }
-
-    initThread(threadData) {
-        this.store.fetchStoreData("mail.thread", {
-            thread_model: threadData.model,
-            thread_id: threadData.id,
-            request_list: ["display_name"],
-        });
     }
 
     onRecompute() {
@@ -81,46 +70,34 @@ export class ChatHub extends Record {
         }
     }
 
-    load(str = "{}") {
-        this.loadMutex.exec(() => this._load(str));
+    async load(str = "{}") {
+        await this.loadMutex.exec(() => this._load(str));
     }
 
     async _load(str) {
+        /** @type {{ opened: Object[], folded: Object[] }} */
         const { opened = [], folded = [] } = JSON.parse(str);
-        const openCandidates = [];
-        const foldCandidates = [];
-        const promises = [];
-        for (const threadData of opened) {
-            promises.push(
-                this.store.Thread.getOrFetch(threadData).then((thread) => {
-                    if (thread) {
-                        openCandidates.push(this.store.ChatWindow.insert({ thread }));
-                    }
-                })
-            );
-        }
-        for (const threadData of folded) {
-            promises.push(
-                this.store.Thread.getOrFetch(threadData).then((thread) => {
-                    if (thread) {
-                        foldCandidates.push(this.store.ChatWindow.insert({ thread }));
-                    }
-                })
-            );
-        }
-        await Promise.all(promises);
-        // state might change while waiting for all data to be loaded
-        const toFold = foldCandidates.filter((chatWindow) => chatWindow.exists());
-        const toOpen = openCandidates.filter((chatWindow) => chatWindow.exists());
+        const getThread = (data) => this.store.Thread.getOrFetch(data, ["display_name"]);
+        const openPromises = opened.map(getThread);
+        const foldPromises = folded.map(getThread);
+        const foldThreads = await Promise.all(foldPromises);
+        const openThreads = await Promise.all(openPromises);
+        /** @param {import("models").Thread[]} threads */
+        const insertChatWindows = (threads) =>
+            threads
+                .filter((thread) => thread)
+                .map((thread) => this.store.ChatWindow.insert({ thread }));
+        const toFold = insertChatWindows(foldThreads);
+        const toOpen = insertChatWindows(openThreads);
         // close first to make room for others
         for (const chatWindow of [...this.opened, ...this.folded]) {
             if (chatWindow.notIn(toOpen) && chatWindow.notIn(toFold)) {
-                chatWindow.close({ notifyState: false });
+                chatWindow.close({ force: true, notifyState: false });
             }
         }
         // folded before opened because if there are too many opened they will be added to folded
-        this.folded = toFold.filter((chatWindow) => chatWindow.exists());
-        this.opened = toOpen.filter((chatWindow) => chatWindow.exists());
+        this.folded = toFold;
+        this.opened = toOpen;
     }
 
     get maxOpened() {
