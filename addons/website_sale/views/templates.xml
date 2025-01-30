@@ -458,7 +458,7 @@
                         <div id="products_grid" t-attf-class="col">
                             <t
                                 t-set="_header_has_content"
-                                t-value="category or opt_wsale_categories_top or (not is_view_active('website_sale.floating_bar') and (opt_wsale_attributes_top or is_view_active('website_sale.search') or is_view_active('website_sale.sort') or hasPricelistDropdown))"
+                                t-value="category or opt_wsale_categories_top or (not opt_wsale_floating_bar and (opt_wsale_attributes_top or is_view_active('website_sale.search') or is_view_active('website_sale.sort') or hasPricelistDropdown))"
                             />
 
                             <header
@@ -508,9 +508,9 @@
                                    t-call="website_sale.filmstrip_categories"
                                 />
                                 <div
-                                    t-if="not is_view_active('website_sale.floating_bar')"
+                                    t-if="not opt_wsale_floating_bar"
                                     class="products_header btn-toolbar flex-nowrap align-items-center justify-content-between gap-1 gap-lg-2 gap-xl-3"
-                                    >
+                                >
                                     <t t-if="is_view_active('website_sale.search')">
                                         <t t-set="_has_all_sibligns" t-value="hasPricelistDropdown and is_view_active('website_sale.sort') and wsale_has_filters_btn"></t>
                                         <div t-attf-class="o_wsale_products_header_search_form_container {{ _has_all_sibligns and 'd-none d-sm-inline-block'}} col-xl-5 me-auto {{not hasLeftColumn and 'col-xl-6'}}"
@@ -538,11 +538,13 @@
                                         t-if="is_view_active('website_sale.sort')"
                                         t-call="website_sale.sort"
                                     />
-                                    <button t-if="wsale_has_filters_btn"
-                                            t-attf-class="btn btn-{{navClass}} position-relative {{not wsale_has_filters_btn_lg and 'd-lg-none'}} {{not is_view_active('website_sale.search') and 'ms-auto'}} text-nowrap"
-                                            title="Filters"
-                                            data-bs-toggle="offcanvas"
-                                            data-bs-target="#o_wsale_offcanvas">
+                                    <button
+                                        t-if="wsale_has_filters_btn"
+                                        t-attf-class="btn btn-{{navClass}} position-relative {{not wsale_has_filters_btn_lg and 'd-lg-none'}} {{not is_view_active('website_sale.search') and 'ms-auto'}} text-nowrap"
+                                        title="Filters"
+                                        data-bs-toggle="offcanvas"
+                                        data-bs-target="#o_wsale_offcanvas"
+                                    >
                                         <i class="oi oi-settings-adjust" role="img"/>
                                         <small t-attf-class="ms-1 {{(hasPricelistDropdown and is_view_active('website_sale.search') and is_view_active('website_sale.sort')) and 'd-none d-md-inline-block'}}">Filters</small>
                                         <span
@@ -619,7 +621,7 @@
                                 </t>
                                 <p t-ignore="true" groups="sales_team.group_sale_manager">Click <i>'New'</i> in the top-right corner to create your first product.</p>
                             </div>
-                            <div t-attf-class="products_pager d-flex justify-content-center {{opt_wsale_design_grid and 'py-4' or 'py-5 pb-4'}}">
+                            <div id="o_wsale_pager" t-attf-class="products_pager d-flex justify-content-center {{opt_wsale_design_grid and 'py-4' or 'py-5 pb-4'}}">
                                 <t t-call="website.pager"/>
                             </div>
                             <t t-if="category">
@@ -1014,6 +1016,86 @@
                 </ul>
             </div>
         </div>
+    </template>
+
+    <!-- Floating Toolbar -->
+    <template
+        id="website_sale.floating_bar"
+        name="Shop Floating Bar"
+        inherit_id="website_sale.products"
+        active="False"
+    >
+        <xpath expr="//div[hasclass('o_wsale_products_main_row')]" position="attributes">
+            <attribute name="class" add="position-relative" separator=" "/>
+        </xpath>
+
+        <xpath expr="//div[@id='o_wsale_pager']" position="attributes">
+            <attribute name="t-attf-class" add="o_wsale_pager_accommodate_floating" separator=" "/>
+        </xpath>
+
+        <xpath expr="//div[@id='products_grid']" position="after">
+            <t
+                t-set="floatBar_hasSort"
+                t-value="is_view_active('website_sale.sort')"
+            />
+            <t
+                t-set="floatBar_hasSearch"
+                t-value="is_view_active('website_sale.search')"
+            />
+            <t
+                t-set="website_sale_pricelists"
+                t-value="website_sale_pricelists or website.get_pricelist_available(show_visible=True)"
+            />
+            <t
+                t-set="floatBar_hasPricelist"
+                t-value="website_sale_pricelists and len(website_sale_pricelists)&gt;1"
+            />
+            <div
+                id="o_wsale_floating_bar_rail"
+                class="o_not_editable position-absolute top-0 bottom-0 d-flex justify-content-end align-items-end p-0"
+            >
+                <nav
+                    id="o_wsale_floating_bar"
+                    t-attf-class="navbar position-sticky z-3 d-flex gap-1 gap-lg-2 flex-shrink-0 bg-body rounded mb-2 px-2 px-lg-3 shadow {{floatBar_hasSearch and 'ps-1 ps-lg-1'}}  {{floatBar_hasPricelist and 'o_wsale_has_pricelist'}}"
+                >
+                    <div t-if="floatBar_hasSearch">
+                        <a
+                            t-attf-class="btn o_not_editable {{(wsale_has_filters_btn or floatBar_hasSort or floatBar_hasPricelist) and 'me-n2'}}"
+                            data-bs-target="#o_wsale_search_modal"
+                            data-bs-toggle="modal"
+                            role="button"
+                            title="Search Products"
+                            href="#"
+                        >
+                            <i class="oi oi-search" role="img"/>
+                        </a>
+                    </div>
+                    <span
+                        t-if="floatBar_hasSearch and (wsale_has_filters_btn or floatBar_hasSort or floatBar_hasPricelist)"
+                        t-attf-class="align-self-stretch border-start opacity-50 {{(not floatBar_hasSort and not floatBar_hasPricelist and not wsale_has_filters_btn_lg) and 'd-lg-none'}}"
+                    />
+                    <t t-if="floatBar_hasPricelist" t-call="website_sale.pricelist_list"/>
+                    <t
+                        t-if="floatBar_hasSort"
+                        t-call="website_sale.sort"
+                    />
+                    <button
+                        t-if="wsale_has_filters_btn"
+                        t-attf-class="btn btn-{{navClass}} position-relative {{not wsale_has_filters_btn_lg and 'd-lg-none'}}"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#o_wsale_offcanvas"
+                    >
+                        <i class="oi oi-settings-adjust" role="img"/>
+                        <span
+                            t-if="isFilteringByPrice or attrib_set or tags"
+                            t-attf-class="position-absolute top-0 start-100 translate-middle rounded-circle bg-danger p-1"
+                        >
+                            <span class="visually-hidden">filters active</span>
+                        </span>
+                    </button>
+                </nav>
+            </div>
+        </xpath>
     </template>
 
     <!-- Add to cart button-->
