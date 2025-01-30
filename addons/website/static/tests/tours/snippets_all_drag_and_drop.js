@@ -41,7 +41,7 @@ for (let snippet of snippetsNames) {
         name: snippet.split(':')[0],
         group: snippet.split(':')[1],
     };
-    const isModal = ['s_popup', 's_newsletter_subscribe_popup'].includes(snippet.name);
+    const isModal = ['s_popup', 's_newsletter_subscribe_popup', 's_newsletter_benefits'].includes(snippet.name);
     const isDropInOnlySnippet = Object.keys(dropInOnlySnippets).includes(snippet.name);
 
     let draggableElSelector = "";

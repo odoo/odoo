@@ -28,6 +28,9 @@
     <xpath expr="//t[@id='mass_mailing_newsletter_popup_hook']" position="replace">
         <t t-snippet="website_mass_mailing.s_newsletter_subscribe_popup" string="Newsletter Popup" t-forbid-sanitize="form" group="contact_and_forms"/>
     </xpath>
+    <xpath expr="//t[@id='mass_mailing_newsletter_benefits_hook']" position="replace">
+        <t t-snippet="website_mass_mailing.s_newsletter_benefits" string="Newsletter Benefits" t-forbid-sanitize="form" group="contact_and_forms"/>
+    </xpath>
     <xpath expr="//t[@id='mass_mailing_newsletter_hook']" position="replace">
         <t t-snippet="website_mass_mailing.s_newsletter_subscribe_form" string="Newsletter" t-thumbnail="/website/static/src/img/snippets_thumbs/s_newsletter_subscribe_form.svg" t-forbid-sanitize="form"/>
     </xpath>
@@ -295,6 +298,49 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
             </div>
         </div>
     </div>
+</template>
+
+<template id="s_newsletter_benefits" name="Newsletter Benefits">
+    <div class="s_popup o_newsletter_popup o_snippet_invisible" data-vcss="001" data-invisible="1">
+        <div class="modal fade s_popup_middle o_newsletter_modal"
+             style="background-color: var(--black-50) !important;"
+             data-show-after="5000" data-display="afterDelay" data-consents-duration="7"
+             data-bs-focus="false" data-bs-backdrop="false" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg d-flex">
+                <div class="modal-content oe_structure">
+                    <div class="s_popup_close js_close_popup o_we_no_overlay o_not_editable shadow-none" aria-label="Close">&#215;</div>
+                    <div class="s_media_list_item" data-name="Box">
+                        <div class="row s_col_no_resize s_col_no_bgcolor o_colored_level o_cc o_cc1 g-0 align-items-center p-lg-5 overflow-hidden">
+                            <div class="s_media_list_img_wrapper col-lg-6 align-self-stretch">
+                                <img src="/web_editor/shape/website_mass_mailing/s_newsletter_benefits.svg" class="s_media_list_img h-100 w-100 object-fit-cover" alt=""/>
+                            </div>
+                            <div class="s_media_list_body col-lg-6 p-4">
+                                <h3>Stay Ahead with weekly insights &amp; updates</h3>
+                                <p class="lead">Join our mailing list to receive carefully curated resources, tips, and updates straight to your inbox.</p>
+                                <p><i class="fa fa-check text-o-color-1" role="img"/>&#160;&#160;Curated Industry Insights</p>
+                                <p><i class="fa fa-check text-o-color-1" role="img"/>&#160;&#160;Expert Tips &amp; How-Tos</p>
+                                <p><i class="fa fa-check text-o-color-1" role="img"/>&#160;&#160;Guides &amp; Resources</p>
+                                <t t-snippet-call="website_mass_mailing.s_newsletter_subscribe_form">
+                                    <t t-set="thank_you_message">
+                                        <p class="h6-fs text-success">Thanks for registering!</p>
+                                    </t>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="s_newsletter_benefits_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <!-- Layout -->
+        <div data-selector=".s_media_list_item" data-target="> div">
+            <we-range string="Padding" data-select-class="p-lg-0|p-lg-1|p-lg-2|p-lg-3|p-lg-4|p-lg-5"/>
+        </div>
+    </xpath>
 </template>
 
 <template id="newsletter_subscribe_options" name="Newsletter Subscribe Options" inherit_id="website.snippet_options">
