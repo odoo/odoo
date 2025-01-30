@@ -91,6 +91,9 @@ export class BlockTab extends Component {
             this.dropzonePlugin.displayDropZone(snippet);
         }
         const addElement = this.dropzonePlugin.getAddElement(position);
+        if (addElement.noDrop) {
+            return;
+        }
         this.dialog.add(
             AddSnippetDialog,
             {

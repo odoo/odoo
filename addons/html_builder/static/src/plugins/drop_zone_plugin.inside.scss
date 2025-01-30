@@ -1,3 +1,20 @@
+#wrap.o_editable {
+    .oe_drop_zone.oe_insert:only-child {
+        $-margin-inline: 2%;
+        height: 100%;
+        width: 100% - 2 * $-margin-inline;
+        padding: 112px 0;
+        margin: 20px $-margin-inline;
+
+        &::before {
+            content: attr(data-editor-message);
+            display: block;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+    }
+}
+
 .oe_drop_zone {
     height: 10px;
     background: $o-we-dropzone-bg-color;
