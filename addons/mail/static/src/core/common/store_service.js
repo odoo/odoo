@@ -232,7 +232,6 @@ export class Store extends BaseStore {
 
     /** Import data received from init_messaging */
     async initialize() {
-        this.chatHub.init();
         await this.fetchStoreData("init_messaging");
         this.isReady.resolve();
     }
@@ -355,6 +354,7 @@ export class Store extends BaseStore {
             default_display_mode: "video_full_screen",
             partners_to: [this.self.id],
         });
+        await this.store.chatHub.initPromise;
         this.ChatWindow.get(thread)?.update({ autofocus: 0 });
         this.env.services["discuss.rtc"].toggleCall(thread, { camera: true });
         this.openInviteThread = thread;
@@ -591,7 +591,7 @@ export class Store extends BaseStore {
         this.store.insert(data);
         const thread = this.store.Thread.get({ id: channel_id, model: "discuss.channel" });
         if (forceOpen) {
-            thread.openChatWindow({ focus: true });
+            await thread.openChatWindow({ focus: true });
         }
         return thread;
     }

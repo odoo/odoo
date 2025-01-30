@@ -11,8 +11,12 @@ export class ChatWindow extends Record {
     static get(data) {
         return super.get(data);
     }
-    /** @returns {import("models").ChatWindow|import("models").ChatWindow[]} */
-    static insert() {
+    /**
+     * @template T
+     * @param {T} data
+     * @returns {T extends any[] ? import("models").ChatWindow[] : import("models").ChatWindow}
+     */
+    static insert(data) {
         return super.insert(...arguments);
     }
 
@@ -34,7 +38,8 @@ export class ChatWindow extends Record {
         return Boolean(this.hubAsOpened);
     }
 
-    close(options = {}) {
+    async close(options = {}) {
+        await this.store.chatHub.initPromise;
         const { escape = false } = options;
         options.notifyState ??= true;
         const chatHub = this.store.chatHub;
@@ -58,14 +63,16 @@ export class ChatWindow extends Record {
         }
     }
 
-    fold() {
+    async fold() {
+        await this.store.chatHub.initPromise;
         this.store.chatHub.opened.delete(this);
         this.store.chatHub.folded.delete(this);
         this.store.chatHub.folded.unshift(this);
         this.store.chatHub.save();
     }
 
-    open({ focus = false, notifyState = true, jumpToNewMessage = false } = {}) {
+    async open({ focus = false, notifyState = true, jumpToNewMessage = false } = {}) {
+        await this.store.chatHub.initPromise;
         this.store.chatHub.folded.delete(this);
         this.store.chatHub.opened.delete(this);
         this.store.chatHub.opened.unshift(this);

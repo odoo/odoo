@@ -40,8 +40,23 @@ export class Thread extends Record {
     static insert(data) {
         return super.insert(...arguments);
     }
-    static async getOrFetch(data) {
-        return this.get(data);
+    static async getOrFetch(data, fieldNames = []) {
+        let thread = this.get(data);
+        if (
+            data.id > 0 &&
+            (!thread || fieldNames.some((fieldName) => thread[fieldName] === undefined))
+        ) {
+            await this.store.fetchStoreData("mail.thread", {
+                thread_model: data.model,
+                thread_id: data.id,
+                request_list: fieldNames,
+            });
+            thread = this.get(data);
+            if (!thread.exists() || !thread.hasReadAccess) {
+                return;
+            }
+        }
+        return thread;
     }
 
     /** @type {number} */
@@ -78,8 +93,8 @@ export class Thread extends Record {
         /** @this {import("models").Thread} */
         onUpdate() {
             if (this.close_chat_window) {
-                this.closeChatWindow();
                 this.close_chat_window = undefined;
+                this.closeChatWindow({ force: true });
             }
         },
     });
@@ -683,7 +698,12 @@ export class Thread extends Record {
     /** @param {Object} [options] */
     open(options) {}
 
-    openChatWindow({ focus = false, fromMessagingMenu } = {}) {
+    async openChatWindow({ focus = false, fromMessagingMenu } = {}) {
+        const thread = await this.store.Thread.getOrFetch(this);
+        if (!thread) {
+            return;
+        }
+        await this.store.chatHub.initPromise;
         const cw = this.store.ChatWindow.insert(
             assignDefined({ thread: this }, { fromMessagingMenu })
         );
@@ -694,9 +714,10 @@ export class Thread extends Record {
         return cw;
     }
 
-    closeChatWindow(options = {}) {
+    async closeChatWindow(options = {}) {
+        await this.store.chatHub.initPromise;
         const chatWindow = this.store.ChatWindow.get({ thread: this });
-        chatWindow?.close({ notifyState: false, ...options });
+        await chatWindow?.close({ notifyState: false, ...options });
     }
 
     pin() {

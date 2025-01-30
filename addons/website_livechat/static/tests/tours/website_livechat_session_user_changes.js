@@ -17,7 +17,6 @@ registry.category("web_tour.tours").add("website_livechat_login_after_chat_start
         },
         {
             trigger: ".o-livechat-root:shadow .o-mail-Message-content:contains('Hello!')",
-            run: "click",
         },
         {
             trigger: "a:contains(Sign in)",
@@ -42,9 +41,7 @@ registry.category("web_tour.tours").add("website_livechat_login_after_chat_start
             },
         },
         {
-            content:
-                "Livechat button is present since the old livechat session was linked to the public user, not the current user.",
-            trigger: ".o-livechat-root:shadow .o-livechat-LivechatButton",
+            trigger: ".o-livechat-root:shadow .o-mail-Message-content:contains('Hello!')",
         },
     ],
 });
