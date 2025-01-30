@@ -357,15 +357,12 @@ patch(PosStore.prototype, {
             );
             const qtyChange = tableOrders.reduce(
                 (acc, order) => {
-                    const quantityChange = this.getOrderChanges(false, order);
-                    const quantitySkipped = this.getOrderChanges(true, order);
+                    const quantityChange = this.getOrderChanges(order);
                     acc.changed += quantityChange.count;
-                    acc.skipped += quantitySkipped.count;
                     return acc;
                 },
-                { changed: 0, skipped: 0 }
+                { changed: 0 }
             );
-
             table.uiState.orderCount = tableOrders.length;
             table.uiState.changeCount = qtyChange.changed;
         }
