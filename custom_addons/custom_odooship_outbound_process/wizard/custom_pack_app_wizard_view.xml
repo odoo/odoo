@@ -15,11 +15,14 @@
                             <field name="picking_id" options="{'no_open': True}"
                                    invisible="1"
                                    readonly="True"/>
+                            <field name="pack_bench_id"/>
                         </group>
                         <group>
                             <field name="package_box_type_id"
+                                   invisible="show_package_box_in_lines != True"
                                    placeholder="Select Packaging Box"/>
                             <field name="site_code_id"/>
+                            <field name="show_package_box_in_lines" invisible="True"/>
                         </group>
                     </group>
                     <group>
@@ -35,6 +38,7 @@
                                 <field name="picking_id" readonly="1"/>
                                 <field name="tenant_code_id" readonly="1"/>
                                 <field name="site_code_id" readonly="1"/>
+                                <field name="package_box_type_id" column_invisible="parent.show_package_box_in_lines !='False'"/>
                                 <field name="quantity"/>
                                 <field name="available_quantity"/>
                                 <field name="remaining_quantity" column_invisible="True"/>
