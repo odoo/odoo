@@ -26,7 +26,9 @@ const { COLORS } = ColorList;
 const formatters = registry.category("formatters");
 
 // These classes determine whether a click on a record should open it.
-export const CANCEL_GLOBAL_CLICK = ["a", ".dropdown", ".oe_kanban_action", "[data-bs-toggle]"].join(",");
+export const CANCEL_GLOBAL_CLICK = ["a", ".dropdown", ".oe_kanban_action", "[data-bs-toggle]"].join(
+    ","
+);
 const ALLOW_GLOBAL_CLICK = [".oe_kanban_global_click", ".oe_kanban_global_click_edit"].join(",");
 
 /**
@@ -150,8 +152,9 @@ function isBinSize(value) {
  * @returns {boolean} true if no content found or if containing only formatting tags
  */
 function isHtmlEmpty(innerHTML = "") {
-    const div = Object.assign(document.createElement("div"), { innerHTML });
-    return div.innerText.trim() === "";
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(innerHTML, "text/html");
+    return doc.body.innerText.trim() === "";
 }
 
 export class KanbanRecord extends Component {
