@@ -9,7 +9,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { QuickReactionMenu } from "@mail/core/common/quick_reaction_menu";
 import { describe, test } from "@odoo/hoot";
-import { press } from "@odoo/hoot-dom";
+import { animationFrame, press } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -101,4 +101,25 @@ test("navigate quick reaction menu using arrow keys", async () => {
         await press("ArrowLeft");
     }
     await contains(".o-mail-QuickReactionMenu-emojiPicker:focus");
+});
+
+test("can quick search emoji from quick reaction", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "Hello world!");
+    await press("Enter");
+    await click("[title='Add a Reaction']");
+    await contains(".o-mail-QuickReactionMenu");
+    await press("b");
+    await contains(".o-EmojiPicker");
+    await contains(".o-EmojiPicker-search input:value('b')");
+    for (const ch of [..."roccoli"]) {
+        await press(ch);
+    }
+    await contains(".o-EmojiPicker-search input:value('broccoli')");
+    await animationFrame();
+    await press("Enter");
+    await contains(".o-mail-MessageReaction", { text: "🥦1" });
 });

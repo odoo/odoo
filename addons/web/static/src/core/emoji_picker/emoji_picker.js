@@ -92,7 +92,7 @@ export const PICKER_PROPS = [
 ];
 
 export class EmojiPicker extends Component {
-    static props = [...PICKER_PROPS, "class?"];
+    static props = [...PICKER_PROPS, "class?", "initialSearchTerm?"];
     static template = "web.EmojiPicker";
 
     categories = null;
@@ -110,7 +110,7 @@ export class EmojiPicker extends Component {
         this.state = useState({
             activeEmojiIndex: 0,
             categoryId: null,
-            searchTerm: "",
+            searchTerm: this.props.initialSearchTerm ?? "",
             /** @type {Emoji|undefined} */
             hoveredEmoji: undefined,
         });
@@ -580,7 +580,7 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
             }
             return def;
         }
-        return popover.open(ref.el, props);
+        return popover.open(ref.el, { ...props, ...openProps });
     }
 
     function close() {
