@@ -1,10 +1,11 @@
-import { PortalHomeCounters } from '@portal/js/portal';
+import { patch } from "@web/core/utils/patch";
+import { PortalHomeCounters } from '@portal/interactions/portal_home_counters';
 
-PortalHomeCounters.include({
+patch(PortalHomeCounters.prototype, {
     /**
      * @override
      */
-    _getCountersAlwaysDisplayed() {
-        return this._super(...arguments).concat(['invoice_count']);
+    getCountersAlwaysDisplayed() {
+        return super.getCountersAlwaysDisplayed(...arguments).concat(['invoice_count']);
     },
 });
