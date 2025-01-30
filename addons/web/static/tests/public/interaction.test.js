@@ -486,10 +486,9 @@ describe("handling crashes", () => {
         class Test extends Interaction {
             static selector = ".test";
             start() {
-                expect(() => this.addListener(this.el, "click", null))
-                    .toThrow(
-                        "Invalid listener for event 'click' (not a function)"
-                    );
+                expect(() => this.addListener(this.el, "click", null)).toThrow(
+                    "Invalid listener for event 'click' (not a function)"
+                );
             }
         }
         await startInteraction(Test, TemplateTest);
@@ -505,9 +504,9 @@ describe("handling crashes", () => {
                 this.addListener(this.el.querySelector("span"), "click", () => clicked++);
             }
         }
-        await expect(startInteraction(Test, TemplateTest))
-            .rejects
-            .toThrow("this.addListener can only be called after the interaction is started");
+        await expect(startInteraction(Test, TemplateTest)).rejects.toThrow(
+            "this.addListener can only be called after the interaction is started"
+        );
     });
 
     test("cannot update content while updating content", async () => {
@@ -563,12 +562,12 @@ describe("handling crashes", () => {
         class Test extends Interaction {
             static selector = ".test";
             dynamicContent = {
-                span: { click: () => { } },
+                span: { click: () => {} },
             };
         }
-        await expect(startInteraction(Test, TemplateTest))
-            .rejects
-            .toThrow("Invalid directive: 'click' (should start with t-)");
+        await expect(startInteraction(Test, TemplateTest)).rejects.toThrow(
+            "Invalid directive: 'click' (should start with t-)"
+        );
     });
 
     test("crash if dynamicContent is defined on class, not on instance", async () => {
@@ -576,18 +575,18 @@ describe("handling crashes", () => {
             static selector = ".test";
             static dynamicContent = {};
         }
-        await expect(startInteraction(Test, TemplateTest))
-            .rejects
-            .toThrow("The dynamic content object should be defined on the instance, not on the class (Test)");
+        await expect(startInteraction(Test, TemplateTest)).rejects.toThrow(
+            "The dynamic content object should be defined on the instance, not on the class (Test)"
+        );
     });
 
     test("crash if selector is defined on instance, not on class", async () => {
         class Test extends Interaction {
             selector = ".test";
         }
-        await expect(startInteraction(Test, TemplateTest))
-            .rejects
-            .toThrow("The selector should be defined as a static property on the class Test, not on the instance");
+        await expect(startInteraction(Test, TemplateTest)).rejects.toThrow(
+            "The selector should be defined as a static property on the class Test, not on the instance"
+        );
     });
 });
 
@@ -973,6 +972,33 @@ describe("waitFor...", () => {
             expect.verifySteps([]);
             await click(".test");
             expect.verifySteps(["waitfor", "clicked", "updatecontent"]);
+        });
+
+        test("waitFor rethrow errors", async () => {
+            class Test extends Interaction {
+                static selector = ".test";
+                dynamicContent = {
+                    _root: { "t-on-click": this.onClick },
+                };
+                async onClick() {
+                    try {
+                        expect.step("before");
+                        await this.waitFor(Promise.reject(new Error("boom")));
+                        expect.step("after");
+                    } catch (e) {
+                        expect.step("in catch");
+                        expect(e.message).toBe("boom");
+                    }
+                }
+                updateContent() {
+                    expect.step("updatecontent");
+                    super.updateContent();
+                }
+            }
+            await startInteraction(Test, TemplateTest);
+            expect.verifySteps([]);
+            await click(".test");
+            expect.verifySteps(["before", "in catch", "updatecontent"]);
         });
     });
 
