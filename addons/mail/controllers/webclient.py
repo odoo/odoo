@@ -25,6 +25,7 @@ class WebclientController(http.Controller):
         """
         return self._process_request(fetch_params, context=context)
 
+    @classmethod
     def _process_request(self, fetch_params, context):
         store = Store()
         if context:
@@ -32,6 +33,7 @@ class WebclientController(http.Controller):
         self._process_request_loop(store, fetch_params)
         return store.get_result()
 
+    @classmethod
     def _process_request_loop(self, store: Store, fetch_params):
         for fetch_param in fetch_params:
             name, params = (fetch_param, None) if isinstance(fetch_param, str) else fetch_param
@@ -41,6 +43,7 @@ class WebclientController(http.Controller):
             if request.env.user._is_internal():
                 self._process_request_for_internal_user(store, name, params)
 
+    @classmethod
     def _process_request_for_all(self, store: Store, name, params):
         if name == "init_messaging":
             if not request.env.user._is_public():
@@ -62,6 +65,7 @@ class WebclientController(http.Controller):
             else:
                 store.add(thread, request_list=params["request_list"], as_thread=True)
 
+    @classmethod
     def _process_request_for_logged_in_user(self, store: Store, name, params):
         if name == "failures":
             domain = [
@@ -76,6 +80,7 @@ class WebclientController(http.Controller):
             notifications = request.env["mail.notification"].sudo().search(domain, limit=100)
             notifications.mail_message_id._message_notifications_to_store(store)
 
+    @classmethod
     def _process_request_for_internal_user(self, store: Store, name, params):
         if name == "systray_get_activities":
             # sudo: bus.bus: reading non-sensitive last id

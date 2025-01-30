@@ -14,6 +14,7 @@ import { serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 import { groupBy } from "@web/core/utils/arrays";
 
+const mockRpcRegistry = registry.category("mock_rpc");
 export const DISCUSS_ACTION_ID = 104;
 
 /**
@@ -93,13 +94,13 @@ export function registerRoute(route, handler) {
             return res;
         }
         const response = handler.call(this, request);
-        res = await beforeCallableHandler.after?.(response);
+        res = await beforeCallableHandler?.after?.(response);
         if (res !== undefined) {
             return res;
         }
         return response;
     };
-    registry.category("mock_rpc").add(route, beforeCallableHandler);
+    mockRpcRegistry.add(route, beforeCallableHandler);
 }
 
 // RPC handlers
@@ -963,7 +964,11 @@ async function mail_thread_subscribe(request) {
 async function processRequest(request) {
     const store = new mailDataHelpers.Store();
     const args = await parseRequestParams(request);
-    for (const fetchParam of args.fetch_params) {
+    let fetchParams = args.fetch_params;
+    if (args.method === "lazy_session_info") {
+        fetchParams = ["failures", "systray_get_activities", "init_messaging"];
+    }
+    for (const fetchParam of fetchParams) {
         const [name, params] =
             typeof fetchParam === "string" || fetchParam instanceof String
                 ? [fetchParam, undefined]
@@ -1394,6 +1399,12 @@ class Store {
         return record.id;
     }
 }
+
+registerRoute("/web/dataset/call_kw/ir.http/lazy_session_info", async function (request) {
+    return {
+        store_data: (await processRequest.call(this, request)).get_result(),
+    };
+});
 
 export const mailDataHelpers = {
     _process_request_for_all,

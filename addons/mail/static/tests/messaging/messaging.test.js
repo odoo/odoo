@@ -34,18 +34,11 @@ test("Receiving a new message out of discuss app should open a chat bubble", asy
         ],
         channel_type: "chat",
     });
-    onRpcBefore("/mail/data", (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep(`/mail/data - ${JSON.stringify(args)}`);
-        }
+    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", (args) => {
+        asyncStep("init_messaging");
     });
     await start();
-    await waitForSteps([
-        `/mail/data - ${JSON.stringify({
-            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
-            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
-        })}`,
-    ]);
+    await waitForSteps(["init_messaging"]);
     // send after init_messaging because bus subscription is done after init_messaging
     // simulate receving new message
     withUser(userId, () =>
@@ -69,18 +62,11 @@ test("Receiving a new message in discuss app should open a chat bubble after lea
         ],
         channel_type: "chat",
     });
-    onRpcBefore("/mail/data", (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep(`/mail/data - ${JSON.stringify(args)}`);
-        }
+    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", (args) => {
+        asyncStep("init_messaging");
     });
     await start();
-    await waitForSteps([
-        `/mail/data - ${JSON.stringify({
-            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
-            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
-        })}`,
-    ]);
+    await waitForSteps(["init_messaging"]);
     // send after init_messaging because bus subscription is done after init_messaging
     await openDiscuss();
     // simulate receiving new message

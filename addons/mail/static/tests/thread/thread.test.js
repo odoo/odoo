@@ -288,8 +288,11 @@ test("mark channel as fetched when a new message is loaded", async () => {
         ],
         channel_type: "chat",
     });
+    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", (args) => {
+        asyncStep(`lazy_session_info`);
+    });
     onRpcBefore("/mail/data", (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
+        if (JSON.stringify(args.fetch_params).includes("discuss.channel")) {
             asyncStep(`/mail/data - ${JSON.stringify(args)}`);
         }
     });
@@ -305,13 +308,9 @@ test("mark channel as fetched when a new message is loaded", async () => {
     await start();
     await contains(".o_menu_systray i[aria-label='Messages']");
     await waitForSteps([
+        `lazy_session_info`,
         `/mail/data - ${JSON.stringify({
-            fetch_params: [
-                "failures",
-                "systray_get_activities",
-                "init_messaging",
-                ["discuss.channel", [channelId]],
-            ],
+            fetch_params: [["discuss.channel", [channelId]]],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);

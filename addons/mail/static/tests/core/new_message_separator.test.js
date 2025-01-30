@@ -252,20 +252,19 @@ test("show new message separator when message is received while chat window is c
         channel_type: "chat",
     });
     onRpcBefore("/mail/data", (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
+        if (JSON.stringify(args.fetch_params).includes("discuss.channel")) {
             asyncStep(`/mail/data - ${JSON.stringify(args)}`);
         }
+    });
+    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", (args) => {
+        asyncStep("init_messaging");
     });
     setupChatHub({ opened: [channelId] });
     await start();
     await waitForSteps([
+        "init_messaging",
         `/mail/data - ${JSON.stringify({
-            fetch_params: [
-                "failures",
-                "systray_get_activities",
-                "init_messaging",
-                ["discuss.channel", [channelId]],
-            ],
+            fetch_params: [["discuss.channel", [channelId]]],
             context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
         })}`,
     ]);
