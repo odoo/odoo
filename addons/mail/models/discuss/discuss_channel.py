@@ -1348,7 +1348,8 @@ class DiscussChannel(models.Model):
             "%(new_line)sType %(bold_start)s@username%(bold_end)s to mention someone, and grab their attention."
             "%(new_line)sType %(bold_start)s#channel%(bold_end)s to mention a channel."
             "%(new_line)sType %(bold_start)s/command%(bold_end)s to execute a command."
-            "%(new_line)sType %(bold_start)s:shortcut%(bold_end)s to insert a canned response in your message.",
+            "%(new_line)sType %(bold_start)s::shortcut%(bold_end)s to insert a canned response in your message."
+            "%(new_line)sType %(bold_start)s:emoji:%(bold_end)s to insert an emoji in your message.",
             bold_start=Markup("<b>"),
             bold_end=Markup("</b>"),
             new_line=Markup("<br>"),
