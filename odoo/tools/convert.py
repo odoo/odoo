@@ -166,13 +166,16 @@ def _eval_xml(self, node, env):
             case t:
                 raise ValueError(f"Unknown type {t!r}")
 
-    elif node.tag == "function":
+    elif node.tag in ("function", "test_setup_function"):
         from odoo.models import BaseModel  # noqa: PLC0415
-        model_str = node.get('model')
-        model = env[model_str]
+
+        model_str = model = None
+        if node.tag == 'function':
+            model_str = node.get('model')
+            model = env[model_str]
         method_name = node.get('name')
         # determine arguments
-        args = []
+        args = [] if node.tag == 'function' else [env]
         kwargs = {}
 
         if a_eval := node.get('eval'):
@@ -184,11 +187,15 @@ def _eval_xml(self, node, env):
             else:
                 args.append(_eval_xml(self, child, env))
         # merge current context with context in kwargs
-        if 'context' in kwargs:
+        if model is not None and 'context' in kwargs:
             model = model.with_context(**kwargs.pop('context'))
-        method = getattr(model, method_name)
+        if node.tag == 'function':
+            method = getattr(model, method_name)
+        else:
+            from odoo.tests.common import get_test_function # noqa: PLC0415
+            method = get_test_function(method_name)
         is_model_method = getattr(method, '_api_model', False)
-        if is_model_method:
+        if node.tag == 'test_setup_function' or is_model_method:
             pass  # already bound to an empty recordset
         else:
             record_ids, *args = args
@@ -605,6 +612,7 @@ form: module.record_id""" % (xml_id,)
             'record': self._tag_record,
             'delete': self._tag_delete,
             'function': self._tag_function,
+            'test_setup_function': self._tag_function,
             'menuitem': self._tag_menuitem,
             'template': self._tag_template,
 

@@ -17,14 +17,21 @@ import logging
 import sys
 from datetime import datetime, timezone
 from contextlib import ExitStack
+from typing import Tuple
+from collections.abc import Sequence, MutableMapping
 
 from . import case
 from .common import HttpCase, get_db_name
 from .result import stats_logger
 from unittest import util, BaseTestSuite, TestCase, mock
+from odoo import tools
+from odoo.api import Environment, SUPERUSER_ID
+from odoo.modules import get_manifest
 from odoo.modules.registry import Registry
+from odoo.tools.misc import unique, StackMap
 
 __unittest = True
+_logger = logging.getLogger(__name__)
 
 
 class TestSuite(BaseTestSuite):
@@ -163,30 +170,120 @@ class OdooSuite(TestSuite):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.installed_bundles = []
+        self.idref_stack = StackMap()
+
     def run(self, result, debug=False):
+        self._reorder_tests()
         self.registry = Registry(get_db_name())
         with self.registry.cursor() as cr, \
             mock.patch.object(cr, 'close', lambda *_: _):
             self.cr = cr
-            # As psql's NOW() returns the time when the transaction was started
-            # some tests relying on time passed using that function might fail
-            # if the test is ran after a certain time after the transaction is opened.
-            # The following patches overrides psql's NOW method such that it returns
-            # the timestamp at which the class's setUpClass was ran.
-            cr.execute("CREATE SCHEMA IF NOT EXISTS __odoo_overrides")
-            # pg_catalog must appear after our override schema.
-            cr.execute('SET search_path TO "$user", public, __odoo_overrides, pg_catalog')
-            return super().run(result, debug=debug)
+            try:
+                # As psql's NOW() returns the time when the transaction was started
+                # some tests relying on time passed using that function might fail
+                # if the test is ran after a certain time after the transaction is opened.
+                # The following patches overrides psql's NOW method such that it returns
+                # the timestamp at which the class's setUpClass was ran.
+                cr.execute("CREATE SCHEMA IF NOT EXISTS __odoo_overrides")
+                # pg_catalog must appear after our override schema.
+                cr.execute('SET search_path TO "$user", public, __odoo_overrides, pg_catalog')
+                res = super().run(result, debug=debug)
+            finally:
+                cr.rollback()
+            return res
+
+    def _reorder_tests(self):
+        """
+        Re-order tests by bundle.
+
+        Tests are ordered such that test cases with a bundle set A are ran before test cases with
+        a superset of A.
+        """
+        old_tests = self._tests
+        self._tests = []
+
+        def _add_all(bundles: Tuple[str]):
+            b_len = len(bundles)
+            _add_all_queue: Sequence[Tuple[str]] = []
+            for test in old_tests[:]:
+                test_bundles = getattr(type(test), 'bundles', tuple())
+                if test_bundles == bundles:
+                    self._tests.append(test)
+                    old_tests.remove(test)
+                elif b_len and test_bundles[:b_len] == bundles:
+                    _add_all_queue.append(tuple(test_bundles[:b_len + 1]))
+            for bundle in unique(sorted(_add_all_queue, key=lambda b: len(b))):
+                _add_all(bundle)
+        # This will add all tests without bundles at the start of the test list.
+        _add_all(tuple())
+        while old_tests:
+            test = old_tests[0]
+            # Find all tests which start with the first bundle and recursively
+            # add all 'children' tests.
+            _add_all(getattr(type(test), 'bundles', ())[:1])
+
+    def _clean_filestore(self, env=None):
+        """
+        Cleans the filestore using :code:`self.cr`, attachment can be created/unlinked
+        during tests and this can add up and take quite some disc space.
+        Crons are usually responsible for cleaning up but since they are not running during tests,
+        we need to do it manually.
+
+        This is called on class cleanup and on bundle cleanup
+        """
+        if not env:
+            env = Environment(self.cr, SUPERUSER_ID, {})
+        env['ir.attachment']._gc_file_store_unsafe()
+
+    def _ensure_bundles(self, bundles):
+        """
+        Ensures the given bundles are installed.
+
+        Each bundle will receive its own savepoint so that we can
+        jump from one bundle list to another.
+
+        This relies on tests being ordered (by bundles) prior to starting the execution.
+        """
+        changed = False
+        for bundle in reversed(self.installed_bundles):
+            if bundle in bundles:
+                break
+            _logger.debug('Rolling back bundle: %s', bundle)
+            self.cr.execute('ROLLBACK TO SAVEPOINT "%s"', (bundle, ))
+            self.installed_bundles.remove(bundle)
+            self.idref_stack.popmap()
+            changed = True
+        env = Environment(self.cr, SUPERUSER_ID, {})
+        if changed:
+            self._clean_filestore(env)
+        for bundle in bundles:
+            if bundle in self.installed_bundles:
+                continue
+            module, bundle_name = bundle.split('.')
+            _logger.debug('Loading bundle: %s', bundle)
+            self.cr.execute('SAVEPOINT "%s"', (bundle, ))
+            bundle_def = get_manifest(module).get('test', {})
+            assert bundle_name in bundle_def, f'Could not find bundle with qualifier {bundle}'
+            self.idref_stack.pushmap()
+            for filename in bundle_def[bundle_name]:
+                tools.convert_file(env, module, filename, self.idref_stack)
+            env.flush_all()
+            self.installed_bundles.append(bundle)
+            env = Environment(self.cr, SUPERUSER_ID, {})
 
     def _handleClassSetUp(self, test, result):
         previous_test_class = result._previousTestClass
         test_class = type(test)
         is_new_class = previous_test_class != test_class
         with ExitStack() as stack:
+            test_class.registry = self.registry
+            test_class.cr = self.cr
             # Override NOW()
             if is_new_class:
                 now = datetime.now(timezone.utc)
                 self._cr = now
+                self._ensure_bundles(getattr(test_class, 'bundles', []))
                 self.cr.execute("SAVEPOINT savepoint_suite")
                 self.cr.execute("""
                     CREATE OR REPLACE FUNCTION __odoo_overrides.now()
@@ -200,7 +297,7 @@ class OdooSuite(TestSuite):
                     LANGUAGE plpgsql STABLE PARALLEL SAFE STRICT;
                 """, (now, ))
             # Enable stat collection
-            if is_new_class and hasattr(result, 'stat') and stats_logger.isEnabledFor(logging.INFO):
+            if is_new_class and hasattr(result, 'stats') and stats_logger.isEnabledFor(logging.INFO):
                 test_id = f'{test_class.__module__}.{test_class.__qualname__}.setUpClass'
                 stack.enter_context(result.collectStats(test_id))
             return super()._handleClassSetUp(test, result)
@@ -227,6 +324,10 @@ class OdooSuite(TestSuite):
                 self.cr.postrollback.clear()
                 self.cr.execute('ROLLBACK TO SAVEPOINT savepoint_suite')
                 self.cr._now = None
+                # Also clean the filestore
+                self._clean_filestore()
+            if test is None:
+                self._ensure_bundles([])
             return res
 
     def has_http_case(self):

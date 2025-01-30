@@ -65,7 +65,7 @@ class TestModuleManifest(BaseCase):
             'pre_init_hook': '',
             'sequence': 100,
             'summary': '',
-            'test': [],
+            'test': {},
             'update_xml': [],
             'uninstall_hook': '',
             'version': f'{major_version}.1.0',

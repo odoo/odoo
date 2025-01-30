@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo
+    uid="ref('base.base_common_bundle_user', raise_if_not_found=False) or None"
+    context="{'allowed_company_ids': [ref('base.base_common_bundle_company', raise_if_not_found=False) or env.company.id]}"
+>
+    <record id="test_size_attribute" model="product.attribute">
+        <field name="name">Size</field>
+        <field name="value_ids" eval="[
+            (0, 0, { 'name': 'S', }),
+            (0, 0, { 'name': 'M', }),
+        ]"/>
+    </record>
+    <record id="test_size_attribute_l" model="product.attribute.value">
+        <field name="name">L</field>
+        <field name="attribute_id" eval="ref('product.test_size_attribute')"/>
+    </record>
+    <record id="test_color_attribute" model="product.attribute">
+        <field name="name">Color</field>
+    </record>
+    <record id="test_color_attribute_red" model="product.attribute.value">
+        <field name="name">red</field>
+        <field name="sequence">1</field>
+        <field name="attribute_id" eval="ref('product.test_color_attribute')"/>
+    </record>
+    <record id="test_color_attribute_blue" model="product.attribute.value">
+        <field name="name">blue</field>
+        <field name="sequence">2</field>
+        <field name="attribute_id" eval="ref('product.test_color_attribute')"/>
+    </record>
+    <record id="test_color_attribute_green" model="product.attribute.value">
+        <field name="name">green</field>
+        <field name="sequence">3</field>
+        <field name="attribute_id" eval="ref('product.test_color_attribute')"/>
+    </record>
+    <record id="test_no_variant_attribute" model="product.attribute">
+        <field name="name">No variant</field>
+        <field name="create_variant">no_variant</field>
+        <field name="value_ids" eval="[
+            (0, 0, { 'name': 'extra' }),
+            (0, 0, { 'name': 'second' }),
+        ]"/>
+    </record>
+    <record id="test_dynamic_attribute" model="product.attribute">
+        <field name="name">Dynamic</field>
+        <field name="create_variant">dynamic</field>
+        <field name="value_ids" eval="[
+            (0, 0, { 'name': 'dyn1' }),
+            (0, 0, { 'name': 'dyn2' }),
+        ]"/>
+    </record>
+</odoo>

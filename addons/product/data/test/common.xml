@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+Due to the install order of bundles we provide a way to override both user and company.
+ -->
+<odoo
+    uid="ref('base.base_common_bundle_user', raise_if_not_found=False) or None"
+    context="{'allowed_company_ids': [ref('base.base_common_bundle_company', raise_if_not_found=False) or env.company.id]}"
+>
+    <record id="test_category" model="product.category">
+        <field name="name">Test Category</field>
+    </record>
+    <record id="test_product" model="product.product">
+        <field name="name">Test Product</field>
+        <field name="type">consu</field>
+        <field name="list_price">20.0</field>
+        <field name="categ_id" eval="ref('product.test_category')"/>
+    </record>
+    <record id="test_product_service" model="product.product">
+        <field name="name">Test Service Product</field>
+        <field name="type">service</field>
+        <field name="list_price">50.0</field>
+        <field name="categ_id" eval="ref('product.test_category')"/>
+    </record>
+    <record id="test_pricelist" model="product.pricelist">
+        <field name="name">Test Pricelist</field>
+    </record>
+    <function model="product.pricelist" name="action_archive">
+        <value model="product.pricelist" eval="obj().search([('id', '!=', ref('product.test_pricelist'))]).ids"/>
+    </function>
+</odoo>

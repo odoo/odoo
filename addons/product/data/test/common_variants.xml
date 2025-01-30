@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo
+    uid="ref('base.base_common_bundle_user', raise_if_not_found=False) or None"
+    context="{'allowed_company_ids': [ref('base.base_common_bundle_company', raise_if_not_found=False) or env.company.id]}"
+>
+    <record id="test_template_sofa" model="product.template">
+        <field name="name">Sofa</field>
+        <field name="uom_id" eval="ref('uom.product_uom_unit')"/>
+        <field name="categ_id" eval="ref('product.test_category')"/>
+        <field name="attribute_line_ids" eval="[
+            (0, 0, {
+                'attribute_id': ref('product.test_color_attribute'),
+                'value_ids': [
+                    (4, ref('product.test_color_attribute_red')),
+                    (4, ref('product.test_color_attribute_blue')),
+                    (4, ref('product.test_color_attribute_green')),
+                ]
+            }),
+        ]"/>
+    </record>
+    <record id="test_template_shirt" model="product.template">
+        <field name="name">Shirt</field>
+        <field name="categ_id" eval="ref('product.test_category')"/>
+        <field name="attribute_line_ids" eval="[
+            (0, 0, {
+                'attribute_id': ref('product.test_size_attribute'),
+                'value_ids': [
+                    (6, 0, [ref('product.test_size_attribute_l')]),
+                ],
+            }),
+        ]"/>
+    </record>
+</odoo>

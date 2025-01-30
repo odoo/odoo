@@ -62,7 +62,7 @@ from odoo.service import security
 from odoo.sql_db import BaseCursor, Cursor
 from odoo.tools import config, float_compare, mute_logger, profiler, SQL, DotDict
 from odoo.tools.mail import single_email_re
-from odoo.tools.misc import find_in_path, lower_logging
+from odoo.tools.misc import find_in_path, lower_logging, unique
 from odoo.tools.xml_utils import _validate_xml
 
 from . import case
@@ -173,7 +173,17 @@ def test_xsd(url=None, path=None, skip=False):
     return decorator
 
 
-def new_test_user(env, login='', groups='base.group_user', context=None, **kwargs):
+_test_setup_registry = {}
+
+def get_test_function(funcname: str):
+    return _test_setup_registry[funcname]
+
+def register_setup_method(func):
+    _test_setup_registry[func.__name__] = func
+    return func
+
+@register_setup_method
+def new_test_user(env, login='', groups='base.group_user', context=None, xml_id=None, **kwargs):
     """ Helper function to create a new test user. It allows to quickly create
     users given its login and groups (being a comma separated list of xml ids).
     Kwargs are directly propagated to the create to further customize the
@@ -197,7 +207,10 @@ def new_test_user(env, login='', groups='base.group_user', context=None, **kwarg
     if not groups:
         raise ValueError('New users require at least user groups')
     if context is None:
-        context = {}
+        context = {'mail_create_nolog': True,
+                    'mail_create_nosubscribe': True,
+                    'mail_notrack': True,
+                    'no_reset_password': True}
 
     groups_id = [Command.set(kwargs.pop('groups_id', False) or [env.ref(g.strip()).id for g in groups.split(',')])]
     create_values = dict(kwargs, login=login, groups_id=groups_id)
@@ -217,7 +230,13 @@ def new_test_user(env, login='', groups='base.group_user', context=None, **kwarg
     if 'company_id' in create_values and 'company_ids' not in create_values:
         create_values['company_ids'] = [(4, create_values['company_id'])]
 
-    return env['res.users'].with_context(**context).create(create_values)
+    user = env['res.users'].with_context(**context).create(create_values)
+    if xml_id is not None:
+        env['ir.model.data']._update_xmlids([{
+            'xml_id': xml_id,
+            'record': user,
+        }])
+    return user
 
 def loaded_demo_data(env):
     return bool(env.ref('base.user_demo', raise_if_not_found=False))
@@ -859,7 +878,7 @@ class TransactionCase(BaseCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.addClassCleanup(cls._clean_cls)
-        cls.addClassCleanup(cls._gc_filestore)
+        # cls.addClassCleanup(cls._gc_filestore)
         cls.registry = cls.registry or Registry(get_db_name())
         cls.registry_start_invalidated = cls.registry.registry_invalidated
         cls.registry_start_sequence = cls.registry.registry_sequence
@@ -2288,6 +2307,31 @@ def tagged(*tags):
         return obj
     return tags_decorator
 
+def bundles(*bundles: Iterable[str], override=False):
+    """
+    A decorator to define which bundles a test relies on.
+
+    Bundles are stored in a set that can be accessed from a 'bundles' attribute.
+
+    Bundles may be used to share test data between test classes.
+    Bundles are installed in order, inheriting from a class will also inherit bundles.
+    Duplicates are ignored.
+
+    Bundles must be fully qualified.
+
+    See :func:`~odoo.tests.suite.OdooSuite._ensure_bundles`
+
+    :param bool override: if True, override the parents bundles
+    """
+
+    def decorator(obj):
+        if override:
+            obj.bundles = tuple(unique(bundles))
+        else:
+            obj.bundles = tuple(unique(itertools.chain(getattr(obj, 'bundles', []), bundles)))
+        return obj
+
+    return decorator
 
 class freeze_time:
     """ Object to replace the freezegun in Odoo test suites

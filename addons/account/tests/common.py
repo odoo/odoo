@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, Command
-from odoo.tests import Form, HttpCase, new_test_user
+from odoo.tests import Form, HttpCase, new_test_user, bundles, register_setup_method
 from odoo.tools.float_utils import float_round
 
 from odoo.addons.product.tests.common import ProductCommon
@@ -16,6 +16,13 @@ from unittest import SkipTest
 from unittest.mock import patch
 
 
+@register_setup_method
+def setup_chart_template(env, company, chart_template=None):
+    AccountTestInvoicingCommon.env = env
+    AccountTestInvoicingCommon._use_chart_template(company, chart_template)
+    AccountTestInvoicingCommon.env = None
+
+@bundles('account.common', *ProductCommon.bundles, override=True)
 class AccountTestInvoicingCommon(ProductCommon):
     # to override by the helper methods setup_country and setup_chart_template to adapt to a localization
     chart_template = False
@@ -210,7 +217,8 @@ class AccountTestInvoicingCommon(ProductCommon):
     def setup_independent_company(cls, **kwargs):
         if cls.env.registry.loaded:
             # Only create a new company for post-install tests
-            return cls._create_company(name='company_1_data', **kwargs)
+            return cls.quick_ref('base.base_common_bundle_company')
+            # return cls._create_company(name='company_1_data', **kwargs)
         else:
             cls.env['account.tax.group'].create({
                 'name': 'Test tax group',
@@ -221,15 +229,16 @@ class AccountTestInvoicingCommon(ProductCommon):
 
     @classmethod
     def setup_independent_user(cls):
-        return new_test_user(
-            cls.env,
-            name='Because I am accountman!',
-            login='accountman',
-            password='accountman',
-            email='accountman@test.com',
-            groups_id=cls.get_default_groups().ids,
-            company_id=cls.env.company.id,
-        )
+        return cls.quick_ref('base.base_common_bundle_user')
+        # return new_test_user(
+        #     cls.env,
+        #     name='Because I am accountman!',
+        #     login='accountman',
+        #     password='accountman',
+        #     email='accountman@test.com',
+        #     groups_id=cls.get_default_groups().ids,
+        #     company_id=cls.env.company.id,
+        # )
 
     @classmethod
     def _create_company(cls, **create_values):

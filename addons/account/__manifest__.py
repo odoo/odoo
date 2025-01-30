@@ -91,6 +91,11 @@ You could use this simplified accounting in case you work with an (external) acc
     'demo': [
         'demo/account_demo.xml',
     ],
+    'test': {
+        'common': [
+            'data/test/common.xml',
+        ],
+    },
     'installable': True,
     'application': True,
     'post_init_hook': '_account_post_init',

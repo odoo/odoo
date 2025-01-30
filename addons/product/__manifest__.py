@@ -63,6 +63,21 @@ Print product labels with barcode.
         'data/product_document_demo.xml',
         'data/product_supplierinfo_demo.xml',
     ],
+    'test': {
+        # The following bundles depend on each other, in order.
+        'common': [
+            'data/test/common.xml',
+        ],
+        'common_attributes': [
+            'data/test/common_attributes.xml',
+        ],
+        'common_variants': [
+            'data/test/common_variants.xml',
+        ],
+        'common_extended': [
+            'data/test/common_extended.xml'
+        ]
+    },
     'installable': True,
     'assets': {
         'web.assets_backend': [
