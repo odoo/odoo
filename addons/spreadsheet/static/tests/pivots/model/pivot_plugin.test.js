@@ -198,6 +198,37 @@ test("Renaming a pivot does not retrigger RPCs", async () => {
     expect.verifySteps([]);
 });
 
+test("Renaming a pivot with a matching global filter does not retrigger RPCs", async () => {
+    const { model, pivotId } = await createSpreadsheetWithPivot({
+        mockRPC: function (route, { model, method, kwargs }) {
+            switch (method) {
+                case "read_group":
+                    expect.step("read_group");
+                    break;
+            }
+        },
+    });
+    expect.verifySteps(["read_group", "read_group", "read_group", "read_group"]);
+    await addGlobalFilter(
+        model,
+        {
+            id: "42",
+            type: "relation",
+            label: "test",
+            defaultValue: [41],
+            modelName: undefined,
+            rangeType: undefined,
+        },
+        {
+            pivot: { [pivotId]: { chain: "product_id", type: "many2one" } },
+        }
+    );
+    expect.verifySteps(["read_group", "read_group", "read_group", "read_group"]);
+    updatePivot(model, pivotId, { name: "name" });
+    await animationFrame();
+    expect.verifySteps([]);
+});
+
 test("Undo/Redo for RENAME_PIVOT", async function () {
     const { model, pivotId } = await createSpreadsheetWithPivot();
     expect(model.getters.getPivotName(pivotId)).toBe("Partner Pivot");
