@@ -52,3 +52,21 @@ export function getSnippetName(snippetEl) {
     }
     return _t("Block");
 }
+
+/**
+ * Checks if the element is visible (= in the viewport).
+ *
+ * @param {HTMLElement} el
+ * @returns {Boolean}
+ */
+export function isElementInViewport(el) {
+    const rect = el.getBoundingClientRect();
+    const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+    return (
+        Math.round(rect.top) >= 0 &&
+        Math.round(rect.left) >= 0 &&
+        Math.round(rect.right) <= viewportWidth &&
+        Math.round(rect.bottom) <= viewportHeight
+    );
+}

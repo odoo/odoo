@@ -1,4 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
+import { isElementInViewport } from "@html_builder/builder/utils/utils";
 
 export class ClonePlugin extends Plugin {
     static id = "clone";
@@ -10,7 +11,7 @@ export class ClonePlugin extends Plugin {
     };
 
     // TODO find why the images should not have the clone buttons.
-    setup() {}
+    setup() { }
 
     getActions() {
         return {
@@ -18,20 +19,22 @@ export class ClonePlugin extends Plugin {
             addItem: {
                 apply: ({ editingElement, param: itemSelector, value: position }) => {
                     const itemEl = editingElement.querySelector(itemSelector);
-                    this.cloneElement(itemEl, { position });
+                    this.cloneElement(itemEl, { position, scrollToClone: true });
                 },
             },
         };
     }
 
-    cloneElement(el, { position = "afterend" } = {}) {
+    cloneElement(el, { position = "afterend", scrollToClone = false } = {}) {
         // TODO snippet_will_be_cloned ?
         // TODO cleanUI resource for each option
         const cloneEl = el.cloneNode(true);
         el.insertAdjacentElement(position, cloneEl);
         this.dependencies["builder-options"].updateContainers(cloneEl);
         this.dispatchTo("on_clone_handlers", { cloneEl: cloneEl, originalEl: el });
-        cloneEl.scrollIntoView({ behavior: "smooth", block: "center" });
+        if (scrollToClone && !isElementInViewport(cloneEl)) {
+            cloneEl.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
         // TODO snippet_cloned ?
         this.dependencies.history.addStep();
     }

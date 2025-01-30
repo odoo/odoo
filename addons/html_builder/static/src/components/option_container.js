@@ -71,7 +71,9 @@ export class OptionsContainer extends Component {
     }
 
     cloneElement() {
-        this.env.editor.shared.clone.cloneElement(this.props.editingElement);
+        this.env.editor.shared.clone.cloneElement(this.props.editingElement, {
+            scrollToClone: true,
+        });
     }
 
     async saveSnippet() {
