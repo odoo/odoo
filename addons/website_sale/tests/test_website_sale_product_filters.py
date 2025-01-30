@@ -76,6 +76,17 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestSaleProductAttributeV
             'website_published': True,
         })
 
+        # More generic products to get the number of product templates to 17
+        generics = cls.env['product.template'].create([{
+            'name': f"Generic product {i}",
+            'company_id': False,
+            'website_published': True,
+        } for i in range(1, 13)])
+
+        cls.product_tmpls = (
+            cls.computer_case + cls.monitor + cls.computer + cls.windows_pc + cls.mac + generics
+        )
+
     def test_latest_sold_filter(self):
         """Check the latest sold filter after selling 1 computer and 3 different cases.
 
@@ -265,4 +276,40 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestSaleProductAttributeV
                 [p['product_id'] for p in no_variants],
                 [self.computer.product_variant_id.id, self.windows_pc.product_variant_id.id],
                 "Alternative products filter should return 2 results when hiding variants",
+            )
+
+    def test_newest_products_filter(self):
+        """Check the newest products filter.
+
+        When showing variants, the filter should return 16 variants with repeating templates.
+        When hiding variants, the filter should return 16 templates, all unique.
+
+        This filter is unique in that it's defined in `data/data.xml`, and hence can't be called
+        via the `_get_products` method.
+        """
+        # Ensure we're working with a known set of products
+        self.env['product.template'].search([('id', 'not in', self.product_tmpls.ids)]).write({
+            'sale_ok': False,
+        })
+
+        dyn_filter = self.env.ref('website_sale.dynamic_filter_newest_products')
+        with MockRequest(self.env, website=self.website):
+            with_variants = dyn_filter._prepare_values(search_domain=[])
+            self.assertEqual(
+                len(with_variants),
+                16,
+                "When displaying newest variants, 16 records should be shown",
+            )
+            self.assertLess(
+                len({p['product_template_id'] for p in with_variants}),
+                16,
+                "When displaying newest variants, some product templates should be repeating",
+            )
+
+            no_variants = dyn_filter._prepare_values(search_domain=['hide_variants'])
+            self.assertEqual(len(no_variants), 16)
+            self.assertEqual(
+                len({p['product_template_id'] for p in no_variants}),
+                16,
+                "When displaying newest product templates, 16 unique templates should be shown",
             )
