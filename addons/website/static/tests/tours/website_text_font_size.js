@@ -94,13 +94,17 @@ function getFontSizeTestSteps(fontSizeClass) {
 
 function getAllFontSizesTestSteps() {
     const steps = [];
+    const fontSizeClassesToSkip = [
+        // This option is hidden by default because same value as base-fs.
+        "h6-fs",
+        // There is nothing related to these classes in the UI to test anymore.
+        "small",
+        "o_small_twelve-fs",
+        "o_small_ten-fs",
+        "o_small_eight-fs",
+    ];
     for (const fontSizeClass of FONT_SIZE_CLASSES) {
-        if (fontSizeClass === 'h6-fs') {
-            // That option is hidden by default because same value as base-fs
-            continue;
-        }
-        if (fontSizeClass === 'small') {
-            // There is nothing related to that class in the UI to test anymore.
+        if (fontSizeClassesToSkip.includes(fontSizeClass)) {
             continue;
         }
         steps.push(...getFontSizeTestSteps(fontSizeClass));
