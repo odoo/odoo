@@ -68,6 +68,24 @@ class ResPartner(models.Model):
 class ResPartnerBank(models.Model):
     _inherit = 'res.partner.bank'
 
+    bank_street = fields.Char(related='bank_id.street', readonly=False)
+    bank_street2 = fields.Char(related='bank_id.street2', readonly=False)
+    bank_zip = fields.Char(related='bank_id.zip', readonly=False)
+    bank_city = fields.Char(related='bank_id.city', readonly=False)
+    bank_state = fields.Many2one(related='bank_id.state', readonly=False)
+    bank_country = fields.Many2one(related='bank_id.country', readonly=False)
+    bank_email = fields.Char(related='bank_id.email', readonly=False)
+    bank_phone = fields.Char(related='bank_id.phone', readonly=False)
+    employee_id = fields.Many2one('hr.employee', 'Employee', compute="_compute_employee_id")
+
+    @api.depends('partner_id')
+    def _compute_employee_id(self):
+        for bank in self:
+            if bank.partner_id.employee:
+                bank.employee_id = bank.partner_id.employee_ids.filtered(lambda e: e.company_id == self.env.companies)
+            else:
+                bank.employee_id = False
+
     def _compute_display_name(self):
         account_employee = self.browse()
         if not self.env.user.has_group('hr.group_hr_user'):

@@ -84,18 +84,20 @@
                     <group>
                         <group>
                             <field name="acc_number"/>
-                            <field name="bank_id"/>
                             <field name="partner_id"/>
+                            <field name="bank_id" options='{"no_open": True}'/>
                         </group>
                         <group>
+                            <field name="allow_out_payment" widget="boolean_toggle"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="currency_id" groups="base.group_multi_currency" options="{'no_create': True}"/>
-                            <field name="allow_out_payment" widget="boolean_toggle"/>
                         </group>
                     </group>
-                    <group name="note" string="Notes">
-                        <field name="note" colspan="2" nolabel="1" placeholder="Internal notes..."/>
-                    </group>
+                    <notebook>
+                        <page string="Notes" name="internal_notes">
+                            <field name="note" nolabel="1" placeholder="Internal notes..."/>
+                        </page>
+                    </notebook>
                 </sheet>
                 </form>
             </field>
