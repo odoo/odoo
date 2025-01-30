@@ -37,9 +37,11 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
         })
         channel = self.env["discuss.channel"].browse(data["discuss.channel"][0]["id"])
         lead = channel._convert_visitor_to_lead(self.env.user.partner_id, '/lead TestLead command')
-
-        self.assertTrue(any(m.partner_id == self.user_sales_leads.partner_id for m in channel.channel_member_ids))
-        self.assertTrue(any(bool(m.guest_id) for m in channel.channel_member_ids))
+        members = (
+            self.env["discuss.channel.member"].sudo().search([("channel_id", "=", channel.id)])
+        )
+        self.assertTrue(any(m.partner_id == self.user_sales_leads.partner_id for m in members))
+        self.assertTrue(any(bool(m.guest_id) for m in members))
         self.assertEqual(lead.name, 'TestLead command')
         self.assertEqual(lead.partner_id, self.env['res.partner'])
 
@@ -55,8 +57,11 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
         channel = self.env["discuss.channel"].browse(data["discuss.channel"][0]["id"])
         lead = channel._convert_visitor_to_lead(self.env.user.partner_id, '/lead TestLead command')
 
-        self.assertTrue(any(m.partner_id == self.user_sales_leads.partner_id for m in channel.channel_member_ids))
-        self.assertTrue(any(bool(m.guest_id) for m in channel.channel_member_ids))
+        members = (
+            self.env["discuss.channel.member"].sudo().search([("channel_id", "=", channel.id)])
+        )
+        self.assertTrue(any(m.partner_id == self.user_sales_leads.partner_id for m in members))
+        self.assertTrue(any(bool(m.guest_id) for m in members))
 
         # public + someone else: no customer (as they were anonymous)
         # sudo: discuss.channel.member - removing non-self member for test setup purposes
@@ -78,9 +83,11 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
         channel = self.env["discuss.channel"].browse(data["discuss.channel"][0]["id"])
         lead = channel._convert_visitor_to_lead(self.env.user.partner_id, '/lead TestLead command')
 
+        members = (
+            self.env["discuss.channel.member"].sudo().search([("channel_id", "=", channel.id)])
+        )
         self.assertEqual(
-            channel.channel_partner_ids,
-            self.user_sales_leads.partner_id | self.user_portal.partner_id
+            members.partner_id, self.user_sales_leads.partner_id | self.user_portal.partner_id
         )
         self.assertEqual(lead.partner_id, self.user_portal.partner_id)
 
@@ -90,8 +97,13 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
         })
         lead = channel._convert_visitor_to_lead(self.env.user.partner_id, '/lead TestLead command')
 
+        members = (
+            self.env["discuss.channel.member"].sudo().search([("channel_id", "=", channel.id)])
+        )
         self.assertEqual(
-            channel.channel_partner_ids,
-            self.user_sales_leads.partner_id | self.user_portal.partner_id | self.user_sales_manager.partner_id
+            members.partner_id,
+            self.user_sales_leads.partner_id
+            | self.user_portal.partner_id
+            | self.user_sales_manager.partner_id,
         )
         self.assertEqual(lead.partner_id, self.user_portal.partner_id)

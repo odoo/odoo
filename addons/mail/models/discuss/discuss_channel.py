@@ -302,7 +302,7 @@ class DiscussChannel(models.Model):
                 if cmd[0] != 0:
                     raise ValidationError(_('Invalid value when creating a channel with memberships, only 0 is allowed.'))
                 for field_name in cmd[2]:
-                    if field_name not in ["partner_id", "guest_id", "unpin_dt", "last_interest_dt"]:
+                    if field_name not in ["is_channel_admin", "partner_id", "guest_id", "unpin_dt", "last_interest_dt"]:
                         raise ValidationError(
                             _(
                                 "Invalid field “%(field_name)s” when creating a channel with members.",
@@ -316,9 +316,10 @@ class DiscussChannel(models.Model):
             # is_pinned + ensure they have rights to see channel
             if not self.env.context.get('install_mode') and not self.env.user._is_public():
                 partner_ids_to_add = list(set(partner_ids + [self.env.user.partner_id.id]))
-            vals['channel_member_ids'] = membership_ids_cmd + [
-                (0, 0, {'partner_id': pid})
-                for pid in partner_ids_to_add if pid not in membership_pids
+            vals["channel_member_ids"] = membership_ids_cmd + [
+                (0, 0, {"partner_id": pid, "is_channel_admin": pid == self.env.user.partner_id.id})
+                for pid in partner_ids_to_add
+                if pid not in membership_pids
             ]
 
             # clean vals
@@ -429,8 +430,9 @@ class DiscussChannel(models.Model):
     def _subscribe_users_automatically_get_members(self):
         """ Return new members per channel ID """
         return dict(
+            # sudo: discuss.channel - reading members of the group for subscribe is acceptable
             (channel.id,
-             ((channel.group_ids.users.partner_id.filtered(lambda p: p.active) - channel.channel_partner_ids).ids))
+             ((channel.group_ids.users.partner_id.filtered(lambda p: p.active) - channel.sudo().channel_partner_ids).ids))
                 for channel in self
             )
 
@@ -480,13 +482,24 @@ class DiscussChannel(models.Model):
         all_new_members = self.env["discuss.channel.member"]
         for channel in self:
             members_to_create = []
-            existing_members = self.env['discuss.channel.member'].search(expression.AND([
-                [('channel_id', '=', channel.id)],
-                expression.OR([
-                    [('partner_id', 'in', partners.ids)],
-                    [('guest_id', 'in', guests.ids)]
-                ])
-            ]))
+            # sudo: discuss.channel.member - checking existing members when adding member is acceptable
+            existing_members = (
+                self.env["discuss.channel.member"]
+                .sudo()
+                .search(
+                    expression.AND(
+                        [
+                            [("channel_id", "=", channel.id)],
+                            expression.OR(
+                                [
+                                    [("partner_id", "in", partners.ids)],
+                                    [("guest_id", "in", guests.ids)],
+                                ]
+                            ),
+                        ]
+                    )
+                )
+            )
             members_to_create += [{
                 'partner_id': partner.id,
                 'channel_id': channel.id,
