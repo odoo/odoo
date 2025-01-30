@@ -38,9 +38,7 @@ a dependency towards website editing and customization capabilities.""",
         'web.assets_frontend': [
             'portal/static/src/interactions/**/*',
             'portal/static/src/scss/portal.scss',
-            'portal/static/src/js/portal.js',
             'portal/static/src/xml/portal_chatter.xml',
-            'portal/static/src/js/portal_security.js',
             'portal/static/src/xml/portal_security.xml',
             'portal/static/src/js/components/**/*',
             'portal/static/src/signature_form/**/*',
@@ -48,6 +46,7 @@ a dependency towards website editing and customization capabilities.""",
         ],
         'web.assets_unit_tests_setup': [
             'portal/static/src/interactions/**/*',
+            'portal/static/src/js/components/input_confirmation_dialog/*',
             'portal/static/src/xml/**/*',
         ],
         'web.assets_tests': [
