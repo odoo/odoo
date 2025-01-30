@@ -374,11 +374,11 @@ export class EmojiPicker extends Component {
             }
             case "ArrowRight": {
                 const colRight = currentCol + 1;
-                if (colRight === this.emojiMatrix[currentRow].length) {
+                if (colRight === this.emojiMatrix[currentRow]?.length) {
                     const rowBelowRight = this.emojiMatrix[currentRow + 1];
                     newIdx = rowBelowRight?.[0];
                 } else {
-                    newIdx = this.emojiMatrix[currentRow][colRight];
+                    newIdx = this.emojiMatrix[currentRow]?.[colRight];
                 }
                 break;
             }
