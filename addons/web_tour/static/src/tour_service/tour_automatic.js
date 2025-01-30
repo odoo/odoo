@@ -5,7 +5,6 @@ import { Macro } from "@web/core/macro";
 import { browser } from "@web/core/browser/browser";
 import { setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
 import * as hoot from "@odoo/hoot-dom";
-import { patch } from "@web/core/utils/patch";
 
 export class TourAutomatic {
     mode = "auto";
@@ -92,18 +91,27 @@ export class TourAutomatic {
             ]);
 
         const end = () => {
-            //Tour is finished, it's too late to console.
-            patch(console, {
-                error: () => {},
-                warn: () => {},
-            });
             delete window.hoot;
             transitionConfig.disabled = false;
             tourState.clear();
             pointer.stop();
             //No need to catch error yet.
-            window.addEventListener("error", (ev) => ev.preventDefault());
-            window.addEventListener("unhandledrejection", (ev) => ev.preventDefault());
+            window.addEventListener(
+                "error",
+                (ev) => {
+                    ev.preventDefault();
+                    ev.stopImmediatePropagation();
+                },
+                true
+            );
+            window.addEventListener(
+                "unhandledrejection",
+                (ev) => {
+                    ev.preventDefault();
+                    ev.stopImmediatePropagation();
+                },
+                true
+            );
         };
 
         this.macro = new Macro({
