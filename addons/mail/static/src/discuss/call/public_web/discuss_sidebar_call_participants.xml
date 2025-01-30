@@ -32,7 +32,7 @@
                 direction="compact ? 'v' : 'h'"
                 avatarClass="(p) => this.avatarClass(p)"
                 max="compact ? 1 : 4"
-                personas="sessions.map((s) => s.channel_member_id.persona)"
+                personas="sessions.map((s) => s.channel_member_id?.persona).filter(p => p)"
             >
                 <t t-set-slot="avatarExtraInfo" t-slot-scope="scope">
                     <div class="o-mail-DiscussSidebarCallParticipants-status small" t-att-class="{
