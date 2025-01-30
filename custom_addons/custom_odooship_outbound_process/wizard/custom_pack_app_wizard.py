@@ -129,15 +129,15 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
         if self.warehouse_id.name == "FC3":
             api_url = (
-                "https://shiperooconnect-prod.automation.shiperoo.com//api/ot_orders"
+                "https://shiperooconnect-prod.automation.shiperoo.com/api/ot_orders"
                 if is_production == 'True'
-                else "https://shiperooconnect.automation.shiperoo.com//api/ot_orders"
+                else "https://shiperooconnect.automation.shiperoo.com/api/ot_orders"
             )
         elif self.warehouse_id.name == "SHIPEROOALTONA":
             api_url = (
-                "https://shiperooconnect-prod.automation.shiperoo.com//api/orders"
+                "https://shiperooconnect-prod.automation.shiperoo.com/api/orders"
                 if is_production == 'True'
-                else "https://shiperooconnect.automation.shiperoo.com//api/orders"
+                else "https://shiperooconnect.automation.shiperoo.com/api/orders"
             )
         else:
             raise ValidationError(_("Unknown warehouse. Cannot determine API endpoint."))
