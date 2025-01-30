@@ -1,12 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
 from http import HTTPStatus
 
 import markupsafe
 
 import odoo.http
-from odoo.tests import tagged
+from odoo.tests import tagged, get_db_name
 from odoo.tests.common import new_test_user, Like
 from odoo.tools import mute_logger
+from odoo.tools.misc import submap
 from odoo.addons.test_http.utils import HtmlTokenizer
 
 from .test_common import TestHttpBase
@@ -116,3 +118,32 @@ class TestHttpModels(TestHttpBase):
             'name': "too much data" * 1000  # 1.3kB
         })
         self.assertEqual(res.status_code, HTTPStatus.REQUEST_ENTITY_TOO_LARGE)
+
+    def test_models6_rpc_path_poisoning(self):
+        with self.assertLogs('werkzeug', logging.INFO) as capture:
+            self.xmlrpc_object.execute_kw(
+                get_db_name(), self.jackoneill.id, 'jackoneill',
+               'res.users', 'read', [self.jackoneill.id, ['login']]
+            )
+            res = self.url_open('/test_http/wsgi_environ')
+            res.raise_for_status()
+
+        self.assertEqual(capture.output, [
+            Like('..."POST /xmlrpc/2/object#res.users.read HTTP/...'),
+            Like('..."GET /test_http/wsgi_environ HTTP/...'),
+        ], "there must be two requests, the first with a fragment, the second without")
+
+        environ = {
+            "PATH_INFO": "/test_http/wsgi_environ",
+            "QUERY_STRING": "",
+            "REQUEST_URI": "/test_http/wsgi_environ",
+            "RAW_URI": "/test_http/wsgi_environ",
+        }
+        self.assertEqual(
+            submap(res.json(), environ.keys()),
+            environ,
+            "the fragment must not leak in the next request")
+        self.assertNotIn(
+            '#res.users/read',
+            res.text,
+            "the fragment must not leak in the next request")
