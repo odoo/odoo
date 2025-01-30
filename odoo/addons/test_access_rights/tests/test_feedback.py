@@ -343,7 +343,7 @@ Sorry, %s (id=%s) doesn't have 'write' access to:
 Blame the following rules:
 - rule 0
 
-Note: this might be a multi-company issue. Switching company may help - in Odoo, not in real life!
+Note: this might be a multi-company issue. Switching company may help!
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
         % (self.user.name, self.user.id, self.record._description, self.record.display_name, self.record._name, self.record.id))
@@ -377,7 +377,7 @@ Sorry, %s (id=%s) doesn't have 'read' access to:
 Blame the following rules:
 - rule 0
 
-Note: this might be a multi-company issue. Switching company may help - in Odoo, not in real life!
+Note: this might be a multi-company issue. Switching company may help!
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
         % (self.user.name, self.user.id, child_record._description, child_record.display_name, child_record._name, child_record.id))
@@ -402,7 +402,7 @@ Sorry, %s (id=%s) doesn't have 'read' access to:
 Blame the following rules:
 - rule 0
 
-Note: this might be a multi-company issue. Switching company may help - in Odoo, not in real life!
+Note: this might be a multi-company issue. Switching company may help!
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
         % (self.user.name, self.user.id, self.record._description, self.record.display_name, self.record._name, self.record.id, self.record.sudo().company_id.display_name))

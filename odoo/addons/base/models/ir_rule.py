@@ -244,7 +244,7 @@ class IrRule(models.Model):
         failing_rules = _("Blame the following rules:\n%s", rules_description)
 
         if company_related:
-            failing_rules += "\n\n" + _('Note: this might be a multi-company issue. Switching company may help - in Odoo, not in real life!')
+            failing_rules += "\n\n" + _('Note: this might be a multi-company issue. Switching company may help!')
 
         # clean up the cache of records prefetched with display_name above
         records_sudo.invalidate_recordset()
