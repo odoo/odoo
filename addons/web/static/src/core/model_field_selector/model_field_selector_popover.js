@@ -39,7 +39,7 @@ class Page {
 
     get title() {
         const prefix = this.previousPage?.previousPage ? "... > " : "";
-        const title = this.previousPage?.selectedField.string || "";
+        const title = this.previousPage?.selectedField?.string || "";
         if (prefix.length || title.length) {
             return `${prefix}${title}`;
         }
@@ -104,7 +104,7 @@ export class ModelFieldSelectorPopover extends Component {
         update: Function,
     };
     static defaultProps = {
-        filter: (fieldDef) => fieldDef.searchable,
+        filter: (value) => value.searchable && value.type != "json",
         isDebugMode: false,
         followRelations: true,
     };
