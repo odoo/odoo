@@ -1851,7 +1851,7 @@ class AccountTax(models.Model):
                     index = (index + 1) % len(sorted_tax_reps_data)
 
         subsequent_taxes = self.env['account.tax']
-        subsequent_tags = self.env['account.account.tag']
+        subsequent_tags_per_tax = defaultdict(lambda: self.env['account.account.tag'])
         for tax_data in reversed(taxes_data):
             tax = tax_data['tax']
 
@@ -1865,7 +1865,9 @@ class AccountTax(models.Model):
                     tax_rep_data['tax_tags'] = tax_rep.tag_ids
                 if tax.include_base_amount:
                     tax_rep_data['taxes'] |= subsequent_taxes
-                    tax_rep_data['tax_tags'] |= subsequent_tags
+                    for other_tax, tags in subsequent_tags_per_tax.items():
+                        if tax != other_tax:
+                            tax_rep_data['tax_tags'] |= tags
 
                 # Add the accounting grouping_key to create the tax lines.
                 base_line_grouping_key = self._prepare_base_line_grouping_key(base_line)
@@ -1879,7 +1881,7 @@ class AccountTax(models.Model):
             if tax.is_base_affected:
                 subsequent_taxes |= tax
                 if include_caba_tags or tax.tax_exigibility == 'on_invoice':
-                    subsequent_tags |= tax[repartition_lines_field].filtered(lambda x: x.repartition_type == 'base').tag_ids
+                    subsequent_tags_per_tax[tax] |= tax[repartition_lines_field].filtered(lambda x: x.repartition_type == 'base').tag_ids
 
     @api.model
     def _add_accounting_data_in_base_lines_tax_details(self, base_lines, company, include_caba_tags=False):
