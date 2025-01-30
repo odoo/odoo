@@ -27,7 +27,8 @@
                 <div class="row">
                     <div class="col-12 text-end mt-2">
                         <span class="badge bg-light text-dark border border-dark p-2">
-                            <strong>    As of <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%m/%d/%Y')"/>
+                            <t t-set="date_format" t-value="env['res.lang']._get_data(code=env.user.lang).date_format"/>
+                            <strong>    As of <span t-esc="context_timestamp(datetime.datetime.now()).strftime(date_format)"/>
                             </strong>
                         </span>
                     </div>
