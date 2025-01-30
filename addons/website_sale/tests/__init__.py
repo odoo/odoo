@@ -25,6 +25,7 @@ from . import test_website_sale_pricelist
 from . import test_website_sale_product_attribute_value_config
 from . import test_website_sale_product_configurator
 from . import test_website_sale_product_filters
+from . import test_website_sale_product_page
 from . import test_website_sale_product_template
 from . import test_website_sale_reorder_from_portal
 from . import test_website_sale_show_compare_list_price
