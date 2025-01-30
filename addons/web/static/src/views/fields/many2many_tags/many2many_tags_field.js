@@ -62,7 +62,7 @@ export class Many2ManyTagsField extends Component {
         context: {},
     };
 
-    static RECORD_COLORS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+    static RECORD_COLORS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
     static SEARCH_MORE_LIMIT = 320;
 
     setup() {
@@ -89,12 +89,10 @@ export class Many2ManyTagsField extends Component {
                 onDelete: removeRecord,
                 edit: this.props.record.isInEdition,
             },
-            getEvalParams: (props) => {
-                return {
-                    evalContext: this.evalContext,
-                    readonly: props.readonly,
-                };
-            },
+            getEvalParams: (props) => ({
+                evalContext: this.evalContext,
+                readonly: props.readonly,
+            }),
         });
 
         this.openMany2xRecord = useOpenMany2XRecord({
@@ -111,9 +109,9 @@ export class Many2ManyTagsField extends Component {
 
         this.update = (recordlist) => {
             recordlist = recordlist
-                ? recordlist.filter((element) => {
-                      return !this.tags.some((record) => record.resId === element.id);
-                  })
+                ? recordlist.filter(
+                      (element) => !this.tags.some((record) => record.resId === element.id)
+                  )
                 : [];
             if (!recordlist.length) {
                 return;

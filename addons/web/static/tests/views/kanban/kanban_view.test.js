@@ -8020,8 +8020,8 @@ test("edit the kanban color with the colorpicker", async () => {
 
     await toggleKanbanRecordDropdown(0);
 
-    expect(".o_kanban_record.o_kanban_color_12").toHaveCount(0, {
-        message: "no record should have the color 12",
+    expect(".o_kanban_record.o_kanban_color_13").toHaveCount(0, {
+        message: "no record should have the color 13",
     });
     expect(
         queryAll(".o_kanban_colorpicker", { root: getDropdownMenu(getKanbanRecord({ index: 0 })) })
@@ -8030,7 +8030,7 @@ test("edit the kanban color with the colorpicker", async () => {
         queryAll(".o_kanban_colorpicker > *", {
             root: getDropdownMenu(getKanbanRecord({ index: 0 })),
         })
-    ).toHaveCount(12, { message: "the color picker should have 12 children (the colors)" });
+    ).toHaveCount(13, { message: "the color picker should have 13 children (the colors)" });
 
     await contains(".o_kanban_colorpicker a.o_kanban_color_9").click();
 
