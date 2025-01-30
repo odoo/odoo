@@ -1086,18 +1086,16 @@ export class FloorScreen extends Component {
         // This information in uiState came by websocket
         // If the table is not synced, we need to count the unsynced orders
         let changeCount = 0;
-        let skipCount = 0;
         const tableOrders = this.pos.models["pos.order"].filter(
             (o) => o.table_id?.id === table.id && !o.finalized
         );
 
         for (const order of tableOrders) {
-            const changes = getOrderChanges(order, false, this.pos.config.preparationCategories);
+            const changes = getOrderChanges(order, this.pos.config.preparationCategories);
             changeCount += changes.nbrOfChanges;
-            skipCount += changes.nbrOfSkipped;
         }
 
-        return { changes: changeCount, skip: skipCount };
+        return { changes: changeCount };
     }
     setColor(hasSelectedTable, color) {
         if (hasSelectedTable) {
