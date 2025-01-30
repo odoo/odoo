@@ -24,9 +24,10 @@ class PackDeliveryReceiptWizard(models.TransientModel):
     picking_ids = fields.Many2many('stock.picking', string='Pick Numbers', store=True)
     line_ids = fields.One2many('custom.pack.app.wizard.line', 'wizard_id', string='Product Lines')
     pack_bench_id = fields.Many2one('pack.bench.configuration', string='Pack Bench')
-    package_box_type_id = fields.Many2one('package.box.configuration', string='Package Box Type')
+    package_box_type_id = fields.Many2one('package.box.configuration', string='Package Box Type',
+                                          help="Select packaging box for single picking.")
+    show_package_box_in_lines = fields.Boolean(compute="_compute_show_package_box_in_lines", store=True)
     picking_id = fields.Many2one('stock.picking', string='Select Receipt')
-    package_id = fields.Many2one('package.configuration', string='Select Package Type')
 
 
     @api.onchange('pc_container_code_id')
@@ -44,6 +45,15 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 raise ValidationError(_("No completed pickings found for this PC container code."))
 
             self.picking_ids = [(6, 0, pickings.ids)]
+
+    @api.depends('picking_ids')
+    def _compute_show_package_box_in_lines(self):
+        """
+        Determines if the package_box_type_id should be displayed in line items
+        instead of the wizard header.
+        """
+        for record in self:
+            record.show_package_box_in_lines = len(record.picking_ids) > 1
 
 
     def pack_products(self):
@@ -106,9 +116,12 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             move_lines.remaining_packed_qty = sum(
                 line.mapped('remaining_quantity'))  # Sum of all quantities from the picking
             move_lines.remaining_packed_qty = True
-            move_lines.delivery_receipt_state = 'fully_received' if move_lines.remaining_qty == 0.0 else 'partially_received'
+            move_lines.released_manual_orders = 'fully_received' if move_lines.remaining_qty == 0.0 else 'partially_received'
             move_lines.released_manual = True if move_lines.remaining_packed_qty == 0.0 else False
             move_lines.remaining_packed_qty -= line.quantity
+            # **Remove pc_container_code if state is fully received**
+            if move_lines.released_manual_orders == 'fully_received':
+                move_lines.write({'pc_container_code': False})
 
         #Payload
 
@@ -146,6 +159,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 "sales_order_number": line.picking_id.sale_id.name if line.picking_id.sale_id else "N/A",
                 "sales_order_carrier": line.picking_id.sale_id.carrier if line.picking_id.sale_id else "N/A",
                 "sales_order_origin": line.picking_id.sale_id.origin if line.picking_id.sale_id else "N/A",
+                "intercom_location":line.picking_id.sale_id.intercom_location if line.picking_id.sale_id else "N/A",
             })
 
         # Prepare full payload
@@ -197,6 +211,8 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
     picking_id = fields.Many2one('stock.picking', string='Picking Number', compute='_compute_picking_id', store=True)
     tenant_code_id = fields.Many2one(related='picking_id.tenant_code_id', string='Tenant ID')
     site_code_id = fields.Many2one(related='picking_id.site_code_id', string='Site Code')
+    package_box_type_id = fields.Many2one('package.box.configuration', string='Package Box Type',
+                                          help="Select packaging box for each product line.")
 
 
     @api.depends('wizard_id.picking_ids', 'product_id')
