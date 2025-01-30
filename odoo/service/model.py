@@ -15,6 +15,7 @@ from odoo.modules.registry import Registry
 from odoo.tools import lazy
 
 from . import security
+from .server import thread_local
 
 _logger = logging.getLogger(__name__)
 
@@ -93,7 +94,8 @@ def call_kw(model: BaseModel, name: str, args: list, kwargs: Mapping):
 
 
 def dispatch(method, params):
-    db, uid, passwd = params[0], int(params[1]), params[2]
+    db, uid, passwd, model, method_, *args = params
+    uid = int(uid)
     security.check(db, uid, passwd)
 
     threading.current_thread().dbname = db
@@ -101,9 +103,9 @@ def dispatch(method, params):
     registry = Registry(db).check_signaling()
     try:
         if method == 'execute':
-            res = execute(db, uid, *params[3:])
+            res = execute(db, uid, model, method_, *args)
         elif method == 'execute_kw':
-            res = execute_kw(db, uid, *params[3:])
+            res = execute_kw(db, uid, model, method_, *args)
         else:
             raise NameError(f"Method not available {method}")  # noqa: TRY301
         registry.signal_changes()
@@ -121,6 +123,7 @@ def execute_cr(cr, uid, obj, method, *args, **kw):
     recs = env.get(obj)
     if recs is None:
         raise UserError(f"Object {obj} doesn't exist")  # pylint: disable=missing-gettext
+    thread_local.rpc_model_method = f'{obj}.{method}'
     result = retrying(partial(call_kw, recs, method, args, kw), env)
     # force evaluation of lazy values before the cursor is closed, as it would
     # error afterwards if the lazy isn't already evaluated (and cached)
