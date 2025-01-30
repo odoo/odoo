@@ -36,15 +36,22 @@ export class OpeningControlPopup extends Component {
         return this.pos.models["pos.order"].filter((o) => o.lines.length > 0 && o.state === "draft")
             .length;
     }
-    confirm() {
+    async confirm() {
         this.pos.session.state = "opened";
-        this.pos.data.call(
+        await this.pos.data.call(
             "pos.session",
             "set_opening_control",
             [this.pos.session.id, parseFloat(this.state.openingCash), this.state.notes],
             {},
             true
         );
+        const order = this.pos.getOrder();
+        if (order) {
+            if (order.session_id !== this.pos.session) {
+                order.session_id = this.pos.session;
+                this.pos.getNextOrderRefs(order);
+            }
+        }
         this.props.close();
     }
     async openDetailsPopup() {
