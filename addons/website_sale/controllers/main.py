@@ -1057,7 +1057,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 order_sudo.partner_shipping_id == order_sudo.partner_invoice_id
             ),
             'only_services': order_sudo.only_services,
-            'json_pickup_location_data': json.dumps(order_sudo.pickup_location_data or {}),
         }
 
     @route(
