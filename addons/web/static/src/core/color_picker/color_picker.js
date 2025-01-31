@@ -52,10 +52,12 @@ export class ColorPicker extends Component {
         applyColorResetPreview: Function,
         colorPrefix: { type: String },
         noTransparency: { type: Boolean, optional: true },
+        withGradient: { type: Boolean, optional: true },
         close: { type: Function, optional: true },
     };
     static defaultProps = {
         close: () => {},
+        withGradient: true,
     };
 
     setup() {
