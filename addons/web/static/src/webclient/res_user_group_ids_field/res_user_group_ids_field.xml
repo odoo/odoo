@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="web.ResUserGroupIdsField">
-    <Record fields="fields" fieldNames="Object.keys(fields)" values="values" onRecordChanged.bind="onRecordChanged" t-slot-scope="data">
+    <Record fields="fields" fieldNames="Object.keys(fields)" values="values" hooks="hooks" t-slot-scope="data">
         <FormRenderer record="data.record" archInfo="archInfo"/>
     </Record>
 </t>
