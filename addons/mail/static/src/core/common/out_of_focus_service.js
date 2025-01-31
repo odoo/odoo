@@ -90,7 +90,7 @@ export class OutOfFocusService {
      * @param {string} [param0.icon] The icon to be displayed in the
      * notification.
      */
-    sendNotification({ message, sound = true, title, type, icon }) {
+    sendNotification({ message, sound = false, title, type, icon }) {
         if (!this.canSendNativeNotification || !this.multiTab.isOnMainTab()) {
             return;
         }
@@ -128,7 +128,7 @@ export class OutOfFocusService {
      * @param {string} title
      * @param {string} message
      */
-    sendNativeNotification(title, message, icon, { sound = true } = {}) {
+    sendNativeNotification(title, message, icon, { sound = false } = {}) {
         const notification = new Notification(title, {
             body: message,
             icon,

@@ -44,6 +44,12 @@ patch(Thread.prototype, {
                         chatWindow.fold();
                     }
                 }
+                if (
+                    !this.store.env.services["presence"].isOdooFocused() &&
+                    this.store.env.services["multi_tab"].isOnMainTab()
+                ) {
+                    this.store.env.services["mail.sound_effects"].play("new-message");
+                }
             }
             this.store.env.services["mail.out_of_focus"].notify(message, this);
         }
