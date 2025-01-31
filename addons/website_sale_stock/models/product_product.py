@@ -5,6 +5,7 @@ from datetime import datetime
 from pytz import UTC
 
 from odoo import models, fields, _
+from odoo.http import request
 
 
 class ProductProduct(models.Model):
@@ -81,9 +82,9 @@ class ProductProduct(models.Model):
         stock_warehouses_ids = (
             request.website.warehouse_id.lot_stock_id.ids
             if request and request.website.warehouse_id.lot_stock_id
-            else self.env['stock.warehouse']
-                    .search([('lot_stock_id', '!=', False)])
-                    .mapped('lot_stock_id.id')
+            else self.env['stock.warehouse'].sudo()
+                     .search([('lot_stock_id', '!=', False)])
+                     .mapped('lot_stock_id.id')
         )
         incoming_moves = StockMoveSudo.search(
             moves_domain + [('location_dest_id', 'in', stock_warehouses_ids)],

@@ -13,7 +13,6 @@ from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.http import request, route
-from odoo.orm.domains import Domain
 from odoo.osv import expression
 from odoo.tools import SQL, clean_context, float_round, groupby, lazy, single_email_re, str2bool
 from odoo.tools.json import scriptsafe as json_scriptsafe
@@ -2055,15 +2054,15 @@ class WebsiteSale(payment_portal.PaymentPortal):
             raise NotFound()
         if pricelist_name_ilike is not None:
             pricelist = request.env['product.pricelist'].sudo().search(
-                Domain.AND(
-                    [('name', 'ilike', pricelist_name_ilike)]
-                    + request.env['product.pricelist']._get_website_pricelists_domain(website)
-                ),
+                expression.AND([
+                    [('name', 'ilike', pricelist_name_ilike)],
+                    request.env['product.pricelist']._get_website_pricelists_domain(website)
+                ]),
                 limit=1,
             )
             if not pricelist:
                 raise NotFound()
-            request.update_context(forced_pricelist=pricelist)
+            request.pricelist = pricelist
 
         View = request.env['ir.ui.view'].sudo()
         IrHttp = request.env['ir.http']

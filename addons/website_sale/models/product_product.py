@@ -216,7 +216,7 @@ class ProductProduct(models.Model):
         """
         self = self.with_context(display_default_code=False)
 
-        pricelist_id = request.website.pricelist_id.id
+        pricelist_id = request.pricelist.id
         currency = request.website.currency_id
         IrHttp = request.env['ir.http']
         base_url = request.website.get_base_url()
@@ -240,7 +240,7 @@ class ProductProduct(models.Model):
         dummy_partner = self.env['res.partner'].new({})
         dummy_order = self.env['sale.order'].new({
             'partner_id': dummy_partner.id,
-            'pricelist_id': request.website.pricelist_id,
+            'pricelist_id': request.pricelist,
             'order_line': [{'product_uom_qty': 1.0}],
         })
         order_line = dummy_order.order_line[0]

@@ -11,10 +11,10 @@ from werkzeug.exceptions import NotFound
 from odoo import Command
 from odoo.tests import HttpCase, tagged
 
-from odoo.addons.website_sale.controllers.main import WebsiteSale
-from odoo.addons.website.tools import MockRequest
 from odoo.addons.delivery.tests.common import DeliveryCommon
 from odoo.addons.product.tests.common import ProductVariantsCommon
+from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale.tests.common import MockRequest
 
 
 class WebsiteSaleGMCCommon(ProductVariantsCommon, DeliveryCommon):
@@ -83,12 +83,17 @@ class WebsiteSaleGMCCommon(ProductVariantsCommon, DeliveryCommon):
         })
         cls.carrier.product_id.list_price = 5.0
         cls.WebsiteSaleController = WebsiteSale()
+        cls.empty_so = cls.env['sale.order'].create({
+            'partner_id': cls.partner.id,
+            'website_id': cls.website.id,
+        })
 
     def mock_public_request(self, **kwargs):
         website = kwargs.pop('website', self.website)
         return MockRequest(
             self.products.with_user(self.public_user).env,
             website=website.with_user(self.public_user),
+            website_sale_current_pl=kwargs.pop('pricelist', self.pricelist).id,
             **kwargs,
         )
 
@@ -111,7 +116,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
 
         self.assertEqual(200, response.status_code)
         gmc_xml = etree.XML(response.content)  # valid xml
-        self.assertEqual(f'Home | {self.website.name}', gmc_xml.xpath('//title')[0].text)
+        self.assertEqual(self.website.name, gmc_xml.xpath('//title')[0].text)
         self.assertURLEqual('/', gmc_xml.xpath('//link')[0].text)
         self.assertEqual(
             'This is the homepage of the website',
@@ -130,7 +135,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
 
         self.assertEqual(200, response.status_code)
         gmc_xml = etree.XML(response.content)
-        self.assertEqual('Home | Mon unique site', gmc_xml.xpath('//title')[0].text)
+        self.assertEqual('Mon unique site', gmc_xml.xpath('//title')[0].text)
         self.assertURLEqual(
             f'/{fr_lang.url_code}',
             gmc_xml.xpath('//link')[0].text,
@@ -248,7 +253,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
             ],
         )
 
-        self.update_items(context={'forced_pricelist': self.christmas_pricelist})
+        self.update_items(pricelist=self.christmas_pricelist)
 
         # 1000.0 (list_price) * 1.1 (EUR rate) - 10% (discount)
         self.assertEqual('990.0 EUR', self.red_sofa_item['sale_price'])
@@ -324,13 +329,13 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
         })
 
         self.update_items()
-        response_image_red_sofa = self.url_open_image(self.red_sofa_item['additionnal_image_link'][0])
-        response_image_blue_sofa_0 = self.url_open_image(self.blue_sofa_item['additionnal_image_link'][0])
-        response_image_blue_sofa_1 = self.url_open_image(self.blue_sofa_item['additionnal_image_link'][1])
+        response_image_red_sofa = self.url_open_image(self.red_sofa_item['additional_image_link'][0])
+        response_image_blue_sofa_0 = self.url_open_image(self.blue_sofa_item['additional_image_link'][0])
+        response_image_blue_sofa_1 = self.url_open_image(self.blue_sofa_item['additional_image_link'][1])
 
-        self.assertEqual(1, len(self.red_sofa_item['additionnal_image_link']))  # template image
+        self.assertEqual(1, len(self.red_sofa_item['additional_image_link']))  # template image
         # template image + variant image
-        self.assertEqual(2, len(self.blue_sofa_item['additionnal_image_link']))
+        self.assertEqual(2, len(self.blue_sofa_item['additional_image_link']))
         self.assertEqual(response_image_red_sofa, extra_image_template)
         self.assertEqual(response_image_blue_sofa_0, extra_image_blue_sofa)
         self.assertEqual(response_image_blue_sofa_1, extra_image_template)
@@ -349,7 +354,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
 
         self.update_items()
 
-        self.assertEqual(10, len(self.blue_sofa_item['additionnal_image_link']))
+        self.assertEqual(10, len(self.blue_sofa_item['additional_image_link']))
 
     def test_gmc_items_identifier_exists_iff_barcode_exists(self):
         self.red_sofa.barcode = '0232344532564'
