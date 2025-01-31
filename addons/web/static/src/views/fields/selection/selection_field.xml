@@ -8,7 +8,7 @@
         <t t-else="">
             <t t-set="isPlaceholder" t-value="false === value" />
             <select
-                t-attf-class="o_input pe-3 {{isPlaceholder ? 'o_selected_placeholder' : ''}}"
+                class="o_input pe-3"
                 t-on-change="onChange"
                 t-on-click.stop="() =&gt; {}"
                 t-att-id="props.id">

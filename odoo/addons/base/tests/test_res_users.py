@@ -3,7 +3,6 @@
 from types import SimpleNamespace
 from unittest.mock import patch
 
-from odoo.addons.base.models.res_users_view import is_selection_groups, get_selection_groups, name_selection_groups
 from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command
@@ -278,7 +277,7 @@ class TestUsers(UsersCommonCase):
             "The phone of the partner_id shall be updated."
         )
 
-@tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install', 'groups')
 class TestUsers2(UsersCommonCase):
 
     def test_change_user_login(self):
@@ -316,104 +315,91 @@ class TestUsers2(UsersCommonCase):
     def test_selection_groups(self):
         # create 3 groups that should be in a selection
         app = self.env['ir.module.category'].create({'name': 'Foo'})
-        group1, group2, group0 = self.env['res.groups'].create([
+        group_user, group_manager, group_visitor = self.env['res.groups'].create([
             {'name': name, 'category_id': app.id}
             for name in ('User', 'Manager', 'Visitor')
         ])
         # THIS PART IS NECESSARY TO REPRODUCE AN ISSUE: group1.id < group2.id < group0.id
-        self.assertLess(group1.id, group2.id)
-        self.assertLess(group2.id, group0.id)
+        self.assertLess(group_user.id, group_manager.id)
+        self.assertLess(group_manager.id, group_visitor.id)
         # implication order is group0 < group1 < group2
-        group2.implied_ids = group1
-        group1.implied_ids = group0
-        groups = group0 + group1 + group2
-
-        # determine the name of the field corresponding to groups
-        fname = next(
-            name
-            for name in self.env['res.users'].fields_get()
-            if is_selection_groups(name) and group0.id in get_selection_groups(name)
-        )
-        self.assertCountEqual(get_selection_groups(fname), groups.ids)
+        group_manager.implied_ids = group_user
+        group_user.implied_ids = group_visitor
+        groups = group_visitor + group_user + group_manager
 
         # create a user
         user = self.env['res.users'].create({'name': 'foo', 'login': 'foo'})
 
-        # put user in group0, and check field value
-        user.write({fname: group0.id})
-        self.assertEqual(user.group_ids & groups, group0)
-        self.assertEqual(user.read([fname])[0][fname], group0.id)
+        # put user in group_visitor, and check field value
+        user.write({'group_ids': [Command.set([group_visitor.id])]})
+        self.assertEqual(user.group_ids & groups, group_visitor)
+        self.assertEqual(user.all_group_ids & groups, group_visitor)
+        self.assertEqual(user.read(['group_ids'])[0]['group_ids'], [group_visitor.id])
+        self.assertEqual(user.read(['all_group_ids'])[0]['all_group_ids'], [group_visitor.id])
 
-        # put user in group1, and check field value
-        user.write({fname: group1.id})
-        self.assertEqual(user.group_ids & groups, group0 + group1)
-        self.assertEqual(user.read([fname])[0][fname], group1.id)
+        # remove group_visitor
+        user.write({'group_ids': [Command.unlink(group_visitor.id)]})
+        self.assertEqual(user.group_ids & groups, self.env['res.groups'])
 
-        # put user in group2, and check field value
-        user.write({fname: group2.id})
-        self.assertEqual(user.group_ids & groups, groups)
-        self.assertEqual(user.read([fname])[0][fname], group2.id)
+        # put user in group_manager, and check field value
+        user.write({'group_ids': [Command.set([group_manager.id])]})
+        self.assertEqual(user.group_ids & groups, group_manager)
+        self.assertEqual(user.all_group_ids & groups, group_visitor + group_manager + group_user)
+        self.assertEqual(user.read(['group_ids'])[0]['group_ids'], [group_manager.id])
+        self.assertEqual(set(user.read(['all_group_ids'])[0]['all_group_ids']), set((group_visitor + group_manager + group_user).ids))
 
-        normalized_values = user._remove_reified_groups({fname: group0.id})
-        self.assertEqual(sorted(normalized_values['group_ids']), [(3, group1.id), (3, group2.id), (4, group0.id)])
+        # add user in group_user, and check field value
+        user.write({'group_ids': [Command.link(group_user.id)]})
+        self.assertEqual(user.group_ids & groups, group_manager + group_user)
+        self.assertEqual(user.all_group_ids & groups, group_visitor + group_manager + group_user)
+        self.assertEqual(set(user.read(['group_ids'])[0]['group_ids']), set((group_manager + group_user).ids))
+        self.assertEqual(set(user.read(['all_group_ids'])[0]['all_group_ids']), set((group_visitor + group_manager + group_user).ids))
 
-        normalized_values = user._remove_reified_groups({fname: group1.id})
-        self.assertEqual(sorted(normalized_values['group_ids']), [(3, group2.id), (4, group1.id)])
-
-        normalized_values = user._remove_reified_groups({fname: group2.id})
-        self.assertEqual(normalized_values['group_ids'], [(4, group2.id)])
-
-    def test_read_list_with_reified_field(self):
-        """ Check that read_group and search_read get rid of reified fields"""
-        User = self.env['res.users']
-        fnames = ['name', 'email', 'login']
-
-        # find some reified field name
-        reified_fname = next(
-            fname
-            for fname in User.fields_get()
-            if fname.startswith(('in_group_', 'sel_groups_'))
-        )
-
-        # check that the reified field name is not aggregable
-        self.assertFalse(User.fields_get([reified_fname], ['aggregator'])[reified_fname].get('aggregator'))
-
-        # check that the reified fields are not considered invalid in search_read
-        # and are ignored
-        res_with_reified = User.search_read([], fnames + [reified_fname])
-        res_without_reified = User.search_read([], fnames)
-        self.assertEqual(res_with_reified, res_without_reified, "Reified fields should be ignored in search_read")
-
-        # Verify that the read_group is raising an error if reified field is used as groupby
-        with self.assertRaises(ValueError):
-            User._read_group([], fnames + [reified_fname], ['__count'])
-
-    def test_reified_groups_on_change(self):
+    def test_implied_groups_on_change(self):
         """Test that a change on a reified fields trigger the onchange of group_ids."""
         group_public = self.env.ref('base.group_public')
         group_portal = self.env.ref('base.group_portal')
         group_user = self.env.ref('base.group_user')
 
-        # Build the reified group field name
-        user_groups = group_public | group_portal | group_user
-        user_groups_ids = [str(group_id) for group_id in sorted(user_groups.ids)]
-        group_field_name = f"sel_groups_{'_'.join(user_groups_ids)}"
+        app = self.env['ir.module.category'].create({'name': 'Foo'})
+        group_contain_user = self.env['res.groups'].create({
+            'name': 'Small user group', 'category_id': app.id, 'implied_ids': [group_user.id]})
 
-        # <group col="4" invisible="sel_groups_1_9_10 != 1" groups="base.group_no_one" class="o_label_nowrap">
-        with self.debug_mode():
-            user_form = Form(self.env['res.users'], view='base.view_users_form')
+        user_form = Form(self.env['res.users'], view='base.view_users_form')
         user_form.name = "Test"
         user_form.login = "Test"
         self.assertFalse(user_form.share)
 
-        user_form[group_field_name] = group_portal.id
+        user_form['group_ids'] = group_portal
         self.assertTrue(user_form.share, 'The group_ids onchange should have been triggered')
 
-        user_form[group_field_name] = group_user.id
+        user_form['group_ids'] = group_user
         self.assertFalse(user_form.share, 'The group_ids onchange should have been triggered')
 
-        user_form[group_field_name] = group_public.id
+        user_form['group_ids'] = group_public
         self.assertTrue(user_form.share, 'The group_ids onchange should have been triggered')
+
+        user_form['group_ids'] = group_user
+        user_form['group_ids'] = group_user + group_contain_user
+
+        user_form.save()
+
+        # in debug mode, allow extra groups
+
+        with self.debug_mode():
+            user_form = Form(self.env['res.users'], view='base.view_users_form')
+            user_form.name = "Test-2"
+            user_form.login = "Test-2"
+
+            user_form['group_ids'] = group_portal
+            self.assertTrue(user_form.share)
+
+            # for portal user, the view_group_extra_ids is only show in debug mode
+            user_form['group_ids'] = group_portal + group_contain_user
+            self.assertFalse(user_form.share, 'The group_ids onchange should have been triggered')
+
+            with self.assertRaises(ValidationError, msg="The user cannot be at the same time in groups: ['User types / Internal User', 'User types / Portal', 'Foo / Small user group']"):
+                user_form.save()
 
     @users('portal_1')
     @mute_logger('odoo.addons.base.models.ir_model')
@@ -457,211 +443,15 @@ class TestUsers2(UsersCommonCase):
             other.login = "foo"
 
     @warmup
-    def test_write_groups_id_performance(self):
+    def test_write_group_ids_performance(self):
         contact_creation_group = self.env.ref("base.group_partner_manager")
         self.assertNotIn(contact_creation_group, self.user_internal.group_ids)
 
-        # all modules: 28, base: 16
-        with self.assertQueryCount(28):
+        # all modules: 23, base: 10
+        with self.assertQueryCount(23):
             self.user_internal.write({
                 "group_ids": [Command.link(contact_creation_group.id)],
             })
-
-
-@tagged('post_install', '-at_install', 'res_groups')
-class TestUsersGroupWarning(TransactionCase):
-
-    @classmethod
-    def setUpClass(cls):
-        """
-            These are the Groups and their Hierarchy we have Used to test Group warnings.
-
-            Category groups hierarchy:
-                Sales
-                ├── User: All Documents
-                └── Administrator
-                Timesheets
-                ├── User: own timesheets only
-                ├── User: all timesheets
-                └── Administrator
-                Project
-                ├── User
-                └── Administrator
-                Field Service
-                ├── User
-                └── Administrator
-
-            Implied groups hierarchy:
-                Sales / Administrator
-                └── Sales / User: All Documents
-
-                Timesheets / Administrator
-                └── Timesheets / User: all timesheets
-                    └── Timehseets / User: own timesheets only
-
-                Project / Administrator
-                ├── Project / User
-                └── Timesheets / User: all timesheets
-
-                Field Service / Administrator
-                ├── Sales / Administrator
-                ├── Project / Administrator
-                └── Field Service / User
-        """
-        super().setUpClass()
-        ResGroups = cls.env['res.groups']
-        IrModuleCategory = cls.env['ir.module.category']
-        categ_sales = IrModuleCategory.create({'name': 'Sales'})
-        categ_project = IrModuleCategory.create({'name': 'Project'})
-        categ_field_service = IrModuleCategory.create({'name': 'Field Service'})
-        categ_timesheets = IrModuleCategory.create({'name': 'Timesheets'})
-
-        # Sales
-        cls.group_sales_user, cls.group_sales_administrator = ResGroups.create([
-            {'name': 'User: All Documents', 'category_id': categ_sales.id},
-            {'name': 'Administrator', 'category_id': categ_sales.id},
-        ])
-        cls.sales_categ_field = name_selection_groups((cls.group_sales_user | cls.group_sales_administrator).ids)
-        cls.group_sales_administrator.implied_ids = cls.group_sales_user
-
-        # Timesheets
-        cls.group_timesheets_user_own_timesheet = ResGroups.create([
-            {'name': 'User: own timesheets only', 'category_id': categ_timesheets.id}
-        ])
-        cls.group_timesheets_user_all_timesheet = ResGroups.create([
-            {'name': 'User: all timesheets', 'category_id': categ_timesheets.id}
-        ])
-        cls.group_timesheets_administrator = ResGroups.create([
-            {'name': 'Administrator', 'category_id': categ_timesheets.id}
-        ])
-        cls.timesheets_categ_field = name_selection_groups((cls.group_timesheets_user_own_timesheet |
-                                                            cls.group_timesheets_user_all_timesheet |
-                                                            cls.group_timesheets_administrator).ids
-                                                           )
-        cls.group_timesheets_administrator.implied_ids += cls.group_timesheets_user_all_timesheet
-        cls.group_timesheets_user_all_timesheet.implied_ids += cls.group_timesheets_user_own_timesheet
-
-        # Project
-        cls.group_project_user, cls.group_project_admnistrator = ResGroups.create([
-            {'name': 'User', 'category_id': categ_project.id},
-            {'name': 'Administrator', 'category_id': categ_project.id},
-        ])
-        cls.project_categ_field = name_selection_groups((cls.group_project_user | cls.group_project_admnistrator).ids)
-        cls.group_project_admnistrator.implied_ids = (cls.group_project_user | cls.group_timesheets_user_all_timesheet)
-
-        # Field Service
-        cls.group_field_service_user, cls.group_field_service_administrator = ResGroups.create([
-            {'name': 'User', 'category_id': categ_field_service.id},
-            {'name': 'Administrator', 'category_id': categ_field_service.id},
-        ])
-        cls.field_service_categ_field = name_selection_groups((cls.group_field_service_user | cls.group_field_service_administrator).ids)
-        cls.group_field_service_administrator.implied_ids = (cls.group_sales_administrator |
-                                                             cls.group_project_admnistrator |
-                                                             cls.group_field_service_user).ids
-
-        # User
-        cls.test_group_user = cls.env['res.users'].create({
-            'name': 'Test Group User',
-            'login': 'TestGroupUser',
-            'group_ids': (
-                cls.env.ref('base.group_user') |
-                cls.group_timesheets_administrator |
-                cls.group_field_service_administrator).ids,
-        })
-
-
-    def test_user_group_empty_group_warning(self):
-        """ User changes Empty Sales access from 'Sales: Administrator'. The
-        warning should be there since 'Sales: Administrator' is required when
-        user is having 'Field Service: Administrator'. When user reverts the
-        changes, warning should disappear. """
-        with Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
-            UserForm[self.sales_categ_field] = False
-            self.assertEqual(
-                UserForm.user_group_warning,
-                'Since Test Group User is a/an "Field Service: Administrator", '
-                'they will at least obtain the right "Sales: Administrator", "Project: Administrator"'
-            )
-
-            UserForm[self.sales_categ_field] = self.group_sales_administrator.id
-            self.assertEqual(
-                UserForm.user_group_warning,
-                'Since Test Group User is a/an "Field Service: Administrator", '
-                'they will at least obtain the right "Project: Administrator"'
-            )
-
-            UserForm[self.project_categ_field] = self.group_project_admnistrator.id
-            self.assertFalse(UserForm.user_group_warning)
-
-    def test_user_group_inheritance_warning(self):
-        """ User changes 'Sales: User' from 'Sales: Administrator'. The warning
-        should be there since 'Sales: Administrator' is required when user is
-        having 'Field Service: Administrator'. When user reverts the changes,
-        warning should disappear. """
-        with Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
-            UserForm[self.sales_categ_field] = self.group_sales_user.id
-            self.assertEqual(
-                UserForm.user_group_warning,
-                'Since Test Group User is a/an "Field Service: Administrator", '
-                'they will at least obtain the right "Sales: Administrator", "Project: Administrator"'
-            )
-
-            UserForm[self.sales_categ_field] = self.group_sales_administrator.id
-            self.assertEqual(
-                UserForm.user_group_warning,
-                'Since Test Group User is a/an "Field Service: Administrator", '
-                'they will at least obtain the right "Project: Administrator"'
-            )
-
-            UserForm[self.project_categ_field] = self.group_project_admnistrator.id
-            self.assertFalse(UserForm.user_group_warning)
-
-    def test_user_group_inheritance_warning_multi(self):
-        """ User changes 'Sales: User' from 'Sales: Administrator' and
-        'Project: User' from 'Project: Administrator'. The warning should
-        be there since 'Sales: Administrator' and 'Project: Administrator'
-        are required when user is havning 'Field Service: Administrator'.
-        When user reverts the changes For 'Sales: Administrator', warning
-        should disappear for Sales Access."""
-        with Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
-            UserForm[self.sales_categ_field] = self.group_sales_user.id
-            UserForm[self.project_categ_field] = self.group_project_user.id
-            self.assertTrue(
-                UserForm.user_group_warning,
-                'Since Test Group User is a/an "Field Service: Administrator", they will at least obtain the right "Sales: Administrator", Project: Administrator"',
-            )
-
-            UserForm[self.sales_categ_field] = self.group_sales_administrator.id
-            self.assertEqual(
-                UserForm.user_group_warning,
-                'Since Test Group User is a/an "Field Service: Administrator", they will at least obtain the right "Project: Administrator"'
-            )
-
-    def test_user_group_least_possible_inheritance_warning(self):
-        """ User changes 'Timesheets: User: own timesheets only ' from
-        'Timesheets: Administrator'. The warning should be there since
-        'Timesheets: User: all timesheets' is at least required when user is
-        having 'Project: Administrator'. When user reverts the changes For
-        'Timesheets: User: all timesheets', warning should disappear."""
-        self.test_group_user.group_ids -= self.group_field_service_administrator
-        self.test_group_user.group_ids += self.group_project_admnistrator
-        with Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
-            UserForm[self.timesheets_categ_field] = self.group_timesheets_user_own_timesheet.id
-            self.assertEqual(
-                UserForm.user_group_warning,
-                'Since Test Group User is a/an "Project: Administrator", they will at least obtain the right "Timesheets: User: all timesheets"'
-            )
-
-            UserForm[self.timesheets_categ_field] = self.group_timesheets_user_all_timesheet.id
-            self.assertFalse(UserForm.user_group_warning)
-
-    def test_user_group_parent_inheritance_no_warning(self):
-        """ User changes 'Field Service: User' from 'Field Service: Administrator'.
-        The warning should not be there since 'Field Service: User' is not affected
-        by any other groups."""
-        with Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
-            UserForm[self.field_service_categ_field] = self.group_field_service_user.id
-            self.assertFalse(UserForm.user_group_warning)
 
 
 class TestUsersTweaks(TransactionCase):

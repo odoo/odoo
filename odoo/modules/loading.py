@@ -128,7 +128,6 @@ def force_demo(env: Environment) -> None:
         load_demo(env, package, {}, 'init')
 
     env['ir.module.module'].invalidate_model(['demo'])
-    env['res.groups']._update_user_groups_view()
 
 
 def load_module_graph(
@@ -557,7 +556,6 @@ def load_modules(
 
         # STEP 6: verify custom views on every model
         if update_module:
-            env['res.groups']._update_user_groups_view()
             View = env['ir.ui.view']
             for model in registry:
                 try:
