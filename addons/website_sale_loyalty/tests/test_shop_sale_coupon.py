@@ -388,7 +388,11 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
             lambda l: l.coupon_id and l.coupon_id.id == self.coupon.id
         )
 
-        order._cart_update(coupon_line.product_id.id, add_qty=None)
+        website = self.website
+        with MockRequest(website.env, website=self.website, sale_order_id=order.id):
+            Cart().update_cart(
+                line_id=None, quantity=0.0, product_id=coupon_line.product_id.id,
+            )
 
         msg = "The coupon should've been removed from the order"
         self.assertEqual(len(order.applied_coupon_ids), 0, msg=msg)
@@ -507,12 +511,11 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
         coupon_line = order.website_order_line.filtered(
             lambda line: line.coupon_id and line.coupon_id.id == self.coupon.id
         )
-        order._cart_update(
-            product_id=coupon_line.product_id.id,
-            line_id=None,
-            add_qty=None,
-            set_qty=0,
-        )
+        website = self.website
+        with MockRequest(website.env, website=self.website, sale_order_id=order.id):
+            Cart().update_cart(
+                line_id=None, quantity=0.0, product_id=coupon_line.product_id.id,
+            )
 
         msg = "All coupon lines should have been removed from the order."
         self.assertEqual(len(order.applied_coupon_ids), 0, msg=msg)

@@ -1,7 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import random
+
 from datetime import datetime
+
 from dateutil.relativedelta import relativedelta
 
 from odoo import SUPERUSER_ID, _, api, fields, models
@@ -274,102 +276,54 @@ class SaleOrder(models.Model):
             # Only add the main partner as follower of the order
             self._message_subscribe([partner_id])
 
-    def _cart_update(self, product_id, line_id=None, add_qty=0, set_qty=0, **kwargs):
-        """ Add or set product quantity, add_qty can be negative """
+    def _cart_add(self, product_id:int, quantity:int|float=1.0, **kwargs):
+        """Add quantity of the given product to the current sales order.
+
+        :param int product_id: product id, as a `product.product` id.
+        :params float quantity: the quantity to add to the cart.
+        :param dict kwargs: Additional parameters given to deeper method calls.
+        :return: values used by the cart service to give feedback to the customer.
+        :rtype: dict
+        """
         self.ensure_one()
         self = self.with_company(self.company_id)
 
-        product = self.env['product.product'].browse(product_id).exists()
-        if add_qty and (not product or not product._is_add_to_cart_allowed()):
-            raise UserError(_("The given product does not exist therefore it cannot be added to cart."))
-
-        if line_id is not False:
-            order_line = self._cart_find_product_line(product_id, line_id, **kwargs)[:1]
-        else:
-            order_line = self.env['sale.order.line']
-
-        try:
-            if add_qty:
-                add_qty = int(add_qty)
-        except ValueError:
-            add_qty = 1
-
-        try:
-            if set_qty:
-                set_qty = int(set_qty)
-        except ValueError:
-            set_qty = 0
-
-        quantity = 0
-        if set_qty:
-            quantity = set_qty
-        elif add_qty is not None:
-            if order_line:
-                quantity = order_line.product_uom_qty + (add_qty or 0)
-            else:
-                quantity = add_qty or 0
-
-        if quantity > 0:
-            quantity, warning = self._verify_updated_quantity(
-                order_line,
-                product_id,
-                quantity,
+        if existing_sol := self._cart_find_product_line(product_id, **kwargs)[:1]:
+            # If a matching line is found, update the existing line instead.
+            return self._cart_update_line_quantity(
+                line_id=existing_sol.id,
+                quantity=existing_sol.product_uom_qty + quantity,
                 **kwargs,
             )
-        else:
-            # If the line will be removed anyway, there is no need to verify
-            # the requested quantity update.
-            warning = ''
 
-        order_line = self._cart_update_order_line(product_id, quantity, order_line, **kwargs)
+        quantity, warning = self._verify_updated_quantity(
+            self.env['sale.order.line'],
+            product_id,
+            quantity,
+            **kwargs,
+        )
 
-        if (
-            order_line
-            and order_line.product_template_id.type != 'combo'
-            and order_line.price_unit == 0
-            and self.website_id.prevent_zero_price_sale
-            and product.service_tracking not in self.env['product.template']._get_product_types_allow_zero_price()
-        ):
-            raise UserError(_(
-                "The given product does not have a price therefore it cannot be added to cart.",
-            ))
-        if self.only_services:
-            self._remove_delivery_line()
-        elif self.carrier_id:
-            # Recompute the delivery rate.
-            rate = self.carrier_id.rate_shipment(self)
-            if rate['success']:
-                self.order_line.filtered(lambda line: line.is_delivery).price_unit = rate['price']
-            else:
-                self._remove_delivery_line()
+        order_line = self._create_new_cart_line(product_id, quantity, **kwargs)
 
-        if request:
-            request.session['website_sale_cart_quantity'] = self.cart_quantity
+        # NOTE: the provided product_id should not be given after `_create_new_cart_line` call as it
+        # could be different from the line's product_id (see variant generation logic in
+        # `_prepare_order_line_values`).
+        self._verify_cart_after_update(order_line)
 
         return {
             'line_id': order_line.id,
             'quantity': quantity,
-            'option_ids': list(set(order_line.linked_line_ids.filtered(
-                lambda sol: sol.order_id == order_line.order_id).ids)
-            ),
             'warning': warning,
         }
 
     def _cart_find_product_line(
-        self,
-        product_id,
-        line_id=None,
-        linked_line_id=False,
-        no_variant_attribute_value_ids=None,
-        **kwargs
+        self, product_id, linked_line_id=False, no_variant_attribute_value_ids=None, **kwargs
     ):
         """Find the cart line matching the given parameters.
 
         Custom attributes won't be matched (but no_variant & dynamic ones will be)
 
         :param int product_id: the product being added/removed, as a `product.product` id
-        :param int line_id: optional, the line the customer wants to edit (/shop/cart page), as a
-            `sale.order.line` id
         :param int linked_line_id: optional, the parent line (for optional products), as a
             `sale.order.line` id
         :param list optional_product_ids: optional, the optional products of the line, as a list
@@ -377,17 +331,13 @@ class SaleOrder(models.Model):
         :param list no_variant_attribute_value_ids: list of `product.template.attribute.value` ids
             whose attribute is configured as `no_variant`
         :param dict kwargs: unused parameters, maybe used in overrides or other cart update methods
+        :return: matching order lines in the cart, if any
+        :rtype: `sale.order.line` recordset
         """
         self.ensure_one()
 
         if not self.order_line:
             return self.env['sale.order.line']
-
-        if line_id:
-            # If we update a specific line, there is no need to filter anything else
-            return self.order_line.filtered(
-                lambda sol: sol.product_id.id == product_id and sol.id == line_id
-            )
 
         domain = [
             ('product_id', '=', product_id),
@@ -408,31 +358,100 @@ class SaleOrder(models.Model):
 
         return filtered_sol
 
+    def _cart_update_line_quantity(self, line_id:int, quantity:int|float, **kwargs):
+        """Update the quantity of a given line of the cart.
+
+        :param int line_id: line id, as a `sale.order.line` id.
+        :params float quantity: the updated quantity of the line.
+        :param dict kwargs: Additional parameters given to deeper method calls.
+        :return: values used by the cart service to give feedback to the customer.
+        :rtype: dict
+        """
+        self.ensure_one()
+        self = self.with_company(self.company_id)
+
+        if not (order_line := self.order_line.filtered(lambda sol: sol.id == line_id)):
+            raise UserError(_("This line doesn't belong to your order."))
+
+        if quantity > 0:
+            quantity, warning = self._verify_updated_quantity(
+                order_line,
+                order_line.product_id.id,
+                quantity,
+                **kwargs,
+            )
+        else:
+            # If the line will be removed anyway, there is no need to verify
+            # the requested quantity update.
+            warning = ''
+
+        order_line = self._cart_update_order_line(order_line, quantity, **kwargs)
+        self._verify_cart_after_update(order_line)
+
+        return {
+            'line_id': order_line.id,
+            'quantity': quantity,
+            'warning': warning,
+        }
+
     # hook to be overridden
     def _verify_updated_quantity(self, order_line, product_id, new_qty, **kwargs):
         return new_qty, ''
 
-    def _cart_update_order_line(self, product_id, quantity, order_line, **kwargs):
+    def _cart_update_order_line(self, order_line, quantity, **kwargs):
         self.ensure_one()
+        order_line.ensure_one()
 
-        if order_line and quantity <= 0:
+        if quantity <= 0:
             # Remove zero or negative lines
             order_line.unlink()
-            order_line = self.env['sale.order.line']
-        elif order_line:
-            # Update existing line
-            update_values = self._prepare_order_line_update_values(order_line, quantity, **kwargs)
-            if update_values:
-                self._update_cart_line_values(order_line, update_values)
-        elif quantity > 0:
-            # Create new line
-            order_line_values = self._prepare_order_line_values(product_id, quantity, **kwargs)
-            order_line = self.env['sale.order.line'].sudo().create(order_line_values)
+            return self.env['sale.order.line']
+
+        # Update existing line
+        update_values = self._prepare_order_line_update_values(order_line, quantity, **kwargs)
+        if update_values:
+            order_line.write(update_values)
+
+            # If the line is a combo product line, and it already has combo items, we need to update
+            # the combo item quantities as well.
+            if (
+                order_line.product_type == 'combo'
+                and order_line.linked_line_ids
+                and 'product_uom_qty' in update_values
+            ):
+                for linked_line_id in order_line.linked_line_ids:
+                    if quantity != linked_line_id.product_uom_qty:
+                        self._cart_update_line_quantity(
+                            line_id=linked_line_id.id,
+                            quantity=quantity,
+                        )
+
         return order_line
 
+    def _prepare_order_line_update_values(self, order_line, quantity, **kwargs):
+        self.ensure_one()
+        values = {}
+
+        if quantity != order_line.product_uom_qty:
+            values['product_uom_qty'] = quantity
+
+        return values
+
+    def _create_new_cart_line(self, product_id, quantity, **kwargs):
+        if quantity <= 0.0:
+            return self.env['sale.order.line']
+
+        return self.env['sale.order.line'].sudo().create(
+            self._prepare_order_line_values(product_id, quantity, **kwargs)
+        )
+
     def _prepare_order_line_values(
-        self, product_id, quantity, linked_line_id=False,
-        no_variant_attribute_value_ids=None, product_custom_attribute_values=None,
+        self,
+        product_id,
+        quantity,
+        linked_line_id=False,
+        no_variant_attribute_value_ids=None,
+        product_custom_attribute_values=None,
         combo_item_id=None,
         **kwargs
     ):
@@ -493,23 +512,30 @@ class SaleOrder(models.Model):
 
         return values
 
-    def _prepare_order_line_update_values(
-        self, order_line, quantity, linked_line_id=False, **kwargs
-    ):
-        self.ensure_one()
-        values = {}
+    def _verify_cart_after_update(self, order_line):
+        if (
+            order_line
+            and order_line.product_template_id.type != 'combo'
+            and order_line.price_unit == 0
+            and self.website_id.prevent_zero_price_sale
+            and order_line.product_template_id.service_tracking not in self.env['product.template']._get_product_types_allow_zero_price()
+        ):
+            raise UserError(_(
+                "The given product does not have a price therefore it cannot be added to cart.",
+            ))
 
-        if quantity != order_line.product_uom_qty:
-            values['product_uom_qty'] = quantity
-        if linked_line_id and linked_line_id != order_line.linked_line_id.id:
-            values['linked_line_id'] = linked_line_id
+        if self.only_services:
+            self._remove_delivery_line()
+        elif self.carrier_id:
+            # Recompute the delivery rate.
+            rate = self.carrier_id.rate_shipment(self)
+            if rate['success']:
+                self.order_line.filtered('is_delivery').price_unit = rate['price']
+            else:
+                self._remove_delivery_line()
 
-        return values
-
-    # hook to be overridden
-    def _update_cart_line_values(self, order_line, update_values):
-        self.ensure_one()
-        order_line.write(update_values)
+        if request:
+            request.session['website_sale_cart_quantity'] = self.cart_quantity
 
     def _verify_cart(self):
         """Check cart content and clear outdated/invalid lines."""
