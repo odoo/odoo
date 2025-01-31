@@ -52,11 +52,13 @@ class EventType(models.Model):
                  })]
 
     def _default_question_ids(self):
-        return [
-            (4, self.env.ref('event.event_question_name').id),
-            (4, self.env.ref('event.event_question_email').id),
-            (4, self.env.ref('event.event_question_phone').id),
-        ]
+        """
+            Get default question_ids from ir.model.data.
+        """
+        Data = self.env['ir.model.data'].sudo()
+        default_question_xmlids = ['event.event_question_name', 'event.event_question_email', 'event.event_question_phone']
+        default_question_ids = [Data._xmlid_to_res_id(xmlid, raise_if_not_found=False) for xmlid in default_question_xmlids]
+        return self.env['event.question'].search([('id', 'in', default_question_ids)])
 
     name = fields.Char('Event Template', required=True, translate=True)
     note = fields.Html(string='Note')
