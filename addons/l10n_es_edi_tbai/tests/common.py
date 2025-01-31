@@ -55,14 +55,15 @@ class TestEsEdiTbaiCommon(TestAccountMoveSendCommon):
             cert_name = 'araba_1234.p12'
             cert_password = '1234'
         elif agency == 'bizkaia':
-            cert_name = 'bizkaia_111111.p12'
-            cert_password = '111111'
+            cert_name = 'Bizkaia-IZDesa2021.p12'
+            cert_password = 'IZDesa2021'
         elif agency == 'gipuzkoa':
             cert_name = 'gipuzkoa_IZDesa2021.p12'
             cert_password = 'IZDesa2021'
         else:
             raise ValueError("Unknown tax agency: " + agency)
 
+<<<<<<< 18.0
         cls.certificate = cls.env['certificate.certificate'].create({
             'name': 'Test ES TBAI certificate',
             'content': base64.b64encode(
@@ -70,8 +71,19 @@ class TestEsEdiTbaiCommon(TestAccountMoveSendCommon):
             'pkcs12_password': cert_password,
             'scope': 'tbai',
             'company_id': cls.company_data['company'].id,
+||||||| d38036fd84ad5cb1f82c114d40650ab37a2124ed
+        cls.certificate = cls.env['l10n_es_edi.certificate'].create({
+            'content': base64.encodebytes(
+                misc.file_open("l10n_es_edi_tbai/demo/certificates/" + cert_name, 'rb').read()),
+            'password': cert_password,
+=======
+        cls.certificate = cls.env['l10n_es_edi.certificate'].sudo().create({
+            'content': base64.encodebytes(
+                misc.file_open("l10n_es_edi_tbai/demo/certificates/" + cert_name, 'rb').read()),
+            'password': cert_password,
+>>>>>>> 93b44ae8454b7a0ff583d6fbc564fd55d01f79f8
         })
-        cls.company_data['company'].write({
+        cls.company_data['company'].sudo().write({
             'l10n_es_tbai_tax_agency': agency,
             'l10n_es_tbai_certificate_id': cls.certificate.id,
         })

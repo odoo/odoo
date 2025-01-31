@@ -16,6 +16,9 @@ class TestEdiTbaiWebServices(TestEsEdiTbaiCommon):
     def setUpClass(cls):
         super().setUpClass()
 
+        # Operations tested here should be available to a billing user
+        cls.env.user.groups_id = cls.env.ref("account.group_account_invoice")
+
         # Invoice name are tracked by the web-services so this constant tries to get a new unique invoice name at each
         # execution.
         cls.today = datetime.now()
@@ -55,6 +58,7 @@ class TestEdiTbaiWebServices(TestEsEdiTbaiCommon):
 
     def test_edi_gipuzkoa(self):
         self._set_tax_agency('gipuzkoa')
+<<<<<<< 18.0
 
         self._get_invoice_send_wizard(self.out_invoice).action_send_and_print()
         self.assertEqual(self.out_invoice.l10n_es_tbai_state, 'sent')
@@ -63,3 +67,41 @@ class TestEdiTbaiWebServices(TestEsEdiTbaiCommon):
         self.in_invoice.l10n_es_tbai_send_bill()
         self.assertEqual(self.in_invoice.l10n_es_tbai_state, 'sent')
         self.assertTrue(self.in_invoice.l10n_es_tbai_post_document_id.xml_attachment_id)
+||||||| d38036fd84ad5cb1f82c114d40650ab37a2124ed
+        self.moves.action_process_edi_web_services(with_commit=False)
+        generated_files = self._process_documents_web_services(self.moves, {'es_tbai'})
+        self.assertTrue(generated_files)
+        self.assertRecordValues(self.out_invoice, [{'edi_state': 'sent'}])
+=======
+        self.moves.action_process_edi_web_services(with_commit=False)
+        generated_files = self._process_documents_web_services(self.moves, {'es_tbai'})
+        self.assertTrue(generated_files)
+        self.assertRecordValues(self.out_invoice, [{'edi_state': 'sent'}])
+
+    def test_edi_cancellation(self):
+        self._set_tax_agency("gipuzkoa")
+        # Post the invoices
+        self.moves.action_process_edi_web_services(with_commit=False)
+        generated_files = self._process_documents_web_services(self.moves, {"es_tbai"})
+        self.assertTrue(generated_files)
+        self.assertRecordValues(
+            self.moves,
+            [
+                {"edi_state": "sent", "state": "posted"},
+                {"edi_state": False, "state": "posted"},
+            ],
+        )
+        # Cancel the invoices
+        self.moves.invalidate_recordset(["l10n_es_tbai_post_xml"])
+        self.moves.button_cancel_posted_moves()
+        self.moves.action_process_edi_web_services(with_commit=False)
+        generated_files = self._process_documents_web_services(self.moves, {"es_tbai"})
+        # self.assertTrue(generated_files)
+        self.assertRecordValues(
+            self.moves,
+            [
+                {"edi_state": "cancelled", "state": "cancel"},
+                {"edi_state": False, "state": "cancel"},
+            ],
+        )
+>>>>>>> 93b44ae8454b7a0ff583d6fbc564fd55d01f79f8
