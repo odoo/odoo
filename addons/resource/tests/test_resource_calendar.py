@@ -1,3 +1,4 @@
+from pytz import utc
 from datetime import date, datetime
 
 from odoo.tests.common import TransactionCase
@@ -49,3 +50,11 @@ class TestResourceCalendar(TransactionCase):
 
         self.assertEqual(self.calendar_fixed_40h._get_max_number_of_hours(start, end), 8)
         self.assertEqual(self.calendar_fixed_with_hours._get_max_number_of_hours(start, end), 9)
+
+    def test_attendance_intervals_batch(self):
+        start = datetime.combine(date(2025, 1, 1), datetime.min.time(), tzinfo=utc)
+        end = datetime.combine(date(2025, 1, 5), datetime.min.time(), tzinfo=utc)
+        intervals = self.calendar_40h._attendance_intervals_batch(start, end)
+        intervals_fixed = self.calendar_fixed_40h._attendance_intervals_batch(start, end)
+        self.assertEqual(len(intervals[False]), 6)
+        self.assertEqual(len(intervals_fixed[False]), 3)

@@ -301,7 +301,6 @@ class ResourceCalendar(models.Model):
                 calendar.full_time_required_hours = calendar.hours_per_week
 
     def _get_global_attendances(self):
-        # TODO AMAH: recheck this conditions spcially the dates
         return self.attendance_ids.filtered(lambda attendance:
             attendance.day_period != 'lunch'
             and not attendance.date_from and not attendance.date_to
@@ -432,10 +431,59 @@ class ResourceCalendar(models.Model):
     # Computation API
     # --------------------------------------------------
 
+    def _attendance_intervals_batch_fixed_time(self, start_dt, end_dt, resources=None, domain=None, tz=None):
+        # TODO AMAH: in fixed_time handel the twoweeks case
+        if not resources:
+            resources = self.env['resource.resource']
+            resources_list = [resources]
+        else:
+            resources_list = list(resources) + [self.env['resource.resource']]
+        resources_per_tz = defaultdict(list)
+        for resource in resources_list:
+            resources_per_tz[tz or timezone((resource or self).tz)].append(resource)
+
+        weekdays = set()
+        for idx, day in enumerate(['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']):
+            if self[day]:
+                weekdays.add(idx)
+        start = start_dt.astimezone(utc)
+        end = end_dt.astimezone(utc)
+        bounds_per_tz = {
+            tz: (start_dt.astimezone(tz), end_dt.astimezone(tz))
+            for tz in resources_per_tz
+        }
+        # Use the outer bounds from the requested timezones
+        for low, high in bounds_per_tz.values():
+            start = min(start, low.replace(tzinfo=utc))
+            end = max(end, high.replace(tzinfo=utc))
+        # Generate once with utc as timezone
+        days = rrule(DAILY, start.date(), until=end.date(), byweekday=weekdays)
+        base_result = []
+        for day in days:
+            day_from = datetime.combine(day, datetime.min.time())
+            day_to = datetime.combine(day, datetime.max.time())
+            base_result.append((day_from, day_to, self.env['resource.calendar.attendance']))
+
+        result_per_tz = {
+            tz: [(max(bounds_per_tz[tz][0], tz.localize(val[0])),
+                min(bounds_per_tz[tz][1], tz.localize(val[1])),
+                val[2])
+                    for val in base_result]
+            for tz in resources_per_tz
+        }
+        result_per_resource_id = dict()
+        for tz, resources in resources_per_tz.items():
+            res = result_per_tz[tz]
+            res_intervals = WorkIntervals(res)
+            for resource in resources:
+                result_per_resource_id[resource.id] = res_intervals
+        return result_per_resource_id
+
     def _attendance_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None, lunch=False):
-        # TODO AMAH: rewrite this method to accomdate the new types
         assert start_dt.tzinfo and end_dt.tzinfo
         self.ensure_one()
+        if self.schedule_type == 'fixed_time':
+            return self._attendance_intervals_batch_fixed_time(start_dt, end_dt, resources, domain, tz)
         if not resources:
             resources = self.env['resource.resource']
             resources_list = [resources]
