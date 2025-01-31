@@ -242,6 +242,18 @@
                         t-out="td_product['ribbon'].name or ''"
                     />
                 </a>
+                <div class="row">
+                    <t t-foreach="product._get_previewed_attribute()" t-as="ptav">
+                        <t t-set="selected_attribute_value" t-value="ptav.product_attribute_value_id.id" />
+                        <t
+                            t-set="variant_href"
+                            t-value="product_href.split('#')[0] + '#attribute_values=%s' % (selected_attribute_value)"
+                        />
+                         <div t-if="a.display_type == 'color'" class="pt-1 pb-3"></div>
+                        <t t-if="ptav.display_type == 'color'"></t>
+                        <a class="col" t-out="ptav.name" t-att-href="variant_href" />
+                    </t>
+                </div>
             </div>
             <div class="o_wsale_product_information position-relative d-flex flex-grow-1 flex-shrink-1">
                 <div class="o_wsale_product_information_text">

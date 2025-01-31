@@ -273,6 +273,16 @@ class ProductTemplate(models.Model):
 
         return self._get_possible_variants(parent_combination).sorted(_sort_key_variant)
 
+    def _get_previewed_attribute(self):
+        for product in self:
+            all_variants = product._get_possible_variants_sorted()
+            available_variants = all_variants.attribute_line_ids.filtered(
+                lambda variant: variant.attribute_id.preview_variants !='hidden'
+            )
+            if available_variants:
+                return available_variants[0].product_template_value_ids
+
+
     def _get_sales_prices(self, website):
         if not self:
             return {}
