@@ -24,6 +24,7 @@ this event.
         'views/event_registration_views.xml',
         'views/event_views.xml',
         'views/sale_order_views.xml',
+        'views/templates.xml',
         'data/event_sale_data.xml',
         'data/mail_templates.xml',
         'report/event_event_templates.xml',

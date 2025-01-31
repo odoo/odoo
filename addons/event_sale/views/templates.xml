@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="sale_order_portal_template" inherit_id="sale.sale_order_portal_template" name="Event sale order portal">
+        <xpath expr="//div[@t-if='sale_order.is_expired']" position="before">
+            <div t-if="sale_order.has_soldout_event" class="alert alert-warning alert-dismissible d-print-none" role="alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+                <strong>The event is sold out!</strong> <a role="button" href="#discussion"><i class="fa fa-comment"/> Contact us for more information.</a>
+            </div>
+        </xpath>
+    </template>
+</odoo>
