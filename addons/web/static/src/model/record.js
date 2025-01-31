@@ -39,12 +39,11 @@ class _Record extends Component {
                 onRecordSaved: this.props.info.onRecordSaved || (() => {}),
                 onWillSaveRecord: this.props.info.onWillSaveRecord || (() => {}),
                 onRecordChanged: this.props.info.onRecordChanged || (() => {}),
+                onRootLoaded: this.props.info.onRootLoaded || (() => {}),
             },
         };
         const modelServices = Object.fromEntries(
-            StandaloneRelationalModel.services.map((servName) => {
-                return [servName, useService(servName)];
-            })
+            StandaloneRelationalModel.services.map((servName) => [servName, useService(servName)])
         );
         modelServices.orm = this.orm;
         this.model = useState(new StandaloneRelationalModel(this.env, modelParams, modelServices));
@@ -164,12 +163,15 @@ export class Record extends Component {
         "values?",
         "onRecordChanged?",
         "onRecordSaved?",
+        "onRootLoaded?",
         "onWillSaveRecord?",
     ];
     setup() {
         const { activeFields, fieldNames, fields, resModel } = this.props;
         if (!activeFields && !fieldNames) {
-            throw Error(`Record props should have either a "activeFields" key or a "fieldNames" key`);
+            throw Error(
+                `Record props should have either a "activeFields" key or a "fieldNames" key`
+            );
         }
         if (!fields && (!fieldNames || !resModel)) {
             throw Error(
