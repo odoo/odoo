@@ -61,6 +61,23 @@ patch(Message.prototype, {
             }
         }
     },
+    onClick(ev) {
+        if (ev.target.closest(".o_mail_redirect")) {
+            ev.preventDefault();
+            let id = Number(ev.target.dataset.oeId);
+            const Partner = this.store.Persona.get({ type: "partner", id: id });
+            if (Partner.userId) {
+                id = Partner.userId;
+            }
+            const remodel = Partner.userId ? "res.users" : "res.partner";
+            this.avatarCard.open(ev.target, {
+                id: id,
+                res_model: remodel,
+            });
+            return true;
+        }
+        return super.onClick(ev);
+    },
     openRecord() {
         this.message.thread.open({ focus: true });
     },

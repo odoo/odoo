@@ -938,7 +938,7 @@ class MailMessage(models.Model):
             # sudo: mail.message - reading reactions on accessible message is allowed
             Store.Many("reaction_ids", rename="reactions", sudo=True),
             # sudo: res.partner: reading limited data of recipients is acceptable
-            Store.Many("partner_ids", ["avatar_128", "name"], rename="recipients", sudo=True),
+            Store.Many("partner_ids", ["avatar_128", "name", "user"], rename="recipients", sudo=True),
             "res_id",  # keep for iOS app
             "subject",
             # sudo: mail.message.subtype - reading description on accessible message is allowed
