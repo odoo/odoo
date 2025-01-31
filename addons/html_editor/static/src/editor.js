@@ -3,7 +3,7 @@ import { createBaseContainer } from "./utils/base_container";
 import { fillShrunkPhrasingParent, removeClass } from "./utils/dom";
 import { isEmpty } from "./utils/dom_info";
 import { resourceSequenceSymbol, withSequence } from "./utils/resource";
-import { initElementForEdition } from "./utils/sanitize";
+import { fixInvalidHTML, initElementForEdition } from "./utils/sanitize";
 
 /**
  * @typedef { import("./plugin_sets").SharedMethods } SharedMethods
@@ -96,7 +96,7 @@ export class Editor {
         this.editable = editable;
         this.document = editable.ownerDocument;
         if (this.config.content) {
-            editable.innerHTML = this.config.content;
+            editable.innerHTML = fixInvalidHTML(this.config.content);
             if (isEmpty(editable)) {
                 const baseContainer = createBaseContainer(this.config.baseContainer, this.document);
                 fillShrunkPhrasingParent(baseContainer);
