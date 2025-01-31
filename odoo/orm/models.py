@@ -1835,6 +1835,121 @@ class BaseModel(metaclass=MetaModel):
         return defaults
 
     @api.model
+    def _read_grouping_set(
+        self,
+        domain: DomainType,
+        grouping_sets: list[list[str]],
+        aggregates: typing.Iterable[str] = (),
+        having: DomainType = (),
+        order: str | None = None,
+    ) -> list[list[tuple]]:
+        """ Get fields aggregations specified by ``aggregates`` grouped by the given ``groupby``
+        fields where record are filtered by the ``domain``.
+
+        :param list domain: :ref:`A search domain <reference/orm/domains>`. Use an empty
+                list to match all records.
+        :param list grouping_set: list of grouping_set tuple descriptions by which the records will be grouped.
+                A groupby description is either a field (then it will be grouped by that field)
+                or a string `'field:granularity'`. Right now, the only supported granularities
+                are `'day'`, `'week'`, `'month'`, `'quarter'` or `'year'`, and they only make sense for
+                date/datetime fields.
+        :param list aggregates: list of aggregates specification.
+                Each element is `'field:agg'` (aggregate field with aggregation function `'agg'`).
+                The possible aggregation functions are the ones provided by
+                `PostgreSQL <https://www.postgresql.org/docs/current/static/functions-aggregate.html>`_,
+                `'count_distinct'` with the expected meaning and `'recordset'` to act like `'array_agg'`
+                converted into a recordset.
+        :param list having: A domain where the valid "fields" are the aggregates.
+        :param str order: optional ``order by`` specification, for
+                overriding the natural sort ordering of the groups,
+                see also :meth:`~.search`.
+        :return: list of list of tuple containing in the order the groups values and aggregates values (flatten):
+                `[(groupby_1_value, ... , aggregate_1_value_aggregate, ...), ...]`.
+                If group is related field, the value of it will be a recordset (with a correct prefetch set).
+
+        :rtype: list
+        :raise AccessError: if user is not allowed to access requested information
+        """
+        self.browse().check_access('read')
+        query = self._search(domain)
+        result = [[] for __ in grouping_sets]
+        if query.is_empty():
+            return result
+
+        groupby = OrderedSet(spec for grouping_set in grouping_sets for spec in grouping_set)
+        # mask(a) = 1, mask(b) = 2, mask(c) = 4
+        groupby_mask = {groupby: 2 ^ i for i, groupby in enumerate(groupby)}
+        # for GROUPING SET ((a, b, c), (a, c), (b), ())
+        # GROUPING(a, b, c) = ((2 ^ len(groupby)) - 1) - sum(mask(field) for field in group)
+        # (7 - 1 - 2 - 4, 7 - 1 - 4, 7 - 2, 7)
+        # {0: 0, 2: 1, 5: 2, 7: 3}
+        max_mask = ((2 ^ len(groupby)) - 1)  # or sum(groupby_mask.values())
+        mask_grouping_mapping = {
+            (max_mask - sum(groupby_mask[groupby] for groupby in grouping_set)): i
+            for i, grouping_set in enumerate(grouping_sets)
+        }
+
+        groupby_terms: dict[str, SQL] = {
+            spec: self._read_group_groupby(spec, query)
+            for spec in groupby
+        }
+        # GROUPING(a, b, c)
+        grouping_select_sql = SQL("GROUPING(%s)", SQL(", ").join(groupby_terms.values()))
+
+        # GROUPING SET ((a, b, c), (a, c), (b), ())
+        grouping_set_sqls = [
+            SQL("(%s)", SQL(", ").join(groupby_terms[groupby_spec] for groupby_spec in grouping_set))
+            for grouping_set in grouping_sets
+        ]
+        query.groupby = SQL("GROUPING SET (%s)", SQL(", ").join(grouping_set_sqls))
+
+        query.having = self._read_group_having(having, query)
+        # _read_group_orderby may possibly extend query.groupby for orderby
+        query.order = self._read_group_orderby(order, groupby_terms, query)
+
+        select_terms: list[SQL] = [
+            self._read_group_select(spec, query)
+            for spec in aggregates
+        ]
+
+        # row_values: [(GROUPING(), a1, b1, c1, <aggregates>), (GROUPING(), a2, b2, c2, <aggregates>), ...]
+        row_values = self.env.execute_query(
+            query.select(grouping_select_sql, *groupby_terms.values(), *select_terms))
+
+        if not row_values:
+            return result
+
+        # post-process values column by column
+        column_iterator = zip(*row_values)
+
+        grouping_indexes = [
+            mask_grouping_mapping[value] for value in next(column_iterator)
+        ]
+
+        # column_result: [(a1, a2, ...), (b1, b2, ...), (c1, c2, ...), (<aggregates>)]
+        column_result = []
+        for spec in groupby:
+            column = self._read_group_postprocess_groupby(spec, next(column_iterator))
+            column_result.append(column)
+        for spec in aggregates:
+            column = self._read_group_postprocess_aggregate(spec, next(column_iterator))
+            column_result.append(column)
+        assert next(column_iterator, None) is None
+
+        # return [(a1, b1, c1, <aggregates>), (a2, b2, c2, <aggregates>), ...]
+        all_groups = list(zip(*column_result))
+        result = []
+        for grouping_index, row in zip(grouping_indexes, all_groups):
+            result[grouping_index].append(row)
+        # return [
+        #   [(a1, b1, c1, <aggregates>), (a2, b2, c2, <aggregates>), ...],
+        #   [(a1, c1, <aggregates>), (a2, c2, <aggregates>), ...],
+        #   [(b1, <aggregates>), (b2, <aggregates>), ...],
+        #   [(<aggregates>)],
+        # ]
+
+
+    @api.model
     def _read_group(self, domain: DomainType, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None) -> list[tuple]:
         """ Get fields aggregations specified by ``aggregates`` grouped by the given ``groupby``
         fields where record are filtered by the ``domain``.
