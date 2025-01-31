@@ -124,7 +124,7 @@ export class GallerySlider extends Interaction {
     onSlidCarousel() {
         if (this.liEls) {
             const active = [...this.liEls].filter((el) => el.classList.contains("active"));
-            const index = active.length ? [...this.liEls].indexOf(active) : 0;
+            const index = active.length ? [...this.liEls].indexOf(active[0]) : 0;
             this.page = Math.floor(index / this.realNbPerPage);
         }
         this.hide();
