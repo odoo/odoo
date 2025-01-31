@@ -75,7 +75,5 @@ class AccountMoveReversal(models.TransientModel):
     @api.onchange('l10n_latam_document_number', 'l10n_latam_document_type_id')
     def _onchange_l10n_latam_document_number(self):
         if self.l10n_latam_document_type_id:
-            l10n_latam_document_number = self.l10n_latam_document_type_id._format_document_number(
+            self.l10n_latam_document_number = self.l10n_latam_document_type_id._format_document_number(
                 self.l10n_latam_document_number)
-            if self.l10n_latam_document_number != l10n_latam_document_number:
-                self.l10n_latam_document_number = l10n_latam_document_number
