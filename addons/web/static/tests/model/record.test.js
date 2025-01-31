@@ -96,6 +96,33 @@ test(`can be updated with different resId`, async () => {
     expect.verifySteps(["/web/dataset/call_kw/foo/web_read"]);
 });
 
+test(`can be receive a context as props`, async () => {
+    class Parent extends Component {
+        static props = ["*"];
+        static components = { Record, Field };
+        static template = xml`
+            <div class="root">
+                <Record resModel="'foo'" fieldNames="['foo']" context="{ test: 4 }" t-slot-scope="data">
+                    <Field name="'foo'" record="data.record"/>
+                </Record>
+            </div>
+        `;
+    }
+
+    onRpc("onchange", ({ kwargs }) => {
+        expect.step(`onchange`);
+        expect(kwargs.context).toEqual({
+            allowed_company_ids: [1],
+            lang: "en",
+            test: 4,
+            tz: "taht",
+            uid: 7,
+        });
+    });
+    await mountWithCleanup(Parent);
+    expect.verifySteps(["onchange"]);
+});
+
 test(`predefined fields and values`, async () => {
     class Parent extends Component {
         static props = ["*"];
