@@ -160,8 +160,10 @@
                                     </group>
                                     <group string="Citizenship">
                                         <field name="country_id" options='{"no_open": True, "no_create": True}'/>
-                                        <field name="identification_id"/>
-                                        <field name="ssnid"/>
+                                        <div class="o_cell o_wrap_label">
+                                            <field name="identification_id_label" nolabel="1" class="o_form_label"/>
+                                        </div>
+                                        <field name="identification_id" nolabel="1"/>
                                         <field name="passport_id"/>
                                         <field name="gender"/>
                                         <label for="birthday"/>
