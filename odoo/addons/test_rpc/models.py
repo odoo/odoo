@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class Test_RpcModel_A(models.Model):
@@ -11,6 +11,14 @@ class Test_RpcModel_A(models.Model):
     name = fields.Char(required=True)
     field_b1 = fields.Many2one("test_rpc.model_b", string="required field", required=True)
     field_b2 = fields.Many2one("test_rpc.model_b", string="restricted field", ondelete="restrict")
+
+    @api.model
+    def int8(self):
+        return 1 << 32
+
+    @api.model
+    def bigint(self):
+        return 1 << 64
 
 
 class Test_RpcModel_B(models.Model):
