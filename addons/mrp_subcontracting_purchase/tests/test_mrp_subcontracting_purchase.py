@@ -735,12 +735,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
             'bom_line_ids': [(0, 0, {'product_id': component.id, 'product_qty': 1.0})],
         })
 
-        inventory_wizard = self.env['stock.change.product.qty'].create({
-            'product_id': component.id,
-            'product_tmpl_id': component.product_tmpl_id.id,
-            'new_quantity': total_component_quantity,
-        })
-        inventory_wizard.change_product_qty()
+        self.env['stock.quant']._update_available_quantity(component, self.warehouse.lot_stock_id, total_component_quantity)
         # Check quantity was updated
         self.assertEqual(component.virtual_available, total_component_quantity)
         self.assertEqual(component.qty_available, total_component_quantity)
