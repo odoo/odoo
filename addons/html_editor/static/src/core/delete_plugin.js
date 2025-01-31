@@ -17,7 +17,7 @@ import {
     nextLeaf,
     previousLeaf,
 } from "../utils/dom_info";
-import { getState, isFakeLineBreak, prepareUpdate } from "../utils/dom_state";
+import { getState, isFakeLineBreak, observeMutations, prepareUpdate } from "../utils/dom_state";
 import {
     childNodes,
     closestElement,
@@ -85,6 +85,7 @@ export class DeletePlugin extends Plugin {
             withSequence(5, this.onBeforeInputInsertText.bind(this)),
             this.onBeforeInputDelete.bind(this),
         ],
+        input_handlers: (ev) => this.onInput?.(ev),
         selectionchange_handlers: withSequence(5, () => this.onSelectionChange?.()),
         /** Overrides */
         delete_backward_overrides: withSequence(30, this.deleteBackwardUnmergeable.bind(this)),
@@ -1161,11 +1162,8 @@ export class DeletePlugin extends Plugin {
         const argsForDelete = handledInputTypes[ev.inputType];
         if (argsForDelete) {
             this.delete(...argsForDelete);
-            if (hasTouch() && isBrowserChrome()) {
-                this.preventDefaultDeleteAndroidChrome(ev);
-            } else {
-                ev.preventDefault();
-            }
+            ev.preventDefault();
+            this.preventDefaultDeleteAndroidChrome(ev);
         }
     }
 
@@ -1190,39 +1188,29 @@ export class DeletePlugin extends Plugin {
      * @param {InputEvent} beforeInputEvent
      */
     async preventDefaultDeleteAndroidChrome(beforeInputEvent) {
-        // Revert DOM changes that occurred between beforeinput and input
         const restoreDOM = this.dependencies.history.makeSavePoint();
-        await this.waitForInputEvent(beforeInputEvent);
-        restoreDOM();
 
-        // Revert selection change after input but within the same tick
-        const { restore: restoreSelection } = this.dependencies.selection.preserveSelection();
-        const getMutationRecords = this.watchForMutations();
-        this.onSelectionChange = () => {
-            // If further mutations occurred, consider selection change legit
-            // (e.g. dictionary input) and do not revert it.
-            if (!getMutationRecords().length) {
-                restoreSelection();
+        this.onInput = (ev) => {
+            if (ev.inputType !== beforeInputEvent.inputType) {
+                return;
             }
-        };
-        setTimeout(() => delete this.onSelectionChange);
-    }
+            // Revert DOM changes that occurred between beforeinput and input
+            restoreDOM();
 
-    /**
-     * @param {InputEvent} beforeInputEvent
-     * @returns {Promise<void>} Promise that resolves when the input event of
-     * same type is triggered
-     */
-    waitForInputEvent(beforeInputEvent) {
-        return new Promise((resolve) => {
-            const listener = (inputEvent) => {
-                if (inputEvent.inputType === beforeInputEvent.inputType) {
-                    resolve();
-                    inputEvent.target.removeEventListener("input", listener);
+            // Revert selection changes after input event, within the same tick.
+            const { restore: restoreSelection } = this.dependencies.selection.preserveSelection();
+            // If further mutations occurred, consider selection change legit
+            // (e.g. dictionary input) and do not revert it. 
+            const observerOptions = { childList: true, subtree: true, characterData: true };
+            const getMutationRecords = observeMutations(this.editable, observerOptions);
+            this.onSelectionChange = () => {
+                const shouldRevertSelectionChanges = !getMutationRecords().length;
+                if (shouldRevertSelectionChanges) {
+                    restoreSelection();
                 }
             };
-            beforeInputEvent.target.addEventListener("input", listener);
-        });
+            setTimeout(() => delete this.onSelectionChange);
+        };
     }
 
     /**
@@ -1231,18 +1219,18 @@ export class DeletePlugin extends Plugin {
      *
      * @returns {() => MutationRecord[]}
      */
-    watchForMutations() {
-        const records = [];
-        const observerCallback = (mutations) => records.push(...mutations);
-        const observer = new MutationObserver(observerCallback);
-        const observerOptions = { childList: true, subtree: true, characterData: true };
-        observer.observe(this.editable, observerOptions);
-        return () => {
-            observerCallback(observer.takeRecords());
-            observer.disconnect();
-            return records;
-        };
-    }
+    // watchForMutations() {
+    //     const records = [];
+    //     const observerCallback = (mutations) => records.push(...mutations);
+    //     const observer = new MutationObserver(observerCallback);
+    //     const observerOptions = { childList: true, subtree: true, characterData: true };
+    //     observer.observe(this.editable, observerOptions);
+    //     return () => {
+    //         observerCallback(observer.takeRecords());
+    //         observer.disconnect();
+    //         return records;
+    //     };
+    // }
 
     // ======== AD-HOC STUFF ========
 
