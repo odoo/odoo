@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./helpers";
-import { WebsiteBuilder } from "@html_builder/website_builder_action";
+import { WebsiteBuilder } from "@html_builder/website_preview/website_builder_action";
 
 defineWebsiteModels();
 

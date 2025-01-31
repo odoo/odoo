@@ -1,4 +1,4 @@
-import { WebsiteBuilder } from "@html_builder/website_builder_action";
+import { WebsiteBuilder } from "@html_builder/website_preview/website_builder_action";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, click } from "@odoo/hoot-dom";
 import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";

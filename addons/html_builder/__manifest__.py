@@ -28,10 +28,7 @@
 
     'assets': {
         'web.assets_backend': [
-            'html_builder/static/src/**/*',
-            ('remove', 'html_builder/static/src/builder/**/*.js'),
-            ('remove', 'html_builder/static/src/builder/**/*.xml'),
-            ('remove', 'html_builder/static/src/builder/**/*.inside.scss'),
+            'html_builder/static/src/website_preview/**/*',
         ],
         # this bundle is lazy loaded when the editor is ready
         'html_builder.assets': [
@@ -42,8 +39,7 @@
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
 
-            'html_builder/static/src/builder/**/*.js',
-            'html_builder/static/src/builder/**/*.xml',
+            'html_builder/static/src/builder/**/*',
         ],
         'html_builder.inside_builder_style': [
             ('include', 'web._assets_helpers'),
