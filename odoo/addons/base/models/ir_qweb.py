@@ -2431,10 +2431,16 @@ class IrQWeb(models.AbstractModel):
         field_options['tagName'] = tagName
         field_options['expression'] = expression
         field_options['type'] = field_options.get('widget', field.type)
-        inherit_branding = (
-                self.env.context['inherit_branding']
-                if 'inherit_branding' in self.env.context
-                else self.env.context.get('inherit_branding_auto') and record.has_access('write'))
+        if 'inherit_branding' in self.env.context:
+            inherit_branding = self.env.context['inherit_branding']
+        else:
+            has_access = False
+            try:
+                # has_access may raise an exception, e.g. mail.message > _check_access > _get_mail_message_access
+                has_access = record.has_access('write')
+            except Exception:
+                pass
+            inherit_branding = self.env.context.get('inherit_branding_auto') and has_access
         field_options['inherit_branding'] = inherit_branding
         translate = self.env.context.get('edit_translations') and values.get('translatable') and field.translate
         field_options['translate'] = translate
