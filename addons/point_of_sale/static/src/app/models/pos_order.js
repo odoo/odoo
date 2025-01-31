@@ -944,17 +944,24 @@ export class PosOrder extends Base {
         return this.lines;
     }
 
-    serialize() {
-        const data = super.serialize(...arguments);
+    serialize(options = {}) {
+        let data = {};
+        let mapping = {};
 
-        if (
-            data.last_order_preparation_change &&
-            typeof data.last_order_preparation_change === "object"
-        ) {
-            data.last_order_preparation_change = JSON.stringify(data.last_order_preparation_change);
+        if (options.mapping) {
+            const { result, uuidMapping } = super.serialize(options);
+            mapping = uuidMapping;
+            data = result;
+        } else {
+            data = super.serialize(options);
         }
 
-        return data;
+        const lastChange = data.last_order_preparation_change;
+        if (lastChange && typeof lastChange === "object") {
+            data.last_order_preparation_change = JSON.stringify(lastChange);
+        }
+
+        return options.mapping ? { result: data, uuidMapping: mapping } : data;
     }
     getCustomerDisplayData() {
         return {

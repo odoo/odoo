@@ -18,8 +18,8 @@ class PosOrder(models.Model):
         return action
 
     @api.model
-    def sync_from_ui(self, orders):
-        results = super().sync_from_ui(orders)
+    def sync_from_ui(self, orders, record_uuid_mapping={}):
+        results = super().sync_from_ui(orders, record_uuid_mapping)
         paid_orders = self.browse([order['id'] for order in results['pos.order'] if order['state'] in ['paid', 'done']])
 
         if not paid_orders:
@@ -42,8 +42,8 @@ class PosOrder(models.Model):
         return results
 
     @api.model
-    def _process_order(self, order, existing_order):
-        res = super()._process_order(order, existing_order)
+    def _process_order(self, order, existing_order, record_uuid_mapping={}):
+        res = super()._process_order(order, existing_order, record_uuid_mapping)
         refunded_line_ids = [line[2].get('refunded_orderline_id') for line in order.get('lines') if line[0] in [0, 1] and line[2].get('refunded_orderline_id')]
         refunded_orderlines = self.env['pos.order.line'].browse(refunded_line_ids)
         event_to_cancel = []

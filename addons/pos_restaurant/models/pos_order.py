@@ -22,8 +22,8 @@ class PosOrder(models.Model):
         return self.env["pos.order"].search(domain, limit=1)
 
     @api.model
-    def sync_from_ui(self, orders):
-        result = super().sync_from_ui(orders)
+    def sync_from_ui(self, orders, record_uuid_mapping={}):
+        result = super().sync_from_ui(orders, record_uuid_mapping)
 
         if self.env.context.get('table_ids'):
             order_ids = [order['id'] for order in result['pos.order']]

@@ -45,8 +45,8 @@ class PosOrder(models.Model):
         return invoice_vals
 
     @api.model
-    def sync_from_ui(self, orders):
-        data = super().sync_from_ui(orders)
+    def sync_from_ui(self, orders, record_uuid_mapping={}):
+        data = super().sync_from_ui(orders, record_uuid_mapping)
         if len(orders) == 0:
             return data
 

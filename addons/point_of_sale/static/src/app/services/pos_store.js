@@ -1266,12 +1266,41 @@ export class PosStore extends WithLazyGetterTrap {
                 order.recomputeOrderData();
             }
 
-            const serializedOrder = orders.map((order) =>
-                order.serialize({ orm: true, clear: true })
+            const result = orders.reduce(
+                (acc, rec) => {
+                    const { result, uuidMapping } = rec.serialize({
+                        orm: true,
+                        clear: true,
+                        mapping: true,
+                    });
+
+                    acc.orders.push(result);
+
+                    for (const model of Object.keys(acc.uuidMapping)) {
+                        const mapping = acc.uuidMapping[model];
+
+                        if (!uuidMapping[model]) {
+                            continue;
+                        }
+
+                        Object.assign(mapping, uuidMapping[model]);
+                        delete uuidMapping[model];
+                    }
+
+                    Object.assign(acc.uuidMapping, uuidMapping);
+                    return acc;
+                },
+                { orders: [], uuidMapping: {} }
             );
-            const data = await this.data.call("pos.order", "sync_from_ui", [serializedOrder], {
-                context,
-            });
+
+            const data = await this.data.call(
+                "pos.order",
+                "sync_from_ui",
+                [result.orders, result.uuidMapping],
+                {
+                    context,
+                }
+            );
             const missingRecords = await this.data.missingRecursive(data);
             this.data.dispatchData(missingRecords);
             const newData = this.models.loadData(missingRecords, [], false, true);
