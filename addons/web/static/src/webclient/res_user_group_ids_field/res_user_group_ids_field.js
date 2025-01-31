@@ -46,6 +46,9 @@ export class ResUserGroupIdsField extends Component {
                 </group>
             </t>`;
         this.archInfo = new FormArchParser().parse(parseXML(arch), models, "main");
+        this.hooks = {
+            onRecordChanged: this.onRecordChanged.bind(this),
+        };
     }
 
     get values() {

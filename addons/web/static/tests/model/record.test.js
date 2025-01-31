@@ -157,12 +157,48 @@ test(`predefined fields and values`, async () => {
     expect(`.o_field_widget input`).toHaveValue("abc");
 });
 
-test(`provides a way to handle changes in the record`, async () => {
+test(`Record with onRootLoaded props`, async () => {
+    let record;
     class Parent extends Component {
         static props = ["*"];
         static components = { Record, Field };
         static template = xml`
-            <Record resModel="'foo'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data" onRecordChanged.bind="onRecordChanged">
+            <Record resModel="'foo'" fieldNames="['foo']" fields="fields" t-slot-scope="data" hooks="hooks">
+                <Field name="'foo'" record="data.record"/>
+            </Record>
+        `;
+
+        setup() {
+            this.fields = {
+                foo: {
+                    name: "foo",
+                    type: "char",
+                },
+            };
+            this.hooks = {
+                onRootLoaded: this.onRootLoaded.bind(this),
+            };
+        }
+
+        onRootLoaded(root) {
+            expect.step("onRootLoaded");
+            record = root;
+        }
+    }
+
+    await mountWithCleanup(Parent);
+    expect.verifySteps(["onRootLoaded"]);
+    expect(record.data.foo).toBe("");
+    await contains(`[name='foo'] input`).edit("coucou");
+    expect(record.data.foo).toBe("coucou");
+});
+
+test(`Record with onRecordChanged props`, async () => {
+    class Parent extends Component {
+        static props = ["*"];
+        static components = { Record, Field };
+        static template = xml`
+            <Record resModel="'foo'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data" hooks="hooks">
                 <Field name="'foo'" record="data.record"/>
             </Record>
         `;
@@ -182,6 +218,9 @@ test(`provides a way to handle changes in the record`, async () => {
                 foo: "abc",
                 bar: true,
             };
+            this.hooks = {
+                onRecordChanged: this.onRecordChanged.bind(this),
+            };
         }
 
         onRecordChanged(record, changes) {
@@ -200,16 +239,23 @@ test(`provides a way to handle changes in the record`, async () => {
     expect(`[name='foo'] input`).toHaveValue("753");
 });
 
-test(`provides a way to handle before/after saved the record`, async () => {
+test(`Record with onWillSaveRecord and onRecordSavedProps`, async () => {
     class Parent extends Component {
         static props = ["*"];
         static components = { Record, Field };
         static template = xml`
-            <Record resModel="'foo'" resId="1" fieldNames="['foo']" mode="'edit'" t-slot-scope="data" onRecordSaved="onRecordSaved" onWillSaveRecord="onWillSaveRecord">
+            <Record resModel="'foo'" resId="1" fieldNames="['foo']" mode="'edit'" t-slot-scope="data" hooks="hooks">
                 <button class="save" t-on-click="() => data.record.save()">Save</button>
                 <Field name="'foo'" record="data.record"/>
             </Record>
         `;
+
+        setup() {
+            this.hooks = {
+                onRecordSaved: this.onRecordSaved.bind(this),
+                onWillSaveRecord: this.onWillSaveRecord.bind(this),
+            };
+        }
 
         onRecordSaved(record) {
             expect.step("onRecordSaved");
@@ -228,6 +274,34 @@ test(`provides a way to handle before/after saved the record`, async () => {
     expect.verifySteps(["fields_get", "web_read", "onWillSaveRecord", "web_save", "onRecordSaved"]);
 });
 
+test(`can access record changes`, async () => {
+    class Parent extends Component {
+        static props = ["*"];
+        static components = { Record, Field };
+        static template = xml`
+            <Record resModel="'foo'" fieldNames="['foo']" t-slot-scope="data">
+                <button class="do_something" t-on-click="() => doSomething(data.record)">
+                    Do something
+                </button>
+                <Field name="'foo'" record="data.record"/>
+            </Record>
+        `;
+
+        doSomething(record) {
+            expect.step(`do something with ${JSON.stringify(record.getChanges())}`);
+        }
+    }
+
+    await mountWithCleanup(Parent);
+
+    await contains(".do_something").click();
+    expect.verifySteps([`do something with {"foo":false}`]);
+
+    await contains(".o_field_widget[name=foo] input").edit("some value");
+    await contains(".do_something").click();
+    expect.verifySteps([`do something with {"foo":"some value"}`]);
+});
+
 test.tags("desktop");
 test(`handles many2one fields: value is a pair id, display_name`, async () => {
     class Bar extends models.Model {
@@ -244,7 +318,7 @@ test(`handles many2one fields: value is a pair id, display_name`, async () => {
         static props = ["*"];
         static components = { Record, Many2OneField };
         static template = xml`
-            <Record resModel="'foo'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data" onRecordChanged.bind="onRecordChanged">
+            <Record resModel="'foo'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data" hooks="hooks">
                 <Many2OneField name="'foo'" record="data.record"/>
             </Record>
         `;
@@ -259,6 +333,9 @@ test(`handles many2one fields: value is a pair id, display_name`, async () => {
             };
             this.values = {
                 foo: [1, "bar1"],
+            };
+            this.hooks = {
+                onRecordChanged: this.onRecordChanged.bind(this),
             };
         }
 
@@ -420,7 +497,7 @@ test(`supports passing dynamic values -- full control to the user of Record`, as
         static props = ["*"];
         static components = { Record, Field };
         static template = xml`
-            <Record resModel="'foo'" fieldNames="['foo']" fields="fields" values="{ foo: values.foo }" t-slot-scope="data" onRecordChanged.bind="onRecordChanged">
+            <Record resModel="'foo'" fieldNames="['foo']" fields="fields" values="{ foo: values.foo }" t-slot-scope="data" hooks="hooks">
                 <Field name="'foo'" record="data.record"/>
             </Record>
         `;
@@ -440,6 +517,9 @@ test(`supports passing dynamic values -- full control to the user of Record`, as
                 foo: "abc",
                 bar: true,
             });
+            this.hooks = {
+                onRecordChanged: this.onRecordChanged.bind(this),
+            }
         }
 
         onRecordChanged(record, changes) {
