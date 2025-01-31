@@ -950,13 +950,14 @@ action = {
         # first run, check we have a field set
         # this does not happen using the UI where the trigger is forced to be set
         self.assertFalse(automation.last_run)
-        with self.assertLogs('odoo.addons.base_automation', 'WARNING') as capture:
-            self.env["base.automation"]._cron_process_time_based_actions(auto_commit=False)
+        with self.assertLogs('odoo.addons.base_automation', 'WARNING') as capture, self.enter_registry_test_mode():
+            self.env["base.automation"]._cron_process_time_based_actions()
         self.assertRegex(capture.output[0], r"Missing date trigger")
         automation.trg_date_id = model.field_id.filtered(lambda f: f.name == 'date_automation_last')
 
         # normal run
-        self.env["base.automation"]._cron_process_time_based_actions(auto_commit=False)
+        with self.enter_registry_test_mode():
+            self.env["base.automation"]._cron_process_time_based_actions()
         self.assertTrue(automation.last_run)
 
     @common.freeze_time('2020-01-01 03:00:00')
@@ -976,7 +977,10 @@ action = {
             "trg_date_id": model.field_id.filtered(lambda f: f.name == 'date_automation_last').id,
         })
 
-        with patch.object(automation.__class__, '_process', side_effect=automation._process) as mock:
+        with (
+            patch.object(automation.__class__, '_process', side_effect=automation._process) as mock,
+            self.enter_registry_test_mode(),
+        ):
             with patch.object(self.env.cr, '_now', now := datetime.datetime.now()):
                 past_date = now - datetime.timedelta(1)
                 self.env["base.automation.lead.test"].create({
@@ -986,13 +990,13 @@ action = {
                 } for i in range(15))
             with common.freeze_time('2020-01-01 03:01:01'), patch.object(self.env.cr, '_now', datetime.datetime.now()):
                 # process records
-                self.env["base.automation"]._cron_process_time_based_actions(auto_commit=False)
+                self.env["base.automation"]._cron_process_time_based_actions()
                 self.assertEqual(mock.call_count, 10)
                 self.assertEqual(automation.last_run, self.env.cr.now())
             with common.freeze_time('2020-01-01 03:11:59'), patch.object(self.env.cr, '_now', datetime.datetime.now()):
                 # 2 in the future (because of timing)
                 # 10 previously done records because we use the date_automation_last as trigger without delay
-                self.env["base.automation"]._cron_process_time_based_actions(auto_commit=False)
+                self.env["base.automation"]._cron_process_time_based_actions()
                 self.assertEqual(mock.call_count, 22)
                 self.assertEqual(automation.last_run, self.env.cr.now())
                 # test triggering using a calendar
@@ -1000,7 +1004,7 @@ action = {
                 automation.trg_date_range_type = 'day'
                 self.env["base.automation.lead.test"].create({'name': 'calendar'})  # for the run
             with common.freeze_time('2020-02-02 03:11:00'), patch.object(self.env.cr, '_now', datetime.datetime.now()):
-                self.env["base.automation"]._cron_process_time_based_actions(auto_commit=False)
+                self.env["base.automation"]._cron_process_time_based_actions()
                 self.assertEqual(mock.call_count, 38)
 
     def test_005_check_model_with_different_rec_name_char(self):
