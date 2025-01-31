@@ -41,9 +41,9 @@ class WebsiteEventSaleController(WebsiteEventController):
         cart_data = {}
         for ticket_id, count in tickets_data.items():
             ticket_sudo = event_ticket_by_id.get(ticket_id)
-            cart_values = order_sudo._cart_update(
+            cart_values = order_sudo._cart_add(
                 product_id=ticket_sudo.product_id.id,
-                add_qty=count,
+                quantity=count,
                 event_ticket_id=ticket_id,
             )
             cart_data[ticket_id] = cart_values['line_id']

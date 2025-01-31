@@ -25,9 +25,9 @@ class WebsiteEventBoothController(WebsiteEventController):
         order_sudo = request.cart or request.website._create_cart()
         if order_sudo._is_anonymous_cart():
             order_sudo._update_address(booth_values['partner_id'], ['partner_id'])
-        order_sudo._cart_update(
+        order_sudo._cart_add(
             product_id=booth_category.product_id.id,
-            set_qty=1,
+            quantity=1,
             event_booth_pending_ids=booths.ids,
             registration_values=booth_values,
         )

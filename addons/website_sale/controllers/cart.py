@@ -2,7 +2,8 @@
 
 from werkzeug.exceptions import NotFound
 
-from odoo import fields
+from odoo import _, fields
+from odoo.exceptions import UserError
 from odoo.http import request, route
 from odoo.tools import consteq
 
@@ -103,7 +104,7 @@ class Cart(PaymentPortal):
         self,
         product_template_id,
         product_id,
-        quantity=None,
+        quantity=1.0,
         product_custom_attribute_values=None,
         no_variant_attribute_value_ids=None,
         linked_products=None,
@@ -130,10 +131,15 @@ class Cart(PaymentPortal):
         """
         order_sudo = request.cart or request.website._create_cart()
 
-        values = order_sudo._cart_update(
+        product = request.env['product.product'].browse(product_id).exists()
+        if quantity and (not product or not product._is_add_to_cart_allowed()):
+            raise UserError(_(
+                "The given product does not exist therefore it cannot be added to cart."
+            ))
+
+        values = order_sudo._cart_add(
             product_id=product_id,
-            line_id=False if kwargs.get('is_combo') else None,  # Always create new line for combo.
-            add_qty=quantity,
+            quantity=quantity,
             product_custom_attribute_values=product_custom_attribute_values,
             no_variant_attribute_value_ids=no_variant_attribute_value_ids,
             **kwargs
@@ -141,21 +147,37 @@ class Cart(PaymentPortal):
         line_ids = {product_template_id: values['line_id']}
 
         if linked_products and values['line_id']:
-            for product in linked_products:
-                product_values = order_sudo._cart_update(
-                    product_id=product['product_id'],
-                    set_qty=product['quantity'],
-                    product_custom_attribute_values=product['product_custom_attribute_values'],
+            for product_data in linked_products:
+                product_sudo = request.env['product.product'].sudo().browse(
+                    product_data['product_id']
+                ).exists()
+                if product_data['quantity'] and (
+                    not product_sudo
+                    or (
+                        not product_sudo._is_add_to_cart_allowed()
+                        # For combos, the validity of the given product will be checked
+                        # through the SOline constraints (_check_combo_item_id)
+                        and not product_data.get('combo_item_id')
+                    )
+                ):
+                    raise UserError(_(
+                        "The given product does not exist therefore it cannot be added to cart."
+                    ))
+
+                product_values = order_sudo._cart_add(
+                    product_id=product_data['product_id'],
+                    quantity=product_data['quantity'],
+                    product_custom_attribute_values=product_data['product_custom_attribute_values'],
                     no_variant_attribute_value_ids=[
-                        int(value_id) for value_id in product['no_variant_attribute_value_ids']
+                        int(value_id) for value_id in product_data['no_variant_attribute_value_ids']
                     ],
                     # Using `line_ids[...]` instead of `line_ids.get(...)` ensures that this throws
                     # if an optional product contains bad data.
-                    linked_line_id=line_ids[product['parent_product_template_id']],
-                    **self._get_additional_cart_update_values(product),
+                    linked_line_id=line_ids[product_data['parent_product_template_id']],
+                    **self._get_additional_cart_update_values(product_data),
                     **kwargs,
                 )
-                line_ids[product['product_template_id']] = product_values['line_id']
+                line_ids[product_data['product_template_id']] = product_values['line_id']
 
         values['notification_info'] = self._get_cart_notification_information(
             order_sudo, line_ids.values()
@@ -174,35 +196,30 @@ class Cart(PaymentPortal):
         website=True,
         sitemap=False
     )
-    def update_cart(
-        self,
-        line_id,
-        product_id,
-        quantity,
-    ):
-        if not line_id:
-            return  # Ensures this method is only used from the cart page.
+    def update_cart(self, line_id, quantity, product_id=None, **kwargs):
+        """Update the quantity of a specific line of the current cart.
 
+        :param int line_id: line to update, as a `sale.order.line` id.
+        :param float quantity: new line quantity.
+            0 or negative numbers will only delete the line, the ecommerce
+            doesn't work with negative numbers.
+        :param int|None product_id: product_id of the edited line, only used when line_id
+            is falsy
+        :params dict kwargs: additional parameters given to _cart_update_line_quantity calls.
+        """
         order_sudo = request.cart
 
-        values = order_sudo._cart_update(
-            line_id=line_id,
-            product_id=product_id,
-            add_qty=None,  # Needed to ensure the removal feature of the line.
-            set_qty=quantity,
-        )
+        # This method must be only called from the cart page BUT in some advanced logic
+        # eg. website_sale_loyalty, a cart line could be a temporary record without id.
+        # In this case, the line_id must be found out through the given product id.
+        if not line_id:
+            line_id = order_sudo.order_line.filtered(
+                lambda sol: sol.product_id.id == product_id
+            )[:1].id
+            if not line_id:
+                raise UserError(_("This line doesn't exist anymore."))
 
-        # If the line is a combo product line, and it already has combo items, we need to update
-        # the combo item quantities as well.
-        line = request.env['sale.order.line'].browse(values['line_id'])
-        if line.product_type == 'combo' and line.linked_line_ids:
-            for linked_line_id in line.linked_line_ids:
-                if values['quantity'] != linked_line_id.product_uom_qty:
-                    order_sudo._cart_update(
-                        product_id=linked_line_id.product_id.id,
-                        line_id=linked_line_id.id,
-                        set_qty=values['quantity'],
-                    )
+        values = order_sudo._cart_update_line_quantity(line_id, quantity, **kwargs)
 
         values['cart_quantity'] = order_sudo.cart_quantity
         values['cart_ready'] = order_sudo._is_cart_ready()
@@ -308,10 +325,10 @@ class Cart(PaymentPortal):
         ]
 
     def _get_additional_cart_update_values(self, data):
-        """ Look for extra information in a given dictionary to be included in a `_cart_update` call.
+        """ Look for extra information in a given dictionary to be included in a `_cart_add` call.
 
         :param dict data: A dictionary in which to look up for extra information.
-        :return: addition values to be passed to `_cart_update`.
+        :return: addition values to be passed to `_cart_add`.
         :rtype: dict
         """
         if data.get('combo_item_id'):

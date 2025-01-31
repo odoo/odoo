@@ -99,7 +99,7 @@ class SaleOrder(models.Model):
             products with different taxes.
             In this case, each taxes will have their own discount line. This is required
             to have correct amount of taxes according to the discount.
-            But we wan't these lines to be `visually` merged into a single one in the
+            But we want these lines to be `visually` merged into a single one in the
             e-commerce since the end user should only see one discount line.
             This is only possible since we don't show taxes in cart.
             eg:
@@ -168,22 +168,24 @@ class SaleOrder(models.Model):
         super()._remove_delivery_line()
         self._update_programs_and_rewards()
 
-    def _cart_update(self, product_id, line_id=None, add_qty=0, set_qty=0, **kwargs):
-        line = self.order_line.filtered(lambda sol: sol.product_id.id == product_id)[:1]
-        reward_id = line.reward_id
-        if set_qty == 0 and line.coupon_id and reward_id and reward_id.reward_type == 'discount':
-            # Force the deletion of the line even if it's a temporary record created by new()
-            line_id = line.id
+    def _cart_update_order_line(self, order_line, quantity, **kwargs):
+        if (
+            quantity <= 0
+            and order_line.coupon_id
+            and order_line.reward_id
+            and order_line.reward_id.reward_type == 'discount'
+        ):
             # When a reward line is deleted we remove it from the auto claimable rewards
             self = self.with_context(website_sale_loyalty_delete=True)  # noqa: PLW0642
-        res = super()._cart_update(
-            product_id, line_id=line_id, add_qty=add_qty, set_qty=set_qty, **kwargs
-        )
+
+        return super()._cart_update_order_line(order_line, quantity, **kwargs)
+
+    def _verify_cart_after_update(self, order_line):
+        super()._verify_cart_after_update(order_line)
         self._update_programs_and_rewards()
         self._auto_apply_rewards()
         if request:  # In case the rewards application modifies the cart quantity
             request.session['website_sale_cart_quantity'] = self.cart_quantity
-        return res
 
     def _get_free_shipping_lines(self):
         self.ensure_one()
@@ -242,11 +244,9 @@ class SaleOrder(models.Model):
                         res[coupon] = reward
         return res
 
-    def _cart_find_product_line(self, product_id, line_id=None, **kwargs):
-        """ Override to filter out reward lines from the cart lines.
-
-        These are handled by the _update_programs_and_rewards and _auto_apply_rewards methods.
-        """
-        lines = super()._cart_find_product_line(product_id, line_id, **kwargs)
-        lines = lines.filtered(lambda l: not l.is_reward_line) if not line_id else lines
-        return lines
+    def _cart_find_product_line(self, product_id, **kwargs):
+        # Filter out reward lines, they shouldn't be modified by standard _cart_add logic.
+        # This kind of lines is handled by _update_programs_and_rewards and _auto_apply_rewards.
+        return super()._cart_find_product_line(product_id, **kwargs).filtered(
+            lambda sol: not sol.is_reward_line
+        )

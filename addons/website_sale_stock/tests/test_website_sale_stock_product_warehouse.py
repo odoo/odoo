@@ -87,8 +87,6 @@ class TestWebsiteSaleStockProductWarehouse(
                 "This quantity should be based on all warehouses.",
             )
 
-            values = so._cart_update(
-                product_id=self.product_A.id, line_id=so.order_line.id, set_qty=30
-            )
+            values = so._cart_update_line_quantity(line_id=so.order_line.id, quantity=30)
             self.assertTrue(values.get('warning', False))
             self.assertEqual(values.get('quantity'), 25)
