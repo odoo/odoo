@@ -14,6 +14,7 @@ from hashlib import md5
 from io import BytesIO
 from itertools import islice
 from lxml import etree, html
+from markupsafe import escape as markup_escape
 from textwrap import shorten
 from werkzeug.exceptions import NotFound
 from xml.etree import ElementTree as ET
@@ -796,6 +797,58 @@ class Website(Home):
             return []
         xmlroot = ET.fromstring(response)
         return json.dumps([sugg[0].attrib['data'] for sugg in xmlroot if len(sugg) and sugg[0].attrib['data']])
+
+    @http.route(['/website/update_alt_images'], type='jsonrpc', auth="user", website=True)
+    def update_alt_images(self, imgs):
+        if not request.env.user.has_group('website.group_website_restricted_editor'):
+            raise werkzeug.exceptions.Forbidden()
+        for img in imgs:
+            record = request.env[img['res_model']].browse(img['res_id'])
+            img['field'] = 'arch_db' if img['field'] == 'arch' else img['field']
+            tree = html.fromstring(str(record[img['field']]))
+            modified = False
+            for index, element in enumerate(tree.xpath('//img')):
+                imgId = f"{img['res_model']}-{img['res_id']}-{index!s}"
+                if imgId == img['id']:
+                    if (img['decorative']):
+                        element.set('alt', '')
+                        element.set('role', 'presentation')
+                    else:
+                        element.set('alt', markup_escape(img['alt']))
+                        element.attrib.pop('role', None)
+                    modified = True
+            if modified:
+                new_html_content = html.tostring(tree, encoding='unicode', method='html')
+                record.write({img['field']: new_html_content})
+
+    @http.route(['/website/update_broken_links'], type='jsonrpc', auth="user", website=True)
+    def update_broken_links(self, links):
+        if not request.env.user.has_group('website.group_website_restricted_editor'):
+            raise werkzeug.exceptions.Forbidden()
+        for link in links:
+            record = request.env[link['res_model']].browse(link['res_id'])
+            link['field'] = 'arch_db' if link['field'] == 'arch' else link['field']
+            if 'url' in record._fields:
+                href = record['url']
+                if href and (link['oldLink'] == href or link['oldLink'] == href + '/'):
+                    if link['remove']:
+                        record['url'] = ''
+                    else:
+                        record['url'] = link['newLink']
+                continue
+            tree = html.fromstring(str(record[link['field']]))
+            modified = False
+            for element in tree.xpath('//a'):
+                href = element.get('href')
+                if href and (link['oldLink'] == href or link['oldLink'] == href + '/'):
+                    if link['remove']:
+                        element.drop_tag()
+                    else:
+                        element.set('href', markup_escape(link['newLink']))
+                    modified = True
+            if modified:
+                new_html_content = html.tostring(tree, encoding='unicode', method='html')
+                record.write({link['field']: new_html_content})
 
     @http.route(['/website/get_seo_data'], type='jsonrpc', auth="user", website=True, readonly=True)
     def get_seo_data(self, res_id, res_model):
