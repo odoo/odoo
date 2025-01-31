@@ -125,6 +125,9 @@ class TestScheduledMessageBusiness(TestScheduledMessage, CronMixinCase):
             scheduled_message.write({'res_id': 2})
         with self.assertRaises(UserError):
             scheduled_message.write({'model': 'mail.test.track'})
+        # unlink the test record should also unlink the test message
+        self.test_record.sudo().unlink()
+        self.assertFalse(scheduled_message.exists())
 
     @users('employee')
     def test_scheduled_message_posting(self):
