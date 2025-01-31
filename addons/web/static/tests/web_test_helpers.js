@@ -7,6 +7,7 @@ import { IrAttachment } from "./_framework/mock_server/mock_models/ir_attachment
 import { IrModel } from "./_framework/mock_server/mock_models/ir_model";
 import { IrModelAccess } from "./_framework/mock_server/mock_models/ir_model_access";
 import { IrModelFields } from "./_framework/mock_server/mock_models/ir_model_fields";
+import { IrModuleCategory } from "./_framework/mock_server/mock_models/ir_module_category";
 import { IrRule } from "./_framework/mock_server/mock_models/ir_rule";
 import { IrUiView } from "./_framework/mock_server/mock_models/ir_ui_view";
 import { ResCompany } from "./_framework/mock_server/mock_models/res_company";
@@ -175,6 +176,7 @@ export const webModels = {
     IrModel,
     IrModelAccess,
     IrModelFields,
+    IrModuleCategory,
     IrRule,
     IrUiView,
     ResCompany,

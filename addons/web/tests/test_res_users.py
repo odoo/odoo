@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import Form, TransactionCase
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.tests.common import tagged
 
 
 class TestResUsers(TransactionCase):
@@ -59,3 +61,9 @@ class TestResUsers(TransactionCase):
                 line.new_passwd = 'bla'
         rec = form.save()
         rec.change_password_button()
+
+
+@tagged('post_install', '-at_install')
+class TestUserSettings(HttpCaseWithUserDemo):
+    def test_user_group_settings(self):
+        self.start_tour('/odoo?debug=1', 'test_user_group_settings', login='admin')
