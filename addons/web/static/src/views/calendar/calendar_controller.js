@@ -19,6 +19,7 @@ import { CogMenu } from "@web/search/cog_menu/cog_menu";
 import { browser } from "@web/core/browser/browser";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { getLocalYearAndWeek } from "@web/core/l10n/dates";
+import { CalendarSuperQuickPanel } from "./calendar_create_panel/calendar_create_panel";
 
 import { Component, useState } from "@odoo/owl";
 
@@ -49,6 +50,7 @@ export class CalendarController extends Component {
         MobileFilterPanel: CalendarMobileFilterPanel,
         QuickCreate: CalendarQuickCreate,
         QuickCreateFormView: FormViewDialog,
+        SuperQuickPanel: CalendarSuperQuickPanel,
         Layout,
         SearchBar,
         ViewScaleSelector,
@@ -99,6 +101,7 @@ export class CalendarController extends Component {
                 !this.env.isSmall &&
                 Boolean(sessionShowSidebar != null ? JSON.parse(sessionShowSidebar) : true),
         });
+        this.superQuickValues = useState({values: {}});
 
         this.searchBarToggler = useSearchBarToggler();
     }
@@ -217,6 +220,16 @@ export class CalendarController extends Component {
             model: this.model,
         };
     }
+
+    get superQuickPanelProps() {
+        return {
+            fields: this.props.archInfo.superQuickPanelFields || {},
+            title: "Add Work Entry",
+            model: this.model,
+            values: this.superQuickValues
+        };
+    }
+
     get mobileFilterPanelProps() {
         return {
             model: this.model,
@@ -268,34 +281,50 @@ export class CalendarController extends Component {
         };
     }
 
-    createRecord(record) {
+    async createRecord(record) {
         if (!this.model.canCreate) {
             return;
         }
-        if (this.model.hasQuickCreate) {
-            if (this.model.quickCreateFormViewId) {
+        console.log(this.model)
+        if (this.superQuickValues.values){
+            let vals = this.superQuickValues.values;
+            const exportedState = this.env.searchModel.exportState() || {};
+            const sections = exportedState.sections || [];
+
+            for (const section of sections) {
+                const [sectionId, sectionData] = section;
+                if (sectionData.activeValueId) {
+                    vals[sectionData.fieldName] = sectionData.activeValueId;
+                }
+            }
+            await this.orm.call('hr.work.entry', "calendar_panel_replace", [record, this.superQuickValues.values]);
+            await this.model.load();
+        }else {
+            if (this.model.hasQuickCreate) {
+                if (this.model.quickCreateFormViewId) {
+                    return new Promise((resolve) => {
+                        this.displayDialog(
+                            this.constructor.components.QuickCreateFormView,
+                            this.getQuickCreateFormViewProps(record),
+                            {
+                                onClose: () => resolve(),
+                            }
+                        );
+                    });
+                }
+
                 return new Promise((resolve) => {
                     this.displayDialog(
-                        this.constructor.components.QuickCreateFormView,
-                        this.getQuickCreateFormViewProps(record),
+                        this.constructor.components.QuickCreate,
+                        this.getQuickCreateProps(record),
                         {
                             onClose: () => resolve(),
                         }
                     );
                 });
+            } else {
+                return this.editRecordInCreation(record);
             }
-
-            return new Promise((resolve) => {
-                this.displayDialog(
-                    this.constructor.components.QuickCreate,
-                    this.getQuickCreateProps(record),
-                    {
-                        onClose: () => resolve(),
-                    }
-                );
-            });
-        } else {
-            return this.editRecordInCreation(record);
         }
     }
     async editRecord(record, context = {}, shouldFetchFormViewId = true) {

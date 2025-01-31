@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.CalendarSuperQuickPanel">
+        <div class="o_calendar_super_quick_panel bg-light p-3 h-100 d-flex flex-column">
+            <div class="row">
+                <div class="col-12 col-xl-6 mb-3">
+                    <div id="div_l10n_cl_type_document" class="btn-group" role="group">
+                        <input type="radio"
+                                class="btn-check"
+                                name="l10n_cl_type_document"
+                                id="radio_ticket"
+                                checked="true"
+                                value="ticket"
+                                />
+                        <label class="btn btn-outline-primary px-3" for="radio_ticket">Add</label>
+                        <input type="radio"
+                                class="btn-check"
+                                name="l10n_cl_type_document"
+                                id="radio_invoice"
+                                value="invoice"
+                                />
+                        <label class="btn btn-outline-primary px-3" for="radio_invoice">Delete</label>
+                    </div>
+                </div>
+            </div>
+            <!-- The dynamic field rows -->
+            <div class="flex-grow-1">
+                <t t-foreach="props.fields" t-as="fName" t-key="fName">
+                    <FieldRow t-props="fieldRowProps(fName)" />
+                </t>
+            <div class="o_csp_aggregation_table">
+                <h6 class="fw-bold mb-2">Summary</h6>
+                <table class="table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Duration (hours)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="props.model.aggreg" t-as="entry" t-key="entry.name">
+                            <tr>
+                                <td t-esc="entry.name"/>
+                                <td t-esc="entry.total_duration"/>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        </div>
+    </t>
+</templates>
