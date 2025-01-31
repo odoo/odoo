@@ -530,3 +530,8 @@ class ProjectProject(models.Model):
             super()._get_profitability_items(with_action),
             with_action
         )
+
+    def action_view_tasks(self):
+        action = super().action_view_tasks()
+        action['context']['billable_enabled'] = self.allow_timesheets and self.allow_billable
+        return action

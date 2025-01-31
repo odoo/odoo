@@ -151,7 +151,26 @@
                 <xpath expr="//field[@name='remaining_hours']" position="after">
                     <field name="sale_line_id" column_invisible="True"/>
                     <field name="remaining_hours_available" column_invisible="True"/>
-                    <field name="remaining_hours_so" invisible="not sale_line_id or not remaining_hours_available" widget="timesheet_uom" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="remaining_hours_so" invisible="not sale_line_id or not remaining_hours_available" widget="timesheet_uom" optional="hide"
+                        groups="hr_timesheet.group_hr_timesheet_user" column_invisible="not context.get('billable_enabled', True)"/>
+                </xpath>
+                <xpath expr="//field[@name='allocated_hours']" position="attributes">
+                    <attribute name="column_invisible">not context.get('billable_enabled', True)</attribute>
+                </xpath>
+                <xpath expr="//field[@name='effective_hours'][2]" position="attributes">
+                    <attribute name="column_invisible">not context.get('billable_enabled', True)</attribute>
+                </xpath>
+                <xpath expr="//field[@name='subtask_effective_hours']" position="attributes">
+                    <attribute name="column_invisible">not context.get('billable_enabled', True)</attribute>
+                </xpath>
+                <xpath expr="//field[@name='total_hours_spent']" position="attributes">
+                    <attribute name="column_invisible">not context.get('billable_enabled', True)</attribute>
+                </xpath>
+                <xpath expr="//field[@name='remaining_hours']" position="attributes">
+                    <attribute name="column_invisible">not context.get('billable_enabled', True)</attribute>
+                </xpath>
+                <xpath expr="//field[@name='progress'][2]" position="attributes">
+                    <attribute name="column_invisible">not context.get('billable_enabled', True)</attribute>
                 </xpath>
             </field>
         </record>
