@@ -9225,6 +9225,10 @@ registry.ContainerWidth = SnippetOptionWidget.extend({
             optionName: 'StepsConnector',
             name: 'change_container_width',
         });
+        this.trigger_up("option_update", {
+            optionName: "gallery",
+            name: "change_container_width",
+        });
     },
 });
 
