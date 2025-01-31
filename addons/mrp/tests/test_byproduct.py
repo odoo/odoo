@@ -183,9 +183,9 @@ class TestMrpByProduct(common.TransactionCase):
             are included in the `move_finished_ids`. `move_byproduct_ids` is a subset of `move_finished_ids`.
 
             So, when creating a manufacturing order, whether:
-            - Only `move_finished_ids` is passed, containing both the finished product and the by-products of the BOM,
-            - Only `move_byproduct_ids` is passed, only containing the by-products of the BOM,
-            - Both `move_finished_ids` and `move_byproduct_ids` are passed,
+            - Only `move_finished_ids`(A + B) is passed, containing both the finished product and the by-products of the BOM,
+            - Both `move_finished_ids`(A + B) and `move_byproduct_ids`(B) are passed,
+            - Both `move_finished_ids`(A) and `move_byproduct_ids`(B) are passed,
               holding the product finished and the byproducts respectively
             At the end, in the created manufacturing order
             `move_finished_ids` must contain both the finished product, and the by-products,
@@ -229,8 +229,22 @@ class TestMrpByProduct(common.TransactionCase):
                     }),
                 ],
             }),
-            # Only `move_byproduct_ids` passed, containing the by-product move only
+            # Both `move_finished_ids`(A + B) and `move_byproduct_ids`(B) passed,
             (2.0, 4.0, {
+                'move_finished_ids': [
+                    (0, 0, {
+                        'product_id': self.product_a.id,
+                        'product_uom_qty': 2.0,
+                        'location_id': self.product_a.property_stock_production,
+                        'location_dest_id': self.warehouse.lot_stock_id.id,
+                    }),
+                    (0, 0, {
+                        'product_id': self.product_b.id,
+                        'product_uom_qty': 4.0,
+                        'location_id': self.product_a.property_stock_production,
+                        'location_dest_id': self.warehouse.lot_stock_id.id,
+                    }),
+                ],
                 'move_byproduct_ids': [
                     (0, 0, {
                         'product_id': self.product_b.id,
@@ -240,7 +254,7 @@ class TestMrpByProduct(common.TransactionCase):
                     }),
                 ],
             }),
-            # Both `move_finished_ids` and `move_byproduct_ids` passed,
+            # Both `move_finished_ids`(A) and `move_byproduct_ids`(B) passed,
             # containing respectively the finished product and the by-product
             (3.0, 4.0, {
                 'move_finished_ids': [
