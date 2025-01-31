@@ -5,7 +5,7 @@ import { defaultBuilderComponents } from "../builder_components/default_builder_
 import { globalBuilderOptions } from "../builder_components/global_builder_options";
 import { useVisibilityObserver, useApplyVisibility } from "../builder_components/utils";
 import { DependencyManager } from "../plugins/dependency_manager";
-import { getSnippetName } from "@html_builder/builder/utils/utils";
+import { getSnippetName } from "@html_builder/utils/utils";
 
 export class OptionsContainer extends Component {
     static template = "html_builder.OptionsContainer";

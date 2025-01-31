@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { CSS_SHORTHANDS, areCssValuesEqual } from "@html_builder/builder/utils/utils_css";
+import { CSS_SHORTHANDS, areCssValuesEqual } from "@html_builder/utils/utils_css";
 
 class CoreBuilderActionPlugin extends Plugin {
     static id = "CoreBuilderAction";

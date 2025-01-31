@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
-import { hideInvisibleEl, showInvisibleEl } from "@html_builder/builder/plugins/visibility_plugin";
-import { applyFunDependOnSelectorAndExclude } from "@html_builder/builder/options/utils";
+import { hideInvisibleEl, showInvisibleEl } from "@html_builder/plugins/visibility_plugin";
+import { applyFunDependOnSelectorAndExclude } from "@html_builder/options/utils";
 
 export const device_visibility_option_selector = "section .row > div";
 

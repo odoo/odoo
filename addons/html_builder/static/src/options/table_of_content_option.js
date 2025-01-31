@@ -1,4 +1,4 @@
-import { applyFunDependOnSelectorAndExclude } from "@html_builder/builder/options/utils";
+import { applyFunDependOnSelectorAndExclude } from "@html_builder/options/utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 

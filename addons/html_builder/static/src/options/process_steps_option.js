@@ -1,6 +1,6 @@
 import { defaultBuilderComponents } from "../builder_components/default_builder_components";
-import { coreBuilderActions } from "@html_builder/builder/core_builder_action_plugin";
-import { applyFunDependOnSelectorAndExclude } from "@html_builder/builder/options/utils";
+import { coreBuilderActions } from "@html_builder/core_builder_action_plugin";
+import { applyFunDependOnSelectorAndExclude } from "@html_builder/options/utils";
 import { Plugin } from "@html_editor/plugin";
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";

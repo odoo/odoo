@@ -1,9 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
-import {
-    addMobileOrders,
-    removeMobileOrders,
-} from "@html_builder/builder/utils/column_layout_utils";
-import { isMobileView } from "@html_builder/builder/utils/utils";
+import { addMobileOrders, removeMobileOrders } from "@html_builder/utils/column_layout_utils";
+import { isMobileView } from "@html_builder/utils/utils";
 
 // TODO find where to define the selectors so they are not duplicated across files
 const moveUpOrDown = {

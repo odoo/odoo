@@ -1,5 +1,5 @@
 import { getEditable, setupWebsiteBuilder } from "../helpers";
-import { SnippetModel } from "@html_builder/builder/snippet_model";
+import { SnippetModel } from "@html_builder/snippet_model";
 import { getMockEnv, makeMockEnv, mockService } from "@web/../tests/web_test_helpers";
 
 export async function getStructureSnippet(snippetName) {

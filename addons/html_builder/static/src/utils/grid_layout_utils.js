@@ -28,9 +28,9 @@ export function getGridProperties(rowEl) {
  * @param {Element} rowEl the parent grid element of the element
  */
 export function setElementToMaxZindex(element, rowEl) {
-    const childrenEls = [...rowEl.children].filter((el) => {
-        return el !== element && !el.classList.contains("o_we_grid_preview");
-    });
+    const childrenEls = [...rowEl.children].filter(
+        (el) => el !== element && !el.classList.contains("o_we_grid_preview")
+    );
     element.style.zIndex = Math.max(...childrenEls.map((el) => el.style.zIndex)) + 1;
 }
 /**
@@ -141,9 +141,7 @@ export function toggleGridMode(containerEl) {
     rowEl.dataset.rowCount = rowCount;
 
     // Removing the classes that break the grid.
-    const classesToRemove = [...rowEl.classList].filter((c) => {
-        return /^align-items/.test(c);
-    });
+    const classesToRemove = [...rowEl.classList].filter((c) => /^align-items/.test(c));
     rowEl.classList.remove(...classesToRemove);
 
     rowEl.classList.add("o_grid_mode");
@@ -241,9 +239,7 @@ function placeColumns(columnEls, rowSize, rowGap, columnSize, columnGap) {
     for (const [i, columnEl] of [...columnEls].entries()) {
         // Removing padding and offset classes.
         const regex = /^(((pt|pb)\d{1,3}$)|col-lg-|offset-lg-)/;
-        const toRemove = [...columnEl.classList].filter((c) => {
-            return regex.test(c);
-        });
+        const toRemove = [...columnEl.classList].filter((c) => regex.test(c));
         columnEl.classList.remove(...toRemove);
         columnEl.classList.add("col-lg-" + columnSpans[i]);
 
@@ -357,9 +353,9 @@ export function checkIfImageColumn(columnEl) {
         // If there is only one image and if this image is the only "real"
         // child of the column, we need to check if there is text in it.
         const textNodeEls = [...columnEl.childNodes].filter((el) => el.nodeType === Node.TEXT_NODE);
-        const areTextNodesEmpty = [...textNodeEls].every((textNodeEl) => {
-            return textNodeEl.nodeValue.trim() === "";
-        });
+        const areTextNodesEmpty = [...textNodeEls].every(
+            (textNodeEl) => textNodeEl.nodeValue.trim() === ""
+        );
         isImageColumn = areTextNodesEmpty;
     }
     return isImageColumn;

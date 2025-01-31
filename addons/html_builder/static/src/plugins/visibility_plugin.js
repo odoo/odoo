@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { isMobileView } from "@html_builder/builder/utils/utils";
+import { isMobileView } from "@html_builder/utils/utils";
 
 export class VisibilityPlugin extends Plugin {
     static id = "visibilityPlugin";

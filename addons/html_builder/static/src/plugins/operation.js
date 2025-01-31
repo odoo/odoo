@@ -20,9 +20,7 @@ export class Operation {
                 cancelResolve?.();
             });
 
-        const cancelTimePromise = new Promise((resolve) => {
-            return setTimeout(resolve, cancelTime);
-        });
+        const cancelTimePromise = new Promise((resolve) => setTimeout(resolve, cancelTime));
         const cancelLoadPromise = new Promise((resolve) => {
             cancelResolve = resolve;
         });

@@ -11,7 +11,7 @@ import {
     convertToNormalColumn,
     reloadLazyImages,
     toggleGridMode,
-} from "@html_builder/builder/utils/grid_layout_utils";
+} from "@html_builder/utils/grid_layout_utils";
 import { Button } from "../components/button";
 
 class LayoutOptionPlugin extends Plugin {

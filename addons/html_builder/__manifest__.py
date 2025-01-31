@@ -39,17 +39,18 @@
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
 
-            'html_builder/static/src/builder/**/*',
+            'html_builder/static/src/**/*',
+            ('remove', 'html_builder/static/src/website_preview/**/*'),
         ],
         'html_builder.inside_builder_style': [
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_primary_variables'),
             'web/static/src/scss/bootstrap_overridden.scss',
-            'html_builder/static/src/builder/**/*.inside.scss',
+            'html_builder/static/src/**/*.inside.scss',
         ],
         'html_builder.iframe_add_dialog': [
             ('include', 'web.assets_frontend'),
-            'html_builder/static/src/builder/builder_sidebar/tabs/block_tab/add_snippet_dialog/snippet_viewer.scss'
+            'html_builder/static/src/builder_sidebar/tabs/block_tab/add_snippet_dialog/snippet_viewer.scss'
         ],
         'web.assets_unit_tests': [
             'html_builder/static/tests/**/*',

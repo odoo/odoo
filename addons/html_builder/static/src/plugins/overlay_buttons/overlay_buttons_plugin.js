@@ -7,7 +7,7 @@ import {
     sizingY,
     sizingX,
     sizingGrid,
-} from "@html_builder/builder/plugins/builder_overlay/builder_overlay";
+} from "@html_builder/plugins/builder_overlay/builder_overlay";
 
 // Moving with the arrows.
 const moveUpOrDown = {

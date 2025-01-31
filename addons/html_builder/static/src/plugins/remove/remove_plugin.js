@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { resizeGrid } from "@html_builder/builder/utils/grid_layout_utils";
+import { resizeGrid } from "@html_builder/utils/grid_layout_utils";
 import { getVisibleSibling } from "../move/move_plugin";
 import { unremovableNodePredicates as deletePluginPredicates } from "@html_editor/core/delete_plugin";
 import { isUnremovableQWebElement as qwebPluginPredicate } from "@html_editor/others/qweb_plugin";

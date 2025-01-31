@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
-import { setElementToMaxZindex } from "@html_builder/builder/utils/grid_layout_utils";
-import { isMobileView } from "@html_builder/builder/utils/utils";
+import { setElementToMaxZindex } from "@html_builder/utils/grid_layout_utils";
+import { isMobileView } from "@html_builder/utils/utils";
 
 const gridItemSelector = ".row.o_grid_mode > div.o_grid_item";
 

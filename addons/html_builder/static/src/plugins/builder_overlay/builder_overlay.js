@@ -1,11 +1,11 @@
 import { renderToElement } from "@web/core/utils/render";
-import { isMobileView } from "@html_builder/builder/utils/utils";
+import { isMobileView } from "@html_builder/utils/utils";
 import {
     addBackgroundGrid,
     setElementToMaxZindex,
     getGridProperties,
     resizeGrid,
-} from "@html_builder/builder/utils/grid_layout_utils";
+} from "@html_builder/utils/grid_layout_utils";
 
 // TODO move them elsewhere.
 export const sizingY = {
