@@ -1104,6 +1104,12 @@ class StockQuant(models.Model):
         """
         self._update_available_quantity(product_id, location_id, reserved_quantity=quantity, lot_id=lot_id, package_id=package_id, owner_id=owner_id)
 
+    def _update_uom_id(self, to_uom):
+        for quant in self:
+            if quant.product_id.uom_id == to_uom:
+                continue
+            quant.quantity = quant.product_id.uom_id._compute_quantity(quant.quantity, to_uom)
+
     @api.model
     def _unlink_zero_quants(self):
         """ _update_available_quantity may leave quants with no
