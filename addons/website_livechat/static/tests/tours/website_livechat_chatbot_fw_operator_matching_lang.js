@@ -12,7 +12,12 @@ registry.category("web_tour.tours").add("chatbot_fw_operator_matching_lang", {
             run: "click",
         },
         {
-            trigger: ".o-livechat-root:shadow .o-mail-Composer-input:enabled",
+            trigger:
+                ".o-livechat-root:shadow .o-mail-NotificationMessage:contains(joined the channel)",
+        },
+        {
+            trigger:
+                ".o-livechat-root:shadow .o-mail-NotificationMessage:contains(left the channel)",
         },
     ],
 });
