@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "mysterious egg",
-
-    'summary': "Oh? An egg is hatching!",
-
+    'name': "HTML Builder",
+    'summary': "Generic html builder",
     'description': """
-    Oh? An egg is hatching!
+    This addon contains a generic html builder application. It is designed to be
+    used by the website builder and mass mailing editor.
     """,
 
     'author': "Odoo",
@@ -35,7 +34,7 @@
             ('remove', 'html_builder/static/src/builder/**/*.inside.scss'),
         ],
         # this bundle is lazy loaded when the editor is ready
-        'website.assets_builder': [
+        'html_builder.assets': [
             ('include', 'web._assets_helpers'),
 
             'web/static/src/scss/pre_variables.scss',
@@ -58,7 +57,7 @@
         ],
         'web.assets_unit_tests': [
             'html_builder/static/tests/**/*',
-            ('include', 'website.assets_builder'),
+            ('include', 'html_builder.assets'),
         ],
     },
     'license': 'LGPL-3',

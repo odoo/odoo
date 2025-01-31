@@ -123,7 +123,7 @@ export async function setupWebsiteBuilder(
 
 export async function openBuilderSidebar() {
     // The next line allow us to await asynchronous fetches and cache them before it is used
-    await Promise.all([getWebsiteSnippets(), loadBundle("website.assets_builder")]);
+    await Promise.all([getWebsiteSnippets(), loadBundle("html_builder.assets")]);
 
     await click(".o-website-btn-custo-primary");
     // linked to the setTimeout in the WebsiteBuilder component
