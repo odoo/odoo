@@ -28,7 +28,7 @@ class TestCalendarController(HttpCase):
         self.event.write({"partner_ids": [(4, self.other_user.partner_id.id)]})
         attendee = self.event.attendee_ids.filtered(lambda att: att.partner_id.id == self.other_user.partner_id.id)
         token = attendee.access_token
-        url = "/calendar/meeting/accept?token=%s&id=%d" % (token, self.event.id)
+        url = f"/calendar/meeting/accept{token}/{attendee.id}"
         res = self.url_open(url)
 
         self.assertEqual(res.status_code, 200, "Response should = OK")
@@ -39,7 +39,7 @@ class TestCalendarController(HttpCase):
         self.event.write({"partner_ids": [(4, self.other_user.partner_id.id)]})
         attendee = self.event.attendee_ids.filtered(lambda att: att.partner_id.id == self.other_user.partner_id.id)
         token = attendee.access_token
-        url = "/calendar/meeting/accept?token=%s&id=%d" % (token, self.event.id)
+        url = f"/calendar/meeting/accept/{token}/{attendee.id}"
         self.authenticate("test_user_2", "P@ssw0rd!")
         res = self.url_open(url)
 
