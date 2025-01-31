@@ -621,7 +621,7 @@ class AccountEdiFormat(models.Model):
         return results
 
     def _has_oss_taxes(self, invoice):
-        if self.env['ir.module.module'].search([('name', '=', 'l10n_eu_oss'), ('state', '=', 'installed')]):
+        if self.env['ir.module.module'].sudo().search([('name', '=', 'l10n_eu_oss'), ('state', '=', 'installed')]):
             oss_tag = self.env.ref('l10n_eu_oss.tag_oss')
             lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_note'))
             tax_tags = lines.mapped('tax_ids.invoice_repartition_line_ids.tag_ids')
