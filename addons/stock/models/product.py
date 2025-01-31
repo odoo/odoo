@@ -608,9 +608,6 @@ class ProductProduct(models.Model):
             action["name"] = _('Update Quantity')
         return action
 
-    def action_update_quantity_on_hand(self):
-        return self.product_tmpl_id.with_context(default_product_id=self.id, create=True).action_update_quantity_on_hand()
-
     def action_product_forecast_report(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("stock.stock_forecasted_product_product_action")
@@ -1066,24 +1063,6 @@ class ProductTemplate(models.Model):
         if 'product_variant' in self.env.context:
             return self.env['product.product'].browse(self.env.context['default_product_id']).action_open_quants()
         return self.product_variant_ids.filtered(lambda p: p.active or p.qty_available != 0).action_open_quants()
-
-    def action_update_quantity_on_hand(self):
-        advanced_option_groups = [
-            'stock.group_stock_multi_locations',
-            'stock.group_tracking_owner',
-            'stock.group_tracking_lot'
-        ]
-        if any(self.env.user.has_group(g) for g in advanced_option_groups) or self.tracking != 'none':
-            return self.action_open_quants()
-        else:
-            default_product_id = self.env.context.get('default_product_id', len(self.product_variant_ids) == 1 and self.product_variant_id.id)
-            action = self.env["ir.actions.actions"]._for_xml_id("stock.action_change_product_quantity")
-            action['context'] = dict(
-                self.env.context,
-                default_product_id=default_product_id,
-                default_product_tmpl_id=self.id
-            )
-            return action
 
     def action_view_related_putaway_rules(self):
         self.ensure_one()
