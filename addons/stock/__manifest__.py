@@ -45,7 +45,6 @@
         'data/mail_template_data.xml',
 
         'views/stock_menu_views.xml',
-        'wizard/stock_change_product_qty_views.xml',
         'wizard/stock_picking_return_views.xml',
         'wizard/stock_inventory_conflict.xml',
         'wizard/stock_backorder_confirmation_views.xml',

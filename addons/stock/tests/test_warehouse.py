@@ -77,25 +77,6 @@ class TestWarehouse(TestStockCommon):
 
         self.assertEqual(quant.location_id, stock_location)
 
-    def test_inventory_wizard_as_user(self):
-        """ Using the "Update Quantity" wizard as stock user.
-        """
-        self.product_1.is_storable = True
-        InventoryWizard = self.env['stock.change.product.qty'].with_user(self.user_stock_user)
-        inventory_wizard = InventoryWizard.create({
-            'product_id': self.product_1.id,
-            'product_tmpl_id': self.product_1.product_tmpl_id.id,
-            'new_quantity': 50.0,
-        })
-        inventory_wizard.change_product_qty()
-        # Check quantity was updated
-        self.assertEqual(self.product_1.virtual_available, 50.0)
-        self.assertEqual(self.product_1.qty_available, 50.0)
-
-        # Check associated quants: 2 quants for the product and the quantity (1 in stock, 1 in inventory adjustment)
-        quant = self.env['stock.quant'].search([('id', 'not in', self.existing_quants.ids)])
-        self.assertEqual(len(quant), 2)
-
     def test_basic_move(self):
         product = self.product_3.with_user(self.user_stock_manager)
         product.is_storable = True
