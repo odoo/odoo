@@ -10,7 +10,7 @@ declare module "models" {
     export interface Thread {
         setAsDiscussThread: (pushState: boolean) => void,
         unpin: () => Promise<void>,
-        askLeaveConfirmation: (body: string) => void,
+        askLeaveConfirmation: (body: string) => Promise<void>,
         leaveChannel: () => Promise<void>,
     }
     export interface Models {

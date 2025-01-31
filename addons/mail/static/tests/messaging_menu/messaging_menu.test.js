@@ -604,7 +604,7 @@ test("Counter is updated when receiving new message", async () => {
     });
     await start();
     await openDiscuss();
-    withUser(userId, () =>
+    await withUser(userId, () =>
         rpc("/mail/message/post", {
             thread_id: channelId,
             thread_model: "discuss.channel",

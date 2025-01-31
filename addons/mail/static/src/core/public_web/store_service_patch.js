@@ -3,7 +3,8 @@ import { Record } from "@mail/core/common/record";
 import { router } from "@web/core/browser/router";
 import { patch } from "@web/core/utils/patch";
 
-patch(Store.prototype, {
+/** @type {import("models").Store} */
+const storePatch = {
     setup() {
         super.setup(...arguments);
         this.discuss = Record.one("DiscussApp");
@@ -14,7 +15,8 @@ patch(Store.prototype, {
         this.discuss = { activeTab: "main" };
         this.env.bus.addEventListener(
             "discuss.channel/new_message",
-            ({ detail: { channel, message, silent } }) => {
+            async ({ detail: { channel, message, silent } }) => {
+                await this.store.getSelf();
                 if (this.env.services.ui.isSmall || message.isSelfAuthored || silent) {
                     return;
                 }
@@ -22,7 +24,8 @@ patch(Store.prototype, {
             }
         );
     },
-});
+};
+patch(Store.prototype, storePatch);
 
 patch(storeService, {
     start(env, services) {

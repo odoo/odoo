@@ -10,7 +10,6 @@ import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { Deferred, Mutex } from "@web/core/utils/concurrency";
 import { debounce } from "@web/core/utils/timing";
-import { session } from "@web/session";
 import { browser } from "@web/core/browser/browser";
 
 /**
@@ -80,7 +79,15 @@ export class Store extends BaseStore {
     /** @type {typeof import("@mail/core/common/volume_model").Volume} */
     Volume;
 
-    /** This is the current logged partner / guest */
+    /**
+     * The current logged partner / guest.
+     *
+     * This field is not filled before init:
+     * - When using it in reactive code (component/computed field), a guard should be added when
+     *   accessing it. The value will eventually auto-correct due to reactivity.
+     * - In functions, `getSelf` should be used and awaited instead, otherwise the value won't be
+     *   correctly used, as there is no auto-correct in flows (when the method ends, it's too late).
+     */
     self = Record.one("Persona");
     /**
      * Indicates whether the current user is using the application through the
@@ -230,6 +237,11 @@ export class Store extends BaseStore {
         return fetchDeferred;
     }
 
+    async getSelf() {
+        await this.isReady;
+        return this.self;
+    }
+
     /** Import data received from init_messaging */
     async initialize() {
         await this.fetchStoreData("init_messaging");
@@ -350,6 +362,7 @@ export class Store extends BaseStore {
     }
 
     async startMeeting() {
+        await this.isReady;
         const thread = await this.createGroupChat({
             default_display_mode: "video_full_screen",
             partners_to: [this.self.id],
@@ -642,14 +655,6 @@ export const storeService = {
      */
     start(env, services) {
         const store = makeStore(env);
-        store.insert(session.storeData);
-        /**
-         * Add defaults for `self` and `settings` because in livechat there could be no user and no
-         * guest yet (both undefined at init), but some parts of the code that loosely depend on
-         * these values will still be executed immediately. Providing a dummy default is enough to
-         * avoid crashes, the actual values being filled at livechat init when they are necessary.
-         */
-        store.self ??= { id: -1, type: "guest" };
         store.settings ??= {};
         store.initialize();
         store.onStarted();

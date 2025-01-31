@@ -34,9 +34,16 @@ export class DiscussCorePublicWeb {
         this.busService.subscribe("discuss.channel/joined", async (payload) => {
             const { data, channel_id, invited_by_user_id: invitedByUserId } = payload;
             this.store.insert(data);
-            await this.store.fetchChannel(channel_id);
+            const [self] = await Promise.all([
+                this.store.getSelf(),
+                /**
+                 * Re-fetch when joining to update potentially outdated fields, as leaving will remove
+                 * the bus subscription which is supposed to keep fields in sync.
+                 */
+                this.store.fetchChannel(channel_id),
+            ]);
             const thread = this.store.Thread.get({ id: channel_id, model: "discuss.channel" });
-            if (thread && invitedByUserId && invitedByUserId !== this.store.self.userId) {
+            if (thread && invitedByUserId && invitedByUserId !== self.userId) {
                 this.notificationService.add(
                     _t("You have been invited to #%s", thread.displayName),
                     { type: "info" }

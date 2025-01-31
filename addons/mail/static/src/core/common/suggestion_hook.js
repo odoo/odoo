@@ -9,20 +9,22 @@ class UseSuggestion {
         this.fetchSuggestions = useDebounced(this.fetchSuggestions.bind(this), 250);
         useEffect(
             () => {
-                this.update();
-                if (this.search.position === undefined || !this.search.delimiter) {
-                    return; // nothing else to fetch
-                }
-                if (this.composer.store.self.type !== "partner") {
-                    return; // guests cannot access fetch suggestion method
-                }
-                if (
-                    this.lastFetchedSearch?.count === 0 &&
-                    (!this.search.delimiter || this.isSearchMoreSpecificThanLastFetch)
-                ) {
-                    return; // no need to fetch since this is more specific than last and last had no result
-                }
-                this.fetchSuggestions();
+                this.composer.store.getSelf().then((self) => {
+                    this.update();
+                    if (this.search.position === undefined || !this.search.delimiter) {
+                        return; // nothing else to fetch
+                    }
+                    if (
+                        this.lastFetchedSearch?.count === 0 &&
+                        (!this.search.delimiter || this.isSearchMoreSpecificThanLastFetch)
+                    ) {
+                        return; // no need to fetch since this is more specific than last and last had no result
+                    }
+                    if (self.type !== "partner") {
+                        return; // guests cannot access fetch suggestion method
+                    }
+                    this.fetchSuggestions();
+                });
             },
             () => [this.search.delimiter, this.search.position, this.search.term]
         );

@@ -39,7 +39,7 @@ export class Attachment extends FileModelMixin(Record) {
     create_date = Record.attr(undefined, { type: "datetime" });
 
     get isDeletable() {
-        if (this.message && !this.store.self.isInternalUser) {
+        if (this.message && !this.store.self?.isInternalUser) {
             return this.message.editable;
         }
         return true;

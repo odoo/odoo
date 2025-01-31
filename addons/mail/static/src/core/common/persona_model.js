@@ -84,8 +84,9 @@ export class Persona extends Record {
     userId;
     /** @type {ImStatus} */
     im_status = Record.attr(null, {
-        onUpdate() {
-            if (this.eq(this.store.self) && this.im_status === "offline") {
+        async onUpdate() {
+            const self = await this.store.getSelf();
+            if (this.eq(self) && this.im_status === "offline") {
                 this.store.env.services.im_status.updateBusPresence();
             }
         },
@@ -113,7 +114,7 @@ export class Persona extends Record {
 
     get avatarUrl() {
         const accessTokenParam = {};
-        if (!this.store.self.isInternalUser) {
+        if (!this.store.self?.isInternalUser) {
             accessTokenParam.access_token = this.avatar_128_access_token;
         }
         if (this.type === "partner") {

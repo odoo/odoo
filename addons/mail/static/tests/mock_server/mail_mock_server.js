@@ -93,7 +93,7 @@ export function registerRoute(route, handler) {
             return res;
         }
         const response = handler.call(this, request);
-        res = await beforeCallableHandler.after?.(response);
+        res = await beforeCallableHandler.after?.({ params: args, response });
         if (res !== undefined) {
             return res;
         }
@@ -940,6 +940,7 @@ async function processRequest(request) {
                 ? [fetchParam, undefined]
                 : fetchParam;
         if (name === "init_messaging") {
+            ResUsers._init_store_data(store);
             if (!MailGuest._get_guest_from_context() || !ResUsers._is_public(this.env.uid)) {
                 ResUsers._init_messaging([this.env.uid], store, args.context);
             }

@@ -62,17 +62,21 @@ export class DiscussCoreCommon {
                 thread: { id: channel_id, model: "discuss.channel" },
             });
         });
-        this.env.bus.addEventListener("mail.message/delete", ({ detail: { message, notifId } }) => {
-            if (message.thread) {
-                const { selfMember } = message.thread;
-                if (
-                    message.id > selfMember?.seen_message_id.id &&
-                    notifId > selfMember.message_unread_counter_bus_id
-                ) {
-                    selfMember.message_unread_counter--;
+        this.env.bus.addEventListener(
+            "mail.message/delete",
+            async ({ detail: { message, notifId } }) => {
+                await this.store.getSelf();
+                if (message.thread) {
+                    const { selfMember } = message.thread;
+                    if (
+                        message.id > selfMember?.seen_message_id.id &&
+                        notifId > selfMember.message_unread_counter_bus_id
+                    ) {
+                        selfMember.message_unread_counter--;
+                    }
                 }
             }
-        });
+        );
     }
 
     /**
@@ -87,24 +91,27 @@ export class DiscussCoreCommon {
 
     async _handleNotificationNewMessage(payload, { id: notifId }) {
         const { data, id: channelId, silent, temporary_id } = payload;
-        const channel = await this.store.Thread.getOrFetch({
-            model: "discuss.channel",
-            id: channelId,
-        });
+        const { "mail.message": messages = [] } = this.store.insert(data, { html: true });
+        const [channel, self] = await Promise.all([
+            this.store.Thread.getOrFetch({ model: "discuss.channel", id: channelId }),
+            this.store.getSelf(),
+        ]);
         if (!channel) {
             return;
         }
-        const { "mail.message": messages = [] } = this.store.insert(data, { html: true });
         /** @type {import("models").Message} */
         const message = messages[0];
         if (message.notIn(channel.messages)) {
             if (!channel.loadNewer) {
-                channel.addOrReplaceMessage(message, this.store["mail.message"].get(temporary_id));
+                await channel.addOrReplaceMessage(
+                    message,
+                    this.store["mail.message"].get(temporary_id)
+                );
             } else if (channel.status === "loading") {
                 channel.pendingNewMessages.push(message);
             }
             if (message.isSelfAuthored) {
-                channel.onNewSelfMessage(message);
+                await channel.onNewSelfMessage(message);
             } else {
                 if (!channel.isDisplayed && channel.selfMember) {
                     channel.selfMember.syncUnread = true;
@@ -115,11 +122,7 @@ export class DiscussCoreCommon {
                 }
             }
         }
-        if (
-            channel.channel_type !== "channel" &&
-            this.store.self.type === "partner" &&
-            channel.selfMember
-        ) {
+        if (channel.channel_type !== "channel" && self.type === "partner" && channel.selfMember) {
             // disabled on non-channel threads and
             // on "channel" channels for performance reasons
             channel.markAsFetched();
@@ -128,7 +131,7 @@ export class DiscussCoreCommon {
             !channel.loadNewer &&
             !message.isSelfAuthored &&
             channel.composer.isFocused &&
-            this.store.self.type === "partner" &&
+            self.type === "partner" &&
             channel.newestPersistentMessage?.eq(channel.newestMessage)
         ) {
             channel.markAsRead({ sync: false });

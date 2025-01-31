@@ -123,6 +123,7 @@ test("Not loading of GIF categories when feature is not available", async () => 
     await start();
     await openDiscuss(channelId);
     const store = getService("mail.store");
+    await store.isReady;
     store.hasGifPickerFeature = false;
     isFeatureEnabled = false;
     await click("button[title='Add GIFs']");
@@ -166,25 +167,23 @@ test("Open a GIF category trigger the search for the category", async () => {
 test("Can have GIF categories with same name", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
-    onRpc("/discuss/gif/categories", () => {
-        return {
-            locale: "en",
-            tags: [
-                {
-                    searchterm: "duplicate",
-                    path: "/v2/search?q=duplicate&locale=en&component=categories&contentfilter=low",
-                    image: "https://media.tenor.com/BiseY2UXovAAAAAM/duplicate.gif",
-                    name: "#duplicate",
-                },
-                {
-                    searchterm: "duplicate",
-                    path: "/v2/search?q=duplicate&locale=en&component=categories&contentfilter=low",
-                    image: "https://media.tenor.com/BiseY2UXovAAAAAM/duplicate.gif",
-                    name: "#duplicate",
-                },
-            ],
-        };
-    });
+    onRpc("/discuss/gif/categories", () => ({
+        locale: "en",
+        tags: [
+            {
+                searchterm: "duplicate",
+                path: "/v2/search?q=duplicate&locale=en&component=categories&contentfilter=low",
+                image: "https://media.tenor.com/BiseY2UXovAAAAAM/duplicate.gif",
+                name: "#duplicate",
+            },
+            {
+                searchterm: "duplicate",
+                path: "/v2/search?q=duplicate&locale=en&component=categories&contentfilter=low",
+                image: "https://media.tenor.com/BiseY2UXovAAAAAM/duplicate.gif",
+                name: "#duplicate",
+            },
+        ],
+    }));
     onRpc("/discuss/gif/search", () => rpc.search);
     await start();
     await openDiscuss(channelId);

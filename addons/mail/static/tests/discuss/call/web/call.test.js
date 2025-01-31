@@ -10,13 +10,13 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { test } from "@odoo/hoot";
 import { mockUserAgent } from "@odoo/hoot-mock";
 import { mockService } from "@web/../tests/web_test_helpers";
 
-describe.current.tags("desktop");
 defineMailModels();
 
+test.tags("desktop");
 test("no auto-call on joining chat", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Mario" });
@@ -31,6 +31,7 @@ test("no auto-call on joining chat", async () => {
     await contains(".o-discuss-Call", { count: 0 });
 });
 
+test.tags("desktop");
 test("no auto-call on joining group chat", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
@@ -59,6 +60,9 @@ test("show Push-to-Talk button on mobile", async () => {
     mockService("discuss.ptt_extension", {
         get isEnabled() {
             return false;
+        },
+        set isEnabled(value) {
+            // ignore value if the extension is actually installed on the current browser
         },
     });
     patchUiSize({ size: SIZES.SM });

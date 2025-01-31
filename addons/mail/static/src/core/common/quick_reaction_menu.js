@@ -70,9 +70,10 @@ export class QuickReactionMenu extends Component {
         }
     }
 
-    toggleReaction(emoji) {
+    async toggleReaction(emoji) {
+        const self = await this.store.getSelf();
         const reaction = this.props.message.reactions.find(
-            (r) => r.content === emoji && this.store.self.in(r.personas)
+            (r) => r.content === emoji && self.in(r.personas)
         );
         if (reaction) {
             reaction.remove();
@@ -95,7 +96,7 @@ export class QuickReactionMenu extends Component {
 
     reactedBySelf(emoji) {
         return this.props.message.reactions.some(
-            (r) => r.content === emoji && this.store.self.in(r.personas)
+            (r) => r.content === emoji && this.store.self?.in(r.personas)
         );
     }
 

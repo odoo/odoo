@@ -303,8 +303,9 @@ const threadPatch = {
         return super.importantCounter;
     },
     /** @override */
-    isDisplayedOnUpdate() {
+    async isDisplayedOnUpdate() {
         super.isDisplayedOnUpdate(...arguments);
+        await this.store.getSelf();
         if (this.selfMember && !this.isDisplayed) {
             this.selfMember.syncUnread = true;
         }
@@ -318,8 +319,9 @@ const threadPatch = {
      * @param {boolean} [options.sync] Whether to sync the unread message
      * state with the server values.
      */
-    markAsRead({ sync } = {}) {
-        super.markAsRead(...arguments);
+    async markAsRead({ sync } = {}) {
+        await super.markAsRead(...arguments);
+        await Promise.all([this.store.Thread.getOrFetch(this), this.store.getSelf()]);
         if (!this.selfMember) {
             return;
         }
@@ -360,7 +362,8 @@ const threadPatch = {
             : super.needactionCounter;
     },
     /** @override */
-    onNewSelfMessage(message) {
+    async onNewSelfMessage(message) {
+        await this.store.getSelf();
         if (!this.selfMember || message.id < this.selfMember.seen_message_id?.id) {
             return;
         }

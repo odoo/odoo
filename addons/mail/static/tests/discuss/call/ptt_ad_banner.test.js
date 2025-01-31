@@ -23,6 +23,9 @@ test("display banner when ptt extension is not enabled", async () => {
         get isEnabled() {
             return false;
         },
+        set isEnabled(value) {
+            // ignore value if the extension is actually installed on the current browser
+        },
     });
     patchUiSize({ size: SIZES.SM });
     await start();

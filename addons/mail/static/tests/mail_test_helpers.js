@@ -31,15 +31,10 @@ import { registry } from "@web/core/registry";
 import { MEDIAS_BREAKPOINTS, utils as uiUtils } from "@web/core/ui/ui_service";
 import { useServiceProtectMethodHandling } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
-import { session } from "@web/session";
 import { WebClient } from "@web/webclient/webclient";
 export { SIZES } from "@web/core/ui/ui_service";
 
-import {
-    DISCUSS_ACTION_ID,
-    authenticateGuest,
-    mailDataHelpers,
-} from "./mock_server/mail_mock_server";
+import { DISCUSS_ACTION_ID, authenticateGuest } from "./mock_server/mail_mock_server";
 import { Base } from "./mock_server/mock_models/base";
 import { DEFAULT_MAIL_VIEW_ID } from "./mock_server/mock_models/constants";
 import { DiscussChannel } from "./mock_server/mock_models/discuss_channel";
@@ -326,16 +321,6 @@ export async function start(options) {
             const adminUser = pyEnv["res.users"].search_read([["id", "=", serverState.userId]])[0];
             authenticate(adminUser.login, adminUser.password);
         }
-    }
-    if ("res.users" in pyEnv) {
-        /** @type {import("mock_models").ResUsers} */
-        const ResUsers = pyEnv["res.users"];
-        const store = new mailDataHelpers.Store();
-        ResUsers._init_store_data(store);
-        patchWithCleanup(session, {
-            storeData: store.get_result(),
-        });
-        registerDebugInfo("session.storeData", session.storeData);
     }
     let env;
     if (options?.asTab) {

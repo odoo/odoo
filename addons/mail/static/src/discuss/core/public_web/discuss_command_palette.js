@@ -38,9 +38,10 @@ class CreateChatDialog extends Component {
         return _t("Open Chat");
     }
 
-    onClickConfirm() {
+    async onClickConfirm() {
+        const self = await this.store.getSelf();
         const selectedPartnersId = this.invitePeopleState.selectedPartners.map((p) => p.id);
-        const partners_to = [...new Set([this.store.self.id, ...selectedPartnersId])];
+        const partners_to = [...new Set([self.id, ...selectedPartnersId])];
         this.store.startChat(partners_to);
         this.props.close();
     }
@@ -142,12 +143,16 @@ export class DiscussCommandPalette {
     }
 
     async fetch() {
-        await this.store.channels.fetch(); // FIXME: needed to search group chats without explicit name
-        await this.store.searchConversations(this.cleanedTerm);
+        await Promise.all([
+            this.store.getSelf(),
+            this.store.channels.fetch(), // FIXME: needed to search group chats without explicit name
+            this.store.searchConversations(this.cleanedTerm),
+        ]);
     }
 
     /** @param {Record[]} [filtered] persona or thread to filters, e.g. being build already in a category in a patch such as MENTIONS or RECENT */
-    buildResults(filtered) {
+    async buildResults(filtered) {
+        const self = await this.store.getSelf();
         const TOTAL_LIMIT = this.ui.isSmall ? 7 : 8;
         const remaining = TOTAL_LIMIT - (filtered ? filtered.size : 0);
         let personas = Object.values(this.store.Persona.records).filter(
@@ -158,7 +163,7 @@ export class DiscussCommandPalette {
             .sortPartnerSuggestions(personas, this.cleanedTerm)
             .slice(0, TOTAL_LIMIT)
             .filter((persona) => !filtered || !filtered.has(persona));
-        const selfPersona = this.store.self.in(personas) ? this.store.self : undefined;
+        const selfPersona = self.in(personas) ? self : undefined;
         if (selfPersona) {
             personas = personas.filter((p) => p.notEq(selfPersona));
         }
@@ -286,7 +291,7 @@ commandProviderRegistry.add("find_or_start_conversation", {
     async provide(env, options) {
         const palette = new DiscussCommandPalette(env, options);
         await palette.fetch();
-        palette.buildResults();
+        await palette.buildResults();
         palette.commands.slice(0, 8);
         if (!palette.store.inPublicPage) {
             palette.commands.push(palette.makeDiscussCommand(NEW_CHANNEL));

@@ -36,13 +36,15 @@ export class ChannelInvitation extends Component {
             searchStr: "",
         });
         onWillStart(() => {
-            if (this.store.self.type === "partner") {
-                this.fetchPartnersToInvite();
-            }
+            this.store.getSelf().then((self) => {
+                if (self.type === "partner") {
+                    this.fetchPartnersToInvite();
+                }
+            });
         });
         onMounted(() => {
-            if (this.store.self.type === "partner" && this.props.thread) {
-                this.inputRef.el.focus();
+            if (this.props.thread) {
+                this.inputRef.el?.focus();
             }
         });
         useEffect(

@@ -165,9 +165,10 @@ export class ChatWindow extends Component {
     }
 
     async renameGuest(name) {
+        const self = await this.store.getSelf();
         const newName = name.trim();
-        if (this.store.self.name !== newName) {
-            await this.store.self.updateGuestName(newName);
+        if (self.name !== newName) {
+            await self.updateGuestName(newName);
         }
         this.state.editingGuestName = false;
     }

@@ -67,13 +67,12 @@ Object.assign(Chatter.defaultProps, {
     isChatterAside: false,
     isInFormSheetBg: true,
 });
-
 /**
- * @type {import("@mail/chatter/web_portal/chatter").Chatter }
+ * @type {Chatter}
  * @typedef {Object} Props
  * @property {function} [close]
  */
-patch(Chatter.prototype, {
+const chatterPatch = {
     setup() {
         this.messageHighlight = useMessageHighlight();
         super.setup(...arguments);
@@ -119,7 +118,7 @@ patch(Chatter.prototype, {
                     );
                     this.state.isAttachmentBoxOpened = true;
                 }
-            }
+            },
         });
         useEffect(
             () => {
@@ -244,8 +243,9 @@ patch(Chatter.prototype, {
     },
 
     async _follow(thread) {
+        const self = await this.store.getSelf();
         await this.orm.call(thread.model, "message_subscribe", [[thread.id]], {
-            partner_ids: [this.store.self.id],
+            partner_ids: [self.id],
         });
         this.onFollowerChanged(thread);
     },
@@ -407,4 +407,5 @@ patch(Chatter.prototype, {
     popoutAttachment() {
         this.attachmentPopout.popout();
     },
-});
+};
+patch(Chatter.prototype, chatterPatch);

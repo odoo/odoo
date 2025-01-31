@@ -30,13 +30,14 @@ messageActionsRegistry
                 el: component.root?.el?.querySelector(`[name="${action.id}"]`),
             }),
         setup() {
+            /** @type {import("@mail/core/common/message").Message} */
             const component = useComponent();
             component.reactionPicker = useEmojiPicker(undefined, {
-                onSelect: (emoji) => {
+                onSelect: async (emoji) => {
+                    const self = await component.store.getSelf();
                     const reaction = component.props.message.reactions.find(
                         ({ content, personas }) =>
-                            content === emoji &&
-                            personas.find((persona) => persona.eq(component.store.self))
+                            content === emoji && personas.find((persona) => persona.eq(self))
                     );
                     if (!reaction) {
                         component.props.message.react(emoji);
@@ -158,7 +159,7 @@ messageActionsRegistry
     })
     .add("download_files", {
         condition: (component) =>
-            component.message.attachment_ids.length > 1 && component.store.self.isInternalUser,
+            component.message.attachment_ids.length > 1 && component.store.self?.isInternalUser,
         icon: "fa fa-download",
         title: _t("Download Files"),
         onClick: (component) =>

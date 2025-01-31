@@ -14,7 +14,7 @@ export const pttExtensionHookService = {
         const versionPromise =
             window.chrome?.runtime?.sendMessage(EXT_ID, { type: "ask-version" }) ??
             Promise.resolve("1.0.0.0");
-        const self = reactive({
+        const state = reactive({
             isEnabled: undefined,
             voiceActivated: undefined,
             notifyIsTalking(isTalking) {
@@ -24,7 +24,7 @@ export const pttExtensionHookService = {
                 sendMessage("subscribe");
             },
             unsubscribe() {
-                self.voiceActivated = false;
+                state.voiceActivated = false;
                 sendMessage("unsubscribe");
             },
             downloadURL: `https://chromewebstore.google.com/detail/discuss-push-to-talk/${EXT_ID}`,
@@ -54,7 +54,7 @@ export const pttExtensionHookService = {
             switch (data.type) {
                 case "push-to-talk-pressed":
                     {
-                        self.voiceActivated = false;
+                        state.voiceActivated = false;
                         const isFirstPress = !rtc.selfSession?.isTalking;
                         rtc.onPushToTalk();
                         if (rtc.selfSession?.isTalking) {
@@ -68,16 +68,16 @@ export const pttExtensionHookService = {
                     break;
                 case "toggle-voice":
                     {
-                        if (self.voiceActivated) {
+                        if (state.voiceActivated) {
                             rtc.setPttReleaseTimeout(0);
                         } else {
                             rtc.onPushToTalk();
                         }
-                        self.voiceActivated = !self.voiceActivated;
+                        state.voiceActivated = !state.voiceActivated;
                     }
                     break;
                 case "answer-is-enabled":
-                    self.isEnabled = true;
+                    state.isEnabled = true;
                     break;
             }
         });
@@ -89,7 +89,7 @@ export const pttExtensionHookService = {
          * @param {*} value
          */
         async function sendMessage(type, value) {
-            if (!self.isEnabled && type !== "ask-is-enabled") {
+            if (!state.isEnabled && type !== "ask-is-enabled") {
                 return;
             }
             const version = parseVersion(await versionPromise);
@@ -102,7 +102,7 @@ export const pttExtensionHookService = {
 
         sendMessage("ask-is-enabled");
 
-        return self;
+        return state;
     },
 };
 

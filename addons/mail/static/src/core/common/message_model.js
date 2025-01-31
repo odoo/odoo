@@ -156,7 +156,7 @@ export class Message extends Record {
      * @returns {boolean}
      */
     get allowsEdition() {
-        return this.store.self.isAdmin || this.isSelfAuthored;
+        return this.store.self?.isAdmin || this.isSelfAuthored;
     }
 
     get bubbleColor() {
@@ -226,7 +226,7 @@ export class Message extends Record {
     }
 
     get isSelfMentioned() {
-        return this.store.self.in(this.recipients);
+        return this.store.self?.in(this.recipients);
     }
 
     get isHighlightedFromMention() {
@@ -360,8 +360,8 @@ export class Message extends Record {
         return Boolean(
             !this.is_transient &&
                 this.thread &&
-                this.store.self.type === "partner" &&
-                this.store.self.isInternalUser
+                this.store.self?.type === "partner" &&
+                this.store.self?.isInternalUser
         );
     }
 

@@ -15,10 +15,15 @@ export class WelcomePage extends Component {
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.state = useState({
-            userName: this.store.self.name || _t("Guest"),
+            userName: this.store.self?.name || "",
             audioStream: null,
             videoStream: null,
         });
+        this.store
+            .getSelf()
+            .then(
+                (self) => (this.state.userName = this.state.userName || self.name || _t("Guest"))
+            );
         this.audioRef = useRef("audio");
         this.videoRef = useRef("video");
         onMounted(() => {
@@ -35,9 +40,10 @@ export class WelcomePage extends Component {
         }
     }
 
-    joinChannel() {
-        if (this.store.self.type === "guest") {
-            this.store.self.updateGuestName(this.state.userName.trim());
+    async joinChannel() {
+        const self = await this.store.getSelf();
+        if (self.type === "guest") {
+            await self.updateGuestName(this.state.userName.trim());
         }
         browser.localStorage.setItem("discuss_call_preview_join_mute", !this.state.audioStream);
         browser.localStorage.setItem(
@@ -126,6 +132,6 @@ export class WelcomePage extends Component {
         }
     }
     getLoggedInAsText() {
-        return sprintf(_t("Logged in as %s"), this.store.self.name);
+        return sprintf(_t("Logged in as %s"), this.store.self?.name);
     }
 }

@@ -661,7 +661,7 @@ export class Thread extends Record {
     /**
      * @param {Object} [options] used in overrides
      */
-    markAsRead(options) {
+    async markAsRead(options) {
         const newestPersistentMessage = this.newestPersistentOfAllMessage;
         if (!newestPersistentMessage && !this.isLoaded) {
             this.isLoadedDeferred
@@ -693,7 +693,7 @@ export class Thread extends Record {
     }
 
     /** @param {import("models").Message} message */
-    onNewSelfMessage(message) {}
+    async onNewSelfMessage(message) {}
 
     /** @param {Object} [options] */
     open(options) {}
@@ -720,8 +720,9 @@ export class Thread extends Record {
         await chatWindow?.close({ notifyState: false, ...options });
     }
 
-    pin() {
-        if (this.model !== "discuss.channel" || this.store.self.type !== "partner") {
+    async pin() {
+        const self = await this.store.getSelf();
+        if (this.model !== "discuss.channel" || self.type !== "partner") {
             return;
         }
         this.is_pinned = true;
@@ -762,9 +763,10 @@ export class Thread extends Record {
         }
     }
 
-    addOrReplaceMessage(message, tmpMsg) {
+    async addOrReplaceMessage(message, tmpMsg) {
+        const self = await this.store.getSelf();
         // The message from other personas (not self) should not replace the tmpMsg
-        if (tmpMsg && tmpMsg.in(this.messages) && message.author.eq(this.store.self)) {
+        if (tmpMsg && tmpMsg.in(this.messages) && message.author.eq(self)) {
             this.messages.splice(this.messages.indexOf(tmpMsg), 1, message);
             return;
         }
@@ -795,7 +797,8 @@ export class Thread extends Record {
                 res_id: this.id,
                 model: "discuss.channel",
             };
-            tmpData.author = this.store.self;
+            const self = await this.store.getSelf();
+            tmpData.author = self;
             if (parentId) {
                 tmpData.parentMessage = this.store["mail.message"].get(parentId);
             }
@@ -816,7 +819,7 @@ export class Thread extends Record {
                 { html: true }
             );
             this.messages.push(tmpMsg);
-            this.onNewSelfMessage(tmpMsg);
+            await this.onNewSelfMessage(tmpMsg);
         }
         const data = await this.store.doMessagePost(params, tmpMsg);
         if (!data) {
@@ -825,8 +828,8 @@ export class Thread extends Record {
         const { "mail.message": messages = [] } = this.store.insert(data, { html: true });
         /** @type {import("models").Message} */
         const message = messages[0];
-        this.addOrReplaceMessage(message, tmpMsg);
-        this.onNewSelfMessage(message);
+        await this.addOrReplaceMessage(message, tmpMsg);
+        await this.onNewSelfMessage(message);
         // Only delete the temporary message now that seen_message_id is updated
         // to avoid flickering.
         tmpMsg?.delete();
