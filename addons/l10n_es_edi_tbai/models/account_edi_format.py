@@ -71,6 +71,9 @@ class AccountEdiFormat(models.Model):
         if self.code != 'es_tbai' or invoice.country_code != 'ES':
             return errors
 
+        if invoice.is_purchase_document() and not invoice.ref:
+            errors.append(_("You need to fill in the Reference field as the invoice number from your vendor."))
+
         # Ensure a certificate is available.
         if not invoice.company_id.l10n_es_edi_certificate_id:
             errors.append(_("Please configure the certificate for TicketBAI/SII."))
@@ -659,7 +662,10 @@ class AccountEdiFormat(models.Model):
         lroe_values = self._l10n_es_tbai_prepare_values_bi(invoice, invoice_xml, cancel=cancel)
         if invoice.is_purchase_document():
             lroe_str = env['ir.qweb']._render('l10n_es_edi_tbai.template_LROE_240_main_recibidas', lroe_values)
-            invoice.l10n_es_tbai_post_xml = b64encode(lroe_str.encode())
+            if cancel:
+                invoice.l10n_es_tbai_cancel_xml = b64encode(lroe_str.encode())
+            else:
+                invoice.l10n_es_tbai_post_xml = b64encode(lroe_str.encode())
         else:
             lroe_str = env['ir.qweb']._render('l10n_es_edi_tbai.template_LROE_240_main', lroe_values)
 
