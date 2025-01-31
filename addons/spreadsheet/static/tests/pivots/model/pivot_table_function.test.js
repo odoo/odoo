@@ -157,6 +157,36 @@ test("PIVOT(include_total=FALSE) with only row groupby applied", async function 
         ]);
 });
 
+test("sorted PIVOT(include_total=FALSE) with only row groupby applied", async function () {
+    const { model } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
+        <pivot>
+            <field name="foo" type="row"/>
+            <field name="probability" type="measure"/>
+        </pivot>`,
+    });
+    const [pivotId] = model.getters.getPivotIds();
+    updatePivot(model, pivotId, {
+        sortedColumn: {
+            domain: [],
+            order: "desc",
+            measure: "probability:avg",
+        },
+    });
+    model.dispatch("CREATE_SHEET", { sheetId: "42" });
+    setCellContent(model, "A1", `=PIVOT("1",,FALSE)`, "42");
+    // prettier-ignore
+    expect(getEvaluatedGrid(model, "A1:C7", "42")).toEqual([
+        ["(#1) Partner Pivot",  "Total",        null],
+        ["",                    "Probability",  null],
+        [17,                    95,             null],
+        [2,                     15,             null],
+        [1,                     11,             null],
+        [12,                    10,             null],
+        [null,                  null,           null],
+    ]);
+});
+
 test("PIVOT(include_total=FALSE) with multiple measures and only row groupby applied", async function () {
     const { model } = await createSpreadsheetWithPivot({
         arch: /* xml */ `
