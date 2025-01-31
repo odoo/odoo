@@ -76,7 +76,7 @@ class TestLivechatChatbotUI(TestImLivechatCommon, TestWebsiteLivechatCommon, Cha
             ("How can I help you?", operator, self.step_dispatch_operator),
             ("I want to speak with an operator", False, False),
             ("I will transfer you to a human", operator, False),
-            ("joined the channel", self.operator.partner_id, False), # human_operator has joined the channel
+            (f"{self.operator.livechat_username} has joined", self.operator.partner_id, False),
         ]
 
         self.assertEqual(len(conversation_messages), len(expected_messages))
