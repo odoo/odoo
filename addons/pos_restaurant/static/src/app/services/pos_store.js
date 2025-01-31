@@ -138,7 +138,7 @@ patch(PosStore.prototype, {
                     orphanLine.qty
                 );
             } else {
-                const serializedLine = orphanLine.serialize({ orm: true });
+                const serializedLine = orphanLine.serialize();
                 serializedLine.order_id = destOrder.id;
                 delete serializedLine.uuid;
                 delete serializedLine.id;
@@ -296,7 +296,7 @@ patch(PosStore.prototype, {
 
             for (const detail of beforeMergeDetails) {
                 const line = order.lines.find((l) => l.uuid === detail.uuid);
-                const serializedLine = line.serialize({ orm: true });
+                const serializedLine = line.serialize();
                 delete serializedLine.uuid;
                 delete serializedLine.id;
                 const course = courseByLines[detail.uuid];

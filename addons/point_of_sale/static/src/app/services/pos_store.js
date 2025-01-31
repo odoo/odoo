@@ -1247,7 +1247,6 @@ export class PosStore extends WithLazyGetterTrap {
             if (options.throw) {
                 throw error;
             }
-
             console.warn("Offline mode active, order will be synced later");
             return error;
         } finally {

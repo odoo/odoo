@@ -2,7 +2,8 @@ import { toRaw } from "@odoo/owl";
 import { uuidv4 } from "@point_of_sale/utils";
 import { TrapDisabler } from "@point_of_sale/proxy_trap";
 import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
-import { deserializeDateTime, serializeDateTime } from "@web/core/l10n/dates";
+import { deserializeDateTime } from "@web/core/l10n/dates";
+import { recursiveSerialization } from "./utils/recursive_serialization";
 
 const ID_CONTAINER = {};
 const { DateTime } = luxon;
@@ -199,107 +200,10 @@ export class Base extends WithLazyGetterTrap {
      * @param {boolean} options.orm - [true] if result is to be sent to the server
      */
     serialize(options = {}) {
-        const orm = options.orm ?? false;
-        const clear = options.clear ?? false;
-
-        const serializedData = this.model.serialize(this, { orm });
-
-        if (orm) {
-            const fields = this.model.fields;
-            const serializedDataOrm = {};
-
-            // We only care about the fields present in python model
-            for (const [name, params] of Object.entries(fields)) {
-                if (params.dummy) {
-                    continue;
-                }
-                if (params.local || params.related || params.compute) {
-                    continue;
-                }
-
-                if (X2MANY_TYPES.has(params.type)) {
-                    serializedDataOrm[name] = serializedData[name]
-                        .map((id) => {
-                            let serData = false;
-                            let data = {};
-
-                            if (
-                                !this._dynamicModels.includes(params.relation) &&
-                                typeof id === "number"
-                            ) {
-                                return [4, id];
-                            } else if (!this._dynamicModels.includes(params.relation)) {
-                                throw new Error(
-                                    "Trying to create a non serializable record" + params.relation
-                                );
-                            }
-
-                            if (params.relation !== params.model) {
-                                const records = this.model.records;
-                                data = records[params.relation].get(id).serialize(options);
-                                data.id = typeof id === "number" ? id : parseInt(id.split("_")[1]);
-                            } else {
-                                return typeof id === "number" ? id : parseInt(id.split("_")[1]);
-                            }
-
-                            if (
-                                typeof id === "number" &&
-                                this.models.commands[params.relation].update.has(id)
-                            ) {
-                                serData = [1, id, data];
-
-                                if (clear) {
-                                    this.models.commands[params.relation].update.delete(id);
-                                }
-                            } else if (typeof id !== "number") {
-                                serData = [0, 0, data];
-                            }
-
-                            if (serData) {
-                                for (const [key, value] of Object.entries(serData[2])) {
-                                    if (
-                                        this.models[params.relation].fields[key]?.relation &&
-                                        typeof value === "string"
-                                    ) {
-                                        serData[2][key] = parseInt(value.split("_")[1]);
-                                    }
-                                }
-                            }
-
-                            return serData;
-                        })
-                        .filter((s) => s);
-
-                    if (
-                        this.models.commands[params.model].unlink.has(name) ||
-                        this.models.commands[params.model].delete.has(name)
-                    ) {
-                        const unlinks = this.models.commands[params.model].unlink.get(name);
-                        const deletes = this.models.commands[params.model].delete.get(name);
-                        for (const id of unlinks || []) {
-                            serializedDataOrm[name].push([3, id]);
-                        }
-                        for (const id of deletes || []) {
-                            serializedDataOrm[name].push([2, id]);
-                        }
-                        if (clear) {
-                            this.models.commands[params.model].unlink.delete(name);
-                            this.models.commands[params.model].delete.delete(name);
-                        }
-                    }
-                } else {
-                    let value = serializedData[name];
-                    if (name === "id" && typeof value === "string") {
-                        value = serializedData[name].split("_")[1];
-                    }
-                    serializedDataOrm[name] = value !== undefined ? value : false;
-                }
-            }
-
-            return serializedDataOrm;
-        }
-
-        return serializedData;
+        return recursiveSerialization(this, options, {
+            X2MANY_TYPES,
+            DATE_TIME_TYPE,
+        });
     }
     getCacheMap(fieldName) {
         const cacheName = `_${fieldName}`;
@@ -591,35 +495,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 return [];
             }
             return ids.map((value) => this.read(value));
-        }
-        /**
-         * @param {object} options
-         * @param {boolean} options.orm - Exclude local & related fields from the serialization
-         */
-        serialize(record, options = {}) {
-            const orm = options.orm ?? false;
-            const result = {};
-            const ownFields = getFields(this.name);
-            for (const name in ownFields) {
-                const field = ownFields[name];
-                if ((orm && field.local) || (orm && field.related) || (orm && field.compute)) {
-                    continue;
-                }
-
-                if (field.type === "many2one") {
-                    result[name] = record[name]?.id || record.raw[name] || false;
-                } else if (X2MANY_TYPES.has(field.type)) {
-                    const ids = [...record[name]].map((record) => record.id);
-                    result[name] = ids.length ? ids : (!orm && record.raw[name]) || [];
-                } else if (DATE_TIME_TYPE.has(field.type) && typeof record[name] === "object") {
-                    result[name] = serializeDateTime(record[name]);
-                } else if (typeof record[name] === "object") {
-                    result[name] = JSON.stringify(record[name]);
-                } else {
-                    result[name] = record[name] !== undefined ? record[name] : false;
-                }
-            }
-            return result;
         }
         // aliases
         getAllBy() {
@@ -922,7 +797,10 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                     const modelCommands = commands[field.relation];
                     const map = backend ? modelCommands.delete : modelCommands.unlink;
                     const oldVal = map.get(inverse.name);
-                    map.set(inverse.name, [...(oldVal || []), record.id]);
+                    map.set(inverse.name, [
+                        ...(oldVal || []),
+                        { id: record.id, parentId: record[field.name].id },
+                    ]);
                 }
             };
 

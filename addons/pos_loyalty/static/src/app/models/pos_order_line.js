@@ -42,13 +42,6 @@ patch(PosOrderline, {
 });
 
 patch(PosOrderline.prototype, {
-    serialize(options = {}) {
-        const json = super.serialize(...arguments);
-        if (options.orm && json.coupon_id < 0) {
-            json.coupon_id = undefined;
-        }
-        return json;
-    },
     setOptions(options) {
         if (options.eWalletGiftCardProgram) {
             this._e_wallet_program_id = options.eWalletGiftCardProgram;

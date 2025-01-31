@@ -9,16 +9,6 @@ export class RestaurantOrderCourse extends Base {
         super.setup(vals);
         this.uiState = {};
     }
-    serialize(options = {}) {
-        const data = super.serialize(...arguments);
-        if (options.orm === true) {
-            // The line_ids relationship is serialized in pos_order (restaurant_course_lines)
-            // using a course_uuid -> line_uuids mapping to prevent inserting the same new line
-            // multiple times in the data model.
-            delete data.line_ids;
-        }
-        return data;
-    }
     get name() {
         return _t("Course") + " " + this.index;
     }
