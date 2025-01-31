@@ -12,13 +12,6 @@ patch(PosOrderline.prototype, {
         orderline.note = this.note;
         return orderline;
     },
-    serialize(options = {}) {
-        const data = super.serialize(...arguments);
-        if (options.orm && data.course_id) {
-            delete data.course_id;
-        }
-        return data;
-    },
     getDisplayClasses() {
         return {
             ...super.getDisplayClasses(),

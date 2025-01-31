@@ -80,7 +80,7 @@ class PosOrder(models.Model):
                 })
 
         pos_order = False
-        combo_child_uuids_by_parent_uuid = self._prepare_combo_line_uuids(order)
+        record_uuid_mapping = order.pop('relations_uuid_mapping', {})
 
         if not existing_order:
             pos_order = self.create({
@@ -99,35 +99,21 @@ class PosOrder(models.Model):
 
             pos_order.write(order)
 
-        pos_order._link_combo_items(combo_child_uuids_by_parent_uuid)
+        for model_name, mapping in record_uuid_mapping.items():
+            owner_records = self.env[model_name].search([('uuid', 'in', mapping.keys())])
+            for uuid, fields in mapping.items():
+                for name, uuids in fields.items():
+                    params = self.env[model_name]._fields[name]
+                    if params.type in ['one2many', 'many2many']:
+                        records = self.env[params.comodel_name].search([('uuid', 'in', uuids)])
+                        owner_records.filtered(lambda r: r.uuid == uuid).write({name: [Command.link(r.id) for r in records]})
+                    else:
+                        record = self.env[params.comodel_name].search([('uuid', '=', uuids)])
+                        owner_records.filtered(lambda r: r.uuid == uuid).write({name: record.id})
+
         self = self.with_company(pos_order.company_id)
         self._process_payment_lines(order, pos_order, pos_session, draft)
         return pos_order._process_saved_order(draft)
-
-    def _prepare_combo_line_uuids(self, order_vals):
-        acc = {}
-        lines = [line[2] for line in order_vals['lines'] if line[0] in [0, 1]]
-
-        for line in lines:
-            if combo_line_ids := line.get('combo_line_ids'):
-                if line['uuid'] in acc:
-                    acc[line['uuid']].append([l['uuid'] for l in lines if l.get('id') in combo_line_ids])
-                else:
-                    acc[line['uuid']] = [l['uuid'] for l in lines if l.get('id') in combo_line_ids]
-
-            line['combo_line_ids'] = False
-            line['combo_parent_id'] = False
-
-        return acc
-
-    def _link_combo_items(self, combo_child_uuids_by_parent_uuid):
-        self.ensure_one()
-
-        for parent_uuid, child_uuids in combo_child_uuids_by_parent_uuid.items():
-            parent_line = self.lines.filtered(lambda line: line.uuid == parent_uuid)
-            if not parent_line:
-                continue
-            parent_line.combo_line_ids = [(6, 0, self.lines.filtered(lambda line: line.uuid in child_uuids).ids)]
 
     def _process_saved_order(self, draft):
         self.ensure_one()

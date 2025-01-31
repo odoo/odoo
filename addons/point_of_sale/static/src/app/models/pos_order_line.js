@@ -166,7 +166,7 @@ export class PosOrderline extends Base {
 
         // Remove those that needed to be removed.
         for (const lotLine of lotLinesToRemove) {
-            this.pack_lot_ids = this.pack_lot_ids.filter((pll) => pll.id !== lotLine.id);
+            lotLine.delete();
         }
 
         for (const newLotLine of newPackLotLines) {
