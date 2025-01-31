@@ -81,7 +81,7 @@ class TestACL(TransactionCaseWithUserDemo):
                           "Label for 'decimal_places' must not be found in view definition")
 
         # Make demo user a member of the restricted group and check that the field is back
-        self.test_group.users += self.user_demo
+        self.test_group.user_ids += self.user_demo
         has_group_test = self.user_demo.has_group(self.TEST_GROUP)
         fields = currency.fields_get([])
         form_view = currency.get_view(primary.id, 'form')
@@ -117,7 +117,7 @@ class TestACL(TransactionCaseWithUserDemo):
             partner.write({'bank_ids': []})
 
         # Add the restricted group, and check that it works again
-        self.test_group.users += self.user_demo
+        self.test_group.user_ids += self.user_demo
         has_group_test = self.user_demo.has_group(self.TEST_GROUP)
         self.assertTrue(has_group_test, "`demo` user should now belong to the restricted group")
         self.assertTrue(partner.read(['bank_ids']))
@@ -280,7 +280,7 @@ class TestIrRule(TransactionCaseWithUserDemo):
         # create a new group with demo user in it, and a complex rule
         group_test = self.env['res.groups'].create({
             'name': 'Test Group',
-            'users': [Command.set(self.user_demo.ids)],
+            'user_ids': [Command.set(self.user_demo.ids)],
         })
 
         # add the rule to the new group, with a domain containing an implicit

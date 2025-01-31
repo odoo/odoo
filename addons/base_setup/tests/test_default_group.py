@@ -34,14 +34,14 @@ class TestResConfig(TransactionCase):
         group_system = self.env.ref('base.group_system')
 
         # Sanity check
-        self.assertTrue(user not in group_system.users)
+        self.assertTrue(user not in group_system.all_user_ids)
 
         # Propage new groups (default)
         self.env['ir.config_parameter'].sudo().set_param("base_setup.default_user_rights", True)
 
         self.env.ref('base.default_user').groups_id |= group_system
 
-        self.assertTrue(user in self.env.ref('base.group_system').sudo().users)
+        self.assertTrue(user in self.env.ref('base.group_system').sudo().all_user_ids)
 
         new_partner = self.env['res.partner'].create({'name': 'New User'})
         new_user = self.env['res.users'].create({
@@ -50,7 +50,7 @@ class TestResConfig(TransactionCase):
             'company_ids': [(4, company.id)],
             'partner_id': new_partner.id,
         })
-        self.assertTrue(new_user in group_system.users)
+        self.assertTrue(new_user in group_system.all_user_ids)
 
         (user | self.env.ref('base.default_user')).groups_id -= group_system
 
@@ -59,7 +59,7 @@ class TestResConfig(TransactionCase):
 
         self.env.ref('base.default_user').groups_id |= group_system
 
-        self.assertTrue(user not in group_system.users)
+        self.assertTrue(user not in group_system.all_user_ids)
 
         new_partner = self.env['res.partner'].create({'name': 'New User'})
         new_user = self.env['res.users'].create({
@@ -68,4 +68,4 @@ class TestResConfig(TransactionCase):
             'company_ids': [(4, company.id)],
             'partner_id': new_partner.id,
         })
-        self.assertTrue(new_user not in group_system.users)
+        self.assertTrue(new_user not in group_system.all_user_ids)

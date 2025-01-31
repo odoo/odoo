@@ -13,7 +13,7 @@ class ResUsers(models.Model):
         interviewer_group = self.env.ref('hr_recruitment.group_hr_recruitment_interviewer')
         recruitment_group = self.env.ref('hr_recruitment.group_hr_recruitment_user')
 
-        interviewers = self - recruitment_group.users
+        interviewers = self - recruitment_group.all_user_ids
         interviewers.sudo().write({
             'groups_id': [(4, interviewer_group.id)]
         })
@@ -31,7 +31,7 @@ class ResUsers(models.Model):
         user_ids |= {interviewer.id for [interviewer] in application_interviewers}
 
         # Remove users that are no longer interviewers on at least a job or an application
-        users_to_remove = set(self.ids) - (user_ids | set(recruitment_group.users.ids))
+        users_to_remove = set(self.ids) - (user_ids | set(recruitment_group.all_user_ids.ids))
         self.env['res.users'].browse(users_to_remove).sudo().write({
             'groups_id': [(3, interviewer_group.id)]
         })

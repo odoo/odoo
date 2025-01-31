@@ -43,7 +43,7 @@ class TestResConfig(TransactionCase):
         # Case 1: Enable a group
         default_values.update({'group_multi_currency': True})
         ResConfig.create(default_values).execute()
-        self.assertTrue(user in self.env.ref('base.group_multi_currency').sudo().users)
+        self.assertTrue(user in self.env.ref('base.group_multi_currency').sudo().all_user_ids)
 
         new_partner = self.env['res.partner'].create({'name': 'New User'})
         new_user = self.env['res.users'].create({
@@ -52,12 +52,12 @@ class TestResConfig(TransactionCase):
             'company_ids': [(4, company.id)],
             'partner_id': new_partner.id,
         })
-        self.assertTrue(new_user in self.env.ref('base.group_multi_currency').sudo().users)
+        self.assertTrue(new_user in self.env.ref('base.group_multi_currency').sudo().all_user_ids)
 
         # Case 2: Disable a group
         default_values.update({'group_multi_currency': False})
         ResConfig.create(default_values).execute()
-        self.assertTrue(user not in self.env.ref('base.group_multi_currency').sudo().users)
+        self.assertTrue(user not in self.env.ref('base.group_multi_currency').sudo().all_user_ids)
 
         new_partner = self.env['res.partner'].create({'name': 'New User'})
         new_user = self.env['res.users'].create({
@@ -66,7 +66,7 @@ class TestResConfig(TransactionCase):
             'company_ids': [(4, company.id)],
             'partner_id': new_partner.id,
         })
-        self.assertTrue(new_user not in self.env.ref('base.group_multi_currency').sudo().users)
+        self.assertTrue(new_user not in self.env.ref('base.group_multi_currency').sudo().all_user_ids)
 
     def test_no_install(self):
         """Make sure that when saving settings,

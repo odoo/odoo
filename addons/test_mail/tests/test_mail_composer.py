@@ -47,7 +47,7 @@ class TestMailComposer(MailCommon, TestRecipients):
             notification_type='inbox',
             signature='--\nErnest'
         )
-        cls.env.ref('mail.group_mail_template_editor').users -= cls.user_rendering_restricted
+        cls.env.ref('mail.group_mail_template_editor').user_ids -= cls.user_rendering_restricted
 
         with cls.mock_datetime_and_now(cls, cls.reference_now):
             cls.test_record = cls.env['mail.test.ticket.mc'].with_context(cls._test_context).create({
