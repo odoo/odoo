@@ -71,12 +71,41 @@ class TestMessagePostCommon(MailCommon, TestRecipients):
         self.patch(self.env.registry, 'ready', True)
 
 
-@tagged('mail_post')
+@tagged('mail_post', 'mail_notify')
 class TestMailNotifyAPI(TestMessagePostCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.test_lang_records = cls.env['mail.test.lang'].create([
+            {
+                'customer_id': False,
+                'email_from': 'test.record.1@test.customer.com',
+                'lang': 'es_ES',
+                'name': 'TestRecord1',
+            }, {
+                'customer_id': cls.partner_2.id,
+                'email_from': 'valid.other@gmail.com',
+                'name': 'TestRecord2',
+            },
+        ])
+        cls.test_lang_template = cls.env['mail.template'].create({
+            'auto_delete': True,
+            'body_html': '<p>EnglishBody for <t t-out="object.name"/></p>',
+            'email_from': '{{ user.email_formatted }}',
+            'email_layout_xmlid': 'mail.test_layout',  # created during '_activate_multi_lang'
+            'lang': '{{ object.customer_id.lang or object.lang }}',
+            'model_id': cls.env['ir.model']._get('mail.test.lang').id,
+            'name': 'TestTemplate',
+            'subject': 'EnglishSubject for {{ object.name }}',
+            'use_default_to': True,
+        })
+        cls._activate_multi_lang(test_record=cls.test_lang_records[0], test_template=cls.test_lang_template)
 
     @mute_logger('odoo.models.unlink')
     @users('employee')
-    def test_email_notifiction_layouts(self):
+    def test_email_notification_layouts(self):
         self.user_employee.write({'notification_type': 'email'})
         test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
         test_message = self.env['mail.message'].browse(self.test_message.ids)
@@ -91,7 +120,7 @@ class TestMailNotifyAPI(TestMessagePostCommon):
                 test_record._notify_thread_by_email(
                     test_message,
                     recipients_data,
-                    force_send=False
+                    force_send=False,
                 )
             self.assertEqual(len(self._new_mails), 2, 'Should have 2 emails: one for customers, one for internal users')
 
@@ -102,6 +131,93 @@ class TestMailNotifyAPI(TestMessagePostCommon):
             # check internal user email
             user_email = self._new_mails.filtered(lambda mail: mail.recipient_ids == self.partner_employee)
             self.assertTrue(user_email)
+
+    @mute_logger('odoo.models.unlink')
+    @users('employee')
+    def test_email_notification_layouts_header_footer(self):
+        """ Test tweaks for header / footer
+
+        Basic behavior
+         * header shown
+          * if having an access button (aka sth to show), unless 'email_notification_allow_header'
+            ctx key is set to False;
+          * 'email_notification_force_header' ctx key allows to force
+         * footer shown
+          * if having a header, if the author is internal, and if 'email_notification_allow_footer'
+            ctx key is set (defaults to False);
+          * 'email_notification_force_footer' ctx key allows to force
+        """
+        (self.user_employee + self.user_employee_c2).write({'notification_type': 'email'})
+        test_lang_record = self.env['mail.test.lang'].browse(self.test_lang_records[0].ids)
+        test_lang_record.message_subscribe(partner_ids=(self.partner_1 + self.partner_employee_c2).ids)
+        test_classic_record = self.env['mail.test.simple'].browse(self.test_record.ids)
+        test_classic_record.message_subscribe(partner_ids=(self.partner_1 + self.partner_employee_c2).ids)
+
+        for record, add_ctx, exp_header_for, exp_footer_for, exp_unfollow_for in [
+            # for 'lang'-like model: _notify_get_recipients_groups is overriden
+            # # so that customers / followers have access button
+            (
+                test_lang_record, {},
+                self.partner_1 + self.partner_2 + self.partner_employee_c2,
+                self.env['res.partner'],  # footer is now disabled by default
+                self.env['res.partner'],  # no footer, no unfollow
+            ),
+            (
+                test_lang_record, {'email_notification_allow_footer': True},
+                self.partner_1 + self.partner_2 + self.partner_employee_c2,
+                self.partner_1 + self.partner_2 + self.partner_employee_c2,  # footer allowed if header
+                self.partner_employee_c2,  # unfollow for internal
+            ),
+            # classic record, access button is for internal only
+            (
+                test_classic_record, {},
+                self.partner_employee_c2,  # based on access_button, aka internal only
+                self.env['res.partner'],  # footer is now disabled by default
+                self.env['res.partner'],  # no footer, no unfollow
+            ),
+            (
+                test_classic_record, {'email_notification_force_header': True},
+                self.partner_1 + self.partner_2 + self.partner_employee_c2,  # forced
+                self.env['res.partner'],  # footer is now disabled by default
+                self.env['res.partner'],  # no footer, no unfollow
+            ),
+            (
+                test_classic_record, {'email_notification_force_header': True, 'email_notification_allow_footer': True},
+                self.partner_1 + self.partner_2 + self.partner_employee_c2,  # forced
+                self.partner_1 + self.partner_2 + self.partner_employee_c2,  # footer allowed if header
+                self.partner_employee_c2,  # unfollow for internal
+            ),
+            (
+                test_classic_record, {'email_notification_force_footer': True},
+                self.partner_employee_c2,  # based on access_button, aka internal only
+                self.partner_1 + self.partner_2 + self.partner_employee_c2,  # footer is forced
+                self.partner_employee_c2,  # unfollow for internal
+            ),
+        ]:
+            with self.subTest(record_name=record.name, add_ctx=add_ctx):
+                with self.mock_mail_gateway():
+                    _message = record.with_context(**add_ctx).message_post(
+                        body='Test Layout / Tweak',
+                        email_layout_xmlid='mail.test_layout',
+                        partner_ids=self.partner_2.ids,
+                        message_type='comment',
+                        subtype_id=self.env.ref('mail.mt_comment').id,
+                    )
+
+                for partner in self.partner_1 + self.partner_2 + self.partner_employee_c2:
+                    found_email = self._find_sent_email(self.env.user.email_formatted, [partner.email_formatted])
+                    if partner in exp_header_for:
+                        self.assertIn('HEADER', found_email['body'])
+                    else:
+                        self.assertNotIn('HEADER', found_email['body'])
+                    if partner in exp_footer_for:
+                        self.assertIn(f'Sent by {self.env.company.name}', found_email['body'])
+                    else:
+                        self.assertNotIn(f'Sent by {self.env.company.name}', found_email['body'])
+                    if partner in exp_unfollow_for:
+                        self.assertIn(f'mail/unfollow?model={record._name}&pid={partner.id}&res_id={record.id}', found_email['body'])
+                    else:
+                        self.assertNotIn('mail/unfollow', found_email['body'])
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
