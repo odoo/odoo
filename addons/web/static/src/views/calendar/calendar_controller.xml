@@ -55,14 +55,27 @@
                             </t>
                         </h5>
                     </div>
-                    <div t-if="hasSideBar" class="o_sidebar_toggler d-none d-md-flex d-print-none align-items-center border-bottom pe-3">
+                    <div t-if="hasSideBar and !hasQuick" class="o_sidebar_toggler d-none d-md-flex d-print-none align-items-center border-bottom pe-3">
                         <button class="btn btn-light oi oi-panel-right collapsed ms-2 lh-base" t-on-click="toggleSideBar"/>
                     </div>
                     <MobileFilterPanel t-if="env.isSmall and hasSideBar" t-props="mobileFilterPanelProps" />
                     <div class="o_calendar_wrapper d-flex overflow-hidden">
                         <t t-if="showCalendar" t-component="props.Renderer" t-props="rendererProps"/>
-                        <div t-if="hasSideBar and showSideBar" class="o_calendar_sidebar_container d-print-none position-relative w-100 w-md-auto bg-view overflow-x-hidden overflow-y-auto">
+                        <div t-if="(hasSideBar and showSideBar) or hasQuick" class="o_calendar_sidebar_container d-print-none position-relative w-100 w-md-auto bg-view overflow-x-hidden overflow-y-auto">
                             <div class="o_calendar_sidebar">
+                                <div t-if="!env.isSmall and this.hasQuick" class="d-flex flex-column gap-1">
+                                    <div class="btn-group">
+                                        <button class="btn btn-secondary" t-att-class="{'active': isMode(CALENDAR_MODE.normal)}" data-tooltip="Filter"  t-on-click.stop="() => this.setMode(CALENDAR_MODE.normal)"><i class="fa fa-filter"/></button>
+                                        <button class="btn btn-secondary" t-att-class="{'active': isMode(CALENDAR_MODE.quick_add)}" data-tooltip="New" t-on-click="() => this.setMode(CALENDAR_MODE.quick_add)"><i class="fa fa-plus"/></button>
+                                        <button class="btn btn-secondary" t-att-class="{'active': isMode(CALENDAR_MODE.quick_remove)}" data-tooltip="Delete" t-on-click="() => this.setMode(CALENDAR_MODE.quick_remove)"><i class="fa fa-trash"/></button>
+                                    </div>
+                                    <div t-if="isMode(CALENDAR_MODE.quick_remove)" class="alert alert-danger">Clicking on a day or selecting an area will irrevocably delete its content</div>
+                                    <div t-if="isMode(CALENDAR_MODE.quick_add)" class="o_form_view o_form_nosheet o_xxs_form_view o_form_renderer">
+                                        <Record fields="props.fields" fieldNames="Object.keys(quickCreateFields)" resModel="props.resModel" onRootLoaded.bind="onQuickCreateRootLoaded" context="props.context" t-slot-scope="data">
+                                            <FormRenderer record="data.record" archInfo="archInfo"/>
+                                        </Record>
+                                    </div>
+                                </div>
                                 <DatePicker t-if="showDatePicker" t-props="datePickerProps" />
                                 <FilterPanel t-props="filterPanelProps" />
                             </div>

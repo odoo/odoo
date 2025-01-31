@@ -41,6 +41,7 @@ export class CalendarArchParser {
         let monthOverflow = true;
         const popoverFieldNodes = {};
         const filtersInfo = {};
+        const quickFields = {};
 
         visitXML(arch, (node) => {
             switch (node.tagName) {
@@ -191,6 +192,33 @@ export class CalendarArchParser {
 
                     break;
                 }
+                case "QuickCreate": {
+                    for (const childNode of node.children) {
+                        if (childNode.tagName === "field") {
+                            if (childNode.hasAttribute("name")) {
+                                const fieldName = childNode.getAttribute("name");
+                                // const aggregate = childNode.getAttribute("aggregate");
+                                // const scope = childNode.getAttribute("scope");
+                                fieldNames.add(fieldName);
+
+                                const parseFieldNode = Field.parseFieldNode(
+                                    childNode,
+                                    models,
+                                    modelName,
+                                    "quick_create_calendar",
+                                    jsClass
+                                );
+
+                                if (parseFieldNode.type === "many2one") {
+                                    parseFieldNode.widget = "radio";
+                                }
+
+                                quickFields[fieldName] = parseFieldNode;
+                            }
+                        }
+                    }
+                    return false;
+                }
             }
         });
 
@@ -201,6 +229,7 @@ export class CalendarArchParser {
             eventLimit,
             fieldMapping,
             fieldNames: [...fieldNames],
+            quickFields,
             filtersInfo,
             formViewId,
             hasEditDialog,

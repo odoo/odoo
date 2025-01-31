@@ -6,8 +6,9 @@ import { useCalendarPopover, useClickHandler, useFullCalendar } from "../hooks";
 import { CalendarCommonPopover } from "./calendar_common_popover";
 import { makeWeekColumn } from "./calendar_common_week_column";
 
-import { Component } from "@odoo/owl";
+import { Component, onWillUpdateProps, useEffect, useRef } from "@odoo/owl";
 import { useBus } from "@web/core/utils/hooks";
+import { CALENDAR_MODE } from "@web/views/calendar/calendar_controller";
 
 const SCALE_TO_FC_VIEW = {
     day: "timeGridDay",
@@ -55,15 +56,71 @@ export class CalendarCommonRenderer extends Component {
         editRecord: Function,
         deleteRecord: Function,
         setDate: { type: Function, optional: true },
+        calendarMode: { type: String, optional: true },
+    };
+
+    static defaultProps = {
+        calendarMode: CALENDAR_MODE.normal,
     };
 
     setup() {
+        this.calendarRef = useRef("fullCalendar");
+
         this.fc = useFullCalendar("fullCalendar", this.options);
         this.click = useClickHandler(this.onClick, this.onDblClick);
         this.popover = useCalendarPopover(this.constructor.components.Popover);
+
+        this.quickCreateClearState();
+
         useBus(this.props.model.bus, "SCROLL_TO_CURRENT_HOUR", () =>
             this.fc.api.scrollToTime(`${luxon.DateTime.local().hour - 2}:00:00`)
         );
+
+        useEffect(
+            (el) => {
+                const quickCreatePointerDownBound = this.quickCreatePointerDown.bind(this);
+                const quickCreatePointerMoveBound = this.quickCreatePointerMove.bind(this);
+                const quickCreatePointerUpBound = this.quickCreatePointerUp.bind(this);
+                const quickCreatePointerCancelBound = this.quickCreatePointerCancel.bind(this);
+                window.addEventListener("pointerdown", quickCreatePointerDownBound, {
+                    capture: true,
+                });
+                window.addEventListener("pointermove", quickCreatePointerMoveBound, {
+                    capture: true,
+                });
+                window.addEventListener("pointerup", quickCreatePointerUpBound, { capture: true });
+                window.addEventListener("pointercancel", quickCreatePointerCancelBound, {
+                    capture: true,
+                });
+                return () => {
+                    window.removeEventListener("pointerdown", quickCreatePointerDownBound, {
+                        capture: true,
+                    });
+                    window.removeEventListener("pointermove", quickCreatePointerMoveBound, {
+                        capture: true,
+                    });
+                    window.removeEventListener("pointerup", quickCreatePointerUpBound, {
+                        capture: true,
+                    });
+                    window.removeEventListener("pointercancel", quickCreatePointerCancelBound, {
+                        capture: true,
+                    });
+                };
+            },
+            () => [this.calendarRef.el]
+        );
+
+        onWillUpdateProps((nextProps) => {
+            if ("calendarMode" in nextProps) {
+                if (nextProps.calendarMode !== CALENDAR_MODE.normal) {
+                    this.fc.api.setOption("editable", false);
+                    this.fc.api.setOption("selectable", false);
+                } else {
+                    this.fc.api.setOption("editable", this.props.model.canCreate);
+                    this.fc.api.setOption("selectable", this.props.model.canCreate);
+                }
+            }
+        });
     }
 
     get options() {
@@ -204,6 +261,9 @@ export class CalendarCommonRenderer extends Component {
         this.highlightEvent(info.event, "o_cw_custom_highlight");
     }
     onDateClick(info) {
+        if (this.props.calendarMode !== CALENDAR_MODE.normal) {
+            return;
+        }
         if (info.jsEvent.defaultPrevented) {
             return;
         }
@@ -392,5 +452,117 @@ export class CalendarCommonRenderer extends Component {
         el.classList.remove("fc-daygrid-more-link");
         el.parentNode.insertBefore(wrapper, el);
         wrapper.appendChild(el);
+    }
+
+    getElementIndex(element) {
+        return [].indexOf.call(element?.parentNode.children || [], element);
+    }
+
+    quickCreateClearState() {
+        this.startCol = -1;
+        this.endCol = -1;
+        this.startRow = -1;
+        this.endRow = -1;
+
+        this.currentSelectionElement = [];
+    }
+
+    quickCreateGetSelectedElement() {
+        const elementsToSelect = [];
+        const [startX, endX] = [this.startCol, this.endCol].sort();
+        const [startY, endY] = [this.startRow, this.endRow].sort();
+
+        for (let x = startX; x <= endX; x++) {
+            for (let y = startY; y <= endY; y++) {
+                elementsToSelect.push(
+                    `tbody tr[role="row"]:nth-child(${y + 1}) > .fc-day:nth-child(${x + 1})`
+                );
+            }
+        }
+
+        if (elementsToSelect.length) {
+            return this.calendarRef.el.querySelectorAll(elementsToSelect.join(","));
+        } else {
+            return [];
+        }
+    }
+
+    quickCreateDrawHighlight() {
+        const highlight = "o-highlight";
+
+        this.calendarRef.el.querySelectorAll(`.${highlight}`).forEach((node) => {
+            node.classList.remove(highlight);
+        });
+
+        this.currentSelectionElement.forEach((node) => {
+            node.classList.add(highlight);
+        });
+    }
+
+    quickCreatePointerDown(ev) {
+        if (this.props.calendarMode === CALENDAR_MODE.normal) {
+            return;
+        }
+        const targetElement = ev.target.closest(".fc-day:not(.fc-col-header-cell)");
+        if (!targetElement) {
+            return;
+        }
+        const rowSelector = 'tr[role="row"]';
+        this.startCol = this.endCol = this.getElementIndex(targetElement);
+        this.startRow = this.endRow = this.getElementIndex(targetElement.closest(rowSelector));
+        this.currentSelectionElement = [targetElement];
+        this.quickCreateDrawHighlight();
+    }
+
+    quickCreatePointerMove(ev) {
+        if (this.props.calendarMode === CALENDAR_MODE.normal) {
+            return;
+        }
+        const targetElement = ev.target.closest(".fc-day:not(.fc-col-header-cell)");
+        if (!targetElement || this.startCol < 0 || this.startRow < 0) {
+            return;
+        }
+        const rowSelector = 'tr[role="row"]';
+        this.endCol = this.getElementIndex(targetElement);
+        this.endRow = this.getElementIndex(targetElement.closest(rowSelector));
+        this.currentSelectionElement = this.quickCreateGetSelectedElement();
+        this.quickCreateDrawHighlight();
+    }
+
+    async quickCreatePointerUp(ev) {
+        if (this.props.calendarMode === CALENDAR_MODE.normal) {
+            return;
+        }
+        const targetElement = ev.target.closest(".fc-day:not(.fc-col-header-cell)");
+        if (!targetElement) {
+            this.quickCreateClearState();
+            this.quickCreateDrawHighlight();
+            return;
+        }
+        if (this.props.calendarMode === CALENDAR_MODE.quick_add) {
+            const dates = [];
+            for (const element of this.currentSelectionElement) {
+                const date = DateTime.fromISO(element.dataset.date);
+                if (!date.invalid) {
+                    dates.push(date);
+                }
+            }
+            await this.props.model.createRecordNoInteraction(dates);
+        } else if (this.props.calendarMode === CALENDAR_MODE.quick_remove) {
+            const ids = [];
+            for (const element of this.currentSelectionElement) {
+                for (const event of [...element.querySelectorAll(".fc-event")]) {
+                    ids.push(parseInt(event.dataset.eventId, 10));
+                }
+            }
+            await this.props.model.unlinkRecords(ids);
+        }
+        this.quickCreateClearState();
+        this.quickCreateDrawHighlight();
+    }
+
+    quickCreatePointerCancel(ev) {
+        this.quickCreateClearState();
+        this.quickCreateDrawHighlight();
     }
 }
