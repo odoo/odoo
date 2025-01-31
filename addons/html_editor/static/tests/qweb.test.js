@@ -230,7 +230,7 @@ test("select text inside t-out", async () => {
 
     await tick();
     expect(getContent(el)).toBe(
-        `<div>[<t t-out="test" data-oe-t-inline="true" contenteditable="false">Hello</t>]</div>`
+        `<div><t t-out="test" data-oe-t-inline="true" contenteditable="false">Hello</t>[]</div>`
     );
 });
 
@@ -246,7 +246,7 @@ test("select text inside t-esc", async () => {
 
     await tick();
     expect(getContent(el)).toBe(
-        `<div>[<t t-esc="test" data-oe-t-inline="true" contenteditable="false">Hello</t>]</div>`
+        `<div><t t-esc="test" data-oe-t-inline="true" contenteditable="false">Hello</t>[]</div>`
     );
 });
 
@@ -262,7 +262,7 @@ test("select text inside t-field", async () => {
 
     await tick();
     expect(getContent(el)).toBe(
-        `<div>[<t t-field="test" data-oe-t-inline="true" contenteditable="false">Hello</t>]</div>`
+        `<div><t t-field="test" data-oe-t-inline="true" contenteditable="false">Hello</t>[]</div>`
     );
 });
 
