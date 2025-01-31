@@ -40,11 +40,12 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 ('move_ids_without_package.pc_container_code', '=', self.pc_container_code_id.name),
                 ('state', '=', 'done')
             ])
-
+            self._auto_select_package_box_type()
             if not pickings:
                 raise ValidationError(_("No completed pickings found for this PC container code."))
 
             self.picking_ids = [(6, 0, pickings.ids)]
+
 
     @api.depends('picking_ids')
     def _compute_show_package_box_in_lines(self):
@@ -55,32 +56,51 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         for record in self:
             record.show_package_box_in_lines = len(record.picking_ids) > 1
 
+    def _auto_select_package_box_type(self):
+        """
+        Automatically selects the package box type based on the Incoterm location field in the sales order.
+        """
+        if len(self.picking_ids) == 1:
+            picking = self.picking_ids[0]
+            incoterm_location = picking.sale_id.incoterm_location if picking.sale_id else None
+
+            if incoterm_location:
+                package_box = self.env['package.box.configuration'].search(
+                    [('name', '=', incoterm_location)], limit=1)
+                if package_box:
+                    self.package_box_type_id = package_box.id  # Set package type for single pick
+
+        else:  # Multiple picks scenario
+            for line in self.line_ids:
+                if line.picking_id.sale_id:
+                    incoterm_location = line.picking_id.sale_id.incoterm_location
+                    package_box = self.env['package.box.configuration'].search(
+                        [('name', '=', incoterm_location)], limit=1)
+                    if package_box:
+                        line.package_box_type_id = package_box.id  # Set package type in line items for multiple picks
+
 
     def pack_products(self):
         """
-        Validates and updates packed products, ensures quantities do not exceed expectations,
-        updates remaining quantities, sets the correct packing status,
-        updates the custom pack app lines, marks stock moves as packed,
-        and sends the payload to the appropriate endpoint.
+        Main method to validate and process the pack operation.
+        Calls appropriate processing methods based on the number of pick numbers.
         """
         if not self.picking_ids:
             raise ValidationError(_("No pickings are linked to this operation. Please check your container code."))
 
-        # To ensure Product is added on line items
+        # Ensure Product is added on line items
         for line in self.line_ids:
             if not line.product_id:
                 raise ValidationError(_("Please ensure all line items have a product selected before proceeding."))
 
         active_id = self.env.context.get('active_id')
         pack_app_order = self.env['custom.pack.app'].browse(active_id)
-
-        # Prepare data for License Plate Order
         section_name = self.pc_container_code_id.name
 
         # Create a section line for the license plate
         self.env['custom.pack.app.line'].create({
             'pack_app_line_id': pack_app_order.id,
-            'product_id': False,  # No product for section header
+            'product_id': False,
             'name': section_name,
             'quantity': 0,
             'sku_code': '',
@@ -92,10 +112,8 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             'site_code_id': False,
         })
 
-        # Dictionary to keep track of products already added
-        license_plate_product_map = {}
-
-        # Iterate through each line entered in the wizard
+        # Organize picking orders
+        picking_orders = {}
         for line in self.line_ids:
             self.env['custom.pack.app.line'].create({
                 'pack_app_line_id': pack_app_order.id,
@@ -110,91 +128,146 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 'site_code_id': line.site_code_id.id,
             })
 
-            # Update remaining quantity in stock move lines
-            move_lines = self.picking_id.move_ids_without_package.filtered(
-                lambda m: m.product_id == line.product_id)
-            move_lines.remaining_packed_qty = sum(
-                line.mapped('remaining_quantity'))  # Sum of all quantities from the picking
-            move_lines.remaining_packed_qty = True
-            move_lines.released_manual_orders = 'fully_received' if move_lines.remaining_qty == 0.0 else 'partially_received'
-            move_lines.released_manual = True if move_lines.remaining_packed_qty == 0.0 else False
-            move_lines.remaining_packed_qty -= line.quantity
-            # **Remove pc_container_code if state is fully received**
-            if move_lines.released_manual_orders == 'fully_received':
-                move_lines.write({'pc_container_code': False})
+            if line.picking_id.id not in picking_orders:
+                picking_orders[line.picking_id.id] = []
+            picking_orders[line.picking_id.id].append(line)
 
-        #Payload
-
-        # Determine API endpoint based on warehouse
+        # Determine API endpoint
         is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
-        if self.warehouse_id.name == "FC3":
-            api_url = (
-                "https://shiperooconnect-prod.automation.shiperoo.com/api/ot_orders"
-                if is_production == 'True'
-                else "https://shiperooconnect.automation.shiperoo.com/api/ot_orders"
-            )
-        elif self.warehouse_id.name == "SHIPEROOALTONA":
-            api_url = (
-                "https://shiperooconnect-prod.automation.shiperoo.com/api/orders"
-                if is_production == 'True'
-                else "https://shiperooconnect.automation.shiperoo.com/api/orders"
-            )
+        if self.site_code_id.name == "FC3":
+            api_url = "https://shiperooconnect-prod.automation.shiperoo.com/api/ot_orders" if is_production == 'True' else "https://shiperooconnect.automation.shiperoo.com/api/ot_orders"
+        elif self.site_code_id.name == "SHIPEROOALTONA":
+            api_url = "https://shiperooconnect-prod.automation.shiperoo.com/api/orders" if is_production == 'True' else "https://shiperooconnect.automation.shiperoo.com/api/orders"
         else:
             raise ValidationError(_("Unknown warehouse. Cannot determine API endpoint."))
 
-        # Prepare product details for payload
-        order_lines = []
-        for line in self.line_ids:
-            order_lines.append({
-                "sku_code": line.product_id.default_code,
-                "name": line.product_id.name,
-                "quantity": line.quantity,
-                "remaining_quantity": line.remaining_quantity,
-                "picking_id": line.picking_id.name if line.picking_id else "",
-                "tenant_code": line.tenant_code_id.name if line.tenant_code_id else "",
-                "site_code": line.site_code_id.name if line.site_code_id else "",
-                "receipt_number": line.picking_id.name,
-                "partner_id": line.picking_id.partner_id.name,
-                "origin": line.picking_id.origin or "N/A",
-                "sales_order_number": line.picking_id.sale_id.name if line.picking_id.sale_id else "N/A",
-                "sales_order_carrier": line.picking_id.sale_id.carrier if line.picking_id.sale_id else "N/A",
-                "sales_order_origin": line.picking_id.sale_id.origin if line.picking_id.sale_id else "N/A",
-                "incoterm_location":line.picking_id.sale_id.incoterm_location if line.picking_id.sale_id else "N/A",
-            })
+        # Process based on the number of pick numbers
+        if len(self.picking_ids) > 1:
+            payloads = self.process_multiple_picks(picking_orders)
+        else:
+            payloads = [self.process_single_pick()]
 
-        # Prepare full payload
-        payload = {
-            "header": {
-                "user_id": "system",
-                "user_key": "system",
-                "warehouse_code": self.warehouse_id.name
-            },
+        # Send payloads to API
+        for payload in payloads:
+            self.send_payload_to_api(api_url, payload)
+
+        return {'type': 'ir.actions.act_window_close'}
+
+    def process_single_pick(self):
+        """
+        Processes the pack operation when there is only one pick number.
+        Returns the formatted payload.
+        """
+        grouped_lines = {}
+        total_weight = 0
+
+        for line in self.line_ids:
+            sku_code = line.product_id.default_code
+            product_weight = line.product_id.weight or 1  # Default weight to 1 if not defined
+
+            if sku_code not in grouped_lines:
+                grouped_lines[sku_code] = {
+                    "sku_code": sku_code,
+                    "name": line.product_id.name,
+                    "quantity": 0,
+                    "remaining_quantity": 0,
+                    "weight": 0,
+                    "picking_id": line.picking_id.name if line.picking_id else "",
+                    "customer_name": line.picking_id.partner_id.name or "",
+                    "shipping_address": f"{line.picking_id.partner_id.name},{line.picking_id.partner_id.street or ''}",
+                    "tenant_code": line.tenant_code_id.name if line.tenant_code_id else "",
+                    "site_code": line.site_code_id.name if line.site_code_id else "",
+                    "receipt_number": line.picking_id.name,
+                    "partner_id": line.picking_id.partner_id.name,
+                    "origin": line.picking_id.origin or "N/A",
+                    "package_name": line.package_box_type_id.name,
+                    "length": line.package_box_type_id.length or "NA",
+                    "width": line.package_box_type_id.width or "NA",
+                    "height": line.package_box_type_id.height or "NA",
+                    "sales_order_number": line.picking_id.sale_id.name if line.picking_id.sale_id else "N/A",
+                    "sales_order_carrier": line.picking_id.sale_id.carrier if line.picking_id.sale_id else "N/A",
+                    "sales_order_origin": line.picking_id.sale_id.origin if line.picking_id.sale_id else "N/A",
+                    "incoterm_location": line.picking_id.sale_id.incoterm_location if line.picking_id.sale_id else "N/A",
+                }
+
+            grouped_lines[sku_code]["quantity"] += line.quantity
+            grouped_lines[sku_code]["remaining_quantity"] += line.remaining_quantity
+            grouped_lines[sku_code]["weight"] += product_weight * line.quantity
+            total_weight += product_weight * line.quantity
+
+        return {
+            "header": {"user_id": "system", "user_key": "system", "warehouse_code": self.warehouse_id.name},
             "body": {
                 "receipt_list": [{
-                    "product_lines": order_lines
+                    "product_lines": list(grouped_lines.values()),
+                    "pack_bench_number": self.pack_bench_id.name,
+                    "pack_bench_ip": self.pack_bench_id.printer_ip,
                 }]
             }
         }
 
-        # Convert to JSON
+    def process_multiple_picks(self, picking_orders):
+        """
+        Processes multiple pick numbers and returns a list of formatted payloads.
+        Each pick number has its own payload, and products are NOT grouped across different pick numbers.
+        """
+        payloads = []
+        for picking_id, lines in picking_orders.items():
+            product_lines = []
+
+            for line in lines:
+                product_weight = line.product_id.weight or 1  # Default weight to 1 if not defined
+
+                product_lines.append({
+                    "sku_code": line.product_id.default_code,
+                    "name": line.product_id.name,
+                    "quantity": line.quantity,
+                    "remaining_quantity": line.remaining_quantity,
+                    "weight": product_weight * line.quantity,  # Weight per product line
+                    "picking_id": line.picking_id.name if line.picking_id else "",
+                    "customer_name": line.picking_id.partner_id.name or "",
+                    "shipping_address": f"{line.picking_id.partner_id.name},{line.picking_id.partner_id.street or ''}",
+                    "tenant_code": line.tenant_code_id.name if line.tenant_code_id else "",
+                    "site_code": line.site_code_id.name if line.site_code_id else "",
+                    "receipt_number": line.picking_id.name,
+                    "origin": line.picking_id.origin or "N/A",
+                    "package_name": line.package_box_type_id.name,
+                    "length": line.package_box_type_id.length or "NA",
+                    "width": line.package_box_type_id.width or "NA",
+                    "height": line.package_box_type_id.height or "NA",
+                    "sales_order_number": line.picking_id.sale_id.name if line.picking_id.sale_id else "N/A",
+                    "sales_order_carrier": line.picking_id.sale_id.carrier if line.picking_id.sale_id else "N/A",
+                    "sales_order_origin": line.picking_id.sale_id.origin if line.picking_id.sale_id else "N/A",
+                    "incoterm_location": line.picking_id.sale_id.incoterm_location if line.picking_id.sale_id else "N/A",
+                })
+
+            payloads.append({
+                "header": {"user_id": "system", "user_key": "system", "warehouse_code": self.warehouse_id.name},
+                "body": {
+                    "receipt_list": [{
+                        "product_lines": product_lines,
+                        "pack_bench_number": self.pack_bench_id.name,
+                        "pack_bench_ip": self.pack_bench_id.printer_ip,
+                    }]
+                }
+            })
+
+        return payloads
+
+    def send_payload_to_api(self, api_url, payload):
+        """
+        Sends the given payload to the provided API URL.
+        """
         json_payload = json.dumps(payload, indent=4)
+        _logger.info(f"Sending payload to API: {json_payload}")
 
-        # Log payload
-        _logger.info(f"Sending payload to: {json_payload}")
-
-        # Send payload to API
-        headers = {'Content-Type': 'application/json'}
         try:
-            response = requests.post(api_url, headers=headers, data=json_payload)
-            response.raise_for_status()  # Raises an error for failed requests
+            response = requests.post(api_url, headers={'Content-Type': 'application/json'}, data=json_payload)
+            response.raise_for_status()
             _logger.info(f"Payload successfully sent to {api_url}")
-
         except requests.exceptions.RequestException as e:
             _logger.error(f"Error sending payload: {str(e)}")
             raise UserError(f"Error sending payload: {str(e)}")
-
-
-        return {'type': 'ir.actions.act_window_close'}
 
 
 class PackDeliveryReceiptWizardLine(models.TransientModel):
@@ -213,6 +286,8 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
     site_code_id = fields.Many2one(related='picking_id.site_code_id', string='Site Code')
     package_box_type_id = fields.Many2one('package.box.configuration', string='Package Box Type',
                                           help="Select packaging box for each product line.")
+    sale_order_id = fields.Many2one(related='picking_id.sale_id', string='Sale Order')
+    incoterm_location = fields.Char(related='sale_order_id.incoterm_location', string='Incoterm location')
 
 
     @api.depends('wizard_id.picking_ids', 'product_id')
@@ -285,5 +360,6 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
         """
         if self.product_id:
             self.quantity = 1  # Set default quantity to 1 per scan
+            self.wizard_id._auto_select_package_box_type()
 
 
