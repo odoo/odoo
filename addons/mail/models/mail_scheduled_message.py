@@ -1,11 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
 import json
+from collections import defaultdict
+from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.addons.mail.tools.discuss import Store
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import clean_context
 
 import logging
@@ -172,27 +173,43 @@ class ScheduledMessage(models.Model):
             still post permission on the related record, and to allow for the attachments to be
             transferred to the messages (see _process_attachments_for_post in mail.thread)
             if raise_exception is set to False, the method will skip the posting of a message
-            instead of raising an error. This is useful when scheduled messages are sent from
-            the _post_messages_cron
+            instead of raising an error, and send a notification to the author about the failure.
+            This is useful when scheduled messages are sent from the _post_messages_cron.
         """
         notification_parameters_whitelist = self._notification_parameters_whitelist()
         for scheduled_message in self:
             message_creator = scheduled_message.create_uid
             try:
-                scheduled_message.with_user(message_creator)._check()
-            except AccessError:
+                with self.env.cr.savepoint():
+                    scheduled_message.with_user(message_creator)._check()
+                    self.env[scheduled_message.model].browse(scheduled_message.res_id).with_user(message_creator).message_post(
+                        attachment_ids=list(scheduled_message.attachment_ids.ids),
+                        author_id=scheduled_message.author_id.id,
+                        body=scheduled_message.body,
+                        partner_ids=list(scheduled_message.partner_ids.ids),
+                        subtype_xmlid='mail.mt_note' if scheduled_message.is_note else 'mail.mt_comment',
+                        **{k: v for k, v in json.loads(scheduled_message.notification_parameters or '{}').items() if k in notification_parameters_whitelist},
+                    )
+            except Exception:
                 if raise_exception:
                     raise
-                _logger.info("Posting of scheduled message %s failed: user %s cannot post on the record", scheduled_message.id, message_creator.id)
-                continue
-            self.env[scheduled_message.model].browse(scheduled_message.res_id).with_user(message_creator).message_post(
-                attachment_ids=list(scheduled_message.attachment_ids.ids),
-                author_id=scheduled_message.author_id.id,
-                body=scheduled_message.body,
-                partner_ids=list(scheduled_message.partner_ids.ids),
-                subtype_xmlid='mail.mt_note' if scheduled_message.is_note else 'mail.mt_comment',
-                **{k: v for k, v in json.loads(scheduled_message.notification_parameters or '{}').items() if k in notification_parameters_whitelist},
-            )
+                _logger.info("Posting of scheduled message with ID %s failed", scheduled_message.id, exc_info=True)
+                # notify user about the failure (send content as user might have lost access to the record)
+                try:
+                    with self.env.cr.savepoint():
+                        self.env['mail.thread'].message_notify(
+                            partner_ids=[message_creator.partner_id.id],
+                            subject=_("A scheduled message could not be sent"),
+                            body=_("The message scheduled on %(model)s(%(id)s) with the following content could not be sent:%(original_message)s",
+                                model=scheduled_message.model,
+                                id=scheduled_message.res_id,
+                                original_message=Markup("<br>-----<br>%s<br>-----<br>") % scheduled_message.body,
+                            )
+                        )
+                except Exception:
+                    # in case even message_notify fails, make sure the failing scheduled message
+                    # will be deleted
+                    _logger.exception("The notification about the failed scheduled message could not be sent")
         self.unlink()
 
     # ------------------------------------------------------
@@ -246,7 +263,7 @@ class ScheduledMessage(models.Model):
         domain = [('scheduled_date', '<=', fields.Datetime.now())]
         messages_to_post = self.search(domain, limit=limit)
         _logger.info("Posting %s scheduled messages", len(messages_to_post))
-        messages_to_post._post_message()
+        messages_to_post._post_message(raise_exception=False)
 
         # restart cron if needed
         if self.search_count(domain, limit=1):
