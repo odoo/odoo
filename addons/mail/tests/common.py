@@ -1168,7 +1168,7 @@ class MailCase(MockEmail):
              'active': partner.active,
              'email_normalized': partner.email_normalized,
              'is_follower': partner in record.message_partner_ids if record else False,
-             'groups': partner.user_ids.groups_id.ids,
+             'groups': partner.user_ids.group_ids.ids,
              'lang': partner.lang,
              'name': partner.name,
              'notif': partner.user_ids.notification_type or 'email',

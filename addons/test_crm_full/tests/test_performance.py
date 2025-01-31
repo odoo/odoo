@@ -17,7 +17,7 @@ class CrmPerformanceCase(TestCrmFullCommon):
         self._flush_tracking()
 
         self.user_sales_leads.write({
-            'groups_id': [
+            'group_ids': [
                 (4, self.env.ref('event.group_event_user').id),
                 (4, self.env.ref('im_livechat.im_livechat_group_user').id),
             ]

@@ -175,13 +175,13 @@ class TestMailGroup(TestMailListCommon):
             mail_group.with_user(self.user_employee_2).check_access('read')
 
         # Add the group to the user
-        self.user_employee_2.groups_id |= test_group
+        self.user_employee_2.group_ids |= test_group
         mail_group.with_user(self.user_employee_2).check_access('read')
         with self.assertRaises(AccessError, msg='Only moderator / responsible and admin can write on the group'):
             mail_group.with_user(self.user_employee_2).check_access('write')
 
         # Remove the group of the user BUT add it in the moderators list
-        self.user_employee_2.groups_id -= test_group
+        self.user_employee_2.group_ids -= test_group
         mail_group.moderator_ids |= self.user_employee_2
         mail_group.with_user(self.user_employee_2).check_access('read')
         mail_group.with_user(self.user_employee_2).check_access('write')

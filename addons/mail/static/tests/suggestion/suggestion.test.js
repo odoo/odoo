@@ -69,7 +69,7 @@ test("can @user in restricted (group_public_id) channels", async () => {
         { email: "testpartner2@odoo.com", name: "TestPartner2" },
     ]);
     pyEnv["res.users"].create([
-        { partner_id: partnerId_1, groups_id: [Command.link(groupId)] },
+        { partner_id: partnerId_1, group_ids: [Command.link(groupId)] },
         { partner_id: partnerId_2 },
     ]);
     const channelId = pyEnv["discuss.channel"].create({

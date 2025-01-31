@@ -447,7 +447,7 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
 
     def test_in_refund_line_onchange_cash_rounding_1(self):
         # Required for `invoice_cash_rounding_id` to be visible in the view
-        self.env.user.groups_id += self.env.ref('account.group_cash_rounding')
+        self.env.user.group_ids += self.env.ref('account.group_cash_rounding')
         # Test 'add_invoice_line' rounding
         move_form = Form(self.invoice)
         # Add a cash rounding having 'add_invoice_line'.
@@ -787,8 +787,8 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
             # `purchase` adds a view which makes `invoice_vendor_bill_id` invisible
             # for purchase users
             # https://github.com/odoo/odoo/blob/385884afd31f25d61e99d139ecd4c574d99a1863/addons/purchase/views/account_move_views.xml#L26
-            self.env.user.groups_id -= self.env.ref('purchase.group_purchase_manager')
-            self.env.user.groups_id -= self.env.ref('purchase.group_purchase_user')
+            self.env.user.group_ids -= self.env.ref('purchase.group_purchase_manager')
+            self.env.user.group_ids -= self.env.ref('purchase.group_purchase_user')
         # invisible="state != 'draft' or move_type != 'in_invoice'"
         # This is an in_refund invoice, `invoice_vendor_bill_id` is not supposed to be visible
         # and therefore not supposed to be changed.

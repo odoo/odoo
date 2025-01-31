@@ -21,7 +21,7 @@ class TestLivechatCommon(TransactionCaseWithUserDemo):
             'email': 'operator@example.com',
             'password': "ideboulonate",
             'livechat_username': 'El Deboulonnator',
-            'groups_id': [(6, 0, [
+            'group_ids': [(6, 0, [
                 self.group_user.id,
                 self.group_livechat_user.id,
             ])],

@@ -112,7 +112,7 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
         self.start_tour("/", 'event_buy_last_ticket')
 
     def test_pricelists_different_currencies(self):
-        self.env.user.groups_id += self.env.ref('product.group_product_pricelist')
+        self.env.user.group_ids += self.env.ref('product.group_product_pricelist')
         self.start_tour("/", 'event_sale_pricelists_different_currencies', login='admin')
     # TO DO - add public test with new address when convert to web.tour format.
 

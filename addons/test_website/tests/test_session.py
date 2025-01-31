@@ -70,9 +70,9 @@ class TestWebsiteSession(HttpCaseWithUserDemo):
             el = html.fromstring(html_text)
             return el.xpath('//*[@data-oe-model="test.model"]')
 
-        self.user_demo.groups_id += self.env.ref('website.group_website_restricted_editor')
-        self.user_demo.groups_id += self.env.ref('test_website.group_test_website_admin')
-        self.user_demo.groups_id -= self.env.ref('website.group_website_designer')
+        self.user_demo.group_ids += self.env.ref('website.group_website_restricted_editor')
+        self.user_demo.group_ids += self.env.ref('test_website.group_test_website_admin')
+        self.user_demo.group_ids -= self.env.ref('website.group_website_designer')
 
         # Create session for demo user.
         public_session = self.authenticate(None, None)

@@ -87,7 +87,7 @@ class TestReports(TestReportsCommon):
             'product_id': product_test.id,
         })
         #add group to the user
-        self.env.user.groups_id += self.env.ref('stock.group_stock_lot_print_gs1')
+        self.env.user.group_ids += self.env.ref('stock.group_stock_lot_print_gs1')
         report = self.env.ref('stock.label_lot_template')
         target = b'\n\n^XA^CI28\n^FO100,50\n^A0N,44,33^FD[C4181234""154654654654]Mellohi"^FS\n^FO100,100\n^A0N,44,33^FDLN/SN:Volume-Beta"^FS\n\n^FO425,150^BY3\n^BXN,8,200\n^FD010974521379614210Volume-Beta"^FS\n^XZ\n'
 
@@ -698,8 +698,8 @@ class TestReports(TestReportsCommon):
         """
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
         grp_multi_routes = self.env.ref('stock.group_adv_location')
-        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
-        self.env.user.write({'groups_id': [(4, grp_multi_routes.id)]})
+        self.env.user.write({'group_ids': [(4, grp_multi_loc.id)]})
+        self.env.user.write({'group_ids': [(4, grp_multi_routes.id)]})
         # Warehouse config.
         warehouse = self.env.ref('stock.warehouse0')
         warehouse.reception_steps = 'three_steps'
@@ -1326,8 +1326,8 @@ class TestReports(TestReportsCommon):
         """
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
         grp_multi_routes = self.env.ref('stock.group_adv_location')
-        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
-        self.env.user.write({'groups_id': [(4, grp_multi_routes.id)]})
+        self.env.user.write({'group_ids': [(4, grp_multi_loc.id)]})
+        self.env.user.write({'group_ids': [(4, grp_multi_routes.id)]})
         # Warehouse config.
         warehouse = self.env.ref('stock.warehouse0')
         warehouse.reception_steps = 'two_steps'

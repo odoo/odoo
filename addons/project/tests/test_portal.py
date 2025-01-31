@@ -86,7 +86,7 @@ class TestPortalProject(TestProjectPortalCommon, HttpCase):
 
     def test_search_validates_results(self):
         project_manager = self.env['res.users'].search([
-            ('groups_id', 'in', [self.env.ref('project.group_project_manager').id])
+            ('group_ids', 'in', [self.env.ref('project.group_project_manager').id])
         ],limit=1)
         self.authenticate(project_manager.login, project_manager.login)
         self.project_1 = self.env['project.project'].create({'name': 'Portal Search Project 1'})

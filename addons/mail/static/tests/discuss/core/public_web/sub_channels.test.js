@@ -211,13 +211,13 @@ test("mention suggestions in thread match channel restrictions", async () => {
         name: "Thread",
         parent_channel_id: channelId,
     });
-    pyEnv["res.users"].write(serverState.userId, { groups_id: [Command.link(groupId)] });
+    pyEnv["res.users"].write(serverState.userId, { group_ids: [Command.link(groupId)] });
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         { email: "p1@odoo.com", name: "p1" },
         { email: "p2@odoo.com", name: "p2" },
     ]);
     pyEnv["res.users"].create([
-        { partner_id: partnerId_1, groups_id: [Command.link(groupId)] },
+        { partner_id: partnerId_1, group_ids: [Command.link(groupId)] },
         { partner_id: partnerId_2 },
     ]);
     await start();
