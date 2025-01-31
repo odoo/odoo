@@ -1660,7 +1660,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         partner_test_a = self.env["res.partner"].create({"name": "APartner"})
         self.env["res.partner"].create({"name": "BPartner", "zip": 1111})
 
-        def mocked_get_limited_partners_loading(self):
+        def mocked_get_limited_partners_loading(self, offset=0):
             return [(partner_test_a.id,)]
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
