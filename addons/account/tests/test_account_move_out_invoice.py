@@ -4527,3 +4527,39 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             })],
         })
         self.assertEqual(move.line_ids.partner_id, self.partner_a)
+
+    def test_out_invoice_bank_partner(self):
+        """ Check the bank partner is recomputed on invoice company change on new invoice """
+        company_1 = self.company_data['company']
+        company_2 = self.company_data_2['company']
+        bank = self.env["res.partner.bank"].create({
+            "bank_name": "FAKE",
+            "acc_number": "1234567890",
+            "partner_id": company_1.partner_id.id,
+        })
+        bank_2 = self.env["res.partner.bank"].create({
+            "bank_name": "FAKE 2",
+            "acc_number": "1234567890",
+            "partner_id": company_2.partner_id.id,
+        })
+        invoice_new = self.env["account.move"].with_context(default_move_type="out_invoice").new({
+            "company_id": company_1.id,
+            "partner_id": self.partner_a.id,
+        })
+        self.assertEqual(
+            company_1.partner_id,
+            invoice_new.bank_partner_id
+        )
+        self.assertEqual(
+            bank,
+            invoice_new.partner_bank_id
+        )
+        invoice_new.company_id = company_2
+        self.assertEqual(
+            company_2.partner_id,
+            invoice_new.bank_partner_id
+        )
+        self.assertEqual(
+            bank_2,
+            invoice_new.partner_bank_id
+        )
