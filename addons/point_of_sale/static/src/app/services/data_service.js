@@ -242,15 +242,12 @@ export class PosData extends Reactive {
 
     async loadInitialData() {
         let localData = await this.getCachedServerDataFromIndexedDB();
-        const session = localData["pos.session"]?.[0];
+        const session = localData?.["pos.session"]?.[0];
 
-        if (session && session.id !== odoo.pos_session_id) {
-            await this.resetIndexedDB();
-            window.location.reload();
-            return {};
-        }
-
-        if (navigator.onLine && session?.state !== "opened") {
+        if (
+            (navigator.onLine && session?.state !== "opened") ||
+            session?.id !== odoo.pos_session_id
+        ) {
             try {
                 const limitedLoading = this.isLimitedLoading();
                 const serverDate = localData["pos.session"]?.[0]?._data_server_date;
