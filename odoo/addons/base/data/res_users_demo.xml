@@ -91,7 +91,7 @@
         </record>
 
         <record id="base.group_portal" model="res.groups"><!-- Add the demo user to the portal (and therefore to the portal member group) -->
-            <field name="users" eval="[Command.link(ref('demo_user0'))]"/>
+            <field name="user_ids" eval="[Command.link(ref('demo_user0'))]"/>
         </record>
     </data>
 </odoo>

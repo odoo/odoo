@@ -25,7 +25,7 @@
             <field name="category_id" ref="base.module_category_sales_sales"/>
             <field name="implied_ids" eval="[(4, ref('group_sale_salesman_all_leads')),
                          (4, ref('mail.group_mail_canned_response_admin'))]"/>
-            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+            <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>
 
     <data noupdate="1">
