@@ -78,12 +78,14 @@ export class BuilderColorPicker extends Component {
     static props = {
         ...basicContainerBuilderComponentProps,
         noTransparency: { type: Boolean, optional: true },
+        withGradient: { type: Boolean, optional: true },
         unit: { type: String, optional: true },
         title: { type: String, optional: true },
         getUsedCustomColors: { type: Function, optional: true },
     };
     static defaultProps = {
         getUsedCustomColors: () => [],
+        withGradient: true,
     };
     static components = {
         ColorSelector: ColorSelector,
@@ -105,6 +107,7 @@ export class BuilderColorPicker extends Component {
                 getUsedCustomColors: this.props.getUsedCustomColors,
                 colorPrefix: "color-prefix-",
                 noTransparency: this.props.noTransparency,
+                withGradient: this.props.withGradient,
             },
             {
                 onClose: onPreviewRevert,
