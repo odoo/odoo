@@ -3930,8 +3930,17 @@ class AccountMove(models.Model):
         self.write({'state': 'draft', 'is_move_sent': False})
 
     def button_cancel(self):
-        self.write({'auto_post': 'no', 'state': 'cancel'})
+        # Shortcut to move from posted to cancelled directly. This is useful for E-invoices that must not be changed
+        # when sent to the government.
+        moves_to_reset_draft = self.filtered(lambda x: x.state == 'posted')
+        if moves_to_reset_draft:
+            moves_to_reset_draft.button_draft()
 
+        if any(move.state != 'draft' for move in self):
+            raise UserError(_("Only draft journal entries can be cancelled."))
+
+        self.write({'auto_post': 'no', 'state': 'cancel'})
+        
     def action_activate_currency(self):
         self.currency_id.filtered(lambda currency: not currency.active).write({'active': True})
 
