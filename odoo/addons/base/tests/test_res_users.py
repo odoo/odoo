@@ -579,10 +579,18 @@ class TestUsersGroupWarning(TransactionCase):
             UserForm[self.sales_categ_field] = False
             self.assertEqual(
                 UserForm.user_group_warning,
-                'Since Test Group User is a/an "Field Service: Administrator", they will at least obtain the right "Sales: Administrator"'
+                'Since Test Group User is a/an "Field Service: Administrator", '
+                'they will at least obtain the right "Sales: Administrator", "Project: Administrator"'
             )
 
             UserForm[self.sales_categ_field] = self.group_sales_administrator.id
+            self.assertEqual(
+                UserForm.user_group_warning,
+                'Since Test Group User is a/an "Field Service: Administrator", '
+                'they will at least obtain the right "Project: Administrator"'
+            )
+
+            UserForm[self.project_categ_field] = self.group_project_admnistrator.id
             self.assertFalse(UserForm.user_group_warning)
 
     def test_user_group_inheritance_warning(self):
@@ -594,10 +602,18 @@ class TestUsersGroupWarning(TransactionCase):
             UserForm[self.sales_categ_field] = self.group_sales_user.id
             self.assertEqual(
                 UserForm.user_group_warning,
-                'Since Test Group User is a/an "Field Service: Administrator", they will at least obtain the right "Sales: Administrator"'
+                'Since Test Group User is a/an "Field Service: Administrator", '
+                'they will at least obtain the right "Sales: Administrator", "Project: Administrator"'
             )
 
             UserForm[self.sales_categ_field] = self.group_sales_administrator.id
+            self.assertEqual(
+                UserForm.user_group_warning,
+                'Since Test Group User is a/an "Field Service: Administrator", '
+                'they will at least obtain the right "Project: Administrator"'
+            )
+
+            UserForm[self.project_categ_field] = self.group_project_admnistrator.id
             self.assertFalse(UserForm.user_group_warning)
 
     def test_user_group_inheritance_warning_multi(self):
@@ -627,6 +643,8 @@ class TestUsersGroupWarning(TransactionCase):
         'Timesheets: User: all timesheets' is at least required when user is
         having 'Project: Administrator'. When user reverts the changes For
         'Timesheets: User: all timesheets', warning should disappear."""
+        self.test_group_user.group_ids -= self.group_field_service_administrator
+        self.test_group_user.group_ids += self.group_project_admnistrator
         with Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
             UserForm[self.timesheets_categ_field] = self.group_timesheets_user_own_timesheet.id
             self.assertEqual(
