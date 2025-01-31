@@ -1,14 +1,8 @@
-
 from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import UserError, ValidationError
+from odoo.fields import Domain
 from odoo.osv import expression
 from odoo.tools import SetDefinitions
-from odoo.tools.misc import OrderedSet
-
-
-#
-# Functions for manipulating boolean and selection pseudo-fields
-#
 
 class ResGroups(models.Model):
     _name = 'res.groups'
@@ -18,7 +12,7 @@ class ResGroups(models.Model):
 
     name = fields.Char(required=True, translate=True)
     user_ids = fields.Many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', help='Users explicitly in this group')
-    all_user_ids = fields.Many2many('res.users', related='user_ids', depends_context=['active_test'], string='Users and implied users')
+    all_user_ids = fields.Many2many('res.users', compute='_compute_all_user_ids', search='_search_all_user_ids', string='Users and implied users')
 
     model_access = fields.One2many('ir.model.access', 'group_id', string='Access Controls', copy=True)
     rule_groups = fields.Many2many('ir.rule', 'rule_group_rel',
@@ -39,9 +33,68 @@ class ResGroups(models.Model):
         'The api key duration cannot be a negative value.',
     )
 
+    """ The groups involved are to be interpreted as sets.
+    Thus we can define groups that we will call for example N, Z... such as mathematical sets.
+        ┌──────────────────────────────────────────┐
+        │ C  ┌──────────────────────────┐          │
+        │    │ R  ┌───────────────────┐ │ ┌──────┐ |   "C"
+        │    │    │ Q  ┌────────────┐ │ │ │ I    | |   "I" implied "C"
+        │    │    │    │ Z  ┌─────┐ │ │ │ │      | |   "R" implied "C"
+        │    │    │    │    │ N   │ │ │ │ │      │ │   "Q" implied "R"
+        │    │    │    │    └─────┘ │ │ │ │      │ │   "P" implied "R"
+        │    │    │    └────────────┘ │ │ │      │ │   "Z" implied "Q"
+        │    │    └───────────────────┘ │ │      │ │   "N" implied "Z"
+        │    │      ┌───────────────┐   │ │      │ │
+        │    │      │ P             │   │ │      │ │
+        │    │      └───────────────┘   │ └──────┘ │
+        │    └──────────────────────────┘          │
+        └──────────────────────────────────────────┘
+    For example:
+    * A manager group will imply a user group: all managers are users (like Z imply C);
+    * A group "computer developer employee" will imply that he is an employee group, a user
+      group, that he has access to the timesheet user group.... "computer developer employee"
+      is therefore a set of users in the intersection of these groups. These users will
+      therefore have all the rights of these groups in addition to their own access rights.
+    """
+    implied_ids = fields.Many2many('res.groups', 'res_groups_implied_rel', 'gid', 'hid',
+        string='Implied Groups', help='Users of this group are also implicitly part of those groups')
+    all_implied_ids = fields.Many2many('res.groups', string='Transitively Implied Groups', recursive=True,
+        compute='_compute_all_implied_ids', compute_sudo=True, search='_search_all_implied_ids')
+    implied_by_ids = fields.Many2many('res.groups', 'res_groups_implied_rel', 'hid', 'gid',
+        string='Implying Groups', help="Users in those groups are implicitly part of this group.")
+    all_implied_by_ids = fields.Many2many('res.groups', string='Transitively Implying Groups', recursive=True,
+        compute='_compute_all_implied_by_ids', compute_sudo=True, search='_search_all_implied_by_ids')
+    disjoint_ids = fields.Many2many('res.groups', string='Disjoint Groups',
+        help="A user may not belong to this group and one of those.  For instance, users may not be portal users and internal users.",
+        compute='_compute_disjoint_ids')
+
+    @api.constrains('implied_ids', 'implied_by_ids')
+    def _check_disjoint_groups(self):
+        # check for users that might have two exclusive groups
+        self.env.registry.clear_cache('groups')
+        self.all_implied_by_ids._check_user_disjoint_groups()
+
     @api.constrains('user_ids')
-    def _check_one_user_type(self):
-        self.user_ids._check_one_user_type()
+    def _check_user_disjoint_groups(self):
+        # Here we should check all the users in any group of 'self':
+        #
+        #   self.user_ids._check_disjoint_groups()
+        #
+        # But that wouldn't scale at all for large groups, like more than 10K
+        # users.  So instead we search for such a nasty user.
+        gids = self._get_user_type_groups().ids
+        domain = (
+            Domain('active', '=', True)
+            & Domain('group_ids', 'in', self.ids)
+            & Domain.OR(
+                Domain('all_group_ids', 'in', [gids[index]])
+                & Domain('all_group_ids', 'in', gids[index+1:])
+                for index in range(0, len(gids) - 1)
+            )
+        )
+        user = self.env['res.users'].search(domain, order='id', limit=1)
+        if user:
+            user._check_disjoint_groups()  # raises a ValidationError
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_settings_group(self):
@@ -108,12 +161,20 @@ class ResGroups(models.Model):
         if 'name' in vals:
             if vals['name'].startswith('-'):
                 raise UserError(_('The name of the group can not start with "-"'))
+
         # invalidate caches before updating groups, since the recomputation of
         # field 'share' depends on method has_group()
         # DLE P139
         if self.ids:
             self.env['ir.model.access'].call_cache_clearing_methods()
-        return super().write(vals)
+
+        res = super().write(vals)
+
+        if 'implied_ids' in vals or 'implied_by_ids' in vals:
+            # Invalidate the cache of groups and their relationships
+            self.env.registry.clear_cache('groups')
+
+        return res
 
     def _ensure_xml_id(self):
         """Return the groups external identifiers, creating the external identifier for groups missing one"""
@@ -135,88 +196,71 @@ class ResGroups(models.Model):
 
         return result
 
-#
-# Implied groups
-#
-# Extension of res.groups and res.users with a relation for "implied" or
-# "inherited" groups.  Once a user belongs to a group, it automatically belongs
-# to the implied groups (transitively).
-#
+    @api.depends('all_implied_by_ids.user_ids')
+    def _compute_all_user_ids(self):
+        for group in self.with_context(active_test=False):
+            group.all_user_ids = group.all_implied_by_ids.user_ids
 
-# pylint: disable=E0102
-class ResGroups(models.Model):  # noqa: F811
-    _inherit = 'res.groups'
+    def _search_all_user_ids(self, operator, value):
+        return [('all_implied_by_ids.user_ids', operator, value)]
 
-    implied_ids = fields.Many2many('res.groups', 'res_groups_implied_rel', 'gid', 'hid',
-        string='Inherits', help='Users of this group automatically inherit those groups')
-    trans_implied_ids = fields.Many2many('res.groups', string='Transitively inherits',
-        compute='_compute_trans_implied', recursive=True)
-
-    @api.depends('implied_ids.trans_implied_ids')
-    def _compute_trans_implied(self):
-        # Compute the transitive closure recursively. Note that the performance
-        # is good, because the record cache behaves as a memo (the field is
-        # never computed twice on a given group.)
+    @api.depends('implied_ids.all_implied_ids')
+    def _compute_all_implied_ids(self):
+        """ Compute the reflexive transitive closure of implied_ids. """
+        group_definitions = self._get_group_definitions()
         for g in self:
-            g.trans_implied_ids = g.implied_ids | g.implied_ids.trans_implied_ids
+            g.all_implied_ids = g.ids + group_definitions.get_superset_ids(g.ids)
+
+    def _search_all_implied_ids(self, operator, value):
+        """ Compute the search on the reflexive transitive closure of implied_ids. """
+        if operator not in ('in', 'not in') or not isinstance(value, (int, list, tuple)):
+            raise NotImplementedError
+        if isinstance(value, int):
+            value = [value]
+        group_definitions = self._get_group_definitions()
+        ids = [*value, *group_definitions.get_subset_ids(value)]
+        return [('id', operator, ids)]
+
+    @api.depends('implied_by_ids.all_implied_by_ids')
+    def _compute_all_implied_by_ids(self):
+        """ Compute the reflexive transitive closure of implied_by_ids. """
+        group_definitions = self._get_group_definitions()
+        for g in self:
+            g.all_implied_by_ids = g.ids + group_definitions.get_subset_ids(g.ids)
+
+    def _search_all_implied_by_ids(self, operator, value):
+        """ Compute the search on the reflexive transitive closure of implied_by_ids. """
+        assert isinstance(value, (int, list, tuple))
+
+        if isinstance(value, int):
+            value = [value]
+        group_definitions = self._get_group_definitions()
+        ids = [*value, *group_definitions.get_superset_ids(value)]
+
+        return [('id', operator, ids)]
+
+    def _get_user_type_groups(self):
+        """ Return the (disjoint) user type groups (employee, portal, public). """
+        group_ids = [
+            gid
+            for xid in ('base.group_user', 'base.group_portal', 'base.group_public')
+            if (gid := self.env['ir.model.data']._xmlid_to_res_id(xid, raise_if_not_found=False))
+        ]
+        return self.sudo().browse(group_ids)
+
+    def _compute_disjoint_ids(self):
+        user_type_groups = self._get_user_type_groups()
+        for group in self:
+            if group in user_type_groups:
+                group.disjoint_ids = user_type_groups - group
+            else:
+                group.disjoint_ids = False
 
     @api.model_create_multi
     def create(self, vals_list):
-        user_ids_list = [vals.pop('user_ids', None) for vals in vals_list]
         groups = super().create(vals_list)
-        for group, user_ids in zip(groups, user_ids_list):
-            if user_ids:
-                # delegate addition of users to add implied groups
-                group.write({'user_ids': user_ids})
         self.env.registry.clear_cache('groups')
         return groups
-
-    def write(self, values):
-        res = super().write(values)
-        if values.get('user_ids') or values.get('implied_ids'):
-            # add all implied groups (to all users of each group)
-            updated_group_ids = OrderedSet()
-            updated_user_ids = OrderedSet()
-            for group in self:
-                self._cr.execute("""
-                    WITH RECURSIVE group_imply(gid, hid) AS (
-                        SELECT gid, hid
-                          FROM res_groups_implied_rel
-                         UNION
-                        SELECT i.gid, r.hid
-                          FROM res_groups_implied_rel r
-                          JOIN group_imply i ON (i.hid = r.gid)
-                    )
-                    INSERT INTO res_groups_users_rel (gid, uid)
-                         SELECT i.hid, r.uid
-                           FROM group_imply i, res_groups_users_rel r
-                          WHERE r.gid = i.gid
-                            AND i.gid = %(gid)s
-                         EXCEPT
-                         SELECT r.gid, r.uid
-                           FROM res_groups_users_rel r
-                           JOIN group_imply i ON (r.gid = i.hid)
-                          WHERE i.gid = %(gid)s
-                    RETURNING gid, uid
-                """, dict(gid=group.id))
-                updated = self.env.cr.fetchall()
-                gids, uids = zip(*updated) if updated else ([], [])
-                updated_group_ids.update(gids)
-                updated_user_ids.update(uids)
-            # notify the ORM about the updated users and groups
-            updated_groups = self.env['res.groups'].browse(updated_group_ids)
-            updated_groups.invalidate_recordset(['user_ids'])
-            updated_groups.modified(['user_ids'])
-            updated_users = self.env['res.users'].browse(updated_user_ids)
-            updated_users.invalidate_recordset(['group_ids'])
-            updated_users.modified(['group_ids'])
-            # explicitly check constraints
-            updated_groups._validate_fields(['user_ids'])
-            updated_users._validate_fields(['group_ids'])
-            self._check_one_user_type()
-        if 'implied_ids' in values:
-            self.env.registry.clear_cache('groups')
-        return res
 
     def unlink(self):
         res = super().unlink()
@@ -227,27 +271,15 @@ class ResGroups(models.Model):  # noqa: F811
         """ Add the given group to the groups implied by the current group
         :param implied_group: the implied group to add
         """
-        groups = self.filtered(lambda g: implied_group not in g.implied_ids)
+        groups = self.filtered(lambda g: implied_group not in g.all_implied_ids)
         groups.write({'implied_ids': [Command.link(implied_group.id)]})
 
     def _remove_group(self, implied_group):
         """ Remove the given group from the implied groups of the current group
         :param implied_group: the implied group to remove
         """
-        groups = self.filtered(lambda g: implied_group in g.implied_ids)
-        if groups:
-            groups.write({'implied_ids': [Command.unlink(implied_group.id)]})
-            # if user belongs to implied_group thanks to another group, don't remove him
-            # this avoids readding the template user and triggering the mechanism at 121cd0d6084cb28
-            users_to_unlink = [
-                user
-                for user in groups.with_context(active_test=False).user_ids
-                if implied_group not in (user.group_ids - implied_group).trans_implied_ids
-            ]
-            if users_to_unlink:
-                # do not remove inactive users (e.g. default)
-                implied_group.with_context(active_test=False).write(
-                    {'user_ids': [Command.unlink(user.id) for user in users_to_unlink]})
+        groups = self.all_implied_ids.filtered(lambda g: implied_group in g.implied_ids)
+        groups.write({'implied_ids': [Command.unlink(implied_group.id)]})
 
     @api.model
     @tools.ormcache(cache='groups')
@@ -259,14 +291,8 @@ class ResGroups(models.Model):  # noqa: F811
             group.id: {
                 'ref': id_to_ref[group.id] or str(group.id),
                 'supersets': group.implied_ids.ids,
+                'disjoints': group.disjoint_ids.ids,
             }
             for group in groups
         }
-        # determine exclusive groups (will be disjoint for the set expression)
-        user_types_category_id = self.env['ir.model.data']._xmlid_to_res_id('base.module_category_user_type', raise_if_not_found=False)
-        if user_types_category_id:
-            user_type_ids = self.sudo().search([('category_id', '=', user_types_category_id)]).ids
-            for user_type_id in user_type_ids:
-                data[user_type_id]['disjoints'] = set(user_type_ids) - {user_type_id}
-
         return SetDefinitions(data)

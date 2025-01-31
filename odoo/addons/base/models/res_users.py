@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from __future__ import annotations
 
 import binascii
 import contextlib
@@ -11,7 +12,6 @@ import json
 import logging
 import os
 import time
-from collections import defaultdict
 from functools import wraps
 from hashlib import sha256
 from itertools import chain
@@ -26,6 +26,7 @@ from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationErro
 from odoo.http import request, DEFAULT_LANG
 from odoo.osv import expression
 from odoo.tools import is_html_empty, frozendict, lazy_property, SQL
+
 
 _logger = logging.getLogger(__name__)
 
@@ -240,7 +241,8 @@ class ResUsers(models.Model):
     phone = fields.Char(related='partner_id.phone', inherited=True, readonly=False)
 
     group_ids = fields.Many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', string='Groups', default=lambda s: s._default_groups(), help="Groups explicitly assigned to the user")
-    all_group_ids = fields.Many2many('res.groups', related='group_ids', string="Groups and implied groups")
+    all_group_ids = fields.Many2many('res.groups', string="Groups and implied groups",
+        compute='_compute_all_group_ids', compute_sudo=True, search='_search_all_group_ids')
 
     accesses_count = fields.Integer('# Access Rights', help='Number of access rights that apply to the current user',
                                     compute='_compute_accesses_count', compute_sudo=True)
@@ -385,6 +387,14 @@ class ResUsers(models.Model):
             else:
                 user.password = user.new_password
 
+    @api.depends('group_ids.all_implied_ids')
+    def _compute_all_group_ids(self):
+        for user in self:
+            user.all_group_ids = user.group_ids.all_implied_ids
+
+    def _search_all_group_ids(self, operator, value):
+        return [('group_ids.all_implied_ids', operator, value)]
+
     @api.depends('name')
     def _compute_signature(self):
         for user in self.filtered(lambda user: user.name and is_html_empty(user.signature)):
@@ -467,39 +477,19 @@ class ResUsers(models.Model):
                     )
 
     @api.constrains('group_ids')
-
-    def _check_one_user_type(self):
+    def _check_disjoint_groups(self):
         """We check that no users are both portal and users (same with public).
            This could typically happen because of implied groups.
         """
-        user_types_category = self.env.ref('base.module_category_user_type', raise_if_not_found=False)
-        user_types_groups = self.env['res.groups'].search(
-            [('category_id', '=', user_types_category.id)]) if user_types_category else False
-        if user_types_groups:  # needed at install
-            if self._has_multiple_groups(user_types_groups.ids):
-                raise ValidationError(_('The user cannot have more than one user types.'))
-
-    def _has_multiple_groups(self, group_ids):
-        """The method is not fast if the list of ids is very long;
-           so we rather check all users than limit to the size of the group
-        :param group_ids: list of group ids
-        :return: boolean: is there at least a user in at least 2 of the provided groups
-        """
-        if not group_ids:
-            return False
-        if len(self.ids) == 1:
-            user_condition = SQL(" AND r.uid = %s", self.id)
-        else:
-            # default; we check ALL users (actually pretty efficient)
-            user_condition = SQL()
-        return bool(self.env.execute_query(SQL("""
-        SELECT r.uid
-        FROM res_groups_users_rel r
-        WHERE r.gid IN %s %s
-        GROUP BY r.uid
-        HAVING COUNT(r.gid) > 1
-        LIMIT 1
-        """, tuple(group_ids), user_condition)))
+        user_type_groups = self.env['res.groups']._get_user_type_groups()
+        for user in self:
+            disjoint_groups = user.all_group_ids & user_type_groups
+            if len(disjoint_groups) > 1:
+                raise ValidationError(_(
+                    "User %(user)s cannot be at the same time in exclusive groups %(groups)s.",
+                    user=repr(user.name),
+                    groups=", ".join(repr(g.display_name) for g in disjoint_groups),
+                ))
 
     def onchange(self, values, field_names, fields_spec):
         # Hacky fix to access fields in `SELF_READABLE_FIELDS` in the onchange logic.
@@ -524,14 +514,6 @@ class ResUsers(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        for values in vals_list:
-            if 'group_ids' in values:
-                # complete 'group_ids' with implied groups
-                user = self.new(values)
-                gs = user.group_ids._origin
-                gs = gs | gs.trans_implied_ids
-                values['group_ids'] = self._fields['group_ids'].convert_to_write(gs, user)
-
         users = super().create(vals_list)
         setting_vals = []
         for user in users:
@@ -611,25 +593,9 @@ class ResUsers(models.Model):
                 if env.user in self:
                     lazy_property.reset_all(env)
 
-        if 'group_ids' in values:
-            # Do not use `_is_internal` as it relies on the ormcache which is not yet invalidated
-            internal_group_id = self.env['ir.model.data']._xmlid_to_res_id("base.group_user")
-            demoted_users = users_before.filtered(lambda u: internal_group_id not in u.group_ids.ids)
-            if demoted_users:
-                # demoted users are restricted to the assigned groups only
-                vals = {'group_ids': [Command.clear()] + values['group_ids']}
-                super(ResUsers, demoted_users).write(vals)
-            # add implied groups for all users (in batches)
-            users_batch = defaultdict(self.browse)
-            for user in self:
-                users_batch[user.group_ids] += user
-            for groups, users in users_batch.items():
-                gs = set(concat(g.trans_implied_ids for g in groups))
-                vals = {'group_ids': [Command.link(g.id) for g in gs]}
-                super(ResUsers, users).write(vals)
+        if 'group_ids' in values and self.ids:
             # clear caches linked to the users
-            if self.ids:
-                self.env['ir.model.access'].call_cache_clearing_methods()
+            self.env['ir.model.access'].call_cache_clearing_methods()
 
         # per-method / per-model caches have been removed so the various
         # clear_cache/clear_caches methods pretty much just end up calling

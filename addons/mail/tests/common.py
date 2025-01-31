@@ -1678,7 +1678,7 @@ class MailCommon(common.TransactionCase, MailCase):
             cls.env,
             company_id=cls.company_admin.id,
             country_id=cls.env.ref('base.be').id,
-            groups='base.group_user,mail.group_mail_template_editor,base.group_partner_manager',
+            groups='base.group_user,base.group_partner_manager',
             login='employee',
             name='Ernest Employee',
             notification_type='inbox',
