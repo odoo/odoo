@@ -3899,7 +3899,14 @@ class AccountMove(models.Model):
         for move in self:
             move.to_check = False
 
-    def button_draft(self):
+    def button_draft(self):        
+        self._check_draftable()
+        # We remove all the analytics entries for this journal
+        move.mapped('line_ids.analytic_line_ids').unlink()
+        self.mapped('line_ids').remove_move_reconcile()
+        self.write({'state': 'draft', 'is_move_sent': False})
+    
+    def _check_draftable(self):
         exchange_move_ids = set()
         if self:
             self.env['account.full.reconcile'].flush_model(['exchange_move_id'])
@@ -3935,15 +3942,21 @@ class AccountMove(models.Model):
                 raise UserError(_('You cannot reset to draft a tax cash basis journal entry.'))
             if move.restrict_mode_hash_table and move.state == 'posted':
                 raise UserError(_('You cannot modify a posted entry of this journal because it is in strict mode.'))
-            # We remove all the analytics entries for this journal
-            move.mapped('line_ids.analytic_line_ids').unlink()
-
-        self.mapped('line_ids').remove_move_reconcile()
-        self.write({'state': 'draft', 'is_move_sent': False})
+            if not all(move.show_reset_to_draft_button for move in self):
+                raise UserError(_("Some journal entries cannot be reset to draft because they are validated in AFIP."))
 
     def button_cancel(self):
-        self.write({'auto_post': 'no', 'state': 'cancel'})
+        """Shortcut to move from posted to cancelled directly. This is useful for E-invoices that must not be changed
+        when sent to the government"""
+        moves_to_reset_draft = self.filtered(lambda x: x.state == 'posted')
+        if moves_to_reset_draft:
+                moves_to_reset_draft.button_draft()
 
+        if any(move.state != 'draft' for move in self):
+            raise UserError(_("Only draft journal entries can be cancelled."))
+
+        self.write({'auto_post': 'no', 'state': 'cancel'})
+        
     def action_activate_currency(self):
         self.currency_id.filtered(lambda currency: not currency.active).write({'active': True})
 
