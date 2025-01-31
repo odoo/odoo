@@ -69,6 +69,8 @@
             ('include', 'web.chartjs_lib'),
             'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js',
             'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml',
+            'spreadsheet/static/src/o_spreadsheet/o_spreadsheet_variables.scss',
+            'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.scss',
             'spreadsheet/static/src/o_spreadsheet/icons.xml',
             'spreadsheet/static/src/o_spreadsheet/o_spreadsheet_extended.scss',
             'spreadsheet/static/src/o_spreadsheet/migration.js',
@@ -83,6 +85,7 @@
             'spreadsheet/static/src/plugins.js',
         ],
         'web.assets_backend': [
+            'spreadsheet/static/src/o_spreadsheet/o_spreadsheet_variables.scss',
             'spreadsheet/static/src/**/*.scss',
             'spreadsheet/static/src/assets_backend/**/*',
             ('remove', 'spreadsheet/static/src/public_readonly_app/**/*.scss'),
