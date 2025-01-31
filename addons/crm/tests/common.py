@@ -92,7 +92,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         })
 
         (cls.user_sales_manager + cls.user_sales_leads + cls.user_sales_salesman).write({
-            'groups_id': [(4, cls.env.ref('crm.group_use_lead').id)]
+            'group_ids': [(4, cls.env.ref('crm.group_use_lead').id)]
         })
 
         cls.env['crm.stage'].search([]).write({'sequence': 9999})  # ensure search will find test data first

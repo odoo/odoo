@@ -11,7 +11,7 @@ class ResUsers(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         users = super().create(vals_list)
-        self.env["discuss.channel"].search([("group_ids", "in", users.groups_id.ids)])._subscribe_users_automatically()
+        self.env["discuss.channel"].search([("group_ids", "in", users.all_group_ids.ids)])._subscribe_users_automatically()
         return users
 
     def write(self, vals):
@@ -19,10 +19,10 @@ class ResUsers(models.Model):
         if "active" in vals and not vals["active"]:
             self._unsubscribe_from_non_public_channels()
         sel_groups = [vals[k] for k in vals if is_selection_groups(k) and vals[k]]
-        if vals.get("groups_id"):
+        if vals.get("group_ids"):
             # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
-            user_group_ids = [command[1] for command in vals["groups_id"] if command[0] == 4]
-            user_group_ids += [id for command in vals["groups_id"] if command[0] == 6 for id in command[2]]
+            user_group_ids = [command[1] for command in vals["group_ids"] if command[0] == 4]
+            user_group_ids += [id for command in vals["group_ids"] if command[0] == 6 for id in command[2]]
             self.env["discuss.channel"].search([("group_ids", "in", user_group_ids)])._subscribe_users_automatically()
         elif sel_groups:
             self.env["discuss.channel"].search([("group_ids", "in", sel_groups)])._subscribe_users_automatically()
@@ -65,7 +65,7 @@ class ResUsers(models.Model):
             hasCannedResponses=bool(self.env["mail.canned.response"].sudo().search([
                 "|",
                 ("create_uid", "=", self.env.user.id),
-                ("group_ids", "in", self.env.user.groups_id.ids),
+                ("group_ids", "in", self.env.user.all_group_ids.ids),
             ], limit=1)) if self.env.user else False,
             channel_types_with_seen_infos=sorted(
                 self.env["discuss.channel"]._types_allowing_seen_infos()

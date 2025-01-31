@@ -356,7 +356,7 @@ class TestAccessFeatures(common.SlidesCase):
 
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')
     def test_channel_auto_subscription(self):
-        user_employees = self.env['res.users'].search([('groups_id', 'in', self.ref('base.group_user'))])
+        user_employees = self.env['res.users'].search([('all_group_ids', 'in', self.ref('base.group_user'))])
 
         channel = self.env['slide.channel'].with_user(self.user_officer).create({
             'name': 'Test',
@@ -370,7 +370,7 @@ class TestAccessFeatures(common.SlidesCase):
         new_user = self.env['res.users'].create({
             'name': 'NewUser',
             'login': 'NewUser',
-            'groups_id': [(6, 0, [self.ref('base.group_user')])]
+            'group_ids': [(6, 0, [self.ref('base.group_user')])]
         })
         channel.invalidate_model()
         self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id') | new_user.partner_id)
@@ -378,18 +378,18 @@ class TestAccessFeatures(common.SlidesCase):
         new_user_2 = self.env['res.users'].create({
             'name': 'NewUser2',
             'login': 'NewUser2',
-            'groups_id': [(5, 0)]
+            'group_ids': [(5, 0)]
         })
         channel.invalidate_model()
         self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id') | new_user.partner_id)
-        new_user_2.write({'groups_id': [(4, self.ref('base.group_user'))]})
+        new_user_2.write({'group_ids': [(4, self.ref('base.group_user'))]})
         channel.invalidate_model()
         self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id') | new_user.partner_id | new_user_2.partner_id)
 
         new_user_3 = self.env['res.users'].create({
             'name': 'NewUser3',
             'login': 'NewUser3',
-            'groups_id': [(5, 0)]
+            'group_ids': [(5, 0)]
         })
         channel.invalidate_model()
         self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id') | new_user.partner_id | new_user_2.partner_id)

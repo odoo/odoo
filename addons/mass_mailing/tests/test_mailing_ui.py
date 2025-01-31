@@ -14,12 +14,12 @@ class TestMailingUi(MassMailCommon, HttpCaseWithUserDemo):
         super(TestMailingUi, cls).setUpClass()
 
         cls.user_marketing.write({
-            'groups_id': [
+            'group_ids': [
                 (4, cls.env.ref('mail.group_mail_template_editor').id),
             ],
         })
         cls.user_demo.write({
-            'groups_id': [
+            'group_ids': [
                 (4, cls.env.ref('mass_mailing.group_mass_mailing_campaign').id),
                 (4, cls.env.ref('mass_mailing.group_mass_mailing_user').id),
             ],
@@ -42,7 +42,7 @@ class TestMailingUi(MassMailCommon, HttpCaseWithUserDemo):
             'name': 'Test Newsletter',
         })
         self.user_marketing.write({
-            'groups_id': [
+            'group_ids': [
                 (4, self.env.ref('mass_mailing.group_mass_mailing_campaign').id),
             ],
         })

@@ -42,7 +42,7 @@ class HrEmployee(models.Model):
         # not its associated `ir.model.data` which makes `self.env.ref(...)` fail.
         group = self.env.ref('hr_expense.group_hr_expense_team_approver', raise_if_not_found=False)
         return [
-            '|', ('id', 'parent_of', self.ids), ('groups_id', 'in', group.ids)
+            '|', ('id', 'parent_of', self.ids), ('all_group_ids', 'in', group.ids)
         ] if group else [('id', 'parent_of', self.ids)]
 
     expense_manager_id = fields.Many2one(

@@ -168,7 +168,7 @@ class IrActionsActions(models.Model):
             actions = []
             for action in all_actions:
                 action = dict(action)
-                groups = action.pop('groups_id', None)
+                groups = action.pop('group_ids', None)
                 if groups and not any(self.env.user.has_group(ext_id) for ext_id in groups):
                     # the user may not perform this action
                     continue
@@ -204,14 +204,14 @@ class IrActionsActions(models.Model):
             try:
                 action = self.env[action_model].sudo().browse(action_id)
                 fields = ['name', 'binding_view_types', 'binding_invisible']
-                for field in ('groups_id', 'res_model', 'sequence', 'domain'):
+                for field in ('group_ids', 'res_model', 'sequence', 'domain'):
                     if field in action._fields:
                         fields.append(field)
                 action = action.read(fields)[0]
-                if action.get('groups_id'):
+                if action.get('group_ids'):
                     # transform the list of ids into a list of xml ids
-                    groups = self.env['res.groups'].browse(action['groups_id'])
-                    action['groups_id'] = list(groups._ensure_xml_id().values())
+                    groups = self.env['res.groups'].browse(action['group_ids'])
+                    action['group_ids'] = list(groups._ensure_xml_id().values())
                 if 'domain' in action and not action.get('domain'):
                     action.pop('domain')
                 result[binding_type].append(frozendict(action))
@@ -329,7 +329,7 @@ class IrActionsAct_Window(models.Model):
                                "when displaying the result of an action, federating view mode, views and " \
                                "reference view. The result is returned as an ordered list of pairs (view_id,view_mode).")
     limit = fields.Integer(default=80, help='Default limit for the list view')
-    groups_id = fields.Many2many('res.groups', 'ir_act_window_group_rel',
+    group_ids = fields.Many2many('res.groups', 'ir_act_window_group_rel',
                                  'act_id', 'gid', string='Groups')
     search_view_id = fields.Many2one('ir.ui.view', string='Search View Ref.')
     embedded_action_ids = fields.One2many('ir.embedded.actions', compute="_compute_embedded_actions")
@@ -382,7 +382,7 @@ class IrActionsAct_Window(models.Model):
 
     def _get_readable_fields(self):
         return super()._get_readable_fields() | {
-            "context", "mobile_view_mode", "domain", "filter", "groups_id", "limit",
+            "context", "mobile_view_mode", "domain", "filter", "group_ids", "limit",
             "res_id", "res_model", "search_view_id", "target", "view_id", "view_mode", "views", "embedded_action_ids",
             # this is used by frontend, with the document layout wizard before send and print
             "close_on_report_download",
@@ -592,7 +592,7 @@ class IrActionsServer(models.Model):
         'ir.model.fields', string='Link Field',
         compute='_compute_link_field_id', readonly=False, store=True,
         help="Specify a field used to link the newly created record on the record used by the server action.")
-    groups_id = fields.Many2many('res.groups', 'ir_act_server_group_rel',
+    group_ids = fields.Many2many('res.groups', 'ir_act_server_group_rel',
                                  'act_id', 'gid', string='Allowed Groups', help='Groups that can execute the server action. Leave empty to allow everybody.')
 
     update_field_id = fields.Many2one('ir.model.fields', string='Field to Update', ondelete='cascade', compute='_compute_crud_relations', store=True, readonly=False)
@@ -643,7 +643,7 @@ class IrActionsServer(models.Model):
             if parent_id := vals.get('parent_id'):
                 parent = self.browse(parent_id)
                 vals['model_id'] = parent.model_id.id
-                vals['groups_id'] = parent.groups_id.ids
+                vals['group_ids'] = parent.group_ids.ids
         return super().create(vals_list)
 
     @api.model
@@ -651,11 +651,11 @@ class IrActionsServer(models.Model):
         return [
             'state',
             'model_id',
-            'groups_id',
+            'group_ids',
             'parent_id',
             'child_ids.warning',
             'child_ids.model_id',
-            'child_ids.groups_id',
+            'child_ids.group_ids',
             'update_path',
             'webhook_field_ids'
         ]
@@ -669,9 +669,9 @@ class IrActionsServer(models.Model):
                               model=self.model_id.name,
                               children=', '.join(children_with_different_model.mapped('name'))))
 
-        if self.groups_id and (children_with_different_groups := self.child_ids.filtered(lambda a: a.groups_id != self.groups_id)):
+        if self.group_ids and (children_with_different_groups := self.child_ids.filtered(lambda a: a.group_ids != self.group_ids)):
             warnings.append(_("Following child actions should have the same groups (%(groups)s): %(children)s",
-                              groups=', '.join(self.groups_id.mapped('name')),
+                              groups=', '.join(self.group_ids.mapped('name')),
                               children=', '.join(children_with_different_groups.mapped('name'))))
 
         if (children_with_warnings := self.child_ids.filtered('warning')):
@@ -877,7 +877,7 @@ class IrActionsServer(models.Model):
 
     def _get_readable_fields(self):
         return super()._get_readable_fields() | {
-            "groups_id", "model_name",
+            "group_ids", "model_name",
         }
 
     def _get_runner(self):
@@ -1055,9 +1055,9 @@ class IrActionsServer(models.Model):
         """
         res = False
         for action in self.sudo():
-            action_groups = action.groups_id
+            action_groups = action.group_ids
             if action_groups:
-                if not (action_groups & self.env.user.groups_id):
+                if not (action_groups & self.env.user.all_group_ids):
                     raise AccessError(_("You don't have enough access rights to run this action."))
             else:
                 model_name = action.model_id.model

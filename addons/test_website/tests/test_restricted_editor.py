@@ -32,5 +32,5 @@ class TestRestrictedEditor(HttpCaseWithWebsiteUser):
 
     @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
     def test_02_restricted_editor_test_admin(self):
-        self.user_website_user.groups_id += self.env.ref("test_website.group_test_website_admin")
+        self.user_website_user.group_ids += self.env.ref("test_website.group_test_website_admin")
         self.start_tour(self.env['website'].get_client_action_url('/'), 'test_restricted_editor_test_admin', login="website_user")

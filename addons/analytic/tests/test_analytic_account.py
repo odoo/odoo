@@ -187,7 +187,7 @@ class TestAnalyticAccount(AnalyticCommon):
         analyst_partner = self.env['res.partner'].create({'name': 'analyst'})
         analyst = self.env['res.users'].create({
             'login': 'analyst',
-            'groups_id': [Command.set(self.env.ref('analytic.group_analytic_accounting').ids)],
+            'group_ids': [Command.set(self.env.ref('analytic.group_analytic_accounting').ids)],
             'partner_id': analyst_partner.id
         })
         plan = self.env['account.analytic.plan'].with_user(analyst).create({'name': 'test plan'})

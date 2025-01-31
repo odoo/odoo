@@ -165,7 +165,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         ensures that the final received quantity is correctly computed
         """
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
-        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
+        self.env.user.write({'group_ids': [(4, grp_multi_loc.id)]})
 
         po = self.env['purchase.order'].create({
             'partner_id': self.subcontractor_partner1.id,
@@ -836,7 +836,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         Check the locations.
         """
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
-        self.env.user.write({'groups_id': [Command.link(grp_multi_loc.id)]})
+        self.env.user.write({'group_ids': [Command.link(grp_multi_loc.id)]})
         subcontract_loc = self.env.company.subcontracting_location_id
         production_loc = self.finished.property_stock_production
         final_loc = self.env['stock.location'].create({

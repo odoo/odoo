@@ -69,7 +69,7 @@ class TestResUsers(TransactionCase):
                 'name': username,
                 'login': username,
                 'email': username + '@email.com',
-                'groups_id': [(6, 0, [self.env.ref(group).id])]
+                'group_ids': [(6, 0, [self.env.ref(group).id])]
             })
             user.with_user(user).sudo()._compute_calendar_default_privacy()
 

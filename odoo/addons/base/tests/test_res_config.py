@@ -175,7 +175,7 @@ class TestResConfigExecute(TransactionCase):
         settings_only_user = ResUsers.create({
             'name': 'Sleepy Joe',
             'login': 'sleepy',
-            'groups_id': [Command.link(group_system.id)],
+            'group_ids': [Command.link(group_system.id)],
         })
 
         # If not enabled (like in demo data), landing on res.config will try
@@ -193,9 +193,9 @@ class TestResConfigExecute(TransactionCase):
 
         settings_view_conditional_groups = self.env['ir.ui.view'].search([
             ('model', '=', 'res.config.settings'),
-        ]).groups_id
+        ]).group_ids
 
-        # Semi hack to recover part of the coverage lost when the groups_id
+        # Semi hack to recover part of the coverage lost when the group_ids
         # were moved from the views records to the view nodes (with groups attributes)
         groups_data = self.env['res.groups'].get_groups_by_application()
         for group_data in groups_data:
@@ -210,7 +210,7 @@ class TestResConfigExecute(TransactionCase):
             create_values = {
                 'name': f'Test {group_name}',
                 'login': group_name,
-                'groups_id': [Command.link(group_system.id), Command.link(group.id)]
+                'group_ids': [Command.link(group_system.id), Command.link(group.id)]
             }
             user = ResUsers.create(create_values)
             self._test_user_settings_view_save(user)

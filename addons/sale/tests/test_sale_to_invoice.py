@@ -130,7 +130,7 @@ class TestSaleToInvoice(TestSaleCommon):
         """ Test invoice for downpayment and check it can be validated
         """
         # Lock the sale orders when confirmed
-        self.env.user.groups_id += self.env.ref('sale.group_auto_done_setting')
+        self.env.user.group_ids += self.env.ref('sale.group_auto_done_setting')
 
         # Confirm the SO
         self.sale_order.action_confirm()
@@ -659,7 +659,7 @@ class TestSaleToInvoice(TestSaleCommon):
         and with an account prefix set,
         the default analytic account is correctly set during the conversion from so to invoice
         """
-        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+        self.env.user.group_ids += self.env.ref('analytic.group_analytic_accounting')
         analytic_plan_default = self.env['account.analytic.plan'].create({
             'name': 'default',
             'applicability_ids': [Command.create({
@@ -914,7 +914,7 @@ class TestSaleToInvoice(TestSaleCommon):
             'name': 'Salesperson',
             'login': 'salesperson',
             'email': 'test@test.com',
-            'groups_id': [(6, 0, [self.env.ref('sales_team.group_sale_salesman').id])]
+            'group_ids': [(6, 0, [self.env.ref('sales_team.group_sale_salesman').id])]
         })
 
         # create a SO and generate invoice from it

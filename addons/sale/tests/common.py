@@ -45,7 +45,7 @@ class SaleCommon(
 
     @classmethod
     def _enable_discounts(cls):
-        cls.env.user.groups_id += cls.group_discount_per_so_line
+        cls.env.user.group_ids += cls.group_discount_per_so_line
 
     def _create_so(self, **values):
         default_values = {
@@ -74,7 +74,7 @@ class TestSaleCommon(AccountTestInvoicingCommon):
                 'email': 'default_user_salesman@example.com',
                 'signature': '--\nMark',
                 'notification_type': 'email',
-                'groups_id': [(6, 0, cls.quick_ref('sales_team.group_sale_salesman').ids)],
+                'group_ids': [(6, 0, cls.quick_ref('sales_team.group_sale_salesman').ids)],
                 'company_ids': [(6, 0, company.ids)],
                 'company_id': company.id,
             }),

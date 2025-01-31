@@ -94,7 +94,7 @@ class ResUsers(models.Model):
                 visitor_pre_authenticate_sudo._update_visitor_last_visit()
         return auth_info
 
-    @api.constrains('groups_id')
+    @api.constrains('group_ids')
     def _check_one_user_type(self):
         super()._check_one_user_type()
         internal_users = self.env.ref('base.group_user').all_user_ids & self

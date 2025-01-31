@@ -631,7 +631,7 @@ class StockQuant(TransactionCase):
         """
         # Enable multi-locations to be able to set an origin location for delivery
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
-        self.env.user.write({'groups_id': [Command.link(grp_multi_loc.id)]})
+        self.env.user.write({'group_ids': [Command.link(grp_multi_loc.id)]})
 
         closest_strategy = self.env['product.removal'].search([('method', '=', 'closest')])
         self.stock_location.removal_strategy_id = closest_strategy
@@ -801,7 +801,7 @@ class StockQuant(TransactionCase):
 
     def test_quant_display_name(self):
         """ Check the display name of a quant. """
-        self.env.user.groups_id += self.env.ref('stock.group_production_lot')
+        self.env.user.group_ids += self.env.ref('stock.group_production_lot')
         sn1 = self.env['stock.lot'].create({
             'name': 'sn1',
             'product_id': self.product_serial.id,
@@ -935,7 +935,7 @@ class StockQuant(TransactionCase):
             return Form.from_action(self.env, quant_ids.action_stock_quant_relocate())
 
         self.env['stock.quant.package'].search([]).unlink()
-        self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_tracking_lot').id)]})
+        self.env.user.write({'group_ids': [(4, self.env.ref('stock.group_tracking_lot').id)]})
         package_01 = self.env['stock.quant.package'].create({})
         package_02 = self.env['stock.quant.package'].create({})
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 10, package_id=package_01)

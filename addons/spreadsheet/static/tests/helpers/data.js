@@ -198,7 +198,7 @@ export class IrUIMenu extends models.Model {
 
     name = fields.Char({ string: "Name" });
     action = fields.Char({ string: "Action" });
-    groups_id = fields.Many2many({ string: "Groups", relation: "res.group" });
+    group_ids = fields.Many2many({ string: "Groups", relation: "res.group" });
 }
 
 export class IrActions extends models.Model {
@@ -213,7 +213,7 @@ export class ResUsers extends mailModels.ResUsers {
     _name = "res.users";
 
     name = fields.Char({ string: "Name" });
-    groups_id = fields.Many2many({ string: "Groups", relation: "res.group" });
+    group_ids = fields.Many2many({ string: "Groups", relation: "res.group" });
 }
 
 export class SpreadsheetMixin extends models.Model {

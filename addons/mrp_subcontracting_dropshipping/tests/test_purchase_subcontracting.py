@@ -194,7 +194,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         the supplier as destination
         """
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
-        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
+        self.env.user.write({'group_ids': [(4, grp_multi_loc.id)]})
 
         subcontractor, client = self.env['res.partner'].create([
             {'name': 'SuperSubcontractor'},
