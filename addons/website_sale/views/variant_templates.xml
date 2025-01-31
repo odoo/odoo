@@ -104,7 +104,7 @@
 
                     <t t-elif="attribute.display_type == 'color'">
                         <ul t-att-data-attribute_id="attribute.id" t-attf-class="list-inline o_wsale_product_attribute #{'d-none' if single_and_custom else ''}">
-                            <li t-foreach="ptavs" t-as="ptav" class="list-inline-item me-1">
+                            <li t-foreach="ptavs" t-as="ptav" class="list-inline-item me-1 mb-2">
                                 <t t-set="img_style"
                                    t-value="'background:url(/web/image/product.template.attribute.value/%s/image); background-size:cover;' % ptav.id if ptav.image else ''"
                                 />

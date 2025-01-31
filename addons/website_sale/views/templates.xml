@@ -208,6 +208,83 @@
         </t>
     </template>
 
+    <template id="product_variant_preview">
+        <t
+            t-set="product_ptavs_data"
+            t-value="previewed_attribute_values[product.id]"
+        />
+        <t t-if="product_ptavs_data">
+            <t
+                t-set="product_ptavs"
+                t-value="product_ptavs_data.get('ptavs_data')"
+            />
+            <div
+                t-attf-class="o_wsale_attribute_previewer d-flex align-items-center gap-1 flex-nowrap z-1 overflow-hidden {{
+                    'show_on_hover' if product_ptavs[0]['ptav'].attribute_id.preview_variants == 'hover' and layout_mode != 'list' else ''
+                }}"
+                t-att-data-hidden-ptav-count="product_ptavs_data.get('hidden_ptavs_count')"
+            >
+                <t t-foreach="product_ptavs" t-as="previewed_ptav">
+                    <t t-set="ptav" t-value="previewed_ptav['ptav']"/>
+                    <t t-set="selected_attribute_value"
+                        t-value="ptav.product_attribute_value_id.id"/>
+                    <t
+                        t-set="variant_href"
+                        t-value="product_href.split('#')[0] + '#attribute_values=%s' % (selected_attribute_value)"
+                    />
+                    <a
+                        class="o_product_variant_preview my-2 d-none"
+                        t-att-data-variant-image="previewed_ptav['variant_image_url']"
+                        t-att-href="variant_href"
+                    >
+                        <div
+                            t-if="ptav.attribute_id.is_thumbnail_visible"
+                            class="d-flex"
+                        >
+                            <label
+                                class="css_attribute_preview_thumbnail cursor-pointer d-block"
+                                t-att-style="'background:url(%s); background-size:cover; background-position: center center;' % previewed_ptav['variant_image_url']"
+                                t-att-title="ptav.name"
+                            />
+                        </div>
+                        <div
+                            t-elif="ptav.display_type == 'color'"
+                            class="d-flex"
+                        >
+                            <t
+                                t-if="ptav.product_attribute_value_id.image"
+                                t-set="background_style"
+                                t-value="'background:url(/web/image/product.attribute.value/%s/image); background-size:cover;' % ptav.product_attribute_value_id.id"
+                            />
+                            <t
+                                t-elif="not ptav.is_custom"
+                                t-set="background_style"
+                                t-value="'background: ' + str(ptav.html_color or ptav.name)"
+                            />
+                            <label
+                                t-att-style="background_style"
+                                class="css_attribute_color cursor-pointer d-block"
+                                t-att-title="ptav.name"
+                            />
+                        </div>
+                        <span
+                            t-else=""
+                            t-attf-class="{{'' if ppr == 2 and layout_mode != 'list' else 'btn-sm'}} btn bg-body w-100 text-body text-truncate"
+                            t-out="ptav.name"
+                        />
+                    </a>
+                </t>
+                <span name="hidden_ptavs_count" class="d-none ms-1 small">
+                    <a t-att-href="product_href"/>
+                </span>
+            </div>
+        </t>
+    </template>
+
+    <template id="website_sale.shop_product_buttons">
+        <t name="buttons_container"/>
+    </template>
+
     <template id="products_item" name="Products item">
         <form
             class="oe_product_cart h-100 d-flex"
@@ -264,10 +341,11 @@
                             Unpublished
                         </a>
                     </h6>
+
+                    <t t-call="website_sale.product_variant_preview" />
                 </div>
-                <div class="o_wsale_product_sub d-flex justify-content-between gap-2">
+                <div class="o_wsale_product_sub d-flex align-items-center justify-content-between flex-nowrap gap-3">
                     <t t-set="template_price_vals" t-value="get_product_prices(product)"/>
-                    <div class="o_wsale_product_btn d-flex gap-2"/>
                     <div class="product_price">
                         <span class="h6 mb-0"
                               t-if="template_price_vals['price_reduce'] or not website.prevent_zero_price_sale"
@@ -282,8 +360,18 @@
                             </del>
                         </t>
                     </div>
+                    <div
+                        t-if="layout_mode == 'list'"
+                        class="o_wsale_product_btn o_wsale_product_btn_list d-flex gap-2"
+                        t-call="website_sale.shop_product_buttons"
+                    />
                 </div>
             </div>
+            <div
+                t-if="layout_mode != 'list'"
+                class="o_wsale_product_btn o_wsale_product_btn_catalog d-flex gap-2"
+                t-call="website_sale.shop_product_buttons"
+            />
         </form>
     </template>
 
@@ -298,8 +386,13 @@
         </xpath>
     </template>
 
-    <template id="products_add_to_cart" inherit_id="website_sale.products_item" active="False" name="Add to Cart">
-        <xpath expr="//div[hasclass('o_wsale_product_btn')]" position="inside">
+    <template
+        id="products_add_to_cart"
+        inherit_id="website_sale.shop_product_buttons"
+        active="False"
+        name="Add to Cart"
+    >
+        <t name="buttons_container" position="inside">
             <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
             <input name="product_id" t-att-value="product_variant_id" type="hidden"/>
             <input name="product_template_id" t-att-value="product.id" type="hidden"/>
@@ -317,7 +410,7 @@
                     <span class="fa fa-shopping-cart"/>
                 </a>
             </t>
-        </xpath>
+        </t>
     </template>
 
     <template id="pricelist_list" name="Pricelists Dropdown">

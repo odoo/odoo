@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="add_to_wishlist" inherit_id="website_sale.products_item" name="Wishlist Button" priority="20">
-        <xpath expr="//div[hasclass('o_wsale_product_btn')]" position="inside">
+    <template
+        id="website_sale_wishlist.add_to_wishlist"
+        inherit_id="website_sale.shop_product_buttons"
+        name="Wishlist Button"
+        priority="20"
+    >
+        <t name="buttons_container" position="inside">
             <t t-set="in_wish" t-value="product in products_in_wishlist"/>
             <t t-set="product_variant_id" t-value="in_wish or product._get_first_possible_variant_id()"/>
             <button
@@ -18,7 +23,7 @@
             >
                 <span class="fa fa-heart" role="img" aria-label="Add to wishlist"/>
             </button>
-        </xpath>
+        </t>
     </template>
 
     <template id="product_cart_lines" inherit_id="website_sale.cart_lines" active="True">
