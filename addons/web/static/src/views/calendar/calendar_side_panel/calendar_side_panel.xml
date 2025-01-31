@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.CalendarSidePanel">
+        <div class="o_calendar_sidebar_container d-print-none position-relative w-100 w-md-auto bg-view overflow-x-hidden overflow-y-auto">
+            <div class="o_calendar_sidebar">
+                <div t-if="props.model.hasMultiCreate" class="d-flex flex-column gap-1">
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" t-att-class="{'active': props.mode === CALENDAR_MODES.filter}" data-tooltip="Filter"  t-on-click.stop="() => this.props.setMode(CALENDAR_MODES.filter)"><i class="fa fa-filter"/></button>
+                        <button class="btn btn-secondary" t-att-class="{'active': props.mode === CALENDAR_MODES.add}" data-tooltip="New" t-on-click="() => this.props.setMode(CALENDAR_MODES.add)"><i class="fa fa-plus"/></button>
+                        <button class="btn btn-secondary" t-att-class="{'active': props.mode === CALENDAR_MODES.delete}" data-tooltip="Clicking on a day or selecting an area will irrevocably delete its content" t-on-click="() => this.props.setMode(CALENDAR_MODES.delete)">
+                            <i class="fa fa-trash" t-att-class="{'text-danger': props.mode === CALENDAR_MODES.delete}"/>
+                        </button>
+                    </div>
+                    <div t-if="state.isReady and props.mode === CALENDAR_MODES.add" class="o_form_view o_xxs_form_view mt-2">
+                        <Record t-props="multiCreateRecordProps" t-slot-scope="data">
+                            <FormRenderer record="data.record" archInfo="multiCreateArchInfo" class="'p-0'"/>
+                        </Record>
+                    </div>
+                </div>
+                <DatePicker t-if="props.mode === CALENDAR_MODES.filter and showDatePicker" t-props="datePickerProps" />
+                <FilterPanel t-props="filterPanelProps" />
+            </div>
+        </div>
+    </t>
+</templates>

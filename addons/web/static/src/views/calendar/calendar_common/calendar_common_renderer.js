@@ -9,6 +9,8 @@ import { makeWeekColumn } from "./calendar_common_week_column";
 
 import { Component } from "@odoo/owl";
 import { useBus } from "@web/core/utils/hooks";
+import { useSquareSelection } from "@web/views/calendar/square_selection_hook";
+import { CALENDAR_MODES } from "@web/views/calendar/calendar_modes";
 
 const SCALE_TO_FC_VIEW = {
     day: "timeGridDay",
@@ -56,15 +58,25 @@ export class CalendarCommonRenderer extends Component {
         editRecord: Function,
         deleteRecord: Function,
         setDate: { type: Function, optional: true },
+        calendarMode: { type: String, optional: true },
+        multiCreateRecord: { type: Function, optional: true },
+        multiDeleteRecords: { type: Function, optional: true },
+    };
+
+    static defaultProps = {
+        calendarMode: CALENDAR_MODES.filter,
     };
 
     setup() {
         this.fc = useFullCalendar("fullCalendar", this.options);
         this.click = useClickHandler(this.onClick, this.onDblClick);
         this.popover = useCalendarPopover(this.constructor.components.Popover);
+
         useBus(this.props.model.bus, "SCROLL_TO_CURRENT_HOUR", () =>
             this.fc.api.scrollToTime(`${luxon.DateTime.local().hour - 2}:00:00`)
         );
+
+        useSquareSelection();
     }
 
     get options() {

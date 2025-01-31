@@ -289,8 +289,8 @@ test(`can access record changes`, async () => {
             </Record>
         `;
 
-        doSomething(record) {
-            expect.step(`do something with ${JSON.stringify(record.getChanges())}`);
+        async doSomething(record) {
+            expect.step(`do something with ${JSON.stringify(await record.getChanges())}`);
         }
     }
 
@@ -521,7 +521,7 @@ test(`supports passing dynamic values -- full control to the user of Record`, as
             });
             this.hooks = {
                 onRecordChanged: this.onRecordChanged.bind(this),
-            }
+            };
         }
 
         onRecordChanged(record, changes) {
