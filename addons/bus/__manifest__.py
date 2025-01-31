@@ -27,14 +27,6 @@
         # Unit test files
         'web.assets_unit_tests': [
             'bus/static/tests/**/*',
-            ('remove', 'bus/static/tests/legacy/**/*'), # to remove when all legacy tests are ported
-        ],
-        'web.tests_assets': [
-            'bus/static/tests/legacy/helpers/**/*',
-        ],
-        'web.qunit_suite_tests': [
-            'bus/static/tests/legacy/**/*.js',
-            ('remove', 'bus/static/tests/legacy/helpers/**/*'),
         ],
         'bus.websocket_worker_assets': [
             'web/static/src/module_loader.js',
