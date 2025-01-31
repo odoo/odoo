@@ -7,7 +7,7 @@
     'description': """Shiperoo Outbound Process.""",
     'author': 'Drishti Joshi',
     'company': 'Shiperoo',
-    'depends': ['stock', 'base', 'sale', 'ash_test'],
+    'depends': ['stock', 'base', 'sale', 'ash_test', 'sale_stock'],
     'data': [
         'data/pack_app_sequence.xml',
         'security/ir.model.access.csv',
