@@ -189,26 +189,17 @@ class TestWebsiteSaleCart(ProductAttributesCommon, WebsiteSaleCommon):
             # remove the product from the cart
             self.WebsiteSaleCartController.update_cart(
                 line_id=sale_order.order_line.id,
-                product_id=self.product.id,
-                quantity=0
+                quantity=0,
             )
             self.assertEqual(sale_order.amount_total, 0.0)
             self.assertEqual(sale_order.order_line, SaleOrderLine)
 
             # removing the product again doesn't add a line with zero quantity
-            self.WebsiteSaleCartController.update_cart(
-                line_id=sale_order.order_line.id,
-                product_id=self.product.id,
-                quantity=0,
-            )
-            self.assertEqual(sale_order.order_line, SaleOrderLine)
-
-            self.WebsiteSaleCartController.add_to_cart(
-                product_template_id=self.product.product_tmpl_id,
-                product_id=self.product.id,
-                quantity=0,
-            )
-            self.assertEqual(sale_order.order_line, SaleOrderLine)
+            with self.assertRaises(UserError):
+                self.WebsiteSaleCartController.update_cart(
+                    line_id=sale_order.order_line.id,
+                    quantity=0,
+                )
 
     def test_unpublished_accessory_product_visibility(self):
         # Check if unpublished product is shown to public user
@@ -218,7 +209,7 @@ class TestWebsiteSaleCart(ProductAttributesCommon, WebsiteSaleCommon):
         })
 
         self.product.accessory_product_ids = [Command.link(accessory_product.id)]
-        self.empty_cart._cart_update(product_id=self.product.id, add_qty=1)
+        self.empty_cart._cart_add(product_id=self.product.id)
         self.assertEqual(len(self.empty_cart.with_user(self.public_user)._cart_accessories()), 0)
 
     def test_cart_new_fpos_from_geoip(self):
@@ -302,7 +293,7 @@ class TestWebsiteSaleCart(ProductAttributesCommon, WebsiteSaleCommon):
 
         so.fiscal_position_id = fpos
         so._recompute_taxes()
-        so._cart_update(product_id=test_product.id, line_id=sol.id, set_qty=2)
+        so._cart_update_line_quantity(line_id=sol.id, quantity=2)
         self.assertEqual(
             round(sol.price_total),
             106,
@@ -379,7 +370,7 @@ class TestWebsiteSaleCart(ProductAttributesCommon, WebsiteSaleCommon):
 
         so.fiscal_position_id = fpos
         so._recompute_taxes()
-        so._cart_update(product_id=product.id, line_id=sol.id, set_qty=2)
+        so._cart_update_line_quantity(line_id=sol.id, quantity=2)
         self.assertEqual(
             round(sol.price_total),
             200,
@@ -400,15 +391,15 @@ class TestWebsiteSaleCart(ProductAttributesCommon, WebsiteSaleCommon):
         })
         no_variant_ptavs = product_no_variants.attribute_line_ids.product_template_value_ids
         self.assertEqual(len(self.empty_cart.order_line), 0)
-        self.empty_cart._cart_update(
+        self.empty_cart._cart_add(
             product_id=product_no_variants.product_variant_id.id,
-            add_qty=1,
+            quantity=1,
             no_variant_attribute_value_ids=no_variant_ptavs[0].ids,
         )
         self.assertEqual(len(self.empty_cart.order_line), 1)
-        self.empty_cart._cart_update(
+        self.empty_cart._cart_add(
             product_id=product_no_variants.product_variant_id.id,
-            add_qty=1,
+            quantity=1,
             no_variant_attribute_value_ids=no_variant_ptavs[0].ids,
         )
         self.assertEqual(len(self.empty_cart.order_line), 1)
