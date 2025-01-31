@@ -10,7 +10,7 @@ from uuid import uuid4
 
 from dateutil.relativedelta import relativedelta
 from odoo import _, api, exceptions, fields, models
-from odoo.exceptions import LockError
+from odoo.exceptions import LockError, MissingError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import safe_eval
@@ -1003,7 +1003,9 @@ class BaseAutomation(models.Model):
     @api.model
     def _check(self, automatic=False, use_new_cursor=False):
         warnings.warn("Since 19.0, use _cron_process_time_based_automations", DeprecationWarning)
-        self._cron_process_time_based_actions(auto_commit=automatic)
+        if not automatic:
+            raise RuntimeError("can run time-based automations only in automatic mode")
+        self._cron_process_time_based_actions()
 
     def _search_time_based_automation_records(self, *, until):
         automation = self.ensure_one()
@@ -1083,7 +1085,7 @@ class BaseAutomation(models.Model):
             return Model.search(domain).filtered_domain(time_domain)
 
     @api.model
-    def _cron_process_time_based_actions(self, *, auto_commit=True):
+    def _cron_process_time_based_actions(self):
         """ Execute the time-based automations.
 
         :param auto_commit: Set to True when called from a CRON to commit after
@@ -1094,9 +1096,14 @@ class BaseAutomation(models.Model):
 
         # retrieve all the automation rules to run based on a timed condition
         automations = self.with_context(active_test=True).search([('trigger', 'in', TIME_TRIGGERS)])
-        for automation_number, automation in enumerate(automations, 1):
-            if auto_commit and not automation.active:
-                # automation deactivated between commits
+        self.env['ir.cron']._commit_progress(remaining=len(automations))
+
+        for automation in automations:
+            # is automation deactivated or disappeared between commits?
+            try:
+                if not automation.active:
+                    continue
+            except MissingError:
                 continue
             _logger.info("Starting time-based automation rule `%s`.", automation.name)
             now = self.env.cr.now()
@@ -1110,14 +1117,6 @@ class BaseAutomation(models.Model):
                     _logger.error(traceback.format_exc())
 
             automation.write({'last_run': now})
-            if auto_commit:
-                # auto-commit for batch processing
-                # because we process all between `last_run` and `now`
-                self.env['ir.cron']._notify_progress(
-                    done=automation_number,
-                    remaining=(len(automations) - automation_number),
-                )
-                self.env.cr.commit()
-            else:
-                self.env.flush_all()
             _logger.info("Time-based automation rule `%s` done.", automation.name)
+            if not self.env['ir.cron']._commit_progress(1):
+                break
