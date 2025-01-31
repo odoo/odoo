@@ -1,36 +1,31 @@
-import { rpc } from "@web/core/network/rpc";
-
+import { IoTDevice } from "@iot_base/device_controller";
 import { BasePrinter } from "@point_of_sale/app/utils/printer/base_printer";
 
 /**
- * Printer that sends print requests thru /hw_proxy endpoints.
+ * Printer that sends print requests through longpolling to default printer.
  * Doesn't require pos_iot to be installed.
  */
 export class HWPrinter extends BasePrinter {
     /**
      * @param {Object} params
-     * @param {string} params.url full address of the iot box. E.g. `http://10.23.45.67:8069`.
+     * @param {IoTDevice} params.printer - IoTDevice class to communicate with the printer
      */
     setup(params) {
         super.setup(...arguments);
-        this.url = params.url;
-    }
-
-    sendAction(data) {
-        return rpc(`${this.url}/hw_proxy/default_printer_action`, { data });
+        this.printer = params.printer;
     }
 
     /**
      * @override
      */
     openCashbox() {
-        return this.sendAction({ action: "cashbox" });
+        return this.printer.action({ action: "cashbox" });
     }
 
     /**
      * @override
      */
     sendPrintingJob(img) {
-        return this.sendAction({ action: "print_receipt", receipt: img });
+        return this.printer.action({ action: "print_receipt", receipt: img });
     }
 }

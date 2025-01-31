@@ -220,6 +220,7 @@
             "point_of_sale/static/src/utils.js",
             "point_of_sale/static/src/customer_display/**/*",
             ('remove', 'point_of_sale/static/src/customer_display/customer_display_adapter.js'),
+            "iot/static/src/device_controller.js",
         ],
         'point_of_sale.customer_display_assets_test': [
             ('include', 'point_of_sale.base_tests'),

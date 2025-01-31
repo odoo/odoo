@@ -49,6 +49,7 @@ export class PosStore extends WithLazyGetterTrap {
         "number_buffer",
         "barcode_reader",
         "hardware_proxy",
+        "iot_longpolling",
         "ui",
         "pos_data",
         "dialog",
@@ -70,6 +71,7 @@ export class PosStore extends WithLazyGetterTrap {
         {
             number_buffer,
             hardware_proxy,
+            iot_longpolling,
             barcode_reader,
             ui,
             dialog,
@@ -123,6 +125,7 @@ export class PosStore extends WithLazyGetterTrap {
 
         this.synch = { status: "connected", pending: 0 };
         this.hardwareProxy = hardware_proxy;
+        this.iotLongpolling = iot_longpolling;
         this.hiddenProductIds = new Set();
         this.selectedOrderUuid = null;
         this.selectedPartner = null;

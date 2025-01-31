@@ -1,12 +1,13 @@
 import { reactive } from "@odoo/owl";
-import { deduceUrl, getOnNotified } from "@point_of_sale/utils";
+import { getOnNotified } from "@point_of_sale/utils";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
+import { DeviceController } from "@iot/device_controller";
 
 export const CustomerDisplayDataService = {
-    dependencies: ["bus_service", "notification"],
-    async start(env, { bus_service, notification }) {
+    dependencies: ["bus_service", "notification", "iot_longpolling"],
+    async start(env, { bus_service, notification, iot_longpolling }) {
         const data = reactive({});
         if (session.type === "local") {
             new BroadcastChannel("UPDATE_CUSTOMER_DISPLAY").onmessage = (event) => {
@@ -22,25 +23,14 @@ export const CustomerDisplayDataService = {
             );
         }
         if (session.type === "proxy") {
+            const iotDisplay = new DeviceController(iot_longpolling, {
+                iot_ip: session.proxy_ip,
+                identifier: "HDMI-1",
+            });
             const intervalId = setInterval(async () => {
+                iotDisplay.addListener((response) => Object.assign(data, response.result));
                 try {
-                    const response = await fetch(
-                        `${deduceUrl(session.proxy_ip)}/hw_proxy/customer_facing_display`,
-                        {
-                            method: "POST",
-                            headers: {
-                                Accept: "application/json",
-                                "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({
-                                params: {
-                                    action: "get",
-                                },
-                            }),
-                        }
-                    );
-                    const payload = await response.json();
-                    Object.assign(data, payload.result.data);
+                    iotDisplay.action({ action: "get_customer_display_data" });
                 } catch (error) {
                     notification.add(
                         _t(
@@ -52,6 +42,7 @@ export const CustomerDisplayDataService = {
                         }
                     );
                     console.error("Error fetching data for the IoT customer display: %s", error);
+                    iotDisplay.removeListener();
                     clearInterval(intervalId);
                 }
             }, 1000);
