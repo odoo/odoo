@@ -341,12 +341,19 @@ export class ProductScreen extends Component {
     get productsToDisplay() {
         let list = [];
 
-        if (this.searchWord !== "") {
+        if(this.searchWord !== "") {
+          if(this.pos.selectedCategory?.id){
+            // if there is a search word and a category selected
+            list = this.addMainProductsToDisplay(this.getProductsByCategoryAndSearchWord(this.pos.selectedCategory, this.searchWord));
+          }else{
             list = this.addMainProductsToDisplay(this.getProductsBySearchWord(this.searchWord));
-        } else if (this.pos.selectedCategory?.id) {
+          }
+        }else{
+          if(this.pos.selectedCategory?.id){
             list = this.getProductsByCategory(this.pos.selectedCategory);
-        } else {
+          }else{
             list = this.products;
+          }
         }
 
         if (!list || list.length === 0) {
@@ -409,6 +416,20 @@ export class ProductScreen extends Component {
         // Remove duplicates since owl doesn't like it.
         return Array.from(new Set(products));
     }
+
+
+    // this will return the list of products that are in the selected category and that match the search word
+    getProductsByCategoryAndSearchWord(category, searchWord) {
+        const allCategoryIds = category.getAllChildren().map((cat) => cat.id);
+        const products = allCategoryIds.flatMap(
+            (catId) => this.pos.models["product.product"].getBy("pos_categ_ids", catId) || []
+        );
+        // Remove duplicates since owl doesn't like it.
+        return Array.from(new Set(products.filter((product) => product.exactMatch(searchWord))));
+    },
+
+    
+    
 
     async onPressEnterKey() {
         const { searchProductWord } = this.pos;
