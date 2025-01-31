@@ -484,6 +484,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'float_round': float_round,
             'shop_path': SHOP_PATH,
             'product_query_string': self._get_product_query_string(**post),
+            'previewed_attribute_values': lazy(products._get_previewed_attribute_values),
         }
         if filter_by_price_enabled:
             values['min_price'] = min_price or available_min_price

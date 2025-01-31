@@ -2,6 +2,8 @@
 
 import logging
 
+from collections import defaultdict
+
 from odoo import _, api, fields, models
 from odoo.fields import Domain
 from odoo.http import request
@@ -274,6 +276,35 @@ class ProductTemplate(models.Model):
             return keys
 
         return self._get_possible_variants(parent_combination).sorted(_sort_key_variant)
+
+    def _get_previewed_attribute_values(self):
+        """Compute previewed product attribute values for each product in the recordset.
+
+        :return: the previewed attribute values per product
+        :rtype: dict
+        """
+        res = defaultdict(dict)
+        show_count = 20
+        for template in self:
+            available_attribute_lines = template.attribute_line_ids.filtered(
+                lambda ptal: ptal.attribute_id.preview_variants != 'hidden'
+            )
+            if available_attribute_lines:
+                previewed_ptal = available_attribute_lines[0]
+                previewed_ptavs = previewed_ptal.product_template_value_ids._only_active()
+                if len(previewed_ptavs) > 1:
+                    previewed_ptavs_data = []
+                    for ptav in previewed_ptavs[:show_count]:
+                        matching_variant = ptav.ptav_product_variant_ids[0]
+                        previewed_ptavs_data.append({
+                            'ptav': ptav,
+                            'variant_image_url': self.env['website'].image_url(matching_variant, 'image_512'),
+                        })
+                    res[template.id] = {
+                        'ptavs_data': previewed_ptavs_data,
+                        'hidden_ptavs_count': max(0, len(previewed_ptavs) - show_count)
+                    }
+        return res
 
     def _get_sales_prices(self, website):
         if not self:

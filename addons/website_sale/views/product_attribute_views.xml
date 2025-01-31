@@ -14,6 +14,18 @@
                         widget="radio"
                         options="{'horizontal': True}"
                     />
+                    <field
+                        name="preview_variants"
+                        widget="radio"
+                        options="{'horizontal': True}"
+                        readonly="create_variant != 'always' or display_type == 'multi'"
+                    />
+                    <field
+                        name="is_thumbnail_visible"
+                        widget="boolean_toggle"
+                        readonly="create_variant != 'always' or display_type == 'multi'"
+                        invisible="preview_variants == 'hidden'"
+                    />
                 </group>
             </group>
         </field>
