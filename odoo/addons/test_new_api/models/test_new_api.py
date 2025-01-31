@@ -901,6 +901,64 @@ class Test_New_ApiComputeOnchangeLine(models.Model):
             line.bar = (line.foo or "") + "r"
 
 
+class Test_New_ApiComputeOnchangeAbstract(models.AbstractModel):
+    _name = 'test_new_api.compute.onchange.abstract'
+    _description = "Compute method as an onchange on abstract model"
+
+    active = fields.Boolean()
+    foo = fields.Char()
+    bar = fields.Char(compute='_compute_bar', store=True)
+    baz = fields.Char(compute='_compute_baz', store=True, readonly=False)
+    count = fields.Integer(default=0)
+    line_ids = fields.One2many(
+        'test_new_api.compute.onchange.line.abstract', 'record_id',
+        compute='_compute_line_ids', store=True, readonly=False
+    )
+
+    @api.onchange('foo')
+    def _onchange_foo(self):
+        self.count += 1
+
+    @api.depends('foo')
+    def _compute_bar(self):
+        for record in self:
+            record.bar = (record.foo or "") + "r"
+
+    @api.depends('active', 'foo')
+    def _compute_baz(self):
+        for record in self:
+            if record.active:
+                record.baz = (record.foo or "") + "z"
+
+    @api.depends('foo')
+    def _compute_line_ids(self):
+        for record in self:
+            if not record.foo:
+                continue
+            if any(line.foo == record.foo for line in record.line_ids):
+                continue
+            # add a line with the same value as 'foo'
+            record.line_ids = [Command.create({'foo': record.foo})]
+
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
+        return [dict(vals, foo=self.env._("%s (copy)", record.foo)) for record, vals in zip(self, vals_list)]
+
+
+class Test_New_ApiComputeOnchangeLineAbstract(models.AbstractModel):
+    _name = 'test_new_api.compute.onchange.line.abstract'
+    _description = "Line-like model for test_new_api.compute.onchange.abstract"
+
+    record_id = fields.Many2one('test_new_api.compute.onchange.abstract', ondelete='cascade')
+    foo = fields.Char()
+    bar = fields.Char(compute='_compute_bar')
+
+    @api.depends('foo')
+    def _compute_bar(self):
+        for line in self:
+            line.bar = (line.foo or "") + "r"
+
+
 class Test_New_ApiComputeDynamicDepends(models.Model):
     _name = 'test_new_api.compute.dynamic.depends'
     _description = "Computed field with dynamic dependencies"
