@@ -1347,11 +1347,18 @@ class SaleOrderLine(models.Model):
         """
         self.ensure_one()
 
+        display_type = self.display_type or 'product'
+        name = self.env['account.move.line']._get_journal_items_full_name(self.name, self.product_id.display_name)
+        product_id = self.product_id.id
+        if self.product_id.type == 'combo':
+            display_type = 'line_section'
+            name = self.product_id.name + " x " + str(self.qty_to_invoice)
+            product_id = False
         res = {
-            'display_type': self.display_type or 'product',
+            'display_type': display_type,
             'sequence': self.sequence,
-            'name': self.env['account.move.line']._get_journal_items_full_name(self.name, self.product_id.display_name),
-            'product_id': self.product_id.id,
+            'name': name,
+            'product_id': product_id,
             'product_uom_id': self.product_uom.id,
             'quantity': self.qty_to_invoice,
             'discount': self.discount,
