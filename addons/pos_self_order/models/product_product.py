@@ -88,7 +88,7 @@ class ProductTemplate(models.Model):
         return res
 
     def _can_return_content(self, field_name=None, access_token=None):
-        if self.sudo().self_order_available and field_name == "image_512":
+        if field_name == "image_512" and self.sudo().self_order_available:
             return True
         return super()._can_return_content(field_name, access_token)
 
@@ -125,6 +125,6 @@ class ProductProduct(models.Model):
                 })
 
     def _can_return_content(self, field_name=None, access_token=None):
-        if self.sudo().self_order_available and field_name == "image_512":
+        if field_name == "image_512" and self.sudo().self_order_available:
             return True
         return super()._can_return_content(field_name, access_token)

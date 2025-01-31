@@ -49,12 +49,9 @@ class IrBinary(models.AbstractModel):
             raise MissingError(f"No record found for xmlid={xmlid}, res_model={res_model}, id={res_id}")  # pylint: disable=missing-gettext
         if access_token and verify_limited_field_access_token(record, field, access_token):
             return record.sudo()
-        try:
-            record.check_access("read")
-        except AccessError:
-            if record._can_return_content(field, access_token):
-                return record.sudo()
-            raise
+        if record._can_return_content(field, access_token):
+            return record.sudo()
+        record.check_access("read")
         return record
 
     def _record_to_stream(self, record, field_name):
