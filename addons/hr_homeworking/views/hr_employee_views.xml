@@ -20,14 +20,20 @@
             </xpath>
             <xpath expr="//group[@name='departure']" position="after">
                 <group string="Remote Work">
-                    <span class="text-muted fst-italic oe_inline" colspan="2">Specify your default work location for each day of the week. This schedule will repeat itself each week.</span>
-                    <field name="monday_location_id" placeholder="Unspecified" force_save="1"/>
-                    <field name="tuesday_location_id" placeholder="Unspecified" force_save="1"/>
-                    <field name="wednesday_location_id" placeholder="Unspecified" force_save="1"/>
-                    <field name="thursday_location_id" placeholder="Unspecified" force_save="1"/>
-                    <field name="friday_location_id" placeholder="Unspecified" force_save="1"/>
-                    <field name="saturday_location_id" placeholder="Unspecified" force_save="1"/>
-                    <field name="sunday_location_id" placeholder="Unspecified" force_save="1"/>
+                    <span class="text-muted fst-italic oe_inline mb-1" colspan="2">Specify your default work location for each day of the week. This schedule will repeat itself each week.</span>
+                    <group>
+                        <field name="monday_location_id" placeholder="Unspecified" force_save="1"/>
+                        <field name="tuesday_location_id" placeholder="Unspecified" force_save="1"/>
+                        <field name="wednesday_location_id" placeholder="Unspecified" force_save="1"/>
+                        <field name="thursday_location_id" placeholder="Unspecified" force_save="1"/>
+                        <field name="friday_location_id" placeholder="Unspecified" force_save="1"/>
+                        <field name="saturday_location_id" placeholder="Unspecified" force_save="1"/>
+                        <field name="sunday_location_id" placeholder="Unspecified" force_save="1"/>
+                    </group>
+                    <group>
+                        <button name="action_copy_to_all" type="object" string="Copy to all" 
+                            icon="fa-clone" class="btn btn-link p-0"/>
+                    </group>
                 </group>
             </xpath>
         </field>
