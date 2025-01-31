@@ -2,7 +2,10 @@
 <odoo>
 
     <template id="unavailable_products_warning">
-        <div name="unavailable_products_warning" class="alert alert-warning mt-2">
+        <div
+            name="unavailable_products_warning"
+            t-attf-class="alert alert-warning mt-2 {{'' if is_selected else 'd-none'}}"
+        >
             Some of the products are not available at <strong><t t-out="wh_name"/></strong>.
             <div
                 t-foreach="unavailable_order_lines"
@@ -54,13 +57,25 @@
         <xpath expr="//t[@t-set='is_pickup_needed']" position="attributes">
             <attribute name="t-value" add="dm.delivery_type=='in_store'" separator=" or "/>
         </xpath>
+        <t t-set="pickup_location_data" position="after">
+            <t t-if="not pickup_location_data and default_pickup_locations.get(dm.id)">
+                <t
+                    t-set="pickup_location_data"
+                    t-value="default_pickup_locations[dm.id].get('pickup_location_data', {})"
+                />
+                <t
+                    t-set="unavailable_order_lines"
+                    t-value="default_pickup_locations[dm.id].get('unavailable_order_lines', {})"
+                />
+            </t>
+        </t>
         <div name="o_pickup_location" position="after">
-            <t t-if="dm.delivery_type=='in_store' and order.carrier_id.id==dm.id">
+            <t t-if="dm.delivery_type=='in_store' and pickup_location_data">
                 <t
                     t-if="unavailable_order_lines"
                     t-call="website_sale_collect.unavailable_products_warning"
                 >
-                    <t t-set="wh_name" t-value="order.pickup_location_data.get('name')"/>
+                    <t t-set="wh_name" t-value="pickup_location_data.get('name')"/>
                 </t>
             </t>
         </div>
