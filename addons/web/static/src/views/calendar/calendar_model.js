@@ -73,7 +73,11 @@ export class CalendarModel extends Model {
         return this.meta.canDelete;
     }
     get canEdit() {
-        return this.meta.canEdit && this.data.hasEditRight && !this.meta.fields[this.meta.fieldMapping.date_start].readonly;
+        return (
+            this.meta.canEdit &&
+            this.data.hasEditRight &&
+            !this.meta.fields[this.meta.fieldMapping.date_start].readonly
+        );
     }
     get eventLimit() {
         return this.meta.eventLimit;
@@ -137,6 +141,9 @@ export class CalendarModel extends Model {
     }
     get scales() {
         return this.meta.scales;
+    }
+    get showDatePicker() {
+        return this.meta.showDatePicker;
     }
     get storageKey() {
         return `scaleOf-viewId-${this.env.config.viewId}`;
@@ -488,9 +495,12 @@ export class CalendarModel extends Model {
      */
     fetchRecords(data) {
         const { context, fieldNames, resModel } = this.meta;
-        return this.orm.searchRead(resModel, this.computeDomain(data), [
-            ...new Set([...fieldNames, ...Object.keys(this.meta.activeFields)]),
-        ], { context });
+        return this.orm.searchRead(
+            resModel,
+            this.computeDomain(data),
+            [...new Set([...fieldNames, ...Object.keys(this.meta.activeFields)])],
+            { context }
+        );
     }
     /**
      * @protected
