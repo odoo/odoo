@@ -203,8 +203,9 @@ export class Record extends DataPoint {
         });
     }
 
-    getChanges({ withReadonly } = {}) {
-        return this._getChanges(this._changes, { withReadonly });
+    async getChanges({ withReadonly } = {}) {
+        await this.model._askChanges();
+        return this.model.mutex.exec(() => this._getChanges(this._changes, { withReadonly }));
     }
 
     async isDirty() {

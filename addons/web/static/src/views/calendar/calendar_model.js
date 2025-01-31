@@ -47,6 +47,7 @@ export class CalendarModel extends Model {
             range: null,
             records: {},
             unusualDays: [],
+            multiCreateRecord: null,
         };
 
         const debouncedLoadDelay = this.constructor.DEBOUNCED_LOAD_DELAY;
@@ -127,6 +128,9 @@ export class CalendarModel extends Model {
     }
     get hasEditDialog() {
         return this.meta.hasEditDialog;
+    }
+    get hasMultiCreate() {
+        return !!this.meta.multiCreateView;
     }
     get hasQuickCreate() {
         return this.meta.quickCreate;
@@ -209,6 +213,29 @@ export class CalendarModel extends Model {
         await this.orm.create(this.meta.resModel, [rawRecord], { context });
         await this.load();
     }
+
+    async multiCreateRecords(dates) {
+        const values = await this.data.multiCreateRecord.getChanges();
+        const [section] = this.filterSections;
+        const records = [];
+        for (const date of dates) {
+            const rawRecord = this.buildRawRecord({ start: date });
+            for (const filter of section.filters) {
+                if (filter.active && filter.type === "record") {
+                    records.push({
+                        ...rawRecord,
+                        ...values,
+                        [section.fieldName]: filter.value,
+                    });
+                }
+            }
+        }
+        if (records.length) {
+            await this.orm.create(this.meta.resModel, records, { context: this.meta.context });
+            await this.load();
+        }
+    }
+
     async unlinkFilter(fieldName, recordId) {
         const info = this.meta.filtersInfo[fieldName];
         const section = this.data.filterSections[fieldName];
@@ -226,6 +253,14 @@ export class CalendarModel extends Model {
         await this.orm.unlink(this.meta.resModel, [recordId]);
         await this.load();
     }
+
+    async unlinkRecords(recordsId) {
+        if (recordsId.length) {
+            await this.orm.unlink(this.meta.resModel, recordsId);
+            await this.load();
+        }
+    }
+
     async updateFilters(fieldName, filters, active) {
         // update filters directly, to provide a direct feedback to the user
         this.keepLast.add(Promise.resolve());
@@ -745,6 +780,7 @@ export class CalendarModel extends Model {
         const previousFilters = previousSection ? previousSection.filters : [];
 
         const rawFilters = Object.values(data.records).reduce((filters, record) => {
+            // FIXME: doesn't work for many2many/one2Many
             const rawValues = ["many2many", "one2many"].includes(field.type)
                 ? record.rawRecord[fieldName]
                 : [record.rawRecord[fieldName]];

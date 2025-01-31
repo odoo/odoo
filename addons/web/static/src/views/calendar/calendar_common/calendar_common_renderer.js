@@ -7,8 +7,10 @@ import { useCalendarPopover, useClickHandler, useFullCalendar } from "../hooks";
 import { CalendarCommonPopover } from "./calendar_common_popover";
 import { makeWeekColumn } from "./calendar_common_week_column";
 
-import { Component } from "@odoo/owl";
+import { Component, useRef } from "@odoo/owl";
 import { useBus } from "@web/core/utils/hooks";
+import { useSquareSelection } from "@web/views/calendar/squareSelectionHook";
+import { CALENDAR_MODES } from "@web/views/calendar/calendar_modes";
 
 const SCALE_TO_FC_VIEW = {
     day: "timeGridDay",
@@ -56,15 +58,25 @@ export class CalendarCommonRenderer extends Component {
         editRecord: Function,
         deleteRecord: Function,
         setDate: { type: Function, optional: true },
+        calendarMode: { type: String, optional: true },
+    };
+
+    static defaultProps = {
+        calendarMode: CALENDAR_MODES.filter,
     };
 
     setup() {
-        this.fc = useFullCalendar("fullCalendar", this.options);
+        this.calendarRef = useRef("fullCalendar");
+
+        this.fc = useFullCalendar("fullCalendar", this.finalOptions(this.props.calendarMode));
         this.click = useClickHandler(this.onClick, this.onDblClick);
         this.popover = useCalendarPopover(this.constructor.components.Popover);
+
         useBus(this.props.model.bus, "SCROLL_TO_CURRENT_HOUR", () =>
             this.fc.api.scrollToTime(`${luxon.DateTime.local().hour - 2}:00:00`)
         );
+
+        useSquareSelection(this.onSquareSelection.bind(this));
     }
 
     get options() {
@@ -130,6 +142,16 @@ export class CalendarCommonRenderer extends Component {
         return {
             weekNumbersWithinDays: !this.env.isSmall,
         };
+    }
+
+    finalOptions(calendarMode) {
+        const options = this.options;
+        if (calendarMode !== CALENDAR_MODES.filter) {
+            options["editable"] = false;
+            options["selectable"] = false;
+            options["dateClick"] = () => {};
+        }
+        return options;
     }
 
     viewDidMount({ el, view }) {
@@ -393,5 +415,26 @@ export class CalendarCommonRenderer extends Component {
         el.classList.remove("fc-daygrid-more-link");
         el.parentNode.insertBefore(wrapper, el);
         wrapper.appendChild(el);
+    }
+
+    async onSquareSelection(currentSelectionElement) {
+        if (this.props.calendarMode === CALENDAR_MODES.add) {
+            const dates = [];
+            for (const element of currentSelectionElement) {
+                const date = luxon.DateTime.fromISO(element.dataset.date);
+                if (!date.invalid) {
+                    dates.push(date);
+                }
+            }
+            await this.props.model.multiCreateRecords(dates);
+        } else if (this.props.calendarMode === CALENDAR_MODES.delete) {
+            const ids = [];
+            for (const element of currentSelectionElement) {
+                for (const event of [...element.querySelectorAll(".fc-event")]) {
+                    ids.push(parseInt(event.dataset.eventId, 10));
+                }
+            }
+            await this.props.model.unlinkRecords(ids);
+        }
     }
 }
