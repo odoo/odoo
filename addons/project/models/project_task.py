@@ -1392,7 +1392,9 @@ class ProjectTask(models.Model):
             f"{field}.id": "id",
             f"{field}.name": "name",
         })
-        filtered_domain = _change_operator(filtered_domain)
+        if not filtered_domain.is_true():
+            # If domain is not equal to Domain.TRUE then
+            filtered_domain = _change_operator(filtered_domain)
         if not filtered_domain:
             return self.env[comodel]
         if additional_domain:
