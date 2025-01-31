@@ -3094,6 +3094,7 @@ class AccountMove(models.Model):
         fields = fields or self._get_default_read_fields()
         return super().read(fields, load)
 
+    @api.model
     def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None, **read_kwargs):
         fields = fields or self._get_default_read_fields()
         return super().search_read(domain, fields, offset, limit, order, **read_kwargs)
