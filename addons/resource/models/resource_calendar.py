@@ -91,8 +91,7 @@ class ResourceCalendar(models.Model):
         'res.company', 'Company', domain=lambda self: [('id', 'in', self.env.companies.ids)],
         default=lambda self: self.env.company)
     attendance_ids = fields.One2many(
-        'resource.calendar.attendance', 'calendar_id', 'Working Time',
-        compute='_compute_attendance_ids', store=True, readonly=False, copy=True)
+        'resource.calendar.attendance', 'calendar_id', 'Working Time', copy=True)
     leave_ids = fields.One2many(
         'resource.calendar.leaves', 'calendar_id', 'Time Off')
     global_leave_ids = fields.One2many(
@@ -261,18 +260,6 @@ class ResourceCalendar(models.Model):
                 calendar.work_time_rate = 100
 
             calendar.is_fulltime = float_compare(calendar.full_time_required_hours, calendar.hours_per_week, 3) == 0
-
-    @api.depends('company_id')
-    def _compute_attendance_ids(self):
-        # TODO AMAH: Talk with Geoffrey to see if the behavior is correct
-        for calendar in self.filtered(lambda c: not c._origin or c._origin.company_id != c.company_id and c.company_id):
-            company_calendar = calendar.company_id.resource_calendar_id
-            calendar.update({
-                'two_weeks_calendar': company_calendar.two_weeks_calendar,
-                'tz': company_calendar.tz,
-                'attendance_ids': [(5, 0, 0)] + [
-                    (0, 0, attendance._copy_attendance_vals()) for attendance in company_calendar.attendance_ids if not attendance.resource_id]
-            })
 
     @api.depends('company_id')
     def _compute_global_leave_ids(self):
