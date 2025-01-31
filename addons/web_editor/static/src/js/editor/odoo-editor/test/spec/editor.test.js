@@ -2,6 +2,7 @@ import { OdooEditor } from '../../src/OdooEditor.js';
 import {
     childNodeIndex,
     getTraversedNodes,
+    nodeSize,
     setSelection,
 } from '../../src/utils/utils.js';
 import {
@@ -7797,5 +7798,34 @@ X[]
                 });
             });
         });
+    });
+    describe('Seprator', () => {
+        describe("selection", () => {
+            it("should apply custom selection on separator when selected", async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>abc</p><hr contenteditable="false"><p>def</p>',
+                    stepFunction: async editor => {
+                        const editable = editor.editable;
+                        const anchorNode = editable.childNodes[0];
+                        const focusNode = editable.childNodes[editable.childNodes.length - 1];
+                        setSelection(anchorNode, 0, focusNode, nodeSize(focusNode));
+                        await nextTick();
+                    },
+                    contentAfterEdit: '<p>[abc</p><hr contenteditable="false" data-oe-keep-contenteditable="" class="o_selected_hr"><p>def]</p>',
+                })
+            });
+            it("should remove custom selection on separator when not selected", async () => {
+                await testEditor(BasicEditor, {
+                    contentAfterEdit: '<p>[abc</p><hr contenteditable="false"><p>def]</p>',
+                    contentBefore: '<p>[abc</p><hr class="o_selected_hr" contenteditable="false"><p>def]</p>',
+                    stepFunction: async editor => {
+                        const anchorNode = editor.editable.querySelector('p');
+                        setSelection(anchorNode, 0);
+                        await nextTick();
+                    },
+                    contentAfterEdit: '<p>[]abc</p><hr contenteditable="false" data-oe-keep-contenteditable=""><p>def</p>',
+                })
+            });
+        })
     });
 });
