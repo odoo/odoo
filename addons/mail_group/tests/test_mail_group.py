@@ -39,7 +39,7 @@ class TestMailGroup(TestMailListCommon):
         the sender is a part of the allowed USER group, but is NOT a member of the mailing list."""
         group_user_not_member = mail_new_test_user(self.env, login='group user not member', email="group_user_not_member@example.com")
 
-        self.assertIn(group_user_not_member, self.test_group.access_group_id.users,
+        self.assertIn(group_user_not_member, self.test_group.access_group_id.all_user_ids,
             "User, that sends e-mail, must be part of the access group (in this test scenario)")
         self.assertNotIn(group_user_not_member.id, self.test_group.member_ids.ids,
             "User, that sends e-mail, shan't be a member of the mail group (in this test scenario)")

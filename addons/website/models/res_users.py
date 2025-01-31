@@ -97,6 +97,6 @@ class ResUsers(models.Model):
     @api.constrains('groups_id')
     def _check_one_user_type(self):
         super()._check_one_user_type()
-        internal_users = self.env.ref('base.group_user').users & self
+        internal_users = self.env.ref('base.group_user').all_user_ids & self
         if any(user.website_id for user in internal_users):
             raise ValidationError(_("Remove website on related partner before they become internal user."))

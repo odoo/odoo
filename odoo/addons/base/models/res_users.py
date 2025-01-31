@@ -591,7 +591,7 @@ class ResUsers(models.Model):
             # that needs to be added to existing ones as well for consistency
             added_groups = self._default_groups() - old_groups
             if added_groups:
-                internal_users = self.env.ref('base.group_user').users - self
+                internal_users = self.env.ref('base.group_user').all_user_ids - self
                 internal_users.write({'groups_id': [Command.link(gid) for gid in added_groups.ids]})
 
         if 'company_id' in values:
@@ -1313,13 +1313,14 @@ class UsersMultiCompany(models.Model):
         res = super().write(values)
         if 'company_ids' not in values:
             return res
-        group_multi_company = self.env.ref('base.group_multi_company', False)
-        if group_multi_company:
+        group_multi_company_id = self.env['ir.model.data']._xmlid_to_res_id(
+            'base.group_multi_company', raise_if_not_found=False)
+        if group_multi_company_id:
             for user in self:
-                if len(user.company_ids) <= 1 and user.id in group_multi_company.users.ids:
-                    user.write({'groups_id': [Command.unlink(group_multi_company.id)]})
-                elif len(user.company_ids) > 1 and user.id not in group_multi_company.users.ids:
-                    user.write({'groups_id': [Command.link(group_multi_company.id)]})
+                if len(user.company_ids) <= 1 and group_multi_company_id in user.groups_id.ids:
+                    user.write({'groups_id': [Command.unlink(group_multi_company_id)]})
+                elif len(user.company_ids) > 1 and group_multi_company_id not in user.groups_id.ids:
+                    user.write({'groups_id': [Command.link(group_multi_company_id)]})
         return res
 
     @api.model
@@ -1327,12 +1328,13 @@ class UsersMultiCompany(models.Model):
         if values is None:
             values = {}
         user = super().new(values=values, origin=origin, ref=ref)
-        group_multi_company = self.env.ref('base.group_multi_company', False)
-        if group_multi_company and 'company_ids' in values:
-            if len(user.company_ids) <= 1 and user.id in group_multi_company.users.ids:
-                user.update({'groups_id': [Command.unlink(group_multi_company.id)]})
-            elif len(user.company_ids) > 1 and user.id not in group_multi_company.users.ids:
-                user.update({'groups_id': [Command.link(group_multi_company.id)]})
+        group_multi_company_id = self.env['ir.model.data']._xmlid_to_res_id(
+            'base.group_multi_company', raise_if_not_found=False)
+        if group_multi_company_id:
+            if len(user.company_ids) <= 1 and group_multi_company_id in user.groups_id.ids:
+                user.update({'groups_id': [Command.unlink(group_multi_company_id)]})
+            elif len(user.company_ids) > 1 and group_multi_company_id not in user.groups_id.ids:
+                user.update({'groups_id': [Command.link(group_multi_company_id)]})
         return user
 
 

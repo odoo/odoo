@@ -17,7 +17,9 @@ class ResGroups(models.Model):
     _allow_sudo_commands = False
 
     name = fields.Char(required=True, translate=True)
-    users = fields.Many2many('res.users', 'res_groups_users_rel', 'gid', 'uid')
+    user_ids = fields.Many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', help='Users explicitly in this group')
+    all_user_ids = fields.Many2many('res.users', related='user_ids', depends_context=['active_test'], string='Users and implied users')
+
     model_access = fields.One2many('ir.model.access', 'group_id', string='Access Controls', copy=True)
     rule_groups = fields.Many2many('ir.rule', 'rule_group_rel',
         'group_id', 'rule_group_id', string='Rules', domain="[('global', '=', False)]")
@@ -37,9 +39,9 @@ class ResGroups(models.Model):
         'The api key duration cannot be a negative value.',
     )
 
-    @api.constrains('users')
+    @api.constrains('user_ids')
     def _check_one_user_type(self):
-        self.users._check_one_user_type()
+        self.user_ids._check_one_user_type()
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_settings_group(self):
@@ -133,7 +135,6 @@ class ResGroups(models.Model):
 
         return result
 
-
 #
 # Implied groups
 #
@@ -161,18 +162,18 @@ class ResGroups(models.Model):  # noqa: F811
 
     @api.model_create_multi
     def create(self, vals_list):
-        user_ids_list = [vals.pop('users', None) for vals in vals_list]
+        user_ids_list = [vals.pop('user_ids', None) for vals in vals_list]
         groups = super().create(vals_list)
         for group, user_ids in zip(groups, user_ids_list):
             if user_ids:
                 # delegate addition of users to add implied groups
-                group.write({'users': user_ids})
+                group.write({'user_ids': user_ids})
         self.env.registry.clear_cache('groups')
         return groups
 
     def write(self, values):
         res = super().write(values)
-        if values.get('users') or values.get('implied_ids'):
+        if values.get('user_ids') or values.get('implied_ids'):
             # add all implied groups (to all users of each group)
             updated_group_ids = OrderedSet()
             updated_user_ids = OrderedSet()
@@ -204,13 +205,13 @@ class ResGroups(models.Model):  # noqa: F811
                 updated_user_ids.update(uids)
             # notify the ORM about the updated users and groups
             updated_groups = self.env['res.groups'].browse(updated_group_ids)
-            updated_groups.invalidate_recordset(['users'])
-            updated_groups.modified(['users'])
+            updated_groups.invalidate_recordset(['user_ids'])
+            updated_groups.modified(['user_ids'])
             updated_users = self.env['res.users'].browse(updated_user_ids)
             updated_users.invalidate_recordset(['groups_id'])
             updated_users.modified(['groups_id'])
             # explicitly check constraints
-            updated_groups._validate_fields(['users'])
+            updated_groups._validate_fields(['user_ids'])
             updated_users._validate_fields(['groups_id'])
             self._check_one_user_type()
         if 'implied_ids' in values:
@@ -240,13 +241,13 @@ class ResGroups(models.Model):  # noqa: F811
             # this avoids readding the template user and triggering the mechanism at 121cd0d6084cb28
             users_to_unlink = [
                 user
-                for user in groups.with_context(active_test=False).users
+                for user in groups.with_context(active_test=False).user_ids
                 if implied_group not in (user.groups_id - implied_group).trans_implied_ids
             ]
             if users_to_unlink:
                 # do not remove inactive users (e.g. default)
                 implied_group.with_context(active_test=False).write(
-                    {'users': [Command.unlink(user.id) for user in users_to_unlink]})
+                    {'user_ids': [Command.unlink(user.id) for user in users_to_unlink]})
 
     @api.model
     @tools.ormcache(cache='groups')

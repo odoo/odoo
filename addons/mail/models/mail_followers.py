@@ -149,7 +149,7 @@ class MailFollowers(models.Model):
         self.env['mail.message.subtype'].flush_model(['internal'])
         self.env['res.users'].flush_model(['notification_type', 'active', 'partner_id', 'groups_id'])
         self.env['res.partner'].flush_model(['active', 'email_normalized', 'name', 'partner_share'])
-        self.env['res.groups'].flush_model(['users'])
+        self.env['res.groups'].flush_model(['user_ids'])
         # if we have records and a subtype: we have to fetch followers, unless being
         # in user notification mode (contact only pids)
         if message_type != 'user_notification' and records and subtype_id:
