@@ -1080,7 +1080,7 @@ def _optimize_in_list(condition, _):
         # empty, return a boolean
         return _FALSE_DOMAIN if condition.operator == 'in' else _TRUE_DOMAIN
     if not isinstance(value, COLLECTION_TYPES):
-        # TODO show warning, note that condition.field_expr in ('groups_id', 'user_ids') gives a lot of them
+        # TODO show warning, note that condition.field_expr in ('group_ids', 'user_ids') gives a lot of them
         _logger.debug("The domain condition %r should have a list value.", condition)
         value = [value]
     if value is condition.value:

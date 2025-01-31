@@ -57,7 +57,7 @@ class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
 
     def test_compute_signup_url(self):
         user = self.user_demo
-        user.groups_id -= self.env.ref('base.group_partner_manager')
+        user.group_ids -= self.env.ref('base.group_partner_manager')
 
         partner = self.partner_portal
         partner.signup_prepare()

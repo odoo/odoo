@@ -22,7 +22,7 @@ class TestHasGroup(TransactionCase):
             'partner_id': self.env['res.partner'].create({
                 'name': "Strawman Test User"
             }).id,
-            'groups_id': [Command.set([group0.id])]
+            'group_ids': [Command.set([group0.id])]
         })
 
         self.grp_internal_xml_id = 'base.group_user'
@@ -54,7 +54,7 @@ class TestHasGroup(TransactionCase):
         )
 
     def test_other_user(self):
-        internal_user = self.test_user.copy({'groups_id': self.grp_internal})
+        internal_user = self.test_user.copy({'group_ids': self.grp_internal})
         internal_user = internal_user.with_user(internal_user)
         test_user = self.env['res.users'].with_user(self.test_user).browse(self.test_user.id)
 
@@ -135,11 +135,11 @@ class TestHasGroup(TransactionCase):
         portal_user = self.env['res.users'].create({
             'login': 'portalTest2',
             'name': 'Portal test 2',
-            'groups_id': [Command.set([self.grp_portal.id])],
+            'group_ids': [Command.set([self.grp_portal.id])],
             })
 
         self.assertEqual(
-            portal_user.groups_id, (self.grp_portal + grp_test_portal),
+            portal_user.all_group_ids, (self.grp_portal + grp_test_portal),
             "The portal user should have the implied group.",
         )
 
@@ -147,7 +147,7 @@ class TestHasGroup(TransactionCase):
             {"name": "fail", "implied_ids": [Command.set([self.grp_internal.id])]})
 
         with self.assertRaises(ValidationError):
-            portal_user.write({'groups_id': [Command.link(grp_fail.id)]})
+            portal_user.write({'group_ids': [Command.link(grp_fail.id)]})
 
     def test_two_user_types(self):
         #Create a user with two groups of user types kind (Internal and Portal)
@@ -161,14 +161,14 @@ class TestHasGroup(TransactionCase):
             self.env['res.users'].create({
                 'login': 'test_two_user_types',
                 'name': "Test User with two user types",
-                'groups_id': [Command.set([grp_test.id])]
+                'group_ids': [Command.set([grp_test.id])]
             })
 
         #Add a user with portal to the group Internal
         test_user = self.env['res.users'].create({
                 'login': 'test_user_portal',
                 'name': "Test User with two user types",
-                'groups_id': [Command.set([self.grp_portal.id])]
+                'group_ids': [Command.set([self.grp_portal.id])]
              })
         with self.assertRaises(ValidationError):
             self.grp_internal.user_ids = [Command.link(test_user.id)]
@@ -185,7 +185,7 @@ class TestHasGroup(TransactionCase):
         test_user = self.env['res.users'].create({
             'login': 'test_user_portal',
             'name': "Test User with one user types",
-            'groups_id': [Command.set([grp_test.id])]
+            'group_ids': [Command.set([grp_test.id])]
         })
 
         with self.assertRaisesRegex(ValidationError, "The user cannot have more than one user types"), self.env.cr.savepoint():
@@ -196,9 +196,9 @@ class TestHasGroup(TransactionCase):
                 "name": "x_group_names",
                 "model_id": self.env.ref("base.model_res_users").id,
                 "state": "manual",
-                "field_description": "A computed field that depends on groups_id",
-                "compute": "for r in self: r['x_group_names'] = ', '.join(r.groups_id.mapped('name'))",
-                "depends": "groups_id",
+                "field_description": "A computed field that depends on group_ids",
+                "compute": "for r in self: r['x_group_names'] = ', '.join(r.group_ids.mapped('name'))",
+                "depends": "group_ids",
                 "store": True,
                 "ttype": "char",
             }
@@ -230,15 +230,15 @@ class TestHasGroup(TransactionCase):
         group_U = self.env["res.groups"].create({"name": "U", "implied_ids": [Command.set([self.grp_internal.id])]})
         self.grp_internal.implied_ids = False  # only there to simplify the test by not having to care about its trans_implied_ids
 
-        self.test_user.write({'groups_id': [Command.link(group_U.id)]})
+        self.test_user.write({'group_ids': [Command.link(group_U.id)]})
         self.assertEqual(
-            self.test_user.groups_id, (group_0 + group_U + self.grp_internal),
+            self.test_user.group_ids, (group_0 + group_U + self.grp_internal),
             "We should have our 2 groups and the implied user group",
         )
 
         # Now we demote him. The JS framework sends 3 and 4 commands,
         # which is what we write here, but it should work even with a 5 command or whatever.
-        self.test_user.write({'groups_id': [
+        self.test_user.write({'group_ids': [
             Command.unlink(self.grp_internal.id),
             Command.unlink(self.grp_public.id),
             Command.link(self.grp_portal.id),
@@ -250,7 +250,7 @@ class TestHasGroup(TransactionCase):
         # so as a compromise we remove all groups when demoting a user
         # (even technical display groups, e.g. TaxB2B, which could be re-added later)
         self.assertEqual(
-            self.test_user.groups_id, (self.grp_portal),
+            self.test_user.group_ids, (self.grp_portal),
             "Here the portal group does not imply any other group, so we should only have this group.",
         )
 
@@ -274,26 +274,26 @@ class TestHasGroup(TransactionCase):
         # as well as 'implied_groups'; otherwise nothing else should happen.
         # By contrast, for a portal user we want implied groups not to be added
         # if and only if it would not give group_user (or group_public) privileges
-        user_a = U.create({"name": "a", "login": "a", "groups_id": [Command.set([group_AA.id, group_user.id])]})
-        self.assertEqual(user_a.groups_id, (group_AA + group_A + group_user + group_no_one))
+        user_a = U.create({"name": "a", "login": "a", "group_ids": [Command.set([group_AA.id, group_user.id])]})
+        self.assertEqual(user_a.group_ids, (group_AA + group_A + group_user + group_no_one))
 
-        user_b = U.create({"name": "b", "login": "b", "groups_id": [Command.set([group_portal.id, group_AA.id])]})
-        self.assertEqual(user_b.groups_id, (group_AA + group_A + group_portal))
+        user_b = U.create({"name": "b", "login": "b", "group_ids": [Command.set([group_portal.id, group_AA.id])]})
+        self.assertEqual(user_b.group_ids, (group_AA + group_A + group_portal))
 
         # user_b is not an internal user, but giving it a new group just added a new group
-        (user_a + user_b).write({"groups_id": [Command.link(group_BB.id)]})
-        self.assertEqual(user_a.groups_id, (group_AA + group_A + group_BB + group_B + group_user + group_no_one))
-        self.assertEqual(user_b.groups_id, (group_AA + group_A + group_BB + group_B + group_portal))
+        (user_a + user_b).write({"group_ids": [Command.link(group_BB.id)]})
+        self.assertEqual(user_a.group_ids, (group_AA + group_A + group_BB + group_B + group_user + group_no_one))
+        self.assertEqual(user_b.group_ids, (group_AA + group_A + group_BB + group_B + group_portal))
 
         # now we create a group that implies the group_user
         # adding it to a user should work normally, whereas adding it to a portal user should raise
         group_C = G.create({"name": "C", "implied_ids": [Command.set([group_user.id])]})
 
-        user_a.write({"groups_id": [Command.link(group_C.id)]})
-        self.assertEqual(user_a.groups_id, (group_AA + group_A + group_BB + group_B + group_C + group_user + group_no_one))
+        user_a.write({"group_ids": [Command.link(group_C.id)]})
+        self.assertEqual(user_a.group_ids, (group_AA + group_A + group_BB + group_B + group_C + group_user + group_no_one))
 
         with self.assertRaises(ValidationError):
-            user_b.write({"groups_id": [Command.link(group_C.id)]})
+            user_b.write({"group_ids": [Command.link(group_C.id)]})
 
     def test_has_group_cleared_cache_on_write(self):
         self.env.registry.clear_cache()

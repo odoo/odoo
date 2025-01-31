@@ -11,7 +11,7 @@ class TestPortalWizard(MailCommon):
         super(TestPortalWizard, self).setUp()
 
         # for those tests, consider user_employee cannot manager partners for acl testse
-        self.user_employee.write({'groups_id': [(3, self.env.ref('base.group_partner_manager').id)]})
+        self.user_employee.write({'group_ids': [(3, self.env.ref('base.group_partner_manager').id)]})
         self.partner = self.env['res.partner'].create({
             'name': 'Testing Partner',
             'email': 'testing_partner@example.com',
@@ -110,7 +110,7 @@ class TestPortalWizard(MailCommon):
             portal_user.action_revoke_access()
 
         self.assertEqual(portal_user.user_id, self.public_user, 'Must keep the user even if it is archived')
-        self.assertEqual(group_public, portal_user.user_id.groups_id, 'Must add the group public after removing the portal group')
+        self.assertEqual(group_public, portal_user.user_id.group_ids, 'Must add the group public after removing the portal group')
         self.assertFalse(portal_user.user_id.active, 'Must have archived the user')
         self.assertFalse(portal_user.is_portal)
         self.assertFalse(portal_user.is_internal)

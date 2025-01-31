@@ -207,7 +207,7 @@ class TestExpenses(TestExpenseCommon):
     def test_expense_split_flow(self):
         """ Check Split Expense flow. """
         # Grant Analytic Accounting rights, to be able to modify analytic_distribution from the wizard
-        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+        self.env.user.group_ids += self.env.ref('analytic.group_analytic_accounting')
 
         expense = self.create_expenses({
             'tax_ids': [Command.set(self.tax_purchase_a.ids)],
@@ -437,7 +437,7 @@ class TestExpenses(TestExpenseCommon):
         """ As soon as you set a product, the expense name, uom, taxes and account are set according to the product. """
         # Disable multi-uom
         self.env.ref('base.group_user').implied_ids -= self.env.ref('uom.group_uom')
-        self.expense_user_employee.groups_id -= self.env.ref('uom.group_uom')
+        self.expense_user_employee.group_ids -= self.env.ref('uom.group_uom')
 
         # Use the expense employee
         Expense = self.env['hr.expense'].with_user(self.expense_user_employee)

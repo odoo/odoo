@@ -501,7 +501,7 @@ class TestMrpByProduct(common.TransactionCase):
         self.assertEqual(byproduct_move.product_qty, 1.0)
 
     def test_byproducts_bom_document(self):
-        self.env.user.groups_id += self.env.ref('mrp.group_mrp_byproducts')
+        self.env.user.group_ids += self.env.ref('mrp.group_mrp_byproducts')
         doc_product_bom = self.env['product.document'].create({
             'name': 'doc_product_bom',
             'attached_on_mrp': 'bom',

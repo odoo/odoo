@@ -63,19 +63,19 @@ class TestCommonTimesheet(TransactionCase):
             'name': 'User Employee',
             'login': 'user_employee',
             'email': 'useremployee@test.com',
-            'groups_id': [(6, 0, [cls.env.ref('hr_timesheet.group_hr_timesheet_user').id])],
+            'group_ids': [(6, 0, [cls.env.ref('hr_timesheet.group_hr_timesheet_user').id])],
         })
         cls.user_employee2 = cls.env['res.users'].create({
             'name': 'User Employee 2',
             'login': 'user_employee2',
             'email': 'useremployee2@test.com',
-            'groups_id': [(6, 0, [cls.env.ref('hr_timesheet.group_hr_timesheet_user').id])],
+            'group_ids': [(6, 0, [cls.env.ref('hr_timesheet.group_hr_timesheet_user').id])],
         })
         cls.user_manager = cls.env['res.users'].create({
             'name': 'User Officer',
             'login': 'user_manager',
             'email': 'usermanager@test.com',
-            'groups_id': [(6, 0, [cls.env.ref('hr_timesheet.group_timesheet_manager').id])],
+            'group_ids': [(6, 0, [cls.env.ref('hr_timesheet.group_timesheet_manager').id])],
         })
         # employees
         cls.empl_employee = cls.env['hr.employee'].create({
@@ -354,7 +354,7 @@ class TestTimesheet(TestCommonTimesheet):
         project_manager = self.env['res.users'].create({
             'name': 'user_project_manager',
             'login': 'user_project_manager',
-            'groups_id': [(6, 0, [self.ref('project.group_project_manager')])],
+            'group_ids': [(6, 0, [self.ref('project.group_project_manager')])],
         })
 
         project = self.env['project.project'].create({

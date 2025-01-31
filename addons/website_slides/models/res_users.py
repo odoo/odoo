@@ -13,7 +13,7 @@ class ResUsers(models.Model):
         users = super().create(vals_list)
         for user in users:
             self.env['slide.channel'].sudo().search([
-                ('enroll_group_ids', 'in', user.groups_id.ids)
+                ('enroll_group_ids', 'in', user.all_group_ids.ids)
             ])._action_add_members(user.partner_id)
         return users
 
@@ -21,9 +21,9 @@ class ResUsers(models.Model):
         """ Trigger automatic subscription based on updated user groups """
         res = super().write(vals)
         sanitized_vals = self._remove_reified_groups(vals)
-        if sanitized_vals.get('groups_id'):
-            added_group_ids = [command[1] for command in sanitized_vals['groups_id'] if command[0] == 4]
-            added_group_ids += [id for command in sanitized_vals['groups_id'] if command[0] == 6 for id in command[2]]
+        if sanitized_vals.get('group_ids'):
+            added_group_ids = [command[1] for command in sanitized_vals['group_ids'] if command[0] == 4]
+            added_group_ids += [id for command in sanitized_vals['group_ids'] if command[0] == 6 for id in command[2]]
             self.env['slide.channel'].sudo().search([('enroll_group_ids', 'in', added_group_ids)])._action_add_members(self.mapped('partner_id'))
         return res
 

@@ -21,19 +21,19 @@ class UsersCommonCase(TransactionCase):
                 'name': 'Internal',
                 'login': 'user_internal',
                 'password': 'password',
-                'groups_id': [cls.env.ref('base.group_user').id],
+                'group_ids': [cls.env.ref('base.group_user').id],
             },
             {
                 'name': 'Portal 1',
                 'login': 'portal_1',
                 'password': 'portal_1',
-                'groups_id': [cls.env.ref('base.group_portal').id],
+                'group_ids': [cls.env.ref('base.group_portal').id],
             },
             {
                 'name': 'Portal 2',
                 'login': 'portal_2',
                 'password': 'portal_2',
-                'groups_id': [cls.env.ref('base.group_portal').id],
+                'group_ids': [cls.env.ref('base.group_portal').id],
             },
         ])
 
@@ -176,7 +176,7 @@ class TestUsers(UsersCommonCase):
             'name': 'Portal',
             'login': 'portal_user',
             'password': 'password',
-            'groups_id': [self.env.ref('base.group_portal').id],
+            'group_ids': [self.env.ref('base.group_portal').id],
         })
         portal_partner = portal_user.partner_id
 
@@ -184,7 +184,7 @@ class TestUsers(UsersCommonCase):
             'name': 'Portal',
             'login': 'portal_user_2',
             'password': 'password',
-            'groups_id': [self.env.ref('base.group_portal').id],
+            'group_ids': [self.env.ref('base.group_portal').id],
         })
         portal_partner_2 = portal_user_2.partner_id
 
@@ -299,7 +299,7 @@ class TestUsers2(UsersCommonCase):
     def test_reified_groups(self):
         """ The groups handler doesn't use the "real" view with pseudo-fields
         during installation, so it always works (because it uses the normal
-        groups_id field).
+        group_ids field).
         """
         # use the specific views which has the pseudo-fields
         f = Form(self.env['res.users'], view='base.view_users_form')
@@ -307,11 +307,11 @@ class TestUsers2(UsersCommonCase):
         f.login = "bob"
         user = f.save()
 
-        self.assertIn(self.env.ref('base.group_user'), user.groups_id)
+        self.assertIn(self.env.ref('base.group_user'), user.group_ids)
 
         # all template user groups are copied
         default_user = self.env.ref('base.default_user')
-        self.assertEqual(default_user.groups_id, user.groups_id)
+        self.assertEqual(default_user.group_ids, user.group_ids)
 
     def test_selection_groups(self):
         # create 3 groups that should be in a selection
@@ -341,27 +341,27 @@ class TestUsers2(UsersCommonCase):
 
         # put user in group0, and check field value
         user.write({fname: group0.id})
-        self.assertEqual(user.groups_id & groups, group0)
+        self.assertEqual(user.group_ids & groups, group0)
         self.assertEqual(user.read([fname])[0][fname], group0.id)
 
         # put user in group1, and check field value
         user.write({fname: group1.id})
-        self.assertEqual(user.groups_id & groups, group0 + group1)
+        self.assertEqual(user.group_ids & groups, group0 + group1)
         self.assertEqual(user.read([fname])[0][fname], group1.id)
 
         # put user in group2, and check field value
         user.write({fname: group2.id})
-        self.assertEqual(user.groups_id & groups, groups)
+        self.assertEqual(user.group_ids & groups, groups)
         self.assertEqual(user.read([fname])[0][fname], group2.id)
 
         normalized_values = user._remove_reified_groups({fname: group0.id})
-        self.assertEqual(sorted(normalized_values['groups_id']), [(3, group1.id), (3, group2.id), (4, group0.id)])
+        self.assertEqual(sorted(normalized_values['group_ids']), [(3, group1.id), (3, group2.id), (4, group0.id)])
 
         normalized_values = user._remove_reified_groups({fname: group1.id})
-        self.assertEqual(sorted(normalized_values['groups_id']), [(3, group2.id), (4, group1.id)])
+        self.assertEqual(sorted(normalized_values['group_ids']), [(3, group2.id), (4, group1.id)])
 
         normalized_values = user._remove_reified_groups({fname: group2.id})
-        self.assertEqual(normalized_values['groups_id'], [(4, group2.id)])
+        self.assertEqual(normalized_values['group_ids'], [(4, group2.id)])
 
     def test_read_list_with_reified_field(self):
         """ Check that read_group and search_read get rid of reified fields"""
@@ -389,7 +389,7 @@ class TestUsers2(UsersCommonCase):
             User._read_group([], fnames + [reified_fname], ['__count'])
 
     def test_reified_groups_on_change(self):
-        """Test that a change on a reified fields trigger the onchange of groups_id."""
+        """Test that a change on a reified fields trigger the onchange of group_ids."""
         group_public = self.env.ref('base.group_public')
         group_portal = self.env.ref('base.group_portal')
         group_user = self.env.ref('base.group_user')
@@ -407,13 +407,13 @@ class TestUsers2(UsersCommonCase):
         self.assertFalse(user_form.share)
 
         user_form[group_field_name] = group_portal.id
-        self.assertTrue(user_form.share, 'The groups_id onchange should have been triggered')
+        self.assertTrue(user_form.share, 'The group_ids onchange should have been triggered')
 
         user_form[group_field_name] = group_user.id
-        self.assertFalse(user_form.share, 'The groups_id onchange should have been triggered')
+        self.assertFalse(user_form.share, 'The group_ids onchange should have been triggered')
 
         user_form[group_field_name] = group_public.id
-        self.assertTrue(user_form.share, 'The groups_id onchange should have been triggered')
+        self.assertTrue(user_form.share, 'The group_ids onchange should have been triggered')
 
     @users('portal_1')
     @mute_logger('odoo.addons.base.models.ir_model')
@@ -459,12 +459,12 @@ class TestUsers2(UsersCommonCase):
     @warmup
     def test_write_groups_id_performance(self):
         contact_creation_group = self.env.ref("base.group_partner_manager")
-        self.assertNotIn(contact_creation_group, self.user_internal.groups_id)
+        self.assertNotIn(contact_creation_group, self.user_internal.group_ids)
 
         # all modules: 28, base: 16
         with self.assertQueryCount(28):
             self.user_internal.write({
-                "groups_id": [Command.link(contact_creation_group.id)],
+                "group_ids": [Command.link(contact_creation_group.id)],
             })
 
 
@@ -563,7 +563,7 @@ class TestUsersGroupWarning(TransactionCase):
         cls.test_group_user = cls.env['res.users'].create({
             'name': 'Test Group User',
             'login': 'TestGroupUser',
-            'groups_id': (
+            'group_ids': (
                 cls.env.ref('base.group_user') |
                 cls.group_timesheets_administrator |
                 cls.group_field_service_administrator).ids,

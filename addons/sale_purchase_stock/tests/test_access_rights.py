@@ -18,7 +18,7 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
             'name': 'Le Grand Jojo User',
             'login': 'grand.jojo',
             'email': 'grand.jojo@chansonbelge.com',
-            'groups_id': [(6, 0, [group_sale_user.id])]
+            'group_ids': [(6, 0, [group_sale_user.id])]
         })
 
     def test_access_saleperson_decreases_qty(self):

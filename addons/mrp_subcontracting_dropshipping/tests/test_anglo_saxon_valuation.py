@@ -52,7 +52,7 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
         all_amls_ids = self.env['account.move.line'].search_read([], ['id'])
 
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
-        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
+        self.env.user.write({'group_ids': [(4, grp_multi_loc.id)]})
 
         (self.product_a | self.product_b).categ_id = self.categ_fifo_auto
         self.product_b.standard_price = 10

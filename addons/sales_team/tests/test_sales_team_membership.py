@@ -52,7 +52,7 @@ class TestMembership(TestSalesCommon):
         self.assertEqual(sales_team_1.member_ids, self.user_admin)
 
         # create a new user on the fly, just for testing
-        self.user_sales_manager.write({'groups_id': [(4, self.env.ref('base.group_system').id)]})
+        self.user_sales_manager.write({'group_ids': [(4, self.env.ref('base.group_system').id)]})
         new_team.write({'member_ids': [(0, 0, {
             'name': 'Marty OnTheMCFly',
             'login': 'mcfly@test.example.com',
@@ -60,7 +60,7 @@ class TestMembership(TestSalesCommon):
         new_user = self.env['res.users'].search([('login', '=', 'mcfly@test.example.com')])
         self.assertTrue(len(new_user))
         self.assertEqual(new_team.member_ids, self.env.user | self.user_sales_leads | new_user)
-        self.user_sales_manager.write({'groups_id': [(3, self.env.ref('base.group_system').id)]})
+        self.user_sales_manager.write({'group_ids': [(3, self.env.ref('base.group_system').id)]})
 
         self.env.flush_all()
         memberships = self.env['crm.team.member'].with_context(active_test=False).search([('user_id', '=', self.user_sales_leads.id)])
@@ -95,7 +95,7 @@ class TestMembership(TestSalesCommon):
         self.assertEqual(sales_team_1.member_ids, self.user_sales_leads | self.user_admin)
 
         # create a new user on the fly, just for testing
-        self.user_sales_manager.write({'groups_id': [(4, self.env.ref('base.group_system').id)]})
+        self.user_sales_manager.write({'group_ids': [(4, self.env.ref('base.group_system').id)]})
         new_team.write({'member_ids': [(0, 0, {
             'name': 'Marty OnTheMCFly',
             'login': 'mcfly@test.example.com',
@@ -103,7 +103,7 @@ class TestMembership(TestSalesCommon):
         new_user = self.env['res.users'].search([('login', '=', 'mcfly@test.example.com')])
         self.assertTrue(len(new_user))
         self.assertEqual(new_team.member_ids, self.env.user | self.user_sales_leads | new_user)
-        self.user_sales_manager.write({'groups_id': [(3, self.env.ref('base.group_system').id)]})
+        self.user_sales_manager.write({'group_ids': [(3, self.env.ref('base.group_system').id)]})
         self.env.flush_all()
 
         # still avoid duplicated team / user entries

@@ -202,7 +202,7 @@ class MrpProduction(models.Model):
         help='Technical field to check when we can reserve quantities')
     user_id = fields.Many2one(
         'res.users', 'Responsible', default=lambda self: self.env.user,
-        domain=lambda self: [('groups_id', 'in', self.env.ref('mrp.group_mrp_user').id)])
+        domain=lambda self: [('all_group_ids', 'in', self.env.ref('mrp.group_mrp_user').id)])
     company_id = fields.Many2one(
         'res.company', 'Company', default=lambda self: self.env.company,
         index=True, required=True)

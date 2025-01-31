@@ -208,11 +208,11 @@ class ResGroups(models.Model):  # noqa: F811
             updated_groups.invalidate_recordset(['user_ids'])
             updated_groups.modified(['user_ids'])
             updated_users = self.env['res.users'].browse(updated_user_ids)
-            updated_users.invalidate_recordset(['groups_id'])
-            updated_users.modified(['groups_id'])
+            updated_users.invalidate_recordset(['group_ids'])
+            updated_users.modified(['group_ids'])
             # explicitly check constraints
             updated_groups._validate_fields(['user_ids'])
-            updated_users._validate_fields(['groups_id'])
+            updated_users._validate_fields(['group_ids'])
             self._check_one_user_type()
         if 'implied_ids' in values:
             self.env.registry.clear_cache('groups')
@@ -242,7 +242,7 @@ class ResGroups(models.Model):  # noqa: F811
             users_to_unlink = [
                 user
                 for user in groups.with_context(active_test=False).user_ids
-                if implied_group not in (user.groups_id - implied_group).trans_implied_ids
+                if implied_group not in (user.group_ids - implied_group).trans_implied_ids
             ]
             if users_to_unlink:
                 # do not remove inactive users (e.g. default)

@@ -33,7 +33,7 @@ class TestMarketingCardMail(MailCase, MarketingCardCommon):
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_campaign_send_mailing(self):
         campaign = self.campaign.with_user(self.env.user)
-        self.env.user.sudo().groups_id += self.env.ref('mass_mailing.group_mass_mailing_user')
+        self.env.user.sudo().group_ids += self.env.ref('mass_mailing.group_mass_mailing_user')
         partners = self.env['res.partner'].sudo().create([{'name': f'Part{n}', 'email': f'partn{n}@test.lan'} for n in range(7)])
         mailing_context = campaign.action_share().get('context') | {
             'default_email_from': 'test@test.lan',

@@ -74,7 +74,7 @@ class TestStockLandedCostsMrp(ValuationReconciliationTestCommon):
             'name': "Adviser",
             'login': "fm",
             'email': "accountmanager@yourcompany.com",
-            'groups_id': [(6, 0, [cls.env.ref('account.group_account_manager').id, cls.env.ref('mrp.group_mrp_user').id, cls.env.ref('stock.group_stock_manager').id])]
+            'group_ids': [(6, 0, [cls.env.ref('account.group_account_manager').id, cls.env.ref('mrp.group_mrp_user').id, cls.env.ref('stock.group_stock_manager').id])]
         })
 
     def test_landed_cost_on_mrp(self):
@@ -144,7 +144,7 @@ class TestStockLandedCostsMrp(ValuationReconciliationTestCommon):
             'name': "Stock Manager",
             'login': "test",
             'email': "test@test.com",
-            'groups_id': [(6, 0, [self.env.ref('stock.group_stock_manager').id])]
+            'group_ids': [(6, 0, [self.env.ref('stock.group_stock_manager').id])]
         })
         # Make some stock and reserve
         self.env['stock.quant']._update_available_quantity(self.product_component1, self.warehouse_1.lot_stock_id, 10)

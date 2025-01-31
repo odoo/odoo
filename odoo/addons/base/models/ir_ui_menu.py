@@ -29,7 +29,7 @@ class IrUiMenu(models.Model):
     child_id = fields.One2many('ir.ui.menu', 'parent_id', string='Child IDs')
     parent_id = fields.Many2one('ir.ui.menu', string='Parent Menu', index=True, ondelete="restrict")
     parent_path = fields.Char(index=True)
-    groups_id = fields.Many2many('res.groups', 'ir_ui_menu_group_rel',
+    group_ids = fields.Many2many('res.groups', 'ir_ui_menu_group_rel',
                                  'menu_id', 'gid', string='Groups',
                                  help="If you have groups, the visibility of this menu will be based on these groups. "\
                                       "If this field is empty, Odoo will compute visibility based on the related object's read access.")
@@ -86,7 +86,7 @@ class IrUiMenu(models.Model):
         # It will be used to determine which ones are visible
         menus = self.with_context({}).search_fetch(
             # Don't use 'any' operator in the domain to avoid ir.rule
-            ['|', ('groups_id', '=', False), ('groups_id', 'in', tuple(group_ids))],
+            ['|', ('group_ids', '=', False), ('group_ids', 'in', tuple(group_ids))],
             ['parent_id', 'action'], order='id',
         ).sudo()
 

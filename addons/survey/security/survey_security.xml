@@ -21,7 +21,7 @@
         </record>
 
         <record id="base.default_user" model="res.users">
-            <field name="groups_id" eval="[(4, ref('group_survey_user'))]"/>
+            <field name="group_ids" eval="[(4, ref('group_survey_user'))]"/>
         </record>
 
         <!-- SURVEY: SURVEY, PAGE, STAGE, QUESTION, LABEL -->

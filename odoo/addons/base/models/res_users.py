@@ -177,7 +177,7 @@ class ResUsers(models.Model):
         return [
             'signature', 'company_id', 'login', 'email', 'name', 'image_1920',
             'image_1024', 'image_512', 'image_256', 'image_128', 'lang', 'tz',
-            'tz_offset', 'groups_id', 'partner_id', 'write_date', 'action_id',
+            'tz_offset', 'group_ids', 'partner_id', 'write_date', 'action_id',
             'avatar_1920', 'avatar_1024', 'avatar_512', 'avatar_256', 'avatar_128',
             'share', 'device_ids', 'api_key_ids', 'phone',
         ]
@@ -195,7 +195,7 @@ class ResUsers(models.Model):
         All the groups of the Template User
         """
         default_user = self.env.ref('base.default_user', raise_if_not_found=False)
-        return default_user.sudo().groups_id if default_user else []
+        return default_user.sudo().group_ids if default_user else []
 
     partner_id = fields.Many2one('res.partner', required=True, ondelete='restrict', auto_join=True, index=True,
         string='Related Partner', help='Partner-related data of the user')
@@ -214,7 +214,6 @@ class ResUsers(models.Model):
     active_partner = fields.Boolean(related='partner_id.active', readonly=True, string="Partner is Active")
     action_id = fields.Many2one('ir.actions.actions', string='Home Action',
         help="If specified, this action will be opened at log on for this user, in addition to the standard menu.")
-    groups_id = fields.Many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', string='Groups', default=lambda s: s._default_groups())
     log_ids = fields.One2many('res.users.log', 'create_uid', string='User log entries')
     device_ids = fields.One2many('res.device', 'user_id', string='User devices')
     login_date = fields.Datetime(related='log_ids.create_date', string='Latest authentication', readonly=False)
@@ -239,6 +238,9 @@ class ResUsers(models.Model):
     name = fields.Char(related='partner_id.name', inherited=True, readonly=False)
     email = fields.Char(related='partner_id.email', inherited=True, readonly=False)
     phone = fields.Char(related='partner_id.phone', inherited=True, readonly=False)
+
+    group_ids = fields.Many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', string='Groups', default=lambda s: s._default_groups(), help="Groups explicitly assigned to the user")
+    all_group_ids = fields.Many2many('res.groups', related='group_ids', string="Groups and implied groups")
 
     accesses_count = fields.Integer('# Access Rights', help='Number of access rights that apply to the current user',
                                     compute='_compute_accesses_count', compute_sudo=True)
@@ -388,10 +390,10 @@ class ResUsers(models.Model):
         for user in self.filtered(lambda user: user.name and is_html_empty(user.signature)):
             user.signature = Markup('<p>%s</p>') % user['name']
 
-    @api.depends('groups_id')
+    @api.depends('all_group_ids')
     def _compute_share(self):
         user_group_id = self.env['ir.model.data']._xmlid_to_res_id('base.group_user')
-        internal_users = self.filtered_domain([('groups_id', 'in', [user_group_id])])
+        internal_users = self.filtered_domain([('all_group_ids', 'in', [user_group_id])])
         internal_users.share = False
         (self - internal_users).share = True
 
@@ -404,10 +406,10 @@ class ResUsers(models.Model):
         for user in self:
             user.tz_offset = datetime.datetime.now(pytz.timezone(user.tz or 'GMT')).strftime('%z')
 
-    @api.depends('groups_id')
+    @api.depends('all_group_ids')
     def _compute_accesses_count(self):
         for user in self:
-            groups = user.groups_id
+            groups = user.all_group_ids
             user.accesses_count = len(groups.model_access)
             user.rules_count = len(groups.rule_groups)
             user.groups_count = len(groups)
@@ -464,8 +466,8 @@ class ResUsers(models.Model):
                         _('The action "%s" cannot be set as the home action because it requires a record to be selected beforehand.', action.name)
                     )
 
+    @api.constrains('group_ids')
 
-    @api.constrains('groups_id')
     def _check_one_user_type(self):
         """We check that no users are both portal and users (same with public).
            This could typically happen because of implied groups.
@@ -523,12 +525,12 @@ class ResUsers(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for values in vals_list:
-            if 'groups_id' in values:
-                # complete 'groups_id' with implied groups
+            if 'group_ids' in values:
+                # complete 'group_ids' with implied groups
                 user = self.new(values)
-                gs = user.groups_id._origin
+                gs = user.group_ids._origin
                 gs = gs | gs.trans_implied_ids
-                values['groups_id'] = self._fields['groups_id'].convert_to_write(gs, user)
+                values['group_ids'] = self._fields['group_ids'].convert_to_write(gs, user)
 
         users = super().create(vals_list)
         setting_vals = []
@@ -577,10 +579,10 @@ class ResUsers(models.Model):
                 self = self.sudo()
 
         old_groups = []
-        if 'groups_id' in values:
+        if 'group_ids' in values:
             users_before = self.filtered(lambda u: u._is_internal())
             if self._apply_groups_to_existing_employees():
-                # if modify groups_id content, compute the delta of groups to apply
+                # if modify group_ids content, compute the delta of groups to apply
                 # the new ones to other existing users
                 old_groups = self._default_groups()
 
@@ -592,7 +594,7 @@ class ResUsers(models.Model):
             added_groups = self._default_groups() - old_groups
             if added_groups:
                 internal_users = self.env.ref('base.group_user').all_user_ids - self
-                internal_users.write({'groups_id': [Command.link(gid) for gid in added_groups.ids]})
+                internal_users.write({'group_ids': [Command.link(gid) for gid in added_groups.ids]})
 
         if 'company_id' in values:
             for user in self:
@@ -609,21 +611,21 @@ class ResUsers(models.Model):
                 if env.user in self:
                     lazy_property.reset_all(env)
 
-        if 'groups_id' in values:
+        if 'group_ids' in values:
             # Do not use `_is_internal` as it relies on the ormcache which is not yet invalidated
             internal_group_id = self.env['ir.model.data']._xmlid_to_res_id("base.group_user")
-            demoted_users = users_before.filtered(lambda u: internal_group_id not in u.groups_id.ids)
+            demoted_users = users_before.filtered(lambda u: internal_group_id not in u.group_ids.ids)
             if demoted_users:
                 # demoted users are restricted to the assigned groups only
-                vals = {'groups_id': [Command.clear()] + values['groups_id']}
+                vals = {'group_ids': [Command.clear()] + values['group_ids']}
                 super(ResUsers, demoted_users).write(vals)
             # add implied groups for all users (in batches)
             users_batch = defaultdict(self.browse)
             for user in self:
-                users_batch[user.groups_id] += user
+                users_batch[user.group_ids] += user
             for groups, users in users_batch.items():
                 gs = set(concat(g.trans_implied_ids for g in groups))
-                vals = {'groups_id': [Command.link(g.id) for g in gs]}
+                vals = {'group_ids': [Command.link(g.id) for g in gs]}
                 super(ResUsers, users).write(vals)
             # clear caches linked to the users
             if self.ids:
@@ -725,7 +727,7 @@ class ResUsers(models.Model):
     @api.model
     def _get_invalidation_fields(self):
         return {
-            'groups_id', 'active', 'lang', 'tz', 'company_id', 'company_ids',
+            'group_ids', 'active', 'lang', 'tz', 'company_id', 'company_ids',
             *self._get_session_token_fields()
         }
 
@@ -1050,13 +1052,13 @@ class ResUsers(models.Model):
         """
         group_id = self.env['res.groups']._get_group_definitions().get_id(group_ext_id)
         # for new record don't fill the ormcache
-        return group_id in (self._get_group_ids() if self.id else self.groups_id._origin._ids)
+        return group_id in (self._get_group_ids() if self.id else self.all_group_ids._origin._ids)
 
     @tools.ormcache('self.id')
     def _get_group_ids(self):
         """ Return ``self``'s group ids (as a tuple)."""
         self.ensure_one()
-        return self.groups_id._ids
+        return self.all_group_ids._ids
 
     def _action_show(self):
         """If self is a singleton, directly access the form view. If it is a recordset, open a list view"""
@@ -1089,7 +1091,7 @@ class ResUsers(models.Model):
             'res_model': 'res.groups',
             'type': 'ir.actions.act_window',
             'context': {'create': False, 'delete': False},
-            'domain': [('id','in', self.groups_id.ids)],
+            'domain': [('id', 'in', self.all_group_ids.ids)],
             'target': 'current',
         }
 
@@ -1101,7 +1103,7 @@ class ResUsers(models.Model):
             'res_model': 'ir.model.access',
             'type': 'ir.actions.act_window',
             'context': {'create': False, 'delete': False},
-            'domain': [('id', 'in', self.groups_id.model_access.ids)],
+            'domain': [('id', 'in', self.all_group_ids.model_access.ids)],
             'target': 'current',
         }
 
@@ -1113,7 +1115,7 @@ class ResUsers(models.Model):
             'res_model': 'ir.rule',
             'type': 'ir.actions.act_window',
             'context': {'create': False, 'delete': False},
-            'domain': [('id', 'in', self.groups_id.rule_groups.ids)],
+            'domain': [('id', 'in', self.all_group_ids.rule_groups.ids)],
             'target': 'current',
         }
 
@@ -1303,10 +1305,10 @@ class UsersMultiCompany(models.Model):
             'base.group_multi_company', raise_if_not_found=False)
         if group_multi_company_id:
             for user in users:
-                if len(user.company_ids) <= 1 and group_multi_company_id in user.groups_id.ids:
-                    user.write({'groups_id': [Command.unlink(group_multi_company_id)]})
-                elif len(user.company_ids) > 1 and group_multi_company_id not in user.groups_id.ids:
-                    user.write({'groups_id': [Command.link(group_multi_company_id)]})
+                if len(user.company_ids) <= 1 and group_multi_company_id in user.group_ids.ids:
+                    user.write({'group_ids': [Command.unlink(group_multi_company_id)]})
+                elif len(user.company_ids) > 1 and group_multi_company_id not in user.group_ids.ids:
+                    user.write({'group_ids': [Command.link(group_multi_company_id)]})
         return users
 
     def write(self, values):
@@ -1317,10 +1319,10 @@ class UsersMultiCompany(models.Model):
             'base.group_multi_company', raise_if_not_found=False)
         if group_multi_company_id:
             for user in self:
-                if len(user.company_ids) <= 1 and group_multi_company_id in user.groups_id.ids:
-                    user.write({'groups_id': [Command.unlink(group_multi_company_id)]})
-                elif len(user.company_ids) > 1 and group_multi_company_id not in user.groups_id.ids:
-                    user.write({'groups_id': [Command.link(group_multi_company_id)]})
+                if len(user.company_ids) <= 1 and group_multi_company_id in user.group_ids.ids:
+                    user.write({'group_ids': [Command.unlink(group_multi_company_id)]})
+                elif len(user.company_ids) > 1 and group_multi_company_id not in user.group_ids.ids:
+                    user.write({'group_ids': [Command.link(group_multi_company_id)]})
         return res
 
     @api.model
@@ -1331,10 +1333,10 @@ class UsersMultiCompany(models.Model):
         group_multi_company_id = self.env['ir.model.data']._xmlid_to_res_id(
             'base.group_multi_company', raise_if_not_found=False)
         if group_multi_company_id:
-            if len(user.company_ids) <= 1 and group_multi_company_id in user.groups_id.ids:
-                user.update({'groups_id': [Command.unlink(group_multi_company_id)]})
-            elif len(user.company_ids) > 1 and group_multi_company_id not in user.groups_id.ids:
-                user.update({'groups_id': [Command.link(group_multi_company_id)]})
+            if len(user.company_ids) <= 1 and group_multi_company_id in user.group_ids.ids:
+                user.update({'group_ids': [Command.unlink(group_multi_company_id)]})
+            elif len(user.company_ids) > 1 and group_multi_company_id not in user.group_ids.ids:
+                user.update({'group_ids': [Command.link(group_multi_company_id)]})
         return user
 
 
@@ -1537,7 +1539,7 @@ class ResUsersApikeys(models.Model):
             return
         if not date:
             raise ValidationError(_("The API key must have an expiration date"))
-        max_duration = max(group.api_key_duration for group in self.env.user.groups_id) or 1.0
+        max_duration = max(group.api_key_duration for group in self.env.user.all_group_ids) or 1.0
         if date > datetime.datetime.now() + datetime.timedelta(days=max_duration):
             raise ValidationError(_("You cannot exceed %(duration)s days.", duration=max_duration))
 
@@ -1598,7 +1600,7 @@ class ResUsersApikeysDescription(models.TransientModel):
         custom_duration = ('-1', 'Custom Date')  # Will force the user to enter a date manually
         if self.env.is_system():
             return durations + [persistent_duration, custom_duration]
-        max_duration = max(group.api_key_duration for group in self.env.user.groups_id) or 1.0
+        max_duration = max(group.api_key_duration for group in self.env.user.all_group_ids) or 1.0
         return list(filter(
             lambda duration: int(duration[0]) <= max_duration, durations
         )) + [custom_duration]

@@ -24,7 +24,7 @@ class EventRegistrationCase(TestEventCrmCommon):
         })
         # add sales rights to event manager, to enable lead check
         cls.user_eventmanager.write({
-            'groups_id': [(4, cls.env.ref('sales_team.group_sale_salesman').id)],
+            'group_ids': [(4, cls.env.ref('sales_team.group_sale_salesman').id)],
         })
 
         cls.test_lang_website = cls.env['website'].sudo().create({

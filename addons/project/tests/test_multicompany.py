@@ -42,7 +42,7 @@ class TestMultiCompanyCommon(TransactionCase):
             'email': 'employee@companya.com',
             'company_id': cls.company_a.id,
             'company_ids': [(6, 0, [cls.company_a.id])],
-            'groups_id': [(6, 0, [user_group_employee.id])]
+            'group_ids': [(6, 0, [user_group_employee.id])]
         })
         cls.user_manager_company_a = Users.create({
             'name': 'Manager Company A',
@@ -50,7 +50,7 @@ class TestMultiCompanyCommon(TransactionCase):
             'email': 'manager@companya.com',
             'company_id': cls.company_a.id,
             'company_ids': [(6, 0, [cls.company_a.id])],
-            'groups_id': [(6, 0, [user_group_employee.id])]
+            'group_ids': [(6, 0, [user_group_employee.id])]
         })
         cls.user_employee_company_b = Users.create({
             'name': 'Employee Company B',
@@ -58,7 +58,7 @@ class TestMultiCompanyCommon(TransactionCase):
             'email': 'employee@companyb.com',
             'company_id': cls.company_b.id,
             'company_ids': [(6, 0, [cls.company_b.id])],
-            'groups_id': [(6, 0, [user_group_employee.id])]
+            'group_ids': [(6, 0, [user_group_employee.id])]
         })
         cls.user_manager_company_b = Users.create({
             'name': 'Manager Company B',
@@ -66,7 +66,7 @@ class TestMultiCompanyCommon(TransactionCase):
             'email': 'manager@companyb.com',
             'company_id': cls.company_b.id,
             'company_ids': [(6, 0, [cls.company_b.id])],
-            'groups_id': [(6, 0, [user_group_employee.id])]
+            'group_ids': [(6, 0, [user_group_employee.id])]
         })
 
     @contextmanager
@@ -131,16 +131,16 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
 
         # setup users
         cls.user_employee_company_a.write({
-            'groups_id': [(4, user_group_project_user.id)]
+            'group_ids': [(4, user_group_project_user.id)]
         })
         cls.user_manager_company_a.write({
-            'groups_id': [(4, user_group_project_manager.id)]
+            'group_ids': [(4, user_group_project_manager.id)]
         })
         cls.user_employee_company_b.write({
-            'groups_id': [(4, user_group_project_user.id)]
+            'group_ids': [(4, user_group_project_user.id)]
         })
         cls.user_manager_company_b.write({
-            'groups_id': [(4, user_group_project_manager.id)]
+            'group_ids': [(4, user_group_project_manager.id)]
         })
 
         # create project in both companies

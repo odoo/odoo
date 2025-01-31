@@ -220,7 +220,7 @@ class TestAllowedUsers(TestAccessRights):
         self.assertNotIn(self.portal.partner_id, self.task.message_partner_ids, "Portal user should have been removed from allowed users")
 
     def test_write_task(self):
-        self.user.groups_id |= self.env.ref('project.group_project_user')
+        self.user.group_ids |= self.env.ref('project.group_project_user')
         self.assertNotIn(self.user.partner_id, self.project_pigs.message_partner_ids)
         self.task.message_subscribe(partner_ids=[self.user.partner_id.id])
         self.project_pigs.invalidate_model()
@@ -228,7 +228,7 @@ class TestAllowedUsers(TestAccessRights):
         self.task.with_user(self.user).name = "I can edit a task!"
 
     def test_no_write_project(self):
-        self.user.groups_id |= self.env.ref('project.group_project_user')
+        self.user.group_ids |= self.env.ref('project.group_project_user')
         self.assertNotIn(self.user.partner_id, self.project_pigs.message_partner_ids)
         with self.assertRaises(AccessError, msg="User should not be able to edit project"):
             self.project_pigs.with_user(self.user).name = "I can't edit a task!"
@@ -243,7 +243,7 @@ class TestProjectPortalCommon(TestProjectCommon):
             'email': 'n.n@example.com',
             'signature': '--\nNoemie',
             'notification_type': 'email',
-            'groups_id': [(6, 0, [])]})
+            'group_ids': [(6, 0, [])]})
 
         self.task_3 = self.env['project.task'].with_context({'mail_create_nolog': True}).create({
             'name': 'Test3', 'user_ids': self.user_portal, 'project_id': self.project_pigs.id})

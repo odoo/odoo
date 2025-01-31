@@ -19,5 +19,5 @@ class TestUTMCommon(common.TransactionCase):
             'name': 'User Employee',
             'login': 'user_employee_utm',
             'email': 'user_employee_utm@test.com',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id])],
+            'group_ids': [(6, 0, [cls.env.ref('base.group_user').id])],
         })

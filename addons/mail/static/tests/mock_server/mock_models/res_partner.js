@@ -116,7 +116,7 @@ export class ResPartner extends webModels.ResPartner {
         const parent_channel = this.browse(channel.parent_channel_id);
         const allowed_group = parent_channel?.group_public_id ?? channel.group_public_id;
         if (allowed_group) {
-            extraDomain.push(["groups_id", "in", allowed_group]);
+            extraDomain.push(["group_ids", "in", allowed_group]);
         }
         const baseDomain = search
             ? ["|", ["name", "ilike", searchLower], ["email", "ilike", searchLower]]
@@ -148,7 +148,7 @@ export class ResPartner extends webModels.ResPartner {
         for (const partnerId of partners) {
             const data = {
                 name: users[partnerId]?.name,
-                groups_id: users[partnerId]?.groups_id.includes(allowed_group)
+                group_ids: users[partnerId]?.group_ids.includes(allowed_group)
                     ? allowed_group
                     : undefined,
             };

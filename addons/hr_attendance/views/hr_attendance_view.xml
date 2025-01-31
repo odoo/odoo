@@ -313,7 +313,7 @@
         <field name="name">Attendances</field>
         <field name="path">attendances</field>
         <field name="res_model">hr.attendance</field>
-        <field name="groups_id" eval="[(4, ref('hr_attendance.group_hr_attendance_officer'))]"/>
+        <field name="group_ids" eval="[(4, ref('hr_attendance.group_hr_attendance_officer'))]"/>
         <field name="view_mode">list,form</field>
         <field name="context">
             {
@@ -449,7 +449,7 @@
         <field name="code">
             action = model._action_open_kiosk_mode()
         </field>
-        <field name="groups_id" eval="[(4, ref('hr_attendance.group_hr_attendance_manager'))]"/>
+        <field name="group_ids" eval="[(4, ref('hr_attendance.group_hr_attendance_manager'))]"/>
     </record>
 
     <!-- Menus -->

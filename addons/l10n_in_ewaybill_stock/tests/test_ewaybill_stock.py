@@ -14,7 +14,7 @@ class TestStockEwaybill(L10nInTestInvoicingCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.env.user.groups_id += cls.env.ref('stock.group_stock_manager')
+        cls.env.user.group_ids += cls.env.ref('stock.group_stock_manager')
         cls.product_a.standard_price = 500.00
         cls.partner_a.write({
             'vat': '27DJMPM8965E1ZE',

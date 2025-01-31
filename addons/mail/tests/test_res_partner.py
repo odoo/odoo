@@ -450,7 +450,7 @@ class TestPartner(MailCommon):
         self.assertNotIn('Portal Access Granted', new_msg.body)
         self.assertIn('Contact created', new_msg.body)
 
-        new_user.write({'groups_id': [(4, group_portal.id), (3, group_user.id)]})
+        new_user.write({'group_ids': [(4, group_portal.id), (3, group_user.id)]})
         new_msg = new_user.message_ids[0]
         self.assertIn('Portal Access Granted', new_msg.body)
         self.assertEqual(new_msg.subtype_id, subtype_note)
@@ -458,7 +458,7 @@ class TestPartner(MailCommon):
         # check at create
         new_user = Users.create({
             'email': 'micheline.2@test.example.com',
-            'groups_id': [(4, group_portal.id)],
+            'group_ids': [(4, group_portal.id)],
             'login': 'michmich.2',
             'name': 'Micheline Portal',
         })

@@ -18,7 +18,7 @@
         </record>
 
         <record id="base.default_user" model="res.users">
-            <field name="groups_id" eval="[(4,ref('group_website_slides_manager'))]"/>
+            <field name="group_ids" eval="[(4,ref('group_website_slides_manager'))]"/>
         </record>
 
         <data noupdate="1">

@@ -28,7 +28,7 @@ class TestAngloSaxonValuationPurchaseMRP(AccountTestInvoicingCommon):
         })
 
         currency_grp = cls.env.ref('base.group_multi_currency')
-        cls.env.user.write({'groups_id': [(4, currency_grp.id)]})
+        cls.env.user.write({'group_ids': [(4, currency_grp.id)]})
 
         cls.env.company.anglo_saxon_accounting = True
 

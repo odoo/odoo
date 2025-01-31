@@ -62,7 +62,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(sale_order.order_line.qty_delivered, 1)
 
         self.pos_user.write({
-            'groups_id': [
+            'group_ids': [
                 (4, self.env.ref('stock.group_stock_user').id),
                 (4, self.env.ref('sales_team.group_sale_salesman_all_leads').id),
                 (4, self.env.ref('account.group_account_user').id),
@@ -883,13 +883,13 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'fixed_amount': 100,
         })
         payment.create_invoices()
-        all_groups = self.user.groups_id
-        self.user.groups_id = self.env.ref('account.group_account_manager') + self.env.ref('sales_team.group_sale_salesman_all_leads')
+        selected_groups = self.user.group_ids
+        self.user.group_ids = self.env.ref('account.group_account_manager') + self.env.ref('sales_team.group_sale_salesman_all_leads')
 
         downpayment_line = sale_order.order_line.filtered(lambda l: l.is_downpayment and not l.display_type)
         downpayment_invoice = downpayment_line.order_id.order_line.invoice_lines.move_id
         downpayment_invoice.action_post()
-        self.user.groups_id = all_groups
+        self.user.group_ids = selected_groups
         self.assertEqual(downpayment_line.price_unit, 100)
 
     def test_settle_order_ship_later_delivered_qty(self):

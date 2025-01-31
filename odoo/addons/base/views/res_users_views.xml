@@ -155,10 +155,10 @@
                         </div>
                         <group name="phone_numbers">
                             <field name="company_id" context="{'user_preference': 0}" groups="base.group_multi_company"/>
-                            <label for="groups_id" string="Access Rights"
+                            <label for="group_ids" string="Access Rights"
                                     invisible="id &gt; 0" groups="base.group_no_one"/>
                             <div invisible="id &gt; 0" groups="base.group_no_one">
-                                <field name="groups_id" readonly="1" widget="many2many_tags" options="{'color_field': 'color'}" style="display: inline;"/> You will be able to define additional access rights by editing the newly created user under the Settings / Users menu.
+                                <field name="group_ids" readonly="1" widget="many2many_tags" options="{'color_field': 'color'}" style="display: inline;"/> You will be able to define additional access rights by editing the newly created user under the Settings / Users menu.
                             </div>
                             <field name="phone" widget="phone"/>
                         </group>
@@ -225,7 +225,7 @@
                                     <field string="Allowed Companies" name="company_ids" widget="many2many_tags" options="{'no_create': True, 'color_field': 'color'}"/>
                                     <field string="Default Company" name="company_id" context="{'user_preference': 0}"/>
                                 </group>
-                                <field name="groups_id"/>
+                                <field name="group_ids"/>
                             </page>
                             <page string="Preferences" name="preferences">
                                 <group>
@@ -327,7 +327,7 @@
             <field name="inherit_id" ref="view_users_form"/>
             <field name="arch" type="xml">
                 <!-- dummy, will be modified by groups -->
-                <field name="groups_id" position="after"/>
+                <field name="group_ids" position="after"/>
             </field>
         </record>
         <!-- dummy update on group, to force the view above to be update -->
@@ -526,7 +526,7 @@
         <record model="ir.ui.view" id="view_apikeys">
             <field name="name">API Keys Listing</field>
             <field name="model">res.users.apikeys</field>
-            <field name="groups_id" eval="[Command.link(ref('base.group_system'))]"/>
+            <field name="group_ids" eval="[Command.link(ref('base.group_system'))]"/>
             <field name="arch" type="xml">
                 <list create="false" edit="false" delete="false" editable="bottom">
                     <field name="user_id"/>
@@ -541,7 +541,7 @@
             <field name="name">API Keys Listing</field>
             <field name="res_model">res.users.apikeys</field>
             <field name="view_mode">list</field>
-            <field name="groups_id" eval="[Command.link(ref('base.group_system'))]"/>
+            <field name="group_ids" eval="[Command.link(ref('base.group_system'))]"/>
             <field name="view_id" ref="base.view_apikeys"/>
         </record>
 

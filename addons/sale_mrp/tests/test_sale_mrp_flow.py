@@ -16,7 +16,7 @@ class TestSaleMrpFlowCommon(ValuationReconciliationTestCommon):
     def setUpClass(cls):
         super().setUpClass()
         # Required for `uom_id` to be visible in the view
-        cls.env.user.groups_id += cls.env.ref('uom.group_uom')
+        cls.env.user.group_ids += cls.env.ref('uom.group_uom')
         cls.env.ref('stock.route_warehouse0_mto').active = True
 
         # Useful models
@@ -2106,7 +2106,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         custo_location = self.env.ref('stock.stock_location_customers')
 
         grp_uom = self.env.ref('uom.group_uom')
-        self.env.user.write({'groups_id': [(4, grp_uom.id)]})
+        self.env.user.write({'group_ids': [(4, grp_uom.id)]})
 
         # 100 kit_3 = 100 x compo_f + 200 x compo_g
         self.env['stock.quant']._update_available_quantity(self.component_f, stock_location, 100)
@@ -2176,7 +2176,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         stock_location = self.company_data['default_warehouse'].lot_stock_id
 
         grp_uom = self.env.ref('uom.group_uom')
-        self.env.user.write({'groups_id': [(4, grp_uom.id)]})
+        self.env.user.write({'group_ids': [(4, grp_uom.id)]})
 
         # 10 kit_3 = 10 x compo_f + 20 x compo_g
         self.env['stock.quant']._update_available_quantity(self.component_f, stock_location, 10)
@@ -2215,7 +2215,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         stock_location = self.company_data['default_warehouse'].lot_stock_id
 
         grp_uom = self.env.ref('uom.group_uom')
-        self.env.user.write({'groups_id': [(4, grp_uom.id)]})
+        self.env.user.write({'group_ids': [(4, grp_uom.id)]})
 
         # 10 kit_3 = 10 x compo_f + 20 x compo_g
         self.env['stock.quant']._update_available_quantity(self.component_f, stock_location, 10)

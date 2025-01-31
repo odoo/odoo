@@ -25,7 +25,7 @@ test("Visitor going offline shows disconnection banner to operator", async () =>
     });
     const pyEnv = await startServer();
     pyEnv["res.users"].write([serverState.userId], {
-        groups_id: pyEnv["res.groups"]
+        group_ids: pyEnv["res.groups"]
             .search_read([["id", "=", serverState.groupLivechatId]])
             .map(({ id }) => id),
     });

@@ -39,7 +39,7 @@ class TestResConfig(TransactionCase):
         # Propage new groups (default)
         self.env['ir.config_parameter'].sudo().set_param("base_setup.default_user_rights", True)
 
-        self.env.ref('base.default_user').groups_id |= group_system
+        self.env.ref('base.default_user').group_ids |= group_system
 
         self.assertTrue(user in self.env.ref('base.group_system').sudo().all_user_ids)
 
@@ -52,12 +52,12 @@ class TestResConfig(TransactionCase):
         })
         self.assertTrue(new_user in group_system.all_user_ids)
 
-        (user | self.env.ref('base.default_user')).groups_id -= group_system
+        (user | self.env.ref('base.default_user')).group_ids -= group_system
 
         # Again but invert the settings
         self.env['ir.config_parameter'].sudo().set_param("base_setup.default_user_rights", False)
 
-        self.env.ref('base.default_user').groups_id |= group_system
+        self.env.ref('base.default_user').group_ids |= group_system
 
         self.assertTrue(user not in group_system.all_user_ids)
 

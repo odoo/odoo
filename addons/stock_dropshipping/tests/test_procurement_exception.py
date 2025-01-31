@@ -8,9 +8,9 @@ class TestProcurementException(common.TransactionCase):
 
     def test_00_procurement_exception(self):
         # Required for `partner_invoice_id` to be visible in the view
-        self.env.user.groups_id += self.env.ref('account.group_delivery_invoice_address')
+        self.env.user.group_ids += self.env.ref('account.group_delivery_invoice_address')
         # Required for `route_id` to be visible in the view
-        self.env.user.groups_id += self.env.ref('stock.group_adv_location')
+        self.env.user.group_ids += self.env.ref('stock.group_adv_location')
 
         res_partner_2 = self.env['res.partner'].create({'name': 'My Test Partner'})
         res_partner_address = self.env['res.partner'].create({

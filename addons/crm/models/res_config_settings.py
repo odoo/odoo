@@ -133,10 +133,10 @@ class ResConfigSettings(models.TransientModel):
 
     def set_values(self):
         group_use_lead_id = self.env['ir.model.data']._xmlid_to_res_id('crm.group_use_lead')
-        has_group_lead_before = group_use_lead_id in self.env.user.groups_id.ids
+        has_group_lead_before = group_use_lead_id in self.env.user.all_group_ids.ids
         super(ResConfigSettings, self).set_values()
         # update use leads / opportunities setting on all teams according to settings update
-        has_group_lead_after = group_use_lead_id in self.env.user.groups_id.ids
+        has_group_lead_after = group_use_lead_id in self.env.user.all_group_ids.ids
         if has_group_lead_before != has_group_lead_after:
             teams = self.env['crm.team'].search([])
             teams.filtered('use_opportunities').use_leads = has_group_lead_after
