@@ -393,7 +393,7 @@ class TestAccessFeatures(common.SlidesCase):
         })
         channel.invalidate_model()
         self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id') | new_user.partner_id | new_user_2.partner_id)
-        self.env.ref('base.group_user').write({'users': [(4, new_user_3.id)]})
+        self.env.ref('base.group_user').write({'user_ids': [(4, new_user_3.id)]})
         channel.invalidate_model()
         self.assertEqual(channel.partner_ids, user_employees.mapped('partner_id') | new_user.partner_id | new_user_2.partner_id | new_user_3.partner_id)
 

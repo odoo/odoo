@@ -171,7 +171,7 @@ class TestHasGroup(TransactionCase):
                 'groups_id': [Command.set([self.grp_portal.id])]
              })
         with self.assertRaises(ValidationError):
-            self.grp_internal.users = [Command.link(test_user.id)]
+            self.grp_internal.user_ids = [Command.link(test_user.id)]
 
     def test_two_user_types_implied_groups(self):
         """Contrarily to test_two_user_types, we simply add an implied_id to a group.
@@ -209,8 +209,8 @@ class TestHasGroup(TransactionCase):
                 "model_id": self.env.ref("base.model_res_groups").id,
                 "state": "manual",
                 "field_description": "A computed field that depends on users",
-                "compute": "for r in self: r['x_user_names'] = ', '.join(r.users.mapped('name'))",
-                "depends": "users",
+                "compute": "for r in self: r['x_user_names'] = ', '.join(r.user_ids.mapped('name'))",
+                "depends": "user_ids",
                 "store": True,
                 "ttype": "char",
             }

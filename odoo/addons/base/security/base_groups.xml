@@ -19,7 +19,7 @@
         <record model="res.groups" id="group_system">
             <field name="name">Settings</field>
             <field name="implied_ids" eval="[Command.link(ref('group_erp_manager')), Command.link(ref('group_sanitize_override'))]"/>
-            <field name="users" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
+            <field name="user_ids" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
         </record>
 
         <record model="res.groups" id="group_user">
@@ -45,16 +45,16 @@
         <record id="group_allow_export" model="res.groups">
             <field name="name">Access to export feature</field>
             <field name="category_id" ref="base.module_category_hidden"/>
-            <field name="users" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
+            <field name="user_ids" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
         </record>
         <record model="res.groups" id="group_user">
             <field name="implied_ids" eval="[Command.link(ref('group_no_one'))]"/>
-            <field name="users" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
+            <field name="user_ids" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
         </record>
 
         <record model="res.groups" id="group_partner_manager">
             <field name="name">Contact Creation</field>
-            <field name="users" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
+            <field name="user_ids" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
         </record>
 
         <record id="default_user" model="res.users">

@@ -21,7 +21,7 @@ class BaseModuleInstallRequest(models.TransientModel):
 
     @api.depends('module_id')
     def _compute_user_ids(self):
-        users = self.env.ref('base.group_system').users
+        users = self.env.ref('base.group_system').all_user_ids
         self.user_ids = [(6, 0, users.ids)]
 
     def action_send_request(self):
