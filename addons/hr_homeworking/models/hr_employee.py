@@ -70,3 +70,13 @@ class HrEmployeeBase(models.AbstractModel):
                 continue
             employee.hr_icon_display = f'presence_{today_employee_location_id.location_type}'
             employee.show_hr_icon_display = True
+
+    def action_copy_to_all(self):
+        self.ensure_one()
+
+        self.tuesday_location_id = self.monday_location_id
+        self.wednesday_location_id = self.monday_location_id
+        self.thursday_location_id = self.monday_location_id
+        self.friday_location_id = self.monday_location_id
+        self.saturday_location_id = self.monday_location_id
+        self.sunday_location_id = self.monday_location_id
