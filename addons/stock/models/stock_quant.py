@@ -589,7 +589,8 @@ class StockQuant(models.Model):
                 name.append(record.package_id.name)
             if record.owner_id:
                 name.append(record.owner_id.name)
-            record.display_name = ' - '.join(name)
+            name = [n for n in name if n]
+            record.display_name = name and ' - '.join(name) or '/'
 
     @api.constrains('product_id')
     def check_product_id(self):
