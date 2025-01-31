@@ -5,7 +5,7 @@
             <field name="groups_id" eval="[(3, ref('hr_attendance.group_hr_attendance_manager'))]"/>
         </record>
 
-        <record id="hr.employee_al" model="hr.employee">
+        <record id="hr.employee_ronnie" model="hr.employee">
             <field name="barcode">123</field>
         </record>
 
@@ -13,19 +13,19 @@
             <field name="barcode">456</field>
         </record>
 
-        <record id="hr.employee_hne" model="hr.employee">
+        <record id="hr.employee_abigail" model="hr.employee">
             <field name="attendance_manager_id" ref="base.user_demo"/>
         </record>
 
-        <record id="hr.employee_mit" model="hr.employee">
+        <record id="hr.employee_anita" model="hr.employee">
             <field name="attendance_manager_id" ref="base.user_demo"/>
         </record>
 
-        <record id="hr.employee_chs" model="hr.employee">
+        <record id="hr.employee_jennie" model="hr.employee">
             <field name="attendance_manager_id" ref="base.user_demo"/>
         </record>
 
-        <record id="hr.employee_fme" model="hr.employee">
+        <record id="hr.employee_keith" model="hr.employee">
             <field name="attendance_manager_id" ref="base.user_demo"/>
         </record>
 
@@ -44,74 +44,74 @@
         <record id="attendance1" model="hr.attendance">
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-01 08:21')" name="check_in"/>
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-01 15:51')" name="check_out"/>
-            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="employee_id" ref="hr.employee_demo"/>
         </record>
 
         <record id="attendance2" model="hr.attendance">
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-02 08:47')" name="check_in"/>
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-02 15:53')" name="check_out"/>
-            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="employee_id" ref="hr.employee_demo"/>
         </record>
 
         <record id="attendance3" model="hr.attendance">
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-03 08:32')" name="check_in"/>
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-03 15:22')" name="check_out"/>
-            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="employee_id" ref="hr.employee_demo"/>
         </record>
 
         <record id="attendance4" model="hr.attendance">
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-04 08:01')" name="check_in"/>
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-04 16:21')" name="check_out"/>
-            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="employee_id" ref="hr.employee_demo"/>
         </record>
 
         <record id="attendance5" model="hr.attendance">
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-05 10:10')" name="check_in"/>
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-05 14:42')" name="check_out"/>
-            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="employee_id" ref="hr.employee_demo"/>
         </record>
 
         <record id="attendance6" model="hr.attendance">
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-06 10:10')" name="check_in"/>
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-06 17:34')" name="check_out"/>
-            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="employee_id" ref="hr.employee_demo"/>
         </record>
 
         <record id="attendance7" model="hr.attendance">
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-07 08:21')" name="check_in"/>
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-07 17:29')" name="check_out"/>
-            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="employee_id" ref="hr.employee_demo"/>
         </record>
 
         <record id="attendance8" model="hr.attendance">
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-08 09:21')" name="check_in"/>
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-08 14:54')" name="check_out"/>
-            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="employee_id" ref="hr.employee_demo"/>
         </record>
 
         <record id="attendance9" model="hr.attendance">
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-09 10:32')" name="check_in"/>
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-09 17:31')" name="check_out"/>
-            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="employee_id" ref="hr.employee_demo"/>
         </record>
 
         <record id="attendance10" model="hr.attendance">
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-10 08:00')" name="check_in"/>
             <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-10 17:00')" name="check_out"/>
-            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="employee_id" ref="hr.employee_demo"/>
         </record>
 
         <record id="attendance11" model="hr.attendance">
             <field eval="(datetime.now()+timedelta(hours=-4)).strftime('%Y-%m-%d %H:%M:00')" name="check_in"/>
             <field eval="(datetime.now()+timedelta(minutes=-30)).strftime('%Y-%m-%d %H:%M:00')" name="check_out"/>
-            <field name="employee_id" ref="hr.employee_hne"/>
+            <field name="employee_id" ref="hr.employee_abigail"/>
             <field name="overtime_status">to_approve</field>
         </record>
 
         <record id="attendance12" model="hr.attendance">
             <field eval="(datetime.now()+timedelta(hours=-31)).strftime('%Y-%m-%d %H:%M:00')" name="check_in"/>
             <field eval="(datetime.now()+timedelta(hours=-7)).strftime('%Y-%m-%d %H:%M:00')" name="check_out"/>
-            <field name="employee_id" ref="hr.employee_mit"/>
+            <field name="employee_id" ref="hr.employee_anita"/>
             <field name="overtime_status">refused</field>
         </record>
 
@@ -128,14 +128,14 @@
         <record id="attendance13" model="hr.attendance">
             <field eval="(datetime.now()+timedelta(hours=-7)).strftime('%Y-%m-%d %H:%M:10')" name="check_in"/>
             <field eval="(datetime.now()+timedelta(hours=-2)).strftime('%Y-%m-%d %H:%M:00')" name="check_out"/>
-            <field name="employee_id" ref="hr.employee_mit"/>
+            <field name="employee_id" ref="hr.employee_anita"/>
             <field name="overtime_status">approved</field>
         </record>
 
         <record id="attendance14" model="hr.attendance">
             <field eval="(datetime.now()+timedelta(hours=-15)).strftime('%Y-%m-%d %H:%M:00')" name="check_in"/>
             <field eval="(datetime.now()+timedelta(hours=-3)).strftime('%Y-%m-%d %H:%M:00')" name="check_out"/>
-            <field name="employee_id" ref="hr.employee_chs"/>
+            <field name="employee_id" ref="hr.employee_jennie"/>
         </record>
         <record id="attendance14" model="hr.attendance">
             <field name="validated_overtime_hours">2</field>

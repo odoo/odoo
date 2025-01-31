@@ -9,7 +9,7 @@
             ]"/>
         </record>
 
-        <record id="hr.employee_mit" model="hr.employee">
+        <record id="hr.employee_anita" model="hr.employee">
             <field name="private_email">douglas.fletcher51@example.com</field>
             <field name="private_phone">(132)-553-7242</field>
         </record>
@@ -23,14 +23,14 @@
             <field name="alias_name">purchase_expense</field>
         </record>
 
-        <record id="hr.employee_fme" model="hr.employee">
+        <record id="hr.employee_keith" model="hr.employee">
             <field name="private_street">Chaussée de Namur, 40</field>
             <field name="private_zip">1367</field>
             <field name="private_city">Grand-Rosière-Hottomont</field>
             <field name="private_country_id" ref="base.be"/>
         </record>
 
-        <record id="hr.employee_al" model="hr.employee">
+        <record id="hr.employee_ronnie" model="hr.employee">
             <field name="private_street">Chaussée de Namur, 40</field>
             <field name="private_zip">1367</field>
             <field name="private_city">Grand-Rosière-Hottomont</field>
@@ -122,13 +122,13 @@
         <!-- ++++++++++++++ Expense sheet for Demo ++++++++++++++-->
         <record id="customer_meeting_sheet" model="hr.expense.sheet">
             <field name="name">Customer meeting</field>
-            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="employee_id" ref="hr.employee_demo"/>
             <field name="state">submit</field>
         </record>
 
         <record id="travel_demo_by_car_expense" model="hr.expense">
             <field name="name">Travel by Car</field>
-            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="employee_id" ref="hr.employee_demo"/>
             <field name="analytic_distribution" eval="{ref('analytic.analytic_our_super_product'): 100}"/>
             <field name="product_id" ref="expense_product_mileage"/>
             <field name="product_uom_id" ref="uom.product_uom_km"/>
@@ -139,7 +139,7 @@
 
         <record id="lunch_demo_customer_bill_expense" model="hr.expense">
             <field name="name">Lunch with Customer</field>
-            <field name="employee_id" ref="hr.employee_qdp"/>
+            <field name="employee_id" ref="hr.employee_demo"/>
             <field name="analytic_distribution" eval="{ref('analytic.analytic_nebula'): 100}"/>
             <field name="product_id" ref="product_product_no_cost"/>
             <field name="date" eval="time.strftime('%Y')+'-01-15'"/>
@@ -150,13 +150,13 @@
         <!-- ++++++++++++++ Expense sheet for Keith Byrd ++++++++++++++-->
         <record id="team_building_sheet" model="hr.expense.sheet">
             <field name="name">Team Building</field>
-            <field name="employee_id" ref="hr.employee_fme"/>
+            <field name="employee_id" ref="hr.employee_keith"/>
             <field name="state">submit</field>
         </record>
 
         <record id="pizzas_bill_expense" model="hr.expense">
             <field name="name">Pizzas</field>
-            <field name="employee_id" ref="hr.employee_fme"/>
+            <field name="employee_id" ref="hr.employee_keith"/>
             <field name="analytic_distribution" eval="{ref('analytic.analytic_nebula'): 100}"/>
             <field name="product_id" ref="expense_product_meal"/>
             <field name="date" eval="time.strftime('%Y-%m')+'-05'"/>
@@ -166,7 +166,7 @@
 
         <record id="drinks_bill_expense" model="hr.expense">
             <field name="name">Drinks</field>
-            <field name="employee_id" ref="hr.employee_fme"/>
+            <field name="employee_id" ref="hr.employee_keith"/>
             <field name="analytic_distribution" eval="{ref('analytic.analytic_nebula'): 100}"/>
             <field name="product_id" ref="expense_product_meal"/>
             <field name="date" eval="time.strftime('%Y-%m')+'-05'"/>
@@ -176,7 +176,7 @@
 
         <record id="paintball_bill_expense" model="hr.expense">
             <field name="name">Paintball</field>
-            <field name="employee_id" ref="hr.employee_fme"/>
+            <field name="employee_id" ref="hr.employee_keith"/>
             <field name="analytic_distribution" eval="{ref('analytic.analytic_nebula'): 100}"/>
             <field name="product_id" ref="product_product_no_cost"/>
             <field name="date" eval="time.strftime('%Y-%m')+'-05'"/>
@@ -187,13 +187,13 @@
         <!-- ++++++++++++++ Expense sheet for Ronnie Hart ++++++++++++++-->
         <record id="office_furniture_sheet" model="hr.expense.sheet">
             <field name="name">Office furniture</field>
-            <field name="employee_id" ref="hr.employee_al"/>
+            <field name="employee_id" ref="hr.employee_ronnie"/>
             <field name="state">submit</field>
         </record>
 
         <record id="chair_bill_expense" model="hr.expense">
             <field name="name">Chairs</field>
-            <field name="employee_id" ref="hr.employee_al"/>
+            <field name="employee_id" ref="hr.employee_ronnie"/>
             <field name="analytic_distribution" eval="{ref('analytic.analytic_nebula'): 100}"/>
             <field name="product_id" ref="product_product_no_cost"/>
             <field name="date" eval="time.strftime('%Y')+'-06-02'"/>
@@ -203,7 +203,7 @@
 
         <record id="lamp_bill_expense" model="hr.expense">
             <field name="name">Lamp</field>
-            <field name="employee_id" ref="hr.employee_al"/>
+            <field name="employee_id" ref="hr.employee_ronnie"/>
             <field name="analytic_distribution" eval="{ref('analytic.analytic_nebula'): 100}"/>
             <field name="product_id" ref="product_product_no_cost"/>
             <field name="date" eval="time.strftime('%Y')+'-06-02'"/>
@@ -214,7 +214,7 @@
         <!-- ++++++++++++++ Expense for Randall Lewis ++++++++++++++-->
         <record id="afterwork_bill_expense" model="hr.expense">
             <field name="name">Car tyres</field>
-            <field name="employee_id" ref="hr.employee_stw"/>
+            <field name="employee_id" ref="hr.employee_randall"/>
             <field name="analytic_distribution" eval="{ref('analytic.analytic_nebula'): 100}"/>
             <field name="product_id" ref="product_product_no_cost"/>
             <field name="date" eval="time.strftime('%Y')+'-03-15'"/>
