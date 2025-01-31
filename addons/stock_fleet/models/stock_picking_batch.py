@@ -76,7 +76,7 @@ class StockPickingBatch(models.Model):
 
     # Public actions
     def order_on_zip(self):
-        sorted_records = self.picking_ids.sorted('zip')
+        sorted_records = self.picking_ids.sorted(lambda p: p.zip or "")
         for idx, record in enumerate(sorted_records):
             record.batch_sequence = idx
 
