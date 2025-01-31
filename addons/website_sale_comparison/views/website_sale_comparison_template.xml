@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="add_to_compare" inherit_id="website_sale.products_item" name="Comparison List" priority="22">
-        <xpath expr="//div[hasclass('o_wsale_product_btn')]" position="inside">
+    <template
+        id="website_sale_comparison.add_to_compare"
+        inherit_id="website_sale.shop_product_buttons"
+        name="Comparison List"
+        priority="22"
+    >
+        <t name="buttons_container" position="inside">
             <t t-set="attrib_categories" t-value="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()"/>
             <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
             <button
                 t-if="product_variant_id and attrib_categories"
                 type="button"
                 role="button"
-                class="d-none d-md-inline-block btn btn-light o_add_compare"
+                class="btn btn-light o_add_compare"
                 title="Compare"
                 aria-label="Compare"
                 t-att-data-product-product-id="product_variant_id"
@@ -17,7 +22,7 @@
             >
                 <span class="fa fa-exchange"/>
             </button>
-        </xpath>
+        </t>
     </template>
 
     <template id="product_add_to_compare" name='Add to comparison in product page' inherit_id="website_sale.product" priority="8">
