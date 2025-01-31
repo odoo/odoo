@@ -20,6 +20,7 @@ export class CalendarRenderer extends Component {
         editRecord: Function,
         deleteRecord: Function,
         setDate: Function,
+        quickCreateDeleteMode: Boolean,
     };
     get calendarComponent() {
         return this.constructor.components[this.props.model.scale];

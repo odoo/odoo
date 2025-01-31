@@ -38,6 +38,7 @@ export class CalendarModel extends Model {
             range: null,
             records: {},
             unusualDays: [],
+            quickCreateValuesCallback: () => new Object(),
         };
     }
     async load(params = {}) {
@@ -189,6 +190,18 @@ export class CalendarModel extends Model {
         await this.orm.create(this.meta.resModel, [rawRecord], { context });
         await this.load();
     }
+
+    async createRecordNoInteraction(record, extraFields) {
+        const rawRecord = this.buildRawRecord(record);
+        // TODO get companies ids ...
+        // const context = this.makeContextDefaults(rawRecord);
+        const context = {};
+        await this.orm.create(this.meta.resModel, [{ ...rawRecord, ...extraFields }], {
+            context,
+        });
+        await this.load();
+    }
+
     async unlinkFilter(fieldName, recordId) {
         const info = this.meta.filtersInfo[fieldName];
         if (info && info.writeResModel) {
@@ -200,6 +213,14 @@ export class CalendarModel extends Model {
         await this.orm.unlink(this.meta.resModel, [recordId]);
         await this.load();
     }
+
+    async unlinkRecords(recordsId) {
+        if (recordsId.length) {
+            await this.orm.unlink(this.meta.resModel, recordsId);
+            await this.load();
+        }
+    }
+
     async updateFilters(fieldName, filters) {
         const section = this.data.filterSections[fieldName];
         if (section) {

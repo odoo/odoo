@@ -60,6 +60,14 @@
                     </div>
                     <MobileFilterPanel t-if="env.isSmall and hasSideBar" t-props="mobileFilterPanelProps" />
                     <div class="o_calendar_wrapper d-flex overflow-hidden">
+                        <div t-if="showQuickCreate">
+                            <div><button class="btn btn-primary" t-att-class="{'active': state.quickCreateDeleteMode}" title="Mass remove" accesskey="d" t-on-click="quickCreateToggleModeDelete"><i class="fa fa-eraser"/></button></div>
+                            <div class="o_form_view o_form_nosheet o_xxs_form_view o_form_renderer">
+                                <Record fields="props.fields" fieldNames="Object.keys(quickCreateFields)" resModel="props.resModel" onRootLoaded.bind="onQuickCreateRootLoaded" context="props.context" t-slot-scope="data">
+                                    <FormRenderer record="data.record" archInfo="archInfo"/>
+                                </Record>
+                            </div>
+                        </div>
                         <t t-if="showCalendar" t-component="props.Renderer" t-props="rendererProps"/>
                         <div t-if="hasSideBar and showSideBar" class="o_calendar_sidebar_container d-print-none position-relative w-100 w-md-auto bg-view overflow-x-hidden overflow-y-auto">
                             <div class="o_calendar_sidebar">
