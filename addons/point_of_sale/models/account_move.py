@@ -54,10 +54,14 @@ class AccountMove(models.Model):
                     reconciled_partials = move._get_all_reconciled_invoice_partials()
                     for i, reconciled_partial in enumerate(reconciled_partials):
                         counterpart_line = reconciled_partial['aml']
+                        # Check if there are multiple pos_payment records
                         pos_payment = counterpart_line.move_id.sudo().pos_payment_ids
-                        move.invoice_payments_widget['content'][i].update({
-                            'pos_payment_name': pos_payment.payment_method_id.name,
-                        })
+                        if pos_payment:
+                            # Handle multiple records by taking the first
+                            pos_payment_name = ', '.join(payment.payment_method_id.name for payment in pos_payment)
+                            move.invoice_payments_widget['content'][i].update({
+                                'pos_payment_name': pos_payment_name,
+                            })
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
