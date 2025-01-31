@@ -3,7 +3,7 @@
 from types import SimpleNamespace
 from unittest.mock import patch
 
-from odoo.addons.base.models.res_users import is_selection_groups, get_selection_groups, name_selection_groups
+from odoo.addons.base.models.res_users_view import is_selection_groups, get_selection_groups, name_selection_groups
 from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command
