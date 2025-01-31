@@ -1,5 +1,6 @@
 import { onMounted } from "@odoo/owl";
 
+import { parseEmail } from "@mail/utils/common/format";
 import { _t } from "@web/core/l10n/translation";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
@@ -8,10 +9,25 @@ import {
     Many2ManyTagsField,
     many2ManyTagsField,
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
-import { useOpenMany2XRecord } from "@web/views/fields/relational_utils";
+import { useOpenMany2XRecord, Many2XAutocomplete } from "@web/views/fields/relational_utils";
 
 export class FieldMany2ManyTagsEmailTagsList extends TagsList {
     static template = "FieldMany2ManyTagsEmailTagsList";
+}
+
+export class FieldMany2ManyTagsEmailMany2xAutocomplete extends Many2XAutocomplete {
+    /**
+     * @param {string} value
+     * @returns {Object}
+     */
+    getCreationContext(value) {
+        const [name, email] = value ? parseEmail(value) : ["", ""];
+        const context = super.getCreationContext(name);
+        if (email) {
+            context["default_email"] = email;
+        }
+        return context;
+    }
 }
 
 export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
@@ -19,6 +35,7 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
     static components = {
         ...FieldMany2ManyTagsEmail.components,
         TagsList: FieldMany2ManyTagsEmailTagsList,
+        Many2XAutocomplete: FieldMany2ManyTagsEmailMany2xAutocomplete
     };
     static props = {
         ...Many2ManyTagsField.props,
