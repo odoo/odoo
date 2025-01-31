@@ -20,3 +20,6 @@ class TwilioMessageLog(models.Model):
     res_model = fields.Char(string="Res Model")
     res_id = fields.Char(string="Res ID")
     is_reply_message = fields.Boolean(string="Is Reply Message", default=False)
+    company_id = fields.Many2one("res.company","Company")
+    user_id = fields.Many2one("res.users", "User")
+    res_name = fields.Char("Res Name")

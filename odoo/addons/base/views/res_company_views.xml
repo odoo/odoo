@@ -68,6 +68,7 @@
             <field name="arch" type="xml">
                 <tree string="Companies" decoration-muted="not active">
                     <field name="sequence" widget="handle"/>
+                    <field name="id" readonly="1"/>
                     <field name="name"/>
                     <field name="partner_id" required="0"/>
                     <field name="child_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>

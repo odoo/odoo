@@ -71,6 +71,9 @@ class ResCompanyInherited(models.Model):
                                 "uri": record.uri,
                                 "res_model": 'crm.lead',
                                 "res_id": str(lead_id.id),
+                                "res_name": lead_id and lead_id.name or False,
+                                "user_id": lead_id.user_id and lead_id.user_id.id or False,
+                                "company_id": lead_id.company_id and lead_id.company_id.id or False,
                             }
                             log_message = self.env['twilio.message.log'].sudo().create(msg_dict)
                             _logger.info("Twilio SMS Reply - Pipeline (%s, %s) >> Log %s" %(str(lead_id.id), lead_id.name, log_message.id))

@@ -21,6 +21,9 @@
                             <field name="uri"/>
                             <field name="res_model"/>
                             <field name="res_id"/>
+                            <field name="res_name" />
+                            <field name="user_id" />
+                            <field name="company_id" />
                             <field name="status"/>
                         </group>
                     </sheet>
@@ -35,12 +38,40 @@
                 <tree string="Message Log">
                     <field name="res_model"/>
                     <field name="res_id"/>
+                    <field name="res_name" />
                     <field name="date_sent"/>
                     <field name="direction"/>
                     <field name="from_phone"/>
                     <field name="to_phone"/>
+                    <field name="user_id"/>
+                    <field name="company_id"/>
                     <field name="status"/>
                 </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="search_view_message_log">
+            <field name="name">twilio.message.log.search</field>
+            <field name="model">twilio.message.log</field>
+            <field name="arch" type="xml">
+                <search string="Message Log">
+                    <field name="res_model"/>
+                    <field name="res_name" />
+                    <separator/>
+                    <filter string="Creation Date" name="filter_creation_date" date="create_date"/>
+                    <filter string="Sent Date" name="filter_date_sent" date="date_sent"/>
+                    <group expand="0" string="Group By">
+                        <filter string="User" name="gb_user_id" context="{'group_by':'user_id'}"/>
+                        <filter name="gb_status" string="Status" context="{'group_by':'status'}"/>
+                        <filter name="gb_res_model" string="Res Model" context="{'group_by':'res_model'}"/>
+                        <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Creation Date" name="gb_create_date_month" context="{'group_by':'create_date:month'}" />
+                        <filter string="Sent Date" name="gb_date_sent_month" context="{'group_by':'date_sent:month'}"/>
+                        <separator/>
+                        <filter name="gb_direction" string="Direction" context="{'group_by':'direction'}"/>
+                    </group>
+                </search>
             </field>
         </record>
 

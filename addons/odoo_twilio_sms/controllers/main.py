@@ -62,6 +62,9 @@ class TwilioWebhookController(http.Controller):
                             "res_model": log_id.res_model,
                             "res_id": log_id.res_id,
                             "is_reply_message": True,
+                            "res_name": active_id.name,
+                            "user_id": active_id.user_id and active_id.user_id.id or False,
+                            "company_id": active_id.company_id and active_id.company_id.id or False,
                         }
                         log_message = request.env['twilio.message.log'].sudo().create(msg_dict)
             else:
@@ -86,6 +89,9 @@ class TwilioWebhookController(http.Controller):
                         "to_phone": resp.from_phone,
                         "res_model": 'res.partner',
                         "res_id": partner_id.id,
+                        "res_name": partner_id.name,
+                        "user_id": partner_id.user_id and partner_id.user_id.id or False,
+                        "company_id": partner_id.company_id and partner_id.company_id.id or False,
                     }
                     log_message = request.env['twilio.message.log'].sudo().create(msg_dict)
         except Exception as e:

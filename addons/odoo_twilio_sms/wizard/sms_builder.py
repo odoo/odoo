@@ -93,6 +93,9 @@ class SmsBuilder(models.TransientModel):
                     "uri": message.uri,
                     "res_model": self._context.get('active_model'),
                     "res_id": self._context.get('active_id'),
+                    "res_name": active_id.name,
+                    "user_id": active_id.user_id and active_id.user_id.id or False,
+                    "company_id": active_id.company_id and active_id.company_id.id or False,
                 }
                 log_message = self.env['twilio.message.log'].sudo().create(msg_dict)
             else:
