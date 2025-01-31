@@ -36,11 +36,7 @@ class _Record extends Component {
                 mode: this.props.info.mode,
                 context: this.props.info.context,
             },
-            hooks: {
-                onRecordSaved: this.props.info.onRecordSaved || (() => {}),
-                onWillSaveRecord: this.props.info.onWillSaveRecord || (() => {}),
-                onRecordChanged: this.props.info.onRecordChanged || (() => {}),
-            },
+            hooks: this.props.info.hooks,
         };
         const modelServices = Object.fromEntries(
             StandaloneRelationalModel.services.map((servName) => [servName, useService(servName)])
@@ -162,9 +158,7 @@ export class Record extends Component {
         "mode?",
         "values?",
         "context?",
-        "onRecordChanged?",
-        "onRecordSaved?",
-        "onWillSaveRecord?",
+        "hooks?",
     ];
     static defaultProps = {
         context: {},

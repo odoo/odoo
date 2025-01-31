@@ -309,7 +309,9 @@ export class AnalyticDistribution extends Component {
             fields: recordFields,
             values: values,
             activeFields: recordFields,
-            onRecordChanged: async (record, changes) => await this.lineChanged(record, changes, line),
+            hooks: {
+                onRecordChanged: async (record, changes) => await this.lineChanged(record, changes, line),
+            }
         }
     }
 
