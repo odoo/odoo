@@ -20,6 +20,9 @@ export class CalendarRenderer extends Component {
         editRecord: Function,
         deleteRecord: Function,
         setDate: Function,
+        calendarMode: String,
+        multiCreateRecord: Function,
+        multiDeleteRecords: Function,
     };
     get calendarComponent() {
         return this.constructor.components[this.props.model.scale];
