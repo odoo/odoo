@@ -111,6 +111,8 @@ class PosSession(models.Model):
                     'relation': params.comodel_name,
                     'type': params.type,
                 }
+                if params.type == 'many2one' and params.ondelete:
+                    relations[name]['ondelete'] = params.ondelete
                 if params.type == 'one2many' and params.inverse_name:
                     relations[name]['inverse_name'] = params.inverse_name
                 if params.type == 'many2many':

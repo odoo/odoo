@@ -73,34 +73,6 @@ patch(PosOrder.prototype, {
         }
         return super.setPartner(...arguments);
     },
-    serialize(options = {}) {
-        const data = super.serialize(...arguments);
-        if (options.orm === true && this.lines.length) {
-            if (this.hasCourses()) {
-                data.restaurant_course_lines = this.getORMCourseMappings(data);
-            }
-        }
-        return data;
-    },
-    getORMCourseMappings(serializedData) {
-        // Map each course uuid to its corresponding list line uuids to ensure proper assignment of new created course
-        const updatedLineIds = (serializedData.lines || [])
-            .filter((line) => line[0] === 1)
-            .map((line) => line[1]);
-        return this.lines.reduce((mapping, line) => {
-            if (
-                line.course_id &&
-                (typeof line.id === "string" || // New line
-                    typeof line.course_id.id === "string" || // New course
-                    updatedLineIds.includes(line.id)) // Updated line
-            ) {
-                const courseUuid = line.course_id.uuid;
-                mapping[courseUuid] = mapping[courseUuid] || [];
-                mapping[courseUuid].push(line.uuid);
-            }
-            return mapping;
-        }, {});
-    },
     cleanCourses() {
         if (!this.hasCourses()) {
             return;
@@ -127,8 +99,8 @@ patch(PosOrder.prototype, {
                 course.index = newIndex + 1;
                 return course;
             });
-        removedCourses.forEach((c) => {
-            c.delete();
+        removedCourses.forEach((course) => {
+            course.delete();
         });
         if (cleanedCourses.length !== originalLength) {
             this.course_ids = cleanedCourses;
