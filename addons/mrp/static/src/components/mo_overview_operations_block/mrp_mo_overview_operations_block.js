@@ -38,14 +38,14 @@ export class MoOverviewOperationsBlock extends Component {
     setup() {
         this.formatFloatTime = formatFloatTime;
         this.state = useState({
-            // Unfold the main MO's operations by default
-            isFolded: this.level > 0 && !this.props.unfoldAll,
+            // fold the main MO's operations by default
+            isFolded: true,
         });
         if (this.props.unfoldAll) {
             this.env.overviewBus.trigger("update-folded", { indexes: [this.index], isFolded: false });
         }
 
-        useBus(this.env.overviewBus, "unfold-all", () => this.unfold());
+        useBus(this.env.overviewBus, "toggle-fold-all-mo", () => this._toggleFoldMo());
     }
 
     //---- Handlers ----
@@ -55,9 +55,10 @@ export class MoOverviewOperationsBlock extends Component {
         this.env.overviewBus.trigger("update-folded", { indexes: [this.index], isFolded: this.state.isFolded });
     }
 
-    unfold() {
-        this.state.isFolded = false;
-        this.env.overviewBus.trigger("update-folded", { indexes: [this.index], isFolded: false });
+    _toggleFoldMo() {
+        const currentState = this.state.isFolded;
+        this.state.isFolded = !currentState;
+        this.env.overviewBus.trigger("update-folded", { indexes: [this.index], isFolded: !currentState })
     }
 
     //---- Helpers ----
