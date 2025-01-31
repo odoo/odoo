@@ -180,7 +180,12 @@ class AccountEdiFormat(models.Model):
                     tax_info = {
                         'BaseImponible': round(base_amount, 2),
                     }
-                    if tax_values['applied_tax_amount'] > 0.0:
+                    if tax_values['l10n_es_type'] == 'sujeto_agricultura':
+                        tax_info.update({
+                            'PorcentCompensacionREAGYP': tax_values['applied_tax_amount'],
+                            'ImporteCompensacionREAGYP': round(math.copysign(tax_values['tax_amount'], base_amount), 2),
+                        })
+                    elif tax_values['applied_tax_amount'] > 0.0:
                         tax_info.update({
                             'TipoImpositivo': tax_values['applied_tax_amount'],
                             'CuotaSoportada': round(math.copysign(tax_values['tax_amount'], base_amount), 2),
@@ -281,6 +286,7 @@ class AccountEdiFormat(models.Model):
             # === Invoice ===
 
             invoice_node['DescripcionOperacion'] = invoice.invoice_origin[:500] if invoice.invoice_origin else 'manual'
+            reagyp = invoice.invoice_line_ids.tax_ids.filtered(lambda t: t.l10n_es_type == 'sujeto_agricultura')
             if invoice.is_sale_document():
                 nif = invoice.company_id.vat[2:] if invoice.company_id.vat.startswith('ES') else invoice.company_id.vat
                 info['IDFactura']['IDEmisorFactura'] = {'NIF': nif}
@@ -322,7 +328,12 @@ class AccountEdiFormat(models.Model):
                 mod_303_11 = self.env.ref('l10n_es.mod_303_11')
                 tax_tags = invoice.invoice_line_ids.tax_ids.invoice_repartition_line_ids.tag_ids
                 intracom = bool(tax_tags & (mod_303_10 + mod_303_11))
-                invoice_node['ClaveRegimenEspecialOTrascendencia'] = '09' if intracom else '01'
+                if intracom:
+                    invoice_node['ClaveRegimenEspecialOTrascendencia'] = '09'
+                elif reagyp:
+                    invoice_node['ClaveRegimenEspecialOTrascendencia'] = '02'
+                else:
+                    invoice_node['ClaveRegimenEspecialOTrascendencia'] = '01'
 
             if invoice.move_type == 'out_invoice':
                 invoice_node['TipoFactura'] = 'F2' if is_simplified else 'F1'
@@ -330,7 +341,10 @@ class AccountEdiFormat(models.Model):
                 invoice_node['TipoFactura'] = 'R5' if is_simplified else 'R1'
                 invoice_node['TipoRectificativa'] = 'I'
             elif invoice.move_type == 'in_invoice':
-                invoice_node['TipoFactura'] = 'F1'
+                if reagyp:
+                    invoice_node['TipoFactura'] = 'F6'
+                else:
+                    invoice_node['TipoFactura'] = 'F1'
             elif invoice.move_type == 'in_refund':
                 invoice_node['TipoFactura'] = 'R4'
                 invoice_node['TipoRectificativa'] = 'I'
