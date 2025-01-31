@@ -13,6 +13,7 @@
                 Custom
             </button>
             <button class="btn btn-sm btn-light text-truncate btn-tab"
+                t-if="props.withGradient"
                 t-att-class="{active: state.activeTab === 'gradient'}"
                 t-on-click="() => this.setTab('gradient')">
                 Gradient
@@ -75,7 +76,7 @@
                     noTransparency="props.noTransparency" />
             </div>
         </t>
-        <t t-if="state.activeTab==='gradient'">
+        <t t-if="state.activeTab==='gradient' and props.withGradient">
             <div class="o_colorpicker_sections p-2" t-on-click="onColorApply" t-on-mouseover="onColorHover" t-on-mouseout="onColorHoverOut" t-on-focusin="onColorHover" t-on-focusout="onColorHoverOut">
                 <t t-foreach="this.DEFAULT_GRADIENT_COLORS" t-as="gradient" t-key="gradient">
                     <button class="w-50 m-0 o_color_button btn" t-attf-style="background-image: #{gradient};" t-att-data-color="gradient"/>
