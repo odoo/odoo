@@ -187,21 +187,9 @@ Options:
 <!-- (Option) Sidebar Blog: Follow Us -->
 <template id="opt_sidebar_blog_index_follow_us" name="Follow Us" priority="1" inherit_id="website_blog.sidebar_blog_index" active="True">
     <xpath expr="//div[@id='o_wblog_sidebar']" position="inside">
-        <div class="o_wblog_sidebar_block pb-5">
-            <div>
-                <h6 class="text-uppercase pb-2 mb-4 border-bottom fw-bold">Follow Us</h6>
-            </div>
-            <div class="o_wblog_social_links d-flex flex-wrap mx-n1 o_not_editable">
-                <t t-set="classes" t-translation="off">bg-100 border mx-1 mb-2 rounded-circle d-flex align-items-center justify-content-center text-decoration-none</t>
-                <a t-att-href="https://www.facebook.com/Odoo" aria-label="Facebook" title="Facebook" t-att-class="classes"><i class="fa fa-facebook-square text-facebook"/></a>
-                <a t-att-href="https://twitter.com/Odoo" t-att-class="classes"><i class="fa fa-twitter text-twitter" aria-label="X" title="X"/></a>
-                <a t-att-href="https://www.linkedin.com/company/odoo" t-att-class="classes"><i class="fa fa-linkedin text-linkedin" aria-label="LinkedIn" title="LinkedIn"/></a>
-                <a t-att-href="https://www.youtube.com/user/OpenERPonline" t-att-class="classes"><i class="fa fa-youtube-play text-youtube" aria-label="Youtube" title="Youtube"/></a>
-                <a t-att-href="https://github.com/odoo" t-att-class="classes"><i class="fa fa-github text-github" aria-label="Github" title="Github"/></a>
-                <a t-att-href="https://www.instagram.com/explore/tags/odoo/" t-att-class="classes"><i class="fa fa-instagram text-instagram" aria-label="Instagram" title="Instagram"/></a>
-                <a t-att-href="https://www.tiktok.com/@odoo" t-att-class="classes"><i class="fa fa-tiktok text-tiktok" aria-label="TikTok" title="TikTok"/></a>
-                <a t-if="blog" t-att-href="'/blog/%s/feed' % slug(blog)" t-att-class="classes"><i class="fa fa-rss-square" aria-label="RSS" title="RSS"/></a>
-            </div>
+        <div class="o_wblog_sidebar_block pb-5" t-ignore="true">
+            <h6 class="text-uppercase pb-2 mb-4 border-bottom fw-bold">Follow Us</h6>
+            <t t-snippet-call="website.s_social_media"/>
             <t t-call="website_mail.follow" t-if="blog">
                 <t t-set="email" t-value="user_id.email"/>
                 <t t-set="object" t-value="blog"/>
@@ -284,17 +272,9 @@ Display a sidebar beside the post content.
 <!-- (Option) Post Sidebar: Share Links Display -->
 <template id="opt_blog_post_share_links_display" name="Share Links" inherit_id="website_blog.blog_post_sidebar" active="True" priority="2">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
-        <div class="o_wblog_sidebar_block pb-5">
-            <div>
-                <h6 class="text-uppercase pb-3 mb-4 border-bottom fw-bold">Share this post</h6>
-            </div>
-
-            <div class="o_wblog_social_links d-flex flex-wrap mx-n1 o_not_editable">
-                <t t-set="classes" t-translation="off">bg-100 border mx-1 mb-2 rounded-circle d-flex align-items-center justify-content-center text-decoration-none</t>
-                <a href="#" aria-label="Facebook" title="Share on Facebook" t-attf-class="o_facebook #{classes}"><i class="fa fa-facebook-square text-facebook"/></a>
-                <a href="#" aria-label="Twitter" title="Share on X" t-attf-class="o_twitter #{classes}"><i class="fa fa-twitter text-twitter" aria-label="X" title="X"/></a>
-                <a href="#" aria-label="LinkedIn" title="Share on LinkedIn" t-attf-class="o_linkedin #{classes}"><i class="fa fa-linkedin text-linkedin" aria-label="LinkedIn" title="LinkedIn"/></a>
-            </div>
+        <div class="o_wblog_sidebar_block pb-5" t-ignore="true">
+            <h6 class="text-uppercase pb-3 mb-4 border-bottom fw-bold">Share this post</h6>
+            <t t-call="website.s_social_media"/>
         </div>
 
         <div class="oe_structure" id="oe_structure_blog_post_sidebar_3"/>
