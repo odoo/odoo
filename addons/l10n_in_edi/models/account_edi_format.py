@@ -39,6 +39,7 @@ class AccountEdiFormat(models.Model):
            self.env.ref('l10n_in.tax_tag_base_sgst')
            + self.env.ref('l10n_in.tax_tag_base_cgst')
            + self.env.ref('l10n_in.tax_tag_base_igst')
+           + self.env.ref('l10n_in.tax_tag_igst_lut')
            + self.env.ref('l10n_in.tax_tag_base_cess')
            + self.env.ref('l10n_in.tax_tag_zero_rated')
         ).ids
