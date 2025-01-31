@@ -77,7 +77,7 @@ class TestEventData(TestEventBoothSaleCommon):
         self.assertEqual(event.event_booth_ids[1].message_partner_ids, self.env['res.partner'])
 
         # add group or the test will fail
-        self.user_eventmanager.write({'groups_id': [
+        self.user_eventmanager.write({'group_ids': [
             (4, self.env.ref('sales_team.group_sale_salesman').id),
         ]})
 

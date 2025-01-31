@@ -155,7 +155,6 @@ class AccountJournal(models.Model):
         help="You can choose different models for each type of reference. The default one is the Odoo reference.",
     )
 
-    #groups_id = fields.Many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', string='Groups')
     currency_id = fields.Many2one('res.currency', help='The currency used to enter statement', string="Currency")
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, index=True, default=lambda self: self.env.company,
         help="Company related to this journal")

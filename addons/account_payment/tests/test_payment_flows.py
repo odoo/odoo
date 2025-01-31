@@ -150,7 +150,7 @@ class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
         account_user = self.env['res.users'].create({
             'login': 'TestUser',
             'password': 'Odoo@123',
-            'groups_id': [Command.set(self.env.ref('account.group_account_manager').ids)],
+            'group_ids': [Command.set(self.env.ref('account.group_account_manager').ids)],
             'partner_id': partner.id
         })
         # Create an invoice with invoice due date must be in past with payment status to be not paid

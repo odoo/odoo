@@ -13,10 +13,10 @@ class StockMoveLine(TestStockCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env.user.groups_id += cls.env.ref("stock.group_tracking_owner")
-        cls.env.user.groups_id += cls.env.ref("stock.group_tracking_lot")
-        cls.env.user.groups_id += cls.env.ref("stock.group_production_lot")
-        cls.env.user.groups_id += cls.env.ref('stock.group_stock_multi_locations')
+        cls.env.user.group_ids += cls.env.ref("stock.group_tracking_owner")
+        cls.env.user.group_ids += cls.env.ref("stock.group_tracking_lot")
+        cls.env.user.group_ids += cls.env.ref("stock.group_production_lot")
+        cls.env.user.group_ids += cls.env.ref('stock.group_stock_multi_locations')
         cls.product = cls.env['product.product'].create({
             'name': 'Product A',
             'is_storable': True,

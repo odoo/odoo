@@ -682,7 +682,7 @@ class TestGroupsOdoo(common.TransactionCase):
             ('base.group_user,base.group_erp_manager', 'base.group_erp_manager | base.group_multi_company', True),
         ]
         for user_groups, groups, result in tests:
-            user.groups_id = [(6, 0, [self.env.ref(xmlid).id for xmlid in user_groups.split(',')])]
+            user.group_ids = [(6, 0, [self.env.ref(xmlid).id for xmlid in user_groups.split(',')])]
             self.assertEqual(self.parse_repr(groups).matches(user._get_group_ids()), result, f'User ({user_groups!r}) should {"" if result else "not "}have access to groups: ({groups!r})')
 
     def test_groups_6_distinct(self):
@@ -690,9 +690,9 @@ class TestGroupsOdoo(common.TransactionCase):
             'name': 'A User',
             'login': 'a_user',
             'email': 'a@user.com',
-            'groups_id': self.env.ref('base.group_user').ids,
+            'group_ids': self.env.ref('base.group_user').ids,
         })
         with self.assertRaisesRegex(ValidationError, "The user cannot have more than one user types."):
-            user.groups_id = [(4, self.env.ref('base.group_public').id)]
+            user.group_ids = [(4, self.env.ref('base.group_public').id)]
         with self.assertRaisesRegex(ValidationError, "The user cannot have more than one user types."):
-            user.groups_id = [(4, self.env.ref('base.group_portal').id)]
+            user.group_ids = [(4, self.env.ref('base.group_portal').id)]

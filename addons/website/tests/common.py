@@ -35,7 +35,7 @@ class HttpCaseWithWebsiteUser(HttpCase):
             "signature": "<span>-- <br/>+Mr Restricted</span>",
             "company_id": company.id,
             "image_1920": base64.b64encode(file_open("website/static/src/img/user-restricted-image.png", "rb").read()),
-            "groups_id": [
+            "group_ids": [
                 Command.unlink(cls.env.ref("website.group_website_designer").id),
                 Command.link(cls.env.ref("website.group_website_restricted_editor").id),
                 Command.link(cls.env.ref("base.group_user").id),

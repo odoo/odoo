@@ -27,7 +27,7 @@
         </record>
 
         <record id="base.default_user" model="res.users">
-            <field name="groups_id" eval="[(4,ref('group_timesheet_manager'))]"/>
+            <field name="group_ids" eval="[(4,ref('group_timesheet_manager'))]"/>
         </record>
 
         <record id="timesheet_line_rule_portal_user" model="ir.rule">

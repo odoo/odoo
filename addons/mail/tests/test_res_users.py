@@ -78,15 +78,15 @@ class TestUser(MailCommon):
 
         # Ensure the internal user has well the inbox notification type
         self.assertEqual(user.notification_type, 'inbox')
-        self.assertIn(self.env.ref('mail.group_mail_notification_type_inbox'), user.groups_id)
+        self.assertIn(self.env.ref('mail.group_mail_notification_type_inbox'), user.group_ids)
 
         # Change the internal user to portal, and make sure it automatically converts from inbox to email notifications
-        user.write({'groups_id': [
+        user.write({'group_ids': [
             (3, self.env.ref('base.group_user').id),
             (4, self.env.ref('base.group_portal').id),
         ]})
         self.assertEqual(user.notification_type, 'email')
-        self.assertNotIn(self.env.ref('mail.group_mail_notification_type_inbox'), user.groups_id)
+        self.assertNotIn(self.env.ref('mail.group_mail_notification_type_inbox'), user.group_ids)
 
     def test_web_create_users(self):
         src = [
@@ -132,7 +132,7 @@ class TestUserTours(HttpCaseWithUserDemo):
                 'name': 'Marc Demo',
                 'user_id': self.user_demo.id,
             })
-            self.user_demo.groups_id += self.env.ref('hr.group_hr_user')
+            self.user_demo.group_ids += self.env.ref('hr.group_hr_user')
         self.user_demo.tz = "Europe/Brussels"
 
         # avoid 'reload_context' action in the middle of the tour to ease steps and form save checks
@@ -154,7 +154,7 @@ class TestUserSettings(MailCommon):
         user = self.env.user.create({
             'name': 'A portal user',
             'login': 'portal_test',
-            'groups_id': [(6, 0, [portal_group.id])],
+            'group_ids': [(6, 0, [portal_group.id])],
         })
         self.assertFalse(user.res_users_settings_ids, 'Portal users should not have settings by default')
 

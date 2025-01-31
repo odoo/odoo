@@ -21,8 +21,8 @@ class UomCommon(BaseCommon):
 
     @classmethod
     def _enable_uom(cls):
-        cls.env.user.groups_id += cls.group_uom
+        cls.env.user.group_ids += cls.group_uom
 
     @classmethod
     def _disable_uom(cls):
-        cls.env.user.groups_id -= cls.group_uom
+        cls.env.user.group_ids -= cls.group_uom

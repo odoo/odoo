@@ -174,7 +174,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         cls.user_branch = cls.env['res.users'].create({
             'name': 'Branch User',
             'login': 'user_branch',
-            'groups_id': [
+            'group_ids': [
                 Command.link(cls.env.ref('base.group_user').id),
                 Command.link(cls.env.ref('account.group_account_user').id),
                 Command.link(cls.env.ref('account.group_account_manager').id),

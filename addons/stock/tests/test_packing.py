@@ -453,9 +453,9 @@ class TestPacking(TestPackingCommon):
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
         grp_multi_step_rule = self.env.ref('stock.group_adv_location')
         grp_pack = self.env.ref('stock.group_tracking_lot')
-        self.env.user.write({'groups_id': [(3, grp_multi_loc.id)]})
-        self.env.user.write({'groups_id': [(3, grp_multi_step_rule.id)]})
-        self.env.user.write({'groups_id': [(3, grp_pack.id)]})
+        self.env.user.write({'group_ids': [(3, grp_multi_loc.id)]})
+        self.env.user.write({'group_ids': [(3, grp_multi_step_rule.id)]})
+        self.env.user.write({'group_ids': [(3, grp_pack.id)]})
         self.warehouse.reception_steps = 'two_steps'
         # Settings of receipt.
         self.warehouse.in_type_id.show_entire_packs = True
@@ -549,7 +549,7 @@ class TestPacking(TestPackingCommon):
         internal_form = Form(picking)
         # The test specifically removes the ability to see the location fields
         # grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
-        # self.env.user.write({'groups_id': [(3, grp_multi_loc.id)]})
+        # self.env.user.write({'group_ids': [(3, grp_multi_loc.id)]})
         # Hence, `internal_form.location_id` shouldn't be changed
         with internal_form.package_level_ids.new() as pack_line:
             pack_line.package_id = receipt_package.package_id
@@ -590,9 +590,9 @@ class TestPacking(TestPackingCommon):
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
         grp_multi_step_rule = self.env.ref('stock.group_adv_location')
         grp_pack = self.env.ref('stock.group_tracking_lot')
-        self.env.user.write({'groups_id': [(3, grp_multi_loc.id)]})
-        self.env.user.write({'groups_id': [(3, grp_multi_step_rule.id)]})
-        self.env.user.write({'groups_id': [(3, grp_pack.id)]})
+        self.env.user.write({'group_ids': [(3, grp_multi_loc.id)]})
+        self.env.user.write({'group_ids': [(3, grp_multi_step_rule.id)]})
+        self.env.user.write({'group_ids': [(3, grp_pack.id)]})
         self.warehouse.reception_steps = 'two_steps'
         # Settings of receipt.
         self.warehouse.in_type_id.show_entire_packs = True
@@ -693,7 +693,7 @@ class TestPacking(TestPackingCommon):
         internal_form = Form(picking)
         # The test specifically removes the ability to see the location fields
         # grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
-        # self.env.user.write({'groups_id': [(3, grp_multi_loc.id)]})
+        # self.env.user.write({'group_ids': [(3, grp_multi_loc.id)]})
         # Hence, `internal_form.location_id` shouldn't be changed
         with internal_form.package_level_ids.new() as pack_line:
             pack_line.package_id = receipt_package.package_id
@@ -1070,9 +1070,9 @@ class TestPacking(TestPackingCommon):
         warehouse = self.stock_location.warehouse_id
         warehouse.reception_steps = "two_steps"
         self.productA.weight = 1.0
-        self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_multi_locations').id)]})
+        self.env.user.write({'group_ids': [(4, self.env.ref('stock.group_stock_multi_locations').id)]})
         # Required for `result_package_id` to be visible in the view
-        self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_tracking_lot').id)]})
+        self.env.user.write({'group_ids': [(4, self.env.ref('stock.group_tracking_lot').id)]})
 
         package_type = self.env['stock.package.type'].create({
             'name': "Super Pallet",
@@ -1173,9 +1173,9 @@ class TestPacking(TestPackingCommon):
         warehouse.reception_steps = "two_steps"
         self.productA.weight = 1.0
         self.productB.weight = 1.0
-        self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_stock_multi_locations').id)]})
+        self.env.user.write({'group_ids': [(4, self.env.ref('stock.group_stock_multi_locations').id)]})
         # Required for `result_package_id` to be visible in the view
-        self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_tracking_lot').id)]})
+        self.env.user.write({'group_ids': [(4, self.env.ref('stock.group_tracking_lot').id)]})
 
         package_type = self.env['stock.package.type'].create({
             'name': "Super Pallet",

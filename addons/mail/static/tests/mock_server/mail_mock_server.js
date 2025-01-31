@@ -1049,7 +1049,7 @@ function _process_request_for_internal_user(store, name, params) {
         const domain = [
             "|",
             ["create_uid", "=", this.env.user.id],
-            ["group_ids", "in", this.env.user.groups_id],
+            ["group_ids", "in", this.env.user.group_ids],
         ];
         store.add(this.env["mail.canned.response"].search(domain));
     }

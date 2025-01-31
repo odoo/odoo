@@ -41,7 +41,7 @@ class ProductCommon(UomCommon):
 
     @classmethod
     def _enable_pricelists(cls):
-        cls.env.user.groups_id += cls.group_product_pricelist
+        cls.env.user.group_ids += cls.group_product_pricelist
 
     @classmethod
     def _create_pricelist(cls, **create_vals):

@@ -62,7 +62,7 @@
         </record>
 
         <record id="base.default_user" model="res.users">
-            <field name="groups_id" eval="[(4,ref('lunch.group_lunch_manager'))]"/>
+            <field name="group_ids" eval="[(4,ref('lunch.group_lunch_manager'))]"/>
         </record>
 
         <record id="ir_rule_lunch_supplier_multi_company" model="ir.rule">

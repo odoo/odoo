@@ -62,15 +62,15 @@ def parse_m2m(commands):
 #   section "Others".
 #
 # The user form view is modified by an inherited view (base.user_groups_view);
-# the inherited view replaces the field 'groups_id' by a set of reified group
+# the inherited view replaces the field 'group_ids' by a set of reified group
 # fields (boolean or selection fields).  The arch of that view is regenerated
 # each time groups are changed.
 #
 # Naming conventions for reified groups fields:
 # - boolean field 'in_group_ID' is True iff
-#       ID is in 'groups_id'
+#       ID is in 'group_ids'
 # - selection field 'sel_groups_ID1_..._IDk' is ID iff
-#       ID is in 'groups_id' and ID is maximal in the set {ID1, ..., IDk}
+#       ID is in 'group_ids' and ID is maximal in the set {ID1, ..., IDk}
 #
 
 
@@ -126,7 +126,7 @@ class ResGroups(models.Model):
 
         if self._context.get('install_filename') or self._context.get(MODULE_UNINSTALL_FLAG):
             # use a dummy view during install/upgrade/uninstall
-            xml = E.field(name="groups_id", position="after")
+            xml = E.field(name="group_ids", position="after")
 
         else:
             group_no_one = view.env.ref('base.group_no_one')
@@ -233,7 +233,7 @@ class ResGroups(models.Model):
                 E.group(*(xml1), groups="base.group_no_one"),
                 E.group(*(xml2), invisible=user_type_invisible),
                 E.group(*(xml3), invisible=user_type_invisible),
-                E.group(*(xml4), invisible=user_type_invisible, groups="base.group_no_one"), name="groups_id", position="replace")
+                E.group(*(xml4), invisible=user_type_invisible, groups="base.group_no_one"), name="group_ids", position="replace")
             xml.addprevious(etree.Comment("GENERATED AUTOMATICALLY BY GROUPS"))
 
         # serialize and update the view
@@ -301,7 +301,7 @@ class UsersView(models.Model):
 
     user_group_warning = fields.Text(string="User Group Warning", compute="_compute_user_group_warning")
 
-    @api.depends('groups_id', 'share')
+    @api.depends('group_ids', 'share')
     @api.depends_context('show_user_group_warning')
     def _compute_user_group_warning(self):
         self.user_group_warning = False
@@ -339,7 +339,7 @@ class UsersView(models.Model):
         :return: string to display in a warning
         """
         # Current groups of the user
-        current_groups = user.groups_id.filtered('trans_implied_ids')
+        current_groups = user.group_ids.filtered('trans_implied_ids')
         current_groups_by_category = defaultdict(lambda: self.env['res.groups'])
         for group in current_groups:
             current_groups_by_category[group.category_id] |= group.trans_implied_ids.filtered(lambda grp: grp.category_id == group.category_id)
@@ -349,7 +349,7 @@ class UsersView(models.Model):
         categories_to_ignore = self.env.ref('base.module_category_hidden') + self.env.ref('base.module_category_usability')
         for group in current_groups:
             # Get the updated group from current groups
-            missing_implied_groups = group.implied_ids - user.groups_id
+            missing_implied_groups = group.implied_ids - user.group_ids
             # Get the missing group needed in updated group's category (For example, someone changes
             # Sales: Admin to Sales: User, but Field Service is already set to Admin, so here in the
             # 'Sales' category, we will at the minimum need Admin group)
@@ -390,13 +390,13 @@ class UsersView(models.Model):
             else:
                 values1[key] = val
 
-        if 'groups_id' not in values and (add or rem):
+        if 'group_ids' not in values and (add or rem):
             added = self.env['res.groups'].sudo().browse(add)
             added |= added.mapped('trans_implied_ids')
             added_ids = added._ids
             # remove group ids in `rem` and add group ids in `add`
             # do not remove groups that are added by implied
-            values1['groups_id'] = list(itertools.chain(
+            values1['group_ids'] = list(itertools.chain(
                 zip(repeat(3), [gid for gid in rem if gid not in added_ids]),
                 zip(repeat(4), add)
             ))
@@ -406,7 +406,7 @@ class UsersView(models.Model):
     @api.model
     def default_get(self, fields):
         group_fields, fields = partition(is_reified_group, fields)
-        fields1 = (fields + ['groups_id']) if group_fields else fields
+        fields1 = (fields + ['group_ids']) if group_fields else fields
         values = super().default_get(fields1)
         self._add_reified_groups(group_fields, values)
         return values
@@ -422,25 +422,25 @@ class UsersView(models.Model):
     def onchange(self, values, field_names, fields_spec):
         reified_fnames = [fname for fname in fields_spec if is_reified_group(fname)]
         if reified_fnames:
-            values = {key: val for key, val in values.items() if key != 'groups_id'}
+            values = {key: val for key, val in values.items() if key != 'group_ids'}
             values = self._remove_reified_groups(values)
 
             if any(is_reified_group(fname) for fname in field_names):
                 field_names = [fname for fname in field_names if not is_reified_group(fname)]
-                field_names.append('groups_id')
+                field_names.append('group_ids')
 
             fields_spec = {
                 field_name: field_spec
                 for field_name, field_spec in fields_spec.items()
                 if not is_reified_group(field_name)
             }
-            fields_spec['groups_id'] = {}
+            fields_spec['group_ids'] = {}
 
         result = super().onchange(values, field_names, fields_spec)
 
-        if reified_fnames and 'groups_id' in result.get('value', {}):
+        if reified_fnames and 'group_ids' in result.get('value', {}):
             self._add_reified_groups(reified_fnames, result['value'])
-            result['value'].pop('groups_id', None)
+            result['value'].pop('group_ids', None)
 
         return result
 
@@ -449,11 +449,11 @@ class UsersView(models.Model):
         fields1 = fields or list(self.fields_get())
         group_fields, other_fields = partition(is_reified_group, fields1)
 
-        # read regular fields (other_fields); add 'groups_id' if necessary
+        # read regular fields (other_fields); add 'group_ids' if necessary
         drop_groups_id = False
         if group_fields and fields:
-            if 'groups_id' not in other_fields:
-                other_fields.append('groups_id')
+            if 'group_ids' not in other_fields:
+                other_fields.append('group_ids')
                 drop_groups_id = True
         else:
             other_fields = fields
@@ -465,12 +465,12 @@ class UsersView(models.Model):
             for values in res:
                 self._add_reified_groups(group_fields, values)
                 if drop_groups_id:
-                    values.pop('groups_id', None)
+                    values.pop('group_ids', None)
         return res
 
     def _add_reified_groups(self, fields, values):
         """ add the given reified group fields into `values` """
-        gids = set(parse_m2m(values.get('groups_id') or []))
+        gids = set(parse_m2m(values.get('group_ids') or []))
         for f in fields:
             if is_boolean_group(f):
                 values[f] = get_boolean_group(f) in gids

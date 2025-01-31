@@ -40,7 +40,7 @@
     </record>
 
     <record id="base.default_user" model="res.users">
-        <field name="groups_id" eval="[(4,ref('hr_recruitment.group_hr_recruitment_manager'))]"/>
+        <field name="group_ids" eval="[(4,ref('hr_recruitment.group_hr_recruitment_manager'))]"/>
     </record>
 
     <record id="group_applicant_cv_display" model="res.groups">

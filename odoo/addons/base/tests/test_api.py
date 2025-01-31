@@ -101,7 +101,7 @@ class TestAPI(SavepointCaseWithUserDemo):
         user = self.env.user
         self.assertIsRecord(user, 'res.users')
         self.assertIsRecord(user.partner_id, 'res.partner')
-        self.assertIsRecordset(user.groups_id, 'res.groups')
+        self.assertIsRecordset(user.group_ids, 'res.groups')
 
         for name, field in self.partners._fields.items():
             if field.type == 'many2one':
@@ -135,8 +135,8 @@ class TestAPI(SavepointCaseWithUserDemo):
 
         self.assertIs(partner.parent_id.user_id.name, False)
 
-        self.assertFalse(partner.parent_id.user_id.groups_id)
-        self.assertIsRecordset(partner.parent_id.user_id.groups_id, 'res.groups')
+        self.assertFalse(partner.parent_id.user_id.group_ids)
+        self.assertIsRecordset(partner.parent_id.user_id.group_ids, 'res.groups')
 
     @mute_logger('odoo.models')
     def test_40_new_new(self):
@@ -209,7 +209,7 @@ class TestAPI(SavepointCaseWithUserDemo):
             demo_partner.company_id.write({'name': 'Pricks'})
 
         # remove demo user from all groups
-        demo.write({'groups_id': [Command.clear()]})
+        demo.write({'group_ids': [Command.clear()]})
 
         # demo user can no longer access partner data
         with self.assertRaises(AccessError):

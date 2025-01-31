@@ -29,7 +29,7 @@ class TestViewGroups(ViewCase):
     def test_attrs_groups(self):
         """ Checks that attrs/modifiers with groups work
         """
-        self.env.user.groups_id = [(6, 0, [self.env.ref('base.group_system').id])]
+        self.env.user.group_ids = [(6, 0, [self.env.ref('base.group_system').id])]
         f = Form(self.env['test_new_api.model.some_access'], view='test_new_api.view_model_some_access')
         f.a = 1
         f.b = 2
@@ -42,7 +42,7 @@ class TestViewGroups(ViewCase):
 
         # other access
 
-        self.env.user.groups_id = [(6, 0, [self.env.ref('base.group_public').id])]
+        self.env.user.group_ids = [(6, 0, [self.env.ref('base.group_public').id])]
         f = Form(self.env['test_new_api.model.some_access'], view='test_new_api.view_model_some_access')
         f.a = 1
         with self.assertRaisesRegex(AssertionError, "'b' was not found in the view"):
@@ -135,7 +135,7 @@ class TestViewGroups(ViewCase):
             'name': 'A User',
             'login': 'a_user',
             'email': 'a@user.com',
-            'groups_id': [(4, self.env.ref('base.group_user').id)],
+            'group_ids': [(4, self.env.ref('base.group_user').id)],
         })
         view = self.env.ref('test_new_api.view_model_all_access').with_user(user)
         arch = self.env['test_new_api.model.all_access']._get_view_cache(view_id=view.id)['arch']

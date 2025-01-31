@@ -100,7 +100,7 @@ export class Persona extends Record {
     isInternalUser = false;
     /** @type {luxon.DateTime} */
     write_date = Record.attr(undefined, { type: "datetime" });
-    groups_id = Record.many("res.groups", { inverse: "personas" });
+    group_ids = Record.many("res.groups", { inverse: "personas" });
 
     /**
      * @returns {boolean}
