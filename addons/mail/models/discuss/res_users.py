@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
-from odoo.addons.base.models.res_users import is_selection_groups
+from odoo.addons.base.models.res_users_view import is_selection_groups
 from odoo.addons.mail.tools.discuss import Store
 
 

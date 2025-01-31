@@ -7,7 +7,6 @@ import collections
 import datetime
 import hmac
 import ipaddress
-import itertools
 import json
 import logging
 import os
@@ -15,23 +14,18 @@ import time
 from collections import defaultdict
 from functools import wraps
 from hashlib import sha256
-from itertools import chain, repeat
+from itertools import chain
 from markupsafe import Markup
 
 import pytz
-from lxml import etree
-from lxml.builder import E
 from passlib.context import CryptContext as _CryptContext
 
 from odoo import api, fields, models, tools, _, Command
-from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
-from odoo.fields import Domain
 from odoo.http import request, DEFAULT_LANG
 from odoo.osv import expression
-from odoo.tools import is_html_empty, partition, frozendict, lazy_property, SQL, SetDefinitions
-from odoo.tools.misc import OrderedSet
+from odoo.tools import is_html_empty, frozendict, lazy_property, SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -84,45 +78,6 @@ class CryptContext:
 MIN_ROUNDS = 600_000
 concat = chain.from_iterable
 
-#
-# Functions for manipulating boolean and selection pseudo-fields
-#
-def name_boolean_group(id):
-    return 'in_group_' + str(id)
-
-def name_selection_groups(ids):
-    return 'sel_groups_' + '_'.join(str(it) for it in sorted(ids))
-
-def is_boolean_group(name):
-    return name.startswith('in_group_')
-
-def is_selection_groups(name):
-    return name.startswith('sel_groups_')
-
-def is_reified_group(name):
-    return is_boolean_group(name) or is_selection_groups(name)
-
-def get_boolean_group(name):
-    return int(name[9:])
-
-def get_selection_groups(name):
-    return [int(v) for v in name[11:].split('_')]
-
-def parse_m2m(commands):
-    "return a list of ids corresponding to a many2many value"
-    ids = []
-    for command in commands:
-        if isinstance(command, (tuple, list)):
-            if command[0] in (Command.UPDATE, Command.LINK):
-                ids.append(command[1])
-            elif command[0] == Command.CLEAR:
-                ids = []
-            elif command[0] == Command.SET:
-                ids = list(command[2])
-        else:
-            ids.append(command)
-    return ids
-
 def _jsonable(o):
     try: json.dumps(o)
     except TypeError: return False
@@ -171,134 +126,8 @@ def check_identity(fn):
     return wrapped
 
 #----------------------------------------------------------
-# Basic res.groups and res.users
+# Basic res.users
 #----------------------------------------------------------
-
-
-class ResGroups(models.Model):
-    _name = 'res.groups'
-    _description = "Access Groups"
-    _rec_name = 'full_name'
-    _order = 'name'
-    _allow_sudo_commands = False
-
-    name = fields.Char(required=True, translate=True)
-    users = fields.Many2many('res.users', 'res_groups_users_rel', 'gid', 'uid')
-    model_access = fields.One2many('ir.model.access', 'group_id', string='Access Controls', copy=True)
-    rule_groups = fields.Many2many('ir.rule', 'rule_group_rel',
-        'group_id', 'rule_group_id', string='Rules', domain="[('global', '=', False)]")
-    menu_access = fields.Many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', string='Access Menu')
-    view_access = fields.Many2many('ir.ui.view', 'ir_ui_view_group_rel', 'group_id', 'view_id', string='Views')
-    comment = fields.Text(translate=True)
-    category_id = fields.Many2one('ir.module.category', string='Application', index=True)
-    color = fields.Integer(string='Color Index')
-    full_name = fields.Char(compute='_compute_full_name', string='Group Name', search='_search_full_name')
-    share = fields.Boolean(string='Share Group', help="Group created to set access rights for sharing data with some users.")
-    api_key_duration = fields.Float(string='API Keys maximum duration days',
-        help="Determines the maximum duration of an api key created by a user belonging to this group.")
-
-    _name_uniq = models.Constraint("UNIQUE (category_id, name)",
-        'The name of the group must be unique within an application!')
-    _check_api_key_duration = models.Constraint(
-        'CHECK(api_key_duration >= 0)',
-        'The api key duration cannot be a negative value.',
-    )
-
-    @api.constrains('users')
-    def _check_one_user_type(self):
-        self.users._check_one_user_type()
-
-    @api.ondelete(at_uninstall=False)
-    def _unlink_except_settings_group(self):
-        classified = self.env['res.config.settings']._get_classified_fields()
-        for _name, _groups, implied_group in classified['group']:
-            if implied_group.id in self.ids:
-                raise ValidationError(_('You cannot delete a group linked with a settings field.'))
-
-    @api.depends('category_id.name', 'name')
-    def _compute_full_name(self):
-        # Important: value must be stored in environment of group, not group1!
-        for group, group1 in zip(self, self.sudo()):
-            if group1.category_id:
-                group.full_name = '%s / %s' % (group1.category_id.name, group1.name)
-            else:
-                group.full_name = group1.name
-
-    def _search_full_name(self, operator, operand):
-        lst = True
-        if isinstance(operand, bool):
-            return [('name', operator, operand)]
-        if isinstance(operand, str):
-            lst = False
-            operand = [operand]
-        where_domains = []
-        for group in operand:
-            values = [v for v in group.split('/') if v]
-            group_name = values.pop().strip()
-            category_name = values and '/'.join(values).strip() or group_name
-            group_domain = [('name', operator, lst and [group_name] or group_name)]
-            category_ids = self.env['ir.module.category'].sudo()._search(
-                [('name', operator, [category_name] if lst else category_name)])
-            category_domain = [('category_id', 'in', category_ids)]
-            if operator in expression.NEGATIVE_TERM_OPERATORS and not values:
-                category_domain = expression.OR([category_domain, [('category_id', '=', False)]])
-            if (operator in expression.NEGATIVE_TERM_OPERATORS) == (not values):
-                where = expression.AND([group_domain, category_domain])
-            else:
-                where = expression.OR([group_domain, category_domain])
-            where_domains.append(where)
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
-            return expression.AND(where_domains)
-        else:
-            return expression.OR(where_domains)
-
-    @api.model
-    def _search(self, domain, offset=0, limit=None, order=None):
-        # add explicit ordering if search is sorted on full_name
-        if order and order.startswith('full_name'):
-            groups = super().search(domain)
-            groups = groups.sorted('full_name', reverse=order.endswith('DESC'))
-            groups = groups[offset:offset+limit] if limit else groups[offset:]
-            return groups._as_query(order)
-        return super()._search(domain, offset, limit, order)
-
-    def copy_data(self, default=None):
-        default = dict(default or {})
-        vals_list = super().copy_data(default=default)
-        for group, vals in zip(self, vals_list):
-            vals['name'] = default.get('name') or _('%s (copy)', group.name)
-        return vals_list
-
-    def write(self, vals):
-        if 'name' in vals:
-            if vals['name'].startswith('-'):
-                raise UserError(_('The name of the group can not start with "-"'))
-        # invalidate caches before updating groups, since the recomputation of
-        # field 'share' depends on method has_group()
-        # DLE P139
-        if self.ids:
-            self.env['ir.model.access'].call_cache_clearing_methods()
-        return super().write(vals)
-
-    def _ensure_xml_id(self):
-        """Return the groups external identifiers, creating the external identifier for groups missing one"""
-        result = self.get_external_id()
-        missings = {group_id: f'__custom__.group_{group_id}' for group_id, ext_id in result.items() if not ext_id}
-        if missings:
-            self.env['ir.model.data'].sudo().create(
-                [
-                    {
-                        'name': name.split('.')[1],
-                        'model': 'res.groups',
-                        'res_id': group_id,
-                        'module': name.split('.')[0],
-                    }
-                    for group_id, name in missings.items()
-                ]
-            )
-            result.update(missings)
-
-        return result
 
 
 class ResUsersLog(models.Model):
@@ -1444,428 +1273,32 @@ class ResUsers(models.Model):
         """ If an MFA method is enabled, returns the URL for its second step. """
         return
 
+    @api.model
+    def fields_get(self, allfields=None, attributes=None):
+        res = super().fields_get(allfields, attributes=attributes)
+
+        # add self readable/writable fields
+        missing = set(self.SELF_WRITEABLE_FIELDS).union(self.SELF_READABLE_FIELDS).difference(res.keys())
+        if allfields:
+            missing = missing.intersection(allfields)
+        if missing:
+            self = self.sudo()  # noqa: PLW0642
+            res.update({
+                key: dict(values, readonly=key not in self.SELF_WRITEABLE_FIELDS, searchable=False)
+                for key, values in super().fields_get(missing, attributes).items()
+            })
+        return res
+
 
 ResUsersPatchedInTest = ResUsers
 
-#
-# Implied groups
-#
-# Extension of res.groups and res.users with a relation for "implied" or
-# "inherited" groups.  Once a user belongs to a group, it automatically belongs
-# to the implied groups (transitively).
-#
 
-
-# TODO: reorganize or split the file to avoid declaring classes multiple times
-# pylint: disable=E0102
-class ResGroups(models.Model):  # noqa: F811
-    _inherit = 'res.groups'
-
-    implied_ids = fields.Many2many('res.groups', 'res_groups_implied_rel', 'gid', 'hid',
-        string='Inherits', help='Users of this group automatically inherit those groups')
-    trans_implied_ids = fields.Many2many('res.groups', string='Transitively inherits',
-        compute='_compute_trans_implied', recursive=True)
-
-    @api.depends('implied_ids.trans_implied_ids')
-    def _compute_trans_implied(self):
-        # Compute the transitive closure recursively. Note that the performance
-        # is good, because the record cache behaves as a memo (the field is
-        # never computed twice on a given group.)
-        for g in self:
-            g.trans_implied_ids = g.implied_ids | g.implied_ids.trans_implied_ids
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        user_ids_list = [vals.pop('users', None) for vals in vals_list]
-        groups = super().create(vals_list)
-        for group, user_ids in zip(groups, user_ids_list):
-            if user_ids:
-                # delegate addition of users to add implied groups
-                group.write({'users': user_ids})
-        self.env.registry.clear_cache('groups')
-        return groups
-
-    def write(self, values):
-        res = super().write(values)
-        if values.get('users') or values.get('implied_ids'):
-            # add all implied groups (to all users of each group)
-            updated_group_ids = OrderedSet()
-            updated_user_ids = OrderedSet()
-            for group in self:
-                self._cr.execute("""
-                    WITH RECURSIVE group_imply(gid, hid) AS (
-                        SELECT gid, hid
-                          FROM res_groups_implied_rel
-                         UNION
-                        SELECT i.gid, r.hid
-                          FROM res_groups_implied_rel r
-                          JOIN group_imply i ON (i.hid = r.gid)
-                    )
-                    INSERT INTO res_groups_users_rel (gid, uid)
-                         SELECT i.hid, r.uid
-                           FROM group_imply i, res_groups_users_rel r
-                          WHERE r.gid = i.gid
-                            AND i.gid = %(gid)s
-                         EXCEPT
-                         SELECT r.gid, r.uid
-                           FROM res_groups_users_rel r
-                           JOIN group_imply i ON (r.gid = i.hid)
-                          WHERE i.gid = %(gid)s
-                    RETURNING gid, uid
-                """, dict(gid=group.id))
-                updated = self.env.cr.fetchall()
-                gids, uids = zip(*updated) if updated else ([], [])
-                updated_group_ids.update(gids)
-                updated_user_ids.update(uids)
-            # notify the ORM about the updated users and groups
-            updated_groups = self.env['res.groups'].browse(updated_group_ids)
-            updated_groups.invalidate_recordset(['users'])
-            updated_groups.modified(['users'])
-            updated_users = self.env['res.users'].browse(updated_user_ids)
-            updated_users.invalidate_recordset(['groups_id'])
-            updated_users.modified(['groups_id'])
-            # explicitly check constraints
-            updated_groups._validate_fields(['users'])
-            updated_users._validate_fields(['groups_id'])
-            self._check_one_user_type()
-        if 'implied_ids' in values:
-            self.env.registry.clear_cache('groups')
-        return res
-
-    def unlink(self):
-        res = super().unlink()
-        self.env.registry.clear_cache('groups')
-        return res
-
-    def _apply_group(self, implied_group):
-        """ Add the given group to the groups implied by the current group
-        :param implied_group: the implied group to add
-        """
-        groups = self.filtered(lambda g: implied_group not in g.implied_ids)
-        groups.write({'implied_ids': [Command.link(implied_group.id)]})
-
-    def _remove_group(self, implied_group):
-        """ Remove the given group from the implied groups of the current group
-        :param implied_group: the implied group to remove
-        """
-        groups = self.filtered(lambda g: implied_group in g.implied_ids)
-        if groups:
-            groups.write({'implied_ids': [Command.unlink(implied_group.id)]})
-            # if user belongs to implied_group thanks to another group, don't remove him
-            # this avoids readding the template user and triggering the mechanism at 121cd0d6084cb28
-            users_to_unlink = [
-                user
-                for user in groups.with_context(active_test=False).users
-                if implied_group not in (user.groups_id - implied_group).trans_implied_ids
-            ]
-            if users_to_unlink:
-                # do not remove inactive users (e.g. default)
-                implied_group.with_context(active_test=False).write(
-                    {'users': [Command.unlink(user.id) for user in users_to_unlink]})
-
-    @api.model
-    @tools.ormcache(cache='groups')
-    def _get_group_definitions(self):
-        """ Return the definition of all the groups as a :class:`~odoo.tools.SetDefinitions`. """
-        groups = self.sudo().search([], order='id')
-        id_to_ref = groups.get_external_id()
-        data = {
-            group.id: {
-                'ref': id_to_ref[group.id] or str(group.id),
-                'supersets': group.implied_ids.ids,
-            }
-            for group in groups
-        }
-        # determine exclusive groups (will be disjoint for the set expression)
-        user_types_category_id = self.env['ir.model.data']._xmlid_to_res_id('base.module_category_user_type', raise_if_not_found=False)
-        if user_types_category_id:
-            user_type_ids = self.sudo().search([('category_id', '=', user_types_category_id)]).ids
-            for user_type_id in user_type_ids:
-                data[user_type_id]['disjoints'] = set(user_type_ids) - {user_type_id}
-
-        return SetDefinitions(data)
-
-
-#
-# Virtual checkbox and selection for res.user form view
-#
-# Extension of res.groups and res.users for the special groups view in the users
-# form.  This extension presents groups with selection and boolean widgets:
-# - Groups are shown by application, with boolean and/or selection fields.
-#   Selection fields typically defines a role "Name" for the given application.
-# - Uncategorized groups are presented as boolean fields and grouped in a
-#   section "Others".
-#
-# The user form view is modified by an inherited view (base.user_groups_view);
-# the inherited view replaces the field 'groups_id' by a set of reified group
-# fields (boolean or selection fields).  The arch of that view is regenerated
-# each time groups are changed.
-#
-# Naming conventions for reified groups fields:
-# - boolean field 'in_group_ID' is True iff
-#       ID is in 'groups_id'
-# - selection field 'sel_groups_ID1_..._IDk' is ID iff
-#       ID is in 'groups_id' and ID is maximal in the set {ID1, ..., IDk}
-#
-
-
-# pylint: disable=E0102
-class ResGroups(models.Model):  # noqa: F811
-    _inherit = 'res.groups'
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        groups = super().create(vals_list)
-        self._update_user_groups_view()
-        # actions.get_bindings() depends on action records
-        self.env.registry.clear_cache()
-        return groups
-
-    def write(self, values):
-        # determine which values the "user groups view" depends on
-        VIEW_DEPS = ('category_id', 'implied_ids')
-        view_values0 = [g[name] for name in VIEW_DEPS if name in values for g in self]
-        res = super().write(values)
-        # update the "user groups view" only if necessary
-        view_values1 = [g[name] for name in VIEW_DEPS if name in values for g in self]
-        if view_values0 != view_values1:
-            self._update_user_groups_view()
-        # actions.get_bindings() depends on action records
-        self.env.registry.clear_cache()
-        return res
-
-    def unlink(self):
-        res = super().unlink()
-        self._update_user_groups_view()
-        # actions.get_bindings() depends on action records
-        self.env.registry.clear_cache()
-        return res
-
-    def _get_hidden_extra_categories(self):
-        return ['base.module_category_hidden', 'base.module_category_extra', 'base.module_category_usability']
-
-    @api.model
-    def _update_user_groups_view(self):
-        """ Modify the view with xmlid ``base.user_groups_view``, which inherits
-            the user form view, and introduces the reified group fields.
-        """
-        # remove the language to avoid translations, it will be handled at the view level
-        self = self.with_context(lang=None)
-
-        # We have to try-catch this, because at first init the view does not
-        # exist but we are already creating some basic groups.
-        view = self.env.ref('base.user_groups_view', raise_if_not_found=False)
-        if not (view and view._name == 'ir.ui.view'):
-            return
-
-        if self._context.get('install_filename') or self._context.get(MODULE_UNINSTALL_FLAG):
-            # use a dummy view during install/upgrade/uninstall
-            xml = E.field(name="groups_id", position="after")
-
-        else:
-            group_no_one = view.env.ref('base.group_no_one')
-            group_employee = view.env.ref('base.group_user')
-            xml0, xml1, xml2, xml3, xml4 = [], [], [], [], []
-            xml_by_category = {}
-            xml1.append(E.separator(string='User Type', colspan="2", groups='base.group_no_one'))
-
-            user_type_field_name = ''
-            user_type_readonly = str({})
-            sorted_tuples = sorted(self.get_groups_by_application(),
-                                   key=lambda t: t[0].xml_id != 'base.module_category_user_type')
-
-            invisible_information = "All fields linked to groups must be present in the view due to the overwrite of create and write. The implied groups are calculated using this values."
-
-            for app, kind, gs, category_name in sorted_tuples:  # we process the user type first
-                attrs = {}
-                # hide groups in categories 'Hidden' and 'Extra' (except for group_no_one)
-                if app.xml_id in self._get_hidden_extra_categories():
-                    attrs['groups'] = 'base.group_no_one'
-
-                # User type (employee, portal or public) is a separated group. This is the only 'selection'
-                # group of res.groups without implied groups (with each other).
-                if app.xml_id == 'base.module_category_user_type':
-                    # application name with a selection field
-                    field_name = name_selection_groups(gs.ids)
-                    # test_reified_groups, put the user category type in invisible
-                    # as it's used in domain of attrs of other fields,
-                    # and the normal user category type field node is wrapped in a `groups="base.no_one"`,
-                    # and is therefore removed when not in debug mode.
-                    xml0.append(E.field(name=field_name, invisible="True", on_change="1"))
-                    xml0.append(etree.Comment(invisible_information))
-                    user_type_field_name = field_name
-                    user_type_readonly = f'{user_type_field_name} != {group_employee.id}'
-                    attrs['widget'] = 'radio'
-                    # Trigger the on_change of this "virtual field"
-                    attrs['on_change'] = '1'
-                    xml1.append(E.field(name=field_name, **attrs))
-                    xml1.append(E.newline())
-
-                elif kind == 'selection':
-                    # application name with a selection field
-                    field_name = name_selection_groups(gs.ids)
-                    attrs['readonly'] = user_type_readonly
-                    attrs['on_change'] = '1'
-                    if category_name not in xml_by_category:
-                        xml_by_category[category_name] = []
-                        xml_by_category[category_name].append(E.newline())
-                    xml_by_category[category_name].append(E.field(name=field_name, **attrs))
-                    xml_by_category[category_name].append(E.newline())
-                    # add duplicate invisible field so default values are saved on create
-                    if attrs.get('groups') == 'base.group_no_one':
-                        xml0.append(E.field(name=field_name, **dict(attrs, invisible="True", groups='!base.group_no_one')))
-                        xml0.append(etree.Comment(invisible_information))
-
-                else:
-                    # application separator with boolean fields
-                    app_name = app.name or 'Other'
-                    xml4.append(E.separator(string=app_name, **attrs))
-                    left_group, right_group = [], []
-                    attrs['readonly'] = user_type_readonly
-                    # we can't use enumerate, as we sometime skip groups
-                    group_count = 0
-                    for g in gs:
-                        field_name = name_boolean_group(g.id)
-                        dest_group = left_group if group_count % 2 == 0 else right_group
-                        if g == group_no_one:
-                            # make the group_no_one invisible in the form view
-                            dest_group.append(E.field(name=field_name, invisible="True", **attrs))
-                            dest_group.append(etree.Comment(invisible_information))
-                        else:
-                            dest_group.append(E.field(name=field_name, **attrs))
-                        # add duplicate invisible field so default values are saved on create
-                        xml0.append(E.field(name=field_name, **dict(attrs, invisible="True", groups='!base.group_no_one')))
-                        xml0.append(etree.Comment(invisible_information))
-                        group_count += 1
-                    xml4.append(E.group(*left_group))
-                    xml4.append(E.group(*right_group))
-
-            xml4.append({'class': "o_label_nowrap"})
-            user_type_invisible = f'{user_type_field_name} != {group_employee.id}' if user_type_field_name else None
-
-            for xml_cat in sorted(xml_by_category.keys(), key=lambda it: it[0]):
-                master_category_name = xml_cat[1]
-                xml3.append(E.group(*(xml_by_category[xml_cat]), string=master_category_name))
-
-            field_name = 'user_group_warning'
-            user_group_warning_xml = E.div({
-                'class': "alert alert-warning",
-                'role': "alert",
-                'colspan': "2",
-                'invisible': f'not {field_name}',
-            })
-            user_group_warning_xml.append(E.label({
-                'for': field_name,
-                'string': "Access Rights Mismatch",
-                'class': "text text-warning fw-bold",
-            }))
-            user_group_warning_xml.append(E.field(name=field_name))
-            xml2.append(user_group_warning_xml)
-
-            xml = E.field(
-                *(xml0),
-                E.group(*(xml1), groups="base.group_no_one"),
-                E.group(*(xml2), invisible=user_type_invisible),
-                E.group(*(xml3), invisible=user_type_invisible),
-                E.group(*(xml4), invisible=user_type_invisible, groups="base.group_no_one"), name="groups_id", position="replace")
-            xml.addprevious(etree.Comment("GENERATED AUTOMATICALLY BY GROUPS"))
-
-        # serialize and update the view
-        xml_content = etree.tostring(xml, pretty_print=True, encoding="unicode")
-        if xml_content != view.arch:  # avoid useless xml validation if no change
-            new_context = dict(view._context)
-            new_context.pop('install_filename', None)  # don't set arch_fs for this computed view
-            new_context['lang'] = None
-            view.with_context(new_context).write({'arch': xml_content})
-
-    def get_application_groups(self, domain):
-        """ Return the non-share groups that satisfy ``domain``. """
-        return self.search(domain + [('share', '=', False)])
-
-    @api.model
-    def get_groups_by_application(self):
-        """ Return all groups classified by application (module category), as a list::
-
-                [(app, kind, groups), ...],
-
-            where ``app`` and ``groups`` are recordsets, and ``kind`` is either
-            ``'boolean'`` or ``'selection'``. Applications are given in sequence
-            order.  If ``kind`` is ``'selection'``, ``groups`` are given in
-            reverse implication order.
-        """
-        def linearize(app, gs, category_name):
-            # 'User Type' is an exception
-            if app.xml_id == 'base.module_category_user_type':
-                return (app, 'selection', gs.sorted('id'), category_name)
-            # determine sequence order: a group appears after its implied groups
-            order = {g: len(g.trans_implied_ids & gs) for g in gs}
-            # We want a selection for Accounting too. Auditor and Invoice are both
-            # children of Accountant, but the two of them make a full accountant
-            # so it makes no sense to have checkboxes.
-            if app.xml_id == 'base.module_category_accounting_accounting':
-                return (app, 'selection', gs.sorted(key=order.get), category_name)
-            # check whether order is total, i.e., sequence orders are distinct
-            if len(set(order.values())) == len(gs):
-                return (app, 'selection', gs.sorted(key=order.get), category_name)
-            else:
-                return (app, 'boolean', gs, (100, 'Other'))
-
-        # classify all groups by application
-        by_app, others = defaultdict(self.browse), self.browse()
-        for g in self.get_application_groups([]):
-            if g.category_id:
-                by_app[g.category_id] += g
-            else:
-                others += g
-        # build the result
-        res = []
-        for app, gs in sorted(by_app.items(), key=lambda it: it[0].sequence or 0):
-            if app.parent_id:
-                res.append(linearize(app, gs, (app.parent_id.sequence, app.parent_id.name)))
-            else:
-                res.append(linearize(app, gs, (100, 'Other')))
-
-        if others:
-            res.append((self.env['ir.module.category'], 'boolean', others, (100,'Other')))
-        return res
-
-
-class IrModuleCategory(models.Model):
-    _inherit = "ir.module.category"
-
-    def write(self, values):
-        res = super().write(values)
-        if "name" in values:
-            self.env["res.groups"]._update_user_groups_view()
-        return res
-
-    def unlink(self):
-        res = super().unlink()
-        self.env["res.groups"]._update_user_groups_view()
-        return res
-
-
-class UsersView(models.Model):
+class UsersMultiCompany(models.Model):
     _inherit = 'res.users'
 
-    user_group_warning = fields.Text(string="User Group Warning", compute="_compute_user_group_warning")
-
-    @api.depends('groups_id', 'share')
-    @api.depends_context('show_user_group_warning')
-    def _compute_user_group_warning(self):
-        self.user_group_warning = False
-        if self._context.get('show_user_group_warning'):
-            for user in self.filtered_domain([('share', '=', False)]):
-                group_inheritance_warnings = self._prepare_warning_for_group_inheritance(user)
-                if group_inheritance_warnings:
-                    user.user_group_warning = group_inheritance_warnings
-
     @api.model_create_multi
     def create(self, vals_list):
-        new_vals_list = []
-        for values in vals_list:
-            new_vals_list.append(self._remove_reified_groups(values))
-        users = super().create(new_vals_list)
+        users = super().create(vals_list)
         group_multi_company_id = self.env['ir.model.data']._xmlid_to_res_id(
             'base.group_multi_company', raise_if_not_found=False)
         if group_multi_company_id:
@@ -1877,7 +1310,6 @@ class UsersView(models.Model):
         return users
 
     def write(self, values):
-        values = self._remove_reified_groups(values)
         res = super().write(values)
         if 'company_ids' not in values:
             return res
@@ -1894,7 +1326,6 @@ class UsersView(models.Model):
     def new(self, values=None, origin=None, ref=None):
         if values is None:
             values = {}
-        values = self._remove_reified_groups(values)
         user = super().new(values=values, origin=origin, ref=ref)
         group_multi_company = self.env.ref('base.group_multi_company', False)
         if group_multi_company and 'company_ids' in values:
@@ -1903,216 +1334,6 @@ class UsersView(models.Model):
             elif len(user.company_ids) > 1 and user.id not in group_multi_company.users.ids:
                 user.update({'groups_id': [Command.link(group_multi_company.id)]})
         return user
-
-    def _prepare_warning_for_group_inheritance(self, user):
-        """ Check (updated) groups configuration for user. If implieds groups
-        will be added back due to inheritance and hierarchy in groups return
-        a message explaining the missing groups.
-
-        :param res.users user: target user
-
-        :return: string to display in a warning
-        """
-        # Current groups of the user
-        current_groups = user.groups_id.filtered('trans_implied_ids')
-        current_groups_by_category = defaultdict(lambda: self.env['res.groups'])
-        for group in current_groups:
-            current_groups_by_category[group.category_id] |= group.trans_implied_ids.filtered(lambda grp: grp.category_id == group.category_id)
-
-        missing_groups = {}
-        # We don't want to show warning for "Technical" and "Extra Rights" groups
-        categories_to_ignore = self.env.ref('base.module_category_hidden') + self.env.ref('base.module_category_usability')
-        for group in current_groups:
-            # Get the updated group from current groups
-            missing_implied_groups = group.implied_ids - user.groups_id
-            # Get the missing group needed in updated group's category (For example, someone changes
-            # Sales: Admin to Sales: User, but Field Service is already set to Admin, so here in the
-            # 'Sales' category, we will at the minimum need Admin group)
-            missing_implied_groups = missing_implied_groups.filtered(
-                lambda g:
-                g.category_id not in (group.category_id | categories_to_ignore) and
-                g not in current_groups_by_category[g.category_id] and
-                (self.env.user.has_group('base.group_no_one') or g.category_id)
-            )
-            if missing_implied_groups:
-                # prepare missing group message, by categories
-                missing_groups[group] = ", ".join(
-                    f'"{missing_group.category_id.name or self.env._("Other")}: {missing_group.name}"'
-                    for missing_group in missing_implied_groups
-                )
-        return "\n".join(
-            self.env._(
-                'Since %(user)s is a/an "%(category)s: %(group)s", they will at least obtain the right %(missing_group_message)s',
-                user=user.name,
-                category=group.category_id.name or self.env._('Other'),
-                group=group.name,
-                missing_group_message=missing_group_message,
-            ) for group, missing_group_message in missing_groups.items()
-        )
-
-    def _remove_reified_groups(self, values):
-        """ return `values` without reified group fields """
-        add, rem = [], []
-        values1 = {}
-
-        for key, val in values.items():
-            if is_boolean_group(key):
-                (add if val else rem).append(get_boolean_group(key))
-            elif is_selection_groups(key):
-                rem += get_selection_groups(key)
-                if val:
-                    add.append(val)
-            else:
-                values1[key] = val
-
-        if 'groups_id' not in values and (add or rem):
-            added = self.env['res.groups'].sudo().browse(add)
-            added |= added.mapped('trans_implied_ids')
-            added_ids = added._ids
-            # remove group ids in `rem` and add group ids in `add`
-            # do not remove groups that are added by implied
-            values1['groups_id'] = list(itertools.chain(
-                zip(repeat(3), [gid for gid in rem if gid not in added_ids]),
-                zip(repeat(4), add)
-            ))
-
-        return values1
-
-    @api.model
-    def default_get(self, fields):
-        group_fields, fields = partition(is_reified_group, fields)
-        fields1 = (fields + ['groups_id']) if group_fields else fields
-        values = super().default_get(fields1)
-        self._add_reified_groups(group_fields, values)
-        return values
-
-    def _determine_fields_to_fetch(self, field_names, ignore_when_in_cache=False):
-        valid_fields = partition(is_reified_group, field_names)[1]
-        return super()._determine_fields_to_fetch(valid_fields, ignore_when_in_cache)
-
-    def _read_format(self, fnames, load='_classic_read'):
-        valid_fields = partition(is_reified_group, fnames)[1]
-        return super()._read_format(valid_fields, load)
-
-    def onchange(self, values, field_names, fields_spec):
-        reified_fnames = [fname for fname in fields_spec if is_reified_group(fname)]
-        if reified_fnames:
-            values = {key: val for key, val in values.items() if key != 'groups_id'}
-            values = self._remove_reified_groups(values)
-
-            if any(is_reified_group(fname) for fname in field_names):
-                field_names = [fname for fname in field_names if not is_reified_group(fname)]
-                field_names.append('groups_id')
-
-            fields_spec = {
-                field_name: field_spec
-                for field_name, field_spec in fields_spec.items()
-                if not is_reified_group(field_name)
-            }
-            fields_spec['groups_id'] = {}
-
-        result = super().onchange(values, field_names, fields_spec)
-
-        if reified_fnames and 'groups_id' in result.get('value', {}):
-            self._add_reified_groups(reified_fnames, result['value'])
-            result['value'].pop('groups_id', None)
-
-        return result
-
-    def read(self, fields=None, load='_classic_read'):
-        # determine whether reified groups fields are required, and which ones
-        fields1 = fields or list(self.fields_get())
-        group_fields, other_fields = partition(is_reified_group, fields1)
-
-        # read regular fields (other_fields); add 'groups_id' if necessary
-        drop_groups_id = False
-        if group_fields and fields:
-            if 'groups_id' not in other_fields:
-                other_fields.append('groups_id')
-                drop_groups_id = True
-        else:
-            other_fields = fields
-
-        res = super().read(other_fields, load=load)
-
-        # post-process result to add reified group fields
-        if group_fields:
-            for values in res:
-                self._add_reified_groups(group_fields, values)
-                if drop_groups_id:
-                    values.pop('groups_id', None)
-        return res
-
-    def _add_reified_groups(self, fields, values):
-        """ add the given reified group fields into `values` """
-        gids = set(parse_m2m(values.get('groups_id') or []))
-        for f in fields:
-            if is_boolean_group(f):
-                values[f] = get_boolean_group(f) in gids
-            elif is_selection_groups(f):
-                # determine selection groups, in order
-                sel_groups = self.env['res.groups'].sudo().browse(get_selection_groups(f))
-                sel_order = {g: len(g.trans_implied_ids & sel_groups) for g in sel_groups}
-                sel_groups = sel_groups.sorted(key=sel_order.get)
-                # determine which ones are in gids
-                selected = [gid for gid in sel_groups.ids if gid in gids]
-                # if 'Internal User' is in the group, this is the "User Type" group
-                # and we need to show 'Internal User' selected, not Public/Portal.
-                if self.env.ref('base.group_user').id in selected:
-                    values[f] = self.env.ref('base.group_user').id
-                else:
-                    values[f] = selected and selected[-1] or False
-
-    @api.model
-    def fields_get(self, allfields=None, attributes=None):
-        res = super().fields_get(allfields, attributes=attributes)
-        # add reified groups fields
-        for app, kind, gs, _category_name in self.env['res.groups'].sudo().get_groups_by_application():
-            if kind == 'selection':
-                # 'User Type' should not be 'False'. A user is either 'employee', 'portal' or 'public' (required).
-                selection_vals = [(False, '')]
-                if app.xml_id == 'base.module_category_user_type':
-                    selection_vals = []
-                field_name = name_selection_groups(gs.ids)
-                if allfields and field_name not in allfields:
-                    continue
-                # selection group field
-                tips = []
-                if app.description:
-                    tips.append(app.description + '\n')
-                tips.extend('%s: %s' % (g.name, g.comment) for g in gs if g.comment)
-                res[field_name] = {
-                    'type': 'selection',
-                    'string': app.name or _('Other'),
-                    'selection': selection_vals + [(g.id, g.name) for g in gs],
-                    'help': '\n'.join(tips),
-                    'exportable': False,
-                    'selectable': False,
-                }
-            else:
-                # boolean group fields
-                for g in gs:
-                    field_name = name_boolean_group(g.id)
-                    if allfields and field_name not in allfields:
-                        continue
-                    res[field_name] = {
-                        'type': 'boolean',
-                        'string': g.name,
-                        'help': g.comment,
-                        'exportable': False,
-                        'selectable': False,
-                    }
-        # add self readable/writable fields
-        missing = set(self.SELF_WRITEABLE_FIELDS).union(self.SELF_READABLE_FIELDS).difference(res.keys())
-        if allfields:
-            missing = missing.intersection(allfields)
-        if missing:
-            self = self.sudo()  # noqa: PLW0642
-            res.update({
-                key: dict(values, readonly=key not in self.SELF_WRITEABLE_FIELDS, searchable=False)
-                for key, values in super().fields_get(missing, attributes).items()
-            })
-        return res
 
 
 class ResUsersIdentitycheck(models.TransientModel):
