@@ -130,26 +130,26 @@
                                                 <strong>Dependencies</strong> and <strong>Compute</strong>.</p>
                                                 <p>The field <strong>Dependencies</strong> lists the fields that
                                                 the current field depends on. It is a comma-separated list of
-                                                field names, like <code>name, size</code>. You can also refer to
+                                                field names, like <code t-translation="off">name, size</code>. You can also refer to
                                                 fields accessible through other relational fields, for instance
-                                                <code>partner_id.company_id.name</code>.</p>
+                                                <code t-translation="off">partner_id.company_id.name</code>.</p>
                                                 <p>The field <strong>Compute</strong> is the Python code to
                                                 compute the value of the field on a set of records. The value of
                                                 the field must be assigned to each record with a dictionary-like
                                                 assignment.</p>
-                                                <pre>
+<pre t-translation="off">
     for record in self:
         record['size'] = len(record.name)
 </pre>
                                                 <p>The only predefined variables are</p>
                                                 <ul>
-                                                    <li><code>self</code> (the set of records to compute)</li>
-                                                    <li><code>datetime</code> (Python module)</li>
-                                                    <li><code>dateutil</code> (Python module)</li>
-                                                    <li><code>time</code> (Python module)</li>
+                                                    <li><code t-translation="off">self</code> (the set of records to compute)</li>
+                                                    <li><code t-translation="off">datetime</code> (Python module)</li>
+                                                    <li><code t-translation="off">dateutil</code> (Python module)</li>
+                                                    <li><code t-translation="off">time</code> (Python module)</li>
                                                 </ul>
-                                                <p>Other features are accessible through <code>self</code>, like
-                                                <code>self.env</code>, etc.</p>
+                                                <p>Other features are accessible through <code t-translation="off">self</code>, like
+                                                <code t-translation="off">self.env</code>, etc.</p>
                                             </div>
                                         </page>
                                         <page name="groups" string="Access Rights">
@@ -356,26 +356,26 @@
                                     <strong>Dependencies</strong> and <strong>Compute</strong>.</p>
                                     <p>The field <strong>Dependencies</strong> lists the fields that
                                     the current field depends on. It is a comma-separated list of
-                                    field names, like <code>name, size</code>. You can also refer to
+                                    field names, like <code t-translation="off">name, size</code>. You can also refer to
                                     fields accessible through other relational fields, for instance
-                                    <code>partner_id.company_id.name</code>.</p>
+                                    <code t-translation="off">partner_id.company_id.name</code>.</p>
                                     <p>The field <strong>Compute</strong> is the Python code to
                                     compute the value of the field on a set of records. The value of
                                     the field must be assigned to each record with a dictionary-like
                                     assignment.</p>
-                                    <pre>
+<pre t-translation="off">
     for record in self:
         record['size'] = len(record.name)
 </pre>
                                     <p>The only predefined variables are</p>
                                     <ul>
-                                        <li><code>self</code> (the set of records to compute)</li>
-                                        <li><code>datetime</code> (Python module)</li>
-                                        <li><code>dateutil</code> (Python module)</li>
-                                        <li><code>time</code> (Python module)</li>
+                                        <li><code t-translation="off">self</code> (the set of records to compute)</li>
+                                        <li><code t-translation="off">datetime</code> (Python module)</li>
+                                        <li><code t-translation="off">dateutil</code> (Python module)</li>
+                                        <li><code t-translation="off">time</code> (Python module)</li>
                                     </ul>
-                                    <p>Other features are accessible through <code>self</code>, like
-                                    <code>self.env</code>, etc.</p>
+                                    <p>Other features are accessible through <code t-translation="off">self</code>, like
+                                    <code t-translation="off">self.env</code>, etc.</p>
                                 </div>
                             </page>
                             <page name="groups" string="Access Rights">
