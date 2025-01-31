@@ -531,7 +531,7 @@ class TestGroupsOdoo(common.TransactionCase):
         self.assertEqual(str(parse('base.group_user') & parse('base.group_system')), "'base.group_system'")
         self.assertEqual(str(parse('base.group_system') & parse('base.group_user')), "'base.group_system'")
         self.assertEqual(str(parse('base.group_erp_manager') & parse('base.group_system')), "'base.group_system'")
-        self.assertEqual(str(parse('base.group_system') & parse('base.group_allow_export')), "'base.group_system' & 'base.group_allow_export'")
+        self.assertEqual(str(parse('base.group_system') & parse('base.group_multi_currency')), "'base.group_system' & 'base.group_multi_currency'")
         self.assertEqual(str(parse('base.group_user') | parse('base.group_user')), "'base.group_user'")
         self.assertEqual(str(parse('base.group_user') | parse('base.group_system')), "'base.group_user'")
         self.assertEqual(str(parse('base.group_system') | parse('base.group_public')), "'base.group_system' | 'base.group_public'")
@@ -562,7 +562,7 @@ class TestGroupsOdoo(common.TransactionCase):
         self.assertEqual(str(parse('!base.group_user') & parse('base.group_portal,base.group_user')), "'base.group_portal'")
         self.assertEqual(str(parse('base.group_user') & parse('base.group_portal,!base.group_user')), "~*")
         self.assertEqual(str(parse('!base.group_user') & parse('base.group_portal,!base.group_system')), "'base.group_portal'")
-        self.assertEqual(str(parse('!base.group_user,base.group_allow_export') & parse('base.group_allow_export,!base.group_system')), "~'base.group_user' & 'base.group_allow_export'")
+        self.assertEqual(str(parse('!base.group_user,base.group_multi_currency') & parse('base.group_multi_currency,!base.group_system')), "~'base.group_user' & 'base.group_multi_currency'")
         self.assertEqual(str(parse('!base.group_user,base.group_portal') & parse('base.group_portal,!base.group_system')), "'base.group_portal'")
         self.assertEqual(str(parse('!*') & parse('base.group_portal')), "~*")
         self.assertEqual(str(parse('*') & parse('base.group_portal')), "'base.group_portal'")
@@ -575,7 +575,7 @@ class TestGroupsOdoo(common.TransactionCase):
         self.assertEqual(str(parse('base.group_user') & parse('base.group_portal,!base.group_system')), "~*")
         self.assertEqual(str(parse('base.group_user,base.group_system') & parse('base.group_system,base.group_portal')), "'base.group_system'")
         self.assertEqual(str(parse('base.group_user') & parse('base.group_system,base.group_portal')), "'base.group_system'")
-        self.assertEqual(str(parse('base.group_user,base.group_system') & parse('base.group_allow_export')), "'base.group_user' & 'base.group_allow_export'")
+        self.assertEqual(str(parse('base.group_user,base.group_system') & parse('base.group_multi_currency')), "'base.group_user' & 'base.group_multi_currency'")
         self.assertEqual(str(parse('base.group_user,base.group_erp_manager') | parse('base.group_system')), "'base.group_user'")
         self.assertEqual(str(parse('base.group_user') | parse('base.group_portal,base.group_system')), "'base.group_user' | 'base.group_portal'")
         self.assertEqual(str(parse('!*') | parse('base.group_user')), "'base.group_user'")
@@ -596,12 +596,12 @@ class TestGroupsOdoo(common.TransactionCase):
         self.assertEqual(parse('base.group_system,base.group_public') <= parse('base.group_system,base.group_public'), True)
         self.assertEqual(parse('base.group_system,base.group_public') <= parse('base.group_user,base.group_public'), True)
         self.assertEqual(parse('base.group_system,!base.group_public') <= parse('base.group_system'), True)
-        self.assertEqual(parse('base.group_system,!base.group_allow_export') <= parse('base.group_system'), True)
-        self.assertEqual(parse('base.group_system') <= parse('base.group_system,!base.group_allow_export'), False)
+        self.assertEqual(parse('base.group_system,!base.group_multi_currency') <= parse('base.group_system'), True)
+        self.assertEqual(parse('base.group_system') <= parse('base.group_system,!base.group_multi_currency'), False)
         self.assertEqual(parse('base.group_system') <= parse('base.group_system,!base.group_public'), True)
         self.assertEqual(parse('base.group_system') == parse('base.group_system,!base.group_public'), True)
         self.assertEqual(parse('!base.group_public,!base.group_portal') <= parse('!base.group_public'), True)
-        self.assertEqual(parse('base.group_user,!base.group_allow_export') <= parse('base.group_user,!base.group_system,!base.group_allow_export'), False)
+        self.assertEqual(parse('base.group_user,!base.group_multi_currency') <= parse('base.group_user,!base.group_system,!base.group_multi_currency'), False)
         self.assertEqual(parse('base.group_system,!base.group_portal,!base.group_public') <= parse('base.group_system,!base.group_public'), True)
 
     def test_groups_3_from_ref(self):
@@ -612,31 +612,31 @@ class TestGroupsOdoo(common.TransactionCase):
         self.assertEqual(str(parse('base.group_user & base.group_portal | base.group_user & ~base.group_system') & parse('~base.group_user & base.group_portal')), "~*")
         self.assertEqual(str(parse('base.group_user & base.group_portal | base.group_user & base.group_system') & parse('base.group_user & ~base.group_portal')), "'base.group_system'")
         self.assertEqual(str(parse('base.group_public & base.group_erp_manager | base.group_public & base.group_portal') & parse('*')), "~*")
-        self.assertEqual(str(parse('base.group_system & base.group_allow_export') & parse('base.group_portal | base.group_system')), "'base.group_system' & 'base.group_allow_export'")
+        self.assertEqual(str(parse('base.group_system & base.group_multi_currency') & parse('base.group_portal | base.group_system')), "'base.group_system' & 'base.group_multi_currency'")
         self.assertEqual(str(parse('base.group_portal & base.group_erp_manager') | parse('base.group_erp_manager')), "'base.group_erp_manager'")
-        self.assertEqual(parse('base.group_system & base.group_allow_export') < parse('base.group_system'), True)
+        self.assertEqual(parse('base.group_system & base.group_multi_currency') < parse('base.group_system'), True)
         self.assertEqual(parse('base.base_test_group') == parse('base.base_test_group & base.group_user'), True)
         self.assertEqual(parse('base.group_system | base.base_test_group') == parse('base.group_system & base.group_user | base.base_test_group & base.group_user'), True)
-        self.assertEqual(parse('base.group_public & base.group_allow_export') <= parse('base.group_public'), True)
-        self.assertEqual(parse('base.group_public') <= parse('base.group_public & base.group_allow_export'), False)
+        self.assertEqual(parse('base.group_public & base.group_multi_currency') <= parse('base.group_public'), True)
+        self.assertEqual(parse('base.group_public') <= parse('base.group_public & base.group_multi_currency'), False)
         self.assertEqual(parse('base.group_public & base.group_user') <= parse('base.group_portal'), True)
         self.assertEqual(parse('base.group_public & base.group_user') <= parse('base.group_public | base.group_user'), True)
         self.assertEqual(parse('base.group_public & base.group_system') <= parse('base.group_user'), True)
         self.assertEqual(parse('base.group_public & base.group_system') <= parse('base.group_portal | base.group_user'), True)
-        self.assertEqual(parse('base.group_public & base.group_allow_export') <= parse('~base.group_public'), False)
+        self.assertEqual(parse('base.group_public & base.group_multi_currency') <= parse('~base.group_public'), False)
         self.assertEqual(parse('base.group_portal & base.group_public | base.group_system & base.group_public') <= parse('base.group_public'), True)
         self.assertEqual(parse('base.group_portal & base.group_user | base.group_system & base.group_user') <= parse('base.group_user'), True)
         self.assertEqual(parse('base.group_portal & base.group_system | base.group_user & base.group_system') <= parse('base.group_system'), True)
         self.assertEqual(parse('base.group_portal & base.group_user | base.group_user & base.group_user') <= parse('base.group_user'), True)
         self.assertEqual(parse('base.group_portal & base.group_user | base.group_user & base.group_user') <= parse('base.group_user'), True)
         self.assertEqual(parse('base.group_public') <= parse('base.group_portal & base.group_public | base.group_system & base.group_public'), False)
-        self.assertEqual(parse('base.group_user & base.group_allow_export') <= parse('base.group_user & base.group_system & base.group_allow_export'), False)
-        self.assertEqual(parse('base.group_system & base.group_allow_export') <= parse('base.group_user & base.group_system & base.group_allow_export'), True)
-        self.assertEqual(parse('base.group_system & base.group_allow_export') <= parse('base.group_system'), True)
+        self.assertEqual(parse('base.group_user & base.group_multi_currency') <= parse('base.group_user & base.group_system & base.group_multi_currency'), False)
+        self.assertEqual(parse('base.group_system & base.group_multi_currency') <= parse('base.group_user & base.group_system & base.group_multi_currency'), True)
+        self.assertEqual(parse('base.group_system & base.group_multi_currency') <= parse('base.group_system'), True)
         self.assertEqual(parse('base.group_public') >= parse('base.group_portal & base.group_public | base.group_system & base.group_public'), True)
         self.assertEqual(parse('base.group_user & base.group_public') >= parse('base.group_user & base.group_portal & base.group_public | base.group_user & base.group_system & base.group_public'), True)
-        self.assertEqual(parse('base.group_system & base.group_allow_export') >= parse('base.group_system'), False)
-        self.assertEqual(parse('base.group_system & base.group_allow_export') > parse('base.group_system'), False)
+        self.assertEqual(parse('base.group_system & base.group_multi_currency') >= parse('base.group_system'), False)
+        self.assertEqual(parse('base.group_system & base.group_multi_currency') > parse('base.group_system'), False)
 
     def test_groups_4_full_empty(self):
         user_group_ids = self.env.user._get_group_ids()
@@ -656,7 +656,7 @@ class TestGroupsOdoo(common.TransactionCase):
         tests = [
             # group on the user, # groups access, access
             ('base.group_public', 'base.group_system | base.group_public', True),
-            ('base.group_public,base.group_allow_export', 'base.group_user | base.group_public', True),
+            ('base.group_public,base.group_multi_currency', 'base.group_user | base.group_public', True),
             ('base.group_public', 'base.group_system & base.group_public', False),
             ('base.group_public', 'base.group_system | base.group_portal', False),
             ('base.group_public', 'base.group_system & base.group_portal', False),
@@ -674,10 +674,10 @@ class TestGroupsOdoo(common.TransactionCase):
             ('base.group_portal', 'base.group_portal & ~base.group_user', True),
             ('base.group_system', '~base.group_system & base.group_user', False),
             ('base.group_system', '~base.group_system & ~base.group_user', False),
-            ('base.group_user', 'base.group_user & base.group_sanitize_override & base.group_allow_export', False),
-            ('base.group_system', 'base.group_user & base.group_sanitize_override & base.group_allow_export', False),
-            ('base.group_system,base.group_allow_export', 'base.group_user & base.group_sanitize_override & base.group_allow_export', True),
-            ('base.group_user,base.group_sanitize_override,base.group_allow_export', 'base.group_user & base.group_sanitize_override & base.group_allow_export', True),
+            ('base.group_user', 'base.group_user & base.group_sanitize_override & base.group_multi_currency', False),
+            ('base.group_system', 'base.group_user & base.group_sanitize_override & base.group_multi_currency', False),
+            ('base.group_system,base.group_multi_currency', 'base.group_user & base.group_sanitize_override & base.group_multi_currency', True),
+            ('base.group_user,base.group_sanitize_override,base.group_multi_currency', 'base.group_user & base.group_sanitize_override & base.group_multi_currency', True),
             ('base.group_user', 'base.group_erp_manager | base.group_multi_company', False),
             ('base.group_user,base.group_erp_manager', 'base.group_erp_manager | base.group_multi_company', True),
         ]
@@ -692,7 +692,20 @@ class TestGroupsOdoo(common.TransactionCase):
             'email': 'a@user.com',
             'group_ids': self.env.ref('base.group_user').ids,
         })
-        with self.assertRaisesRegex(ValidationError, "The user cannot have more than one user types."):
+
+        # update res.users groups with distinct groups
+        with self.assertRaises(ValidationError, msg="The user cannot have more than one user types."):
             user.group_ids = [(4, self.env.ref('base.group_public').id)]
-        with self.assertRaisesRegex(ValidationError, "The user cannot have more than one user types."):
+        with self.assertRaises(ValidationError, msg="The user cannot have more than one user types."):
             user.group_ids = [(4, self.env.ref('base.group_portal').id)]
+
+        user.group_ids = self.env.ref('base.group_user') + self.test_group
+
+        # update res.group implied_ids having the effect that users have distinct groups
+        with self.assertRaises(ValidationError, msg="The user cannot have more than one user types."):
+            self.test_group.implied_ids += self.env.ref('base.group_public')
+        with self.assertRaises(ValidationError, msg="The user cannot have more than one user types."):
+            self.env.ref('base.group_public').implied_by_ids = self.test_group
+
+        # this works because public user is inactive
+        self.env.ref('base.group_public').implied_ids += self.test_group

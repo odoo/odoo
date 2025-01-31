@@ -37,8 +37,8 @@ class TestPerfSessionInfo(common.HttpCase):
     def test_load_web_menus_perf(self):
         self.env.registry.clear_all_caches()
         self.env.invalidate_all()
-        # cold orm/fields cache (only web: 10, all module: 38 (+3 if not has group account.group_account_readonly); without demo: 44)
-        with self.assertQueryCount(44):
+        # cold orm/fields cache (only web: 10, all module: 38 (+3 if not has group account.group_account_readonly); without demo: 45)
+        with self.assertQueryCount(45):
             self.env['ir.ui.menu'].load_web_menus(False)
 
         # cold fields cache - warm orm cache (only web: 0, all module: 1)
@@ -49,8 +49,8 @@ class TestPerfSessionInfo(common.HttpCase):
     def test_load_menus_perf(self):
         self.env.registry.clear_all_caches()
         self.env.invalidate_all()
-        # cold orm/fields cache (only web: 10, all module: 38 (+3 if not has group account.group_account_readonly); without demo: 44)
-        with self.assertQueryCount(44):
+        # cold orm/fields cache (only web: 10, all module: 38 (+3 if not has group account.group_account_readonly); without demo: 45)
+        with self.assertQueryCount(45):
             self.env['ir.ui.menu'].load_menus(False)
 
         # cold fields cache - warm orm cache (only web: 0, all module: 1)

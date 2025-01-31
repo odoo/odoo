@@ -264,7 +264,7 @@ class ResGroups(models.Model):
             if app.xml_id == 'base.module_category_user_type':
                 return (app, 'selection', gs.sorted('id'), category_name)
             # determine sequence order: a group appears after its implied groups
-            order = {g: len(g.trans_implied_ids & gs) for g in gs}
+            order = {g: len(g.all_implied_ids & gs) for g in gs}
             # We want a selection for Accounting too. Auditor and Invoice are both
             # children of Accountant, but the two of them make a full accountant
             # so it makes no sense to have checkboxes.
@@ -339,10 +339,11 @@ class UsersView(models.Model):
         :return: string to display in a warning
         """
         # Current groups of the user
-        current_groups = user.group_ids.filtered('trans_implied_ids')
+        current_groups = user.group_ids.filtered('implied_ids')
         current_groups_by_category = defaultdict(lambda: self.env['res.groups'])
-        for group in current_groups:
-            current_groups_by_category[group.category_id] |= group.trans_implied_ids.filtered(lambda grp: grp.category_id == group.category_id)
+        for group in current_groups.all_implied_ids:
+            in_category = group.all_implied_ids.filtered(lambda g: g.category_id == group.category_id)
+            current_groups_by_category[group.category_id] |= in_category - group
 
         missing_groups = {}
         # We don't want to show warning for "Technical" and "Extra Rights" groups
@@ -391,8 +392,7 @@ class UsersView(models.Model):
                 values1[key] = val
 
         if 'group_ids' not in values and (add or rem):
-            added = self.env['res.groups'].sudo().browse(add)
-            added |= added.mapped('trans_implied_ids')
+            added = self.env['res.groups'].sudo().browse(add).all_implied_ids
             added_ids = added._ids
             # remove group ids in `rem` and add group ids in `add`
             # do not remove groups that are added by implied
@@ -477,7 +477,7 @@ class UsersView(models.Model):
             elif is_selection_groups(f):
                 # determine selection groups, in order
                 sel_groups = self.env['res.groups'].sudo().browse(get_selection_groups(f))
-                sel_order = {g: len(g.trans_implied_ids & sel_groups) for g in sel_groups}
+                sel_order = {g: len(g.all_implied_ids & sel_groups) for g in sel_groups}
                 sel_groups = sel_groups.sorted(key=sel_order.get)
                 # determine which ones are in gids
                 selected = [gid for gid in sel_groups.ids if gid in gids]

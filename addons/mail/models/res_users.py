@@ -53,7 +53,9 @@ class ResUsers(models.Model):
         ]).notification_type = 'email'
 
         # Special case: internal users with inbox notifications converted to portal must be converted to email users
-        self.filtered_domain([('share', '=', True), ('notification_type', '=', 'inbox')]).notification_type = 'email'
+        new_portal_users = self.filtered_domain([('share', '=', True), ('notification_type', '=', 'inbox')])
+        new_portal_users.notification_type = 'email'
+        new_portal_users.write({"group_ids": [Command.unlink(inbox_group_id)]})
 
     @api.depends("presence_ids.status")
     def _compute_im_status(self):
