@@ -244,6 +244,10 @@ export class Composer extends Component {
         return "";
     }
 
+    get showQuickAction() {
+        return true;
+    }
+
     onClickCancelOrSaveEditText(ev) {
         const composer = toRaw(this.props.composer);
         if (composer.message && ev.target.dataset?.type === EDIT_CLICK_TYPE.CANCEL) {
