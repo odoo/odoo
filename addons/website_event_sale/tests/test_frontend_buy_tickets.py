@@ -126,26 +126,12 @@ class TestRoutes(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon, PaymentHttpCo
 
         sale_order = self.empty_cart
 
-        so_line_1, so_line_2 = self.env['sale.order.line'].create([
-            {
-                'event_id': self.event.id,
-                'event_ticket_id': self.ticket.id,
-                'name': self.event.name,
-                'order_id': sale_order.id,
-                'product_id': self.ticket.product_id.id,
-                'product_uom_qty': 2,
-            },
-            {
-                'event_id': self.event_2.id,
-                'event_ticket_id': self.ticket_2.id,
-                'name': self.event_2.name,
-                'order_id': sale_order.id,
-                'product_id': self.ticket_2.product_id.id,
-            },
-        ])
-        sale_order._cart_update(line_id=so_line_1.id, product_id=self.ticket.product_id.id)
-        sale_order._cart_update(line_id=so_line_2.id, product_id=self.ticket_2.product_id.id)
-        sale_order.order_line.product_uom_qty = 2
+        sale_order._cart_add(
+            product_id=self.ticket.product_id.id, event_ticket_id=self.ticket.id, quantity=2
+        )
+        sale_order._cart_add(
+            product_id=self.ticket_2.product_id.id, event_ticket_id=self.ticket_2.id, quantity=2
+        )
 
         url = self._build_url(f'/shop/payment/transaction/{sale_order.id}')
         self.assertEqual(self.event.seats_taken, 0)

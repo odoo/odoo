@@ -244,7 +244,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
         sol = so.order_line
         self.assertEqual(sol.price_total, 100.0)
         so.pricelist_id = promo_pricelist
-        so._cart_update(product_id=product.id, line_id=sol.id, set_qty=500)
+        so._cart_update_line_quantity(line_id=sol.id, quantity=500)
         self.assertEqual(sol.price_unit, 100.0, 'Both reductions should be applied')
         self.assertEqual(sol.discount, 72.25, 'Both reductions should be applied')
         self.assertEqual(sol.price_total, 13875)
@@ -281,7 +281,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
         })
         sol = so.order_line
         self.assertEqual(sol.price_total, 0)
-        so._cart_update(product_id=product.id, line_id=sol.id, set_qty=6)
+        so._cart_update_line_quantity(line_id=sol.id, quantity=6)
         self.assertEqual(sol.price_unit, 10.0, 'Pricelist price should be applied')
         self.assertEqual(sol.discount, 0, 'Pricelist price should be applied')
         self.assertEqual(sol.price_total, 60.0)
@@ -410,7 +410,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
             self.assertEqual(sol.price_total, 100.0)
 
             frozen_time.move_to(tomorrow + timedelta(seconds=10))
-            so._cart_update(product_id=product.id, line_id=sol.id, set_qty=2)
+            so._cart_update_line_quantity(line_id=sol.id, quantity=2)
             self.assertEqual(sol.price_unit, 80.0, 'Reduction should be applied')
             self.assertEqual(sol.price_total, 160)
 
