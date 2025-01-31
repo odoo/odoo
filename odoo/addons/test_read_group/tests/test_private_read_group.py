@@ -25,11 +25,11 @@ class TestPrivateReadGroup(common.TransactionCase):
         Model.create({})
 
         with self.assertQueries(["""
-            SELECT "test_read_group_aggregate"."key",
+            SELECT COALESCE("test_read_group_aggregate"."key", %s),
                    SUM("test_read_group_aggregate"."value")
             FROM "test_read_group_aggregate"
-            GROUP BY "test_read_group_aggregate"."key"
-            ORDER BY "test_read_group_aggregate"."key" ASC
+            GROUP BY COALESCE("test_read_group_aggregate"."key", %s)
+            ORDER BY COALESCE("test_read_group_aggregate"."key", %s) ASC
         """]):
             self.assertEqual(
                 Model._read_group([], groupby=['key'], aggregates=['value:sum']),
@@ -42,17 +42,17 @@ class TestPrivateReadGroup(common.TransactionCase):
 
         # Forcing order with many2one, traverse use the order of the comodel (res.partner)
         with self.assertQueries(["""
-            SELECT "test_read_group_aggregate"."key",
+            SELECT COALESCE("test_read_group_aggregate"."key", %s),
                    "test_read_group_aggregate"."partner_id",
                    SUM("test_read_group_aggregate"."value")
             FROM "test_read_group_aggregate"
             LEFT JOIN "res_partner" AS "test_read_group_aggregate__partner_id"
                 ON ("test_read_group_aggregate"."partner_id" = "test_read_group_aggregate__partner_id"."id")
-            GROUP BY "test_read_group_aggregate"."key",
+            GROUP BY COALESCE("test_read_group_aggregate"."key", %s),
                      "test_read_group_aggregate"."partner_id",
                      "test_read_group_aggregate__partner_id"."complete_name",
                      "test_read_group_aggregate__partner_id"."id"
-            ORDER BY "test_read_group_aggregate"."key" ASC,
+            ORDER BY COALESCE("test_read_group_aggregate"."key", %s) ASC,
                      "test_read_group_aggregate__partner_id"."complete_name" ASC,
                      "test_read_group_aggregate__partner_id"."id" DESC
         """]):
@@ -71,13 +71,13 @@ class TestPrivateReadGroup(common.TransactionCase):
         # Same than before but with private method, the order doesn't traverse
         # many2one order, then the order is based on id of partner
         with self.assertQueries(["""
-            SELECT "test_read_group_aggregate"."key",
+            SELECT COALESCE("test_read_group_aggregate"."key", %s),
                    "test_read_group_aggregate"."partner_id",
                    SUM("test_read_group_aggregate"."value")
             FROM "test_read_group_aggregate"
-            GROUP BY "test_read_group_aggregate"."key",
+            GROUP BY COALESCE("test_read_group_aggregate"."key", %s),
                      "test_read_group_aggregate"."partner_id"
-            ORDER BY "test_read_group_aggregate"."key" ASC,
+            ORDER BY COALESCE("test_read_group_aggregate"."key", %s) ASC,
                      "test_read_group_aggregate"."partner_id" ASC
         """]):
             self.assertEqual(
@@ -154,7 +154,7 @@ class TestPrivateReadGroup(common.TransactionCase):
             FROM "test_read_group_aggregate"
             LEFT JOIN "res_partner" AS "test_read_group_aggregate__partner_id"
                 ON ("test_read_group_aggregate"."partner_id" = "test_read_group_aggregate__partner_id"."id")
-            GROUP BY "test_read_group_aggregate"."display_name",
+            GROUP BY COALESCE("test_read_group_aggregate"."display_name", %s),
                      "test_read_group_aggregate"."partner_id",
                      "test_read_group_aggregate__partner_id"."complete_name",
                      "test_read_group_aggregate__partner_id"."id"
@@ -276,12 +276,12 @@ class TestPrivateReadGroup(common.TransactionCase):
         Model.create({'key': 3, 'value': 1})
 
         with self.assertQueries(["""
-            SELECT "test_read_group_aggregate"."key",
+            SELECT COALESCE(COALESCE("test_read_group_aggregate"."key", %s), %s),
                    SUM("test_read_group_aggregate"."value")
             FROM "test_read_group_aggregate"
-            GROUP BY "test_read_group_aggregate"."key"
+            GROUP BY COALESCE(COALESCE("test_read_group_aggregate"."key", %s), %s)
             HAVING SUM("test_read_group_aggregate"."value") > %s
-            ORDER BY "test_read_group_aggregate"."key" ASC
+            ORDER BY COALESCE(COALESCE("test_read_group_aggregate"."key", %s), %s) ASC
         """]):
             self.assertEqual(
                 Model._read_group(
@@ -294,13 +294,13 @@ class TestPrivateReadGroup(common.TransactionCase):
             )
 
         with self.assertQueries(["""
-            SELECT "test_read_group_aggregate"."key",
+            SELECT COALESCE("test_read_group_aggregate"."key", %s),
                    SUM("test_read_group_aggregate"."value"),
                    COUNT(*)
             FROM "test_read_group_aggregate"
-            GROUP BY "test_read_group_aggregate"."key"
+            GROUP BY COALESCE("test_read_group_aggregate"."key", %s)
             HAVING (COUNT(*) < %s AND SUM("test_read_group_aggregate"."value") > %s)
-            ORDER BY "test_read_group_aggregate"."key" ASC
+            ORDER BY COALESCE("test_read_group_aggregate"."key", %s) ASC
         """]):
             self.assertEqual(
                 Model._read_group(
@@ -930,7 +930,7 @@ class TestPrivateReadGroup(common.TransactionCase):
         """]):
             self.assertEqual(
                 RelatedInherits._read_group([], ['name'], ['__count']),
-                [('a', 3), ('b', 1), (False, 1)],
+                [('', 1), ('a', 3), ('b', 1)],
             )
 
         with self.assertQueries(["""
@@ -944,7 +944,7 @@ class TestPrivateReadGroup(common.TransactionCase):
         """]):
             self.assertEqual(
                 RelatedInherits._read_group([], ['name'], ['value:sum']),
-                [('a', 1 + 1 + 2), ('b', 3), (False, 4)],
+                [('', 4), ('a', 1 + 1 + 2), ('b', 3)],
             )
 
         with self.assertQueries(["""
