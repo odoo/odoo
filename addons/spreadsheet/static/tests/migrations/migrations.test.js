@@ -536,6 +536,33 @@ test("Pivot sorted columns are migrated (12 to 13)", () => {
     expect(migratedData.pivots["2"].sortedColumn).toBe(undefined);
 });
 
+test("drop sorted column if not part of measures", async () => {
+    const data = {
+        version: 23,
+        pivots: {
+            1: {
+                type: "ODOO",
+                columns: [],
+                domain: [],
+                measures: [{ id: "probability:sum", fieldName: "probability", aggregator: "sum" }],
+                model: "partner",
+                rows: [{ fieldName: "bar" }],
+                sortedColumn: {
+                    measure: "foo",
+                    order: "asc",
+                    groupId: [[], [1]],
+                },
+                name: "A pivot",
+                context: {},
+                fieldMatching: {},
+                formulaId: "1",
+            },
+        },
+    };
+    const migratedData = load(data);
+    expect(migratedData.pivots["1"].sortedColumn).toBe(undefined);
+});
+
 test("Odoo version is exported", () => {
     const model = new Model();
     expect(model.exportData().odooVersion).toBe(ODOO_VERSION);

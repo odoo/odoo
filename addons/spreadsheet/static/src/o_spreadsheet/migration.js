@@ -395,9 +395,13 @@ function migrate12to13(data) {
             if (!pivot.sortedColumn) {
                 continue;
             }
+            const measures = pivot.measures.map((field) => field.fieldName);
             // We're missing some information to convert the sortedColumn (fieldType), so we'll drop the sorted columns
             // that are not on the total column
-            if (pivot.sortedColumn.groupId[1]?.length) {
+            if (
+                pivot.sortedColumn.groupId[1]?.length ||
+                !measures.includes(pivot.sortedColumn.measure)
+            ) {
                 pivot.sortedColumn = undefined;
                 continue;
             }
