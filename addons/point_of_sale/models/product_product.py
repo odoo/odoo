@@ -26,6 +26,6 @@ class ProductProduct(models.Model):
                 ))
 
     def _can_return_content(self, field_name=None, access_token=None):
-        if self.available_in_pos and field_name == "image_128":
+        if field_name == "image_128" and self.sudo().available_in_pos:
             return True
         return super()._can_return_content(field_name, access_token)
