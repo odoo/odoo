@@ -8089,5 +8089,12 @@ X[]
                 });
             });
         });
+
+        it('should insert a p in empty div', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<div>[]</div>',
+                contentAfterEdit: '<div><p placeholder="Type &quot;/&quot; for commands" class="oe-hint oe-command-temporary-hint">[]<br></p></div>',
+            });
+        });
     });
 });
