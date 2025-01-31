@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
+from odoo.fields import Domain
 from odoo.addons.base.models.res_users import is_selection_groups
 from odoo.addons.mail.tools.discuss import Store
 
@@ -62,11 +63,14 @@ class ResUsers(models.Model):
         store.add_global_values(
             hasGifPickerFeature=bool(get_param("discuss.tenor_api_key")),
             hasMessageTranslationFeature=bool(get_param("mail.google_translate_api_key")),
-            hasCannedResponses=bool(self.env["mail.canned.response"].sudo().search([
-                "|",
-                ("create_uid", "=", self.env.user.id),
-                ("group_ids", "in", self.env.user.groups_id.ids),
-            ], limit=1)) if self.env.user else False,
+            hasCannedResponses=bool(
+                self.env.user._is_internal()
+                and self.env["mail.canned.response"].search_count(
+                    Domain("create_uid", "=", self.env.user.id)
+                    | Domain("group_ids", "in", self.env.user.groups_id.ids),
+                    limit=1,
+                )
+            ),
             channel_types_with_seen_infos=sorted(
                 self.env["discuss.channel"]._types_allowing_seen_infos()
             ),
