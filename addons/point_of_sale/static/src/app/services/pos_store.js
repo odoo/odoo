@@ -382,7 +382,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     get session() {
-        return this.data.models["pos.session"].getFirst();
+        return this.data.models["pos.session"].get(odoo.pos_session_id);
     }
 
     async processServerData() {
