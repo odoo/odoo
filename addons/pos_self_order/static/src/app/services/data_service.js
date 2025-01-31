@@ -15,6 +15,9 @@ patch(PosData.prototype, {
     get databaseName() {
         return `self_order-config-id_${session.data.config_id}_${session.data.access_token}`;
     },
+    initializeWebsocket() {
+        return false;
+    },
     initIndexedDB() {
         return session.data.self_ordering_mode === "mobile"
             ? super.initIndexedDB(...arguments)
