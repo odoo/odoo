@@ -130,4 +130,24 @@ export const coreBuilderActions = {
             editingElement.removeAttribute(attributeName);
         },
     },
+
+    // TODO maybe find a better place for this
+    setClassRange: {
+        getValue: ({ editingElement, param: classNames }) => {
+            for (const index in classNames) {
+                const className = classNames[index];
+                if (editingElement.classList.contains(className)) {
+                    return index;
+                }
+            }
+        },
+        apply: ({ editingElement, param: classNames, value: index }) => {
+            for (const className of classNames) {
+                if (editingElement.classList.contains(className)) {
+                    editingElement.classList.remove(className);
+                }
+            }
+            editingElement.classList.add(classNames[index]);
+        },
+    },
 };
