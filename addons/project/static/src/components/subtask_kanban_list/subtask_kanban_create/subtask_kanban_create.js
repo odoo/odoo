@@ -12,10 +12,11 @@ export class SubtaskCreate extends Component {
         onBlur: { type: Function },
     };
     setup() {
-        this.placeholder = _t("Add Sub-tasks");
+        this.placeholder = _t("Write a task name");
         this.state = useState({
             inputSize: 1,
             name: this.props.name,
+            isFieldInvalid: false,
         });
         this.input = useRef("subtaskCreateInput");
         useAutofocus({ refName: "subtaskCreateInput" });
@@ -37,14 +38,11 @@ export class SubtaskCreate extends Component {
     _onInput(ev) {
         const value = ev.target.value;
         this.state.name = value;
+        this.state.isFieldInvalid = false;
     }
 
     _onClick() {
         this.input.el.focus();
-    }
-
-    async _onBlur() {
-        this.props.onBlur();
     }
 
     /**
@@ -53,13 +51,17 @@ export class SubtaskCreate extends Component {
      */
     _onNameChanged(ev) {
         const value = ev.target.value.trim();
-        this.props.onSubtaskCreateNameChanged(value);
-        ev.target.blur();
+        if (value !== "") {
+            this.props.onSubtaskCreateNameChanged(value);
+            ev.target.blur();
+        }
     }
 
     _onSaveClick() {
-        if (this.input.el.value !== "") {
-            this.props.onSubtaskCreateNameChanged(this.input.el.value);
+        if (this.input.el.value.trim() === "") {
+            this.props.onSubtaskCreateNameChanged(this.input.el.value.trim());
+            this.state.isFieldInvalid = true;
+            this.state.name = "";
         }
     }
 }

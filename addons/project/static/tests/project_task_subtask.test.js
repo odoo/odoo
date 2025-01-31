@@ -286,3 +286,30 @@ test("project.task (form): check focus on new subtask's name", async () => {
         message: "Upon clicking on 'Add a line', the new subtask's name should be focused.",
     });
 });
+
+test("project.task (kanban): check subtask creation when input is empty", async () => {
+    await mountView({
+        resModel: "project.task",
+        type: "kanban",
+    });
+    await click(".subtask_list_button");
+    await animationFrame();
+    await click(".subtask_create");
+    await animationFrame();
+    await click(".subtask_create_input input");
+    await edit("");
+    await click(".subtask_create_input button");
+    await animationFrame();
+    expect(".subtask_create_input input").toHaveClass("o_field_invalid", {
+        message: "input field should be displayed as invalid",
+    });
+    expect(".o_notification_content").toHaveInnerHTML("<ul><li>Display Name</li></ul>", {
+        message: "The content of the notification should contain 'Display Name'.",
+    });
+    expect(".o_notification_title").toHaveText("Invalid fields:", {
+        message: "The notification title should be 'Invalid fields'.",
+    });
+    expect(".o_notification_bar").toHaveClass("bg-danger", {
+        message: "The notification bar should have type 'danger'.",
+    });
+});
