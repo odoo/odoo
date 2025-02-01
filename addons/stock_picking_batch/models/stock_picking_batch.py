@@ -178,18 +178,25 @@ class StockPickingBatch(models.Model):
         for vals in vals_list:
             if vals.get('name', '/') == '/':
                 company_id = vals.get('company_id', self.env.company.id)
-                if vals.get('is_wave'):
-                    vals['name'] = self.env['ir.sequence'].with_company(company_id).next_by_code('picking.wave') or '/'
-                else:
-                    vals['name'] = self.env['ir.sequence'].with_company(company_id).next_by_code('picking.batch') or '/'
+                picking_type = self.env['stock.picking.type'].browse(vals.get('picking_type_id'))
+                if picking_type:
+                    sequence_code = 'picking.wave' if vals.get('is_wave') else 'picking.batch'
+                    vals['name'] = self._prepare_name(picking_type, sequence_code, company_id)
         return super().create(vals_list)
 
     def write(self, vals):
+        batches_to_rename = self.env['stock.picking.batch']
+        if vals.get('picking_type_id'):
+            picking_type = self.env['stock.picking.type'].browse(vals.get('picking_type_id'))
+            batches_to_rename = self.filtered(lambda b: b.picking_type_id != picking_type)
         res = super().write(vals)
         if not self.picking_ids:
             self.filtered(lambda b: b.state == 'in_progress').action_cancel()
         if vals.get('picking_type_id'):
             self._sanity_check()
+            for batch in batches_to_rename:
+                sequence_code = 'picking.wave' if batch.is_wave else 'picking.batch'
+                batch.name = self._prepare_name(picking_type, sequence_code, batch.company_id)
         if vals.get('picking_ids'):
             batch_without_picking_type = self.filtered(lambda batch: not batch.picking_type_id)
             if batch_without_picking_type:
@@ -345,9 +352,34 @@ class StockPickingBatch(models.Model):
             }
         }
 
+    def action_batch_detailed_operations(self):
+        self.ensure_one()
+        view_id = self.env.ref('stock_picking_batch.view_move_line_tree').id
+        return {
+            'name': _('Detailed Operations'),
+            'view_mode': 'list',
+            'type': 'ir.actions.act_window',
+            'res_model': 'stock.move.line',
+            'views': [(view_id, 'list')],
+            'domain': [('id', 'in', self.picking_ids.move_line_ids.ids)],
+            'context': {
+                'default_company_id': self.company_id.id,
+                'default_picking_id': self.picking_ids and self.picking_ids[0].id or False,
+                'picking_ids': self.picking_ids.ids,
+                'show_lots_text': self.show_lots_text,
+                'picking_code': self.picking_type_code,
+                'create': self.state not in ('done', 'cancel'),
+            }
+        }
+
     # -------------------------------------------------------------------------
     # Miscellaneous
     # -------------------------------------------------------------------------
+    @api.model
+    def _prepare_name(self, picking_type, sequence_code, company_id):
+        sequence_prefix, sequence_number = (self.env['ir.sequence'].with_company(company_id).next_by_code(sequence_code) or '/').split('/')
+        return f"{sequence_prefix}/{picking_type.sequence_code}/{sequence_number}"
+
     def _sanity_check(self):
         for batch in self:
             if not batch.picking_ids <= batch.allowed_picking_ids:
