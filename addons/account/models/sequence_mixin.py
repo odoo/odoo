@@ -73,7 +73,7 @@ class SequenceMixin(models.AbstractModel):
         date = fields.Date.to_date(self[self._sequence_date_field])
         sequence = self[self._sequence_field]
 
-        if not sequence or not date:
+        if not sequence or sequence == '/' or not date:
             return True
 
         format_values = self._get_sequence_format_param(sequence)[1]
@@ -119,11 +119,15 @@ class SequenceMixin(models.AbstractModel):
     @api.depends(lambda self: [self._sequence_field])
     def _compute_split_sequence(self):
         for record in self:
-            sequence = record[record._sequence_field] or ''
-            regex = re.sub(r"\?P<\w+>", "?:", record._sequence_fixed_regex.replace(r"?P<seq>", ""))  # make the seq the only matching group
-            matching = re.match(regex, sequence)
-            record.sequence_prefix = sequence[:matching.start(1)]
-            record.sequence_number = int(matching.group(1) or 0)
+            if record[record._sequence_field]:
+                sequence = record[record._sequence_field]
+                regex = re.sub(r"\?P<\w+>", "?:", record._sequence_fixed_regex.replace(r"?P<seq>", ""))  # make the seq the only matching group
+                matching = re.match(regex, sequence)
+                record.sequence_prefix = sequence[:matching.start(1)]
+                record.sequence_number = int(matching.group(1) or 0)
+            else:
+                record.sequence_prefix = ''
+                record.sequence_number = int(0)
 
     @api.model
     def _deduce_sequence_number_reset(self, name):
