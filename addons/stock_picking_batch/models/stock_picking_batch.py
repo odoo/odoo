@@ -181,7 +181,10 @@ class StockPickingBatch(models.Model):
                 if vals.get('is_wave'):
                     vals['name'] = self.env['ir.sequence'].with_company(company_id).next_by_code('picking.wave') or '/'
                 else:
-                    vals['name'] = self.env['ir.sequence'].with_company(company_id).next_by_code('picking.batch') or '/'
+                    if vals.get('picking_type_id'):
+                        picking_type = self.env['stock.picking.type'].browse(vals.get('picking_type_id'))
+                        sequence_prefix, sequence_number = (self.env['ir.sequence'].with_company(company_id).next_by_code('picking.batch') or '/').split('/')
+                        vals['name'] = f"{sequence_prefix}/{picking_type.sequence_code}/{sequence_number}"
         return super().create(vals_list)
 
     def write(self, vals):
@@ -197,6 +200,15 @@ class StockPickingBatch(models.Model):
                 batch_without_picking_type.picking_type_id = picking.picking_type_id.id
         if 'user_id' in vals:
             self.picking_ids.assign_batch_user(vals['user_id'])
+        if vals.get('picking_type_id') and not self.is_wave:
+            picking_type = self.env['stock.picking.type'].browse(vals.get('picking_type_id'))
+            if self.name == _('New'):
+                sequence_prefix, sequence_number = (self.env['ir.sequence'].with_company(self.company_id).next_by_code('picking.batch') or '/').split('/')
+                self.name = f"{sequence_prefix}/{picking_type.sequence_code}/{sequence_number}"
+            else:
+                sequence_parts = self.display_name.split('/')
+                sequence_prefix, sequence_number = sequence_parts[0], sequence_parts[-1]
+                self.name = f"{sequence_prefix}/{picking_type.sequence_code}/{sequence_number}"
         return res
 
     @api.ondelete(at_uninstall=False)
@@ -308,6 +320,24 @@ class StockPickingBatch(models.Model):
                 'default_product_ids': self.move_line_ids.product_id.ids,
                 'default_move_ids': self.move_ids.ids,
                 'default_move_quantity': 'move'},
+        }
+
+    def action_batch_detailed_operations(self):
+        view_id = self.env.ref('stock_picking_batch.view_move_line_tree').id
+        return {
+            'name': _('Detailed Operations'),
+            'view_mode': 'list',
+            'type': 'ir.actions.act_window',
+            'res_model': 'stock.move.line',
+            'res_id': self.id,
+            'views': [(view_id, 'list')],
+            'domain': [('id', 'in', self.picking_ids.move_line_ids.ids)],
+            'context': {
+                'default_company_id': self.company_id.id,
+                'picking_ids': self.picking_ids.ids,
+                'show_lots_text': self.show_lots_text,
+                'create': self.state == 'in_progress',
+            }
         }
 
     # -------------------------------------------------------------------------
