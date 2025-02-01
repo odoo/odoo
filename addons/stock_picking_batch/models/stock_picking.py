@@ -43,11 +43,15 @@ class StockPickingType(models.Model):
             record.count_picking_batch = count.get((record.id, False), 0)
 
     def action_batch(self):
-        action = self.env['ir.actions.act_window']._for_xml_id("stock_picking_batch.stock_picking_batch_action")
+        action = self._get_action('stock_picking_batch.stock_picking_batch_action')
         if self.env.context.get("view_mode"):
             del action["mobile_view_mode"]
             del action["views"]
             action["view_mode"] = self.env.context["view_mode"]
+        return action
+
+    def action_wave(self):
+        action = self._get_action('stock_picking_batch.action_picking_tree_wave')
         return action
 
     @api.model
