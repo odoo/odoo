@@ -26,6 +26,11 @@
         <field name="model">stock.picking.batch</field>
         <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='scheduled_date']" position="replace">
+                <field name="end_date" invisible="1"/><!-- Needed in widget below -->
+                <field name="scheduled_date" readonly="state in ['cancel', 'done']" widget="daterange" options="{'end_date_field': 'end_date'}"/>
+            </xpath>
+
             <xpath expr="//group[@id='batch_delivery_data']" position="after">
                 <group>
                     <field name="dock_id" groups="stock.group_stock_multi_locations"/>
