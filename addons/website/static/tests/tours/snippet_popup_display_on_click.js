@@ -53,6 +53,10 @@ registerWebsitePreviewTour("snippet_popup_display_on_click", {
         run: "edit #Win-%2420",
     },
     ...clickOnSave(),
+    {
+        content: "Wait content of iframe is loaded",
+        trigger: ":iframe main:contains(enhance your)",
+    },
     clickOnElement("text image snippet button", ":iframe .s_text_image .btn-secondary"),
     {
         content: "Verify that the popup opens after clicked the button.",
@@ -88,6 +92,10 @@ registerWebsitePreviewTour("snippet_popup_display_on_click", {
         run: "click",
     },
     ...clickOnSave(),
+    {
+        content: "Wait content of iframe is loaded",
+        trigger: ":iframe main:contains(enhance your)",
+    },
     clickOnElement("text image snippet button", ":iframe .s_text_image .btn-secondary"),
     {
         trigger: ".o_website_preview[data-view-xmlid='website.homepage']",

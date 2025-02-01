@@ -1383,6 +1383,18 @@ class TestCompute(common.TransactionCase):
         partner_count = self.env['res.partner'].search_count([('name', '=', 'Test Partner Automation')])
         self.assertEqual(partner_count, 1, "Only one partner should have been created")
 
+    def test_00_form_save_update_related_model_id(self):
+        with Form(self.env['ir.actions.server'], view="base.view_server_action_form") as f:
+            f.name = "Test Action"
+            f.model_id = self.env["ir.model"]._get("res.partner")
+            f.state = "object_write"
+            f.update_path = "user_id"
+            f.evaluation_type = "value"
+            f.resource_ref = "res.users,2"
+
+        res_users_model = self.env["ir.model"]._get("res.users")
+        self.assertEqual(f.update_related_model_id, res_users_model)
+
 
 @common.tagged("post_install", "-at_install")
 class TestHttp(common.HttpCase):

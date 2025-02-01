@@ -238,6 +238,7 @@ registry.category("web_tour.tours").add("SelfOrderOrderNumberTour", {
         Utils.clickBtn("Order Now"),
         ProductPage.clickProduct("Coca-Cola"),
         Utils.clickBtn("Order"),
+        CartPage.checkProduct("Coca-Cola", "2.53", "1"),
         Utils.clickBtn("Pay"),
         ...CartPage.selectTable("1"),
         Utils.clickBtn("Ok"),

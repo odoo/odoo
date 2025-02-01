@@ -381,3 +381,16 @@ registry.category("web_tour.tours").add("PoSDownPaymentFixedTax", {
             }),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PoSSettleQuotation", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});

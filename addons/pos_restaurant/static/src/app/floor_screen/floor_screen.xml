@@ -15,8 +15,8 @@
                             <span t-if="changeCount > 0" class="badge rounded-pill text-bg-danger ms-2 py-1 smaller fw-bolder" t-esc="changeCount"/>
                         </button>
                     </t>
-                    <button t-attf-class="{{editButtonClass}} btn-secondary lh-lg" t-if="pos.isEditMode or pos.config.floor_ids?.length === 0" >
-                        <i class="fa fa-plus fa-fw" role="img" aria-label="Add Floor" title="Add Floor" t-on-click="addFloor"/>
+                    <button t-attf-class="{{editButtonClass}} btn-secondary lh-lg" t-if="pos.isEditMode or pos.config.floor_ids?.length === 0" t-on-click="addFloor" >
+                        <i class="fa fa-plus fa-fw" role="img" aria-label="Add Floor" title="Add Floor" />
                     </button>
                 </div>
                 <!-- Right Side Div -->
