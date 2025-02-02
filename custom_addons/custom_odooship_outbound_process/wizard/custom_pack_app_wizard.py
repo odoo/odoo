@@ -9,6 +9,7 @@ import xml.etree.ElementTree as ET
 import urllib
 import pyodbc
 
+
 _logger = logging.getLogger(__name__)
 
 
@@ -93,6 +94,11 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             if not line.product_id:
                 raise ValidationError(_("Please ensure all line items have a product selected before proceeding."))
 
+            if not line.weight or line.weight <= 0.0:
+                raise ValidationError(_(
+                    "The product '%s' (SKU: %s) does not have a weight. Please add weight before proceeding."
+                ) % (line.product_id.name, line.product_id.default_code or "N/A"))
+
         active_id = self.env.context.get('active_id')
         pack_app_order = self.env['custom.pack.app'].browse(active_id)
         section_name = self.pc_container_code_id.name
@@ -163,7 +169,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
         for line in self.line_ids:
             sku_code = line.product_id.default_code
-            product_weight = line.product_id.weight or 1  # Default weight to 1 if not defined
+            product_weight = line.weight  # Default weight to 1 if not defined
 
             if sku_code not in grouped_lines:
                 grouped_lines[sku_code] = {
@@ -188,6 +194,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     "sales_order_carrier": line.picking_id.sale_id.carrier if line.picking_id.sale_id else "N/A",
                     "sales_order_origin": line.picking_id.sale_id.origin if line.picking_id.sale_id else "N/A",
                     "incoterm_location": line.picking_id.sale_id.incoterm_location if line.picking_id.sale_id else "N/A",
+                    "status": line.picking_id.sale_id.status if line.picking_id.sale_id else "N/A",
                 }
 
             grouped_lines[sku_code]["quantity"] += line.quantity
@@ -216,7 +223,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             product_lines = []
 
             for line in lines:
-                product_weight = line.product_id.weight or 1  # Default weight to 1 if not defined
+                product_weight = line.weight  # Default weight to 1 if not defined
 
                 product_lines.append({
                     "sku_code": line.product_id.default_code,
@@ -239,6 +246,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     "sales_order_carrier": line.picking_id.sale_id.carrier if line.picking_id.sale_id else "N/A",
                     "sales_order_origin": line.picking_id.sale_id.origin if line.picking_id.sale_id else "N/A",
                     "incoterm_location": line.picking_id.sale_id.incoterm_location if line.picking_id.sale_id else "N/A",
+                    "status": line.picking_id.sale_id.status if line.picking_id.sale_id else "N/A",
                 })
 
             payloads.append({
@@ -276,6 +284,7 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
 
     wizard_id = fields.Many2one('custom.pack.app.wizard', string='Wizard Reference', required=True)
     product_id = fields.Many2one('product.product', string='Product', required=True, domain="[('id', 'in', available_product_ids)]")
+    default_code = fields.Char(related='product_id.default_code', string='SKU Code')
     available_quantity = fields.Float(string='Expected Quantity', compute='_compute_available_quantity', store=True)
     remaining_quantity = fields.Float(string='Remaining Quantity', compute='_compute_remaining_quantity', store=True)
     quantity = fields.Float(string='Quantity', required=True)
@@ -288,6 +297,7 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
                                           help="Select packaging box for each product line.")
     sale_order_id = fields.Many2one(related='picking_id.sale_id', string='Sale Order')
     incoterm_location = fields.Char(related='sale_order_id.incoterm_location', string='Incoterm location')
+    weight = fields.Float(string="Weight", help="If product weight is missing, enter weight here.", required=True)
 
 
     @api.depends('wizard_id.picking_ids', 'product_id')
@@ -356,10 +366,45 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
     @api.onchange('product_id')
     def _onchange_product_id(self):
         """
-        Automatically add quantity as 1 each time the product is scanned.
+        When a product is selected:
+        - If weight exists on the product, fetch and assign it.
+        - If weight does NOT exist, prompt the user to enter it manually.
+        - Once entered, update the product's weight permanently for future use.
         """
         if self.product_id:
-            self.quantity = 1  # Set default quantity to 1 per scan
-            self.wizard_id._auto_select_package_box_type()
+            self.quantity = 1  # Set default quantity per scan
 
+            if not self.product_id.weight or self.product_id.weight <= 0.0:
+                 return {
+                    'warning': {
+                        'title': _("Missing Weight"),
+                        'message': _("The selected product '%s' does not have a weight. "
+                                     "Please enter the weight manually.") % self.product_id.name
+                    }
+                }
+            else:
+                # If weight exists, fetch it from the product and assign it
+                self.weight = self.product_id.weight
+
+        self.wizard_id._auto_select_package_box_type()
+
+    @api.onchange('weight')
+    def _onchange_weight(self):
+        """
+        When the user manually enters a weight:
+        - Validate the weight input (must be greater than 0).
+        - Save it to the product record so it is available next time.
+        """
+        if self.product_id:
+            if self.weight and self.weight > 0:
+                if self.product_id and (not self.product_id.weight or self.product_id.weight == 0.0):
+                    self.product_id.weight = self.weight  # Update the product record
+                    _logger.info(f"Updated weight for product {self.product_id.name} to {self.weight}")
+            elif self.weight == 0:
+                return {
+                    'warning': {
+                        'title': _("Invalid Weight"),
+                        'message': _("Weight must be greater than 0. Please enter a valid weight."),
+                    }
+                }
 
