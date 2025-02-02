@@ -41,9 +41,11 @@ msgstr "账户"
 
 #. module: spreadsheet_account
 #. odoo-javascript
+#. odoo-python
 #: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
-msgid "Bank and Cash"
-msgstr "银行和现金"
+#: code:addons/spreadsheet_account/models/account.py:0
+msgid "Cell Audit"
+msgstr ""
 
 #. module: spreadsheet_account
 #: model:ir.model,name:spreadsheet_account.model_res_company
@@ -141,10 +143,22 @@ msgid "Income"
 msgstr "收入"
 
 #. module: spreadsheet_account
-#. odoo-python
-#: code:addons/spreadsheet_account/models/account.py:0
-msgid "Journal items for account prefix %s"
-msgstr "账户前缀%s的会计分录"
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "Offset applied to the years."
+msgstr ""
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "Return the partner balance for the specified account(s) and period"
+msgstr ""
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "Return the residual amount for the specified account(s) and period"
+msgstr ""
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -223,6 +237,12 @@ msgstr "设为 \"true\"，则包括未发布的条目。"
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/plugins/accounting_plugin.js:0
+msgid "The balance for given partners could not be computed."
+msgstr ""
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/plugins/accounting_plugin.js:0
 msgid "The company fiscal year could not be found."
 msgstr "无法找到公司的财政年度。"
 
@@ -261,6 +281,12 @@ msgstr "用作提取财政年度开始的日期。"
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "The partner ids (separated by a comma)."
+msgstr ""
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 msgid "The prefix of the accounts."
 msgstr "账户前缀。"
 
@@ -273,5 +299,13 @@ msgstr "技术账户类型（可能的值为：%s）。"
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-msgid "Year offset applied to date_range."
-msgstr "应用于日期范围的年份偏移。"
+msgid ""
+"The prefix of the accounts. If none provided, all receivable and payable "
+"accounts will be used."
+msgstr ""
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/plugins/accounting_plugin.js:0
+msgid "The residual amount for given accounts could not be computed."
+msgstr ""

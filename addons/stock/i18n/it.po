@@ -3,8 +3,8 @@
 # 	* stock
 # 
 # Translators:
-# Marianna Ciofani, 2025
 # Wil Odoo, 2025
+# Marianna Ciofani, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Marianna Ciofani, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,6 +50,9 @@ msgid ""
 "The quantity done for the product %(product)s doesn't respect the rounding precision defined on the system.\n"
 "Please change the quantity done or the rounding precision in your settings."
 msgstr ""
+"\n"
+"La quantità completata per il prodotto %(product)s non rispetta la precisione di arrotondamento definita nel sistema.\n"
+"Modifica la quantità completata o la precisione di arrotondamento dalle impostazioni."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -1189,7 +1192,7 @@ msgstr "Ubicazioni consentite"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_replenishment_uom_ids
 msgid "Allowed Replenishment Uom"
-msgstr ""
+msgstr "UdM rifornimento consentita"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__allowed_route_ids
@@ -1202,7 +1205,7 @@ msgstr "Percorso consentito"
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__allowed_uom_ids
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "UdM consentite"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__alternative
@@ -1269,7 +1272,7 @@ msgstr "Applicabile a"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__package_type_selectable
 msgid "Applicable on Package Type"
-msgstr ""
+msgstr "Applicabile su tipo di collo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__product_selectable
@@ -6519,7 +6522,7 @@ msgstr "Larghezza imballaggio"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__packaging_uom_id
 msgid "Packaging unit from sale or purchase orders"
-msgstr ""
+msgstr "Unità imballaggio da ordini di vendita o acquisto"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_pack_stock_loc_id
@@ -7351,7 +7354,7 @@ msgstr "Quantità nell’UdM predefinita del prodotto"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__packaging_uom_qty
 msgid "Quantity in the packaging unit"
-msgstr ""
+msgstr "Quantità nell'unità dell'imballaggio"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__incoming_qty
@@ -7764,7 +7767,7 @@ msgstr "Informazioni rifornimento per %(product)s in %(warehouse)s"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__replenishment_uom_id
 msgid "Replenishment Multiple"
-msgstr ""
+msgstr "Rifornimento multiplo"
 
 #. module: stock
 #. odoo-python
@@ -7906,7 +7909,7 @@ msgstr "Reso"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 msgid "Return All"
-msgstr ""
+msgstr "Restituisci tutto"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
@@ -8027,7 +8030,7 @@ msgstr "Su questo prodotto è possibile selezionare i percorsi"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_uom_uom__route_ids
 msgid "Routes propagated from the package type"
-msgstr ""
+msgstr "Percorsi propagati dal tipo di collo"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__resupply_wh_ids
@@ -8292,7 +8295,7 @@ msgstr "Selezione non supportata."
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure or packagings"
-msgstr ""
+msgstr "Vendi e acquista prodotti con varie unità di misura e imballaggi"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9370,6 +9373,8 @@ msgid ""
 "The procurement quantity will be rounded up to a multiple of this "
 "unit/packaging. If it is not set, it is not rounded."
 msgstr ""
+"La quantità di approvvigionamento verrà arrotondata a un multiplo "
+"dell'unità/imballaggio. Altrimenti non verrà arrotondata."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -9693,6 +9698,9 @@ msgid ""
 "advised to change the Unit of Measure since it can lead to inconsistencies. "
 "The existing moves will not be recalculated with the new unit of measure."
 msgstr ""
+"Il prodotto è stato utilizzato in almeno un movimento di magazzino. Non è "
+"consigliato modificare l'unità di misura perché può causare incongruenze. I "
+"movimenti esistenti non verranno ricalcolati con la nuova unità di misura."
 
 #. module: stock
 #. odoo-python
@@ -10282,7 +10290,7 @@ msgstr "Unità"
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Units & Packagings"
-msgstr ""
+msgstr "Unità e imballaggi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
@@ -10777,6 +10785,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_route__package_type_selectable
 msgid "When checked, the route will be selectable on package types"
 msgstr ""
+"Se selezionata, sarà possibile scegliere il percorso tra i tipi di collo"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__product_categ_selectable

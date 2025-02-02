@@ -3,8 +3,8 @@
 # 	* event
 # 
 # Translators:
-# Wil Odoo, 2025
 # Marianna Ciofani, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-20 08:41+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Marianna Ciofani, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -83,7 +83,7 @@ msgstr "%s (copia)"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.js:0
 msgid "'%(name)s' %(type)s badge sent to printer '%(printer)s'"
-msgstr ""
+msgstr "Badge %(type)s di '%(name)s' inviato alla stampante '%(printer)s'"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_attendee_list
@@ -1866,13 +1866,13 @@ msgstr "Dopo ogni iscrizione"
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_event
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__after_event
 msgid "After the event ended"
-msgstr ""
+msgstr "Dopo la fine dell'evento"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_event_start
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__after_event_start
 msgid "After the event started"
-msgstr ""
+msgstr "Dopo l'inizio dell'evento"
 
 #. module: event
 #: model:event.tag.category,name:event.event_tag_category_1
@@ -2129,13 +2129,13 @@ msgstr "Il codice a barre deve essere unico"
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__before_event_end
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__before_event_end
 msgid "Before the event ends"
-msgstr ""
+msgstr "Prima della fine dell'evento"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__before_event
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__before_event
 msgid "Before the event starts"
-msgstr ""
+msgstr "Prima dell'inizio dell'evento"
 
 #. module: event
 #. odoo-python
@@ -2279,6 +2279,7 @@ msgstr "Comunicazioni"
 msgid ""
 "Communication for %(event_name)s scheduled on %(scheduled_date)s failed."
 msgstr ""
+"Comunicazione per %(event_name)s programmata il %(scheduled_date)s fallita."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_registration_ids
@@ -2543,7 +2544,7 @@ msgstr "Completato"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "Download Tickets"
-msgstr ""
+msgstr "Scarica biglietti"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
@@ -3292,6 +3293,12 @@ msgstr ""
 "sito web."
 
 #. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_barcode.xml:0
+msgid "Install"
+msgstr "Installa"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_nbr
 msgid "Interval"
@@ -3349,7 +3356,7 @@ msgstr "È in corso"
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "It failed with error %(error)s."
-msgstr ""
+msgstr "Fallito con errore %(error)s."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__seats_max
@@ -3434,7 +3441,7 @@ msgstr "Ultimo partecipante"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__error_datetime
 msgid "Last Error"
-msgstr ""
+msgstr "Ultimo errore"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__write_uid
@@ -4164,7 +4171,7 @@ msgstr "Le registrazioni sono iniziate"
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "Rendering of template failed with error: %(error)s."
-msgstr ""
+msgstr "Rendering modello fallito con errore: %(error)s."
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
@@ -4641,6 +4648,8 @@ msgid ""
 "There is an issue with dynamic placeholder. Actual error received is: "
 "%(error)s."
 msgstr ""
+"Problema rilevato con il segnaposto dinamico. L'errore attualmente ricevuto "
+"è: %(error)s."
 
 #. module: event
 #: model:ir.model.constraint,message:event.constraint_event_registration_answer_value_check
@@ -4677,7 +4686,7 @@ msgstr "Queste informazioni saranno stampate sui vostri biglietti."
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "This is due to an error in template %(template_link)s."
-msgstr ""
+msgstr "Questo è dovuto a un errore nel modello %(template_link)s."
 
 #. module: event
 #. odoo-javascript
@@ -4708,7 +4717,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "This may be linked to template %(template_link)s."
-msgstr ""
+msgstr "Questo potrebbe essere collegato al modello %(template_link)s."
 
 #. module: event
 #. odoo-python

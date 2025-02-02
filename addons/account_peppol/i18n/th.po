@@ -101,7 +101,7 @@ msgstr "บัญชีที่ใช้สำหรับ Peppol"
 
 #. module: account_peppol
 #. odoo-javascript
-#: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
+#: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.js:0
 msgid "Activate"
 msgstr "เปิดใช้งาน"
 
@@ -408,6 +408,12 @@ msgid "Fully automated"
 msgstr "อัตโนมัติเต็มรูปแบบ"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.js:0
+msgid "Got it !"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "I want to migrate my existing Peppol connection to Odoo (optional):"
 msgstr "ฉันต้องการย้ายการเชื่อมต่อ Peppol ที่มีอยู่ไปยัง Odoo (ไม่บังคับ):"
@@ -505,14 +511,14 @@ msgid "Mobile number"
 msgstr "หมายเลขโทรศัพท์มือถือ"
 
 #. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid
+msgid "Not on Peppol"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__not_registered
 msgid "Not registered"
 msgstr "ยังไม่ได้ลงทะเบียน"
-
-#. module: account_peppol
-#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid
-msgid "Not valid"
-msgstr "ไม่ถูกต้อง"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_verified
@@ -749,12 +755,6 @@ msgstr "อีเมลสำหรับการติดต่อหลัก
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_contact_email
 msgid "Primary contact email for Peppol-related communication"
 msgstr "อีเมลสำหรับการติดต่อหลัก เพื่อการสื่อสารที่เกี่ยวข้องกับ Peppol"
-
-#. module: account_peppol
-#. odoo-javascript
-#: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.js:0
-msgid "Print & Send"
-msgstr "พิมพ์ & ส่ง"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__proxy_type
@@ -1001,6 +1001,13 @@ msgid "View Partner(s)"
 msgstr "ดูพาร์ทเนอร์"
 
 #. module: account_peppol
+#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
+msgid ""
+"We could not find a user with this information on our server. Please check "
+"your information."
+msgstr ""
+
+#. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "What is Peppol and why it's great ?"
@@ -1047,6 +1054,11 @@ msgstr "ตอนนี้คุณสามารถส่งใบแจ้ง
 #: code:addons/account_peppol/tools/demo_utils.py:0
 msgid "You can now send invoices in demo mode."
 msgstr "ตอนนี้คุณสามารถส่งใบแจ้งหนี้ในโหมดสาธิตได้แล้ว"
+
+#. module: account_peppol
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "You can send this invoice electronically via Peppol."
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form

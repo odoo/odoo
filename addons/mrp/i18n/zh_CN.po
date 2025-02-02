@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Chloe Wang, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Chloe Wang, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -89,7 +90,7 @@ msgstr "#使用的物料清单（BOM）"
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 msgid "%(display_name)s"
-msgstr ""
+msgstr "%(display_name)s"
 
 #. module: mrp
 #. odoo-python
@@ -759,7 +760,7 @@ msgstr "已允许"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__allowed_uom_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "允许的单位"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reserve_visible
@@ -1359,6 +1360,15 @@ msgid "Change Quantity To Produce"
 msgstr "变更待生产数量"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"Changing the product or variant will permanently reset all previously "
+"encoded variant-related data."
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Check availability"
@@ -1890,6 +1900,8 @@ msgid ""
 " be multiplied by two. However, note that both time before and after "
 "production will only be counted once."
 msgstr ""
+"该工作中心可并行（同时）生产的默认件数（以产品为单位）。例如：产能为 5，您需要生产 10 件，那么 BOM 上列出的操作时间将乘以 "
+"2。但请注意，生产前后的时间只计算一次。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_consumption_warning_line__product_uom_id
@@ -2781,17 +2793,17 @@ msgstr "是受阻原因"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Is paused"
-msgstr ""
+msgstr "已暂停"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Is running"
-msgstr ""
+msgstr "运行中"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Is stopped"
-msgstr ""
+msgstr "已停止"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__is_user_working
@@ -4413,7 +4425,7 @@ msgstr "产品模板"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__product_uom_id
 msgid "Product Unit"
-msgstr ""
+msgstr "单品单位"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
@@ -4611,7 +4623,7 @@ msgstr "正在生产的数量"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_ready
 msgid "Quantity Ready"
-msgstr ""
+msgstr "数量已准备好"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
@@ -5505,7 +5517,7 @@ msgstr "欠单链中待分配的已生产数量。"
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "The quantity produced must be positive."
-msgstr ""
+msgstr "生产量必须为正数。"
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_qty_positive
@@ -6234,6 +6246,8 @@ msgid ""
 "BoM search. That allows to define stock rules which trigger different "
 "manufacturing orders with different BoMs."
 msgstr ""
+"当采购操作下的 “生产” "
+"路线已设置操作类型，会尝试使用相同操作类型的物料清单（BoM）为该产品创建生产单。否则，搜索物料清单时将不考虑操作类型。这样就可以定义库存规则，用不同的物料清单触发不同的制造订单规则。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__manual_consumption
@@ -6609,7 +6623,7 @@ msgstr "只能合并状态相同的制造。"
 msgid ""
 "You cannot change the quantity produced of a work order that is in done or "
 "cancel state."
-msgstr ""
+msgstr "不能更改处于已完成或已取消状态的工单的生产数量。"
 
 #. module: mrp
 #. odoo-python
@@ -6660,7 +6674,7 @@ msgstr "不能移动已取消或已完成的制造订单。"
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "You cannot produce more than 1 unit of a serial product at a time."
-msgstr ""
+msgstr "不能同时生产超过 1 个单位的系列产品。"
 
 #. module: mrp
 #. odoo-python

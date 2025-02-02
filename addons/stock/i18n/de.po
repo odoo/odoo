@@ -3,8 +3,8 @@
 # 	* stock
 # 
 # Translators:
-# Larissa Manderfeld, 2025
 # Wil Odoo, 2025
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,6 +50,9 @@ msgid ""
 "The quantity done for the product %(product)s doesn't respect the rounding precision defined on the system.\n"
 "Please change the quantity done or the rounding precision in your settings."
 msgstr ""
+"\n"
+"Die Menge, die für das Produkt %(product)s angegeben wurde, entspricht nicht der Rundungsgenauigkeit, die im System definiert wurde.\n"
+"Bitte ändern Sie die angegebene Menge oder die Rundungsgenauigkeit Ihren Einstellungen."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -1189,7 +1192,7 @@ msgstr "Erlaubter Lagerort"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_replenishment_uom_ids
 msgid "Allowed Replenishment Uom"
-msgstr ""
+msgstr "Zulässige Maßeinheit für Auffüllung"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__allowed_route_ids
@@ -1202,7 +1205,7 @@ msgstr "Erlaubte Route"
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__allowed_uom_ids
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "Zulässige Maßeinheit"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__alternative
@@ -1269,7 +1272,7 @@ msgstr "Anwendbar auf"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__package_type_selectable
 msgid "Applicable on Package Type"
-msgstr ""
+msgstr "Auf Pakettyp anwendbar"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__product_selectable
@@ -6539,7 +6542,7 @@ msgstr "Paketbreite"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__packaging_uom_id
 msgid "Packaging unit from sale or purchase orders"
-msgstr ""
+msgstr "Verpackungseinheit aus Verkaufsaufträgen oder Bestellungen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_pack_stock_loc_id
@@ -7376,7 +7379,7 @@ msgstr "Menge in der Standard-Maßeinheit des Produkts"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__packaging_uom_qty
 msgid "Quantity in the packaging unit"
-msgstr ""
+msgstr "Menge in der Verpackungseinheit"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__incoming_qty
@@ -7788,7 +7791,7 @@ msgstr "Auffüllinformationen für %(product)s in %(warehouse)s"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__replenishment_uom_id
 msgid "Replenishment Multiple"
-msgstr ""
+msgstr "Mehrfache Auffüllung"
 
 #. module: stock
 #. odoo-python
@@ -7930,7 +7933,7 @@ msgstr "Retoure ausführen"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 msgid "Return All"
-msgstr ""
+msgstr "Alle retournieren"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
@@ -8051,7 +8054,7 @@ msgstr "Routen können für dieses Produkt ausgewählt werden."
 #. module: stock
 #: model:ir.model.fields,help:stock.field_uom_uom__route_ids
 msgid "Routes propagated from the package type"
-msgstr ""
+msgstr "Vom Pakettyp übertragene Routen"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__resupply_wh_ids
@@ -8317,6 +8320,8 @@ msgstr "Auswahl nicht unterstützt."
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure or packagings"
 msgstr ""
+"Verkaufen und kaufen Sie Produkte in verschiedenen Maßeinheiten oder "
+"Verpackungen"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9398,6 +9403,8 @@ msgid ""
 "The procurement quantity will be rounded up to a multiple of this "
 "unit/packaging. If it is not set, it is not rounded."
 msgstr ""
+"Die Beschaffungsmenge wird auf ein Vielfaches dieser Einheit/Verpackung "
+"aufgerundet. Wenn nicht angegeben, wird sie nicht gerundet."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -9727,6 +9734,10 @@ msgid ""
 "advised to change the Unit of Measure since it can lead to inconsistencies. "
 "The existing moves will not be recalculated with the new unit of measure."
 msgstr ""
+"Dieses Produkt wurde bei mindestens einer Lagerbewegung verwendet. Es ist "
+"nicht ratsam, die Maßeinheit zu ändern, da dies zu Inkonsistenzen führen "
+"kann. Die vorhandenen Bewegungen werden nicht mit der neuen Maßeinheit neu "
+"berechnet."
 
 #. module: stock
 #. odoo-python
@@ -10322,7 +10333,7 @@ msgstr "Einheiten"
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Units & Packagings"
-msgstr ""
+msgstr "Einheiten & Verpackungen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
@@ -10817,6 +10828,8 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_route__package_type_selectable
 msgid "When checked, the route will be selectable on package types"
 msgstr ""
+"Wenn diese Option aktiviert ist, kann die Route in den Produkttypen "
+"ausgewählt werden."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__product_categ_selectable
@@ -11864,4 +11877,5 @@ msgstr "Einheiten"
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} Lieferauftrag (Ref {{ object.name or 'n/a' }})"
+"{{ object.company_id.name }} Lieferauftrag (Ref {{ object.name or 'k. A.' "
+"}})"

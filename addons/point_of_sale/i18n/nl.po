@@ -4,9 +4,10 @@
 # 
 # Translators:
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
-# Manon Rondou, 2025
 # Martin Trigaux, 2025
 # Wil Odoo, 2025
+# Dylan Kiss, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -106,6 +107,12 @@ msgstr "%(product_name)s: Bestelde hoeveelheid: %(old_qty)s"
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(refunded_order)s REFUND"
 msgstr "%(refunded_order)s TERUGBETALING"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
+msgid "%(vatLabel)s: %(vatId)s"
+msgstr "%(vatLabel)s: %(vatId)s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -899,6 +906,9 @@ msgid ""
 "An error occurred while closing the session. Unsynced orders will be "
 "available in the next session. The page will be reloaded."
 msgstr ""
+"Er is een fout opgetreden bij het afsluiten van de sessie. Niet-"
+"gesynchroniseerde bestellingen zullen beschikbaar zijn in de volgende "
+"sessie. De pagina wordt opnieuw geladen."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3764,7 +3774,7 @@ msgstr "IoT box IP adressen"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/customer_display/customer_display_data_service.js:0
 msgid "IoT Customer Display Error"
-msgstr ""
+msgstr "IoT Klantendisplay-fout"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_is_follower
@@ -4178,6 +4188,8 @@ msgid ""
 "Make sure there is an IoT Box subscription associated with your Odoo "
 "database, then restart the IoT Box."
 msgstr ""
+"Zorg ervoor dat er een IoT Box-abonnement gekoppeld is aan je Odoo-database "
+"en start vervolgens de IoT Box opnieuw op."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6574,7 +6586,7 @@ msgstr "Retouren"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 msgid "Register"
-msgstr "Registreer"
+msgstr "Kassa"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7646,6 +7658,12 @@ msgid "Tax Group"
 msgstr "Btw-groep"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
+msgid "Tax ID: %(vatId)s"
+msgstr "Btw-nummer: %(vatId)s"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_subtotal_incl
 msgid "Tax Incl."
 msgstr "Incl. btw"
@@ -8091,6 +8109,8 @@ msgstr ""
 msgid ""
 "The session is being closed by another user. The page will be reloaded."
 msgstr ""
+"De sessie wordt afgesloten door een andere gebruiker. De pagina wordt "
+"opnieuw geladen."
 
 #. module: point_of_sale
 #. odoo-python

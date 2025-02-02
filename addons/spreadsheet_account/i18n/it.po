@@ -3,8 +3,8 @@
 # 	* spreadsheet_account
 # 
 # Translators:
-# Marianna Ciofani, 2025
 # Wil Odoo, 2025
+# Marianna Ciofani, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Marianna Ciofani, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,9 +43,11 @@ msgstr "Conto"
 
 #. module: spreadsheet_account
 #. odoo-javascript
+#. odoo-python
 #: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
-msgid "Bank and Cash"
-msgstr "Banca e cassa"
+#: code:addons/spreadsheet_account/models/account.py:0
+msgid "Cell Audit"
+msgstr "Verifica cella"
 
 #. module: spreadsheet_account
 #: model:ir.model,name:spreadsheet_account.model_res_company
@@ -144,10 +146,24 @@ msgid "Income"
 msgstr "Ricavi"
 
 #. module: spreadsheet_account
-#. odoo-python
-#: code:addons/spreadsheet_account/models/account.py:0
-msgid "Journal items for account prefix %s"
-msgstr "Movimenti contabili per il prefisso del conto %s"
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "Offset applied to the years."
+msgstr "Compensazione applicata agli anni."
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "Return the partner balance for the specified account(s) and period"
+msgstr ""
+"Restituisce il saldo del partner per il o i conti e il periodo specificati"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "Return the residual amount for the specified account(s) and period"
+msgstr ""
+"Restituisce l'importo residuo per il o i conti e il periodo specificati"
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -229,6 +245,12 @@ msgstr "Imposta come VERO per includere voci non registrate."
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/plugins/accounting_plugin.js:0
+msgid "The balance for given partners could not be computed."
+msgstr "Impossibile calcolare il saldo dei partner indicati."
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/plugins/accounting_plugin.js:0
 msgid "The company fiscal year could not be found."
 msgstr "Non è stato possibile trovare l'anno fiscale della società."
 
@@ -269,6 +291,12 @@ msgstr "Data dalla quale estrarre l'inizio dell'anno fiscale."
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "The partner ids (separated by a comma)."
+msgstr "ID partner (separati da virgola)."
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 msgid "The prefix of the accounts."
 msgstr "Il prefisso dei conti."
 
@@ -281,5 +309,15 @@ msgstr "Il tipo di conto tecnico (i valori possibili sono: %s)."
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-msgid "Year offset applied to date_range."
-msgstr "Compensazione dell'anno applicata a date_range."
+msgid ""
+"The prefix of the accounts. If none provided, all receivable and payable "
+"accounts will be used."
+msgstr ""
+"Il prefisso dei conti. Se non viene fornito, verranno utilizzati tutti i "
+"conti di credito e di debito."
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/plugins/accounting_plugin.js:0
+msgid "The residual amount for given accounts could not be computed."
+msgstr "Impossibile calcolare l'importo rimanente dei conti forniti."

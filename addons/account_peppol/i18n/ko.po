@@ -99,7 +99,7 @@ msgstr "Peppol에 사용되는 계정입니다."
 
 #. module: account_peppol
 #. odoo-javascript
-#: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
+#: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.js:0
 msgid "Activate"
 msgstr "활성화"
 
@@ -404,6 +404,12 @@ msgid "Fully automated"
 msgstr "완전 자동화"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.js:0
+msgid "Got it !"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "I want to migrate my existing Peppol connection to Odoo (optional):"
 msgstr "기존 Peppol 연결을 Odoo로 마이그레이션합니다 (선택 사항):"
@@ -498,14 +504,14 @@ msgid "Mobile number"
 msgstr " 휴대폰 번호"
 
 #. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid
+msgid "Not on Peppol"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__not_registered
 msgid "Not registered"
 msgstr "등록하지 않음"
-
-#. module: account_peppol
-#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid
-msgid "Not valid"
-msgstr "유효하지 않음"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_verified
@@ -740,12 +746,6 @@ msgid "Primary contact email for Peppol-related communication"
 msgstr "Peppol 관련 연락을 위한 기본 이메일"
 
 #. module: account_peppol
-#. odoo-javascript
-#: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.js:0
-msgid "Print & Send"
-msgstr "인쇄 후 보내기"
-
-#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__proxy_type
 msgid "Proxy Type"
 msgstr "프록시 유형"
@@ -928,7 +928,7 @@ msgstr ""
 msgid ""
 "This feature is deprecated. Contact odoo support if you need a migration "
 "key."
-msgstr ""
+msgstr "이 기능은 더 이상 사용되지 않습니다. 마이그레이션 키가 필요한 경우 Odoo 지원팀에 문의하십시오."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -978,6 +978,13 @@ msgid "View Partner(s)"
 msgstr "협력사 보기"
 
 #. module: account_peppol
+#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
+msgid ""
+"We could not find a user with this information on our server. Please check "
+"your information."
+msgstr ""
+
+#. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "What is Peppol and why it's great ?"
@@ -1023,6 +1030,11 @@ msgstr "이제 Peppol을 통해 전자 청구서를 보낼 수 있습니다."
 #: code:addons/account_peppol/tools/demo_utils.py:0
 msgid "You can now send invoices in demo mode."
 msgstr "이제 데모 모드에서 청구서를 보낼 수 있습니다."
+
+#. module: account_peppol
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "You can send this invoice electronically via Peppol."
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form

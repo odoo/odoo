@@ -43,9 +43,11 @@ msgstr "勘定科目"
 
 #. module: spreadsheet_account
 #. odoo-javascript
+#. odoo-python
 #: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
-msgid "Bank and Cash"
-msgstr "銀行及び現金"
+#: code:addons/spreadsheet_account/models/account.py:0
+msgid "Cell Audit"
+msgstr ""
 
 #. module: spreadsheet_account
 #: model:ir.model,name:spreadsheet_account.model_res_company
@@ -143,10 +145,22 @@ msgid "Income"
 msgstr "収益"
 
 #. module: spreadsheet_account
-#. odoo-python
-#: code:addons/spreadsheet_account/models/account.py:0
-msgid "Journal items for account prefix %s"
-msgstr "勘定科目プレフィックス%s用の仕訳項目"
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "Offset applied to the years."
+msgstr ""
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "Return the partner balance for the specified account(s) and period"
+msgstr ""
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "Return the residual amount for the specified account(s) and period"
+msgstr ""
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -225,6 +239,12 @@ msgstr "未投稿のエントリを含めるにはTRUEを設定します。"
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/plugins/accounting_plugin.js:0
+msgid "The balance for given partners could not be computed."
+msgstr ""
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/plugins/accounting_plugin.js:0
 msgid "The company fiscal year could not be found."
 msgstr "会社の会計年度が見つかりません。"
 
@@ -263,6 +283,12 @@ msgstr "会計年度の開始を抽出する日。"
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "The partner ids (separated by a comma)."
+msgstr ""
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 msgid "The prefix of the accounts."
 msgstr "アカウントのプレフィクス"
 
@@ -275,5 +301,13 @@ msgstr "技術アカウントの種類(可能な値: %s)です。"
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-msgid "Year offset applied to date_range."
-msgstr "date_rangeに適用される年オフセット値"
+msgid ""
+"The prefix of the accounts. If none provided, all receivable and payable "
+"accounts will be used."
+msgstr ""
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/plugins/accounting_plugin.js:0
+msgid "The residual amount for given accounts could not be computed."
+msgstr ""

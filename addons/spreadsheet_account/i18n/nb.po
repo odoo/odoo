@@ -41,9 +41,11 @@ msgstr "Konto"
 
 #. module: spreadsheet_account
 #. odoo-javascript
+#. odoo-python
 #: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
-msgid "Bank and Cash"
-msgstr "Bank og kontanter"
+#: code:addons/spreadsheet_account/models/account.py:0
+msgid "Cell Audit"
+msgstr ""
 
 #. module: spreadsheet_account
 #: model:ir.model,name:spreadsheet_account.model_res_company
@@ -141,9 +143,21 @@ msgid "Income"
 msgstr "Inntekt"
 
 #. module: spreadsheet_account
-#. odoo-python
-#: code:addons/spreadsheet_account/models/account.py:0
-msgid "Journal items for account prefix %s"
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "Offset applied to the years."
+msgstr ""
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "Return the partner balance for the specified account(s) and period"
+msgstr ""
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "Return the residual amount for the specified account(s) and period"
 msgstr ""
 
 #. module: spreadsheet_account
@@ -223,6 +237,12 @@ msgstr ""
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/plugins/accounting_plugin.js:0
+msgid "The balance for given partners could not be computed."
+msgstr ""
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/plugins/accounting_plugin.js:0
 msgid "The company fiscal year could not be found."
 msgstr ""
 
@@ -261,6 +281,12 @@ msgstr ""
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "The partner ids (separated by a comma)."
+msgstr ""
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 msgid "The prefix of the accounts."
 msgstr ""
 
@@ -273,5 +299,13 @@ msgstr ""
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-msgid "Year offset applied to date_range."
+msgid ""
+"The prefix of the accounts. If none provided, all receivable and payable "
+"accounts will be used."
+msgstr ""
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/plugins/accounting_plugin.js:0
+msgid "The residual amount for given accounts could not be computed."
 msgstr ""

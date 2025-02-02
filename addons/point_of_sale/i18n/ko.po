@@ -3,8 +3,8 @@
 # 	* point_of_sale
 # 
 # Translators:
-# Daye Jeong, 2025
 # Sarah Park, 2025
+# Daye Jeong, 2025
 # Wil Odoo, 2025
 # 
 msgid ""
@@ -113,6 +113,12 @@ msgstr "%(product_name)s: 주문 수량: %(old_qty)s"
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(refunded_order)s REFUND"
 msgstr "%(refunded_order)s환불"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
+msgid "%(vatLabel)s: %(vatId)s"
+msgstr "%(vatLabel)s: %(vatId)s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -445,7 +451,7 @@ msgstr "현재 이 POS에 열려 있는 세션이 있습니다. 일부 설정 �
 msgid ""
 "A session-unique sequence number for the order. Negative if generated from "
 "the client"
-msgstr ""
+msgstr "주문에 대한 세션 고유 시퀀스 번호로, 클라이언트에서 생성된 경우 음수로 표시됩니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__receipt_footer
@@ -769,7 +775,7 @@ msgstr "모든 결제 방법은 판매 전표와 동일하거나 회사 통화�
 #: model:ir.model.fields,help:point_of_sale.field_pos_preset__is_return
 msgid ""
 "All quantity in the cart will be in negative. Ideal for return managment."
-msgstr ""
+msgstr "장바구니에 있는 모든 수량이 마이너스로 표시됩니다. 반품 관리에 이상적인 옵션입니다. "
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_all_sales_lines
@@ -873,6 +879,7 @@ msgid ""
 "An error occurred while closing the session. Unsynced orders will be "
 "available in the next session. The page will be reloaded."
 msgstr ""
+"세션을 종료하는 동안 오류가 발생했습니다. 동기화되지 않은 주문은 다음 세션에서 사용할 수 있습니다. 페이지를 다시 로드합니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1653,7 +1660,7 @@ msgstr "이 품목을 POS에 표시할지를 확인합니다."
 #: model:ir.model.fields,help:point_of_sale.field_uom_uom__is_pos_groupable
 msgid ""
 "Check if you want to group products of this unit in point of sale orders"
-msgstr ""
+msgstr "이 단위의 제품을 판매 시점 주문으로 묶으려면 이 옵션을 선택하십시오."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__cash_control
@@ -2493,7 +2500,7 @@ msgstr "새 범주 정의"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "Define presets to manage taxes & prices for eat in, take out, members..."
-msgstr ""
+msgstr "식사, 테이크아웃, 회원에 대한 세금과 가격을 관리하기 위한 사전 설정을 정의합니다."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_template_action_pos_product
@@ -7508,6 +7515,12 @@ msgid "Tax Group"
 msgstr "세금 그룹"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
+msgid "Tax ID: %(vatId)s"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_subtotal_incl
 msgid "Tax Incl."
 msgstr "세금 포함."
@@ -7765,7 +7778,7 @@ msgstr "알 수없는 오류로 인해 주문을 서버로 보낼 수 없습니�
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
 "The order delivery / pickup date is in the future. You cannot cancel it."
-msgstr ""
+msgstr "주문 배송/픽업 날짜가 미래로 설정되어 있어 취소할 수 없습니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7905,7 +7918,7 @@ msgstr "세션이 비정상적으로 오랫동안 열려 있습니다. 폐쇄를
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid ""
 "The session is being closed by another user. The page will be reloaded."
-msgstr ""
+msgstr "다른 사용자가 세션을 닫고 있습니다. 페이지가 다시 로드됩니다."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7919,7 +7932,7 @@ msgstr ""
 msgid ""
 "The tip has been added to the order. However,the selected payment line does "
 "not allow tips to be added."
-msgstr ""
+msgstr "팁이 주문에 추가되었습니다. 그러나 선택한 결제 항목은 팁 추가를 허용하지 않습니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_adyen
@@ -8652,7 +8665,7 @@ msgstr "재정 위치를 사용하여 주문별로 세금을 다르게 받으십
 msgid ""
 "Used to generate the OOOO part of the pos_reference field of the pos.order "
 "model."
-msgstr ""
+msgstr "pos.order 모델의 pos_reference 필드에 있는 OOOO 부분을 생성하는 데 사용됩니다."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form

@@ -265,7 +265,7 @@ msgstr "<span class=\"o_stat_text\"> プロダクト</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.uom_uom_form_view_inherit
 msgid "<span class=\"o_stat_text\">Barcodes</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">バーコード</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -899,7 +899,7 @@ msgstr "コンボ価格"
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "Combo products can't have attributes."
-msgstr ""
+msgstr "コンボプロダクトには属性を指定できません。"
 
 #. module: product
 #. odoo-python
@@ -1861,7 +1861,7 @@ msgstr "在庫管理"
 #: model:ir.model.fields,field_description:product.field_product_product__is_dynamically_created
 #: model:ir.model.fields,field_description:product.field_product_template__is_dynamically_created
 msgid "Is Dynamically Created"
-msgstr ""
+msgstr "動的に作成"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__message_is_follower
@@ -1989,7 +1989,7 @@ msgstr "行"
 #. module: product
 #: model:ir.model,name:product.model_product_uom
 msgid "Link between products and their UoMs"
-msgstr ""
+msgstr "プロダクトと単位のリンク"
 
 #. module: product
 #: model:product.template,name:product.product_product_local_delivery_product_template
@@ -2339,12 +2339,12 @@ msgstr "梱包タイプA"
 #: model:ir.model.fields,field_description:product.field_uom_uom__packaging_barcodes_count
 #: model_terms:ir.ui.view,arch_db:product.product_uom_list_view
 msgid "Packaging Barcodes"
-msgstr ""
+msgstr "パッケージングバーコード"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_packaging
 msgid "Packaging Barcodes (PDF)"
-msgstr ""
+msgstr "パッケージングバーコード (PDF)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__uom_ids
@@ -2356,7 +2356,7 @@ msgstr "パッケージング"
 #: model:ir.model.fields,help:product.field_product_product__uom_ids
 #: model:ir.model.fields,help:product.field_product_template__uom_ids
 msgid "Packagings which can be used for sales"
-msgstr ""
+msgstr "販売に使用できるパッケージング"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_id
@@ -3354,6 +3354,8 @@ msgid ""
 " a vendor unit is set, quantity should be specified in this unit, otherwise "
 "it should be specified in the default unit of the product."
 msgstr ""
+"この仕入先から購買する際に、単価の割引を受けるために必要な数量。 "
+"仕入先単位が設定されている場合、数量はこの単位で指定する必要があります。そうでない場合は、プロダクトのデフォルト単位で指定する必要があります。"
 
 #. module: product
 #. odoo-python
@@ -3425,7 +3427,7 @@ msgstr "このメモは内部参照用です。"
 #: code:addons/product/models/product_template.py:0
 msgid ""
 "This product is part of a combo, so its type can't be changed to \"combo\"."
-msgstr ""
+msgstr "このプロダクトはコンボの一部ですあるため、タイプを \"コンボ\" に変更することはできません。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
@@ -3492,7 +3494,7 @@ msgstr "単位"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_uom_ids
 msgid "Unit Barcode"
-msgstr ""
+msgstr "単位バーコード"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_uom_name
@@ -3526,7 +3528,7 @@ msgstr "単位"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_uom
 msgid "Units of Measure & Packagings"
-msgstr ""
+msgstr "単位 & パッケージング"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -3590,7 +3592,7 @@ msgstr "この機能を使用して、顧客と共有したいファイルを保
 #: model:ir.model.fields,help:product.field_res_partner__property_product_pricelist
 #: model:ir.model.fields,help:product.field_res_users__property_product_pricelist
 msgid "Used for sales to the current partner"
-msgstr ""
+msgstr "現在の取引先への販売に使用"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products

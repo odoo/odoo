@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2025
+# Marta Wacławek, 2025
 # Wil Odoo, 2025
 # 
 msgid ""
@@ -103,6 +104,12 @@ msgstr "%(product_name)s: Zamówiona ilość: %(old_qty)s"
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(refunded_order)s REFUND"
 msgstr "%(refunded_order)s REFUNDACJA"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
+msgid "%(vatLabel)s: %(vatId)s"
+msgstr "%(vatLabel)s: %(vatId)s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -548,8 +555,8 @@ msgid ""
 "Account used as outstanding account when creating accounting payment records"
 " for bank payments."
 msgstr ""
-"Konto używane jako nierozliczone konto podczas tworzenia księgowych rekordów"
-" płatności dla płatności bankowych."
+"Konto używane jako nierozliczone konto podczas tworzenia księgowych zapisów "
+"płatności dla płatności bankowych."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4066,7 +4073,7 @@ msgstr "Numer pozycji"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_uom
 msgid "Link between products and their UoMs"
-msgstr ""
+msgstr "Link pomiędzy produktami a ich JM"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7636,6 +7643,12 @@ msgid "Tax Group"
 msgstr "Grupa podatku"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
+msgid "Tax ID: %(vatId)s"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_subtotal_incl
 msgid "Tax Incl."
 msgstr "Z podatkiem"
@@ -8686,7 +8699,7 @@ msgstr "Rodzaj użytej karty"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Typ wyjątku działania na rekordzie."
+msgstr "Typ wyjątku działania na zapisie."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9414,7 +9427,7 @@ msgstr "np 0123456789"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_view_form_normalized_pos
 msgid "e.g. 1234567890"
-msgstr ""
+msgstr "np. 1234567890"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form

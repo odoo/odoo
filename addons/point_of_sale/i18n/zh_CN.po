@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Odoo哥 <vnsoft.he@gmail.com>, 2024
-# Chloe Wang, 2025
 # Martin Trigaux, 2025
+# Chloe Wang, 2025
 # Wil Odoo, 2025
 # 
 msgid ""
@@ -35,6 +35,15 @@ msgid ""
 "            * OOOO is the sequence number.\n"
 "    "
 msgstr ""
+"\n"
+"        此订单可供人类阅读的参考编号。\n"
+"            * 格式：YYLL-SSS-FOOOO\n"
+"            * YY 是年份\n"
+"            * LL 是登录号码（装置代理）\n"
+"            * SSS 是操作时段识别码\n"
+"            * F 会是 1 或 0（1 表示序号由客户端产生）\n"
+"            * OOOO 是序号\n"
+"    "
 
 #. module: point_of_sale
 #. odoo-python
@@ -108,6 +117,12 @@ msgstr "%(refunded_order)s 退款"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
+msgid "%(vatLabel)s: %(vatId)s"
+msgstr "%(vatLabel)s：%(vatId)s"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.js:0
 msgid "%s customer(s) found for \"%s\"."
 msgstr "%s找到“%s”的客户。"
@@ -156,7 +171,7 @@ msgstr "0.00"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_request_with_code
 msgid "0014-001-00001"
-msgstr ""
+msgstr "0014-001-00001"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -437,7 +452,7 @@ msgstr "此POS已开启营业区间。在结束营业区间之后方可修改设
 msgid ""
 "A session-unique sequence number for the order. Negative if generated from "
 "the client"
-msgstr ""
+msgstr "订单在操作时段内唯一序列号。如果订单由客户端产生，则为负数。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__receipt_footer
@@ -645,7 +660,7 @@ msgstr "新增一个支付方式"
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_preset_form
 msgid "Add a new preset"
-msgstr ""
+msgstr "新增预设组合"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_printer_form
@@ -759,7 +774,7 @@ msgstr "如果没有使用会计应用，所有付款方式必须与销售日记
 #: model:ir.model.fields,help:point_of_sale.field_pos_preset__is_return
 msgid ""
 "All quantity in the cart will be in negative. Ideal for return managment."
-msgstr ""
+msgstr "购物车中的所有数量都将以负数表示。适合处理退货。"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_all_sales_lines
@@ -860,7 +875,7 @@ msgstr "上传产品价格错误。确认POS机上的所有价格清单准确。
 msgid ""
 "An error occurred while closing the session. Unsynced orders will be "
 "available in the next session. The page will be reloaded."
-msgstr ""
+msgstr "关闭会话时发生错误。未同步订单将在下一个会话中提供。页面将重新加载。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1044,7 +1059,7 @@ msgstr "可用PoS产品类别"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__available_preset_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_available_preset_ids
 msgid "Available Presets"
-msgstr ""
+msgstr "可用预设组合"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__available_pricelist_ids
@@ -1280,7 +1295,7 @@ msgstr "找零"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
 msgid "CUSTOMER NOTE"
-msgstr ""
+msgstr "客户须知"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1641,7 +1656,7 @@ msgstr "勾选此项，产品将在POS出现。"
 #: model:ir.model.fields,help:point_of_sale.field_uom_uom__is_pos_groupable
 msgid ""
 "Check if you want to group products of this unit in point of sale orders"
-msgstr ""
+msgstr "检查是否要在销售点订单中对该单位的产品进行分组"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__cash_control
@@ -1688,7 +1703,7 @@ msgstr "根据客户的类型选择订单上的具体财政状况(免税、现�
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.xml:0
 msgid "Choose customer"
-msgstr ""
+msgstr "选择客户"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_ticket_portal_url_display_mode
@@ -2078,12 +2093,12 @@ msgstr "数量"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__count_linked_config
 msgid "Count Linked Config"
-msgstr ""
+msgstr "计数已连接配置"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__count_linked_orders
 msgid "Count Linked Orders"
-msgstr ""
+msgstr "计数已连接订单"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2320,7 +2335,7 @@ msgstr "客户被要求 %s 支付方式。"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Customer required"
-msgstr ""
+msgstr "客户要求"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6116,7 +6131,7 @@ msgstr "产品模板属性值"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__product_uom_id
 msgid "Product Unit"
-msgstr ""
+msgstr "单品单位"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_uom_uom
@@ -7477,6 +7492,12 @@ msgstr "不含税"
 #: model:ir.model,name:point_of_sale.model_account_tax_group
 msgid "Tax Group"
 msgstr "税项组"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
+msgid "Tax ID: %(vatId)s"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_subtotal_incl

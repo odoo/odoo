@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2025
 # Anja Funk <anja.funk@afimage.de>, 2025
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Anja Funk <anja.funk@afimage.de>, 2025\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -269,7 +270,7 @@ msgstr "<span class=\"o_stat_text\"> Produkte</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.uom_uom_form_view_inherit
 msgid "<span class=\"o_stat_text\">Barcodes</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Barcodes</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -915,7 +916,7 @@ msgstr "Kombinationspreis"
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "Combo products can't have attributes."
-msgstr ""
+msgstr "Kombinationsprodukte können keine Attribute enthalten."
 
 #. module: product
 #. odoo-python
@@ -1893,7 +1894,7 @@ msgstr "Lager"
 #: model:ir.model.fields,field_description:product.field_product_product__is_dynamically_created
 #: model:ir.model.fields,field_description:product.field_product_template__is_dynamically_created
 msgid "Is Dynamically Created"
-msgstr ""
+msgstr "Wird dynamisch erstellt"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__message_is_follower
@@ -2024,7 +2025,7 @@ msgstr "Zeilen"
 #. module: product
 #: model:ir.model,name:product.model_product_uom
 msgid "Link between products and their UoMs"
-msgstr ""
+msgstr "Verknüpfung zwischen Produkten und ihren Maßeinheiten"
 
 #. module: product
 #: model:product.template,name:product.product_product_local_delivery_product_template
@@ -2388,12 +2389,12 @@ msgstr "Pakettyp A"
 #: model:ir.model.fields,field_description:product.field_uom_uom__packaging_barcodes_count
 #: model_terms:ir.ui.view,arch_db:product.product_uom_list_view
 msgid "Packaging Barcodes"
-msgstr ""
+msgstr "Verpackungsbarcodes"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_packaging
 msgid "Packaging Barcodes (PDF)"
-msgstr ""
+msgstr "Verpackungsbarcodes (PDF)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__uom_ids
@@ -2405,7 +2406,7 @@ msgstr "Verpackungen"
 #: model:ir.model.fields,help:product.field_product_product__uom_ids
 #: model:ir.model.fields,help:product.field_product_template__uom_ids
 msgid "Packagings which can be used for sales"
-msgstr ""
+msgstr "Verpackungen können für Verkäufe verwendet werden"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_id
@@ -3441,6 +3442,10 @@ msgid ""
 " a vendor unit is set, quantity should be specified in this unit, otherwise "
 "it should be specified in the default unit of the product."
 msgstr ""
+"Die Menge, die von diesem Lieferanten gekauft werden muss, um den "
+"Einheitspreis zu erhalten. Wenn eine Lieferanteneinheit festgelegt ist, "
+"sollte die Menge in dieser Einheit angegeben werden, andernfalls sollte sie "
+"in der Standardeinheit des Produkts angegeben werden."
 
 #. module: product
 #. odoo-python
@@ -3520,6 +3525,8 @@ msgstr "Dieser Hinweis dient nur internen Zwecken."
 msgid ""
 "This product is part of a combo, so its type can't be changed to \"combo\"."
 msgstr ""
+"Dieses Produkt ist Teil einer Kombination, daher kann sein Typ nicht in "
+"„Kombination“ geändert werden."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
@@ -3590,7 +3597,7 @@ msgstr "Einheit"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_uom_ids
 msgid "Unit Barcode"
-msgstr ""
+msgstr "Barcode der Einheit"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_uom_name
@@ -3624,7 +3631,7 @@ msgstr "Maßeinheiten"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_uom
 msgid "Units of Measure & Packagings"
-msgstr ""
+msgstr "Maßeinheiten & Verpackungen"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -3692,7 +3699,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_res_partner__property_product_pricelist
 #: model:ir.model.fields,help:product.field_res_users__property_product_pricelist
 msgid "Used for sales to the current partner"
-msgstr ""
+msgstr "Für Verkäufe an den aktuellen Partner verwendet"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products

@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Marta Wacławek, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +27,7 @@ msgid ""
 "                Manual actions may be needed."
 msgstr ""
 ".\n"
-"Może być konieczne wykonanie czynności manualnych."
+"                Może być konieczne wykonanie czynności ręcznych."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -36,7 +37,7 @@ msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Oczekiwanie na przybycie"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-clock-o\"/>Preparation"
-msgstr "<i class=\"fa fa-fw fa-clock-o\"/>Przygotowanie"
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/>Przygotowywanie"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -65,6 +66,9 @@ msgid ""
 "                                        <i class=\"fa fa-fw fa-truck\"/> Shipped\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"small badge rounded-pill text-bg-success orders_label_text_align\">\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> Wysłane\n"
+"                                    </span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
@@ -80,7 +84,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "<strong>Customer Reference</strong>"
-msgstr ""
+msgstr "<strong>Odniesienie klienta</strong>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -104,26 +108,26 @@ msgid ""
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
 "Zgodnie z konfiguracją produktu, dostarczona ilość może być automatycznie obliczana przez mechanizm:\n"
-"- Ręcznie: ilość jest ustawiana ręcznie na linii\n"
-"- Analityczne z wydatków: ilość jest sumą ilości z zaksięgowanych wydatków\n"
-"- Z karty pracy: ilość jest sumą godzin zarejestrowanych na zadaniach powiązanych z tą linią sprzedaży\n"
-"- Przesunięcia zasobów: ilość pochodzi z potwierdzonych pobrań\n"
+"- Ręcznie: ilość jest ustawiana ręcznie przy pozycji\n"
+"- Analitycznie z wydatków: ilość jest sumą ilości z zaksięgowanych wydatków\n"
+"- Czas pracy: ilość jest sumą godzin zarejestrowanych na zadaniach powiązanych z tą linią sprzedaży\n"
+"- Ruchy magazynowe: ilość pochodzi z potwierdzonych kompletacji\n"
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 msgid "All planned operations included"
-msgstr "Wszystkie zaplanowane operacje obejmowały"
+msgstr "Wszystkie zaplanowane operacje włącznie"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Apply specific routes"
-msgstr "Zastosuj określone trasy"
+msgstr "Zastosuj konkretne trasy"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__direct
 msgid "As soon as possible"
-msgstr "Jak najszybciej to możliwe"
+msgstr "Najszybciej jak to możliwe"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -150,6 +154,9 @@ msgid ""
 "            Orange: Partially Delivered\n"
 "            Green: Fully Delivered"
 msgstr ""
+"Niebieski: Niedostarczone/Rozpoczęte\n"
+"            Pomarańczowy: Częściowo dostarczone\n"
+"            Zielony: W pełni dostarczone"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -215,7 +222,7 @@ msgid ""
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
 "Termin dostawy, który możesz obiecać klientowi, obliczony z minimalnego "
-"czasu realizacji linii zamówienia w przypadku produktów usługowych. W "
+"czasu realizacji pozycji zamówienia w przypadku produktów usługowych. W "
 "przypadku wysyłki, polityka wysyłkowa zamówienia zostanie wzięta pod uwagę, "
 "aby wykorzystać minimalny lub maksymalny czas realizacji linii zamówienia."
 
@@ -313,12 +320,12 @@ msgstr "Darmowa ilość dzisiaj"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__full
 msgid "Fully Delivered"
-msgstr "W pełni dostarczony"
+msgstr "W pełni dostarczone"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
 msgid "Has late picking"
-msgstr "Ma późne zbieranie"
+msgstr "Ma późną kompletację"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_move__id
@@ -417,7 +424,7 @@ msgstr "Zapis dziennika"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_move_line
 msgid "Journal Item"
-msgstr "Pozycja zapisu"
+msgstr "Pozycja dziennika"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -476,7 +483,7 @@ msgstr "Przenieś oczekiwane terminy dostawy o"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
 msgid "No delivery yet! Automate them with sales orders."
-msgstr ""
+msgstr "Nie ma żadnych zamówień! Zautomatyzuj je z zamówieniami sprzedaży."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -516,7 +523,7 @@ msgstr "Częściowo dostarczone"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
 msgid "Picking Policy"
-msgstr "Polityka kompletacji"
+msgstr "Zasady kompletacji"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_procurement_group
@@ -561,6 +568,8 @@ msgid ""
 "Reduce back orders with reservations, locations management, smart\n"
 "                replenishment propositions, shipping connectors, barcode scanner, etc."
 msgstr ""
+"Zredukuj ilość oczekujących zamówień dzięki rezerwacjom, zarządzaniem lokalizacjami, inteligentnymi\n"
+"                propozycjami uzupełniania zapasów, kurierami, skanerem kodów kreskowych itp."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -695,18 +704,18 @@ msgstr "Zasady wysyłki"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__started
 msgid "Started"
-msgstr ""
+msgstr "Rozpoczęte"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
 msgid "Stock Move"
-msgstr "Przesunięcie"
+msgstr "Ruch magazynowy"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__move_ids
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order_line__qty_delivered_method__stock_move
 msgid "Stock Moves"
-msgstr "Przesunięcia"
+msgstr "Ruchy magazynowe"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_forecasted_product_product
@@ -742,6 +751,9 @@ msgid ""
 "                        From <strong>\"%(old_address)s\"</strong> to <strong>\"%(new_address)s\"</strong>,\n"
 "                        You should probably update the partner on this document."
 msgstr ""
+"Adres dostawy został zmieniony na Zamówieniu Sprzedaży<br/>\n"
+"                        Z <strong>\"%(old_address)s\"</strong> na <strong>\"%(new_address)s\"</strong>,\n"
+"                        Prawdopodobnie powinieneś zaktualizować partnera w tym dokumencie."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -773,7 +785,7 @@ msgstr "Produkt ten jest uzupełniany na żądanie."
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_storable
 msgid "Track Inventory"
-msgstr ""
+msgstr "Śledź magazyn"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -830,12 +842,13 @@ msgstr "Kiedy rozpocząć wysyłkę"
 msgid ""
 "You must have a warehouse for line using a delivery in different company."
 msgstr ""
+"Musisz mieć magazyn dla pozycji korzystającej z dostawy w innej firmie."
 
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/models/sale_order.py:0
 msgid "You must set a warehouse on your sale order to proceed."
-msgstr ""
+msgstr "Musisz ustawić magazyn na zamówieniu sprzedaży, aby kontynuować."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so

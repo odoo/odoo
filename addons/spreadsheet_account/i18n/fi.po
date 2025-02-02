@@ -3,8 +3,8 @@
 # 	* spreadsheet_account
 # 
 # Translators:
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # Wil Odoo, 2025
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,9 +43,11 @@ msgstr "Tili"
 
 #. module: spreadsheet_account
 #. odoo-javascript
+#. odoo-python
 #: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
-msgid "Bank and Cash"
-msgstr "Käteisvarat (pankki, käteinen)"
+#: code:addons/spreadsheet_account/models/account.py:0
+msgid "Cell Audit"
+msgstr "Solun auditointi"
 
 #. module: spreadsheet_account
 #: model:ir.model,name:spreadsheet_account.model_res_company
@@ -143,10 +145,23 @@ msgid "Income"
 msgstr "Tulo"
 
 #. module: spreadsheet_account
-#. odoo-python
-#: code:addons/spreadsheet_account/models/account.py:0
-msgid "Journal items for account prefix %s"
-msgstr "Tilin etuliitteen %s"
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "Offset applied to the years."
+msgstr "Vuosiin sovellettava poikkeama."
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "Return the partner balance for the specified account(s) and period"
+msgstr ""
+"Palauttaa kumppanin saldon määritellyltä tililtä (tililtä) ja ajanjaksolta"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "Return the residual amount for the specified account(s) and period"
+msgstr "Palauttaa määritetyn tilin (tilien) ja ajanjakson jäännösmäärän"
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -226,6 +241,12 @@ msgstr ""
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/plugins/accounting_plugin.js:0
+msgid "The balance for given partners could not be computed."
+msgstr "Tiettyjen kumppaneiden saldoa ei voitu laskea."
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/plugins/accounting_plugin.js:0
 msgid "The company fiscal year could not be found."
 msgstr "Yrityksen verovuotta ei löytynyt."
 
@@ -266,6 +287,12 @@ msgstr "Päivä, josta verovuoden alku otetaan."
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "The partner ids (separated by a comma)."
+msgstr "Kumppaneiden tunnukset (pilkulla erotettuna)."
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 msgid "The prefix of the accounts."
 msgstr "Tilien etuliite."
 
@@ -278,5 +305,15 @@ msgstr "Teknisen tilin tyyppi (mahdolliset arvot: %s)."
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-msgid "Year offset applied to date_range."
-msgstr "Päiväysalueeseen sovellettava vuoden siirtymä."
+msgid ""
+"The prefix of the accounts. If none provided, all receivable and payable "
+"accounts will be used."
+msgstr ""
+"Tilien etuliite. Jos etuliitettä ei ole annettu, käytetään kaikkia saamis- "
+"ja velkatilejä."
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/plugins/accounting_plugin.js:0
+msgid "The residual amount for given accounts could not be computed."
+msgstr "Tiettyjen tilien jäännösmäärää ei voitu laskea."

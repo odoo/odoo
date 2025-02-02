@@ -3,8 +3,8 @@
 # 	* sale_loyalty
 # 
 # Translators:
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # Wil Odoo, 2025
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,6 +25,7 @@ msgstr ""
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid " - On products with the following taxes: %(taxes)s"
 msgstr ""
+"Alennus: %(percent)s%%- Tuotteista, joissa on seuraavat verot %(taxes)s"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
@@ -34,7 +35,7 @@ msgstr "<span class=\"fa fa-clipboard\"/> Kopioi"
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
 msgid "<strong>Loyalty Card</strong>"
-msgstr ""
+msgstr "<strong>Kanta-asiakaskortti</strong>"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -127,7 +128,7 @@ msgstr "Hylkää"
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "Discount %(desc)s%(tax_str)s"
-msgstr ""
+msgstr "Alennus %(desc)s%(tax_str)s"
 
 #. module: sale_loyalty
 #: model:ir.ui.menu,name:sale_loyalty.menu_discount_loyalty_type_config
@@ -239,7 +240,7 @@ msgstr "Myönnetty"
 #. odoo-javascript
 #: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
 msgid "Issued :"
-msgstr ""
+msgstr "Myönnetty"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__write_uid
@@ -259,7 +260,7 @@ msgstr "Viimeksi päivitetty"
 #. odoo-javascript
 #: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
 msgid "Loyalty Card :"
-msgstr ""
+msgstr "Kanta-asiakaskortti :"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_card
@@ -269,7 +270,7 @@ msgstr "Kanta-asiakkuuden kuponki"
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__loyalty_data
 msgid "Loyalty Data"
-msgstr ""
+msgstr "Kanta-asiakastiedot"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_loyalty_program
@@ -519,12 +520,14 @@ msgid ""
 "This discount (%(discount)s) is not compatible with \"%(other_discount)s\". "
 "Please remove it in order to apply this one."
 msgstr ""
+"Tämä alennus (%(discount)s) ei ole yhteensopiva \"%(other_discount)s\" "
+"kanssa. Poista se, jotta voit soveltaa tätä."
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "This program cannot be applied with code."
-msgstr ""
+msgstr "Tätä ohjelmaa ei voi soveltaa koodilla."
 
 #. module: sale_loyalty
 #. odoo-python
@@ -565,7 +568,7 @@ msgstr "Käytetty"
 #. odoo-javascript
 #: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
 msgid "Used :"
-msgstr ""
+msgstr "Käytetty :"
 
 #. module: sale_loyalty
 #. odoo-python

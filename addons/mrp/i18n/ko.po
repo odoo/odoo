@@ -3,8 +3,8 @@
 # 	* mrp
 # 
 # Translators:
-# Daye Jeong, 2025
 # Wil Odoo, 2025
+# Daye Jeong, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Daye Jeong, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -91,7 +91,7 @@ msgstr "# 자재명세서 사용처"
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 msgid "%(display_name)s"
-msgstr ""
+msgstr "%(display_name)s"
 
 #. module: mrp
 #. odoo-python
@@ -1367,6 +1367,15 @@ msgid "Change Quantity To Produce"
 msgstr "생산량 변경"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"Changing the product or variant will permanently reset all previously "
+"encoded variant-related data."
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Check availability"
@@ -1905,6 +1914,8 @@ msgid ""
 " be multiplied by two. However, note that both time before and after "
 "production will only be counted once."
 msgstr ""
+"이 작업장에서 병렬로 (동시에) 생산할 수 있는 기본 수량 (품목별 단위 기준)입니다. 예를 들어 작업장별로 5개를 생산할 수 있고 총 "
+"10개를 생산해야 하는 경우라면 자재명세서에 표시된 작업 시간에 2를 곱하게 됩니다. 단, 생산 전후 시간은 모두 한 번만 계산됩니다."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_consumption_warning_line__product_uom_id
@@ -6692,7 +6703,7 @@ msgstr "취소되거나 완료된 제조 주문은 이동할 수 없습니다."
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "You cannot produce more than 1 unit of a serial product at a time."
-msgstr ""
+msgstr "일련번호가 있는 제품의 경우 한 번에 하나만 생산할 수 있습니다."
 
 #. module: mrp
 #. odoo-python

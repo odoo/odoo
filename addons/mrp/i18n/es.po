@@ -91,7 +91,7 @@ msgstr "# de LdM donde son usados"
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 msgid "%(display_name)s"
-msgstr ""
+msgstr "%(display_name)s"
 
 #. module: mrp
 #. odoo-python
@@ -771,7 +771,7 @@ msgstr "Permitido"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__allowed_uom_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "UdM permitida"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reserve_visible
@@ -1395,6 +1395,15 @@ msgid "Change Quantity To Produce"
 msgstr "Cambiar cantidad a producir"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"Changing the product or variant will permanently reset all previously "
+"encoded variant-related data."
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Check availability"
@@ -1945,6 +1954,12 @@ msgid ""
 " be multiplied by two. However, note that both time before and after "
 "production will only be counted once."
 msgstr ""
+"Número de piezas (en la unidad del producto) que se pueden producir en "
+"paralelo (al mismo tiempo) en este centro de trabajo. Por ejemplo: la "
+"capacidad es de 5 y necesita producir 10 unidades, por lo que el tiempo de "
+"operación que se indica en la LdM se multiplicará por dos. Sin embargo, "
+"tenga en cuenta que tanto el tiempo anterior como posterior a la producción "
+"solo se contarán una vez."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_consumption_warning_line__product_uom_id
@@ -4529,7 +4544,7 @@ msgstr "Plantilla de producto"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__product_uom_id
 msgid "Product Unit"
-msgstr ""
+msgstr "Unidad del producto"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product

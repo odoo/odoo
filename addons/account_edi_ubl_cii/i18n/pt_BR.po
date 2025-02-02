@@ -3,8 +3,8 @@
 # 	* account_edi_ubl_cii
 # 
 # Translators:
-# Wil Odoo, 2024
 # Maitê Dietze, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-24 15:31+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
-"Last-Translator: Maitê Dietze, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -192,6 +192,12 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 msgid "Conditional cash/payment discount"
 msgstr "Desconto condicional de pagamento à vista"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
+msgid "Configure"
+msgstr "Configurar"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_res_partner
@@ -583,6 +589,12 @@ msgid "Malta VAT - 9943"
 msgstr "Malta VAT - 9943"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
+msgid "Missing partner(s) VAT or Peppol Address"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9940
 msgid "Monaco VAT - 9940"
 msgstr "Monaco VAT - 9940"
@@ -661,12 +673,8 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
-msgid ""
-"Please fill in Peppol EAS and Peppol Endpoint in your company form to "
-"generate a complete file."
+msgid "Please configure your company to generate a complete XML file."
 msgstr ""
-"Preencha o Peppol EAS e o Peppol Endpoint no formulário da sua empresa para "
-"gerar um arquivo completo."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9945
@@ -849,16 +857,6 @@ msgstr ""
 "revertidas."
 
 #. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
-msgid ""
-"These partners are missing Peppol Address. Please check those in their "
-"Accounting tab. Otherwise, the generated files will be incomplete."
-msgstr ""
-"These partners are missing Peppol Address. Please check those in their "
-"Accounting tab. Otherwise, the generated files will be incomplete."
-
-#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9952
 msgid "Turkey VAT - 9952"
 msgstr "Turkey VAT - 9952"
@@ -913,12 +911,6 @@ msgstr "United Kingdom VAT - 9932"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9953
 msgid "Vatican VAT - 9953"
 msgstr "Vatican VAT - 9953"
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
-msgid "View Company"
-msgstr "Ver empresa"
 
 #. module: account_edi_ubl_cii
 #. odoo-python

@@ -3,9 +3,9 @@
 # 	* point_of_sale
 # 
 # Translators:
+# Wil Odoo, 2025
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
 # Fernanda Alvarez, 2025
-# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-20 08:40+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Fernanda Alvarez, 2025\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -115,6 +115,12 @@ msgstr "%(product_name)s: Cantidad ordenada: %(old_qty)s"
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "%(refunded_order)s REFUND"
 msgstr "REEMBOLSO DE %(refunded_order)s"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
+msgid "%(vatLabel)s: %(vatId)s"
+msgstr "%(vatLabel)s: %(vatId)s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -911,6 +917,8 @@ msgid ""
 "An error occurred while closing the session. Unsynced orders will be "
 "available in the next session. The page will be reloaded."
 msgstr ""
+"Ocurrió un error al cerrar la sesión. Las órdenes que no están sincronizadas"
+" estarán disponibles en la próxima sesión. La página se volverá a cargar."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1338,7 +1346,7 @@ msgstr "CAMBIO"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
 msgid "CUSTOMER NOTE"
-msgstr ""
+msgstr "NOTA DEL CLIENTE"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1707,6 +1715,8 @@ msgstr "Indique si quiere que este producto aparezca en el punto de venta."
 msgid ""
 "Check if you want to group products of this unit in point of sale orders"
 msgstr ""
+"Indique si desea agrupar los productos de esta unidad en las órdenes del "
+"punto de venta"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__cash_control
@@ -1760,7 +1770,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.xml:0
 msgid "Choose customer"
-msgstr ""
+msgstr "Elija un cliente"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_ticket_portal_url_display_mode
@@ -2415,7 +2425,7 @@ msgstr "Clientes"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
 msgid "DUPLICATA !"
-msgstr ""
+msgstr "DUPLICADO"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3521,7 +3531,7 @@ msgstr "ID"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
 msgid "INTERNAL NOTE"
-msgstr ""
+msgstr "NOTA INTERNA"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__proxy_ip
@@ -4094,7 +4104,7 @@ msgstr "Número de línea"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_uom
 msgid "Link between products and their UoMs"
-msgstr ""
+msgstr "Enlace entre los productos y sus unidades de medida"
 
 #. module: point_of_sale
 #. odoo-python
@@ -4376,7 +4386,7 @@ msgstr "NUEVO"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "NOTE UPDATE"
-msgstr ""
+msgstr "ACTUALIZACIÓN DE NOTA"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__name
@@ -4547,7 +4557,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.xml:0
 msgid "No customers found, press enter to load more."
-msgstr ""
+msgstr "No se encontraron clientes, presione la tecla \"entrar\" para cargar más."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_sale_graph
@@ -4675,7 +4685,7 @@ msgstr "Notas"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Number by page"
-msgstr ""
+msgstr "Número por página"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_needaction_counter
@@ -5449,7 +5459,7 @@ msgstr "Confirme el importe grande"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Please add a valid customer to the order."
-msgstr ""
+msgstr "Agregue un cliente válido a la orden."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5994,7 +6004,7 @@ msgstr "Precio adicional"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "Price incl. Tax:"
-msgstr ""
+msgstr "Precio con impuestos:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6290,7 +6300,7 @@ msgstr "Valor del atributo del modelo de producto"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__product_uom_id
 msgid "Product Unit"
-msgstr ""
+msgstr "Unidad del producto"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_uom_uom
@@ -6946,7 +6956,7 @@ msgstr "Buscar órdenes..."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/search_bar/search_bar.xml:0
 msgid "Search Products"
-msgstr ""
+msgstr "Buscar productos"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
@@ -6999,7 +7009,7 @@ msgstr "Seleccionar un ajuste preestablecido"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Select an order"
-msgstr ""
+msgstr "Seleccione una orden"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7671,6 +7681,12 @@ msgid "Tax Group"
 msgstr "Grupo de impuestos"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
+msgid "Tax ID: %(vatId)s"
+msgstr "Número de identificación fiscal: %(vatId)s"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_subtotal_incl
 msgid "Tax Incl."
 msgstr "Impuestos incl."
@@ -8117,7 +8133,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid ""
 "The session is being closed by another user. The page will be reloaded."
-msgstr ""
+msgstr "Otro usuario está cerrando la sesión. La página se volverá a cargar."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8132,6 +8148,8 @@ msgid ""
 "The tip has been added to the order. However,the selected payment line does "
 "not allow tips to be added."
 msgstr ""
+"Agregó la propina a la orden, pero la línea de pago seleccionada no permite "
+"agregar propinas."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_adyen
@@ -8632,13 +8650,13 @@ msgstr "Precio total sin impuestos:"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "Total Price incl. Tax:"
-msgstr ""
+msgstr "Precio total con impuestos:"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "Total VAT:"
-msgstr ""
+msgstr "IVA total:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__amount

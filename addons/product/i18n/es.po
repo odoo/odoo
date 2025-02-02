@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2025
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2025
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2025\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -112,7 +113,7 @@ msgstr "'Etiquetas de Productos - %s' % (object.name)"
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_packaging
 msgid "'Products packaging - %s' % (object.name)"
-msgstr "'Empaquetados de productos - %s' % (object.name)"
+msgstr "'Embalaje de productos - %s' % (object.name)"
 
 #. module: product
 #. odoo-python
@@ -269,7 +270,7 @@ msgstr "<span class=\"o_stat_text\"> Productos</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.uom_uom_form_view_inherit
 msgid "<span class=\"o_stat_text\">Barcodes</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Códigos de barra</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -324,7 +325,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_uom_barcode_uniq
 msgid "A barcode can only be assigned to one packaging."
-msgstr "Solo se puede asignar un código de barras a un empaquetado."
+msgstr "Solo se puede asignar un código de barras a un embalaje."
 
 #. module: product
 #. odoo-python
@@ -369,7 +370,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 msgid "A packaging already uses the barcode"
-msgstr "Un empaquetado ya usa este código de barras"
+msgstr "Un embalaje ya usa este código de barras"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -914,7 +915,7 @@ msgstr "Precio de la combinación"
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "Combo products can't have attributes."
-msgstr ""
+msgstr "Los productos de combinación no pueden incluir atributos."
 
 #. module: product
 #. odoo-python
@@ -1886,7 +1887,7 @@ msgstr "Inventario"
 #: model:ir.model.fields,field_description:product.field_product_product__is_dynamically_created
 #: model:ir.model.fields,field_description:product.field_product_template__is_dynamically_created
 msgid "Is Dynamically Created"
-msgstr ""
+msgstr "Se creó dinámicamente"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__message_is_follower
@@ -2017,7 +2018,7 @@ msgstr "Líneas"
 #. module: product
 #: model:ir.model,name:product.model_product_uom
 msgid "Link between products and their UoMs"
-msgstr ""
+msgstr "Enlace entre productos y sus UdM"
 
 #. module: product
 #: model:product.template,name:product.product_product_local_delivery_product_template
@@ -2380,24 +2381,24 @@ msgstr "Tipo de paquete A"
 #: model:ir.model.fields,field_description:product.field_uom_uom__packaging_barcodes_count
 #: model_terms:ir.ui.view,arch_db:product.product_uom_list_view
 msgid "Packaging Barcodes"
-msgstr ""
+msgstr "Códigos de barras de embalaje"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_packaging
 msgid "Packaging Barcodes (PDF)"
-msgstr ""
+msgstr "Códigos de barras de embalaje (PDF)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__uom_ids
 #: model:ir.model.fields,field_description:product.field_product_template__uom_ids
 msgid "Packagings"
-msgstr "Empaquetados"
+msgstr "Embalajes"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__uom_ids
 #: model:ir.model.fields,help:product.field_product_template__uom_ids
 msgid "Packagings which can be used for sales"
-msgstr ""
+msgstr "Embalajes que pueden utilizarse para las ventas"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_id
@@ -3428,6 +3429,10 @@ msgid ""
 " a vendor unit is set, quantity should be specified in this unit, otherwise "
 "it should be specified in the default unit of the product."
 msgstr ""
+"La cantidad a comprar de este proveedor para beneficiarse del precio "
+"unitario. Si define una unidad de proveedor deberá especificar la cantidad "
+"en la misma; de lo contrario, deberá especificarla en la unidad por defecto "
+"del producto."
 
 #. module: product
 #. odoo-python
@@ -3507,6 +3512,8 @@ msgstr "Esta nota es solo para fines internos."
 msgid ""
 "This product is part of a combo, so its type can't be changed to \"combo\"."
 msgstr ""
+"Este producto forma parte de una combinación, así que no puede cambiar su "
+"tipo a “combinación”."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
@@ -3577,7 +3584,7 @@ msgstr "Unidad"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_uom_ids
 msgid "Unit Barcode"
-msgstr ""
+msgstr "Código de barras de la unidad"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_uom_name
@@ -3611,7 +3618,7 @@ msgstr "Unidades de medida"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_uom
 msgid "Units of Measure & Packagings"
-msgstr ""
+msgstr "Unidades de medida y embalajes"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -3679,7 +3686,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_res_partner__property_product_pricelist
 #: model:ir.model.fields,help:product.field_res_users__property_product_pricelist
 msgid "Used for sales to the current partner"
-msgstr ""
+msgstr "Utilizado para las ventas al contacto actual"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
