@@ -11,7 +11,7 @@
 # david danilov, 2022
 # Jonathan Spier, 2022
 # Mor Kir <morki@013.net.il>, 2022
-# hed shefer <hed@laylinetech.com>, 2022
+# Hed Shefer <hed@laylinetech.com>, 2022
 # Ofir Blum <ofir.blum@gmail.com>, 2022
 # שהאב חוסיין <shhab89@gmail.com>, 2022
 # Roy Sayag, 2023
@@ -28,6 +28,7 @@
 # Netta Waizer, 2024
 # yael terner, 2024
 # Ha Ketem <haketem@gmail.com>, 2024
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
@@ -35,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Ha Ketem <haketem@gmail.com>, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27816,8 +27817,11 @@ msgstr "שלח את החבילות שלך דרך UPS ולעקוב אחריהם �
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_usps
-msgid "Send your shippings through USPS and track them online"
-msgstr "שלח את החבילות שלך דרך USPS ולעקוב אחריהם באינטרנט"
+msgid ""
+"This is the legacy integration with USPS. Please install the new \"United "
+"States Postal Service (USPS) Shipping\" module and uninstall this one as "
+"soon as possible."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_survey
@@ -31434,8 +31438,8 @@ msgstr "ארצות הברית - הנהלת חשבונות"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_usps
-msgid "United States Postal Service (USPS) Shipping"
-msgstr "שירות הדואר בארה\"ב (USPS) משלוח"
+msgid "United States Postal Service (USPS) Shipping (Legacy)"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_uom
@@ -32022,7 +32026,7 @@ msgstr "ערך"
 #: code:addons/base/models/ir_fields.py:0
 #, python-format
 msgid "Value '%s' not found in selection field '%%(field)s'"
-msgstr "ערך '%s' לא נמצא בשדה הבחירה '%%'שדה(ות)"
+msgstr "ערך '%s' לא נמצא בשדה הבחירה '%%(field)s'"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property__value_binary
@@ -33635,13 +33639,6 @@ msgstr "mail_bot_hr"
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2many
 msgid "many2many"
 msgstr "רבים לרבים"
-
-#. module: base
-#. odoo-python
-#: code:addons/base/models/ir_actions.py:0
-#, python-format
-msgid "many2many fields cannot be evaluated by reference"
-msgstr "לא ניתן להעריך שדות רבים2רבים באמצעות הפניה"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2one
