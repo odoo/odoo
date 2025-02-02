@@ -5,7 +5,7 @@
 # Translators:
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2024
 # Wil Odoo, 2024
-# Junko Augias, 2024
+# Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Junko Augias, 2024\n"
+"Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2669,6 +2669,14 @@ msgstr "只今"
 
 #. module: hr_holidays
 #. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"Only %s's Time Off Approver, a time off Officer/Responsible or Administrator"
+" can approve or refuse allocation requests."
+msgstr "%s の休暇承認者、休暇担当/責任者、または管理者のみが、休暇割当要求を承認または拒否できます。"
+
+#. module: hr_holidays
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Manager can reset a refused leave."
 msgstr "否認された休暇をリセットできるのは、タイムオフマネージャーのみです。"
@@ -2701,16 +2709,16 @@ msgstr "取消済休暇を変更できるのはマネジャーのみです。"
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid "Only a time off Manager can approve its own requests."
-msgstr "休暇管理者のみが自身の申請を承認できます。"
+msgid "Only a time off Administrator can approve their own requests."
+msgstr "管理者だけが、自分の申請を承認できます。"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"Only a time off Officer/Responsible or Manager can approve or refuse time "
-"off requests."
-msgstr "休暇の要求を承認または否認できるのは、休暇担当者/責任者またはマネージャーのみです。"
+"Only a time off Officer/Responsible or Administrator can approve or refuse "
+"allocation requests."
+msgstr "管理責任者または管理者のみが、休暇割当申請を承認または拒否することができます。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4290,6 +4298,14 @@ msgstr "休暇申請時に2回目の承認を申請する権利がありませ�
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You must be %s's Manager to approve this leave"
 msgstr "この休暇の承認には%sのマネジャーである必要があります。"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"You must be either %s's Time Off Approver or Time off Administrator to "
+"validate this allocation request."
+msgstr "この休暇割当申請を検証するには、%s の休暇承認者または休暇管理者のいずれかである必要があります。"
 
 #. module: hr_holidays
 #. odoo-python

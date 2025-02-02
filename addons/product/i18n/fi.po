@@ -27,22 +27,22 @@
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2024
 # Timo Koukkari <ti.ko@netikka.fi>, 2024
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2024
 # Svante <svante@svante.fi>, 2024
 # Antti Oksman <antti.oksman@web-veistamo.fi>, 2024
 # Camille Dantinne <cmd@odoo.com>, 2024
 # Jessica Jakara, 2024
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # Martin Trigaux, 2024
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2025
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:40+0000\n"
+"POT-Creation-Date: 2025-01-27 13:04+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -934,8 +934,8 @@ msgstr "Yhdistelmähinta"
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
-msgid "Combo products can't have attributes"
-msgstr "Yhdistelmällä ei voi olla attribuutteja"
+msgid "Combo products can't have attributes."
+msgstr "Yhdistelmätuotteilla ei voi olla attribuutteja"
 
 #. module: product
 #. odoo-python
@@ -1024,7 +1024,7 @@ msgstr "Sisältää määrän"
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_packaging_positive_qty
 msgid "Contained Quantity should be positive."
-msgstr "Sisältyvän määrän olisi oltava positiivinen."
+msgstr "Sisältyvän määrän on oltava positiivinen."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
@@ -1433,7 +1433,7 @@ msgstr "Dynaamisesti"
 #: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
 msgid "Each value should be defined only once per attribute per product."
 msgstr ""
-"Kukin arvo olisi määriteltävä vain kerran attribuuttia ja tuotetta kohti."
+"Kukin arvo on määriteltävä vain kerran attribuuttia ja tuotetta kohti."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -3436,7 +3436,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "The minimum margin should be lower than the maximum margin."
-msgstr "Vähimmäismarginaalin olisi oltava pienempi kuin enimmäismarginaali."
+msgstr "Vähimmäismarginaalin on oltava pienempi kuin enimmäismarginaali."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_combo__base_price
@@ -3576,6 +3576,15 @@ msgid ""
 msgstr ""
 "Tätä hintalistaa käytetään oletusarvon sijasta myyntiin nykyiselle "
 "yhteistyökumppanille"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+msgid ""
+"This product is part of a combo, so its type can't be changed to \"combo\"."
+msgstr ""
+"Tämä tuote on osa yhdistelmää, joten sen tyyppiä ei voi muuttaa muotoon "
+"\"yhdistelmä\"."
 
 #. module: product
 #. odoo-python

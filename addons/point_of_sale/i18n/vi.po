@@ -6,8 +6,8 @@
 # Nancy Momoland <thanh.np2502@gmail.com>, 2024
 # Vo Thanh Thuy, 2024
 # Tiffany Chang, 2024
-# Wil Odoo, 2024
 # Thi Huong Nguyen, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 13:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -97,6 +97,12 @@ msgstr "ĐƠN HOÀN TIỀN %(refunded_order)s "
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
+msgid "%(vatLabel)s: %(vatId)s"
+msgstr "%(vatLabel)s: %(vatId)s"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.js:0
 msgid "%s customer(s) found for \"%s\"."
 msgstr "%s khách hàng được tìm thấy cho \"%s\"."
@@ -142,12 +148,6 @@ msgstr "(khi mở)"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "+ New Shop"
 msgstr "+ Cửa hàng mới"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
-msgid "/pos/ticket"
-msgstr "/pos/ticket"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -686,6 +686,12 @@ msgstr "Biểu tượng loại hoạt động"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/product_configurator_popup/product_configurator_popup.xml:0
+msgid "Add"
+msgstr "Thêm"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/customer_note_button/customer_note_button.js:0
 msgid "Add %s"
 msgstr "Thêm %s"
@@ -942,6 +948,14 @@ msgid ""
 msgstr ""
 "Đã xảy ra lỗi khi tải giá sản phẩm. Hãy đảm bảo tất cả bảng giá có sẵn trong"
 " POS."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
+msgid ""
+"An error occurred while closing the session. Unsynced orders will be "
+"available in the next session. The page will be reloaded."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1214,7 +1228,7 @@ msgstr "Dòng sao kê ngân hàng"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Bar"
-msgstr "Quán bar"
+msgstr "Bar"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1459,10 +1473,28 @@ msgid "Cash %(session_name)s"
 msgstr "Tiền mặt %(session_name)s"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Cash Bakery"
+msgstr "Tiền mặt Tiệm bánh"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Cash Clothes Shop"
+msgstr "Tiền mặt Cửa hàng quần áo"
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.xml:0
 msgid "Cash Count"
 msgstr "Đếm tiền mặt"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Cash Furn. Shop"
+msgstr "Tiền mặt Cửa hàng đồ nội thất"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1772,6 +1804,12 @@ msgstr ""
 "Thắt lưng da cổ điển, phụ kiện không thể thiếu trong tủ đồ của mọi người."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
+msgid "Clear Cache"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Click here to close the session"
@@ -1857,6 +1895,12 @@ msgstr "Ghi chú đóng"
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.xml:0
 msgid "Closing Register"
 msgstr "Đang đóng máy tính tiền"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
+msgid "Closing Session"
+msgstr "Đóng phiên"
 
 #. module: point_of_sale
 #. odoo-python
@@ -2921,6 +2965,7 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
 msgid "Error"
 msgstr "Lỗi"
 
@@ -2929,16 +2974,6 @@ msgstr "Lỗi"
 #: code:addons/point_of_sale/models/pos_category.py:0
 msgid "Error! You cannot create recursive categories."
 msgstr "Lỗi! Bạn không thể tạo danh mục lặp lại. "
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/customer_display/customer_display_data_service.js:0
-msgid ""
-"Error: %s.\n"
-"Make sure there is an IoT Box subscription associated with your Odoo database, then restart the IoT Box."
-msgstr ""
-"Lỗi: %s.\n"
-"Đảm bảo có đăng ký Hộp IoT được liên kết với cơ sở dữ liệu Odoo của bạn, sau đó khởi động lại Hộp IoT."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3150,16 +3185,16 @@ msgid "Full Product Name"
 msgstr "Tên sản phẩm đầy đủ"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_config.py:0
-msgid "Furniture Shop"
-msgstr "Cửa hàng nội thất"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Furniture"
 msgstr "Đồ nội thất"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Furniture Shop"
+msgstr "Cửa hàng nội thất"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3619,8 +3654,8 @@ msgstr "Địa chỉ IP của Hộp IoT"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/customer_display/customer_display_data_service.js:0
-msgid "IoT customer display error"
-msgstr "Lỗi màn hình cho khách hàng IoT"
+msgid "IoT Customer Display Error"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_is_follower
@@ -3933,6 +3968,7 @@ msgstr "Số trình tự đăng nhập"
 #: code:addons/point_of_sale/static/src/app/navbar/sale_details_button/sales_detail_report.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/login_screen/login_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.xml:0
+#: code:addons/point_of_sale/static/src/app/screens/saver_screen/saver_screen.xml:0
 msgid "Logo"
 msgstr "Logo"
 
@@ -3979,6 +4015,14 @@ msgstr ""
 " giá cho các khách hàng cụ thể từ biểu mẫu liên hệ của họ (trong tab Bán "
 "hàng). Để hợp lệ, bảng giá này phải được liệt kê ở đây dưới dạng bảng giá có"
 " sẵn. Nếu không, bảng giá mặc định sẽ được áp dụng."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/customer_display/customer_display_data_service.js:0
+msgid ""
+"Make sure there is an IoT Box subscription associated with your Odoo "
+"database, then restart the IoT Box."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4371,6 +4415,11 @@ msgid "Nomenclature"
 msgstr "Phép đặt tên"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
+msgid "Not Cancelled"
+msgstr "Không bị hủy"
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/report_sale_details.py:0
 msgid "Not Categorized"
@@ -4474,12 +4523,6 @@ msgstr "Đơn hàng offline"
 #: code:addons/point_of_sale/static/src/app/store/select_lot_popup/select_lot_popup.xml:0
 msgid "Ok"
 msgstr "Ok"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/store/product_configurator_popup/product_configurator_popup.xml:0
-msgid "Add"
-msgstr "Thêm"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4723,7 +4766,7 @@ msgid ""
 "Order Printers are used by restaurants and bars to print the\n"
 "            order updates in the kitchen/bar when the waiter updates the order."
 msgstr ""
-"Máy in đơn hàng được nhà hàng và quán bar sử dụng để in\n"
+"Máy in đơn hàng được nhà hàng và bar sử dụng để in\n"
 "                thông tin cập nhật đơn hàng trong bếp/quầy bar khi nhân viên phục vụ bàn cập nhật đơn hàng. "
 
 #. module: point_of_sale
@@ -7334,6 +7377,12 @@ msgid "Tax Group"
 msgstr "Nhóm thuế"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
+msgid "Tax ID: %(vatId)s"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_subtotal_incl
 msgid "Tax Incl."
 msgstr "Bao gồm thuế"
@@ -7745,6 +7794,13 @@ msgid ""
 "The session has been opened for an unusually long period. Please consider "
 "closing."
 msgstr "Phiên đã mở trong thời gian dài bất thường. Hãy cân nhắc đóng phiên. "
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
+msgid ""
+"The session is being closed by another user. The page will be reloaded."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_adyen

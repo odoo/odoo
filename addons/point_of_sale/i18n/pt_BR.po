@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2024
-# Wil Odoo, 2024
+# Wil Odoo, 2025
 # Maitê Dietze, 2025
 # 
 msgid ""
@@ -96,6 +96,12 @@ msgstr "%(refunded_order)s REEMBOLSO"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
+msgid "%(vatLabel)s: %(vatId)s"
+msgstr "%(vatLabel)s: %(vatId)s"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.js:0
 msgid "%s customer(s) found for \"%s\"."
 msgstr "%s cliente(s) encontrado(s) para \"%s”."
@@ -142,12 +148,6 @@ msgstr "(desde a abertura)"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "+ New Shop"
 msgstr "+ Nova loja"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
-msgid "/pos/ticket"
-msgstr "/pos/ticket"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -684,6 +684,12 @@ msgstr "Ícone do tipo de atividade"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/product_configurator_popup/product_configurator_popup.xml:0
+msgid "Add"
+msgstr "Adicionar"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/customer_note_button/customer_note_button.js:0
 msgid "Add %s"
 msgstr "Adicionar %s"
@@ -939,6 +945,16 @@ msgid ""
 msgstr ""
 "Houve um erro ao carregar os preços dos produtos. Certifique-se de que todas"
 " as listas de preços estão disponíveis no PDV."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
+msgid ""
+"An error occurred while closing the session. Unsynced orders will be "
+"available in the next session. The page will be reloaded."
+msgstr ""
+"An error occurred while closing the session. Unsynced orders will be "
+"available in the next session. The page will be reloaded."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1453,10 +1469,28 @@ msgid "Cash %(session_name)s"
 msgstr "Caixa %(session_name)s"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Cash Bakery"
+msgstr "Caixa - Padaria"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Cash Clothes Shop"
+msgstr "Caixa - Loja de roupas"
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.xml:0
 msgid "Cash Count"
 msgstr "Total em caixa"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Cash Furn. Shop"
+msgstr "Caixa - Loja de móveis"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1766,6 +1800,12 @@ msgstr ""
 "roupa."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
+msgid "Clear Cache"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Click here to close the session"
@@ -1851,6 +1891,12 @@ msgstr "Notas de fechamento"
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.xml:0
 msgid "Closing Register"
 msgstr "Fechando caixa registradora"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
+msgid "Closing Session"
+msgstr "Sessão de encerramento"
 
 #. module: point_of_sale
 #. odoo-python
@@ -2913,6 +2959,7 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
 msgid "Error"
 msgstr "Erro"
 
@@ -2921,16 +2968,6 @@ msgstr "Erro"
 #: code:addons/point_of_sale/models/pos_category.py:0
 msgid "Error! You cannot create recursive categories."
 msgstr "Erro: não é possível criar categorias recursivas."
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/customer_display/customer_display_data_service.js:0
-msgid ""
-"Error: %s.\n"
-"Make sure there is an IoT Box subscription associated with your Odoo database, then restart the IoT Box."
-msgstr ""
-"Erro: %s.\n"
-"Certifique-se de que haja uma assinatura da IoT Box associada à sua base de dados Odoo e, em seguida, reinicie a IoT Box."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3142,16 +3179,16 @@ msgid "Full Product Name"
 msgstr "Nome completo do produto"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_config.py:0
-msgid "Furniture Shop"
-msgstr "Loja de móveis"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Furniture"
 msgstr "Móveis"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "Furniture Shop"
+msgstr "Loja de móveis"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3610,8 +3647,8 @@ msgstr "Endereço IP de IoT Box"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/customer_display/customer_display_data_service.js:0
-msgid "IoT customer display error"
-msgstr "Erro de exibição do cliente da IoT"
+msgid "IoT Customer Display Error"
+msgstr "IoT Customer Display Error"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_is_follower
@@ -3926,6 +3963,7 @@ msgstr "Número de sequência do login"
 #: code:addons/point_of_sale/static/src/app/navbar/sale_details_button/sales_detail_report.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/login_screen/login_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.xml:0
+#: code:addons/point_of_sale/static/src/app/screens/saver_screen/saver_screen.xml:0
 msgid "Logo"
 msgstr "Logotipo"
 
@@ -3973,6 +4011,16 @@ msgstr ""
 "contato (na aba de vendas). Para ser válida, a lista de preços deve constar "
 "aqui como uma lista de preços disponível. Senão, a lista de preços padrão "
 "vigorará."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/customer_display/customer_display_data_service.js:0
+msgid ""
+"Make sure there is an IoT Box subscription associated with your Odoo "
+"database, then restart the IoT Box."
+msgstr ""
+"Make sure there is an IoT Box subscription associated with your Odoo "
+"database, then restart the IoT Box."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4368,6 +4416,11 @@ msgid "Nomenclature"
 msgstr "Nomenclatura"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
+msgid "Not Cancelled"
+msgstr "Não cancelado"
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/report_sale_details.py:0
 msgid "Not Categorized"
@@ -4470,12 +4523,6 @@ msgstr "Pedidos offline"
 #: code:addons/point_of_sale/static/src/app/store/select_lot_popup/select_lot_popup.xml:0
 msgid "Ok"
 msgstr "Ok"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/store/product_configurator_popup/product_configurator_popup.xml:0
-msgid "Add"
-msgstr "Adicionar"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7333,6 +7380,12 @@ msgid "Tax Group"
 msgstr "Grupo de impostos"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
+msgid "Tax ID: %(vatId)s"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_subtotal_incl
 msgid "Tax Incl."
 msgstr "Com impostos"
@@ -7752,6 +7805,14 @@ msgid ""
 msgstr ""
 "A sessão está aberta por um período mais longo que o habitual. Considere "
 "encerrá-la."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/pos_store.js:0
+msgid ""
+"The session is being closed by another user. The page will be reloaded."
+msgstr ""
+"The session is being closed by another user. The page will be reloaded."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_adyen
