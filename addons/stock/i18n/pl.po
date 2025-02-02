@@ -6510,7 +6510,7 @@ msgstr "Wydrukuj etykietę jako:"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Print on \"Put in Pack\""
-msgstr ""
+msgstr "Wydrukuj na \"Umieść w paczce\""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -9092,6 +9092,8 @@ msgid ""
 "The quantities selected do not all belong to the same location.\n"
 "                    You may not assign them a package without moving them to a common location."
 msgstr ""
+"Wybrane ilości nie należą do tej samej lokalizacji.\n"
+"                    Nie możesz przypisać im opakowania bez przemieszczania ich do wspólnej lokalizacji."
 
 #. module: stock
 #. odoo-python
@@ -9207,6 +9209,8 @@ msgid ""
 "There is nothing eligible to put in a pack. Either there are no quantities "
 "to put in a pack or all products are already in a pack."
 msgstr ""
+"Nie ma nic kwalifikującego się do umieszczenia w paczce. Albo nie ma ilości "
+"do umieszczenia w paczce, albo wszystkie produkty są już w paczce."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
@@ -9248,6 +9252,8 @@ msgid ""
 "This checkbox is just indicative, it doesn't validate or generate any "
 "product moves."
 msgstr ""
+"To pole wyboru ma charakter wyłącznie orientacyjny, nie zatwierdza ani nie "
+"generuje żadnych ruchów produktowych."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__name
@@ -9301,6 +9307,10 @@ msgid ""
 "quantity does not generate a backorder.Changing this quantity on assigned "
 "moves affects the product reservation, and should be done with care."
 msgstr ""
+"Jest to ilość produktu, która jest planowana do przemieszczenia. Obniżenie "
+"tej ilości nie generuje oczekującego zamówienia. Zmiana tej ilości w "
+"przypisanych ruchach wpływa na rezerwację produktu i powinna być wykonana "
+"ostrożnie."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__child_internal_location_ids
@@ -9459,6 +9469,10 @@ msgid ""
 "reference values or assign the existing reference sequence to this operation"
 " type."
 msgstr ""
+"Ten prefiks sekwencji jest już używany przez inny typ operacji. Zaleca się "
+"wybranie unikalnego prefiksu, aby uniknąć problemów i/lub powtórzonych "
+"wartości referencyjnych, lub przypisanie istniejącej sekwencji referencyjnej"
+" do tego typu operacji."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production

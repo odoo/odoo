@@ -77,7 +77,7 @@ msgstr "%(assigned)s лийдове разпределени между %(team_c
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "%(assigned)s leads allocated to %(team_name)s team."
-msgstr ""
+msgstr "%(assigned)s нови контакти, разпределени към  %(team_name)s екип."
 
 #. module: crm
 #. odoo-python
@@ -91,7 +91,7 @@ msgstr "%(attach_name)s (от %(lead_name)s)"
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "%(duplicates)s duplicates leads have been merged."
-msgstr ""
+msgstr "%(duplicates)s дублираните нови контакти са обединени."
 
 #. module: crm
 #. odoo-python
@@ -100,6 +100,8 @@ msgstr ""
 msgid ""
 "%(members_assigned)s leads assigned among %(member_count)s salespersons."
 msgstr ""
+"%(members_assigned)s нови контакти, разпределени между %(member_count)s "
+"търговците."
 
 #. module: crm
 #. odoo-python
@@ -1599,11 +1601,15 @@ msgstr "Бъдещи дейности"
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_iap_mine
 msgid "Generate new leads based on their country, industries, size, etc."
 msgstr ""
+"Генерирайте нови потенциални клиенти въз основа на тяхната страна, "
+"индустрии, размер и т.н."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Generate new leads based on their country, industry, size, etc."
 msgstr ""
+"Генерирайте нови потенциални клиенти въз основа на тяхната страна, "
+"индустрии, размер и т.н."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_lost
@@ -2014,7 +2020,7 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Lead or Opportunity"
-msgstr ""
+msgstr "Потенциален клиент или възможност"
 
 #. module: crm
 #. odoo-python
@@ -2033,7 +2039,7 @@ msgstr "Лийд / Възможност"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_create
 msgid "Lead/Opportunity created"
-msgstr ""
+msgstr "Потенциален клиент/Възможност е създаден"
 
 #. module: crm
 #. odoo-python
@@ -2058,7 +2064,7 @@ msgstr "Лийдове"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__lead_month_count
 msgid "Leads (30 days)"
-msgstr ""
+msgstr "Потенциални клиенти (30 дни)"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_report_crm_lead_salesteam
@@ -2091,7 +2097,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason__leads_count
 msgid "Leads Count"
-msgstr ""
+msgstr "Брой потенциални клиенти"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_calendar_view_leads
@@ -2107,7 +2113,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_activity
 msgid "Leads or Opportunities"
-msgstr ""
+msgstr "Потенциални клиенти или възможности"
 
 #. module: crm
 #. odoo-python
@@ -2127,7 +2133,7 @@ msgstr "Лийдове, разпределени към мен"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that are not assigned"
-msgstr ""
+msgstr "Потенциални клиенти, които не са разпределени"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -2151,21 +2157,21 @@ msgstr "Лийдове/Възможности"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_utm_campaign__crm_lead_count
 msgid "Leads/Opportunities count"
-msgstr ""
+msgstr "Брой потенциални клиенти/възможности"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Let's <b>Schedule an Activity.</b>"
-msgstr ""
+msgstr "Нека <b>планираме дейност.</b>"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Let’s have a look at an Opportunity."
-msgstr ""
+msgstr "Нека разгледаме една възможност."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__action__exist
@@ -2228,7 +2234,7 @@ msgstr "Изгубена бройка"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "Lost Lead"
-msgstr ""
+msgstr "Загубен потенциален клиент"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lost_reason_id
@@ -2471,7 +2477,7 @@ msgstr "Нов"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_open_lead_form
 msgid "New Lead"
-msgstr ""
+msgstr "Нов потенциален клиент"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created
@@ -2570,6 +2576,8 @@ msgid ""
 "No allocated leads to %(team_name)s team because it has no capacity. Add "
 "capacity to its salespersons."
 msgstr ""
+"Няма разпределени потенциални клиенти към %(team_name)s екипа защото няма "
+"капацитет. Добавете капацитет към своите търговци."
 
 #. module: crm
 #. odoo-python
@@ -2590,7 +2598,7 @@ msgstr "Няма намерени данни!"
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action_team
 msgid "No data yet!"
-msgstr ""
+msgstr "Все още няма данни!"
 
 #. module: crm
 #. odoo-python
