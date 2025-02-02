@@ -18,8 +18,8 @@
 # Jussi Lehto <jussi@gulfeo.com>, 2024
 # Martin Trigaux, 2024
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2024
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # Jessica Jakara, 2025
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:23+0000\n"
 "PO-Revision-Date: 2024-08-18 03:00+0000\n"
-"Last-Translator: Jessica Jakara, 2025\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,16 +59,18 @@ msgid ""
 "<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"Clicks\" role=\"img\" "
 "title=\"Clicks\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"Klikkaukset\" "
+"role=\"img\" title=\"Klikkaukset\"/>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_kanban
 msgid "<i class=\"fa fa-fw fa-share\" aria-label=\"Shares\" role=\"img\" title=\"Shares\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-share\" aria-label=\"Jaot\" role=\"img\" title=\"Jaot\"/>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
 msgid "<small>Where does this link to?</small>"
-msgstr ""
+msgstr "<small>Mihin tämä linkki johtaa?</small>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -77,6 +79,9 @@ msgid ""
 "                                Clicks\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                Klikkaukset\n"
+"                            </span>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -85,6 +90,9 @@ msgid ""
 "                                Opened\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                Avattu\n"
+"                            </span>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -101,6 +109,9 @@ msgid ""
 "                                Shared\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                Jaettu\n"
+"                            </span>"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__message_needaction
@@ -195,17 +206,17 @@ msgstr "Kortti"
 #. module: marketing_card
 #: model:ir.actions.act_window,name:marketing_card.card_campaign_action
 msgid "Card Campaign"
-msgstr ""
+msgstr "Korttikampanja"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__card_click_count
 msgid "Card Click Count"
-msgstr ""
+msgstr "Kortin klikkauksen määrä"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__card_count
 msgid "Card Count"
-msgstr ""
+msgstr "Korttien määrä"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__card_element_ids
@@ -228,20 +239,25 @@ msgid "Card Element Text"
 msgstr ""
 
 #. module: marketing_card
+#: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
+msgid "Card Layout"
+msgstr ""
+
+#. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__card_share_count
 msgid "Card Share Count"
-msgstr ""
+msgstr "Kortin osuuden määrä"
 
 #. module: marketing_card
 #: model:ir.actions.act_window,name:marketing_card.card_template_action
 #: model:ir.ui.menu,name:marketing_card.cards_template_menu
 msgid "Card Template"
-msgstr ""
+msgstr "Kortin malli"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
 msgid "Click here for your reward!"
-msgstr ""
+msgstr "Klikkaa tästä saadaksesi palkintosi!"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_tag__color
@@ -251,17 +267,17 @@ msgstr "Väri"
 #. module: marketing_card
 #: model_terms:ir.actions.act_window,help:marketing_card.cards_card_action
 msgid "Create a Card Campaign to send cards to your partners"
-msgstr ""
+msgstr "Luo korttikampanja lähettääksesi kortteja yhteistyökumppaneillesi"
 
 #. module: marketing_card
 #: model_terms:ir.actions.act_window,help:marketing_card.card_campaign_action
 msgid "Create a Sharing Campaign!"
-msgstr ""
+msgstr "Luo jakokampanja!"
 
 #. module: marketing_card
 #: model_terms:ir.actions.act_window,help:marketing_card.card_template_action
 msgid "Create a design to use in Card Campaigns"
-msgstr ""
+msgstr "Luo suunnittelu korttikampanjoissa käytettäväksi"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__create_uid
@@ -286,12 +302,12 @@ msgstr "Luotu"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__default_background
 msgid "Default Background"
-msgstr ""
+msgstr "Oletustausta"
 
 #. module: marketing_card
 #: model:ir.model.fields,help:marketing_card.field_card_campaign__post_suggestion
 msgid "Description below the card and default text when sharing on X"
-msgstr ""
+msgstr "Kortin alla oleva kuvaus ja oletusteksti, kun korttia jaetaan X:ssä"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__card_template_id
@@ -326,7 +342,7 @@ msgstr ""
 #. module: marketing_card
 #: model:ir.model.constraint,message:marketing_card.constraint_card_card_campaign_record_unique
 msgid "Each record should be unique for a campaign"
-msgstr ""
+msgstr "Jokaisen tietueen tulisi olla kampanjan osalta yksilöllinen"
 
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_card_card_share
@@ -341,7 +357,7 @@ msgstr ""
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_card_view_search
 msgid "Filter By"
-msgstr ""
+msgstr "Suodata"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__message_follower_ids
@@ -389,7 +405,7 @@ msgstr ""
 #. module: marketing_card
 #: model:ir.module.category,description:marketing_card.module_category_marketing_card
 msgid "Helps you manage marketing card campaigns."
-msgstr ""
+msgstr "Auttaa sinua hallinnoimaan markkinointikorttikampanjoita."
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__id
@@ -441,7 +457,7 @@ msgstr "Kuva 2"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__image_preview
 msgid "Image Preview"
-msgstr ""
+msgstr "Kuvan esikatselu"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__message_is_follower
@@ -451,7 +467,7 @@ msgstr "On seuraaja"
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "Join me at this event!"
-msgstr ""
+msgstr "Tule mukaan tähän tapahtumaan!"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__lang
@@ -500,7 +516,7 @@ msgstr "Markkinointikortti"
 #: model:ir.model,name:marketing_card.model_card_campaign
 #: model:ir.model.fields,field_description:marketing_card.field_card_card_share__card_campaign_id
 msgid "Marketing Card Campaign"
-msgstr ""
+msgstr "Markkinointikorttikampanja"
 
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_card_campaign_element
@@ -510,22 +526,22 @@ msgstr ""
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_card_campaign_tag
 msgid "Marketing Card Campaign Tag"
-msgstr ""
+msgstr "Markkinointikortin kampanjan tunniste"
 
 #. module: marketing_card
 #: model:res.groups,name:marketing_card.marketing_card_group_manager
 msgid "Marketing Card Manager"
-msgstr ""
+msgstr "Markkinointikorttipäällikkö"
 
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_card_template
 msgid "Marketing Card Template"
-msgstr ""
+msgstr "Markkinointikortin malli"
 
 #. module: marketing_card
 #: model:res.groups,name:marketing_card.marketing_card_group_user
 msgid "Marketing Card User"
-msgstr ""
+msgstr "Markkinointikortin käyttäjä"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_card_share__message
@@ -633,18 +649,18 @@ msgstr ""
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__post_suggestion
 msgid "Post Suggestion"
-msgstr ""
+msgstr "Lähetä ehdotus"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
 msgid "Powered By"
-msgstr ""
+msgstr "Moottorina"
 
 #. module: marketing_card
 #: model_terms:ir.actions.act_window,help:marketing_card.card_campaign_action
 msgid ""
 "Prepare a design and some content and let your community spread the word!"
-msgstr ""
+msgstr "Valmistele ulkoasu ja sisältö ja anna yhteisösi levittää sanaa!"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__preview_record_ref
@@ -669,7 +685,7 @@ msgstr "Pääväri"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__primary_text_color
 msgid "Primary Text Color"
-msgstr ""
+msgstr "Ensisijainen tekstin väri"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_1
@@ -678,7 +694,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_4
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_5
 msgid "Profile Picture"
-msgstr ""
+msgstr "Profiilikuva"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__rating_ids
@@ -724,7 +740,7 @@ msgstr "Vastuuhenkilö"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__reward_target_url
 msgid "Reward Link"
-msgstr ""
+msgstr "Palkintolinkki"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__message_has_sms_error
@@ -734,12 +750,12 @@ msgstr "Tekstiviestin toimitusvirhe"
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_card_view_search
 msgid "Search Card"
-msgstr ""
+msgstr "Hakukortin ehdot -alue"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_search
 msgid "Search Share Campaign"
-msgstr ""
+msgstr "Etsi kampanjan jakoa"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__secondary_color
@@ -749,7 +765,7 @@ msgstr "Toissijainen väri"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__secondary_text_color
 msgid "Secondary Text Color"
-msgstr ""
+msgstr "Toissijainen tekstin väri"
 
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_campaign_element__card_element_role__section_1
@@ -764,7 +780,7 @@ msgstr ""
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
 msgid "Select where to share"
-msgstr ""
+msgstr "Valitse minne jaetaan"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -780,12 +796,12 @@ msgstr "Lähetä ja sulje"
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign.py:0
 msgid "Send Cards"
-msgstr ""
+msgstr "Lähetä kortteja"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "Share Campaign"
-msgstr ""
+msgstr "Jaa kampanja"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_element_view_form
@@ -795,7 +811,7 @@ msgstr ""
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_card_view_list
 msgid "Share Card"
-msgstr ""
+msgstr "Jaa kortti"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_card_share_view_form
@@ -803,9 +819,14 @@ msgid "Share Cards"
 msgstr ""
 
 #. module: marketing_card
+#: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
+msgid "Share Reward"
+msgstr ""
+
+#. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_card__share_status
 msgid "Share Status"
-msgstr ""
+msgstr "Jaa tila"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_template_view_form
@@ -853,17 +874,17 @@ msgstr ""
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_campaign_element__card_element_role__subheader
 msgid "Sub-Header"
-msgstr ""
+msgstr "Alaotsikko"
 
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_campaign_element__card_element_role__subsection_1
 msgid "Sub-Section 1"
-msgstr ""
+msgstr "1 alajakso"
 
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_campaign_element__card_element_role__subsection_2
 msgid "Sub-Section 2"
-msgstr ""
+msgstr "2 alajakso"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_card_share__subject
@@ -885,7 +906,7 @@ msgstr "Tunnisteet"
 #. module: marketing_card
 #: model:ir.model.constraint,message:marketing_card.constraint_card_campaign_tag_name_uniq
 msgid "Tags may not reuse existing names."
-msgstr ""
+msgstr "Tunnisteet eivät saa käyttää uudelleen olemassa olevia nimiä."
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_tree
@@ -905,12 +926,12 @@ msgstr "Tekstin väri"
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "Thanks for sharing, here is your reward!"
-msgstr ""
+msgstr "Kiitos jakamisesta, tässä on palkintosi!"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__reward_message
 msgid "Thanks to You Message"
-msgstr ""
+msgstr "Kiitos sinulle Viesti"
 
 #. module: marketing_card
 #. odoo-python
@@ -919,6 +940,8 @@ msgid ""
 "The UTM source '%s' cannot be deleted as it is used to promote marketing "
 "cards campaigns."
 msgstr ""
+"UTM-lähdettä \"%s\" ei voi poistaa, koska sitä käytetään "
+"markkinointikorttikampanjoiden edistämiseen."
 
 #. module: marketing_card
 #. odoo-python
@@ -947,6 +970,8 @@ msgid ""
 "User-agent: *\n"
 "                Allow: /cards/"
 msgstr ""
+"Käyttäjäagentti: *\n"
+"                Allow: /cards/"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_element__value_type
@@ -956,7 +981,7 @@ msgstr "Arvon tyyppi"
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_card_view_search
 msgid "Visited"
-msgstr ""
+msgstr "Vierailtu"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__website_message_ids
@@ -977,7 +1002,7 @@ msgstr ""
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "Your Home Page"
-msgstr ""
+msgstr "Kotisivusi"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_1
@@ -991,12 +1016,12 @@ msgstr "painikkeen teksti"
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "e.g. \"https://www.mycompany.com/reward\""
-msgstr ""
+msgstr "esim. \"https://www.mycompany.com/reward\""
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "e.g. Odoo Experience Talks"
-msgstr ""
+msgstr "esim. Odoo Experience Talks"
 
 #. module: marketing_card
 #. odoo-python
