@@ -13,7 +13,7 @@ class ProductUom(models.Model):
     uom_id = fields.Many2one('uom.uom', 'Unit', required=True, ondelete='cascade')
     product_id = fields.Many2one('product.product', 'Product', required=True, ondelete='cascade')
     barcode = fields.Char(index='btree_not_null', required=True)
-    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
+    company_id = fields.Many2one('res.company', 'Company')
 
     _barcode_uniq = models.Constraint('unique(barcode)', 'A barcode can only be assigned to one packaging.')
 
@@ -30,3 +30,10 @@ class ProductUom(models.Model):
             return super()._compute_display_name()
         for record in self:
             record.display_name = f"{record.barcode} for: {record.product_id.display_name}"
+
+    def _clean_invalids(self):
+        product_uoms_to_unlink = set()
+        for product_uom in self:
+            if self.uom_id not in self.product_id.uom_ids:
+                product_uoms_to_unlink.add(product_uom.id)
+        return self.browse(product_uoms_to_unlink).unlink()
