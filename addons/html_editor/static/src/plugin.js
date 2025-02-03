@@ -39,9 +39,11 @@ export class Plugin {
 
     addDomListener(target, eventName, fn, capture) {
         const handler = (ev) => {
-            if (
-                !isProtecting(ev.target) &&
-                (!isProtected(ev.target) || isUnprotecting(ev.target))
+            if ((
+                    !isProtecting(ev.target) &&
+                    (!isProtected(ev.target) || isUnprotecting(ev.target))
+                ) ||
+                this.getResource("editable_node_predicates").some(predicate => predicate(ev.target))
             ) {
                 fn?.call(this, ev);
             }
