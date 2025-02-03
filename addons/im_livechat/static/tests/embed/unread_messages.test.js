@@ -23,7 +23,7 @@ import {
     withUser,
 } from "@web/../tests/web_test_helpers";
 
-import { expirableStorage } from "@im_livechat/embed/common/expirable_storage";
+import { expirableStorage } from "@im_livechat/core/common/expirable_storage";
 import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
 import { queryFirst } from "@odoo/hoot-dom";
 import { rpc } from "@web/core/network/rpc";
