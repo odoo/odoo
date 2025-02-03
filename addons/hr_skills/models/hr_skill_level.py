@@ -14,6 +14,12 @@ class HrSkillLevel(models.Model):
     level_progress = fields.Integer(string="Progress", help="Progress from zero knowledge (0%) to fully mastered (100%).")
     default_level = fields.Boolean(help="If checked, this level will be the default one selected when choosing this skill.")
 
+    # This field is a technical field, created to be set exclusively by the front-end; it's why this computed field is
+    # not stored and not readonly.
+    # With this field, it's possible to know in onchange defined in the model hr_skill_type which
+    # level became the new default_level.
+    technical_is_new_default = fields.Boolean(compute="_compute_technical_is_new_default", readonly=False)
+
     _check_level_progress = models.Constraint(
         'CHECK(level_progress BETWEEN 0 AND 100)',
         'Progress should be a number between 0 and 100.',
@@ -26,6 +32,11 @@ class HrSkillLevel(models.Model):
             return super()._compute_display_name()
         for record in self:
             record.display_name = f"{record.name} ({record.level_progress}%)"
+
+    # This compute is never trigger by a depends in purpose. The front-end will change this value when the
+    # default_level will become true.
+    def _compute_technical_is_new_default(self):
+        self.technical_is_new_default = False
 
     @api.model_create_multi
     def create(self, vals_list):

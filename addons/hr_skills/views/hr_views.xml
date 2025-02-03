@@ -228,6 +228,7 @@
                 <field name="name"/>
                 <field name="level_progress" widget="progressbar" options="{'editable': true}"/>
                 <field name="default_level" widget="boolean_toggle_load"/>
+                <field name="technical_is_new_default" column_invisible="1"/> <!-- needs to be here to be accessible for the front-end -->
             </list>
         </field>
     </record>
@@ -377,7 +378,7 @@
                     </field>
                     <group string="Levels">
                     </group>
-                    <field name="skill_level_ids" nolabel="1" widget="auto_save_skill_type" context="{'default_skill_type_id': id}"/>
+                    <field name="skill_level_ids" nolabel="1" context="{'default_skill_type_id': id}"/>
                     <group string="Display">
                         <field name="color" widget="color_picker"/>
                     </group>
