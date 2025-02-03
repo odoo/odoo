@@ -1414,6 +1414,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             'picking_type_id': self.mapped('picking_type_id').id,
             'location_id': self.mapped('location_id').id,
         }
+        self.env.add_to_compute(self._fields['location_dest_id'], self)
         if self.location_dest_id.ids:
             vals['location_dest_id'] = self.location_dest_id.id
         return vals
