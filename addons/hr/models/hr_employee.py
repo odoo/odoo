@@ -579,9 +579,10 @@ class HrEmployee(models.Model):
                 ('subscription_department_ids', 'in', department_id)
             ])._subscribe_users_automatically()
         if vals.get('departure_description'):
-            self.message_post(body=_(
-                'Additional Information: \n %(description)s',
-                description=vals.get('departure_description')))
+            for employee in self:
+                employee.message_post(body=_(
+                    'Additional Information: \n %(description)s',
+                    description=vals.get('departure_description')))
         return res
 
     def unlink(self):
