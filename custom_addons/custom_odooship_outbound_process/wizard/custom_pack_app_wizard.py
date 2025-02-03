@@ -40,11 +40,12 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 ('move_ids_without_package.pc_container_code', '=', self.pc_container_code_id.name),
                 ('state', '=', 'done')
             ])
-            self._auto_select_package_box_type()
+
             if not pickings:
                 raise ValidationError(_("No completed pickings found for this PC container code."))
 
             self.picking_ids = [(6, 0, pickings.ids)]
+            self._auto_select_package_box_type()
 
 
     @api.depends('picking_ids')
@@ -62,11 +63,11 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         """
         if len(self.picking_ids) == 1:
             picking = self.picking_ids[0]
-            incoterm_location = picking.sale_id.incoterm_location if picking.sale_id else None
-
+            incoterm_location = picking.sale_id.incoterm_location
             if incoterm_location:
                 package_box = self.env['package.box.configuration'].search(
                     [('name', '=', incoterm_location)], limit=1)
+                print("\n\n\n", package_box)
                 if package_box:
                     self.package_box_type_id = package_box.id  # Set package type for single pick
 
