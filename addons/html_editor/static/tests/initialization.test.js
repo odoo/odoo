@@ -169,3 +169,30 @@ describe("list normalization", () => {
         });
     });
 });
+
+describe("link normalization", () => {
+    test("should move inline color from anchor to font", async () => {
+        await testEditor({
+            contentBefore: '<p><a href="#" style="color: #008f8c">test</a></p>',
+            contentAfter:
+                '<p><a href="#"><font style="color: rgb(0, 143, 140);">test</font></a></p>',
+        });
+    });
+
+    test("should remove anchor color and retain font color", async () => {
+        await testEditor({
+            contentBefore:
+                '<p><a href="#" style="color: #008f8c"><font style="color: rgb(255, 0, 0);">test</font></a></p>',
+            contentAfter: '<p><a href="#"><font style="color: rgb(255, 0, 0);">test</font></a></p>',
+        });
+    });
+
+    test("should handle inline color styles in multiple anchor elements", async () => {
+        await testEditor({
+            contentBefore:
+                '<p><a href="#" style="color: #008f8c"><font style="color: rgb(255, 0, 0);">test</font></a></p><p><a href="#" style="color: #008f8c">test</a></p>',
+            contentAfter:
+                '<p><a href="#"><font style="color: rgb(255, 0, 0);">test</font></a></p><p><a href="#"><font style="color: rgb(0, 143, 140);">test</font></a></p>',
+        });
+    });
+});
