@@ -42,7 +42,7 @@ export class ChatBotService {
      * Start the chatbot script.
      */
     async start() {
-        if (this.chatbot.thread.isLastMessageFromCustomer) {
+        if (this.chatbot.thread.isLastMessageFromCustomer && !this.chatbot.completed) {
             await this.chatbot?.processAnswer(
                 this.livechatService.thread.newestPersistentOfAllMessage
             );

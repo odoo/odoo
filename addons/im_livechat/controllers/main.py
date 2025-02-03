@@ -162,6 +162,7 @@ class LivechatController(http.Controller):
                 ),
                 "name": channel_vals["name"],
                 "scrollUnread": False,
+                "livechat_active": True,
                 "channel_type": "livechat",
                 "chatbot": chatbot_data,
             }
