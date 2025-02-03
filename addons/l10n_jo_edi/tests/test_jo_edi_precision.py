@@ -310,3 +310,37 @@ class TestJoEdiPrecision(JoEdiCommon):
                 }),
             ],
         })
+
+    def test_jo_special_invoice_precision(self):
+        self.company.l10n_jo_edi_taxpayer_type = 'special'
+        self.company.l10n_jo_edi_sequence_income_source = '16683693'
+        self._validate_invoice_vals_jo_edi_numbers({
+            'name': 'TestEIN014',
+            'invoice_date': '2023-11-10',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_b.id,
+                    'price_unit': 100,
+                    'quantity': 1,
+                    'tax_ids': [Command.set((self.jo_general_tax_10 | self.jo_special_tax_10).ids)],
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 100,
+                    'quantity': 1,
+                    'tax_ids': [Command.set((self.jo_general_tax_10 | self.jo_special_tax_5).ids)],
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 100,
+                    'quantity': 1,
+                    'tax_ids': [Command.set((self.jo_general_tax_16 | self.jo_special_tax_5).ids)],
+                }),
+                Command.create({
+                    'product_id': self.product_b.id,
+                    'price_unit': 100,
+                    'quantity': 1,
+                    'tax_ids': [Command.set((self.jo_general_tax_16 | self.jo_special_tax_10).ids)],
+                }),
+            ],
+        })
