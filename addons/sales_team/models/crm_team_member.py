@@ -141,7 +141,7 @@ class CrmTeamMember(models.Model):
     # ------------------------------------------------------------
 
     @api.model_create_multi
-    def create(self, values_list):
+    def create(self, vals_list):
         """ Specific behavior implemented on create
 
           * mono membership mode: other user memberships are automatically
@@ -155,10 +155,10 @@ class CrmTeamMember(models.Model):
         """
         is_membership_multi = self.env['ir.config_parameter'].sudo().get_param('sales_team.membership_multi', False)
         if not is_membership_multi:
-            self._synchronize_memberships(values_list)
+            self._synchronize_memberships(vals_list)
         return super(CrmTeamMember, self.with_context(
             mail_create_nosubscribe=True
-        )).create(values_list)
+        )).create(vals_list)
 
     def write(self, values):
         """ Specific behavior about active. If you change user_id / team_id user

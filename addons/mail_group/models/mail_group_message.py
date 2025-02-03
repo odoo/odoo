@@ -87,8 +87,8 @@ class MailGroupMessage(models.Model):
                 raise AccessError(_('The record of the message should be the group.'))
 
     @api.model_create_multi
-    def create(self, values_list):
-        for vals in values_list:
+    def create(self, vals_list):
+        for vals in vals_list:
             if not vals.get('mail_message_id'):
                 vals.update({
                     'res_id': vals.get('mail_group_id'),
@@ -100,7 +100,7 @@ class MailGroupMessage(models.Model):
                     if field in vals
                     and field in self.env['mail.thread']._get_message_create_valid_field_names()
                 }).id
-        return super(MailGroupMessage, self).create(values_list)
+        return super().create(vals_list)
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default)

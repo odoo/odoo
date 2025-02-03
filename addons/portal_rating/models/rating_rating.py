@@ -14,10 +14,10 @@ class RatingRating(models.Model):
     publisher_datetime = fields.Datetime("Commented on", readonly=True)
 
     @api.model_create_multi
-    def create(self, values_list):
-        for values in values_list:
+    def create(self, vals_list):
+        for values in vals_list:
             self._synchronize_publisher_values(values)
-        ratings = super().create(values_list)
+        ratings = super().create(vals_list)
         if any(rating.publisher_comment for rating in ratings):
             ratings._check_synchronize_publisher_values()
         return ratings

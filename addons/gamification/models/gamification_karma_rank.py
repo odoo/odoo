@@ -33,8 +33,8 @@ class GamificationKarmaRank(models.Model):
             rank.rank_users_count = requests_mapped_data.get(rank.id, 0)
 
     @api.model_create_multi
-    def create(self, values_list):
-        res = super().create(values_list)
+    def create(self, vals_list):
+        res = super().create(vals_list)
         if any(res.mapped('karma_min')) > 0:
             users = self.env['res.users'].sudo().search([('karma', '>=', max(min(res.mapped('karma_min')), 1))])
             if users:

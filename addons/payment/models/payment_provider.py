@@ -312,8 +312,8 @@ class PaymentProvider(models.Model):
     #=== CRUD METHODS ===#
 
     @api.model_create_multi
-    def create(self, values_list):
-        providers = super().create(values_list)
+    def create(self, vals_list):
+        providers = super().create(vals_list)
         providers._check_required_if_provider()
         if any(provider.state != 'disabled' for provider in providers):
             self._toggle_post_processing_cron()

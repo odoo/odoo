@@ -597,9 +597,9 @@ class MailMessage(models.Model):
         return self.browse()
 
     @api.model_create_multi
-    def create(self, values_list):
+    def create(self, vals_list):
         tracking_values_list = []
-        for values in values_list:
+        for values in vals_list:
             if 'email_from' not in values:  # needed to compute reply_to
                 _author_id, email_from = self.env['mail.thread']._message_compute_author(values.get('author_id'), email_from=None, raise_on_email=False)
                 values['email_from'] = email_from
@@ -640,7 +640,7 @@ class MailMessage(models.Model):
             # delegate creation of tracking after the create as sudo to avoid access rights issues
             tracking_values_list.append(values.pop('tracking_value_ids', False))
 
-        messages = super().create(values_list)
+        messages = super().create(vals_list)
 
         # link back attachments to records, to filter out attachments linked to
         # the same records as the message (considered as ok if message is ok)
@@ -648,9 +648,9 @@ class MailMessage(models.Model):
         attachments_tocheck = self.env['ir.attachment']
         doc_to_attachment_ids = defaultdict(set)
         if all(isinstance(command, int) or command[0] in (4, 6)
-               for values in values_list
+               for values in vals_list
                for command in values['attachment_ids']):
-            for values in values_list:
+            for values in vals_list:
                 message_attachment_ids = set()
                 for command in values['attachment_ids']:
                     if isinstance(command, int):
@@ -680,7 +680,7 @@ class MailMessage(models.Model):
         if attachments_tocheck:
             attachments_tocheck.check('read')
 
-        for message, values, tracking_values_cmd in zip(messages, values_list, tracking_values_list):
+        for message, values, tracking_values_cmd in zip(messages, vals_list, tracking_values_list):
             if tracking_values_cmd:
                 vals_lst = [dict(cmd[2], mail_message_id=message.id) for cmd in tracking_values_cmd if len(cmd) == 3 and cmd[0] == 0]
                 other_cmd = [cmd for cmd in tracking_values_cmd if len(cmd) != 3 or cmd[0] != 0]

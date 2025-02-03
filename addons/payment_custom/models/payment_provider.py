@@ -26,8 +26,8 @@ class PaymentProvider(models.Model):
         string="Enable QR Codes", help="Enable the use of QR-codes when paying by wire transfer.")
 
     @api.model_create_multi
-    def create(self, values_list):
-        providers = super().create(values_list)
+    def create(self, vals_list):
+        providers = super().create(vals_list)
         providers.filtered(lambda p: p.custom_mode == 'wire_transfer').pending_msg = None
         return providers
 

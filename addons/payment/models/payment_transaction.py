@@ -160,8 +160,8 @@ class PaymentTransaction(models.Model):
     #=== CRUD METHODS ===#
 
     @api.model_create_multi
-    def create(self, values_list):
-        for values in values_list:
+    def create(self, vals_list):
+        for values in vals_list:
             provider = self.env['payment.provider'].browse(values['provider_id'])
 
             if not values.get('reference'):
@@ -188,7 +188,7 @@ class PaymentTransaction(models.Model):
             # Include provider-specific create values
             values.update(self._get_specific_create_values(provider.code, values))
 
-        txs = super().create(values_list)
+        txs = super().create(vals_list)
 
         # Monetary fields are rounded with the currency at creation time by the ORM. Sometimes, this
         # can lead to inconsistent string representation of the amounts sent to the providers.

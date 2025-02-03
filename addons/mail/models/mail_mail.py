@@ -125,9 +125,9 @@ class MailMail(models.Model):
         return [('body_html', operator, value)]
 
     @api.model_create_multi
-    def create(self, values_list):
+    def create(self, vals_list):
         # notification field: if not set, set if mail comes from an existing mail.message
-        for values in values_list:
+        for values in vals_list:
             if 'is_notification' not in values and values.get('mail_message_id'):
                 values['is_notification'] = True
             if values.get('scheduled_date'):
@@ -135,10 +135,10 @@ class MailMail(models.Model):
                 values['scheduled_date'] = parsed_datetime.replace(tzinfo=None) if parsed_datetime else False
             else:
                 values['scheduled_date'] = False  # void string crashes
-        new_mails = super(MailMail, self).create(values_list)
+        new_mails = super().create(vals_list)
 
         new_mails_w_attach = self.env['mail.mail']
-        for mail, values in zip(new_mails, values_list):
+        for mail, values in zip(new_mails, vals_list):
             if values.get('attachment_ids'):
                 new_mails_w_attach += mail
         if new_mails_w_attach:

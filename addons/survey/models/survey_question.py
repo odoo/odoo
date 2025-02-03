@@ -421,6 +421,7 @@ class SurveyQuestion(models.Model):
                 new_question.triggering_answer_ids = old_question.triggering_answer_ids
         return new_questions
 
+    @api.model_create_multi
     def create(self, vals_list):
         questions = super().create(vals_list)
         questions.filtered(

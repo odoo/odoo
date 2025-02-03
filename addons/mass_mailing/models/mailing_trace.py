@@ -125,11 +125,11 @@ class MailingTrace(models.Model):
             trace.display_name = f'{trace.trace_type}: {trace.mass_mailing_id.name} ({trace.id})'
 
     @api.model_create_multi
-    def create(self, values_list):
-        for values in values_list:
+    def create(self, vals_list):
+        for values in vals_list:
             if 'mail_mail_id' in values:
                 values['mail_mail_id_int'] = values['mail_mail_id']
-        return super(MailingTrace, self).create(values_list)
+        return super().create(vals_list)
 
     def action_view_contact(self):
         self.ensure_one()

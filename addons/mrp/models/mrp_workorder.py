@@ -521,8 +521,8 @@ class MrpWorkorder(models.Model):
         return res
 
     @api.model_create_multi
-    def create(self, values):
-        res = super().create(values)
+    def create(self, vals_list):
+        res = super().create(vals_list)
 
         # resequence the workorders if necessary
         for mo in res.mapped('production_id'):
