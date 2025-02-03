@@ -2482,7 +2482,7 @@ class MrpProduction(models.Model):
                 ):
                 move_raw.bom_line_id = bom_line
                 move_raw.product_id = bom_line.product_id
-                move_raw.product_uom_qty = bom_line.product_qty / ratio
+                move_raw.product_uom_qty = next((vals['qty'] for (line, vals) in bom_lines if line == bom_line), 0) / ratio
                 move_raw.product_uom = bom_line.product_uom_id
                 if move_raw.operation_id != bom_line.operation_id:
                     move_raw.operation_id = bom_line.operation_id
