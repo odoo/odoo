@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="sale_management.sale_order_template_view_form"/>
         <field name="arch" type="xml">
             <notebook position="inside">
-                <page name="pdf_quote" string="Quote Builder" invisible="not (name)">
+                <page name="pdf_quote" string="Quote Builder" invisible="not (id)">
                     <field
                         name="quotation_document_ids"
                         mode="kanban"
