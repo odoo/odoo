@@ -180,9 +180,9 @@ class PosPaymentMethod(models.Model):
 
         return record
 
-
-    def create(self, vals):
-        records = super().create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
 
         for record in records:
             if record.viva_com_merchant_id and record.viva_com_api_key:

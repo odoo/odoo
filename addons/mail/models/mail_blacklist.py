@@ -22,11 +22,11 @@ class MailBlacklist(models.Model):
     )
 
     @api.model_create_multi
-    def create(self, values):
+    def create(self, vals_list):
         # First of all, extract values to ensure emails are really unique (and don't modify values in place)
         new_values = []
         all_emails = []
-        for value in values:
+        for value in vals_list:
             email = tools.email_normalize(value.get('email'))
             if not email:
                 raise UserError(_('Invalid email address “%s”', value['email']))

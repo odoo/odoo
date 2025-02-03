@@ -45,8 +45,8 @@ class PaymentToken(models.Model):
     #=== CRUD METHODS ===#
 
     @api.model_create_multi
-    def create(self, values_list):
-        for values in values_list:
+    def create(self, vals_list):
+        for values in vals_list:
             if 'provider_id' in values:
                 provider = self.env['payment.provider'].browse(values['provider_id'])
 
@@ -55,7 +55,7 @@ class PaymentToken(models.Model):
             else:
                 pass  # Let psycopg warn about the missing required field.
 
-        return super().create(values_list)
+        return super().create(vals_list)
 
     @api.model
     def _get_specific_create_values(self, provider_code, values):

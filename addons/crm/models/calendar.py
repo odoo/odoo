@@ -36,8 +36,8 @@ class CalendarEvent(models.Model):
                     event.is_highlighted = True
 
     @api.model_create_multi
-    def create(self, vals):
-        events = super(CalendarEvent, self).create(vals)
+    def create(self, vals_list):
+        events = super().create(vals_list)
         for event in events:
             if event.opportunity_id and not event.activity_ids:
                 event.opportunity_id.log_meeting(event)
