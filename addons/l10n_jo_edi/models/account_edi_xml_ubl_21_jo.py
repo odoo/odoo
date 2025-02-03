@@ -157,7 +157,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
     def _get_invoice_payment_terms_vals_list(self, invoice):
         return []
 
-    def _get_invoice_tax_totals_vals_helper(self, taxes_vals, special_tax_amount):
+    def _get_invoice_tax_totals_vals_helper(self, taxes_vals, special_tax_amount_per_line):
         tax_totals_vals = {
             'currency': JO_CURRENCY,
             'currency_dp': self._get_currency_decimal_places(),
@@ -166,6 +166,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         }
         for grouping_key, vals in taxes_vals['tax_details'].items():
             if grouping_key['tax_amount_type'] != 'fixed':
+                special_tax_amount = sum(special_tax_amount_per_line.get(line, 0) for line in vals['records'])
                 taxable_amount = sum(self._round_max_dp(self._get_line_taxable_amount(line)) for line in vals['records']) + special_tax_amount
                 subtotal = {
                     'currency': JO_CURRENCY,
@@ -184,13 +185,13 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         if invoice.company_id.l10n_jo_edi_taxpayer_type == 'income':
             return []
 
-        special_tax_amount = sum(
-            line_tax['tax_amount']
-            for line_vals in taxes_vals['tax_details_per_record'].values()
+        special_tax_amount_per_line = {
+            line: line_tax['tax_amount']
+            for line, line_vals in taxes_vals['tax_details_per_record'].items()
             for line_tax in line_vals['tax_details'].values()
             if 'tax_amount_type' in line_tax and line_tax['tax_amount_type'] == 'fixed'
-        )
-        vals = self._get_invoice_tax_totals_vals_helper(taxes_vals, special_tax_amount)
+        }
+        vals = self._get_invoice_tax_totals_vals_helper(taxes_vals, special_tax_amount_per_line)
         if not invoice._is_sales_refund():
             vals['tax_subtotal_vals'] = []
         return [vals]
@@ -255,7 +256,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
                     'tax_amount': special_tax_amount,
                     'tax_category_vals': tax_details_vals['_tax_category_vals_'],
                 }
-        vals = self._get_invoice_tax_totals_vals_helper(taxes_vals, special_tax_amount)
+        vals = self._get_invoice_tax_totals_vals_helper(taxes_vals, special_tax_amount_per_line={line: special_tax_amount})
         if special_tax_subtotal:
             vals['tax_subtotal_vals'].insert(0, special_tax_subtotal)
             vals['tax_subtotal_vals'][1]['taxable_amount'] = taxable_amount
