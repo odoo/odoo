@@ -56,10 +56,10 @@ test("set the label of the select from the active select item and be updated on 
     expect(".options-container").toBeDisplayed();
     expect(".we-bg-options-container .dropdown").toHaveText("A");
     await contains(".we-bg-options-container .dropdown").click();
-    await contains(".o-overlay-item [data-attribute-action-value-id='b']").click();
+    await contains(".o-overlay-item [data-attribute-action-value='b']").click();
     expect(".we-bg-options-container .dropdown").toHaveText("B");
     await animationFrame();
-    expect(".o-overlay-item [data-attribute-action-value-id='b']").not.toBeDisplayed();
+    expect(".o-overlay-item [data-attribute-action-value='b']").not.toBeDisplayed();
     await contains(".o-snippets-top-actions .fa-undo").click();
     expect(".we-bg-options-container .dropdown").toHaveText("A");
     await contains(".o-snippets-top-actions .fa-repeat").click();
