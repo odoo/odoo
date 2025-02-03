@@ -230,10 +230,21 @@
                                    invisible="not show_credit_limit">
                                 <field name="credit"/>
                                 <field name="days_sales_outstanding"/>
-                                <label for="use_partner_credit_limit"/>
+                                <label for="credit_limit_mode"/>
                                 <div class="o_row">
-                                    <field name="use_partner_credit_limit"/>
-                                    <field name="credit_limit" class="oe_inline" widget="monetary" options="{'currency_field': 'currency_id'}"  invisible="not use_partner_credit_limit"/>
+                                    <!-- As credit_limit_mode is company dependent it can not be set as required on the model-->
+                                    <!-- <field name="credit_limit_mode" class="oe_inline" required="show_credit_limit"/> -->
+                                    <field name="credit_limit_mode" class="oe_inline"/>
+                                    <field name="credit_limit"
+                                        class="oe_inline"
+                                        widget="monetary" options="{'currency_field': 'currency_id'}"
+                                        invisible="credit_limit_mode != 'company' or not credit_limit_mode"
+                                    />
+                                    <field name="custom_credit_limit"
+                                        class="oe_inline"
+                                        widget="monetary" options="{'currency_field': 'currency_id'}"
+                                        invisible="credit_limit_mode != 'custom'"
+                                    />
                                 </div>
                             </group>
                         </group>

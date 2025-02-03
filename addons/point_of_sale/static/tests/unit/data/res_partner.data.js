@@ -52,7 +52,6 @@ export class ResPartner extends MailResPartner {
             company_type: "person",
             fiscal_position_id: false,
             credit_limit: 0.0,
-            use_partner_credit_limit: false,
         },
         {
             id: 4,
@@ -76,7 +75,6 @@ export class ResPartner extends MailResPartner {
             company_type: "person",
             fiscal_position_id: false,
             credit_limit: 0.0,
-            use_partner_credit_limit: false,
         },
     ];
 }
