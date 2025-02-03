@@ -375,4 +375,9 @@
         <record id="hr.menu_resource_calendar_view" model="ir.ui.menu">
             <field name="parent_id" ref="menu_human_resources_configuration_contract"/>
         </record>
+        <record id="hr.menu_view_hr_contract_type" model="ir.ui.menu">
+            <field name="parent_id" ref="menu_human_resources_configuration_contract"/>
+            <field name="groups_id" eval="[(6, 0, [ref('hr.group_hr_user')])]"/>
+        </record>
+
 </odoo>
