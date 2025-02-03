@@ -146,7 +146,7 @@ export class Counter {
 }
 
 export function floatCompare(a, b, { decimals } = {}) {
-    if (!decimals) {
+    if (decimals === undefined) {
         throw new Error("decimals must be provided");
     }
     a = roundDecimals(a, decimals);
