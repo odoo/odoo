@@ -3,14 +3,14 @@ import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { markup } from "@odoo/owl";
 import { AnchorDialog } from "./anchor_dialog";
+import { getElementsWithOption } from "@html_builder/utils/utils";
+
+const anchorSelector = ":not(p).oe_structure > *, :not(p)[data-oe-type=html] > *";
+const anchorExclude =
+    ".modal *, .oe_structure .oe_structure *, [data-oe-type=html] .oe_structure *, .s_popup";
 
 export function canHaveAnchor(element) {
-    return (
-        element.matches(":not(p).oe_structure > *, :not(p)[data-oe-type=html] > *") &&
-        !element.matches(
-            ".modal *, .oe_structure .oe_structure *, [data-oe-type=html] .oe_structure *, .s_popup"
-        )
-    );
+    return element.matches(anchorSelector) && !element.matches(anchorExclude);
 }
 
 export class AnchorPlugin extends Plugin {
@@ -22,10 +22,8 @@ export class AnchorPlugin extends Plugin {
     };
 
     onClone({ cloneEl }) {
-        if (!canHaveAnchor(cloneEl)) {
-            return;
-        }
-        this.deleteAnchor(cloneEl);
+        const anchorEls = getElementsWithOption(cloneEl, anchorSelector, anchorExclude);
+        anchorEls.forEach((anchorEl) => this.deleteAnchor(anchorEl));
     }
 
     // TODO check if no other way when doing popup options.

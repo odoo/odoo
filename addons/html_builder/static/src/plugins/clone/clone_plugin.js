@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { isElementInViewport } from "@html_builder/builder/utils/utils";
+import { isElementInViewport } from "@html_builder/utils/utils";
 
 export class ClonePlugin extends Plugin {
     static id = "clone";
@@ -11,7 +11,7 @@ export class ClonePlugin extends Plugin {
     };
 
     // TODO find why the images should not have the clone buttons.
-    setup() { }
+    setup() {}
 
     getActions() {
         return {

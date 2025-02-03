@@ -1,4 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
+import { getElementsWithOption } from "@html_builder/utils/utils";
 
 export class SnippetLifecyclePlugin extends Plugin {
     static id = "snippetLifecyclePlugin";
@@ -17,13 +18,7 @@ export class SnippetLifecyclePlugin extends Plugin {
                 continue;
             }
 
-            let editingEls = [...root.querySelectorAll(selector)];
-            if (root.matches(selector)) {
-                editingEls.unshift(root);
-            }
-            if (exclude) {
-                editingEls = editingEls.filter((editingEl) => !editingEl.matches(exclude));
-            }
+            const editingEls = getElementsWithOption(root, selector, exclude);
             editingEls.forEach((editingEl) => cleanForSave(editingEl));
         }
     }

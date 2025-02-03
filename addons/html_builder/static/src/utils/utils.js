@@ -70,3 +70,23 @@ export function isElementInViewport(el) {
         Math.round(rect.bottom) <= viewportHeight
     );
 }
+
+/**
+ * Gets all the elements matching an option selector/exclude starting from the
+ * root element.
+ *
+ * @param {HTMLElement} rootEl
+ * @param {String} selector
+ * @param {String} exclude
+ * @returns {Array}
+ */
+export function getElementsWithOption(rootEl, selector, exclude = false) {
+    let matchingEls = [...rootEl.querySelectorAll(selector)];
+    if (rootEl.matches(selector)) {
+        matchingEls.unshift(rootEl);
+    }
+    if (exclude) {
+        matchingEls = matchingEls.filter((editingEl) => !editingEl.matches(exclude));
+    }
+    return matchingEls;
+}
