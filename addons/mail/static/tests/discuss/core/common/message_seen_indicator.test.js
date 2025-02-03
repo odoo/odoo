@@ -572,3 +572,44 @@ test("Title show some member seen info (partial seen), click show dialog with fu
         await contains("li", { text: `User ${i}` }); // Not checking datetime because HOOT mocking of tz do not work
     }
 });
+
+test("Show seen indicator on message with only attachment", async () => {
+    const pyEnv = await startServer();
+    const partnerId_1 = pyEnv["res.partner"].create({ name: "Demo User" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "test",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId_1 }),
+        ],
+        channel_type: "group",
+    });
+
+    const attachmentId = pyEnv["ir.attachment"].create({
+        name: "test.txt",
+        mimetype: "text/plain",
+    });
+    const messageId = pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "",
+        model: "discuss.channel",
+        res_id: channelId,
+        attachment_ids: [attachmentId],
+    });
+    const memberIds = pyEnv["discuss.channel.member"].search([["channel_id", "=", channelId]]);
+    pyEnv["discuss.channel.member"].write(memberIds, {
+        fetched_message_id: messageId,
+        seen_message_id: false,
+    });
+    const [memberId_1] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", partnerId_1],
+    ]);
+    pyEnv["discuss.channel.member"].write([memberId_1], {
+        seen_message_id: messageId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-MessageSeenIndicator");
+    await contains(".o-mail-MessageSeenIndicator .fa-check", { count: 2 });
+});
