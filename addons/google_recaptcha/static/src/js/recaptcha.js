@@ -12,7 +12,8 @@ export class ReCaptcha {
     /**
      * Loads the recaptcha libraries.
      *
-     * @returns {Promise|boolean} promise if libs are loading else false if the reCaptcha key is empty.
+     * @returns {Promise|boolean} promise if libs are loading else false if the
+     * reCaptcha is disabled or its key is empty.
      */
     loadLibs() {
         if (this._publicKey) {
@@ -33,7 +34,7 @@ export class ReCaptcha {
     async getToken(action) {
         if (!this._publicKey) {
             return {
-                message: _t("No recaptcha site key set."),
+                message: _t("reCAPTCHA disabled or no site key has been configured. Please check your settings."),
             };
         }
         await this._recaptchaReady;
