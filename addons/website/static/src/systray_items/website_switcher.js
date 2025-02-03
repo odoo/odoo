@@ -77,7 +77,7 @@ export class WebsiteSwitcherSystray extends Component {
 
 export const systrayItem = {
     Component: WebsiteSwitcherSystray,
-    isDisplayed: env => env.services.website.hasMultiWebsites,
+    isDisplayed: (env) => env.services.website.websites.length > 1,
 };
 
 registry.category("website_systray").add("WebsiteSwitcher", systrayItem, { sequence: 12 });
