@@ -666,3 +666,35 @@ export function isContentEditable(node) {
     const element = isTextNode(node) ? node.parentElement : node;
     return element.isContentEditable;
 }
+
+/**
+ * Returns true if the node is at the start of all its ancestors up to one of the stopNodeNames.
+ *
+ * A node is considered "at the start" if it is the first child of its parent or
+ * if all nodes before it (siblings) are empty or non-existent.
+ *
+ * @param {Node} node - The node to check.
+ * @param {String[]} stopNodeName - The node names where the check stops.
+ * @returns {boolean} - True if the node is at the start of all its ancestors, false otherwise.
+ */
+export function isAtStart(node, stopNodeNames) {
+    let currentNode = node;
+    while (currentNode && stopNodeNames.includes(currentNode.nodeName)) {
+        const parentNode = currentNode.parentNode;
+        if (!parentNode) {
+            return false;
+        }
+        let firstChild = parentNode.firstChild;
+        while (
+            (firstChild.nodeType === Node.TEXT_NODE && !isVisibleTextNode(firstChild)) ||
+            !isContentEditable(firstChild)
+        ) {
+            firstChild = firstChild.nextSibling;
+        }
+        if (firstChild !== currentNode && parentNode?.isContentEditable) {
+            return false;
+        }
+        currentNode = parentNode;
+    }
+    return true;
+}

@@ -9,7 +9,9 @@ import {
 } from "@html_editor/utils/color";
 import { fillEmpty } from "@html_editor/utils/dom";
 import {
+    getDeepestPosition,
     isContentEditable,
+    isEditorTab,
     isEmptyBlock,
     isTextNode,
     isWhitespace,
@@ -91,7 +93,10 @@ export class ColorPlugin extends Plugin {
         if (nodes.length === 0) {
             return;
         }
-        const el = closestElement(nodes[0]);
+        let el = closestElement(nodes[0]);
+        if (isEditorTab(el)) {
+            el = el.parentElement;
+        }
         if (!el) {
             return;
         }
@@ -202,12 +207,24 @@ export class ColorPlugin extends Plugin {
             selection = this.dependencies.split.splitSelection();
             selectionNodes = this.dependencies.selection
                 .getSelectedNodes()
-                .filter((node) => isContentEditable(node) && node.nodeName !== "T");
+                .filter(
+                    (node) =>
+                        (isContentEditable(node) && node.nodeName !== "T") ||
+                        isEditorTab(node) ||
+                        isEditorTab(node.parentElement)
+                );
             if (isEmptyBlock(selection.endContainer)) {
                 selectionNodes.push(selection.endContainer, ...descendants(selection.endContainer));
             }
         }
-
+        const [deepAnchorNode, deepAnchorOffset] = getDeepestPosition(
+            selection.anchorNode,
+            selection.anchorOffset
+        );
+        const [deepFocusNode, deepFocusOffset] = getDeepestPosition(
+            selection.focusNode,
+            selection.focusOffset
+        );
         const selectedNodes =
             mode === "backgroundColor" && color
                 ? selectionNodes.filter((node) => !closestElement(node, "table.o_selected_table"))
@@ -308,7 +325,25 @@ export class ColorPlugin extends Plugin {
                 fontsSet.delete(font);
             }
         }
-        this.dependencies.selection.setSelection(selection, { normalize: false });
+
+        const correctedSelection = {
+            anchorNode: selection.anchorNode,
+            anchorOffset: selection.anchorOffset,
+            focusNode: selection.focusNode,
+            focusOffset: selection.focusOffset,
+        };
+
+        if (!correctedSelection.anchorNode.parentElement && deepAnchorNode) {
+            // node has been removed we should restore it.
+            correctedSelection.anchorNode = deepAnchorNode;
+            correctedSelection.anchorOffset = deepAnchorOffset;
+        }
+        if (!correctedSelection.focusNode.parentElement && deepFocusNode) {
+            // node has been removed we should restore it.
+            correctedSelection.focusNode = deepFocusNode;
+            correctedSelection.focusOffset = deepFocusOffset;
+        }
+        this.dependencies.selection.setSelection(correctedSelection, { normalize: false });
     }
 
     getUsedCustomColors(mode) {

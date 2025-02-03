@@ -313,6 +313,24 @@ describe("insert tabulation", () => {
                 `<blockquote>${oeTab(tabInBlockquote)}f${oeTab(tabAfterFinBlockquote)}]g</blockquote>`,
         });
     });
+
+    test("should insert a tab character without background color if the selection is at the beginning of the `p`", async () => {
+        const expectedTabWidth = TAB_WIDTH;
+        await testTabulation({
+            contentBefore: `<p><font>[]ab</font></p>`,
+            stepFunction: keydownTab,
+            contentAfter: `<p>${oeTab(expectedTabWidth)}[]<font>ab</font></p>`,
+        });
+    });
+
+    test("should insert a tab character without background color when there is no `p` parent", async () => {
+        const expectedTabWidth = TAB_WIDTH;
+        await testTabulation({
+            contentBefore: `<h1><font>[]ab</font></h1>`,
+            stepFunction: keydownTab,
+            contentAfter: `<h1>${oeTab(expectedTabWidth)}[]<font>ab</font></h1>`,
+        });
+    });
 });
 
 describe("delete backward tabulation", () => {
