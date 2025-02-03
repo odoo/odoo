@@ -281,11 +281,10 @@ class StockPicking(models.Model):
 
         return domain
 
-    def _get_auto_batch_description(self):
-        """ Get the description of the automatically created batch based on the grouped pickings and grouping criteria """
+    def _get_auto_batch_description_items(self):
         self.ensure_one()
         description_items = []
-        if self.picking_type_id.batch_group_by_partner and self.partner_id:
+        if self.picking_type_id.batch_group_by_partner and self.partner_id.name:
             description_items.append(self.partner_id.name)
         if self.picking_type_id.batch_group_by_destination and self.partner_id.country_id:
             description_items.append(self.partner_id.country_id.name)
@@ -293,6 +292,12 @@ class StockPicking(models.Model):
             description_items.append(self.location_id.display_name)
         if self.picking_type_id.batch_group_by_dest_loc and self.location_dest_id:
             description_items.append(self.location_dest_id.display_name)
+        return description_items
+
+    def _get_auto_batch_description(self):
+        """ Get the description of the automatically created batch based on the grouped pickings and grouping criteria """
+        self.ensure_one()
+        description_items = self._get_auto_batch_description_items()
         return ', '.join(description_items)
 
     def _package_move_lines(self, batch_pack=False, move_lines_to_pack=False):
