@@ -2543,6 +2543,34 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(bom.bom_line_ids[1].operation_id, ope_2)
         self.assertEqual(bom.byproduct_ids[1].operation_id, ope_2)
 
+    def test_bom_overview_for_product_template_with_dynamic_variants(self):
+        """ 
+        This test checks if the bom overview report is generated when we have a product with dynamic create variants
+        meaning the product variants are only created on adding them to a sales order
+        """
+        dynamic_attribute = self.env['product.attribute'].create({
+            'name': 'Dynamic',
+            'create_variant': 'dynamic',
+            'value_ids': [
+                Command.create({'name': 'red', 'sequence': 1}),
+            ]
+        })
+        attr_val = dynamic_attribute['value_ids'][0]
+        product_with_dynamic_variant = self.env['product.template'].create({
+            'name': 'John Cutter',
+            'attribute_line_ids': [Command.create({
+                'attribute_id': dynamic_attribute.id,
+                'value_ids': [attr_val.id]
+            })],
+        })
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': product_with_dynamic_variant.id,
+            'operation_ids': [
+                Command.create({'name': 'Rub it gently with a cloth two at once', 'workcenter_id': self.workcenter_3.id}),
+            ],
+        })
+        report_html = self.env['report.mrp.report_bom_structure'].get_html(bom.id)
+        self.assertTrue(report_html)
 
 @tagged('-at_install', 'post_install')
 class TestTourBoM(HttpCase):
