@@ -1404,6 +1404,10 @@ class TestVariantWrite(TransactionCase):
         variant1.active = False
         self.assertEqual(template.product_variant_ids, variant2)
 
+        # remove changes because adding a second variant like this is not valid
+        # combination_indices are violated
+        self.env.transaction.clear()
+
     def test_write_inherited_field(self):
         product = self.env['product.product'].create({'name': 'Foo', 'sequence': 1})
         self.assertEqual(product.name, 'Foo')

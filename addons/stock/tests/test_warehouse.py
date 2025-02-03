@@ -634,7 +634,9 @@ class TestWarehouse(TestStockCommon):
 
         companies_before = wh.mapped(lambda w: (w.id, w.company_id))
         # writing on any field should change the company of warehouses
-        wh.write({"name": "whatever"})
+        for i, w in enumerate(wh):
+            # name must be unique per company
+            w.write({"name": f"whatever {i}"})
         companies_after = wh.mapped(lambda w: (w.id, w.company_id))
 
         self.assertEqual(companies_after, companies_before)
