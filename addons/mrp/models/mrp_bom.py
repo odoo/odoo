@@ -648,7 +648,7 @@ class MrpBomLine(models.Model):
                 - always and dynamic: match_all_variant_values()
         """
         self.ensure_one()
-        if product._name == 'product.template':
+        if not product or product._name == 'product.template':
             return False
 
         # attributes create_variant 'always' and 'dynamic'
@@ -777,7 +777,7 @@ class MrpBomByproduct(models.Model):
         custom control.
         """
         self.ensure_one()
-        if product._name == 'product.template':
+        if not product or product._name == 'product.template':
             return False
         return not product._match_all_variant_values(self.bom_product_template_attribute_value_ids)
 

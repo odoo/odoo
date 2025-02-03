@@ -172,7 +172,7 @@ class MrpRoutingWorkcenter(models.Model):
         # skip operation line if archived
         if not self.active:
             return True
-        if product._name == 'product.template':
+        if not product or product._name == 'product.template':
             return False
         return not product._match_all_variant_values(self.bom_product_template_attribute_value_ids)
 
