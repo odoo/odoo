@@ -134,6 +134,12 @@ const canEditButCannotChange = [
     },
 ];
 
+const ensureWebsiteSwitcherNotVisible = [{
+    content: 'Ensure website switcher is not present if there is only 1 website available',
+    trigger: '.o_menu_systray:not(:has(.o_website_switcher_container))',
+    run: () => {}, // This is a check.
+}];
+
 const register = (title, steps) => {
     wTourUtils.registerWebsitePreviewTour(title, {
         url: '/test_model/1',
@@ -184,4 +190,8 @@ register('test_systray_not_reditor_not_tester', [
     ...canAddNewContent,
     ...canViewInBackEnd,
     ...cannotEdit,
+]);
+
+register('test_systray_single_website', [
+    ...ensureWebsiteSwitcherNotVisible,
 ]);
