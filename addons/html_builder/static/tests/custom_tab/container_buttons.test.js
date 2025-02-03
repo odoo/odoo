@@ -8,6 +8,7 @@ import {
     getSnippetStructure,
     getInnerContent,
     getSnippetView,
+    dummyBase64Img,
 } from "../helpers";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -22,6 +23,7 @@ const dummySnippet = `
                 <div class="col-lg-7">
                     <p>TEST</p>
                     <p><a class="btn">BUTTON</a></p>
+                    <img src="${dummyBase64Img}"/>
                 </div>
                 <div class="col-lg-5">
                     <p>TEST</p>
@@ -38,11 +40,16 @@ test("Use the sidebar 'remove' buttons", async () => {
         ".o_customize_tab .options-container > div:contains('Dummy Section') button.oe_snippet_remove";
     const removeColumnSelector =
         ".o_customize_tab .options-container > div:contains('Column') button.oe_snippet_remove";
+    const removeImageSelector =
+        ".o_customize_tab .options-container > div:contains('Image') button.oe_snippet_remove";
 
-    await contains(":iframe .col-lg-7").click();
+    await contains(":iframe .col-lg-7 img").click();
     expect(removeSectionSelector).toHaveCount(1);
     expect(removeColumnSelector).toHaveCount(1);
+    expect(removeImageSelector).toHaveCount(1);
 
+    await contains(removeImageSelector).click();
+    expect(":iframe .col-lg-7 img").toHaveCount(0);
     await contains(removeColumnSelector).click();
     expect(":iframe .col-lg-7").toHaveCount(0);
     await contains(removeSectionSelector).click();

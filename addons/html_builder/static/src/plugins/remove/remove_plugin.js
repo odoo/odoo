@@ -53,7 +53,7 @@ export class RemovePlugin extends Plugin {
         buttons.push({
             class: "oe_snippet_remove bg-danger fa fa-trash",
             handler: () => {
-                this.removeCurrentTarget();
+                this.removeElement(this.target);
                 this.dependencies.history.addStep();
             },
         });
@@ -91,41 +91,41 @@ export class RemovePlugin extends Plugin {
 
     removeElement(el) {
         this.updateContainers(el);
-        this.removeCurrentTarget();
+        this.removeCurrentTarget(el);
         this.dependencies.history.addStep();
     }
 
-    removeCurrentTarget() {
+    removeCurrentTarget(toRemoveEl) {
         // Get the elements having options containers.
         let optionsTargetEls = this.getOptionsContainersElements();
 
         // TODO invisible element
         // TODO will_remove_snippet
         // TODO onRemove
-        this.dispatchTo("onRemove", this.target);
+        this.dispatchTo("onRemove", toRemoveEl);
 
-        let parentEl = this.target.parentElement;
-        const previousSiblingEl = getVisibleSibling(this.target, "prev");
-        const nextSiblingEl = getVisibleSibling(this.target, "next");
+        let parentEl = toRemoveEl.parentElement;
+        const previousSiblingEl = getVisibleSibling(toRemoveEl, "prev");
+        const nextSiblingEl = getVisibleSibling(toRemoveEl, "next");
         if (parentEl.matches(".o_editable:not(body)")) {
             parentEl = parentEl.closest("body");
         }
 
         // Remove tooltips.
-        [this.target, ...this.target.querySelectorAll("*")].forEach((el) => {
+        [toRemoveEl, ...toRemoveEl.querySelectorAll("*")].forEach((el) => {
             const tooltip = Tooltip.getInstance(el);
             if (tooltip) {
                 tooltip.dispose();
             }
         });
         // Remove the element.
-        this.target.remove();
+        toRemoveEl.remove();
 
         // Resize the grid, if any, to have the correct row count.
         // Must be done here and not in a dedicated onRemove method because
         // onRemove is called before actually removing the element and it
         // should be the case in order to resize the grid.
-        if (this.target.classList.contains("o_grid_item")) {
+        if (toRemoveEl.classList.contains("o_grid_item")) {
             resizeGrid(parentEl);
         }
 
@@ -155,7 +155,7 @@ export class RemovePlugin extends Plugin {
             this.updateContainers(parentEl);
             optionsTargetEls = this.getOptionsContainersElements();
             if (this.isEmptyAndRemovable(parentEl, optionsTargetEls)) {
-                this.removeCurrentTarget();
+                this.removeCurrentTarget(parentEl);
             }
         }
 

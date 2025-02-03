@@ -1,12 +1,9 @@
 import { expect, test } from "@odoo/hoot";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
+import { defineWebsiteModels, dummyBase64Img, setupWebsiteBuilder } from "../helpers";
 import { animationFrame, click, queryAll, waitFor } from "@odoo/hoot-dom";
 
 defineWebsiteModels();
-
-const base64Img =
-    "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
 
 test("Add image in gallery", async () => {
     onRpc("/web/dataset/call_kw/ir.attachment/search_read", (test) => [
@@ -24,13 +21,13 @@ test("Add image in gallery", async () => {
         <section class="s_image_gallery o_masonry" data-columns="2">
             <div class="container">
                 <div class="o_masonry_col col-lg-6">
-                    <img class="first_img img img-fluid d-block rounded" data-index="1" src='${base64Img}'>
-                    <img class="a_nice_img img img-fluid d-block rounded" data-index="2" src='${base64Img}'>
-                    <img class="a_nice_img img img-fluid d-block rounded" data-index="3" src='${base64Img}'>
-                    <img class="a_nice_img img img-fluid d-block rounded" data-index="4" src='${base64Img}'>
+                    <img class="first_img img img-fluid d-block rounded" data-index="1" src='${dummyBase64Img}'>
+                    <img class="a_nice_img img img-fluid d-block rounded" data-index="2" src='${dummyBase64Img}'>
+                    <img class="a_nice_img img img-fluid d-block rounded" data-index="3" src='${dummyBase64Img}'>
+                    <img class="a_nice_img img img-fluid d-block rounded" data-index="4" src='${dummyBase64Img}'>
                 </div>
                 <div class="o_masonry_col col-lg-6">
-                    <img class="a_nice_img img img-fluid d-block rounded" data-index="5"  src='${base64Img}'>
+                    <img class="a_nice_img img img-fluid d-block rounded" data-index="5"  src='${dummyBase64Img}'>
                 </div>
             </div>
         </section>

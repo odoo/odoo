@@ -2,16 +2,13 @@ import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, dblclick, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilder } from "./helpers";
+import { defineWebsiteModels, setupWebsiteBuilder, dummyBase64Img } from "./helpers";
 
 defineWebsiteModels();
 
-const base64Img =
-    "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
-
 test("click on Image shouldn't open toolbar", async () => {
     const { getEditor } = await setupWebsiteBuilder(
-        `<div><p>a</p><img class=a_nice_img src='${base64Img}'></div>`
+        `<div><p>a</p><img class=a_nice_img src='${dummyBase64Img}'></div>`
     );
     const editor = getEditor();
     const p = editor.editable.querySelector("p");
@@ -25,7 +22,7 @@ test("click on Image shouldn't open toolbar", async () => {
 });
 
 test("double click on Image", async () => {
-    await setupWebsiteBuilder(`<div><img class=a_nice_img src='${base64Img}'></div>`);
+    await setupWebsiteBuilder(`<div><img class=a_nice_img src='${dummyBase64Img}'></div>`);
     expect(".modal-content").toHaveCount(0);
     await dblclick(":iframe img.a_nice_img");
     await animationFrame();

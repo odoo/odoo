@@ -265,3 +265,6 @@ export function getInnerContent({
     keywords = keywords.join(", ");
     return `<div name="${name}" data-oe-type="snippet" data-oe-snippet-id="456" data-o-image-preview="${imagePreview}" data-oe-thumbnail="${thumbnail}" data-oe-keywords="${keywords}">${content}</div>`;
 }
+
+export const dummyBase64Img =
+    "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
