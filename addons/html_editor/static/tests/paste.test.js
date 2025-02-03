@@ -364,6 +364,16 @@ describe("Simple text", () => {
                 contentAfter: '<div>2a<span class="a">bx[]</span>e<br>f</div>',
             });
         });
+
+        test("should paste a text when content contains line breaks", async () => {
+            await testEditor({
+                contentBefore: "<div>[abc]</div>",
+                stepFunction: async (editor) => {
+                    pasteText(editor, "ab\ncd");
+                },
+                contentAfter: "<div>ab</div><div>cd[]</div>",
+            });
+        });
     });
 });
 
