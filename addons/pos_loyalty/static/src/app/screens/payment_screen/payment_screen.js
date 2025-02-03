@@ -109,7 +109,6 @@ patch(PaymentScreen.prototype, {
                 couponData[couponId] = {
                     points: 0,
                     program_id: reward.program_id.id,
-                    expiration_date: reward.program_id.date_to,
                     coupon_id: couponId,
                     barcode: false,
                 };
