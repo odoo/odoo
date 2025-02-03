@@ -2,6 +2,7 @@ import { AND, Record } from "@mail/core/common/record";
 import { rpc } from "@web/core/network/rpc";
 import { browser } from "@web/core/browser/browser";
 import { debounce } from "@web/core/utils/timing";
+import { expirableStorage } from "@im_livechat/core/common/expirable_storage";
 
 export class Chatbot extends Record {
     static id = AND("script", "thread");
@@ -75,6 +76,7 @@ export class Chatbot extends Record {
         this.thread.messages.push(this.store["mail.message"].get(message_id));
         if (this.currentStep) {
             this.currentStep.isLast = false;
+            this.thread.livechat_active = true;
         }
         this.start();
     }
@@ -123,7 +125,8 @@ export class Chatbot extends Record {
         return (
             (this.currentStep?.isLast &&
                 (!this.currentStep.expectAnswer || this.currentStep?.completed)) ||
-            this.currentStep?.operatorFound
+            this.currentStep?.operatorFound ||
+            !this.thread.livechat_active
         );
     }
 
@@ -231,8 +234,19 @@ export class Chatbot extends Record {
             const nextURL = new URL(answer.redirect_link, window.location.href);
             isRedirecting = url.pathname !== nextURL.pathname || url.origin !== nextURL.origin;
         }
+        const redirects = JSON.parse(
+            expirableStorage.getItem("im_livechat.chatbot_redirect") ?? "[]"
+        );
         const targetURL = new URL(answer.redirect_link, window.location.origin);
-        const redirectionAlreadyDone = targetURL.href === location.href;
+        const redirectionAlreadyDone =
+            targetURL.href === location.href || redirects.includes(message.id);
+        redirects.push(message.id);
+        const ONE_DAY_TTL = 60 * 60 * 24;
+        expirableStorage.setItem(
+            "im_livechat.chatbot_redirect",
+            JSON.stringify([...new Set(redirects)]),
+            ONE_DAY_TTL
+        );
         if (!redirectionAlreadyDone) {
             browser.location.assign(answer.redirect_link);
         }
