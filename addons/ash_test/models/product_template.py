@@ -24,3 +24,4 @@ class ProductTemplate(models.Model):
         ('manual', 'Manual'),
         ('automation_bulk', 'Automation Bulk'),
     ], string='Automation Manual Product', default='manual')
+    hs_code = fields.Char(string='HS Code')
