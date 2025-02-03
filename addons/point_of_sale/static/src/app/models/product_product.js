@@ -253,5 +253,8 @@ export class ProductProduct extends Base {
     get productDisplayName() {
         return this.default_code ? `[${this.default_code}] ${this.name}` : this.name;
     }
+    get canBeDisplayed() {
+        return this.active && this.available_in_pos;
+    }
 }
 registry.category("pos_available_models").add(ProductProduct.pythonModel, ProductProduct);

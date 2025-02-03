@@ -364,7 +364,7 @@ export class ProductScreen extends Component {
             if (filteredList.length >= 100) {
                 break;
             }
-            if (!excludedProductIds.includes(product.id) && product.available_in_pos) {
+            if (!excludedProductIds.includes(product.id) && product.canBeDisplayed) {
                 filteredList.push(product);
             }
         }

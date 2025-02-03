@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { unwrapContents } from "@html_editor/utils/dom";
-import { closestElement } from "@html_editor/utils/dom_traversal";
+import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
 import { findInSelection, callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
 import { LinkPopover } from "./link_popover";
@@ -12,6 +12,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { rpc } from "@web/core/network/rpc";
 import { memoize } from "@web/core/utils/functions";
 import { withSequence } from "@html_editor/utils/resource";
+import { isBlock } from "@html_editor/utils/blocks";
 
 /**
  * @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection
@@ -124,7 +125,16 @@ async function fetchAttachmentMetaData(url, ormService) {
 
 export class LinkPlugin extends Plugin {
     static id = "link";
-    static dependencies = ["dom", "history", "input", "selection", "split", "lineBreak", "overlay"];
+    static dependencies = [
+        "dom",
+        "history",
+        "input",
+        "selection",
+        "split",
+        "lineBreak",
+        "overlay",
+        "color",
+    ];
     // @phoenix @todo: do we want to have createLink and insertLink methods in link plugin?
     static shared = ["createLink", "insertLink", "getPathAsUrlCommand"];
     resources = {
@@ -316,7 +326,7 @@ export class LinkPlugin extends Plugin {
         this.type = type;
     }
 
-    normalizeLink() {
+    normalizeLink(root) {
         const { anchorNode } = this.dependencies.selection.getEditableSelection();
         const linkEl = closestElement(anchorNode, "a");
         if (linkEl && linkEl.isContentEditable) {
@@ -324,6 +334,26 @@ export class LinkPlugin extends Plugin {
             const url = deduceURLfromText(label, linkEl);
             if (url) {
                 linkEl.setAttribute("href", url);
+            }
+        }
+        for (const anchorEl of selectElements(root, "a")) {
+            const { color } = anchorEl.style;
+            const childNodes = [...anchorEl.childNodes];
+            // For each anchor element, if it has an inline color style,
+            // (converted from an external style), remove it from the anchor,
+            // create a font tag inside it, and move the color to the font tag.
+            // This ensures the color is applied to the font element instead of
+            // the anchor element itself.
+            if (color && childNodes.every((n) => !isBlock(n))) {
+                anchorEl.style.removeProperty("color");
+                const font = selectElements(anchorEl, "font").next().value;
+                if (font && anchorEl.textContent === font.textContent) {
+                    continue;
+                }
+                const newFont = this.document.createElement("font");
+                newFont.append(...childNodes);
+                anchorEl.appendChild(newFont);
+                this.dependencies.color.colorElement(newFont, color, "color");
             }
         }
     }

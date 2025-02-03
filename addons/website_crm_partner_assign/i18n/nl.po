@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # Manon Rondou, 2025
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 13:41+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Manon Rondou, 2025\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,7 +38,7 @@ msgid ""
 "(<i class=\"fa fa-long-arrow-right me-1\" aria-label=\"Assigned Partner\" "
 "title=\"Assigned Partner\"/>"
 msgstr ""
-"(<i class=\"fa fa-long-arrow-right me-1\" aria-label=\"Assigned Contact\" "
+"(<i class=\"fa fa-long-arrow-right me-1\" aria-label=\"Assigned Partner\" "
 "title=\"Toegewezen contact\"/>"
 
 #. module: website_crm_partner_assign
@@ -53,7 +53,7 @@ msgid ""
 "                There are no matching partners found for the selected country. Displaying results across all countries instead."
 msgstr ""
 "<i class=\"fa fa-info-circle me-2\"/>\n"
-"                Er zijn geen overeenkomende contacten gevonden voor het geselecteerde land. Bekijk de resultaten voor alle landen."
+"                Er zijn geen overeenkomende partners gevonden voor het geselecteerde land. Bekijk de resultaten voor alle landen."
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.ref_country
@@ -310,7 +310,7 @@ msgstr ""
 "                            Hallo,<br/>\n"
 "                            We zijn benaderd door potentiële klanten in jouw regio. De volgende leads zijn toegewezen aan <t t-out=\"ctx['partner_id'].name or ''\"/>:<br/>\n"
 "                            <ol>\n"
-"                                <li t-foreach=\"ctx['partner_leads']\" t-as=\"lead\"><a t-att-href=\"lead['lead_link']\" t-out=\"lead['lead_id'].name or 'Subject Undefined'\">Onderwerp niet gedefinieerd</a>, <t t-out=\"lead['lead_id'].partner_name or lead['lead_id'].contact_name or 'Contact Name Undefined'\">Contactnaam niet gedefinieerd</t>, <t t-out=\"lead['lead_id'].country_id and lead['lead_id'].country_id.name or 'Country Undefined'\">Land niet gedefinieerd</t>, <t t-out=\"lead['lead_id'].email_from or 'Email Undefined' or ''\">E-mail niet gedefinieerd</t>, <t t-out=\"lead['lead_id'].phone or ''\">+1 650-123-4567</t> </li><br/>\n"
+"                                <li t-foreach=\"ctx['partner_leads']\" t-as=\"lead\"><a t-att-href=\"lead['lead_link']\" t-out=\"lead['lead_id'].name or 'Subject Undefined'\">Onderwerp niet gedefinieerd</a>, <t t-out=\"lead['lead_id'].partner_name or lead['lead_id'].contact_name or 'Partner Name Undefined'\">Contactnaam niet gedefinieerd</t>, <t t-out=\"lead['lead_id'].country_id and lead['lead_id'].country_id.name or 'Country Undefined'\">Land niet gedefinieerd</t>, <t t-out=\"lead['lead_id'].email_from or 'Email Undefined' or ''\">E-mail niet gedefinieerd</t>, <t t-out=\"lead['lead_id'].phone or ''\">+1 650-123-4567</t> </li><br/>\n"
 "                            </ol>\n"
 "                            <t t-if=\"ctx.get('partner_in_portal')\">\n"
 "                                Maak verbinding met je <a t-att-href=\"'%s?db=%s' % (object.get_base_url(), object.env.cr.dbname)\">Partnerportaal</a> voor meer details. Op elke lead bevinden zich twee knoppen in de linkerbovenhoek die je moet indrukken nadat je contact hebt opgenomen met de lead: \"Ik ben geïnteresseerd\" & \"Ik ben niet geïnteresseerd\".<br/>\n"
@@ -319,12 +319,12 @@ msgstr ""
 "                                Je hebt nog geen portaaltoegang tot onze database. Neem contact met\n"
 "                                <t t-out=\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'\">ons</t> op.<br/>\n"
 "                            </t>\n"
-"                            De lead wordt naar een andere contact gestuurd als je niet binnen de 20 dagen contact opneemt met de lead.<br/><br/>\n"
+"                            De lead wordt naar een andere partner gestuurd als je niet binnen de 20 dagen contact opneemt met de lead.<br/><br/>\n"
 "                            Bedankt,<br/>\n"
 "                            <t t-out=\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature or ''\"/>\n"
 "                            <br/>\n"
 "                            <t t-if=\"not ctx['partner_id'].user_id\">\n"
-"                                PS: Het lijkt erop dat je geen toegewezen accountmanager hebt. Gelieve contact met ons op te nemen.\n"
+"                                PS: Het lijkt erop dat je geen toegewezen accountmanager hebt. Graag contact met ons op te nemen.\n"
 "                            </t>\n"
 "                        </div>\n"
 "                    </td>\n"
@@ -838,7 +838,7 @@ msgstr "Implementatie referenties"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__implemented_partner_count
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__implemented_partner_count
 msgid "Implemented Partner Count"
-msgstr "Geïmplementeerd aantal contacten"
+msgstr "Geïmplementeerd aantal partners"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__assigned_partner_id

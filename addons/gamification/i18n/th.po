@@ -34,6 +34,15 @@ msgid ""
 "        <t t-out=\"object.challenge_id.manager_id.signature or ''\"/>\n"
 "    </t>\n"
 msgstr ""
+"\n"
+"    <strong>การแจ้งเตือน</strong><br/>\n"
+"    คุณไม่ได้อัปเดตความคืบหน้าของเป้าหมาย<t t-out=\"object.definition_id.name or ''\"/> (ปัจจุบันถึง <t t-out=\"object.completeness or ''\"/>%) เป็นเวลาอย่างน้อย <t t-out=\"object.remind_update_delay or ''\"/> วัน อย่าลืมทำการอัปเดต\n"
+"    <br/><br/>\n"
+"    ขอบคุณ\n"
+"    <t t-if=\"object.challenge_id.manager_id.signature\">\n"
+"        <br/>\n"
+"        <t t-out=\"object.challenge_id.manager_id.signature or ''\"/>\n"
+"    </t>\n"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__user_count

@@ -835,7 +835,7 @@ test("message comment of same author within 5min. should be squashed", async () 
     await contains(".o-mail-Message", {
         contains: [
             [".o-mail-Message-content", { text: "body2" }],
-            [".o-mail-Message-sidebar .o-mail-Message-date", { text: "10:02" }],
+            [".o-mail-Message-sidebar .o-mail-Message-date", { text: "10:02 AM" }],
         ],
     });
 });

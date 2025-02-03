@@ -5,8 +5,8 @@
 # Translators:
 # emre oktem, 2024
 # Tiffany Chang, 2024
-# Mehmet YAYLA, 2024
 # Kaan Özdemir, 2024
+# Mehmet YAYLA, 2024
 # Doğan Altunbay <doganaltunbay@gmail.com>, 2024
 # İmat Yahya Çataklı <yahya.catakli@soluto.com.tr>, 2024
 # Saban Yildiz <sabany@projetgrup.com>, 2024
@@ -15,7 +15,6 @@
 # Metin Akın <aknmetin@gmail.com>, 2024
 # UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2024
 # Melih Melik Sonmez, 2024
-# Erdal Mutlu, 2024
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2024
 # checkyoursix <batuhan.akpinar@gmail.com>, 2024
 # İlknur Gözütok, 2024
@@ -39,22 +38,23 @@
 # Levent Karakaş <levent@mektup.at>, 2024
 # abc Def <hdogan1974@gmail.com>, 2024
 # Murat Kaplan <muratk@projetgrup.com>, 2024
+# Martin Trigaux, 2024
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2024
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024
 # Murat Durmuş <muratd@projetgrup.com>, 2024
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2024
-# Martin Trigaux, 2024
 # Ediz Duman <neps1192@gmail.com>, 2024
 # Umur Akın <umura@projetgrup.com>, 2024
 # Wil Odoo, 2024
+# Deniz Guvener, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-19 13:06+0000\n"
+"POT-Creation-Date: 2025-01-27 14:23+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Deniz Guvener, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3732,6 +3732,13 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_pos_urban_piper_enhancements
+msgid ""
+"\n"
+"Enhancements for the Point of Sale UrbanPiper module. Includes features such as store timing configuration, scheduled order handling, and improved toggle options.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_website_appointment_crm
 msgid ""
 "\n"
@@ -4487,6 +4494,22 @@ msgstr ""
 "     * FBA: Bir stok konumu ve stok hareketleri, Amazon Lojistik Merkezlerinde stoklarınızı izlemenize olanak tanır.\n"
 "     * FBM: Onaylanan her toplama işlemi için Amazon'a teslimat bildirimleri gönderilir (kısmi teslimat dostu).\n"
 "\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_sale_shopee
+msgid ""
+"\n"
+"Import your Shopee orders in Odoo and synchronize deliveries\n"
+"============================================================\n"
+"\n"
+"Key Features\n"
+"------------\n"
+"* Import orders from multiple accounts and shops\n"
+"* Orders are matched with Odoo products based on their internal reference (item_id or model_id in Shopee)\n"
+"* Support for both Fulfillment by Shopee (FBS), Fulfillment by Merchant (FBM) and Fulfilled by Cross Border Seller (Hybrid):\n"
+"* FBS: Importing the completed orders\n"
+"* FBM/Hybrid: Delivery information is fetched from Shopee, track and synchronize the stock level to Shopee\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_debit_note
@@ -6155,6 +6178,22 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_it_riba
+msgid ""
+"\n"
+"Ri.Ba. Export for Batch Payment\n"
+"================================\n"
+"\n"
+"This module enables the generation of Ri.Ba. (Ricevute Bancarie) files from batch payments in Odoo.  \n"
+"It facilitates compliance with the Italian banking standard for managing receivables.\n"
+"\n"
+"- Group multiple receivables into a single batch for streamlined management and reconciliation.\n"
+"- Export batch payments as RIBA-compliant files to be submitted to your homebanking for processing.\n"
+"\n"
+"For more information about RIBA standards, refer to the guidelines issued by the Italian Bankers Association (CBI).\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_rw
 msgid ""
 "\n"
@@ -6644,6 +6683,7 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_ec_edi_stock
 #: model:ir.module.module,description:base.module_l10n_pe_edi_stock
 msgid ""
 "\n"
@@ -7957,6 +7997,7 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_pos_restaurant_loyalty
 #: model:ir.module.module,description:base.module_pos_sale_loyalty
 msgid ""
 "\n"
@@ -8323,6 +8364,14 @@ msgid ""
 "\n"
 "The Chart of Accounts is from SYSCOHADA.\n"
 "\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_my_edi_extended
+msgid ""
+"\n"
+"This module improves the MyInvois E-invoicing feature by adding proper support for self billing, rendering the MyInvois\n"
+"QR code in the invoice PDF file and allows better management of foreign customer TIN.\n"
 msgstr ""
 
 #. module: base
@@ -9241,6 +9290,7 @@ msgstr "%s (Özel Giden Posta Sunucusu):"
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_actions.py:0
 #: code:addons/base/models/ir_filters.py:0
 #: code:addons/base/models/res_lang.py:0
 #: code:addons/base/models/res_partner.py:0
@@ -11177,6 +11227,11 @@ msgstr "Toplu postalama için aday / fırsat UTM bilgisi ekleyin"
 #: model:ir.module.module,summary:base.module_mass_mailing_crm_sms
 msgid "Add lead / opportunities info on mass mailing sms"
 msgstr "Toplu posta sms'leri hakkında müşteri adayı / fırsat bilgisi ekleyin"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_hr_payroll_localisation
+msgid "Add models and fields for complete mexican localisation"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_social_sale
@@ -14592,14 +14647,14 @@ msgid "Bahamas"
 msgstr "Bahamalar"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_bh
-msgid "Bahrain - Accounting"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.bh
 msgid "Bahrain"
 msgstr "Bahreyn"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_bh
+msgid "Bahrain - Accounting"
+msgstr ""
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.THB
@@ -14932,12 +14987,17 @@ msgstr "Tutar Önce"
 #. module: base
 #: model:res.country,name:base.by
 msgid "Belarus"
-msgstr "Beyaz Rusya"
+msgstr "Belarus"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
 msgid "Belgian Intrastat Declaration"
 msgstr "Belçika Intrastat beyannamesi"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_pos_restaurant
+msgid "Belgian POS Restaurant Localization"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_attendance
@@ -15069,7 +15129,7 @@ msgstr "Bermuda"
 #. module: base
 #: model:res.country,name:base.bt
 msgid "Bhutan"
-msgstr "Bütan"
+msgstr "Bhutan"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_ups
@@ -15187,7 +15247,7 @@ msgstr "Standlar/Katılımcı Köprüsü"
 #. module: base
 #: model:res.country,name:base.ba
 msgid "Bosnia and Herzegovina"
-msgstr "Bosna Hersek"
+msgstr "Bosna-Hersek"
 
 #. module: base
 #: model:res.country,name:base.bw
@@ -15487,7 +15547,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.io
 msgid "British Indian Ocean Territory"
-msgstr "Hint Okyanusu İngiliz Bölgesi"
+msgstr "İngiliz Hint Okyanusu Toprağı"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_device__browser
@@ -15498,7 +15558,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.bn
 msgid "Brunei Darussalam"
-msgstr "Brunei Sultanlığı"
+msgstr "Brunei"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_budget
@@ -15889,7 +15949,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.cv
 msgid "Cape Verde"
-msgstr "Yeşil Burun Adaları"
+msgstr "Cape Verde"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__on_delete__cascade
@@ -15918,7 +15978,7 @@ msgstr "Kategori"
 #. module: base
 #: model:res.country,name:base.ky
 msgid "Cayman Islands"
-msgstr "Cayman Adaları"
+msgstr "Kayman Adaları"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.GHS
@@ -16311,7 +16371,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.cn
 msgid "China"
-msgstr "Çin"
+msgstr "Çin Halk Cumhuriyeti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cn
@@ -17755,7 +17815,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.cw
 msgid "Curaçao"
-msgstr "Curaçao"
+msgstr "Curacao"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_currency_form
@@ -17968,7 +18028,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.cy
 msgid "Cyprus"
-msgstr "Kıbrıs"
+msgstr "Kıbrıs Rum Kesimi"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cy
@@ -17998,7 +18058,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ci
 msgid "Côte d'Ivoire"
-msgstr "Fil Dişi Sahili"
+msgstr "Fildişi Sahili"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_D
@@ -18457,7 +18517,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.cd
 msgid "Democratic Republic of the Congo"
-msgstr "Demokratik Kongo Cumhuriyeti"
+msgstr "Kongo Demokratik Cumhuriyeti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cd
@@ -19412,6 +19472,11 @@ msgid "Ecuadorian Accounting Reports"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ec_edi_stock
+msgid "Ecuadorian Delivery Guide"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ec_edi_pos
 msgid "Ecuadorian Point of Sale"
 msgstr ""
@@ -19840,7 +19905,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.gq
 msgid "Equatorial Guinea"
-msgstr "Ekvatoral Gine"
+msgstr "Ekvator Ginesi"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_maintenance
@@ -19943,7 +20008,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.sz
 msgid "Eswatini"
-msgstr "Eswatini"
+msgstr "Svaziland"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__etc/gmt
@@ -20819,6 +20884,11 @@ msgstr "İfade"
 #: model:ir.module.module,shortdesc:base.module_base_address_extended
 msgid "Extended Addresses"
 msgstr "Genişletilmiş Adresler"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_my_edi_extended
+msgid "Extended features for the E-invoicing using MyInvois"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__mode__extension
@@ -22391,7 +22461,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.gp
 msgid "Guadeloupe"
-msgstr "Guadeloupe"
+msgstr "Guadelup"
 
 #. module: base
 #: model:res.country,name:base.gu
@@ -22442,7 +22512,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.gw
 msgid "Guinea-Bissau"
-msgstr "Gine Bissau"
+msgstr "Gine-Bissau"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gw
@@ -23581,6 +23651,11 @@ msgid "Import QIF Bank Statement"
 msgstr "QIF Formatında Banka Hesap Özeti İçe Aktarımı"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_sale_shopee
+msgid "Import Shopee orders and sync deliveries"
+msgstr ""
+
+#. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "Import Template for Customers"
@@ -24628,7 +24703,7 @@ msgstr "Bu genel belgemi"
 #. module: base
 #: model:res.country,name:base.im
 msgid "Isle of Man"
-msgstr "Isle of Man"
+msgstr "Man Adası"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__israel
@@ -24704,6 +24779,11 @@ msgstr "İtalya - Muhasebe"
 #: model:ir.module.module,shortdesc:base.module_l10n_it_reports
 msgid "Italy - Accounting Reports"
 msgstr "İtalya - Muhasebe Raporları"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_it_riba
+msgid "Italy - Bank Receipts (Ri.Ba.)"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_edi_doi
@@ -24861,7 +24941,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.kz
 msgid "Kazakhstan"
-msgstr "Kazkistan"
+msgstr "Kazakistan"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_kz
@@ -24918,6 +24998,11 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_l10n_ke_hr_payroll_account
 msgid "Kenya - Payroll with Accounting"
 msgstr "Kenya - Muhasebe ile Bordro"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ke_edi_oscu_pos
+msgid "Kenya - Point of Sale"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ke_edi_oscu_mrp
@@ -25018,7 +25103,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.xk
 msgid "Kosovo"
-msgstr "Kosovo"
+msgstr "Kosova"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.ISK
@@ -25613,7 +25698,7 @@ msgstr "Lisans"
 #. module: base
 #: model:res.country,name:base.li
 msgid "Liechtenstein"
-msgstr "Liechtenstein"
+msgstr "Lihtenştayn"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.SZL
@@ -25714,6 +25799,11 @@ msgstr "Satış Noktası ve Satış Marjı arasındaki bağlantı modülü"
 #: model:ir.module.module,summary:base.module_pos_hr_restaurant
 msgid "Link module between pos_hr and pos_restaurant"
 msgstr "Pos_hr ve pos_restaurant arasındaki bağlantı modülü"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_pos_restaurant_loyalty
+msgid "Link module between pos_restaurant and pos_loyalty"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_pos_sale
@@ -26178,7 +26268,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.mw
 msgid "Malawi"
-msgstr "Malawi"
+msgstr "Malavi"
 
 #. module: base
 #: model:res.country,name:base.my
@@ -26198,6 +26288,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_my_edi
 msgid "Malaysia - E-invoicing"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_my_edi_extended
+msgid "Malaysia - E-invoicing Extended Features"
 msgstr ""
 
 #. module: base
@@ -26698,7 +26793,7 @@ msgstr "Marshall Adaları"
 #. module: base
 #: model:res.country,name:base.mq
 msgid "Martinique"
-msgstr "Martinique"
+msgstr "Martinik"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_mass_mailing
@@ -26779,7 +26874,7 @@ msgstr "Moritanya"
 #. module: base
 #: model:res.country,name:base.mu
 msgid "Mauritius"
-msgstr "Mauritus"
+msgstr "Mauritius"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mu_account
@@ -26931,6 +27026,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_hr_payroll
 msgid "Mexico - Payroll"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_hr_payroll_localisation
+msgid "Mexico - Payroll - Localisation"
 msgstr ""
 
 #. module: base
@@ -27406,7 +27506,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.md
 msgid "Moldova"
-msgstr "Moldova"
+msgstr "Moldova Cumhuriyeti"
 
 #. module: base
 #: model:res.country,name:base.mc
@@ -28065,7 +28165,7 @@ msgstr "Kuzey Kore"
 #. module: base
 #: model:res.country,name:base.mk
 msgid "North Macedonia"
-msgstr "Kuzey Makedonya"
+msgstr "Makedonya"
 
 #. module: base
 #: model:res.country,name:base.mp
@@ -30133,6 +30233,11 @@ msgid "POS - HR"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_restaurant_loyalty
+msgid "POS - Restaurant Loyality"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_sms
 msgid "POS - SMS"
 msgstr ""
@@ -31185,7 +31290,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.pn
 msgid "Pitcairn Islands"
-msgstr "Pitcairn Adaları"
+msgstr "Pitcairn"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__pivot
@@ -31300,6 +31405,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_point_of_sale
+#: model:ir.module.category,name:base.module_category_localization_point_of_sale
 #: model:ir.module.category,name:base.module_category_point_of_sale
 #: model:ir.module.category,name:base.module_category_sales_point_of_sale
 #: model:ir.module.module,shortdesc:base.module_point_of_sale
@@ -31314,6 +31420,11 @@ msgstr "Satış Noktası - Kuponlar & Sadakat"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_urban_piper
 msgid "Point of Sale - UrbanPiper"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_urban_piper_enhancements
+msgid "Point of Sale - UrbanPiper Enhancements"
 msgstr ""
 
 #. module: base
@@ -32546,7 +32657,8 @@ msgid "RTN"
 msgstr "RTN"
 
 #. module: base
-#: model:res.country,vat_label:base.ec model:res.country,vat_label:base.pe
+#: model:res.country,vat_label:base.ec model:res.country,vat_label:base.pa
+#: model:res.country,vat_label:base.pe
 msgid "RUC"
 msgstr "RUC"
 
@@ -33363,7 +33475,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.re
 msgid "Réunion"
-msgstr "Birleşme"
+msgstr "Reunion"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_S
@@ -33517,12 +33629,12 @@ msgstr "STANDART SATIŞ KOŞULLARI"
 #. module: base
 #: model:res.country,name:base.bl
 msgid "Saint Barthélémy"
-msgstr "Saint Barthélémy"
+msgstr "Saint Barthelemy"
 
 #. module: base
 #: model:res.country,name:base.sh
 msgid "Saint Helena, Ascension and Tristan da Cunha"
-msgstr "Saint Helena, Ascension ve Tristan da Cunha"
+msgstr "Saint Helena"
 
 #. module: base
 #: model:res.country,name:base.kn
@@ -33537,17 +33649,17 @@ msgstr "Saint Lucia"
 #. module: base
 #: model:res.country,name:base.mf
 msgid "Saint Martin (French part)"
-msgstr "Sen Martin (Fransız bölümü)"
+msgstr "Saint Martin (Fransız kısmı)"
 
 #. module: base
 #: model:res.country,name:base.pm
 msgid "Saint Pierre and Miquelon"
-msgstr "Sen Piyer ve Miquelon"
+msgstr "Saint Pierre ve Mikelon"
 
 #. module: base
 #: model:res.country,name:base.vc
 msgid "Saint Vincent and the Grenadines"
-msgstr "Saint Vincent ve the Grenadines"
+msgstr "Saint Vincent ve Grenadinler"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract_salary
@@ -33558,6 +33670,11 @@ msgstr "Maaş Yapılandırıcı"
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_contract_salary
 msgid "Salary Configurator (Belgium)"
 msgstr "Salary Configurator (Belgium)"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_contract_salary_mobility_budget
+msgid "Salary Configurator (Belgium) - Mobility Budget"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract_salary_holidays
@@ -33571,6 +33688,7 @@ msgstr "Salary Configurator - Payroll"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_hr_contract_salary
+#: model:ir.module.module,summary:base.module_l10n_be_hr_contract_salary_mobility_budget
 msgid "Salary Package Configurator"
 msgstr "Maaş Paketi Yapılandıcı"
 
@@ -33578,6 +33696,11 @@ msgstr "Maaş Paketi Yapılandıcı"
 #: model:ir.module.category,name:base.module_category_accounting_localizations_sale
 msgid "Sale"
 msgstr "Satış"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_test_sale_purchase_edi_ubl
+msgid "Sale & Purchase Order EDI Tests: Ensure Flow Robustness"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_sms
@@ -34646,6 +34769,11 @@ msgid "Shiprocket: Cash on Delivery"
 msgstr "Shiprocket: Teslimatta Ödeme"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_shopee
+msgid "Shopee Connector"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_wishlist
 msgid "Shopper's Wishlist"
 msgstr "Shopper'ın İstek Listesi"
@@ -34785,7 +34913,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.sx
 msgid "Sint Maarten (Dutch part)"
-msgstr "Sint Maarten (Hollanda bölümü)"
+msgstr "Sint Maarten"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__size
@@ -35001,7 +35129,7 @@ msgstr "Sırala"
 #. module: base
 #: model:res.country,name:base.za
 msgid "South Africa"
-msgstr "Güney Afrika"
+msgstr "Güney Afrika Cumhuriyeti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_za
@@ -35026,7 +35154,7 @@ msgstr "Güney Kore"
 #. module: base
 #: model:res.country,name:base.ss
 msgid "South Sudan"
-msgstr "Güney Sudan"
+msgstr "South Sudan"
 
 #. module: base
 #. odoo-python
@@ -35437,7 +35565,7 @@ msgstr "State Required"
 #. module: base
 #: model:res.country,name:base.ps
 msgid "State of Palestine"
-msgstr "Filistin Devleti"
+msgstr "İşgal Altındaki Filistin Toprağı"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__state_ids
@@ -35847,7 +35975,7 @@ msgstr "Sistem Güncellemesi"
 #. module: base
 #: model:res.country,name:base.st
 msgid "São Tomé and Príncipe"
-msgstr "São Tomé ve Príncipe"
+msgstr "Sao Tome ve Principe"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sn
@@ -35934,7 +36062,7 @@ msgstr "Tajawal"
 #. module: base
 #: model:res.country,name:base.tj
 msgid "Tajikistan"
-msgstr "Tacakistan"
+msgstr "Tacikistan"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.BDT
@@ -35960,7 +36088,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.tz
 msgid "Tanzania"
-msgstr "Tanzanya"
+msgstr "Tanzanya Birleşik Cumhuriyeti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tz_account
@@ -36125,6 +36253,11 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_test_resource
 msgid "Test - Resource"
 msgstr "Test - Kaynak"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_test_sale_purchase_edi_ubl
+msgid "Test - Sale & Purchase Order EDI"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_html_field_history
@@ -37567,6 +37700,14 @@ msgstr ""
 "test_mail. "
 
 #. module: base
+#: model:ir.module.module,description:base.module_test_sale_purchase_edi_ubl
+msgid ""
+"This module contains tests related to sale and purchase order edi.\n"
+"    Ensure export and import of order working properly and filling details properly from\n"
+"    order XML file."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_test_spreadsheet_edition
 msgid ""
 "This module contains tests related to spreadsheet edition.\n"
@@ -38186,7 +38327,7 @@ msgstr "Tetiklenen eylemler"
 #. module: base
 #: model:res.country,name:base.tt
 msgid "Trinidad and Tobago"
-msgstr "Trinidad Tobago"
+msgstr "Trinidad ve Tobago"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__2
@@ -38219,16 +38360,6 @@ msgid "Turkey"
 msgstr "Türkiye"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_tr_nilvera
-msgid "Türkiye - Nilvera"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_tr_nilvera_einvoice
-msgid "Türkiye - Nilvera E-Invoice"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.tm
 msgid "Turkmenistan"
 msgstr "Türkmenistan"
@@ -38236,7 +38367,7 @@ msgstr "Türkmenistan"
 #. module: base
 #: model:res.country,name:base.tc
 msgid "Turks and Caicos Islands"
-msgstr "Türk ve Caicos Adaları"
+msgstr "Turks ve Caicos Adaları"
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_mail_plugin
@@ -38326,6 +38457,16 @@ msgstr "Türkiye - Muhasebe"
 #: model:ir.module.module,shortdesc:base.module_l10n_tr_reports
 msgid "Türkiye - Accounting Reports"
 msgstr "Türkiye - Muhasebe Raporları"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_tr_nilvera
+msgid "Türkiye - Nilvera"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_tr_nilvera_einvoice
+msgid "Türkiye - Nilvera E-Invoice"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tr_hr_payroll
@@ -38495,7 +38636,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.um
 msgid "USA Minor Outlying Islands"
-msgstr "ABD Çevresi Adaları"
+msgstr "Birleşik Devletler Minor Outlying Adaları"
 
 #. module: base
 #: model:res.country,vat_label:base.at
@@ -38693,7 +38834,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.uk
 msgid "United Kingdom"
-msgstr "Birleşik Krallık (İngiltere)"
+msgstr "Birleşik Krallık (Büyük Britanya ve Kuzey İrlanda)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uk
@@ -38703,7 +38844,7 @@ msgstr "Birleşik Krallık - Muhasebe"
 #. module: base
 #: model:res.country,name:base.us
 msgid "United States"
-msgstr "Amerika Birleşik Devletleri (A.B.D.)"
+msgstr "Amerika Birleşik Devletleri"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us_account
@@ -39556,12 +39697,12 @@ msgstr "Birisinden kalan görünümler"
 #. module: base
 #: model:res.country,name:base.vg
 msgid "Virgin Islands (British)"
-msgstr "Virgin Adaları (İngiliz)"
+msgstr "Virjin Adaları (İngiliz)"
 
 #. module: base
 #: model:res.country,name:base.vi
 msgid "Virgin Islands (USA)"
-msgstr "Virgin Adaları (ABD)"
+msgstr "Virjin Adaları (ABD)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
@@ -40753,7 +40894,7 @@ msgstr "PK"
 #. module: base
 #: model:res.country,name:base.zm
 msgid "Zambia"
-msgstr "Zambiya"
+msgstr "Zambia"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_zm_account
@@ -41209,12 +41350,6 @@ msgid "many2many"
 msgstr "many2many"
 
 #. module: base
-#. odoo-python
-#: code:addons/base/models/ir_actions.py:0
-msgid "many2many fields cannot be evaluated by reference"
-msgstr "many2many alanları başvuru ile değerlendirilemiyor"
-
-#. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2one
 msgid "many2one"
 msgstr "many2one"
@@ -41518,7 +41653,7 @@ msgstr "evet"
 #. module: base
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
-msgstr "Åland Adaları"
+msgstr "Aland Adaları"
 
 #. module: base
 #. odoo-python

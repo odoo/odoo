@@ -542,7 +542,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             'extra_edis': False,
             'extra_edi_checkboxes': False,
             'pdf_report_id': wizard._get_default_pdf_report_id(invoice).id,
-            'display_pdf_report_id': False,
+            'display_pdf_report_id': True,
             'mail_template_id': wizard._get_default_mail_template_id(invoice).id,
             'mail_lang': 'en_US',
             'mail_partner_ids': wizard.move_id.partner_id.ids,

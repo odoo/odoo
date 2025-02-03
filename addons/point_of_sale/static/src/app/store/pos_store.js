@@ -29,7 +29,8 @@ import { PartnerList } from "../screens/partner_list/partner_list";
 import { ScaleScreen } from "../screens/scale_screen/scale_screen";
 import { computeComboItems } from "../models/utils/compute_combo_items";
 import { changesToOrder, getOrderChanges } from "../models/utils/order_change";
-import { getTaxesAfterFiscalPosition, getTaxesValues } from "../models/utils/tax_utils";
+import { getTaxesAfterFiscalPosition } from "../models/utils/tax_utils";
+import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { QRPopup } from "@point_of_sale/app/utils/qr_code_popup/qr_code_popup";
 import { ActionScreen } from "@point_of_sale/app/screens/action_screen";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
@@ -1184,10 +1185,7 @@ export class PosStore extends Reactive {
 
     getPendingOrder() {
         const orderToCreate = this.models["pos.order"].filter(
-            (order) =>
-                this.pendingOrder.create.has(order.id) &&
-                (order.lines.length > 0 ||
-                    order.payment_ids.some((p) => p.payment_method_id.type === "pay_later"))
+            (order) => this.pendingOrder.create.has(order.id) && order.hasItemsOrPayLater
         );
         const orderToUpdate = this.models["pos.order"].readMany(
             Array.from(this.pendingOrder.write)
@@ -1466,9 +1464,11 @@ export class PosStore extends Reactive {
         }
     }
 
-    getProducePriceDetails(product, p = false) {
-        const pricelist = this.getDefaultPricelist();
-        const price = p === false ? product.get_price(pricelist, 1) : p;
+    prepareProductBaseLineForTaxesComputationExtraValues(product, p = false) {
+        const currency = this.config.currency_id;
+        const extraValues = { currency_id: currency };
+        const priceList = this.getDefaultPricelist();
+        const priceUnit = p === false ? product.get_price(priceList, 1) : p;
 
         let taxes = product.taxes_id;
 
@@ -1478,17 +1478,32 @@ export class PosStore extends Reactive {
             taxes = getTaxesAfterFiscalPosition(taxes, order.fiscal_position_id, this.models);
         }
 
-        // Taxes computation.
-        const taxesData = getTaxesValues(
-            taxes,
-            price,
-            1,
-            product,
-            this.config._product_default_values,
-            this.company,
-            this.currency
+        return {
+            ...extraValues,
+            product_id: accountTaxHelpers.eval_taxes_computation_prepare_product_values(
+                this.config._product_default_values,
+                product
+            ),
+            quantity: 1,
+            price_unit: priceUnit,
+            tax_ids: taxes,
+        };
+    }
+
+    getProducePriceDetails(product, p = false) {
+        const company = this.company;
+        const baseLine = accountTaxHelpers.prepare_base_line_for_taxes_computation(
+            {},
+            this.prepareProductBaseLineForTaxesComputationExtraValues(product, p)
         );
-        return taxesData;
+        accountTaxHelpers.add_tax_details_in_base_line(baseLine, company);
+        accountTaxHelpers.round_base_lines_tax_details([baseLine], company);
+
+        const results = baseLine.tax_details;
+        for (const taxData of results.taxes_data) {
+            Object.assign(taxData, taxData.tax);
+        }
+        return results;
     }
 
     getProductPrice(product, p = false) {

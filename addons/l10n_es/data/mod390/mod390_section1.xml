@@ -46,6 +46,30 @@
                                 </record>
                             </field>
                         </record>
+                        <record id="mod_390_casilla_667" model="account.report.line">
+                            <field name="name">[667] Base imponible 2%</field>
+                            <field name="code">aeat_mod_390_667</field>
+                            <field name="expression_ids">
+                                <record id="mod_390_casilla_667_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">aeat_mod_303_165.balance</field>
+                                    <field name="subformula">cross_report</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="mod_390_casilla_668" model="account.report.line">
+                            <field name="name">[668] Cuota 2%</field>
+                            <field name="code">aeat_mod_390_668</field>
+                            <field name="expression_ids">
+                                <record id="mod_390_casilla_668_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">aeat_mod_303_167.balance</field>
+                                    <field name="subformula">cross_report</field>
+                                </record>
+                            </field>
+                        </record>
                         <record id="mod_390_casilla_01" model="account.report.line">
                             <field name="name">[01] Base imponible 4%</field>
                             <field name="code">aeat_mod_390_01</field>
@@ -91,6 +115,28 @@
                                     <field name="engine">aggregation</field>
                                     <field name="formula">aeat_mod_303_155.balance</field>
                                     <field name="subformula">cross_report</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="mod_390_casilla_669" model="account.report.line">
+                            <field name="name">[669] Base imponible 7.5%</field>
+                            <field name="code">aeat_mod_390_669</field>
+                            <field name="expression_ids">
+                                <record id="mod_390_casilla_669_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">mod390[669]</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="mod_390_casilla_670" model="account.report.line">
+                            <field name="name">[670] Cuota 7.5%</field>
+                            <field name="code">aeat_mod_390_670</field>
+                            <field name="expression_ids">
+                                <record id="mod_390_casilla_670_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">mod390[670]</field>
                                 </record>
                             </field>
                         </record>
@@ -172,6 +218,30 @@
                                 </record>
                             </field>
                         </record>
+                        <record id="mod_390_casilla_671" model="account.report.line">
+                            <field name="name">[671] Base imponible 2%</field>
+                            <field name="code">aeat_mod_390_671</field>
+                            <field name="expression_ids">
+                                <record id="mod_390_casilla_671_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">external</field>
+                                    <field name="formula">sum</field>
+                                    <field name="subformula">editable;rounding=2</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="mod_390_casilla_672" model="account.report.line">
+                            <field name="name">[672] Cuota 2%</field>
+                            <field name="code">aeat_mod_390_672</field>
+                            <field name="expression_ids">
+                                <record id="mod_390_casilla_672_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">external</field>
+                                    <field name="formula">sum</field>
+                                    <field name="subformula">editable;rounding=2</field>
+                                </record>
+                            </field>
+                        </record>
                         <record id="mod_390_casilla_500" model="account.report.line">
                             <field name="name">[500] Base imponible 4%</field>
                             <field name="code">aeat_mod_390_500</field>
@@ -213,6 +283,30 @@
                             <field name="code">aeat_mod_390_707</field>
                             <field name="expression_ids">
                                 <record id="mod_390_casilla_707_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">external</field>
+                                    <field name="formula">sum</field>
+                                    <field name="subformula">editable;rounding=2</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="mod_390_casilla_673" model="account.report.line">
+                            <field name="name">[673] Base imponible 7.5%</field>
+                            <field name="code">aeat_mod_390_673</field>
+                            <field name="expression_ids">
+                                <record id="mod_390_casilla_673_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">external</field>
+                                    <field name="formula">sum</field>
+                                    <field name="subformula">editable;rounding=2</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="mod_390_casilla_674" model="account.report.line">
+                            <field name="name">[674] Cuota 7.5%</field>
+                            <field name="code">aeat_mod_390_674</field>
+                            <field name="expression_ids">
+                                <record id="mod_390_casilla_674_balance" model="account.report.expression">
                                     <field name="label">balance</field>
                                     <field name="engine">external</field>
                                     <field name="formula">sum</field>
@@ -298,6 +392,30 @@
                                 </record>
                             </field>
                         </record>
+                        <record id="mod_390_casilla_675" model="account.report.line">
+                            <field name="name">[675] Base imponible 2%</field>
+                            <field name="code">aeat_mod_390_675</field>
+                            <field name="expression_ids">
+                                <record id="mod_390_casilla_675_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">external</field>
+                                    <field name="formula">sum</field>
+                                    <field name="subformula">editable;rounding=2</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="mod_390_casilla_676" model="account.report.line">
+                            <field name="name">[676] Cuota 2%</field>
+                            <field name="code">aeat_mod_390_676</field>
+                            <field name="expression_ids">
+                                <record id="mod_390_casilla_676_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">external</field>
+                                    <field name="formula">sum</field>
+                                    <field name="subformula">editable;rounding=2</field>
+                                </record>
+                            </field>
+                        </record>
                         <record id="mod_390_casilla_643" model="account.report.line">
                             <field name="name">[643] Base imponible 4%</field>
                             <field name="code">aeat_mod_390_643</field>
@@ -339,6 +457,30 @@
                             <field name="code">aeat_mod_390_711</field>
                             <field name="expression_ids">
                                 <record id="mod_390_casilla_711_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">external</field>
+                                    <field name="formula">sum</field>
+                                    <field name="subformula">editable;rounding=2</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="mod_390_casilla_677" model="account.report.line">
+                            <field name="name">[677] Base imponible 7.5%</field>
+                            <field name="code">aeat_mod_390_677</field>
+                            <field name="expression_ids">
+                                <record id="mod_390_casilla_677_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">external</field>
+                                    <field name="formula">sum</field>
+                                    <field name="subformula">editable;rounding=2</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="mod_390_casilla_678" model="account.report.line">
+                            <field name="name">[678] Cuota 7.5%</field>
+                            <field name="code">aeat_mod_390_678</field>
+                            <field name="expression_ids">
+                                <record id="mod_390_casilla_678_balance" model="account.report.expression">
                                     <field name="label">balance</field>
                                     <field name="engine">external</field>
                                     <field name="formula">sum</field>
@@ -424,6 +566,30 @@
                                 </record>
                             </field>
                         </record>
+                        <record id="mod_390_casilla_679" model="account.report.line">
+                            <field name="name">[679] Base imponible 2%</field>
+                            <field name="code">aeat_mod_390_679</field>
+                            <field name="expression_ids">
+                                <record id="mod_390_casilla_679_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">external</field>
+                                    <field name="formula">sum</field>
+                                    <field name="subformula">editable;rounding=2</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="mod_390_casilla_680" model="account.report.line">
+                            <field name="name">[680] Cuota 2%</field>
+                            <field name="code">aeat_mod_390_680</field>
+                            <field name="expression_ids">
+                                <record id="mod_390_casilla_680_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">external</field>
+                                    <field name="formula">sum</field>
+                                    <field name="subformula">editable;rounding=2</field>
+                                </record>
+                            </field>
+                        </record>
                         <record id="mod_390_casilla_07" model="account.report.line">
                             <field name="name">[07] Base imponible 4%</field>
                             <field name="code">aeat_mod_390_07</field>
@@ -465,6 +631,30 @@
                             <field name="code">aeat_mod_390_715</field>
                             <field name="expression_ids">
                                 <record id="mod_390_casilla_715_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">external</field>
+                                    <field name="formula">sum</field>
+                                    <field name="subformula">editable;rounding=2</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="mod_390_casilla_681" model="account.report.line">
+                            <field name="name">[681] Base imponible 7.5%</field>
+                            <field name="code">aeat_mod_390_681</field>
+                            <field name="expression_ids">
+                                <record id="mod_390_casilla_681_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">external</field>
+                                    <field name="formula">sum</field>
+                                    <field name="subformula">editable;rounding=2</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="mod_390_casilla_682" model="account.report.line">
+                            <field name="name">[682] Cuota 7.5%</field>
+                            <field name="code">aeat_mod_390_682</field>
+                            <field name="expression_ids">
+                                <record id="mod_390_casilla_682_balance" model="account.report.expression">
                                     <field name="label">balance</field>
                                     <field name="engine">external</field>
                                     <field name="formula">sum</field>
@@ -578,6 +768,28 @@
                                 </record>
                             </field>
                         </record>
+                        <record id="mod_390_casilla_683" model="account.report.line">
+                            <field name="name">[683] Base imponible 2%</field>
+                            <field name="code">aeat_mod_390_683</field>
+                            <field name="expression_ids">
+                                <record id="mod_390_casilla_683_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">mod390[683]</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="mod_390_casilla_684" model="account.report.line">
+                            <field name="name">[684] Cuota 2%</field>
+                            <field name="code">aeat_mod_390_684</field>
+                            <field name="expression_ids">
+                                <record id="mod_390_casilla_684_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">mod390[684]</field>
+                                </record>
+                            </field>
+                        </record>
                         <record id="mod_390_casilla_21" model="account.report.line">
                             <field name="name">[21] Base imponible 4%</field>
                             <field name="code">aeat_mod_390_21</field>
@@ -619,6 +831,28 @@
                                     <field name="label">balance</field>
                                     <field name="engine">tax_tags</field>
                                     <field name="formula">mod390[719]</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="mod_390_casilla_685" model="account.report.line">
+                            <field name="name">[685] Base imponible 7.5%</field>
+                            <field name="code">aeat_mod_390_685</field>
+                            <field name="expression_ids">
+                                <record id="mod_390_casilla_685_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">mod390[685]</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="mod_390_casilla_686" model="account.report.line">
+                            <field name="name">[686] Cuota 7.5%</field>
+                            <field name="code">aeat_mod_390_686</field>
+                            <field name="expression_ids">
+                                <record id="mod_390_casilla_686_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">mod390[686]</field>
                                 </record>
                             </field>
                         </record>
@@ -694,6 +928,28 @@
                                 </record>
                             </field>
                         </record>
+                        <record id="mod_390_casilla_687" model="account.report.line">
+                            <field name="name">[687] Base imponible 2%</field>
+                            <field name="code">aeat_mod_390_687</field>
+                            <field name="expression_ids">
+                                <record id="mod_390_casilla_687_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">mod390[687]</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="mod_390_casilla_688" model="account.report.line">
+                            <field name="name">[688] Cuota 2%</field>
+                            <field name="code">aeat_mod_390_688</field>
+                            <field name="expression_ids">
+                                <record id="mod_390_casilla_688_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">mod390[688]</field>
+                                </record>
+                            </field>
+                        </record>
                         <record id="mod_390_casilla_545" model="account.report.line">
                             <field name="name">[545] Base imponible 4%</field>
                             <field name="code">aeat_mod_390_545</field>
@@ -735,6 +991,28 @@
                                     <field name="label">balance</field>
                                     <field name="engine">tax_tags</field>
                                     <field name="formula">mod390[723]</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="mod_390_casilla_689" model="account.report.line">
+                            <field name="name">[689] Base imponible 7.5%</field>
+                            <field name="code">aeat_mod_390_689</field>
+                            <field name="expression_ids">
+                                <record id="mod_390_casilla_689_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">mod390[689]</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="mod_390_casilla_690" model="account.report.line">
+                            <field name="name">[690] Cuota 7.5%</field>
+                            <field name="code">aeat_mod_390_690</field>
+                            <field name="expression_ids">
+                                <record id="mod_390_casilla_690_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">mod390[690]</field>
                                 </record>
                             </field>
                         </record>
@@ -912,33 +1190,42 @@
                             <field name="name">[33] Base imponible</field>
                             <field name="code">aeat_mod_390_33</field>
                             <field name="aggregation_formula">
-                                aeat_mod_390_716.balance + aeat_mod_390_01.balance + aeat_mod_390_03.balance +
-                                aeat_mod_390_05.balance + aeat_mod_390_500.balance + aeat_mod_390_502.balance +
-                                aeat_mod_390_504.balance + aeat_mod_390_643.balance + aeat_mod_390_645.balance +
-                                aeat_mod_390_647.balance + aeat_mod_390_07.balance + aeat_mod_390_09.balance +
-                                aeat_mod_390_11.balance + aeat_mod_390_13.balance + aeat_mod_390_21.balance +
-                                aeat_mod_390_718.balance + aeat_mod_390_23.balance + aeat_mod_390_25.balance +
-                                aeat_mod_390_720.balance + aeat_mod_390_545.balance + aeat_mod_390_722.balance +
-                                aeat_mod_390_547.balance + aeat_mod_390_551.balance + aeat_mod_390_27.balance +
-                                aeat_mod_390_29.balance + aeat_mod_390_649.balance + aeat_mod_390_31.balance
+                                aeat_mod_390_700.balance + aeat_mod_390_667.balance + aeat_mod_390_01.balance +
+                                aeat_mod_390_702.balance + aeat_mod_390_669.balance + aeat_mod_390_03.balance +
+                                aeat_mod_390_05.balance + aeat_mod_390_704.balance + aeat_mod_390_671.balance +
+                                aeat_mod_390_500.balance + aeat_mod_390_706.balance + aeat_mod_390_673.balance +
+                                aeat_mod_390_502.balance + aeat_mod_390_504.balance + aeat_mod_390_708.balance +
+                                aeat_mod_390_675.balance + aeat_mod_390_643.balance + aeat_mod_390_710.balance +
+                                aeat_mod_390_677.balance + aeat_mod_390_645.balance + aeat_mod_390_647.balance +
+                                aeat_mod_390_712.balance + aeat_mod_390_679.balance + aeat_mod_390_07.balance +
+                                aeat_mod_390_714.balance + aeat_mod_390_681.balance + aeat_mod_390_09.balance +
+                                aeat_mod_390_11.balance + aeat_mod_390_13.balance + aeat_mod_390_716.balance +
+                                aeat_mod_390_683.balance + aeat_mod_390_21.balance + aeat_mod_390_718.balance +
+                                aeat_mod_390_685.balance + aeat_mod_390_23.balance + aeat_mod_390_25.balance +
+                                aeat_mod_390_720.balance + aeat_mod_390_687.balance + aeat_mod_390_545.balance +
+                                aeat_mod_390_722.balance + aeat_mod_390_689.balance + aeat_mod_390_547.balance +
+                                aeat_mod_390_551.balance
                             </field>
                         </record>
                         <record id="mod_390_casilla_34" model="account.report.line">
                             <field name="name">[34] Cuotas</field>
                             <field name="code">aeat_mod_390_34</field>
                             <field name="aggregation_formula">
-                                aeat_mod_390_717.balance + aeat_mod_390_02.balance + aeat_mod_390_04.balance +
-                                aeat_mod_390_06.balance + aeat_mod_390_501.balance +
-                                aeat_mod_390_503.balance + aeat_mod_390_505.balance +
-                                aeat_mod_390_644.balance + aeat_mod_390_646.balance +
-                                aeat_mod_390_648.balance + aeat_mod_390_08.balance +
-                                aeat_mod_390_10.balance + aeat_mod_390_12.balance +
-                                aeat_mod_390_14.balance + aeat_mod_390_22.balance + aeat_mod_390_719.balance +
-                                aeat_mod_390_24.balance + aeat_mod_390_26.balance + aeat_mod_390_721.balance +
-                                aeat_mod_390_546.balance + aeat_mod_390_723.balance + aeat_mod_390_548.balance +
-                                aeat_mod_390_552.balance + aeat_mod_390_28.balance +
-                                aeat_mod_390_30.balance + aeat_mod_390_650.balance +
-                                aeat_mod_390_32.balance
+                                aeat_mod_390_701.balance + aeat_mod_390_668.balance + aeat_mod_390_02.balance +
+                                aeat_mod_390_703.balance + aeat_mod_390_670.balance + aeat_mod_390_04.balance +
+                                aeat_mod_390_06.balance + aeat_mod_390_705.balance + aeat_mod_390_672.balance +
+                                aeat_mod_390_501.balance + aeat_mod_390_707.balance + aeat_mod_390_674.balance +
+                                aeat_mod_390_503.balance + aeat_mod_390_505.balance + aeat_mod_390_709.balance +
+                                aeat_mod_390_676.balance + aeat_mod_390_644.balance + aeat_mod_390_711.balance +
+                                aeat_mod_390_678.balance + aeat_mod_390_646.balance + aeat_mod_390_648.balance +
+                                aeat_mod_390_713.balance + aeat_mod_390_680.balance + aeat_mod_390_08.balance +
+                                aeat_mod_390_715.balance + aeat_mod_390_682.balance + aeat_mod_390_10.balance +
+                                aeat_mod_390_12.balance + aeat_mod_390_14.balance + aeat_mod_390_717.balance +
+                                aeat_mod_390_684.balance + aeat_mod_390_22.balance + aeat_mod_390_719.balance +
+                                aeat_mod_390_686.balance + aeat_mod_390_24.balance + aeat_mod_390_26.balance +
+                                aeat_mod_390_721.balance + aeat_mod_390_688.balance + aeat_mod_390_546.balance +
+                                aeat_mod_390_723.balance + aeat_mod_390_690.balance + aeat_mod_390_548.balance +
+                                aeat_mod_390_552.balance
                             </field>
                         </record>
                     </field>

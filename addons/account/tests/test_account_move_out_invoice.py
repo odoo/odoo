@@ -4297,6 +4297,36 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertEqual(invoice_1.journal_id.id, invoices_duplicate[0]['journal_id'])
         self.assertEqual(invoice_2.journal_id.id, invoices_duplicate[1]['journal_id'])
 
+    def test_before_initial_rate(self):
+        def invoice(date):
+            return self.init_invoice(
+                move_type='out_invoice',
+                invoice_date=date,
+                partner=self.partner_a,
+                amounts=[1000.0],
+                taxes=[],
+                currency=currency,
+            )
+
+        currency = self.setup_other_currency('EUR', rates=[
+            ('2016-01-01', 3.0),
+            ('2017-01-01', 2.0),
+        ])
+        self.assertRecordValues(invoice('2015-01-01'), [{
+            'amount_total': 1000.0,
+            'amount_total_signed': 333.33,
+        }])
+        self.assertRecordValues(invoice('2016-01-01'), [{
+            'amount_total': 1000.0,
+            'amount_total_signed': 333.33,
+        }])
+        self.assertRecordValues(invoice('2017-01-01'), [{
+            'amount_total': 1000.0,
+            'amount_total_signed': 500.00,
+        }])
+
+
+
     def test_on_quick_encoding_non_accounting_lines(self):
         """ Ensure that quick encoding values are only applied to accounting lines) """
 
@@ -4497,3 +4527,39 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             })],
         })
         self.assertEqual(move.line_ids.partner_id, self.partner_a)
+
+    def test_out_invoice_bank_partner(self):
+        """ Check the bank partner is recomputed on invoice company change on new invoice """
+        company_1 = self.company_data['company']
+        company_2 = self.company_data_2['company']
+        bank = self.env["res.partner.bank"].create({
+            "bank_name": "FAKE",
+            "acc_number": "1234567890",
+            "partner_id": company_1.partner_id.id,
+        })
+        bank_2 = self.env["res.partner.bank"].create({
+            "bank_name": "FAKE 2",
+            "acc_number": "1234567890",
+            "partner_id": company_2.partner_id.id,
+        })
+        invoice_new = self.env["account.move"].with_context(default_move_type="out_invoice").new({
+            "company_id": company_1.id,
+            "partner_id": self.partner_a.id,
+        })
+        self.assertEqual(
+            company_1.partner_id,
+            invoice_new.bank_partner_id
+        )
+        self.assertEqual(
+            bank,
+            invoice_new.partner_bank_id
+        )
+        invoice_new.company_id = company_2
+        self.assertEqual(
+            company_2.partner_id,
+            invoice_new.bank_partner_id
+        )
+        self.assertEqual(
+            bank_2,
+            invoice_new.partner_bank_id
+        )

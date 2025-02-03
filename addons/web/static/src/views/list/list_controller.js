@@ -529,7 +529,7 @@ export class ListController extends Component {
     }
 
     async getExportedFields(model, import_compat, parentParams) {
-        let domain = this.model.root.domain;
+        let domain = parentParams ? [] : this.model.root.domain;
         if (!this.isDomainSelected) {
             const resIds = await this.getSelectedResIds();
             const ids = resIds.length > 0 && resIds;

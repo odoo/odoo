@@ -4,18 +4,18 @@
 # 
 # Translators:
 # Martin Trigaux, 2024
-# Manon Rondou, 2024
 # Tiffany Chang, 2024
 # Wil Odoo, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:40+0000\n"
+"POT-Creation-Date: 2025-01-27 13:04+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -152,7 +152,7 @@ msgid ""
 msgstr ""
 "- Onmiddellijk: Alle mogelijke varianten worden aangemaakt zodra het kenmerk en de waarden ervan worden toegevoegd aan een product.\n"
 "        - Dynamisch: Elke variant wordt alleen aangemaakt wanneer de bijbehorende attributen en waarden worden toegevoegd aan een verkooporder.\n"
-"        - Nooit: Varianten worden nooit aangemaakt voor het attribuut.\n"
+"        - Nooit: Varianten worden nooit aangemaakt voor het kenmerk.\n"
 "        Opmerking: dit kan niet worden gewijzigd als het kenmerk eenmaal wordt gebruikt voor een product."
 
 #. module: product
@@ -906,8 +906,8 @@ msgstr "Combinatieprijs"
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
-msgid "Combo products can't have attributes"
-msgstr "Combinatieproducten kunnen geen kenmerken hebben"
+msgid "Combo products can't have attributes."
+msgstr "Comboproducten kunnen geen attributen hebben."
 
 #. module: product
 #. odoo-python
@@ -965,7 +965,7 @@ msgstr "Conferentie tafel"
 #. module: product
 #: model:ir.model,name:product.model_res_config_settings
 msgid "Config Settings"
-msgstr "Configuratie instellingen"
+msgstr "Configuratie-instellingen"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -1553,7 +1553,7 @@ msgstr "Volgers"
 #: model:ir.model.fields,field_description:product.field_product_product__message_partner_ids
 #: model:ir.model.fields,field_description:product.field_product_template__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Contacten)"
+msgstr "Volgers (Partners)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__activity_type_icon
@@ -2081,7 +2081,7 @@ msgstr "Marges"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_markup
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Markup"
-msgstr "Opmaak"
+msgstr "Opslag"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -3559,7 +3559,16 @@ msgid ""
 "current partner"
 msgstr ""
 "Deze prijslijst wordt gebruikt i.p.v. de standaard prijslijst bij verkopen "
-"aan de huidige contact"
+"aan de huidige partner"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_template.py:0
+msgid ""
+"This product is part of a combo, so its type can't be changed to \"combo\"."
+msgstr ""
+"Dit product maakt deel uit van een combinatie. Het type kan niet worden "
+"gewijzigd naar 'combo'."
 
 #. module: product
 #. odoo-python
@@ -4362,7 +4371,7 @@ msgstr "Bijv. USD handelaren"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "markup"
-msgstr "opmaak"
+msgstr "opslag"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
