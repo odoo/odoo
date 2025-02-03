@@ -465,30 +465,48 @@
                                 id="o_wsale_products_header"
                                 t-attf-class="d-flex flex-column gap-2 {{_header_has_content and 'py-3' or (not _header_has_content and not opt_wsale_design_grid and 'py-3')}}"
                                 >
-                                <t t-if="category" t-call="website_sale.products_breadcrumb">
+                                <t t-if="category and not search" t-call="website_sale.products_breadcrumb">
                                     <t
                                         t-set="_classes"
                                         t-valuef="d-none d-lg-flex w-100 p-0 mb-0 small"
                                     />
                                 </t>
-                                <div
-                                    t-if="category"
-                                    class="d-flex gap-1 align-items-center"
-                                    >
-                                    <t t-if="not category.parent_id" t-set="backUrl" t-valuef="/shop"/>
-                                    <t t-else="" t-set="backUrl" t-value="keep('/shop/category/' + slug(category.parent_id), category=0)"/>
+                                <h1
+                                    t-if="category or search"
+                                    t-attf-class="d-flex gap-1 align-items-center mb-0 lh-lg {{search and 'base-fs font-sans-serif' or 'fs-3'}} {{search and bool(category) and 'mb-2'}}"
+                                >
                                     <a
-                                        t-attf-class="btn ps-0 pe-2 d-lg-none"
-                                        t-att-href="category.parent_id and keep('/shop/category/' + slug(category.parent_id), category=0) or '/shop'"
+                                        t-if="(search and not category) or (not search and category)"
+                                        t-attf-class="btn ps-0 pe-2 {{not search and 'd-lg-none'}}"
+                                        t-att-href="category.parent_id and keep('/shop/category/' + slug(category.parent_id), category=0) or keep('/shop/', search=0, category=0)"
                                         role="button"
-                                        title="Back"
-                                        >
+                                        t-attf-title="Back to {{category.parent_id and category.parent_id.name or 'Shop'}}"
+                                    >
                                         <i class="oi oi-arrow-left" role="img"/>
                                     </a>
-                                    <h1 class="mb-0 fs-3 lh-base" t-esc="category.name"/>
-                                </div>
+                                    <t t-if="search and category">
+                                        <span class="text-muted">Searching</span>
+                                        <span class="badge text-bg-info fw-normal base-fs">
+                                            <t t-esc="search"/>
+                                            <a title="Clear search for this category" t-att-href="keep('/shop/category/' + slug(category), search=0)" class="link-info">
+                                                <i class="oi oi-close" role="img"/>
+                                            </a>
+                                        </span>
+                                        <span class="text-muted">in</span>
+                                        <span class="badge text-bg-primary fw-normal base-fs">
+                                            <t t-esc="category.name"/>
+                                            <a title="Search globally" t-att-href="keep('/shop/', search=search, category=0)">
+                                                <i class="oi oi-close" role="img"/>
+                                            </a>
+                                        </span>
+                                    </t>
+                                    <span t-elif="search">
+                                        <span class="text-muted">Search results for </span>'<strong t-esc="search"/>' <small t-if="search_count" class="text-muted"> (<t t-esc="search_count"/>)</small>
+                                    </span>
+                                    <t t-elif="category" t-esc="category.name"/>
+                                </h1>
                                 <h1
-                                    t-if="not category"
+                                    t-if="not category and not search"
                                     class="position-absolute start-100 w-0 h-0 overflow-hidden visually-hidden"
                                     >
                                     <t t-out="res_company.name"/> - All products
@@ -513,12 +531,15 @@
                                 >
                                     <t t-if="is_view_active('website_sale.search')">
                                         <t t-set="_has_all_sibligns" t-value="hasPricelistDropdown and is_view_active('website_sale.sort') and wsale_has_filters_btn"></t>
-                                        <div t-attf-class="o_wsale_products_header_search_form_container {{ _has_all_sibligns and 'd-none d-sm-inline-block'}} col-xl-5 me-auto {{not hasLeftColumn and 'col-xl-6'}}"
+                                        <!-- Desktop Search button -->
+                                        <div
+                                            t-attf-class="o_wsale_products_header_search_form_container {{ _has_all_sibligns and 'd-none d-sm-inline-block'}} col-xl-5 me-auto {{not hasLeftColumn and 'col-xl-6'}}"
                                             t-call="website_sale.search"
-                                            >
-                                            <t t-if="category" t-set="placeholder" t-value="'Search in ' + category.name"/>
+                                        >
+                                            <t t-if="category" t-set="placeholder">Search in <t t-out="category.name"/></t>
                                             <t t-set="search" t-value="original_search or search"/>
                                         </div>
+                                        <!-- Mobile Search button -->
                                         <a
                                             t-attf-class="btn o_not_editable {{_has_all_sibligns and 'd-inline-block d-sm-none' or 'd-none'}} me-auto btn-{{navClass}}"
                                             data-bs-target="#o_wsale_search_modal"
@@ -526,7 +547,7 @@
                                             role="button"
                                             title="Search Products"
                                             href="#"
-                                            >
+                                        >
                                             <i class="oi oi-search" role="img"/>
                                         </a>
                                     </t>
@@ -619,8 +640,22 @@
                                 <t t-else="">
                                     <h3 class="mt8">No results</h3>
                                     <p>No results for "<strong t-esc='search'/>"<t t-if="category"> in category "<strong t-esc="category.display_name"/>"</t>.</p>
+                                    <a
+                                        t-if="category"
+                                        t-attf-href="/shop?search={{search}}"
+                                        t-attf-title="Search {{search}} globally"
+                                        class="d-block pb-5"
+                                    >
+                                        Search globally
+                                    </a>
                                 </t>
-                                <p t-ignore="true" groups="sales_team.group_sale_manager">Click <i>'New'</i> in the top-right corner to create your first product.</p>
+                                <div
+                                    t-ignore="true"
+                                    groups="sales_team.group_sale_manager"
+                                    class="alert alert-info d-inline-block mx-auto"
+                                >
+                                    Click <i>'New'</i> in the top-right corner to create your first product.
+                                </div>
                             </div>
                             <div id="o_wsale_pager" t-attf-class="products_pager d-flex justify-content-center {{opt_wsale_design_grid and 'py-4' or 'py-5 pb-4'}}">
                                 <t t-call="website.pager"/>
@@ -660,6 +695,7 @@
                                 <t t-set="_classes" t-valuef="input-group rounded o_cc o_cc1 mb-1"/>
                                 <t t-set="_input_classes" t-valuef="border-0 p-3"/>
                                 <t t-set="_submit_classes" t-valuef="px-4"/>
+                                <t t-if="category" t-set="placeholder">Search in <t t-out="category.name"/></t>
                             </t>
                         </div>
                     </div>
@@ -794,9 +830,9 @@
             <div
                 if="is_view_active('website_sale.search') and (opt_wsale_attributes or opt_wsale_attributes_top)"
                 class="offcanvas-body flex-grow-0 overflow-visible"
-                >
+            >
                 <t t-call="website_sale.search">
-                    <t t-if="category" t-set="placeholder" t-value="'Search in ' + category.name"/>
+                    <t t-if="category" t-set="placeholder">Search in <t t-out="category.name"/></t>
                     <t t-set="search" t-value="original_search or search"/>
                     <t t-set="_s_searchbar_autocomplete_classes" t-valuef="bg-primary"> </t>
                 </t>

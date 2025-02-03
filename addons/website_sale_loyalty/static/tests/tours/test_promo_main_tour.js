@@ -7,7 +7,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
     steps: () => [
         /* 1. Buy 1 Small Cabinet, enable coupon code & insert 10% code */
         {
-            trigger: ".oe_search_found",
+            trigger: ".oe_search_found:not(:visible)",
         },
         {
             content: "select Small Cabinet",

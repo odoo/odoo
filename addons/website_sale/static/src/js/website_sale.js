@@ -586,6 +586,22 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
 
 publicWidget.registry.WebsiteSale = WebsiteSale
 
+publicWidget.registry.WebsiteSaleSearchModal = publicWidget.Widget.extend({
+    selector: '#o_wsale_search_modal',
+    disabledInEditableMode: true,
+
+    //--------------------------------------------------------------------------
+    // Overrides
+    //--------------------------------------------------------------------------
+    start() {
+        this._super(...arguments);
+
+        this.el.addEventListener("shown.bs.modal", (ev) => {
+            ev.target.querySelector('.oe_search_box').focus();
+        });
+    },
+});
+
 publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
     selector: '.oe_website_sale',
     disabledInEditableMode: false,
@@ -710,6 +726,7 @@ publicWidget.registry.websiteSaleProductPageReviews = publicWidget.Widget.extend
 export default {
     WebsiteSale: publicWidget.registry.WebsiteSale,
     WebsiteSaleLayout: publicWidget.registry.WebsiteSaleLayout,
+    WebsiteSaleSearchModal: publicWidget.registry.WebsiteSaleSearchModal,
     WebsiteSaleProductPage: publicWidget.registry.WebsiteSaleAccordionProduct,
     WebsiteSaleCarouselProduct: publicWidget.registry.websiteSaleCarouselProduct,
     WebsiteSaleProductPageReviews: publicWidget.registry.websiteSaleProductPageReviews,
