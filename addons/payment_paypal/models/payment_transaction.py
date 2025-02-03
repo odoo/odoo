@@ -7,7 +7,6 @@ from odoo import _, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.payment import utils as payment_utils
-from odoo.addons.payment_paypal import utils as paypal_utils
 from odoo.addons.payment_paypal.const import PAYMENT_STATUS_MAPPING
 
 
@@ -51,7 +50,8 @@ class PaymentTransaction(models.Model):
                             'business_email':  self.provider_id.company_id.email,
                             'brand_name': self.provider_id.company_id.name,
                         },
-                        'email_address': paypal_utils.get_normalized_email_account(self.provider_id)
+                        'email_address': payment_utils.get_normalized_field(
+                            self.provider_id.paypal_email_account),
                     },
                 },
             ],
