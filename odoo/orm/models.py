@@ -4489,8 +4489,6 @@ class BaseModel(metaclass=MetaModel):
             for field in self._fields.values():
                 if field.type in ('one2many', 'many2many'):
                     self.env.cache.set(record, field, ())
-                elif field.related and not field.column_type:
-                    self.env.cache.set(record, field, None)
                 elif field.store and field.name not in set_vals:
                     self.env.cache.set(record, field, None)
 
