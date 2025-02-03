@@ -7,7 +7,6 @@ import json
 import requests
 import xml.etree.ElementTree as ET
 import urllib
-import pyodbc
 
 
 _logger = logging.getLogger(__name__)
