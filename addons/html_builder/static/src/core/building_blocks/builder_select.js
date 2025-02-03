@@ -1,4 +1,5 @@
 import { Component, onMounted, useRef, useSubEnv } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import {
     basicContainerBuilderComponentProps,
@@ -30,7 +31,7 @@ export class BuilderSelect extends Component {
         let currentLabel;
         const updateCurrentLabel = () => {
             if (buttonRef.el) {
-                buttonRef.el.innerHTML = currentLabel;
+                buttonRef.el.innerHTML = currentLabel || _t("None");
             }
         };
         useSelectableComponent(this.props.id, {
