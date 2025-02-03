@@ -152,6 +152,20 @@ const canEditButCannotChange = () => [
     },
 ];
 
+const ensureWebsiteSwitcherIsNotVisible = [
+    {
+        content: "Ensure website switcher is hidden when only one website exists",
+        trigger: ".o_menu_systray:not(:has(.o_website_switcher_container))",
+    },
+];
+
+const ensureWebsiteSwitcherIsVisible = [
+    {
+        content: "Ensure website switcher is present when multiple website exists",
+        trigger: ".o_menu_systray:has(.o_website_switcher_container)",
+    },
+];
+
 const register = (title, steps) => {
     registerWebsitePreviewTour(title, {
         url: "/test_model/1",
@@ -205,3 +219,7 @@ register("test_systray_not_reditor_not_tester", () => [
         trigger: ":iframe main:contains(test model)",
     },
 ]);
+
+register("test_systray_single_website", () => ensureWebsiteSwitcherIsNotVisible);
+
+register("test_systray_multi_website", () => ensureWebsiteSwitcherIsVisible);
