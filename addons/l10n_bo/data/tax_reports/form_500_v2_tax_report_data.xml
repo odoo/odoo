@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="iue_tax_report" model="account.report">
+            <field name="name">Formulario 500v2: IUE</field>
+            <field name="root_report_id" ref="account.generic_tax_report"/>
+            <field name="country_id" ref="base.bo"/>
+            <field name="filter_fiscal_position" eval="True"/>
+            <field name="availability_condition">country</field>
+            <field name="column_ids">
+                <record id="iue_tax_report_code" model="account.report.column">
+                    <field name="name">Cód. Casilla</field>
+                    <field name="expression_label">code</field>
+                    <field name="figure_type">string</field>
+                </record>
+                <record id="iue_tax_report_balance" model="account.report.column">
+                    <field name="name">Importe</field>
+                    <field name="expression_label">balance</field>
+                    <field name="figure_type">monetary</field>
+                </record>
+            </field>
+            <field name="line_ids">
+                <record id="f500_v2_tax_report" model="account.report.line">
+                    <field name="sequence" eval="0"/>
+                    <field name="name">Form. 500v2: Impuesto a las Utilidades IUE</field>
+                    <field name="code">f500_v2_tax_report</field>
+                    <field name="hierarchy_level" eval="0"/>
+                    <field name="children_ids">
+                        <record id="current_period_profit_tax_line" model="account.report.line">
+                            <field name="sequence" eval="1"/>
+                            <field name="name">Utilidad contable de la gestión de Estados Financieros</field>
+                            <field name="code">iue42</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="foldable" eval="1"/>
+                            <field name="expression_ids">
+                                <record id="current_profit_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">42</field>
+                                </record>
+                                <record id="current_profit_tax_tag" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">INOP.balance + OTIN.balance - COST.balance - GAST.balance - DEPR.balance</field>
+                                    <field name="date_scope">from_beginning</field>
+                                    <field name="subformula">if_above(CUR(0))</field>
+                                </record>
+                            </field>
+                            <field name="children_ids">
+                                <record id="operating_income_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="2"/>
+                                    <field name="name">Ingreso Operativo</field>
+                                    <field name="code">INOP</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="hide_if_zero" eval="True"/>
+                                    <field name="expression_ids">
+                                        <record id="operating_income_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula" eval="[('account_id.account_type', '=', 'income')]"/>
+                                            <field name="date_scope">from_beginning</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="other_income_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="3"/>
+                                    <field name="name">Otros Ingresos</field>
+                                    <field name="code">OTIN</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="hide_if_zero" eval="True"/>
+                                    <field name="expression_ids">
+                                        <record id="other_income_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula" eval="[('account_id.account_type', '=', 'income_other')]"/>
+                                            <field name="date_scope">from_beginning</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="direct_cost_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="4"/>
+                                    <field name="name">Costos</field>
+                                    <field name="code">COST</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="hide_if_zero" eval="True"/>
+                                    <field name="expression_ids">
+                                        <record id="direct_cost_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula" eval="[('account_id.account_type', '=', 'expense_direct_cost')]"/>
+                                            <field name="date_scope">from_beginning</field>
+                                            <field name="subformula">sum</field>
+                                            <field name="green_on_positive" eval="False"/>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="expense_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="5"/>
+                                    <field name="name">Gastos</field>
+                                    <field name="code">GAST</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="hide_if_zero" eval="True"/>
+                                    <field name="expression_ids">
+                                        <record id="expense_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula" eval="[('account_id.account_type', '=', 'expense')]"/>
+                                            <field name="date_scope">from_beginning</field>
+                                            <field name="subformula">sum</field>
+                                            <field name="green_on_positive" eval="False"/>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="depreciation_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="6"/>
+                                    <field name="name">Depreciaciones</field>
+                                    <field name="code">DEPR</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="hide_if_zero" eval="True"/>
+                                    <field name="expression_ids">
+                                        <record id="depreciation_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula" eval="[('account_id.account_type', '=', 'expense_depreciation')]"/>
+                                            <field name="date_scope">from_beginning</field>
+                                            <field name="subformula">sum</field>
+                                            <field name="green_on_positive" eval="False"/>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="current_period_loss_tax_line" model="account.report.line">
+                            <field name="sequence" eval="7"/>
+                            <field name="name">Pérdida contable de la gestión de Estados Financieros</field>
+                            <field name="code">iue68</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="expression_ids">
+                                <record id="current_period_loss_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">68</field>
+                                </record>
+                                <record id="current_period_loss_tax_tag" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">COST.balance + GAST.balance + DEPR.balance - INOP.balance - OTIN.balance</field>
+                                    <field name="date_scope">from_beginning</field>
+                                    <field name="subformula">if_above(CUR(0))</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="non_deductible_expense_tax_line" model="account.report.line">
+                            <field name="sequence" eval="8"/>
+                            <field name="name">Total Gastos No Deducibles</field>
+                            <field name="code">iue71</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="foldable" eval="True"/>
+                            <field name="expression_ids">
+                                <record id="non_deductible_expense_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">71</field>
+                                </record>
+                                <record id="non_deductible_expense_tax_tag" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">ALQ.balance + DEP.balance + RSO.balance</field>
+                                    <field name="date_scope">from_beginning</field>
+                                </record>
+                            </field>
+                            <field name="children_ids">
+                                <record id="non_deductible_rent_expense_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="9"/>
+                                    <field name="name">Alquileres</field>
+                                    <field name="code">ALQ</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="expression_ids">
+                                        <record id="non_deductible_rent_expense_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula" eval="[('account_id.account_type', '=', 'expense'),('account_id.name', 'ilike', 'Alquiler')]"/>
+                                            <field name="date_scope">from_beginning</field>
+                                            <field name="subformula">sum</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="non_deductible_depreciation_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="10"/>
+                                    <field name="name">Depreciaciones</field>
+                                    <field name="code">DEP</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="expression_ids">
+                                        <record id="non_deductible_depreciation_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula" eval="[('account_id.account_type', '=', 'expense_depreciation')]"/>
+                                            <field name="date_scope">from_beginning</field>
+                                            <field name="subformula">sum</field>
+                                            <field name="green_on_positive" eval="False"/>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="non_deductible_partner_expense_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="11"/>
+                                    <field name="name">Retiros de socios</field>
+                                    <field name="code">RSO</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="expression_ids">
+                                        <record id="non_deductible_partner_expense_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula" eval="[('account_id.account_type', '=', 'expense_depreciation'),('account_id.name', 'ilike', 'Socio')]"/>
+                                            <field name="date_scope">from_beginning</field>
+                                            <field name="subformula">sum</field>
+                                            <field name="green_on_positive" eval="False"/>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="deductible_expense_allocation_tax_line" model="account.report.line">
+                            <field name="sequence" eval="12"/>
+                            <field name="name">Total Regularizaciones para Imputar Gastos Deducibles</field>
+                            <field name="code">iue480</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="expression_ids">
+                                <record id="deductible_expense_allocation_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">480</field>
+                                </record>
+                                <record id="deductible_expense_allocation_tax_tag" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">external</field>
+                                    <field name="formula">sum</field>
+                                    <field name="subformula">editable</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="untaxed_income_tax_line" model="account.report.line">
+                            <field name="sequence" eval="13"/>
+                            <field name="name">Total Rentas No Gravadas</field>
+                            <field name="code">iue495</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="foldable" eval="True"/>
+                            <field name="expression_ids">
+                                <record id="untaxed_income_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">495</field>
+                                </record>
+                                <record id="untaxed_income_tax_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">INDI.balance + INEX.balance + UTEX.balance</field>
+                                    <field name="date_scope">from_beginning</field>
+                                </record>
+                            </field>
+                            <field name="children_ids">
+                                <record id="untaxed_stock_dividends_income_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="14"/>
+                                    <field name="name">Ingreso por Dividendos de Acciones</field>
+                                    <field name="code">INDI</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="expression_ids">
+                                        <record id="untaxed_stock_dividends_income_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula" eval="[('account_id.account_type', 'in', ['income', 'income_other']),('account_id.name', 'ilike', 'Dividendo')]"/>
+                                            <field name="date_scope">from_beginning</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="foreign_income_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="15"/>
+                                    <field name="name">Ingreso de Fuente Extranjera</field>
+                                    <field name="code">INEX</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="expression_ids">
+                                        <record id="foreign_income_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula" eval="[('account_id.account_type', 'in', ['income', 'income_other']), ('account_id.name', 'ilike', 'Exportaci')]"/>
+                                            <field name="date_scope">from_beginning</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="foreign_utility_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="15"/>
+                                    <field name="name">Utilidad de Fuente Extranjera</field>
+                                    <field name="code">UTEX</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="expression_ids">
+                                        <record id="foreign_utility_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula" eval="[('account_id.account_type', 'in', ['income', 'income_other']), ('account_id.name', 'ilike', 'Extranjer')]"/>
+                                            <field name="date_scope">from_beginning</field>
+                                            <field name="subformula">-sum</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="partial_in_country_activities_income_tax_line" model="account.report.line">
+                            <field name="sequence" eval="16"/>
+                            <field name="name">Total Consolidado de Importes Cancelados Durante la Gestión por Actividades Parcialmente Realizadas en el País</field>
+                            <field name="code">iue345</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="expression_ids">
+                                <record id="partial_in_country_activities_income_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">345</field>
+                                </record>
+                                <record id="partial_in_country_activities_income_tax_tag" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">external</field>
+                                    <field name="formula">sum</field>
+                                    <field name="subformula">editable</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="deferred_profit_for_next_period_tax_line" model="account.report.line">
+                            <field name="sequence" eval="17"/>
+                            <field name="name">Utilidades de las ventas a plazos que van a ser diferidas para la siguiente gestión fiscal</field>
+                            <field name="code">iue563</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="expression_ids">
+                                <record id="deferred_profit_for_next_period_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">563</field>
+                                </record>
+                                <record id="deferred_profit_for_next_period_tax_tag" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">external</field>
+                                    <field name="formula">sum</field>
+                                    <field name="subformula">editable</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="deferred_profit_from_previous_period_tax_line" model="account.report.line">
+                            <field name="sequence" eval="18"/>
+                            <field name="name">Utilidades de las ventas a plazos diferidos durante la gestión fiscal anterior</field>
+                            <field name="code">iue589</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="expression_ids">
+                                <record id="deferred_profit_from_previous_period_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">589</field>
+                                </record>
+                                <record id="deferred_profit_from_previous_period_tax_tag" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">external</field>
+                                    <field name="formula">sum</field>
+                                    <field name="subformula">editable</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="net_profit_tax_line" model="account.report.line">
+                            <field name="sequence" eval="19"/>
+                            <field name="name">Utilidad Neta (C42 + C71 + C589 - C68 - C480 - C495 - C563; Si > 0)</field>
+                            <field name="code">iue592</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="expression_ids">
+                                <record id="net_profit_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">592</field>
+                                </record>
+                                <record id="net_profit_tax_tag" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">iue42.balance + iue71.balance + iue589.balance - iue68.balance - iue480.balance - iue495.balance - iue563.balance</field>
+                                    <field name="subformula">if_above(CUR(0))</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="net_loss_tax_line" model="account.report.line">
+                            <field name="sequence" eval="20"/>
+                            <field name="name">Perdida Neta (C68 + C480 + C495 + C563 - C42 - C71 - C589 - ; Si > 0)</field>
+                            <field name="code">iue606</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="expression_ids">
+                                <record id="net_loss_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">606</field>
+                                </record>
+                                <record id="net_loss_tax_tag" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">iue68.balance + iue480.balance + iue495.balance + iue563.balance - iue42.balance - iue71.balance - iue589.balance</field>
+                                    <field name="subformula">if_above(CUR(0))</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="previous_period_uncompensated_loss_tax_line" model="account.report.line">
+                            <field name="sequence" eval="21"/>
+                            <field name="name">Pérdida no compensada gestión anterior (C1013 del Form. de la gestión anterior)</field>
+                            <field name="code">iue619</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="expression_ids">
+                                <record id="previous_period_uncompensated_loss_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">619</field>
+                                </record>
+                                <record id="previous_period_uncompensated_loss_tax_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">external</field>
+                                    <field name="formula">sum</field>
+                                    <field name="subformula">editable</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="next_period_uncompensated_loss_tax_line" model="account.report.line">
+                            <field name="sequence" eval="22"/>
+                            <field name="name">Pérdida no compensada gestión para la gestión siguiente (C606 + C619 - C592; Si > 0)</field>
+                            <field name="code">iue1013</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="expression_ids">
+                                <record id="previous_period_uncompensated_loss_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">1013</field>
+                                </record>
+                                <record id="previous_period_uncompensated_loss_tax_tag" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">iue606.balance + iue619.balance - iue592.balance</field>
+                                    <field name="subformula">if_above(CUR(0))</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="taxable_net_profit_tax_line" model="account.report.line">
+                            <field name="sequence" eval="23"/>
+                            <field name="name">Utilidad neta imponible (C592 - C606 - C619; Si > 0)</field>
+                            <field name="code">iue26</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="expression_ids">
+                                <record id="taxable_net_profit_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">26</field>
+                                </record>
+                                <record id="taxable_net_profit_tax_tag" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">iue592.balance - iue606.balance - iue619.balance</field>
+                                    <field name="subformula">if_above(CUR(0))</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="iue_tax_amount_tax_line" model="account.report.line">
+                            <field name="sequence" eval="24"/>
+                            <field name="name">Impuesto determinado (C26 * 25%)</field>
+                            <field name="code">iue909</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="expression_ids">
+                                <record id="iue_tax_amount_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">909</field>
+                                </record>
+                                <record id="iue_tax_amount_tax_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">iue26.balance * 0.25</field>
+                                    <field name="subformula">if_above(CUR(0))</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="previous_iue_payment_on_account_in_sworn_statements_tax_line" model="account.report.line">
+                            <field name="sequence" eval="25"/>
+                            <field name="name">Pagos a cuenta realizados en DDJJ anterior y/o en boletas de pago</field>
+                            <field name="code">iue622</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="expression_ids">
+                                <record id="iue_tax_amount_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">622</field>
+                                </record>
+                                <record id="iue_tax_amount_tax_tag" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">external</field>
+                                    <field name="formula">sum</field>
+                                    <field name="subformula">editable</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="previous_period_payment_balance_to_compensate_tax_line" model="account.report.line">
+                            <field name="sequence" eval="26"/>
+                            <field name="name">Saldo disponible de pagos del periodo anterior a compensar</field>
+                            <field name="code">iue640</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="expression_ids">
+                                <record id="previous_period_payment_balance_to_compensate_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">640</field>
+                                </record>
+                                <record id="previous_period_payment_balance_to_compensate_tax_tag" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">external</field>
+                                    <field name="formula">sum</field>
+                                    <field name="subformula">editable</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="iue_taxpayer_favor_balance_for_next_period_tax_line" model="account.report.line">
+                            <field name="sequence" eval="27"/>
+                            <field name="name">Diferencia a favor del contribuyente para el siguiente período (C622 + C640 - C909; Si > 0)</field>
+                            <field name="code">iue747</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="expression_ids">
+                                <record id="iue_taxpayer_favor_balance_for_next_period_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">747</field>
+                                </record>
+                                <record id="iue_taxpayer_favor_balance_for_next_period_tax_tag" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">iue622.balance + iue640.balance - iue909.balance</field>
+                                    <field name="subformula">if_above(CUR(0))</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="iue_treasury_favor_balance_tax_line" model="account.report.line">
+                            <field name="sequence" eval="28"/>
+                            <field name="name">Saldo definitivo a favor del fisco (C909 + C622 - C640; Si > 0)</field>
+                            <field name="code">iue996</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="expression_ids">
+                                <record id="iue_treasury_favor_balance_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">996</field>
+                                </record>
+                                <record id="iue_treasury_favor_balance_tax_tag" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">iue909.balance + iue622.balance - iue640.balance</field>
+                                    <field name="subformula">if_above(CUR(0))</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="credit_allocation_in_values_tax_line" model="account.report.line">
+                            <field name="sequence" eval="29"/>
+                            <field name="name">Imputación de crédito en valores (Sujeto a verificación y confirmación por parte del SIN)</field>
+                            <field name="code">iue677</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="expression_ids">
+                                <record id="credit_allocation_in_values_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">677</field>
+                                </record>
+                                <record id="credit_allocation_in_values_tax_tag" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">external</field>
+                                    <field name="formula">sum</field>
+                                    <field name="subformula">editable</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="iue_to_pay_in_cash_tax_line" model="account.report.line">
+                            <field name="sequence" eval="30"/>
+                            <field name="name">Impuesto a pagar en efectivo (C996 - C677; Si > 0) (Si la presentación es fuera de término, debe realizar el pago en la boleta F.1000)</field>
+                            <field name="code">iue576</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="expression_ids">
+                                <record id="iue_to_pay_in_cash_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">576</field>
+                                </record>
+                                <record id="iue_to_pay_in_cash_tax_tag" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">iue996.balance - iue677.balance</field>
+                                    <field name="subformula">if_above(CUR(0))</field>
+                                </record>
+                            </field>
+                        </record>
+                    </field>
+                </record>
+            </field>
+        </record>
+
+    </data>
+</odoo>
