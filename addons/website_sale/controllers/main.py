@@ -1165,16 +1165,27 @@ class WebsiteSale(payment_portal.PaymentPortal):
             ),
             'show_vat': (
                 (address_type == 'billing' or use_delivery_as_billing)
-                and (
+                and ((
                     is_anonymous_cart  # Allow inputting VAT on the new main address.
                     or (
                         partner_sudo == order_sudo.partner_id
                         and (can_edit_vat or partner_sudo.vat)
                     )  # On the main partner only, if the VAT was set.
                 )
+                or self._vat_required(country_sudo.code))
             ),
             'vat_label': request.env._("VAT"),
         }
+
+    def _vat_required(self, country_code):
+        """ Check if the VAT number is always required for the current localisation.
+
+        :return: True if the VAT number is required, False otherwise.
+        :rtype: bool
+        This will be overridden in the l10n modules.
+        """
+
+        return False
 
     @route(
         '/shop/address/submit', type='http', methods=['POST'], auth='public', website=True,
