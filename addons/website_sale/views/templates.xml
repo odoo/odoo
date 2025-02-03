@@ -462,27 +462,49 @@
                                 id="o_wsale_products_header"
                                 t-attf-class="d-flex flex-column gap-2 {{_header_has_content and 'py-3' or (not _header_has_content and not opt_wsale_design_grid and 'py-3')}}"
                                 >
-                                <t t-if="category" t-call="website_sale.products_breadcrumb">
+                                <t t-if="category and not search" t-call="website_sale.products_breadcrumb">
                                     <t
                                         t-set="_classes"
                                         t-valuef="d-none d-lg-flex w-100 p-0 mb-0 small"
                                     />
                                 </t>
                                 <div
-                                    t-if="category"
+                                    t-if="category or search"
                                     class="d-flex gap-1 align-items-center"
                                     >
-                                    <t t-if="not category.parent_id" t-set="backUrl" t-valuef="/shop"/>
-                                    <t t-else="" t-set="backUrl" t-value="keep('/shop/category/' + slug(category.parent_id), category=0)"/>
+                                    <t t-if="not category or (category and not category.parent_id)" t-set="backUrl" t-value="'/shop'"/>
+                                    <t t-elif="category.parent_id" t-set="backUrl" t-value="keep('/shop/category/' + slug(category.parent_id), category=0)"/>
                                     <a
-                                        t-attf-class="btn ps-0 pe-2 d-lg-none"
-                                        t-att-href="category.parent_id and keep('/shop/category/' + slug(category.parent_id), category=0) or '/shop'"
+                                        t-if="not (search and category)"
+                                        t-attf-class="btn ps-0 pe-2 {{not search and 'd-lg-none'}}"
+                                        t-att-href="backUrl"
                                         role="button"
                                         title="Back"
                                         >
                                         <i class="oi oi-arrow-left" role="img"/>
                                     </a>
-                                    <h1 class="mb-0 fs-3 lh-base" t-esc="category.name"/>
+                                    <h1 t-attf-class="mb-0 lh-lg {{search and 'base-fs font-sans-serif' or 'fs-3'}} {{search and category and 'mb-2'}}">
+                                        <t t-if="search and category">
+                                            <span class="text-muted">Searching</span>
+                                            <span class="badge text-bg-info fw-normal base-fs">
+                                                <t t-esc="search"/>
+                                                <a title="Clear search for this category" t-attf-href="/shop/category/{{slug(category)}}" class="link-info">
+                                                    <i class="oi oi-close" role="img"/>
+                                                </a>
+                                            </span>
+                                            <span class="text-muted">in</span>
+                                            <span class="badge text-bg-primary fw-normal base-fs">
+                                                <t t-esc="category.name"/>
+                                                <a title="Clear search for this category" t-attf-href="/shop?search={{search}}">
+                                                    <i class="oi oi-close" role="img"/>
+                                                </a>
+                                            </span>
+                                        </t>
+                                        <t t-elif="search">
+                                            <span class="text-muted">Search results for </span>'<strong t-esc="search"/>' <small t-if="search_count" class="text-muted"> (<t t-esc="search_count"/>)</small>
+                                        </t>
+                                        <t t-elif="category" t-esc="category.name"/>
+                                    </h1>
                                 </div>
                                 <h1
                                     t-if="not category"
@@ -602,8 +624,22 @@
                                 <t t-else="">
                                     <h3 class="mt8">No results</h3>
                                     <p>No results for "<strong t-esc='search'/>"<t t-if="category"> in category "<strong t-esc="category.display_name"/>"</t>.</p>
+                                    <a
+                                        t-if="category"
+                                        t-attf-href="/shop?search={{search}}"
+                                        t-attf-title="Search {{search}} globally"
+                                        class="d-block pb-5"
+                                        >
+                                        Search globally
+                                    </a>
                                 </t>
-                                <p t-ignore="true" groups="sales_team.group_sale_manager">Click <i>'New'</i> in the top-right corner to create your first product.</p>
+                                <div
+                                    t-ignore="true"
+                                    groups="sales_team.group_sale_manager"
+                                    class="alert alert-info d-inline-block mx-auto"
+                                    >
+                                    Click <i>'New'</i> in the top-right corner to create your first product.
+                                </div>
                             </div>
                             <div id="o_wsale_pager" t-attf-class="products_pager d-flex justify-content-center {{opt_wsale_design_grid and 'py-4' or 'py-5 pb-4'}}">
                                 <t t-call="website.pager"/>
@@ -643,6 +679,7 @@
                                 <t t-set="_classes" t-valuef="input-group rounded o_cc o_cc1 mb-1"/>
                                 <t t-set="_input_classes" t-valuef="border-0 p-3"/>
                                 <t t-set="_submit_classes" t-valuef="px-4"/>
+                                <t t-if="category" t-set="placeholder" t-value="'Search in ' + category.name"/>
                             </t>
                         </div>
                     </div>
