@@ -72,7 +72,8 @@ class MassMailController(http.Controller):
                 </div>
             </t>
         """)
-        return request.render(template, {
+        return request.env['ir.qweb']._render(template, {
+            'main_object': mailing,
             'token': token,
             'email': email,
             'mailing_id': mailing_id,
