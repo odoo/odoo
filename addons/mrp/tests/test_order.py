@@ -4846,7 +4846,7 @@ class TestMrpOrder(TestMrpCommon):
 
     def test_update_mo_from_bom_with_kit(self):
         """
-        Test that an MO can be updated from BoM when the finished product has a kit as a component.
+        Test updating an MO from BoM when the finished product has a kit as a component.
         """
         # Test that the finished product has a kit as a component
         kit_bom_line = self.bom_3.bom_line_ids.filtered(lambda line: line.product_id.is_kits)
@@ -4867,8 +4867,16 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(self.bom_3.bom_line_ids, kit_bom_line)
         mo.action_update_bom()
         self.assertRecordValues(mo.move_raw_ids, [
-            {'product_id': kit_bom.bom_line_ids[0].product_id.id, 'product_uom_qty': 2, 'product_uom': kit_bom.bom_line_ids[0].product_id.uom_id.id},
-            {'product_id': kit_bom.bom_line_ids[1].product_id.id, 'product_uom_qty': 3, 'product_uom': kit_bom.bom_line_ids[1].product_id.uom_id.id},
+            {'product_id': kit_bom.bom_line_ids[0].product_id.id, 'product_uom_qty': 4, 'product_uom': kit_bom.bom_line_ids[0].product_id.uom_id.id},
+            {'product_id': kit_bom.bom_line_ids[1].product_id.id, 'product_uom_qty': 6, 'product_uom': kit_bom.bom_line_ids[1].product_id.uom_id.id},
+        ])
+        # Check propagation upon update of the kit quantity
+        kit_bom_line.product_qty = 3
+        kit_bom.bom_line_ids[0].product_qty = 4
+        mo.action_update_bom()
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'product_id': kit_bom.bom_line_ids[0].product_id.id, 'product_uom_qty': 12, 'product_uom': kit_bom.bom_line_ids[0].product_id.uom_id.id},
+            {'product_id': kit_bom.bom_line_ids[1].product_id.id, 'product_uom_qty': 9, 'product_uom': kit_bom.bom_line_ids[1].product_id.uom_id.id},
         ])
 
     @freeze_time('2024-11-26 9:00')
