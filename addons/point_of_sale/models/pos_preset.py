@@ -20,10 +20,10 @@ class PosPreset(models.Model):
     count_linked_config = fields.Integer(compute='_compute_count_linked_config')
 
     # Timing options
-    use_timing = fields.Boolean(string='Timing', default=False)
-    resource_calendar_id = fields.Many2one('resource.calendar', 'Resource')
+    use_timing = fields.Boolean(string='Enable Time Slots', default=False)
+    resource_calendar_id = fields.Many2one('resource.calendar', 'Schedule')
     attendance_ids = fields.One2many(related="resource_calendar_id.attendance_ids", string="Attendances", readonly=False)
-    slots_per_interval = fields.Integer(string='Capacity', default=5)
+    slots_per_interval = fields.Integer(string='Order Limit', default=5)
     interval_time = fields.Integer(string='Interval time (in min)', default=20)
 
     @api.constrains('attendance_ids')
@@ -32,14 +32,6 @@ class PosPreset(models.Model):
             for attendance in preset.attendance_ids:
                 if attendance.hour_from % 24 >= attendance.hour_to % 24:
                     raise ValidationError(_('The start time must be before the end time.'))
-
-    @api.constrains('identification')
-    def _check_identification(self):
-        config_ids = self.env['pos.config'].search([])
-        for preset in self:
-            config = config_ids.filtered(lambda c: c.default_preset_id.id == preset.id)
-            if config and preset.identification != 'none':
-                raise ValidationError(_('The identification method should be set to "None" for the default preset.'))
 
     @api.model
     def _load_pos_data_domain(self, data):
