@@ -521,16 +521,33 @@ class ResPartner(models.Model):
         groups='account.group_account_invoice,account.group_account_readonly'
     )
     credit_limit = fields.Float(
-        string='Credit Limit', help='Credit limit specific to this partner.',
+        help='Company default credit limit.',
         groups='account.group_account_invoice,account.group_account_readonly',
-        company_dependent=True, copy=False, readonly=False)
-    use_partner_credit_limit = fields.Boolean(
-        string='Partner Limit', groups='account.group_account_invoice,account.group_account_readonly',
-        compute='_compute_use_partner_credit_limit', inverse='_inverse_use_partner_credit_limit',
-        help='Set a value greater than 0.0 to activate a credit limit check')
+        compute='_compute_credit_limit',
+        copy=False)
+    custom_credit_limit = fields.Float(
+        help='Credit limit specific to this partner.',
+        groups='account.group_account_invoice,account.group_account_readonly',
+        company_dependent=True, copy=False,
+    )
     show_credit_limit = fields.Boolean(
         default=lambda self: self.env.company.account_use_credit_limit,
         compute='_compute_show_credit_limit', groups='account.group_account_invoice,account.group_account_readonly')
+    credit_limit_mode = fields.Selection(
+        # As this field is company dependant, it can not be set to required=True.
+        # Therefor a None value should be treated as 'company'
+        selection=[
+            ('company', 'Company'),
+            ('custom', 'Custom'),
+            ('no_limit', 'No Limit'),
+        ],
+        help='''• Company : Use the default company credit limit
+                • Custom : Set a custom credit limit
+                • No Limit : Remove credit limit''',
+        default='company',
+        groups='account.group_account_invoice,account.group_account_readonly',
+        company_dependent=True, copy=False,
+    )
     days_sales_outstanding = fields.Float(
         string='Days Sales Outstanding (DSO)',
         help='[(Total Receivable/Total Revenue) * number of days since the first invoice] for this customer',
@@ -672,16 +689,13 @@ class ResPartner(models.Model):
             partner.duplicated_bank_account_partners_count = len(partner._get_duplicated_bank_accounts())
 
     @api.depends_context('company')
-    def _compute_use_partner_credit_limit(self):
-        company_limit = self._fields['credit_limit'].get_company_dependent_fallback(self)
+    @api.depends('credit_limit_mode')
+    def _compute_credit_limit(self):
         for partner in self:
-            partner.use_partner_credit_limit = partner.credit_limit != company_limit
-
-    def _inverse_use_partner_credit_limit(self):
-        company_limit = self._fields['credit_limit'].get_company_dependent_fallback(self)
-        for partner in self:
-            if not partner.use_partner_credit_limit:
-                partner.credit_limit = company_limit
+            if partner.credit_limit_mode == 'custom':
+                partner.credit_limit = partner.custom_credit_limit
+            else:
+                partner.credit_limit = partner.env.company.default_credit_limit
 
     @api.depends_context('company')
     def _compute_show_credit_limit(self):
