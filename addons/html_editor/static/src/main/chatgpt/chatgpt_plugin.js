@@ -10,7 +10,7 @@ import { user } from "@web/core/user";
 
 export class ChatGPTPlugin extends Plugin {
     static id = "chatgpt";
-    static dependencies = ["selection", "history", "dom", "sanitize", "dialog"];
+    static dependencies = ["baseContainer", "selection", "history", "dom", "sanitize", "dialog"];
     resources = {
         user_commands: [
             {
@@ -103,6 +103,7 @@ export class ChatGPTPlugin extends Plugin {
             },
             ...params,
         };
+        dialogParams.baseContainer = this.dependencies.baseContainer.getDefaultNodeName();
         // collapse to end
         const sanitize = this.dependencies.sanitize.sanitize;
         if (selection.isCollapsed) {
