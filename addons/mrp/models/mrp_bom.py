@@ -186,7 +186,7 @@ class MrpBom(models.Model):
             if sum(bom.byproduct_ids.mapped('cost_share')) > 100:
                 raise ValidationError(_("The total cost share for a BoM's by-products cannot exceed 100."))
 
-    @api.onchange('bom_line_ids', 'product_qty')
+    @api.onchange('bom_line_ids', 'product_qty', 'product_id', 'product_tmpl_id')
     def onchange_bom_structure(self):
         if self.type == 'phantom' and self._origin and self.env['stock.move'].search([('bom_line_id', 'in', self._origin.bom_line_ids.ids)], limit=1):
             return {
