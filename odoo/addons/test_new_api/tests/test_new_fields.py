@@ -4627,6 +4627,20 @@ class TestComputeQueries(TransactionCase):
         self.assertEqual(records.mapped('value1'), [10, 0, 0, 0])
         self.assertEqual(records.mapped('value2'), [0, 12, 0, 0])
 
+    def test_create_cache_consistency(self):
+        """ The cache should always contains the raw value of the database. The
+        cache value of non-assigned column during create() should be None for
+        any column field type.
+        """
+        record = self.env['test_new_api.create.performance'].create({})
+        self.assertEqual(record.confirmed, False)
+        cached_value = record._cache['confirmed']
+
+        # the cached value should be the same as if we had fetched it from database
+        record.invalidate_recordset()
+        record.fetch(['confirmed'])
+        self.assertEqual(record._cache['confirmed'], cached_value)
+
     def test_partial_compute_batching(self):
         """ Create several 'new' records and check that the partial compute
         method is called only once.

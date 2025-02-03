@@ -2290,3 +2290,9 @@ class Test_New_ViewStrId(models.Model):
     _table_query = "SELECT 'hello' AS id, 'test' AS name"
 
     name = fields.Char()
+
+
+class Test_New_ApiCreatePerformance(models.Model):
+    _name = _description = 'test_new_api.create.performance'
+
+    confirmed = fields.Boolean()
