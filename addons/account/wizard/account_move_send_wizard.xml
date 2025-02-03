@@ -33,16 +33,11 @@
 
                     <group>
                         <field name="pdf_report_id" options="{'no_create': True, 'no_edit': True}" invisible="not display_pdf_report_id"/>
-
-                        <label for="mail_partner_ids" string="Recipients"/>
-                        <div>
-                            <widget name="mail_composer_recipient_list" thread_model_field="model" thread_id_field="res_ids"/>
-                            <field name="mail_partner_ids"
-                                   widget="many2many_tags"
-                                   placeholder="Add contacts to notify..."
-                                   options="{'no_quick_create': True}"
-                                   context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
-                        </div>
+                        <field name="mail_partner_ids"
+                               widget="many2many_tags"
+                               placeholder="Add contacts to notify..."
+                               options="{'no_quick_create': True}"
+                               context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
                         <field name="subject"
                                placeholder="Subject..."
                                required="'email' in sending_methods"/>

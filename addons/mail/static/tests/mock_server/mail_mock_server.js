@@ -627,7 +627,10 @@ export async function mail_message_post(request) {
             if (partner.length !== 0) {
                 post_data.partner_ids.push(partner[0].id);
             } else {
-                const partner_id = ResPartner.create(Object.assign({ email }));
+                const partner_id = ResPartner.create({
+                    email,
+                    name: email,
+                });
                 post_data.partner_ids.push(partner_id);
             }
         }

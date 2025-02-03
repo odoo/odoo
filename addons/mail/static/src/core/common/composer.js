@@ -498,11 +498,11 @@ export class Composer extends Component {
     }
 
     async onClickFullComposer(ev) {
+        const allRecipients = [...this.thread.suggestedRecipients];
         if (this.props.type !== "note") {
-            // auto-create partners of checked suggested partners
-            const newPartners = this.thread.suggestedRecipients.filter(
-                (recipient) => recipient.checked && !recipient.persona
-            );
+            allRecipients.push(...this.thread.additionalRecipients);
+            // auto-create partners:
+            const newPartners = allRecipients.filter((recipient) => !recipient.persona);
             if (newPartners.length !== 0) {
                 const recipientEmails = [];
                 newPartners.forEach((recipient) => {
@@ -517,9 +517,7 @@ export class Composer extends Component {
                     const partnerData = partners[index];
                     const persona = this.store.Persona.insert({ ...partnerData, type: "partner" });
                     const email = recipientEmails[index];
-                    const recipient = this.thread.suggestedRecipients.find(
-                        (recipient) => recipient.email === email
-                    );
+                    const recipient = allRecipients.find((recipient) => recipient.email === email);
                     Object.assign(recipient, { persona });
                 }
             }
@@ -542,9 +540,7 @@ export class Composer extends Component {
             default_partner_ids:
                 this.props.type === "note"
                     ? []
-                    : this.thread.suggestedRecipients
-                          .filter((recipient) => recipient.checked)
-                          .map((recipient) => recipient.persona.id),
+                    : allRecipients.map((recipient) => recipient.persona.id),
             default_res_ids: [this.thread.id],
             default_subtype_xmlid: this.props.type === "note" ? "mail.mt_note" : "mail.mt_comment",
             // Changed in 18.2+: finally get rid of autofollow, following should be done manually
@@ -685,6 +681,7 @@ export class Composer extends Component {
         this.suggestion?.clearCannedResponses();
         this.props.messageToReplyTo?.cancel();
         this.props.composer.emailAddSignature = true;
+        this.props.composer.thread.additionalRecipients = [];
     }
 
     async editMessage() {

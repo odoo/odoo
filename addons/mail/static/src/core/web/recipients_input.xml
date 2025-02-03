@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="mail.RecipientsInput">
+        <div class="o-mail-RecipientsInput d-flex flex-wrap flex-grow-1 align-items-center gap-1">
+            <TagsList tags="this.state.tags"/>
+            <div class="flex-grow-1">
+                <AutoComplete
+                    placeholder="this.getPlaceholder()"
+                    sources="this.getAutoCompleteSources()"
+                    onSelect.bind="this.onSelect"/>
+            </div>
+        </div>
+    </t>
+</templates>

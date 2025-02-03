@@ -41,7 +41,6 @@
                             invisible="composition_mode != 'mass_mail'"/>
                         <label for="partner_ids" string="To" invisible="composition_mode != 'comment' or subtype_is_log"/>
                         <div groups="base.group_user" invisible="composition_mode != 'comment' or subtype_is_log">
-                            <widget invisible="not model or composition_mode == 'mass_mail' or composition_comment_option in ['reply_all', 'forward']" name="mail_composer_recipient_list" thread_model_field="model" thread_id_field="res_ids"/>
                             <field name="partner_ids" widget="many2many_tags_email" placeholder="Followers only"
                                 required="composition_comment_option == 'forward'"
                                 options="{'no_quick_create': True}" context="{'show_email':True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
