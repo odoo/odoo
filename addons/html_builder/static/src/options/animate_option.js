@@ -1,10 +1,10 @@
 import { Plugin } from "@html_editor/plugin";
-import { Component, useEnv } from "@odoo/owl";
-import { registry } from "@web/core/registry";
-import { defaultBuilderComponents } from "../builder_components/default_builder_components";
 import { withSequence } from "@html_editor/utils/resource";
-import { useDomState, useIsActiveItem } from "../builder_components/utils";
+import { Component } from "@odoo/owl";
+import { registry } from "@web/core/registry";
 import { getScrollingElement } from "@web/core/utils/scrolling";
+import { defaultBuilderComponents } from "../builder_components/default_builder_components";
+import { useDomState, useIsActiveItem } from "../builder_components/utils";
 class AnimateOptionPlugin extends Plugin {
     static id = "AnimateOption";
     resources = {
@@ -22,6 +22,7 @@ class AnimateOptionPlugin extends Plugin {
                 // textSelector: ".o_animated_text",
             }),
         ],
+        system_classes: ["o_animating"],
         builder_actions: this.getActions(),
         normalize_handlers: this.normalize.bind(this),
         clean_for_save_handlers: this.cleanForSave.bind(this),
@@ -140,14 +141,15 @@ class AnimateOptionPlugin extends Plugin {
                     );
                     return intensity;
                 },
-                apply: ({ editingElement, value }) => {},
+                apply: ({ editingElement, value }) => {
+                    editingElement.style.setProperty("--wanim-intensity", `${value}`);
+                    this.forceAnimation(editingElement);
+                },
             },
             forceAnimation: {
                 // todo: to remove after having the commit of louis
                 isActive: () => true,
-                apply: () => {
-                    console.warn("todo");
-                },
+                apply: ({ editingElement }) => this.forceAnimation(editingElement),
             },
             setAnimationEffect: {
                 isApplied({ editingElement, value: className }) {
@@ -168,9 +170,34 @@ class AnimateOptionPlugin extends Plugin {
                         editingElement.classList.add(directionClassName);
                     }
                     editingElement.classList.add(effectClassName);
+                    this.forceAnimation(editingElement);
                 },
             },
         };
+    }
+    async forceAnimation(editingElement) {
+        editingElement.style.animationName = "dummy";
+        if (editingElement.classList.contains("o_animate_on_scroll")) {
+            // Trigger a DOM reflow.
+            void editingElement.offsetWidth;
+            editingElement.style.animationName = "";
+            this.ownerDocument.defaultView.dispatchEvent(new Event("resize"));
+        } else {
+            // Trigger a DOM reflow (Needed to prevent the animation from
+            // being launched twice when previewing the "Intensity" option).
+            await new Promise((resolve) => setTimeout(resolve));
+            editingElement.classList.add("o_animating");
+            this.scrollingElement.classList.add("o_wanim_overflow_xy_hidden");
+            editingElement.style.animationName = "";
+            editingElement.addEventListener(
+                "animationend",
+                () => {
+                    this.scrollingElement.classList.remove("o_wanim_overflow_xy_hidden");
+                    editingElement.classList.remove("o_animating");
+                },
+                { once: true }
+            );
+        }
     }
 
     removeEffectAndDirectionClasses(targetClassList) {

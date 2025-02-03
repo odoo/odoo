@@ -60,11 +60,11 @@
     <BuilderContext t-if="this.isActiveItem('animation_on_appearance_opt')">
         <!-- Start After -->
         <BuilderRow label.translate="Start After">
-            <BuilderNumberInput styleAction="'animation-delay'" default="0" unit="'s'" />
+            <BuilderNumberInput styleAction="'animation-delay'" action="'forceAnimation'" default="0" unit="'s'" />
         </BuilderRow>
         <!-- Duration -->
         <BuilderRow label.translate="Duration">
-            <BuilderNumberInput styleAction="'animation-duration'" default="0.4" unit="'s'" />
+            <BuilderNumberInput styleAction="'animation-duration'" action="'forceAnimation'" default="0.4" unit="'s'" />
         </BuilderRow>
     </BuilderContext>
 </t>
