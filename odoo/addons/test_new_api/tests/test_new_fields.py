@@ -4661,6 +4661,14 @@ class TestComputeQueries(TransactionCase):
         record.fetch(['confirmed'])
         self.assertEqual(record._cache['confirmed'], cached_value)
 
+    def test_create_cache_of_compute_store_fields(self):
+        model = self.env['test_new_api.create.performance']
+        model.create({})  # warmup
+
+        with self.assertQueryCount(2):  # one for create + one to update name_changes
+            record = model.create({'name': 'blabla'})
+            self.assertEqual(record.name_changes, 1)
+
     def test_partial_compute_batching(self):
         """ Create several 'new' records and check that the partial compute
         method is called only once.
