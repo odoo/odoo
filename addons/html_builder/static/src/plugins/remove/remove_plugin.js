@@ -101,8 +101,7 @@ export class RemovePlugin extends Plugin {
 
         // TODO invisible element
         // TODO will_remove_snippet
-        // TODO onRemove
-        this.dispatchTo("onRemove", toRemoveEl);
+        this.dispatchTo("on_remove_handlers", toRemoveEl);
 
         let parentEl = toRemoveEl.parentElement;
         const previousSiblingEl = getVisibleSibling(toRemoveEl, "prev");

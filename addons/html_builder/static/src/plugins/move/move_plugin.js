@@ -1,5 +1,9 @@
 import { Plugin } from "@html_editor/plugin";
-import { addMobileOrders, removeMobileOrders } from "@html_builder/utils/column_layout_utils";
+import {
+    addMobileOrders,
+    fillRemovedItemGap,
+    removeMobileOrders,
+} from "@html_builder/utils/column_layout_utils";
 import { isMobileView } from "@html_builder/utils/utils";
 
 // TODO find where to define the selectors so they are not duplicated across files
@@ -64,6 +68,7 @@ export class MovePlugin extends Plugin {
     resources = {
         get_overlay_buttons: this.getActiveOverlayButtons.bind(this),
         on_clone_handlers: this.onClone.bind(this),
+        on_remove_handlers: this.onRemove.bind(this),
     };
 
     setup() {
@@ -113,6 +118,18 @@ export class MovePlugin extends Plugin {
             const siblingEls = [...originalEl.parentNode.children];
             const maxOrder = Math.max(...siblingEls.map((el) => el.style.order));
             cloneEl.style.order = maxOrder + 1;
+        }
+    }
+
+    onRemove(toRemoveEl) {
+        if (!isMovable(toRemoveEl)) {
+            return;
+        }
+        // If there is a mobile order, the gap created by the removed element
+        // must be filled in.
+        const mobileOrder = toRemoveEl.style.order;
+        if (mobileOrder) {
+            fillRemovedItemGap(toRemoveEl.parentElement, parseInt(mobileOrder));
         }
     }
 
