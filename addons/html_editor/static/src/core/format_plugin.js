@@ -41,6 +41,7 @@ export class FormatPlugin extends Plugin {
         "insertAndSelectZws",
         "mergeAdjacentInlines",
         "formatSelection",
+        "removeFormat",
     ];
     resources = {
         user_commands: [

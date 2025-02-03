@@ -4,44 +4,6 @@ import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { Component, useState, onWillDestroy, status, markup } from "@odoo/owl";
 
-const POSTPROCESS_GENERATED_CONTENT = (content) => {
-    const lines = content.split("\n").filter((line) => line.trim().length);
-    const fragment = document.createDocumentFragment();
-    let parentUl, parentOl;
-    let lineIndex = 0;
-    for (const line of lines) {
-        if (line.trim().startsWith("- ")) {
-            // Create or continue an unordered list.
-            parentUl = parentUl || document.createElement("ul");
-            const li = document.createElement("li");
-            li.innerText = line.trim().slice(2);
-            parentUl.appendChild(li);
-        } else if (
-            (parentOl && line.startsWith(`${parentOl.children.length + 1}. `)) ||
-            (!parentOl && line.startsWith("1. ") && lines[lineIndex + 1]?.startsWith("2. "))
-        ) {
-            // Create or continue an ordered list (only if the line starts
-            // with the next number in the current ordered list (or 1 if no
-            // ordered list was in progress and it's followed by a 2).
-            parentOl = parentOl || document.createElement("ol");
-            const li = document.createElement("li");
-            li.innerText = line.slice(line.indexOf(".") + 2);
-            parentOl.appendChild(li);
-        } else {
-            // Insert any list in progress, and a new block for the current
-            // line.
-            [parentUl, parentOl].forEach((list) => list && fragment.appendChild(list));
-            parentUl = parentOl = undefined;
-            const block = document.createElement(line.startsWith("Title: ") ? "h2" : "p");
-            block.innerText = line;
-            fragment.appendChild(block);
-        }
-        lineIndex += 1;
-    }
-    [parentUl, parentOl].forEach((list) => list && fragment.appendChild(list));
-    return fragment;
-};
-
 export class ChatGPTDialog extends Component {
     static template = "";
     static components = { Dialog };
@@ -49,6 +11,7 @@ export class ChatGPTDialog extends Component {
         insert: Function,
         close: Function,
         sanitize: Function,
+        normalize: Function
     };
 
     setup() {
@@ -67,7 +30,7 @@ export class ChatGPTDialog extends Component {
     }
 
     formatContent(content) {
-        const fragment = POSTPROCESS_GENERATED_CONTENT(content);
+        const fragment = this.postprocessGeneratedContent(content);
         let result = "";
         for (const child of fragment.children) {
             this.props.sanitize(child, { IN_PLACE: true });
@@ -96,6 +59,44 @@ export class ChatGPTDialog extends Component {
             .catch((error) => protectedCallback(_t(error.data?.message || error.message), true));
     }
 
+    postprocessGeneratedContent(content) {
+        const lines = content.split("\n").filter((line) => line.trim().length);
+        const fragment = document.createDocumentFragment();
+        let parentUl, parentOl;
+        let lineIndex = 0;
+        for (const line of lines) {
+            if (line.trim().startsWith("- ")) {
+                // Create or continue an unordered list.
+                parentUl = parentUl || document.createElement("ul");
+                const li = document.createElement("li");
+                li.innerText = line.trim().slice(2);
+                parentUl.appendChild(li);
+            } else if (
+                (parentOl && line.startsWith(`${parentOl.children.length + 1}. `)) ||
+                (!parentOl && line.startsWith("1. ") && lines[lineIndex + 1]?.startsWith("2. "))
+            ) {
+                // Create or continue an ordered list (only if the line starts
+                // with the next number in the current ordered list (or 1 if no
+                // ordered list was in progress and it's followed by a 2).
+                parentOl = parentOl || document.createElement("ol");
+                const li = document.createElement("li");
+                li.innerText = line.slice(line.indexOf(".") + 2);
+                parentOl.appendChild(li);
+            } else {
+                // Insert any list in progress, and a new block for the current
+                // line.
+                [parentUl, parentOl].forEach((list) => list && fragment.appendChild(list));
+                parentUl = parentOl = undefined;
+                const block = document.createElement(line.startsWith("Title: ") ? "h2" : "p");
+                block.innerText = line;
+                fragment.appendChild(block);
+            }
+            lineIndex += 1;
+        }
+        [parentUl, parentOl].forEach((list) => list && fragment.appendChild(list));
+        return fragment;
+    }
+
     _cancel() {
         this.props.close();
     }
@@ -110,7 +111,7 @@ export class ChatGPTDialog extends Component {
                 title: _t("Content generated"),
                 type: "success",
             });
-            const fragment = POSTPROCESS_GENERATED_CONTENT(text || "");
+            const fragment = this.postprocessGeneratedContent(text || "");
             this.props.sanitize(fragment, { IN_PLACE: true });
             this.props.insert(fragment);
         } catch (e) {

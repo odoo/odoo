@@ -133,7 +133,7 @@ test("ChatGPT alternatives dialog generates alternatives for each button", async
     await waitFor(".o-chatgpt-alternative");
     let alternativesCount = 3;
     expect(".o-chatgpt-alternative").toHaveCount(alternativesCount);
-    const alternatives = editor.document.querySelectorAll(".o-chatgpt-alternative");
+    const alternatives = editor.document.querySelectorAll(".o-chatgpt-alternative-content");
     expect(getContent(alternatives[0])).toBe("<p>Alternative #3</p>");
     expect(getContent(alternatives[1])).toBe("<p>Alternative #2</p>");
     expect(getContent(alternatives[2])).toBe("<p>Alternative #1</p>");
@@ -149,7 +149,9 @@ test("ChatGPT alternatives dialog generates alternatives for each button", async
         const newAlternative = editor.document.querySelector(".o-chatgpt-alternative");
         expect(getContent(newAlternative)).toBe(
             `<span class="badge bg-secondary float-end">${DEFAULT_ALTERNATIVES_MODES[dataMode]}</span>` +
-                `<p>Alternative #${alternativesCount}</p>`
+                `<div class="o-chatgpt-alternative-content">` +
+                    `<p>Alternative #${alternativesCount}</p>` +
+                `</div>`
         );
     }
 });
@@ -263,6 +265,68 @@ test("ChatGPT prompt dialog properly formats an unordered list", async () => {
     expect(".o-chatgpt-message").toHaveCount(2); // user message + response
     expect(getContent(editor.document.querySelectorAll(".o-chatgpt-message div")[1])).toBe(
         `<ul><li>First item</li><li>Second item</li><li>Third item</li></ul>`
+    );
+});
+
+test("ChatGPT alternatives dialog properly preserves blocks", async () => {
+    const { el } = await setupEditor(
+        "<div>" +
+            "<blockquote>[quote</blockquote>" +
+            "<ul>" +
+                "<li>item</li>" +
+                "<li class=\"oe-nested\">" +
+                    "<ol>" +
+                        "<li><strong>nested</strong> item</li>" +
+                    "</ol>" +
+                "</li>" +
+                "<li>item</li>" +
+            "</ul>" +
+            "<p>text</p>" +
+            "<pre>code</pre>" +
+            "<h1><span style=\"font-size: 64px;\">heading</span>]</h1>" +
+        "</div>", {
+        config: { Plugins: [...MAIN_PLUGINS, ChatGPTPlugin] },
+    });
+    onRpc("/html_editor/generate_text", () => (
+        "blockquote\n" +
+        "li\n" +
+        "nested li\n" +
+        "li\n" +
+        "p\n" +
+        "pre\n" +
+        "h1\n" +
+        "extra h1"
+    ));
+
+    // Select ChatGPT in the Powerbox.
+    await openFromToolbar();
+
+    // Insert the top response.
+    await waitFor(".o-chatgpt-alternative");
+    expect(".o-chatgpt-alternative").toHaveCount(3);
+    expect("footer button.btn[disabled]").toHaveCount(1);
+    await contains(".o-chatgpt-alternative").click();
+    expect("footer button.btn[disabled]").toHaveCount(0);
+    await contains("footer button.btn").click();
+
+    // Expect the response to have replaced the selected text.
+    expect(getContent(el)).toBe(
+        "<div>" +
+            "<blockquote>blockquote</blockquote>" +
+            "<ul>" +
+                "<li>li</li>" +
+                "<li class=\"oe-nested\">" +
+                    "<ol>" +
+                        "<li>nested li</li>" +
+                    "</ol>" +
+                "</li>" +
+                "<li>li</li>" +
+            "</ul>" +
+            "<p>p</p>" +
+            "<pre>pre</pre>" +
+            "<h1>h1</h1>" +
+            "<h1>extra h1[]</h1>" +
+        "</div>"
     );
 });
 

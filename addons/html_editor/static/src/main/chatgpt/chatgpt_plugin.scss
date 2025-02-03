@@ -27,7 +27,7 @@ button.o-message-insert {
     line-height: 1;
 }
 .o-chatgpt-message > div > *:last-child,
-.o-chatgpt-alternative > *:last-child,
+.o-chatgpt-alternative-content > *:last-child,
 .o-chatgpt-translated > *:last-child {
     margin-bottom: 0;
 }
@@ -35,4 +35,12 @@ button.o-message-insert {
     color: #d44c59;
     font-weight: bold;
     --bg-opacity: 0.25;
+}
+
+.o-chatgpt-alternative-content {
+    padding: 0;
+    margin: 0;
+    & > *:first-child:not(:has(~ *)) {
+        padding-left: 0 !important;
+    }
 }
