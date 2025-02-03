@@ -1062,3 +1062,46 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
             'sale_line_id': sale_order_line.id,
         })
         self.assertEqual(sale_order.state, 'sale')
+
+    def test_create_project_on_fly(self):
+        """
+            Steps:
+                1) Create a sale order with multiple order lines.
+                2) On fly create a project
+                3) Verify the project's default values.
+                3) Confirm the sale order.
+                4) Repeat step 2 and step 3.
+        """
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({'product_id': self.product_order_service1.id, 'sequence': 2}),
+                Command.create({'product_id': self.product_order_service2.id, 'sequence': 1}),
+                Command.create({'product_id': self.product_order_service3.id, 'sequence': 3}),
+            ],
+        })
+
+        def _create_project_on_fly():
+            with Form(
+                self.env['project.project'].with_context(
+                    default_partner_id=sale_order.partner_id.id,
+                    order_id=sale_order.id,
+                    order_state=sale_order.state
+                )
+            ) as project_form:
+                project_form.name = "Test Project"
+            return project_form.save()
+
+        project = _create_project_on_fly()
+        self.assertListEqual(
+            [project.partner_id, project.reinvoiced_sale_order_id.id, project.sale_line_id.id],
+            [sale_order.partner_id, False, False],
+        )
+
+        sale_order.action_confirm()
+        project = _create_project_on_fly()
+        self.assertListEqual(
+            [project.partner_id.id, project.reinvoiced_sale_order_id.id, project.sale_line_id.id],
+            [sale_order.partner_id.id, sale_order.id, sale_order.order_line[0].id],
+        )
