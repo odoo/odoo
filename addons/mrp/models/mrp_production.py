@@ -2453,12 +2453,12 @@ class MrpProduction(models.Model):
 
         # Compares the BoM's lines to the MO's components.
         for move_raw in self.move_raw_ids:
-            bom_line = bom_lines_by_id.pop((move_raw.bom_line_id.id, move_raw.product_id.id), False)
+            bom_line, bom_qty = bom_lines_by_id.pop((move_raw.bom_line_id.id, move_raw.product_id.id), (False, None))
             # If the move isn't already linked to a BoM lines, search for a compatible line.
             if not bom_line:
-                for _bom_line in bom_lines_by_id.values():
+                for _bom_line, _bom_qty in bom_lines_by_id.values():
                     if move_raw.product_id == _bom_line.product_id:
-                        bom_line = bom_lines_by_id.pop((_bom_line.id, move_raw.product_id.id))
+                        bom_line, bom_qty = bom_lines_by_id.pop((_bom_line.id, move_raw.product_id.id))
                         if bom_line:
                             break
             move_raw_qty = bom_line and move_raw.product_uom._compute_quantity(
@@ -2472,7 +2472,7 @@ class MrpProduction(models.Model):
                 ):
                 move_raw.bom_line_id = bom_line
                 move_raw.product_id = bom_line.product_id
-                move_raw.product_uom_qty = bom_line.product_qty / ratio
+                move_raw.product_uom_qty = bom_qty / ratio
                 move_raw.product_uom = bom_line.product_uom_id
                 if move_raw.operation_id != bom_line.operation_id:
                     move_raw.operation_id = bom_line.operation_id
@@ -2481,10 +2481,10 @@ class MrpProduction(models.Model):
                 moves_to_unlink |= move_raw
         # Creates a raw moves for each remaining BoM's lines.
         raw_moves_values = []
-        for bom_line in bom_lines_by_id.values():
+        for bom_line, bom_qty in bom_lines_by_id.values():
             raw_move_vals = self._get_move_raw_values(
                 bom_line.product_id,
-                bom_line.product_qty / ratio,
+                bom_qty / ratio,
                 bom_line.product_uom_id,
                 bom_line=bom_line
             )
