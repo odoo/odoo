@@ -28,15 +28,16 @@ class Profiling(Controller):
     ], type='http', sitemap=False, auth='user', readonly=True)
     def speedscope(self, profile=None, action=False, **kwargs):
         if not profile:
-            return
+            raise request.not_found()
         profile_str = profile
-        profile = request.env['ir.profile'].browse(int(profile_str))
+        profiles = request.env['ir.profile'].browse(int(p) for p in profile.split(','))
         if not kwargs and not action:
             context = {
-                'profile': profile,
+                'profile_str': profile_str,
+                'profiles': profiles,
             }
             return request.render('web.config_speedscope_index', context)
-        speedscope_result = profile._generate_speedscope(profile._parse_params(kwargs))
+        speedscope_result = profiles._generate_speedscope(profiles._parse_params(kwargs))
         if action == 'download_json':
             headers = [
                 ('Content-Type', 'application/json'),
@@ -46,7 +47,7 @@ class Profiling(Controller):
             return request.make_response(speedscope_result, headers)
         icp = request.env['ir.config_parameter']
         context = {
-            'profile': profile,
+            'profiles': profiles,
             'speedscope_base64': base64.b64encode(speedscope_result).decode('utf-8'),
             'url_root': request.httprequest.url_root,
             'cdn': icp.sudo().get_param('speedscope_cdn', "https://cdn.jsdelivr.net/npm/speedscope@1.13.0/dist/release/")

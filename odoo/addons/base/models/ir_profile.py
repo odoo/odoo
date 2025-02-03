@@ -58,27 +58,47 @@ class IrProfile(models.Model):
 
     def _parse_params(self, params):
         return {
-            'constant_time' : str2bool(params.get('constant_time', False)),
-            'aggregate_sql' : str2bool(params.get('aggregate_sql', False)),
-            'use_context' : str2bool(params.get('use_execution_context', False)),
-            'combined_profile' : str2bool(params.get('combined_profile', False)),
-            'sql_no_gap_profile' : str2bool(params.get('sql_no_gap_profile', False)),
-            'sql_density_profile' : str2bool(params.get('sql_density_profile', False)),
-            'frames_profile' : str2bool(params.get('frames_profile', False)),
+            'constant_time': str2bool(params.get('constant_time', False)),
+            'aggregate_sql': str2bool(params.get('aggregate_sql', False)),
+            'use_context': str2bool(params.get('use_execution_context', False)),
+            'combined_profile': str2bool(params.get('combined_profile', False)),
+            'sql_no_gap_profile': str2bool(params.get('sql_no_gap_profile', False)),
+            'sql_density_profile': str2bool(params.get('sql_density_profile', False)),
+            'frames_profile': str2bool(params.get('frames_profile', False)),
             'profile_aggregation_mode': params.get('profile_aggregation_mode', 'tabs'),
         }
 
     def _generate_speedscope(self, params):
-        sp = Speedscope(init_stack_trace=json.loads(self.init_stack_trace))
-        if self.sql:
-            sp.add('sql', json.loads(self.sql), params['aggregate_sql'])
-        if self.traces_async:
-            sp.add('frames', json.loads(self.traces_async))
-        if self.traces_sync:
-            sp.add('settrace', json.loads(self.traces_sync))
+        init_stack_trace = self[0].init_stack_trace
+        for record in self:
+            if record.init_stack_trace != init_stack_trace:
+                raise UserError(_('All profiles must have the same initial stack trace to be displayed together.'))
+        sp = Speedscope(init_stack_trace=json.loads(init_stack_trace))
+        for profile in self:
+            if (params['sql_no_gap_profile'] or params['sql_density_profile'] or params['combined_profile']) and profile.sql:
+                sp.add(f'sql {profile.id}', json.loads(profile.sql))
+            if (params['frames_profile'] or params['combined_profile']) and profile.traces_async:
+                sp.add(f'frames {profile.id}', json.loads(profile.traces_async))
+            if params['profile_aggregation_mode'] == 'tabs':
+                profile._add_outputs(sp, profile.id if len(self) > 1 else '', params)
 
-        result = json.dumps(sp.add_default(**params).make(**params))
-        self.speedscope = base64.b64encode(result.encode('utf-8'))
+        if params['profile_aggregation_mode'] == 'temporal':
+            self._add_outputs(sp, 'all', params)
+
+        result = json.dumps(sp.make(**params))
+        return result.encode('utf-8')
+
+    def _add_outputs(self, sp, suffix, params):
+        sql = [f'sql {profile.id}' for profile in self]
+        frames = [f'frames {profile.id}' for profile in self]
+        if params['combined_profile']:
+            sp.add_output(sql + frames, display_name=f'Combined {suffix}', **params)
+        if params['sql_no_gap_profile']:
+            sp.add_output(sql, hide_gaps=True, display_name=f'Sql (no gap) {suffix}', **params)
+        if params['sql_density_profile']:
+            sp.add_output(sql, continuous=False, complete=False, display_name=f'Sql (density) {suffix}', **params)
+        if params['frames_profile']:
+            sp.add_output(frames, display_name=f'Frames {suffix}',**params)
 
     def _compute_speedscope_url(self):
         for profile in self:
@@ -139,6 +159,14 @@ class IrProfile(models.Model):
             'session': request.session.profile_session,
             'collectors': request.session.profile_collectors,
             'params': request.session.profile_params,
+        }
+
+    def action_view_speedscope(self):
+        ids = ",".join(str(p.id) for p in self)
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f'/web/speedscope/{ids}',
+            'target': 'new',
         }
 
 

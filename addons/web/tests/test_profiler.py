@@ -55,10 +55,10 @@ class TestProfilingWeb(ProfilingHttpCase):
         self.assertTrue(res['result']['session'])
         self.assertEqual(last_profile, self.env['ir.profile'].search([], limit=1, order='id desc'), "profiling route shouldn't have been profiled")
         # Profile a page
-        res = self.url_open('/web/speedscope')  # profile a light route
+        res = self.url_open('/web/login')  # profile a light route
         new_profile = self.env['ir.profile'].search([], limit=1, order='id desc')
         self.assertNotEqual(last_profile, new_profile, "A new profile should have been created")
-        self.assertEqual(new_profile.name, '/web/speedscope?')
+        self.assertEqual(new_profile.name, '/web/login?')
 
     def test_profile_test_tool(self):
         with self.profile():
