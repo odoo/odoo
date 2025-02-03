@@ -357,6 +357,7 @@ class AccountBankStatementLine(models.Model):
                 defaults.setdefault('date', last_line.date)
         return defaults
 
+    @api.model
     def new(self, values=None, origin=None, ref=None):
         return super(AccountBankStatementLine, self.with_context(is_statement_line=True)).new(values, origin, ref)
 

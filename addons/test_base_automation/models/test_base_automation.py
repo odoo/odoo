@@ -152,6 +152,7 @@ class BaseAutomationModelWithRecnameM2o(models.Model):
     _rec_name = "user_id"
     user_id = fields.Many2one("base.automation.model.with.recname.char", string='Responsible')
 
+    @api.model
     def name_create(self, name):
         name = name.strip()
         user = self.env["base.automation.model.with.recname.char"].search([('description', '=ilike', name)], limit=1)

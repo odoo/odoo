@@ -11,6 +11,7 @@ class Test_RpcModel_A(models.Model):
     field_b1 = fields.Many2one("test_rpc.model_b", string="required field", required=True)
     field_b2 = fields.Many2one("test_rpc.model_b", string="restricted field", ondelete="restrict")
 
+    @api.model
     @api.private
     def read_group(self, *a, **kw):
         return super().read_group(*a, **kw)
