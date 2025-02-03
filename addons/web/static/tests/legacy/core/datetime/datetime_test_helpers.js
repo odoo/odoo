@@ -174,23 +174,6 @@ export function getTexts(...selectors) {
 }
 
 /**
- * @param {Object} [options={}]
- * @param {boolean} [options.parse=false] whether to directly return the parsed
- *  values of the select elements
- * @returns {HTMLSelectElement[] | (number | string)[]}
- */
-export function getTimePickers({ parse = false } = {}) {
-    return select(".o_time_picker").map((timePickerEl) => {
-        const selects = select(timePickerEl, ".o_time_picker_select");
-        if (parse) {
-            return selects.map((sel) => (isNaN(sel.value) ? sel.value : Number(sel.value)));
-        } else {
-            return selects;
-        }
-    });
-}
-
-/**
  * @param  {...(string | HTMLElement)} selectors
  * @returns {HTMLElement[]}
  */
