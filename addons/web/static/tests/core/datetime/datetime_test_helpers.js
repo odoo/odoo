@@ -1,12 +1,5 @@
 import { expect } from "@odoo/hoot";
-import {
-    click,
-    queryAll,
-    queryAllTexts,
-    queryAllValues,
-    queryFirst,
-    queryText,
-} from "@odoo/hoot-dom";
+import { click, edit, queryAll, queryAllTexts, queryFirst, queryText } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 
 const PICKER_COLS = 7;
@@ -50,13 +43,12 @@ export function assertDateTimePicker(expectedParams) {
         expect(".o_time_picker").toHaveCount(time.length);
         for (let i = 0; i < time.length; i++) {
             const expectedTime = time[i];
-            const values = queryAll(`.o_time_picker:nth-child(${i + 1}) .o_time_picker_select`).map(
-                (sel) => sel.value
+            expect(`.o_time_picker:nth-child(${i + 1}) .o_time_picker_input`).toHaveValue(
+                expectedTime,
+                {
+                    message: `time values should be [${expectedTime}]`,
+                }
             );
-            const actual = [...values.slice(0, 2).map(Number), ...values.slice(2)];
-            expect(actual).toEqual(expectedTime, {
-                message: `time values should be [${expectedTime}]`,
-            });
         }
     } else {
         expect(".o_time_picker").toHaveCount(0);
@@ -163,11 +155,9 @@ export async function zoomOut() {
     await animationFrame();
 }
 
-export function getTimePickers({ parse = false } = {}) {
-    return queryAll(".o_time_picker").map((timePickerEl) => {
-        if (parse) {
-            return queryAllValues(".o_time_picker_select", { root: timePickerEl });
-        }
-        return queryAll(".o_time_picker_select", { root: timePickerEl });
-    });
+export async function editTime(time, timepickerIndex = 0) {
+    await click(`.o_time_picker_input:eq(${timepickerIndex})`);
+    await animationFrame();
+    await edit(time, { confirm: "enter" });
+    await animationFrame();
 }

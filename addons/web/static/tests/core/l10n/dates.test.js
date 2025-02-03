@@ -1,4 +1,4 @@
-import { beforeEach, expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { mockDate, mockTimeZone } from "@odoo/hoot-mock";
 import {
     defineParams,
@@ -14,6 +14,7 @@ import {
     formatDateTime,
     parseDate,
     parseDateTime,
+    parseTime,
     serializeDate,
     serializeDateTime,
     strftimeToLuxonFormat,
@@ -667,4 +668,125 @@ test("parseDateTime: arab locale, latin numbering system as input", async () => 
     expect(parseDateTime("15 07, 2020 12:30:43").toISO().split(".")[0]).toBe("2020-07-15T12:30:43");
     expect(parseDateTime("22/01/2023").toISO().split(".")[0]).toBe("2023-01-22T00:00:00");
     expect(parseDateTime("2023-01-22").toISO().split(".")[0]).toBe("2023-01-22T00:00:00");
+});
+
+describe.current.tags("headless");
+test("parseTime (various entries)", async () => {
+    patchWithCleanup(localization, {
+        timeFormat,
+        dateTimeFormat: `${dateFormat} ${timeFormat}`,
+    });
+
+    const testSet = [
+        // Default ":" separator
+        ["8:15", "08:15:00"],
+        ["10:15", "10:15:00"],
+        ["10:5", "10:50:00"],
+        ["10:15:34", "10:15:34"],
+        ["24:00", "00:00:00"],
+        ["10:", "10:00:00"],
+
+        // No separators
+        ["123", "12:30:00"],
+        ["101", "10:01:00"],
+        ["1015", "10:15:00"],
+        ["101534", "10:15:34"],
+        ["10  15", "10:15:00"],
+        ["10  15   34", "10:15:34"],
+        ["1 15", "01:15:00"],
+        ["35", "03:50:00"],
+
+        // Other separators
+        ["10h", "10:00:00"],
+        ["1h30", "01:30:00"],
+        ["10h15", "10:15:00"],
+        ["10h15:34", "10:15:34"],
+
+        // Am / Pm
+        ["8pm", "20:00:00"],
+        ["8PM", "20:00:00"],
+        ["8 pm", "20:00:00"],
+        ["8:55pm", "20:55:00"],
+        ["8:55 pm", "20:55:00"],
+        ["8:55pm 33", "20:55:33"],
+        ["8:55:33pm", "20:55:33"],
+
+        ["12am", "00:00:00"],
+        ["12pm", "12:00:00"],
+        ["8ppp", null],
+
+        // Wrong inputs
+        ["28:00", null],
+        ["28:", null],
+        ["abc", null],
+        ["10101010", null],
+    ];
+
+    for (const [input, expected] of testSet) {
+        let result = parseTime(input, true);
+        if (result) {
+            result = result.toFormat("HH:mm:ss");
+        }
+        expect(result).toBe(expected, {
+            message: `"${input}" should parse to "${expected}" and got "${result}"`,
+        });
+    }
+});
+
+describe.current.tags("headless");
+test("parseTime (no seconds)", async () => {
+    patchWithCleanup(localization, {
+        timeFormat,
+        dateTimeFormat: `${dateFormat} ${timeFormat}`,
+    });
+
+    const testSet = [
+        ["8:15", "08:15:00"],
+        ["10:15", "10:15:00"],
+        ["10:5", "10:05:00"],
+        ["24:00", "00:00:00"],
+        ["10:", "10:00:00"],
+        ["101", "10:10:00"],
+        ["350", "03:50:00"],
+        ["1015", "10:15:00"],
+        ["10  15", "10:15:00"],
+        ["1 15", "01:15:00"],
+
+        ["8:55aaa", null],
+        ["8:55:33", null],
+        ["8:55:", null],
+        ["08553", null],
+        ["085533", null],
+        ["08553300", null],
+        ["8:55:33pm", null],
+    ];
+
+    for (const [input, expected] of testSet) {
+        let result = parseTime(input, false);
+        if (result) {
+            result = result.toFormat("HH:mm:ss");
+        }
+        expect(result).toBe(expected, {
+            message: `(parseSeconds=false) "${input}" should parse to "${expected}" and got "${result}"`,
+        });
+    }
+});
+
+describe.current.tags("headless");
+test("parseTime (arabic numbers)", async () => {
+    patchWithCleanup(Settings, { defaultNumberingSystem: "arab" });
+
+    const testSet = [
+        ["11", "١١:٠٠"],
+        ["11:45", "١١:٤٥"],
+        ["١١", "١١:٠٠"],
+        ["١١:٤٥", "١١:٤٥"],
+    ];
+
+    for (const [input, expected] of testSet) {
+        const result = parseTime(input).toFormat("HH:mm");
+        expect(result).toBe(expected, {
+            message: `"${input}" should parse to "${expected}" and got "${result}"`,
+        });
+    }
 });
