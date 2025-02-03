@@ -3082,6 +3082,7 @@ class AccountMove(models.Model):
     # LOW-LEVEL METHODS
     # -------------------------------------------------------------------------
 
+    @api.model
     def check_field_access_rights(self, operation, field_names):
         result = super().check_field_access_rights(operation, field_names)
         if not field_names:

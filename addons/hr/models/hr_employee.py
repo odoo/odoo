@@ -327,6 +327,7 @@ class HrEmployee(models.Model):
         for employee_private, employee_public in zip(self, self.env['hr.employee.public'].browse(self.ids)):
             employee_private.display_name = employee_public.display_name
 
+    @api.model
     def search_fetch(self, domain, field_names, offset=0, limit=None, order=None):
         if self.browse().has_access('read'):
             return super().search_fetch(domain, field_names, offset, limit, order)
