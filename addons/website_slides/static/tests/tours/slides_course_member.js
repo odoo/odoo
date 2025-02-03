@@ -141,13 +141,16 @@ registry.category("web_tour.tours").add("course_member", {
             // check that the course is marked as completed
             trigger: 'div:contains("Basics of Gardening") span:contains("Completed")',
         },
-        // eLearning: go back on course and rate it (new rate or update it, both should work)
+        // eLearning: go back on course and rate it
         {
-            trigger: 'a:contains("Basics of Gardening")',
+            trigger: 'a:contains("Basics of Gardening - Test")',
             run: "click",
         },
         {
-            trigger: '#ratingComposerRoot:shadow button:contains("Review")',
+            trigger: 'div.o_website_rating_static[title="0 stars on 5"]',
+        },
+        {
+            trigger: '#ratingComposerRoot:shadow button:contains("Add Review")',
             run: "click",
         },
         {
@@ -156,18 +159,60 @@ registry.category("web_tour.tours").add("course_member", {
         },
         {
             trigger: "#ratingComposerRoot:shadow textarea",
-            run: "edit This is a great course. Top !",
+            run: "edit This is a great course. Top!",
         },
         {
             trigger: "#ratingComposerRoot:shadow button.o-mail-Composer-send",
             run: "click",
         },
         {
-            trigger: 'a[id="review-tab"]',
+            trigger: 'div.o_website_rating_static[title="3 stars on 5"]',
+        },
+        {
+            trigger: 'a[id="review-tab"]:contains("Reviews (1)")',
+        },
+        // eLearning: edit the review
+        {
+            trigger: '#ratingComposerRoot:shadow button:contains("Edit Review")',
             run: "click",
         },
         {
-            trigger: '#chatterRoot:shadow .o-mail-Message-body:contains("This is a great course. Top !")',
+            trigger: "#ratingComposerRoot:shadow i.fa.fa-star-o:eq(1)",
+            run: "click",
+        },
+        {
+            trigger: "#ratingComposerRoot:shadow textarea",
+            run: "edit This is a great course. I highly recommend it!",
+        },
+        {
+            trigger: "#ratingComposerRoot:shadow button.o-mail-Composer-send",
+            run: "click",
+        },
+        {
+            trigger: 'a[id="review-tab"]:contains("Reviews (1)")',
+            run: "click",
+        },
+        {
+            trigger: '#chatterRoot:shadow .o-mail-Message-body:contains("This is a great course. I highly recommend it!")',
+            run: 'hover && click #chatterRoot:shadow .o-mail-Message [title="Expand"]',
+        },
+        {
+            trigger: '#chatterRoot:shadow .o-mail-Message-moreMenu [title="Delete"]',
+            run: "click",
+        },
+        {
+            trigger: '#chatterRoot:shadow button:contains("Confirm")',
+            run: "click",
+        },
+        // it should be the exact string
+        {
+            trigger: 'a[id="review-tab"]:contains("Reviews")',
+        },
+        {
+            trigger: 'div.o_website_rating_static[title="0 stars on 5"]',
+        },
+        {
+            trigger: '#ratingComposerRoot:shadow button:contains("Add Review")',
         },
     ],
 });
