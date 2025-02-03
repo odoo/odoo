@@ -1,6 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
 import { isBlock } from "@html_editor/utils/blocks";
-import { _t } from "@web/core/l10n/translation";
 import { closest, touching } from "@web/core/utils/ui";
 
 function filterFunction(el, exclude) {
@@ -38,7 +37,6 @@ export class DropZonePlugin extends Plugin {
 
     resources = {
         savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
-        normalize_handlers: this.updateEmptyDropZone.bind(this),
     };
 
     setup() {
@@ -91,21 +89,6 @@ export class DropZonePlugin extends Plugin {
         };
     }
 
-    get wrapEl() {
-        return this.document.getElementById("wrap");
-    }
-
-    get emptyDropZoneEl() {
-        return this.wrapEl.querySelector(".oe_drop_zone.oe_insert[data-editor-message]");
-    }
-
-    createDropZone() {
-        const dropZone = this.document.createElement("div");
-        dropZone.className = "oe_drop_zone oe_insert";
-        this.dropZoneElements.push(dropZone);
-        return dropZone;
-    }
-
     displayDropZone(snippet) {
         this.clearDropZone();
 
@@ -117,16 +100,20 @@ export class DropZonePlugin extends Plugin {
         }
         targets.push(...selectorSiblings);
 
-        if (this.emptyDropZoneEl) {
-            return;
-        }
+        const createDropZone = () => {
+            const dropZone = this.document.createElement("div");
+            dropZone.className = "oe_drop_zone oe_insert";
+            this.dropZoneElements.push(dropZone);
+            return dropZone;
+        };
+
         for (const target of targets) {
             if (!target.nextElementSibling?.classList.contains("oe_drop_zone")) {
-                target.after(this.createDropZone());
+                target.after(createDropZone());
             }
 
             if (!target.previousElementSibling?.classList.contains("oe_drop_zone")) {
-                target.before(this.createDropZone());
+                target.before(createDropZone());
             }
         }
     }
@@ -139,17 +126,6 @@ export class DropZonePlugin extends Plugin {
         }
 
         this.dropZoneElements = [];
-        this.updateEmptyDropZone();
-    }
-
-    updateEmptyDropZone() {
-        if (this.wrapEl.matches(":empty")) {
-            const emptyDropZoneEl = this.createDropZone();
-            emptyDropZoneEl.dataset.editorMessage = _t("DRAG BUILDING BLOCKS HERE");
-            this.wrapEl.appendChild(emptyDropZoneEl);
-        } else {
-            this.emptyDropZoneEl?.remove();
-        }
     }
 
     dragElement(element) {
@@ -166,42 +142,25 @@ export class DropZonePlugin extends Plugin {
     }
 
     getAddElement(position) {
-        const cancel = () => {
-            this.clearDropZone();
-            const fn = () => {};
-            fn.noDrop = true;
-            return fn;
-        };
-        if (position && !touching([this.document.body], position).length) {
-            return cancel();
-        }
         const dropZone = position
-            ? closest(touching(this.dropZoneElements, position), position) ||
-              closest(this.dropZoneElements, position)
+            ? closest(touching(this.dropZoneElements, position), position)
             : closest(this.dropZoneElements, {
                   x: window.innerWidth / 2,
                   y: window.innerHeight / 2,
               });
         if (!dropZone) {
-            return cancel();
+            this.clearDropZone();
+            return () => {};
         }
-
-        let target, insertMethod;
-        if (dropZone === this.emptyDropZoneEl) {
-            insertMethod = "appendChild";
-            target = dropZone.parentElement;
-        }
+        let target = dropZone.previousSibling;
+        let addAfter = true;
         if (!target) {
-            insertMethod = "after";
-            target = dropZone.previousSibling;
-        }
-        if (!target) {
-            insertMethod = "before";
+            addAfter = false;
             target = dropZone.nextSibling;
         }
         this.clearDropZone();
         return (elementToAdd) => {
-            target[insertMethod](elementToAdd);
+            addAfter ? target.after(elementToAdd) : target.before(elementToAdd);
             scrollToWindow(elementToAdd, { behavior: "smooth", offset: 50 });
             this.dependencies.history.addStep();
         };
