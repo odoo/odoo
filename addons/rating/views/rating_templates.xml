@@ -62,7 +62,7 @@
                                            t-attf-id="rate_{{rate_name}}"
                                            t-att-value="rate_name"
                                            t-att-checked="rate == rate_name"/>
-                                    <label t-attf-class="col p-4 btn o_rating_label shadow-none transition-base {{rate == rate_name and 'active' or ''}}"
+                                    <label t-attf-class="col p-4 o_rating_label shadow-none transition-base {{rate == rate_name and 'active' or ''}}"
                                            t-att-for="'rate_%s' % (rate_name)">
                                         <img t-attf-src='/rating/static/src/img/rating_#{rate_name}.svg'
                                              t-att-alt="rate_name_value"
