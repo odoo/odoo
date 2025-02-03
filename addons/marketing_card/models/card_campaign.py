@@ -159,7 +159,7 @@ class CardCampaign(models.Model):
             campaign.res_model = preview_model or campaign.res_model or 'res.partner'
 
     @api.model_create_multi
-    def create(self, create_vals):
+    def create(self, vals_list):
         utm_source = self.env.ref('marketing_card.utm_source_marketing_card', raise_if_not_found=False)
         link_trackers = self.env['link.tracker'].sudo().create([
             {
@@ -168,12 +168,12 @@ class CardCampaign(models.Model):
                 'source_id': utm_source.id if utm_source else None,
                 'label': f"marketing_card_campaign_{vals.get('name', '')}_{fields.Datetime.now()}",
             }
-            for vals in create_vals
+            for vals in vals_list
         ])
         return super().create([{
             **vals,
             'link_tracker_id': link_tracker_id,
-        } for vals, link_tracker_id in zip(create_vals, link_trackers.ids)])
+        } for vals, link_tracker_id in zip(vals_list, link_trackers.ids)])
 
     def write(self, vals):
         link_tracker_vals = {}

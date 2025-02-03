@@ -23,7 +23,7 @@ class PhoneBlacklist(models.Model):
     )
 
     @api.model_create_multi
-    def create(self, values):
+    def create(self, vals_list):
         """ Create new (or activate existing) blacklisted numbers.
                 A. Note: Attempt to create a number that already exists, but is non-active, will result in its activation.
                 B. Note: If the number already exists and it's active, it will be added to returned set, (it won't be re-created)
@@ -32,7 +32,7 @@ class PhoneBlacklist(models.Model):
         # Extract and sanitize numbers, ensuring uniques
         to_create = []
         done = set()
-        for value in values:
+        for value in vals_list:
             try:
                 sanitized_value = self.env.user._phone_format(number=value['number'], raise_exception=True)
             except UserError as err:

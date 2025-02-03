@@ -40,8 +40,8 @@ class StockMoveLine(models.Model):
                 return expression.OR([[('production_id.picking_type_id', operator, value)], res])
 
     @api.model_create_multi
-    def create(self, values):
-        res = super(StockMoveLine, self).create(values)
+    def create(self, vals_list):
+        res = super().create(vals_list)
         for line in res:
             # If the line is added in a done production, we need to map it
             # manually to the produced move lines in order to see them in the

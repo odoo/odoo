@@ -43,10 +43,10 @@ class PaymentProvider(models.Model):
     #=== CRUD METHODS ===#
 
     @api.model_create_multi
-    def create(self, values_list):
-        for values in values_list:
+    def create(self, vals_list):
+        for values in vals_list:
             self._adyen_extract_prefix_from_api_url(values)
-        return super().create(values_list)
+        return super().create(vals_list)
 
     def write(self, values):
         self._adyen_extract_prefix_from_api_url(values)

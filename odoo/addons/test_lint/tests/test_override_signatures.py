@@ -33,7 +33,7 @@ methods_to_sanitize = {
     if not method_name.startswith('_')
 } - {
     # Not yet sanitized...
-    'write', 'create', 'default_get'
+    'write', 'default_get'
 }
 
 

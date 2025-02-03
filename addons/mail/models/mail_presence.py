@@ -40,8 +40,9 @@ class MailPresence(models.Model):
         "A mail presence must have a user or a guest.",
     )
 
-    def create(self, values):
-        presences = super().create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        presences = super().create(vals_list)
         presences._send_presence()
         return presences
 

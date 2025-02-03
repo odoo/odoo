@@ -91,8 +91,8 @@ class MailRenderMixin(models.AbstractModel):
         return name in ['render_engine', 'render_options'] or super()._valid_field_parameter(field, name)
 
     @api.model_create_multi
-    def create(self, values_list):
-        record = super().create(values_list)
+    def create(self, vals_list):
+        record = super().create(vals_list)
         if self._unrestricted_rendering:
             # If the rendering is unrestricted (e.g. mail.template),
             # check the user is part of the mail editor group to create a new template if the template is dynamic

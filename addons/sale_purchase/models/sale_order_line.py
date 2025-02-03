@@ -41,8 +41,8 @@ class SaleOrderLine(models.Model):
     # --------------------------
 
     @api.model_create_multi
-    def create(self, values):
-        lines = super(SaleOrderLine, self).create(values)
+    def create(self, vals_list):
+        lines = super().create(vals_list)
         # Do not generate purchase when expense SO line since the product is already delivered
         lines.filtered(
             lambda line: line.state == 'sale' and not line.is_expense
