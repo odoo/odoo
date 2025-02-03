@@ -134,7 +134,7 @@ export class VideoSelector extends Component {
         }
         const url = embedMatch ? embedMatch[1] : this.state.urlInput;
 
-        const options = {};
+        let options = {};
         if (this.props.isForBgVideo) {
             Object.keys(this.OPTIONS).forEach(key => {
                 options[key] = true;
@@ -144,6 +144,11 @@ export class VideoSelector extends Component {
                 options[option.id] = option.value;
             }
         }
+
+        if (Object.keys(options).length === 0) {
+            options = this.getOptionsFromUrl(url);
+        }
+
         const { embed_url: src, platform } = await this._getVideoURLData(url, options);
 
         if (!src) {
@@ -172,6 +177,19 @@ export class VideoSelector extends Component {
             this.state.platform = platform;
             this.state.options = newOptions;
         }
+    }
+
+    /**
+     * Extracts options as a boolean object based on the presence of
+     * urlParameter in the URL.
+     */
+    getOptionsFromUrl(url) {
+        const options = {};
+        for (const key in this.OPTIONS) {
+            const { urlParameter } = this.OPTIONS[key];
+            options[key] = url.indexOf(urlParameter) >= 0;
+        }
+        return options;
     }
 
     /**
