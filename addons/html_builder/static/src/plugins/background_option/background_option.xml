@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BackgroundComponent">
+    <BuilderRow label.translate="Change Shapes" t-if="showBackgroundShapeButton()">
+        <button type="button" class="btn btn-primary" t-on-click="() => this.showBackgroundShapes()">
+            <img src="/html_builder/static/img/options/bg_shape.svg"/>
+        </button>
+    </BuilderRow>
+</t>
+
+</templates>

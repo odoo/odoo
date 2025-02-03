@@ -10,7 +10,11 @@
         </t>
         <t t-else="">
             <div t-ref="content">
-                <t t-foreach="props.currentOptionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
+                <CustomizeComponent t-if="state.customizeComponent"
+                    editingElements="state.customizeComponent.editingEls"
+                    comp="state.customizeComponent.comp"
+                    compProps="state.customizeComponent.props"/>
+                <t t-else="" t-foreach="props.currentOptionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
                     <OptionsContainer
                         snippetModel="props.snippetModel"
                         editingElement="optionsContainer.element"

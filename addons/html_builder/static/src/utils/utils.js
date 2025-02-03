@@ -1,3 +1,5 @@
+import { DependencyManager } from "../core/plugins/dependency_manager";
+import { useSubEnv } from "@odoo/owl";
 import { SIZES, MEDIAS_BREAKPOINTS } from "@web/core/ui/ui_service";
 import { _t } from "@web/core/l10n/translation";
 
@@ -90,4 +92,13 @@ export function getElementsWithOption(rootEl, selector, exclude = false) {
         matchingEls = matchingEls.filter((editingEl) => !editingEl.matches(exclude));
     }
     return matchingEls;
+}
+
+export function useOptionsSubEnv(getEditingElements) {
+    useSubEnv({
+        dependencyManager: new DependencyManager(),
+        getEditingElement: () => getEditingElements()[0],
+        getEditingElements: getEditingElements,
+        weContext: {},
+    });
 }

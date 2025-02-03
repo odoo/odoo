@@ -371,10 +371,19 @@ export function normalizeColor(color) {
  * @param {string} string a css value in the form 'url("...")'
  * @returns {string|false} the src of the image or false if not parsable
  */
-export function getBgImageURL(el) {
+export function getBgImageURLFromEl(el) {
     const parts = backgroundImageCssToParts(window.getComputedStyle(el).backgroundImage);
     const string = parts.url || "";
-    const match = string.match(/^url\((['"])(.*?)\1\)$/);
+    return getBgImageURLFromURL(string);
+}
+/**
+ * Parse an element's background-image's url.
+ *
+ * @param {string} string a css value in the form 'url("...")'
+ * @returns {string|false} the src of the image or false if not parsable
+ */
+export function getBgImageURLFromURL(url) {
+    const match = url.match(/^url\((['"])(.*?)\1\)$/);
     if (!match) {
         return "";
     }

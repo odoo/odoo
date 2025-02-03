@@ -100,3 +100,57 @@
     border-width: 4px;
     border-bottom: none !important;
 }
+
+.o_pager_container {
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+}
+
+.builder_select_page {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: $o-we-item-spacing / 2;
+    padding: $o-we-item-spacing;
+    background-color: $o-we-bg-lighter;
+
+    button {
+        --PreviewAlphaBg-background-size: 16px;
+
+        @extend %o-preview-alpha-background;
+        padding: $o-we-item-spacing;
+        background-color: transparent;
+    }
+    // For background shapes
+    .button_shape {
+        grid-column: span 2;
+        padding: 0;
+
+        button, div {
+            width: 100%;
+            height: 50px;
+        }
+    }
+    img {
+        width: 100%;
+        aspect-ratio: 1;
+        object-fit: contain;
+    }
+}
+
+.o_we_shape_animated_label {
+    @include o-position-absolute(0, 0);
+    padding: 0 4px;
+    background: $o-we-toolbar-color-accent;
+    color: white;
+
+    > span {
+        @include o-text-overflow(inline-block);
+        max-width: 0;
+    }
+}
+
+.o_pager_nav_angle {
+    @include button-variant($o-we-bg-light, $o-we-bg-light);
+    padding: $o-we-item-spacing / 2;
+    font-size: $o-we-sidebar-font-size * 1.4;
+}

@@ -163,6 +163,7 @@ export function addOption({
     Component,
     sequence,
     cleanForSave,
+    props,
 }) {
     const pluginId = uniqueId("test-option");
     const Class = makeOptionPlugin({
@@ -174,6 +175,7 @@ export function addOption({
         applyTo,
         sequence,
         cleanForSave,
+        props,
     });
     registry.category("website-plugins").add(pluginId, Class);
     after(() => {
@@ -189,6 +191,7 @@ function makeOptionPlugin({
     sequence,
     OptionComponent,
     cleanForSave,
+    props,
 }) {
     const option = {
         OptionComponent,
@@ -197,6 +200,7 @@ function makeOptionPlugin({
         exclude,
         applyTo,
         cleanForSave,
+        props,
     };
 
     const Class = {

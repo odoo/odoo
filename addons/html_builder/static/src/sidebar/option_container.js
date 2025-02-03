@@ -1,4 +1,4 @@
-import { Component, useSubEnv, markup } from "@odoo/owl";
+import { Component, markup } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { defaultBuilderComponents } from "../core/default_builder_components";
@@ -7,14 +7,17 @@ import {
     useApplyVisibility,
     useIsActiveItem,
 } from "../core/building_blocks/utils";
-import { DependencyManager } from "../core/plugins/dependency_manager";
-import { getSnippetName } from "@html_builder/utils/utils";
+import { getSnippetName, useOptionsSubEnv } from "@html_builder/utils/utils";
 import { BorderConfigurator } from "@html_builder/plugins/border_configurator";
 import { ShadowOption } from "@html_builder/plugins/shadow_option";
 
 export class OptionsContainer extends Component {
     static template = "html_builder.OptionsContainer";
-    static components = { ...defaultBuilderComponents, BorderConfigurator, ShadowOption };
+    static components = {
+        ...defaultBuilderComponents,
+        BorderConfigurator,
+        ShadowOption,
+    };
     static props = {
         snippetModel: { type: Object },
         options: { type: Array },
@@ -25,13 +28,7 @@ export class OptionsContainer extends Component {
 
     setup() {
         this.notification = useService("notification");
-
-        useSubEnv({
-            dependencyManager: new DependencyManager(),
-            getEditingElement: () => this.props.editingElement,
-            getEditingElements: () => [this.props.editingElement],
-            weContext: {},
-        });
+        useOptionsSubEnv(() => [this.props.editingElement]);
         this.isActiveItem = useIsActiveItem();
         useVisibilityObserver("content", useApplyVisibility("root"));
     }
