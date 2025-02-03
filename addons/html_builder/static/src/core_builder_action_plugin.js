@@ -130,6 +130,27 @@ export const coreBuilderActions = {
             editingElement.removeAttribute(attributeName);
         },
     },
+    dataAttributeAction: {
+        getValue: ({ editingElement, param: attributeName }) =>
+            editingElement.dataset[attributeName],
+        isApplied: ({ editingElement, param: attributeName, value }) => {
+            if (value) {
+                return editingElement.dataset[attributeName] === value;
+            } else {
+                return !(attributeName in editingElement.dataset);
+            }
+        },
+        apply: ({ editingElement, param: attributeName, value }) => {
+            if (value) {
+                editingElement.dataset[attributeName] = value;
+            } else {
+                delete editingElement.dataset[attributeName];
+            }
+        },
+        clean: ({ editingElement, param: attributeName }) => {
+            delete editingElement.dataset[attributeName];
+        },
+    },
 
     // TODO maybe find a better place for this
     setClassRange: {
