@@ -60,11 +60,13 @@ export class ModalAttendeesRegistration extends Interaction {
      * @param {SubmitEvent} ev
      */
     onSubmit(ev) {
-        const tokenInput = document.createElement("input");
-        tokenInput.setAttribute("name", "recaptcha_token_response");
-        tokenInput.setAttribute("type", "hidden");
-        tokenInput.setAttribute("value", this.recaptchaToken.token);
-        this.insert(tokenInput, ev.currentTarget);
+        if (this.recaptchaToken.token) {
+            const tokenInput = document.createElement("input");
+            tokenInput.setAttribute("name", "recaptcha_token_response");
+            tokenInput.setAttribute("type", "hidden");
+            tokenInput.setAttribute("value", this.recaptchaToken.token);
+            this.insert(tokenInput, ev.currentTarget);
+        }
     }
 }
 
