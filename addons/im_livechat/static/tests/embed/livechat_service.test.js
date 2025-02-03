@@ -2,7 +2,7 @@ import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
 } from "@im_livechat/../tests/livechat_test_helpers";
-import { expirableStorage } from "@im_livechat/embed/common/expirable_storage";
+import { expirableStorage } from "@im_livechat/core/common/expirable_storage";
 import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
 import {
     click,

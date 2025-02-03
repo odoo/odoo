@@ -1,4 +1,4 @@
-import { expirableStorage } from "@im_livechat/embed/common/expirable_storage";
+import { expirableStorage } from "@im_livechat/core/common/expirable_storage";
 import { SESSION_STATE } from "@im_livechat/embed/common/livechat_service";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
