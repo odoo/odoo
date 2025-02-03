@@ -46,4 +46,4 @@ class Employee(models.Model):
         demo_tag = self.env.ref('hr_skills.employee_resume_line_emp_eg_1', raise_if_not_found=False)
         if demo_tag:
             return
-        convert.convert_file(self.env, 'hr_skills', 'data/scenarios/hr_skills_scenario.xml', None, mode='init', kind='data')
+        convert.convert_file(self.sudo().env, 'hr_skills', 'data/scenarios/hr_skills_scenario.xml', None, mode='init', kind='data')
