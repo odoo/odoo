@@ -1761,6 +1761,9 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
         // Handle the sliding manually.
         this.__onControlClick = throttleForAnimation(this._onControlClick.bind(this));
         this.$controls.on("click.carousel_option", this.__onControlClick);
+        for (const controlEl of this.$controls) {
+            controlEl.addEventListener("keydown", this._onControlKeyDown);
+        }
 
         return this._super.apply(this, arguments);
     },
@@ -1771,6 +1774,9 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
         this._super.apply(this, arguments);
         this.$bsTarget.off('.carousel_option');
         this.$controls.off(".carousel_option");
+        for (const controlEl of this.$controls) {
+            controlEl.removeEventListener("keydown", this._onControlKeyDown);
+        }
     },
     /**
      * @override
@@ -1934,6 +1940,20 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
             this.options.wysiwyg.odooEditor.historyUnpauseSteps();
             this.options.wysiwyg.odooEditor.historyStep();
         }});
+    },
+    /**
+     * Since carousel controls are disabled in edit mode because slides are
+     * handled manually, we disable the left and right keydown events to prevent
+     * sliding this way.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onControlKeyDown(ev) {
+        if (["ArrowLeft", "ArrowRight"].includes(ev.code)) {
+            ev.preventDefault();
+            ev.stopPropagation();
+        }
     },
     /**
      * @override
