@@ -8,6 +8,9 @@
             <xpath expr="//setting[@id='recaptcha']" position="attributes">
                 <attribute name="help" add="If no keys are provided, no checks will be done." separator=" " />
             </xpath>
+            <xpath expr="//setting[@id='recaptcha']/field" position="replace">
+                <field name="enable_recaptcha"/>
+            </xpath>
             <div id="recaptcha_warning" position="replace">
                 <div class="content-group" id="reacaptcha_configuration_settings" invisible="not module_google_recaptcha">
                     <div class="mt16 row">
