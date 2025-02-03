@@ -1,0 +1,536 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="it_tax_report" model="account.report">
+            <field name="name">Formulario 400v5: IT</field>
+            <field name="root_report_id" ref="account.generic_tax_report"/>
+            <field name="country_id" ref="base.bo"/>
+            <field name="filter_fiscal_position" eval="True"/>
+            <field name="availability_condition">country</field>
+            <field name="column_ids">
+                <record id="it_tax_report_code" model="account.report.column">
+                    <field name="name">Cód. Casilla</field>
+                    <field name="expression_label">code</field>
+                    <field name="figure_type">string</field>
+                </record>
+                <record id="it_tax_report_balance" model="account.report.column">
+                    <field name="name">Importe</field>
+                    <field name="expression_label">balance</field>
+                    <field name="figure_type">monetary</field>
+                </record>
+            </field>
+            <field name="line_ids">
+                <record id="f400_v5_tax_report" model="account.report.line">
+                    <field name="sequence" eval="0"/>
+                    <field name="name">Form. 400v.5: Impuesto a las Transacciones IT</field>
+                    <field name="code">f400_v5_tax_report</field>
+                    <field name="hierarchy_level" eval="0"/>
+                    <field name="children_ids">
+                        <record id="it_base_determination_report" model="account.report.line">
+                            <field name="sequence" eval="100"/>
+                            <field name="name">Determinación de la Base Imponible e Impuesto</field>
+                            <field name="code">it_base_determination_report</field>
+                            <field name="children_ids">
+                                <record id="it_total_income_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="101"/>
+                                    <field name="name">Total ingresos brutos devengados y/o percibidos en especie (incluye ingresos exentos)</field>
+                                    <field name="code">it13</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="it_total_income_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">13</field>
+                                        </record>
+                                        <record id="it_total_income_tax_tag" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">tax_tags</field>
+                                            <field name="formula">it13</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="it_exempt_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="102"/>
+                                    <field name="name">Ingresos exentos</field>
+                                    <field name="code">it32</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="it_exempt_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">32</field>
+                                        </record>
+                                        <record id="it_exempt_tax_tag" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">tax_tags</field>
+                                            <field name="formula">it32</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="it_base_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="103"/>
+                                    <field name="name">Base imponible (C13 - C32)</field>
+                                    <field name="code">it24</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="it_base_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">24</field>
+                                        </record>
+                                        <record id="it_base_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">it13.balance - it32.balance</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="it_determined_amount_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="104"/>
+                                    <field name="name">Impuesto Determinado (C24 * 3%)</field>
+                                    <field name="code">it909</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="it_determined_amount_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">909</field>
+                                        </record>
+                                        <record id="it_determined_amount_tax_tag" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">tax_tags</field>
+                                            <field name="formula">it909</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="it_balance_determination_report" model="account.report.line">
+                            <field name="sequence" eval="200"/>
+                            <field name="name">Determinación del Saldo</field>
+                            <field name="code">it_balance_determination_report</field>
+                            <field name="children_ids">
+                                <record id="paid_iue_to_compensate_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="201"/>
+                                    <field name="name">IUE pagado a compensar (1ra. Instancia o “Saldo IUE a compensar” del Formulario 400, C619 del período anterior)</field>
+                                    <field name="code">it664</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="paid_iue_to_compensate_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">664</field>
+                                        </record>
+                                        <record id="paid_iue_to_compensate_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">external</field>
+                                            <field name="formula">sum</field>
+                                            <field name="subformula">editable</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="it_determined_treasury_favor_balance_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="202"/>
+                                    <field name="name">Saldo de Impuesto Determinado a favor del Fisco (C909 - C664; Si > 0)</field>
+                                    <field name="code">it1001</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="it_determined_treasury_favor_balance_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">1001</field>
+                                        </record>
+                                        <record id="it_determined_treasury_favor_balance_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">it909.balance - it664.balance</field>
+                                            <field name="subformula">if_above(CUR(0))</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="it_payment_on_account_in_sworn_statements_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="203"/>
+                                    <field name="name">Pagos a Cuenta realizados en DD.JJ. y/o Boletas de Pago correspondientes al periodo que se declara</field>
+                                    <field name="code">it622</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="it_payment_on_account_in_sworn_statements_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">622</field>
+                                        </record>
+                                        <record id="it_payment_on_account_in_sworn_statements_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">external</field>
+                                            <field name="formula">sum</field>
+                                            <field name="subformula">editable</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="it_previous_payments_on_account_to_compensate_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="204"/>
+                                    <field name="name">Saldo de Pagos a Cuenta del periodo anterior a compensar (C747 del Formulario 400 del período anterior)</field>
+                                    <field name="code">it640</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="it_previous_payments_on_account_to_compensate_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">640</field>
+                                        </record>
+                                        <record id="it_previous_payments_on_account_to_compensate_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">external</field>
+                                            <field name="formula">sum</field>
+                                            <field name="subformula">editable</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="it_taxpayer_favor_balance_payments_on_account_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="205"/>
+                                    <field name="name">Saldo por Pagos a Cuenta a favor del Contribuyente (C622+C640-C1001; Si > 0)</field>
+                                    <field name="code">it643</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="it_taxpayer_favor_balance_payments_on_account_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">643</field>
+                                        </record>
+                                        <record id="it_taxpayer_favor_balance_payments_on_account_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">it622.balance + it640.balance - it1001.balance</field>
+                                            <field name="subformula">if_above(CUR(0))</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="it_treasury_favor_balance_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="206"/>
+                                    <field name="name">Saldo a favor del Fisco (C1001-C622-C640; Si > 0)</field>
+                                    <field name="code">it996</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="it_treasury_favor_balance_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">996</field>
+                                        </record>
+                                        <record id="it_treasury_favor_balance_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">it1001.balance - it622.balance - it640.balance</field>
+                                            <field name="subformula">if_above(CUR(0))</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="it_debt_determination_report" model="account.report.line">
+                            <field name="sequence" eval="300"/>
+                            <field name="name">Determinación de la Deuda Tributaria</field>
+                            <field name="code">it_debt_determination_report</field>
+                            <field name="children_ids">
+                                <record id="it_omitted_tribute_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="301"/>
+                                    <field name="name">Tributo Omitido (C996)</field>
+                                    <field name="code">it924</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="it_omitted_tribute_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">924</field>
+                                        </record>
+                                        <record id="it_omitted_tribute_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">external</field>
+                                            <field name="formula">sum</field>
+                                            <field name="subformula">editable</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="it_updated_omitted_tribute_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="302"/>
+                                    <field name="name">Actualización de valor sobre Tributo Omitido</field>
+                                    <field name="code">it925</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="it_updated_omitted_tribute_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">925</field>
+                                        </record>
+                                        <record id="it_updated_omitted_tribute_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">external</field>
+                                            <field name="formula">sum</field>
+                                            <field name="subformula">editable</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="it_interest_on_updated_omitted_tribute_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="303"/>
+                                    <field name="name">Intereses sobre Tributo Omitido Actualizado</field>
+                                    <field name="code">it938</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="it_interest_on_updated_omitted_tribute_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">938</field>
+                                        </record>
+                                        <record id="it_interest_on_updated_omitted_tribute_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">external</field>
+                                            <field name="formula">sum</field>
+                                            <field name="subformula">editable</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="it_late_submission_fine_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="304"/>
+                                    <field name="name">Multa por Incumplimiento a Deber Formal (IDF) por presentacion fuera de plazo</field>
+                                    <field name="code">it954</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="it_late_submission_fine_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">954</field>
+                                        </record>
+                                        <record id="it_late_submission_fine_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">external</field>
+                                            <field name="formula">sum</field>
+                                            <field name="subformula">editable</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="it_late_submission_idf_finetax_line" model="account.report.line">
+                                    <field name="sequence" eval="305"/>
+                                    <field name="name">Multa por IDF por Incremento del Impuesto Determinado en DD.JJ Rectificatoria presenta fuera de plazo</field>
+                                    <field name="code">it967</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="it_late_submission_idf_finetax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">967</field>
+                                        </record>
+                                        <record id="it_late_submission_idf_finetax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">external</field>
+                                            <field name="formula">sum</field>
+                                            <field name="subformula">editable</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="it_total_debt_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="306"/>
+                                    <field name="name">Total Deuda Tributaria (C924+C925+C938+C954+C967)</field>
+                                    <field name="code">it955</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="it_total_debt_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">955</field>
+                                        </record>
+                                        <record id="it_total_debt_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">it924.balance + it925.balance + it938.balance + it954.balance + it967.balance</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="it_definitive_balance_report" model="account.report.line">
+                            <field name="sequence" eval="400"/>
+                            <field name="name">Saldo Definitivo</field>
+                            <field name="code">it_definitive_balance_report</field>
+                            <field name="children_ids">
+                                <record id="it_definitive_taxpayer_iue_to_compensate_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="401"/>
+                                    <field name="name">Saldo definitivo de IUE a compensar para el siguiente período (C664-C909; Si > 0)</field>
+                                    <field name="code">it619</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="it_definitive_taxpayer_iue_to_compensate_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">619</field>
+                                        </record>
+                                        <record id="it_definitive_taxpayer_iue_to_compensate_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">it664.balance - it909.balance</field>
+                                            <field name="subformula">if_above(CUR(0))</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="it_definitive_taxpayer_payment_on_account_balance_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="402"/>
+                                    <field name="name">Saldo definitivo por Pagos a Cuenta a favor del Contribuyente para el siguiente período (C643-C955; Si > 0)</field>
+                                    <field name="code">it747</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="it_definitive_taxpayer_payment_on_account_balance_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">747</field>
+                                        </record>
+                                        <record id="it_definitive_taxpayer_payment_on_account_balance_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">it643.balance - it955.balance</field>
+                                            <field name="subformula">if_above(CUR(0))</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="it_definitive_treasury_balance_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="403"/>
+                                    <field name="name">Saldo definitivo a favor del Fisco (C996; Si > 0)</field>
+                                    <field name="code">it646</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="it_definitive_treasury_balance_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">646</field>
+                                        </record>
+                                        <record id="it_definitive_treasury_balance_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">it996.balance</field>
+                                            <field name="subformula">if_above(CUR(0))</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="it_definitive_treasury_debt_balance__tax_line" model="account.report.line">
+                                    <field name="sequence" eval="403"/>
+                                    <field name="name">Saldo definitivo a favor del Fisco (C955-C643; Si > 0)</field>
+                                    <field name="code">it646d</field>
+                                    <field name="hide_if_zero" eval="1"/>
+                                    <field name="expression_ids">
+                                        <record id="it_definitive_treasury_debt_balance__tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">646</field>
+                                        </record>
+                                        <record id="it_definitive_treasury_debt_balance__tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">it955.balance - it643.balance</field>
+                                            <field name="subformula">if_above(CUR(0))</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="it_payment_amount_report" model="account.report.line">
+                            <field name="sequence" eval="500"/>
+                            <field name="name">Importe de Pago</field>
+                            <field name="code">it_payment_amount_report</field>
+                            <field name="children_ids">
+                                <record id="it_payment_in_values_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="501"/>
+                                    <field name="name">Pago en valores (Sujeto a verificación y confirmación por el SIN)</field>
+                                    <field name="code">it677</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="it_payment_in_values_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">677</field>
+                                        </record>
+                                        <record id="it_payment_in_values_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">external</field>
+                                            <field name="formula">sum</field>
+                                            <field name="subformula">editable</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="it_payment_with_balance_in_favor_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="502"/>
+                                    <field name="name">Pago con Saldo a Favor - FAP (Sujeto a verificación y confirmación por el SIN)</field>
+                                    <field name="code">it678</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="it_payment_with_balance_in_favor_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">678</field>
+                                        </record>
+                                        <record id="it_payment_with_balance_in_favor_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">external</field>
+                                            <field name="formula">sum</field>
+                                            <field name="subformula">editable</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="it_cash_payment_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="503"/>
+                                    <field name="name">Pago en efectivo (C646-C677-C678; Si > 0)</field>
+                                    <field name="code">it576</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="it_cash_payment_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">576</field>
+                                        </record>
+                                        <record id="it_cash_payment_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">it646.balance - it677.balance - it678.balance</field>
+                                            <field name="subformula">if_above(CUR(0))</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                    </field>
+                </record>
+            </field>
+        </record>
+
+    </data>
+</odoo>

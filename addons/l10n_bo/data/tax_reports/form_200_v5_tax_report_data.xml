@@ -1,0 +1,1289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="iva_tax_report" model="account.report">
+            <field name="name">Formulario 200v5: IVA</field>
+            <field name="root_report_id" ref="account.generic_tax_report"/>
+            <field name="country_id" ref="base.bo"/>
+            <field name="filter_fiscal_position" eval="True"/>
+            <field name="availability_condition">country</field>
+            <field name="column_ids">
+                <record id="iva_tax_report_code" model="account.report.column">
+                    <field name="name">Cód. Casilla</field>
+                    <field name="expression_label">code</field>
+                    <field name="figure_type">string</field>
+                </record>
+                <record id="iva_tax_report_balance" model="account.report.column">
+                    <field name="name">Importe</field>
+                    <field name="expression_label">balance</field>
+                    <field name="figure_type">monetary</field>
+                </record>
+            </field>
+            <field name="line_ids">
+                <record id="f200_v5_tax_report" model="account.report.line">
+                    <field name="sequence" eval="0"/>
+                    <field name="name">Form. 200v.5: Impuesto al Valor Agregado IVA</field>
+                    <field name="code">f200_v5_tax_report</field>
+                    <field name="hierarchy_level" eval="0"/>
+                    <field name="children_ids">
+                        <record id="iva_debit_determination_report" model="account.report.line">
+                            <field name="sequence" eval="100"/>
+                            <field name="name">Determinación del Débito Fiscal</field>
+                            <field name="code">iva_debit_determination_report</field>
+                            <field name="children_ids">
+                                <record id="sale_base_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="101"/>
+                                    <field name="name">Ventas de bienes y/o servicios Facturados en el mercado interno, excepto ventas gravadas con Tasa Cero</field>
+                                    <field name="code">iva13</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="sale_base_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">13</field>
+                                        </record>
+                                        <record id="sale_base_tax_tag" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">tax_tags</field>
+                                            <field name="formula">iva13</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="export_exempt_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="102"/>
+                                    <field name="name">Exportación de bienes y operaciones exentas</field>
+                                    <field name="code">iva14</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="export_exempt_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">14</field>
+                                        </record>
+                                        <record id="export_exempt_tax_tag" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">tax_tags</field>
+                                            <field name="formula">iva14</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="zero_rate_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="103"/>
+                                    <field name="name">Ventas gravadas a Tasa Cero</field>
+                                    <field name="code">iva15</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="zero_rate_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">15</field>
+                                        </record>
+                                        <record id="zero_rate_tax_tag" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">tax_tags</field>
+                                            <field name="formula">iva15</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="no_iva_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="104"/>
+                                    <field name="name">Ventas no gravadas y operaciones que no son objeto del IVA</field>
+                                    <field name="code">iva505</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="no_iva_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">505</field>
+                                        </record>
+                                        <record id="no_iva_tax_tag" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">tax_tags</field>
+                                            <field name="formula">iva505</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="particular_consumption_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="105"/>
+                                    <field name="name">Valor atribuido a bienes y/o servicios retirados y consumos particulares</field>
+                                    <field name="code">iva16</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="particular_consumption_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">16</field>
+                                        </record>
+                                        <record id="particular_consumption_tax_tag" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">tax_tags</field>
+                                            <field name="formula">iva16</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="purchase_refund_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="106"/>
+                                    <field name="name">Devoluciones y rescisiones efectuadas en el período</field>
+                                    <field name="code">iva17</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="purchase_refund_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">17</field>
+                                        </record>
+                                        <record id="purchase_refund_tax_tag" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">tax_tags</field>
+                                            <field name="formula">iva17</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="purchase_discount_line" model="account.report.line">
+                                    <field name="sequence" eval="107"/>
+                                    <field name="name">Descuentos, bonificaciones y rebajas obtenidas en el período</field>
+                                    <field name="code">iva18</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="purchase_discount_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">18</field>
+                                        </record>
+                                        <record id="purchase_discount_tag" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">tax_tags</field>
+                                            <field name="formula">iva18</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="corresponding_fiscal_debit_line" model="account.report.line">
+                                    <field name="sequence" eval="108"/>
+                                    <field name="name">Débito Fiscal correspondiente a: [(C13+C16+C17+C18) * 13 %]</field>
+                                    <field name="code">iva39</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="foldable" eval="1"/>
+                                    <field name="expression_ids">
+                                        <record id="debit_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">39</field>
+                                        </record>
+                                        <record id="corresponding_fiscal_debit_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">iva39l.balance + iva39p.balance + iva39r.balance + iva39d.balance</field>
+                                        </record>
+                                    </field>
+                                    <field name="children_ids">
+                                        <record id="debit_tax_line" model="account.report.line">
+                                            <field name="sequence" eval="109"/>
+                                            <field name="name">Ventas (C13 * 13%)</field>
+                                            <field name="code">iva39l</field>
+                                            <field name="hide_if_zero" eval="0"/>
+                                            <field name="expression_ids">
+                                                <record id="debit_tax_tag" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">tax_tags</field>
+                                                    <field name="formula">iva39l</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="particular_consumption_debit_tax_line" model="account.report.line">
+                                            <field name="sequence" eval="110"/>
+                                            <field name="name">Consumo particular (C16 * 13%)</field>
+                                            <field name="code">iva39p</field>
+                                            <field name="hide_if_zero" eval="0"/>
+                                            <field name="expression_ids">
+                                                <record id="particular_consumption_debit_tax_tag" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">tax_tags</field>
+                                                    <field name="formula">iva39p</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="refund_debit_tax_line" model="account.report.line">
+                                            <field name="sequence" eval="111"/>
+                                            <field name="name">Devoluciones (C17 * 13%)</field>
+                                            <field name="code">iva39r</field>
+                                            <field name="hide_if_zero" eval="0"/>
+                                            <field name="expression_ids">
+                                                <record id="refund_debit_tax_tag" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">tax_tags</field>
+                                                    <field name="formula">iva39r</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="discount_debit_tax_line" model="account.report.line">
+                                            <field name="sequence" eval="112"/>
+                                            <field name="name">Descuentos (C18 * 13%)</field>
+                                            <field name="code">iva39d</field>
+                                            <field name="hide_if_zero" eval="0"/>
+                                            <field name="expression_ids">
+                                                <record id="discount_debit_tax_tag" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">tax_tags</field>
+                                                    <field name="formula">iva39d</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="updated_fiscal_credit_refund_line" model="account.report.line">
+                                    <field name="sequence" eval="113"/>
+                                    <field name="name">Débito Fiscal Actualizado correspondiente a Reintegros</field>
+                                    <field name="code">iva55</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="updated_fiscal_credit_refund_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">55</field>
+                                        </record>
+                                        <record id="updated_fiscal_credit_refund_tax_tag" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">tax_tags</field>
+                                            <field name="formula">iva55</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="updated_reconciliation_corresponding_fiscal_debit_line" model="account.report.line">
+                                    <field name="sequence" eval="114"/>
+                                    <field name="name">Débito Fiscal Actualizado correspondiente a Conciliaciones</field>
+                                    <field name="code">iva19</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="updated_reconciliation_corresponding_fiscal_debit_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">19</field>
+                                        </record>
+                                        <record id="updated_reconciliation_corresponding_fiscal_debit_tax_tag" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">tax_tags</field>
+                                            <field name="formula">iva19</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="total_debit_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="115"/>
+                                    <field name="name">Total Débito Fiscal del período (C39+C55+C19)</field>
+                                    <field name="code">iva1002</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="total_debit_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">1002</field>
+                                        </record>
+                                        <record id="total_debit_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">iva39.balance + iva55.balance + iva19.balance</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="iva_credit_determination_report" model="account.report.line">
+                            <field name="sequence" eval="200"/>
+                            <field name="name">Determinación del Crédito Fiscal</field>
+                            <field name="code">iva_credit_determination_report</field>
+                            <field name="children_ids">
+                                <record id="purchase_base_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="201"/>
+                                    <field name="name">Compras correspondientes a actividades gravadas y/o no gravadas</field>
+                                    <field name="code">iva11</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="foldable" eval="1"/>
+                                    <field name="expression_ids">
+                                        <record id="purchase_base_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">11</field>
+                                        </record>
+                                        <record id="purchase_base_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">iva26.balance + iva31.balance</field>
+                                        </record>
+                                    </field>
+                                    <field name="children_ids">
+                                        <record id="purchases_directly_related_to_taxable_activities_tax_line" model="account.report.line">
+                                            <field name="sequence" eval="202"/>
+                                            <field name="name">Compras directamente vinculadas a actividades gravadas</field>
+                                            <field name="code">iva26</field>
+                                            <field name="hide_if_zero" eval="0"/>
+                                            <field name="foldable" eval="1"/>
+                                            <field name="expression_ids">
+                                                <record id="purchases_directly_related_to_taxable_activities_tax_code" model="account.report.expression">
+                                                    <field name="label">code</field>
+                                                    <field name="auditable" eval="False"/>
+                                                    <field name="engine">aggregation</field>
+                                                    <field name="formula">26</field>
+                                                </record>
+                                                <record id="purchases_directly_related_to_taxable_activities_tax_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="auditable" eval="False"/>
+                                                    <field name="engine">aggregation</field>
+                                                    <field name="formula">iva26l.balance + iva26i.balance</field>
+                                                </record>
+                                            </field>
+                                            <field name="children_ids">
+                                                <record id="local_purchases_directly_related_to_taxable_activities_tax_line" model="account.report.line">
+                                                    <field name="sequence" eval="203"/>
+                                                    <field name="name">Compras locales</field>
+                                                    <field name="code">iva26l</field>
+                                                    <field name="hide_if_zero" eval="0"/>
+                                                    <field name="expression_ids">
+                                                        <record id="local_purchases_directly_related_to_taxable_activities_tag" model="account.report.expression">
+                                                            <field name="label">balance</field>
+                                                            <field name="engine">tax_tags</field>
+                                                            <field name="formula">iva26l</field>
+                                                        </record>
+                                                    </field>
+                                                </record>
+                                                <record id="international_purchases_directly_related_to_taxable_activities_tax_line" model="account.report.line">
+                                                    <field name="sequence" eval="204"/>
+                                                    <field name="name">Importaciones</field>
+                                                    <field name="code">iva26i</field>
+                                                    <field name="hide_if_zero" eval="0"/>
+                                                    <field name="expression_ids">
+                                                        <record id="international_purchases_directly_related_to_taxable_activities_tax_balance" model="account.report.expression">
+                                                            <field name="label">balance</field>
+                                                            <field name="auditable" eval="False"/>
+                                                            <field name="engine">aggregation</field>
+                                                            <field name="formula">(iva114i.balance * 100) / 13</field>
+                                                            <field name="subformula">ignore_zero_division</field>
+                                                        </record>
+                                                    </field>
+                                                </record>
+                                            </field>
+                                        </record>
+
+                                        <record id="un_relatable_to_taxable_activities_purchases_tax_line" model="account.report.line">
+                                            <field name="sequence" eval="205"/>
+                                            <field name="name">Compras en las que no es posible discriminar su vinculación con actividades gravadas y no gravadas</field>
+                                            <field name="code">iva31</field>
+                                            <field name="hide_if_zero" eval="0"/>
+                                            <field name="foldable" eval="1"/>
+                                            <field name="expression_ids">
+                                                <record id="un_relatable_to_taxable_activities_purchases_tax_code" model="account.report.expression">
+                                                    <field name="label">code</field>
+                                                    <field name="auditable" eval="False"/>
+                                                    <field name="engine">aggregation</field>
+                                                    <field name="formula">31</field>
+                                                </record>
+                                                <record id="un_relatable_to_taxable_activities_purchases_tax_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="auditable" eval="False"/>
+                                                    <field name="engine">aggregation</field>
+                                                    <field name="formula">iva31e.balance + iva31l.balance + iva31n.balance + iva31z.balance + iva31i.balance</field>
+                                                </record>
+                                            </field>
+                                            <field name="children_ids">
+                                                <record id="exempt_un_relatable_to_taxable_activities_purchases_tax_line" model="account.report.line">
+                                                    <field name="sequence" eval="206"/>
+                                                    <field name="name">Exentos</field>
+                                                    <field name="code">iva31e</field>
+                                                    <field name="hide_if_zero" eval="0"/>
+                                                    <field name="expression_ids">
+                                                        <record id="exempt_un_relatable_to_taxable_activities_purchases_tax_tag" model="account.report.expression">
+                                                            <field name="label">balance</field>
+                                                            <field name="engine">tax_tags</field>
+                                                            <field name="formula">iva31e</field>
+                                                        </record>
+                                                    </field>
+                                                </record>
+                                                <record id="local_un_relatable_to_taxable_activities_purchases_tax_line" model="account.report.line">
+                                                    <field name="sequence" eval="206"/>
+                                                    <field name="name">No discriminables</field>
+                                                    <field name="code">iva31l</field>
+                                                    <field name="hide_if_zero" eval="0"/>
+                                                    <field name="expression_ids">
+                                                        <record id="local_un_relatable_to_taxable_activities_purchases_tax_tag" model="account.report.expression">
+                                                            <field name="label">balance</field>
+                                                            <field name="engine">tax_tags</field>
+                                                            <field name="formula">iva31l</field>
+                                                        </record>
+                                                    </field>
+                                                </record>
+                                                <record id="not_taxed_purchases_tax_line" model="account.report.line">
+                                                    <field name="sequence" eval="206"/>
+                                                    <field name="name">No gravadas</field>
+                                                    <field name="code">iva31n</field>
+                                                    <field name="hide_if_zero" eval="0"/>
+                                                    <field name="expression_ids">
+                                                        <record id="not_taxed_purchases_tax_tag" model="account.report.expression">
+                                                            <field name="label">balance</field>
+                                                            <field name="engine">tax_tags</field>
+                                                            <field name="formula">iva31n</field>
+                                                        </record>
+                                                    </field>
+                                                </record>
+                                                <record id="zero_rate_purchases_tax_line" model="account.report.line">
+                                                    <field name="sequence" eval="206"/>
+                                                    <field name="name">Tasa cero</field>
+                                                    <field name="code">iva31z</field>
+                                                    <field name="hide_if_zero" eval="0"/>
+                                                    <field name="expression_ids">
+                                                        <record id="zero_rate_purchases_tax_tag" model="account.report.expression">
+                                                            <field name="label">balance</field>
+                                                            <field name="engine">tax_tags</field>
+                                                            <field name="formula">iva31z</field>
+                                                        </record>
+                                                    </field>
+                                                </record>
+                                                <record id="international_un_relatable_to_taxable_activities_purchases_tax_line" model="account.report.line">
+                                                    <field name="sequence" eval="207"/>
+                                                    <field name="name">Importaciones</field>
+                                                    <field name="code">iva31i</field>
+                                                    <field name="hide_if_zero" eval="0"/>
+                                                    <field name="expression_ids">
+                                                        <record id="international_un_relatable_to_taxable_activities_purchases_tax_tag" model="account.report.expression">
+                                                                <field name="label">balance</field>
+                                                            <field name="engine">tax_tags</field>
+                                                            <field name="formula">iva31i</field>
+                                                        </record>
+                                                    </field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="sale_refund_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="208"/>
+                                    <field name="name">Devoluciones y rescisiones recibidas en el período</field>
+                                    <field name="code">iva27</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="sale_refund_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">27</field>
+                                        </record>
+                                        <record id="sale_refund_tax_tag" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">tax_tags</field>
+                                            <field name="formula">iva27</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="sale_discount_line" model="account.report.line">
+                                    <field name="sequence" eval="209"/>
+                                    <field name="name">Descuentos, bonificaciones y rebajas otorgadas en el período</field>
+                                    <field name="code">iva28</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="sale_discount_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">28</field>
+                                        </record>
+                                        <record id="sale_discount_tag" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">tax_tags</field>
+                                            <field name="formula">iva28</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="corresponding_credit_tax_report_line" model="account.report.line">
+                                    <field name="sequence" eval="210"/>
+                                    <field name="name">Crédito Fiscal correspondiente a: [(C26+C27+C28)*13%]</field>
+                                    <field name="code">iva114</field>
+                                    <field name="foldable" eval="1"/>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="corresponding_credit_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">114</field>
+                                        </record>
+                                        <record id="corresponding_credit_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">iva114l.balance + iva114i.balance + iva114r.balance + iva114d.balance</field>
+                                        </record>
+                                    </field>
+                                    <field name="children_ids">
+                                        <record id="activity_related_credit_tax_line" model="account.report.line">
+                                            <field name="sequence" eval="211"/>
+                                            <field name="name">Crédito fiscal de compras vinculadas a actividades gravadas (C26 * 13%)</field>
+                                            <field name="code">iva114t</field>
+                                            <field name="hide_if_zero" eval="0"/>
+                                            <field name="foldable" eval="1"/>
+                                            <field name="expression_ids">
+                                                <record id="activity_related_credit_tax_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="auditable" eval="False"/>
+                                                    <field name="engine">aggregation</field>
+                                                    <field name="formula">iva114l.balance + iva114i.balance</field>
+                                                </record>
+                                            </field>
+                                            <field name="children_ids">
+                                                <record id="credit_tax_line" model="account.report.line">
+                                                    <field name="sequence" eval="212"/>
+                                                    <field name="name">Compras locales</field>
+                                                    <field name="code">iva114l</field>
+                                                    <field name="hide_if_zero" eval="0"/>
+                                                    <field name="expression_ids">
+                                                        <record id="credit_tax_tag" model="account.report.expression">
+                                                            <field name="label">balance</field>
+                                                            <field name="engine">tax_tags</field>
+                                                            <field name="formula">iva114l</field>
+                                                        </record>
+                                                    </field>
+                                                </record>
+                                                <record id="import_credit_tax_line" model="account.report.line">
+                                                    <field name="sequence" eval="213"/>
+                                                    <field name="name">Importaciones</field>
+                                                    <field name="code">iva114i</field>
+                                                    <field name="hide_if_zero" eval="0"/>
+                                                    <field name="expression_ids">
+                                                        <record id="import_credit_tax_tag" model="account.report.expression">
+                                                            <field name="label">balance</field>
+                                                            <field name="engine">tax_tags</field>
+                                                            <field name="formula">iva114i</field>
+                                                        </record>
+                                                    </field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="refund_credit_tax_line" model="account.report.line">
+                                            <field name="sequence" eval="214"/>
+                                            <field name="name">Devoluciones (C27 * 13%)</field>
+                                            <field name="code">iva114r</field>
+                                            <field name="hide_if_zero" eval="0"/>
+                                            <field name="expression_ids">
+                                                <record id="refund_credit_tax_tag" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">tax_tags</field>
+                                                    <field name="formula">iva114r</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="discount_credit_tax_line" model="account.report.line">
+                                            <field name="sequence" eval="215"/>
+                                            <field name="name">Descuentos (C28 *13%)</field>
+                                            <field name="code">iva114d</field>
+                                            <field name="hide_if_zero" eval="0"/>
+                                            <field name="expression_ids">
+                                                <record id="discount_credit_tax_tag" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">tax_tags</field>
+                                                    <field name="formula">iva114d</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="updated_reconciliation_corresponding_fiscal_credit_line" model="account.report.line">
+                                    <field name="sequence" eval="216"/>
+                                    <field name="name">Crédito Fiscal Actualizado correspondiente a Conciliaciones</field>
+                                    <field name="code">iva30</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="updated_reconciliation_corresponding_fiscal_credit_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">30</field>
+                                        </record>
+                                        <record id="updated_reconciliation_corresponding_fiscal_credit_tax_tag" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">tax_tags</field>
+                                            <field name="formula">iva30</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="taxable_activity_proportional_fiscal_credit_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="217"/>
+                                    <field name="name">Crédito Fiscal proporcional correspondiente a la actividad gravada [C31*(C13+C14)/(C13+C14+C15+C505)]*13%</field>
+                                    <field name="code">iva1003</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="taxable_activity_proportional_fiscal_credit_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">1003</field>
+                                        </record>
+                                        <record id="taxable_activity_proportional_fiscal_credit_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">iva31.balance * (iva13.balance + iva14.balance) / (iva13.balance + iva14.balance + iva15.balance + iva505.balance)*0.13</field>
+                                            <field name="subformula">ignore_zero_division</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="total_fiscal_credit_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="218"/>
+                                    <field name="name">Total Crédito Fiscal del período (C114+C30+C1003)</field>
+                                    <field name="code">iva1004</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="total_fiscal_credit_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">1004</field>
+                                        </record>
+                                        <record id="total_fiscal_credit_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">iva114.balance + iva30.balance + iva1003.balance</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="iva_difference_determination_report" model="account.report.line">
+                            <field name="sequence" eval="300"/>
+                            <field name="name">Determinación de la Diferencia</field>
+                            <field name="code">iva_difference_determination_report</field>
+                            <field name="children_ids">
+                                <record id="taxpayer_favor_difference_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="301"/>
+                                    <field name="name">Diferencia a favor del Contribuyente (C1004-C1002; Si > 0)</field>
+                                    <field name="code">iva693</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="taxpayer_favor_difference_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">693</field>
+                                        </record>
+                                        <record id="taxpayer_favor_difference_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">iva1004.balance - iva1002.balance</field>
+                                            <field name="subformula">if_above(CUR(0))</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="treasury_favor_difference_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="302"/>
+                                    <field name="name">Diferencia a favor del Fisco o Impuesto Determinado (C1002-C1004; Si > 0)</field>
+                                    <field name="code">iva909</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="treasury_favor_difference_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">909</field>
+                                        </record>
+                                        <record id="treasury_favor_difference_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">iva1002.balance - iva1004.balance</field>
+                                            <field name="subformula">if_above(CUR(0))</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="previous_fiscal_credit_to_compensate_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="303"/>
+                                    <field name="name">Saldo de Crédito Fiscal del período anterior a compensar (C592 del Formulario del período anterior)</field>
+                                    <field name="code">iva635</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="previous_fiscal_credit_to_compensate_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">635</field>
+                                        </record>
+                                        <record id="previous_fiscal_credit_to_compensate_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">external</field>
+                                            <field name="formula">sum</field>
+                                            <field name="subformula">editable</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="updated_previous_fiscal_credit_to_compensate_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="304"/>
+                                    <field name="name">Actualización de valor sobre el saldo de Crédito Fiscal del período anterior</field>
+                                    <field name="code">iva648</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="updated_previous_fiscal_credit_to_compensate_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">648</field>
+                                        </record>
+                                        <record id="updated_previous_fiscal_credit_to_compensate_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">external</field>
+                                            <field name="formula">sum</field>
+                                            <field name="subformula">editable</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="determined_treasury_favor_balance_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="305"/>
+                                    <field name="name">Saldo de Impuesto Determinado a favor del Fisco (C909-C635-C648; Si > 0)</field>
+                                    <field name="code">iva1001</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="determined_treasury_favor_balance_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">1001</field>
+                                        </record>
+                                        <record id="determined_treasury_favor_balance_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">iva909.balance - iva635.balance - iva648.balance</field>
+                                            <field name="subformula">if_above(CUR(0))</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="half_payment_on_account_of_employer_contribution_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="306"/>
+                                    <field name="name">Pago a cuenta del 50% de contribuciones patronales pagadas del periodo (Sobre Cotizaciones Pagadas del Periodo anterior); según D.S. 4298 (Sujeto a verificación por parte del SIN) </field>
+                                    <field name="code">iva621</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="half_payment_on_account_of_employer_contribution_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">621</field>
+                                        </record>
+                                        <record id="half_payment_on_account_of_employer_contribution_tax_tag" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">tax_tags</field>
+                                            <field name="formula">iva621</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="treasury_favor_balance_after_employer_contribution_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="307"/>
+                                    <field name="name">Saldo a favor del Fisco despues de compensar pagos a cuenta por contribuciones patronales (C1001 - C621; Si > 0)((C621 - C1001; Si > 0) = 0)</field>
+                                    <field name="code">iva629</field>
+                                    <field name="hide_if_zero" eval="1"/>
+                                    <field name="expression_ids">
+                                        <record id="treasury_favor_balance_after_employer_contribution_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">629</field>
+                                        </record>
+                                        <record id="treasury_favor_balance_after_employer_contribution_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">iva1001.balance - iva621.balance</field>
+                                            <field name="subformula">if_above(CUR(0))</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="iva_payment_on_account_in_sworn_statements_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="308"/>
+                                    <field name="name">Pagos a Cuenta realizados en DD.JJ. y/o Boletas de Pago correspondientes al período que se declara</field>
+                                    <field name="code">iva622</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="payment_on_account_in_sworn_statements_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">622</field>
+                                        </record>
+                                        <record id="payment_on_account_in_sworn_statements_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">external</field>
+                                            <field name="formula">sum</field>
+                                            <field name="subformula">editable</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="previous_iva_payments_on_account_to_compensate_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="309"/>
+                                    <field name="name">Saldo de Pagos a Cuenta del período anterior a compensar (C747 del Formulario del período anterior)</field>
+                                    <field name="code">iva640</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="previous_payments_on_account_to_compensate_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">640</field>
+                                        </record>
+                                        <record id="previous_payments_on_account_to_compensate_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">external</field>
+                                            <field name="formula">sum</field>
+                                            <field name="subformula">editable</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="iva_taxpayer_favor_balance_payments_on_account_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="310"/>
+                                    <field name="name">Saldo por Pagos a Cuenta a favor del Contribuyente (C640+C622-C629; Si > 0)</field>
+                                    <field name="code">iva643</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="iva_taxpayer_favor_balance_payments_on_account_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">643</field>
+                                        </record>
+                                        <record id="iva_taxpayer_favor_balance_payments_on_account_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">iva640.balance + iva622.balance - iva629.balance</field>
+                                            <field name="subformula">if_above(CUR(0))</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="treasury_favor_balance_after_compensated_payments_on_account_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="311"/>
+                                    <field name="name">Saldo a favor del fisco despues de compensar pagos a cuenta (C629-C622-C640; Si > 0)</field>
+                                    <field name="code">iva468</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="treasury_favor_balance_after_compensated_payments_on_account_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">468</field>
+                                        </record>
+                                        <record id="treasury_favor_balance_after_compensated_payments_on_account_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">iva629.balance - iva622.balance - iva640.balance</field>
+                                            <field name="subformula">if_above(CUR(0))</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="siete_rg_purchase_payment_on_account_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="312"/>
+                                    <field name="name">Pago a cuenta del 5% por compras a contribuyentes del SIETE- RG; según D.S. 4298</field>
+                                    <field name="code">iva465</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="siete_rg_purchase_payment_on_account_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">465</field>
+                                        </record>
+                                        <record id="siete_rg_purchase_payment_on_account_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">external</field>
+                                            <field name="formula">sum</field>
+                                            <field name="subformula">editable</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="siete_rg_payment_on_account_balance_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="313"/>
+                                    <field name="name">Saldo de Pagos a cuenta 5% por compras a contribuyentes del SIETE- RG (C469 del periodo anterior)</field>
+                                    <field name="code">iva466</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="siete_rg_payment_on_account_balance_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">466</field>
+                                        </record>
+                                        <record id="siete_rg_payment_on_account_balance_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">external</field>
+                                            <field name="formula">sum</field>
+                                            <field name="subformula">editable</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="treasury_favor_balance_after_compensated_siete_rg_payments_on_account_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="314"/>
+                                    <field name="name">Saldo a favor despues de compensar pagos a cuenta 5% por compras a contribuyentes SIETE- RG (C465+C466-C468; Si > 0)</field>
+                                    <field name="code">iva467</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="treasury_favor_balance_after_compensated_siete_rg_payments_on_account_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">467</field>
+                                        </record>
+                                        <record id="treasury_favor_balance_after_compensated_siete_rg_payments_on_account_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">iva465.balance + iva466.balance - iva468.balance</field>
+                                            <field name="subformula">if_above(CUR(0))</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="iva_treasury_favor_balance_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="315"/>
+                                    <field name="name">Saldo a favor del Fisco (C468-C465-C466; Si > 0)</field>
+                                    <field name="code">iva996</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="iva_treasury_favor_balance_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">996</field>
+                                        </record>
+                                        <record id="iva_treasury_favor_balance_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">iva468.balance - iva465.balance - iva466.balance</field>
+                                            <field name="subformula">if_above(CUR(0))</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="iva_debt_determination_report" model="account.report.line">
+                            <field name="sequence" eval="400"/>
+                            <field name="name">Determinación de la Deuda Tributaria</field>
+                            <field name="code">iva_debt_determination_report</field>
+                            <field name="children_ids">
+                                <record id="iva_omitted_tribute_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="401"/>
+                                    <field name="name">Tributo Omitido (C996)</field>
+                                    <field name="code">iva924</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="iva_omitted_tribute_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">924</field>
+                                        </record>
+                                        <record id="iva_omitted_tribute_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">external</field>
+                                            <field name="formula">sum</field>
+                                            <field name="subformula">editable</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="updated_iva_omitted_tribute_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="402"/>
+                                    <field name="name">Actualización de valor sobre Tributo Omitido</field>
+                                    <field name="code">iva925</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="updated_iva_omitted_tribute_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">925</field>
+                                        </record>
+                                        <record id="updated_iva_omitted_tribute_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">external</field>
+                                            <field name="formula">sum</field>
+                                            <field name="subformula">editable</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="interest_on_updated_iva_omitted_tribute_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="403"/>
+                                    <field name="name">Intereses sobre Tributo Omitido Actualizado</field>
+                                    <field name="code">iva938</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="interest_on_updated_iva_omitted_tribute_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">938</field>
+                                        </record>
+                                        <record id="interest_on_updated_iva_omitted_tribute_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">external</field>
+                                            <field name="formula">sum</field>
+                                            <field name="subformula">editable</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="late_iva_submission_fine_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="404"/>
+                                    <field name="name">Multa por Incumplimiento a Deber Formal (IDF) por presentacion fuera de plazo</field>
+                                    <field name="code">iva954</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="late_iva_submission_fine_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">954</field>
+                                        </record>
+                                        <record id="late_iva_submission_fine_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">external</field>
+                                            <field name="formula">sum</field>
+                                            <field name="subformula">editable</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="late_iva_submission_idf_fine_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="405"/>
+                                    <field name="name">Multa por IDF por Incremento del Impuesto Determinado en DD.JJ Rectificatoria presenta fuera de plazo</field>
+                                    <field name="code">iva967</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="late_iva_submission_idf_fine_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">967</field>
+                                        </record>
+                                        <record id="late_iva_submission_idf_fine_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">external</field>
+                                            <field name="formula">sum</field>
+                                            <field name="subformula">editable</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="total_iva_debt_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="406"/>
+                                    <field name="name">Total Deuda Tributaria (C924+C925+C938+C954+C967)</field>
+                                    <field name="code">iva955</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="total_iva_debt_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">955</field>
+                                        </record>
+                                        <record id="total_iva_debt_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">iva924.balance + iva925.balance + iva938.balance + iva954.balance + iva967.balance</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="iva_definitive_balance_report" model="account.report.line">
+                            <field name="sequence" eval="500"/>
+                            <field name="name">Saldo Definitivo</field>
+                            <field name="code">iva_definitive_balance_report</field>
+                            <field name="children_ids">
+                                <record id="definitive_taxpayer_fiscal_credit_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="501"/>
+                                    <field name="name">Saldo definitivo de Crédito Fiscal a favor del Contribuyente para el siguiente período (C693+C635+C648-C909; Si > 0)</field>
+                                    <field name="code">iva592</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="definitive_taxpayer_fiscal_credit_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">592</field>
+                                        </record>
+                                        <record id="definitive_taxpayer_fiscal_credit_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">iva693.balance + iva635.balance + iva648.balance - iva909.balance</field>
+                                            <field name="subformula">if_above(CUR(0))</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="definitive_taxpayer_siete_rg_payment_on_account_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="502"/>
+                                    <field name="name">Saldo definitivo por Pagos a Cuenta a favor del contribuyente del 5% por compras a contribuyentes del SIETE-RG para el siguiente periodo (C467; Si > 0)</field>
+                                    <field name="code">iva469</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="definitive_taxpayer_siete_rg_payment_on_account_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">469</field>
+                                        </record>
+                                        <record id="definitive_taxpayer_siete_rg_payment_on_account_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">iva467.balance</field>
+                                            <field name="subformula">if_above(CUR(0))</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="definitive_iva_taxpayer_payment_on_account_balance_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="503"/>
+                                    <field name="name">Saldo definitivo por Pagos a Cuenta a favor del Contribuyente para el siguiente período (C643-C955; Si > 0)</field>
+                                    <field name="code">iva747</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="definitive_iva_taxpayer_payment_on_account_balance_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">747</field>
+                                        </record>
+                                        <record id="definitive_iva_taxpayer_payment_on_account_balance_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">iva643.balance - iva955.balance</field>
+                                            <field name="subformula">if_above(CUR(0))</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="definitive_treasury_iva_balance_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="504"/>
+                                    <field name="name">Saldo definitivo a favor del Fisco (C996; Si > 0)</field>
+                                    <field name="code">iva646</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="definitive_treasury_iva_balance_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">646</field>
+                                        </record>
+                                        <record id="definitive_treasury_iva_balance_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">iva996.balance</field>
+                                            <field name="subformula">if_above(CUR(0))</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="definitive_treasury_iva_debt_balance_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="504"/>
+                                    <field name="name">Saldo definitivo a favor del Fisco (C955-C643; Si > 0)</field>
+                                    <field name="code">iva646d</field>
+                                    <field name="hide_if_zero" eval="1"/>
+                                    <field name="expression_ids">
+                                        <record id="definitive_treasury_iva_debt_balance_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">646</field>
+                                        </record>
+                                        <record id="definitive_treasury_iva_debt_balance_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">iva955.balance - iva643.balance</field>
+                                            <field name="subformula">if_above(CUR(0))</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="iva_payment_amount_report" model="account.report.line">
+                            <field name="sequence" eval="600"/>
+                            <field name="name">Importe de Pago</field>
+                            <field name="code">iva_payment_amount_report</field>
+                            <field name="children_ids">
+                                <record id="iva_payment_in_values_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="601"/>
+                                    <field name="name">Pago en valores (Sujeto a verificación y confirmación por el SIN)</field>
+                                    <field name="code">iva677</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="iva_payment_in_values_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">677</field>
+                                        </record>
+                                        <record id="iva_payment_in_values_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">external</field>
+                                            <field name="formula">sum</field>
+                                            <field name="subformula">editable</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="iva_payment_with_balance_in_favor_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="602"/>
+                                    <field name="name">Pago con Saldo a Favor - FAP (Sujeto a verificación y confirmación por el SIN)</field>
+                                    <field name="code">iva678</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="iva_payment_with_balance_in_favor_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">678</field>
+                                        </record>
+                                        <record id="iva_payment_with_balance_in_favor_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">external</field>
+                                            <field name="formula">sum</field>
+                                            <field name="subformula">editable</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="iva_cash_payment_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="603"/>
+                                    <field name="name">Pago en efectivo (C646-C677-C678; Si > 0)</field>
+                                    <field name="code">iva576</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="iva_cash_payment_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">576</field>
+                                        </record>
+                                        <record id="iva_cash_payment_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">iva646.balance + iva646d.balance - iva677.balance - iva678.balance</field>
+                                            <field name="subformula">if_above(CUR(0))</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                    </field>
+                </record>
+            </field>
+        </record>
+    </data>
+</odoo>

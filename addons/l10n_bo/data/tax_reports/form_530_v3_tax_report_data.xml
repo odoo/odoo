@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="iue_be_retention_tax_report" model="account.report">
+            <field name="name">Formulario 530v3: Retenciones IUE BE</field>
+            <field name="root_report_id" ref="account.generic_tax_report"/>
+            <field name="country_id" ref="base.bo"/>
+            <field name="filter_fiscal_position" eval="True"/>
+            <field name="availability_condition">country</field>
+            <field name="column_ids">
+                <record id="iue_be_retention_tax_report_code" model="account.report.column">
+                    <field name="name">Cód. Casilla</field>
+                    <field name="expression_label">code</field>
+                    <field name="figure_type">string</field>
+                </record>
+                <record id="iue_be_retention_tax_report_balance" model="account.report.column">
+                    <field name="name">Importe</field>
+                    <field name="expression_label">balance</field>
+                    <field name="figure_type">monetary</field>
+                </record>
+            </field>
+            <field name="line_ids">
+                <record id="f530_v3_tax_report" model="account.report.line">
+                    <field name="sequence" eval="0"/>
+                    <field name="name">Form. 530v.3: Retención Beneficiarios del Exterior IUE</field>
+                    <field name="code">f530_v3_tax_report</field>
+                    <field name="hierarchy_level" eval="0"/>
+                    <field name="children_ids">
+                        <record id="iue_be_retention_report" model="account.report.line">
+                            <field name="sequence" eval="100"/>
+                            <field name="name">Retenciones a Beneficiarios del Exterior</field>
+                            <field name="code">iue_be_retention_report</field>
+                            <field name="children_ids">
+                                <record id="iue_be_retention_remitted_amount_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="101"/>
+                                    <field name="name">Importe remesado (Art. 51 Ley Nº 843) </field>
+                                    <field name="code">iueBe13</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="iue_be_retention_remitted_amount_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">13</field>
+                                        </record>
+                                        <record id="iue_be_retention_remitted_amount_tax_tag" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">tax_tags</field>
+                                            <field name="formula">iueBe13</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="iue_be_retention_presumed_net_profit_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="102"/>
+                                    <field name="name">Utilidad Neta Imponible Presunta (C013 * 50%)</field>
+                                    <field name="code">iueBe26</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="iue_be_retention_presumed_net_profit_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">26</field>
+                                        </record>
+                                        <record id="iue_be_retention_presumed_net_profit_tax_tag" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">iueBe13.balance * 0.5</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="iue_be_tax_amount_determination_report" model="account.report.line">
+                            <field name="sequence" eval="200"/>
+                            <field name="name">Determinación del Impuesto</field>
+                            <field name="code">iue_be_tax_amount_determination_report</field>
+                            <field name="children_ids">
+                                <record id="determined_iue_be_retention_amount_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="201"/>
+                                    <field name="name">Impuesto Determinado (C26*25%)</field>
+                                    <field name="code">iueBe909</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="determined_iue_be_retention_amount_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">909</field>
+                                        </record>
+                                        <record id="determined_iue_be_retention_amount_tax_tag" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">tax_tags</field>
+                                            <field name="formula">iueBe909</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+
+                        <record id="iue_be_balance_determination_report" model="account.report.line">
+                            <field name="sequence" eval="300"/>
+                            <field name="name">Determinación de Saldos</field>
+                            <field name="code">iue_be_balance_determination_report</field>
+                            <field name="children_ids">
+                                <record id="iue_be_retention_payment_on_account_in_sworn_statements_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="301"/>
+                                    <field name="name">Pagos a cuenta realizados en DDJJ anterior y/o en Boletas de Pago por el Período Fiscal que se liquida (BP 3050 V.3 C909)</field>
+                                    <field name="code">iueBe622</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="iue_be_retention_payment_on_account_in_sworn_statements_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">622</field>
+                                        </record>
+                                        <record id="iue_be_retention_payment_on_account_in_sworn_statements_tax_tag" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">external</field>
+                                            <field name="formula">sum</field>
+                                            <field name="subformula">editable</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="previous_iue_be_retention_payments_on_account_to_compensate_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="302"/>
+                                    <field name="name">Saldo Disponible de Pagos del Período Anterior a Compensar</field>
+                                    <field name="code">iueBe640</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="previous_iue_be_retention_payments_on_account_to_compensate_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">640</field>
+                                        </record>
+                                        <record id="previous_iue_be_retention_payments_on_account_to_compensate_tax_tag" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">external</field>
+                                            <field name="formula">sum</field>
+                                            <field name="subformula">editable</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="iue_be_retention_taxpayer_favor_balance_payments_on_account_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="303"/>
+                                    <field name="name">Saldo a favor del contribuyente para el siguiente periodo (C622+C640-C909; Si >0)</field>
+                                    <field name="code">iueBe747</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="iue_be_retention_taxpayer_favor_balance_payments_on_account_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">747</field>
+                                        </record>
+                                        <record id="iue_be_retention_taxpayer_favor_balance_payments_on_account_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">iueBe622.balance + iueBe640.balance - iueBe909.balance</field>
+                                            <field name="subformula">if_above(CUR(0))</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="iue_be_retention_treasury_favor_balance_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="304"/>
+                                    <field name="name">Saldo Definitivo a Favor del Fisco (C909 - C622 - C640; Si > 0)</field>
+                                    <field name="code">iueBe996</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="iue_be_retention_treasury_favor_balance_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">996</field>
+                                        </record>
+                                        <record id="iue_be_retention_treasury_favor_balance_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">iueBe909.balance - iueBe622.balance - iueBe640.balance</field>
+                                            <field name="subformula">if_above(CUR(0))</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+
+                        <record id="iue_be_fine_determination_report" model="account.report.line">
+                            <field name="sequence" eval="400"/>
+                            <field name="name">Determinación de la Deuda Tributaria y Multas</field>
+                            <field name="code">iue_be_fine_determination_report</field>
+                            <field name="children_ids">
+                                <record id="iue_be_retention_payment_in_values_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="401"/>
+                                    <field name="name">Imputación de Crédito en Valores (Sujeto a Verificación y Confirmación por Parte del SIN)</field>
+                                    <field name="code">iueBe677</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="iue_be_retention_payment_in_values_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">677</field>
+                                        </record>
+                                        <record id="iue_be_retention_payment_in_values_tax_tag" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">external</field>
+                                            <field name="formula">sum</field>
+                                            <field name="subformula">editable</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="iue_be_retention_cash_payment_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="402"/>
+                                    <field name="name">Impuesto a Pagar en Efectivo (C996-C677;Si > 0)</field>
+                                    <field name="code">iueBe576</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="iue_be_retention_cash_payment_tax_code" model="account.report.expression">
+                                            <field name="label">code</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">576</field>
+                                        </record>
+                                        <record id="iue_be_retention_cash_payment_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">iueBe996.balance - iueBe677.balance</field>
+                                            <field name="subformula">if_above(CUR(0))</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                    </field>
+                </record>
+            </field>
+        </record>
+
+    </data>
+</odoo>
