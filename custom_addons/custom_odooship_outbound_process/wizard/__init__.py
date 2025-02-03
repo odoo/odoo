@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
-from . import stock_picking_inherit
-from . import stock_move_inherit
+from . import custom_pack_app_wizard
