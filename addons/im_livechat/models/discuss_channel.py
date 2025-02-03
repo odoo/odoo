@@ -290,6 +290,8 @@ class DiscussChannel(models.Model):
     def _chatbot_restart(self, chatbot_script):
         # sudo: discuss.channel - visitor can clear current step to restart the script
         self.sudo().chatbot_current_step_id = False
+        # sudo: discuss.channel - visitor can reactivate livechat
+        self.sudo().livechat_active = True
         # sudo: chatbot.message - visitor can clear chatbot messages to restart the script
         self.sudo().chatbot_message_ids.unlink()
         return self._chatbot_post_message(
