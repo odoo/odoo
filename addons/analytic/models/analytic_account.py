@@ -75,14 +75,17 @@ class AccountAnalyticAccount(models.Model):
     balance = fields.Monetary(
         compute='_compute_debit_credit_balance',
         string='Balance',
+        aggregator='sum',
     )
     debit = fields.Monetary(
         compute='_compute_debit_credit_balance',
         string='Debit',
+        aggregator='sum',
     )
     credit = fields.Monetary(
         compute='_compute_debit_credit_balance',
         string='Credit',
+        aggregator='sum',
     )
 
     currency_id = fields.Many2one(

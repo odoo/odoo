@@ -1934,14 +1934,27 @@ class BaseModel(metaclass=MetaModel):
             raise ValueError(f"Invalid field {fname!r} on model {self._name!r} for {aggregate_spec!r}.")
         if not func:
             raise ValueError(f"Aggregate method is mandatory for {fname!r}")
+
+        field = self._fields[fname]
+        sql_field = self._field_to_sql(self._table, fname, query)
+
+        if func == 'same_unit_sum':
+            currency_field_name = field.get_currency_field(self)
+            if currency_field_name:
+                try:
+                    sql_unit_field = self._field_to_sql(self._table, currency_field_name, query)
+                    return SQL("CASE WHEN COUNT(DISTINCT(%s)) <= 1 THEN SUM(%s) ELSE NULL END", sql_unit_field, sql_field)
+                except ValueError:
+                    func = 'sum'
+            else:
+                func = 'sum'
+
         if func not in READ_GROUP_AGGREGATE:
             raise ValueError(f"Invalid aggregate method {func!r} for {aggregate_spec!r}.")
 
-        field = self._fields[fname]
         if func == 'recordset' and not (field.relational or fname == 'id'):
             raise ValueError(f"Aggregate method {func!r} can be only used on relational field (or id) (for {aggregate_spec!r}).")
 
-        sql_field = self._field_to_sql(self._table, fname, query)
         return READ_GROUP_AGGREGATE[func](self._table, sql_field)
 
     def _read_group_groupby(self, groupby_spec: str, query: Query) -> SQL:
