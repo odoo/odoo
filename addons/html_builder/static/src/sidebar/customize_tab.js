@@ -1,0 +1,24 @@
+import { Component, useState } from "@odoo/owl";
+import { OptionsContainer } from "./option_container";
+import { useVisibilityObserver } from "../core/building_blocks/utils";
+
+export class CustomizeTab extends Component {
+    static template = "html_builder.CustomizeTab";
+    static components = { OptionsContainer };
+    static props = {
+        currentOptionsContainers: { type: Array, optional: true },
+        snippetModel: { type: Object },
+    };
+    static defaultProps = {
+        currentOptionsContainers: [],
+    };
+
+    setup() {
+        this.state = useState({
+            hasContent: true,
+        });
+        useVisibilityObserver("content", (hasContent) => {
+            this.state.hasContent = hasContent;
+        });
+    }
+}

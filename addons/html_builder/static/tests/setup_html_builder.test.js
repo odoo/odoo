@@ -5,7 +5,7 @@ import {
     modifyText,
     setupWebsiteBuilder,
 } from "./helpers";
-import { BuilderSidebar } from "@html_builder/builder_sidebar/builder_sidebar";
+import { Builder } from "@html_builder/builder";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
@@ -20,7 +20,7 @@ test("setup of the editable elements", async () => {
 test("history back", async () => {
     let builder_sidebar;
     // Patch to get the builder sidebar instance
-    patchWithCleanup(BuilderSidebar.prototype, {
+    patchWithCleanup(Builder.prototype, {
         setup() {
             super.setup(...arguments);
             builder_sidebar = this;

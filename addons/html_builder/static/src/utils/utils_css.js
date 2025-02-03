@@ -409,7 +409,7 @@ export function backgroundImageCssToParts(css) {
 /**
  * Combines url and gradient parts into a background-image CSS property value
  *
- * @param {Object} contains the separated 'url' and 'gradient' parts
+ * @param {Object} parts contains the separated 'url' and 'gradient' parts
  * @returns {string} CSS 'background-image' property value
  */
 export function backgroundImagePartsToCss(parts) {

@@ -1,12 +1,12 @@
-import { useDomState } from "@html_builder/builder_components/utils";
+import { useDomState } from "@html_builder/core/building_blocks/utils";
 import { setContent, setSelection } from "@html_editor/../tests/_helpers/selection";
 import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 import { Component, onWillStart, xml } from "@odoo/owl";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { defaultBuilderComponents } from "../../src/builder_components/default_builder_components";
-import { OptionsContainer } from "../../src/components/option_container";
+import { defaultBuilderComponents } from "../../src/core/building_blocks/default_builder_components";
+import { OptionsContainer } from "../../src/sidebar/option_container";
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
 
 defineWebsiteModels();

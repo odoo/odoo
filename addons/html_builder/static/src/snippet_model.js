@@ -3,7 +3,8 @@ import { _t } from "@web/core/l10n/translation";
 import { uniqueId } from "@web/core/utils/functions";
 import { Reactive } from "@web/core/utils/reactive";
 import { escape } from "@web/core/utils/strings";
-import { AddSnippetDialog } from "@html_builder/builder_sidebar/tabs/block_tab/add_snippet_dialog/add_snippet_dialog";
+import { AddSnippetDialog } from "@html_builder/sidebar/add_snippet_dialog";
+
 export class SnippetModel extends Reactive {
     constructor(services, { snippetsName, installSnippetModule, context }) {
         super();

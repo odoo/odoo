@@ -1,4 +1,4 @@
-import { InvisibleElementsPanel } from "@html_builder/builder_sidebar/invisible_elements_panel";
+import { InvisibleElementsPanel } from "@html_builder/sidebar/invisible_elements_panel";
 import { unformat } from "@html_editor/../tests/_helpers/format";
 import { expect, test } from "@odoo/hoot";
 import { click, queryAllTexts, queryFirst, queryOne, waitFor } from "@odoo/hoot-dom";

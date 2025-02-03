@@ -69,8 +69,8 @@ export function resizeGrid(rowEl) {
  * Removes the properties and elements added to make the drag work.
  *
  * @private
- * @param {Element} rowEl
- * @param {Element} column
+ * @param {HTMLElement} rowEl
+ * @param {HTMLElement} columnEl
  */
 export function gridCleanUp(rowEl, columnEl) {
     columnEl.style.removeProperty("position");

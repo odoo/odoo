@@ -1,4 +1,4 @@
-import { BuilderSidebar } from "@html_builder/builder_sidebar/builder_sidebar";
+import { Builder } from "@html_builder/builder";
 import { WebsiteBuilder } from "@html_builder/website_preview/website_builder_action";
 import { setContent } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
@@ -101,7 +101,7 @@ export async function setupWebsiteBuilder(
         type: "ir.actions.client",
     });
 
-    patchWithCleanup(BuilderSidebar.prototype, {
+    patchWithCleanup(Builder.prototype, {
         setup() {
             super.setup();
             editor = this.editor;
