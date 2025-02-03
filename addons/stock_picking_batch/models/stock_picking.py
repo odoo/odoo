@@ -247,12 +247,13 @@ class StockPicking(models.Model):
         return super()._package_move_lines(batch_pack)
 
     def assign_batch_user(self, user_id):
-        if not user_id:
-            return
         pickings = self.filtered(lambda p: p.user_id.id != user_id)
         pickings.write({'user_id': user_id})
         for pick in pickings:
-            log_message = _('Assigned to %s Responsible', (pick.batch_id._get_html_link()))
+            if user_id:
+                log_message = _('Assigned to %s Responsible', (pick.batch_id._get_html_link()))
+            else:
+                log_message = _('Unassigned responsible from %s', (pick.batch_id._get_html_link()))
             pick.message_post(body=log_message)
 
     def action_view_batch(self):

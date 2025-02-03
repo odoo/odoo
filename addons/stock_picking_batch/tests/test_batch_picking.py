@@ -800,6 +800,13 @@ class TestBatchPicking02(TransactionCase):
             'picking_ids': [(4, picking_1.id), (4, picking_2.id)]
         })
         batch.action_confirm()
+        # assign a responsible to the batch should assign it to the pickings
+        self.assertFalse((picking_1 | picking_2).user_id.id)
+        batch.user_id = self.env.user
+        self.assertEqual((picking_1 | picking_2).user_id, self.env.user)
+        # remove the responsible from the batch should remove it from the pickings
+        batch.user_id = False
+        self.assertFalse((picking_1 | picking_2).user_id.id)
         action = batch.action_done()
         Form(self.env[action['res_model']].with_context(action['context'])).save().process_cancel_backorder()
         self.assertEqual(batch.state, 'done')
