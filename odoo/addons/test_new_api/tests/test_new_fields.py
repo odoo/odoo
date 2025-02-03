@@ -4629,6 +4629,22 @@ class TestComputeQueries(TransactionCase):
         self.assertEqual(records.mapped('value1'), [10, 0, 0, 0])
         self.assertEqual(records.mapped('value2'), [0, 12, 0, 0])
 
+    def test_create_cache_bool(self):
+        """ The cache always contains the raw value of the DB,
+        It means that for bool: None == False. 
+        It is important to have a consistency for stuff like get_records_different_from """
+        model = self.env['test_new_api.create.performance']
+        rec = model.create({})
+
+        self.assertEqual(rec.one_bool, False)
+
+        value_in_cache_after_create = rec._cache['one_bool']
+
+        rec.invalidate_recordset()
+        rec.fetch(['one_bool'])
+
+        self.assertEqual(rec._cache['one_bool'], value_in_cache_after_create)
+
     def test_partial_compute_batching(self):
         """ Create several 'new' records and check that the partial compute
         method is called only once.
