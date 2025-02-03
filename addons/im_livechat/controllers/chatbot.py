@@ -62,6 +62,8 @@ class LivechatChatbotScriptController(http.Controller):
                 next_step = chatbot.script_step_ids[:1]
 
         if not next_step:
+            # sudo - discuss.channel: marking the channel as closed as part of the chat bot flow
+            discuss_channel.sudo().livechat_active = False
             return None
         # sudo: discuss.channel - updating current step on the channel is allowed
         discuss_channel.sudo().chatbot_current_step_id = next_step.id

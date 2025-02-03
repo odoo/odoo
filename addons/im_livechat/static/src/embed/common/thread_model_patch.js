@@ -44,6 +44,7 @@ patch(Thread.prototype, {
             },
         });
         this.chatbot = Record.one("Chatbot");
+        this.livechat_active = false;
         this._toggleChatbot = Record.attr(false, {
             compute() {
                 return this.chatbot && this.isLoaded && this.livechat_active;

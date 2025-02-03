@@ -131,6 +131,7 @@ class LivechatController(http.Controller):
                 "name": channel_vals["name"],
                 "open_chat_window": True,
                 "scrollUnread": False,
+                "livechat_active": True,
                 "channel_type": "livechat",
                 "chatbot": chatbot_data,
             }

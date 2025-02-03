@@ -1,4 +1,4 @@
-import { expirableStorage } from "@im_livechat/embed/common/expirable_storage";
+import { expirableStorage } from "@im_livechat/core/common/expirable_storage";
 
 import { reactive } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
