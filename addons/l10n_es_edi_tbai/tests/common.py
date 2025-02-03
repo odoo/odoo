@@ -29,7 +29,7 @@ class TestEsEdiTbaiCommon(TestAccountMoveSendCommon):
         cls.company_data['company'].write({
             'name': 'EUS Company',
             'state_id': cls.env.ref('base.state_es_ss').id,
-            'vat': 'ES09760433S',
+            'vat': 'ESA12345674',
             'l10n_es_tbai_test_env': True,
         })
         cls._set_tax_agency('gipuzkoa')

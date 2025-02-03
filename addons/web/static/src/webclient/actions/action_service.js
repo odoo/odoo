@@ -175,15 +175,14 @@ export function makeActionManager(env, router = _router) {
         const controllers = state.actionStack
             .slice(0, -1)
             .map((actionState, index) => {
-                const controller = {
-                    jsId: `controller_${++id}`,
+                const controller = _makeController({
                     displayName: actionState.displayName,
                     virtual: true,
                     action: {},
                     props: {},
                     state: { ...actionState, actionStack: state.actionStack.slice(0, index + 1) },
                     currentState: {},
-                };
+                });
                 if (actionState.action) {
                     controller.action.id = actionState.action;
 
@@ -362,6 +361,20 @@ export function makeActionManager(env, router = _router) {
 
         // actionRequest is an object describing the action
         return actionRequest;
+    }
+
+    /**
+     * Makes a controller from the given params.
+     *
+     * @param {Object} params
+     * @returns {Controller}
+     */
+    function _makeController(params) {
+        return {
+            ...params,
+            jsId: `controller_${++id}`,
+            isMounted: false,
+        };
     }
 
     /**
@@ -849,7 +862,7 @@ export function makeActionManager(env, router = _router) {
                 useChildSubEnv({
                     config: controller.config,
                     pushStateBeforeReload: () => {
-                        if (this.isMounted) {
+                        if (controller.isMounted) {
                             return;
                         }
                         pushState(nextStack);
@@ -872,20 +885,19 @@ export function makeActionManager(env, router = _router) {
                         });
                     }
                 }
-                this.isMounted = false;
 
                 onMounted(this.onMounted);
                 onWillUnmount(this.onWillUnmount);
                 onError(this.onError);
             }
             onError(error) {
-                if (this.isMounted) {
+                if (controller.isMounted) {
                     // the error occurred on the controller which is
                     // already in the DOM, so simply show the error
                     Promise.reject(error);
                     return;
                 }
-                if (!this.isMounted && status(this) === "mounted") {
+                if (!controller.isMounted && status(this) === "mounted") {
                     // The error occured during an onMounted hook of one of the components.
                     env.bus.trigger("ACTION_MANAGER:UPDATE", {
                         id: ++id,
@@ -961,10 +973,10 @@ export function makeActionManager(env, router = _router) {
                 }
                 resolve();
                 env.bus.trigger("ACTION_MANAGER:UI-UPDATED", _getActionMode(action));
-                this.isMounted = true;
+                controller.isMounted = true;
             }
             onWillUnmount() {
-                this.isMounted = false;
+                controller.isMounted = false;
                 if (action.target === "new" && dialogCloseResolve) {
                     dialogCloseResolve();
                 }
@@ -972,7 +984,8 @@ export function makeActionManager(env, router = _router) {
             get componentProps() {
                 const componentProps = { ...this.props };
                 const updateActionState = componentProps.updateActionState;
-                componentProps.updateActionState = (newState) => updateActionState(this, newState);
+                componentProps.updateActionState = (newState) =>
+                    updateActionState(controller, newState);
                 if (this.constructor.Component === View) {
                     componentProps.__beforeLeave__ = this.__beforeLeave__;
                     componentProps.__getGlobalState__ = this.__getGlobalState__;
@@ -1161,14 +1174,13 @@ export function makeActionManager(env, router = _router) {
             view = _findView(views, view.multiRecord, action.mobile_view_mode) || view;
         }
 
-        const controller = {
-            jsId: `controller_${++id}`,
+        const controller = _makeController({
             Component: View,
             action,
             view,
             views,
             ..._getViewInfo(view, action, views, options.props),
-        };
+        });
         action.controllers[view.type] = controller;
 
         const newStackLastController = options.newStack?.at(-1);
@@ -1228,12 +1240,11 @@ export function makeActionManager(env, router = _router) {
                     action.target = clientAction.target;
                 }
             }
-            const controller = {
-                jsId: `controller_${++id}`,
+            const controller = _makeController({
                 Component: clientAction,
                 action,
                 ..._getActionInfo(action, options.props),
-            };
+            });
             controller.displayName ||= clientAction.displayName?.toString() || "";
             return _updateUI(controller, options);
         } else {
@@ -1259,12 +1270,11 @@ export function makeActionManager(env, router = _router) {
             context: Object.assign({}, action.context),
         });
 
-        const controller = {
-            jsId: `controller_${++id}`,
+        const controller = _makeController({
             Component: ReportAction,
             action,
             ..._getActionInfo(action, props),
-        };
+        });
 
         return _updateUI(controller, options);
     }
@@ -1584,13 +1594,14 @@ export function makeActionManager(env, router = _router) {
                 _t("No view of type '%s' could be found in the current action.", viewType)
             );
         }
-        const newController = controller.action.controllers[viewType] || {
-            jsId: `controller_${++id}`,
-            Component: View,
-            action: controller.action,
-            views: controller.views,
-            view,
-        };
+        const newController =
+            controller.action.controllers[viewType] ||
+            _makeController({
+                Component: View,
+                action: controller.action,
+                views: controller.views,
+                view,
+            });
 
         const canProceed = await clearUncommittedChanges(env);
         if (!canProceed) {
@@ -1651,6 +1662,9 @@ export function makeActionManager(env, router = _router) {
             return doAction(actionRequest, options);
         }
         if (controller.action.type === "ir.actions.act_window") {
+            if (controller.isMounted) {
+                controller.exportedState = controller.getLocalState();
+            }
             const { action, exportedState, view, views } = controller;
             const props = { ...controller.props };
             if (exportedState && "resId" in exportedState) {
