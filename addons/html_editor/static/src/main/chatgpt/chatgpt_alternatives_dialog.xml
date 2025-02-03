@@ -38,7 +38,9 @@
                                 'text-muted': state.selectedMessageId != message.id and state.currentBatchId != message.batchId,
                             }">
                             <span t-if="message.mode" class="badge bg-secondary float-end"><t t-out="props.alternativesModes[message.mode]"/></span>
-                            <t t-out="formatContent(message.text)"/>
+                            <div class="o-chatgpt-alternative-content">
+                                <t t-out="formatContent(message.text)"/>
+                            </div>
                         </button>
                     </t>
                 </t>

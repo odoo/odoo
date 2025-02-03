@@ -7,10 +7,11 @@ import { ChatGPTTranslateDialog } from "./chatgpt_translate_dialog";
 import { LanguageSelector } from "./language_selector";
 import { withSequence } from "@html_editor/utils/resource";
 import { user } from "@web/core/user";
+import { isBlock } from "@html_editor/utils/blocks";
 
 export class ChatGPTPlugin extends Plugin {
     static id = "chatgpt";
-    static dependencies = ["selection", "history", "dom", "sanitize", "dialog", "delete"];
+    static dependencies = ["selection", "history", "dom", "sanitize", "dialog", "delete", "format"];
     resources = {
         user_commands: [
             {
@@ -72,8 +73,9 @@ export class ChatGPTPlugin extends Plugin {
                         this.dependencies.delete.deleteSelection(selection);
                         selection = this.dependencies.selection.getEditableSelection();
                     }
-                        this.dependencies.dom.setTag({ tagName: "P" });
+                    this.dependencies.dom.setTag({ tagName: "P" });
                 }
+                this.dependencies.format.removeFormat();
                 const insertedNodes = this.dependencies.dom.insert(content);
                 this.dependencies.history.addStep();
                 // Add a frame around the inserted content to highlight it for 2
@@ -112,6 +114,7 @@ export class ChatGPTPlugin extends Plugin {
                     setTimeout(() => div.remove(), 2000);
                 }
             },
+            normalize: element => this.dispatchTo("normalize_handlers", element),
             ...params,
         };
         // collapse to end
@@ -119,6 +122,9 @@ export class ChatGPTPlugin extends Plugin {
         if (selection.isCollapsed) {
             this.dependencies.dialog.addDialog(ChatGPTPromptDialog, { ...dialogParams, sanitize });
         } else {
+            if (!params.language) {
+                dialogParams.originalBlocks = [...this.dependencies.selection.getTraversedBlocks()];
+            }
             const originalText = selection.textContent() || "";
             this.dependencies.dialog.addDialog(
                 params.language ? ChatGPTTranslateDialog : ChatGPTAlternativesDialog,
