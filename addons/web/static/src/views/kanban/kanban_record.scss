@@ -165,3 +165,13 @@
         }
     }
 }
+
+@include media-breakpoint-down(md) {
+    .o_field_x2many_kanban.o_kanban_mobile .o_kanban_record:not(.o_kanban_ghost):not(.o-kanban-button-new) {
+        border: none;
+
+        &:not(:last-of-type) {
+            border-bottom: $border-width solid $border-color;
+        }
+    }
+}
