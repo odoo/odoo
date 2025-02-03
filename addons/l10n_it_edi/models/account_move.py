@@ -56,7 +56,6 @@ class AccountMove(models.Model):
         string="SDI State",
         selection=[
             ('being_sent', 'Being Sent To SdI'),
-            ('requires_user_signature', 'Requires user signature'),
             ('processing', 'SdI Processing'),
             ('rejected', 'SdI Rejected'),
             ('forwarded', 'SdI Accepted, Forwarded to Partner'),
@@ -1551,18 +1550,12 @@ class AccountMove(models.Model):
             filename = attachment_vals['name']
             content = b64encode(attachment_vals['raw']).decode()
             move.l10n_it_edi_header = False
+            to_upload = {'filename': filename, 'xml': content}
             if move.commercial_partner_id._l10n_it_edi_is_public_administration():
-                move.l10n_it_edi_state = 'requires_user_signature'
-                move.l10n_it_edi_transaction = False
-                move.sudo().message_post(body=nl2br(_(
-                    "Sending invoices to Public Administration partners is not supported.\n"
-                    "The IT EDI XML file is generated, please sign the document and upload it "
-                    "through the 'Fatture e Corrispettivi' portal of the Tax Agency."
-                )))
-            else:
-                move.l10n_it_edi_state = 'being_sent'
-                files_to_upload.append({'filename': filename, 'xml': content})
-                filename_move[filename] = move
+                to_upload = {'destination_code': move.commercial_partner_id.l10n_it_pa_index}
+            move.l10n_it_edi_state = 'being_sent'
+            files_to_upload.append(to_upload)
+            filename_move[filename] = move
 
         # Upload files
         try:
