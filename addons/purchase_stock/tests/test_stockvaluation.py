@@ -3657,3 +3657,53 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         move_line.quantity = 2.
         delivery.button_validate()
         self.assertEqual(delivery.state, 'done')
+
+    def test_return_a_return_avco_prod_with_exchange_diff(self):
+        """ When there is some return of a return, we expect `_generate_price_difference_vals` to
+        assume any pdiff existing in the relevant transfers' SVL records has already been
+        compensated for. This should remain true in the case where the underlying purchase order
+        has some currency exchange diff.
+        """
+        self.product1.categ_id.property_cost_method = 'average'
+        avco_prod = self.product1
+        (self.env.ref('base.EUR') + self.env.ref('base.CHF')).active = True
+        euro_id = self.env.ref('base.EUR').id
+        franc_id = self.env.ref('base.CHF').id
+        self.env['res.currency.rate'].create([
+            {'currency_id': euro_id, 'rate': 0.95},
+            {'currency_id': franc_id, 'rate': 0.8},
+        ])
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'currency_id': euro_id,
+            'order_line': [Command.create({
+                'product_id': avco_prod.id,
+                'product_uom_qty': 5,
+                'price_unit': 10,
+            })],
+        })
+        purchase_order.button_confirm()
+        receipt1 = purchase_order.picking_ids
+        receipt1.button_validate()
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_b.id,
+            'currency_id': franc_id,
+            'order_line': [Command.create({
+                'product_id': avco_prod.id,
+                'product_uom_qty': 5,
+            })],
+        })
+        purchase_order.button_confirm()
+        receipt2 = purchase_order.picking_ids
+        receipt2.button_validate()
+
+        receipt2_return1 = self._return(receipt2)
+        # return the initial return
+        self._return(receipt2_return1)
+        pre_bill_cost = avco_prod.standard_price
+        purchase_order.action_create_invoice()
+        bill = purchase_order.invoice_ids
+        bill.invoice_date = fields.Date.today()
+        bill.action_post()
+        self.assertEqual(avco_prod.standard_price, pre_bill_cost)
