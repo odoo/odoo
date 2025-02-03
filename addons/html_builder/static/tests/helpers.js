@@ -49,7 +49,13 @@ export function defineWebsiteModels() {
 
 export async function setupWebsiteBuilder(
     websiteContent,
-    { snippets, openEditor = true, loadIframeBundles = false, hasToCreateWebsite = true } = {}
+    {
+        snippets,
+        openEditor = true,
+        loadIframeBundles = false,
+        hasToCreateWebsite = true,
+        styleContent,
+    } = {}
 ) {
     if (hasToCreateWebsite) {
         const pyEnv = await startServer();
@@ -60,6 +66,12 @@ export async function setupWebsiteBuilder(
     let resolveIframeLoaded = () => {};
     const iframeLoaded = new Promise((resolve) => {
         resolveIframeLoaded = (el) => {
+            const iframe = el;
+            if (styleContent) {
+                const style = iframe.contentDocument.createElement("style");
+                style.innerHTML = styleContent;
+                iframe.contentDocument.body.appendChild(style);
+            }
             resolve(el);
         };
     });
