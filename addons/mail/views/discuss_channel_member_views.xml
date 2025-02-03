@@ -8,6 +8,7 @@
         <field name="arch" type="xml">
             <list string="Channels">
                 <field name="channel_id"/>
+                <field name="is_channel_admin" string="Channel Admin"/>
                 <field name="partner_id"/>
                 <field name="guest_id"/>
                 <field name="is_pinned"/>
@@ -25,6 +26,7 @@
                 <sheet>
                     <group>
                         <field name="channel_id" readonly="id"/>
+                        <field name="is_channel_admin" string="Channel Admin"/>
                         <field name="partner_id" readonly="id or guest_id" required="not guest_id"/>
                         <field name="guest_id" readonly="id or partner_id" required="not partner_id"/>
                         <field name="custom_channel_name"/>

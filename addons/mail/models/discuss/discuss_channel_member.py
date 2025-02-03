@@ -30,6 +30,7 @@ class DiscussChannelMember(models.Model):
     is_self = fields.Boolean(compute="_compute_is_self", search="_search_is_self")
     # channel
     channel_id = fields.Many2one("discuss.channel", "Channel", ondelete="cascade", required=True, auto_join=True)
+    is_channel_admin = fields.Boolean("Is admin of the channel", groups="base.group_system")
     # state
     custom_channel_name = fields.Char('Custom channel name')
     fetched_message_id = fields.Many2one('mail.message', string='Last Fetched', index="btree_not_null")
@@ -94,9 +95,11 @@ class DiscussChannelMember(models.Model):
         current_partner, current_guest = self.env["res.partner"]._get_current_persona()
         self.is_self = False
         for member in self:
-            if current_partner and member.partner_id == current_partner:
+            # sudo: discuss.channel.member - reading partner to check if it's self is considered acceptable
+            if current_partner and member.sudo().partner_id == current_partner:
                 member.is_self = True
-            if current_guest and member.guest_id == current_guest:
+            # sudo: discuss.channel.member - reading guest to check if it's self is considered acceptable
+            if current_guest and member.sudo().guest_id == current_guest:
                 member.is_self = True
 
     def _search_is_self(self, operator, operand):

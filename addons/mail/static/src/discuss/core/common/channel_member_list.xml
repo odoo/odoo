@@ -41,6 +41,7 @@
                 <ImStatus member="member" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'" size="'md'"/>
             </div>
             <span t-ref="displayName" class="ms-2 text-truncate text-muted fw-bold" t-esc="member.name"/>
+            <i t-if="member.is_channel_admin" class="ms-2 fa fa-star text-warning" title="Channel Owner" aria-label="Channel Owner"/>
             <span class="ms-auto">
                 <span t-if="member.in(props.thread.invitedMembers)" class="p-1 fa fa-user-plus opacity-75"/>
                 <span t-if="member.rtcSession?.is_muted and !member.rtcSession?.is_deaf" class="p-1 fa fa-microphone-slash opacity-75"/>
