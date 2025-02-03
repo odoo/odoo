@@ -73,6 +73,7 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/core/common/**/*',
             'im_livechat/static/src/core/public_web/**/*',
             'im_livechat/static/src/core/web/**/*',
+            'im_livechat/static/src/embed/common/expirable_storage.js',
         ],
         'web.assets_unit_tests': [
             'im_livechat/static/tests/**/*',
