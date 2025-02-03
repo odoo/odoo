@@ -1,7 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.tests import Form
 from odoo.tests.common import TransactionCase
+
 
 class TestResourceSkills(TransactionCase):
     def test_availability_skills_infos_resource(self):
@@ -23,23 +24,26 @@ class TestResourceSkills(TransactionCase):
             'user_id': user.id,
             'resource_id': resource.id,
         }])
-        levels = self.env['hr.skill.level'].create([{
-            'name': f'Level {x}',
-            'level_progress': x * 10,
-        } for x in range(10)])
-        skill_type = self.env['hr.skill.type'].create({
-            'name': 'Best Music',
-            'skill_level_ids': levels.ids,
-        })
-        skill = self.env['hr.skill'].create([{
-            'name': 'Fortunate Son',
-            'skill_type_id': skill_type.id,
-        }])
+
+        with Form(self.env['hr.skill.type']) as skill_type:
+            skill_type.name = 'Best Music'
+            for i in range(3):
+                with skill_type.skill_ids.new() as skill:
+                    skill.name = f'Fortunate Son {i}'
+            for x in range(10):
+                with skill_type.skill_level_ids.new() as level:
+                    level.name = f"level {x}"
+                    level.level_progress = x * 10
+                    level.default_level = x % 2
+        skill_type = skill_type.save()
+
         self.env['hr.employee.skill'].create({
             'employee_id': employee.id,
-            'skill_id': skill.id,
-            'skill_level_id': levels[1].id,
+            'skill_id': skill_type.skill_ids[2].id,
+            'skill_level_id': skill_type.skill_level_ids[1].id,
             'skill_type_id': skill_type.id,
         })
-
         self.assertEqual(resource.employee_skill_ids, employee.employee_skill_ids)
+
+        default_levels = skill_type.skill_level_ids.filtered(lambda level: level.default_level)
+        self.assertEqual(len(default_levels), 1)
