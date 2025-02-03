@@ -87,8 +87,9 @@ function target(selectionData) {
         (el.tagName === "DIV" || el.tagName === "P") &&
         isEmptyBlock(el)
     ) {
-        return el;
+        return [el];
     }
+    return [];
 }
 
 /**
