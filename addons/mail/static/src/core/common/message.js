@@ -219,6 +219,7 @@ export class Message extends Component {
             ),
             "o-actionMenuMobileOpen": this.state.actionMenuMobileOpen,
             "o-editing": this.state.isEditing,
+            "px-3": !this.env.inChatter && !this.props.isInChatWindow,
         };
     }
 

@@ -1,3 +1,12 @@
+@keyframes highlight {
+    0%, to {
+        background-color: inherit;
+    }
+    50% {
+        background: mix($white, $warning, 65%);
+    }
+}
+
 .o-mail-Message {
     transition: background-color .2s ease-out, opacity .5s ease-out, box-shadow .5s ease-out, transform .2s ease-out;
 
@@ -9,7 +18,11 @@
     }
 
     &.o-highlighted {
-        transform: translateY(-#{map-get($spacers, 3)});
+        animation-name: highlight;
+        animation-duration: 3s;
+        animation-iteration-count: infinite;
+        animation-direction: alternate;
+        background-color: inherit;
     }
 
     &.o-actionMenuMobileOpen {
