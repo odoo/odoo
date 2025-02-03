@@ -353,3 +353,31 @@ export const selectElements = function* (root, selector) {
         yield elem;
     }
 };
+
+/**
+ * Recursively finds the first or last child element matching a condition, starting from a given node.
+ *
+ * @param {Node} root - The node to start searching from.
+ * @param {function(Element): boolean} isValid - A callback to test each element for a condition.
+ * @param {boolean} [findLast=false] - If true, searches from the end of the child nodes (last matching element).
+ * @returns {Element|null} - The matching element, or null if no match is found.
+ */
+export function findMatchingElement(root, isValid, findLast = false) {
+    if (isValid(root)) {
+        return root;
+    }
+    const children = root.childNodes ?? [];
+    const start = findLast ? children.length - 1 : 0;
+    const end = findLast ? -1 : children.length;
+    const step = findLast ? -1 : 1;
+
+    for (let i = start; i !== end; i += step) {
+        const child = children[i];
+        const nestedMatch = findMatchingElement(child, isValid, findLast);
+        if (nestedMatch) {
+            return nestedMatch;
+        }
+    }
+
+    return null;
+}
