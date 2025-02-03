@@ -2296,3 +2296,10 @@ class Test_New_ApiCreatePerformance(models.Model):
     _name = _description = 'test_new_api.create.performance'
 
     confirmed = fields.Boolean()
+    name = fields.Char()
+    name_changes = fields.Integer(compute='_compute_name_changes', store=True)
+
+    @api.depends('name')
+    def _compute_name_changes(self):
+        for record in self:
+            record.name_changes += 1
