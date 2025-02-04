@@ -7,9 +7,10 @@ const { getNumberOfPivotFunctions } = helpers;
 /**
  * @param {import("@odoo/o-spreadsheet").CellPosition} position
  * @param {import("@spreadsheet").SpreadsheetChildEnv} env
+ * @param {boolean} newWindow
  * @returns {Promise<void>}
  */
-export const SEE_RECORDS_PIVOT = async (position, env) => {
+export const SEE_RECORDS_PIVOT = async (position, env, newWindow) => {
     const pivotId = env.model.getters.getPivotIdFromPosition(position);
     const pivot = env.model.getters.getPivot(pivotId);
     await pivot.load();
@@ -33,7 +34,7 @@ export const SEE_RECORDS_PIVOT = async (position, env) => {
             domain,
             context,
         },
-        { viewType: "list" }
+        { viewType: "list", newWindow }
     );
 };
 

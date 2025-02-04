@@ -32,7 +32,7 @@ test("Create drill down domain", async () => {
         doAction: async (action, options) => {
             expect.step("drill down action");
             expect(action).toEqual(drillDownAction);
-            expect(options).toBe(undefined);
+            expect(options).toEqual({ newWindow: undefined });
             return true;
         },
     };
