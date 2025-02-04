@@ -112,9 +112,9 @@ class TestMailing(EventCase, MockEmail):
         for event_values, exp_followers, exp_defaults, exp_suggested in [
             (
                 {"organizer_id": self.event_organizer.id, "user_id": self.user_eventuser.id},
-                self.user_eventmanager.partner_id + self.event_organizer + self.user_eventuser.partner_id,
+                self.user_eventmanager.partner_id + self.user_eventuser.partner_id,
                 {"email_cc": "", "email_to": "", "partner_ids": []},
-                [],
+                [{'email': self.event_organizer.email, 'name': self.event_organizer.name, 'partner_id': self.event_organizer.id, 'create_values': {}}],
             ),
             (
                 {"organizer_id": False, "user_id": self.user_eventuser.id},
@@ -124,9 +124,9 @@ class TestMailing(EventCase, MockEmail):
             ),
             (
                 {},
-                self.user_eventmanager.partner_id + default_organizer,
+                self.user_eventmanager.partner_id,
                 {"email_cc": "", "email_to": "", "partner_ids": []},
-                [],
+                [{'email': default_organizer.email, 'name': default_organizer.name, 'partner_id': default_organizer.id, 'create_values': {}}],
             ),
         ]:
             with self.subTest(event_values=event_values):
