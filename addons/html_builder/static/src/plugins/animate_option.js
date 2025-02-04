@@ -216,25 +216,20 @@ class AnimateOptionPlugin extends Plugin {
     }
 
     /**
-     * Removes or adds the lazy loading on images because animated images can
-     * appear before or after their parents and cause bugs in the animations.
-     * To put "lazy" back on the "loading" attribute, we simply remove the
-     * attribute as it is automatically added on page load.
+     * Adds the lazy loading on images because animated images can appear before
+     * or after their parents and cause bugs in the animations. To put "lazy"
+     * back on the "loading" attribute, we simply remove the attribute as it is
+     * automatically added on page load.
      *
      * @private
-     * @param {Boolean} isLazy
      */
-    setImagesLazyLoading(editingElement, isLazy) {
+    setImagesLazyLoading(editingElement) {
         const imgEls = editingElement.matches("img")
             ? [editingElement]
             : editingElement.querySelectorAll("img");
         for (const imgEl of imgEls) {
-            if (isLazy) {
-                // Let the automatic system add the loading attribute
-                imgEl.removeAttribute("loading");
-            } else {
-                imgEl.loading = "eager";
-            }
+            // Let the automatic system add the loading attribute
+            imgEl.removeAttribute("loading");
         }
     }
 
@@ -257,6 +252,13 @@ class AnimateOptionPlugin extends Plugin {
             if (!el.classList.contains("o_animate_preview")) {
                 el.classList.add("o_animate_preview");
             }
+        }
+        const animateImg = animateEls
+            .map((el) => (el.tagName === "IMG" && el) || el.querySelectorAll("img"))
+            .flat()
+            .filter(Boolean);
+        for (const img of animateImg) {
+            img.loading = "eager";
         }
     }
     cleanForSave({ root }) {

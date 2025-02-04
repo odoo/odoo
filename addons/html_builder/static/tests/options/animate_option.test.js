@@ -183,3 +183,34 @@ test("visibility of animation animation=onHover", async () => {
 
     // todo: check all the hover options
 });
+
+test("image should not be lazy onAppearance", async () => {
+    await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            <img src='${base64Img}'>
+        </div>
+    `);
+    await contains(":iframe .test-options-target img").click();
+
+    expect(":iframe .test-options-target img").toHaveProperty("loading", "auto");
+
+    await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
+    await contains(".o-dropdown--menu [data-action-value='onAppearance']").click();
+
+    expect(":iframe .test-options-target img").toHaveProperty("loading", "eager");
+
+    await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
+    await contains(".o-dropdown--menu [data-action-value='']").click();
+
+    expect(":iframe .test-options-target img").toHaveProperty("loading", "auto");
+});
+
+test("o_animate should be normalized with loading=eager", async () => {
+    await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            <img class="o_animate" src='${base64Img}'>
+        </div>
+    `);
+    // Should be normalized
+    expect(":iframe .test-options-target img").toHaveProperty("loading", "eager");
+});
