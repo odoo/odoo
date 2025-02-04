@@ -72,7 +72,7 @@ class AnimateOptionPlugin extends Plugin {
     }
 
     getActions() {
-        const effectWithFadein = ["onAppearance", "onScroll"];
+        const animationWithFadein = ["onAppearance", "onScroll"];
         return {
             setAnimationMode: {
                 // todo: to remove after having the commit of louis
@@ -103,18 +103,17 @@ class AnimateOptionPlugin extends Plugin {
                         // });
                     }
 
-                    const isNextEffectFadein = effectWithFadein.includes(nextAction.value);
-                    if (!isNextEffectFadein) {
+                    const isNextAnimationFadein = animationWithFadein.includes(nextAction.value);
+                    if (!isNextAnimationFadein) {
                         this.removeEffectAndDirectionClasses(editingElement.classList);
                         editingElement.style.setProperty("--wanim-intensity", "");
                         editingElement.style.animationDuration = "";
-                        this.setImagesLazyLoading(editingElement, true);
+                        this.setImagesLazyLoading(editingElement);
                     }
                 },
                 apply: ({ editingElement, value: effectName }) => {
-                    if (effectWithFadein.includes(effectName)) {
+                    if (animationWithFadein.includes(effectName)) {
                         editingElement.classList.add("o_anim_fade_in");
-                        this.setImagesLazyLoading(editingElement, false);
                     }
                     if (effectName === "onScroll") {
                         editingElement.dataset.scrollZoneStart = 0;
