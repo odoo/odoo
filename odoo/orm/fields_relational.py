@@ -434,6 +434,9 @@ class Many2one(_Relational[M]):
         domain_query = comodel.with_context(active_test=False)._search(value)
         return self.condition_to_sql(fname, operator, domain_query, model, alias, query)
 
+    def _get_inverse_name(self):
+        return f"_{self.comodel_name.replace(".", "_")}_ids"
+
 
 class _RelationalMulti(_Relational[M], typing.Generic[M]):
     r"Abstract class for relational fields \*2many."
@@ -1539,6 +1542,9 @@ class Many2many(_RelationalMulti[M]):
             SQL.identifier(rel_alias, rel_id2),
             coquery.subselect(),
         )
+
+    def _get_inverse_name(self):
+        return f"_{self.comodel_name.replace(".", "_")}_ids"
 
 
 class PrefetchMany2one:
