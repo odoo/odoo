@@ -6,7 +6,7 @@ from odoo.tests import Form, tagged, users
 from odoo.tools import formataddr
 
 
-@tagged("event_mail", "mail_template", "post_install", "-at_install")
+@tagged("event_mail", "mail_template", "mail_thread", "post_install", "-at_install")
 class TestMailing(EventCase, MockEmail):
 
     @classmethod
@@ -104,6 +104,39 @@ class TestMailing(EventCase, MockEmail):
                     fields_values=exp_mail_values,
                 )
                 self.assertEqual(len(self._new_mails), 4)
+
+    @users("user_eventmanager")
+    def test_event_mail_recipients(self):
+        """ Check default / suggested recipients """
+        default_organizer = self.user_eventmanager.company_id.partner_id
+        for event_values, exp_followers in [
+            (
+                {"organizer_id": self.event_organizer.id, "user_id": self.user_eventuser.id},
+                self.user_eventmanager.partner_id + self.event_organizer + self.user_eventuser.partner_id,
+            ),
+            (
+                {"organizer_id": False, "user_id": self.user_eventuser.id},
+                self.user_eventmanager.partner_id + self.user_eventuser.partner_id,
+            ),
+            (
+                {},
+                self.user_eventmanager.partner_id + default_organizer,
+            ),
+        ]:
+            with self.subTest(event_values=event_values):
+                test_event = self.env['event.event'].create({
+                    'date_begin': self.event_date_begin,
+                    'date_end': self.event_date_end,
+                    'date_tz': 'Europe/Brussels',
+                    'event_mail_ids': False,
+                    'name': 'TestEvent',
+                    **event_values,
+                })
+                self.assertEqual(test_event.message_partner_ids, exp_followers)
+                defaults = test_event._message_get_default_recipients()
+                print('defaults', defaults)
+                suggested = test_event._message_get_suggested_recipients()
+                print('suggested', suggested)
 
     @users("user_eventuser")
     def test_mail_template_creation(self):
