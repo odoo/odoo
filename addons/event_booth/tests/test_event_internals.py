@@ -67,7 +67,7 @@ class TestEventData(TestEventBoothCommon):
         event.event_booth_ids[1].write({'partner_id': self.event_customer.id})
         self.assertEqual(event.event_booth_count, 2)
         self.assertEqual(event.event_booth_count_available, 2)
-        self.assertEqual(event.event_booth_ids[1].message_partner_ids, self.event_customer)
+        self.assertEqual(event.event_booth_ids[1].message_partner_ids, self.env['res.partner'])
 
         # one booth is sold
         event.event_booth_ids[1].write({'state': 'unavailable'})

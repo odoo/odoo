@@ -66,25 +66,9 @@ class EventBooth(models.Model):
 
     def write(self, vals):
         to_confirm = self.filtered(lambda booth: booth.state == 'available')
-        wpartner = {}
-        if 'state' in vals or 'partner_id' in vals:
-            wpartner = dict(
-                (booth, booth.partner_id.ids)
-                for booth in self.filtered(lambda booth: booth.partner_id)
-            )
-
         res = super(EventBooth, self).write(vals)
-
-        if vals.get('state') == 'unavailable' or vals.get('partner_id'):
-            for booth in self:
-                booth.message_subscribe(booth.partner_id.ids)
-        for booth in self:
-            if wpartner.get(booth) and booth.partner_id.id not in wpartner[booth]:
-                booth.message_unsubscribe(wpartner[booth])
-
         if vals.get('state') == 'unavailable':
             to_confirm._action_post_confirm(vals)
-
         return res
 
     def _post_confirmation_message(self):

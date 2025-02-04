@@ -43,7 +43,7 @@ class TestEventEvent(TestEventFullCommon):
         self.assertEqual(len(event.event_ticket_ids), 2)
         self.assertTrue(event.introduction_menu)
         self.assertTrue(event.location_menu)
-        self.assertEqual(event.message_partner_ids, self.env.user.partner_id + self.env.user.company_id.partner_id)
+        self.assertEqual(event.message_partner_ids, self.env.user.partner_id)
         self.assertEqual(event.note, '<p>Template note</p>')
         self.assertTrue(event.register_menu)
         self.assertEqual(len(event.question_ids), 3)
