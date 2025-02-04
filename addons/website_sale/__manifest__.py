@@ -167,6 +167,7 @@
         ],
         'website.backend_assets_all_wysiwyg': [
             'website_sale/static/src/js/components/wysiwyg_adapter/wysiwyg_adapter.js',
+            'website_sale/static/src/snippets/s_dynamic_snippet/options.js',
         ],
         'web.assets_tests': [
             'website_sale/static/tests/tours/**/*',
