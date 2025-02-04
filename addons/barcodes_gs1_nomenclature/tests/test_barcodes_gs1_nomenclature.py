@@ -1,7 +1,9 @@
 from odoo.exceptions import ValidationError
+from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
 
+@tagged('post_install', '-at_install')
 class TestBarcodeGS1Nomenclature(TransactionCase):
     def test_gs1_date_to_date(self):
         barcode_nomenclature = self.env['barcode.nomenclature']
@@ -128,3 +130,24 @@ class TestBarcodeGS1Nomenclature(TransactionCase):
         barcode_rule.pattern = r'(300)(.*)'
         with self.assertRaises(ValidationError):
             res = barcode_nomenclature.gs1_decompose_extanded('300bilou4000')
+
+    def test_add_and_remove_barcode_in_product(self):
+        """
+        Tests product creation with default GS1 nomenclature, ensuring barcode is saved,
+        and removed correctly, or skips if the product module is missing.
+        """
+        if 'product.product' not in self.env:
+            self.skipTest('The `product` module is not installed.')
+
+        company = self.env.company
+        default_gs1_nomenclature = self.env.ref('barcodes_gs1_nomenclature.default_gs1_nomenclature')
+        company.nomenclature_id = default_gs1_nomenclature
+
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'barcode': '0101234567890128',
+        })
+        self.assertEqual(product.barcode, '0101234567890128', "The barcode should be saved correctly.")
+
+        product.write({'barcode': False})
+        self.assertFalse(product.barcode)
