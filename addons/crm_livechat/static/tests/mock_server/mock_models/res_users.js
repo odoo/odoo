@@ -1,7 +1,7 @@
-import { mailModels } from "@mail/../tests/mail_test_helpers";
+import { livechatModels } from "@im_livechat/../tests/livechat_test_helpers";
 import { serverState } from "@web/../tests/web_test_helpers";
 
-export class ResUsers extends mailModels.ResUsers {
+export class ResUsers extends livechatModels.ResUsers {
     /** @override */
     _init_store_data(store) {
         super._init_store_data(...arguments);

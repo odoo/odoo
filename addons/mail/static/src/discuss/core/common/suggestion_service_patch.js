@@ -8,6 +8,27 @@ const commandRegistry = registry.category("discuss.channel_commands");
 
 /** @type {SuggestionService} */
 const suggestionServicePatch = {
+    getChannelCommands(channel) {
+        if (!channel) {
+            // channel commands are channel specific
+            return [];
+        }
+        return commandRegistry
+            .getEntries()
+            .map(([name, command]) => ({
+                channel_types: command.channel_types,
+                condition: command.condition,
+                help: command.help,
+                id: command.id,
+                name,
+            }))
+            .filter(({ condition, channel_types }) => {
+                const passesCondition = !condition || condition({ store: this.store, channel });
+                const passesChannelType =
+                    !channel_types || channel_types.includes(channel.channel_type);
+                return passesCondition && passesChannelType;
+            });
+    },
     getSupportedDelimiters(thread, env) {
         const res = super.getSupportedDelimiters(...arguments);
         return thread?.channel ? [...res, ["/", 0]] : res;
@@ -68,23 +89,9 @@ const suggestionServicePatch = {
             // channel commands are channel specific
             return;
         }
-        const commands = commandRegistry
-            .getEntries()
-            .filter(([name, command]) => {
-                if (!cleanTerm(name).includes(cleanedSearchTerm)) {
-                    return false;
-                }
-                if (command.channel_types) {
-                    return command.channel_types.includes(channel.channel_type);
-                }
-                return true;
-            })
-            .map(([name, command]) => ({
-                channel_types: command.channel_types,
-                help: command.help,
-                id: command.id,
-                name,
-            }));
+        const commands = this.getChannelCommands(channel).filter(({ name }) =>
+            cleanTerm(name).includes(cleanedSearchTerm)
+        );
         const sortFunc = (c1, c2) => {
             if (c1.channel_types && !c2.channel_types) {
                 return -1;
