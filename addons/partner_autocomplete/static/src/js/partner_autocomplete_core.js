@@ -2,6 +2,7 @@
 
 import { loadJS } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
+import { browser } from "@web/core/browser/browser";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
 import { renderToMarkup } from "@web/core/utils/render";
@@ -18,7 +19,6 @@ export function usePartnerAutocomplete() {
     const keepLastOdoo = new KeepLast();
     const keepLastClearbit = new KeepLast();
 
-    const http = useService("http");
     const notification = useService("notification");
     const orm = useService("orm");
 
@@ -250,7 +250,13 @@ export function usePartnerAutocomplete() {
      */
     async function getClearbitSuggestions(value) {
         const url = `https://autocomplete.clearbit.com/v1/companies/suggest?query=${value}`;
-        const prom = http.get(url);
+        const prom = browser.fetch(
+            url,
+            {
+                method: 'GET',
+                cache: 'no-cache',
+            }
+        ).then((response) => (response['json']()));
         return keepLastClearbit.add(prom);
     }
 
