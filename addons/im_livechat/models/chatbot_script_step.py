@@ -192,9 +192,9 @@ class ChatbotScriptStep(models.Model):
 
         description = Markup('')
         if input_email:
-            description += Markup('%s<strong>%s</strong><br>') % (_('Please contact me on: '), input_email)
+            description += Markup("%s<strong>%s</strong><br>") % (_("Email: "), input_email)
         if input_phone:
-            description += Markup('%s<strong>%s</strong><br>') % (_('Please call me on: '), input_phone)
+            description += Markup("%s<strong>%s</strong><br>") % (_("Phone: "), input_phone)
         if description:
             description += Markup('<br>')
 
@@ -204,6 +204,17 @@ class ChatbotScriptStep(models.Model):
             'phone': input_phone,
             'description': description,
         }
+
+    def _find_first_user_free_input(self, discuss_channel):
+        """Find the first message from the visitor responding to a free_input step."""
+        chatbot_partner = self.chatbot_script_id.operator_partner_id
+        user_answers = discuss_channel.chatbot_message_ids.filtered(
+            lambda m: m.mail_message_id.author_id != chatbot_partner
+        ).sorted("id")
+        for answer in user_answers:
+            if answer.script_step_id.step_type in ("free_input_single", "free_input_multi"):
+                return answer.mail_message_id
+        return self.env["mail.message"]
 
     def _fetch_next_step(self, selected_answer_ids):
         """ Fetch the next step depending on the user's selected answers.
