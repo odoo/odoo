@@ -607,6 +607,7 @@ class AccountChartTemplate(models.AbstractModel):
         created_records = {}
         for model_name, model_data in delay(list(deepcopy(data).items())):
             all_records_vals = []
+            xml_ids = []
             for xml_id, record_vals in model_data.items():
                 # Extract the translations from the values
                 for key in list(record_vals):
@@ -619,6 +620,7 @@ class AccountChartTemplate(models.AbstractModel):
                     xml_id = False
                 else:
                     xml_id = f"{('account.' + str(self.env.company.id) + '_') if '.' not in xml_id else ''}{xml_id}"
+                    xml_ids.append(xml_id)
 
                 all_records_vals.append({
                     'xml_id': xml_id,
@@ -626,8 +628,15 @@ class AccountChartTemplate(models.AbstractModel):
                     'noupdate': True,
                 })
             model = self.with_context(lang='en_US').env[model_name]
-            model._load_records(all_records_vals, ignore_duplicates=ignore_duplicates)
-            created_records[model_name] = model.concat(*(vals['record'] for vals in all_records_vals if vals.get('state') == 'created'))
+            if ignore_duplicates:
+                existing_record_xml_ids = {
+                    ("%s.%s" % row[1:3])
+                    for row in self.env['ir.model.data'].sudo()._lookup_xmlids(xml_ids, model)
+                    if row[6]
+                }
+                existing_record_xml_ids.add(False)
+                all_records_vals = [vals for vals in all_records_vals if vals['xml_id'] not in existing_record_xml_ids]
+            created_records[model_name] = model._load_records(all_records_vals)
         return created_records
 
     def _post_load_data(self, template_code, company, template_data):
