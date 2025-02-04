@@ -22,7 +22,7 @@ class ResPartner(models.Model):
         ],
     )
     is_ubl_format = fields.Boolean(compute='_compute_is_ubl_format')
-    is_peppol_edi_format = fields.Boolean(compute='_compute_is_peppol_edi_format')
+    is_peppol_edi_format = fields.Boolean(compute='_compute_is_peppol_edi_format')  # TODO remove in master
     peppol_endpoint = fields.Char(
         string="Peppol Endpoint",
         help="Unique identifier used by the BIS Billing 3.0 and its derivatives, also known as 'Endpoint ID'.",
@@ -138,9 +138,9 @@ class ResPartner(models.Model):
         return {
             'ubl_bis3': {'countries': list(PEPPOL_DEFAULT_COUNTRIES), 'on_peppol': True, 'sequence': 200},
             'xrechnung': {'countries': ['DE'], 'on_peppol': True},
-            'ubl_a_nz': {'countries': ['NZ', 'AU'], 'on_peppol': True},
+            'ubl_a_nz': {'countries': ['NZ', 'AU'], 'on_peppol': False},  # Not yet available through Odoo's Access Point, although it's a Peppol valid format
             'nlcius': {'countries': ['NL'], 'on_peppol': True},
-            'ubl_sg': {'countries': ['SG'], 'on_peppol': True},
+            'ubl_sg': {'countries': ['SG'], 'on_peppol': False},  # Same.
             'facturx': {'countries': ['FR'], 'on_peppol': False},
         }
 
@@ -158,21 +158,26 @@ class ResPartner(models.Model):
 
     def _get_suggested_ubl_cii_edi_format(self):
         self.ensure_one()
-        formats_info = self._get_ubl_cii_formats_info()
         format_mapping = self._get_ubl_cii_formats_by_country()
-        country_code = self._deduce_country_code()
+        country_code = self.commercial_partner_id._deduce_country_code()
         if country_code in format_mapping:
             formats_by_country = format_mapping[country_code]
             # return the format with the smallest sequence
             if len(formats_by_country) == 1:
                 return formats_by_country[0]
             else:
+                formats_info = self._get_ubl_cii_formats_info()
                 return min(formats_by_country, key=lambda e: formats_info[e].get('sequence', 100))  # we use a sequence of 100 by default
         return False
 
-    def _get_suggested_invoice_edi_format(self):
-        # EXTENDS 'account'
-        return super()._get_suggested_invoice_edi_format() or self._get_suggested_ubl_cii_edi_format()
+    def _get_suggested_peppol_edi_format(self):
+        self.ensure_one()
+        suggested_format = self.commercial_partner_id._get_suggested_ubl_cii_edi_format()
+        return suggested_format if suggested_format in self.env['res.partner']._get_peppol_formats() else 'ubl_bis3'
+
+    def _get_peppol_edi_format(self):
+        self.ensure_one()
+        return self.invoice_edi_format or self._get_suggested_peppol_edi_format()
 
     @api.model
     def _get_peppol_formats(self):

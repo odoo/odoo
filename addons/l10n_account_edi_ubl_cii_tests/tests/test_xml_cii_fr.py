@@ -22,6 +22,7 @@ class TestCIIFR(TestUBLCommon):
             'phone': '+1 (650) 555-0111',
             'email': "partner1@yourcompany.com",
             'ref': 'ref_partner_1',
+            'invoice_edi_format': 'facturx',
         })
 
         cls.partner_2 = cls.env['res.partner'].create({
@@ -33,6 +34,7 @@ class TestCIIFR(TestUBLCommon):
             'country_id': cls.env.ref('base.fr').id,
             'bank_ids': [(0, 0, {'acc_number': 'FR90735788866632'})],
             'ref': 'ref_partner_2',
+            'invoice_edi_format': 'facturx',
         })
 
         cls.tax_21 = cls.env['account.tax'].create({

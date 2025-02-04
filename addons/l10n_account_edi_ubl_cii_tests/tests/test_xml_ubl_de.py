@@ -24,6 +24,7 @@ class TestUBLDE(TestUBLCommon):
             'country_id': cls.env.ref('base.de').id,
             'bank_ids': [(0, 0, {'acc_number': 'DE48500105176424548921'})],
             'ref': 'ref_partner_1',
+            'invoice_edi_format': 'xrechnung',
         })
 
         cls.partner_2 = cls.env['res.partner'].create({
@@ -35,6 +36,7 @@ class TestUBLDE(TestUBLCommon):
             'country_id': cls.env.ref('base.de').id,
             'bank_ids': [(0, 0, {'acc_number': 'DE50500105175653254743'})],
             'ref': 'ref_partner_2',
+            'invoice_edi_format': 'xrechnung',
         })
 
         cls.tax_19 = cls.env['account.tax'].create({
