@@ -99,7 +99,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
             TicketScreen.nthRowContains(1, "Payment"),
             TicketScreen.deleteOrder("002"),
             Dialog.confirm(),
-            Chrome.createFloatingOrder(),
+            Chrome.clickRegister(),
 
             // Invoice an order
             ProductScreen.addOrderline("Whiteboard Pen", "5", "6"),
@@ -113,10 +113,10 @@ registry.category("web_tour.tours").add("ChromeTour", {
 
             // Cancelling a floating order should remove it from the floating orders list.
             ReceiptScreen.clickNextOrder(),
-            Chrome.hasFloatingOrder("007"),
+            Chrome.hasFloatingOrder("006"),
             ProductScreen.clickReview(),
             ProductScreen.clickControlButton("Cancel Order"),
-            Chrome.noFloatingOrder("007"),
+            Chrome.noFloatingOrder("006"),
         ].flat(),
 });
 
