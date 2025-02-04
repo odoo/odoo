@@ -41,5 +41,6 @@
             'website_event_meet/static/src/xml/website_event_meeting_room.xml',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

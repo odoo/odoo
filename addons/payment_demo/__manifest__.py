@@ -24,5 +24,6 @@
             'payment_demo/static/src/js/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

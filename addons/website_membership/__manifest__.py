@@ -19,5 +19,6 @@ Publish your members/association directory publicly.
     ],
     'demo': ['data/membership_demo.xml'],
     'installable': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

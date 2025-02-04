@@ -53,5 +53,6 @@ Main Features
             'fleet/static/src/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

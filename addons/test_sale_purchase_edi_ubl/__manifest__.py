@@ -8,5 +8,6 @@
     order XML file.""",
     'category': "Hidden",
     'depends': ['purchase_edi_ubl_bis3', 'sale_edi_ubl'],
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

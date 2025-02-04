@@ -37,5 +37,6 @@
             'website_event_track_quiz/static/src/xml/quiz_templates.xml',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

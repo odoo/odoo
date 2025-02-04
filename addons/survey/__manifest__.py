@@ -118,5 +118,6 @@ sent mails with personal token for the invitation of the survey.
             'survey/static/src/js/tours/survey_tour.js',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

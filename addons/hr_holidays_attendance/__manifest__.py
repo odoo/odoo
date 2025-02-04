@@ -24,5 +24,6 @@ Convert employee's extra hours to leave allocations.
             'hr_holidays_attendance/static/src/xml/time_off_calendar.xml',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

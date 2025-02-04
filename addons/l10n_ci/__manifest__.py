@@ -20,5 +20,6 @@ The Chart of Accounts is from SYSCOHADA.
     'demo': [
         'demo/demo_company.xml',
     ],
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

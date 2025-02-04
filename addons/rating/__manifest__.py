@@ -36,5 +36,6 @@ This module allows a customer to give rating.
             "rating/static/src/core/common/**/*",
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

@@ -48,5 +48,6 @@ Preferences
             'sale_stock/static/src/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

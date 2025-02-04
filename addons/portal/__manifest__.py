@@ -111,5 +111,6 @@ a dependency towards website editing and customization capabilities.""",
             "portal/static/src/chatter/scss/shadow.scss",
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

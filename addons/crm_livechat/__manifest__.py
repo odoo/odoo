@@ -20,6 +20,7 @@
     ],
     'description': 'Create new lead with using /lead command in the channel',
     'auto_install': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
     'assets': {
         'web.assets_backend': {

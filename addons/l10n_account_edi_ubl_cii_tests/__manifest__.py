@@ -26,5 +26,6 @@ valid ones.
         'l10n_au',
     ],
     'installable': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

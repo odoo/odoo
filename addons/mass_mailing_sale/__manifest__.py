@@ -15,5 +15,6 @@
         'demo/mailing_mailing.xml',
     ],
     'auto_install': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

@@ -36,5 +36,6 @@ Step 4: Repeat steps 1,2,3 for all GSTIN you have in odoo. If you have a multi-c
     ],
     'installable': True,
     # not auto_install because the company can be related to the service industry
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

@@ -12,5 +12,6 @@
     ],
     'installable': True,
     'auto_install': ['event_sale'],
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

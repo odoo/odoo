@@ -52,5 +52,6 @@ The automatic assignment is figured from the weight of partner levels and the ge
             'website_crm_partner_assign/static/src/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

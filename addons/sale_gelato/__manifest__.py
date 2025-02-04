@@ -16,5 +16,6 @@
         'views/product_template_views.xml',
         'wizards/res_config_settings_views.xml',
     ],
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

@@ -84,6 +84,7 @@ actions(Check in/Check out) performed by them.
 
         ]
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
     'post_init_hook': 'post_init_hook',
     'uninstall_hook': 'uninstall_hook',

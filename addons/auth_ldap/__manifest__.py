@@ -13,5 +13,6 @@
     'external_dependencies': {
         'python': ['python-ldap'],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

@@ -25,5 +25,6 @@
             'microsoft_calendar/static/tests/microsoft_calendar_tests.js',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

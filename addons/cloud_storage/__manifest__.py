@@ -18,5 +18,6 @@
             'cloud_storage/static/src/core/common/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

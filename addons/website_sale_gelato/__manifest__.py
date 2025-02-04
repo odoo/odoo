@@ -8,5 +8,6 @@
         'data/delivery_carrier_data.xml',
     ],
     'auto_install': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

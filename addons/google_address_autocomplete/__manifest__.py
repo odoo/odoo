@@ -32,5 +32,6 @@ This module Auto complete the address data.
             'google_address_autocomplete/static/tests/**/*.test.js',
         ]
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

@@ -48,5 +48,6 @@ configuration of their taxes and fiscal positions manually.
         'data/l10n_fr_account_demo.xml',
     ],
     'post_init_hook': '_l10n_fr_post_init_hook',
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }
