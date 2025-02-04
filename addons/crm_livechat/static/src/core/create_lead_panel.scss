@@ -1,0 +1,11 @@
+.o-create-lead-panel {
+    --create-lead-background-color: $input-focus-bg;
+
+    background-color: var(--create-lead-background-color);
+    border: $input-border-width solid $border-color;
+
+    &:focus-within {
+        border-color: $input-focus-border-color;
+        color: $input-focus-color;
+    }
+}
