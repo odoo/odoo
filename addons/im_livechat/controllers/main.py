@@ -152,6 +152,7 @@ class LivechatController(http.Controller):
                 ),
                 "scrollUnread": False,
                 "state": "open",
+                "livechat_active": True,
                 "channel_type": "livechat",
                 "chatbot": (
                     {
