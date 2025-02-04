@@ -583,7 +583,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                         }))
                         mls_without_lots -= move_line
                     else:  # No line without serial number, creates a new one.
-                        reserved_quants = self.env['stock.quant']._get_reserve_quantity(move.product_id, move.location_id, 1.0, lot_id=lot)
+                        reserved_quants = self.env['stock.quant'].with_context(packaging_uom_id=move.packaging_uom_id)._get_reserve_quantity(move.product_id, move.location_id, 1.0, lot_id=lot)
                         if reserved_quants:
                             move_line_vals = self._prepare_move_line_vals(quantity=0, reserved_quant=reserved_quants[0][0])
                         else:
@@ -1633,7 +1633,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         if not owner_id:
             owner_id = self.env['res.partner']
 
-        quants = self.env['stock.quant']._get_reserve_quantity(
+        quants = self.env['stock.quant'].with_context(packaging_uom_id=self.packaging_uom_id)._get_reserve_quantity(
             self.product_id, location_id, need, uom_id=self.product_uom,
             lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
 
