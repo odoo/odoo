@@ -1,29 +1,9 @@
-import { fields, models, defineModels } from "@web/../tests/web_test_helpers";
+import { models, defineModels } from "@web/../tests/web_test_helpers";
 import { Domain } from "@web/core/domain";
 import { hrModels } from "@hr/../tests/hr_test_helpers";
 
-export class HrContract extends models.Model {
+export class HrContract extends models.ServerModel {
     _name = "hr.contract";
-
-    name = fields.Char();
-    state = fields.Selection({
-        selection: [
-            ["draft", "New"],
-            ["open", "Running"],
-            ["close", "Expired"],
-            ["cancel", "Cancelled"],
-        ],
-    });
-    kanban_state = fields.Selection({
-        selection: [
-            ["normal", "Grey"],
-            ["done", "Green"],
-            ["blocked", "Red"],
-        ],
-    });
-    employee_id = fields.Many2one({ relation: "hr.employee" });
-    date_start = fields.Date();
-    date_end = fields.Date();
 
     _records = [
         {
@@ -32,31 +12,65 @@ export class HrContract extends models.Model {
             employee_id: 1,
             kanban_state: false,
             state: false,
+            active: true,
+        },
+    ];
+}
+
+export class HrEmployee extends hrModels.HrEmployee {
+
+    _records = [
+        {
+            name: "Pig-2",
+            id: 1,
+            user_id: 1,
         },
     ];
 
-    get_employee_working_periods(employees, start, stop) {
+    _get_contracts(ids, date_from, date_to, states = ["open"], kanban_state = false) {
+        let state_domain = new Domain([["state", "in", states]]);
+
+        if (kanban_state) {
+            state_domain = Domain.and([
+                state_domain,
+                new Domain([["kanban_state", "in", kanban_state]]),
+            ]);
+        }
+
+        return this.env["hr.contract"]._filter(
+            Domain.and([
+                new Domain([["employee_id", "in", ids]]),
+                state_domain,
+                new Domain([
+                    ["date_start", "<=", date_to],
+                    "|",
+                    ["date_end", "=", false],
+                    ["date_end", ">=", date_from],
+                ]),
+            ]).toList()
+        );
+    }
+
+    _get_employee_working_periods(employees, start, stop) {
         const rows = {};
 
         for (const val of employees) {
             rows[val] = { working_periods: [] };
         }
-        const employees_with_contract = this.env["hr.contract"].read_group(
-            new Domain([
+
+        const employees_with_contract = this.env["hr.contract"].formatted_read_group(
+            [
                 "&",
                 ["employee_id", "in", employees],
                 "|",
-                ["state", "not in", ["draft", "cancel", false]],
+                ["state", "not in", ["draft", "cancel"]],
                 "&",
                 ["kanban_state", "=", "done"],
                 ["state", "=", "draft"],
-            ]).toList(),
-            "",
-            ["id", "employee_id"],
-            "",
-            "",
-            "",
-            false
+            ],
+            ["employee_id", "date_start:day", "date_end:day"],
+            [],
+            ...Array(3).fill(""),
         );
 
         const contracts = this.env["hr.employee"]._get_contracts(
@@ -94,44 +108,10 @@ export class HrContract extends models.Model {
         }
         return rows;
     }
+
 }
 
-export class HrEmployeeContract extends hrModels.HrEmployee {
-
-    _records = [
-        {
-            name: "Pig-2",
-            id: 1,
-            user_id: 1,
-        },
-    ];
-
-    _get_contracts(ids, date_from, date_to, states = ["open"], kanban_state = false) {
-        let state_domain = new Domain([["state", "in", states]]);
-
-        if (kanban_state) {
-            state_domain = Domain.and([
-                state_domain,
-                new Domain([["kanban_state", "in", kanban_state]]),
-            ]);
-        }
-
-        return this.env["hr.contract"]._filter(
-            Domain.and([
-                new Domain([["employee_id", "in", ids]]),
-                state_domain,
-                new Domain([
-                    ["date_start", "<=", date_to],
-                    "|",
-                    ["date_end", "=", false],
-                    ["date_end", ">=", date_from],
-                ]),
-            ]).toList()
-        );
-    }
-}
-
-hrModels.HrEmployee = HrEmployeeContract;
+hrModels.HrEmployee = HrEmployee;
 
 export const hrContractModels = {
     ...hrModels,
