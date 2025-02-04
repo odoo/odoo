@@ -1,5 +1,6 @@
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
+import { delay } from "@odoo/hoot-dom";
 
 registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour", {
     url: "/odoo",
@@ -33,6 +34,9 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
         {
             content: "Wait for the autocomplete RPC",
             trigger: 'div[name="model_id"] .ui-autocomplete:contains("Contact")',
+            run: async() => {
+                await delay(300);
+            }
         },
         {
             content: "Click on contact",
