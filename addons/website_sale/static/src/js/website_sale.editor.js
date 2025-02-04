@@ -13,9 +13,10 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
      * @override
      */
     start: function () {
-        this.ppg = parseInt(this.$target.closest('[data-ppg]').data('ppg'));
-        this.ppr = parseInt(this.$target.closest('[data-ppr]').data('ppr'));
-        this.default_sort = this.$target.closest('[data-default-sort]').data('default-sort');
+        const gridEl = this.$target[0].querySelector('#o_wsale_products_grid');
+        this.ppg = parseInt(gridEl.dataset.ppg);
+        this.ppr = parseInt(gridEl.dataset.ppr);
+        this.default_sort = gridEl.dataset.defaultSort;
         return this._super.apply(this, arguments);
     },
     /**
