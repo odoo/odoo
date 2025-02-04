@@ -414,10 +414,13 @@ class HrContract(models.Model):
         """
         employees_sudo = self.env["hr.employee"].browse(employee_ids).sudo()
         employees_rows = {employee: {"working_periods": []} for employee in employee_ids}
-        employees_with_contract = dict(
+        # Contracts of employees in current scale of time
+        contracts = employees_sudo._get_contracts(start, stop, ["draft", "open", "close"])
+        # Contracts of employees who don't have active contract in current scale of time
+        employees_with_contract_outside_current_scale = dict(
             self.env["hr.contract"].sudo()._read_group(
                 domain=[
-                    ("employee_id", "in", employees_sudo.ids),
+                    ("employee_id", "in", set(employees_sudo.ids) - set(contracts.mapped("employee_id").ids)),
                     "|",
                     ("state", "not in", ["draft", "cancel"]),
                     "&",
@@ -428,7 +431,6 @@ class HrContract(models.Model):
                 aggregates=["__count"],
             )
         )
-        contracts = employees_sudo._get_contracts(start, stop, ["draft", "open", "close"])
         employees_with_contract_in_current_scale = []
         for contract in contracts:
             if contract.state == 'draft' and contract.kanban_state != 'done':
@@ -445,7 +447,7 @@ class HrContract(models.Model):
                 "end": end_datetime,
             })
         for employee in employees_sudo - self.env["hr.employee"].browse(employees_with_contract_in_current_scale):
-            if employees_with_contract.get(employee, 0):
+            if employees_with_contract_outside_current_scale.get(employee, 0):
                 continue
             employees_rows[employee.id]["working_periods"].append({
                 "start": start,
