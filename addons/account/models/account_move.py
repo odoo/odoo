@@ -1875,6 +1875,7 @@ class AccountMove(models.Model):
         2) Add the rounding in the biggest tax amount: The cash rounding line is added as a new tax line on the tax
         having the biggest balance.
         '''
+        self = self.with_company(self.company_id)
         self.ensure_one()
         def _compute_cash_rounding(self, total_amount_currency):
             ''' Compute the amount differences due to the cash rounding.

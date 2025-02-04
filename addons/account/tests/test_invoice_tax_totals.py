@@ -845,6 +845,37 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         for move in moves_rounding:
             self.assertEqual(sum(move.line_ids.filtered(lambda line: line.display_type == 'rounding').mapped('balance')), moves_rounding[move])
 
+    def test_recompute_cash_rounding_lines_multi_company(self):
+        self.company_data_2 = self.setup_company_data("company_2")
+
+        cash_rounding_add_invoice_line = self.env['account.cash.rounding'].with_company(self.company_data["company"]).create({
+            'name': 'Add invoice line Rounding UP',
+            'rounding': 1,
+            'strategy': 'add_invoice_line',
+            'profit_account_id': self.company_data['default_account_revenue'].id,
+            'loss_account_id': self.company_data['default_account_expense'].id,
+            'rounding_method': 'UP',
+        })
+        cash_rounding_add_invoice_line.with_company(self.company_data_2["company"]).write({
+            'profit_account_id': self.company_data_2['default_account_revenue'].id,
+            'loss_account_id': self.company_data_2['default_account_expense'].id,
+        })
+
+        self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-01',
+            'company_id': self.company_data_2['company'].id,
+            'invoice_cash_rounding_id': cash_rounding_add_invoice_line.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'line',
+                    'display_type': 'product',
+                    'price_unit': 99.5,
+                })
+            ],
+        })
+
     def test_cash_rounding_amount_total_rounded_foreign_currency(self):
         tax_15 = self.env['account.tax'].create({
             'name': "tax_15",
