@@ -100,8 +100,8 @@ const threadPatch = {
             const command = commandRegistry.get(firstWord, false);
             if (
                 command &&
-                (!command.channel_types ||
-                    command.channel_types.includes(this.channel?.channel_type))
+                (!command.condition ||
+                    command.condition({ store: this.store, channel: this.channel }))
             ) {
                 await this.channel.executeCommand(command, textContent);
                 return;

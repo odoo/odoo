@@ -91,7 +91,7 @@ test("add an emoji after a command", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", "/");
-    await click(":nth-child(1 of .o-mail-Composer-suggestion)");
+    await click(":nth-child(3 of .o-mail-Composer-suggestion)");
     await contains(".o-mail-Composer-input", { value: "/who " });
     await click("button[title='Add Emojis']");
     await click(".o-Emoji:text('😊')");

@@ -109,6 +109,13 @@ export function defineMailModels() {
     return defineModels(mailModels);
 }
 
+export function getChannelCommandsForThread(threadId) {
+    const store = getService("mail.store");
+    const suggestionService = getService("mail.suggestion");
+    const thread = store["mail.thread"].get({ model: "discuss.channel", id: threadId });
+    return suggestionService.getChannelCommands(thread.channel);
+}
+
 export const mailModels = {
     ...webModels,
     ...busModels,
