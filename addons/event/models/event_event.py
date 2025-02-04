@@ -635,23 +635,11 @@ class EventEvent(models.Model):
             if event.date_end < event.date_begin:
                 raise ValidationError(_('The closing date cannot be earlier than the beginning date.'))
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        events = super(EventEvent, self).create(vals_list)
-        for res in events:
-            if res.organizer_id:
-                res.message_subscribe([res.organizer_id.id])
-        self.env.flush_all()
-        return events
-
     def write(self, vals):
         if 'stage_id' in vals and 'kanban_state' not in vals:
             # reset kanban state when changing stage
             vals['kanban_state'] = 'normal'
-        res = super(EventEvent, self).write(vals)
-        if vals.get('organizer_id'):
-            self.message_subscribe([vals['organizer_id']])
-        return res
+        return super().write(vals)
 
     @api.depends('event_registrations_sold_out', 'seats_limited', 'seats_max', 'seats_available')
     @api.depends_context('name_with_seats_availability')
