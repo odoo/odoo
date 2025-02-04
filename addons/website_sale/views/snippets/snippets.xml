@@ -146,6 +146,9 @@
             <we-checkbox string="Description"
                          class="o_we_sublevel_1"
                          data-customize-website-views="website_sale.products_description"
+                         data-wsale-preview-id="website_sale.editor_preview.description"
+                         data-wsale-preview-classes="o_wsale_previewing_description"
+                         data-wsale-preview-place-after=".oe_product_cart:not(.oe_product_cart_has_description) .o_wsale_products_item_title"
                          data-no-preview="true"
                          data-reload="/"/>
             <we-row string="Buttons" class="o_we_full_row o_we_sublevel_1">
@@ -155,16 +158,22 @@
                     data-reload="/"/>
                 <div class="flex-basis-100"/>
             </we-row>
-            <we-row id="o_wsale_grid_left_panel" class="o_wsale_editor_section" string="Categories" data-variable="filmstrip">
+            <we-row id="o_wsale_grid_left_panel" class="o_wsale_editor_section" string="Categories">
                 <we-button string="Sidebar"
                            title="Show into Sidebar"
                            data-customize-website-views="website_sale.products_categories"
+                           data-wsale-preview-id="website_sale.editor_preview.sidebar"
+                           data-wsale-preview-place-before="#o_wsale_container:not(.o_wsale_has_sidebar) #products_grid"
+                           data-wsale-preview-classes="o_wsale_previewing_sidebar, o_wsale_has_sidebar"
                            data-name="categories_opt"
                            data-no-preview="true"
                            data-reload="/"/>
                 <we-button string="Top"
                            title="Show a filmstrip navigation at the Top"
                            data-customize-website-views="website_sale.products_categories_top"
+                           data-wsale-preview-id="website_sale.editor_preview.filmstrip"
+                           data-wsale-preview-classes="o_wsale_previewing_filmstrip"
+                           data-wsale-preview-place-before="#o_wsale_container:not(.o_wsale_has_filmstrip) .products_header"
                            data-name="categories_opt_top"
                            data-no-preview="true"
                            data-reload="/"/>
@@ -188,12 +197,17 @@
                            />
                 <we-button string="Sidebar"
                            title="Show filters into Sidebar"
+                           data-wsale-preview-id="website_sale.editor_preview.sidebar"
+                           data-wsale-preview-place-before="#o_wsale_container:not(.o_wsale_has_sidebar) #products_grid"
+                           data-wsale-preview-classes="o_wsale_previewing_sidebar, o_wsale_has_sidebar"
                            data-customize-website-views="website_sale.products_attributes"
                            data-name="attributes_opt"
                            />
                 <we-button string="Off-screen Menu"
                            title="Render a button to show the Off-screen Menu"
                            data-customize-website-views="website_sale.products_attributes_top"
+                           data-wsale-preview-id=""
+                           data-wsale-preview-classes="o_wsale_previewing_offcanvas"
                            data-name="attributes_opt_top"
                            />
             </we-select>
@@ -238,6 +252,9 @@
                 class="o_we_sublevel_1"
                 data-customize-website-views="website_sale.floating_bar"
                 data-dependencies="attributes_opt_top, search_top_opt, sort_top_opt"
+                data-wsale-preview-id="website_sale.editor_preview.floating_bar"
+                data-wsale-preview-classes="o_wsale_previewing_floating_bar"
+                data-wsale-preview-place-after="#o_wsale_container:not(.o_wsale_has_floating_bar) .o_wsale_products_main_row"
                 data-no-preview="true"
                 data-reload="/"
             />
