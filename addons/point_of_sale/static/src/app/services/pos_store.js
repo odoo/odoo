@@ -1475,8 +1475,13 @@ export class PosStore extends WithLazyGetterTrap {
         if (name === "ProductScreen") {
             this.getOrder()?.deselectOrderline();
         }
-        this.previousScreen = this.mainScreen.component?.name;
         const component = registry.category("pos_screens").get(name);
+        if (
+            (component.updatePreviousScreen ?? true) &&
+            (this.mainScreen.component?.updatePreviousScreen ?? true)
+        ) {
+            this.previousScreen = this.mainScreen.component?.name;
+        }
         this.mainScreen = { component, props };
         // Save the screen to the order so that it is shown again when the order is selected.
         if (component.storeOnOrder ?? true) {
