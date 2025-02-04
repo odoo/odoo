@@ -472,12 +472,20 @@ export class LinkPlugin extends Plugin {
             const imageNode = selectedNodes.find((node) => node.tagName === "IMG");
 
             const link = this.document.createElement("a");
-            if (!selection.isCollapsed) {
-                const content = this.dependencies.selection.extractContent(selection);
-                link.append(content);
-                link.normalize();
+            if (selectedNodes.length === 1 && imageNode) {
+                imageNode.before(link);
+                link.append(imageNode);
+                if (link.parentElement.matches("figure[contenteditable=false]")) {
+                    link.setAttribute("contenteditable", true);
+                }
+            } else {
+                if (!selection.isCollapsed) {
+                    const content = this.dependencies.selection.extractContent(selection);
+                    link.append(content);
+                    link.normalize();
+                }
+                this.dependencies.dom.insert(link);
             }
-            this.dependencies.dom.insert(link);
             if (!imageNode) {
                 this.dependencies.selection.setCursorEnd(link);
             } else {
