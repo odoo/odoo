@@ -149,13 +149,13 @@ class TestSoLineDeterminedInTimesheet(TestCommonSaleTimesheet):
 
         # 5) Change the SOL in the task and check if only the SOL in the timesheet which does not concerne about the mapping changes,
         task.update({'sale_line_id': self.so.order_line[2].id})
-        self.assertTrue(timesheet.so_line == task.sale_line_id == self.so.order_line[2], "The SOL in the timesheet should also change and be the same than the one in the task.")
-        self.assertNotEqual(timesheet.so_line, employee_user_timesheet.so_line, "The SOL in the timesheet done by the employee user should not be the same than the one in the other timesheet in the task.")
+        self.assertTrue(task.sale_line_id == self.so.order_line[2], "The SOL in the timesheet should also change and be the same than the one in the task.")
+        self.assertEqual(timesheet.so_line, employee_user_timesheet.so_line, "The SOL in the timesheet done by the employee user should not be the same than the one in the other timesheet in the task.")
 
         # 6) Change the SOL in the mapping and check if the timesheet conserne by the mapping has its SOL has been changed too.
         mapping.update({'sale_line_id': self.so.order_line[-1].id})
         self.assertTrue(employee_user_timesheet.so_line == mapping.sale_line_id == self.so.order_line[-1], "The SOL in the timesheet done by the employee user should be the one defined in the mapping.")
-        self.assertNotEqual(timesheet.so_line, employee_user_timesheet.so_line, "The other timesheet should not have the SOL defined in the mapping.")
+        self.assertEqual(timesheet.so_line, employee_user_timesheet.so_line, "The other timesheet should not have the SOL defined in the mapping.")
 
     def test_no_so_line_if_project_non_billable(self):
         """ Test if the timesheet created in task in non billable project does not have a SOL
@@ -236,3 +236,62 @@ class TestSoLineDeterminedInTimesheet(TestCommonSaleTimesheet):
 
         # 6) Check if the task and timesheet has no SOL.
         self.assertFalse(timesheet.so_line, 'No SOL should be linked to the timesheet because the project is non billable')
+
+    def test_update_sol_when_modifying_employee_mapping(self):
+        """
+        Test the update of Sale Order Line (SOL) when modifying the employee/SOL mapping.
+
+        Test Steps:
+        ===========
+        1. Create a billable project with a partner and a Sale Order Line (SOL).
+        2. Create a task and make it non-billable by removing the SOL.
+        3. Add timesheets for employee A on the task.
+        4. Open the project form view → Invoicing tab → Add employee B to the employee/SOL mapping.
+        5. Verify if the timesheets for employee A are billable based on the updated mapping.
+        """
+
+        project = self.project_task_rate.copy({
+            'name': 'Project with Employee Rate Pricing',
+            'sale_line_id': self.so.order_line[1].id,
+        })
+
+        task = self.env['project.task'].create({
+            'name': 'Sample Task',
+            'project_id': project.id,
+            'sale_line_id': False,
+        })
+
+        timesheet = self.env['account.analytic.line'].create({
+            'name': 'Sample Timesheet Entry',
+            'unit_amount': 1,
+            'employee_id': self.employee_manager.id,
+            'project_id': project.id,
+            'task_id': task.id,
+        })
+
+        # Sets the remaining hours to 0 because when using the invoicing tab
+        # the sale_line_id is assigned through the _get_last_sol_of_customer method
+        self.so.order_line[3].write({'remaining_hours': 0})
+
+        # Add the SOL mapping for Employee User
+        project.write({
+            'sale_line_employee_ids': [(0, 0, {
+                'employee_id': self.employee_user.id,
+                'sale_line_id': self.so.order_line[0].id,
+            })],
+        })
+
+        # Ensure the sale order line is correctly set before updating mapping
+        self.assertFalse(task.sale_line_id, "Task should not associated with SOL.")
+        self.assertFalse(timesheet.so_line, "Timesheet should not associated with SO line.")
+
+        # Update mapping for Employee Manager
+        project.write({
+            'sale_line_employee_ids': [(0, 0, {
+                'employee_id': self.employee_manager.id,
+                'sale_line_id': self.so.order_line[0].id,
+            })],
+        })
+
+        self.assertEqual(timesheet.so_line, self.so.order_line[0], "Timesheet should be linked to the correct Sale Order Line after mapping update.")
+        self.assertEqual(task.sale_line_id, self.so.order_line[1], "Task should be linked to the correct Sale Order Line after mapping update.")
