@@ -17,6 +17,7 @@ import {
     extractInfoFromGroupData,
     getBasicEvalContext,
     getFieldsSpec,
+    getId,
     isRelational,
     makeActiveField,
 } from "./utils";
@@ -46,6 +47,8 @@ import { FetchRecordError } from "./errors";
  * @property {object} context
  * @property {boolean} isMonoRecord
  * @property {boolean} isRoot
+ * @property {string} [loadId]
+ * @property {boolean} [cached]
  * @property {Array} [domain]
  * @property {Array} [groupBy]
  * @property {Array} [orderBy]
@@ -232,6 +235,8 @@ export class RelationalModel extends Model {
         const config = Object.assign({}, currentConfig);
 
         config.context = "context" in params ? params.context : config.context;
+        config.context = { ...config.context };
+        delete config.context.params;
         if (currentConfig.isMonoRecord) {
             config.resId = "resId" in params ? params.resId : config.resId;
             config.resIds = "resIds" in params ? params.resIds : config.resIds;
@@ -293,18 +298,13 @@ export class RelationalModel extends Model {
      * @param {Config} config
      */
     async _loadData(config) {
+        config.loadId = getId();
         if (config.isMonoRecord) {
             const evalContext = getBasicEvalContext(config);
             if (!config.resId) {
                 return this._loadNewRecord(config, { evalContext });
             }
-            const records = await this._loadRecords(
-                {
-                    ...config,
-                    resIds: [config.resId],
-                },
-                evalContext
-            );
+            const records = await this._loadRecords(config, evalContext);
             return records[0];
         }
         if (config.resIds) {
@@ -522,7 +522,8 @@ export class RelationalModel extends Model {
      * @returns
      */
     async _loadRecords(config, evalContext = config.context) {
-        const { resModel, resIds, activeFields, fields, context } = config;
+        const { resModel, activeFields, fields, context } = config;
+        const resIds = config.resId ? [config.resId] : config.resIds;
         if (!resIds.length) {
             return [];
         }
@@ -532,7 +533,17 @@ export class RelationalModel extends Model {
                 context: { bin_size: true, ...context },
                 specification: fieldSpec,
             };
-            const records = await this.orm.webRead(resModel, resIds, kwargs);
+            const loadId = config.loadId;
+            const result = await this.orm.cached.webRead(resModel, resIds, kwargs);
+            const records = result.cached || result; // fallback for studio which overrides orm
+            if (result.cached) {
+                config.cached = true;
+            }
+            result.actual?.then((records) => {
+                if (records.length === 1) {
+                    this._updateRoot(loadId, records[0]);
+                }
+            });
             if (!records.length) {
                 throw new FetchRecordError(resIds);
             }
@@ -561,7 +572,15 @@ export class RelationalModel extends Model {
             count_limit:
                 config.countLimit !== Number.MAX_SAFE_INTEGER ? config.countLimit + 1 : undefined,
         };
-        return this.orm.webSearchRead(config.resModel, config.domain, kwargs);
+        const loadId = config.loadId;
+        const result = await this.orm.cached.webSearchRead(config.resModel, config.domain, kwargs);
+        if (result.cached) {
+            config.cached = true;
+        }
+        result.actual?.then((data) => {
+            this._updateRoot(loadId, data);
+        });
+        return result.cached || result; // fallback for studio which overrides orm;
     }
 
     /**
@@ -649,6 +668,17 @@ export class RelationalModel extends Model {
         );
         config.countLimit = Number.MAX_SAFE_INTEGER;
         return count;
+    }
+
+    _updateRoot(loadId, data) {
+        if (!this.root) {
+            return;
+        }
+        const rootConfig = this.root.config;
+        if (rootConfig.loadId === loadId) {
+            this.root._setData(data);
+            this.root._config.cached = false;
+        }
     }
 
     /**

@@ -82,7 +82,7 @@ rpc._rpc = function (url, params, settings) {
             }
             const { error: responseError, result: responseResult } = params;
             if (!params.error) {
-                rpcBus.trigger("RPC:RESPONSE", { data, settings, result: params.result });
+                rpcBus.trigger("RPC:RESPONSE", { data, settings, cached: params.cached, result: params.result });
                 return resolve(responseResult);
             }
             const error = makeErrorFromResponse(responseError);
