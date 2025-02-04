@@ -53,6 +53,7 @@ describe("onAppearance", () => {
             "First Time Only"
         );
         expect(".options-container [data-label='Intensity']").not.toBeVisible();
+        expect(".options-container [data-label='Scroll Zone']").not.toBeVisible();
         expect(".options-container [data-label='Start After'] input").toHaveValue("0");
         expect(".options-container [data-label='Duration'] input").toHaveValue("1");
     });
@@ -79,6 +80,7 @@ describe("onAppearance", () => {
             "First Time Only"
         );
         expect(".options-container [data-label='Intensity'] input").toHaveValue(50);
+        expect(".options-container [data-label='Scroll Zone']").not.toBeVisible();
         expect(".options-container [data-label='Start After'] input").toHaveValue("0");
         expect(".options-container [data-label='Duration'] input").toHaveValue("1");
     });
@@ -105,6 +107,7 @@ describe("onAppearance", () => {
             "First Time Only"
         );
         expect(".options-container [data-label='Intensity'] input").toHaveValue(50);
+        expect(".options-container [data-label='Scroll Zone']").not.toBeVisible();
         expect(".options-container [data-label='Start After'] input").toHaveValue("0");
         expect(".options-container [data-label='Duration'] input").toHaveValue("1");
     });
@@ -131,6 +134,7 @@ describe("onAppearance", () => {
             "First Time Only"
         );
         expect(".options-container [data-label='Intensity'] input").toHaveValue(50);
+        expect(".options-container [data-label='Scroll Zone']").not.toBeVisible();
         expect(".options-container [data-label='Start After'] input").toHaveValue("0");
         expect(".options-container [data-label='Duration'] input").toHaveValue("1");
     });
@@ -155,7 +159,7 @@ test("visibility of animation animation=onScroll", async () => {
     expect(".options-container [data-label='Start After']").not.toBeVisible();
     expect(".options-container [data-label='Duration']").not.toBeVisible();
 
-    // todo: check the scrollzone row
+    expect(".options-container [data-label='Scroll Zone']").toBeVisible();
 });
 test("visibility of animation animation=onHover", async () => {
     await setupWebsiteBuilder(`
@@ -173,6 +177,7 @@ test("visibility of animation animation=onHover", async () => {
     expect(".options-container [data-label='Direction']").not.toBeVisible();
     expect(".options-container [data-label='Trigger']").not.toBeVisible();
     expect(".options-container [data-label='Intensity']").not.toBeVisible();
+    expect(".options-container [data-label='Scroll Zone']").not.toBeVisible();
     expect(".options-container [data-label='Start After']").not.toBeVisible();
     expect(".options-container [data-label='Duration']").not.toBeVisible();
 

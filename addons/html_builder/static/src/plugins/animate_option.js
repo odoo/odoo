@@ -182,7 +182,7 @@ class AnimateOptionPlugin extends Plugin {
             // Trigger a DOM reflow.
             void editingElement.offsetWidth;
             editingElement.style.animationName = "";
-            this.ownerDocument.defaultView.dispatchEvent(new Event("resize"));
+            this.document.defaultView.dispatchEvent(new Event("resize"));
         } else {
             // Trigger a DOM reflow (Needed to prevent the animation from
             // being launched twice when previewing the "Intensity" option).
