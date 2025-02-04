@@ -45,45 +45,35 @@ class AccountMoveSend(models.AbstractModel):
                 'action_text': _("View Partner(s)"),
                 'action': invalid_partners._get_records_action(name=_("Check Partner(s)")),
             }
-        edi_modes = set(
-            peppol_moves.company_id.account_edi_proxy_client_ids
-                .filtered(lambda usr: usr.proxy_type == 'peppol')
-                .mapped('edi_mode')
-        )
-        if edi_modes.intersection({'test', 'demo'}):
-            alerts['account_peppol_demo_test_mode'] = {
-                'message': _("Peppol is in testing/demo mode."),
-                'level': 'info',
-            }
-
         not_peppol_moves = moves.filtered(lambda m: 'peppol' not in moves_data[m]['sending_methods'])
         what_is_peppol_alert = {
-                    'level': 'info',
-                    'action_text': _("Why should you use it ?"),
-                    'action': {
-                        'name': _("Why should I use PEPPOL ?"),
-                        'type': 'ir.actions.client',
-                        'tag': 'account_peppol.what_is_peppol',
-                        'target': 'new',
-                        'context': {
-                            'footer': False,
-                            'dialog_size': 'medium',
-                            'action_on_activate': self.action_what_is_peppol_activate(moves),
-                        },
-                    },
-                }
+            'level': 'info',
+            'action_text': _("Why should you use it ?"),
+            'action': {
+                'name': _("Why should I use PEPPOL ?"),
+                'type': 'ir.actions.client',
+                'tag': 'account_peppol.what_is_peppol',
+                'target': 'new',
+                'context': {
+                    'footer': False,
+                    'dialog_size': 'medium',
+                    'action_on_activate': self.action_what_is_peppol_activate(moves),
+                },
+            },
+        }
         info_always_on_countries = {'BE'}
         can_send = self.env['account_edi_proxy_client.user']._get_can_send_domain()
+        any_moves_not_sent_peppol = any(move.peppol_move_state not in ('processing', 'done') for move in moves)
         always_on_companies = moves.company_id.filtered(
             lambda c: c.country_code in info_always_on_countries and c.account_peppol_proxy_state not in can_send
         )
-        if always_on_companies:
+        if always_on_companies and any_moves_not_sent_peppol and not filter_peppol_state(moves, 'not_valid'):
             alerts.pop('account_edi_ubl_cii_configure_company', False)
             alerts['account_peppol_partner_want_peppol'] = {
                 'message': _("You can send this invoice electronically via Peppol."),
                 **what_is_peppol_alert,
             }
-        elif peppol_not_selected_partners := filter_peppol_state(not_peppol_moves, 'valid'):
+        elif (peppol_not_selected_partners := filter_peppol_state(not_peppol_moves, 'valid')) and any_moves_not_sent_peppol:
             # Check for not peppol partners that are on the network.
             if len(peppol_not_selected_partners) == 1:
                 alerts['account_peppol_partner_want_peppol'] = {
@@ -229,6 +219,7 @@ class AccountMoveSend(models.AbstractModel):
             action['context'] = {
                 'active_model': "account.move",
                 'active_ids': moves.ids,
+                'dialog_size': 'medium',
                 **action['context'],
             }
             return action
