@@ -110,6 +110,9 @@ export class CaptionPlugin extends Plugin {
         const figure = this.document.createElement("figure");
         block.before(figure);
         figure.append(image);
+        if (isEmptyBlock(block)) {
+            block.remove();
+        };
         // Add the caption component.
         const captionId = "" + Math.floor(Math.random() * Date.now());
         image.setAttribute("data-caption-id", captionId);
