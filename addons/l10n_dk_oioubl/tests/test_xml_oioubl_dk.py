@@ -182,7 +182,7 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
     @freeze_time('2017-01-01')
     def test_export_partner_fr_without_siret_should_raise_an_error(self):
         self.partner_c.company_registry = False
-        self.partner_c.invoice_edi_format = 'oioubl_201'  # default format for French partners is facturx
+        self.partner_c.invoice_edi_format = 'oioubl_201'
         with self.assertRaisesRegex(UserError, "The company registry is required for french partner:"):
             self.create_post_and_send_invoice(partner=self.partner_c)
 
