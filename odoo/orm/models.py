@@ -5555,7 +5555,7 @@ class BaseModel(metaclass=MetaModel):
         return self.with_context(allowed_company_ids=allowed_company_ids)
 
     @api.private
-    def with_context(self, *args, **kwargs) -> Self:
+    def with_context(self, ctx: dict[str, typing.Any] | None = None, /, **kwargs) -> Self:
         """ with_context([context][, **overrides]) -> Model
 
         Returns a new version of this recordset attached to an extended
@@ -5575,23 +5575,22 @@ class BaseModel(metaclass=MetaModel):
 
             The returned recordset has the same prefetch object as ``self``.
         """  # noqa: RST210
-        if (args and 'force_company' in args[0]) or 'force_company' in kwargs:
-            _logger.warning(
-                "Context key 'force_company' is no longer supported. "
+        context = dict(ctx if ctx is not None else self.env.context, **kwargs)
+        if 'force_company' in context:
+            warnings.warn(
+                "Since 19.0, context key 'force_company' is no longer supported. "
                 "Use with_company(company) instead.",
-                stack_info=True,
+                DeprecationWarning,
             )
-        if (args and 'company' in args[0]) or 'company' in kwargs:
-            _logger.warning(
+        if 'company' in context:
+            warnings.warn(
                 "Context key 'company' is not recommended, because "
                 "of its special meaning in @depends_context.",
-                stack_info=True,
             )
-        context = dict(args[0] if args else self._context, **kwargs)
-        if 'allowed_company_ids' not in context and 'allowed_company_ids' in self._context:
+        if 'allowed_company_ids' not in context and 'allowed_company_ids' in self.env.context:
             # Force 'allowed_company_ids' to be kept when context is overridden
             # without 'allowed_company_ids'
-            context['allowed_company_ids'] = self._context['allowed_company_ids']
+            context['allowed_company_ids'] = self.env.context['allowed_company_ids']
         return self.with_env(self.env(context=context))
 
     @api.private
