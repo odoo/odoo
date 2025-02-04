@@ -138,8 +138,6 @@ export class CaptionPlugin extends Plugin {
         if (captionText) {
             image.setAttribute("data-caption", captionText);
         }
-        // TODO: For accessibility, the caption should probably be in text
-        // rather than in an attribute and in an input element.
         this.dependencies.history.addStep();
     }
 
