@@ -1,4 +1,5 @@
 import { isTextNode } from "@html_editor/utils/dom_info";
+import { convertNumericToUnit } from "@html_editor/utils/formatting";
 import {
     onMounted,
     onWillDestroy,
@@ -362,15 +363,34 @@ export function useClickableBuilderComponent() {
 }
 export function useInputBuilderComponent({ defaultValue } = {}) {
     const comp = useComponent();
+    if (comp.props.saveUnit && !comp.props.unit) {
+        throw new Error("'unit' must be defined to use the 'saveUnit' props");
+    }
     const { getAllActions, callOperation } = getAllActionsAndOperations(comp);
     const getAction = comp.env.editor.shared.builderActions.getAction;
     const state = useDomState(getState);
     const applyOperation = comp.env.editor.shared.history.makePreviewableOperation((applySpecs) => {
         for (const applySpec of applySpecs) {
+            let actionValue = applySpec.actionValue;
+            if (comp.props.unit && comp.props.saveUnit) {
+                // Convert value from unit to saveUnit
+                actionValue = convertNumericToUnit(
+                    actionValue,
+                    comp.props.unit,
+                    comp.props.saveUnit
+                );
+            }
+            if (comp.props.unit) {
+                if (comp.props.saveUnit) {
+                    actionValue = actionValue + comp.props.saveUnit;
+                } else {
+                    actionValue = actionValue + comp.props.unit;
+                }
+            }
             applySpec.apply({
                 editingElement: applySpec.editingElement,
                 param: applySpec.actionParam,
-                value: `${applySpec.actionValue}${comp.props.unit || ""}`,
+                value: actionValue,
                 loadResult: applySpec.loadResult,
                 dependencyManager: comp.env.dependencyManager,
             });
@@ -389,6 +409,14 @@ export function useInputBuilderComponent({ defaultValue } = {}) {
         if (comp.props.unit) {
             // Remove the unit
             actionValue = actionValue && actionValue.match(/\d+/g)[0];
+            if (comp.props.saveUnit) {
+                // Convert value from saveUnit to unit
+                actionValue = convertNumericToUnit(
+                    actionValue,
+                    comp.props.saveUnit,
+                    comp.props.unit
+                );
+            }
         }
         return {
             value: actionValue,

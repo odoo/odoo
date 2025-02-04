@@ -12,6 +12,7 @@ export class BuilderNumberInput extends Component {
         ...basicContainerBuilderComponentProps,
         default: { type: Number, optional: true },
         unit: { type: String, optional: true },
+        saveUnit: { type: String, optional: true },
         step: { type: Number, optional: true },
     };
     static components = { BuilderComponent };

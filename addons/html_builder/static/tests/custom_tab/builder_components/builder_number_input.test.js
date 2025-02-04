@@ -255,3 +255,29 @@ test("input should step up or down from by the step prop", async () => {
 
     expect.verifySteps(["customAction 12", "customAction 10"]);
 });
+test("should handle save unit", async () => {
+    addActionOption({
+        customAction: {
+            getValue: ({ editingElement }) => editingElement.innerHTML,
+            apply: ({ editingElement, value }) => {
+                expect.step(`customAction ${value}`);
+                editingElement.innerHTML = value;
+            },
+        },
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderNumberInput action="'customAction'" unit="'s'" saveUnit="'ms'"/>`,
+    });
+    await setupWebsiteBuilder(`
+                <div class="test-options-target">5000ms</div>
+            `);
+    await contains(":iframe .test-options-target").click();
+    expect(".options-container").toBeDisplayed();
+    await click(".options-container input");
+    const input = queryFirst(".options-container input");
+    expect(input).toHaveValue("5");
+    await fill("7");
+    expect.verifySteps(["customAction 57000ms"]);
+    expect(":iframe .test-options-target").toHaveInnerHTML("57000ms");
+});
