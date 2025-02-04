@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="web.UploadProgressService">
+    <div t-if="state.isVisible" class="o_notification_manager o_upload_progress_toast">
+        <UploadProgressManager
+            files="state.files" 
+            uploadInProgress="state.uploadInProgress"
+            totalFilesCount="state.totalFilesCount"
+            multipleFiles="state.multipleFiles"
+            cancelAllUpload="cancelAllUpload.bind(this)"
+            abortUpload="abortUpload.bind(this)"
+        />
+    </div>
+    </t>
+
+    <t t-name="web.UploadProgressEditorService">
+        <UploadProgressManager
+            files="props.files"
+            uploadInProgress="props.uploadInProgress"
+            cancelAllUpload="cancelAllUpload.bind(this)"
+            abortUpload="abortUpload.bind(this)"
+        />
+    </t>
+</templates>

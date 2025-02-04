@@ -5,9 +5,11 @@ import {
     mockService,
     mountWithCleanup,
     onRpc,
+    patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-
+import { click } from "@odoo/hoot-dom";
 import { Deferred, animationFrame } from "@odoo/hoot-mock";
+import { UploadProgressService } from "@web/core/file_upload/upload_progress_service";
 import { FileUploadProgressContainer } from "@web/core/file_upload/file_upload_progress_container";
 import { FileUploadProgressRecord } from "@web/core/file_upload/file_upload_progress_record";
 import { useService } from "@web/core/utils/hooks";
@@ -124,4 +126,65 @@ test("upload updates on progress", async () => {
     fileUploadService.uploads[1].xhr.upload.dispatchEvent(progressEvent);
     await animationFrame();
     expect(".file_upload_progress_text_right").toHaveText("(350/500MB)");
+});
+
+test("uploading files using progress bar", async () => {
+    patchWithCleanup(UploadProgressService.prototype, {
+        abortUpload() {
+            super.abortUpload(...arguments);
+            expect.step("cancel upload");
+        },
+    });
+
+    await mountWithCleanup(Parent);
+    const FileUploadService = await getService("file_upload");
+    const mainFile = [
+        {
+            name: "test.jpg",
+            size: 72981,
+            type: "image/jpeg",
+        },
+    ];
+    FileUploadService.upload("/test/", mainFile);
+    await animationFrame();
+
+    const progressEvent = new Event("progress", { bubbles: true });
+    progressEvent.loaded = 250000000;
+    progressEvent.total = 500000000;
+    FileUploadService.uploads[1].xhr.upload.dispatchEvent(progressEvent);
+    await animationFrame();
+    expect(".o_we_progressbar").toHaveCount(1);
+    expect(".progress-time").toHaveCount(1);
+    await contains(`.o_notification_close`).click();
+    expect(".modal-header").toHaveText("Confirmation");
+    await contains(`.modal .btn-primary`).click();
+    await click(".o_we_progressbar .btn");
+    expect.verifySteps(["cancel upload"]);
+});
+
+test("hide the cancel button when uploading multiple files at once", async () => {
+    await mountWithCleanup(Parent);
+
+    const FileUploadService = await getService("file_upload");
+    const mainFile = [
+        {
+            name: "test1.jpg",
+            size: 72980,
+            type: "image/jpeg",
+        },
+        {
+            name: "test2.jpg",
+            size: 72977,
+            type: "image/jpeg",
+        },
+    ];
+    FileUploadService.upload("/test/", mainFile);
+    await animationFrame();
+
+    const progressEvent = new Event("progress", { bubbles: true });
+    progressEvent.loaded = 250000000;
+    progressEvent.total = 500000000;
+    FileUploadService.uploads[1].xhr.upload.dispatchEvent(progressEvent);
+    await animationFrame();
+    expect(".o_we_progressbar .btn").toHaveCount(0);
 });
