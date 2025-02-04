@@ -433,3 +433,13 @@ class FleetVehicle(models.Model):
                 'default_vehicle_ids': self.ids,
             }
         }
+
+    def action_open_odometer_report(self):
+        return {
+            'name': _('Odometer reporting'),
+            'type': 'ir.actions.act_window',
+            'target': 'current',
+            'view_mode': 'graph',
+            'res_model': 'fleet.vehicle.odometer.report',
+            'domain': [("vehicle_id", '=', self.id)]
+        }

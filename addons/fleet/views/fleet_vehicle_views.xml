@@ -106,6 +106,7 @@
                             <div class="o_row o_hr_narrow_field" invisible="vehicle_type != 'car'">
                                 <field name="odometer"/>
                                 <field name="odometer_unit"/>
+                                <button name="action_open_odometer_report" type="object" class="fa fa-line-chart me-1"/>
                             </div>
                             <field name="manager_id" domain="[('share', '=', False), ('company_id', '=', company_id)]" widget="many2one_avatar_user"/>
                             <field name="location"/>
