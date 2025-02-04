@@ -125,7 +125,7 @@ def force_demo(cr):
 
 
 def load_module_graph(cr, graph, status=None, perform_checks=True,
-                      skip_modules=None, report=None, models_to_check=None):
+                      skip_modules=None, report=None, models_to_check=None, update_module=False):
     """Migrates+Updates or Installs all module nodes from ``graph``
 
        :param cr:
@@ -136,6 +136,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
        :param skip_modules: optional list of module names (packages) which have previously been loaded and can be skipped
        :param report:
        :param set models_to_check:
+       :param bool update_mdoule:
        :return: list of modules that were installed or updated
     """
     if models_to_check is None:
@@ -166,7 +167,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
         module_cursor_query_count = cr.sql_log_count
         module_extra_query_count = odoo.sql_db.sql_counter
 
-        needs_update = (
+        needs_update = update_module and (
             hasattr(package, "init")
             or hasattr(package, "update")
             or package.state in ("to install", "to upgrade")
@@ -355,7 +356,7 @@ def _check_module_names(cr, module_names):
             _logger.warning('invalid module names, ignored: %s', ", ".join(incorrect_names))
 
 def load_marked_modules(cr, graph, states, force, progressdict, report,
-                        loaded_modules, perform_checks, models_to_check=None):
+                        loaded_modules, perform_checks, models_to_check=None, update_module=False):
     """Loads modules marked with ``states``, adding them to ``graph`` and
        ``loaded_modules`` and returns a list of installed/upgraded modules."""
 
@@ -372,7 +373,7 @@ def load_marked_modules(cr, graph, states, force, progressdict, report,
         _logger.debug('Updating graph with %d more modules', len(module_list))
         loaded, processed = load_module_graph(
             cr, graph, progressdict, report=report, skip_modules=loaded_modules,
-            perform_checks=perform_checks, models_to_check=models_to_check
+            perform_checks=perform_checks, models_to_check=models_to_check, update_module=update_module
         )
         processed_modules.extend(processed)
         loaded_modules.extend(loaded)
@@ -429,7 +430,7 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
         report = registry._assertion_report
         loaded_modules, processed_modules = load_module_graph(
             cr, graph, status, perform_checks=update_module,
-            report=report, models_to_check=models_to_check)
+            report=report, models_to_check=models_to_check, update_module=update_module)
 
         load_lang = tools.config.pop('load_language')
         if load_lang or update_module:
@@ -484,11 +485,11 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
             previously_processed = len(processed_modules)
             processed_modules += load_marked_modules(cr, graph,
                 ['installed', 'to upgrade', 'to remove'],
-                force, status, report, loaded_modules, update_module, models_to_check)
+                force, status, report, loaded_modules, update_module, models_to_check, update_module)
             if update_module:
                 processed_modules += load_marked_modules(cr, graph,
                     ['to install'], force, status, report,
-                    loaded_modules, update_module, models_to_check)
+                    loaded_modules, update_module, models_to_check, update_module)
 
         if update_module:
             # set up the registry without the patch for translated fields
@@ -520,8 +521,9 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
 
         # STEP 3.5: execute migration end-scripts
         migrations = odoo.modules.migration.MigrationManager(cr, graph)
-        for package in graph:
-            migrations.migrate_module(package, 'end')
+        if update_module:
+            for package in graph:
+                migrations.migrate_module(package, 'end')
 
         # check that new module dependencies have been properly installed after a migration/upgrade
         cr.execute("SELECT name from ir_module_module WHERE state IN ('to install', 'to upgrade')")
