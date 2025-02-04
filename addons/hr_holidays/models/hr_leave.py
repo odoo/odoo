@@ -727,13 +727,11 @@ class HrLeave(models.Model):
 
     @api.constrains('date_from', 'date_to', 'employee_id')
     def _check_date(self):
-        if self.env.context.get('leave_skip_date_check', False):
-            return
         for holiday in self:
             if holiday.dashboard_warning_message:
                 raise ValidationError(holiday.dashboard_warning_message)
 
-    @api.constrains('date_from', 'date_to', 'employee_id')
+    @api.constrains('date_from', 'date_to', 'employee_id', deferred=False)
     def _check_date_state(self):
         if self.env.context.get('leave_skip_state_check'):
             return

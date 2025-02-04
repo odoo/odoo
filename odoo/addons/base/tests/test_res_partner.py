@@ -1037,7 +1037,7 @@ class TestPartnerAddressCompany(TransactionCase):
             ResPartner.__class__,
             '_commercial_fields',
             lambda self: commercial_fields + ['barcode'],
-        ), patch.object(ResPartner.__class__, '_validate_fields'):  # skip _check_barcode_unicity
+        ):
             child_address = ResPartner.create({
                 'name': 'Contact',
                 'parent_id': test_partner_company.id,
@@ -1055,8 +1055,7 @@ class TestPartnerAddressCompany(TransactionCase):
         parent.with_company(alt_company).barcode = "BARCODE"
 
         with (
-            patch.object(ResPartner.__class__, '_commercial_fields', lambda self: ['barcode']),
-            patch.object(ResPartner.__class__, '_validate_fields'),  # skip _check_barcode_unicity
+            patch.object(ResPartner.__class__, '_commercial_fields', lambda self: ['barcode'])
         ):
             child = ResPartner.create({'name': "Child", 'parent_id': parent.id})
             self.assertFalse(child.barcode)

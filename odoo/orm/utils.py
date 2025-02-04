@@ -232,3 +232,15 @@ class Prefetch:
     relational = PrefetchRelational
     origin = OriginIds
     union = PrefetchUnion
+
+
+class Constrain:
+    __slots__ = ('method_name', 'deferred', 'triggers')
+
+    def __init__(self, method_name: str, deferred: bool, triggers: tuple[str, ...]):
+        self.method_name = method_name
+        self.deferred = deferred
+        self.triggers = triggers
+
+    def __str__(self) -> str:
+        return self.method_name

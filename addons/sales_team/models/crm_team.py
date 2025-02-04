@@ -224,9 +224,6 @@ class CrmTeam(models.Model):
     def write(self, vals):
         res = super().write(vals)
 
-        if vals.get('company_id'):  # Force re-check of memberships constraint for this team
-            self.crm_team_member_ids._constrains_membership()
-
         if vals.get('member_ids'):
             self._add_members_to_favorites()
         return res

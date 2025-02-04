@@ -320,8 +320,10 @@ class PaymentProvider(models.Model):
 
     @api.constrains('capture_manually')
     def _check_manual_capture_supported_by_payment_methods(self):
-        if self.capture_manually:
-            incompatible_pms = self.payment_method_ids.filtered(
+        for record in self:
+            if not record.capture_manually:
+                continue
+            incompatible_pms = record.payment_method_ids.filtered(
                 lambda method: method.active and method.support_manual_capture == 'none'
             )
             if incompatible_pms:

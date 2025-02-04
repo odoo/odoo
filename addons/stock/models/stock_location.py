@@ -577,6 +577,7 @@ class StockRoute(models.Model):
 
     @api.constrains('company_id')
     def _check_company_consistency(self):
+        # TODO: => check_company
         for route in self:
             if not route.company_id:
                 continue

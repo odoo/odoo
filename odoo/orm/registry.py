@@ -35,7 +35,7 @@ from odoo.tools.func import locked, reset_cached_properties
 from odoo.tools.lru import LRU
 from odoo.tools.misc import Collector, format_frame
 
-from .utils import SUPERUSER_ID
+from .utils import SUPERUSER_ID, Constrain
 from . import model_classes
 
 if typing.TYPE_CHECKING:
@@ -284,6 +284,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         # constraint checks
         self.not_null_fields: set[Field] = set()
+        # constraint dependencies
+        self.constrains_depends: Collector[str, Constrain] = Collector()  # {model_name: (constrains, ...)}
 
         # cache of methods get_field_trigger_tree() and is_modifying_relations()
         self._field_trigger_trees: dict[Field, TriggerTree] = {}
@@ -439,6 +441,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
             self.field_depends.clear()
             self.field_depends_context.clear()
+            self.constrains_depends.clear()
 
         else:
             # only mark impacted models for setup and invalidate related fields
@@ -458,6 +461,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     models_field_depends_done.add(model_cls)
                 elif not model_cls._abstract:
                     todo.extend(model_cls._fields.values())
+                    if not model_cls._abstract:
+                        self.constrains_depends[model_cls._name] = tuple(model_cls._constrains_depends(env))
 
             done = set()
             for field in todo:
@@ -501,6 +506,9 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 depends, depends_context = field.get_depends(model)
                 self.field_depends[field] = tuple(depends)
                 self.field_depends_context[field] = tuple(depends_context)
+
+            if not model._abstract:
+                self.constrains_depends[model._name] = tuple(model._constrains_depends(env))
 
         # clean the lazy_property again in case they are cached by another ongoing registry readonly request
         reset_cached_properties(self)
@@ -652,14 +660,20 @@ class Registry(Mapping[str, type["BaseModel"]]):
     def _field_triggers(self) -> defaultdict[Field, defaultdict[tuple[str, ...], OrderedSet[Field]]]:
         """ Return the field triggers, i.e., the inverse of field dependencies,
         as a dictionary like ``{field: {path: fields}}``, where ``field`` is a
-        dependency, ``path`` is a sequence of fields to inverse and ``fields``
-        is a collection of fields that depend on ``field``.
+        dependency, ``path`` is a sequence of fields/constraints to inverse and ``fields``
+        is a collection of fields/constraints (string) that depend on ``field``.
         """
         triggers: defaultdict[Field, defaultdict[tuple[str, ...], OrderedSet[Field]]] = defaultdict(lambda: defaultdict(OrderedSet))
 
         for Model in self.models.values():
             if Model._abstract:
                 continue
+
+            for constrain in self.constrains_depends[Model._name]:
+                for dependency in Model._resolve_constrains_depends(self, constrain):
+                    *path, dep_field = dependency
+                    triggers[dep_field][tuple(reversed(path))].add(constrain)
+
             for field in Model._fields.values():
                 try:
                     dependencies = list(field.resolve_depends(self))
@@ -685,6 +699,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 field.relational or self.field_inverses[field] or any(
                     dep.relational or self.field_inverses[dep]
                     for dep in self.get_dependent_fields(field)
+                    if not isinstance(dep, Constrain)  # filter out constraint method
                 )
             )
             self._is_modifying_relations[field] = result

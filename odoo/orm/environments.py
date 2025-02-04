@@ -15,7 +15,7 @@ from pprint import pformat
 from weakref import ref as weakref
 from zoneinfo import ZoneInfo
 
-from odoo.exceptions import AccessError, UserError, CacheMiss
+from odoo.exceptions import AccessError, MissingError, UserError, CacheMiss
 from odoo.sql_db import BaseCursor
 from odoo.tools import clean_context, frozendict, reset_cached_properties, OrderedSet, SQL
 from odoo.tools.translate import get_translation, get_translated_module, LazyGettext
@@ -23,7 +23,7 @@ from odoo.tools.misc import StackMap, SENTINEL
 
 from .registry import Registry
 from .query import Query
-from .utils import SUPERUSER_ID
+from .utils import SUPERUSER_ID, Constrain
 
 if typing.TYPE_CHECKING:
     from collections.abc import Collection, Iterable, Iterator, MutableMapping
@@ -391,7 +391,7 @@ class Environment(Mapping[str, "BaseModel"]):
         else:
             _logger.warning("Too many iterations for recomputing fields!")
 
-    def flush_all(self) -> None:
+    def flush_all(self, check_deferred_constrains=True) -> None:
         """ Flush all pending computations and updates to the database. """
         for _ in range(MAX_FIXPOINT_ITERATIONS):
             self._recompute_all()
@@ -402,6 +402,26 @@ class Environment(Mapping[str, "BaseModel"]):
                 self[model_name].flush_model()
         else:
             _logger.warning("Too many iterations for flushing fields!")
+        if check_deferred_constrains:
+            self.check_constrains(deferred=True)
+
+    def check_constrains(self, *, deferred: bool) -> None:
+        to_check = self.transaction.to_check
+        for model_name in list(to_check):
+            if model_name not in to_check:
+                # A constrains may flush and modify to_check
+                continue
+
+            constrains_dict = to_check[model_name]
+            for constrain in list(constrains_dict):
+                if constrain.deferred != deferred:
+                    continue
+                if constrain not in constrains_dict or not constrains_dict[constrain]:
+                    # A constrains may flush and modify to_check
+                    continue
+
+                records = self[model_name].browse(constrains_dict[constrain])
+                records._check_constrain(constrain)
 
     def is_protected(self, field: Field, record: BaseModel) -> bool:
         """ Return whether `record` is protected against invalidation or
@@ -409,9 +429,9 @@ class Environment(Mapping[str, "BaseModel"]):
         """
         return record.id in self._protected.get(field, ())
 
-    def protected(self, field: Field) -> BaseModel:
+    def protected(self, field: Field | str, record: BaseModel) -> BaseModel:
         """ Return the recordset for which ``field`` should not be invalidated or recomputed. """
-        return self[field.model_name].browse(self._protected.get(field, ()))
+        return record.browse(self._protected.get(field, ()))
 
     @typing.overload
     def protecting(self, what: Collection[Field], records: BaseModel) -> typing.ContextManager[None]:
@@ -470,6 +490,13 @@ class Environment(Mapping[str, "BaseModel"]):
             return
         assert field.store and field.compute, "Cannot add to recompute no-store or no-computed field"
         self.transaction.tocompute[field].update(records._ids)
+
+    def add_constrain_to_check(self, records: BaseModel, constrain: Constrain) -> None:
+        self.transaction.to_check[records._name][constrain].update(records._ids)
+
+    def remove_to_check(self, records: BaseModel) -> None:
+        for ids_to_check in self.transaction.to_check[records._name].values():
+            ids_to_check.difference_update(records._ids)
 
     def remove_to_compute(self, field: Field, records: BaseModel) -> None:
         """ Mark ``field`` as computed on ``records``. """
@@ -563,7 +590,7 @@ class Transaction:
         '_Transaction__file_open_tmp_paths', '_recent_envs', '_weak_envs',
         'access_read', 'cache', 'default_env',
         'field_data', 'field_data_patches', 'field_dirty',
-        'protected', 'registry', 'tocompute',
+        'protected', 'registry', 'tocompute', 'to_check',
     )
 
     def __init__(self, registry: Registry):
@@ -598,6 +625,8 @@ class Transaction:
         self.access_read = defaultdict[tuple, defaultdict[str, dict["IdType", bool]]](lambda: defaultdict(dict))
         # temporary directories (managed in odoo.tools.file_open_temporary_directory)
         self.__file_open_tmp_paths = []  # type: ignore # noqa: PLE0237
+        # python constrains to check before commit
+        self.to_check = defaultdict(lambda: defaultdict(OrderedSet))
 
     @property
     def envs(self):
@@ -707,6 +736,7 @@ class Transaction:
         self.field_dirty.clear()
         self.tocompute.clear()
         self.compactify_envs()
+        self.to_check.clear()
         for env in self.envs:
             env.cr.cache.clear()
             break  # all envs of the transaction share the same cursor

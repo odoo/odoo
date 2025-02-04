@@ -152,7 +152,8 @@ class TestAccess(common.TestSurveyCommon):
         self.env['survey.question'].create({'title': 'My Question', 'sequence': 1, 'survey_id': unrestricted_survey.id})
         restricted_to_self_survey = self.env['survey.survey'].create({'title': 'Test Survey Restricted to Self', 'restrict_user_ids': [[4, self.env.user.id]]})
         with self.assertRaises(ValidationError):
-            self.env['survey.survey'].with_user(self.env.user).create({
+            # Check that _check_survey_responsible_access
+            self.env['survey.survey'].sudo().create({
                 'title': 'Test Survey Restricted to Other', 'restrict_user_ids': [[4, restricted_to_other_survey.user_id.id]]})
 
         # Read: restricted to self or no one

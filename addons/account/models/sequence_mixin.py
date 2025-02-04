@@ -436,6 +436,8 @@ class SequenceMixin(models.AbstractModel):
         triggers = registry._field_triggers[self._fields[self._sequence_field]]
         for inverse_field, triggered_fields in triggers.items():
             for triggered_field in triggered_fields:
+                if not isinstance(triggered_field, fields.Field):
+                    continue
                 if not triggered_field.store or not triggered_field.compute:
                     continue
                 for field in registry.field_inverses[inverse_field[0]] if inverse_field else [None]:

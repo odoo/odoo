@@ -76,19 +76,19 @@ def attrsetter(attr, value) -> Decorator:
 
 
 @typing.overload
-def constrains(func: Callable[[BaseModel], Collection[str]], /) -> Decorator:
+def constrains(func: Callable[[BaseModel], Collection[str]], deferred: bool = True, /) -> Decorator:
     ...
 
 
 @typing.overload
-def constrains(*args: str) -> Decorator:
+def constrains(*args: str, deferred: bool = True) -> Decorator:
     ...
 
 
-def constrains(*args) -> Decorator:
+def constrains(*args, deferred=True) -> Decorator:
     """Decorate a constraint checker.
 
-    Each argument must be a field name used in the check::
+    Each argument must be a field name (or a field path) used in the check::
 
         @api.constrains('name', 'description')
         def _check_description(self):
@@ -96,31 +96,30 @@ def constrains(*args) -> Decorator:
                 if record.name == record.description:
                     raise ValidationError("Fields name and description must be different")
 
-    Invoked on the records on which one of the named fields has been modified.
+    Invoked on the records on which one of the named fields has been modified (write/create).
 
     Should raise :exc:`~odoo.exceptions.ValidationError` if the
     validation failed.
 
     .. warning::
 
-        ``@constrains`` only supports simple field names, dotted names
-        (fields of relational fields e.g. ``partner_id.customer``) are not
-        supported and will be ignored.
-
-        ``@constrains`` will be triggered only if the declared fields in the
-        decorated method are included in the ``create`` or ``write`` call.
-        It implies that fields not present in a view will not trigger a call
-        during a record creation. A override of ``create`` is necessary to make
-        sure a constraint will always be triggered (e.g. to test the absence of
-        value).
+        ``@constrains`` is only check at the end of transaction. Then it is possible to
+        have a inconsistent data during the current transaction and context won't be applied
+        when called. Moreover, if the constraint depends on database records that are not
+        the records constrained (e.g. constrains('one2many')), the invariant cannot be
+        guarantee since we use ``REPEATABLE READ`` transaction isolation.
 
     One may also pass a single function as argument.  In that case, the field
-    names are given by calling the function with a model instance.
+    names are given by calling the function with a model instance.  This function
+    shouldn't rely on any data from the database since it called during the initialization of
+    the registry.
 
     """
-    if args and callable(args[0]):
+    if not args:
+        raise ValueError('@constrains without arguments is pointless')
+    if callable(args[0]):
         args = args[0]
-    return attrsetter('_constrains', args)
+    return attrsetter('_constrains', (args, deferred))
 
 
 def ondelete(*, at_uninstall: bool) -> Decorator:

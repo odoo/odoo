@@ -530,7 +530,7 @@ class ResPartner(models.Model):
     def _compute_company_registry_placeholder(self):
         self.company_registry_placeholder = False
 
-    @api.constrains('parent_id')
+    @api.constrains('parent_id', deferred=False)  # _fields_sync doesn't manage cycle
     def _check_parent_id(self):
         if self._has_cycle():
             raise ValidationError(_('You cannot create recursive Partner hierarchies.'))
