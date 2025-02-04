@@ -607,10 +607,10 @@ class test_convert_import_data(TransactionCase):
 
     def test_date_fields_no_options(self):
         self.env['res.lang']._activate_lang('de_DE')
-        content = (  # noqa: UP012
-            'c,d,dt\n'
-            '"foo","15.10.2023","15.10.2023 15:15:15"\n'
-        ).encode()
+        content = (
+            b'c,d,dt\n'
+            b'"foo","15.10.2023","15.10.2023 15:15:15"\n'
+        )
         import_wizard = self.env['base_import.import'].with_context(lang='de_DE').create({
             'res_model': 'import.complex',
             'file': BinaryBytes(content),
@@ -633,6 +633,70 @@ class test_convert_import_data(TransactionCase):
             ['c', 'd', 'dt'],
             [],
             {**opts},
+        )
+
+        # if results empty, no errors
+        self.assertItemsEqual(results['messages'], [])
+
+    def test_date_fields_with_slash_ymd(self):
+        self.env['res.lang']._activate_lang('de_DE')
+        import_wizard = self.env['base_import.import'].with_context(lang='de_DE').create({
+            'res_model': 'import.complex',
+            'file': BinaryBytes(
+                b'c,d,create_date\n'
+                b'"foo","2023/01/01","2023.01.01 15:15:15"\n',
+            ),
+            'file_type': 'text/csv',
+        })
+
+        opts = {
+            'date_format': '',
+            'datetime_format': '',
+            'quoting': '"',
+            'separator': ',',
+            'float_decimal_separator': '.',
+            'float_thousand_separator': ',',
+            'has_headers': True
+        }
+        result_parse = import_wizard.parse_preview({**opts})
+
+        opts = result_parse['options']
+        results = import_wizard.execute_import(
+            ['c', 'd', 'create_date'],
+            [],
+            {**opts}
+        )
+
+        # if results empty, no errors
+        self.assertItemsEqual(results['messages'], [])
+
+    def test_date_fields_with_slash_dmy(self):
+        self.env['res.lang']._activate_lang('de_DE')
+        import_wizard = self.env['base_import.import'].with_context(lang='de_DE').create({
+            'res_model': 'import.complex',
+            'file': BinaryBytes(
+                b'c,d,create_date\n'
+                b'"foo","01/01/2023","2023.01.01 15:15:15"\n',
+            ),
+            'file_type': 'text/csv',
+        })
+
+        opts = {
+            'date_format': '',
+            'datetime_format': '',
+            'quoting': '"',
+            'separator': ',',
+            'float_decimal_separator': '.',
+            'float_thousand_separator': ',',
+            'has_headers': True
+        }
+        result_parse = import_wizard.parse_preview({**opts})
+
+        opts = result_parse['options']
+        results = import_wizard.execute_import(
+            ['c', 'd', 'create_date'],
+            [],
+            {**opts}
         )
 
         # if results empty, no errors
