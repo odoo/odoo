@@ -114,7 +114,7 @@ class AccountMoveSend(models.AbstractModel):
         # EXTENDS 'account'
         if method == 'peppol':
             partner = move.partner_id.commercial_partner_id.with_company(move.company_id)
-            invoice_edi_format = partner.invoice_edi_format or 'ubl_bis3'  # we fallback to bis3 if partner is not set
+            invoice_edi_format = partner._get_peppol_edi_format()
             return all([
                 self._is_applicable_to_company(method, move.company_id),
                 self.env['res.partner']._get_peppol_verification_state(partner.peppol_endpoint, partner.peppol_eas, invoice_edi_format) == 'valid',
