@@ -9,9 +9,10 @@ const { isMatrix } = helpers;
 /**
  * @param {import("@odoo/o-spreadsheet").CellPosition} position
  * @param {import("@spreadsheet").SpreadsheetChildEnv} env
+ * @param {boolean} newWindow
  * @returns {Promise<void>}
  */
-export const SEE_RECORD_LIST = async (position, env) => {
+export const SEE_RECORD_LIST = async (position, env, newWindow) => {
     const cell = env.model.getters.getCorrespondingFormulaCell(position);
     const sheetId = position.sheetId;
     if (!cell || !cell.isFormula) {
@@ -49,7 +50,7 @@ export const SEE_RECORD_LIST = async (position, env) => {
             views: [[false, "form"]],
             context,
         },
-        { viewType: "form" }
+        { viewType: "form", newWindow }
     );
 };
 
