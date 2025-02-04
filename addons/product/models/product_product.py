@@ -239,9 +239,10 @@ class ProductProduct(models.Model):
         """ With GS1 nomenclature, products and packagings use the same pattern. Therefore, we need
         to ensure the uniqueness between products' barcodes and packagings' ones"""
         # Barcodes should only be unique within a company
-        for company_id, barcodes_within_company in self._get_barcodes_by_company():
-            self._check_duplicated_product_barcodes(barcodes_within_company, company_id)
-            self._check_duplicated_packaging_barcodes(barcodes_within_company, company_id)
+        self_ctx = self.with_context(skip_preprocess_gs1=True)
+        for company_id, barcodes_within_company in self_ctx._get_barcodes_by_company():
+            self_ctx._check_duplicated_product_barcodes(barcodes_within_company, company_id)
+            self_ctx._check_duplicated_packaging_barcodes(barcodes_within_company, company_id)
 
     @api.constrains('company_id')
     def _check_company_id(self):
