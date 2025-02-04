@@ -115,7 +115,7 @@ class Environment(Mapping[str, "BaseModel"]):
     def __call__(
         self,
         cr: BaseCursor | None = None,
-        user: int | BaseModel | None = None,
+        user: IdType | BaseModel | None = None,
         context: dict | None = None,
         su: bool | None = None,
     ) -> Environment:
@@ -131,11 +131,19 @@ class Environment(Mapping[str, "BaseModel"]):
         :rtype: :class:`Environment`
         """
         cr = self.cr if cr is None else cr
-        uid = self.uid if user is None else int(user)
+        uid = self.uid if user is None else int(user)  # type: ignore
         if context is None:
             context = clean_context(self.context) if su and not self.su else self.context
         su = (user is None and self.su) if su is None else su
         return Environment(cr, uid, context, su)
+
+    @typing.overload
+    def ref(self, xml_id: str, raise_if_not_found: typing.Literal[True] = True) -> BaseModel:
+        ...
+
+    @typing.overload
+    def ref(self, xml_id: str, raise_if_not_found: typing.Literal[False]) -> BaseModel | None:
+        ...
 
     def ref(self, xml_id: str, raise_if_not_found: bool = True) -> BaseModel | None:
         """ Return the record corresponding to the given ``xml_id``.
