@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import typing
 from operator import attrgetter
 from xmlrpc.client import MAXINT  # TODO change this
 
@@ -5,6 +8,9 @@ from odoo.tools import float_compare, float_is_zero, float_repr, float_round
 from odoo.tools.misc import SENTINEL, Sentinel
 
 from .fields import Field
+
+if typing.TYPE_CHECKING:
+    from .types import BaseModel, Environment
 
 
 class Integer(Field[int]):
@@ -24,11 +30,11 @@ class Integer(Field[int]):
 
     def convert_to_column(self, value, record, values=None, validate=True):
         return int(value or 0)
-    
+
     def convert_to_column_update(self, value, record):
-         if self.company_dependent:
-             value = {k: int(v or 0) for k, v in value.items()}
-         return super().convert_to_column_update(value, record)
+        if self.company_dependent:
+            value = {k: int(v or 0) for k, v in value.items()}
+        return super().convert_to_column_update(value, record)
 
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, dict):
@@ -98,12 +104,12 @@ class Float(Field[float]):
     """
 
     type = 'float'
-    _digits = None                      # digits argument passed to class initializer
+    _digits: str | tuple[int, int] | None = None  # digits argument passed to class initializer
     falsy_value = 0.0
     aggregator = 'sum'
 
-    def __init__(self, string: str | Sentinel = SENTINEL, digits: str | tuple[int, int] | None | Sentinel = SENTINEL, **kwargs):
-        super(Float, self).__init__(string=string, _digits=digits, **kwargs)
+    def __init__(self, string: str | Sentinel = SENTINEL, digits: str | tuple[int, int] | Sentinel | None = SENTINEL, **kwargs):
+        super().__init__(string=string, _digits=digits, **kwargs)
 
     @property
     def _column_type(self):
@@ -115,7 +121,7 @@ class Float(Field[float]):
         return ('numeric', 'numeric') if self._digits is not None else \
                ('float8', 'double precision')
 
-    def get_digits(self, env):
+    def get_digits(self, env: Environment) -> tuple[int, int] | None:
         if isinstance(self._digits, str):
             precision = env['decimal.precision'].precision_get(self._digits)
             return 16, precision
@@ -124,23 +130,23 @@ class Float(Field[float]):
 
     _related__digits = property(attrgetter('_digits'))
 
-    def _description_digits(self, env):
+    def _description_digits(self, env: Environment) -> tuple[int, int] | None:
         return self.get_digits(env)
 
     def convert_to_column(self, value, record, values=None, validate=True):
         value_float = value = float(value or 0.0)
         if digits := self.get_digits(record.env):
-            precision, scale = digits
+            _precision, scale = digits
             value_float = float_round(value, precision_digits=scale)
             value = float_repr(value_float, precision_digits=scale)
         if self.company_dependent:
             return value_float
         return value
-    
+
     def convert_to_column_update(self, value, record):
-         if self.company_dependent:
-             value = {k: float(v or 0.0) for k, v in value.items()}
-         return super().convert_to_column_update(value, record)
+        if self.company_dependent:
+            value = {k: float(v or 0.0) for k, v in value.items()}
+        return super().convert_to_column_update(value, record)
 
     def convert_to_cache(self, value, record, validate=True):
         # apply rounding here, otherwise value in cache may be wrong!
@@ -176,16 +182,16 @@ class Monetary(Field[float]):
     _column_type = ('numeric', 'numeric')
     falsy_value = 0.0
 
-    currency_field = None
+    currency_field: Field | None = None
     aggregator = 'sum'
 
     def __init__(self, string: str | Sentinel = SENTINEL, currency_field: str | Sentinel = SENTINEL, **kwargs):
-        super(Monetary, self).__init__(string=string, currency_field=currency_field, **kwargs)
+        super().__init__(string=string, currency_field=currency_field, **kwargs)
 
-    def _description_currency_field(self, env):
+    def _description_currency_field(self, env: Environment) -> str | None:
         return self.get_currency_field(env[self.model_name])
 
-    def get_currency_field(self, model):
+    def get_currency_field(self, model: BaseModel) -> str | None:
         """ Return the name of the currency field. """
         return self.currency_field or (
             'currency_id' if 'currency_id' in model._fields else

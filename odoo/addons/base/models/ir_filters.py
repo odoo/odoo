@@ -114,10 +114,8 @@ class IrFilters(models.Model):
         )
 
     @api.model
-    def _check_global_default(self, vals, matching_filters):
-        """ _check_global_default(dict, list(dict), dict) -> None
-
-        Checks if there is a global default for the model_id requested.
+    def _check_global_default(self, vals: dict, matching_filters: list[dict]) -> None:
+        """Checks if there is a global default for the model_id requested.
 
         If there is, and the default is different than the record being written
         (-> we're not updating the current global default), raise an error

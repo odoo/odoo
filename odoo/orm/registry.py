@@ -231,7 +231,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         self.field_inverses: Collector[Field, Field] = Collector()
 
         # company dependent
-        self.many2one_company_dependents: Collector[str, tuple[Field, ...]] = Collector()  # {model_name: (field1, field2, ...)}
+        self.many2one_company_dependents: Collector[str, Field] = Collector()  # {model_name: (field1, field2, ...)}
 
         # constraint checks
         self.not_null_fields: set[Field] = set()
