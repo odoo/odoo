@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import os
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools.mimetypes import guess_mimetype
@@ -56,9 +58,11 @@ class IrAttachment(models.Model):
             invoice_pdf_attachments.res_field = False
             today = format_date(self.env, fields.Date.context_today(self))
             for attachment in invoice_pdf_attachments:
+                attachment_name, attachment_extension = os.path.splitext(attachment.name)
                 attachment.name = _(
-                    '%(attachment_name)s (detached by %(user)s on %(date)s)',
-                    attachment_name=attachment.name,
+                    '%(attachment_name)s (detached by %(user)s on %(date)s)%(attachment_extension)s',
+                    attachment_name=attachment_name,
+                    attachment_extension=attachment_extension,
                     user=self.env.user.name,
                     date=today,
                 )
