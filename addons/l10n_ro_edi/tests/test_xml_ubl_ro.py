@@ -39,6 +39,7 @@ class TestUBLRO(TestUBLCommon):
             'street': "Rolling Roast, 88",
             'bank_ids': [(0, 0, {'acc_number': 'RO98RNCB1234567890123456'})],
             'ref': 'ref_partner_a',
+            'invoice_edi_format': 'ciusro',
         })
 
         cls.tax_19 = cls.env['account.tax'].create({
