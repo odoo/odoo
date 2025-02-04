@@ -106,18 +106,6 @@ class IrActionsReport(models.Model):
 
     @api.model
     def get_pdf_engine_state(self, engine_name=None):
-        """
-        Returns the default functional engine, or the requested engine status.
-
-        The state of the pdf engine: install, ok, upgrade, workers or broken.
-        * install: Starting state.
-        * upgrade: The binary is an older version (< 0.12.0).
-        * ok: A binary was found with a recent version (>= 0.12.0).
-        * workers: Not enough workers found to perform the pdf rendering process (< 2 workers).
-        * broken: A binary was found but not responding.
-
-        :return: engine_name, state
-        """
         if not engine_name or engine_name == 'wkhtmltopdf':
             return 'wkhtmltopdf', wkhtmltopdf_state
         return super().get_pdf_engine_state(engine_name)

@@ -3,6 +3,7 @@
 import io
 import json
 import logging
+import typing
 from ast import literal_eval
 from collections import OrderedDict
 from collections.abc import Iterable
@@ -418,11 +419,20 @@ class IrActionsReport(models.Model):
         return result_stream
 
     @api.model
-    def get_pdf_engine_state(self, engine_name=None):
+    def get_pdf_engine_state(self, engine_name=None) -> tuple[str, typing.Literal['ok', 'upgrade', 'workers', 'broken', 'install']]:
         """
-        Returns the default functional engine, or the requested engine status
+        Returns the default functional engine, or the requested engine status.
+
+        The state of the pdf engine: install, ok, upgrade, workers or broken.
+        * ok: A binary was found with a recent version.
+        * upgrade: The binary is an older version.
+        * workers: Not enough workers found to perform the pdf rendering process (< 2 workers).
+        * broken: A binary was found but not responding.
+        * install: Starting state.
+
+        :return: engine_name, state
         """
-        raise NotImplementedError()
+        return engine_name, 'install'
 
     @api.model
     def _get_render_pdf_engine(self, engine_name=None):
@@ -430,25 +440,40 @@ class IrActionsReport(models.Model):
         Return the callable method "_run_pdf_engine_*"
         depending on the installed libraries and default values.
         """
-        default_engine, default_state = self.get_pdf_engine_state()
-        if default_state == 'install':
+        engine, engine_state = self.get_pdf_engine_state(engine_name)
+        if engine_state == 'ok':
+            return getattr(self, f'_run_{engine}')
+        elif engine_state == 'upgrade':
+            _logger.warning(f"The engine {engine!r} binary is an older version.")
+            return getattr(self, f'_run_{engine}')
+        elif engine_state == 'workers':
+            _logger.warning(f"Not enough workers found to perform the PDF rendering process with {engine!r}.")
+        elif engine_state == 'broken':
+            _logger.warning(f"A binary was found but not responding to the PDF engine {engine!r}.")
+        else:
             # pdf engine is not installed
             # the call should be catched before (cf /report/check_pdf_engine) but
             # if get_pdf is called manually (email template), the check could be
             # bypassed
-            raise UserError(_("Unable to find '%s' on this system. The PDF can not be created.", default_engine))
+            _logger.warning(f"Unable to find {engine!r} on this system.")
 
-        engine, engine_state = self.get_pdf_engine_state(engine_name) if engine_name else (default_engine, default_state)
+        engine, engine_state = self.get_pdf_engine_state()
+        if not engine_name or engine == engine_name:
+            engine_name = engine
+            pass
+        elif engine_state == 'ok':
+            return getattr(self, f'_run_{engine}')
+        elif engine_state == 'upgrade':
+            _logger.warning(f"The engine {engine!r} binary is an older version.")
+            return getattr(self, f'_run_{engine}')
+        elif engine_state == 'workers':
+            _logger.warning(f"Not enough workers found to perform the PDF rendering process with {engine!r}.")
+        elif engine_state == 'broken':
+            _logger.warning(f"A binary was found but not responding to the PDF engine {engine!r}.")
+        else:
+            _logger.warning(f"Unable to find {engine!r} on this system.")
 
-        if engine_state == 'install':
-            # pdf engine is not installed
-            # the call should be catched before (cf /report/check_pdf_engine) but
-            # if get_pdf is called manually (email template), the check could be
-            # bypassed
-            _logger.warning(f"Unable to find {engine!r} on this system. The PDF will be created with {default_engine!r}.")
-            engine = default_engine
-
-        return getattr(self, f'_run_{engine}')
+        raise UserError(_("Unable to find '%s' on this system. The PDF can not be created.", engine_name))
 
     def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
         if not data:

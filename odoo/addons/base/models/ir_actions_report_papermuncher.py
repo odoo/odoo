@@ -30,24 +30,9 @@ class IrActionsReport(models.Model):
 
     @api.model
     def get_pdf_engine_state(self, engine_name=None):
-        """
-        Returns the default functional engine, or the requested engine status.
-
-        The state of the pdf engine: install, ok, upgrade, workers or broken.
-        * install: Starting state.
-        * ok: The engine is ready.
-        * broken: A binary was found but not responding.
-
-        :return: engine_name, state
-        """
         if engine_name == 'papermuncher':
             return 'papermuncher', papermuncher_state
-        engine, state = super().get_pdf_engine_state(engine_name)
-        if engine_name or state == 'ok':
-            return engine, state
-        if papermuncher_state == 'ok':
-            return 'papermuncher', 'ok'
-        return engine, state
+        return super().get_pdf_engine_state(engine_name)
 
     @api.model
     def _run_papermuncher(
