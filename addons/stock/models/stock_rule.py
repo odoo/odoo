@@ -318,7 +318,7 @@ class StockRule(models.Model):
         partner = self.partner_address_id or (values.get('group_id', False) and values['group_id'].partner_id)
         if partner:
             product_id = product_id.with_context(lang=partner.lang or self.env.user.lang)
-        picking_description = product_id._get_description(self.picking_type_id)
+        picking_description = ''
         if values.get('product_description_variants'):
             picking_description += values['product_description_variants']
         # it is possible that we've already got some move done, so check for the done qty and create

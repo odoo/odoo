@@ -243,11 +243,11 @@ class ProductProduct(models.Model):
         """
         self.ensure_one()
         picking_code = picking_type_id.code
-        description = html2plaintext(self.description) if not is_html_empty(self.description) else self.name
+        description = html2plaintext(self.description) if not is_html_empty(self.description) else ''
         if picking_code == 'incoming':
             return self.description_pickingin or description
         if picking_code == 'outgoing':
-            return self.description_pickingout or self.name
+            return self.description_pickingout or description
         if picking_code == 'internal':
             return self.description_picking or description
         return description
