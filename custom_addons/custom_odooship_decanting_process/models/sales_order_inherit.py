@@ -18,6 +18,9 @@ class SaleOrder(models.Model):
         readonly=True,
         store=True
     )
+    service_type = fields.Char(string='Service Type')
+    packaging_source_type = fields.Char(string='Packaging Source Type')
+    post_category = fields.Char(string='Post Category')
 
     @api.model
     def create(self, vals):

@@ -7,7 +7,7 @@ import json
 import requests
 import xml.etree.ElementTree as ET
 import urllib
-import pyodbc
+
 
 _logger = logging.getLogger(__name__)
 
@@ -17,17 +17,36 @@ class PackDeliveryReceiptWizard(models.TransientModel):
     _description = 'Pack Delivery Receipt Wizard'
 
     # Field to store the scanned PC container barcode
-    pc_container_code_id = fields.Many2one('pc.container.barcode.configuration', string='Scan Barcode',
-                                           track_visibility="always", required=True)
+    pc_container_code_id = fields.Many2one(
+        'pc.container.barcode.configuration', string='Scan Barcode', required=True
+    )
     warehouse_id = fields.Many2one(related='pc_container_code_id.warehouse_id', store=True)
     site_code_id = fields.Many2one(related='pc_container_code_id.site_code_id', store=True)
     picking_ids = fields.Many2many('stock.picking', string='Pick Numbers', store=True)
     line_ids = fields.One2many('custom.pack.app.wizard.line', 'wizard_id', string='Product Lines')
     pack_bench_id = fields.Many2one('pack.bench.configuration', string='Pack Bench')
-    package_box_type_id = fields.Many2one('package.box.configuration', string='Package Box Type',
-                                          help="Select packaging box for single picking.")
+    package_box_type_id = fields.Many2one(
+        'package.box.configuration', string='Package Box Type', help="Select packaging box for single picking."
+    )
     show_package_box_in_lines = fields.Boolean(compute="_compute_show_package_box_in_lines", store=True)
     picking_id = fields.Many2one('stock.picking', string='Select Receipt')
+    tenant_code_id = fields.Many2one(
+        'tenant.code.configuration',
+        string='Tenant Code',
+        compute='_compute_tenant_code',
+        store=True
+    )
+
+    @api.depends('picking_ids')
+    def _compute_tenant_code(self):
+        """
+        Fetches tenant_code_id from the first picking if multiple pickings exist.
+        """
+        for wizard in self:
+            if wizard.picking_ids:
+                wizard.tenant_code_id = wizard.picking_ids[0].tenant_code_id
+            else:
+                wizard.tenant_code_id = False
 
 
     @api.onchange('pc_container_code_id')
@@ -40,11 +59,12 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 ('move_ids_without_package.pc_container_code', '=', self.pc_container_code_id.name),
                 ('state', '=', 'done')
             ])
-            self._auto_select_package_box_type()
+
             if not pickings:
                 raise ValidationError(_("No completed pickings found for this PC container code."))
 
             self.picking_ids = [(6, 0, pickings.ids)]
+            self._auto_select_package_box_type()
 
 
     @api.depends('picking_ids')
@@ -62,8 +82,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         """
         if len(self.picking_ids) == 1:
             picking = self.picking_ids[0]
-            incoterm_location = picking.sale_id.incoterm_location if picking.sale_id else None
-
+            incoterm_location = picking.sale_id.packaging_source_type
             if incoterm_location:
                 package_box = self.env['package.box.configuration'].search(
                     [('name', '=', incoterm_location)], limit=1)
@@ -73,7 +92,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         else:  # Multiple picks scenario
             for line in self.line_ids:
                 if line.picking_id.sale_id:
-                    incoterm_location = line.picking_id.sale_id.incoterm_location
+                    incoterm_location = line.picking_id.sale_id.packaging_source_type
                     package_box = self.env['package.box.configuration'].search(
                         [('name', '=', incoterm_location)], limit=1)
                     if package_box:
@@ -92,6 +111,11 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         for line in self.line_ids:
             if not line.product_id:
                 raise ValidationError(_("Please ensure all line items have a product selected before proceeding."))
+
+            if not line.weight or line.weight <= 0.0:
+                raise ValidationError(_(
+                    "The product '%s' (SKU: %s) does not have a weight. Please add weight before proceeding."
+                ) % (line.product_id.name, line.product_id.default_code or "N/A"))
 
         active_id = self.env.context.get('active_id')
         pack_app_order = self.env['custom.pack.app'].browse(active_id)
@@ -150,8 +174,66 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         # Send payloads to API
         for payload in payloads:
             self.send_payload_to_api(api_url, payload)
+        self.release_container()
 
         return {'type': 'ir.actions.act_window_close'}
+
+    def release_container(self):
+        """ Releases the container only if packing was successful. """
+        container_code = self.pc_container_code_id.name
+        warehouse_code = self.warehouse_id.name
+        owner_code = self.tenant_code_id.name if self.tenant_code_id else ""
+
+        if not container_code or not warehouse_code or not owner_code:
+            _logger.error("Missing container, warehouse, or owner code.")
+            raise UserError(_("Missing required data to release container."))
+
+        # Fetch URLs dynamically from system parameters based on Warehouse Code
+        dev_url = self.env['ir.config_parameter'].sudo().get_param(f'{warehouse_code.lower()}_geekplus_dev_url')
+        prod_url = self.env['ir.config_parameter'].sudo().get_param(f'{warehouse_code.lower()}_geekplus_prod_url')
+
+        if not dev_url or not prod_url:
+            _logger.error(f"Missing API URL configuration for warehouse {warehouse_code}")
+            raise UserError(_("API URL configuration is missing for warehouse: %s") % warehouse_code)
+
+        # Select the correct API URL based on the environment
+        is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env') == 'True'
+        geek_api_url = prod_url if is_production else dev_url
+
+        full_api_url = f"{geek_api_url}?warehouse_code={warehouse_code}&owner_code={owner_code}"
+
+        _logger.info(f"Releasing container {container_code} via API: {full_api_url}")
+
+        payload = {
+            "header": {
+                "warehouse_code": warehouse_code,
+                "user_id": "admin",
+                "user_key": "Geekplus_2020"
+            },
+            "body": {
+                "container_amount": 1,
+                "container_list": [
+                    {
+                        "container_code": container_code,
+                        "operation_type": 1,
+                        "type": 10
+                    }
+                ]
+            }
+        }
+
+        _logger.info(f"Container Release Payload: {json.dumps(payload, indent=4)}")
+
+        try:
+            response = requests.post(full_api_url, headers={'Content-Type': 'application/json'},
+                                     data=json.dumps(payload))
+            response.raise_for_status()
+            _logger.info(f"Container {container_code} successfully released.")
+            return True
+
+        except requests.exceptions.RequestException as e:
+            _logger.error(f"Error releasing container {container_code}: {str(e)}")
+            raise UserError(_("Error releasing container: %s") % str(e))
 
     def process_single_pick(self):
         """
@@ -163,7 +245,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
         for line in self.line_ids:
             sku_code = line.product_id.default_code
-            product_weight = line.product_id.weight or 1  # Default weight to 1 if not defined
+            product_weight = line.weight  # Default weight to 1 if not defined
 
             if sku_code not in grouped_lines:
                 grouped_lines[sku_code] = {
@@ -185,9 +267,10 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     "width": line.package_box_type_id.width or "NA",
                     "height": line.package_box_type_id.height or "NA",
                     "sales_order_number": line.picking_id.sale_id.name if line.picking_id.sale_id else "N/A",
-                    "sales_order_carrier": line.picking_id.sale_id.carrier if line.picking_id.sale_id else "N/A",
+                    "sales_order_carrier": line.picking_id.sale_id.service_type if line.picking_id.sale_id else "N/A",
                     "sales_order_origin": line.picking_id.sale_id.origin if line.picking_id.sale_id else "N/A",
-                    "incoterm_location": line.picking_id.sale_id.incoterm_location if line.picking_id.sale_id else "N/A",
+                    "incoterm_location": line.incoterm_location or "N/A",
+                    "status": line.picking_id.sale_id.post_category if line.picking_id.sale_id else "N/A",
                 }
 
             grouped_lines[sku_code]["quantity"] += line.quantity
@@ -216,7 +299,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             product_lines = []
 
             for line in lines:
-                product_weight = line.product_id.weight or 1  # Default weight to 1 if not defined
+                product_weight = line.weight  # Default weight to 1 if not defined
 
                 product_lines.append({
                     "sku_code": line.product_id.default_code,
@@ -236,9 +319,10 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     "width": line.package_box_type_id.width or "NA",
                     "height": line.package_box_type_id.height or "NA",
                     "sales_order_number": line.picking_id.sale_id.name if line.picking_id.sale_id else "N/A",
-                    "sales_order_carrier": line.picking_id.sale_id.carrier if line.picking_id.sale_id else "N/A",
+                    "sales_order_carrier": line.picking_id.sale_id.service_type if line.picking_id.sale_id else "N/A",
                     "sales_order_origin": line.picking_id.sale_id.origin if line.picking_id.sale_id else "N/A",
-                    "incoterm_location": line.picking_id.sale_id.incoterm_location if line.picking_id.sale_id else "N/A",
+                    "incoterm_location": line.incoterm_location or "N/A",
+                    "status": line.picking_id.sale_id.post_category if line.picking_id.sale_id else "N/A",
                 })
 
             payloads.append({
@@ -253,6 +337,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             })
 
         return payloads
+
 
     def send_payload_to_api(self, api_url, payload):
         """
@@ -276,6 +361,7 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
 
     wizard_id = fields.Many2one('custom.pack.app.wizard', string='Wizard Reference', required=True)
     product_id = fields.Many2one('product.product', string='Product', required=True, domain="[('id', 'in', available_product_ids)]")
+    default_code = fields.Char(related='product_id.default_code', string='SKU Code')
     available_quantity = fields.Float(string='Expected Quantity', compute='_compute_available_quantity', store=True)
     remaining_quantity = fields.Float(string='Remaining Quantity', compute='_compute_remaining_quantity', store=True)
     quantity = fields.Float(string='Quantity', required=True)
@@ -287,7 +373,8 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
     package_box_type_id = fields.Many2one('package.box.configuration', string='Package Box Type',
                                           help="Select packaging box for each product line.")
     sale_order_id = fields.Many2one(related='picking_id.sale_id', string='Sale Order')
-    incoterm_location = fields.Char(related='sale_order_id.incoterm_location', string='Incoterm location')
+    incoterm_location = fields.Char(related='sale_order_id.packaging_source_type', string='Incoterm location')
+    weight = fields.Float(string="Weight", help="If product weight is missing, enter weight here.", required=True)
 
 
     @api.depends('wizard_id.picking_ids', 'product_id')
@@ -356,10 +443,45 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
     @api.onchange('product_id')
     def _onchange_product_id(self):
         """
-        Automatically add quantity as 1 each time the product is scanned.
+        When a product is selected:
+        - If weight exists on the product, fetch and assign it.
+        - If weight does NOT exist, prompt the user to enter it manually.
+        - Once entered, update the product's weight permanently for future use.
         """
         if self.product_id:
-            self.quantity = 1  # Set default quantity to 1 per scan
-            self.wizard_id._auto_select_package_box_type()
+            self.quantity = 1  # Set default quantity per scan
 
+            if not self.product_id.weight or self.product_id.weight <= 0.0:
+                 return {
+                    'warning': {
+                        'title': _("Missing Weight"),
+                        'message': _("The selected product '%s' does not have a weight. "
+                                     "Please enter the weight manually.") % self.product_id.name
+                    }
+                }
+            else:
+                # If weight exists, fetch it from the product and assign it
+                self.weight = self.product_id.weight
+
+        self.wizard_id._auto_select_package_box_type()
+
+    @api.onchange('weight')
+    def _onchange_weight(self):
+        """
+        When the user manually enters a weight:
+        - Validate the weight input (must be greater than 0).
+        - Save it to the product record so it is available next time.
+        """
+        if self.product_id:
+            if self.weight and self.weight > 0:
+                if self.product_id and (not self.product_id.weight or self.product_id.weight == 0.0):
+                    self.product_id.weight = self.weight  # Update the product record
+                    _logger.info(f"Updated weight for product {self.product_id.name} to {self.weight}")
+            elif self.weight == 0:
+                return {
+                    'warning': {
+                        'title': _("Invalid Weight"),
+                        'message': _("Weight must be greater than 0. Please enter a valid weight."),
+                    }
+                }
 
