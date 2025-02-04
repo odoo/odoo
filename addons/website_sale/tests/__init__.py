@@ -4,7 +4,6 @@ from . import test_address
 from . import test_common
 from . import test_customize
 from . import test_delivery_controller
-from . import test_delivery_express_checkout_flows
 from . import test_delivery_ui
 from . import test_ecommerce_access
 from . import test_express_checkout_flows

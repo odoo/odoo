@@ -1528,12 +1528,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :return None:
         """
         country = request.env["res.country"].search([
-            ('code', '=', address.pop('country'))
+            ('code', '=', address.pop('country')),
         ], limit=1)
-        state = request.env["res.country.state"].search([
-            ('code', '=', address.pop('state', ''))
-        ], limit=1)
-        address.update(country_id=country.id, state_id=state.id)
+        state_id = False
+        if state_code := address.pop('state', False):
+            state_id = country.state_ids.filtered(lambda state: state.code == state_code).id
+        address.update(country_id=country.id, state_id=state_id)
 
     @route('/shop/update_address', type='jsonrpc', auth='public', website=True)
     def shop_update_address(self, partner_id, address_type='billing', **kw):
