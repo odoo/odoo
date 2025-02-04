@@ -399,6 +399,14 @@ export class PosStore extends WithLazyGetterTrap {
         };
         this.models["pos.session"].getFirst().login_number = parseInt(odoo.login_number);
 
+        const models = Object.keys(this.models);
+        const dynamicModels = this.data.opts.dynamicModels;
+        const staticModels = models.filter((model) => !dynamicModels.includes(model));
+        const deviceSync = new DevicesSynchronisation(dynamicModels, staticModels, this);
+
+        this.deviceSync = deviceSync;
+        this.data.deviceSync = deviceSync;
+
         // Check cashier
         this.checkPreviousLoggedCashier();
 
@@ -594,7 +602,6 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     async afterProcessServerData() {
-        // Adding the not synced paid orders to the pending orders
         const paidUnsyncedOrderIds = this.models["pos.order"]
             .filter((order) => order.isUnsyncedPaid)
             .map((order) => order.id);
@@ -603,6 +610,7 @@ export class PosStore extends WithLazyGetterTrap {
             this.addPendingOrder(paidUnsyncedOrderIds);
         }
 
+        // Adding the not synced paid orders to the pending orders
         const openOrders = this.data.models["pos.order"].filter((order) => !order.finalized);
         this.syncAllOrders();
 
@@ -612,6 +620,20 @@ export class PosStore extends WithLazyGetterTrap {
                 : this.addNewOrder().uuid;
         }
 
+<<<<<<< master
+||||||| dea5b91e6917fc52bd39bf77fcc59fd648635158
+        const models = Object.keys(this.models);
+        const dynamicModels = this.data.opts.dynamicModels;
+        const staticModels = models.filter((model) => !dynamicModels.includes(model));
+        const deviceSync = new DevicesSynchronisation(dynamicModels, staticModels, this);
+
+        this.deviceSync = deviceSync;
+        this.data.deviceSync = deviceSync;
+
+        await this.deviceSync.readDataFromServer();
+=======
+        await this.deviceSync.readDataFromServer();
+>>>>>>> f8087a2e4ded458227610c8ae89c8a1f0edc3d0e
         this.markReady();
         this.showScreen(this.firstScreen);
     }
