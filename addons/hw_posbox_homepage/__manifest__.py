@@ -25,5 +25,6 @@ regular Odoo interface anymore.
         ],
     },
     'installable': False,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

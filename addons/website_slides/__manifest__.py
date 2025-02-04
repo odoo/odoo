@@ -190,5 +190,6 @@ Featuring
             'website_slides/static/src/js/public/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

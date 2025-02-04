@@ -8,6 +8,7 @@
     "description": "Spreadsheet",
     "depends": ["spreadsheet"],
     "installable": True,
+    "author": "Odoo S.A.",
     "license": "LGPL-3",
     "data": [
         "security/security.xml",

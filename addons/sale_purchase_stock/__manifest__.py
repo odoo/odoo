@@ -12,5 +12,6 @@ Add relation information between Sale Orders and Purchase Orders if Make to Orde
     'depends': ['sale_stock', 'purchase_stock', 'sale_purchase'],
     'installable': True,
     'auto_install': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

@@ -18,5 +18,6 @@ social media configuration for any other module that might need it.
     'demo': [
         'demo/res_company_demo.xml',
     ],
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

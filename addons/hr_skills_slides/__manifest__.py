@@ -26,5 +26,6 @@ This module add completed courses to resume for employees.
             'hr_skills_slides/static/src/xml/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

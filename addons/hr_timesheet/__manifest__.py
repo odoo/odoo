@@ -67,5 +67,6 @@ up a management by affair.
             'hr_timesheet/static/src/scss/timesheets_task_form.scss'
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

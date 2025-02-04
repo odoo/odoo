@@ -26,5 +26,6 @@ Create booths for your favorite event.
         'data/event_booth_demo.xml',
         'data/event_type_demo.xml',
     ],
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

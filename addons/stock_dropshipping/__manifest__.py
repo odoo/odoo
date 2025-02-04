@@ -31,5 +31,6 @@ internal transfer document is needed.
         'data/stock_dropshipping_demo.xml',
     ],
     'installable': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

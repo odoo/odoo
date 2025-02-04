@@ -22,5 +22,6 @@ This module correct some behaviors when both module are installed.
             'pos_sale_loyalty/static/tests/tours/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

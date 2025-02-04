@@ -90,5 +90,6 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
         ],
     },
     'post_init_hook': '_hr_holiday_post_init',
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

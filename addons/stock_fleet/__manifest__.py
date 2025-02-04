@@ -17,5 +17,6 @@
         'report/report_picking_batch.xml',
         'views/stock_location.xml',
     ],
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

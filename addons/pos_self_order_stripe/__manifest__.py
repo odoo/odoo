@@ -13,5 +13,6 @@
             'pos_self_order_stripe/static/**/*',
         ],
     },
+    "author": "Odoo S.A.",
     "license": "LGPL-3",
 }

@@ -13,5 +13,6 @@
         'views/hr_leave_views.xml',
         'views/hr_leave_type_views.xml',
     ],
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

@@ -24,5 +24,6 @@
             'website_jitsi/static/src/xml/chat_room_modal.xml',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

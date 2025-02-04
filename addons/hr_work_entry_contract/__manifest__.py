@@ -28,5 +28,6 @@
             'hr_work_entry_contract/static/src/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

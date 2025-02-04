@@ -12,5 +12,6 @@
         'views/hr_employee_views.xml',
     ],
     'installable': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }
