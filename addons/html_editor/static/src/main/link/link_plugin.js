@@ -143,6 +143,7 @@ export class LinkPlugin extends Plugin {
         "lineBreak",
         "overlay",
         "color",
+        "baseContainer",
     ];
     // @phoenix @todo: do we want to have createLink and insertLink methods in link plugin?
     static shared = ["createLink", "insertLink", "getPathAsUrlCommand"];
@@ -435,26 +436,41 @@ export class LinkPlugin extends Plugin {
                 // create a new link with current selection as a content
                 if ((selectionTextContent && selectionTextContent === label) || isImage) {
                     const link = this.createLink(url);
-                    const content = this.dependencies.selection.extractContent(selection);
-                    link.append(content);
                     if (classes) {
                         link.className = classes;
                     }
-                    link.normalize();
-                    this.linkInDocument = link;
-                    cursorsToRestore = null;
-                    selection = this.dependencies.selection.getEditableSelection();
-                    const anchorClosestElement = closestElement(selection.anchorNode);
-                    if (commonAncestor !== anchorClosestElement) {
-                        // We force the cursor after the anchorClosestElement
-                        // To be sure the link is inserted in the correct place in the dom.
-                        const [anchorNode, anchorOffset] = rightPos(anchorClosestElement);
-                        this.dependencies.selection.setSelection(
-                            { anchorNode, anchorOffset },
-                            { normalize: false }
-                        );
+                    const image = isImage && findInSelection(selection, "img");
+                    const figure =
+                        image?.parentElement?.matches("figure[contenteditable=false]") &&
+                        image.parentElement;
+                    if (figure) {
+                        figure.before(link);
+                        link.append(figure);
+                        if (link.parentElement === this.editable) {
+                            const baseContainer =
+                                this.dependencies.baseContainer.createBaseContainer();
+                            link.before(baseContainer);
+                            baseContainer.append(link);
+                        }
+                    } else {
+                        const content = this.dependencies.selection.extractContent(selection);
+                        link.append(content);
+                        link.normalize();
+                        cursorsToRestore = null;
+                        selection = this.dependencies.selection.getEditableSelection();
+                        const anchorClosestElement = closestElement(selection.anchorNode);
+                        if (commonAncestor !== anchorClosestElement) {
+                            // We force the cursor after the anchorClosestElement
+                            // To be sure the link is inserted in the correct place in the dom.
+                            const [anchorNode, anchorOffset] = rightPos(anchorClosestElement);
+                            this.dependencies.selection.setSelection(
+                                { anchorNode, anchorOffset },
+                                { normalize: false }
+                            );
+                        }
+                        this.dependencies.dom.insert(link);
                     }
-                    this.dependencies.dom.insert(link);
+                    this.linkInDocument = link;
                 } else if (label) {
                     const link = this.createLink(url, label);
                     if (classes) {
@@ -625,8 +641,9 @@ export class LinkPlugin extends Plugin {
         } else if (!selection.isCollapsed) {
             // Open the link tool only if we have an image selected
             const imageNode = findInSelection(selection, "img");
-            if (imageNode?.parentNode?.tagName === "A" && this.isLinkAllowedOnSelection()) {
-                this.openLinkTools(imageNode.parentElement);
+            const linkContainingImage = imageNode && closestElement(imageNode, "a");
+            if (linkContainingImage && this.isLinkAllowedOnSelection()) {
+                this.openLinkTools(linkContainingImage);
             } else {
                 this.linkInDocument = null;
                 this.closeLinkTools();
@@ -648,10 +665,9 @@ export class LinkPlugin extends Plugin {
      * extend the given link element to include all content from the given selection
      *
      * @param {HTMLLinkElement} linkElement
-     * @param {EditorSelection} selection
      * @return {boolean}
      */
-    extendLinkToSelection(linkElement, selection) {
+    extendLinkToSelection(linkElement) {
         this.dependencies.split.splitSelection();
         const selectedNodes = this.dependencies.selection.getSelectedNodes();
         let before = linkElement.previousSibling;
@@ -701,13 +717,25 @@ export class LinkPlugin extends Plugin {
         if (selectedImageNodes && startLink && endLink && startLink === endLink) {
             for (const imageNode of selectedImageNodes) {
                 let imageLink;
+                const figure = closestElement(imageNode, "figure");
                 if (direction === DIRECTIONS.RIGHT) {
-                    imageLink = this.dependencies.split.splitAroundUntil(imageNode, endLink);
+                    imageLink = this.dependencies.split.splitAroundUntil(
+                        figure || imageNode,
+                        endLink
+                    );
                 } else {
-                    imageLink = this.dependencies.split.splitAroundUntil(imageNode, startLink);
+                    imageLink = this.dependencies.split.splitAroundUntil(
+                        figure || imageNode,
+                        startLink
+                    );
                 }
                 cursors.update(callbacksForCursorUpdate.unwrap(imageLink));
                 unwrapContents(imageLink);
+                if (figure && figure.parentElement !== this.editable) {
+                    // Remove the base container parent if there is one. Figure
+                    // is a block so it's not needed.
+                    unwrapContents(figure.parentElement);
+                }
                 // update the links at the selection
                 [startLink, endLink] = [
                     closestElement(anchorNode, "a"),
