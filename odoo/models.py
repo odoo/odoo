@@ -5214,6 +5214,8 @@ class BaseModel(metaclass=MetaModel):
                     to_update.append(data)
                 elif not update:
                     to_create.append(data)
+                else:
+                    raise ValidationError("Cannot update record without specifying its id or xml_id")
                 continue
             row = existing.get(xml_id)
             if not row:
@@ -5238,10 +5240,10 @@ class BaseModel(metaclass=MetaModel):
 
         # update existing records
         if ignore_duplicates:
-            data_list = [data for data in data_list if data not in to_update]
-        else:
-            for data in to_update:
-                data['record']._load_records_write(data['values'])
+            to_update = []
+        for data in to_update:
+            data['record']._load_records_write(data['values'])
+            data['state'] = 'updated'
 
         # check for records to create with an XMLID from another module
         module = self.env.context.get('install_module')
@@ -5266,6 +5268,7 @@ class BaseModel(metaclass=MetaModel):
         if to_create:
             records = self._load_records_create([data['values'] for data in to_create])
             for data, record in zip(to_create, records):
+                data['state'] = 'created'
                 data['record'] = record
                 if data.get('xml_id'):
                     # add XML ids for parent records that have just been created

@@ -605,7 +605,7 @@ class AccountChartTemplate(models.AbstractModel):
                 created_models.add(model)
 
         created_records = {}
-        for model, model_data in delay(list(deepcopy(data).items())):
+        for model_name, model_data in delay(list(deepcopy(data).items())):
             all_records_vals = []
             for xml_id, record_vals in model_data.items():
                 # Extract the translations from the values
@@ -622,10 +622,12 @@ class AccountChartTemplate(models.AbstractModel):
 
                 all_records_vals.append({
                     'xml_id': xml_id,
-                    'values': deref_values(record_vals, self.env[model]),
+                    'values': deref_values(record_vals, self.env[model_name]),
                     'noupdate': True,
                 })
-            created_records[model] = self.with_context(lang='en_US').env[model]._load_records(all_records_vals, ignore_duplicates=ignore_duplicates)
+            model = self.with_context(lang='en_US').env[model_name]
+            model._load_records(all_records_vals, ignore_duplicates=ignore_duplicates)
+            created_records[model_name] = model.concat(*(vals['record'] for vals in all_records_vals if vals.get('state') == 'created'))
         return created_records
 
     def _post_load_data(self, template_code, company, template_data):
