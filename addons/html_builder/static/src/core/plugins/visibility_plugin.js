@@ -2,8 +2,14 @@ import { Plugin } from "@html_editor/plugin";
 import { isMobileView } from "@html_builder/utils/utils";
 
 export class VisibilityPlugin extends Plugin {
-    static id = "visibilityPlugin";
-    static shared = ["toggleTargetVisibility", "cleanForSaveVisibility"];
+    static id = "visibility";
+    static shared = [
+        "toggleTargetVisibility",
+        "cleanForSaveVisibility",
+        "hideInvisibleEl",
+        "showInvisibleEl",
+    ];
+
     resources = {
         on_option_visibility_update: onOptionVisibilityUpdate,
         on_mobile_preview_clicked: this.onMobilePreviewClicked.bind(this),
@@ -38,10 +44,19 @@ export class VisibilityPlugin extends Plugin {
         this.dispatchTo(dispatchName, editingEl);
         return show;
     }
-}
 
-export function hideInvisibleEl(snippetEl) {
-    snippetEl.classList.remove("o_snippet_override_invisible");
+    hideInvisibleEl(snippetEl) {
+        snippetEl.classList.remove("o_snippet_override_invisible");
+    }
+
+    showInvisibleEl(snippetEl) {
+        const isMobilePreview = isMobileView(snippetEl);
+        const isMobileHidden = snippetEl.classList.contains("o_snippet_mobile_invisible");
+        const isDesktopHidden = snippetEl.classList.contains("o_snippet_desktop_invisible");
+        if ((isMobileHidden && isMobilePreview) || (isDesktopHidden && !isMobilePreview)) {
+            snippetEl.classList.add("o_snippet_override_invisible");
+        }
+    }
 }
 
 function isTargetVisible(editingEl) {
@@ -58,13 +73,4 @@ function onOptionVisibilityUpdate({ editingEl, show }) {
         editingEl.dataset.invisible = "1";
     }
     return show;
-}
-
-export function showInvisibleEl(snippetEl) {
-    const isMobilePreview = isMobileView(snippetEl);
-    const isMobileHidden = snippetEl.classList.contains("o_snippet_mobile_invisible");
-    const isDesktopHidden = snippetEl.classList.contains("o_snippet_desktop_invisible");
-    if ((isMobileHidden && isMobilePreview) || (isDesktopHidden && !isMobilePreview)) {
-        snippetEl.classList.add("o_snippet_override_invisible");
-    }
 }

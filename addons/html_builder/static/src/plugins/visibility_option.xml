@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
+<t t-name="html_builder.DeviceVisibility">
+    <BuilderButton action="'toggleDeviceVisibility'" actionParam="'no_desktop'" preview="false"><img src="/html_builder/static/img/options/desktop_invisible.svg" /></BuilderButton>
+    <BuilderButton action="'toggleDeviceVisibility'" actionParam="'no_mobile'" preview="false"><img src="/html_builder/static/img/options/mobile_invisible.svg" /></BuilderButton>
+</t>
+
+<t t-name="html_builder.DeviceVisibilityOption">
+    <BuilderRow label.translate="Visibility">
+        <t t-call="html_builder.DeviceVisibility"></t>
+    </BuilderRow>
+</t>
+
 <t t-name="html_builder.VisibilityOption">
     <BuilderRow label.translate="Visibility">
         <t t-call="html_builder.DeviceVisibility"></t>

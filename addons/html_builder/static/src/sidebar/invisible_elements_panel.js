@@ -74,7 +74,7 @@ export class InvisibleElementsPanel extends Component {
 
     toggleElementVisibility(invisibleEntry) {
         const toggleVisibility = (snippetEl) => {
-            const show = this.env.editor.shared.visibilityPlugin.toggleTargetVisibility(snippetEl);
+            const show = this.env.editor.shared.visibility.toggleTargetVisibility(snippetEl);
             invisibleEntry.isVisible = show;
             this.env.editor.shared["builder-options"].updateContainers(snippetEl);
             // TODO _disableUndroppableSnippets
