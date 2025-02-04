@@ -14,7 +14,7 @@ export function getDomainDisplayedOperators(fieldDef) {
                 return ["=", "!=", "set", "not_set"];
         }
     }
-
+    const hierarchyOperators = fieldDef.allow_hierachy_operators ? ["child_of", "parent_of"] : [];
     switch (type) {
         case "boolean":
             return ["is", "is_not"];
@@ -64,6 +64,7 @@ export function getDomainDisplayedOperators(fieldDef) {
                 "!=",
                 "ilike",
                 "not ilike",
+                ...hierarchyOperators,
                 "set",
                 "not_set",
                 "starts_with",
@@ -91,8 +92,6 @@ export function getDomainDisplayedOperators(fieldDef) {
                 "not like",
                 "=like",
                 "=ilike",
-                "child_of",
-                "parent_of",
                 "in",
                 "not in",
                 "set",
