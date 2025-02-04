@@ -92,15 +92,13 @@ function getDomain(fieldDef) {
 function makeAutoCompleteEditor(fieldDef) {
     return {
         component: DomainSelectorAutocomplete,
-        extractProps: ({ value, update }) => {
-            return {
-                resModel: getResModel(fieldDef),
-                fieldString: fieldDef.string,
-                domain: getDomain(fieldDef),
-                update: (value) => update(unique(value)),
-                resIds: unique(value),
-            };
-        },
+        extractProps: ({ value, update }) => ({
+            resModel: getResModel(fieldDef),
+            fieldString: fieldDef.string,
+            domain: getDomain(fieldDef),
+            update: (value) => update(unique(value)),
+            resIds: unique(value),
+        }),
         isSupported: (value) => Array.isArray(value),
         defaultValue: () => [],
     };
@@ -155,9 +153,7 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                     value.length === 3 &&
                     typeof value[1] === "string" &&
                     value[2] === fieldDef.type,
-                defaultValue: () => {
-                    return [-1, "months", fieldDef.type];
-                },
+                defaultValue: () => [-1, "months", fieldDef.type],
             };
         }
         case "in":
@@ -278,21 +274,21 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
             return makeSelectEditor(options, params);
         }
         case "many2one": {
-            if (["=", "!=", "parent_of", "child_of"].includes(operator)) {
+            if (["=", "!="].includes(operator)) {
                 return {
                     component: DomainSelectorSingleAutocomplete,
-                    extractProps: ({ value, update }) => {
-                        return {
-                            resModel: getResModel(fieldDef),
-                            fieldString: fieldDef.string,
-                            update,
-                            resId: value,
-                        };
-                    },
+                    extractProps: ({ value, update }) => ({
+                        resModel: getResModel(fieldDef),
+                        fieldString: fieldDef.string,
+                        update,
+                        resId: value,
+                    }),
                     isSupported: () => true,
                     defaultValue: () => false,
                     shouldResetValue: (value) => value !== false && !isId(value),
                 };
+            } else if (["parent_of", "child_of"].includes(operator)) {
+                return makeAutoCompleteEditor(fieldDef);
             }
             break;
         }
