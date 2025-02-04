@@ -394,6 +394,7 @@
 
             <t t-set="opt_wsale_categories_top" t-value="is_view_active('website_sale.products_categories_top')"/>
             <t t-set="opt_wsale_attributes_top" t-value="is_view_active('website_sale.products_attributes_top')"/>
+            <t t-set="opt_wsale_floating_bar" t-value="is_view_active('website_sale.floating_bar')"/>
 
             <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
             <t t-set="website_sale_sortable" t-value="website._get_product_sort_mapping()"/>
@@ -420,7 +421,10 @@
                     t-attf-class="oe_website_sale
                         {{opt_wsale_fullwidth and 'container-fluid o_wsale_page_fluid' or 'o_wsale_page_contained container'}}
                         {{layout_mode == 'list' and 'o_wsale_layout_list' or 'o_wsale_layout_catalog'}}
-                        {{hasLeftColumn and 'o_wsale_has_sidebar'}}"
+                        {{opt_wsale_categories_top and 'o_wsale_has_filmstrip'}}
+                        {{opt_wsale_floating_bar and 'o_wsale_has_floating_bar'}}
+                        {{hasLeftColumn and 'o_wsale_has_sidebar'}}
+                        {{editionPreviews and 'o_wsale_edit_preview_enabled'}}"
                     t-attf-style="--o-wsale-products-grid-gap: {{gap}};"
                 >
                     <div class="row o_wsale_products_main_row flex-nowrap">
@@ -1475,6 +1479,14 @@
         <xpath expr="//div[@id='products_grid']" position="after">
             <!-- Nothing to do, this view is only meant to allow the server -->
             <!-- to know if the list view layout should be used -->
+        </xpath>
+    </template>
+
+    <!-- Enable HTML previews in edition mode. The template is active by default, but can be
+         manually disabled for advanced debug if necessary -->
+    <template id="website_sale.editor_previews" name="Enable edit previews" inherit_id="website_sale.products">
+        <xpath expr="//div[@id='wrap']" position="before">
+            <t t-set="editionPreviews" t-value="true"  groups="website.group_website_designer"/>
         </xpath>
     </template>
 
