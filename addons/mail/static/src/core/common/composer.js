@@ -782,6 +782,14 @@ export class Composer extends Component {
             const config = {
                 emailAddSignature,
                 text,
+                mentionedPartners: composer.mentionedPartners.map((p) => ({
+                    id: p.id,
+                    type: p.type,
+                })),
+                mentionedChannels: composer.mentionedChannels.map((c) => ({
+                    id: c.id,
+                    model: c.model,
+                })),
             };
             browser.localStorage.setItem(composer.localId, JSON.stringify(config));
         };
@@ -794,13 +802,28 @@ export class Composer extends Component {
         }
     }
 
-    restoreContent() {
+    async restoreContent() {
         const composer = toRaw(this.props.composer);
         try {
             const config = JSON.parse(browser.localStorage.getItem(composer.localId));
             if (config.text) {
                 composer.emailAddSignature = config.emailAddSignature;
                 composer.text = config.text;
+                this.suggestion.suggestionService.fetchPartners(
+                    config.mentionedPartners.map((m) => m.id),
+                    this.thread
+                );
+                for (const mentionedPartner of config.mentionedPartners) {
+                    this.props.composer.mentionedPartners.push(
+                        this.store.Persona.get(mentionedPartner)
+                    );
+                }
+                for (const mentionedChannel of config.mentionedChannels) {
+                    const thread = await this.store.Thread.getOrFetch(mentionedChannel);
+                    if (thread) {
+                        this.props.composer.mentionedChannels.push(thread);
+                    }
+                }
             }
         } catch {
             browser.localStorage.removeItem(composer.localId);
