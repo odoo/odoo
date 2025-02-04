@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.tools import float_compare
 from odoo import api, fields, models
 
 
@@ -35,3 +36,16 @@ class ResourceResource(models.Model):
                 resource.avatar_128 = employee[0].avatar_128
             else:
                 resource.avatar_128 = avatar_per_employee_id[employee[0].id]
+
+class ResourceCalendar(models.Model):
+    _inherit = 'resource.calendar'
+
+    def _calculate_hours_per_week(self):
+        self.ensure_one()
+        sum_hours = sum(
+            (a.hour_to - a.hour_from) for a in self.attendance_ids if a.day_period != 'lunch' and not a.work_entry_type_id.is_leave)
+        return sum_hours / 2 if self.two_weeks_calendar else sum_hours
+
+    def _calculate_is_fulltime(self):
+        self.ensure_one()
+        return not float_compare(self.full_time_required_hours, self._calculate_hours_per_week(), 3)
