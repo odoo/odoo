@@ -154,10 +154,6 @@ class TestInherit(common.TransactionCase):
         self.assertEqual(len(parent._table_objects), 1)
         self.assertEqual(len(child._table_objects), 1)
 
-        # check properties memoized on model
-        self.assertEqual(len(parent._constraint_methods), 1)
-        self.assertEqual(len(child._constraint_methods), 1)
-
 
 class TestXMLIDS(common.TransactionCase):
     def test_xml_ids(self):

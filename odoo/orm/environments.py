@@ -357,6 +357,16 @@ class Environment(Mapping[str, "BaseModel"]):
         self._recompute_all()
         for model_name in OrderedSet(field.model_name for field in self.cache.get_dirty_fields()):
             self[model_name].flush_model()
+        # Execute Python constraints
+        to_check = self.transaction.to_check
+        for model_name in list(to_check):
+            constrains_dict = to_check.pop(model_name)
+            for method_name, record_ids in constrains_dict.items():
+                records = self[model_name].browse(record_ids).sudo()
+                assert '__' not in method_name, "Constraint method should never contains '__'"
+                method = getattr(records, method_name)  # TODO: check security
+                assert hasattr(method, '_constrains')
+                getattr(records, method_name)()
 
     def is_protected(self, field: Field, record: BaseModel) -> bool:
         """ Return whether `record` is protected against invalidation or
@@ -364,9 +374,9 @@ class Environment(Mapping[str, "BaseModel"]):
         """
         return record.id in self._protected.get(field, ())
 
-    def protected(self, field: Field) -> BaseModel:
+    def protected(self, field: Field | str, record: BaseModel) -> BaseModel:
         """ Return the recordset for which ``field`` should not be invalidated or recomputed. """
-        return self[field.model_name].browse(self._protected.get(field, ()))
+        return record.browse(self._protected.get(field, ()))
 
     @typing.overload
     def protecting(self, what: Collection[Field], records: BaseModel) -> typing.ContextManager[None]:
@@ -425,6 +435,13 @@ class Environment(Mapping[str, "BaseModel"]):
             return
         assert field.store and field.compute, "Cannot add to recompute no-store or no-computed field"
         self.transaction.tocompute[field].update(records._ids)
+
+    def add_constraint_to_check(self, records: BaseModel, method_name: str) -> None:
+        self.transaction.to_check[records._name][method_name].update(records._ids)
+
+    def remove_to_check(self, records: BaseModel) -> None:
+        for ids_to_check in self.transaction.to_check[records._name].values():
+            ids_to_check.difference_update(records._ids)
 
     def remove_to_compute(self, field: Field, records: BaseModel) -> None:
         """ Mark ``field`` as computed on ``records``. """
@@ -512,7 +529,7 @@ class Environment(Mapping[str, "BaseModel"]):
 
 class Transaction:
     """ A object holding ORM data structures for a transaction. """
-    __slots__ = ('_Transaction__file_open_tmp_paths', 'cache', 'default_env', 'envs', 'protected', 'registry', 'tocompute')
+    __slots__ = ('_Transaction__file_open_tmp_paths', 'cache', 'default_env', 'envs', 'protected', 'registry', 'tocompute', 'to_check')
 
     def __init__(self, registry: Registry):
         self.registry = registry
@@ -529,6 +546,8 @@ class Transaction:
         self.tocompute = defaultdict["Field", OrderedSet["IdType"]](OrderedSet)
         # temporary directories (managed in odoo.tools.file_open_temporary_directory)
         self.__file_open_tmp_paths = ()  # type: ignore # noqa: PLE0237
+        # deferred constraint to check {model_name: {method_name: ids}}
+        self.to_check = defaultdict(lambda: defaultdict(OrderedSet))
 
     def flush(self) -> None:
         """ Flush pending computations and updates in the transaction. """
@@ -545,6 +564,7 @@ class Transaction:
         """ Clear the caches and pending computations and updates in the transactions. """
         self.cache.clear()
         self.tocompute.clear()
+        self.to_check.clear()
 
     def reset(self) -> None:
         """ Reset the transaction.  This clears the transaction, and reassigns
