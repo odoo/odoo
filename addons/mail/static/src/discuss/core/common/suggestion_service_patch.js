@@ -32,19 +32,24 @@ const suggestionServicePatch = {
                 if (!cleanTerm(name).includes(cleanedSearchTerm)) {
                     return false;
                 }
+                if (this.store.self.type !== "partner") {
+                    // or we can do it with isInternalUser
+                    return false;
+                }
+                // if (command.isAvailable) {
+                //     return command.isAvailable(this.store, thread);
+                // }
                 if (command.channel_types) {
                     return command.channel_types.includes(thread.channel_type);
                 }
                 return true;
             })
-            .map(([name, command]) => {
-                return {
-                    channel_types: command.channel_types,
-                    help: command.help,
-                    id: command.id,
-                    name,
-                };
-            });
+            .map(([name, command]) => ({
+                channel_types: command.channel_types,
+                help: command.help,
+                id: command.id,
+                name,
+            }));
         const sortFunc = (c1, c2) => {
             if (c1.channel_types && !c2.channel_types) {
                 return -1;
