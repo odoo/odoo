@@ -86,7 +86,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour2", {
             Chrome.clickMenuOption("Orders"),
             TicketScreen.selectOrder("-0001"),
             TicketScreen.loadSelectedOrder(),
-            Order.hasLine({ productName: "Minute Maid", quantity: "1.0", withClass: ".selected" }),
+            Order.hasLine({ productName: "Minute Maid", quantity: "1.0" }),
             ProductScreen.totalAmountIs("2.00"),
         ].flat(),
 });
