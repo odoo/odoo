@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="discuss.NotificationMuteSettings">
+        <t t-if="props.thread.mute_until_dt">
+            <button class="btn w-100 d-flex p-1 opacity-75" t-on-click="()=>this.setMute(false)">
+                <div class="d-flex flex-column flex-grow-1 px-2 py-1 w-100 rounded">
+                    <span class="fs-6 fw-bold text-wrap text-start text-break">Unmute Conversation</span>
+                    <span class="fw-normal smaller text-start" t-out="store.settings.getMuteUntilText(props.thread.mute_until_dt)"/>
+                </div>
+            </button>
+        </t>
+        <div t-else="" class="d-flex">
+            <Dropdown position="'right-start'" menuClass="'o-mail-NotificationSettings-submenu d-flex flex-column py-0 my-0'">
+                <button class="btn w-100 d-flex p-1 opacity-75">
+                    <div class="d-flex flex-grow-1 align-items-center px-2 py-1 w-100 rounded">
+                        <span class="text-wrap text-start text-break">Mute Conversation</span>
+                        <div class="o-discuss-NotificationSettings-separator flex-grow-1"/>
+                        <i class="oi oi-arrow-right ms-2"/>
+                    </div>
+                </button>
+                <t t-set-slot="content">
+                    <t t-foreach="store.settings.MUTES" t-as="mute" t-key="mute.label">
+                        <DropdownItem class="'o-mail-NotificationSettings-muteDuration btn rounded-0 d-flex align-items-center px-2 py-2 m-0'" onSelected="()=>this.setMute(mute.value)"><button class="btn p-0 mx-2 text-wrap text-start text-break" t-out="mute.name"/></DropdownItem>
+                    </t>
+                </t>
+            </Dropdown>
+        </div>
+    </t>
+
+</templates>
