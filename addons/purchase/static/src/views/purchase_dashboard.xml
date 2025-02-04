@@ -3,55 +3,57 @@
     <t t-name="purchase.PurchaseDashboard">
         <div class="o_purchase_dashboard container-fluid py-4 border-bottom bg-view">
             <div class="row justify-content-between gap-3 gap-lg-0">
-                <div class="col-12 col-lg-5 col-xl-5 col-xxl-4 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
+                <div class="col-12 col-lg-8 col-xl-8 col-xxl-8 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
                     <div class="grid gap-4">
-                        <div class="g-col-3 g-col-sm-2 d-flex align-items-center py-2 justify-content-end text-end justify-content-lg-start text-lg-start text-break">
-                            All RFQs
+                        <div class="g-col-1 g-col-sm-1 d-flex align-items-center py-2 justify-content-center text-break">
+                            All
                         </div>
-                        <div class="g-col-9 g-col-sm-10 grid gap-1">
-                            <div class="g-col-4 p-0" t-on-click="setSearchContext" title="All Draft RFQs" filter_name="draft_rfqs">
-                                <a href="#" class="btn w-100 h-100 border-0 rounded-0 text-capitalize text-break fw-normal"
-                                    t-attf-class="{{ purchaseData['all_draft_rfqs'] == 0 ? 'btn btn-secondary' : 'btn btn-info'}}">
-                                    <div class="fs-2" t-out="purchaseData['all_to_send']"/>To Send
+                        <div class="g-col-10 g-col-sm-10 grid gap-1">
+                            <div class="g-col-2 p-0" t-on-click="setSearchContext" title="All Draft RFQs" filter_name="draft_rfqs">
+                                <a href="#" class="btn purchase-dashboard-card"
+                                    t-attf-class="{{ purchaseData['all_draft_rfqs'] == 0 ? 'btn btn-secondary' : 'btn btn-info' }}">
+                                    <div class="fs-2" t-out="purchaseData['all_to_send']"/>New
                                 </a>
                             </div>
-                            <div class="g-col-4 p-0" t-on-click="setSearchContext" title="All Waiting RFQs" filter_name="waiting_rfqs">
-                                <a href="#" class="btn btn-secondary w-100 h-100 border-0 rounded-0 text-capitalize text-break fw-normal">
-                                    <div class="fs-2" t-out="purchaseData['all_waiting']"/>Waiting
+                            <div class="g-col-2 p-0" t-on-click="setSearchContext" title="All Waiting RFQs" filter_name="waiting_rfqs">
+                                <a href="#" class="btn btn-secondary purchase-dashboard-card">
+                                    <div class="fs-2" t-out="purchaseData['all_waiting']"/>RFQ Sent
                                 </a>
                             </div>
-                            <div class="g-col-4 p-0" t-on-click="setSearchContext" title="All Late RFQs" filter_name="late_rfqs">
-                                <a href="#" class="btn btn-primary w-100 h-100 border-0 rounded-0 text-capitalize text-break fw-normal"
-                                    t-attf-class="{{ purchaseData['all_late'] == 0 ? 'btn btn-secondary' : 'btn btn-warning'}}">
+                            <div class="g-col-2 p-0" t-on-click="setSearchContext" title="All Late RFQs" filter_name="late_rfqs">
+                                <a href="#" class="btn purchase-dashboard-card"
+                                    t-attf-class="{{ purchaseData['all_late'] == 0 ? 'btn btn-secondary' : 'btn btn-warning' }}">
                                     <div class="fs-2" t-out="purchaseData['all_late']"/>Late
                                 </a>
                             </div>
                         </div>
                     </div>
                     <div class="grid gap-4">
-                        <div class="g-col-3 g-col-sm-2 d-flex align-items-center py-2 justify-content-end text-end justify-content-lg-start text-lg-start text-break">
-                            My RFQs
+                        <div class="g-col-1 g-col-sm-1 d-flex align-items-center py-2 justify-content-center text-break">
+                            My
                         </div>
-                        <div class="g-col-9 g-col-sm-10 grid gap-2">
-                            <div class="g-col-4 p-0" t-on-click="setSearchContext" title="My Draft RFQs" filter_name="draft_rfqs,my_purchases">
-                                <a href="#" class="btn btn-light d-flex align-items-center w-100 h-100 p-0 border-0 bg-100 fw-normal">
-                                    <div class="w-100 p-2" t-out="purchaseData['my_to_send']"/>
+                        <div class="g-col-10 g-col-sm-10 grid gap-1 pt-2">
+                            <div class="g-col-2 p-0" t-on-click="setSearchContext" title="My Draft RFQs" filter_name="draft_rfqs,my_purchases">
+                                <a href="#" class="btn purchase-dashboard-card"
+                                    t-attf-class="{{ purchaseData['my_to_send'] == 0 ? 'btn btn-secondary' : 'btn btn-info' }}">
+                                    <div t-out="purchaseData['my_to_send']"/>
                                 </a>
                             </div>
-                            <div class="g-col-4 p-0" t-on-click="setSearchContext" title="My Waiting RFQs" filter_name="waiting_rfqs,my_purchases">
-                                <a href="#" class="btn btn-light d-flex align-items-center w-100 h-100 p-0 border-0 bg-100 fw-normal">
-                                    <div class="w-100 p-2" t-out="purchaseData['my_waiting']"/>
+                            <div class="g-col-2 p-0" t-on-click="setSearchContext" title="My Waiting RFQs" filter_name="waiting_rfqs,my_purchases">
+                                <a href="#" class="btn btn-secondary purchase-dashboard-card">
+                                    <div t-out="purchaseData['my_waiting']"/>
                                 </a>
                             </div>
-                            <div class="g-col-4 p-0" t-on-click="setSearchContext" title="My Late RFQs" filter_name="late_rfqs,my_purchases">
-                                <a href="#" class="btn btn-light d-flex align-items-center w-100 h-100 p-0 border-0 bg-100 fw-normal">
-                                    <div class="w-100 p-2" t-out="purchaseData['my_late']"/>
+                            <div class="g-col-2 p-0" t-on-click="setSearchContext" title="My Late RFQs" filter_name="late_rfqs,my_purchases">
+                                <a href="#" class="btn purchase-dashboard-card"
+                                    t-attf-class="{{ purchaseData['my_late'] == 0 ? 'btn btn-secondary' : 'btn btn-warning' }}">
+                                    <div t-out="purchaseData['my_late']"/>
                                 </a>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-lg-7 col-xl-6 col-xxl-5 flex-shrink-0">
+                <div class="col-12 col-lg-7 col-xl-6 col-xxl-4 flex-shrink-0">
                     <div class="d-flex flex-column justify-content-between gap-2 h-100">
                         <div class="grid gap-2 h-100">
                             <div class="g-col-6 g-col-md-6 grid gap-1 gap-md-4">
