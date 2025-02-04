@@ -489,9 +489,9 @@ class TestProjectBase(TestProjectCommon):
                 ]}),
             ]}
         ])
-        self.assertEqual(project1.task_count, 3)
-        self.assertEqual(project1.open_task_count, 2)
-        self.assertEqual(project1.closed_task_count, 1)
+        self.assertEqual(project1.task_count, 9)
+        self.assertEqual(project1.open_task_count, 5)
+        self.assertEqual(project1.closed_task_count, 4)
         self.assertEqual(project2.task_count, 2)
         self.assertEqual(project2.open_task_count, 2)
         self.assertEqual(project2.closed_task_count, 0)

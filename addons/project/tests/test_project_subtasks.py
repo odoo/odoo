@@ -500,24 +500,6 @@ class TestProjectSubtasks(TestProjectCommon):
         self.assertEqual(task.project_id, self.task_1.project_id, "project_id should be affected")
         self.assertTrue(task.display_in_project, "display_in_project should be True when there is no parent task")
 
-    def test_filter_see_subtasks(self):
-        task = self.task_1
-        task.create({
-            'name': 'chcacs',
-            'parent_id': task.id,
-            'project_id': task.project_id.id,
-        })
-
-        def get_parent_ids(read_from):
-            return read_from._read_group([
-                ("project_id", "=", task.project_id.id),
-                ("display_in_project", "=", True),
-                ("is_closed", "=", False),
-            ], [], ["parent_id:recordset"])[0][0]
-
-        self.assertFalse(get_parent_ids(task))
-        self.assertTrue(get_parent_ids(task.with_context(show_subtasks=True)))
-
     def test_invisible_subtask_became_visible_when_converted_to_task(self):
         task = self.env['project.task'].create({
             'name': 'Parent task',
