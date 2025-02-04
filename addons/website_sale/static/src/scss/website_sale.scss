@@ -248,13 +248,6 @@ $input-border-color: $gray-400;
         }
     }
 
-    // Outline product description boxes to ease edition
-    body.editor_enable &:hover .oe_subdescription {
-        div:has(br:first-child:last-child):not(:hover), div:empty:not(:hover) {
-            outline: $border-width dashed fade-currentColor(25%);
-        }
-    }
-
     // Needed to be visible on a dark <body> background. The rule is defined on
     // the <div> child to avoid overriding the default "text-muted" color if the
     // "--o-wsale-card-text-muted" variable is not defined.
@@ -324,6 +317,13 @@ $input-border-color: $gray-400;
                 }
             }
         }
+    }
+}
+
+// Hide empty category description in not-edition mode
+body:not(.editor_enable) #category_header {
+    &:has(> br:first-child:last-child), &:empty {
+        display: none;
     }
 }
 
