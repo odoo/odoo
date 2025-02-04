@@ -227,6 +227,29 @@ class PurchaseOrder(models.Model):
         invoice_vals['invoice_incoterm_id'] = self.incoterm_id.id
         return invoice_vals
 
+    def action_display_suggest(self, product_domain=False):
+        self.ensure_one()
+        product_ids = self.order_line.product_id.ids
+        if product_domain:
+            product_ids = self.env['product.product'].with_context(order_id=self.id).search(product_domain).ids
+        context = {
+            'dialog_size': 'medium',
+            'default_purchase_order_id': self.id,
+            'default_warehouse_id': self.picking_type_id.warehouse_id.id,
+            'default_product_ids': product_ids,
+        }
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Suggest Quantities based on Sales & Demands"),
+            'target': 'new',
+            'view_mode': 'form',
+            'views': [[False, 'form']],
+            'res_id': False,
+            'view_id': self.env.ref('purchase_stock.purchase_order_suggest_view_form').id,
+            'res_model': 'purchase.order.suggest',
+            'context': context,
+        }
+
     # --------------------------------------------------
     # Business methods
     # --------------------------------------------------

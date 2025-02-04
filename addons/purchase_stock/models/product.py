@@ -1,7 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from dateutil.relativedelta import relativedelta
+
 from odoo import api, fields, models
+from odoo.fields import Domain
 from odoo.osv import expression
 
 
@@ -36,6 +38,36 @@ class ProductProduct(models.Model):
     _inherit = 'product.product'
 
     purchase_order_line_ids = fields.One2many('purchase.order.line', 'product_id', string="PO Lines") # used to compute quantities
+    monthly_demand = fields.Float(compute='_compute_monthly_demand')
+
+    @api.depends_context('monthly_demand_start_date', 'monthly_demand_limit_date', 'warehouse_id')
+    def _compute_monthly_demand(self):
+        start_date = self.env.context.get('monthly_demand_start_date', fields.Datetime.now() - relativedelta(months=1))
+        limit_date = self.env.context.get('monthly_demand_limit_date', fields.Datetime.now())
+        warehouse_id = self.env.context.get('warehouse_id')
+        move_domain = Domain([
+            ('product_id', 'in', self.ids),
+            ('state', '=', 'done'),
+            ('date', '>=', start_date),
+            ('date', '<', limit_date),
+        ])
+        move_domain = Domain.AND([
+            move_domain,
+            self._get_monthly_demand_moves_location_domain(),
+        ])
+        if warehouse_id:
+            move_domain = Domain.AND([
+                move_domain,
+                [('location_id.warehouse_id', '=', warehouse_id)]
+            ])
+        move_qty_by_products = self.env['stock.move']._read_group(move_domain, ['product_id'], ['product_qty:sum'])
+        qty_by_product = {product.id: qty for product, qty in move_qty_by_products}
+        for product in self:
+            product.monthly_demand = qty_by_product.get(product.id, 0)
+
+    @api.model
+    def _get_monthly_demand_moves_location_domain(self):
+        return [('location_dest_usage', 'in', ['customer', 'production'])]
 
     def _get_quantity_in_progress(self, location_ids=False, warehouse_ids=False):
         if not location_ids:
