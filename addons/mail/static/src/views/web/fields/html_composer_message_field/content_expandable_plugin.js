@@ -1,17 +1,55 @@
 import { Plugin } from "@html_editor/plugin";
+import { fillEmpty } from "@html_editor/utils/dom";
+import { isEmptyBlock } from "@html_editor/utils/dom_info";
+import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
 import { renderToElement } from "@web/core/utils/render";
 
 export class ContentExpandablePlugin extends Plugin {
     static id = "contentexpandable";
+    static dependencies = ["protectedNode", "selection"];
     resources = {
-        start_edition_handlers: this.insertReplyContent.bind(this),
         clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
+        delete_backward_overrides: this.deleteBackward.bind(this),
     };
 
+    setup() {
+        this.insertReplyContent();
+    }
+
+    deleteBackward({ endContainer }) {
+        const closestReplyContainer = closestElement(endContainer, ".o_mail_reply_container");
+        if (closestReplyContainer && isEmptyBlock(closestReplyContainer)) {
+            const parentEl = closestReplyContainer.parentElement;
+            closestReplyContainer.remove();
+            fillEmpty(parentEl);
+            return true;
+        }
+    }
+
+    /**
+     * @override
+     */
+    isValidTargetForDomListener(ev) {
+        if (
+            ev.type === "click" &&
+            ev.target &&
+            closestElement(ev.target, ".o-mail-Message-viewMore-btn")
+        ) {
+            // Allow clicking on the viewMore button even if it is protected.
+            return true;
+        }
+        return super.isValidTargetForDomListener(ev);
+    }
+
     insertReplyContent() {
-        const ele = this.editable.querySelector(".o_mail_reply_content");
+        const ele = this.editable.querySelector(".o_mail_reply_container");
         if (!ele) {
             return;
+        }
+        this.dependencies.protectedNode.setProtectingNode(ele, true);
+        for (const subEl of ele.querySelectorAll(":scope > .o_mail_reply_content")) {
+            this.dependencies.protectedNode.setProtectingNode(subEl, false);
+            subEl.classList.add("d-none");
         }
         const mailQuoteElement = this.editable.querySelectorAll('*[data-o-mail-quote="1"]');
         for (const element of mailQuoteElement) {
@@ -24,22 +62,25 @@ export class ContentExpandablePlugin extends Plugin {
         ele.prepend(buttonTemplate);
     }
 
-    onClickViewButton() {
-        const ele = this.editable.querySelector(".o_mail_reply_content");
+    onClickViewButton(ev) {
+        const ele = closestElement(ev.target, ".o_mail_reply_container");
         if (!ele) {
             return;
         }
-        ele.lastElementChild.classList.toggle("d-none");
-        this.editable.focus();
+        for (const subEl of ele.querySelectorAll(":scope > .o_mail_reply_content")) {
+            subEl.classList.toggle("d-none");
+        }
     }
 
     cleanForSave(root) {
-        const ele = root.querySelector(".o_mail_reply_content");
-        if (!ele) {
-            return;
+        for (const el of selectElements(root, ".o_mail_reply_container")) {
+            delete el.dataset.oeProtected;
+            for (const subEl of el.querySelectorAll(".o_mail_reply_content")) {
+                delete subEl.dataset.oeProtected;
+                subEl.classList.remove("d-none");
+            }
+            el.querySelector(".o-mail-Message-viewMore-container")?.remove();
+            el.setAttribute("data-o-mail-quote", "1");
         }
-        ele.querySelector(".o-mail-Message-viewMore-btn")?.parentElement.remove();
-        ele.lastElementChild.classList.remove("d-none");
-        ele.setAttribute("data-o-mail-quote", "1");
     }
 }
