@@ -253,11 +253,14 @@ export class SelectionPlugin extends Plugin {
                 anchorOffset,
                 direction ? "left" : "right"
             );
-            [focusNode, focusOffset] = this.normalizeCursorPosition(
-                focusNode,
-                focusOffset,
-                direction ? "right" : "left"
-            );
+            [focusNode, focusOffset] =
+                selection.isCollapsed
+                    ? [anchorNode, anchorOffset]
+                    : this.normalizeCursorPosition(
+                        focusNode,
+                        focusOffset,
+                        direction ? "right" : "left"
+                    );
             const [startContainer, startOffset, endContainer, endOffset] =
                 direction === DIRECTIONS.RIGHT
                     ? [anchorNode, anchorOffset, focusNode, focusOffset]
