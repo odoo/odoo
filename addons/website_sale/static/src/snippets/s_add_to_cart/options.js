@@ -86,9 +86,7 @@ options.registry.AddToCart = options.Class.extend({
             ['id', 'type'],
         );
         this.$target[0].dataset.variants = response.map(variant => variant.id);
-        // If the template is a combo product, it has only one variant (i.e. `response` has a single
-        // item).
-        this.$target[0].dataset.isCombo = response.some(variant => variant.type === 'combo');
+        if (response.length) this.$target[0].dataset.productType = response[0].type;
     },
 
 
@@ -141,7 +139,7 @@ options.registry.AddToCart = options.Class.extend({
         // it mimics the previous logic. We'll fix this later on.
         buttonEl.dataset.productVariantId =
             variantIds.length > 1 ? this.$target[0].dataset.productVariant : variantIds[0];
-        buttonEl.dataset.isCombo = this.$target[0].dataset.isCombo;
+        buttonEl.dataset.productType = this.$target[0].dataset.productType;
         buttonEl.dataset.action = this.$target[0].dataset.action;
         this._updateButtonContent();
     },
