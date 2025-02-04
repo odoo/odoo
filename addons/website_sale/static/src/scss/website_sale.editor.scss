@@ -1,3 +1,19 @@
+we-customizeblock-options:has(we-customizeblock-option.snippet-option-WebsiteSaleGridLayout) {
+    > we-title {
+        display: none !important;
+    }
+
+    .o_wsale_editor_section {
+        padding-top: map-get($map: $spacers, $key: 2);
+        margin-top: 0;
+
+        > we-title {
+            font-size: $o-we-sidebar-content-main-title-font-size;
+            color: $o-we-sidebar-content-main-title-color !important;
+        }
+    }
+}
+
 .o_wsale_soptions_menu_sizes {
     we-title {
         align-self: flex-start;
@@ -37,4 +53,28 @@
     display: inline-block;
     vertical-align: middle;
     border-radius: 50%;
+}
+
+// ==================
+// Edit-Mode Previews
+// ==================
+
+body.editor_enable {
+    // Outline the category description box
+    #category_header {
+        &:has(br:first-child:last-child), &:empty {
+            outline: $border-width dashed fade-currentColor(25%);
+
+            &:hover {
+                outline: $border-width * 2 solid $o-we-handles-accent-color;
+            }
+        }
+    }
+
+    // Outline product description boxes
+    .oe_subdescription {
+        div:has(br:first-child:last-child):not(:hover), div:empty:not(:hover) {
+            outline: $border-width dashed fade-currentColor(25%);
+        }
+    }
 }

@@ -410,7 +410,7 @@
                             </div>
                         </aside>
                         <div id="products_grid"
-                             t-attf-class="#{'o_wsale_layout_list' if layout_mode == 'list' else ''} {{'col-lg-9' if hasLeftColumn else 'col-12'}}">
+                             t-attf-class="#{'o_wsale_layout_list' if layout_mode == 'list' else 'o_wsale_layout_catalog'} {{'col-lg-9' if hasLeftColumn else 'col-12'}}">
                             <t t-call="website_sale.products_breadcrumb">
                                 <t t-set="_classes" t-valuef="d-none d-lg-flex w-100 p-0 small"/>
                             </t>
@@ -456,10 +456,6 @@
                                     </a>
                                     <h4 t-out="category.name" class="mb-0 me-auto"/>
                                 </div>
-
-                                <t t-if="is_view_active('website_sale.add_grid_or_list_option')" t-call="website_sale.add_grid_or_list_option">
-                                    <t t-set="_classes" t-valuef="d-flex"/>
-                                </t>
 
                                 <button t-if="is_view_active('website_sale.sort') or opt_wsale_categories or opt_wsale_attributes or opt_wsale_attributes_top"
                                         t-attf-class="btn btn-{{navClass}} position-relative {{not opt_wsale_attributes_top and 'd-lg-none'}}"
@@ -616,20 +612,6 @@
                     </a>
                 </t>
             </div>
-        </div>
-    </template>
-
-    <template id="website_sale.add_grid_or_list_option" active="True" name="Grid or List button">
-        <t t-set="_activeClasses" t-translation="off">active</t>
-        <div t-attf-class="o_wsale_apply_layout btn-group {{_classes}}" t-att-data-active-classes="_activeClasses">
-            <input type="radio" class="btn-check" name="wsale_products_layout" id="o_wsale_apply_grid"  t-att-checked="'checked' if layout_mode != 'list' else None" value="grid"/>
-            <label t-attf-class="btn btn-{{navClass}} #{_activeClasses if layout_mode != 'list' else None} o_wsale_apply_grid" title="Grid" for="o_wsale_apply_grid">
-                <i class="fa fa-th-large"/>
-            </label>
-            <input type="radio" class="btn-check" name="wsale_products_layout" id="o_wsale_apply_list" t-att-checked="'checked' if layout_mode == 'list' else None" value="list"/>
-            <label t-attf-class="btn btn-{{navClass}} #{_activeClasses if layout_mode == 'list' else None} o_wsale_apply_list" title="List" for="o_wsale_apply_list">
-                <i class="oi oi-view-list"/>
-            </label>
         </div>
     </template>
 
