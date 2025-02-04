@@ -59,7 +59,7 @@ import { compareListTypes } from "@html_editor/main/list/utils";
  */
 
 export class DeletePlugin extends Plugin {
-    static dependencies = ["selection", "history", "input"];
+    static dependencies = ["baseContainer", "selection", "history", "input"];
     static id = "delete";
     static shared = ["deleteRange", "deleteSelection", "delete"];
     resources = {
@@ -100,6 +100,7 @@ export class DeletePlugin extends Plugin {
             // Monetary field
             (node) => node.matches?.("[data-oe-type='monetary'] > span"),
         ],
+        invalid_for_base_container_predicates: (node) => this.isUnremovable(node, this.editable),
     };
 
     setup() {
@@ -429,9 +430,9 @@ export class DeletePlugin extends Plugin {
                 !block.parentElement.isContentEditable
             ) {
                 // @todo: not sure we want this when allowInlineAtRoot is true
-                const p = this.document.createElement("p");
-                p.appendChild(this.document.createElement("br"));
-                block.appendChild(p);
+                const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                baseContainer.appendChild(this.document.createElement("br"));
+                block.appendChild(baseContainer);
             } else {
                 block.appendChild(this.document.createElement("br"));
             }
@@ -1199,7 +1200,11 @@ export class DeletePlugin extends Plugin {
             return;
         }
 
-        if (isEmpty(closestUnmergeable) && !this.isUnremovable(closestUnmergeable)) {
+        if (
+            (isEmpty(closestUnmergeable) ||
+                this.delegateTo("is_empty_predicates", closestUnmergeable)) &&
+            !this.isUnremovable(closestUnmergeable)
+        ) {
             closestUnmergeable.remove();
             this.dependencies.selection.setSelection({
                 anchorNode: destContainer,

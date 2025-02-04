@@ -300,7 +300,15 @@ export class Message extends Record {
         compute() {
             return (
                 !this.body ||
-                ["", "<p></p>", "<p><br></p>", "<p><br/></p>"].includes(
+                [
+                    "",
+                    "<p></p>",
+                    "<p><br></p>",
+                    "<p><br/></p>",
+                    "<div></div>",
+                    "<div><br></div>",
+                    "<div><br/></div>",
+                ].includes(
                     this.body
                         .replace('<span class="o-mail-Message-edited"></span>', "")
                         .replace(/\s/g, "")

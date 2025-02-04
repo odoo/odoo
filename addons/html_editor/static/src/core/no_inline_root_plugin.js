@@ -1,11 +1,11 @@
-import { getDeepestPosition, paragraphRelatedElements } from "@html_editor/utils/dom_info";
+import { getDeepestPosition, isParagraphRelatedElement } from "@html_editor/utils/dom_info";
 import { Plugin } from "../plugin";
 import { isNotAllowedContent } from "./selection_plugin";
 import { nodeSize } from "@html_editor/utils/position";
 
 export class NoInlineRootPlugin extends Plugin {
     static id = "noInlineRoot";
-    static dependencies = ["selection", "history"];
+    static dependencies = ["baseContainer", "selection", "history"];
 
     resources = {
         ...(!this.config.allowInlineAtRoot && {
@@ -99,14 +99,11 @@ export class NoInlineRootPlugin extends Plugin {
      */
     fixSelectionOnEditableRootGeneric(nodeAfterCursor, nodeBeforeCursor) {
         // Handle arrow key presses.
-        if (nodeAfterCursor && paragraphRelatedElements.includes(nodeAfterCursor.nodeName)) {
+        if (nodeAfterCursor && isParagraphRelatedElement(nodeAfterCursor)) {
             // Cursor is right before a 'P'.
             this.dependencies.selection.setCursorStart(nodeAfterCursor);
             return true;
-        } else if (
-            nodeBeforeCursor &&
-            paragraphRelatedElements.includes(nodeBeforeCursor.nodeName)
-        ) {
+        } else if (nodeBeforeCursor && isParagraphRelatedElement(nodeBeforeCursor)) {
             // Cursor is right after a 'P'.
             this.dependencies.selection.setCursorEnd(nodeBeforeCursor);
             return true;
@@ -132,19 +129,19 @@ export class NoInlineRootPlugin extends Plugin {
             // used to prevent to fix twice from the same mouse event.
             this.preventNextPointerdownFix = true;
 
-            const p = this.document.createElement("p");
-            p.append(this.document.createElement("br"));
+            const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+            baseContainer.append(this.document.createElement("br"));
             if (!nodeAfterCursor) {
                 // Cursor is at the end of the editable.
-                this.editable.append(p);
+                this.editable.append(baseContainer);
             } else if (!nodeBeforeCursor) {
                 // Cursor is at the beginning of the editable.
-                this.editable.prepend(p);
+                this.editable.prepend(baseContainer);
             } else {
                 // Cursor is between two non-p blocks
-                nodeAfterCursor.before(p);
+                nodeAfterCursor.before(baseContainer);
             }
-            this.dependencies.selection.setCursorStart(p);
+            this.dependencies.selection.setCursorStart(baseContainer);
             this.dependencies.history.addStep();
             return true;
         }

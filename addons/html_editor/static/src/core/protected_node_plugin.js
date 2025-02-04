@@ -1,5 +1,5 @@
 import { Plugin } from "../plugin";
-import { isProtecting } from "../utils/dom_info";
+import { isProtecting, isUnprotecting } from "../utils/dom_info";
 import { childNodes } from "../utils/dom_traversal";
 
 const PROTECTED_SELECTOR = `[data-oe-protected="true"],[data-oe-protected=""]`;
@@ -19,7 +19,10 @@ export class ProtectedNodePlugin extends Plugin {
         normalize_handlers: this.normalize.bind(this),
         before_filter_mutation_record_handlers: this.beforeFilteringMutationRecords.bind(this),
 
-        unsplittable_node_predicates: isProtecting, // avoid merge
+        unsplittable_node_predicates: [
+            isProtecting, // avoid merge
+            isUnprotecting,
+        ],
         savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
         removable_descendants_providers: this.filterDescendantsToRemove.bind(this),
     };
