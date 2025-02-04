@@ -8,7 +8,7 @@ import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { useHover, useMessageHighlight } from "@mail/utils/common/hooks";
 import { isEventHandled } from "@web/core/utils/misc";
 
-import { Component, toRaw, useChildSubEnv, useRef, useState } from "@odoo/owl";
+import { Component, toRaw, useChildSubEnv, useRef, useState, useSubEnv } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -41,6 +41,7 @@ export class ChatWindow extends Component {
 
     setup() {
         super.setup();
+        useSubEnv({ inChatWindow: true });
         this.store = useService("mail.store");
         this.messageHighlight = useMessageHighlight();
         this.state = useState({
@@ -57,7 +58,6 @@ export class ChatWindow extends Component {
 
         useChildSubEnv({
             closeActionPanel: () => this.threadActions.activeAction?.close(),
-            inChatWindow: true,
             messageHighlight: this.messageHighlight,
         });
     }
