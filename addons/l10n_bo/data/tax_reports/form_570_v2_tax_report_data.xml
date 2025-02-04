@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="iue_retention_tax_report" model="account.report">
+            <field name="name">Formulario 570v2: Retenciones IUE</field>
+            <field name="root_report_id" ref="account.generic_tax_report"/>
+            <field name="country_id" ref="base.bo"/>
+            <field name="filter_fiscal_position" eval="True"/>
+            <field name="availability_condition">country</field>
+            <field name="column_ids">
+                <record id="iue_retention_tax_report_code" model="account.report.column">
+                    <field name="name">Cód. Casilla</field>
+                    <field name="expression_label">code</field>
+                    <field name="figure_type">string</field>
+                </record>
+                <record id="iue_retention_tax_report_balance" model="account.report.column">
+                    <field name="name">Importe</field>
+                    <field name="expression_label">balance</field>
+                    <field name="figure_type">monetary</field>
+                </record>
+            </field>
+            <field name="line_ids">
+                <record id="f570_v2_tax_report" model="account.report.line">
+                    <field name="sequence" eval="0"/>
+                    <field name="name">Form. 570v.2: Retención de Impuesto a las Utilidades IUE</field>
+                    <field name="code">f570_v2_tax_report</field>
+                    <field name="hierarchy_level" eval="0"/>
+                    <field name="children_ids">
+                        <record id="iue_retention_services_paid_amount_tax_line" model="account.report.line">
+                            <field name="sequence" eval="101"/>
+                            <field name="name">Importe Cancelado por Servicios</field>
+                            <field name="code">iueRet13</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="foldable" eval="1"/>
+                            <field name="expression_ids">
+                                <record id="iue_retention_services_paid_amount_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">13</field>
+                                </record>
+                                <record id="iue_retention_services_paid_amount_tax_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">iueRet13s.balance + iueRet13gs.balance</field>
+                                </record>
+                            </field>
+                            <field name="children_ids">
+                                <record id="iue_retention_service_paid_amount_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="102"/>
+                                    <field name="name">Servicios</field>
+                                    <field name="code">iueRet13s</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="iue_retention_service_paid_amount_tax_tag" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">tax_tags</field>
+                                            <field name="formula">iueRet13s</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="grossing_up_iue_retention_service_paid_amount_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="103"/>
+                                    <field name="name">Grossing Up Servicios</field>
+                                    <field name="code">iueRet13gs</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="grossing_up_iue_retention_service_paid_amount_tax_tag" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">tax_tags</field>
+                                            <field name="formula">iueRet13gs</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="iue_retention_goods_paid_amount_tax_line" model="account.report.line">
+                            <field name="sequence" eval="104"/>
+                            <field name="name">Importe Cancelado por adquisiciones</field>
+                            <field name="code">iueRet26</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="foldable" eval="1"/>
+                            <field name="expression_ids">
+                                <record id="iue_retention_goods_paid_amount_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">26</field>
+                                </record>
+                                <record id="iue_retention_goods_paid_amount_tax_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">iueRet26g.balance + iueRet26gg.balance</field>
+                                </record>
+                            </field>
+                            <field name="children_ids">
+                                <record id="iue_retention_good_paid_amount_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="105"/>
+                                    <field name="name">Bienes</field>
+                                    <field name="code">iueRet26g</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="iue_retention_good_paid_amount_tax_tag" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">tax_tags</field>
+                                            <field name="formula">iueRet26g</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="grossing_up_iue_retention_good_paid_amount_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="106"/>
+                                    <field name="name">Grossing Up Bienes</field>
+                                    <field name="code">iueRet26gg</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="grossing_up_iue_retention_good_paid_amount_tax_tag" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">tax_tags</field>
+                                            <field name="formula">iueRet26gg</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="iue_retention_service_taxable_amount_tax_line" model="account.report.line">
+                            <field name="sequence" eval="107"/>
+                            <field name="name">Importe Sujeto a Impuesto (50% Sobre el Importe de la Casilla C13)</field>
+                            <field name="code">iueRet1001</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="foldable" eval="1"/>
+                            <field name="expression_ids">
+                                <record id="iue_retention_service_taxable_amount_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">1001</field>
+                                </record>
+                                <record id="iue_retention_service_taxable_amount_tax_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">iueRet1001s.balance + iueRet1001gs.balance</field>
+                                </record>
+                            </field>
+                            <field name="children_ids">
+                                <record id="iue_retention_services_taxable_amount_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="108"/>
+                                    <field name="name">Servicios</field>
+                                    <field name="code">iueRet1001s</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="iue_retention_services_taxable_amount_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">iueRet13s.balance * 0.5</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="grossing_up_iue_retention_services_taxable_amount_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="109"/>
+                                    <field name="name">Grossing Up Servicios</field>
+                                    <field name="code">iueRet1001gs</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="grossing_up_iue_retention_services_taxable_amount_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">iueRet13gs.balance * 0.5</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="iue_retention_good_taxable_amount_tax_line" model="account.report.line">
+                            <field name="sequence" eval="110"/>
+                            <field name="name">Importe Sujeto a Impuesto (20% Sobre el Importe de la Casilla C26)</field>
+                            <field name="code">iueRet1002</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="foldable" eval="1"/>
+                            <field name="expression_ids">
+                                <record id="iue_retention_goods_taxable_amount_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">1002</field>
+                                </record>
+                                <record id="iue_retention_goods_taxable_amount_tax_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">iueRet1002g.balance + iueRet1002gg.balance</field>
+                                </record>
+                            </field>
+                            <field name="children_ids">
+                                <record id="iue_retention_goods_taxable_amount_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="111"/>
+                                    <field name="name">Bienes</field>
+                                    <field name="code">iueRet1002g</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="iue_retention_goods_taxable_amount_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">iueRet26g.balance * 0.2</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="grossing_up_iue_retention_goods_taxable_amount_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="112"/>
+                                    <field name="name">Grossing Up Bienes</field>
+                                    <field name="code">iueRet1002gg</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="grossing_up_iue_retention_goods_taxable_amount_tax_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="auditable" eval="False"/>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">iueRet26gg.balance * 0.2</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="determined_iue_retention_amount_tax_line" model="account.report.line">
+                            <field name="sequence" eval="113"/>
+                            <field name="name">Impuesto determinado (25% Sobre (C1001 + C1002))</field>
+                            <field name="code">iueRet909</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="foldable" eval="1"/>
+                            <field name="expression_ids">
+                                <record id="determined_iue_retention_amount_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">909</field>
+                                </record>
+                                <record id="determined_iue_retention_amount_tax_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">iueRet909s.balance + iueRet909gs.balance + iueRet909g.balance + iueRet909gg.balance</field>
+                                </record>
+                            </field>
+                            <field name="children_ids">
+                                <record id="iue_retention_services_amount_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="114"/>
+                                    <field name="name">Servicios</field>
+                                    <field name="code">iueRet909s</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="iue_retention_services_amount_tax_tag" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">tax_tags</field>
+                                            <field name="formula">iueRet909s</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="grossing_up_iue_retention_services_amount_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="115"/>
+                                    <field name="name">Grossing Up Servicios</field>
+                                    <field name="code">iueRet909gs</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="grossing_up_iue_retention_services_amount_tax_tag" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">tax_tags</field>
+                                            <field name="formula">iueRet909gs</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="iue_retention_goods_amount_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="116"/>
+                                    <field name="name">Bienes</field>
+                                    <field name="code">iueRet909g</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="iue_retention_goods_amount_tax_tag" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">tax_tags</field>
+                                            <field name="formula">iueRet909g</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="grossing_up_iue_retention_goods_amount_tax_line" model="account.report.line">
+                                    <field name="sequence" eval="117"/>
+                                    <field name="name">Grossing Up Bienes</field>
+                                    <field name="code">iueRet909gg</field>
+                                    <field name="hide_if_zero" eval="0"/>
+                                    <field name="expression_ids">
+                                        <record id="grossing_up_iue_retention_goods_amount_tax_tag" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">tax_tags</field>
+                                            <field name="formula">iueRet909gg</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="iue_retention_payment_on_account_in_sworn_statements_tax_line" model="account.report.line">
+                            <field name="sequence" eval="118"/>
+                            <field name="name">Pagos a Cuenta Realizados en DDJJ Anterior y/o en Boletas de Pago</field>
+                            <field name="code">iueRet622</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="expression_ids">
+                                <record id="iue_retention_payment_on_account_in_sworn_statements_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">622</field>
+                                </record>
+                                <record id="iue_retention_payment_on_account_in_sworn_statements_tax_tag" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">iueRet622</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="previous_iue_retention_payments_on_account_to_compensate_tax_line" model="account.report.line">
+                            <field name="sequence" eval="119"/>
+                            <field name="name">Saldo Disponible de Pagos del Período Anterior a Compensar</field>
+                            <field name="code">iueRet640</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="expression_ids">
+                                <record id="previous_iue_retention_payments_on_account_to_compensate_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">640</field>
+                                </record>
+                                <record id="previous_iue_retention_payments_on_account_to_compensate_tax_tag" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">iueRet640</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="iue_retention_taxpayer_favor_balance_payments_on_account_tax_line" model="account.report.line">
+                            <field name="sequence" eval="120"/>
+                            <field name="name">Diferencia a Favor del Contribuyente para el Siguiente Período (C622 + C640 - C909; Si > 0 )</field>
+                            <field name="code">iueRet747</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="expression_ids">
+                                <record id="iue_retention_taxpayer_favor_balance_payments_on_account_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">747</field>
+                                </record>
+                                <record id="iue_retention_taxpayer_favor_balance_payments_on_account_tax_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">iueRet622.balance + iueRet640.balance - iueRet909.balance</field>
+                                    <field name="subformula">if_above(CUR(0))</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="iue_retention_treasury_favor_balance_tax_line" model="account.report.line">
+                            <field name="sequence" eval="121"/>
+                            <field name="name">Saldo Definitivo a Favor del Fisco (C909 - C622 - C640; Si > 0)</field>
+                            <field name="code">iueRet996</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="expression_ids">
+                                <record id="iue_retention_treasury_favor_balance_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">996</field>
+                                </record>
+                                <record id="iue_retention_treasury_favor_balance_tax_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">iueRet909.balance - iueRet622.balance - iueRet640.balance</field>
+                                    <field name="subformula">if_above(CUR(0))</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="iue_retention_payment_in_values_tax_line" model="account.report.line">
+                            <field name="sequence" eval="122"/>
+                            <field name="name">Imputación de Crédito en Valores (Sujeto a Verificación y Confirmación por Parte del SIN)</field>
+                            <field name="code">iueRet677</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="expression_ids">
+                                <record id="iue_retention_payment_in_values_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">677</field>
+                                </record>
+                                <record id="iue_retention_payment_in_values_tax_tag" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="engine">tax_tags</field>
+                                    <field name="formula">iueRet677</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="iue_retention_cash_payment_tax_line" model="account.report.line">
+                            <field name="sequence" eval="123"/>
+                            <field name="name">Impuesto a Pagar en Efectivo (C996-C677;Si > 0)</field>
+                            <field name="code">iueRet576</field>
+                            <field name="hide_if_zero" eval="0"/>
+                            <field name="expression_ids">
+                                <record id="iue_cash_payment_tax_code" model="account.report.expression">
+                                    <field name="label">code</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">576</field>
+                                </record>
+                                <record id="iue_cash_payment_tax_balance" model="account.report.expression">
+                                    <field name="label">balance</field>
+                                    <field name="auditable" eval="False"/>
+                                    <field name="engine">aggregation</field>
+                                    <field name="formula">iueRet996.balance - iueRet677.balance</field>
+                                    <field name="subformula">if_above(CUR(0))</field>
+                                </record>
+                            </field>
+                        </record>
+                    </field>
+                </record>
+            </field>
+        </record>
+
+    </data>
+</odoo>
