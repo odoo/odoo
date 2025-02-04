@@ -315,7 +315,7 @@ class AccountEdiCommon(models.AbstractModel):
                 # (Windows or Linux style) and/or the name of the xml instead of the pdf.
                 # Get only the filename with a pdf extension.
                 name = (attachment_name.text or 'invoice').split('\\')[-1].split('/')[-1].split('.')[0] + '.pdf'
-                attachment = self.env['ir.attachment'].create({
+                attachments |= self.env['ir.attachment'].create({
                     'name': name,
                     'res_id': invoice.id,
                     'res_model': 'account.move',
@@ -323,13 +323,6 @@ class AccountEdiCommon(models.AbstractModel):
                     'type': 'binary',
                     'mimetype': 'application/pdf',
                 })
-                # Upon receiving an email (containing an xml) with a configured alias to create invoice, the xml is
-                # set as the main_attachment. To be rendered in the form view, the pdf should be the main_attachment.
-                if invoice.message_main_attachment_id and \
-                        invoice.message_main_attachment_id.name.endswith('.xml') and \
-                        'pdf' not in invoice.message_main_attachment_id.mimetype:
-                    invoice.message_main_attachment_id = attachment
-                attachments |= attachment
         if attachments:
             invoice.with_context(no_new_invoice=True).message_post(attachment_ids=attachments.ids)
 

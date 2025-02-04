@@ -49,13 +49,17 @@ class IrAttachment(models.Model):
         # message_main_attachment_id field can be empty, that's why we compare to False;
         # we are just checking that it exists on the model before writing it
         if related_record and hasattr(related_record, 'message_main_attachment_id'):
-            if force or not related_record.message_main_attachment_id:
+            if force or (self.is_viewable() and not related_record.message_main_attachment_id):
                 #Ignore AccessError, if you don't have access to modify the document
                 #Just don't set the value
                 try:
                     related_record.message_main_attachment_id = self
                 except AccessError:
                     pass
+
+    def is_viewable(self):
+        # reflects the compute of 'threadsAsAttachmentsInWebClientView' in mail/static/src/models/attachment.js
+        return self.mimetype.endswith('pdf') or self.mimetype.startswith('image')
 
     def _delete_and_notify(self):
         for attachment in self:
