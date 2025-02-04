@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from markupsafe import Markup
+from math import floor
 
 from odoo import api, Command, fields, models, SUPERUSER_ID, _
 from odoo.tools.float_utils import float_compare
@@ -200,6 +201,24 @@ class PurchaseOrder(models.Model):
         invoice_vals = super()._prepare_invoice()
         invoice_vals['invoice_incoterm_id'] = self.incoterm_id.id
         return invoice_vals
+
+    def action_display_suggest(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Purchase Order Suggest"),
+            'target': 'new',
+            'view_mode': 'form',
+            'views': [[False, 'form']],
+            'res_id': False,
+            'view_id': self.env.ref('purchase_stock.purchase_order_suggest_view_form').id,
+            'res_model': 'purchase.order.suggest',
+            'context': {
+                'dialog_size': 'medium',
+                'default_purchase_order_id': self.id,
+                'default_warehouse_id': self.picking_type_id.warehouse_id.id,
+            },
+        }
 
     # --------------------------------------------------
     # Business methods

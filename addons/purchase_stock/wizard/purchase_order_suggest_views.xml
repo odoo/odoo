@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="purchase_order_suggest_view_form" model="ir.ui.view">
+        <field name="name">purchase.order.suggest.view.form</field>
+        <field name="model">purchase.order.suggest</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="purchase_order_id" invisible="1"/> <!-- Needed for `currency_id` related field. -->
+                <field name="currency_id" invisible="1"/> <!-- Needed for `estimed_price` `currency_field` option. -->
+                <group>
+                    <label for="number_of_days"/>
+                    <div>
+                        <field name="number_of_days" class="oe_inline"/> days
+                    </div>
+                    <field name="warehouse_id" string="In" groups="stock.group_stock_multi_warehouses"/>
+                </group>
+                <group>
+                    <label for="based_on"/>
+                    <div>
+                        <field name="based_on" class="oe_inline" widget="time_period_selection"/> x
+                        <field name="percent_factor" class="oe_inline"/> %
+                    </div>
+                    <field name="estimed_price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                </group>
+                <footer>
+                    <button invisible="number_of_days"
+                            class="btn-secondary disabled"
+                            name="action_purchase_order_suggest"
+                            string="Compute" type="object"/>
+                    <button invisible="not number_of_days"
+                            class="btn-primary"
+                            name="action_purchase_order_suggest"
+                            string="Compute" type="object"
+                            data-hotkey="q"/>
+                    <button string="Discard" class="btn btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

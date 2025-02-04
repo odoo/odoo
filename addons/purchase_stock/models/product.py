@@ -1,7 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from dateutil.relativedelta import relativedelta
+
 from odoo import api, fields, models
+from odoo.fields import Domain
 from odoo.osv import expression
 
 
@@ -36,6 +38,29 @@ class ProductProduct(models.Model):
     _inherit = 'product.product'
 
     purchase_order_line_ids = fields.One2many('purchase.order.line', 'product_id', string="PO Lines") # used to compute quantities
+    monthly_demand = fields.Float(compute='_compute_monthly_demand')
+
+    @api.depends_context('monthly_demand_start_date', 'monthly_demand_limit_date', 'warehouse_id')
+    def _compute_monthly_demand(self):
+        self.monthly_demand = 0
+        start_date = self.env.context.get('monthly_demand_start_date', fields.Datetime.now() - relativedelta(days=30))
+        limit_date = self.env.context.get('monthly_demand_limit_date', fields.Datetime.now())
+        warehouse_id = self.env.context.get('warehouse_id')
+        for product in self:
+            move_domain = Domain.AND([
+                [('product_id', 'in', product.ids)],
+                [('state', '=', 'done')],
+                [('location_dest_usage', '=', 'customer')],
+                [('date', '>=', start_date)],
+                [('date', '<', limit_date)],
+            ])
+            if warehouse_id:
+                move_domain = Domain.AND([
+                    move_domain,
+                    [('warehouse_id', '=', warehouse_id)]
+                ])
+            moves = self.env['stock.move'].search(move_domain)
+            product.monthly_demand = sum(mv.product_qty for mv in moves)
 
     def _get_quantity_in_progress(self, location_ids=False, warehouse_ids=False):
         if not location_ids:
