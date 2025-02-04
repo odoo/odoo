@@ -2,6 +2,7 @@
 import typing
 from collections.abc import Mapping
 
+from .commands import Command
 from .domains import Domain
 from .environments import Environment
 from .fields import Field
@@ -21,3 +22,6 @@ DomainType = Domain | list[str | tuple[str, str, typing.Any]]
 ContextType = Mapping[str, typing.Any]
 ValuesType = dict[str, typing.Any]
 ModelType = typing.TypeVar("ModelType", bound=BaseModel)
+
+if typing.TYPE_CHECKING:
+    from .commands import CommandValue
