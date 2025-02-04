@@ -24,12 +24,13 @@
             data-selector="main:has(.o_wsale_products_page)"
             data-no-check="true"
             string="Products Page"
-            data-target="#products_grid .o_wsale_products_grid_table_wrapper > .o_wsale_products_grid_table"
+            data-target="#products_grid"
         >
-            <we-select string="Layout" data-no-preview="true" data-reload="/">
-                <we-button data-customize-website-views="" data-name="grid_view_opt">Grid</we-button>
-                <we-button data-customize-website-views="website_sale.products_list_view">List</we-button>
+            <we-select class="o_wsale_editor_section" string="Layout">
+                <we-button data-select-class="o_wsale_layout_catalog" data-customize-website-views="" data-name="grid_view_opt">Grid</we-button>
+                <we-button data-select-class="o_wsale_layout_list" data-customize-website-views="website_sale.products_list_view">List</we-button>
             </we-select>
+
             <we-row string="Size" class="o_we_sublevel_1">
                 <we-input data-set-ppg="" data-step="1" data-no-preview="true" data-reload="/"/>
                 <span class="mx-2 o_wsale_ppr_by">by</span>
@@ -42,6 +43,7 @@
 
             <we-range
                 string="Gap" class="o_we_sublevel_1"
+                data-apply-to=".o_wsale_products_grid_table_wrapper > .o_wsale_products_grid_table"
                 data-select-style="0"
                 data-set-gap=""
                 data-css-property="--o-wsale-products-grid-gap"
@@ -51,7 +53,10 @@
                 data-min="0"
                 data-max="28"
             />
-            <we-select string="Style" class="o_we_sublevel_1">
+            <we-select string="Products"
+                data-apply-to=".o_wsale_products_grid_table_wrapper > .o_wsale_products_grid_table"
+                class="o_wsale_editor_section"
+                >
                 <we-button data-select-class=""
                            data-customize-website-views="">
                            Default
@@ -69,7 +74,11 @@
                            Grid
                 </we-button>
             </we-select>
-            <we-select string="Images Size" class="o_we_sublevel_1">
+            <we-collapse>
+            <we-select string="Images Size"
+                class="o_we_sublevel_1"
+                data-apply-to=".o_wsale_products_grid_table_wrapper > .o_wsale_products_grid_table"
+                >
                 <we-button data-select-class="o_wsale_context_thumb_4_3"
                            data-customize-website-views="website_sale.products_thumb_4_3">
                            Landscape (4/3)
@@ -87,33 +96,48 @@
                            Vertical (2/3)
                 </we-button>
             </we-select>
-            <we-button-group string="Fill" class="o_we_sublevel_2" data-variable="thumb_size">
+            <we-button-group string="Images Fill"
+                class="o_we_sublevel_2"
+                data-variable="thumb_size"
+                data-apply-to=".o_wsale_products_grid_table_wrapper > .o_wsale_products_grid_table"
+                >
                 <we-button data-select-class=""
+                           title="Contain within the box"
                            data-img="/website/static/src/img/snippets_options/content_width_normal.svg"
+                           data-reload="/"
                            data-customize-website-views="">
                 </we-button>
                 <we-button data-select-class="o_wsale_context_thumb_cover"
+                           title="Always Fill the box"
                            data-name="thumb_cover"
                            data-variable="thumb_cover"
                            data-img="/website/static/src/img/snippets_options/content_width_full.svg"
+                           data-reload="/"
                            data-customize-website-views="website_sale.products_thumb_cover">
                 </we-button>
             </we-button-group>
-            <we-checkbox string="Search Bar"
-                         data-customize-website-views="website_sale.search"
-                         data-no-preview="true"
-                         data-reload="/"/>
-            <we-checkbox string="Prod. Desc."
+            </we-collapse>
+            <we-checkbox string="Description"
+                         class="o_we_sublevel_1"
                          data-customize-website-views="website_sale.products_description"
                          data-no-preview="true"
                          data-reload="/"/>
-            <we-row id="o_wsale_grid_left_panel" string="Categories" data-variable="filmstrip">
-                <we-button string="Left"
+            <we-row string="Actions" class="o_we_full_row o_we_sublevel_1">
+                <we-button title="Add to Cart" class="fa fa-fw fa-shopping-cart o_we_add_to_cart_btn"
+                    data-customize-website-views="website_sale.products_add_to_cart"
+                    data-no-preview="true"
+                    data-reload="/"/>
+                <div class="flex-basis-100"/>
+            </we-row>
+            <we-row id="o_wsale_grid_left_panel" class="o_wsale_editor_section" string="Categories" data-variable="filmstrip">
+                <we-button string="Sidebar"
+                           title="Show into Sidebar"
                            data-customize-website-views="website_sale.products_categories"
                            data-name="categories_opt"
                            data-no-preview="true"
                            data-reload="/"/>
-                <we-button string="Top"
+                <we-button string="Top Bar"
+                           title="Show into the Top Bar"
                            data-customize-website-views="website_sale.products_categories_top"
                            data-name="categories_opt_top"
                            data-no-preview="true"
@@ -125,25 +149,36 @@
                          data-dependencies="categories_opt"
                          data-no-preview="true"
                          data-reload="/"/>
-            <we-row string="Attributes" class="o_we_full_row">
-                <we-button string="Left"
+            <we-select string="Style" class="o_we_sublevel_1" data-dependencies="categories_opt_top">
+                <we-button data-select-class=""
+                           data-customize-website-views="">
+                           Filmstrip - default
+                </we-button>
+            </we-select>
+            <we-select string="Filters" class="o_wsale_editor_section" data-no-preview="true" data-reload="/">
+                <we-button string="Hide"
+                           title="Hide all filters"
+                           data-customize-website-views=""
+                           />
+                <we-button string="Left (Sidebar)"
+                           title="Show filters into Sidebar"
                            data-customize-website-views="website_sale.products_attributes"
                            data-name="attributes_opt"
-                           data-no-preview="true"
-                           data-reload="/"/>
-                <we-button string="Top"
+                           />
+                <we-button string="Off-screen Menu"
+                           title="Render a button to show the Off-screen Menu"
                            data-customize-website-views="website_sale.products_attributes_top"
                            data-name="attributes_opt_top"
-                           data-no-preview="true"
-                           data-reload="/"/>
-            </we-row>
-            <we-checkbox string="Price Filter"
+                           />
+            </we-select>
+            <we-checkbox string="Price"
                          class="o_we_sublevel_1"
                          data-customize-website-views="website_sale.filter_products_price"
                          data-dependencies="attributes_opt, attributes_opt_top"
                          data-no-preview="true"
                          data-reload="/"/>
-            <we-checkbox string="Product Tags Filter"
+            <we-checkbox string="Tags"
+                         id="o_wsale_tags_filter_opt"
                          class="o_we_sublevel_1"
                          data-customize-website-views="website_sale.filter_products_tags"
                          data-dependencies="attributes_opt, attributes_opt_top"
@@ -152,33 +187,28 @@
             />
             <we-checkbox
                 id="collapsible_sidebar"
-                string="Collapsible sidebar"
+                string="Collapse sidebar sections"
+                class="o_wsale_editor_section"
                 data-customize-website-views="website_sale.products_categories_list_collapsible, website_sale.products_attributes_collapsible"
                 data-dependencies="categories_opt, attributes_opt"
                 data-no-preview="true"
                 data-reload="/"
             />
-            <we-row string="Top Bar" class="o_we_full_row">
+            <we-row string="Top Bar" class="o_wsale_editor_section">
                 <we-button string="Sort by"
                            data-customize-website-views="website_sale.sort"
                            data-no-preview="true"
                            data-reload="/"/>
-                <we-button string="Layout"
-                           data-customize-website-views="website_sale.add_grid_or_list_option"
+                <we-button string="Search"
+                           data-customize-website-views="website_sale.search"
                            data-no-preview="true"
                            data-reload="/"/>
             </we-row>
-            <we-select string="Default Sort" class="o_wsale_sort_submenu" data-no-preview="true" data-reload="/">
+            <we-select string="Default Sort" class="o_wsale_sort_submenu o_we_sublevel_1" data-no-preview="true" data-reload="/">
                 <t t-foreach="request.env['website']._get_product_sort_mapping()" t-as="query_and_label">
                     <we-button t-att-data-set-default-sort="query_and_label[0]"><t t-esc="query_and_label[1]"/></we-button>
                 </t>
             </we-select>
-            <we-row string="Buttons" class="o_we_full_row">
-                <we-button title="Add to Cart" class="fa fa-fw fa-shopping-cart o_we_add_to_cart_btn"
-                           data-customize-website-views="website_sale.products_add_to_cart"
-                           data-no-preview="true"
-                           data-reload="/"/>
-            </we-row>
         </div>
         <!-- Product -->
         <div data-js="WebsiteSaleProductsItem"
