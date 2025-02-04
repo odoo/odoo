@@ -10,7 +10,7 @@ from werkzeug.urls import url_encode
 
 from odoo import api, Command, fields, models, _
 from odoo.osv import expression
-from odoo.tools import format_amount, format_date, format_list, formatLang, groupby
+from odoo.tools import format_amount, format_date, format_list, formatLang, groupby, SQL
 from odoo.tools.float_utils import float_is_zero
 from odoo.exceptions import UserError, ValidationError
 
@@ -158,6 +158,8 @@ class PurchaseOrder(models.Model):
     receipt_reminder_email = fields.Boolean('Receipt Reminder Email', compute='_compute_receipt_reminder_email')
     reminder_date_before_receipt = fields.Integer('Days Before Receipt', compute='_compute_receipt_reminder_email')
 
+    is_late = fields.Boolean('Is Late', store=False, search='_search_is_late')
+
     @api.constrains('company_id', 'order_line')
     def _check_order_line_company_id(self):
         for order in self:
@@ -257,6 +259,17 @@ class PurchaseOrder(models.Model):
     def onchange_date_planned(self):
         if self.date_planned:
             self.order_line.filtered(lambda line: not line.display_type).date_planned = self.date_planned
+
+    def _search_is_late(self, operator, value):
+        if operator not in ["=", "!="]:
+            raise ValidationError(_("Unsupported operator"))
+        purchase_ids = self._search([('state', '=', 'purchase'), ('date_planned', '<=', fields.Datetime.now())])
+        if operator == "=" and value or operator == "!=" and not value:
+            purchase_lines_late = self.env['purchase.order.line'].search([('order_id', 'in', purchase_ids), ('qty_received', '<', SQL('product_qty'))])
+            return [('id', 'in', purchase_lines_late.order_id.ids)]
+        else:
+            purchase_lines_on_time = self.env['purchase.order.line']._search([('order_id', 'in', purchase_ids), ('qty_received', '>=', SQL('product_qty'))])
+            return [('id', 'in', purchase_lines_on_time.order_id.ids)]
 
     def write(self, vals):
         vals, partner_vals = self._write_partner_values(vals)
@@ -846,47 +859,66 @@ class PurchaseOrder(models.Model):
         self.browse().check_access('read')
 
         result = {
-            'all_to_send': 0,
-            'all_waiting': 0,
-            'all_late': 0,
-            'my_to_send': 0,
-            'my_waiting': 0,
-            'my_late': 0,
+            'global': {
+                'draft': {'all': 0, 'priority': 0},
+                'sent':  {'all': 0, 'priority': 0},
+                'late':  {'all': 0, 'priority': 0},
+                'not_acknowledged': {'all': 0, 'priority': 0},
+                'late_receipt': {'all': 0, 'priority': 0},
+            },
+            'my': {
+                'draft': {'all': 0, 'priority': 0},
+                'sent':  {'all': 0, 'priority': 0},
+                'late':  {'all': 0, 'priority': 0},
+                'not_acknowledged': {'all': 0, 'priority': 0},
+                'late_receipt': {'all': 0, 'priority': 0},
+            },
             'all_avg_order_value': 0,
             'all_avg_days_to_purchase': 0,
             'all_total_last_7_days': 0,
-            'all_sent_rfqs': 0,
             'company_currency_symbol': self.env.company.currency_id.symbol
         }
 
-        one_week_ago = fields.Datetime.to_string(fields.Datetime.now() - relativedelta(days=7))
-
-        query = """SELECT COUNT(1)
-                   FROM mail_message m
-                   JOIN purchase_order po ON (po.id = m.res_id)
-                   WHERE m.create_date >= %s
-                     AND m.model = 'purchase.order'
-                     AND m.message_type = 'notification'
-                     AND m.subtype_id = %s
-                     AND po.company_id = %s;
-                """
-
-        self.env.cr.execute(query, (one_week_ago, self.env.ref('purchase.mt_rfq_sent').id, self.env.company.id))
-        res = self.env.cr.fetchone()
-        result['all_sent_rfqs'] = res[0] or 0
+        def _update(key, dict_to_update, group):
+            for priority, user_id, count in group:
+                my = user_id == self.env.user
+                dict_to_update['global'][key]['all'] += count
+                if priority != '0':
+                    dict_to_update['global'][key]['priority'] += count
+                if not my:
+                    continue
+                dict_to_update['my'][key]['all'] += count
+                if priority != '0':
+                    dict_to_update['my'][key]['priority'] += count
 
         # easy counts
-        po = self.env['purchase.order']
-        result['all_to_send'] = po.search_count([('state', '=', 'draft')])
-        result['my_to_send'] = po.search_count([('state', '=', 'draft'), ('user_id', '=', self.env.uid)])
-        result['all_waiting'] = po.search_count([('state', '=', 'sent'), ('date_order', '>=', fields.Datetime.now())])
-        result['my_waiting'] = po.search_count([('state', '=', 'sent'), ('date_order', '>=', fields.Datetime.now()), ('user_id', '=', self.env.uid)])
-        result['all_late'] = po.search_count([('state', 'in', ['draft', 'sent', 'to approve']), ('date_order', '<', fields.Datetime.now())])
-        result['my_late'] = po.search_count([('state', 'in', ['draft', 'sent', 'to approve']), ('date_order', '<', fields.Datetime.now()), ('user_id', '=', self.env.uid)])
+        groupby = ['priority', 'user_id']
+        aggregate = ['id:count_distinct']
+        rfq_draft_domain = [('state', '=', 'draft')]
+        rfq_draft_group = self.env['purchase.order']._read_group(rfq_draft_domain, groupby, aggregate)
+        _update('draft', result, rfq_draft_group)
+
+        rfq_sent_domain = [('state', '=', 'sent')]
+        rfq_sent_group = self.env['purchase.order']._read_group(rfq_sent_domain, groupby, aggregate)
+        _update('sent', result, rfq_sent_group)
+
+        rfq_late_domain = [('state', 'in', ['draft', 'sent', 'to approve']), ('date_order', '<', fields.Datetime.now())]
+        rfq_late_group = self.env['purchase.order']._read_group(rfq_late_domain, groupby, aggregate)
+        _update('late', result, rfq_late_group)
+
+        rfq_not_acknowledge = [('state', '=', 'purchase'), ('mail_reception_confirmed', '=', False)]
+        rfq_not_acknowledge_group = self.env['purchase.order']._read_group(rfq_not_acknowledge, groupby, aggregate)
+        _update('not_acknowledged', result, rfq_not_acknowledge_group)
+
+        rfq_late_receipt = [('is_late', '=', True)]
+        rfq_late_receipt_group = self.env['purchase.order']._read_group(rfq_late_receipt, groupby, aggregate)
+        _update('late_receipt', result, rfq_late_receipt_group)
 
         # Calculated values ('avg order value', 'avg days to purchase', and 'total last 7 days') note that 'avg order value' and
         # 'total last 7 days' takes into account exchange rate and current company's currency's precision.
         # This is done via SQL for scalability reasons
+        one_week_ago = fields.Datetime.to_string(fields.Datetime.now() - relativedelta(days=7))
+
         query = """SELECT AVG(COALESCE(po.amount_total / NULLIF(po.currency_rate, 0), po.amount_total)),
                           AVG(extract(epoch from age(po.date_approve,po.create_date)/(24*60*60)::decimal(16,2))),
                           SUM(CASE WHEN po.date_approve >= %s THEN COALESCE(po.amount_total / NULLIF(po.currency_rate, 0), po.amount_total) ELSE 0 END)
