@@ -2,9 +2,10 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from '@web/core/registry';
 import { standardWidgetProps } from '@web/views/widgets/standard_widget_props';
 import { useService } from '@web/core/utils/hooks';
-import { Component, useState } from "@odoo/owl";
+import { Component, useState, onWillStart } from "@odoo/owl";
 import { ViewButton } from '@web/views/view_button/view_button';
-import { useRecordObserver } from '@web/model/relational_model/utils';
+import { debounce } from "@web/core/utils/timing";
+
 
 export class ClaimRewardsButton extends Component {
     static template = 'sale_loyalty.ClaimRewardsButton';
@@ -19,15 +20,19 @@ export class ClaimRewardsButton extends Component {
         };
         this.orm = useService('orm');
         this.state = useState({ hasClaimableRewards: false });
-        useRecordObserver(async (record) => {
-            record.data;
-            this.state.hasClaimableRewards = false;
-            await this._fetchRewardsCount(record.resId);
+        onWillStart(async () => {
+            await this._fetchRewardsCount(this.props.record.resId)
         });
+        const oldOnRecordChanged = this.props.record.model.hooks.onRecordChanged;
+        this._fetchRewardsCount = debounce(this._fetchRewardsCount.bind(this), 500);
+        this.props.record.model.hooks.onRecordChanged = (record, ...args) => {
+            oldOnRecordChanged(record, ...args);
+            this._fetchRewardsCount(record.resId);
+        };
     }
 
     get className() {
-        return `btn btn-secondary ${this.state.hasClaimableRewards && 'highlight text-action'}`
+        return `btn btn-secondary ${this.state.hasClaimableRewards ? 'highlight text-action' : ''}`
     }
 
     async _fetchRewardsCount(orderId) {
