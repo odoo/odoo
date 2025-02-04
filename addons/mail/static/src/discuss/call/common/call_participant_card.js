@@ -21,7 +21,7 @@ import { rpc } from "@web/core/network/rpc";
 const HIDDEN_CONNECTION_STATES = new Set([undefined, "connected", "completed"]);
 
 export class CallParticipantCard extends Component {
-    static props = ["className", "cardData", "thread", "minimized?", "inset?"];
+    static props = ["className", "cardData", "thread", "minimized?", "inset?", "compact?"];
     static components = { CallParticipantVideo };
     static template = "discuss.CallParticipantCard";
 
@@ -127,6 +127,10 @@ export class CallParticipantCard extends Component {
             this.rtcSession.raisingHand &&
                 (!screenStream || screenStream !== this.props.cardData.videoStream)
         );
+    }
+
+    get isActiveRtcSession() {
+        return this.rtcSession && this.rtcSession.eq(this.rtcSession.channel.activeRtcSession);
     }
 
     async onClick(ev) {

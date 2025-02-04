@@ -2,12 +2,14 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.CallParticipantCard">
-        <div class="o-discuss-CallParticipantCard position-relative cursor-pointer d-flex flex-column align-items-center justify-content-center mh-100 mw-100 p-1 rounded-1"
+        <div class="o-discuss-CallParticipantCard position-relative cursor-pointer d-flex flex-column align-items-center justify-content-center mh-100 mw-100"
             t-att-class="{
                 'o-isTalking': !props.minimized and isTalking,
                 'o-isInvitation opacity-50': !rtcSession,
                 'o-inset': props.inset,
-                'o-small': props.inset and (ui.isSmall or props.minimized)
+                'o-small': props.inset and (ui.isSmall or props.minimized),
+                'o-active': isActiveRtcSession and !props.inset and props.compact,
+                'p-1 rounded-1': !isActiveRtcSession,
             }"
             t-att-title="name"
             t-att-aria-label="name"
