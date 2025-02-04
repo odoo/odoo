@@ -2,7 +2,6 @@ import { Component, useSubEnv, markup } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { defaultBuilderComponents } from "../core/building_blocks/default_builder_components";
-import { globalBuilderOptions } from "../core/building_blocks/global_builder_options";
 import {
     useVisibilityObserver,
     useApplyVisibility,
@@ -10,10 +9,12 @@ import {
 } from "../core/building_blocks/utils";
 import { DependencyManager } from "../core/plugins/dependency_manager";
 import { getSnippetName } from "@html_builder/utils/utils";
+import { BorderConfigurator } from "@html_builder/plugins/border_configurator";
+import { ShadowOption } from "@html_builder/plugins/shadow_option";
 
 export class OptionsContainer extends Component {
     static template = "html_builder.OptionsContainer";
-    static components = { ...defaultBuilderComponents, ...globalBuilderOptions };
+    static components = { ...defaultBuilderComponents, BorderConfigurator, ShadowOption };
     static props = {
         snippetModel: { type: Object },
         options: { type: Array },
