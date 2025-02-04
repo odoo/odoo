@@ -32,24 +32,25 @@ const suggestionServicePatch = {
                 if (!cleanTerm(name).includes(cleanedSearchTerm)) {
                     return false;
                 }
-                if (command.channel_types) {
-                    return command.channel_types.includes(thread.channel_type);
+                if (command.isAvailable) {
+                    return command.isAvailable(this.store, thread);
                 }
                 return true;
             })
-            .map(([name, command]) => {
-                return {
-                    channel_types: command.channel_types,
-                    help: command.help,
-                    id: command.id,
-                    name,
-                };
-            });
+            .map(([name, command]) => ({
+                isAvailable: command.isAvailable,
+                help: command.help,
+                id: command.id,
+                name,
+            }));
         const sortFunc = (c1, c2) => {
-            if (c1.channel_types && !c2.channel_types) {
+            const c1isAvailable = c1.isAvailable ? c1.isAvailable(this.store, thread) : true;
+            const c2isAvailable = c2.isAvailable ? c2.isAvailable(this.store, thread) : true;
+
+            if (c1isAvailable && !c2isAvailable) {
                 return -1;
             }
-            if (!c1.channel_types && c2.channel_types) {
+            if (!c1isAvailable && c2isAvailable) {
                 return 1;
             }
             const cleanedName1 = cleanTerm(c1.name);
