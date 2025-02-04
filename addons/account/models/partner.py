@@ -339,6 +339,7 @@ class ResPartner(models.Model):
 
     fiscal_country_codes = fields.Char(compute='_compute_fiscal_country_codes')
     partner_vat_placeholder = fields.Char(compute='_compute_partner_vat_placeholder')
+    partner_company_registry_placeholder = fields.Char(compute='_compute_partner_company_registry_placeholder')
 
     @api.depends('company_id')
     @api.depends_context('allowed_company_ids')
@@ -987,3 +988,8 @@ class ResPartner(models.Model):
                     placeholder = _("%s, or / if not applicable", expected_vat)
 
             partner.partner_vat_placeholder = placeholder
+
+    @api.depends('country_id')
+    def _compute_partner_company_registry_placeholder(self):
+        """ Empty by default, to extend in localization where this field is used to improve clarity for the users. """
+        self.partner_company_registry_placeholder = ""

@@ -261,6 +261,7 @@ class ResCompany(models.Model):
         help="Default on whether the sales price used on the product and invoices with this Company includes its taxes."
     )
     company_vat_placeholder = fields.Char(compute='_compute_company_vat_placeholder')
+    company_registry_placeholder = fields.Char(compute='_compute_company_registry_placeholder')
 
     def get_next_batch_payment_communication(self):
         '''
@@ -1030,3 +1031,8 @@ class ResCompany(models.Model):
                     placeholder = _("%s, or / if not applicable", expected_vat)
 
             company.company_vat_placeholder = placeholder
+
+    @api.depends('country_id', 'account_fiscal_country_id')
+    def _compute_company_registry_placeholder(self):
+        """ Empty by default, to extend in localization where this field is used to improve clarity for the users. """
+        self.company_registry_placeholder = ""
