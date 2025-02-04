@@ -178,6 +178,12 @@
             ('remove', 'web/static/src/webclient/actions/reports/layout_assets/**/*'),
             ('remove', 'web/static/src/webclient/actions/**/*css'),
             'web/static/src/webclient/company_service.js',
+
+            'web/static/lib/dompurify/DOMpurify.js',
+            'html_editor/static/src/**/*',
+            ('include', 'html_editor.assets_media_dialog'),
+            ('remove', 'html_editor/static/src/components/history_dialog/history_dialog.dark.scss'),
+            ('remove', 'html_editor/static/src/main/toolbar/toolbar.dark.scss'),
         ],
         'point_of_sale.base_tests': [
             "web/static/lib/hoot-dom/**/*",
