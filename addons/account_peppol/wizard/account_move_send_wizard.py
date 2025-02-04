@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, models, _
-
+from odoo.exceptions import UserError
 
 class AccountMoveSendWizard(models.TransientModel):
     _inherit = 'account.move.send.wizard'
@@ -9,24 +9,17 @@ class AccountMoveSendWizard(models.TransientModel):
     # DEFAULTS
     # -------------------------------------------------------------------------
 
-    @api.model
-    def default_get(self, fields_list):
-        res = super().default_get(fields_list)
-        move = False
-        if 'move_id' in res or (self.env.context.get('active_model') == 'account.move' and self.env.context.get('active_ids')):
-            move = self.env['account.move'].browse(res.get('move_id') or self.env.context.get('active_ids'))
-            partner = move.partner_id.commercial_partner_id
-            partner.button_account_peppol_check_partner_endpoint(company=move.company_id)
-        return res
-
     def _compute_sending_method_checkboxes(self):
         """ EXTENDS 'account'
         If Customer is not valid on Peppol, we disable the checkbox. Also add the proxy mode if not in prod.
         """
-        super()._compute_sending_method_checkboxes()
         for wizard in self:
             peppol_partner = wizard.move_id.partner_id.commercial_partner_id.with_company(wizard.company_id)
+            peppol_partner.button_account_peppol_check_partner_endpoint(company=wizard.company_id)
+        super()._compute_sending_method_checkboxes()
+        for wizard in self:
             if peppol_checkbox := wizard.sending_method_checkboxes.get('peppol'):
+                peppol_partner = wizard.move_id.partner_id.commercial_partner_id.with_company(wizard.company_id)
                 peppol_proxy_mode = wizard.company_id._get_peppol_edi_mode()
                 addendum_not_valid = _(' (customer not on Peppol)') if peppol_partner.peppol_verification_state == 'not_valid' else ''
                 vals_not_valid = {'readonly': True, 'checked': False} if addendum_not_valid else {}
@@ -52,14 +45,16 @@ class AccountMoveSendWizard(models.TransientModel):
         super()._compute_invoice_edi_format()
         for wizard in self:
             if not wizard.invoice_edi_format and wizard.sending_methods and 'peppol' in wizard.sending_methods:
-                wizard.invoice_edi_format = 'ubl_bis3'
+                wizard.invoice_edi_format = wizard.move_id.partner_id._get_peppol_edi_format()
             elif wizard.invoice_edi_format != self._get_default_invoice_edi_format(wizard.move_id) and wizard.sending_methods and 'peppol' not in wizard.sending_methods:
-                wizard.invoice_edi_format = None
+                wizard.invoice_edi_format = None  # back to initial state if user unchecked 'by Peppol'
 
     def action_send_and_print(self, allow_fallback_pdf=False):
         # EXTENDS 'account'
         self.ensure_one()
         if self.sending_methods and 'peppol' in self.sending_methods:
+            if self.move_id.partner_id.commercial_partner_id.peppol_verification_state != 'valid':
+                raise UserError(_("Partner doesn't have a valid Peppol configuration."))
             if registration_action := self._do_peppol_pre_send(self.move_id):
                 return registration_action
         return super().action_send_and_print(allow_fallback_pdf=allow_fallback_pdf)

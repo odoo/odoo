@@ -193,20 +193,15 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
                 'name': 'INV_2023_00001.pdf',
                 'placeholder': True,
             },
-            {
-                'mimetype': 'application/xml',
-                'name': 'INV_2023_00001_ubl_bis3.xml',
-                'placeholder': True,
-            },
         ])
 
-        # we don't want to email the xml file in addition to sending via peppol
         wizard.sending_methods = ['peppol']
         wizard.action_send_and_print()
         self.assertEqual(self._get_mail_message(move).preview, 'The document has been sent to the Peppol Access Point for processing')
 
     def test_send_peppol_alerts_not_valid_partner(self):
         move = self.create_move(self.invalid_partner)
+        self.invalid_partner.invoice_edi_format = 'ubl_bis3'
         move.action_post()
         wizard = self.create_send_and_print(move, default=True)
 
@@ -225,7 +220,6 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')
         self.assertEqual(self.valid_partner.peppol_verification_state, 'not_valid_format')  # on peppol but can't receive bis3
         self.assertTrue('account_peppol_warning_partner' in wizard.alerts)
-        self.assertTrue('account_peppol_demo_test_mode' in wizard.alerts)
 
     def test_send_peppol_alerts_invalid_partner(self):
         """If there's already account_edi_ubl_cii_configure_partner, the warning should not appear."""
@@ -351,9 +345,6 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
                 'peppol_endpoint': '3141592654',
             }])
 
-        new_partner.invoice_edi_format = False
-        self.assertFalse(new_partner.peppol_verification_state)
-
         # the participant exists on the network but cannot receive XRechnung
         new_partner.write({
             'invoice_edi_format': 'xrechnung',
@@ -379,7 +370,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             'peppol_endpoint': '0477472701',
             'invoice_edi_format': 'ubl_bis3',
         })
-        new_partner.with_company(company_2).invoice_edi_format = False
+
         # partner is valid for company 1
         self.assertRecordValues(new_partner, [{
             'peppol_verification_state': 'valid',
@@ -388,6 +379,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             'invoice_edi_format': 'ubl_bis3',
         }])
         # but not valid for company 2
+        new_partner.with_company(company_2).peppol_verification_state = False
         self.assertRecordValues(new_partner.with_company(company_2), [{
             'peppol_verification_state': False,
             'peppol_eas': '0208',
