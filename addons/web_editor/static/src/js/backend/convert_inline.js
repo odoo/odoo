@@ -1768,7 +1768,7 @@ function _normalizeStyle(style) {
  */
 function correctBorderAttributes(style) {
     const stylesObject = style
-        .replace(/\s+/g, "")
+        .replace(/\s+/g, " ")
         .split(";")
         .reduce((styles, styleString) => {
             const [attribute, value] = styleString.split(":").map((str) => str.trim());
