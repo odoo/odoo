@@ -57,7 +57,7 @@ class Date(BaseDate[date]):
     _column_type = ('date', 'date')
 
     @staticmethod
-    def today(*args):
+    def today(*args) -> date:
         """Return the current day in the format expected by the ORM.
 
         .. note:: This function may be used to compute default values.
@@ -65,17 +65,16 @@ class Date(BaseDate[date]):
         return date.today()
 
     @staticmethod
-    def context_today(record, timestamp=None):
+    def context_today(record: BaseModel, timestamp: date | datetime | None = None) -> date:
         """Return the current date as seen in the client's timezone in a format
         fit for date fields.
 
         .. note:: This method may be used to compute default values.
 
         :param record: recordset from which the timezone will be obtained.
-        :param datetime timestamp: optional datetime value to use instead of
+        :param timestamp: optional datetime value to use instead of
             the current date and time (must be a datetime, regular dates
             can't be converted between timezones).
-        :rtype: date
         """
         today = timestamp or datetime.now()
         context_today = None
@@ -90,7 +89,7 @@ class Date(BaseDate[date]):
         return (context_today or today).date()
 
     @staticmethod
-    def to_date(value):
+    def to_date(value) -> date | None:
         """Attempt to convert ``value`` to a :class:`date` object.
 
         .. warning::
@@ -102,7 +101,6 @@ class Date(BaseDate[date]):
         :param value: value to convert.
         :type value: str or date or datetime
         :return: an object representing ``value``.
-        :rtype: date or None
         """
         if not value:
             return None
@@ -118,14 +116,13 @@ class Date(BaseDate[date]):
     from_string = to_date
 
     @staticmethod
-    def to_string(value):
+    def to_string(value: date | typing.Literal[False]) -> str | typing.Literal[False]:
         """
         Convert a :class:`date` or :class:`datetime` object to a string.
 
         :param value: value to convert.
         :return: a string representing ``value`` in the server's date format, if ``value`` is of
             type :class:`datetime`, the hours, minute, seconds, tzinfo will be truncated.
-        :rtype: str
         """
         return value.strftime(DATE_FORMAT) if value else False
 
@@ -144,9 +141,7 @@ class Date(BaseDate[date]):
         return self.to_date(value)
 
     def convert_to_export(self, value, record):
-        if not value:
-            return ''
-        return self.from_string(value)
+        return self.to_date(value) or ''
 
     def convert_to_display_name(self, value, record):
         return Date.to_string(value)
@@ -158,7 +153,7 @@ class Datetime(BaseDate[datetime]):
     _column_type = ('timestamp', 'timestamp')
 
     @staticmethod
-    def now(*args):
+    def now(*args) -> datetime:
         """Return the current day and time in the format expected by the ORM.
 
         .. note:: This function may be used to compute default values.
@@ -167,12 +162,12 @@ class Datetime(BaseDate[datetime]):
         return datetime.now().replace(microsecond=0)
 
     @staticmethod
-    def today(*args):
+    def today(*args) -> datetime:
         """Return the current day, at midnight (00:00:00)."""
         return Datetime.now().replace(hour=0, minute=0, second=0)
 
     @staticmethod
-    def context_timestamp(record, timestamp):
+    def context_timestamp(record: BaseModel, timestamp: datetime) -> datetime:
         """Return the given timestamp converted to the client's timezone.
 
         .. note:: This method is *not* meant for use as a default initializer,
@@ -200,13 +195,12 @@ class Datetime(BaseDate[datetime]):
         return utc_timestamp
 
     @staticmethod
-    def to_datetime(value):
+    def to_datetime(value) -> datetime | None:
         """Convert an ORM ``value`` into a :class:`datetime` value.
 
         :param value: value to convert.
         :type value: str or date or datetime
         :return: an object representing ``value``.
-        :rtype: datetime or None
         """
         if not value:
             return None
@@ -225,7 +219,7 @@ class Datetime(BaseDate[datetime]):
     from_string = to_datetime
 
     @staticmethod
-    def to_string(value):
+    def to_string(value: datetime | typing.Literal[False]) -> str | typing.Literal[False]:
         """Convert a :class:`datetime` or :class:`date` object to a string.
 
         :param value: value to convert.
@@ -233,7 +227,6 @@ class Datetime(BaseDate[datetime]):
         :return: a string representing ``value`` in the server's datetime format,
             if ``value`` is of type :class:`date`,
             the time portion will be midnight (00:00:00).
-        :rtype: str
         """
         return value.strftime(DATETIME_FORMAT) if value else False
 
@@ -246,10 +239,8 @@ class Datetime(BaseDate[datetime]):
         return self.to_datetime(value)
 
     def convert_to_export(self, value, record):
-        if not value:
-            return ''
         value = self.convert_to_display_name(value, record)
-        return self.from_string(value)
+        return self.to_datetime(value) or ''
 
     def convert_to_display_name(self, value, record):
         if not value:

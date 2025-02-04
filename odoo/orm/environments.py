@@ -121,7 +121,7 @@ class Environment(Mapping[str, "BaseModel"]):
     def __call__(
         self,
         cr: BaseCursor | None = None,
-        user: int | BaseModel | None = None,
+        user: IdType | BaseModel | None = None,
         context: dict | None = None,
         su: bool | None = None,
     ) -> Environment:
@@ -134,14 +134,21 @@ class Environment(Mapping[str, "BaseModel"]):
         :param dict context: optional context dictionary to change the current context
         :param bool su: optional boolean to change the superuser mode
         :returns: environment with specified args (new or existing one)
-        :rtype: :class:`Environment`
         """
         cr = self.cr if cr is None else cr
-        uid = self.uid if user is None else int(user)
+        uid = self.uid if user is None else int(user)  # type: ignore
         if context is None:
             context = clean_context(self.context) if su and not self.su else self.context
         su = (user is None and self.su) if su is None else su
         return Environment(cr, uid, context, su)
+
+    @typing.overload
+    def ref(self, xml_id: str, raise_if_not_found: typing.Literal[True] = True) -> BaseModel:
+        ...
+
+    @typing.overload
+    def ref(self, xml_id: str, raise_if_not_found: typing.Literal[False]) -> BaseModel | None:
+        ...
 
     def ref(self, xml_id: str, raise_if_not_found: bool = True) -> BaseModel | None:
         """ Return the record corresponding to the given ``xml_id``.
@@ -278,10 +285,7 @@ class Environment(Mapping[str, "BaseModel"]):
 
     @lazy_property
     def lang(self) -> str | None:
-        """Return the current language code.
-
-        :rtype: str
-        """
+        """Return the current language code."""
         lang = self.context.get('lang')
         if lang and lang != 'en_US' and not self['res.lang']._get_data(code=lang):
             # cannot translate here because we do not have a valid language
@@ -291,8 +295,6 @@ class Environment(Mapping[str, "BaseModel"]):
     @lazy_property
     def _lang(self) -> str:
         """Return the technical language code of the current context for **model_terms** translated field
-
-        :rtype: str
         """
         context = self.context
         lang = self.lang or 'en_US'
