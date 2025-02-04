@@ -224,7 +224,7 @@
                             <div class="o_row">
                                 <field name="scheduled_date" readonly="state in ['cancel', 'done']" required="id"
                                     decoration-warning="state not in ('done', 'cancel') and scheduled_date &lt; now"
-                                    decoration-danger="state not in ('done', 'cancel') and scheduled_date &lt; current_date"
+                                    decoration-danger="state not in ('done', 'cancel') and scheduled_date &lt; datetime.datetime.now().to_utc().strftime('%Y-%m-%d')"
                                     decoration-bf="state not in ('done', 'cancel') and (scheduled_date &lt; current_date or scheduled_date &lt; now)"/>
                                 <field name="json_popover" nolabel="1" widget="stock_rescheduling_popover" invisible="not json_popover"/>
                             </div>
@@ -366,7 +366,7 @@
                     <filter invisible="1" name="day_2" string="The day after tomorrow" domain="[('search_date_category', '=', 'day_2')]"/>
                     <filter invisible="1" name="after" string="After" domain="[('search_date_category', '=', 'after')]"/>
                     <filter name="late" string="Late" help="Deadline exceed or/and by the scheduled"
-                        domain="[('state', 'in', ('assigned', 'waiting', 'confirmed')), '|', '|', ('has_deadline_issue', '=', True), ('date_deadline', '&lt;', current_date), ('scheduled_date', '&lt;', current_date)]"/>
+                        domain="[('state', 'in', ('assigned', 'waiting', 'confirmed')), '|', '|', ('has_deadline_issue', '=', True), ('date_deadline', '&lt;', current_date), ('scheduled_date', '&lt;', datetime.datetime.now().to_utc().strftime('%Y-%m-%d %H:%M:%S'))]"/>
                     <filter string="Planning Issues" name="planning_issues" help="Transfers that are late on scheduled time or one of pickings will be late"
                         domain="['|', ('delay_alert_date', '!=', False), '&amp;', ('scheduled_date','&lt;', time.strftime('%Y-%m-%d %H:%M:%S')), ('state', 'in', ('assigned', 'waiting', 'confirmed'))]"/>
                     <filter string="Late Availability" name="late_availability" domain="[('products_availability_state', '=', 'late')]"/>

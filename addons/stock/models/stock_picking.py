@@ -255,7 +255,7 @@ class StockPickingType(models.Model):
             'count_picking_waiting': [('state', 'in', ('confirmed', 'waiting'))],
             'count_picking_ready': [('state', '=', 'assigned')],
             'count_picking': [('state', 'in', ('assigned', 'waiting', 'confirmed'))],
-            'count_picking_late': [('state', 'in', ('assigned', 'waiting', 'confirmed')), '|', ('scheduled_date', '<', fields.Date.today()), ('has_deadline_issue', '=', True)],
+            'count_picking_late': [('state', 'in', ('assigned', 'waiting', 'confirmed')), '|', ('scheduled_date', '<', fields.Datetime.now()), ('has_deadline_issue', '=', True)],
             'count_picking_backorders': [('backorder_id', '!=', False), ('state', 'in', ('confirmed', 'assigned', 'waiting'))],
         }
         for field_name, domain in domains.items():
