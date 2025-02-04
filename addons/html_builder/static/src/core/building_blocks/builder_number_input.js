@@ -14,6 +14,7 @@ export class BuilderNumberInput extends Component {
         unit: { type: String, optional: true },
         saveUnit: { type: String, optional: true },
         step: { type: Number, optional: true },
+        id: { type: String, optional: true },
     };
     static components = { BuilderComponent };
 

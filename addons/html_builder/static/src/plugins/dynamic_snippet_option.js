@@ -9,15 +9,12 @@ import { Cache } from "@web/core/utils/cache";
 
 class DynamicSnippetOptionPlugin extends Plugin {
     static id = "DynamicSnippetOption";
-    static shared = ["fetchDynamicFilters", "fetchDynamicFilterTemplates"];
+    static shared = ["getComponentProps"];
     resources = {
         builder_options: [
             withSequence(10, {
                 OptionComponent: DynamicSnippetOption,
-                props: {
-                    fetchDynamicFilters: this.fetchDynamicFilters.bind(this),
-                    fetchDynamicFilterTemplates: this.fetchDynamicFilterTemplates.bind(this),
-                },
+                props: this.getComponentProps(),
                 selector: ".s_dynamic_snippet",
             }),
         ],
@@ -29,6 +26,12 @@ class DynamicSnippetOptionPlugin extends Plugin {
             this._fetchDynamicFilterTemplates,
             JSON.stringify
         );
+    }
+    getComponentProps() {
+        return {
+            fetchDynamicFilters: this.fetchDynamicFilters.bind(this),
+            fetchDynamicFilterTemplates: this.fetchDynamicFilterTemplates.bind(this),
+        };
     }
     getActions() {
         return {
@@ -108,12 +111,13 @@ class DynamicSnippetOptionPlugin extends Plugin {
 
 registry.category("website-plugins").add(DynamicSnippetOptionPlugin.id, DynamicSnippetOptionPlugin);
 
-class DynamicSnippetOption extends Component {
+export class DynamicSnippetOption extends Component {
     static template = "html_builder.DynamicSnippetOption";
     static components = { ...defaultBuilderComponents };
     static props = {
         fetchDynamicFilters: Function,
         fetchDynamicFilterTemplates: Function,
+        slots: { type: Object, optional: true },
     };
 
     setup() {
