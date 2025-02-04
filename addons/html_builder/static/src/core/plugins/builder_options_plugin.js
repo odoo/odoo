@@ -2,6 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { uniqueId } from "@web/core/utils/functions";
 import { isRemovable } from "./remove/remove_plugin";
 import { canHaveAnchor } from "./anchor/anchor_plugin";
+import { hasOverlayOptions } from "./overlay_buttons/overlay_buttons_plugin";
 
 export class BuilderOptionsPlugin extends Plugin {
     static id = "builder-options";
@@ -53,6 +54,17 @@ export class BuilderOptionsPlugin extends Plugin {
                     elementToOptions.set(element, [option]);
                 }
             }
+        }
+
+        // Find the closest element with no options that should still have the
+        // overlay buttons.
+        let element = this.target;
+        while (element && !elementToOptions.has(element)) {
+            if (hasOverlayOptions(element)) {
+                elementToOptions.set(element, []);
+                break;
+            }
+            element = element.parentElement;
         }
 
         const previousElementToIdMap = new Map(this.lastContainers.map((c) => [c.element, c.id]));

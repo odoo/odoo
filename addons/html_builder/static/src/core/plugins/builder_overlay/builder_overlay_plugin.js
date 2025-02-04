@@ -2,6 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { getScrollingElement, getScrollingTarget } from "@web/core/utils/scrolling";
 import { BuilderOverlay } from "./builder_overlay";
+import { hasOverlayOptions } from "../overlay_buttons/overlay_buttons_plugin";
 
 export class BuilderOverlayPlugin extends Plugin {
     static id = "builderOverlay";
@@ -89,12 +90,11 @@ export class BuilderOverlayPlugin extends Plugin {
         const innermostOverlay = this.overlays.at(-1);
         innermostOverlay.toggleOverlay(true);
 
-        // Also activate the closest overlay that should have sizing
-        // handles.
-        if (!innermostOverlay.hasSizingHandles) {
+        // Also activate the closest overlay that should have overlay options.
+        if (!hasOverlayOptions(innermostOverlay.overlayTarget)) {
             for (let i = this.overlays.length - 2; i >= 0; i--) {
                 const parentOverlay = this.overlays[i];
-                if (parentOverlay.hasSizingHandles) {
+                if (hasOverlayOptions(parentOverlay.overlayTarget)) {
                     parentOverlay.toggleOverlay(true);
                     break;
                 }

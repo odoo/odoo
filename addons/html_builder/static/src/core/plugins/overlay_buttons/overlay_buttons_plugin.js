@@ -44,6 +44,11 @@ function isResizable(el) {
     return isResizableY || isResizableX || isResizableGrid;
 }
 
+// TODO improve that (resources ?)
+export function hasOverlayOptions(el) {
+    return isMovable(el) || isResizable(el);
+}
+
 export class OverlayButtonsPlugin extends Plugin {
     static id = "overlayButtons";
     static dependencies = ["selection", "overlay", "history"];
@@ -151,7 +156,7 @@ export class OverlayButtonsPlugin extends Plugin {
 
         // Find the innermost option needing the overlay buttons.
         const optionWithOverlayButtons = optionsContainer.findLast((option) =>
-            this.hasOverlayOptions(option.element)
+            hasOverlayOptions(option.element)
         );
         if (optionWithOverlayButtons) {
             this.target = optionWithOverlayButtons.element;
@@ -173,10 +178,5 @@ export class OverlayButtonsPlugin extends Plugin {
             this.target = null;
         }
         this.overlay.close();
-    }
-
-    // TODO improve that (resources ?)
-    hasOverlayOptions(el) {
-        return isMovable(el) || isResizable(el);
     }
 }
