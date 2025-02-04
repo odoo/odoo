@@ -114,3 +114,15 @@ export function clickOrders() {
 export function clickRegister() {
     return { trigger: ".pos-leftheader .register-label", run: "click" };
 }
+export function waitRequest() {
+    return [
+        {
+            content: "Request Start",
+            trigger: "body:has(.fa-circle-o-notch)",
+        },
+        {
+            content: "Wait for request to finish",
+            trigger: "body:not(:has(.fa-circle-o-notch))",
+        },
+    ];
+}

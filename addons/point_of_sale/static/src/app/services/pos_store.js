@@ -324,6 +324,14 @@ export class PosStore extends WithLazyGetterTrap {
         };
         this.models["pos.session"].getFirst().login_number = parseInt(odoo.login_number);
 
+        const models = Object.keys(this.models);
+        const dynamicModels = this.data.opts.dynamicModels;
+        const staticModels = models.filter((model) => !dynamicModels.includes(model));
+        const deviceSync = new DevicesSynchronisation(dynamicModels, staticModels, this);
+
+        this.deviceSync = deviceSync;
+        this.data.deviceSync = deviceSync;
+
         // Check cashier
         this.checkPreviousLoggedCashier();
 
@@ -519,7 +527,6 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     async afterProcessServerData() {
-        // Adding the not synced paid orders to the pending orders
         const paidUnsyncedOrderIds = this.models["pos.order"]
             .filter((order) => order.isUnsyncedPaid)
             .map((order) => order.id);
@@ -528,6 +535,7 @@ export class PosStore extends WithLazyGetterTrap {
             this.addPendingOrder(paidUnsyncedOrderIds);
         }
 
+        // Adding the not synced paid orders to the pending orders
         const openOrders = this.data.models["pos.order"].filter((order) => !order.finalized);
         this.syncAllOrders();
 
@@ -536,14 +544,6 @@ export class PosStore extends WithLazyGetterTrap {
                 ? openOrders[openOrders.length - 1].uuid
                 : this.addNewOrder().uuid;
         }
-
-        const models = Object.keys(this.models);
-        const dynamicModels = this.data.opts.dynamicModels;
-        const staticModels = models.filter((model) => !dynamicModels.includes(model));
-        const deviceSync = new DevicesSynchronisation(dynamicModels, staticModels, this);
-
-        this.deviceSync = deviceSync;
-        this.data.deviceSync = deviceSync;
 
         await this.deviceSync.readDataFromServer();
         this.markReady();
