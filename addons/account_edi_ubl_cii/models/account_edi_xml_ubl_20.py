@@ -341,8 +341,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         :param line:    An invoice line.
         :return:        A list of python dictionaries.
         """
+        fixed_tax_charge_vals_list = []
         if self._context.get('convert_fixed_taxes'):
-            fixed_tax_charge_vals_list = []
             for grouping_key, tax_details in tax_values_list['tax_details'].items():
                 if grouping_key['tax_amount_type'] == 'fixed':
                     fixed_tax_charge_vals_list.append({
