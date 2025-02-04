@@ -130,6 +130,33 @@ class Field(typing.Generic[T]):
     :param bool store: whether the field is stored in database
         (default:``True``, ``False`` for computed fields)
 
+    :param bool default_export_compatible: whether the field must be exported
+        by default in an import-compatible export
+
+    :param str search: name of a method that implements search on the field.
+        The method takes an operator and value. Basic domain optimizations are
+        ran before calling this function.
+        For instance, all ``'='`` are transformed to ``'in'``, and boolean
+        fields conditions are made such that operator is ``'in'``/``'not in'``
+        and value is ``[True]``.
+        The method should ``return NotImplemented`` if it does not support the
+        operator.
+        In that case, the ORM can try to call it with other, semantically
+        equivalent, operators. For instance, try with the positive operator if
+        its corresponding negative operator is not implemented.
+        The method must return a :ref:`reference/orm/domains` that replaces
+        ``(field, operator, value)`` in its domain.
+
+        .. code-block:: python
+
+            def _search_partner_ref(self, operator, value):
+                if operator not in ('in', 'like'):
+                    return NotImplemented
+                ...  # add your logic here, example
+                return Domain('partner_id.ref', operator, value)
+
+    .. rubric:: Aggregation
+
     :param str aggregator: default aggregate function used by the webclient
         on this field when using "Group By" feature.
 
@@ -157,9 +184,6 @@ class Field(typing.Generic[T]):
             @api.model
             def _read_group_many2one_field(self, records, domain):
                 return records + self.search([custom_domain])
-
-    :param bool default_export_compatible: whether the field must be exported by
-            default in an import-compatible export.
 
     .. rubric:: Computed Fields
 
@@ -203,15 +227,6 @@ class Field(typing.Generic[T]):
         must be explicit to guarantee that recomputation is correct
 
     :param str inverse: name of a method that inverses the field (optional)
-
-    :param str search: name of a method that implement search on the field (optional).
-            The method accepts an operator and value. Basic optimizations are
-            ran before calling this function, and for boolean fields, we ensure
-            that operator is 'in'/'not in' and value is ``[True]``. The method
-            should `return NotImplemented` if it does not support the operator.
-            In that case, the ORM can try to call it with other, semantically
-            equivalent, operators (ex: try positive operator if negative is not
-            implemented).
 
     :param str related: sequence of field names
 
