@@ -38,6 +38,9 @@
                                 <t t-call="{{ statusBarDropdownItemsTemplate }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this, props: { ...this.props, record: this.model.root } }) }"/>
                             </t>
                         </CogMenu>
+                        <t t-if="model.root._config.cached">
+                            <i class="fa fa-solid fa-spinner fa-spin m-auto"/>
+                        </t>
                         <t t-if="env.isSmall and buttonBoxTemplate">
                             <t t-call="{{ buttonBoxTemplate }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this, props: { ...this.props, record: this.model.root } }) }"/>
                         </t>

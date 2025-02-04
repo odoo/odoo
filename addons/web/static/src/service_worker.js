@@ -243,10 +243,6 @@ class DiskCache {
 }
 const cache = new DiskCache("odoo");
 
-function deepEqual(o1, o2) {
-    return JSON.stringify(o1) === JSON.stringify(o2);
-}
-
 async function cachedFetch(request, route, clientId) {
     const clonedRequest = request.clone();
     const body = await clonedRequest.text();
@@ -264,15 +260,15 @@ async function cachedFetch(request, route, clientId) {
             } catch {
                 // pass
             }
-            if (result && !deepEqual(result, fromCache)) {
+            if (result) {
                 console.log(`${route}: update cache`);
                 cache.insert("sw-cache", key, result);
                 if (fromCache) {
+                    // FIXME: quid in case of cache miss
                     self.clients.get(clientId).then((client) =>
                         client.postMessage({
-                            type: "CACHE_INVALIDATION",
-                            id, // FIXME: need to be able to match the id somehow
-                            route,
+                            type: "ACTUAL_RPC_RESULT",
+                            id,
                             result,
                         })
                     );
@@ -283,7 +279,7 @@ async function cachedFetch(request, route, clientId) {
     });
     if (fromCache) {
         console.log(`${route}: from cache`);
-        const responseBody = JSON.stringify({ id, jsonrpc, result: fromCache });
+        const responseBody = JSON.stringify({ id, jsonrpc, cached: true, result: fromCache });
         return new Response(responseBody, { status: 200 });
     } else {
         console.log(`${route}: cache miss`);

@@ -7,11 +7,66 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { ActionContainer } from "./actions/action_container";
 import { NavBar } from "./navbar/navbar";
 
-import { Component, onMounted, onWillStart, useExternalListener, useState } from "@odoo/owl";
+import { Component, onMounted, onWillStart, xml, useExternalListener, useState } from "@odoo/owl";
 import { router, routerBus } from "@web/core/browser/router";
 import { browser } from "@web/core/browser/browser";
+import { rpcBus } from "@web/core/network/rpc";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { CheckBox } from "@web/core/checkbox/checkbox";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { debounce } from "@web/core/utils/timing";
 
-const CACHED_ROUTES = ["/web/action/load", /\/web\/dataset\/call_kw\/[^/]+\/get_views/];
+const CACHEABLE_ROUTES = {
+    actions: "/web/action/load", // FIXME: matched load_beadcrumbs
+    views: /^\/web\/dataset\/call_kw\/[^/]+\/get_views$/,
+    web_search_read: /^\/web\/dataset\/call_kw\/[^/]+\/web_search_read$/,
+    web_read: /^\/web\/dataset\/call_kw\/[^/]+\/web_read$/,
+    // /\/web\/dataset\/call_kw\/[^/]+\/web_read_group/,
+    // /\/web\/dataset\/call_kw\/[^/]+\/read_progress_bar/,
+};
+const cachedRoutes = JSON.parse(browser.localStorage.getItem("cached_routes") || "[]");
+
+class Cache extends Component {
+    static props = [];
+    static template = xml`
+        <Dropdown>
+            <button class="py-1 py-lg-0">
+                Cache
+            </button>
+            <t t-set-slot="content">
+                <t t-foreach="Object.keys(CACHEABLE_ROUTES)" t-as="route" t-key="route_index">
+                    <DropdownItem>
+                        <CheckBox
+                            value="selectedRoutes.has(route)"
+                            className="'form-switch d-flex flex-row-reverse justify-content-between p-0 w-100'"
+                            onChange="() => this.toggle(route)"
+                        >
+                            <t t-out="route"/>
+                        </CheckBox>
+                    </DropdownItem>
+                </t>
+            </t>
+        </Dropdown>`;
+    static components = { Dropdown, DropdownItem, CheckBox };
+    CACHEABLE_ROUTES = CACHEABLE_ROUTES;
+
+    setup() {
+        this.selectedRoutes = new Set(cachedRoutes);
+        this.reload = debounce(() => browser.location.reload(), 1000);
+    }
+
+    toggle(route) {
+        if (this.selectedRoutes.has(route)) {
+            this.selectedRoutes.delete(route);
+        } else {
+            this.selectedRoutes.add(route);
+        }
+        browser.localStorage.setItem("cached_routes", JSON.stringify([...this.selectedRoutes]));
+        this.render();
+        this.reload();
+    }
+}
+registry.category("systray").add("cache", { Component: Cache }, { sequence: 9999 });
 
 export class WebClient extends Component {
     static template = "web.WebClient";
@@ -168,17 +223,21 @@ export class WebClient extends Component {
                         registration.active.postMessage({
                             type: "INITIALIZE-CACHES",
                             version: odoo.info.server_version,
-                            cachedRoutes: CACHED_ROUTES,
+                            cachedRoutes: cachedRoutes.map((key) => CACHEABLE_ROUTES[key]),
                         });
                         this.clearServiceWorkerCache = () => {
                             registration.active.postMessage({ type: "CLEAR-CACHES" });
                         };
                         navigator.serviceWorker.addEventListener("message", (event) => {
-                            if (event.data.type === "CACHE_INVALIDATION") {
-                                // this.env.bus.trigger("CLEAR-CACHES"); // FIXME: loop
-                                this.env.services.notification.add("Consider reloading the page", {
-                                    title: "Client out of date",
+                            if (event.data.type === "ACTUAL_RPC_RESULT") {
+                                rpcBus.trigger("RPC:ACTUAL_RESPONSE", {
+                                    id: event.data.id,
+                                    result: event.data.result,
                                 });
+                                // this.env.bus.trigger("CLEAR-CACHES"); // FIXME: loop
+                                // this.env.services.notification.add("Consider reloading the page", {
+                                //     title: "Client out of date",
+                                // });
                             }
                         });
                     });
