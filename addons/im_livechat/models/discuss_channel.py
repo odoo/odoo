@@ -168,12 +168,23 @@ class DiscussChannel(models.Model):
         """
         Converting message body back to plaintext for correct data formatting in HTML field.
         """
-        return Markup("").join(
-            Markup("%s: %s<br/>")
-            % (message.author_id.name or self.anonymous_name, html2plaintext(message.body))
-            # sudo: discuss.channel: can read all previous messages when converting to lead
-            for message in self.sudo().message_ids.sorted("id")
-        )
+        self.ensure_one()
+        parts = []
+        # sudo: res.partner: accessing chat bot partner is acceptable to build channel history.
+        chatbot_op = self.sudo().chatbot_message_ids[
+            :1
+        ].script_step_id.chatbot_script_id.operator_partner_id
+        last_msg_from_chatbot = False
+        for message in (self.message_ids - self.message_ids._filter_empty()).sorted("id"):
+            if message.author_id == chatbot_op and not last_msg_from_chatbot:
+                parts.append(Markup("<br/>"))
+            if message.author_id == chatbot_op:
+                parts.append(Markup("<strong>%s</strong></br>") % html2plaintext(message.body))
+            else:
+                parts.append(Markup("%s</br>") % html2plaintext(message.body))
+            last_msg_from_chatbot = message.author_id == chatbot_op
+        return Markup("").join(parts)
+
 
     # =======================
     # Chatbot
