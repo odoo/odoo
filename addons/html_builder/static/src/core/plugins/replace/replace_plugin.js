@@ -1,4 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
+import { withSequence } from "@html_editor/utils/resource";
+import { _t } from "@web/core/l10n/translation";
 
 // Snippets are replaceable only if they are not within another snippet (e.g. a
 // "s_countdown" is not replaceable when it is dropped as inner content).
@@ -14,7 +16,7 @@ export class ReplacePlugin extends Plugin {
     static id = "replace";
     static dependencies = ["history", "builder-options"];
     resources = {
-        get_overlay_buttons: this.getActiveOverlayButtons.bind(this),
+        get_overlay_buttons: withSequence(3, this.getActiveOverlayButtons.bind(this)),
     };
 
     setup() {
@@ -31,6 +33,7 @@ export class ReplacePlugin extends Plugin {
         this.target = target;
         buttons.push({
             class: "o_snippet_replace bg-warning fa fa-exchange",
+            title: _t("Replace"),
             handler: this.replaceSnippet.bind(this),
         });
         return buttons;

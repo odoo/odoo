@@ -1,4 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
+import { withSequence } from "@html_editor/utils/resource";
+import { _t } from "@web/core/l10n/translation";
 import { setElementToMaxZindex } from "@html_builder/utils/grid_layout_utils";
 import { isMobileView } from "@html_builder/utils/utils";
 
@@ -12,7 +14,7 @@ export class GridLayoutPlugin extends Plugin {
     static id = "gridLayout";
     static dependencies = ["history"];
     resources = {
-        get_overlay_buttons: this.getActiveOverlayButtons.bind(this),
+        get_overlay_buttons: withSequence(0, this.getActiveOverlayButtons.bind(this)),
     };
 
     setup() {
@@ -31,10 +33,12 @@ export class GridLayoutPlugin extends Plugin {
             buttons.push(
                 {
                     class: "o_send_back",
+                    title: _t("Send to back"),
                     handler: this.sendGridItemToBack.bind(this),
                 },
                 {
                     class: "o_bring_front",
+                    title: _t("Bring to front"),
                     handler: this.bringGridItemToFront.bind(this),
                 }
             );

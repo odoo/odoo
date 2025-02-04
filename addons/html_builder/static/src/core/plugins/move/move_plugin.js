@@ -1,4 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
+import { withSequence } from "@html_editor/utils/resource";
+import { _t } from "@web/core/l10n/translation";
 import {
     addMobileOrders,
     fillRemovedItemGap,
@@ -66,7 +68,7 @@ export class MovePlugin extends Plugin {
     static id = "move";
     static dependencies = ["history"];
     resources = {
-        get_overlay_buttons: this.getActiveOverlayButtons.bind(this),
+        get_overlay_buttons: withSequence(0, this.getActiveOverlayButtons.bind(this)),
         on_clone_handlers: this.onClone.bind(this),
         on_remove_handlers: this.onRemove.bind(this),
     };
@@ -91,6 +93,7 @@ export class MovePlugin extends Plugin {
                 const direction = getMoveDirection(this.target) === "vertical" ? "up" : "left";
                 const button = {
                     class: `fa fa-fw fa-angle-${direction}`,
+                    title: _t("Move %s", direction),
                     handler: this.onMoveClick.bind(this, "prev"),
                 };
                 buttons.push(button);
@@ -99,6 +102,7 @@ export class MovePlugin extends Plugin {
                 const direction = getMoveDirection(this.target) === "vertical" ? "down" : "right";
                 const button = {
                     class: `fa fa-fw fa-angle-${direction}`,
+                    title: _t("Move %s", direction),
                     handler: this.onMoveClick.bind(this, "next"),
                 };
                 buttons.push(button);

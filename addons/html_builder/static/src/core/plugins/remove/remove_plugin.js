@@ -1,4 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
+import { withSequence } from "@html_editor/utils/resource";
+import { _t } from "@web/core/l10n/translation";
 import { resizeGrid } from "@html_builder/utils/grid_layout_utils";
 import { getVisibleSibling } from "../move/move_plugin";
 import { unremovableNodePredicates as deletePluginPredicates } from "@html_editor/core/delete_plugin";
@@ -34,7 +36,7 @@ export class RemovePlugin extends Plugin {
     static id = "remove";
     static dependencies = ["history", "builder-options"];
     resources = {
-        get_overlay_buttons: this.getActiveOverlayButtons.bind(this),
+        get_overlay_buttons: withSequence(4, this.getActiveOverlayButtons.bind(this)),
     };
     static shared = ["removeElement"];
 
@@ -52,6 +54,7 @@ export class RemovePlugin extends Plugin {
         this.target = target;
         buttons.push({
             class: "oe_snippet_remove bg-danger fa fa-trash",
+            title: _t("Remove"),
             handler: () => {
                 this.removeElement(this.target);
                 this.dependencies.history.addStep();
