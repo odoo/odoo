@@ -34,7 +34,6 @@ class AccountBankStatement(models.Model):
     # The date field cannot be used as there might be more than one statement in one day.
     # keeping this order is important because the validity of the statements are based on their order
     first_line_index = fields.Char(
-        comodel_name='account.bank.statement.line',
         compute='_compute_date_index', store=True,
     )
 

@@ -29,6 +29,7 @@ _schema = logging.getLogger('odoo.schema')
 class _Relational(Field[M], typing.Generic[M]):
     """ Abstract class for relational fields. """
     relational = True
+    comodel_name: str | None = None     # name of the model of values
     domain: DomainType = []         # domain for searching values
     context: ContextType = {}       # context for searching values
     auto_join = False               # whether joins are generated upon search
@@ -97,6 +98,9 @@ class _Relational(Field[M], typing.Generic[M]):
             return lambda recs: validated(self.domain(recs.env[self.model_name]))  # pylint: disable=not-callable
         else:
             return validated(self.domain)
+
+    # property used by setup_related() to copy values from related field
+    _related_comodel_name = property(attrgetter('comodel_name'))
 
     _related_context = property(attrgetter('context'))
 

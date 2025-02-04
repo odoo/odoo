@@ -2023,7 +2023,7 @@ actual arch.
                         field=name, field_path=field_path, use=use,
                     )
                     self._raise_view_error(msg, node)
-                Model = self.pool.get(field.comodel_name)
+                Model = self.pool.get(field.comodel_name) if field.relational else None
 
     #------------------------------------------------------
     # QWeb template views
