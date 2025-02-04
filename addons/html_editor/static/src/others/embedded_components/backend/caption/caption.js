@@ -3,7 +3,7 @@ import {
     getEmbeddedProps,
     StateChangeManager,
 } from "@html_editor/others/embedded_component_utils";
-import { Component, useEffect, useState } from "@odoo/owl";
+import { Component, useEffect, useState, useRef } from "@odoo/owl";
 import { useAutofocus } from "@web/core/utils/hooks";
 
 export class EmbeddedCaptionComponent extends Component {
@@ -13,6 +13,7 @@ export class EmbeddedCaptionComponent extends Component {
         id: { type: String },
         editable: { type: Element },
         addHistoryStep: { type: Function },
+        focusInput: { type: Boolean },
         host: { type: Object },
     };
 
@@ -23,7 +24,11 @@ export class EmbeddedCaptionComponent extends Component {
             caption: this.image.getAttribute("data-caption") || "",
             host: this.props.host,
         });
-        this.captionInput = useAutofocus();
+        if (this.props.focusInput) {
+            this.captionInput = useAutofocus();
+        } else {
+            this.captionInput = useRef("autofocus");
+        }
         useEffect(
             () => {
                 this.image.setAttribute("data-caption", this.state.caption);

@@ -44,7 +44,7 @@ export class CaptionPlugin extends Plugin {
             figure.before(image);
             const caption = figure.querySelector("figcaption").textContent;
             figure.remove();
-            this.addImageCaption(image, caption);
+            this.addImageCaption(image, caption, false);
         }
     }
 
@@ -84,7 +84,7 @@ export class CaptionPlugin extends Plugin {
         }
     }
 
-    addImageCaption(image, captionText) {
+    addImageCaption(image, captionText, focusInput = true) {
         image = image || this.dependencies.image.getSelectedImage();
         if (!image) {
             return;
@@ -116,6 +116,7 @@ export class CaptionPlugin extends Plugin {
         const caption = renderToElement("html_editor.EmbeddedCaptionBlueprint", {
             embeddedProps: JSON.stringify({
                 id: captionId,
+                focusInput,
             }),
         });
         figure.append(caption);
