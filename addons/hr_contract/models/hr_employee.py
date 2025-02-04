@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import pytz
 
 from collections import defaultdict
 from pytz import timezone, UTC
@@ -332,3 +333,53 @@ class HrEmployee(models.Model):
 
         action['res_id'] = self.contract_ids[0].id
         return action
+
+    def _get_employee_working_periods(self, employee_ids, start, stop):
+        """
+            A dedicated method to get working period values neccessary.Returns the rows by
+            adding contract details for each row of employees_rows.
+            :param employee_ids: A list of employee ids each row
+            :return: employees_rows + contract details
+        """
+        employees_sudo = self.browse(employee_ids).sudo()
+        employees_rows = {employee: {"working_periods": []} for employee in employee_ids}
+        # Contracts of employees in current scale of time
+        contracts = employees_sudo._get_contracts(start, stop, ["draft", "open", "close"])
+        # Contracts of employees who don't have active contract in current scale of time
+        employees_with_contract_outside_current_scale = dict(
+            self.env["hr.contract"].sudo()._read_group(
+                domain=[
+                    ("employee_id", "in", set(employees_sudo.ids) - set(contracts.mapped("employee_id").ids)),
+                    "|",
+                    ("state", "not in", ["draft", "cancel"]),
+                    "&",
+                    ("state", "=", "draft"),
+                    ("kanban_state", "=", "done"),
+                ],
+                groupby=["employee_id"],
+                aggregates=["__count"],
+            )
+        )
+        employees_with_contract_in_current_scale = []
+        for contract in contracts:
+            if contract.state == 'draft' and contract.kanban_state != 'done':
+                continue
+            employee_id = contract.employee_id.id
+            end_datetime = contract.date_end and contract.date_end + relativedelta(hour=23, minute=59, second=59)
+            if end_datetime:
+                user_tz = pytz.timezone(self.env.user.tz or self.env.context.get('tz') or 'UTC')
+                end_datetime = user_tz.localize(end_datetime).astimezone(pytz.utc).replace(tzinfo=None)
+                end_datetime = fields.Datetime.to_string(end_datetime)
+            employees_with_contract_in_current_scale.append(employee_id)
+            employees_rows[employee_id]["working_periods"].append({
+                "start": fields.Datetime.to_string(contract.date_start),
+                "end": end_datetime,
+            })
+        for employee in employees_sudo - self.browse(employees_with_contract_in_current_scale):
+            if employees_with_contract_outside_current_scale.get(employee, 0):
+                continue
+            employees_rows[employee.id]["working_periods"].append({
+                "start": start,
+                "end": stop,
+            })
+        return employees_rows

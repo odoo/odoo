@@ -51,14 +51,10 @@ class TestEmployeeWorkingPeriods(TestContractCommon):
             "kanban_state": "normal",
         })
 
-    def get_employee_working_periods(self, employee_ids, start, stop):
-        return self.env["hr.contract"].get_employee_working_periods(employee_ids, start, stop)
-
     def test_case_no_contract(self):
         """ Check the calendar set on the employee will be given as working days when the resource has no contract. """
-        employee_rows = self.get_employee_working_periods(self.employee.ids, self.dates_inside_contracts["start"], self.dates_inside_contracts["end"])
+        employee_rows = self.env["hr.employee"]._get_employee_working_periods(self.employee.ids, self.dates_inside_contracts["start"], self.dates_inside_contracts["end"])
         working_periods = employee_rows[self.employee.id]["working_periods"]
-
         self.assertEqual(len(working_periods), 1)
         self.assertDictEqual(
             working_periods[0],
@@ -72,7 +68,7 @@ class TestEmployeeWorkingPeriods(TestContractCommon):
 
             Create contract in draft and the kanban state set to "in progress"
         """
-        employee_rows = self.get_employee_working_periods(self.employee_bali.ids, self.dates_inside_contracts["start"], self.dates_inside_contracts["end"])
+        employee_rows = self.env["hr.employee"]._get_employee_working_periods(self.employee_bali.ids, self.dates_inside_contracts["start"], self.dates_inside_contracts["end"])
         working_periods = employee_rows[self.employee_bali.id]['working_periods']
         self.assertEqual(len(working_periods), 1)
         self.assertDictEqual(
@@ -89,7 +85,7 @@ class TestEmployeeWorkingPeriods(TestContractCommon):
         """
         self.employee_bali.contract_id.kanban_state = "blocked"
         self.assertEqual(self.employee_bali.contract_id.state, "draft")
-        employee_rows = self.get_employee_working_periods(self.employee_bali.ids, self.dates_inside_contracts["start"], self.dates_inside_contracts["end"])
+        employee_rows = self.env["hr.employee"]._get_employee_working_periods(self.employee_bali.ids, self.dates_inside_contracts["start"], self.dates_inside_contracts["end"])
         working_periods = employee_rows[self.employee_bali.id]['working_periods']
         self.assertEqual(len(working_periods), 1)
         self.assertDictEqual(
@@ -106,7 +102,7 @@ class TestEmployeeWorkingPeriods(TestContractCommon):
         self.employee_bali.contract_id.kanban_state = "done"
         self.assertEqual(self.employee_bali.contract_id.state, "draft")
 
-        employee_rows = self.get_employee_working_periods(self.employee_bali.ids, self.dates_inside_contracts["start"], self.dates_inside_contracts["end"])
+        employee_rows = self.env["hr.employee"]._get_employee_working_periods(self.employee_bali.ids, self.dates_inside_contracts["start"], self.dates_inside_contracts["end"])
         working_periods = employee_rows[self.employee_bali.id]['working_periods']
         self.assertEqual(len(working_periods), 1)
         self.assertDictEqual(
@@ -115,12 +111,12 @@ class TestEmployeeWorkingPeriods(TestContractCommon):
             "The working period for that resource should be the contract period only."
         )
 
-        employee_rows = self.get_employee_working_periods(self.employee_bali.ids, self.dates_outside_contracts["start"], self.dates_outside_contracts["end"])
+        employee_rows = self.env["hr.employee"]._get_employee_working_periods(self.employee_bali.ids, self.dates_outside_contracts["start"], self.dates_outside_contracts["end"])
         working_periods = employee_rows[self.employee_bali.id]['working_periods']
         self.assertFalse(working_periods, "No working period should be found since the contract period is before the period displayed in the gantt view.")
 
         self.employee_bali.contract_id.date_end = False
-        employee_rows = self.get_employee_working_periods(self.employee_bali.ids, self.dates_outside_contracts["start"], self.dates_outside_contracts["end"])
+        employee_rows = self.env["hr.employee"]._get_employee_working_periods(self.employee_bali.ids, self.dates_outside_contracts["start"], self.dates_outside_contracts["end"])
         working_periods = employee_rows[self.employee_bali.id]['working_periods']
         self.assertDictEqual(
             working_periods[0],
@@ -134,7 +130,7 @@ class TestEmployeeWorkingPeriods(TestContractCommon):
             Create a running contract (state = "open")
         """
         self.employee_bali.contract_id.state = "open"
-        employee_rows = self.get_employee_working_periods(self.employee_bali.ids, self.dates_inside_contracts["start"], self.dates_inside_contracts["end"])
+        employee_rows = self.env["hr.employee"]._get_employee_working_periods(self.employee_bali.ids, self.dates_inside_contracts["start"], self.dates_inside_contracts["end"])
         working_periods = employee_rows[self.employee_bali.id]['working_periods']
         self.assertEqual(len(working_periods), 1)
         self.assertDictEqual(
@@ -143,7 +139,7 @@ class TestEmployeeWorkingPeriods(TestContractCommon):
             "The working period for that resource should be the contract period only."
         )
 
-        employee_rows = self.get_employee_working_periods(self.employee_bali.ids, self.dates_outside_contracts["start"], self.dates_outside_contracts["end"])
+        employee_rows = self.env["hr.employee"]._get_employee_working_periods(self.employee_bali.ids, self.dates_outside_contracts["start"], self.dates_outside_contracts["end"])
         working_periods = employee_rows[self.employee_bali.id]['working_periods']
         self.assertFalse(working_periods, "No working period should be found since the period displayed in the gantt view is after the contract period.")
 
@@ -154,7 +150,7 @@ class TestEmployeeWorkingPeriods(TestContractCommon):
         )
 
         self.employee_bali.contract_id.date_end = False
-        employee_rows = self.get_employee_working_periods(self.employee_bali.ids, self.dates_outside_contracts["start"], self.dates_outside_contracts["end"])
+        employee_rows = self.env["hr.employee"]._get_employee_working_periods(self.employee_bali.ids, self.dates_outside_contracts["start"], self.dates_outside_contracts["end"])
         working_periods = employee_rows[self.employee_bali.id]['working_periods']
         self.assertDictEqual(
             working_periods[0],
@@ -171,7 +167,7 @@ class TestEmployeeWorkingPeriods(TestContractCommon):
 
         # If context dates are in contract start and end then we get working_periods as
         # contract start and end date
-        employee_rows = self.get_employee_working_periods(self.employee_bali.ids, self.dates_inside_contracts["start"], self.dates_inside_contracts["end"])
+        employee_rows = self.env["hr.employee"]._get_employee_working_periods(self.employee_bali.ids, self.dates_inside_contracts["start"], self.dates_inside_contracts["end"])
         working_periods = employee_rows[self.employee_bali.id]['working_periods']
         self.assertEqual(len(working_periods), 1)
         self.assertDictEqual(
@@ -182,11 +178,11 @@ class TestEmployeeWorkingPeriods(TestContractCommon):
 
         # If context dates are not in contract start and end then we get working_periods as
         # contract start and end date
-        employee_rows = self.get_employee_working_periods(self.employee_bali.ids, self.dates_outside_contracts["start"], self.dates_outside_contracts["end"])
+        employee_rows = self.env["hr.employee"]._get_employee_working_periods(self.employee_bali.ids, self.dates_outside_contracts["start"], self.dates_outside_contracts["end"])
         working_periods = employee_rows[self.employee_bali.id]['working_periods']
         self.assertFalse(working_periods, "No working period should be found since the gantt period is outside ")
         self.employee_bali.contract_id.date_end = False
-        employee_rows = self.get_employee_working_periods(self.employee_bali.ids, self.dates_outside_contracts["start"], self.dates_outside_contracts["end"])
+        employee_rows = self.env["hr.employee"]._get_employee_working_periods(self.employee_bali.ids, self.dates_outside_contracts["start"], self.dates_outside_contracts["end"])
         working_periods = employee_rows[self.employee_bali.id]['working_periods']
         self.assertDictEqual(
             working_periods[0],
@@ -197,7 +193,7 @@ class TestEmployeeWorkingPeriods(TestContractCommon):
     def test_with_cancelled_contract(self):
         self.employee_bali.contract_id.state = "cancel"
 
-        employee_rows = self.get_employee_working_periods(self.employee_bali.ids, self.dates_inside_contracts["start"], self.dates_inside_contracts["end"])
+        employee_rows = self.env["hr.employee"]._get_employee_working_periods(self.employee_bali.ids, self.dates_inside_contracts["start"], self.dates_inside_contracts["end"])
         working_periods = employee_rows[self.employee_bali.id]['working_periods']
         self.assertEqual(len(working_periods), 1)
         self.assertDictEqual(
@@ -217,6 +213,6 @@ class TestEmployeeWorkingPeriods(TestContractCommon):
             "kanban_state": "normal",
         })
 
-        employee_rows = self.get_employee_working_periods(self.employee_bali.ids, self.dates_outside_contracts["start"], self.dates_outside_contracts["end"])
+        employee_rows = self.env["hr.employee"]._get_employee_working_periods(self.employee_bali.ids, self.dates_outside_contracts["start"], self.dates_outside_contracts["end"])
         working_periods = employee_rows[self.employee_bali.id]['working_periods']
         self.assertFalse(working_periods)
