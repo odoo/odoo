@@ -42,7 +42,7 @@
         <t t-else="">
             <tr class="partner-line partner-info" t-att-class="{'selected': props.isSelected}" t-att-data-id="props.partner.id"
                 t-on-click="() => this.props.onClickPartner(props.partner)">
-                <td>
+                <td class="text-break w-25">
                     <b t-esc="props.partner.name or ''" />
                     <div class="company-field text-bg-muted" t-esc="props.partner.parent_name or ''" />
                 </td>
