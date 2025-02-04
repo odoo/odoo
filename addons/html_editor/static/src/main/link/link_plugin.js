@@ -603,6 +603,7 @@ export class LinkPlugin extends Plugin {
                 this.closeLinkTools();
             }
         } else {
+<<<<<<< saas-18.2
             const closestLinkElement = closestElement(selection.anchorNode, "A");
             if (closestLinkElement) {
                 if (closestLinkElement !== this.linkInDocument) {
@@ -611,6 +612,118 @@ export class LinkPlugin extends Plugin {
             } else {
                 this.linkInDocument = null;
                 this.closeLinkTools();
+||||||| 73bd69e337b758c18346ae8a1b2e1980eb910ab4
+            const linkEl = closestElement(selection.anchorNode, "A");
+            if (!linkEl) {
+                this.overlay.close();
+                this.removeCurrentLinkIfEmtpy();
+                return;
+            }
+            if (linkEl !== this.linkElement) {
+                this.removeCurrentLinkIfEmtpy();
+                this.overlay.close();
+                this.linkElement = linkEl;
+            }
+
+            // if the link includes an inline image, we close the previous opened popover to reposition it
+            const imageNode = linkEl.querySelector("img");
+            if (imageNode) {
+                this.removeCurrentLinkIfEmtpy();
+                this.overlay.close();
+            }
+
+            const linkProps = {
+                ...props,
+                isImage: false,
+                linkEl: this.linkElement,
+                onApply: (url, label, classes) => {
+                    this.linkElement.href = url;
+                    if (cleanZWChars(this.linkElement.innerText) === label) {
+                        this.overlay.close();
+                        this.dependencies.selection.setSelection(
+                            this.dependencies.selection.getEditableSelection()
+                        );
+                    } else {
+                        const restore = prepareUpdate(...leftPos(this.linkElement));
+                        this.linkElement.innerText = label;
+                        restore();
+                        this.overlay.close();
+                        this.dependencies.selection.setCursorEnd(this.linkElement);
+                    }
+                    if (classes) {
+                        this.linkElement.className = classes;
+                    } else {
+                        this.linkElement.removeAttribute("class");
+                    }
+                    cleanTrailingBR(closestBlock(this.linkElement));
+                    this.dependencies.selection.focusEditable();
+                    this.removeCurrentLinkIfEmtpy();
+                    this.dependencies.history.addStep();
+                },
+                canEdit: !this.linkElement.classList.contains("o_link_readonly"),
+                canUpload: !this.config.disableFile,
+                onUpload: this.config.onAttachmentChange,
+            };
+
+            if (linkEl.isConnected) {
+                // pass the link element to overlay to prevent position change
+                this.overlay.open({ target: this.linkElement, props: linkProps });
+=======
+            const linkEl = closestElement(selection.anchorNode, "A");
+            if (!linkEl) {
+                this.overlay.close();
+                this.removeCurrentLinkIfEmtpy();
+                return;
+            }
+            if (linkEl !== this.linkElement) {
+                this.removeCurrentLinkIfEmtpy();
+                this.overlay.close();
+                this.linkElement = linkEl;
+            }
+
+            // if the link includes an inline image, we close the previous opened popover to reposition it
+            const imageNode = linkEl.querySelector("img");
+            if (imageNode) {
+                this.removeCurrentLinkIfEmtpy();
+                this.overlay.close();
+            }
+
+            if (linkEl.isConnected) {
+                const linkProps = {
+                    ...props,
+                    isImage: false,
+                    linkEl: this.linkElement,
+                    onApply: (url, label, classes) => {
+                        this.linkElement.href = url;
+                        if (cleanZWChars(this.linkElement.innerText) === label) {
+                            this.overlay.close();
+                            this.dependencies.selection.setSelection(
+                                this.dependencies.selection.getEditableSelection()
+                            );
+                        } else {
+                            const restore = prepareUpdate(...leftPos(this.linkElement));
+                            this.linkElement.innerText = label;
+                            restore();
+                            this.overlay.close();
+                            this.dependencies.selection.setCursorEnd(this.linkElement);
+                        }
+                        if (classes) {
+                            this.linkElement.className = classes;
+                        } else {
+                            this.linkElement.removeAttribute("class");
+                        }
+                        cleanTrailingBR(closestBlock(this.linkElement));
+                        this.dependencies.selection.focusEditable();
+                        this.removeCurrentLinkIfEmtpy();
+                        this.dependencies.history.addStep();
+                    },
+                    canEdit: !this.linkElement.classList.contains("o_link_readonly"),
+                    canUpload: !this.config.disableFile,
+                    onUpload: this.config.onAttachmentChange,
+                };
+                // pass the link element to overlay to prevent position change
+                this.overlay.open({ target: this.linkElement, props: linkProps });
+>>>>>>> 139c45e6717ea79978bfd290439599b7723982e1
             }
         }
     }
