@@ -28,7 +28,7 @@ class TestModuleManifest(BaseCase):
 
     def test_default_manifest(self):
         with open(opj(self.module_root, '__manifest__.py'), 'w') as file:
-            file.write(str({'name': f'Temp {self.module_name}', 'license': 'MIT'}))
+            file.write(str({'name': f'Temp {self.module_name}', 'license': 'MIT', 'author': 'Fapi'}))
 
         with self.assertNoLogs('odoo.modules.module', 'WARNING'):
             manifest = load_manifest(self.module_name)
@@ -38,7 +38,7 @@ class TestModuleManifest(BaseCase):
             'addons_path': self.addons_path,
             'application': False,
             'assets': {},
-            'author': 'Odoo S.A.',
+            'author': 'Fapi',
             'auto_install': False,
             'bootstrap': False,
             'category': 'Uncategorized',
@@ -93,4 +93,6 @@ class TestModuleManifest(BaseCase):
         with self.assertLogs('odoo.modules.module', 'WARNING') as capture:
             manifest = load_manifest(self.module_name)
         self.assertEqual(manifest['license'], 'LGPL-3')
-        self.assertIn("Missing `license` key", capture.output[0])
+        self.assertEqual(manifest['author'], '')
+        self.assertIn("Missing `author` key", capture.output[0])
+        self.assertIn("Missing `license` key", capture.output[1])
