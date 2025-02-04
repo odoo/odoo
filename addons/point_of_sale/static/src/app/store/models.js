@@ -1808,6 +1808,7 @@ export class Order extends PosModel {
                         attribute_value_ids: orderline.attribute_value_ids,
                         quantity: quantityDiff,
                         note: note,
+                        isPartOfCombo: orderline.comboParent !== undefined,
                     };
                     changesCount += quantityDiff;
                     changeAbsCount += Math.abs(quantityDiff);
