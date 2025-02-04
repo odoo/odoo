@@ -502,6 +502,214 @@ test("replace an image with a caption", async () => {
     });
 });
 
+test.skip("add a link to an image with a caption", async () => {
+    await testEditor({
+        config: configWithEmbeddedCaption,
+        contentBefore: unformat(
+            `<figure>
+                <img class="img-fluid test-image" src="${base64Img}">
+                <figcaption>Hello</figcaption>
+            </figure>
+            <h1>[]Heading</h1>`
+        ),
+        stepFunction: async () => {
+            await addLinkToImage("odoo.com");
+            expect(".o-we-linkpopover").toHaveCount(1);
+            expect(".o-we-toolbar").toHaveCount(1);
+        },
+        contentAfter: unformat(
+            `<p><br></p>
+            <p>
+                <a href="https://odoo.com">
+                    <figure>
+                        [<img class="img-fluid test-image" src="${base64Img}">]
+                        <figcaption>Hello</figcaption>
+                    </figure>
+                </a>
+            </p>
+            <h1>Heading</h1>`
+        ),
+    });
+});
+
+test("add a caption to an image with a link", async () => {
+    await testEditor({
+        config: configWithEmbeddedCaption,
+        contentBefore: unformat(
+            `<a href="https://odoo.com">
+                <img class="img-fluid test-image" src="${base64Img}">
+            </a>
+            <h1>[]Heading</h1>`
+        ),
+        stepFunction: async editor => {
+            await toggleCaption();
+            await waitFor("figcaption > input");
+            const input = queryOne("figure > figcaption > input");
+            expect(editor.document.activeElement).toBe(input);
+            // Remove the editor selection for the test because it's irrelevant
+            // since the focus is not in it.
+            const selection = editor.document.getSelection();
+            selection.removeAllRanges();
+        },
+        contentAfter: unformat(
+            `<p><br></p>
+            <div>
+                <a href="https://odoo.com">
+                    <figure>
+                        <img class="img-fluid test-image" src="${base64Img}">
+                        <figcaption></figcaption>
+                    </figure>
+                </a>
+            </div>
+            <h1>Heading</h1>`
+        ),
+    });
+});
+
+test.skip("add a caption then a link to an image surrounded by text", async () => {
+    await testEditor({
+        config: configWithEmbeddedCaption,
+        contentBefore: `<p>ab<img class="img-fluid test-image" src="${base64Img}">cd</p>`,
+        stepFunction: async () => {
+            await toggleCaption("Hello");
+            await addLinkToImage("odoo.com");
+            expect(".o-we-linkpopover").toHaveCount(1);
+            expect(".o-we-toolbar").toHaveCount(1);
+        },
+        contentAfter: unformat(
+            `<p>ab</p>
+            <p>
+                <a href="https://odoo.com">
+                    <figure>
+                        [<img class="img-fluid test-image" src="${base64Img}">]
+                        <figcaption>Hello</figcaption>
+                    </figure>
+                </a>
+            </p>
+            <p>cd</p>`
+        ),
+    });
+});
+
+test.skip("add a link then a caption to an image surrounded by text", async () => {
+    await testEditor({
+        config: configWithEmbeddedCaption,
+        contentBefore: `<p>ab<img class="img-fluid test-image" src="${base64Img}">cd</p>`,
+        stepFunction: async editor => {
+            await addLinkToImage("odoo.com");
+            await animationFrame();
+            await toggleCaption("Hello");
+            // Blur the input to commit the caption.
+            await click("p");
+            await animationFrame();
+        },
+        contentAfter: unformat(
+            `<p>ab</p>
+            <p>[]
+                <a href="https://odoo.com">
+                    <figure>
+                        <img class="img-fluid test-image" src="${base64Img}">
+                        <figcaption>Hello</figcaption>
+                    </figure>
+                </a>
+            </p>
+            <p>cd</p>`
+        ),
+    });
+});
+
+test("remove a link from an image with a caption", async () => {
+    const caption = "Hello";
+    const captionId = 1;
+    await testEditor({
+        config: configWithEmbeddedCaption,
+        contentBefore: unformat(
+            `<p><br></p>
+            <a href="https://odoo.com">
+                <figure>
+                    <img class="img-fluid test-image" src="${base64Img}">
+                    <figcaption>${caption}</figcaption>
+                </figure>
+            </a>
+            <h1>Heading</h1>`
+        ),
+        contentBeforeEdit: unformat(
+            `<p><br></p>
+            <div class="o-paragraph">
+                <a href="https://odoo.com">
+                    <figure contenteditable="false">
+                        <img class="img-fluid test-image o_editable_media" src="${base64Img}" data-caption-id="${captionId}" data-caption="${caption}">
+                        <figcaption ${getFigcaptionAttributes(captionId, caption)}>
+                            <input ${CAPTION_INPUT_ATTRIBUTES}>
+                        </figcaption>
+                    </figure>
+                </a>
+            </div>
+            <h1>Heading</h1>`
+        ),
+        stepFunction: async () => {
+            await removeLinkFromImage();
+            await animationFrame();
+            expect(".o-we-linkpopover").toHaveCount(0);
+            expect(".o-we-toolbar").toHaveCount(1);
+        },
+        contentAfter: unformat(
+            `<p><br></p>
+            <figure>
+                [<img class="img-fluid test-image" src="${base64Img}">]
+                <figcaption>Hello</figcaption>
+            </figure>
+            <h1>Heading</h1>`
+        ),
+    });
+});
+
+test("remove a caption from an image with a link", async () => {
+    const caption = "Hello";
+    const captionId = 1;
+    await testEditor({
+        config: configWithEmbeddedCaption,
+        contentBefore: unformat(
+            `<p><br></p>
+            <a href="https://odoo.com">
+                <figure>
+                    <img class="img-fluid test-image" src="${base64Img}">
+                    <figcaption>${caption}</figcaption>
+                </figure>
+            </a>
+            <h1>Heading</h1>`
+        ),
+        contentBeforeEdit: unformat(
+            `<p><br></p>
+            <div class="o-paragraph">
+                <a href="https://odoo.com">
+                    <figure contenteditable="false">
+                        <img class="img-fluid test-image o_editable_media" src="${base64Img}" data-caption-id="${captionId}" data-caption="${caption}">
+                        <figcaption ${getFigcaptionAttributes(captionId, caption)}>
+                            <input ${CAPTION_INPUT_ATTRIBUTES}>
+                        </figcaption>
+                    </figure>
+                </a>
+            </div>
+            <h1>Heading</h1>`
+        ),
+        stepFunction: async () => {
+            await toggleCaption();
+            expect(".o-we-linkpopover").toHaveCount(1);
+            expect(".o-we-toolbar").toHaveCount(1);
+        },
+        contentAfter: unformat(
+            `<p><br></p>
+            <div>
+                <a href="https://odoo.com">
+                    [<img class="img-fluid test-image" src="${base64Img}" data-caption="${caption}">]
+                </a>
+            </div>
+            <h1>Heading</h1>`
+        ),
+    });
+});
+
 test("previewing an image with a caption shows the caption as title", async () => {
     await setupEditorWithEmbeddedCaption(`<img class="img-fluid test-image" src="${base64Img}">`);
 
