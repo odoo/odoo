@@ -946,14 +946,20 @@ class SaleOrder(models.Model):
         Coupons that can not claim any reward are not contained in the result.
         """
         self.ensure_one()
+        result = defaultdict(lambda: self.env['loyalty.reward'])
+
         all_coupons = forced_coupons or (self.coupon_point_ids.coupon_id | self.order_line.coupon_id | self.applied_coupon_ids)
+        if not all_coupons:
+            return result
+
         has_payment_reward = any(line.reward_id.program_id.is_payment_program for line in self.order_line)
         global_discount_reward = self._get_applied_global_discount()
         active_products_domain = self.env['loyalty.reward']._get_active_products_domain()
-        discountable = lazy(lambda: self._discountable_amount(global_discount_reward))
 
-        total_is_zero = self.currency_id.is_zero(discountable)
-        result = defaultdict(lambda: self.env['loyalty.reward'])
+        # Only evaluate discountable amount if needed
+        discountable = lazy(lambda: self._discountable_amount(global_discount_reward))
+        total_is_zero = lazy(lambda: self.currency_id.is_zero(discountable))
+
         for coupon in all_coupons:
             points = self._get_real_points_for_coupon(coupon)
             for reward in coupon.program_id.reward_ids:
@@ -1031,9 +1037,10 @@ class SaleOrder(models.Model):
         coupons_to_unlink = self.env['loyalty.card']
         point_entries_to_unlink = self.env['sale.order.coupon.points']
         # Remove any coupons that are expired
-        self.applied_coupon_ids = self.applied_coupon_ids.filtered(lambda c:
-            (not c.expiration_date or c.expiration_date >= fields.Date.today())
-        )
+        if self.applied_coupon_ids:
+            self.applied_coupon_ids = self.applied_coupon_ids.filtered(lambda c:
+                (not c.expiration_date or c.expiration_date >= fields.Date.today())
+            )
         point_ids_per_program = defaultdict(lambda: self.env['sale.order.coupon.points'])
         for pe in self.coupon_point_ids:
             # Update coupons that were created for Public User
