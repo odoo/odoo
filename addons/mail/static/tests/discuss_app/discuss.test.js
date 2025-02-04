@@ -40,6 +40,13 @@ import { rpc } from "@web/core/network/rpc";
 describe.current.tags("desktop");
 defineMailModels();
 
+function getChannelCommandsForThread(threadId) {
+    const store = getService("mail.store");
+    const suggestionService = getService("mail.suggestion");
+    const thread = store.Thread.get({ model: "discuss.channel", id: threadId });
+    return suggestionService.getChannelCommands(thread);
+}
+
 test("sanity check", async () => {
     await startServer();
     onRpcBefore((route, args) => {
@@ -244,8 +251,17 @@ test("Can use channel command /who", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/who");
+    expect(getChannelCommandsForThread(channelId).map((command) => command.name)).toInclude("who");
     await click(".o-mail-Composer button[title='Send']:enabled");
     await contains(".o_mail_notification", { text: "You are alone in this channel." });
+});
+
+test("guests are not allowed to use commands", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
+    await start({ authenticateAs: false });
+    await openDiscuss(channelId);
+    expect(getChannelCommandsForThread(channelId)).toHaveLength(0);
 });
 
 test("sidebar: chat im_status rendering", async () => {
