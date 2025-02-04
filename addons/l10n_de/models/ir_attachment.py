@@ -31,7 +31,7 @@ class IrAttachment(models.Model):
                 raise ue
 
     def write(self, vals):
-        if vals.keys() & {'res_id', 'res_model', 'raw', 'datas', 'store_fname', 'db_datas'}:
+        if vals.keys() & {'res_id', 'res_model', 'raw', 'datas', 'store_fname', 'db_datas', 'company_id'}:
             try:
                 self._except_audit_trail()
             except UserError as e:
@@ -50,6 +50,7 @@ class IrAttachment(models.Model):
             attachment.res_model == 'account.move'
             and attachment.res_id
             and attachment.res_field in ('invoice_pdf_report_file', 'ubl_cii_xml_file')
+            and attachment.company_id.account_fiscal_country_id.code == 'DE'
         )
         if invoice_pdf_attachments:
             # only detach the document from the field, but keep it in the database for the audit trail
