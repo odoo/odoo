@@ -47,7 +47,7 @@ export function useBuilderComponent() {
         newEnv.getEditingElement = () => editingElements[0];
     }
     const weContext = {};
-    for (const key of basicContainerBuilderComponentPropsNames) {
+    for (const key in basicContainerBuilderComponentProps) {
         if (key in comp.props) {
             weContext[key] = comp.props[key];
         }
@@ -477,8 +477,8 @@ export const basicContainerBuilderComponentProps = {
     dataAttributeAction: { type: String, optional: true },
     styleAction: { type: String, optional: true },
 };
-const basicContainerBuilderComponentPropsNames = Object.keys(basicContainerBuilderComponentProps);
 const validateIsNull = { validate: (value) => value === null };
+
 export const clickableBuilderComponentProps = {
     ...basicContainerBuilderComponentProps,
     inverseAction: { type: Boolean, optional: true },
