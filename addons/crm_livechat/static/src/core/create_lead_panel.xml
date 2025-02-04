@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="crm_livechat.CreateLeadPanel">
+        <ActionPanel
+            title="title"
+            icon="'fa fa-handshake-o'"
+            resizable="false"
+        >
+            <div class="d-flex py-2" >
+                <div class="input-group">
+                    <div class="o-crm_livechat-CreateLeadPanel-form form-control d-flex align-items-center bg-view p-0 flex-grow-1" aria-autocomplete="list">
+                        <div class="d-flex flex-grow-1 flex-wrap h-100">
+                            <input type="text" class="flex-grow-1 w-auto border-0 rounded px-2" accesskey="Q" placeholder="Enter lead title" t-ref="inputRef" t-model="state.leadTitle"/>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary ms-1 rounded" t-on-click="createLead" aria-label="Create" t-att-disabled="!state.leadTitle.length">Create</button>
+                </div>
+            </div>
+        </ActionPanel>
+    </t>
+</templates>
