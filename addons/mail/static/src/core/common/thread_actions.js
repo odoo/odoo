@@ -212,8 +212,8 @@ export const threadActionsInternal = {
             return true;
         }
         return action.condition(component);
-    }
-}
+    },
+};
 
 export function useThreadActions() {
     const component = useComponent();
