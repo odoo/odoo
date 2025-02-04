@@ -198,3 +198,28 @@ test("Use the 'replace' overlay buttons", async () => {
     expect(":iframe section.s_shape_image").toHaveCount(1);
     // TODO add checks of the overlay + options if the behavior is kept.
 });
+
+test("Use the 'clone' overlay buttons", async () => {
+    await setupWebsiteBuilder(`
+        <section class="s_text_image" data-snippet="s_text_image" data-name="Text - Image">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-5">
+                        <p>TEST</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    `);
+
+    await contains(":iframe .col-lg-5").click();
+    expect(".overlay .o_snippet_clone").toHaveCount(1);
+    await contains(".overlay .o_snippet_clone").click();
+    expect(":iframe .col-lg-5").toHaveCount(2);
+
+    await contains(":iframe section").click();
+    expect(".overlay .o_snippet_clone").toHaveCount(1);
+    await contains(".overlay .o_snippet_clone").click();
+    expect(":iframe section").toHaveCount(2);
+    expect(":iframe .col-lg-5").toHaveCount(4);
+});

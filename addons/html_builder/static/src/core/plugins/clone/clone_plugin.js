@@ -1,5 +1,8 @@
 import { Plugin } from "@html_editor/plugin";
+import { withSequence } from "@html_editor/utils/resource";
+import { _t } from "@web/core/l10n/translation";
 import { isElementInViewport } from "@html_builder/utils/utils";
+import { isRemovable } from "../remove/remove_plugin";
 
 export class ClonePlugin extends Plugin {
     static id = "clone";
@@ -8,10 +11,13 @@ export class ClonePlugin extends Plugin {
 
     resources = {
         builder_actions: this.getActions(),
+        get_overlay_buttons: withSequence(2, this.getActiveOverlayButtons.bind(this)),
     };
 
     // TODO find why the images should not have the clone buttons.
-    setup() {}
+    setup() {
+        this.target = null;
+    }
 
     getActions() {
         return {
@@ -23,6 +29,21 @@ export class ClonePlugin extends Plugin {
                 },
             },
         };
+    }
+
+    getActiveOverlayButtons(target) {
+        if (!isRemovable(target)) {
+            this.target = null;
+            return [];
+        }
+        const buttons = [];
+        this.target = target;
+        buttons.push({
+            class: "o_snippet_clone fa fa-clone",
+            title: _t("Duplicate"),
+            handler: () => this.cloneElement(this.target, { scrollToClone: true }),
+        });
+        return buttons;
     }
 
     cloneElement(el, { position = "afterend", scrollToClone = false } = {}) {
