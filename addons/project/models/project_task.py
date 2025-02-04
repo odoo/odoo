@@ -1347,15 +1347,6 @@ class ProjectTask(models.Model):
                 task.recurrence_id.unlink()
         return super().unlink()
 
-    def _where_calc(self, domain, active_test=True):
-        """ Tasks views don't show the sub-tasks / ('display_in_project', '=', True).
-            The pseudo-filter "Show Sub-tasks" adds the key 'show_subtasks' in the context.
-            In that case, we pop the leaf from the domain.
-        """
-        if self.env.context.get('show_subtasks'):
-            domain = filter_domain_leaf(domain, lambda field: field != 'display_in_project')
-        return super()._where_calc(domain, active_test)
-
     def update_date_end(self, stage_id):
         project_task_type = self.env['project.task.type'].browse(stage_id)
         if project_task_type.fold:
