@@ -12,6 +12,7 @@ export class BuilderNumberInput extends Component {
         ...basicContainerBuilderComponentProps,
         default: { type: Number, optional: true },
         unit: { type: String, optional: true },
+        step: { type: Number, optional: true },
     };
     static components = { BuilderComponent };
 
@@ -23,5 +24,13 @@ export class BuilderNumberInput extends Component {
         this.onChange = onChange;
         this.onInput = onInput;
         this.state = state;
+    }
+
+    handleKeydown(event) {
+        if (event.key === "ArrowUp") {
+            event.target.value = parseFloat(event.target.value) + (this.props.step || 1);
+        } else if (event.key === "ArrowDown") {
+            event.target.value = parseFloat(event.target.value) - (this.props.step || 1);
+        }
     }
 }

@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { animationFrame, click, fill, queryFirst } from "@odoo/hoot-dom";
+import { advanceTime, animationFrame, click, fill, queryFirst } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
@@ -221,4 +221,37 @@ test("input with classAction and styleAction", async () => {
     expect(":iframe .test-options-target").toHaveStyle({
         "--custom-property": "2",
     });
+});
+test("input should step up or down from by the step prop", async () => {
+    addActionOption({
+        customAction: {
+            getValue: ({ editingElement }) => editingElement.innerHTML,
+            apply: ({ editingElement, value }) => {
+                expect.step(`customAction ${value}`);
+                editingElement.innerHTML = value;
+            },
+        },
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderNumberInput action="'customAction'" step="2"/>`,
+    });
+    await setupWebsiteBuilder(`
+        <div class="test-options-target">10</div>
+    `);
+    await contains(":iframe .test-options-target").click();
+
+    // simulate arrow up
+    await contains(".options-container input").keyDown("ArrowUp");
+    queryFirst(".options-container input").dispatchEvent(new Event("change"));
+    await advanceTime();
+    expect(":iframe .test-options-target").toHaveInnerHTML("12");
+
+    // simulate arrow down
+    await contains(".options-container input").keyDown("ArrowDown");
+    queryFirst(".options-container input").dispatchEvent(new Event("change"));
+    await advanceTime();
+    expect(":iframe .test-options-target").toHaveInnerHTML("10");
+
+    expect.verifySteps(["customAction 12", "customAction 10"]);
 });

@@ -7,7 +7,7 @@
             style="width: 60px"
             t-att-data-action-id="props.action"
             t-att-data-action-param="props.actionParam" >
-            <input type="text" autocomplete="chrome-off" class="text-end" t-on-change="this.onChange" t-on-input="this.onInput" t-att-value="this.state.value" />
+            <input type="text" autocomplete="chrome-off" class="text-end" t-on-change="this.onChange" t-on-input="this.onInput" t-att-value="this.state.value" t-on-keydown="this.handleKeydown" />
             <span t-out="props.unit" />
         </div>
     </BuilderComponent>
