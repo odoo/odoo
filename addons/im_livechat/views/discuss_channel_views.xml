@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <search string="Search history">
                     <field name="name" string="Participant"/>
-                    <filter name="filter_my_sessions" domain="[('is_member', '=', True)]" string="My Sessions"/>
+                    <filter name="filter_my_sessions" domain="[('livechat_operator_id.user_id', '=', uid)]" string="My Sessions"/>
                     <separator/>
                     <filter name="filter_session_date" date="create_date" string="Session Date"/>
                     <separator/>
