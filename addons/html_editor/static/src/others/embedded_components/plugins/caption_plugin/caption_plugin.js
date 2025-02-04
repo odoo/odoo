@@ -77,7 +77,6 @@ export class CaptionPlugin extends Plugin {
         if (!image) {
             return;
         }
-        // If there's already a caption, focus it and move the selection to it.
         const currentCaption = this.getImageCaption(image);
         if (currentCaption) {
             this.removeImageCaption(image);
