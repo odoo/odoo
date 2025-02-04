@@ -41,22 +41,22 @@ export class HrContract extends models.Model {
         for (const val of employees) {
             rows[val] = { working_periods: [] };
         }
-        const employees_with_contract = this.env["hr.contract"].read_group(
+
+        const employees_with_contract = this.env["hr.contract"].formatted_read_group(
             new Domain([
                 "&",
                 ["employee_id", "in", employees],
                 "|",
-                ["state", "not in", ["draft", "cancel", false]],
+                ["state", "not in", ["draft", "cancel"]],
                 "&",
                 ["kanban_state", "=", "done"],
                 ["state", "=", "draft"],
             ]).toList(),
+            ["employee_id", "date_start:day", "date_end:day"],
+            [],
             "",
-            ["id", "employee_id"],
             "",
             "",
-            "",
-            false
         );
 
         const contracts = this.env["hr.employee"]._get_contracts(
