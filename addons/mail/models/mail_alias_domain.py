@@ -80,23 +80,6 @@ class MailAliasDomain(models.Model):
         if not names:
             return
 
-        similar_domains = self.env['mail.alias.domain'].search([('name', 'in', self.mapped('name'))])
-        for tocheck in self:
-            if any(similar.bounce_alias == tocheck.bounce_alias
-                   for similar in similar_domains if similar != tocheck and similar.name == tocheck.name):
-                raise exceptions.ValidationError(
-                    _('Bounce alias %(bounce)s is already used for another domain with same name. '
-                      'Use another bounce or simply use the other alias domain.',
-                      bounce=tocheck.bounce_email)
-                )
-            if any(similar.catchall_alias == tocheck.catchall_alias
-                   for similar in similar_domains if similar != tocheck and similar.name == tocheck.name):
-                raise exceptions.ValidationError(
-                    _('Catchall alias %(catchall)s is already used for another domain with same name. '
-                      'Use another catchall or simply use the other alias domain.',
-                      catchall=tocheck.catchall_email)
-                )
-
         # search on left-part only to speedup, then filter on right part
         potential_aliases = self.env['mail.alias'].search([
             ('alias_name', 'in', list(set(names))),

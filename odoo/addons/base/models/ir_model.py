@@ -277,36 +277,28 @@ class IrModel(models.Model):
             if not models.check_object_name(model.model):
                 raise ValidationError(_("The model name can only contain lowercase characters, digits, underscores and dots."))
 
-    @api.constrains('order', 'field_id')
     def _check_order(self):
+        # Need to be call manually after reloading the registry to ensure the lastest is updated
         for model in self:
+            if model.model not in self.env:
+                continue
+            record = self.env[model.model]
+            if record._abstract:
+                continue
             try:
-                model._check_qorder(model.order)  # regex check for the whole clause ('is it valid sql?')
-            except UserError as e:
-                raise ValidationError(str(e))
-            # add MAGIC_COLUMNS to 'stored_fields' in case 'model' has not been
-            # initialized yet, or 'field_id' is not up-to-date in cache
-            stored_fields = set(
-                model.field_id.filtered('store').mapped('name') + models.MAGIC_COLUMNS
-            )
-            if model.model in self.env:
-                # add fields inherited from models specified via code if they are already loaded
-                stored_fields.update(
-                    fname
-                    for fname, fval in self.env[model.model]._fields.items()
-                    if fval.inherited and fval.base_field.store
-                )
+                record._check_qorder(model.order)
+                record._order_to_sql(model.order, record._as_query(ordered=False), record._table)
+            except (UserError, ValueError) as e:
+                raise ValidationError(_(
+                    "Invalid order for '%(model_name)s': %(error)s",
+                    model_name=model.model, error=str(e),
+                ))
 
-            order_fields = RE_ORDER_FIELDS.findall(model.order)
-            for field in order_fields:
-                if field not in stored_fields:
-                    raise ValidationError(_("Unable to order by %s: fields used for ordering must be present on the model and stored.", field))
-
-    @api.constrains('fold_name')
+    @api.constrains('fold_name', 'field_id')
     def _check_fold_name(self):
         for model in self:
-            if model.fold_name and model.fold_name not in model.field_id.mapped('name'):
-                raise ValidationError(_("The value of 'Fold Field' should be a field name of the model."))
+            if model.fold_name and model.fold_name != 'fold' and model.fold_name not in model.field_id.mapped('name'):
+                raise ValidationError(self.env._("The value of 'Fold Field' should be a field name of the '%s' model.", model.name))
 
     _obj_name_uniq = models.Constraint('UNIQUE (model)', 'Each model must have a unique name.')
 
@@ -382,16 +374,14 @@ class IrModel(models.Model):
         for unmodifiable_field in ('model', 'state', 'abstract', 'transient'):
             if unmodifiable_field in vals and any(rec[unmodifiable_field] != vals[unmodifiable_field] for rec in self):
                 raise UserError(_('Field %s cannot be modified on models.', self._fields[unmodifiable_field]._description_string(self.env)))
-        # Filter out operations 4 from field id, because the web client always
-        # writes (4,id,False) even for non dirty items.
-        if 'field_id' in vals:
-            vals['field_id'] = [op for op in vals['field_id'] if op[0] != 4]
+
         res = super().write(vals)
         # ordering has been changed, reload registry to reflect update + signaling
         if 'order' in vals or 'fold_name' in vals:
             self.env.flush_all()  # _setup_models__ need to fetch the updated values from the db
             # incremental setup will reload custom models
             self.pool._setup_models__(self.env.cr, [])
+            self._check_order()
         return res
 
     @api.model_create_multi
@@ -407,6 +397,8 @@ class IrModel(models.Model):
             self.pool._setup_models__(self.env.cr, [])
             # update database schema
             self.pool.init_models(self.env.cr, manual_models, dict(self.env.context, update_custom_fields=True))
+
+        res._check_order()
         return res
 
     @api.model
@@ -823,6 +815,21 @@ class IrModelFields(models.Model):
                     "as being 'set null'. Only 'restrict' and 'cascade' make sense.", rec.name,
                 ))
 
+    @api.constrains('relation', 'relation_field', 'store')
+    def _check_one2many_consistency(self):
+        for field_rec in self:
+            if field_rec.state != 'manual':
+                continue
+            if field_rec.ttype == 'one2many' and field_rec.store and not self.search_count([
+                ('ttype', '=', 'many2one'),
+                ('model', '=', field_rec.relation),
+                ('name', '=', field_rec.relation_field),
+            ]):
+                raise ValidationError(_(
+                    "Many2one %(field)s on model %(model)s does not exist!",
+                    field=field_rec.relation_field, model=field_rec.relation,
+                ))
+
     def _get(self, model_name, name):
         """ Return the (sudoed) `ir.model.fields` record with the given model and name.
         The result may be an empty recordset if the model is not found.
@@ -983,7 +990,8 @@ class IrModelFields(models.Model):
         for field in fields:
             self.env.transaction.tocompute.pop(field, None)
 
-        model_names = self.mapped('model')
+        model_names = OrderedSet(self.mapped('model'))
+        ir_models = self.model_id
         self._drop_column()
         res = super().unlink()
 
@@ -997,6 +1005,7 @@ class IrModelFields(models.Model):
             models = self.pool.descendants(model_names, '_inherits')
             self.pool.init_models(self.env.cr, models, dict(self.env.context, update_custom_fields=True))
 
+        ir_models._check_order()
         return res
 
     @api.model_create_multi
@@ -1012,26 +1021,8 @@ class IrModelFields(models.Model):
         # for self._get_ids() in _update_selection()
         self.env.registry.clear_cache('stable')
 
-        res = super().create(vals_list)
-        models = OrderedSet(res.mapped('model'))
-
-        for vals in vals_list:
-            if vals.get('state', 'manual') == 'manual':
-                relation = vals.get('relation')
-                if relation and not IrModel._get_id(relation):
-                    raise UserError(_("Model %s does not exist!", vals['relation']))
-
-                if (
-                    vals.get('ttype') == 'one2many' and
-                    vals.get("store", True) and
-                    not vals.get("related") and
-                    not self.search_count([
-                        ('ttype', '=', 'many2one'),
-                        ('model', '=', vals['relation']),
-                        ('name', '=', vals['relation_field']),
-                    ])
-                ):
-                    raise UserError(_("Many2one %(field)s on model %(model)s does not exist!", field=vals['relation_field'], model=vals['relation']))
+        records = super().create(vals_list)
+        models = OrderedSet(records.mapped('model'))
 
         if any(model in self.pool for model in models):
             # setup models; this re-initializes model in registry
@@ -1040,8 +1031,8 @@ class IrModelFields(models.Model):
             # update database schema of models and their descendants
             models = self.pool.descendants(models, '_inherits')
             self.pool.init_models(self.env.cr, models, dict(self.env.context, update_custom_fields=True))
-
-        return res
+            records.model_id._check_order()
+        return records
 
     def write(self, vals):
         if not self:
@@ -1121,6 +1112,7 @@ class IrModelFields(models.Model):
             self.env.flush_all()
             model_names = OrderedSet(self.mapped('model'))
             self.pool._setup_models__(self.env.cr, model_names)
+            self.model_id._check_order()
 
         if patched_models:
             # update the database schema of the models to patch
@@ -1180,8 +1172,6 @@ class IrModelFields(models.Model):
 
     def _reflect_fields(self, model_names):
         """ Reflect the fields of the given models. """
-        cr = self.env.cr
-
         for model_name in model_names:
             model = self.env[model_name]
             by_label = {}

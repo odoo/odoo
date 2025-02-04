@@ -1184,11 +1184,6 @@ class ProjectProject(models.Model):
     def _get_projects_to_make_billable_domain(self):
         return [('partner_id', '!=', False)]
 
-    @api.constrains(lambda self: self._get_plan_fnames())
-    def _check_account_id(self):
-        # Overriden from 'analytic.plan.fields.mixin'
-        pass
-
     def _get_plan_domain(self, plan):
         return Domain.AND([super()._get_plan_domain(plan), ['|', ('company_id', '=', False), ('company_id', '=?', unquote('company_id'))]])
 

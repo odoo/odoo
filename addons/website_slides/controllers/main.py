@@ -1216,7 +1216,7 @@ class WebsiteSlides(WebsiteProfile):
             # (Use a 'new' and not a create to avoid having to rollback anything if an error is
             # raised)
             slide_question = request.env['slide.question'].new(new_question_values)
-            slide_question._validate_fields(new_question_values.keys())
+            slide_question._check_answers_integrity()
         except ValidationError as e:
             return {'error': e.args[0]}
 

@@ -101,7 +101,7 @@ class ResCurrency(models.CachedModel):
         if group_user and group_mc:
             group_user.sudo()._remove_group(group_mc.sudo())
 
-    @api.constrains('active')
+    @api.constrains('active', deferred=False)
     def _check_company_currency_stays_active(self):
         if self.env.context.get('install_mode') or self.env.context.get('force_deactivate'):
             # install_mode : At install, when this check is run, the "active" field of a currency added to a company will

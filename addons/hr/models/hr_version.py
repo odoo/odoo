@@ -232,7 +232,7 @@ class HrVersion(models.Model):
 
     @api.constrains('employee_id', 'contract_date_start', 'contract_date_end')
     def _check_dates(self):
-        version_read_group = self.env['hr.version'].sudo()._read_group(
+        version_read_group = self.env['hr.version']._read_group(
             [
                 ('id', 'not in', self.ids),
                 ('employee_id', 'in', self.employee_id.ids),
@@ -244,7 +244,7 @@ class HrVersion(models.Model):
         dates_per_employee = defaultdict(list)
         for employee, date_start, date_end, versions in version_read_group:
             dates_per_employee[employee].append((date_start, date_end, versions))
-        for version in self.sudo():  # sudo needed to read contract dates
+        for version in self:
             if not version.contract_date_start or not version.employee_id:
                 continue
             if version.contract_date_end and version.contract_date_start > version.contract_date_end:

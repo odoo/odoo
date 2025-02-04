@@ -404,6 +404,8 @@ class HrEmployee(models.Model):
         versions = [vals['stored'].pop('version_id', None) for vals in data_list]
         result = super()._create(data_list)
         for (employee, version_id, vals) in zip(result, versions, data_list):
+            if not version_id:
+                continue
             version = self.env['hr.version'].browse(version_id)
             version.employee_id = employee.id
             version.write({**vals.get('inherited', {})['hr.version'], 'employee_id': employee.id})

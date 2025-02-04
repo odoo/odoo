@@ -40,7 +40,7 @@ class HrDepartureWizard(models.TransientModel):
             leaves_to_cancel._force_cancel(cancel_msg, notify_responsibles=False)
             # Delete others leaves
             leaves_to_delete = leaves_after_departure - leaves_to_cancel
-            leaves_to_delete.with_context(leave_skip_state_check=True).unlink()
+            leaves_to_delete.unlink()
 
         employee_allocations = self.env['hr.leave.allocation'].search([
             ('employee_id', 'in', self.employee_ids.ids),
