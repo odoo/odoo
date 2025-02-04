@@ -440,7 +440,9 @@ export class MoveNodePlugin extends Plugin {
 function isNodeMovable(node) {
     return (
         node.parentElement?.getAttribute("contentEditable") === "true" &&
-        !node.parentElement.closest(".o_editor_banner")
+        !node.parentElement.closest(".o_editor_banner") &&
+        // TODO: create resource and put this in `content_expandable_plugin`
+        !closestElement(node, ".o_mail_reply_container")
     );
 }
 
