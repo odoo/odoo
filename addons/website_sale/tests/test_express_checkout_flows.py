@@ -44,8 +44,30 @@ class TestWebsiteSaleExpressCheckoutFlows(HttpCaseWithUserDemo):
             'city': 'ooo',
             'zip': '1200',
             'country': 'US',
-            'state': 'AL',
+            'state': 'WA',
         }
+        # Ensure demo user address exists and is valid
+        cls.user_demo.write({
+            'street': "215 Vine St",
+            'city': "Scranton",
+            'zip': "18503",
+            'country_id': cls.env.ref('base.us').id,
+            'state_id': cls.env.ref('base.state_us_39').id,
+        })
+
+    def assertPartnerShippingValues(self, partner, shipping_values):
+        for key, expected in shipping_values.items():
+            if key in ('state', 'country'):
+                value = partner[f'{key}_id'].code
+            else:
+                value = partner[key]
+            self.assertEqual(value, expected, "Shipping value should match")
+        if partner.state_id:
+            self.assertEqual(
+                partner.state_id.country_id,
+                partner.country_id,
+                "Partner's state should be within partner's country",
+            )
 
     def _make_json_rpc_request(self, url, data=None):
         """ Make a JSON-RPC request to the provided URL.
@@ -65,6 +87,7 @@ class TestWebsiteSaleExpressCheckoutFlows(HttpCaseWithUserDemo):
             url,
             data=json.dumps(rpc_request).encode(),
             headers={"Content-Type": "application/json"},
+            timeout=None,
         )
 
         if not result.ok:
@@ -88,12 +111,10 @@ class TestWebsiteSaleExpressCheckoutFlows(HttpCaseWithUserDemo):
 
         new_partner = self.sale_order.partner_id
         self.assertNotEqual(new_partner, self.website.user_id.partner_id)
-        for k in self.express_checkout_billing_values:
-            if k in ['state', 'country']:
-                # State and country are stored as ids in `new_partner` and therefore cannot be
-                # compared.
-                continue
-            self.assertEqual(new_partner[k], self.express_checkout_billing_values[k])
+        self.assertPartnerShippingValues(
+            new_partner,
+            self.express_checkout_billing_values,
+        )
 
     def test_express_checkout_registered_user(self):
         """ Test that when you use express checkout as a registered user and the address sent by the
@@ -138,6 +159,7 @@ class TestWebsiteSaleExpressCheckoutFlows(HttpCaseWithUserDemo):
         ], limit=1)
         child_partner_state = self.env['res.country.state'].search([
             ('code', '=', child_partner_address.pop('state')),
+            ('country_id', '=', child_partner_country.id),
         ], limit=1)
         child_partner = self.env['res.partner'].create(dict(
             **child_partner_address,
@@ -184,9 +206,7 @@ class TestWebsiteSaleExpressCheckoutFlows(HttpCaseWithUserDemo):
         self.assertEqual(self.sale_order.partner_id.id, self.user_demo.partner_id.id)
         new_partner = self.sale_order.partner_invoice_id
         self.assertNotEqual(new_partner, self.website.user_id.partner_id)
-        for k in self.express_checkout_billing_values:
-            if k in ['state', 'country']:
-                # State and country are stored as ids in `new_partner` and therefore cannot be
-                # compared.
-                continue
-            self.assertEqual(new_partner[k], self.express_checkout_billing_values[k])
+        self.assertPartnerShippingValues(
+            new_partner,
+            self.express_checkout_billing_values,
+        )
