@@ -9,22 +9,42 @@ class AccountMoveSendWizard(models.TransientModel):
     # DEFAULTS
     # -------------------------------------------------------------------------
 
+    @api.model
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        move = False
+        if 'move_id' in res or (self.env.context.get('active_model') == 'account.move' and self.env.context.get('active_ids')):
+            move = self.env['account.move'].browse(res.get('move_id') or self.env.context.get('active_ids'))
+            partner = move.partner_id.commercial_partner_id
+            partner.button_account_peppol_check_partner_endpoint(company=move.company_id)
+        return res
+
     def _compute_sending_method_checkboxes(self):
-        # EXTENDS 'account': if Customer is not valid on Peppol, we disable the checkbox
+        """ EXTENDS 'account'
+        If Customer is not valid on Peppol, we disable the checkbox. Also add the proxy mode if not in prod.
+        """
         super()._compute_sending_method_checkboxes()
         for wizard in self:
             peppol_partner = wizard.move_id.partner_id.commercial_partner_id.with_company(wizard.company_id)
-            peppol_partner.button_account_peppol_check_partner_endpoint(company=wizard.company_id)
-            if peppol_partner.peppol_verification_state == 'not_valid' \
-                and (peppol_checkbox := wizard.sending_method_checkboxes.get('peppol')):
-                wizard.sending_method_checkboxes = {
-                    **wizard.sending_method_checkboxes,
-                    'peppol': {
-                        'label': _('%s (customer not on Peppol)', peppol_checkbox['label']),
-                        'readonly': True,
-                        'checked': False,
+            if peppol_checkbox := wizard.sending_method_checkboxes.get('peppol'):
+                peppol_proxy_mode = wizard.company_id._get_peppol_edi_mode()
+                addendum_not_valid = _(' (customer not on Peppol)') if peppol_partner.peppol_verification_state == 'not_valid' else ''
+                vals_not_valid = {'readonly': True, 'checked': False} if addendum_not_valid else {}
+                addendum_mode = _(' (Demo/Test mode)') if peppol_proxy_mode != 'prod' else ''
+                if addendum_not_valid or addendum_mode:
+                    wizard.sending_method_checkboxes = {
+                        **wizard.sending_method_checkboxes,
+                        'peppol': {
+                            **peppol_checkbox,
+                            **vals_not_valid,
+                            'label': _(
+                                '%(peppol_label)s%(not_valid)s%(peppol_proxy_mode)s',
+                                peppol_label=peppol_checkbox['label'],
+                                not_valid=addendum_not_valid,
+                                peppol_proxy_mode=addendum_mode,
+                            ),
+                        }
                     }
-                }
 
     @api.depends('sending_methods')
     def _compute_invoice_edi_format(self):
