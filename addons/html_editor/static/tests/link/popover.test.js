@@ -59,6 +59,27 @@ describe("should open a popover", () => {
         await animationFrame();
         expect(queryOne(".o-we-linkpopover").parentElement).toHaveAttribute("style", style);
     });
+    test("link popover should close when click on editable without url", async () => {
+        const { el } = await setupEditor(`<p>[<img src="${base64Img}">]</p>`);
+        await animationFrame();
+        // we create a link without href on img
+        await click("button[name='link']");
+        await waitFor(".o_we_href_input_link");
+        // we put selection out of editor
+        setSelection({
+            anchorNode: document.body,
+            anchorOffset: 0,
+        });
+        await animationFrame();
+        // Restore the selection in the editor. Setting the selection after the image
+        // will place it inside the `<a>` tag if not removed, causing a traceback.
+        setSelection({
+            anchorNode: el.querySelector("img").parentElement,
+            anchorOffset: 1,
+        });
+        await animationFrame();
+        expect(".o-we-linkpopover").toHaveCount(0);
+    });
 });
 
 describe("popover should switch UI depending on editing state", () => {
