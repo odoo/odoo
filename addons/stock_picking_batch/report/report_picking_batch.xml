@@ -92,7 +92,7 @@
                                                     <span t-if="has_package or move_operation.state == 'done'"
                                                           t-esc="sum(move_operation.mapped('qty_done'))"/>
                                                     <span t-else="" t-esc="sum(move_operation.mapped('reserved_uom_qty'))"/>
-                                                    <span t-field="move_operation.uom_id" groups="move_operation.group_uom"/>
+                                                    <span t-field="move_operation.product_uom_id" groups="uom.group_uom"/>
                                                 </td>
                                                 <td>
                                                     <span t-esc="move_operation.picking_id.display_name"/>
