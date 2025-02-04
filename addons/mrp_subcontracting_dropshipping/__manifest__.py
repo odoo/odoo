@@ -17,5 +17,6 @@ This bridge module allows to manage subcontracting with the dropshipping module.
     ],
     'installable': True,
     'auto_install': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

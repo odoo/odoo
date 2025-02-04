@@ -29,6 +29,7 @@ When a user logs in with a Passkey, MFA will not be required.
             'auth_passkey/static/src/interactions/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
     'installable': True,
 }

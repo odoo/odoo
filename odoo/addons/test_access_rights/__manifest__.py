@@ -8,5 +8,6 @@
         'security.xml',
         'data.xml',
     ],
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

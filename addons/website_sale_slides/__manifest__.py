@@ -33,5 +33,6 @@
             'website_sale_slides/static/tests/tours/*.js',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

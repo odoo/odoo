@@ -22,5 +22,6 @@ This is the base module for managing Units of measure.
             'uom/static/src/components/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

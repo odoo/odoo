@@ -22,5 +22,6 @@ from sales order. It adds sales name and sales Reference on production order.
     ],
     'installable': True,
     'auto_install': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

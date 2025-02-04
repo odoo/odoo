@@ -17,5 +17,6 @@
             'hr_homeworking/static/src/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

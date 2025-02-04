@@ -17,5 +17,6 @@
             'pos_restaurant_adyen/static/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

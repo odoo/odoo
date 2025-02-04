@@ -22,5 +22,6 @@ The check settings are located in the accounting journals configuration page.
     ],
     'installable': True,
     'post_init_hook': 'create_check_sequence_on_bank_journals',
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

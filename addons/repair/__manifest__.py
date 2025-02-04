@@ -45,5 +45,6 @@ The following topics are covered by this module:
             'repair/static/src/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

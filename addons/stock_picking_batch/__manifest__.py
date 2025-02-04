@@ -28,6 +28,7 @@ This module adds the batch transfer option in warehouse management
         'data/stock_picking_batch_demo.xml',
     ],
     'installable': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
     'assets': {
         'web.assets_backend': [

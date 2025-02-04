@@ -507,5 +507,6 @@
             '5': ['s_text_block_h1', 's_text_block', 's_image_gallery', 's_picture'],
         },
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

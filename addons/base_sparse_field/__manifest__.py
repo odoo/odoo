@@ -15,5 +15,6 @@ fields are stored in a "serialized" field in the form of a JSON mapping.
         'security/ir.model.access.csv',
         'views/views.xml',
     ],
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

@@ -31,6 +31,7 @@ When creating invoices from picking, the system is able to add and compute the s
     'demo': ['data/delivery_demo.xml'],
     'installable': True,
     'auto_install': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
     'post_init_hook': '_auto_install_sale_app',
 }

@@ -82,5 +82,6 @@
           'test_assetsbundle/static/invalid_src/xml/file_not_found.xml',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

@@ -7,5 +7,6 @@
     'category': 'Services/Project',
     'depends': ['sale_project', 'project_stock_account'],
     'auto_install': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

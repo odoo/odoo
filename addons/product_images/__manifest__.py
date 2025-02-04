@@ -10,6 +10,7 @@ Automatically set product images based on the barcode
 This module integrates with the Google Custom Search API to set images on products based on the
 barcode.
     """,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
     'category': 'Technical',
     'depends': ['product'],

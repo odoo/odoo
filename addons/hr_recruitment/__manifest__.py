@@ -57,5 +57,6 @@
             'hr_recruitment/static/src/js/tours/hr_recruitment.js',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

@@ -229,5 +229,6 @@
             "point_of_sale/static/tests/customer_display/customer_display_tour.js",
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

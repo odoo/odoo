@@ -52,5 +52,6 @@ The service is provided by the In App Purchase Odoo platform.
             'sms/static/tests/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

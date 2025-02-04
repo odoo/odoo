@@ -29,5 +29,6 @@ Automatically create a sponsor when renting a booth.
             'website_event_booth_exhibitor/static/tests/tours/website_event_booth_exhibitor.js',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

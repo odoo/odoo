@@ -44,5 +44,6 @@
             'payment/static/src/scss/payment_provider.scss',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

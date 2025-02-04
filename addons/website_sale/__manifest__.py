@@ -187,5 +187,6 @@
             #('remove', 'website_sale/static/src/snippets/**/000.js'),
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }
