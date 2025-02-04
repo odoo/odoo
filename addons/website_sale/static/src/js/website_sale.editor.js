@@ -18,6 +18,13 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
         this.ppr = parseInt(gridEl.dataset.ppr);
         this.gap = this.$target[0].style.getPropertyValue('--o-wsale-products-grid-gap');
         this.default_sort = gridEl.dataset.defaultSort;
+
+        // Activate HTML previews when necessary only
+        // See 'website_sale.editor_previews' XML template
+        if(this.$target[0].classList.contains('o_wsale_edit_preview_enabled')) {
+            this._handlePreviews();
+        }
+
         return this._super.apply(this, arguments);
     },
     /**
@@ -91,6 +98,63 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * The 'selectClass' method is not triggered for editor options that require a page
+     * reload (see 'data-reload'). '_handlePreviews' binds 'mouseover' functions on these
+     * UI element directly.
+     *
+     * @private
+     */
+    _handlePreviews() {
+        const targetEl = this.$target[0];
+        const previewsEls = this.el.querySelectorAll('[data-wsale-preview-classes]');
+
+        previewsEls.forEach((el) => {
+            const additionalClasses = el.getAttribute('data-wsale-preview-classes')
+                ?.split(',')
+                .map(cls => cls.trim())
+                .filter(cls => !targetEl.classList.contains(cls)) || [];
+
+            const previewId = el.getAttribute('data-wsale-preview-id');
+            const xmlTemplate = previewId ? renderToElement(previewId) : null;
+            const placeBeforeEls = targetEl.querySelectorAll(el.getAttribute('data-wsale-preview-place-before'));
+            const placeAfterEls = targetEl.querySelectorAll(el.getAttribute('data-wsale-preview-place-after'));
+
+            // Since actionable elements can be either a single element (el) or a NodeList (when
+            // `el` has the class o_we_checkbox_wrapper), we handle both cases properly.
+            const uiEl = el.classList.contains('o_we_checkbox_wrapper')
+                ? el.querySelectorAll('we-title, we-checkbox')
+                : el;
+            const actionableEls = uiEl instanceof NodeList ? [...uiEl] : [uiEl];
+
+            actionableEls.forEach(actionableEl => {
+                actionableEl.addEventListener('mouseover', () => {
+                    if (xmlTemplate && (placeBeforeEls.length || placeAfterEls.length)) {
+                        placeBeforeEls.forEach(placeBeforeEl =>
+                            placeBeforeEl.insertAdjacentElement('beforebegin', xmlTemplate.cloneNode(true))
+                        );
+
+                        placeAfterEls.forEach(placeAfterEl =>
+                            placeAfterEl.insertAdjacentElement('afterend', xmlTemplate.cloneNode(true))
+                        );
+                    }
+
+                    requestAnimationFrame(() => {
+                        targetEl.classList.add(...additionalClasses);
+                    });
+                });
+
+                actionableEl.addEventListener('mouseout', () => {
+                    requestAnimationFrame(() => {
+                        targetEl.classList.remove(...additionalClasses);
+                    });
+                    if (xmlTemplate) {
+                        targetEl.querySelectorAll('[data-wsale-injected-preview]').forEach(el => el.remove());
+                    }
+                });
+            });
+        });
+    },
     /**
      * @override
      */
