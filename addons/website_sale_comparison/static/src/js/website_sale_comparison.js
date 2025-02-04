@@ -69,6 +69,9 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
             });
         });
 
+        // Update checkboxes states on launch.
+        this._updateCheckboxesState();
+
         return this._super.apply(this, arguments);
     },
     /**
@@ -123,6 +126,24 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
         }
     },
 
+    /**
+     * @param {Element} el - The checkbox.
+     */
+    handleCompareToggle: function (el) {
+        const productId = parseInt(el.dataset.productProductId);
+        const toCompare = el.checked;
+
+        if (toCompare) {
+            this.handleCompareAddition($(el));
+        } else {
+            this.comparelist_product_ids = this.comparelist_product_ids.filter(
+                (comp) => comp !== productId
+            );
+            this._updateCookie();
+            this._updateContent('show');
+        }
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -168,7 +189,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
     },
     _addNewProductsImpl: function (product_id) {
         var self = this;
-        $('.o_product_feature_panel').addClass('d-md-block');
+        self.el.classList.remove('d-none');
         if (!self.comparelist_product_ids.includes(product_id)) {
             self.comparelist_product_ids.push(product_id);
             if (Object.prototype.hasOwnProperty.call(self.product_data, product_id)) {
@@ -206,6 +227,16 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
     /**
      * @private
      */
+    _updateCheckboxesState: function () {
+        const checkboxes = this.el.parentElement.querySelectorAll('input.o_add_compare');
+        checkboxes.forEach((checkbox) => {
+            const productId = parseInt(checkbox.dataset.productProductId);
+            checkbox.checked = this.comparelist_product_ids.includes(productId);
+        });
+    },
+    /**
+     * @private
+     */
     _removeFromComparelist: function (e) {
         this.guard.exec(this._removeFromComparelistImpl.bind(this, e));
     },
@@ -218,6 +249,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
         this._updateCookie();
         $('.o_comparelist_limit_warning').hide();
         this._updateContent('show');
+        this._updateCheckboxesState();
     },
     /**
      * @private
@@ -230,15 +262,17 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
      * @private
      */
     _updateComparelistView: function () {
+        const self = this;
         this.$('.o_product_circle').text(this.comparelist_product_ids.length);
-        this.$('.o_comparelist_button').removeClass('d-md-block');
+        self.el.classList.add('d-none');
+
         if (Object.keys(this.comparelist_product_ids || {}).length === 0) {
-            $('.o_product_feature_panel').removeClass('d-md-block');
+            self.el.classList.add('d-none');
         } else {
-            $('.o_product_feature_panel').addClass('d-md-block');
-            this.$('.o_comparelist_products').addClass('d-md-block');
+            self.el.classList.remove('d-none');
+            this.$('.o_comparelist_products').addClass('d-block');
             if (this.comparelist_product_ids.length >=2) {
-                this.$('.o_comparelist_button').addClass('d-md-block');
+                this.$('.o_comparelist_button').addClass('d-block');
                 this.$('.o_comparelist_button a').attr('href',
                     '/shop/compare?products=' + encodeURIComponent(this.comparelist_product_ids));
             }
@@ -260,7 +294,8 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
 publicWidget.registry.ProductComparison = publicWidget.Widget.extend({
     selector: '.js_sale',
     events: {
-        'click .o_add_compare, .o_add_compare_dyn': '_onClickAddCompare',
+        'click .o_add_compare': '_onToggleCheckbox',
+        'click .o_add_compare_dyn': '_onClickAddCompare',
         'click #o_comparelist_table tr': '_onClickComparelistTr',
         'submit .o_add_cart_form_compare': '_onFormSubmit',
     },
@@ -277,7 +312,13 @@ publicWidget.registry.ProductComparison = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
-
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onToggleCheckbox: function (ev) {
+        this.productComparison.handleCompareToggle(ev.currentTarget);
+    },
     /**
      * @private
      * @param {Event} ev
