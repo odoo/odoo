@@ -12,5 +12,6 @@ supposed to do
         'ir.model.access.csv',
         'menu.xml',
     ],
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

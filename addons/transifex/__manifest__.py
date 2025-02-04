@@ -33,5 +33,6 @@ project.
         ],
     },
     'depends': ['base', 'web'],
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

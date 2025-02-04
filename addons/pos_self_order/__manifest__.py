@@ -88,5 +88,6 @@
             "point_of_sale/static/tests/generic_helpers/numpad_util.js",
         ],
     },
+    "author": "Odoo S.A.",
     "license": "LGPL-3",
 }

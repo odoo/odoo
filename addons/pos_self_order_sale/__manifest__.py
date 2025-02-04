@@ -14,5 +14,6 @@
             "pos_self_order_sale/static/src/app/**/**",
         ],
     },
+    "author": "Odoo S.A.",
     "license": "LGPL-3",
 }

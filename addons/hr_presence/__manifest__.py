@@ -25,6 +25,7 @@ Allows to contact directly the employee in case of unjustified absence.
         'data/ir_cron.xml',
     ],
     'installable': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
      'assets': {
         'web.assets_backend': [

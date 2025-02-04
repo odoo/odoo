@@ -24,5 +24,6 @@
             'l10n_test_pos_qr_payment/static/tests/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

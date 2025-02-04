@@ -20,5 +20,6 @@ tests independently to functional aspects of other models.""",
         ],
     },
     'installable': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

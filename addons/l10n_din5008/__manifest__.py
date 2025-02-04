@@ -20,5 +20,6 @@
             'l10n_din5008/static/src/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

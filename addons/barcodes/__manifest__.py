@@ -22,5 +22,6 @@
             ('remove', 'barcodes/static/tests/legacy/**/*'),  # to remove when all legacy tests are ported
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

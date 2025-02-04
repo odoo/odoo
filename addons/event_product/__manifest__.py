@@ -15,5 +15,6 @@
     'installable': True,
     'auto_install': True,
     'assets': {},
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

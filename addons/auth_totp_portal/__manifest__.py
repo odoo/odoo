@@ -15,5 +15,6 @@
             'auth_totp_portal/static/tests/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

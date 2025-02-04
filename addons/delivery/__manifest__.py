@@ -29,5 +29,6 @@ The system is able to add and compute the shipping line.
     ],
     'demo': ['data/delivery_demo.xml'],
     'installable': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

@@ -30,5 +30,6 @@
             'website_event_track_live/static/src/xml/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

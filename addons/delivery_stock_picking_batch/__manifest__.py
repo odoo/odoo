@@ -17,5 +17,6 @@ Allows to prepare batches depending on their carrier
     ],
     'installable': True,
     'auto_install': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

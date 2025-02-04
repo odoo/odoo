@@ -26,5 +26,6 @@
             'l10n_in_pos/static/src/customer_display/customer_display_adapter.js',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

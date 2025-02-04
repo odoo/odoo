@@ -23,5 +23,6 @@ This module enables users to create E-waybill from Inventory App without generat
     ],
     'installable': True,
     'auto_install': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

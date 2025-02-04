@@ -29,5 +29,6 @@ discount to a customer.
             'pos_discount/static/tests/tours/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

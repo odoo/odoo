@@ -62,5 +62,6 @@ This module introduces skills and resume management for employees.
             '/hr_skills/static/src/scss/report_employee_cv.scss',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }
