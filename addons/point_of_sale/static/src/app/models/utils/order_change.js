@@ -60,6 +60,7 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
                     note: note,
                     pos_categ_id: product.pos_categ_ids[0]?.id ?? 0,
                     pos_categ_sequence: product.pos_categ_ids[0]?.sequence ?? 0,
+                    isPartOfCombo: orderline.combo_parent_id !== undefined,
                 };
                 changesCount += quantityDiff;
                 changeAbsCount += Math.abs(quantityDiff);
