@@ -428,6 +428,14 @@ export class Thread extends Record {
         return {};
     }
 
+    get hasLeadAction() {
+        return false;
+    }
+
+    get hasTicketAction() {
+        return false;
+    }
+
     executeCommand(command, body = "") {
         return this.store.env.services.orm.call(
             "discuss.channel",
