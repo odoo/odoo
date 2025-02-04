@@ -8,13 +8,14 @@ from markupsafe import Markup
 from datetime import timedelta
 
 from odoo import _, api, fields, models, tools, Command
+from odoo.fields import Domain
 from odoo.addons.base.models.avatar_mixin import get_hsl_from_seed
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.web_push import PUSH_NOTIFICATION_TYPE
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import format_list, get_lang, html_escape
-from odoo.tools.misc import OrderedSet
+from odoo.tools.misc import OrderedSet, is_list_of
 
 channel_avatar = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530.06 530.06">
 <rect width="530.06" height="530.06" fill="#875a7b"/>
@@ -1319,7 +1320,8 @@ class DiscussChannel(models.Model):
         """ Return 'limit'-first channels' id, name, channel_type and authorizedGroupFullName fields such that the
             name matches a 'search' string. Exclude channels of type chat (DM) and group.
         """
-        domain = [("name", "ilike", search), ("channel_type", "=", "channel")]
+        domain = Domain("channel_type", "=", "channel")
+        domain &= Domain("name", "ilike", search) if not is_list_of(search, int) else Domain("id", "in", search)
         channels = self.search(domain, limit=limit)
         return [{
             'authorizedGroupFullName': channel.group_public_id.full_name,

@@ -113,7 +113,11 @@ class ResPartner(models.Model):
             for p in partners:
                 store.add(p, {"group_ids": [("ADD", (allowed_group & p.user_ids.all_group_ids).ids)]})
         try:
-            roles = self.env["res.role"].search([("name", "ilike", search)], limit=8)
+            if isinstance(search, dict):
+                domain = [("id", "in", search["roles"])]
+            else:
+                domain = [("name", "ilike", search)]
+            roles = self.env["res.role"].search(domain, limit=8)
             store.add(roles, "name")
         except AccessError:
             pass

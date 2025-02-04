@@ -30,7 +30,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { Composer } from "@mail/core/common/composer";
-import { press, queryFirst } from "@odoo/hoot-dom";
+import { advanceTime, press, queryFirst } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -1112,4 +1112,64 @@ test("composer reply-to message is restored on thread change", async () => {
     await click(".o-mail-DiscussSidebar-item:contains('General')");
     await contains(".o-mail-Message");
     await contains(".o-mail-Composer:contains('Replying to')");
+});
+
+test("Restore a composer should also restore partner mention", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    const roleId = pyEnv["res.role"].create({ name: "rd-Discuss" });
+    pyEnv["res.users"].create({
+        role_ids: [roleId],
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "Mario Party",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    const env1 = await start({ asTab: true });
+    const env2 = await start({ asTab: true });
+    await openDiscuss(channelId, { target: env1 });
+    await contains(".o-mail-Composer-input", { value: "", target: env1 });
+    await insertText(".o-mail-Composer-input", "@Mi", { target: env1 });
+    await click(".o-mail-Composer-suggestion", { target: env1 });
+    await contains(".o-mail-Composer-input", {
+        value: "@Mitchell Admin ",
+        target: env1,
+    });
+    await insertText(".o-mail-Composer-input", "#Ma", { target: env1 });
+    await click(".o-mail-Composer-suggestion", { target: env1 });
+    await contains(".o-mail-Composer-input", {
+        value: "@Mitchell Admin #Mario Party ",
+        target: env1,
+    });
+    await insertText(".o-mail-Composer-input", "@rd-", { target: env1 });
+    await click(".o-mail-Composer-suggestion", { target: env1 });
+    await contains(".o-mail-Composer-input", {
+        value: "@Mitchell Admin #Mario Party @rd-Discuss ",
+        target: env1,
+    });
+    await advanceTime(5000);
+    await openDiscuss(channelId, { target: env2 });
+    await contains(".o-mail-Composer-input", {
+        value: "@Mitchell Admin #Mario Party @rd-Discuss ",
+        target: env2,
+    });
+    await click(".o-mail-Composer button[title='Send']", { target: env2 });
+    await contains(".o-mail-Message-body a.o_mail_redirect", {
+        text: "@Mitchell Admin",
+        target: env2,
+    });
+    await contains(".o-mail-Message-body .o_channel_redirect", {
+        text: "Mario Party",
+        target: env2,
+    });
+    await contains(".o-mail-Message-body a[data-oe-model='res.role']", {
+        text: "@rd-Discuss",
+        target: env2,
+    });
 });

@@ -826,6 +826,17 @@ export class Composer extends Component {
                     emailAddSignature,
                     replyToMessageId,
                     text,
+                    mentionedPartners: composer.mentionedPartners.map((p) => ({
+                        id: p.id,
+                        type: p.type,
+                    })),
+                    mentionedChannels: composer.mentionedChannels.map((c) => ({
+                        id: c.id,
+                        model: c.model,
+                    })),
+                    mentionedRoles: composer.mentionedRoles.map((r) => ({
+                        id: r.id,
+                    })),
                 })
             );
         };
@@ -842,11 +853,41 @@ export class Composer extends Component {
         }
     }
 
-    restoreContent() {
+    async restoreContent() {
         const composer = toRaw(this.props.composer);
         let config;
         try {
             config = JSON.parse(browser.localStorage.getItem(composer.localId));
+            if (config.text) {
+                composer.emailAddSignature = config.emailAddSignature;
+                composer.text = config.text;
+                await this.suggestion.suggestionService.fetchPartnersRoles(
+                    {
+                        partners: config.mentionedPartners
+                                .filter((m) => !this.store.Persona.get(m))
+                                .map((m) => m.id),
+                        roles: config.mentionedRoles.map((r) => r.id),
+                    },
+                    this.thread
+                );
+                this.props.composer.mentionedPartners =
+                    this.suggestion.suggestionService.filterPartnerSugestions(
+                        config.mentionedPartners.map((mentionedPartner) =>
+                            this.store.Persona.get(mentionedPartner)
+                        )
+                    );
+                this.props.composer.mentionedRoles = config.mentionedRoles;
+
+                const channelsPromises = config.mentionedChannels.map((c) =>
+                    this.store.Thread.getOrFetch(c)
+                );
+                const channels = this.suggestion.suggestionService.filterChannelSuggestions(
+                    await Promise.all(channelsPromises)
+                );
+                for (const channel of channels) {
+                    this.props.composer.mentionedChannels.push(channel);
+                }
+            }
         } catch {
             browser.localStorage.removeItem(composer.localId);
         }

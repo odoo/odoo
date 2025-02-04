@@ -101,7 +101,7 @@ export class SuggestionService {
     }
 
     /**
-     * @param {string} term
+     * @param {string|number[]} term
      */
     async fetchThreads(term, { abortSignal } = {}) {
         const suggestedThreads = await this.makeOrmCall(
@@ -115,8 +115,10 @@ export class SuggestionService {
     }
 
     searchCannedResponseSuggestions(cleanedSearchTerm) {
-        const cannedResponses = Object.values(this.store["mail.canned.response"].records).filter(
-            (cannedResponse) => cleanTerm(cannedResponse.source).includes(cleanedSearchTerm)
+        const cannedResponses = this.searchByTerm(
+            cleanedSearchTerm,
+            Object.values(this.store["mail.canned.response"].records),
+            ["source"]
         );
         const sortFunc = (c1, c2) => {
             const cleanedName1 = cleanTerm(c1.source);
@@ -195,8 +197,10 @@ export class SuggestionService {
     }
 
     searchRoleSuggestions(cleanedSearchTerm) {
-        const roles = Object.values(this.store["res.role"].records).filter((role) =>
-            cleanTerm(role.name).includes(cleanedSearchTerm)
+        const roles = this.searchByTerm(
+            cleanedSearchTerm,
+            Object.values(this.store["res.role"].records),
+            ["name"],
         );
         const sortFunc = (r1, r2) => {
             const cleanedName1 = cleanTerm(r1.name);
@@ -226,6 +230,30 @@ export class SuggestionService {
         };
     }
 
+    /**
+     * @param {String} term
+     * @param {object[]} suggestions
+     * @param {string[]} fields
+     */
+    searchByTerm(term, suggestions, fields) {
+        return suggestions.filter((suggestion) =>
+            fields.some((field) => suggestion[field] && cleanTerm(suggestion[field]).includes(term))
+        );
+    }
+
+    filterPartnerSugestions(partners) {
+        return [...partners].filter((partner) => partner.name);
+    }
+
+    filterSpecialSuggestions(term, suggestions, thread) {
+        return suggestions.filter(
+            (special) =>
+                thread &&
+                special.channel_types.includes(thread.channel_type) &&
+                term.length >= Math.min(4, special.label.length)
+        );
+    }
+
     isSuggestionValid(persona, thread) {
         return persona.type === "partner" && !persona.eq(this.store.odoobot);
     }
@@ -238,28 +266,16 @@ export class SuggestionService {
 
     searchPartnerSuggestions(cleanedSearchTerm, thread) {
         const partners = this.getPartnerSuggestions(thread);
-        const suggestions = [];
-        for (const partner of partners) {
-            if (!partner.name) {
-                continue;
-            }
-            if (
-                cleanTerm(partner.name).includes(cleanedSearchTerm) ||
-                (partner.email && cleanTerm(partner.email).includes(cleanedSearchTerm))
-            ) {
-                suggestions.push(partner);
-            }
-        }
-        suggestions.push(
-            ...this.store.specialMentions.filter(
-                (special) =>
-                    thread &&
-                    special.channel_types.includes(thread.channel_type) &&
-                    cleanedSearchTerm.length >= Math.min(4, special.label.length) &&
-                    (special.label.startsWith(cleanedSearchTerm) ||
-                        cleanTerm(special.description.toString()).includes(cleanedSearchTerm))
-            )
+        const partnerSuggestions = this.filterPartnerSugestions(partners);
+        const specialSuggestions = this.filterSpecialSuggestions(
+            cleanedSearchTerm,
+            this.store.specialMentions,
+            thread
         );
+        const suggestions = [
+            ...this.searchByTerm(cleanedSearchTerm, partnerSuggestions, ["name", "email"]),
+            ...this.searchByTerm(cleanedSearchTerm, specialSuggestions, ["label", "description"]),
+        ];
         return {
             type: "Partner",
             suggestions: [...this.sortPartnerSuggestions(suggestions, cleanedSearchTerm, thread)],
@@ -300,13 +316,17 @@ export class SuggestionService {
         return {};
     }
 
-    searchChannelSuggestions(cleanedSearchTerm) {
-        const suggestionList = Object.values(this.store.Thread.records).filter(
-            (thread) =>
-                thread.channel_type === "channel" &&
-                thread.displayName &&
-                cleanTerm(thread.displayName).includes(cleanedSearchTerm)
+    filterChannelSuggestions(channels) {
+        return channels.filter((channel) => channel.channel_type === "channel");
+    }
+
+    searchChannelSuggestions(cleanedSearchTerm, sort) {
+        const channelSuggestions = this.filterChannelSuggestions(
+            Object.values(this.store.Thread.records)
         );
+        const suggestionList = this.searchByTerm(cleanedSearchTerm, channelSuggestions, [
+            "displayName",
+        ]);
         const sortFunc = (c1, c2) => {
             const isPublicChannel1 = c1.channel_type === "channel" && !c2.authorizedGroupFullName;
             const isPublicChannel2 = c2.channel_type === "channel" && !c2.authorizedGroupFullName;

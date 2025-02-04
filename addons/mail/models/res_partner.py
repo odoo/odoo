@@ -288,7 +288,11 @@ class ResPartner(models.Model):
         partners = self._search_mention_suggestions(domain, limit)
         store = Store(partners)
         try:
-            roles = self.env["res.role"].search([("name", "ilike", search)], limit=8)
+            if isinstance(search, dict):
+                domain = [("id", "in", search["roles"])]
+            else:
+                domain = [("name", "ilike", search)]
+            roles = self.env["res.role"].search(domain, limit=8)
             store.add(roles, "name")
         except AccessError:
             pass
@@ -296,6 +300,11 @@ class ResPartner(models.Model):
 
     @api.model
     def _get_mention_suggestions_domain(self, search):
+        if isinstance(search, dict):
+            return expression.AND([
+                [("id", "in", search["partners"])],
+                [('active', '=', True)],
+            ])
         return expression.AND([
             expression.OR([
                 [('name', 'ilike', search)],
