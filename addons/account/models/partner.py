@@ -580,6 +580,7 @@ class ResPartner(models.Model):
     display_invoice_edi_format = fields.Boolean(default=lambda self: len(self._fields['invoice_edi_format'].selection), store=False)
     invoice_template_pdf_report_id = fields.Many2one(
         comodel_name='ir.actions.report',
+        string='Invoice template',
         domain="[('is_invoice_report', '=', True)]",
         readonly=False,
         store=True,
