@@ -72,6 +72,7 @@ const actionRegistry = registry.category("actions");
  * @property {ViewType} [viewType]
  * @property {"replaceCurrentAction" | "replacePreviousAction"} [stackPosition]
  * @property {number} [index]
+ * @property {boolean} [newWindow]
  */
 
 export async function clearUncommittedChanges(env) {
