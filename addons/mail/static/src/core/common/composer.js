@@ -703,6 +703,7 @@ export class Composer extends Component {
     async _sendMessage(value, postData, extraData) {
         const thread = toRaw(this.props.composer.thread);
         const postThread = toRaw(this.thread);
+        // debugger
         const post = postThread.post.bind(postThread, value, postData, extraData);
         if (postThread.model === "discuss.channel") {
             // feature of (optimistic) temp message
