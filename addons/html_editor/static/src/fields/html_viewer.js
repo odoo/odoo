@@ -1,5 +1,6 @@
 import {
     Component,
+    markup,
     onMounted,
     onWillStart,
     onWillUnmount,
@@ -10,6 +11,7 @@ import {
 } from "@odoo/owl";
 import { getBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
+import { fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
 import { TableOfContentManager } from "@html_editor/others/embedded_components/core/table_of_content/table_of_content_manager";
 
 export class HtmlViewer extends Component {
@@ -96,11 +98,15 @@ export class HtmlViewer extends Component {
     /**
      * Allows overrides to process the value used in the Html Viewer.
      *
-     * @param { Markup } value
-     * @returns { Markup }
+     * @param { string | Markup } value
+     * @returns { string | Markup }
      */
     formatValue(value) {
-        return value;
+        const newVal = fixInvalidHTML(value);
+        if (instanceofMarkup(value)) {
+            return markup(newVal);
+        }
+        return newVal;
     }
 
     /**

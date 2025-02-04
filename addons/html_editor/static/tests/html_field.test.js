@@ -324,6 +324,54 @@ test("links should open on a new tab in readonly", async () => {
     }
 });
 
+test("XML-like self-closing elements are fixed in readonly mode", async () => {
+    Partner._records = [
+        {
+            id: 1,
+            txt: `<a href="#"/>outside<a href="#">inside</a>`,
+        },
+    ];
+    await mountView({
+        type: "form",
+        resId: 1,
+        resIds: [1, 2],
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html" readonly="1"/>
+            </form>`,
+    });
+    expect(".odoo-editor-editable").toHaveCount(0);
+    expect(`[name="txt"] .o_readonly`).toHaveCount(1);
+    expect(`[name="txt"] .o_readonly`).toHaveInnerHTML(
+        `<a href="#" target="_blank" rel="noreferrer"></a>outside<a href="#" target="_blank" rel="noreferrer">inside</a>`
+    );
+});
+
+test("XML-like self-closing elements are fixed in editable mode", async () => {
+    Partner._records = [
+        {
+            id: 1,
+            txt: `<a href="#"/>outside<a href="#">inside</a>`,
+        },
+    ];
+    await mountView({
+        type: "form",
+        resId: 1,
+        resIds: [1, 2],
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+    expect(".odoo-editor-editable").toHaveCount(1);
+    expect(`[name="txt"] .o_readonly`).toHaveCount(0);
+    expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(
+        `<div class="o-paragraph">outside<a href="#">inside</a></div>`
+    );
+});
+
 test("edit and save a html field", async () => {
     onRpc("web_save", ({ args }) => {
         expect(args[1]).toEqual({
