@@ -24,7 +24,7 @@ export class CaptionPlugin extends Plugin {
                 groupId: "image_description",
                 commandId: "toggleImageCaption",
                 text: "Caption",
-                isActive: () => !!this.getImageCaption(this.dependencies.image.getSelectedImage()),
+                isActive: () => this.hasImageCaption(this.dependencies.image.getSelectedImage()),
             },
         ],
         clean_for_save_handlers: this.cleanForSave.bind(this),
@@ -64,12 +64,12 @@ export class CaptionPlugin extends Plugin {
         }
     }
 
-    getImageCaption(image) {
+    hasImageCaption(image) {
         if (!image) {
             return;
         }
         const block = closestBlock(image);
-        return block.nodeName === "FIGURE" && block.querySelector("[data-embedded='caption'] input");
+        return block.nodeName === "FIGURE" && !!block.querySelector("[data-embedded='caption'] input");
     }
 
     toggleImageCaption(image, captionText) {
@@ -77,8 +77,7 @@ export class CaptionPlugin extends Plugin {
         if (!image) {
             return;
         }
-        const currentCaption = this.getImageCaption(image);
-        if (currentCaption) {
+        if (this.hasImageCaption(image)) {
             this.removeImageCaption(image);
         } else {
             this.addImageCaption(image, captionText);
@@ -88,14 +87,6 @@ export class CaptionPlugin extends Plugin {
     addImageCaption(image, captionText) {
         image = image || this.dependencies.image.getSelectedImage();
         if (!image) {
-            return;
-        }
-        // If there's already a caption, focus it and move the selection to it.
-        const currentCaption = this.getImageCaption(image);
-        if (currentCaption) {
-            currentCaption.focus();
-            const endOffset = currentCaption.value.length;
-            currentCaption.setSelectionRange(endOffset, endOffset);
             return;
         }
         // Move the image within a figure element.
