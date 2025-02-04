@@ -172,7 +172,6 @@ class TestNodeLocator(common.TransactionCase):
         )
         self.assertIsNone(node)
 
-
 class TestViewInheritance(ViewCase):
     def arch_for(self, name, view_type='form', parent=None):
         """ Generates a trivial view of the specified ``view_type``.
@@ -373,6 +372,85 @@ class TestViewInheritance(ViewCase):
     def test_no_arch(self):
         self.d1._check_xml()
 
+    def test_invalid_xpath_from_arch(self):
+        """ Check ir.ui.view's invalid_xpaths_from_arch field is computed correctly."""
+        base_view_arch = """
+            <form string="View">
+                <div name="div1">
+                    <field name="id"/>
+                </div>
+            </form>
+        """
+        base_view = self.makeView('invalid_xpath_base_view', arch=base_view_arch)
+
+        child_view_arch = """
+        <data>
+            <xpath expr="//form/div[1]/div[1]" position="attributes">
+                <attribute name='string'>Invalid Div</attribute>
+            </xpath>
+            <field name="invalid_field" position="after">
+                <field name="inherit_id"/>
+            </field>
+        </data>
+        """
+
+        child_view = self.View.create({
+            'model': self.model,
+            'name': "child_view",
+            'arch': child_view_arch,
+            'inherit_id': base_view.id,
+            'priority': 10,
+            'active': False,
+        })
+
+        self.assertEqual(
+            child_view.invalid_xpaths_from_arch,
+            [
+                {
+                    "tag": "xpath",
+                    "attrib": {"expr": "//form/div[1]/div[1]", "position": "attributes"},
+                    "sourceline": 2,
+                },
+                {
+                    'tag': 'field',
+                    'attrib': {'name': 'invalid_field', 'position': 'after'},
+                    'sourceline': 5
+                }
+            ],
+        )
+
+    def test_invalid_xpath_from_arch_with_valid_xpath(self):
+        """ Check ir.ui.view's invalid_xpaths_from_arch field is computed correctly."""
+        base_view_arch = """
+            <form string="View">
+                <div name="div1">
+                    <field name="id"/>
+                </div>
+            </form>
+        """
+        base_view = self.makeView('invalid_xpath_base_view', arch=base_view_arch)
+
+        child_view_arch = """
+        <data>
+            <xpath expr="//form/div[1]" position="attributes">
+                <attribute name='string'>Valid</attribute>
+            </xpath>
+            <field name="id" position="after">
+                <field name="inherit_id"/>
+            </field>
+        </data>
+        """
+
+        child_view = self.View.create({
+            'model': self.model,
+            'name': "child_view",
+            'arch': child_view_arch,
+            'inherit_id': base_view.id,
+            'priority': 10,
+            'active': False,
+        })
+
+        self.assertEqual(child_view.invalid_xpaths_from_arch, False)
 
 class TestApplyInheritanceSpecs(ViewCase):
     """ Applies a sequence of inheritance specification nodes to a base

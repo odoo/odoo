@@ -201,6 +201,8 @@ actual arch.
          """)
     model_id = fields.Many2one("ir.model", string="Model of the view", compute='_compute_model_id', inverse='_inverse_compute_model_id')
 
+    invalid_xpaths_from_arch = fields.Json(compute='_compute_invalid_xpaths_from_arch')
+
     @api.depends('arch_db', 'arch_fs', 'arch_updated')
     @api.depends_context('read_arch_from_file', 'lang', 'edit_translations', 'check_translations')
     def _compute_arch(self):
@@ -313,6 +315,55 @@ actual arch.
     def _inverse_compute_model_id(self):
         for record in self:
             record.model = record.model_id.model
+
+    @api.depends('arch', 'inherit_id')
+    def _compute_invalid_xpaths_from_arch(self):
+        for view in self:
+            if not view.inherit_id:
+                view.invalid_xpaths_from_arch = False
+                continue
+            was_view_active = view.active
+            view.active = False
+            source = view._get_combined_arch()
+            view.active = was_view_active
+
+            invalid_xpaths = []
+            specs = [etree.fromstring(view.arch)]
+            while len(specs):
+                spec = specs.pop(0)
+                if spec.tag == 'data':
+                    specs += [c for c in spec]
+                    continue
+                specs += [c for c in spec if c.attrib.get("position") == 'move']
+                node = None
+                try:
+                    # If locate_node returns None here:
+                    # Invalid expression: Ok Syntax, but cannot be anchored to the parent view.
+                    node = self.locate_node(source, spec)
+                except ValidationError as e:
+                    # Invalid expression: Syntax Error
+                    pass
+                if node is None:
+                    #TODO: different colors for Xpath Syntax Error and Invalid Xpath
+                    invalid_xpaths.append({
+                        "tag": spec.tag,
+                        "attrib": dict(spec.attrib),
+                        "sourceline": spec.sourceline
+                    })
+                else:
+                    try:
+                        # Since subsequent xpaths are dependent on previous xpaths, we apply the spec.
+                        source = apply_inheritance_specs(source, spec)
+                    except ValueError as e:
+                        # This function is only interested in locting invalid xpath expressions.
+                        # Here, ValueError is raised for:
+                        #   Invalid mode attribute
+                        #   Invalid attributes attribute
+                        #   Invalid position
+                        #   Element <attribute> with 'add' or 'remove' cannot contain text
+                        #   Invalid separator for python expressions in attributes
+                        pass
+            view.invalid_xpaths_from_arch = invalid_xpaths
 
     def _compute_xml_id(self):
         xml_ids = collections.defaultdict(list)
