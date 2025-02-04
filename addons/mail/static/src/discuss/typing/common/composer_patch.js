@@ -60,8 +60,8 @@ patch(Composer.prototype, {
                 value === "/" || // suggestions not yet started
                 this.hasSuggestions ||
                 (command &&
-                    (!command.channel_types ||
-                        command.channel_types.includes(this.thread.channel?.channel_type)))
+                    (!command.condition ||
+                        command.condition({ store: this.store, channel: this.thread.channel })))
             ) {
                 this.stopTyping();
                 return;

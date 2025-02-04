@@ -8,6 +8,20 @@ const commandRegistry = registry.category("discuss.channel_commands");
 
 /** @type {SuggestionService} */
 const suggestionServicePatch = {
+    getChannelCommands(channel) {
+        if (!channel) {
+            return [];
+        }
+        return commandRegistry
+            .getEntries()
+            .map(([name, command]) => ({
+                condition: command.condition,
+                help: command.help,
+                id: command.id,
+                name,
+            }))
+            .filter(({ condition }) => !condition || condition({ store: this.store, channel }));
+    },
     getSupportedDelimiters(thread, env) {
         const res = super.getSupportedDelimiters(...arguments);
         return thread?.channel ? [...res, ["/", 0]] : res;
@@ -68,30 +82,10 @@ const suggestionServicePatch = {
             // channel commands are channel specific
             return;
         }
-        const commands = commandRegistry
-            .getEntries()
-            .filter(([name, command]) => {
-                if (!cleanTerm(name).includes(cleanedSearchTerm)) {
-                    return false;
-                }
-                if (command.channel_types) {
-                    return command.channel_types.includes(channel.channel_type);
-                }
-                return true;
-            })
-            .map(([name, command]) => ({
-                channel_types: command.channel_types,
-                help: command.help,
-                id: command.id,
-                name,
-            }));
+        const commands = this.getChannelCommands(channel).filter(({ name }) =>
+            cleanTerm(name).includes(cleanedSearchTerm)
+        );
         const sortFunc = (c1, c2) => {
-            if (c1.channel_types && !c2.channel_types) {
-                return -1;
-            }
-            if (!c1.channel_types && c2.channel_types) {
-                return 1;
-            }
             const cleanedName1 = cleanTerm(c1.name);
             const cleanedName2 = cleanTerm(c2.name);
             if (

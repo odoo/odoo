@@ -22,6 +22,7 @@ import {
     STORE_FETCH_ROUTES,
     triggerHotkey,
     waitStoreFetch,
+    getChannelCommandsForThread,
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
@@ -313,6 +314,15 @@ test("Click on avatar opens its partner chat window", async () => {
     await contains(".o-mail-avatar-card-name:text('testPartner')");
     await contains(".o_card_user_infos > a:text('test@partner.com')");
     await contains(".o_card_user_infos > a:text('+45687468')");
+});
+
+test("guests are not allowed to use commands", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
+    await start({ authenticateAs: false });
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "/who");
+    expect(getChannelCommandsForThread(channelId)).toHaveLength(0);
 });
 
 test("sidebar: chat im_status rendering", async () => {
