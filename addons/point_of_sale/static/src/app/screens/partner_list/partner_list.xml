@@ -20,7 +20,7 @@
                     debounceMillis="100" />
             </t>
             <div class="fixed-head h-100 pt-0 overflow-hidden">
-                <div class="overflow-y-auto overflow-x-hidden h-100" t-ref="partner-list">
+                <div class="overflow-y-auto h-100" t-ref="partner-list">
                     <t t-set="initialPartners" t-value="getPartners(this.state.initialPartners)"/>
                     <t t-set="loadedPartners" t-value="getPartners(this.state.loadedPartners)"/>
                     <t t-set="nbrPartners" t-value="initialPartners.length + loadedPartners.length"/>
