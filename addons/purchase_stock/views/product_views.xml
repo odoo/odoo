@@ -32,14 +32,22 @@
         <field name="arch" type="xml">
             <xpath expr="//kanban" position="attributes">
                     <attribute name="js_class">purchase_product_kanban_catalog</attribute>
-                    <attribute name="sample">1</attribute> 
+                    <attribute name="sample">1</attribute>
             </xpath>
+            <field name="id" position="after">
+                <field name="type"/>
+            </field>
             <div name="o_kanban_qty_available" position="after">
                 <div t-if="record.is_storable.raw_value"
                      name="o_kanban_qty_forecasted">
                     <span>Forecasted: </span>
                     <field name="virtual_available"/>
                     <field name="uom_id" widget="many2one_uom" class="ms-1" groups="uom.group_uom"/>
+                </div>
+                <div t-if="record.type.raw_value === 'consu'" name="o_kanban_monthly_demand">
+                    <span>Monthly Demand:</span>
+                    <field name="monthly_demand" class="ms-1"/>
+                    <field name="uom_id" class="ms-1" groups="uom.group_uom"/>
                 </div>
             </div>
         </field>
