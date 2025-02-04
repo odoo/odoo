@@ -640,10 +640,11 @@ class ResPartner(models.Model):
     @api.depends_context('company')
     def _compute_invoice_edi_format(self):
         for partner in self:
-            if partner.commercial_partner_id.invoice_edi_format_store == 'none':
+            commercial_partner_id = partner.sudo().commercial_partner_id
+            if commercial_partner_id.invoice_edi_format_store == 'none':
                 partner.invoice_edi_format = False
             else:
-                partner.invoice_edi_format = partner.commercial_partner_id.invoice_edi_format_store or partner.commercial_partner_id._get_suggested_invoice_edi_format()
+                partner.invoice_edi_format = commercial_partner_id.invoice_edi_format_store or commercial_partner_id._get_suggested_invoice_edi_format()
 
     def _inverse_invoice_edi_format(self):
         for partner in self:
