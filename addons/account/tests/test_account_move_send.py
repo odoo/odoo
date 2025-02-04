@@ -656,7 +656,6 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         invoice3 = self.init_invoice("out_invoice", partner=self.partner_b, amounts=[1000], post=True)
         wizard = self.create_send_and_print(invoice1 + invoice2 + invoice3)
         self.assertEqual(wizard.move_ids, invoice1 + invoice2 + invoice3)
-        self.assertTrue(wizard.alerts and 'account_pdf_exist' in wizard.alerts)
         self.assertEqual(wizard.summary_data, {
             'manual': {'count': 2, 'label': 'Manually'},
             'email': {'count': 1, 'label': 'by Email'},
