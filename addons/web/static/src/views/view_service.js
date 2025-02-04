@@ -55,7 +55,8 @@ export const viewService = {
             const { model, method } = ev.detail.data.params;
             if (["ir.ui.view", "ir.filters"].includes(model)) {
                 if (UPDATE_METHODS.includes(method)) {
-                    clearCache();
+                    // clearCache();
+                    env.bus.trigger("CLEAR-CACHES");
                 }
             }
         });

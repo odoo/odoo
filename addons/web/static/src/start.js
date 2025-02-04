@@ -14,6 +14,7 @@ import { Component, whenReady } from "@odoo/owl";
  * @param {Component} Webclient
  */
 export async function startWebClient(Webclient) {
+    console.time("webclient startup");
     odoo.info = {
         db: session.db,
         server_version: session.server_version,

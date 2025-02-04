@@ -366,19 +366,19 @@ export class WebsocketWorker {
     }
 
     _logDebug(title, ...args) {
-        const clientsInDebug = [...this.debugModeByClient.keys()].filter((client) =>
-            this.debugModeByClient.get(client)
-        );
-        for (const client of clientsInDebug) {
-            client.postMessage({
-                type: "log_debug",
-                data: [
-                    `%c${new Date().toLocaleString()} - [${title}]`,
-                    "color: #c6e; font-weight: bold;",
-                    ...args,
-                ],
-            });
-        }
+        // const clientsInDebug = [...this.debugModeByClient.keys()].filter((client) =>
+        //     this.debugModeByClient.get(client)
+        // );
+        // for (const client of clientsInDebug) {
+        //     client.postMessage({
+        //         type: "log_debug",
+        //         data: [
+        //             `%c${new Date().toLocaleString()} - [${title}]`,
+        //             "color: #c6e; font-weight: bold;",
+        //             ...args,
+        //         ],
+        //     });
+        // }
     }
 
     /**
