@@ -158,7 +158,11 @@ export default class DevicesSynchronisation {
                 "&",
                 ["id", "=", o.id],
                 "|",
-                ["write_date", ">", newDateTime.toFormat("yyyy-MM-dd HH:mm:ss")],
+                [
+                    "write_date",
+                    ">",
+                    newDateTime.toFormat("yyyy-MM-dd HH:mm:ss", { numberingSystem: "latn" }),
+                ],
                 ["state", "!=", o.state],
             ]);
         });
