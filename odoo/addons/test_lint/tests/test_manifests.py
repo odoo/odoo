@@ -12,9 +12,12 @@ from odoo.tools.misc import file_open, file_path
 _logger = logging.getLogger(__name__)
 
 MANIFEST_KEYS = {
-    'name', 'icon', 'addons_path', 'license',  # mandatory keys
-    *_DEFAULT_MANIFEST,                        # optional keys
-    'contributors', 'maintainer', 'url',       # unused "informative" keys
+    # mandatory keys
+    'name', 'icon', 'addons_path', 'author', 'license',
+    # optional keys
+    *_DEFAULT_MANIFEST,
+    # unused "informative" keys
+    'contributors', 'maintainer', 'url',
 }
 
 
@@ -63,8 +66,6 @@ class ManifestLinter(BaseCase):
             value = manifest_data[key]
             if key in _DEFAULT_MANIFEST:
                 if key in verified_keys:
-                    if key == 'author' and manifest_data.get('name') == 'CRM':
-                        continue
                     self.assertNotEqual(
                        value,
                         _DEFAULT_MANIFEST[key],
