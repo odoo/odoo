@@ -31,7 +31,7 @@
                         <filter name="create_date_last_365_days" string="Last 365 Days" domain="[('date_last_stage_update', '&gt;', datetime.datetime.combine(context_today() - relativedelta(days=365), datetime.time(23, 59, 59)).to_utc())]"/>
                     </filter>
                     <separator/>
-                    <filter string="Show Sub-tasks" name="show_subtasks" context="{'show_subtasks': True}" invisible="'my_tasks' in context"/>
+                    <filter string="Hide Sub-tasks" name="hide_subtasks" domain="[('display_in_project', '=', True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}"/>
                         <filter string="Milestone" name="milestone" context="{'group_by': 'milestone_id'}" groups="project.group_project_milestone"/>
@@ -112,7 +112,7 @@
                 <filter name="my_tasks" position="before">
                     <field string="Properties" name="task_properties"/>
                 </filter>
-                <filter name="show_subtasks" position="after">
+                <filter name="hide_subtasks" position="after">
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]" groups="mail.group_mail_notification_type_inbox"/>
                     <separator/>
@@ -203,7 +203,7 @@
             <field name="path">tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">kanban,list,form,calendar,pivot,graph,activity</field>
-            <field name="domain">[('project_id', '=', active_id), ('display_in_project', '=', True)]</field>
+            <field name="domain">[('project_id', '=', active_id)]</field>
             <field name="context">{
                 'default_project_id': active_id,
                 'show_project_update': True,
@@ -860,7 +860,7 @@
             <field name="res_model">project.task</field>
             <field name="view_mode">kanban,list,form,calendar,pivot,graph,activity</field>
             <field name="context">{'search_default_my_tasks': 1}</field>
-            <field name="domain">[('project_id', '!=', False), ('display_in_project', '=', True)]</field>
+            <field name="domain">[('project_id', '!=', False)]</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -1062,7 +1062,7 @@
             <field name="res_model">project.task</field>
             <field name="path">all-tasks</field>
             <field name="view_mode">list,kanban,form,calendar,pivot,graph,activity</field>
-            <field name="domain">[('display_in_project', '=', True)]</field>
+            <field name="domain">[]</field>
             <field name="context">{'search_default_open_tasks': 1, 'default_user_ids': [(4, uid)]}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
@@ -1199,7 +1199,7 @@
             <field name="name">Overpassed Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">list,form,calendar,graph,kanban</field>
-            <field name="domain">[('is_closed', '=', False), ('date_deadline','&lt;',time.strftime('%Y-%m-%d')), ('project_id', '!=', False), ('display_in_project', '=', True)]</field>
+            <field name="domain">[('is_closed', '=', False), ('date_deadline','&lt;',time.strftime('%Y-%m-%d')), ('project_id', '!=', False)]</field>
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
@@ -1209,7 +1209,7 @@
             <field name="res_model">project.task</field>
             <field name="name">Project's tasks</field>
             <field name="view_mode">list,form,calendar,graph,kanban</field>
-            <field name="domain">[('project_id', '=', active_id), ('display_in_project', '=', True)]</field>
+            <field name="domain">[('project_id', '=', active_id)]</field>
             <field name="context">{'project_id':active_id}</field>
         </record>
 
