@@ -533,3 +533,18 @@ class TestFrontend(TestFrontendCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_multiple_preparation_printer_different_categories', login="pos_user")
+
+    def test_combo_preparation_receipt_layout(self):
+        setup_product_combo_items(self)
+        pos_printer = self.env['pos.printer'].create({
+            'name': 'Printer',
+            'printer_type': 'epson_epos',
+            'epson_printer_ip': '0.0.0.0',
+            'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
+        })
+        self.pos_config.write({
+            'is_order_printer': True,
+            'printer_ids': [Command.set(pos_printer.ids)],
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.pos_config.id}", 'test_combo_preparation_receipt_layout', login="pos_admin")
