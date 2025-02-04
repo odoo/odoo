@@ -1620,6 +1620,7 @@ def check_patterns(patterns, values):
 def to_re(pattern):
     """ cut down version of TimeRE converting strptime patterns to regex
     """
+    pattern = re.sub(r"([\\.^$*+?\(\){}\[\]|])", r"\\\1", pattern)
     pattern = re.sub(r'\s+', r'\\s+', pattern)
     pattern = re.sub('%([a-z])', _replacer, pattern, flags=re.IGNORECASE)
     pattern = '^' + pattern + '$'
