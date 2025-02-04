@@ -31,7 +31,8 @@ class LoyaltyCard(models.Model):
         default=lambda self: self.env.context.get('active_id', None),
     )
     program_type = fields.Selection(related='program_id.program_type')
-    company_id = fields.Many2one(related='program_id.company_id', store=True)
+    # TODO probably isn't useful to store this company_id anymore
+    company_id = fields.Many2one(related='program_id.company_id', store=True, precompute=True)
     currency_id = fields.Many2one(related='program_id.currency_id')
     # Reserved for this partner if non-empty
     partner_id = fields.Many2one(comodel_name='res.partner', index=True)
