@@ -1,6 +1,8 @@
 import { rpcBus } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { UPDATE_METHODS } from "@web/core/orm_service";
+import { user } from "@web/core/user";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 
 /**
  * @typedef {Object} IrFilter
@@ -118,7 +120,17 @@ export const viewService = {
                             const { arch, toolbar, id, filters, custom_view_id } = views[viewType];
                             const viewDescription = { arch, id, custom_view_id };
                             if (toolbar) {
-                                viewDescription.actionMenus = toolbar;
+                                const actionMenus = toolbar;
+                                if (actionMenus.action) {
+                                    actionMenus.action = actionMenus.action.filter(
+                                        (action) =>
+                                            !evaluateBooleanExpr(
+                                                action.binding_invisible,
+                                                user.evalContext
+                                            )
+                                    );
+                                }
+                                viewDescription.actionMenus = actionMenus;
                             }
                             if (filters) {
                                 viewDescription.irFilters = filters;
