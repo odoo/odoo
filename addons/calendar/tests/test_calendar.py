@@ -480,6 +480,24 @@ class TestCalendar(SavepointCaseWithUserDemo):
         })
         self.assertTrue(set(new_partners) == set(self.event_tech_presentation.videocall_channel_id.channel_partner_ids.ids), 'new partners must be invited to the channel')
 
+    def test_event_duplication_allday(self):
+        """Test that a calendar event is successfully duplicated with dates."""
+        # Create an event
+        calendar_event = self.env['calendar.event'].create({
+            'name': 'All Day',
+            'start': "2018-10-16 00:00:00",
+            'start_date': "2018-10-16",
+            'stop': "2018-10-18 00:00:00",
+            'stop_date': "2018-10-18",
+            'allday': True,
+        })
+        # Duplicate the event with explicit defaults for start_date and stop_date
+        new_calendar_event = calendar_event.copy()
+        # Ensure the copied event exists and retains the correct dates
+        self.assertTrue(new_calendar_event, "Event should be duplicated.")
+        self.assertEqual(new_calendar_event.start_date, calendar_event.start_date, "Start date should match the original.")
+        self.assertEqual(new_calendar_event.stop_date, calendar_event.stop_date, "Stop date should match the original.")
+
     def test_default_duration(self):
         # Check the default duration depending on various parameters
         user_demo = self.user_demo
