@@ -44,5 +44,6 @@ Both goals and badges are flexibles and can be adapted to a large range of modul
         'data/gamification_karma_rank_demo.xml',
         'data/gamification_karma_tracking_demo.xml',
     ],
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

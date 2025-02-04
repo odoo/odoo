@@ -46,5 +46,6 @@ Allow website visitors to chat with the collaborators. This module also brings a
             'website_livechat/static/tests/tours/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

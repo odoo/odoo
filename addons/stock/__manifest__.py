@@ -120,5 +120,6 @@
             'stock/static/tests/stock_traceability_report_backend_tests.js',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

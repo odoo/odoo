@@ -19,5 +19,6 @@
             'l10n_co_pos/static/src/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

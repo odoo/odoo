@@ -22,5 +22,6 @@
             'test_new_api/static/tests/tours/x2many.js',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

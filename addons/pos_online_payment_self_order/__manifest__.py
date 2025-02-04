@@ -22,5 +22,6 @@
             'pos_online_payment_self_order/static/tests/tours/pos_online_payment_multi_table_order.js',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

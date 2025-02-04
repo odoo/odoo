@@ -20,5 +20,6 @@
             'barcodes_gs1_nomenclature/static/src/js/tests/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

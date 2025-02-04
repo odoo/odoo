@@ -19,5 +19,6 @@
             'mail_bot/static/src/scss/odoobot_style.scss',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

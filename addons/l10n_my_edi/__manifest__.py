@@ -30,5 +30,6 @@
         'wizard/l10n_my_edi_status_update_wizard.xml',
     ],
     'installable': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3'
 }

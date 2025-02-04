@@ -12,5 +12,6 @@
     ],
     'installable': True,
     'auto_install': ['pos_hr'],
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

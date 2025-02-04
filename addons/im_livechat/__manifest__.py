@@ -167,5 +167,6 @@ Help your customers with this chat, and analyse their feedback.
             "im_livechat/static/src/core/public_web/**/*",
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

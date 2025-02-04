@@ -15,5 +15,6 @@
         'data/res_company_data.xml',
         'views/res_partner_bank_views.xml'
     ],
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

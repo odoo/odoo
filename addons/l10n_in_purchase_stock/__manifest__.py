@@ -23,5 +23,6 @@ So this module is to get the warehouse address if the bill is created from Purch
     ],
 
     'auto_install': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

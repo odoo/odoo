@@ -33,5 +33,6 @@ can setup API keys to replace their main password.
             'auth_totp/static/src/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

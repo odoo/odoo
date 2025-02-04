@@ -26,5 +26,6 @@ This module consists of:
     'demo': [
         'demo/demo_company.xml',
     ],
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

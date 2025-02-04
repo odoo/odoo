@@ -15,5 +15,6 @@ by also displaying the associated picking reference in the search view.
         'views/stock_landed_cost_views.xml',
     ],
     'auto_install': True,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

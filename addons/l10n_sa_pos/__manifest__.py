@@ -7,6 +7,7 @@
 K.S.A. POS Localization
 =======================================================
     """,
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
     'depends': [
         'l10n_gcc_pos',

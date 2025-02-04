@@ -175,5 +175,6 @@
             'mass_mailing/static/tests/mass_mailing_html_tests.js',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

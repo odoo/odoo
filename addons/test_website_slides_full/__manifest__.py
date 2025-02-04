@@ -26,5 +26,6 @@ certification flow including purchase, certification, failure and success.
             'test_website_slides_full/static/tests/tours/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

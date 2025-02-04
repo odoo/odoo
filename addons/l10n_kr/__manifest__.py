@@ -19,5 +19,6 @@ This provides a base chart of accounts and taxes template for use in Odoo.
     'demo': [
         'demo/demo_company.xml',
     ],
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

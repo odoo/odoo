@@ -10,5 +10,6 @@ Additional information is displayed in the name of the SOL when it is used in se
 """,
     'category': 'Hidden',
     'depends': ['sale_management'],
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

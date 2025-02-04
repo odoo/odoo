@@ -42,5 +42,6 @@
             '/website_event_exhibitor/static/src/scss/event_full_page_ticket_report.scss',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

@@ -24,5 +24,6 @@ Module holding mail improvements for website. It holds the follow widget.
             'website/static/src/interactions/follow.edit.js',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

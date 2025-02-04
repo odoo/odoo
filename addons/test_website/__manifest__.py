@@ -45,5 +45,6 @@ models which only purpose is to run tests.""",
             'test_website/static/tests/tours/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

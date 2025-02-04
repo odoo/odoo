@@ -79,5 +79,6 @@ Print product labels with barcode.
             'product/static/tests/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

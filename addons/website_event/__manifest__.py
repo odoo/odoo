@@ -79,5 +79,6 @@
             'website_event/static/src/js/systray_items/*.js',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

@@ -30,5 +30,6 @@ trigger an automatic reminder email.
             'base_automation/static/tests/**/*',
         ],
     },
+    'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }
