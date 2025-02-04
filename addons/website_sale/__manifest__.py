@@ -164,6 +164,7 @@
         'website.assets_editor': [
             'website_sale/static/src/js/systray_items/*.js',
             'website_sale/static/src/xml/website_sale_utils.xml',
+            'website_sale/static/src/xml/website_sale_editor_previews.xml',
         ],
         'website.backend_assets_all_wysiwyg': [
             'website_sale/static/src/js/components/wysiwyg_adapter/wysiwyg_adapter.js',
