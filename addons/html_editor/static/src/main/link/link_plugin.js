@@ -401,26 +401,35 @@ export class LinkPlugin extends Plugin {
                 // create a new link with current selection as a content
                 if ((selectionTextContent && selectionTextContent === label) || isImage) {
                     const link = this.createLink(url);
-                    const content = this.dependencies.selection.extractContent(selection);
-                    link.append(content);
                     if (classes) {
                         link.className = classes;
                     }
-                    link.normalize();
-                    this.linkInDocument = link;
-                    cursorsToRestore = null;
-                    selection = this.dependencies.selection.getEditableSelection();
-                    const anchorClosestElement = closestElement(selection.anchorNode);
-                    if (commonAncestor !== anchorClosestElement) {
-                        // We force the cursor after the anchorClosestElement
-                        // To be sure the link is inserted in the correct place in the dom.
-                        const [anchorNode, anchorOffset] = rightPos(anchorClosestElement);
-                        this.dependencies.selection.setSelection(
-                            { anchorNode, anchorOffset },
-                            { normalize: false }
-                        );
+                    const image = isImage && findInSelection(selection, "img");
+                    if (isImage) {
+                        if (image.parentElement.matches("figure[contenteditable=false]")) {
+                            link.setAttribute("contenteditable", true);
+                        }
+                        image.before(link);
+                        link.append(image);
+                    } else {
+                        const content = this.dependencies.selection.extractContent(selection);
+                        link.append(content);
+                        link.normalize();
+                        cursorsToRestore = null;
+                        selection = this.dependencies.selection.getEditableSelection();
+                        const anchorClosestElement = closestElement(selection.anchorNode);
+                        if (commonAncestor !== anchorClosestElement) {
+                            // We force the cursor after the anchorClosestElement
+                            // To be sure the link is inserted in the correct place in the dom.
+                            const [anchorNode, anchorOffset] = rightPos(anchorClosestElement);
+                            this.dependencies.selection.setSelection(
+                                { anchorNode, anchorOffset },
+                                { normalize: false }
+                            );
+                        }
+                        this.dependencies.dom.insert(link);
                     }
-                    this.dependencies.dom.insert(link);
+                    this.linkInDocument = link;
                 } else if (label) {
                     const link = this.createLink(url, label);
                     if (classes) {
@@ -573,10 +582,9 @@ export class LinkPlugin extends Plugin {
      * extend the given link element to include all content from the given selection
      *
      * @param {HTMLLinkElement} linkElement
-     * @param {EditorSelection} selection
      * @return {boolean}
      */
-    extendLinkToSelection(linkElement, selection) {
+    extendLinkToSelection(linkElement) {
         this.dependencies.split.splitSelection();
         const selectedNodes = this.dependencies.selection.getSelectedNodes();
         let before = linkElement.previousSibling;
