@@ -10,7 +10,7 @@ patch(spreadsheet.components.FigureComponent.prototype, {
         this.actionService = useService("action");
         this.notificationService = useService("notification");
     },
-    async navigateToOdooMenu() {
+    async navigateToOdooMenu(newWindow) {
         const menu = this.env.model.getters.getChartOdooMenu(this.props.figure.id);
         if (!menu) {
             throw new Error(`Cannot find any menu associated with the chart`);
@@ -24,14 +24,14 @@ patch(spreadsheet.components.FigureComponent.prototype, {
             );
             return;
         }
-        await this.actionService.doAction(menu.actionID);
+        await this.actionService.doAction(menu.actionID, { newWindow });
     },
     get hasOdooMenu() {
         return this.env.model.getters.getChartOdooMenu(this.props.figure.id) !== undefined;
     },
-    async onClick() {
+    async onClick(isMiddleClick) {
         if (this.env.isDashboard() && this.hasOdooMenu) {
-            this.navigateToOdooMenu();
+            this.navigateToOdooMenu(isMiddleClick);
         }
     },
 });
