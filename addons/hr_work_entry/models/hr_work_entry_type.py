@@ -36,13 +36,6 @@ class HrWorkEntryType(models.Model):
         string="Added to Monthly Pay",
         help="Check this setting if you want the hours to be considered as extra time and added as a bonus to the basic salary.")
 
-    @api.constrains('country_id')
-    def _check_work_entry_type_country(self):
-        if self.env.ref('hr_work_entry.work_entry_type_attendance') in self:
-            raise UserError(_("You can't change the country of this specific work entry type."))
-        elif not self.env.context.get('install_mode') and self.env['hr.work.entry'].sudo().search_count([('work_entry_type_id', 'in', self.ids)], limit=1):
-            raise UserError(_("You can't change the Country of this work entry type cause it's currently used by the system. You need to delete related working entries first."))
-
     @api.constrains('code', 'country_id')
     def _check_code_unicity(self):
         similar_work_entry_types = self.search([
@@ -66,3 +59,11 @@ class HrWorkEntryType(models.Model):
     def _inverse_is_work(self):
         for record in self:
             record.is_leave = not record.is_work
+
+    def write(self, vals):
+        if 'country_id' in vals:
+            if self.env.ref('hr_work_entry.work_entry_type_attendance') in self:
+                raise UserError(_("You can't change the country of this specific work entry type."))
+            if self.env['hr.work.entry'].sudo().search_count([('work_entry_type_id', 'in', self.ids)], limit=1):
+                raise UserError(_("You can't change the Country of this work entry type cause it's currently used by the system. You need to delete related working entries first."))
+        return super().write(vals)
