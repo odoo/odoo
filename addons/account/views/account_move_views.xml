@@ -723,7 +723,7 @@
                         <button name="action_print_pdf"
                                 type="object"
                                 class="oe_highlight"
-                                invisible="state != 'posted' or is_being_sent or invoice_pdf_report_id"
+                                invisible="state != 'posted' or is_being_sent or invoice_pdf_report_id or move_type == 'entry'"
                                 string="Print"/>
                         <button name="action_print_pdf"
                                 type="object"
