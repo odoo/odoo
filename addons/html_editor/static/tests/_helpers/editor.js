@@ -7,6 +7,7 @@ import { getContent, getSelection, setContent } from "./selection";
 import { animationFrame } from "@odoo/hoot-mock";
 import { dispatchCleanForSave } from "./dispatch";
 import { fixInvalidHTML } from "@html_editor/utils/sanitize";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 
 export const Direction = {
     BACKWARD: "BACKWARD",
@@ -29,6 +30,11 @@ class TestEditor extends Component {
         const iframe = this.props.wysiwygProps.iframe;
         const oldOnLoad = this.wysiwygProps.onLoad;
         this.wysiwygProps.onLoad = function (editor) {
+            if (!props.wysiwygProps.checkMigration) {
+                editor.config.Plugins = (editor.config.Plugins || MAIN_PLUGINS).filter(
+                    (Plugin) => Plugin.id !== "version"
+                );
+            }
             const oldAttach = editor.attachTo;
             editor.attachTo = function (el) {
                 // @todo @phoenix move it to setupMultiEditor

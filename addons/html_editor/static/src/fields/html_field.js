@@ -1,3 +1,5 @@
+import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_manager";
+import { stripVersion } from "@html_editor/html_migrations/manifest";
 import { stripHistoryIds } from "@html_editor/others/collaboration/collaboration_odoo_plugin";
 import {
     COLLABORATION_PLUGINS,
@@ -11,7 +13,7 @@ import {
 } from "@html_editor/others/embedded_components/embedding_sets";
 import { normalizeHTML } from "@html_editor/utils/html";
 import { Wysiwyg } from "@html_editor/wysiwyg";
-import { Component, status, useRef, useState } from "@odoo/owl";
+import { Component, status, useRef, useState, useSubEnv } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -63,6 +65,10 @@ export class HtmlField extends Component {
     };
 
     setup() {
+        this.htmlUpgradeManager = new HtmlUpgradeManager();
+        useSubEnv({
+            htmlUpgradeManager: this.htmlUpgradeManager,
+        });
         this.mutex = new Mutex();
 
         this.codeViewRef = useRef("codeView");
@@ -79,7 +85,9 @@ export class HtmlField extends Component {
         this.state = useState({
             key: 0,
             showCodeView: false,
-            containsComplexHTML: computeContainsComplexHTML(this.value),
+            containsComplexHTML: computeContainsComplexHTML(
+                this.props.record.data[this.props.name]
+            ),
         });
 
         useRecordObserver((record) => {
@@ -109,7 +117,8 @@ export class HtmlField extends Component {
     }
 
     get value() {
-        return this.props.record.data[this.props.name];
+        const value = this.props.record.data[this.props.name];
+        return this.htmlUpgradeManager.processForUpgrade(value, this.state.containsComplexHTML);
     }
 
     get displayReadonly() {
@@ -133,6 +142,7 @@ export class HtmlField extends Component {
         if (this.props.isCollaborative) {
             stripHistoryIds(element);
         }
+        stripVersion(element);
     }
 
     async updateValue(value) {
