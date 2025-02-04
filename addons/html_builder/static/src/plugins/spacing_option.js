@@ -1,5 +1,5 @@
 import { Component } from "@odoo/owl";
-import { defaultBuilderComponents } from "../core/building_blocks/default_builder_components";
+import { defaultBuilderComponents } from "../core/default_builder_components";
 import { useDomState } from "../core/building_blocks/utils";
 
 export class SpacingOption extends Component {

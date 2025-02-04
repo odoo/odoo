@@ -3,7 +3,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { getScrollingElement } from "@web/core/utils/scrolling";
-import { defaultBuilderComponents } from "../core/building_blocks/default_builder_components";
+import { defaultBuilderComponents } from "../core/default_builder_components";
 import { useDomState, useIsActiveItem } from "../core/building_blocks/utils";
 
 class AnimateOptionPlugin extends Plugin {

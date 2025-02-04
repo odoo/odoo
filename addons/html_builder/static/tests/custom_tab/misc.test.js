@@ -5,7 +5,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 import { Component, onWillStart, xml } from "@odoo/owl";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { defaultBuilderComponents } from "../../src/core/building_blocks/default_builder_components";
+import { defaultBuilderComponents } from "../../src/core/default_builder_components";
 import { OptionsContainer } from "../../src/sidebar/option_container";
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
 

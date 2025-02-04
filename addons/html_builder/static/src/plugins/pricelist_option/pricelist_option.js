@@ -3,7 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Component } from "@odoo/owl";
 
-import { defaultBuilderComponents } from "../../core/building_blocks/default_builder_components";
+import { defaultBuilderComponents } from "../../core/default_builder_components";
 
 export class AddProductButton extends Component {
     static template = "html_builder.AddProductButton";

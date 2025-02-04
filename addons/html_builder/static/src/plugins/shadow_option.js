@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { defaultBuilderComponents } from "../core/building_blocks/default_builder_components";
+import { defaultBuilderComponents } from "../core/default_builder_components";
 import { useIsActiveItem } from "@html_builder/core/building_blocks/utils";
 
 const shadowClass = "shadow";
