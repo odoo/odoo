@@ -12,6 +12,7 @@ import {
 import { Component, onMounted, useState, useExternalListener } from "@odoo/owl";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
+import { barcodeService } from "@barcodes/barcode_service";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { deduceUrl } from "@point_of_sale/utils";
@@ -48,6 +49,8 @@ export class Navbar extends Component {
         this.dialog = useService("dialog");
         this.isDisplayStandalone = isDisplayStandalone();
         this.isBarcodeScannerSupported = isBarcodeScannerSupported;
+        this.timeout = null;
+        this.bufferedInput = "";
         onMounted(async () => {
             this.isSystemUser = await user.hasGroup("base.group_system");
         });
@@ -55,18 +58,42 @@ export class Navbar extends Component {
     }
 
     handleKeydown(event) {
+        const isEndCharacter = event.key.match(/(Enter|Tab)/);
+        const isSpecialKey =
+            !["Control", "Alt"].includes(event.key) && (event.key.length > 1 || event.metaKey);
+
+        clearTimeout(this.timeout);
+        if (isEndCharacter) {
+            this.checkInput(event);
+        } else {
+            if (!isSpecialKey) {
+                this.bufferedInput += event.key;
+            }
+            if (document.activeElement == this.inputRef.el) {
+                this.checkInput(event);
+            } else {
+                this.timeout = setTimeout(() => {
+                    this.checkInput(event);
+                }, barcodeService.maxTimeBetweenKeysInMs);
+            }
+        }
+    }
+
+    checkInput(event) {
         if (
             !this.ui.isSmall &&
             this.inputRef?.el &&
             document.activeElement !== this.inputRef.el &&
             !this.pos.getOrder()?.getSelectedOrderline() &&
             this.noOpenDialogs() &&
-            event.key.length == 1
+            event.key.length == 1 &&
+            this.bufferedInput.length < 3
         ) {
             this.inputRef.el.focus();
-            this.inputRef.el.value = event.key;
+            this.inputRef.el.value = this.bufferedInput;
             event.preventDefault();
         }
+        this.bufferedInput = "";
     }
 
     noOpenDialogs() {
