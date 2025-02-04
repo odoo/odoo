@@ -2,7 +2,7 @@
 
 from odoo import Command
 from odoo.addons.crm_livechat.tests import chatbot_common
-from odoo.tests.common import tagged
+from odoo.tests.common import new_test_user, tagged
 
 
 @tagged("post_install", "-at_install")
@@ -113,3 +113,45 @@ class CrmChatbotCase(chatbot_common.CrmChatbotCase):
         self._post_answer_and_trigger_next_step(discuss_channel, '123456')
         self.assertEqual(discuss_channel.chatbot_current_step_id, self.step_create_lead)
         return discuss_channel
+
+    def test_create_lead_from_chatbot(self):
+        chatbot_script = self.env["chatbot.script"].create({"title": "Create lead bot"})
+        self.env["chatbot.script.step"].create(
+            [
+                {
+                    "chatbot_script_id": chatbot_script.id,
+                    "message": "Hello, how can I help you?",
+                    "step_type": "free_input_single",
+                },
+                {
+                    "step_type": "question_email",
+                    "chatbot_script_id": chatbot_script.id,
+                    "message": "Would you mind leaving your email address so that we can reach you back?",
+                },
+                {
+                    "step_type": "create_lead",
+                    "chatbot_script_id": chatbot_script.id,
+                    "message": "Thank you, you should hear back from us very soon!",
+                },
+            ]
+        )
+        livechat_channel = self.env["im_livechat.channel"].create(
+            {
+                "name": "Create lead channel",
+                "rule_ids": [
+                    Command.create(
+                        {
+                            "regex_url": "/",
+                            "chatbot_script_id": chatbot_script.id,
+                        }
+                    )
+                ],
+            }
+        )
+        self.start_tour(
+            f"/im_livechat/support/{livechat_channel.id}", "crm_livechat.create_lead_from_chatbot"
+        )
+        lead = self.env["crm.lead"].search([("channel_id", "=", livechat_channel.channel_ids.id)])
+        self.assertEqual(lead.name, "I'd like to know more about the CRM application.")
+        self.assertTrue(lead.channel_id)
+        self.assertTrue(lead.channel_id.has_crm_lead)

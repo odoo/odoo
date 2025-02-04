@@ -2,12 +2,27 @@
 
 from markupsafe import Markup
 
-from odoo import models, _
+from odoo import api, fields, models, _
 from odoo.tools import html2plaintext
 
 
 class DiscussChannel(models.Model):
     _inherit = 'discuss.channel'
+
+    lead_ids = fields.One2many(
+        "crm.lead",
+        "channel_id",
+        string="Leads",
+        groups="base.group_erp_manager",
+        help="The channel becomes accessible to sales users when leads are set.",
+    )
+    has_crm_lead = fields.Boolean(compute="_compute_has_crm_lead", compute_sudo=True, store=True)
+    _has_crm_lead_index = models.Index("(has_crm_lead) WHERE has_crm_lead IS TRUE")
+
+    @api.depends("lead_ids")
+    def _compute_has_crm_lead(self):
+        for channel in self:
+            channel.has_crm_lead = bool(channel.lead_ids)
 
     def execute_command_lead(self, **kwargs):
         key = kwargs['body']
@@ -45,6 +60,7 @@ class DiscussChannel(models.Model):
 
         utm_source = self.env.ref('crm_livechat.utm_source_livechat', raise_if_not_found=False)
         return self.env['crm.lead'].create({
+            "channel_id": self.id,
             'name': html2plaintext(key[5:]),
             'partner_id': customers[0].id if customers else False,
             'user_id': False,
