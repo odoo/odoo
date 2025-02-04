@@ -266,6 +266,8 @@ class TestIndex(TransactionCase):
                 else:
                     yield segment_field
 
+                if not segment_field.relational:
+                    break
                 model_name = segment_field.comodel_name
 
         def get_dependency_paths(

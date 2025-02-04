@@ -136,9 +136,9 @@ class PrivacyLookupWizard(models.TransientModel):
                     model._field_to_sql(table_name, field_name),
                 )
                 for field_name, field in model._fields.items()
+                if field.type == 'many2one'
                 if field.comodel_name == 'res.partner'
                 if field.store
-                if field.type == 'many2one'
                 if field.ondelete != 'cascade'
             )
 

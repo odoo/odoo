@@ -311,7 +311,7 @@ class IrActionsServer(models.Model):
 
         if self.state in ('followers', 'remove_followers') and self.followers_type == 'generic' and self.followers_partner_field_name:
             fields, field_chain_str, _property = self._get_relation_chain("followers_partner_field_name")
-            if fields and fields[-1].comodel_name != "res.partner":
+            if fields and (not fields[-1].relational or fields[-1].comodel_name != "res.partner"):
                 warnings.append(_(
                     "The field '%(field_chain_str)s' is not a partner field.",
                     field_chain_str=field_chain_str,
@@ -319,7 +319,7 @@ class IrActionsServer(models.Model):
 
         if self.state == 'next_activity' and self.activity_user_type == 'generic' and self.activity_user_field_name:
             fields, field_chain_str, _property = self._get_relation_chain("activity_user_field_name")
-            if fields and fields[-1].comodel_name != "res.users":
+            if fields and (not fields[-1].relational or fields[-1].comodel_name != "res.users"):
                 warnings.append(_(
                     "The field '%(field_chain_str)s' is not a user field.",
                     field_chain_str=field_chain_str,

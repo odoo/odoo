@@ -415,15 +415,15 @@ form: module.record_id""" % (xml_id,)
             if '@' in f_name:
                 continue  # used for translations
             f_model = field.get("model")
-            if not f_model and f_name in model._fields:
+            if not f_model and f_name in model._fields and model._fields[f_name].relational:
                 f_model = model._fields[f_name].comodel_name
             f_use = field.get("use",'') or 'id'
             f_val = False
 
             if f_search := field.get("search"):
+                assert f_model, 'Define an attribute model="..." in your .XML file!'
                 context = _get_eval_context(self, env, f_model)
                 q = safe_eval(f_search, context)
-                assert f_model, 'Define an attribute model="..." in your .XML file!'
                 # browse the objects searched
                 s = env[f_model].search(q)
                 # column definitions of the "local" object
