@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Literal
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
+from odoo.tools import float_round
 
 if TYPE_CHECKING:
     from odoo.orm.types import Self
@@ -127,6 +128,22 @@ class UomUom(models.Model):
             amount = tools.float_round(amount, precision_rounding=to_unit.rounding, rounding_method=rounding_method)
 
         return amount
+
+    def _check_qty(self, product_qty, uom_id, rounding_method="HALF-UP"):
+        """Check if product_qty in given uom is a multiple of the packaging qty.
+        If not, rounding the product_qty to closest multiple of the packaging qty
+        according to the rounding_method "UP", "HALF-UP or "DOWN".
+        """
+        self.ensure_one()
+        packaging_qty = self._compute_quantity(1, uom_id)
+        # We do not use the modulo operator to check if qty is a mltiple of q. Indeed the quantity
+        # per package might be a float, leading to incorrect results. For example:
+        # 8 % 1.6 = 1.5999999999999996
+        # 5.4 % 1.8 = 2.220446049250313e-16
+        if product_qty and packaging_qty:
+            product_qty = float_round(product_qty / packaging_qty, precision_rounding=1.0,
+                                  rounding_method=rounding_method) * packaging_qty
+        return product_qty
 
     def _compute_price(self, price: float, to_unit: Self) -> float:
         self.ensure_one()
