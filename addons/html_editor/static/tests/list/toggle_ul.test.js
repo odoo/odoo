@@ -433,6 +433,16 @@ describe("Range not collapsed", () => {
                 `),
             });
         });
+
+        test("should turn a list into an unordered list with text alignment", async () => {
+            await testEditor({
+                contentBefore:
+                    '<ol><li style="text-align: center;">[abc</li><li style="text-align: center;">def]</li></ol>',
+                stepFunction: toggleUnorderedList,
+                contentAfter:
+                    '<ul><li style="text-align: center;">[abc</li><li style="text-align: center;">def]</li></ul>',
+            });
+        });
     });
     describe("Remove", () => {
         test("should turn a list into a paragraph", async () => {

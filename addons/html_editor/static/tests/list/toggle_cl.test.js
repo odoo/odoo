@@ -501,6 +501,16 @@ describe("Range not collapsed", () => {
                     '<ul class="o_checklist"><li class="o_checked">a[b</li><li>cd</li><li class="o_checked">e]f</li><li>gh</li></ul>',
             });
         });
+
+        test("should turn a list into a checklist list with text alignment", async () => {
+            await testEditor({
+                contentBefore:
+                    '<ul><li style="text-align: right;">[abc</li><li style="text-align: right;">def]</li></ul>',
+                stepFunction: toggleCheckList,
+                contentAfter:
+                    '<ul class="o_checklist"><li style="text-align: right;">[abc</li><li style="text-align: right;">def]</li></ul>',
+            });
+        });
     });
     describe("Remove", () => {
         test("should turn a checklist into a paragraph", async () => {
