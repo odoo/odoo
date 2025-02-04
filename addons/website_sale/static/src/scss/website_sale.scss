@@ -351,6 +351,20 @@ $input-border-color: $gray-400;
         }
     }
 
+    .o_wsale_product_information_top {
+        display: var(--o-wsale-card-infotop-display, contents);
+        justify-content: var(--o-wsale-card-infotop-justify-content);
+        padding: map-get($spacers, 2) 0;
+        flex-direction: column;
+        flex-grow: 1;
+        padding-right: inherit;
+
+        .o_wsale_comparison_checkbox {
+            order: var(--o-wsale-card-infotop-order, 3);
+            margin-top: var(--o-wsale-card-infotop-margin-top, #{map-get($spacers, 2)});
+        }
+    }
+
     .o_wsale_product_information {
         flex-direction: var(--o-wsale-card-info-flex-direction, column);
         padding: var(--o-wsale-card-info-padding, #{map-get($spacers, 2)} 0);
@@ -581,6 +595,10 @@ body:not(.editor_enable) #category_header {
     }
 
     &.o_wsale_design_grid {
+        @include media-breakpoint-up(lg) {
+            --o-wsale-card-infotop-display: flex;
+        }
+
         &.o_wsale_page_contained .oe_product_cart {
             --o-wsale-card-border-width: 0 #{$border-width $border-width $border-width};
 
@@ -606,6 +624,7 @@ body:not(.editor_enable) #category_header {
         .oe_product_cart {
             --o-wsale-card-flex-align-items: stretch;
             --o-wsale-card-info-padding: #{map-get($spacers, 2) ($container-padding-x * 0.5) map-get($spacers, 2) map-get($spacers, 2)};
+            --o-wsale-card-infotop-justify-content: center;
             --o-wsale-card-sub-flex-direction: row-reverse;
             --o-wsale-card-sub-wrap: nowrap;
             --o-wsale-card-sub-align-items: start;
@@ -621,11 +640,13 @@ body:not(.editor_enable) #category_header {
                     height: 100%;
                 }
 
+                .o_wsale_product_information_top {
+                    padding-right: inherit;
+                }
+
                 .o_wsale_product_information_text {
                     display: flex;
                     flex-direction: column;
-                    justify-content: center;
-                    padding-right: inherit;
                 }
 
                 .o_wsale_product_sub {
