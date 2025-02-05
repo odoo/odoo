@@ -1312,3 +1312,12 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
                 'reconciled': False,
             },
         ])
+
+    def test_communication_wizard(self):
+        """
+        Tests that changing the payment reference updates the payment wizard's communication accordingly.
+        """
+        self.out_invoice_1.payment_reference = "test"
+        ctx = {'active_model': 'account.move', 'active_ids': self.out_invoice_1.ids}
+        wizard = self.env['account.payment.register'].with_context(**ctx).create({})
+        self.assertEqual(wizard.communication, "test")
