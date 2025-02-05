@@ -1503,6 +1503,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             },
         ])
 
+<<<<<<< 17.0
     def test_group_payment_method_with_and_without_discount(self):
         """ Test payment methods when creating group payment for discounted and non-discounted bills"""
         active_ids = (self.in_invoice_epd_applied + self.in_invoice_epd_not_applied).ids
@@ -1602,3 +1603,14 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         self.env.company.parent_ids.invalidate_recordset()
         payment = wizard._create_payments()
         self.assertTrue(payment)
+||||||| 562f55e812950d1319608fa4117dfd3beb8c10ff
+=======
+    def test_communication_wizard(self):
+        """
+        Tests that changing the payment reference updates the payment wizard's communication accordingly.
+        """
+        self.out_invoice_1.payment_reference = "test"
+        ctx = {'active_model': 'account.move', 'active_ids': self.out_invoice_1.ids}
+        wizard = self.env['account.payment.register'].with_context(**ctx).create({})
+        self.assertEqual(wizard.communication, "test")
+>>>>>>> cb9d7d9a9e4efbe24a432cda3102ae1c3e32f995
