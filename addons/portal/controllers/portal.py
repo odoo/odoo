@@ -520,8 +520,14 @@ class CustomerPortal(Controller):
             partner_sudo = request.env['res.partner'].sudo().with_context(
                 create_context
             ).create(address_values)
+            if hasattr(partner_sudo, '_onchange_phone_validation'):
+                # The `phone_validation` module is installed.
+                partner_sudo._onchange_phone_validation()
         elif not self._are_same_addresses(address_values, partner_sudo):
             partner_sudo.write(address_values)  # Keep the same partner if nothing changed.
+            if 'phone' in address_values and hasattr(partner_sudo, '_onchange_phone_validation'):
+                # The `phone_validation` module is installed.
+                partner_sudo._onchange_phone_validation()
 
         self._handle_extra_form_data(extra_form_data, address_values)
 
