@@ -127,7 +127,8 @@ class TestSurveyResults(common.TestSurveyResultsCommon):
         self.assertEqual(data['table_data'],
                          [{'value': str(value),
                            'suggested_answer': self.env['survey.question.answer'],
-                           'count': 1 if value in (5, 7) else 0}
+                           'count': 1 if value in (5, 7) else 0,
+                           'count_text': f"{1 if value in (5, 7) else 0} Votes"}
                           for value in range(11)])
         self.assertEqual(json.loads(data['graph_data']),
                          [{'key': self.question_scale.title,
@@ -147,7 +148,8 @@ class TestSurveyResults(common.TestSurveyResultsCommon):
         self.assertEqual(data['table_data'],
                          [{'value': str(value),
                            'suggested_answer': self.env['survey.question.answer'],
-                           'count': 1 if value == 5 else 0}
+                           'count': 1 if value == 5 else 0,
+                           'count_text': f"{1 if value == 5 else 0} Votes"}
                           for value in range(11)])
         self.assertEqual(data['numerical_max'], 5)
         self.assertEqual(data['numerical_min'], 5)
