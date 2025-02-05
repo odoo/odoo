@@ -162,6 +162,27 @@ test("visibility of animation animation=onScroll", async () => {
 
     expect(".options-container [data-label='Scroll Zone']").toBeVisible();
 });
+test("animation=onScroll should not be visible when the animation is limited", async () => {
+    await setupWebsiteBuilder(
+        `
+                <div class="test-options-target">
+                    <img src='${base64Img}'>
+                </div>
+            `,
+        { styleContent }
+    );
+    await contains(":iframe .test-options-target img").click();
+
+    await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
+    await contains(".o-dropdown--menu [data-action-value='onAppearance']").click();
+
+    await contains(".options-container [data-label='Effect'] .dropdown-toggle").click();
+    await contains(".o-dropdown--menu [data-action-value='o_anim_flash']").click();
+    expect(".options-container [data-label='Effect'] .o-dropdown").toHaveText("Flash");
+
+    await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
+    expect(".o-dropdown--menu [data-action-value='onScroll']").not.toBeVisible();
+});
 test("visibility of animation animation=onHover", async () => {
     await setupWebsiteBuilder(`
         <div class="test-options-target">

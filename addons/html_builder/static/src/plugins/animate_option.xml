@@ -15,7 +15,8 @@
                 <BuilderSelectItem action="'setAnimationMode'" actionValue="'onScroll'"
                             classAction="'o_animate o_animate_on_scroll'"
                             actionParam="{forceAnimation: true}"
-                            id="'animation_on_scroll_opt'">On Scroll</BuilderSelectItem>
+                            id="'animation_on_scroll_opt'"
+                            t-if="!state.isLimitedAnimation">On Scroll</BuilderSelectItem>
                 <BuilderSelectItem action="'setAnimationMode'" actionValue="'onHover'"
                             classAction="'o_animate_on_hover'"
                             id="'animation_on_hover_opt'"
