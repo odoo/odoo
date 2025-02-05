@@ -34,6 +34,7 @@ class _Record extends Component {
                 activeFields,
                 resId: this.props.info.resId,
                 mode: this.props.info.mode,
+                ...(this.props.info?.context && { context: this.props.info.context }),
             },
             hooks: {
                 onRecordSaved: this.props.info.onRecordSaved || (() => {}),
@@ -165,6 +166,7 @@ export class Record extends Component {
         "onRecordChanged?",
         "onRecordSaved?",
         "onWillSaveRecord?",
+        "context?"
     ];
     setup() {
         const { activeFields, fieldNames, fields, resModel } = this.props;
