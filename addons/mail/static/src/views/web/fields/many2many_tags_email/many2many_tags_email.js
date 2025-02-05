@@ -14,6 +14,7 @@ export class FieldMany2ManyTagsEmailTagsList extends TagsList {
 }
 
 export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
+    static template = "FieldMany2ManyTagsEmailTags";
     static components = {
         ...FieldMany2ManyTagsEmail.components,
         TagsList: FieldMany2ManyTagsEmailTagsList,
