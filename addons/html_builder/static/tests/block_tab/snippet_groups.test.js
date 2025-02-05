@@ -14,6 +14,7 @@ import {
     defineWebsiteModels,
     getSnippetStructure,
     setupWebsiteBuilder,
+    setupWebsiteBuilderWithDummySnippet,
 } from "../helpers";
 
 defineWebsiteModels();
@@ -370,27 +371,7 @@ test("drag&drop snippet structure", async () => {
 });
 
 test("cancel snippet drag & drop over sidebar", async () => {
-    const snippetsDescription = (withName = false) => {
-        const name = "Test";
-        return [
-            {
-                name: name,
-                groupName: "a",
-                content: getBasicSection("Yop", { name: withName ? name : "" }),
-            },
-        ];
-    };
-
-    const { getEditableContent } = await setupWebsiteBuilder("", {
-        snippets: {
-            snippet_groups: [
-                '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
-            ],
-            snippet_structure: snippetsDescription().map((snippetDesc) =>
-                getSnippetStructure(snippetDesc)
-            ),
-        },
-    });
+    const { getEditableContent } = await setupWebsiteBuilderWithDummySnippet();
     const initialDropZone = `<div class="oe_drop_zone oe_insert" data-editor-message="DRAG BUILDING BLOCKS HERE"></div>`;
     const editableContent = getEditableContent();
     expect(editableContent).toHaveInnerHTML(initialDropZone);
@@ -401,7 +382,11 @@ test("cancel snippet drag & drop over sidebar", async () => {
 
     await moveTo(".o-website-builder_sidebar");
     expect(editableContent).toHaveInnerHTML(unformat(initialDropZone));
-    await drop();
+    // Specifying an explicit target should not be needed, but the test
+    // sometimes fails, probably because the snippet is partially touching the
+    // iframe. We drop on the "Save" button to be as far as possible from the
+    // iframe.
+    await drop("button[data-action=save]");
     expect(".o_add_snippet_dialog").toHaveCount(0);
     expect(editableContent).toHaveInnerHTML(unformat(initialDropZone));
 });
