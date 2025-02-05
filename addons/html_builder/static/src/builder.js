@@ -1,0 +1,388 @@
+import { Editor } from "@html_editor/editor";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { closestElement } from "@html_editor/utils/dom_traversal";
+import {
+    Component,
+    EventBus,
+    onMounted,
+    onWillDestroy,
+    onWillStart,
+    onWillUpdateProps,
+    useRef,
+    useState,
+    useSubEnv,
+    markup,
+} from "@odoo/owl";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
+import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
+import { RPCError } from "@web/core/network/rpc";
+import { escape } from "@web/core/utils/strings";
+import { user } from "@web/core/user";
+import { useSetupAction } from "@web/search/action_hook";
+import { AnchorPlugin } from "./core/plugins/anchor/anchor_plugin";
+import { BuilderActionsPlugin } from "./core/plugins/builder_actions_plugin";
+import { BuilderOptionsPlugin } from "./core/plugins/builder_options_plugin";
+import { BuilderOverlayPlugin } from "./core/plugins/builder_overlay/builder_overlay_plugin";
+import { ClonePlugin } from "./core/plugins/clone/clone_plugin";
+import { DropZonePlugin } from "./core/plugins/drop_zone_plugin";
+import { DropZoneSelectorPlugin } from "./core/plugins/dropzone_selector_plugin";
+import { GridLayoutPlugin } from "./core/plugins/grid_layout/grid_layout_plugin";
+import { HandleDirtyElementPlugin } from "./core/plugins/handle_dirty_element_plugin";
+import { MediaWebsitePlugin } from "./core/plugins/media_website_plugin";
+import { MovePlugin } from "./core/plugins/move/move_plugin";
+import { OperationPlugin } from "./core/plugins/operation_plugin";
+import { OverlayButtonsPlugin } from "./core/plugins/overlay_buttons/overlay_buttons_plugin";
+import { RemovePlugin } from "./core/plugins/remove/remove_plugin";
+import { ReplacePlugin } from "./core/plugins/replace/replace_plugin";
+import { SetupEditorPlugin } from "./core/plugins/setup_editor_plugin";
+import { SnippetLifecyclePlugin } from "./core/plugins/snippet_lifecycle_plugin";
+import { VisibilityPlugin } from "./core/plugins/visibility_plugin";
+import { SnippetModel } from "./snippet_model";
+import { InvisibleElementsPanel } from "./sidebar/invisible_elements_panel";
+import { BlockTab } from "./sidebar/block_tab";
+import { CustomizeTab } from "./sidebar/customize_tab";
+
+const BUILDER_PLUGINS = [
+    BuilderOptionsPlugin,
+    BuilderActionsPlugin,
+    OperationPlugin,
+    BuilderOverlayPlugin,
+    OverlayButtonsPlugin,
+    MovePlugin,
+    GridLayoutPlugin,
+    ReplacePlugin,
+    RemovePlugin,
+    ClonePlugin,
+    AnchorPlugin,
+    DropZonePlugin,
+    MediaWebsitePlugin,
+    SetupEditorPlugin,
+    HandleDirtyElementPlugin,
+    SnippetLifecyclePlugin,
+    VisibilityPlugin,
+    DropZoneSelectorPlugin,
+];
+
+export class Builder extends Component {
+    static template = "html_builder.Builder";
+    static components = { BlockTab, CustomizeTab, InvisibleElementsPanel };
+    static props = {
+        closeEditor: { type: Function },
+        snippetsName: { type: String },
+        toggleMobile: { type: Function },
+        overlayRef: { type: Function },
+        isTranslation: { type: Boolean },
+        iframeLoaded: { type: Object },
+        isMobile: { type: Boolean },
+    };
+
+    setup() {
+        // const actionService = useService("action");
+        this.builder_sidebarRef = useRef("builder_sidebar");
+        this.state = useState({
+            canUndo: false,
+            canRedo: false,
+            activeTab: this.props.isTranslation ? "customize" : "blocks",
+            currentOptionsContainers: undefined,
+            invisibleEls: [],
+        });
+        useHotkey("control+z", () => this.undo());
+        useHotkey("control+y", () => this.redo());
+        useHotkey("control+shift+z", () => this.redo());
+        this.websiteService = useService("website");
+        this.orm = useService("orm");
+        this.dialog = useService("dialog");
+        this.ui = useService("ui");
+        this.notification = useService("notification");
+
+        const editorBus = new EventBus();
+        // TODO: maybe do a different config for the translate mode and the
+        // "regular" mode.
+        const websitePlugins = registry.category("website-plugins").getAll();
+        this.editor = new Editor(
+            {
+                Plugins: [...MAIN_PLUGINS, ...BUILDER_PLUGINS, ...websitePlugins],
+                onChange: ({ isPreviewing }) => {
+                    this.state.canUndo = this.editor.shared.history.canUndo();
+                    this.state.canRedo = this.editor.shared.history.canRedo();
+                    if (!isPreviewing) {
+                        this.updateInvisibleEls();
+                    }
+                    editorBus.trigger("UPDATE_EDITING_ELEMENT");
+                    editorBus.trigger("STEP_ADDED", { isPreviewing });
+                },
+                resources: {
+                    change_current_options_containers_listeners: (currentOptionsContainers) => {
+                        this.state.currentOptionsContainers = currentOptionsContainers;
+                        if (!currentOptionsContainers.length) {
+                            // There is no options, fallback on the blocks tab
+                            this.setTab("blocks");
+                            return;
+                        }
+                        this.setTab("customize");
+                    },
+                    unsplittable_node_predicates: (node) =>
+                        node.querySelector("[data-oe-translation-source-sha]"),
+                    can_display_toolbar: (namespace) =>
+                        // disable the toolbar for images and icons
+                        namespace === undefined ? true : false,
+                },
+                getRecordInfo: (editableEl) => {
+                    if (!editableEl) {
+                        editableEl = closestElement(
+                            this.editor.shared.selection.getEditableSelection().anchorNode
+                        );
+                    }
+                    return {
+                        resModel: editableEl.dataset["oeModel"],
+                        resId: editableEl.dataset["oeId"],
+                        field: editableEl.dataset["oeField"],
+                        type: editableEl.dataset["oeType"],
+                    };
+                },
+                localOverlayContainers: {
+                    key: this.env.localOverlayContainerKey,
+                    ref: this.props.overlayRef,
+                },
+                replaceSnippet: async (snippet) => await this.snippetModel.replaceSnippet(snippet),
+            },
+            this.env.services
+        );
+
+        this.context = {
+            website_id: this.websiteService.currentWebsite.id,
+            lang: this.websiteService.currentWebsite.metadata.lang,
+            user_lang: user.context.lang,
+        };
+
+        this.snippetModel = useState(
+            new SnippetModel(this.env.services, {
+                snippetsName: this.props.snippetsName,
+                installSnippetModule: this.installSnippetModule.bind(this),
+                context: this.context,
+            })
+        );
+
+        onWillStart(async () => {
+            await this.snippetModel.load();
+            // Ensure that the iframe is loaded and the editor is created before
+            // instantiating the sub components that potentially need the
+            // editor.
+            const iframeEl = await this.props.iframeLoaded;
+            this.editor.attachTo(iframeEl.contentDocument.body.querySelector("#wrapwrap"));
+        });
+
+        useSubEnv({
+            editor: this.editor,
+            editorBus,
+        });
+        // onMounted(() => {
+        //     // actionService.setActionMode("fullscreen");
+        // });
+        onWillDestroy(() => {
+            this.editor.destroy();
+            // actionService.setActionMode("current");
+        });
+
+        useSetupAction({
+            beforeUnload: (ev) => this.onBeforeUnload(ev),
+            beforeLeave: () => this.onBeforeLeave(),
+        });
+
+        onMounted(() => {
+            // TODO: onload editor
+            this.updateInvisibleEls();
+        });
+        onWillUpdateProps((nextProps) => {
+            if (nextProps.isMobile !== this.props.isMobile) {
+                this.updateInvisibleEls(nextProps.isMobile);
+            }
+        });
+    }
+
+    discard() {
+        if (this.editor.shared.dirty.isEditableDirty()) {
+            this.dialog.add(ConfirmationDialog, {
+                body: _t(
+                    "If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."
+                ),
+                confirm: () => this.props.closeEditor(),
+                cancel: () => {},
+            });
+        } else {
+            this.props.closeEditor();
+        }
+    }
+
+    getInvisibleSelector(isMobile = this.props.isMobile) {
+        return `.o_snippet_invisible, ${
+            isMobile ? ".o_snippet_mobile_invisible" : ".o_snippet_desktop_invisible"
+        }`;
+    }
+
+    async save() {
+        this.isSaving = true;
+        // TODO: handle the urgent save and the fail of the save operation
+        const snippetMenuEl = this.builder_sidebarRef.el;
+        // Add a loading effect on the save button and disable the other actions
+        addButtonLoadingEffect(snippetMenuEl.querySelector("[data-action='save']"));
+        const actionButtonEls = snippetMenuEl.querySelectorAll("[data-action]");
+        for (const actionButtonEl of actionButtonEls) {
+            actionButtonEl.disabled = true;
+        }
+        // Save the pending images and the dirty elements
+        const saveProms = [...this.editor.editable.querySelectorAll(".o_dirty")].map(
+            async (dirtyEl) => {
+                await this.editor.shared.media.savePendingImages(dirtyEl);
+                const cleanedEl = this.editor.shared.dirty.handleDirtyElement(dirtyEl);
+                if (this.props.isTranslation) {
+                    await this.saveTranslationElement(cleanedEl);
+                } else {
+                    await this.saveView(cleanedEl);
+                }
+            }
+        );
+        await Promise.all(saveProms);
+        this.props.closeEditor();
+    }
+
+    setTab(tab) {
+        this.state.activeTab = tab;
+    }
+
+    undo() {
+        this.editor.shared.history.undo();
+    }
+
+    redo() {
+        this.editor.shared.history.redo();
+    }
+
+    /**
+     * Saves one (dirty) element of the page.
+     *
+     * @param {HTMLElement} el - the element to save.
+     */
+    async saveView(el) {
+        const viewID = Number(el.dataset["oeId"]);
+        const result = this.orm.call(
+            "ir.ui.view",
+            "save",
+            [viewID, el.outerHTML, (!el.dataset["oeExpression"] && el.dataset["oeXpath"]) || null],
+            {
+                context: {
+                    website_id: this.websiteService.currentWebsite.id,
+                    lang: this.websiteService.currentWebsite.metadata.lang,
+                    // TODO: Restore the delay translation feature once it's
+                    // fixed, see commit msg for more info.
+                    delay_translations: false,
+                },
+            }
+        );
+        return result;
+    }
+    /**
+     * If the element holds a translation, saves it. Otherwise, fallback to the
+     * standard saving but with the lang kept.
+     *
+     * @param {HTMLElement} el - the element to save.
+     */
+    async saveTranslationElement(el) {
+        if (el.dataset["oeTranslationSourceSha"]) {
+            const translations = {};
+            translations[this.websiteService.currentWebsite.metadata.lang] = {
+                [el.dataset["oeTranslationSourceSha"]]: el.innerHTML,
+            };
+            return this.orm.call(el.dataset["oeModel"], "web_update_field_translations", [
+                [Number(el.dataset["oeId"])],
+                el.dataset["oeField"],
+                translations,
+            ]);
+        }
+        // TODO: check what we want to modify in translate mode
+        return this.saveView(el);
+    }
+
+    onBeforeUnload(event) {
+        if (!this.isSaving && this.editor.shared.dirty.isEditableDirty()) {
+            event.preventDefault();
+            event.returnValue = "Unsaved changes";
+        }
+    }
+
+    async onBeforeLeave() {
+        if (this.editor.shared.dirty.isEditableDirty()) {
+            let continueProcess = true;
+            await new Promise((resolve) => {
+                this.dialog.add(ConfirmationDialog, {
+                    body: _t("If you proceed, your changes will be lost"),
+                    confirmLabel: _t("Continue"),
+                    confirm: () => resolve(),
+                    cancel: () => {
+                        continueProcess = false;
+                        resolve();
+                    },
+                });
+            });
+            return continueProcess;
+        }
+        return true;
+    }
+
+    onMobilePreviewClick() {
+        this.props.toggleMobile();
+        this.editor.resources["on_mobile_preview_clicked"].forEach((handler) => handler());
+    }
+
+    updateInvisibleEls(isMobile = this.props.isMobile) {
+        this.state.invisibleEls = [
+            ...this.editor.editable.querySelectorAll(this.getInvisibleSelector(isMobile)),
+        ];
+    }
+
+    installSnippetModule(snippet) {
+        // TODO: Should be the app name, not the snippet name ... Maybe both ?
+        const bodyText = _t("Do you want to install %s App?", snippet.title);
+        const linkText = _t("More info about this app.");
+        const linkUrl =
+            "/odoo/action-base.open_module_tree/" + encodeURIComponent(snippet.moduleId);
+
+        this.dialog.add(ConfirmationDialog, {
+            title: _t("Install %s", snippet.title),
+            body: markup(
+                `${escape(bodyText)}\n<a href="${linkUrl}" target="_blank">${escape(linkText)}</a>`
+            ),
+            confirm: async () => {
+                try {
+                    await this.orm.call("ir.module.module", "button_immediate_install", [
+                        [Number(snippet.moduleId)],
+                    ]);
+                    // TODO Need to Reload webclient
+                    // this._onSaveRequest({
+                    //     data: {
+                    //         reloadWebClient: true,
+                    //     },
+                    // });
+                } catch (e) {
+                    if (e instanceof RPCError) {
+                        const message = escape(_t("Could not install module %s", snippet.title));
+                        this.notification.add(message, {
+                            type: "danger",
+                            sticky: true,
+                        });
+                        return;
+                    }
+                    throw e;
+                }
+            },
+            confirmLabel: _t("Save and Install"),
+            cancel: () => {},
+        });
+    }
+}
+
+registry.category("lazy_components").add("website.Builder", Builder);

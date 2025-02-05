@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.LayoutOption">
+    <BuilderRow label="'Layout'">
+       <BuilderButtonGroup>
+            <Button label="'Grid'" onClick.bind="setGridLayout" isActive="state.elementLayout === 'grid'" />
+            <Button label="'Column'" onClick.bind="setColumnLayout"  isActive="state.elementLayout === 'column'" />
+        </BuilderButtonGroup>
+        <t t-if="state.elementLayout === 'column'">
+            <Dropdown>
+                <button class="btn btn-primary mx-1" t-att-title="props.title">
+                    <t class="px-1" t-out="state.columnCount"/>
+                </button>
+                <t t-set-slot="content">
+                    <t t-foreach="[1, 2, 3, 4, 5, 6]" t-as="column" t-key="column_index">
+                        <DropdownItem onSelected="() => this.changeColumnCount(column)">
+                            <div class="user-select-none">
+                                <t t-out="column"/>
+                            </div>
+                        </DropdownItem>
+                    </t>
+                </t>
+            </Dropdown>
+        </t>
+    </BuilderRow>
+    <t t-if="state.elementLayout === 'grid'">
+        <AddElementOption />
+        <SpacingOption />
+    </t>
+    <t t-else="">
+        <BuilderContext applyTo="'.row'">
+            <t t-call="html_builder.VerticalAlignmentOption">
+                <t t-set="level" t-value="1"/>
+            </t>
+        </BuilderContext>
+    </t>
+</t>
+
+</templates>

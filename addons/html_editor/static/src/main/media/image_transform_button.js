@@ -7,6 +7,7 @@ export class ImageTransformButton extends Component {
     static template = "html_editor.ImageTransformButton";
     static props = {
         icon: String,
+        title: String,
         getSelectedImage: Function,
         resetImageTransformation: Function,
         addStep: Function,

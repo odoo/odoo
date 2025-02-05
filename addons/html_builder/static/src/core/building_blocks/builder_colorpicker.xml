@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BuilderColorPicker">
+    <BuilderComponent>
+        <div>
+            <ColorSelector
+                type="this.colorType"
+                getSelectedColors='() => this.currentColors'
+                getUsedCustomColors='() => []'
+                applyColor="onCommit"
+                applyColorPreview="onPreview"
+                applyColorResetPreview="onRevert"
+                focusEditable='() => this.env.editor.shared.selection.focusEditable()'>
+                <div class="o_we_color_preview" t-ref="colorButton" />
+            </ColorSelector>
+        </div>
+    </BuilderComponent>
+</t>
+
+</templates>
