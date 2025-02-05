@@ -1754,15 +1754,8 @@ test(`reset local state when switching to another view`, async () => {
 test.tags("desktop");
 test(`trying to leave an invalid form view should not change the navbar`, async () => {
     defineMenus([
-        {
-            id: "root",
-            children: [
-                { id: 1, children: [], name: "App0", appID: 1, xmlid: "menu_1", actionID: 1 },
-                { id: 2, children: [], name: "App1", appID: 2, xmlid: "menu_2", actionID: 2 },
-            ],
-            name: "root",
-            appID: "root",
-        },
+        { id: 1, name: "App0", actionID: 1 },
+        { id: 2, name: "App1", actionID: 2 },
     ]);
 
     defineActions([
