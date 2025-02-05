@@ -228,6 +228,11 @@ export class WebClient extends Component {
                         this.clearServiceWorkerCache = () => {
                             registration.active.postMessage({ type: "CLEAR-CACHES" });
                         };
+                        if (!navigator.serviceWorker.controller) {
+                            console.log("hard reload => invalidate caches");
+                            this.clearServiceWorkerCache();
+                            // https://stackoverflow.com/questions/51597231/register-service-worker-after-hard-refresh
+                        }
                         navigator.serviceWorker.addEventListener("message", (event) => {
                             if (event.data.type === "ACTUAL_RPC_RESULT") {
                                 rpcBus.trigger("RPC:ACTUAL_RESPONSE", {
