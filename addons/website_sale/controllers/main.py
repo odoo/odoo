@@ -1119,10 +1119,35 @@ class WebsiteSale(payment_portal.PaymentPortal):
             callback = callback or '/shop/checkout'
 
         self._handle_extra_form_data(extra_form_data, address_values)
+        self._format_form_phone_numbers(partner_sudo)
 
         return json.dumps({
             'successUrl': callback,
         })
+
+    def _format_form_phone_numbers(self, partner_id):
+        """
+         Format the mobile and phone numbers to international format.
+
+         The method attempts to format both mobile and phone numbers if they exist.
+         If formatting fails, it falls back to the original number.
+
+         Returns:
+         None. The method updates the mobile and phone fields in place.
+         """
+        ResPartner = request.env['res.partner']
+        if not partner_id or not hasattr(ResPartner, '_phone_format'):  # The `phone_validation` module is installed.:
+            return
+
+        try:
+            if partner_id.mobile:
+                partner_id.mobile = partner_id._phone_format(fname='mobile', country=partner_id.country_id, force_format='INTERNATIONAL') or partner_id.mobile
+
+            if partner_id.phone:
+                partner_id.phone = partner_id._phone_format(fname='phone', country=partner_id.country_id, force_format='INTERNATIONAL') or partner_id.phone
+        except Exception:
+            # ignored, so as not to stop the flow
+            pass
 
     def _prepare_address_update(self, order_sudo, partner_id=None, address_type=None):
         """ Find the partner whose address to update and return it along with its address type.
