@@ -165,8 +165,8 @@ test("handle switching view and switching back on slow network", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "web_search_read",
         "has_group",
+        "web_search_read",
         "web_search_read",
     ]);
 
@@ -232,10 +232,10 @@ test("execute a new action while loading a lazy-loaded controller", async () => 
         "get_views",
         "web_read",
         "web_search_read",
+        "has_group",
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 
     // unblock the switch to Kanban in action 4
@@ -390,6 +390,7 @@ test("execute a new action while loading views", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
+        "has_group",
     ]);
 });
 
@@ -701,9 +702,7 @@ test("local state, global state, and race conditions", async () => {
             this.id = id++;
             expect.step(this.props.state || "no state");
             useSetupAction({
-                getLocalState: () => {
-                    return { fromId: this.id };
-                },
+                getLocalState: () => ({ fromId: this.id }),
             });
             onWillStart(() => def);
         }
