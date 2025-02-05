@@ -8,7 +8,7 @@ registry.category("website_custom_menus").add("website_links.menu_link_tracker",
         debugger;
         const mainObject = website.currentWebsite.metadata.mainObject;
         const isPage = mainObject.model === "website.page";
-        const model = "link.tracker.dialog";
+        const model = "link.tracker";
         return {
             resModel: model,
             onRecordSaved: async (record) => {

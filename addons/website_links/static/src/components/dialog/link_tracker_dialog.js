@@ -42,7 +42,7 @@ export class LinkTrackerDialog extends FormViewDialog {
             resModel: this.resModel,
             context: Object.assign(
                 {
-                    form_view_ref: "website_links.link_tracker_dialog_view_form",
+                    form_view_ref: "website_links.link_tracker_view_form",
                 },
                 this.viewProps.context
             ),

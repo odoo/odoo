@@ -11,15 +11,33 @@
         </field>
     </record>
 
-    <record id="link_tracker_dialog_view_form" model="ir.ui.view">
-        <field name="name">link.tracker.dialog.form.view</field>
-        <field name="model">link.tracker.dialog</field>
+    <record id="link_tracker_view_form" model="ir.ui.view">
+        <field name="name">link.tracker.form.view</field>
+        <field name="model">link.tracker</field>
         <field name="arch" type="xml">
             <form js_class="link_tracker_dialog_form">
                 <group class="mt-4">
                     <div class="o_row">
-                        <field name="url" string="url"/>
-                        <field name="name" string="name"/>
+                        <label for="url" string="url"/>
+                        <field name="url"/>
+                    </div>
+                </group>
+                <group>
+                    <div class="o_row">
+                        <label for="campaign_id" string="campaign_id"/>
+                        <field name="campaign_id"/>
+                    </div>
+                </group>
+                <group>
+                    <div class="o_row">
+                        <label for="medium_id" string="medium_id"/>
+                        <field name="medium_id"/>
+                    </div>
+                </group>
+                <group>
+                    <div class="o_row">
+                        <label for="source_id" string="source_id"/>
+                        <field name="source_id"/>
                     </div>
                 </group>
             </form>
