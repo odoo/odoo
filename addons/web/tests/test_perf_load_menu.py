@@ -18,7 +18,7 @@ class TestPerfSessionInfo(common.HttpCase):
         self.authenticate(user.login, "info")
 
         self.env.registry.clear_all_caches()
-        # cold ormcache (only web: 42, all module: 117)
+        # cold ormcache (only web: 37, all module: 117)
         with self.assertQueryCount(117):
             self.url_open(
                 "/web/session/get_session_info",
@@ -26,7 +26,7 @@ class TestPerfSessionInfo(common.HttpCase):
                 headers={"Content-Type": "application/json"},
             )
 
-        # cold fields cache - warm ormcache (only web: 6, all module: 25)
+        # cold fields cache - warm ormcache (only web: 5, all module: 25)
         with self.assertQueryCount(25):
             self.url_open(
                 "/web/session/get_session_info",
