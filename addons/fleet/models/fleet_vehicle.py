@@ -436,3 +436,12 @@ class FleetVehicle(models.Model):
                 'default_vehicle_ids': self.ids,
             }
         }
+
+    def action_open_odometer_report(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id('fleet.fleet_vehicle_odometer_reporting_action')
+        action.update({
+            'domain': [('vehicle_id', '=', self.id)],
+            'context': {'search_default_groupby_date': True},
+        })
+        return action
