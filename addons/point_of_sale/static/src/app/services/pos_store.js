@@ -34,7 +34,6 @@ import { CashMovePopup } from "@point_of_sale/app/components/popups/cash_move_po
 import { ClosePosPopup } from "@point_of_sale/app/components/popups/closing_popup/closing_popup";
 import { SelectionPopup } from "../components/popups/selection_popup/selection_popup";
 import { user } from "@web/core/user";
-import { fuzzyLookup } from "@web/core/utils/search";
 import { unaccent } from "@web/core/utils/strings";
 import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
 import { debounce } from "@web/core/utils/timing";
@@ -2260,17 +2259,18 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     getProductsBySearchWord(searchWord, products) {
-        const exactMatches = products.filter((product) => product.exactMatch(searchWord));
+        const words = searchWord.toLowerCase();
+        const exactMatches = products.filter((product) => product.exactMatch(words));
 
-        if (exactMatches.length > 0 && searchWord.length > 2) {
+        if (exactMatches.length > 0 && words.length > 2) {
             return exactMatches;
         }
 
-        const fuzzyMatches = fuzzyLookup(unaccent(searchWord, false), products, (product) =>
-            unaccent(product.searchString, false)
+        const matches = products.filter((p) =>
+            unaccent(p.searchString, false).toLowerCase().includes(words)
         );
 
-        return Array.from(new Set([...exactMatches, ...fuzzyMatches]));
+        return Array.from(new Set([...exactMatches, ...matches]));
     }
 
     getPaymentMethodDisplayText(pm, order) {
