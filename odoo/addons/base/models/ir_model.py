@@ -1873,7 +1873,7 @@ class IrModelConstraint(models.Model):
             if not conname or not module:
                 _logger.warning("Missing module or constraint name for %s", cons)
                 continue
-            definition = cons.definition
+            definition = cons.get_definition(model.pool)
             message = cons.message
             if not isinstance(message, str) or not message:
                 message = None
