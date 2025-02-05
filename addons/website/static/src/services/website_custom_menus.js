@@ -11,9 +11,9 @@ import { PagePropertiesDialog } from "@website/components/dialog/page_properties
  * are not client actions.
  */
 export const websiteCustomMenus = {
-    dependencies: ["website", "orm", "dialog", "ui", "menu"],
-    start(env, { website, orm, dialog, ui, menu }) {
-        const services = { website, orm, dialog, ui };
+    dependencies: ["website", "orm", "dialog", "ui", "menu", "notification"],
+    start(env, { website, orm, dialog, ui, menu, notification }) {
+        const services = { website, orm, dialog, ui, notification };
         return {
             get(xmlId) {
                 return registry.category("website_custom_menus").get(xmlId, null);
