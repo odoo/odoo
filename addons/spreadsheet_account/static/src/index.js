@@ -14,7 +14,7 @@ featurePluginRegistry.add("odooAccountingAggregates", AccountingPlugin);
 cellMenuRegistry.add("move_lines_see_records", {
     name: _t("See records"),
     sequence: 176,
-    async execute(env) {
+    async execute(env, newWindow) {
         const position = env.model.getters.getActivePosition();
         const sheetId = position.sheetId;
         const cell = env.model.getters.getCell(position);
@@ -64,7 +64,7 @@ cellMenuRegistry.add("move_lines_see_records", {
             "spreadsheet_move_line_action",
             param
         );
-        await env.services.action.doAction(action);
+        await env.services.action.doAction(action, { newWindow });
     },
     isVisible: (env) => {
         const position = env.model.getters.getActivePosition();
