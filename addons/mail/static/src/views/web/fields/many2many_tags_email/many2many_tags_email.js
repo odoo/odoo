@@ -98,7 +98,7 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
                 this.openMany2xRecord({
                     resId: record.resId,
                     context: this.props.context,
-                    title: _t("Edit: %s", record.data.display_name),
+                    title: _t("Edit: %s", record.data.name),
                 })
             );
         }
@@ -139,6 +139,7 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
      */
     getTagProps(record) {
         return {...super.getTagProps(record),
+            text: record.data.name,
             onClick: (ev) => this.onTagClick(ev, record),
         };
     }
@@ -152,7 +153,7 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
             return this.openMany2xRecord({
                 resId: record.resId,
                 context: this.props.context,
-                title: _t("Edit: %s", record.data.display_name),
+                title: _t("Edit: %s", record.data.name),
             });
         }
     }
@@ -177,9 +178,11 @@ export const fieldMany2ManyTagsEmail = {
         props.canEditTags = options.edit_tags ? hasEditPermission : false;
         return props;
     },
-    relatedFields: (fieldInfo) => {
-        return [...many2ManyTagsField.relatedFields(fieldInfo), { name: "email", type: "char" }];
-    },
+    relatedFields: (fieldInfo) => [
+        ...many2ManyTagsField.relatedFields(fieldInfo),
+        { name: "email", type: "char" },
+        { name: "name", type: "char" },
+    ],
     additionalClasses: ["o_field_many2many_tags"],
 };
 
