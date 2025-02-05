@@ -319,7 +319,7 @@ export class PosOrder extends Base {
                     };
                 }
                 line.setHasChange(false);
-                line.saved_quantity = line.getQuantity();
+                line.uiState.savedQuantity = line.getQuantity();
             }
         });
         // Checks whether an orderline has been deleted from the order since it
@@ -731,7 +731,7 @@ export class PosOrder extends Base {
         const taxDetails = {};
         for (const line of lines) {
             for (const taxData of line.allPrices.taxesData) {
-                const taxId = taxData.id;
+                const taxId = taxData.tax.id;
                 if (!taxDetails[taxId]) {
                     taxDetails[taxId] = Object.assign({}, taxData, {
                         amount: 0.0,

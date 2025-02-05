@@ -1248,8 +1248,11 @@ export class PosStore extends WithLazyGetterTrap {
             if (data["pos.session"].length > 0) {
                 // Replace the original session by the rescue one. And the rescue one will have
                 // a higher id than the original one since it's the last one created.
-                const session = this.models["pos.session"].sort((a, b) => a.id - b.id)[0];
-                session.delete();
+                const sessions = this.models["pos.session"].getAll().sort((a, b) => b.id - a.id);
+                if (sessions.length > 1) {
+                    const sessionToDelete = sessions.slice(0, -1);
+                    this.models["pos.session"].deleteMany(sessionToDelete);
+                }
                 this.models["pos.order"]
                     .getAll()
                     .filter((order) => order.state === "draft")
@@ -1535,7 +1538,7 @@ export class PosStore extends WithLazyGetterTrap {
         } else if (!order.nb_print) {
             order.nb_print = 0;
         }
-        return res;
+        return result;
     }
     get printOptions() {
         return { webPrintFallback: true };
@@ -2198,6 +2201,7 @@ export class PosStore extends WithLazyGetterTrap {
         // _pos_special_products_ids are product.product so we need to get their product template
         const specialProductsTemplates = this.models["product.product"]
             .readMany(this.session._pos_special_products_ids)
+            .filter((product) => Boolean(product)) // Remove undefined values (archived products)
             .map((product) => product.product_tmpl_id.id);
 
         const excludedProductIds = [this.config.tip_product_id?.id, ...specialProductsTemplates];

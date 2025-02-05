@@ -98,7 +98,7 @@ patch(PosStore.prototype, {
             }
 
             destOrder.uiState.unmerge[uuid] = {
-                table_id: sourceOrder.table_id?.id,
+                table_id: sourceOrder?.table_id?.id,
                 quantity: orphanLine.qty,
             };
 
@@ -109,8 +109,8 @@ patch(PosStore.prototype, {
             }
         }
 
-        await this.deleteOrders([sourceOrder], [], true);
-        await this.syncAllOrders({ orders: [destOrder] });
+        this.deleteOrders([sourceOrder], [], true);
+        this.syncAllOrders({ orders: [destOrder] });
         return destOrder;
     },
     async restoreOrdersToOriginalTable(order, unmergeTable) {
@@ -496,7 +496,7 @@ patch(PosStore.prototype, {
             order.origin_table_id = originalTable?.id;
             order.table_id = destinationTable;
             this.setOrder(order);
-            this.addPendingOrder([order.id]);
+            this.syncAllOrders({ orders: [order] });
             return false;
         }
         return true;
