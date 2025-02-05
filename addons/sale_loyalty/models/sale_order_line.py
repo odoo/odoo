@@ -125,3 +125,9 @@ class SaleOrderLine(models.Model):
 
     def _sellable_lines_domain(self):
         return super()._sellable_lines_domain() + [('reward_id', '=', False)]
+
+    def _get_order_line_price(self, price_type):
+        return sum(self._get_order_lines_with_price().mapped(price_type))
+
+    def _get_order_lines_with_price(self):
+        return self.linked_line_ids if self.product_type == 'combo' else self
