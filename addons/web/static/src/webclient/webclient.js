@@ -7,9 +7,66 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { ActionContainer } from "./actions/action_container";
 import { NavBar } from "./navbar/navbar";
 
-import { Component, onMounted, onWillStart, useExternalListener, useState } from "@odoo/owl";
+import { Component, onMounted, onWillStart, xml, useExternalListener, useState } from "@odoo/owl";
 import { router, routerBus } from "@web/core/browser/router";
 import { browser } from "@web/core/browser/browser";
+import { rpcBus } from "@web/core/network/rpc";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { CheckBox } from "@web/core/checkbox/checkbox";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { debounce } from "@web/core/utils/timing";
+
+const CACHEABLE_ROUTES = {
+    actions: "/web/action/load", // FIXME: matched load_beadcrumbs
+    views: /^\/web\/dataset\/call_kw\/[^/]+\/get_views$/,
+    web_search_read: /^\/web\/dataset\/call_kw\/[^/]+\/web_search_read$/,
+    web_read: /^\/web\/dataset\/call_kw\/[^/]+\/web_read$/,
+    // /\/web\/dataset\/call_kw\/[^/]+\/web_read_group/,
+    // /\/web\/dataset\/call_kw\/[^/]+\/read_progress_bar/,
+};
+const cachedRoutes = JSON.parse(browser.localStorage.getItem("cached_routes") || "[]");
+
+class Cache extends Component {
+    static props = [];
+    static template = xml`
+        <Dropdown>
+            <button class="py-1 py-lg-0">
+                Cache
+            </button>
+            <t t-set-slot="content">
+                <t t-foreach="Object.keys(CACHEABLE_ROUTES)" t-as="route" t-key="route_index">
+                    <DropdownItem>
+                        <CheckBox
+                            value="selectedRoutes.has(route)"
+                            className="'form-switch d-flex flex-row-reverse justify-content-between p-0 w-100'"
+                            onChange="() => this.toggle(route)"
+                        >
+                            <t t-out="route"/>
+                        </CheckBox>
+                    </DropdownItem>
+                </t>
+            </t>
+        </Dropdown>`;
+    static components = { Dropdown, DropdownItem, CheckBox };
+    CACHEABLE_ROUTES = CACHEABLE_ROUTES;
+
+    setup() {
+        this.selectedRoutes = new Set(cachedRoutes);
+        this.reload = debounce(() => browser.location.reload(), 1000);
+    }
+
+    toggle(route) {
+        if (this.selectedRoutes.has(route)) {
+            this.selectedRoutes.delete(route);
+        } else {
+            this.selectedRoutes.add(route);
+        }
+        browser.localStorage.setItem("cached_routes", JSON.stringify([...this.selectedRoutes]));
+        this.render();
+        this.reload();
+    }
+}
+registry.category("systray").add("cache", { Component: Cache }, { sequence: 9999 });
 
 export class WebClient extends Component {
     static template = "web.WebClient";
@@ -46,13 +103,16 @@ export class WebClient extends Component {
         });
         useBus(this.env.bus, "WEBCLIENT:LOAD_DEFAULT_APP", this._loadDefaultApp);
         onMounted(() => {
-            this.loadRouterState();
+            console.log("wc mounted");
+            this.loadRouterState().then(() => console.log("router state loaded"));
             // the chat window and dialog services listen to 'web_client_ready' event in
             // order to initialize themselves:
             this.env.bus.trigger("WEB_CLIENT_READY");
         });
         useExternalListener(window, "click", this.onGlobalClick, { capture: true });
         onWillStart(this.registerServiceWorker);
+
+        useBus(this.env.bus, "CLEAR-CACHES", () => this.clearServiceWorkerCache?.());
     }
 
     async loadRouterState() {
@@ -112,6 +172,7 @@ export class WebClient extends Component {
             // If no action => falls back to the default app
             await this._loadDefaultApp();
         }
+        console.timeEnd("webclient startup");
     }
 
     _loadDefaultApp() {
@@ -141,10 +202,47 @@ export class WebClient extends Component {
         }
     }
 
-    registerServiceWorker() {
+    async registerServiceWorker() {
+        router.addLockedKey("nocache");
+        if ("nocache" in router.current) {
+            document.body.style["border-bottom"] = "4px solid red";
+            return;
+        }
         if (navigator.serviceWorker) {
+            console.log("sw available!");
+            // (await navigator.serviceWorker.getRegistration()).unregister(); // TO TRY
             navigator.serviceWorker
                 .register("/web/service-worker.js", { scope: "/odoo" })
+                .then(() => {
+                    navigator.serviceWorker.ready.then((registration) => {
+                        console.log("sw ready!");
+                        registration.active.postMessage({
+                            type: "INITIALIZE-CACHES",
+                            version: odoo.info.server_version,
+                            cachedRoutes: cachedRoutes.map((key) => CACHEABLE_ROUTES[key]),
+                        });
+                        this.clearServiceWorkerCache = () => {
+                            registration.active.postMessage({ type: "CLEAR-CACHES" });
+                        };
+                        if (!navigator.serviceWorker.controller) {
+                            console.log("hard reload => invalidate caches");
+                            this.clearServiceWorkerCache();
+                            // https://stackoverflow.com/questions/51597231/register-service-worker-after-hard-refresh
+                        }
+                        navigator.serviceWorker.addEventListener("message", (event) => {
+                            if (event.data.type === "ACTUAL_RPC_RESULT") {
+                                rpcBus.trigger("RPC:ACTUAL_RESPONSE", {
+                                    id: event.data.id,
+                                    result: event.data.result,
+                                });
+                                // this.env.bus.trigger("CLEAR-CACHES"); // FIXME: loop
+                                // this.env.services.notification.add("Consider reloading the page", {
+                                //     title: "Client out of date",
+                                // });
+                            }
+                        });
+                    });
+                })
                 .catch((error) => {
                     console.error("Service worker registration failed, error:", error);
                 });

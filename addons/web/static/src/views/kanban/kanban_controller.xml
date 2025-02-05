@@ -32,6 +32,9 @@
                 </t>
                 <t t-set-slot="control-panel-additional-actions">
                     <CogMenu/>
+                    <t t-if="model.root._config.cached">
+                        <i class="fa fa-solid fa-spinner fa-spin m-auto"/>
+                    </t>
                 </t>
                 <t t-set-slot="layout-actions">
                     <SearchBar toggler="searchBarToggler"/>
