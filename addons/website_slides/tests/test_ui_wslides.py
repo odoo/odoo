@@ -14,6 +14,12 @@ from odoo.tools.misc import file_open
 
 class TestUICommon(HttpCaseGamification, HttpCaseWithUserPortal):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # remove demo data
+        cls.env["slide.channel"].search([]).unlink()
+
     def setUp(self):
         super().setUp()
         self.env.ref('gamification.rank_student').description_motivational = """
