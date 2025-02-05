@@ -1,7 +1,12 @@
 import { Plugin } from "../plugin";
 import { isBlock } from "../utils/blocks";
 import { fillEmpty, splitTextNode } from "../utils/dom";
-import { isTextNode, isVisible } from "../utils/dom_info";
+import {
+    isContentEditable,
+    isContentEditableAncestor,
+    isTextNode,
+    isVisible,
+} from "../utils/dom_info";
 import { prepareUpdate } from "../utils/dom_state";
 import { childNodes, closestElement, firstLeaf, lastLeaf } from "../utils/dom_traversal";
 import { DIRECTIONS, childNodeIndex, nodeSize } from "../utils/position";
@@ -19,7 +24,7 @@ import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
  */
 
 export class SplitPlugin extends Plugin {
-    static dependencies = ["selection", "history", "input", "delete", "lineBreak"];
+    static dependencies = ["baseContainer", "selection", "history", "input", "delete", "lineBreak"];
     static id = "split";
     static shared = [
         "splitBlock",
@@ -46,7 +51,27 @@ export class SplitPlugin extends Plugin {
             // "Unbreakable" is a legacy term that means unsplittable and
             // unmergeable.
             (node) => node.classList?.contains("oe_unbreakable"),
-            (node) => ["DIV", "SECTION"].includes(node.nodeName),
+            (node) => {
+                const isExplicitlyNotContentEditable = (node) => {
+                    // In the `contenteditable` attribute consideration,
+                    // disconnected nodes can be unsplittable only if they are
+                    // explicitly set under a contenteditable="false" element.
+                    return (
+                        !isContentEditable(node) &&
+                        (node.isConnected || closestElement(node, "[contenteditable]"))
+                    );
+                };
+                return (
+                    isExplicitlyNotContentEditable(node) ||
+                    // If node sets contenteditable='true' and is inside a non-editable
+                    // context, it has to be unsplittable since splitting it would modify
+                    // the non-editable parent content.
+                    (node.parentElement &&
+                        isContentEditableAncestor(node) &&
+                        isExplicitlyNotContentEditable(node.parentElement))
+                );
+            },
+            (node) => node.nodeName === "SECTION",
         ],
     };
 
