@@ -778,19 +778,14 @@ patch(PosStore.prototype, {
         return course;
     },
     async fireCourse(course) {
-        const order = this.getOrder();
-        if (!order || !course || course.fired) {
-            return false;
-        }
+        const order = course.order_id;
         course.fired = true;
-        this.addPendingOrder([order.id]);
         order.deselectCourse();
-        await this.syncAllOrders();
-        course = this.models["restaurant.order.course"].getBy("uuid", course.uuid);
-        await this._onCourseFired(course);
+        await this.sendOrderInPreparation(order, { firedCourseId: course.id, byPassPrint: true });
+        await this.printCourseTicket(course);
         return true;
     },
-    async _onCourseFired(course) {
+    async printCourseTicket(course) {
         try {
             const changes = {
                 new: [],
