@@ -26,8 +26,7 @@ const moveUpOrDown = {
 const moveLeftOrRight = {
     selector: [
         ".row:not(.s_col_no_resize) > div",
-        ".nav-item",
-        ".s_timeline_card", // timeline TODO custom function, other plugin ?
+        ".nav-item", // TODO specific plugin
     ].join(", "),
     exclude: ".s_showcase .row .row > div",
 };

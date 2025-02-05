@@ -1,9 +1,15 @@
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+
+function isTimelineCard(el) {
+    return el.matches(".s_timeline_card");
+}
 
 class TimelineOptionPlugin extends Plugin {
     static id = "TimelineOption";
+    static dependencies = ["history"];
     resources = {
         builder_options: [
             withSequence(5, {
@@ -23,18 +29,38 @@ class TimelineOptionPlugin extends Plugin {
             selector: ".s_timeline_row",
             dropNear: ".s_timeline_row",
         },
+        has_overlay_options: (el) => isTimelineCard(el),
+        get_overlay_buttons: withSequence(0, this.getActiveOverlayButtons.bind(this)),
     };
-}
 
-// TODO add in overlayButton
-/* <xpath expr="." position="inside">
-    <div data-selector=".s_timeline_row" data-drop-near=".s_timeline_row"/>
-    <div data-js="Timeline" data-selector=".s_timeline_card">
-        <we-button data-timeline-card="" data-no-preview="true" class="o_we_overlay_opt"><i class="fa fa-fw fa-angle-left"/><i class="fa fa-fw fa-angle-right"/></we-button>
-    </div>
-</xpath>
-<xpath expr="//div[@data-js='SnippetMove'][contains(@data-selector,'section')]" position="attributes">
-    <attribute name="data-selector" add=".s_timeline_row" separator=","/>
-</xpath> */
+    getActiveOverlayButtons(target) {
+        if (!isTimelineCard(target)) {
+            this.overlayTarget = null;
+            return [];
+        }
+
+        this.overlayTarget = target;
+        const timelineRowEl = this.overlayTarget.closest(".s_timeline_row");
+        const firstContentEl = timelineRowEl.querySelector(".s_timeline_content");
+        const hasPreviousCard = !firstContentEl.contains(this.overlayTarget);
+        const direction = hasPreviousCard ? "left" : "right";
+        return [
+            {
+                class: `fa fa-fw fa-angle-${direction}`,
+                title: _t("Move %s", direction),
+                handler: this.moveTimelineCard.bind(this),
+            },
+        ];
+    }
+
+    moveTimelineCard() {
+        const timelineRowEl = this.overlayTarget.closest(".s_timeline_row");
+        const timelineCardEls = timelineRowEl.querySelectorAll(".s_timeline_card");
+        const firstContentEl = timelineRowEl.querySelector(".s_timeline_content");
+        timelineRowEl.append(firstContentEl);
+        timelineCardEls.forEach((card) => card.classList.toggle("text-md-end"));
+        this.dependencies.history.addStep();
+    }
+}
 
 registry.category("website-plugins").add(TimelineOptionPlugin.id, TimelineOptionPlugin);
