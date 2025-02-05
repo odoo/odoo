@@ -283,6 +283,7 @@ class AnimateOption extends Component {
         this.state = useDomState((editingElement) => {
             const hasAnimateClass = editingElement.classList.contains("o_animate");
             return {
+                isOptionActive: this.isOptionActive(editingElement),
                 hasAnimateClass: hasAnimateClass,
                 canHover: editingElement.tagName === "IMG",
                 isLimitedAnimation: this.limitedAnimations.some((className) =>
@@ -310,6 +311,13 @@ class AnimateOption extends Component {
         ];
     }
 
+    isOptionActive(editingElement) {
+        if (editingElement.matches("img")) {
+            return isImageSupportedForStyle(editingElement);
+        }
+        return true;
+    }
+
     shouldShowIntensity(editingElement, hasAnimateClass) {
         if (!hasAnimateClass) {
             return false;
@@ -332,4 +340,28 @@ class AnimateOption extends Component {
 
 function intersect(a, b) {
     return a.filter((value) => b.includes(value));
+}
+
+/**
+ * @param {HTMLImageElement} img
+ * @returns {Boolean}
+ */
+export function isImageSupportedForStyle(img) {
+    if (!img.parentElement) {
+        return false;
+    }
+
+    // See also `[data-oe-type='image'] > img` added as data-exclude of some
+    // snippet options.
+    const isTFieldImg = "oeType" in img.parentElement.dataset;
+
+    // Editable root elements are technically *potentially* supported here (if
+    // the edited attributes are not computed inside the related view, they
+    // could technically be saved... but as we cannot tell the computed ones
+    // apart from the "static" ones, we choose to not support edition at all in
+    // those "root" cases).
+    // See also `[data-oe-xpath]` added as data-exclude of some snippet options.
+    const isEditableRootElement = "oeXpath" in img.dataset;
+
+    return !isTFieldImg && !isEditableRootElement;
 }

@@ -1,6 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
+import { animationFrame, queryFirst } from "@odoo/hoot-dom";
 
 defineWebsiteModels();
 
@@ -203,6 +204,42 @@ test("image should not be lazy onAppearance", async () => {
     await contains(".o-dropdown--menu [data-action-value='']").click();
 
     expect(":iframe .test-options-target img").toHaveProperty("loading", "auto");
+});
+
+test("should not show the animation options if the image has a parent [data-oe-type='image']", async () => {
+    const { getEditor } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            <img src='${base64Img}'>
+        </div>
+    `);
+    const editor = getEditor();
+    await contains(":iframe .test-options-target img").click();
+
+    await animationFrame();
+    expect(".options-container [data-label='Animation'] .dropdown-toggle").toBeVisible();
+    const optionTarget = queryFirst(":iframe .test-options-target");
+    optionTarget.setAttribute("data-oe-type", "image");
+    editor.shared.history.addStep();
+    await animationFrame();
+    expect(".options-container [data-label='Animation'] .dropdown-toggle").not.toBeVisible();
+});
+
+test("should not show the animation options if the image has is [data-oe-xpath]", async () => {
+    const { getEditor } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            <img src='${base64Img}'>
+        </div>
+    `);
+    const editor = getEditor();
+    await contains(":iframe .test-options-target img").click();
+
+    await animationFrame();
+    expect(".options-container [data-label='Animation'] .dropdown-toggle").toBeVisible();
+    const optionTarget = queryFirst(":iframe .test-options-target img");
+    optionTarget.setAttribute("data-oe-xpath", "/foo/bar");
+    editor.shared.history.addStep();
+    await animationFrame();
+    expect(".options-container [data-label='Animation'] .dropdown-toggle").not.toBeVisible();
 });
 
 test("o_animate should be normalized with loading=eager", async () => {
