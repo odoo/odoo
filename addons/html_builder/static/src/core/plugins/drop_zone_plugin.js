@@ -1,5 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { isBlock } from "@html_editor/utils/blocks";
+import { _t } from "@web/core/l10n/translation";
 import { closest, touching } from "@web/core/utils/ui";
 
 function filterFunction(el, exclude) {
@@ -35,8 +36,12 @@ export class DropZonePlugin extends Plugin {
     static dependencies = ["history"];
     static shared = ["displayDropZone", "dragElement", "clearDropZone", "getAddElement"];
 
+    // Elements in which the initial dropzone can appear.
+    static editableContentsSelector = '.oe_structure.oe_empty, [data-oe-type="html"]';
+
     resources = {
         savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
+        normalize_handlers: this.updateEmptyDropZone.bind(this),
     };
 
     setup() {
@@ -89,6 +94,36 @@ export class DropZonePlugin extends Plugin {
         };
     }
 
+    /**
+     * Return the element(s) where the initial area to drag & drop snippets
+     * should appear.
+     */
+    get editableContentEls() {
+        return Array.from(
+            this.editable.querySelectorAll(this.constructor.editableContentsSelector)
+        ).filter((el) => {
+            const parent = el.closest(".o_editable, .o_not_editable");
+            return !parent || parent.classList.contains("o_editable");
+        });
+    }
+
+    /**
+     * Return the initial drop zone(s) which show a message to start dropping
+     * snippets.
+     */
+    get emptyDropZoneEls() {
+        return this.editableContentEls
+            .map((el) => el.querySelector(".oe_drop_zone.oe_insert[data-editor-message]"))
+            .filter((el) => el);
+    }
+
+    createDropZone() {
+        const dropZone = this.document.createElement("div");
+        dropZone.className = "oe_drop_zone oe_insert";
+        this.dropZoneElements.push(dropZone);
+        return dropZone;
+    }
+
     displayDropZone(snippet) {
         this.clearDropZone();
 
@@ -100,20 +135,16 @@ export class DropZonePlugin extends Plugin {
         }
         targets.push(...selectorSiblings);
 
-        const createDropZone = () => {
-            const dropZone = this.document.createElement("div");
-            dropZone.className = "oe_drop_zone oe_insert";
-            this.dropZoneElements.push(dropZone);
-            return dropZone;
-        };
-
+        if (this.emptyDropZoneEls.length) {
+            return;
+        }
         for (const target of targets) {
             if (!target.nextElementSibling?.classList.contains("oe_drop_zone")) {
-                target.after(createDropZone());
+                target.after(this.createDropZone());
             }
 
             if (!target.previousElementSibling?.classList.contains("oe_drop_zone")) {
-                target.before(createDropZone());
+                target.before(this.createDropZone());
             }
         }
     }
@@ -126,6 +157,22 @@ export class DropZonePlugin extends Plugin {
         }
 
         this.dropZoneElements = [];
+        this.updateEmptyDropZone();
+    }
+
+    updateEmptyDropZone() {
+        const emptyEditableContentEls = this.editableContentEls.filter((el) =>
+            el.matches(":empty")
+        );
+        if (emptyEditableContentEls.length) {
+            emptyEditableContentEls.forEach((el) => {
+                const emptyDropZoneEl = this.createDropZone();
+                emptyDropZoneEl.dataset.editorMessage = _t("DRAG BUILDING BLOCKS HERE");
+                el.appendChild(emptyDropZoneEl);
+            });
+        } else {
+            this.emptyDropZoneEls.forEach((el) => el.remove());
+        }
     }
 
     dragElement(element) {
@@ -141,26 +188,52 @@ export class DropZonePlugin extends Plugin {
         }
     }
 
+    /**
+     * @param {Object} [position] - set if drag & drop, not set if click
+     * @param {Number} position.x
+     * @param {Number} position.y
+     * @returns {Function}
+     */
     getAddElement(position) {
+        const cancel = () => {
+            this.clearDropZone();
+            return () => {};
+        };
+        // Drag & drop over sidebar: cancel the action.
+        if (position && !touching([this.document.body], position).length) {
+            // TODO: do we want that key with an empty function? Or should we
+            // check everytime we call getAddElement if the result is undefined
+            // before continuing?
+            cancel.noDrop = true;
+            return cancel;
+        }
         const dropZone = position
-            ? closest(touching(this.dropZoneElements, position), position)
+            ? closest(touching(this.dropZoneElements, position), position) ||
+              closest(this.dropZoneElements, position)
             : closest(this.dropZoneElements, {
                   x: window.innerWidth / 2,
                   y: window.innerHeight / 2,
               });
         if (!dropZone) {
-            this.clearDropZone();
-            return () => {};
+            return cancel();
         }
-        let target = dropZone.previousSibling;
-        let addAfter = true;
+
+        let target, insertMethod;
+        if (this.emptyDropZoneEls.includes(dropZone)) {
+            insertMethod = "appendChild";
+            target = dropZone.parentElement;
+        }
         if (!target) {
-            addAfter = false;
+            insertMethod = "after";
+            target = dropZone.previousSibling;
+        }
+        if (!target) {
+            insertMethod = "before";
             target = dropZone.nextSibling;
         }
         this.clearDropZone();
         return (elementToAdd) => {
-            addAfter ? target.after(elementToAdd) : target.before(elementToAdd);
+            target[insertMethod](elementToAdd);
             scrollToWindow(elementToAdd, { behavior: "smooth", offset: 50 });
             this.dependencies.history.addStep();
         };

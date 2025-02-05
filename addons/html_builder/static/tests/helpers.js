@@ -18,6 +18,7 @@ import { uniqueId } from "@web/core/utils/functions";
 import { WebClient } from "@web/webclient/webclient";
 import { getWebsiteSnippets } from "./snippets_getter.hoot";
 import { Plugin } from "@html_editor/plugin";
+import { DropZonePlugin } from "@html_builder/core/plugins/drop_zone_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 
 class Website extends models.Model {
@@ -62,6 +63,7 @@ export async function setupWebsiteBuilder(
         pyEnv["website"].create({});
     }
     let editor;
+    let editableContent;
     await mountWithCleanup(WebClient);
     let resolveIframeLoaded = () => {};
     const iframeLoaded = new Promise((resolve) => {
@@ -108,6 +110,13 @@ export async function setupWebsiteBuilder(
         },
     });
 
+    patchWithCleanup(DropZonePlugin.prototype, {
+        setup() {
+            super.setup();
+            editableContent = this.editableContentEls[0];
+        },
+    });
+
     if (snippets) {
         patchWithCleanup(IrUiView.prototype, {
             render_public_asset: () => getSnippetView(snippets),
@@ -115,7 +124,7 @@ export async function setupWebsiteBuilder(
     }
 
     const iframe = queryOne("iframe[data-src^='/website/force/1']");
-    iframe.contentDocument.body.innerHTML = `<div id="wrapwrap">${websiteContent}</div>`;
+    iframe.contentDocument.body.innerHTML = `<div id="wrapwrap"><div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${websiteContent}</div></div>`;
     if (loadIframeBundles) {
         loadBundle("html_builder.inside_builder_style", {
             targetDoc: iframe.contentDocument,
@@ -130,7 +139,10 @@ export async function setupWebsiteBuilder(
     if (openEditor) {
         await openBuilderSidebar();
     }
-    return { getEditor: () => editor };
+    return {
+        getEditor: () => editor,
+        getEditableContent: () => editableContent,
+    };
 }
 
 export async function openBuilderSidebar() {
@@ -141,10 +153,6 @@ export async function openBuilderSidebar() {
     // linked to the setTimeout in the WebsiteBuilder component
     await advanceTime(200);
     await animationFrame();
-}
-
-export function getEditable(inWrap) {
-    return `<div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${inWrap}</div>`;
 }
 
 export function addOption({
@@ -233,8 +241,8 @@ export function addDropZoneSelector(selector) {
     });
 }
 
-export async function modifyText(editor) {
-    setContent(editor.editable, getEditable('<h1 class="title">H[]ello</h1>'));
+export async function modifyText(editor, editableContent) {
+    setContent(editableContent, '<h1 class="title">H[]ello</h1>');
     editor.shared.history.addStep();
     await insertText(editor, "1");
 }
@@ -280,3 +288,26 @@ export function getInnerContent({
 
 export const dummyBase64Img =
     "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
+
+export async function setupWebsiteBuilderWithDummySnippet(content) {
+    const snippetContent = `<section class="s_test" data-snippet="s_test" data-name="Test">
+        <div class="test_a"></div>
+    </section>`;
+    const snippetsDescription = () => [{ name: "Test", groupName: "a", content: snippetContent }];
+    const snippetsStructure = {
+        snippets: {
+            snippet_groups: [
+                '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
+            ],
+            snippet_structure: snippetsDescription().map((snippetDesc) =>
+                getSnippetStructure(snippetDesc)
+            ),
+        },
+    };
+    const { getEditor, getEditableContent } = await setupWebsiteBuilder(
+        content || "",
+        snippetsStructure
+    );
+
+    return { getEditor, getEditableContent, snippetContent };
+}
