@@ -22428,6 +22428,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             canvas.width = width * dpr;
             canvas.height = height * dpr;
             canvas.setAttribute("style", `width:${width}px;height:${height}px;`);
+            if (width === 0 || height === 0) {
+                return;
+            }
             // Imagine each pixel as a large square. The whole-number coordinates (0, 1, 2…)
             // are the edges of the squares. If you draw a one-unit-wide line between whole-number
             // coordinates, it will overlap opposite sides of the pixel square, and the resulting
@@ -34631,10 +34634,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const { ctx, thinLineWidth } = renderingContext;
             const visibleCols = this.getters.getSheetViewVisibleCols();
             const left = visibleCols[0];
-            const right = visibleCols[visibleCols.length - 1];
             const visibleRows = this.getters.getSheetViewVisibleRows();
             const top = visibleRows[0];
-            const bottom = visibleRows[visibleRows.length - 1];
             const { width, height } = this.getters.getSheetViewDimensionWithHeaders();
             const selection = this.getters.getSelectedZones();
             const selectedCols = getZonesCols(selection);
@@ -34650,7 +34651,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             ctx.lineWidth = thinLineWidth;
             ctx.strokeStyle = "#333";
             // Columns headers background
-            for (let col = left; col <= right; col++) {
+            for (const col of visibleCols) {
                 const colZone = { left: col, right: col, top: 0, bottom: numberOfRows - 1 };
                 const { x, width } = this.getters.getVisibleRect(colZone);
                 const colHasFilter = this.getters.doesZonesContainFilter(sheetId, [colZone]);
@@ -34670,7 +34671,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 ctx.fillRect(x, 0, width, HEADER_HEIGHT);
             }
             // Rows headers background
-            for (let row = top; row <= bottom; row++) {
+            for (const row of visibleRows) {
                 const rowZone = { top: row, bottom: row, left: 0, right: numberOfCols - 1 };
                 const { y, height } = this.getters.getVisibleRect(rowZone);
                 const rowHasFilter = this.getters.doesZonesContainFilter(sheetId, [rowZone]);
@@ -34699,21 +34700,21 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             ctx.stroke();
             ctx.beginPath();
             // column text + separator
-            for (const i of visibleCols) {
-                const colSize = this.getters.getColSize(sheetId, i);
-                const colName = numberToLetters(i);
-                ctx.fillStyle = activeCols.has(i) ? "#fff" : TEXT_HEADER_COLOR;
-                let colStart = this.getHeaderOffset("COL", left, i);
+            for (const col of visibleCols) {
+                const colSize = this.getters.getColSize(sheetId, col);
+                const colName = numberToLetters(col);
+                ctx.fillStyle = activeCols.has(col) ? "#fff" : TEXT_HEADER_COLOR;
+                let colStart = this.getHeaderOffset("COL", left, col);
                 ctx.fillText(colName, colStart + colSize / 2, HEADER_HEIGHT / 2);
                 ctx.moveTo(colStart + colSize, 0);
                 ctx.lineTo(colStart + colSize, HEADER_HEIGHT);
             }
             // row text + separator
-            for (const i of visibleRows) {
-                const rowSize = this.getters.getRowSize(sheetId, i);
-                ctx.fillStyle = activeRows.has(i) ? "#fff" : TEXT_HEADER_COLOR;
-                let rowStart = this.getHeaderOffset("ROW", top, i);
-                ctx.fillText(String(i + 1), HEADER_WIDTH / 2, rowStart + rowSize / 2);
+            for (const row of visibleRows) {
+                const rowSize = this.getters.getRowSize(sheetId, row);
+                ctx.fillStyle = activeRows.has(row) ? "#fff" : TEXT_HEADER_COLOR;
+                let rowStart = this.getHeaderOffset("ROW", top, row);
+                ctx.fillText(String(row + 1), HEADER_WIDTH / 2, rowStart + rowSize / 2);
                 ctx.moveTo(0, rowStart + rowSize);
                 ctx.lineTo(HEADER_WIDTH, rowStart + rowSize);
             }
@@ -36801,8 +36802,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.getters = getters;
             this.sheetId = sheetId;
             this.boundaries = boundaries;
-            this.viewportWidth = sizeInGrid.width;
-            this.viewportHeight = sizeInGrid.height;
+            if (sizeInGrid.width < 0 || sizeInGrid.height < 0) {
+                throw new Error("Viewport size cannot be negative");
+            }
+            this.viewportWidth = sizeInGrid.height && sizeInGrid.width;
+            this.viewportHeight = sizeInGrid.width && sizeInGrid.height;
+            this.top = boundaries.top;
+            this.bottom = boundaries.bottom;
+            this.left = boundaries.left;
+            this.right = boundaries.right;
+            this.offsetX = offsets.x;
+            this.offsetY = offsets.y;
             this.offsetScrollbarX = offsets.x;
             this.offsetScrollbarY = offsets.y;
             this.canScrollVertically = options.canScrollVertically;
@@ -36991,6 +37001,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         // PRIVATE
         searchHeaderIndex(dimension, position, startIndex = 0, absolute = false) {
+            if (this.viewportWidth <= 0 || this.viewportHeight <= 0) {
+                return -1;
+            }
             let size = 0;
             const sheetId = this.sheetId;
             const headers = this.getters.getNumberHeaders(sheetId, dimension);
@@ -37029,7 +37042,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.adjustViewportZoneY();
         }
         /** Corrects the viewport's horizontal offset based on the current structure
-         *  To make sure that at least on column is visible inside the viewport.
+         *  To make sure that at least one column is visible inside the viewport.
          */
         adjustViewportOffsetX() {
             if (this.canScrollHorizontally) {
@@ -37046,7 +37059,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.adjustViewportZoneX();
         }
         /** Corrects the viewport's vertical offset based on the current structure
-         *  To make sure that at least on row is visible inside the viewport.
+         *  To make sure that at least one row is visible inside the viewport.
          */
         adjustViewportOffsetY() {
             if (this.canScrollVertically) {
@@ -37068,11 +37081,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const sheetId = this.sheetId;
             this.left = this.searchHeaderIndex("COL", this.offsetScrollbarX, this.boundaries.left);
             this.right = Math.min(this.boundaries.right, this.searchHeaderIndex("COL", this.viewportWidth, this.left));
+            if (!this.viewportWidth) {
+                return;
+            }
             if (this.left === -1) {
                 this.left = this.boundaries.left;
             }
             if (this.right === -1) {
-                this.right = this.getters.getNumberCols(sheetId) - 1;
+                this.right = this.boundaries.right;
             }
             this.offsetX =
                 this.getters.getColDimensions(sheetId, this.left).start -
@@ -37084,11 +37100,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const sheetId = this.sheetId;
             this.top = this.searchHeaderIndex("ROW", this.offsetScrollbarY, this.boundaries.top);
             this.bottom = Math.min(this.boundaries.bottom, this.searchHeaderIndex("ROW", this.viewportHeight, this.top));
+            if (!this.viewportHeight) {
+                return;
+            }
             if (this.top === -1) {
                 this.top = this.boundaries.top;
             }
             if (this.bottom === -1) {
-                this.bottom = this.getters.getNumberRows(sheetId) - 1;
+                this.bottom = this.boundaries.bottom;
             }
             this.offsetY =
                 this.getters.getRowDimensions(sheetId, this.top).start -
@@ -37340,12 +37359,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         getSheetViewVisibleCols() {
             const sheetId = this.getters.getActiveSheetId();
             const viewports = this.getSubViewports(sheetId);
-            return [...new Set(viewports.map((v) => range(v.left, v.right + 1)).flat())].filter((col) => !this.getters.isHeaderHidden(sheetId, "COL", col));
+            return [...new Set(viewports.map((v) => range(v.left, v.right + 1)).flat())].filter((col) => col >= 0 && !this.getters.isHeaderHidden(sheetId, "COL", col));
         }
         getSheetViewVisibleRows() {
             const sheetId = this.getters.getActiveSheetId();
             const viewports = this.getSubViewports(sheetId);
-            return [...new Set(viewports.map((v) => range(v.top, v.bottom + 1)).flat())].filter((row) => !this.getters.isHeaderHidden(sheetId, "ROW", row));
+            return [...new Set(viewports.map((v) => range(v.top, v.bottom + 1)).flat())].filter((row) => row >= 0 && !this.getters.isHeaderHidden(sheetId, "ROW", row));
         }
         /**
          * Return the main viewport maximum size relative to the client size.
@@ -37368,19 +37387,19 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 maxOffsetY: Math.max(0, height - viewport.viewportHeight + 1),
             };
         }
-        getColRowOffsetInViewport(dimension, referenceIndex, index) {
-            const sheetId = this.getters.getActiveSheetId();
-            const visibleCols = this.getters.getSheetViewVisibleCols();
-            const visibleRows = this.getters.getSheetViewVisibleRows();
-            if (index < referenceIndex) {
-                return -this.getColRowOffsetInViewport(dimension, index, referenceIndex);
+        getColRowOffsetInViewport(dimension, referenceHeaderIndex, targetHeaderIndex) {
+            if (targetHeaderIndex < referenceHeaderIndex) {
+                return -this.getColRowOffsetInViewport(dimension, targetHeaderIndex, referenceHeaderIndex);
             }
+            const sheetId = this.getters.getActiveSheetId();
+            const visibleHeaders = dimension === "COL"
+                ? this.getters.getSheetViewVisibleCols()
+                : this.getters.getSheetViewVisibleRows();
+            const startIndex = visibleHeaders.findIndex((header) => referenceHeaderIndex >= header);
+            const endIndex = visibleHeaders.findIndex((header) => targetHeaderIndex <= header);
+            const relevantIndexes = visibleHeaders.slice(startIndex, endIndex);
             let offset = 0;
-            const visibleIndexes = dimension === "COL" ? visibleCols : visibleRows;
-            for (let i = referenceIndex; i < index; i++) {
-                if (!visibleIndexes.includes(i)) {
-                    continue;
-                }
+            for (const i of relevantIndexes) {
                 offset +=
                     dimension === "COL"
                         ? this.getters.getColSize(sheetId, i)
@@ -37430,7 +37449,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             return { canEdgeScroll, direction, delay };
         }
-        getEdgeScrollRow(y, previousY, tartingY) {
+        getEdgeScrollRow(y, previousY, startingY) {
             let canEdgeScroll = false;
             let direction = 0;
             let delay = 0;
@@ -37451,7 +37470,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 delay = scrollDelay(y - height);
                 direction = 1;
             }
-            else if (y < offsetCorrectionY && tartingY >= offsetCorrectionY && currentOffsetY > 0) {
+            else if (y < offsetCorrectionY && startingY >= offsetCorrectionY && currentOffsetY > 0) {
                 // 2
                 canEdgeScroll = true;
                 delay = scrollDelay(offsetCorrectionY - y);
@@ -37470,13 +37489,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          */
         getVisibleRect(zone) {
             const sheetId = this.getters.getActiveSheetId();
-            const viewportRects = this.getSubViewports(sheetId)
-                .map((viewport) => viewport.getVisibleRect(zone))
-                .filter(isDefined$1);
-            if (viewportRects.length === 0) {
-                return { x: 0, y: 0, width: 0, height: 0 };
-            }
-            return this.recomposeRect(viewportRects);
+            return this.mapViewportsToRect(sheetId, (viewport) => viewport.getVisibleRect(zone));
         }
         /**
          * Computes the actual size and position (:Rect) of the zone on the canvas
@@ -37484,13 +37497,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          */
         getRect(zone) {
             const sheetId = this.getters.getActiveSheetId();
-            const viewportRects = this.getSubViewports(sheetId)
-                .map((viewport) => viewport.getFullRect(zone))
-                .filter(isDefined$1);
-            if (viewportRects.length === 0) {
-                return { x: 0, y: 0, width: 0, height: 0 };
-            }
-            return this.recomposeRect(viewportRects);
+            return this.mapViewportsToRect(sheetId, (viewport) => viewport.getFullRect(zone));
         }
         /**
          * Returns the position of the MainViewport relatively to the start of the grid (without headers)
@@ -37559,12 +37566,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         /** gets rid of deprecated sheetIds */
         cleanViewports() {
-            const sheetIds = this.getters.getSheetIds();
-            for (let sheetId of Object.keys(this.viewports)) {
-                if (!sheetIds.includes(sheetId)) {
-                    delete this.viewports[sheetId];
-                }
+            const newViewport = {};
+            for (const sheetId of this.getters.getSheetIds()) {
+                newViewport[sheetId] = this.viewports[sheetId];
             }
+            this.viewports = newViewport;
         }
         resetSheetViews() {
             this.cleanViewports();
@@ -37585,14 +37591,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.recomputeViewports();
         }
         recomputeViewports() {
-            for (let sheetId of Object.keys(this.viewports)) {
+            for (const sheetId of this.getters.getSheetIds()) {
                 this.resetViewports(sheetId);
             }
         }
         setSheetViewOffset(offsetX, offsetY) {
             const sheetId = this.getters.getActiveSheetId();
             const { maxOffsetX, maxOffsetY } = this.getMaximumSheetOffset();
-            Object.values(this.getSubViewports(sheetId)).forEach((viewport) => viewport.setViewportOffset(clip(offsetX, 0, maxOffsetX), clip(offsetY, 0, maxOffsetY)));
+            this.getSubViewports(sheetId).forEach((viewport) => viewport.setViewportOffset(clip(offsetX, 0, maxOffsetX), clip(offsetY, 0, maxOffsetY)));
         }
         getViewportOffset(sheetId) {
             var _a, _b;
@@ -37608,8 +37614,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const { xSplit, ySplit } = this.getters.getPaneDivisions(sheetId);
             const nCols = this.getters.getNumberCols(sheetId);
             const nRows = this.getters.getNumberRows(sheetId);
-            const colOffset = this.getters.getColRowOffset("COL", 0, xSplit, sheetId);
-            const rowOffset = this.getters.getColRowOffset("ROW", 0, ySplit, sheetId);
+            const colOffset = Math.min(this.getters.getColRowOffset("COL", 0, xSplit, sheetId), this.sheetViewWidth);
+            const rowOffset = Math.min(this.getters.getColRowOffset("ROW", 0, ySplit, sheetId), this.sheetViewHeight);
+            const unfrozenWidth = Math.max(this.sheetViewWidth - colOffset, 0);
+            const unfrozenHeight = Math.max(this.sheetViewHeight - rowOffset, 0);
             const { xRatio, yRatio } = this.getFrozenSheetViewRatio(sheetId);
             const canScrollHorizontally = xRatio < 1.0;
             const canScrollVertically = yRatio < 1.0;
@@ -37620,14 +37628,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     new InternalViewport(this.getters, sheetId, { left: 0, right: xSplit - 1, top: 0, bottom: ySplit - 1 }, { width: colOffset, height: rowOffset }, { canScrollHorizontally: false, canScrollVertically: false }, { x: 0, y: 0 })) ||
                     undefined,
                 topRight: (ySplit &&
-                    new InternalViewport(this.getters, sheetId, { left: xSplit, right: nCols - 1, top: 0, bottom: ySplit - 1 }, { width: this.sheetViewWidth - colOffset, height: rowOffset }, { canScrollHorizontally, canScrollVertically: false }, { x: canScrollHorizontally ? previousOffset.x : 0, y: 0 })) ||
+                    new InternalViewport(this.getters, sheetId, { left: xSplit, right: nCols - 1, top: 0, bottom: ySplit - 1 }, { width: unfrozenWidth, height: rowOffset }, { canScrollHorizontally, canScrollVertically: false }, { x: canScrollHorizontally ? previousOffset.x : 0, y: 0 })) ||
                     undefined,
                 bottomLeft: (xSplit &&
-                    new InternalViewport(this.getters, sheetId, { left: 0, right: xSplit - 1, top: ySplit, bottom: nRows - 1 }, { width: colOffset, height: this.sheetViewHeight - rowOffset }, { canScrollHorizontally: false, canScrollVertically }, { x: 0, y: canScrollVertically ? previousOffset.y : 0 })) ||
+                    new InternalViewport(this.getters, sheetId, { left: 0, right: xSplit - 1, top: ySplit, bottom: nRows - 1 }, { width: colOffset, height: unfrozenHeight }, { canScrollHorizontally: false, canScrollVertically }, { x: 0, y: canScrollVertically ? previousOffset.y : 0 })) ||
                     undefined,
                 bottomRight: new InternalViewport(this.getters, sheetId, { left: xSplit, right: nCols - 1, top: ySplit, bottom: nRows - 1 }, {
-                    width: this.sheetViewWidth - colOffset,
-                    height: this.sheetViewHeight - rowOffset,
+                    width: unfrozenWidth,
+                    height: unfrozenHeight,
                 }, { canScrollHorizontally, canScrollVertically }, {
                     x: canScrollHorizontally ? previousOffset.x : 0,
                     y: canScrollVertically ? previousOffset.y : 0,
@@ -37639,7 +37647,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * Adjust the viewport such that the anchor position is visible
          */
         refreshViewport(sheetId, anchorPosition) {
-            Object.values(this.getSubViewports(sheetId)).forEach((viewport) => {
+            this.getSubViewports(sheetId).forEach((viewport) => {
                 viewport.adjustViewportZone();
                 viewport.adjustPosition(anchorPosition);
             });
@@ -37690,16 +37698,30 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const height = this.sheetViewHeight + this.gridOffsetY;
             return { xRatio: offsetCorrectionX / width, yRatio: offsetCorrectionY / height };
         }
-        recomposeRect(viewportRects) {
-            const x = Math.min(...viewportRects.map((rect) => rect.x));
-            const y = Math.min(...viewportRects.map((rect) => rect.y));
-            const width = Math.max(...viewportRects.map((rect) => rect.x + rect.width)) - x;
-            const height = Math.max(...viewportRects.map((rect) => rect.y + rect.height)) - y;
+        mapViewportsToRect(sheetId, rectCallBack) {
+            let x = Infinity;
+            let y = Infinity;
+            let width = 0;
+            let height = 0;
+            let hasViewports = false;
+            for (const viewport of this.getSubViewports(sheetId)) {
+                const rect = rectCallBack(viewport);
+                if (rect) {
+                    hasViewports = true;
+                    x = Math.min(x, rect.x);
+                    y = Math.min(y, rect.y);
+                    width = Math.max(width, rect.x + rect.width);
+                    height = Math.max(height, rect.y + rect.height);
+                }
+            }
+            if (!hasViewports) {
+                return { x: 0, y: 0, width: 0, height: 0 };
+            }
             return {
                 x: x + this.gridOffsetX,
                 y: y + this.gridOffsetY,
-                width,
-                height,
+                width: width - x,
+                height: height - y,
             };
         }
     }
@@ -43567,9 +43589,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.59';
-    __info__.date = '2025-01-29T06:32:55.517Z';
-    __info__.hash = '0897f45';
+    __info__.version = '16.0.60';
+    __info__.date = '2025-02-05T07:20:03.554Z';
+    __info__.hash = 'd098699';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
