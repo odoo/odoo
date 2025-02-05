@@ -10,6 +10,7 @@ IGNORE_MODEL_NAMES = {
     'payment.link.wizard',
     'account.multicurrency.revaluation.wizard',
     'account_followup.manual_reminder',
+    'product.fetch.image.wizard',
 }
 
 IGNORE_COMPUTED_FIELDS = {

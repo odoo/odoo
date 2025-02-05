@@ -731,7 +731,7 @@ class ProductTemplate(models.Model):
         'Track Inventory', store=True, compute='compute_is_storable', readonly=False,
         default=False, precompute=True, help='A storable product is a product for which you manage stock.')
     responsible_id = fields.Many2one(
-        'res.users', string='Responsible', default=lambda self: self.env.uid, company_dependent=True, check_company=True,
+        'res.users', string='Responsible', default=lambda self: self._default_responsible(), company_dependent=True, check_company=True,
         help="This user will be responsible of the next activities related to logistic operations for this product.")
     property_stock_production = fields.Many2one(
         'stock.location', "Production Location",
@@ -791,6 +791,10 @@ class ProductTemplate(models.Model):
     show_on_hand_qty_status_button = fields.Boolean(compute='_compute_show_qty_status_button')
     show_forecasted_qty_status_button = fields.Boolean(compute='_compute_show_qty_status_button')
     show_qty_update_button = fields.Boolean(compute='_compute_show_qty_update_button')
+
+    def _default_responsible(self):
+        # Return the current user unless it's OdooBot
+        return self.env.uid if self.env.uid != 1 else False
 
     @api.depends('type')
     def compute_is_storable(self):

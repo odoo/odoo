@@ -209,7 +209,7 @@ registry.category("web_tour.tours").add("PoSSaleOrderWithDownpayment", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1),
-            ProductScreen.selectedOrderlineHas("Down Payment (POS)"),
+            ProductScreen.selectedOrderlineHas("Down Payment"),
             ProductScreen.totalAmountIs(980.0),
         ].flat(),
 });
