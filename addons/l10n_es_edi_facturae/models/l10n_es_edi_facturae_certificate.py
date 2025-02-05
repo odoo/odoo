@@ -76,10 +76,13 @@ class Certificate(models.Model):
         rfc4514_attr = dict(element.rfc4514_string().split("=", 1) for element in cert_public.issuer.rdns)
 
         # The 'Organizational Unit' field is optional
+        issuer = f"CN={rfc4514_attr.pop('CN')}, "
         if 'OU' in rfc4514_attr:
-            issuer = f"CN={rfc4514_attr['CN']}, OU={rfc4514_attr['OU']}, O={rfc4514_attr['O']}, C={rfc4514_attr['C']}"
-        else:
-            issuer = f"CN={rfc4514_attr['CN']}, O={rfc4514_attr['O']}, C={rfc4514_attr['C']}"
+            issuer += f"OU={rfc4514_attr.pop('OU')}, "
+        issuer += f"O={rfc4514_attr.pop('O')}, C={rfc4514_attr.pop('C')}"
+
+        # Add remaining certificate fields (not all certificates have other fields)
+        issuer += "".join([f", {key}={value}" for key, value in rfc4514_attr.items()])
 
         # Identifiers
         document_id = f"Document-{sha1(etree.tostring(edi_data)).hexdigest()}"
