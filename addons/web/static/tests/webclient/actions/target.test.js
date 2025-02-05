@@ -655,10 +655,9 @@ describe("fullscreen", () => {
         ]);
         defineMenus([
             {
-                id: "root",
-                children: [{ id: 1, children: [], name: "MAIN APP", appID: 1, actionID: 6 }],
-                name: "root",
-                appID: "root",
+                id: 1,
+                name: "MAIN APP",
+                actionID: 6,
             },
         ]);
         Partner._views["form,false"] = `

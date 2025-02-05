@@ -122,17 +122,9 @@ defineActions([
 ]);
 
 defineMenus([
-    {
-        id: "root",
-        name: "root",
-        appID: "root",
-        children: [
-            // id:0 is a hack to not load anything at webClient mount
-            { id: 0, children: [], name: "UglyHack", appID: 0, xmlid: "menu_0" },
-            { id: 1, children: [], name: "App1", appID: 1, actionID: 1001, xmlid: "menu_1" },
-            { id: 2, children: [], name: "App2", appID: 2, actionID: 1002, xmlid: "menu_2" },
-        ],
-    },
+    { id: 0 }, // prevents auto-loading the first action
+    { id: 1, actionID: 1001 },
+    { id: 2, actionID: 1002 },
 ]);
 
 class Partner extends models.Model {
@@ -706,32 +698,6 @@ describe(`new urls`, () => {
     test(`properly load records with existing first APP`, async () => {
         // simulate a real scenario with a first app (e.g. Discuss), to ensure that we don't
         // fallback on that first app when only a model and res_id are given in the url
-        defineActions([
-            {
-                id: "root",
-                name: "root",
-                appID: "root",
-                children: [
-                    {
-                        id: 1,
-                        children: [],
-                        name: "App1",
-                        appID: 1,
-                        actionID: 1001,
-                        xmlid: "menu_1",
-                    },
-                    {
-                        id: 2,
-                        children: [],
-                        name: "App2",
-                        appID: 2,
-                        actionID: 1002,
-                        xmlid: "menu_2",
-                    },
-                ],
-            },
-        ]);
-
         redirect("/odoo/m-partner/2");
         logHistoryInteractions();
         stepAllNetworkCalls();
@@ -949,15 +915,7 @@ describe(`new urls`, () => {
     });
 
     test(`load state supports being given menu_id alone`, async () => {
-        defineMenus([
-            {
-                id: 666,
-                children: [],
-                name: "App1",
-                appID: 1,
-                actionID: 1,
-            },
-        ]);
+        defineMenus([{ id: 666, actionID: 1 }]);
 
         redirect("/odoo?menu_id=666");
         logHistoryInteractions();
@@ -1687,35 +1645,6 @@ describe(`legacy urls`, () => {
     test(`properly load records with existing first APP`, async () => {
         // simulate a real scenario with a first app (e.g. Discuss), to ensure that we don't
         // fallback on that first app when only a model and res_id are given in the url
-        defineActions(
-            [
-                {
-                    id: "root",
-                    name: "root",
-                    appID: "root",
-                    children: [
-                        {
-                            id: 1,
-                            children: [],
-                            name: "App1",
-                            appID: 1,
-                            actionID: 1001,
-                            xmlid: "menu_1",
-                        },
-                        {
-                            id: 2,
-                            children: [],
-                            name: "App2",
-                            appID: 2,
-                            actionID: 1002,
-                            xmlid: "menu_2",
-                        },
-                    ],
-                },
-            ],
-            { mode: "replace" }
-        );
-
         redirect("/web#id=2&model=partner");
         stepAllNetworkCalls();
 
@@ -1858,9 +1787,7 @@ describe(`legacy urls`, () => {
         defineMenus([
             {
                 id: 666,
-                children: [],
                 name: "App1",
-                appID: 1,
                 actionID: 1,
             },
         ]);
