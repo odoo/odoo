@@ -23,11 +23,6 @@ export class ConfirmationPage extends Component {
 
         onMounted(() => {
             if (this.selfOrder.config.self_ordering_mode === "kiosk") {
-                setTimeout(() => {
-                    this.setDefautLanguage();
-                }, 5000);
-
-                //TODO check this, I'm not sure this is a good idea to set a timeout to print instead of just printing at the end of the initOrder method when we are sure we have an order
                 this.defaultTimeout = setTimeout(() => {
                     this.router.navigate("default");
                 }, 30000);
@@ -37,7 +32,7 @@ export class ConfirmationPage extends Component {
             () => {
                 this.printOrder();
             },
-            () => [this.confirmedOrder.uiState.receiptReady]
+            () => [this.confirmedOrder?.uiState?.receiptReady]
         );
         onWillUnmount(() => {
             clearTimeout(this.defaultTimeout);
@@ -82,8 +77,8 @@ export class ConfirmationPage extends Component {
         }
 
         this.state.onReload = false;
-        this.confirmedOrder.uiState.receiptReady = await this.beforePrintOrder();
-        await this.printOrder();
+        this.confirmedOrder.uiState.receiptReady = this.beforePrintOrder();
+        this.printOrder();
     }
 
     canPrintReceipt() {
@@ -94,7 +89,7 @@ export class ConfirmationPage extends Component {
         );
     }
 
-    async beforePrintOrder() {
+    beforePrintOrder() {
         // meant to be overriden.
         return true;
     }
@@ -138,7 +133,7 @@ export class ConfirmationPage extends Component {
     }
 
     backToHome() {
-        if (!this.setDefautLanguage()) {
+        if (this.confirmedOrder.uiState.receiptReady && !this.setDefautLanguage()) {
             this.router.navigate("default");
         }
     }

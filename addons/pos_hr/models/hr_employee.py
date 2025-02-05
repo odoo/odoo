@@ -14,7 +14,7 @@ class HrEmployee(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        config_id = self.env['pos.config'].browse(data['pos.config']['data'][0]['id'])
+        config_id = self.env['pos.config'].browse(data['pos.config'][0]['id'])
         return config_id._employee_domain(config_id.current_user_id.id)
 
     @api.model
