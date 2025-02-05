@@ -6,7 +6,7 @@
             <head>
                 <meta charset="UTF-8"/>
                 <title>Speedscope for odoo</title>
-                <script t-if="profile">window.location.hash="#profileURL=<t t-esc="url_root"/>web/content/ir.profile/<t t-esc="profile.id"/>/speedscope?<t t-esc="search_params"/>"</script>
+                <script>window.location.hash="#localProfilePath=1"</script>
                 <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet"/>
                 <link rel="stylesheet"
                     t-attf-href="{{cdn}}reset.8c46b7a1.css"
@@ -20,6 +20,12 @@
                     crossorigin="anonymous"
                     integrity="sha256-CvDqAOMjq0Sv/D59O5JSbzzXoClZ3rptt6ts8D/6CWw="
                 ></script>
+                <script>
+                const b64 = '<t t-esc="speedscope_base64"/>';
+                document.addEventListener("DOMContentLoaded", () => {
+                    speedscope.loadFileFromBase64('Profile', b64);
+                });
+                </script>
             </body>
         </html>
     </template>
