@@ -508,6 +508,7 @@ describe("color preview", () => {
     });
 
     test("should preview color in table on hover in solid tab", async () => {
+        const defaultTextColor = "color: rgb(55, 65, 81);";
         const { el } = await setupEditor(`
             <table class="table table-bordered o_table">
                 <tbody>
@@ -534,12 +535,12 @@ describe("color preview", () => {
             <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
-                        <td class="" style="background-color: rgb(206, 0, 0);">
+                        <td class="" style="background-color: rgb(206, 0, 0); ${defaultTextColor}">
                             <p>[<br></p>
                         </td>
                     </tr>
                     <tr>
-                        <td class="" style="background-color: rgb(206, 0, 0);">
+                        <td class="" style="background-color: rgb(206, 0, 0); ${defaultTextColor}">
                             <p>]<br></p>
                         </td>
                     </tr>
@@ -569,6 +570,7 @@ describe("color preview", () => {
     });
 
     test("should preview color in table on hover in custom tab", async () => {
+        const defaultTextColor = "color: rgb(55, 65, 81);";
         const { el } = await setupEditor(`
             <table class="table table-bordered o_table">
                 <tbody>
@@ -597,12 +599,12 @@ describe("color preview", () => {
             <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
-                        <td class="bg-black">
+                        <td class="bg-black" style="${defaultTextColor}">
                             <p>[<br></p>
                         </td>
                     </tr>
                     <tr>
-                        <td class="bg-black">
+                        <td class="bg-black" style="${defaultTextColor}">
                             <p>]<br></p>
                         </td>
                     </tr>
