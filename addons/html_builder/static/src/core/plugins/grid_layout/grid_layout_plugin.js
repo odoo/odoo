@@ -18,18 +18,18 @@ export class GridLayoutPlugin extends Plugin {
     };
 
     setup() {
-        this.target = null;
+        this.overlayTarget = null;
     }
 
     getActiveOverlayButtons(target) {
         if (!isGridItem(target)) {
-            this.target = null;
+            this.overlayTarget = null;
             return [];
         }
 
         const buttons = [];
-        this.target = target;
-        if (!isMobileView(this.target)) {
+        this.overlayTarget = target;
+        if (!isMobileView(this.overlayTarget)) {
             buttons.push(
                 {
                     class: "o_send_back",
@@ -47,25 +47,25 @@ export class GridLayoutPlugin extends Plugin {
     }
 
     sendGridItemToBack() {
-        const rowEl = this.target.parentNode;
-        const columnEls = [...rowEl.children].filter((el) => el !== this.target);
+        const rowEl = this.overlayTarget.parentNode;
+        const columnEls = [...rowEl.children].filter((el) => el !== this.overlayTarget);
         const minZindex = Math.min(...columnEls.map((el) => el.style.zIndex));
 
         // While the minimum z-index is not 0, it is OK to decrease it and to
         // set the column to it. Otherwise, the column is set to 0 and the
         // other columns z-index are increased by one.
         if (minZindex > 0) {
-            this.target.style.zIndex = minZindex - 1;
+            this.overlayTarget.style.zIndex = minZindex - 1;
         } else {
             columnEls.forEach((columnEl) => columnEl.style.zIndex++);
-            this.target.style.zIndex = 0;
+            this.overlayTarget.style.zIndex = 0;
         }
         this.dependencies.history.addStep();
     }
 
     bringGridItemToFront() {
-        const rowEl = this.target.parentNode;
-        setElementToMaxZindex(this.target, rowEl);
+        const rowEl = this.overlayTarget.parentNode;
+        setElementToMaxZindex(this.overlayTarget, rowEl);
         this.dependencies.history.addStep();
     }
 }

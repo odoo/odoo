@@ -74,23 +74,24 @@ export class MovePlugin extends Plugin {
     };
 
     setup() {
-        this.target = null;
+        this.overlayTarget = null;
         this.isMobileView = false;
         this.isGridItem = false;
     }
 
     getActiveOverlayButtons(target) {
         if (!isMovable(target)) {
-            this.target = null;
+            this.overlayTarget = null;
             return [];
         }
 
         const buttons = [];
-        this.target = target;
+        this.overlayTarget = target;
         this.refreshState();
         if (this.areArrowsDisplayed()) {
             if (this.hasPreviousSibling()) {
-                const direction = getMoveDirection(this.target) === "vertical" ? "up" : "left";
+                const direction =
+                    getMoveDirection(this.overlayTarget) === "vertical" ? "up" : "left";
                 const button = {
                     class: `fa fa-fw fa-angle-${direction}`,
                     title: _t("Move %s", direction),
@@ -99,7 +100,8 @@ export class MovePlugin extends Plugin {
                 buttons.push(button);
             }
             if (this.hasNextSibling()) {
-                const direction = getMoveDirection(this.target) === "vertical" ? "down" : "right";
+                const direction =
+                    getMoveDirection(this.overlayTarget) === "vertical" ? "down" : "right";
                 const button = {
                     class: `fa fa-fw fa-angle-${direction}`,
                     title: _t("Move %s", direction),
@@ -138,8 +140,8 @@ export class MovePlugin extends Plugin {
     }
 
     refreshState() {
-        this.isMobileView = isMobileView(this.target);
-        this.isGridItem = this.target.classList.contains("o_grid_item");
+        this.isMobileView = isMobileView(this.overlayTarget);
+        this.isGridItem = this.overlayTarget.classList.contains("o_grid_item");
     }
 
     // TODO check where to call it (SnippetMove > start).
@@ -148,7 +150,7 @@ export class MovePlugin extends Plugin {
     //     // If the target is a column, check if all the columns are either mobile
     //     // ordered or not. If they are not consistent, then we remove the mobile
     //     // order classes from all of them, to avoid issues.
-    //     const parentEl = this.target.parentElement;
+    //     const parentEl = this.overlayTarget.parentElement;
     //     if (parentEl.classList.contains("row")) {
     //         const columnEls = [...parentEl.children];
     //         const orderedColumnEls = columnEls.filter((el) => el.style.order);
@@ -159,9 +161,9 @@ export class MovePlugin extends Plugin {
     // }
 
     areArrowsDisplayed() {
-        const siblingsEl = [...this.target.parentNode.children];
+        const siblingsEl = [...this.overlayTarget.parentNode.children];
         const visibleSiblingEl = siblingsEl.find(
-            (el) => el !== this.target && window.getComputedStyle(el).display !== "none"
+            (el) => el !== this.overlayTarget && window.getComputedStyle(el).display !== "none"
         );
         // The arrows are not displayed if:
         // - the target is a grid item and not in mobile view
@@ -170,11 +172,11 @@ export class MovePlugin extends Plugin {
     }
 
     hasPreviousSibling() {
-        return !!getVisibleSibling(this.target, "prev");
+        return !!getVisibleSibling(this.overlayTarget, "prev");
     }
 
     hasNextSibling() {
-        return !!getVisibleSibling(this.target, "next");
+        return !!getVisibleSibling(this.overlayTarget, "next");
     }
 
     /**
@@ -184,15 +186,15 @@ export class MovePlugin extends Plugin {
      */
     onMoveClick(direction) {
         // TODO nav-item ? (=> specific plugin)
-        // const isNavItem = this.target.classList.contains("nav-item");
-        let hasMobileOrder = !!this.target.style.order;
-        const siblingEls = this.target.parentNode.children;
+        // const isNavItem = this.overlayTarget.classList.contains("nav-item");
+        let hasMobileOrder = !!this.overlayTarget.style.order;
+        const siblingEls = this.overlayTarget.parentNode.children;
 
         // If the target is a column, the ordering in mobile view is independent
         // from the desktop view. If we are in mobile view, we first add the
         // mobile order if there is none yet. In the case where we are not in
         // mobile view, the mobile order is reset.
-        const parentEl = this.target.parentNode;
+        const parentEl = this.overlayTarget.parentNode;
         if (this.isMobileView && parentEl.classList.contains("row") && !hasMobileOrder) {
             addMobileOrders(siblingEls);
             hasMobileOrder = true;
@@ -201,17 +203,17 @@ export class MovePlugin extends Plugin {
             hasMobileOrder = false;
         }
 
-        const siblingEl = getVisibleSibling(this.target, direction);
+        const siblingEl = getVisibleSibling(this.overlayTarget, direction);
         if (hasMobileOrder) {
             // Swap the mobile orders.
-            const currentOrder = this.target.style.order;
-            this.target.style.order = siblingEl.style.order;
+            const currentOrder = this.overlayTarget.style.order;
+            this.overlayTarget.style.order = siblingEl.style.order;
             siblingEl.style.order = currentOrder;
         } else {
             // Swap the DOM elements.
             siblingEl.insertAdjacentElement(
                 direction === "prev" ? "beforebegin" : "afterend",
-                this.target
+                this.overlayTarget
             );
         }
 

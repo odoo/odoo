@@ -20,17 +20,17 @@ export class ReplacePlugin extends Plugin {
     };
 
     setup() {
-        this.target = null;
+        this.overlayTarget = null;
     }
 
     getActiveOverlayButtons(target) {
         if (!isReplaceable(target)) {
-            this.target = null;
+            this.overlayTarget = null;
             return [];
         }
 
         const buttons = [];
-        this.target = target;
+        this.overlayTarget = target;
         buttons.push({
             class: "o_snippet_replace bg-warning fa fa-exchange",
             title: _t("Replace"),
@@ -40,9 +40,9 @@ export class ReplacePlugin extends Plugin {
     }
 
     async replaceSnippet() {
-        const newSnippet = await this.config.replaceSnippet(this.target);
+        const newSnippet = await this.config.replaceSnippet(this.overlayTarget);
         if (newSnippet) {
-            this.target = null;
+            this.overlayTarget = null;
             // TODO find a way to wait for the images to load before updating or
             // to trigger a refresh once the images are loaded afterwards.
             // If not possible, call updateContainers with nothing.

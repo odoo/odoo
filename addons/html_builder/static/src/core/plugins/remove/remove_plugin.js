@@ -41,22 +41,22 @@ export class RemovePlugin extends Plugin {
     static shared = ["removeElement"];
 
     setup() {
-        this.target = null;
+        this.overlayTarget = null;
     }
 
     getActiveOverlayButtons(target) {
         if (!isRemovable(target)) {
-            this.target = null;
+            this.overlayTarget = null;
             return [];
         }
 
         const buttons = [];
-        this.target = target;
+        this.overlayTarget = target;
         buttons.push({
             class: "oe_snippet_remove bg-danger fa fa-trash",
             title: _t("Remove"),
             handler: () => {
-                this.removeElement(this.target);
+                this.removeElement(this.overlayTarget);
                 this.dependencies.history.addStep();
             },
         });

@@ -16,7 +16,7 @@ export class ClonePlugin extends Plugin {
 
     // TODO find why the images should not have the clone buttons.
     setup() {
-        this.target = null;
+        this.overlayTarget = null;
     }
 
     getActions() {
@@ -33,15 +33,15 @@ export class ClonePlugin extends Plugin {
 
     getActiveOverlayButtons(target) {
         if (!isRemovable(target)) {
-            this.target = null;
+            this.overlayTarget = null;
             return [];
         }
         const buttons = [];
-        this.target = target;
+        this.overlayTarget = target;
         buttons.push({
             class: "o_snippet_clone fa fa-clone",
             title: _t("Duplicate"),
-            handler: () => this.cloneElement(this.target, { scrollToClone: true }),
+            handler: () => this.cloneElement(this.overlayTarget, { scrollToClone: true }),
         });
         return buttons;
     }
