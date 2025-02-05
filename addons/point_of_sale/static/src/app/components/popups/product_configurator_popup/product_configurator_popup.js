@@ -1,5 +1,5 @@
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, onMounted, useRef, useState, useSubEnv } from "@odoo/owl";
+import { Component, onMounted, useRef, useState, useSubEnv, useEffect } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useRefListener, useService } from "@web/core/utils/hooks";
 import { ProductInfoBanner } from "@point_of_sale/app/components/product_info_banner/product_info_banner";
@@ -128,7 +128,32 @@ export class ProductConfiguratorPopup extends Component {
             productTemplate: this.props.productTemplate,
             product: null,
             payload: this.env.attribute_components,
+            info: null,
         });
+
+        useEffect(
+            () => {
+                const fetchProductInfo = async () => {
+                    if (!this.props.productTemplate) {
+                        return;
+                    }
+
+                    try {
+                        const productInfo = await this.pos.getProductInfo(
+                            this.props.productTemplate,
+                            1
+                        );
+                        // Update state with fetched product info
+                        this.state.info = productInfo;
+                    } catch (error) {
+                        console.error("Error fetching product info:", error);
+                    }
+                };
+
+                fetchProductInfo(); // Call the async function inside useEffect
+            },
+            () => [this.props.productTemplate]
+        ); // Dependencies array: trigger when productTemplate changes
 
         useRefListener(this.inputArea, "touchend", this.computeProductProduct.bind(this));
         useRefListener(this.inputArea, "click", this.computeProductProduct.bind(this));
