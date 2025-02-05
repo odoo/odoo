@@ -37,6 +37,7 @@ import { user } from "@web/core/user";
 import { unaccent } from "@web/core/utils/strings";
 import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
 import { debounce } from "@web/core/utils/timing";
+import DevicesSynchronisation from "../utils/devices_synchronisation";
 
 const { DateTime } = luxon;
 
@@ -262,7 +263,6 @@ export class PosStore extends WithLazyGetterTrap {
     async initServerData() {
         await this.processServerData();
         this.data.connectWebSocket("CLOSING_SESSION", this.closingSessionNotification.bind(this));
-        this.data.connectWebSocket("SYNCHRONISATION", this.recordSynchronisation.bind(this));
         return await this.afterProcessServerData();
     }
 
@@ -303,82 +303,6 @@ export class PosStore extends WithLazyGetterTrap {
         }, 3000);
     }
 
-    async recordSynchronisation(data) {
-        if (odoo.debug === "assets") {
-            console.info("Incoming synchronisation", data);
-            console.info("Login number", odoo.login_number, data.login_number);
-            console.info("Session Ids", odoo.pos_session_id, data.session_id);
-        }
-
-        if (data.login_number === odoo.login_number || data.session_id !== odoo.pos_session_id) {
-            return;
-        }
-
-        const records = await this.data.call("pos.config", "get_records", [
-            odoo.pos_config_id,
-            data["records"],
-        ]);
-
-        const missing = await this.data.missingRecursive(records);
-        const toRemove = {};
-        const toCreate = {};
-        const toUpdate = {};
-
-        for (const [model, records] of Object.entries(missing)) {
-            toCreate[model] = [];
-            toUpdate[model] = [];
-
-            for (const record of records) {
-                const existingRec = this.models[model].get(record.id);
-                if (existingRec) {
-                    if (model === "pos.order" && existingRec.state === "draft") {
-                        // Verify if some subrecords are deleted
-                        const children = ["lines", "payment_ids"];
-                        for (const child of children) {
-                            const existingChild = existingRec[child];
-                            const recordChild = record[child];
-
-                            if (existingChild.length !== recordChild.length) {
-                                // We only delete server records, the local one will be synced later
-                                const toDelete = existingChild.filter(
-                                    (c) => !recordChild.includes(c.id) && typeof c.id === "number"
-                                );
-
-                                if (toDelete.length) {
-                                    const childModel = toDelete[0].model.name;
-                                    toRemove[childModel] = toRemove[childModel] || [];
-                                    toRemove[childModel].push(...toDelete);
-                                }
-                            }
-                        }
-                    } else if (model === "pos.order") {
-                        continue;
-                    }
-
-                    toUpdate[model].push(record);
-                } else {
-                    toCreate[model].push(record);
-                }
-            }
-        }
-
-        this.models.loadData(toCreate, [], false);
-        this.models.loadData(toUpdate, [], false, true);
-
-        for (const [model, records] of Object.entries(toRemove)) {
-            this.models[model].deleteMany(records, { silent: true });
-        }
-
-        if (
-            this.getOrder()?.finalized &&
-            !["TipScreen", "ReceiptScreen", "PaymentScreen"].includes(
-                this.mainScreen.component.name
-            )
-        ) {
-            this.addNewOrder();
-        }
-    }
-
     get session() {
         return this.data.models["pos.session"].get(odoo.pos_session_id);
     }
@@ -397,6 +321,16 @@ export class PosStore extends WithLazyGetterTrap {
             "": this.models["res.partner"].length,
         };
         this.models["pos.session"].getFirst().login_number = parseInt(odoo.login_number);
+
+        const models = Object.keys(this.models);
+        const dynamicModels = this.data.opts.dynamicModels;
+        const staticModels = models.filter((model) => !dynamicModels.includes(model));
+        const deviceSync = new DevicesSynchronisation(dynamicModels, staticModels, this);
+
+        this.deviceSync = deviceSync;
+        this.data.deviceSync = deviceSync;
+
+        await this.deviceSync.readDataFromServer();
 
         // Check cashier
         this.checkPreviousLoggedCashier();
@@ -1238,6 +1172,7 @@ export class PosStore extends WithLazyGetterTrap {
         return {
             config_id: this.config.id,
             login_number: odoo.login_number,
+            ...(options.context || {}),
         };
     }
 
@@ -1279,7 +1214,6 @@ export class PosStore extends WithLazyGetterTrap {
                 context,
             });
             const missingRecords = await this.data.missingRecursive(data);
-            this.data.dispatchData(missingRecords);
             const newData = this.models.loadData(missingRecords, [], false, true);
 
             for (const line of newData["pos.order.line"]) {
@@ -1612,22 +1546,11 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
     async sendOrderInPreparationUpdateLastChange(o, cancelled = false) {
-        // Always display a "ConnectionLostError" when the user tries to send an order to the kitchen while offline
         if (this.data.network.offline) {
             this.data.network.warningTriggered = false;
             throw new ConnectionLostError();
         }
-        this.addPendingOrder([o.id]);
-        const uuid = o.uuid;
-        const orders = await this.syncAllOrders({ orders: [o] });
-        const order = orders?.find((order) => order.uuid === uuid);
-
-        if (order) {
-            await this.sendOrderInPreparation(order, cancelled);
-            order.updateLastOrderChange();
-            this.addPendingOrder([order.id]);
-            await this.syncAllOrders();
-        }
+        await this.sendOrderInPreparation(o, cancelled);
     }
 
     async printChanges(order, orderChange, reprint = false) {

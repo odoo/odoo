@@ -327,6 +327,7 @@ registry.category("web_tour.tours").add("PoSPaymentSyncTour1", {
             ProductScreen.isShown(),
             ProductScreen.clickOrderButton(),
             ProductScreen.orderlinesHaveNoChange(),
+            Chrome.clickPlanButton(),
         ].flat(),
 });
 
@@ -348,6 +349,7 @@ registry.category("web_tour.tours").add("PoSPaymentSyncTour2", {
             ProductScreen.isShown(),
             ProductScreen.clickOrderButton(),
             ProductScreen.orderlinesHaveNoChange(),
+            Chrome.clickPlanButton(),
         ].flat(),
 });
 
@@ -368,6 +370,7 @@ registry.category("web_tour.tours").add("PoSPaymentSyncTour3", {
             ProductScreen.isShown(),
             ProductScreen.clickOrderButton(),
             ProductScreen.orderlinesHaveNoChange(),
+            Chrome.clickPlanButton(),
         ].flat(),
 });
 
