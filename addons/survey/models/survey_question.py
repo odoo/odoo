@@ -634,9 +634,20 @@ class SurveyQuestion(models.Model):
                 count_data[line.suggested_answer_id] += 1
 
         table_data = [{
+<<<<<<< saas-17.2
             'value': _('Other (see comments)') if not suggested_answer else suggested_answer.value_label,
             'suggested_answer': suggested_answer,
             'count': count_data[suggested_answer]
+||||||| d7036f82439b82c42ec8fb8076793ff817803367
+            'value': _('Other (see comments)') if not sug_answer else sug_answer.value,
+            'suggested_answer': sug_answer,
+            'count': count_data[sug_answer]
+=======
+            'value': _('Other (see comments)') if not sug_answer else sug_answer.value,
+            'suggested_answer': sug_answer,
+            'count': count_data[sug_answer],
+            'count_text': _("%s Votes", count_data[sug_answer]),
+>>>>>>> d6042341ff18a4fdffc5477d2bb5d84e5777e2db
             }
             for suggested_answer in suggested_answers]
         graph_data = [{
