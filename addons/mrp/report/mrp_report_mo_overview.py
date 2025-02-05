@@ -606,7 +606,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             return self._format_receipt_date('available')
 
         replenishments_with_date = list(filter(lambda r: r.get('summary', {}).get('receipt', {}).get('date'), replenishments))
-        max_date = max([get(rep, 'date', True) for rep in replenishments_with_date], default=fields.Date.today())
+        max_date = max([get(rep, 'date', True) for rep in replenishments_with_date], default=fields.Datetime.today())
         if has_to_order_line or any(get(rep, 'type', True) == 'estimated' for rep in replenishments):
             return self._format_receipt_date('estimated', max_date)
         else:
