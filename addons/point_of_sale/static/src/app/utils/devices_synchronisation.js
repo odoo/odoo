@@ -1,6 +1,5 @@
 import { Domain } from "@web/core/domain";
 
-const { DateTime } = luxon;
 /**
  * Class representing the synchronization of records.
  * This class handles the setup and management of dynamic (flexible) models
@@ -123,7 +122,7 @@ export default class DevicesSynchronisation {
      * @param {Object} staticRecords - Records data that need to be synchronized.
      */
     processStaticRecords(staticRecords) {
-        return this.models.loadData(this.models, staticRecords, [], false, true);
+        return this.models.loadData(staticRecords, [], false, true);
     }
 
     /**
@@ -132,7 +131,7 @@ export default class DevicesSynchronisation {
      * @param {Object} dynamicRecords - Record write dates by ids and models.
      */
     processDynamicRecords(dynamicRecords) {
-        return this.models.loadData(this.models, dynamicRecords, [], false, true);
+        return this.models.loadData(dynamicRecords, [], false, true);
     }
 
     /**
@@ -154,8 +153,7 @@ export default class DevicesSynchronisation {
      */
     constructOrdersDomain(serverOpenOrders) {
         const localDomain = serverOpenOrders.map((o) => {
-            const dateTime = DateTime.fromSQL(o.write_date);
-            const newDateTime = dateTime.plus({ seconds: 1 });
+            const newDateTime = o.write_date.plus({ seconds: 1 }).toUTC();
             return new Domain([
                 "&",
                 ["id", "=", o.id],
