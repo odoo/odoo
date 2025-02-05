@@ -43,6 +43,14 @@
             <rng:zeroOrMore>
                 <rng:ref name="field"/>
             </rng:zeroOrMore>
+            <rng:optional>
+                <rng:element name="QuickCreate">
+                    <rng:ref name="overload"/>
+                    <rng:zeroOrMore>
+                        <rng:ref name="field"/>
+                    </rng:zeroOrMore>
+                </rng:element>
+            </rng:optional>
         </rng:element>
     </rng:define>
     <rng:start>
