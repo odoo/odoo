@@ -29,6 +29,16 @@ def setup_product_combo_items(self):
         }
     )
 
+    pos_category_1 = self.env["pos.category"].create({
+        "name": "Category 1",
+    })
+    pos_category_2 = self.env["pos.category"].create({ 
+        "name": "Category 2",
+    })
+    pos_category_3 = self.env["pos.category"].create({
+        "name": "Category 3",
+    })
+
     combo_product_1 = self.env["product.product"].create(
         {
             "name": "Combo Product 1",
@@ -36,6 +46,7 @@ def setup_product_combo_items(self):
             "available_in_pos": True,
             "list_price": 10,
             "taxes_id": [(6, 0, [tax10.id])],
+            "pos_categ_ids": [(6, 0, [pos_category_1.id])],
         }
     )
 
@@ -46,6 +57,7 @@ def setup_product_combo_items(self):
             "available_in_pos": True,
             "list_price": 11,
             "taxes_id": [(6, 0, [tax20in.id])],
+            "pos_categ_ids": [(6, 0, [pos_category_1.id])],
         }
     )
 
@@ -56,6 +68,7 @@ def setup_product_combo_items(self):
             "available_in_pos": True,
             "list_price": 16,
             "taxes_id": [(6, 0, [tax30.id])],
+            "pos_categ_ids": [(6, 0, [pos_category_1.id])],
         }
     )
 
@@ -86,6 +99,7 @@ def setup_product_combo_items(self):
             "available_in_pos": True,
             "list_price": 20,
             "taxes_id": [(6, 0, [tax10.id])],
+            "pos_categ_ids": [(6, 0, [pos_category_2.id])],
         }
     )
 
@@ -96,6 +110,7 @@ def setup_product_combo_items(self):
             "available_in_pos": True,
             "list_price": 25,
             "taxes_id": [(6, 0, [tax20in.id])],
+            "pos_categ_ids": [(6, 0, [pos_category_2.id])],
         }
     )
 
@@ -122,6 +137,7 @@ def setup_product_combo_items(self):
             "available_in_pos": True,
             "list_price": 30,
             "taxes_id": [(6, 0, [tax30.id])],
+            "pos_categ_ids": [(6, 0, [pos_category_3.id])],
         }
     )
 
@@ -132,6 +148,7 @@ def setup_product_combo_items(self):
             "available_in_pos": True,
             "list_price": 32,
             "taxes_id": [(6, 0, [tax10.id])],
+            "pos_categ_ids": [(6, 0, [pos_category_3.id])],
         }
     )
 
@@ -142,6 +159,7 @@ def setup_product_combo_items(self):
             "available_in_pos": True,
             "list_price": 40,
             "taxes_id": [(6, 0, [tax20in.id])],
+            "pos_categ_ids": [(6, 0, [pos_category_3.id])],
         }
     )
 
@@ -152,6 +170,7 @@ def setup_product_combo_items(self):
             "available_in_pos": True,
             "list_price": 50,
             "taxes_id": [(6, 0, [tax20in.id])],
+            "pos_categ_ids": [(6, 0, [pos_category_3.id])],
         }
     )
 
@@ -248,5 +267,6 @@ def setup_product_combo_items(self):
             "combo_ids": [
                 (6, 0, [self.desks_combo.id, self.chairs_combo.id, self.desk_accessories_combo.id])
             ],
+            "pos_categ_ids": [(6, 0, [pos_category_2.id])],
         }
     )
