@@ -24,6 +24,7 @@ export class AutoComplete extends Component {
             },
         },
         placeholder: { type: String, optional: true },
+        autocomplete: { type: String, optional: true},
         autoSelect: { type: Boolean, optional: true },
         resetOnSelect: { type: Boolean, optional: true },
         onInput: { type: Function, optional: true },
@@ -41,6 +42,7 @@ export class AutoComplete extends Component {
     static defaultProps = {
         value: "",
         placeholder: "",
+        autocomplete: "new-password",
         autoSelect: false,
         dropdown: true,
         onInput: () => {},
