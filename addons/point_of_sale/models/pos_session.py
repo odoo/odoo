@@ -300,7 +300,7 @@ class PosSession(models.Model):
 
     @api.constrains('start_at')
     def _check_start_date(self):
-        for record in self:
+        for record in self.filtered('start_at'):
             journal = record.config_id.journal_id
             company = journal.company_id
             start_date = record.start_at.date()

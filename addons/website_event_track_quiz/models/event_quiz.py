@@ -43,6 +43,8 @@ class EventQuizQuestion(models.Model):
 
     @api.constrains('answer_ids')
     def _check_answers_integrity(self):
+        if self.env.context.get('install_mode'):
+            return
         for question in self:
             if len(question.correct_answer_id) != 1:
                 raise ValidationError(_('Question "%s" must have 1 correct answer to be valid.', question.name))

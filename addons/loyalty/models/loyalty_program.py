@@ -199,7 +199,7 @@ class LoyaltyProgram(models.Model):
 
     @api.constrains('reward_ids')
     def _constrains_reward_ids(self):
-        if self.env.context.get('loyalty_skip_reward_check'):
+        if self.env.context.get('loyalty_skip_reward_check') or self.env.context.get('install_mode'):
             return
         if any(not program.reward_ids for program in self):
             raise ValidationError(_("A program must have at least one reward."))

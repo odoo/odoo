@@ -905,6 +905,11 @@ actual arch.
             view_ids.append(root.id)
             if not root.inherit_id:
                 break
+            # Because the constraint is checked after inverse and that _inverse_arch can
+            # trigger indirectly _get_combined_arch() we need to avoid cycling situation:
+            # _inverse_arch -> write -> _check_xml -> _get_combined_arch.
+            if root.inherit_id.id in view_ids:
+                raise ValidationError(_('You cannot create recursive inherited views.'))
             root = root.inherit_id
 
         views = self.browse(view_ids)

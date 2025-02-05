@@ -17,43 +17,45 @@ class TestSurveyController(common.TestSurveyCommon, HttpCase):
             'title': 'How much do you know about words?',
             'scoring_type': 'scoring_with_answers_after_page',
         })
-        (
-            a_q1_partial, a_q1_correct, a_q1_incorrect,
-            a_q2_incorrect, a_q2_correct,
-            a_q3_correct, a_q3_incorrect
-        ) = self.env['survey.question.answer'].create([
-            {'value': 'A thing full of letters.', 'answer_score': 1.0},
-            {'value': 'A unit of language, [...], carrying a meaning.', 'answer_score': 4.0, 'is_correct': True},
-            {'value': 'A thing related to space', 'answer_score': -4.0},
-            {'value': 'Yes', 'answer_score': -0.5},
-            {'value': 'No', 'answer_score': 0.5, 'is_correct': True},
-            {'value': 'Yes', 'answer_score': 0.5, 'is_correct': True},
-            {'value': 'No', 'answer_score': 0.2},
-        ])
-        q1, q2, q3 = self.env['survey.question'].create([{
+        q1 = self.env['survey.question'].create({
             'survey_id': survey.id,
             'title': 'What is a word?',
             'sequence': 2,
             'question_type': 'simple_choice',
-            'suggested_answer_ids': [Command.set((a_q1_partial | a_q1_correct | a_q1_incorrect).ids)],
+            'suggested_answer_ids': [
+                Command.create({'value': 'A thing full of letters.', 'answer_score': 1.0}),
+                Command.create({'value': 'A unit of language, [...], carrying a meaning.', 'answer_score': 4.0, 'is_correct': True}),
+                Command.create({'value': 'A thing related to space', 'answer_score': -4.0}),
+            ],
             'constr_mandatory': False,
-        }, {
+        })
+        a_q1_partial, a_q1_correct, a_q1_incorrect = q1.suggested_answer_ids
+        q2 = self.env['survey.question'].create({
             'survey_id': survey.id,
             'title': 'Are you sure?',
             'sequence': 3,
             'question_type': 'simple_choice',
-            'suggested_answer_ids': [Command.set((a_q2_incorrect | a_q2_correct).ids)],
+            'suggested_answer_ids': [
+                Command.create({'value': 'Yes', 'answer_score': -0.5}),
+                Command.create({'value': 'No', 'answer_score': 0.5, 'is_correct': True}),
+            ],
             'triggering_answer_ids': [Command.set((a_q1_partial | a_q1_incorrect).ids)],
             'constr_mandatory': False,
-        }, {
+        })
+        __, a_q2_correct = q2.suggested_answer_ids
+        q3 = self.env['survey.question'].create({
             'survey_id': survey.id,
             'title': 'Are you sure?',
             'sequence': 5,
             'question_type': 'simple_choice',
-            'suggested_answer_ids': [Command.set((a_q3_correct | a_q3_incorrect).ids)],
+            'suggested_answer_ids': [
+                Command.create({'value': 'Yes', 'answer_score': 0.5, 'is_correct': True}),
+                Command.create({'value': 'No', 'answer_score': 0.2}),
+            ],
             'triggering_answer_ids': [Command.set([a_q1_correct.id])],
             'constr_mandatory': False,
-        }])
+        })
+        a_q3_correct, __ = q3.suggested_answer_ids
         pages = [
             {'is_page': True, 'question_type': False, 'sequence': 1, 'title': 'Page 0', 'survey_id': survey.id},
             {'is_page': True, 'question_type': False, 'sequence': 4, 'title': 'Page 1', 'survey_id': survey.id},
