@@ -692,7 +692,14 @@ test("action is removed while waiting for another action with selectMenu", async
             params: { description: "Id 1" },
         },
     ]);
-    defineMenus([{ id: 1, children: [], name: "App1", appID: 1, actionID: 1001, xmlid: "menu_1" }]);
+    defineMenus([
+        {
+            id: 1,
+            name: "App1",
+            actionID: 1001,
+            xmlid: "menu_1",
+        },
+    ]);
 
     await mountWithCleanup(WebClient);
     // starting point: a kanban view
