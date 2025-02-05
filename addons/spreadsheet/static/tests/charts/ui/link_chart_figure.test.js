@@ -46,18 +46,11 @@ function mockActionService(doActionStep) {
     mockService("action", fakeActionService);
 }
 
-beforeEach(async () => {
+beforeEach(() => {
     serverData = {};
     serverData.menus = {
-        root: {
-            id: "root",
-            children: [1, 2],
-            name: "root",
-            appID: "root",
-        },
         1: {
             id: 1,
-            children: [],
             name: "test menu 1",
             xmlid: "spreadsheet.test.menu",
             appID: 1,
@@ -65,7 +58,6 @@ beforeEach(async () => {
         },
         2: {
             id: 2,
-            children: [],
             name: "test menu 2",
             xmlid: "spreadsheet.test.menu2",
             appID: 1,
@@ -73,7 +65,6 @@ beforeEach(async () => {
         },
         3: {
             id: 3,
-            children: [],
             name: "test menu 2",
             xmlid: "spreadsheet.test.menu_without_action",
             appID: 1,
