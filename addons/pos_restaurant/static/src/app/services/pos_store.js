@@ -98,7 +98,7 @@ patch(PosStore.prototype, {
             }
 
             destOrder.uiState.unmerge[uuid] = {
-                table_id: sourceOrder.table_id.id,
+                table_id: sourceOrder.table_id?.id,
                 quantity: orphanLine.qty,
             };
 
