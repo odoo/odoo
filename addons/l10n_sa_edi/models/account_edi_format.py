@@ -263,13 +263,13 @@ class AccountEdiFormat(models.Model):
         fields_to_check = [
             ('l10n_sa_edi_building_number', _('Building Number for the Buyer is required on Standard Invoices')),
             ('street2', _('Neighborhood for the Seller is required on Standard Invoices')),
-            ('l10n_sa_additional_identification_scheme',
+            ('l10n_sa_edi_additional_identification_scheme',
              _('Additional Identification Scheme is required for the Seller, and must be one of CRN, MOM, MLS, SAG or OTH'),
              lambda p, v: v in ('CRN', 'MOM', 'MLS', 'SAG', 'OTH')
              ),
             ('vat',
              _('VAT is required when Identification Scheme is set to Tax Identification Number'),
-             lambda p, v: p.l10n_sa_additional_identification_scheme != 'TIN'
+             lambda p, v: p.l10n_sa_edi_additional_identification_scheme != 'TIN'
              ),
             ('state_id', _('State / Country subdivision'))
         ]
@@ -284,15 +284,15 @@ class AccountEdiFormat(models.Model):
                invoice.invoice_line_ids.filtered(
                    lambda line: line.display_type == 'product').tax_ids):
             fields_to_check += [
-                ('l10n_sa_additional_identification_scheme',
+                ('l10n_sa_edi_additional_identification_scheme',
                  _('Additional Identification Scheme is required for the Buyer if tax exemption reason is either '
                    'VATEX-SA-HEA or VATEX-SA-EDU, and its value must be NAT'), lambda p, v: v == 'NAT'),
-                ('l10n_sa_additional_identification_number',
+                ('l10n_sa_edi_additional_identification_number',
                  _('Additional Identification Number is required for commercial partners'),
-                 lambda p, v: p.l10n_sa_additional_identification_scheme != 'TIN'
+                 lambda p, v: p.l10n_sa_edi_additional_identification_scheme != 'TIN'
                  ),
             ]
-        elif invoice.commercial_partner_id.l10n_sa_additional_identification_scheme == 'TIN':
+        elif invoice.commercial_partner_id.l10n_sa_edi_additional_identification_scheme == 'TIN':
             fields_to_check += [
                 ('vat', _('VAT is required when Identification Scheme is set to Tax Identification Number'))
             ]

@@ -19,10 +19,10 @@ class ResCompany(models.Model):
     l10n_sa_edi_plot_identification = fields.Char(compute='_compute_address',
                                                   inverse='_l10n_sa_edi_inverse_plot_identification')
 
-    l10n_sa_additional_identification_scheme = fields.Selection(
-        related='partner_id.l10n_sa_additional_identification_scheme', readonly=False)
-    l10n_sa_additional_identification_number = fields.Char(
-        related='partner_id.l10n_sa_additional_identification_number', readonly=False)
+    l10n_sa_edi_additional_identification_scheme = fields.Selection(
+        related='partner_id.l10n_sa_edi_additional_identification_scheme', readonly=False)
+    l10n_sa_edi_additional_identification_number = fields.Char(
+        related='partner_id.l10n_sa_edi_additional_identification_number', readonly=False)
 
     def _get_company_root_delegated_field_names(self):
         return super()._get_company_root_delegated_field_names() + [
