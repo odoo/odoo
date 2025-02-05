@@ -1,6 +1,7 @@
 import { onMounted } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { TagsList } from "@web/core/tags_list/tags_list";
 import {
@@ -22,6 +23,7 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
     static props = {
         ...Many2ManyTagsField.props,
         context: { type: Object, optional: true },
+        canEditTags: { type: Boolean, optional: true }
     };
 
     setup() {
@@ -40,6 +42,15 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
             onRecordSaved: async (record) => {
                 if (record.data.email) {
                     this.recordsIdsToAdd.push(record.resId);
+                }
+                if (this.props.canEditTags) {
+                    // Reload the tag list to update the display:
+                    const list = this.props.record.data[this.props.name];
+                    await list.addAndRemove({
+                        add: [],
+                        remove: [],
+                        reload: true,
+                    });
                 }
             },
             fieldString: this.props.string,
@@ -102,14 +113,50 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
         tags.forEach((tag) => (tag.email = emailByResId[tag.resId]));
         return tags;
     }
+
+    /**
+     * @override
+     * @param {Record} record
+     * @returns {Object}
+     */
+    getTagProps(record) {
+        return {...super.getTagProps(record),
+            onClick: (ev) => this.onTagClick(ev, record),
+        };
+    }
+
+    /**
+     * @param {Event} event
+     * @param {Record} record
+     */
+    onTagClick(event, record) {
+        if (this.props.canEditTags) {
+            return this.openMany2xRecord({
+                resId: record.resId,
+                context: this.props.context,
+                title: _t("Edit: %s", record.data.display_name),
+            });
+        }
+    }
 }
 
 export const fieldMany2ManyTagsEmail = {
     ...many2ManyTagsField,
     component: FieldMany2ManyTagsEmail,
-    extractProps(fieldInfo, dynamicInfo) {
+    supportedOptions: [
+        ...many2ManyTagsField.supportedOptions,
+        {
+            label: _t("Edit Tags"),
+            name: "edit_tags",
+            type: "boolean",
+            help: _t("If checked, clicking on the tag will open the form that allows to directly edit it."),
+        },
+    ],
+    extractProps({ options, attrs }, dynamicInfo) {
         const props = many2ManyTagsField.extractProps(...arguments);
         props.context = dynamicInfo.context;
+        const hasEditPermission = attrs.can_write ? evaluateBooleanExpr(attrs.can_write) : true;
+        props.canEditTags = options.edit_tags ? hasEditPermission : false;
         return props;
     },
     relatedFields: (fieldInfo) => {
