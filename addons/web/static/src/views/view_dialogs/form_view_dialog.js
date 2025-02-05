@@ -66,7 +66,7 @@ export class FormViewDialog extends Component {
             saveRecord: async (record, params) => {
                 let saved;
                 if (this.props.onRecordSave) {
-                    saved = await this.props.onRecordSave(record);
+                    saved = await this.props.onRecordSave.call(this, record);
                 } else {
                     saved = await record.save({ reload: false });
                     if (saved) {
