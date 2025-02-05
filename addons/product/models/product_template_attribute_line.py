@@ -34,6 +34,7 @@ class ProductTemplateAttributeLine(models.Model):
         relation='product_attribute_value_product_template_attribute_line_rel',
         string="Values",
         domain="[('attribute_id', '=', attribute_id)]",
+        required=True,
         ondelete='restrict')
     value_count = fields.Integer(compute='_compute_value_count', store=True)
     product_template_value_ids = fields.One2many(
