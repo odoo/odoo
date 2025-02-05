@@ -1009,6 +1009,11 @@ export class TablePlugin extends Plugin {
             }
             for (const td of selectedTds) {
                 this.dependencies.color.colorElement(td, color, mode);
+                if (color) {
+                    td.style["color"] = getComputedStyle(td).color;
+                } else {
+                    td.style["color"] = "";
+                }
             }
         }
     }
