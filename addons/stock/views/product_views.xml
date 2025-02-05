@@ -88,8 +88,27 @@
             <field name="inherit_id" ref="product.product_product_tree_view"/>
             <field name="arch" type="xml">
                 <field name="type" position="after">
-                    <field name="qty_available" invisible="not is_storable" string="On Hand" optional="show" decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0" decoration-bf="1" groups="stock.group_stock_user"/>
-                    <field name="virtual_available" invisible="not is_storable" string="Forecasted" optional="show" decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0" groups="stock.group_stock_user"/>
+                    <field
+                        name="qty_available"
+                        invisible="not is_storable"
+                        string="On Hand"
+                        optional="show"
+                        decoration-danger="virtual_available &lt; 0"
+                        decoration-warning="virtual_available == 0"
+                        decoration-bf="1"
+                        groups="stock.group_stock_user"
+                        sum="Total On Hand"
+                    />
+                    <field
+                        name="virtual_available"
+                        invisible="not is_storable"
+                        string="Forecasted"
+                        optional="show"
+                        decoration-danger="virtual_available &lt; 0"
+                        decoration-warning="virtual_available == 0"
+                        groups="stock.group_stock_user"
+                        sum="Total Forecasted"
+                    />
                 </field>
             </field>
         </record>
@@ -101,8 +120,8 @@
             <field name="arch" type="xml">
                 <field name="uom_id" position="before">
                     <field name="show_on_hand_qty_status_button" column_invisible="True" groups="stock.group_stock_user"/>
-                    <field name="qty_available" invisible="not show_on_hand_qty_status_button" string="On Hand" optional="show" decoration-danger="qty_available &lt; 0" groups="stock.group_stock_user"/>
-                    <field name="virtual_available" invisible="not show_on_hand_qty_status_button" string="Forecasted" optional="show" decoration-danger="virtual_available &lt; 0" decoration-bf="1" groups="stock.group_stock_user"/>
+                    <field name="qty_available" invisible="not show_on_hand_qty_status_button" string="On Hand" optional="show" decoration-danger="qty_available &lt; 0" groups="stock.group_stock_user" sum="Total On Hand"/>
+                    <field name="virtual_available" invisible="not show_on_hand_qty_status_button" string="Forecasted" optional="show" decoration-danger="virtual_available &lt; 0" decoration-bf="1" groups="stock.group_stock_user" sum="Total Forecasted"/>
                 </field>
                 <field name="default_code" position="after">
                     <field name="responsible_id" widget="many2one_avatar_user" optional="hide" groups="stock.group_stock_user"/>
@@ -118,14 +137,11 @@
             <field name="mode">primary</field>
             <field name="inherit_id" ref="product.product_template_search_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='attribute_line_ids']" position="after">
+                <field name="attribute_line_ids" position="after">
                     <separator/>
                     <field name="location_id" context="{'search_location': self}" filter_domain="[]"/>
                     <field name="warehouse_id" context="{'search_warehouse': self}" filter_domain="[]"/>
-                    <separator/>
-                    <filter name="real_stock_available" string="Available Products" domain="[('qty_available','&gt;',0)]"/>
-                    <filter name="real_stock_negative" string="Negative Forecasted Quantity" domain="[('virtual_available','&lt;',0)]"/>
-                </xpath>
+                </field>
             </field>
         </record>
 
@@ -134,8 +150,9 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_search_view"/>
             <field name="arch" type="xml">
-                <filter name="combo" position="after">
-                    <filter name="is_storable" string="Inventory Management" domain="[('is_storable','=',True)]"/>
+                <filter name="filter_to_sell" position="before">
+                    <filter name="is_storable" string="Tracked Stock" domain="[('is_storable','=',True)]"/>
+                    <separator/>
                 </filter>
             </field>
         </record>
@@ -160,7 +177,7 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='type']" position="after">
+                <field name="product_tooltip" position="after">
                     <label for="is_storable" class="oe_inline" invisible="type != 'consu'"/>
                     <div class="o_row w-100" invisible="type != 'consu'">
                         <field name="is_storable"/>
@@ -180,7 +197,7 @@
                             invisible="not show_qty_update_button"
                             class="btn btn-link py-0 btn-show"/>
                     </div>
-                </xpath>
+                </field>
                 <xpath expr="//group[@name='group_lots_and_weight']" position="inside">
                     <label for="sale_delay" invisible="not sale_ok"/>
                     <div invisible="not sale_ok">

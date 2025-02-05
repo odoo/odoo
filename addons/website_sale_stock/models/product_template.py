@@ -10,7 +10,7 @@ from odoo.addons.website.models import ir_http
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    allow_out_of_stock_order = fields.Boolean(string="Continue selling when out-of-stock", default=True)
+    allow_out_of_stock_order = fields.Boolean(string="Sell when Out-of-Stock", default=True)
 
     available_threshold = fields.Float(string="Show Threshold", default=5.0)
     show_availability = fields.Boolean(string="Show availability Qty", default=False)

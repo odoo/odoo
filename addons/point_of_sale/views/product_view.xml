@@ -8,11 +8,11 @@
             <field name="categ_id" position="after">
                 <field string="POS Product Category" name="pos_categ_ids" filter_domain="[('pos_categ_ids', 'child_of', raw_value)]"/>
             </field>
-            <filter name="filter_to_sell" position="before">
+            <filter name="filter_to_sell" position="after">
                <filter name="filter_to_availabe_pos" string="Point of Sale" domain="[('available_in_pos', '=', True)]"/>
             </filter>
             <filter name="group_by_categ_id" position="after">
-                <filter string="POS Product Category" name="pos_categ_ids" context="{'group_by':'pos_categ_ids'}"/>
+                <filter string="POS Category" name="pos_categ_ids" context="{'group_by': 'pos_categ_ids'}"/>
             </filter>
         </field>
     </record>
@@ -66,7 +66,7 @@
                     <group>
                         <group name="pos" string="Point of Sale">
                             <field name="color" invisible="True"/>
-                            <field name="to_weight"/>
+                            <field name="to_weight" invisible="type=='service'"/>
                             <field name="pos_categ_ids"
                                    widget="many2many_tags"
                                    groups="point_of_sale.group_pos_user"
@@ -92,12 +92,12 @@
                     </group>
                 </page>
             </page>
-            <div name="options" position='inside'>
+            <span name="sale_option" position="after">
                 <span class="d-inline-block">
                     <field name="available_in_pos"/>
                     <label for="available_in_pos" string="Point of Sale"/>
                 </span>
-            </div>
+            </span>
         </field>
     </record>
 
