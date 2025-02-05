@@ -21,7 +21,9 @@ sent mails with personal token for the invitation of the survey.
         'http_routing',
         'mail',
         'web_tour',
-        'gamification'],
+        'gamification',
+        'digest',
+    ],
     'data': [
         'report/survey_templates.xml',
         'report/survey_reports.xml',
@@ -43,6 +45,8 @@ sent mails with personal token for the invitation of the survey.
         'views/gamification_badge_views.xml',
         'wizard/survey_invite_views.xml',
         'views/res_partner_views.xml',
+        'data/digest_kpi.xml',
+        'data/digest_data.xml',
     ],
     'demo': [
         'data/gamification_badge_demo.xml',
