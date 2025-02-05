@@ -66,8 +66,8 @@ test("crm team form activate multi-team option via alert", async () => {
     });
 
     // Members list should have Maria which is already in Team2 => Alert should be shown
-    await expect(".o_field_widget[name='member_ids'] .o_kanban_record:visible").toHaveCount(1);
-    await expect(".o_field_widget[name='member_ids'] .o_kanban_record:visible").toHaveText("Maria");
+    await expect(".o_field_widget[name='member_ids'] .o_kanban_record:visible:not(.o-kanban-button-new)").toHaveCount(1);
+    await expect(".o_field_widget[name='member_ids'] .o_kanban_record:visible:not(.o-kanban-button-new)").toHaveText("Maria");
     await contains(".alert:visible", { count: 1 });
 
     // Clicking on the button should update the multi-team option and remove the alert

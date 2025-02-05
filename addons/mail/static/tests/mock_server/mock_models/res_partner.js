@@ -113,8 +113,10 @@ export class ResPartner extends webModels.ResPartner {
             ["active", "=", true],
             ["partner_share", "=", false],
         ];
-        if (channel.group_public_id) {
-            extraDomain.push(["groups_id", "in", channel.group_public_id]);
+        const parent_channel = this.browse(channel.parent_channel_id);
+        const allowed_group = parent_channel?.group_public_id ?? channel.group_public_id;
+        if (allowed_group) {
+            extraDomain.push(["groups_id", "in", allowed_group]);
         }
         const baseDomain = search
             ? ["|", ["name", "ilike", searchLower], ["email", "ilike", searchLower]]
@@ -146,8 +148,8 @@ export class ResPartner extends webModels.ResPartner {
         for (const partnerId of partners) {
             const data = {
                 name: users[partnerId]?.name,
-                groups_id: users[partnerId]?.groups_id.includes(channel.group_public_id)
-                    ? channel.group_public_id
+                groups_id: users[partnerId]?.groups_id.includes(allowed_group)
+                    ? allowed_group
                     : undefined,
             };
             store.add(this.browse(partnerId), data);

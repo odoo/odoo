@@ -355,7 +355,7 @@
                                 <list editable="bottom">
                                     <field name="product_id" readonly="state == 'done'"/>
                                     <field name="product_uom_qty" readonly="state == 'done'"/>
-                                    <field name="product_uom"/>
+                                    <field name="product_uom" widget="many2one_uom"/>
                                     <field name="operation_id"/>
                                     <field name="byproduct_id"/>
                                     <field name="name"/>
@@ -444,6 +444,8 @@
                                     <!-- TODO put forecast back -->
                                     <field name="forecast_availability" column_invisible="parent.state in ['done', 'cancel']" string="Forecast" widget="forecast_widget" optional="hide"/>
                                     <field name="quantity" string="Quantity"
+                                        decoration-success="not is_done and (quantity - should_consume_qty == 0)"
+                                        decoration-warning="not is_done and (quantity - should_consume_qty &gt; 0.0001)"
                                         column_invisible="parent.state == 'draft'"
                                         decoration-info="manual_consumption"
                                         decoration-bf="manual_consumption"

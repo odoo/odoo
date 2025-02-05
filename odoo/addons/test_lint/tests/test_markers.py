@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
 import os
-import odoo
 
 from . import lint_case
 
@@ -22,6 +20,7 @@ class TestConflictMarkers(lint_case.LintCase):
 
     def test_conflict_markers(self):
         """ Test that there are no conflict markers left in Odoo files """
+        import odoo.addons  # noqa: PLC0415
 
         counter = 0
 

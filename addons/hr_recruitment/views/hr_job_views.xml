@@ -229,6 +229,17 @@
                         <span class="o_stat_text">Trackers</span>
                     </div>
                 </button>
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button bg-secondary"
+                        icon="fa-newspaper-o text-muted"
+                        name="action_job_board_modules"
+                        type="object">
+                        <div class="o_stat_info">
+                            <span class="o_stat_value text-muted">New</span>
+                            <span class="o_stat_text text-muted">Job Board</span>
+                        </div>
+                    </button>
+                </div>
             </div>
 
             <xpath expr="//sheet" position="after">
@@ -250,8 +261,11 @@
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Ready to recruit more efficiently?
-            </p><p>
-                Let's create a job position.
+            </p>
+            <p>
+                <a name="%(hr.action_create_job_position)d" class="btn btn-link" type="action">
+                    Let's create a job position
+                </a>
             </p>
         </field>
     </record>

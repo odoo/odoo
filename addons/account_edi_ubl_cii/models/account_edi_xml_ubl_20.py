@@ -85,7 +85,7 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         return {
             'id': partner.id,
             'name': partner.name,
-            'telephone': partner.phone or partner.mobile,
+            'telephone': partner.phone,
             'electronic_mail': partner.email,
         }
 

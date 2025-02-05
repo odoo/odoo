@@ -332,6 +332,9 @@
                             <label for="state"/>
                             <field name="state" widget="selection_badge" options="{'size': 'sm'}"/>
                         </div>
+                        <div class="alert alert-warning" role="alert" invisible="not warning">
+                            <i class="fa fa-warning pe-2" title="Warning"/><field class="d-inline" name="warning" nolabel="1"/>
+                        </div>
                         <group string="Technical Settings" groups="base.group_no_one">
                             <group>
                                 <field name="model_id" options="{'no_create': True, 'no_open': True}" />

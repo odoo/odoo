@@ -351,6 +351,24 @@ class ProductProduct(models.Model):
                 'message': _("The Reference '%s' already exists.", self.default_code),
             }}
 
+    def _trigger_uom_warning(self):
+        return False
+
+    @api.onchange('uom_id')
+    def _onchange_uom_id(self):
+        if self._origin.uom_id == self.uom_id or not self._trigger_uom_warning():
+            return
+        message = _(
+            'Changing the unit of measure for your product will apply a conversion 1 %(old_uom_name)s = 1 %(new_uom_name)s.\n'
+            'All existing records (Sales orders, Purchase orders, etc.) using this product will be updated by replacing the unit name.',
+            old_uom_name=self._origin.uom_id.display_name, new_uom_name=self.uom_id.display_name)
+        return {
+            'warning': {
+                'title': _('What to expect ?'),
+                'message': message,
+            }
+        }
+
     @api.model_create_multi
     def create(self, vals_list):
         products = super(ProductProduct, self.with_context(create_product_product=False)).create(vals_list)
@@ -837,3 +855,8 @@ class ProductProduct(models.Model):
         if lst_price:
             return (lst_price - self._get_contextual_price()) / lst_price
         return 0.0
+
+    def _update_uom(self, to_uom_id):
+        """ Hook to handle an UoM modification. Avoid recomputation and just replace the
+        many2one field on the impacted models."""
+        return True

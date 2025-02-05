@@ -151,15 +151,15 @@ registry.category("web_tour.tours").add("course_member", {
             run: "click",
         },
         {
-            trigger: ".modal .modal-body i.fa.fa-star:eq(2)",
+            trigger: ".modal.modal_shown .modal-body i.fa.fa-star:eq(2)",
             run: "click",
         },
         {
-            trigger: ".modal .modal-body textarea",
+            trigger: ".modal.modal_shown .modal-body textarea",
             run: "edit This is a great course. Top !",
         },
         {
-            trigger: ".modal button:contains(review)",
+            trigger: ".modal.modal_shown button:contains(review)",
             run: "click",
         },
         {

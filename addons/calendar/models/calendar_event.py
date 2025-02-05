@@ -1081,6 +1081,16 @@ class CalendarEvent(models.Model):
     def _get_trigger_alarm_types(self):
         return ['email']
 
+    def _setup_event_recurrent_alarms(self, events_by_alarm):
+        """ Setup alarms for recurrent events """
+        for event in self:
+            if event.recurrence_id:
+                next_date = event.get_next_alarm_date(events_by_alarm)
+                # In cron, setup alarm only when there is a next date on the target. Otherwise the 'now()'
+                # check in the call below can generate undeterministic behavior and setup random alarms.
+                if next_date:
+                    event.recurrence_id.with_context(date=next_date)._setup_alarms()
+
     def _setup_alarms(self):
         """ Schedule cron triggers for future events """
         cron = self.env.ref('calendar.ir_cron_scheduler_alarm').sudo()

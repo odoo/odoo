@@ -141,14 +141,7 @@ class TestInventory(TransactionCase):
         })
         inventory_quants = self.env['stock.quant'].search(quant_domain)
         self.assertEqual(len(inventory_quants), 2)
-        stock_confirmation_action = inventory_quants.action_apply_inventory()
-        stock_confirmation_wizard_form = Form(
-            self.env['stock.track.confirmation'].with_context(
-                **stock_confirmation_action['context'])
-        )
-
-        stock_confirmation_wizard = stock_confirmation_wizard_form.save()
-        stock_confirmation_wizard.action_confirm()
+        inventory_quants.action_apply_inventory()
 
         # check
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, lot_id=lot1, strict=False), 11.0)

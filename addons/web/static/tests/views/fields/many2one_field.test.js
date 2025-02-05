@@ -3413,9 +3413,6 @@ test("search more in many2one: cannot resequence inside dialog", async () => {
     onRpc("web_search_read", ({ kwargs }) => {
         expect(kwargs.domain).toEqual([]);
     });
-    onRpc("/web/dataset/resequence", () => {
-        expect.step("/web/dataset/resequence");
-    });
     onRpc(({ method }) => {
         expect.step(method);
     });

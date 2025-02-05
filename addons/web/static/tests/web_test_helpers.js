@@ -39,7 +39,12 @@ export {
     getDropdownMenu,
     mountWithCleanup,
 } from "./_framework/component_test_helpers";
-export { contains, defineStyle, editAce } from "./_framework/dom_test_helpers";
+export {
+    contains,
+    defineStyle,
+    editAce,
+    sortableDrag,
+} from "./_framework/dom_test_helpers";
 export {
     clearRegistry,
     getMockEnv,
@@ -75,7 +80,6 @@ export { Command } from "./_framework/mock_server/mock_model";
 export {
     authenticate,
     defineActions,
-    defineEmbeddedActions,
     defineMenus,
     defineModels,
     defineParams,

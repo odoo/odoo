@@ -38,7 +38,7 @@ Users upgraded from a version lower than 16.0 may have those blocks in their
 database, without the s_newsletter_list class. See fixNewsletterListClass.
 -->
 <template id="s_newsletter_subscribe_form" name="Newsletter">
-    <div class="s_newsletter_subscribe_form s_newsletter_list js_subscribe" data-vxml="001" data-list-id="0" data-name="Newsletter Form">
+    <div t-attf-class="s_newsletter_subscribe_form s_newsletter_list js_subscribe #{_contentClasses}" data-vxml="001" data-list-id="0" data-name="Newsletter Form">
         <div class="js_subscribed_wrap d-none">
             <t t-if="thank_you_message" t-out="thank_you_message"/>
             <p t-else="" class="h4-fs text-center text-success"><i class="fa fa-check-circle-o" role="img"/> Thanks for registering!</p>

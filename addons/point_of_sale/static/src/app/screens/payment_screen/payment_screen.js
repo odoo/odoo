@@ -302,11 +302,6 @@ export class PaymentScreen extends Component {
                 this.currentOrder.removePaymentline(line);
             }
 
-            const cash = this.payment_methods_from_config.find((pm) => pm.is_cash_count);
-            if (this.currentOrder.getDue() > 0 && this.pos.config.cash_rounding && cash) {
-                this.currentOrder.addPaymentline(cash, 0);
-            }
-
             await this._finalizeValidation();
         }
     }
@@ -510,7 +505,7 @@ export class PaymentScreen extends Component {
         }
 
         if (
-            this.currentOrder.getTotalWithTax() != 0 &&
+            !floatIsZero(this.currentOrder.getTotalWithTax(), this.pos.currency.decimal_places) &&
             this.currentOrder.payment_ids.length === 0
         ) {
             this.notification.add(_t("Select a payment method to validate the order."));

@@ -4,6 +4,9 @@ import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { EditOrderNamePopup } from "@pos_restaurant/app/popup/edit_order_name_popup/edit_order_name_popup";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
+import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
+import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
+import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 
 patch(PosStore.prototype, {
     /**
@@ -46,6 +49,61 @@ patch(PosStore.prototype, {
         }
         return super.defaultScreen;
     },
+    createNewOrder(data) {
+        const order = super.createNewOrder(data);
+
+        if (order.table_id) {
+            order.setCustomerCount(order.table_id.seats);
+        }
+
+        return order;
+    },
+    async setCustomerCount(o = false) {
+        const currentOrder = o || this.getOrder();
+        const count = await makeAwaitable(this.dialog, NumberPopup, {
+            feedback: (buffer) => {
+                const value = this.env.utils.formatCurrency(
+                    currentOrder?.amountPerGuest(parseInt(buffer, 10) || 0) || 0
+                );
+                return value ? `${value} / ${_t("Guest")}` : "";
+            },
+        });
+        const guestCount = parseInt(count, 10) || 0;
+        if (guestCount == 0 && currentOrder.lines.length === 0) {
+            this.removeOrder(currentOrder);
+            this.showScreen("FloorScreen");
+            return false;
+        }
+        currentOrder.setCustomerCount(guestCount);
+        this.addPendingOrder([currentOrder.id]);
+        return true;
+    },
+    async sendOrderInPreparationUpdateLastChange(order, cancelled = false) {
+        const currentPreset = order.preset_id;
+        if (
+            this.config.use_presets &&
+            currentPreset?.use_guest &&
+            !order.uiState.guestSetted &&
+            !cancelled
+        ) {
+            const response = await this.setCustomerCount(order);
+            if (!response) {
+                return;
+            }
+            order.uiState.guestSetted = true;
+        }
+
+        if (!cancelled) {
+            order.cleanCourses();
+            const firstCourse = order.getFirstCourse();
+            if (firstCourse && !firstCourse.fired) {
+                firstCourse.fired = true;
+                this.getOrder().deselectCourse();
+            }
+        }
+
+        return await super.sendOrderInPreparationUpdateLastChange(order, cancelled);
+    },
     handlePreparationHistory(srcPrep, destPrep, srcLine, destLine, qty) {
         const srcKey = srcLine.preparationKey;
         const destKey = destLine.preparationKey;
@@ -64,15 +122,14 @@ patch(PosStore.prototype, {
     },
     async mergeOrders(sourceOrder, destOrder) {
         let whileGuard = 0;
+        const mergedCourses = this.mergeCourses(sourceOrder, destOrder);
         while (sourceOrder.lines.length) {
             const orphanLine = sourceOrder.lines[0];
-            const destinationLine = destOrder?.lines.find((l) => l.canBeMergedWith(orphanLine));
+            const destinationLine = destOrder.lines.find((l) => l.canBeMergedWith(orphanLine));
             let uuid = "";
-
             if (destinationLine) {
                 destinationLine.merge(orphanLine);
                 uuid = destinationLine.uuid;
-
                 this.handlePreparationHistory(
                     sourceOrder.last_order_preparation_change.lines,
                     destOrder.last_order_preparation_change.lines,
@@ -86,8 +143,17 @@ patch(PosStore.prototype, {
                 delete serializedLine.uuid;
                 delete serializedLine.id;
                 const newLine = this.models["pos.order.line"].create(serializedLine, false, true);
+                newLine.course_id = orphanLine.course_id?.id;
                 uuid = newLine.uuid;
-
+                if (orphanLine.course_id && mergedCourses) {
+                    // Replace new line uuid in the merged courses
+                    const course = mergedCourses[orphanLine.course_id.uuid];
+                    if (course?.lines) {
+                        course.lines = course.lines.map((lineUuid) =>
+                            lineUuid === orphanLine.uuid ? uuid : lineUuid
+                        );
+                    }
+                }
                 this.handlePreparationHistory(
                     sourceOrder.last_order_preparation_change.lines,
                     destOrder.last_order_preparation_change.lines,
@@ -97,10 +163,12 @@ patch(PosStore.prototype, {
                 );
             }
 
-            destOrder.uiState.unmerge[uuid] = {
-                table_id: sourceOrder.table_id.id,
-                quantity: orphanLine.qty,
-            };
+            if (sourceOrder.table_id) {
+                destOrder.uiState.unmerge[uuid] = {
+                    table_id: sourceOrder.table_id.id,
+                    quantity: orphanLine.qty,
+                };
+            }
 
             orphanLine.delete();
             whileGuard++;
@@ -108,10 +176,70 @@ patch(PosStore.prototype, {
                 break;
             }
         }
+        if (mergedCourses) {
+            destOrder.uiState.unmergeCourses = {
+                ...destOrder.uiState.unmergeCourses,
+                ...mergedCourses,
+            };
+        }
+        if (destOrder.courses) {
+            // Ensure unassigned lines in destOrder are linked to the last course
+            const lastCourse = destOrder.courses?.at(-1);
+            if (lastCourse) {
+                destOrder.lines.forEach((line) => {
+                    if (!line.course_id) {
+                        line.course_id = lastCourse;
+                    }
+                });
+            }
+        }
 
         await this.deleteOrders([sourceOrder], [], true);
         await this.syncAllOrders({ orders: [destOrder] });
         return destOrder;
+    },
+    mergeCourses(sourceOrder, destOrder) {
+        if (!sourceOrder.hasCourses() && !destOrder?.hasCourses()) {
+            return;
+        }
+        const result = {}; // Contains the required info to restore merge courses in the original table
+        const courseMap = new Map();
+        sourceOrder.course_ids.forEach((course) => {
+            courseMap.set(course.index, course);
+            result[course.uuid] = {
+                table_id: sourceOrder.table_id?.id,
+                lines: course.line_ids.map((l) => l.uuid),
+                index: course.index,
+                fired: course.fired,
+                fired_date: course.fired_date,
+            };
+        });
+
+        // Add courses from the target, merging lines if course numbers match
+        destOrder.course_ids?.forEach((targetCourse) => {
+            if (courseMap.has(targetCourse.index)) {
+                // If the course already exists, merge the lines
+                const sourceCourse = courseMap.get(targetCourse.index);
+                if (sourceCourse) {
+                    const sourceCourseLines = [...sourceCourse.line_ids];
+                    sourceCourseLines.forEach((source_line) => {
+                        source_line.course_id = targetCourse;
+                        source_line.combo_line_ids?.forEach((line) => {
+                            line.course_id = targetCourse;
+                        });
+                    });
+                    result[targetCourse.uuid] = result[sourceCourse.uuid];
+                    delete result[sourceCourse.uuid];
+                }
+            }
+            courseMap.set(targetCourse.index, targetCourse);
+        });
+
+        // Ensures all courses are assigned to the target order
+        const mergedCourses = Array.from(courseMap.values()).sort((a, b) => a.index - b.index);
+        mergedCourses.forEach((course) => (course.order_id = destOrder.id));
+        destOrder.course_ids = mergedCourses;
+        return result;
     },
     async restoreOrdersToOriginalTable(order, unmergeTable) {
         if (!order?.uiState?.unmerge) {
@@ -130,28 +258,62 @@ patch(PosStore.prototype, {
             },
             []
         );
+        let beforeMergeCourseDetails;
+        if (order?.uiState?.unmergeCourses) {
+            beforeMergeCourseDetails = Object.entries(order.uiState.unmergeCourses).reduce(
+                (acc, [uuid, details]) => {
+                    if (details.table_id === unmergeTable.id) {
+                        acc.push({
+                            ...details,
+                            uuid: uuid,
+                        });
+                    }
+                    return acc;
+                },
+                []
+            );
+        }
 
         if (beforeMergeDetails.length) {
             const newOrder = this.addNewOrder({ table_id: unmergeTable });
+
+            const courseByLines = {};
+            if (beforeMergeCourseDetails?.length) {
+                // Restore courses
+                for (const courseDetails of beforeMergeCourseDetails) {
+                    const course = this.data.models["restaurant.order.course"].create({
+                        order_id: newOrder,
+                        index: courseDetails.index,
+                        fired: courseDetails.fired,
+                        fired_date: courseDetails.fired_date,
+                    });
+                    courseDetails.lines?.forEach((lineUuid) => {
+                        courseByLines[lineUuid] = course;
+                    });
+                    delete order.uiState.unmergeCourses[courseDetails.uuid];
+                }
+            }
+
             for (const detail of beforeMergeDetails) {
                 const line = order.lines.find((l) => l.uuid === detail.uuid);
                 const serializedLine = line.serialize({ orm: true });
-
                 delete serializedLine.uuid;
                 delete serializedLine.id;
-
+                const course = courseByLines[detail.uuid];
                 Object.assign(serializedLine, {
                     order_id: newOrder.id,
                     qty: detail.quantity,
                 });
 
                 const newLine = this.models["pos.order.line"].create(serializedLine, false, true);
+                if (course) {
+                    newLine.course_id = course;
+                }
                 if (parseFloat(line.qty - detail.quantity) === 0) {
                     line.delete();
                 } else {
                     line.setQuantity(line.qty - newLine.qty);
                 }
-
                 this.handlePreparationHistory(
                     order.last_order_preparation_change.lines,
                     newOrder.last_order_preparation_change.lines,
@@ -354,10 +516,31 @@ patch(PosStore.prototype, {
         return super.createOrderIfNeeded(...arguments);
     },
     async addLineToCurrentOrder(vals, opts = {}, configure = true) {
-        if (this.config.module_pos_restaurant && !this.getOrder().uiState.booked) {
-            this.getOrder().setBooked(true);
+        let currentCourse;
+        if (this.config.module_pos_restaurant) {
+            const order = this.getOrder();
+            if (!order.uiState.booked) {
+                order.setBooked(true);
+            }
+            if (order.hasCourses()) {
+                let course = order.getSelectedCourse();
+                if (!course) {
+                    course = order.getLastCourse();
+                }
+                currentCourse = course;
+                order.selectCourse(course);
+                vals = { ...vals, course_id: course };
+            }
         }
-        return super.addLineToCurrentOrder(vals, opts, configure);
+        const result = await super.addLineToCurrentOrder(vals, opts, configure);
+
+        if (currentCourse && result?.combo_line_ids) {
+            result.combo_line_ids.forEach((line) => {
+                line.course_id = currentCourse;
+            });
+        }
+
+        return result;
     },
     async getServerOrders() {
         if (this.config.module_pos_restaurant) {
@@ -496,9 +679,7 @@ patch(PosStore.prototype, {
         }
     },
     getActiveOrdersOnTable(table) {
-        return this.models["pos.order"].filter(
-            (o) => o.table_id?.id === table.id && !o.finalized && o.lines.length
-        );
+        return this.models["pos.order"].filter((o) => o.table_id?.id === table.id && !o.finalized);
     },
     tableHasOrders(table) {
         return Boolean(table.getOrder());
@@ -550,6 +731,7 @@ patch(PosStore.prototype, {
         if (!destinationTable && !destinationOrder) {
             return;
         }
+
         const sourceOrder = this.models["pos.order"].getBy("uuid", orderUuid);
 
         if (destinationTable) {
@@ -558,7 +740,7 @@ patch(PosStore.prototype, {
             }
             destinationOrder = this.getActiveOrdersOnTable(destinationTable.rootTable)[0];
         }
-        await this.mergeOrders(sourceOrder, destinationOrder);
+        await this.mergeOrders(sourceOrder, destinationOrder, destinationTable);
         if (destinationTable) {
             await this.setTable(destinationTable);
         }
@@ -607,5 +789,97 @@ patch(PosStore.prototype, {
             return;
         }
         return this.floorScrollPositions[floorId];
+    },
+    shouldCreatePendingOrder(order) {
+        return super.shouldCreatePendingOrder(order) || order.course_ids?.length > 0;
+    },
+    setOrder(order) {
+        order?.ensureCourseSelection();
+        super.setOrder(order);
+    },
+    addCourse() {
+        const order = this.getOrder();
+
+        const course = this.data.models["restaurant.order.course"].create({
+            order_id: order,
+            index: order.getNextCourseIndex(),
+        });
+        let selectedCourse = course;
+        if (order.course_ids.length === 1 && order.lines.length > 0) {
+            // Assign order lines to the first course
+            order.lines.forEach((line) => (line.course_id = course));
+            // Create a second empty course
+            selectedCourse = this.data.models["restaurant.order.course"].create({
+                order_id: order,
+                index: order.getNextCourseIndex(),
+            });
+        }
+        order.recomputeOrderData(); // To ensure that courses are stored locally
+        order.selectCourse(selectedCourse);
+        return course;
+    },
+    async fireCourse(course) {
+        const order = this.getOrder();
+        if (!order || !course || course.fired) {
+            return false;
+        }
+        course.fired = true;
+        this.addPendingOrder([order.id]);
+        order.deselectCourse();
+        await this.syncAllOrders();
+        course = this.models["restaurant.order.course"].getBy("uuid", course.uuid);
+        await this._onCourseFired(course);
+        return true;
+    },
+    async _onCourseFired(course) {
+        try {
+            const changes = {
+                new: [],
+                cancelled: [],
+                noteUpdate: course.lines.map((line) => ({ product_id: line.getProduct().id })),
+                noteUpdateTitle: _t("Course %s fired", "" + course.index),
+                printNoteUpdateData: false,
+            };
+            this.getOrder().uiState.lastPrint = changes;
+            await this.printChanges(this.getOrder(), changes, false);
+        } catch (e) {
+            console.error("Unable to print course", e);
+        }
+    },
+    async transferLinesToCourse() {
+        const order = this.getOrder();
+        if (!order) {
+            return;
+        }
+        const selectedLine = order.getSelectedOrderline();
+        const selectedCourse = order.getSelectedCourse()
+            ? order.getSelectedCourse()
+            : selectedLine.course_id;
+        const selectionList = this.getOrder().courses.map((course) => ({
+            id: course.id,
+            label: course.name,
+            isSelected: course.id === selectedCourse?.id,
+            item: course,
+        }));
+        const dialogTitle = selectedLine
+            ? _t('Transfer "%s" to:', selectedLine.getFullProductName())
+            : _t('Transfer all products of "%s" into:', selectedCourse.name);
+        const destCourse = await makeAwaitable(this.dialog, SelectionPopup, {
+            title: dialogTitle,
+            list: selectionList,
+        });
+        if (!destCourse) {
+            return;
+        }
+        if (selectedLine) {
+            selectedLine.course_id = destCourse.id;
+        } else {
+            const lines = [...selectedCourse.lines];
+            lines.forEach((line) => {
+                line.course_id = destCourse.id;
+            });
+        }
+        order.selectCourse(destCourse);
+        order.recomputeOrderData();
     },
 });

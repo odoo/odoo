@@ -8,6 +8,7 @@ import { batched } from "@web/core/utils/timing";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { CustomerDisplayPosAdapter } from "@point_of_sale/customer_display/customer_display_adapter";
 import { useIdleTimer } from "./utils/use_idle_timer";
+import useTours from "./hooks/use_tours";
 
 /**
  * Chrome is the root component of the PoS App.
@@ -24,6 +25,9 @@ export class Chrome extends Component {
         window.posmodel = reactivePos;
         useOwnDebugContext();
 
+        if (odoo.use_pos_fake_tours) {
+            window.pos_fake_tour = useTours();
+        }
         // prevent backspace from performing a 'back' navigation
         document.addEventListener("keydown", (ev) => {
             if (ev.key === "Backspace" && !ev.target.matches("input, textarea")) {

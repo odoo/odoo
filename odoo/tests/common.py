@@ -91,7 +91,7 @@ except ImportError:
     freezegun = None
 
 _logger = logging.getLogger(__name__)
-if config['test_enable'] or config['test_file']:
+if config['test_enable']:
     _logger.info("Importing test framework", stack_info=_logger.isEnabledFor(logging.DEBUG))
 else:
     _logger.error(
@@ -2034,7 +2034,29 @@ class HttpCase(TransactionCase):
             self._logger.warning('watch mode is only suitable for local testing')
 
         browser = ChromeBrowser(self, headless=not watch, success_signal=success_signal, debug=debug)
+        sendone_patch = None
+        websocket_allowed_patch = None
+        kick_all_websockets = None
         try:
+            if "bus.bus" in self.env.registry:
+                from odoo.addons.bus.websocket import CloseCode, _kick_all, WebsocketConnectionHandler
+                from odoo.addons.bus.models.bus import BusBus
+
+                kick_all_websockets = partial(_kick_all, CloseCode.KILL_NOW)
+                original_send_one = BusBus._sendone
+
+                def sendone_wrapper(self, target, notification_type, message):
+                    original_send_one(self, target, notification_type, message)
+                    self.env.cr.precommit.run()  # Trigger the creation of bus.bus records
+                    self.env.cr.postcommit.run()  # Trigger notification dispatching
+
+                sendone_patch = patch.object(BusBus, "_sendone", sendone_wrapper)
+                websocket_allowed_patch = patch.object(
+                    WebsocketConnectionHandler, "websocket_allowed", return_value=True
+                )
+                sendone_patch.start()
+                websocket_allowed_patch.start()
+
             self.authenticate(login, login, browser=browser)
             # Flush and clear the current transaction.  This is useful in case
             # we make requests to the server, as these requests are made with
@@ -2078,6 +2100,12 @@ class HttpCase(TransactionCase):
 
         finally:
             browser.stop()
+            if sendone_patch:
+                sendone_patch.stop()
+            if websocket_allowed_patch:
+                websocket_allowed_patch.stop()
+            if kick_all_websockets:
+                kick_all_websockets()
             self._wait_remaining_requests()
 
     def start_tour(self, url_path, tour_name, step_delay=None, **kwargs):

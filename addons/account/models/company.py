@@ -153,12 +153,12 @@ class ResCompany(models.Model):
         readonly=True,
         copy=False,
         default=lambda self: self.env['ir.sequence'].sudo().create({
-            'name': _("Batch Payment Number Sequence"),
+            'name': _("Group Payments Number Sequence"),
             'implementation': 'no_gap',
             'padding': 5,
             'use_date_range': True,
             'company_id': self.id,
-            'prefix': 'BATCH/%(year)s/',
+            'prefix': 'GROUP/%(year)s/',
         }),
     )
 

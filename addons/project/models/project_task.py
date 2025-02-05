@@ -632,18 +632,15 @@ class ProjectTask(models.Model):
         for task in self:
             task.subtask_count, task.closed_subtask_count = total_and_closed_subtask_count_per_parent_id.get(task.id, (0, 0))
 
-    @api.depends('partner_id.phone', 'partner_id.mobile')
+    @api.depends('partner_id.phone')
     def _compute_partner_phone(self):
         for task in self:
-            task.partner_phone = task.partner_id.mobile or task.partner_id.phone or False
+            task.partner_phone = task.partner_id.phone or False
 
     def _inverse_partner_phone(self):
         for task in self:
             if task.partner_id:
-                if task.partner_id.mobile or not task.partner_id.phone:
-                    task.partner_id.mobile = task.partner_phone
-                else:
-                    task.partner_id.phone = task.partner_phone
+                task.partner_id.phone = task.partner_phone
 
     @api.onchange('company_id')
     def _onchange_task_company(self):

@@ -217,6 +217,9 @@ export class Colibri {
 
     processContent(content) {
         for (const sel in content) {
+            if (sel.startsWith("t-")) {
+                throw new Error(`Selector missing for key ${sel} in dynamicContent (interaction '${this.interaction.constructor.name}').`);
+            }
             let nodes;
             if (this.dynamicNodes.has(sel)) {
                 nodes = this.dynamicNodes.get(sel);

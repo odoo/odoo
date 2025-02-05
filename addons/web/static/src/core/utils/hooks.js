@@ -47,10 +47,20 @@ export function useAutofocus({ refName, selectAll, mobile } = {}) {
     if (!mobile && isMobileOS()) {
         return ref;
     }
+    function isFocusable(el) {
+        if (!el) {
+            return;
+        }
+        if (!uiService.activeElement || uiService.activeElement.contains(el)) {
+            return true;
+        }
+        const rootNode = el.getRootNode();
+        return rootNode instanceof ShadowRoot && uiService.activeElement.contains(rootNode.host);
+    }
     // LEGACY
     useEffect(
         (el) => {
-            if (el && (!uiService.activeElement || uiService.activeElement.contains(el))) {
+            if (isFocusable(el)) {
                 el.focus();
                 if (["INPUT", "TEXTAREA"].includes(el.tagName) && el.type !== "number") {
                     el.selectionEnd = el.value.length;

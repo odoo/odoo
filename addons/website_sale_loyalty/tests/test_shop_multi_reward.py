@@ -1,14 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details
 
 from odoo.fields import Command
-from odoo.tests import TransactionCase, tagged
+from odoo.tests import tagged
 
-from odoo.addons.website.tools import MockRequest
+from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 from odoo.addons.website_sale_loyalty.controllers.main import WebsiteSale
 
 
 @tagged('post_install', '-at_install')
-class TestClaimReward(TransactionCase):
+class TestClaimReward(WebsiteSaleCommon):
 
     def test_claim_reward_with_multi_product(self):
         WebsiteSaleController = WebsiteSale()
@@ -28,11 +28,6 @@ class TestClaimReward(TransactionCase):
             'product_tag_ids': tag,
         }])
 
-        partner = self.env['res.partner'].create({
-            'name': 'Test Customer',
-            'email': 'test@example.com',
-        })
-
         promo_program = self.env['loyalty.program'].create({
             'name': 'Free Products',
             'program_type': 'promotion',
@@ -51,18 +46,10 @@ class TestClaimReward(TransactionCase):
             })]
         })
 
-        website = self.env['website'].browse(1)
-        order = self.env['sale.order'].create({
-            'website_id': website.id,
-            'partner_id': partner.id,
-            'order_line': [Command.create({
-                'product_id': product1.id,
-                'product_uom_qty': 1,
-            })],
-        })
+        order = self.empty_cart
+        order.order_line = [Command.create({'product_id': product1.id})]
         order._update_programs_and_rewards()
-        with MockRequest(self.env, website=website, sale_order_id=order.id):
-
+        with MockRequest(self.env, website=self.website, sale_order_id=order.id):
             WebsiteSaleController.claim_reward(promo_program.reward_ids[:1].id, product_id=str(product2.id))
 
             self.assertEqual(len(order.order_line), 2, 'reward line should be added to order')

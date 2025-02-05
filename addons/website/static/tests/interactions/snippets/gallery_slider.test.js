@@ -197,10 +197,10 @@ test("gallery_slider interaction on old lightbox", async () => {
     await advanceTime(SLIDE_DURATION);
     // Fix parameters that are based on sizes.
     interaction.page = 0;
-    interaction.nbPages = 6;
-    interaction.realNbPerPage = 1;
+    interaction.nbPages = 1;
+    interaction.realNbPerPage = 20;
     const imgEl = queryOne(".carousel-item.active img");
-    await click(".o_indicators_right");
+    await click("li[data-bs-slide-to]:eq(1)");
     await animationFrame();
     await onceAllImagesLoaded(getFixture());
     await advanceTime(SLIDE_DURATION);

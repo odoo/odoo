@@ -90,7 +90,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
             {'country_id': country_id,
              'email': f'test_partner_{idx}@test.example.com',
              'invoice_edi_format': False,
-             'mobile': f'047500{idx:2d}{idx:2d}',
+             'phone': f'047500{idx:2d}{idx:2d}',
              'lang': langs[idx % len(langs)],
              'name': f'Partner_{idx}',
             } for idx in range(0, 10)
@@ -603,22 +603,6 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             ('res_field', '=', False),
         ])
         self.assertFalse(invoice_attachments)
-
-    def test_invoice_single_email_missing(self):
-        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
-
-        self.partner_a.invoice_sending_method = 'email'
-        self.partner_a.email = None
-        wizard = self.create_send_and_print(invoice, sending_methods=['email'])
-        self.assertTrue('account_missing_email' in wizard.alerts and wizard.alerts['account_missing_email']['level'] == 'danger')
-        with self.assertRaisesRegex(UserError, "email"):
-            wizard.action_send_and_print()
-
-        self.partner_a.email = "turlututu@tsointsoin"
-        wizard = self.create_send_and_print(invoice, sending_methods=['email'])
-        self.assertFalse(wizard.alerts)
-        wizard.action_send_and_print()
-        self.assertTrue(self._get_mail_message(invoice))
 
     def test_invoice_multi(self):
         invoice1 = self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000], post=True)

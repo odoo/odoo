@@ -2245,6 +2245,43 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(list(warning.keys())[0], 'warning', 'Warning message was not returned')
         self.assertEqual(scrap.location_id, mo.location_dest_id, 'Location was not auto-corrected')
 
+    def test_mo_assign_producing_lot(self):
+        """ Checks that in an MO tracked by Lot the reservations of the raws are not
+        modified if a LOT is assigned manually in the Form.
+        """
+        warehouse = self.warehouse_1
+        mo, _, p_final, comp1, comp2 = self.generate_mo(tracking_final='lot', tracking_base_1='serial', qty_base_1=1, qty_final=1, picking_type_id=warehouse.manu_type_id)
+        self.assertEqual(len(mo), 1, 'MO should have been created')
+        lot1, sn1 = self.env['stock.lot'].create([
+            {
+                'name': 'lot1',
+                'product_id': p_final.id,
+                'company_id': self.env.company.id,
+            },
+            {
+                'name': 'sn1',
+                'product_id': comp1.id,
+                'company_id': self.env.company.id,
+            },
+        ])
+        # make a reservation on the raw moves
+        self.env['stock.quant']._update_available_quantity(comp1, warehouse.lot_stock_id, 1, lot_id=sn1)
+        self.env['stock.quant']._update_available_quantity(comp2, warehouse.lot_stock_id, 1)
+        mo.action_assign()
+        self.assertEqual(mo.qty_producing, 0.0)
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'product_id': comp2.id, 'quantity': 1, 'picked': False, 'lot_ids': []},
+            {'product_id': comp1.id, 'quantity': 1, 'picked': False, 'lot_ids': sn1.ids},
+        ])
+        with Form(mo) as mo_form:
+            mo_form.lot_producing_id = lot1
+        self.assertEqual(mo.qty_producing, 0.0)
+        self.assertEqual(mo.lot_producing_id, lot1)
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'product_id': comp2.id, 'quantity': 1, 'picked': False, 'lot_ids': []},
+            {'product_id': comp1.id, 'quantity': 1, 'picked': False, 'lot_ids': sn1.ids},
+        ])
+
     def test_a_multi_button_plan(self):
         """ Test batch methods (confirm/validate) of the MO with the same bom """
         self.bom_2.type = "normal"  # avoid to get the operation of the kit bom
@@ -4112,9 +4149,9 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(production.workorder_ids.duration_expected, init_duration_expected + 5)
 
     def test_batch_production_01(self):
-        """ Test the wizard mrp.batch.produce without tracked components.
-        """
+        """ Test the wizard mrp.batch.produce without tracked components."""
         self.product_4.tracking = 'serial'
+        self.bom_1.product_uom_id = self.product_4.uom_id
         self.product_4.uom_id = self.uom_unit
         mo_form = Form(self.env['mrp.production'])
         mo_form.bom_id = self.bom_1
@@ -4145,6 +4182,7 @@ class TestMrpOrder(TestMrpCommon):
         self.env['stock.picking.type'].search([('code', '=', 'mrp_operation')]).use_create_components_lots = True
         self.product_1.tracking = 'serial'
         self.product_4.tracking = 'serial'
+        self.bom_1.product_uom_id = self.product_4.uom_id
         self.product_4.uom_id = self.uom_unit
 
         mo_form = Form(self.env['mrp.production'])
@@ -4186,6 +4224,7 @@ class TestMrpOrder(TestMrpCommon):
         self.product_1.tracking = 'serial'
         self.product_2.tracking = 'lot'
         self.product_4.tracking = 'serial'
+        self.bom_1.product_uom_id = self.product_4.uom_id
         self.product_4.uom_id = self.uom_unit
 
         mo_form = Form(self.env['mrp.production'])
@@ -5004,6 +5043,63 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(production.workorder_ids[0].date_finished, production.date_finished)
         self.assertEqual(production.workorder_ids[0].leave_id.date_to, production.date_finished)
 
+    def test_child_mo_after_qty_parent_mo_update(self):
+        """
+        Test that all child MOs will be found after the parent MO has been updated.
+        Suppose three manufactured products A, B and C:
+        - Product A (grandparent)-> Bom:
+            - Product B (parent)-> Bom:
+                - Product C (child) -> Bom:
+                    - component
+        (B + C) have the routes MTO + Manufacture
+        so producing one unit of A -> should generate a MO for B and C
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        mto_route = warehouse.mto_pull_id.route_id
+        manufacture_route = warehouse.manufacture_pull_id.route_id
+        mto_route.active = True
+
+        grandparent, parent, child = self.env['product.product'].create([{
+            'name': n,
+            'is_storable': True,
+            'route_ids': [(6, 0, mto_route.ids + manufacture_route.ids)],
+        } for n in ['grandparent', 'parent', 'child']])
+        component = self.env['product.product'].create({
+            'name': 'component',
+        })
+
+        self.env['mrp.bom'].create([{
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': compo.id, 'product_qty': 1}),
+            ],
+        } for finished_product, compo in [(grandparent, parent), (parent, child), (child, component)]])
+        grandparent_production = self.env['mrp.production'].create({
+            'bom_id': grandparent.bom_ids.id,
+        })
+        grandparent_production.action_confirm()
+        child_production, parent_production = self.env['mrp.production'].search([('product_id', 'in', (parent + child).ids)], order='id desc', limit=2)
+        self.assertTrue(grandparent_production._get_children(), parent_production)
+        self.assertTrue(parent_production._get_children(), child_production)
+        update_quantity_wizard = self.env['change.production.qty'].create({
+            'mo_id': grandparent_production.id,
+            'product_qty': 2,
+        })
+        # Update the quantity to produce of the grandparent to 2, this should create a new MO for both the parent and the child.
+        update_quantity_wizard.change_prod_qty()
+        self.assertEqual(grandparent_production.move_raw_ids.product_uom_qty, 2)
+        child_production_2, parent_production_2 = self.env['mrp.production'].search([('product_id', 'in', (parent + child).ids), ('id', 'not in', [parent_production.id, child_production.id])], order='id desc', limit=2)
+        self.assertEqual(grandparent_production._get_children(), (parent_production | parent_production_2))
+        self.assertEqual(parent_production_2._get_children(), child_production_2)
+
+    def test_workcenter_with_resource_calendar_from_another_company(self):
+        """Test that only the resource calendars from the same
+        company as the work center can be set."""
+        resource_calendar = self.env['resource.calendar'].search([('company_id', 'not in', [self.workcenter_1.company_id.id, False])], limit=1)
+        with self.assertRaises(UserError):
+            self.workcenter_1.resource_calendar_id, = resource_calendar
 
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):

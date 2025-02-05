@@ -6,7 +6,7 @@ import { floatIsZero } from "@web/core/utils/numbers";
 import { renderToElement } from "@web/core/utils/render";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { deduceUrl, random5Chars, uuidv4, Counter } from "@point_of_sale/utils";
+import { deduceUrl, random5Chars, uuidv4, Counter, lte } from "@point_of_sale/utils";
 import { HWPrinter } from "@point_of_sale/app/utils/printer/hw_printer";
 import { ConnectionAbortedError, ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
@@ -37,6 +37,7 @@ import { user } from "@web/core/user";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { unaccent } from "@web/core/utils/strings";
 import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
+import { debounce } from "@web/core/utils/timing";
 
 const { DateTime } = luxon;
 
@@ -121,7 +122,6 @@ export class PosStore extends WithLazyGetterTrap {
             create: new Set(),
         };
 
-        this.synch = { status: "connected", pending: 0 };
         this.hardwareProxy = hardware_proxy;
         this.hiddenProductIds = new Set();
         this.selectedOrderUuid = null;
@@ -149,6 +149,7 @@ export class PosStore extends WithLazyGetterTrap {
             await this.connectToProxy();
         }
         this.closeOtherTabs();
+        this.syncAllOrdersDebounced = debounce(this.syncAllOrders, 100);
     }
 
     get firstScreen() {
@@ -267,7 +268,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     async closingSessionNotification(data) {
-        if (data.login_number === this.session.login_number) {
+        if (data.login_number == this.session.login_number) {
             return;
         }
 
@@ -380,7 +381,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     get session() {
-        return this.data.models["pos.session"].getFirst();
+        return this.data.models["pos.session"].get(odoo.pos_session_id);
     }
 
     async processServerData() {
@@ -530,7 +531,7 @@ export class PosStore extends WithLazyGetterTrap {
                     await this.sendOrderInPreparation(order, true, true);
                 }
 
-                const cancelled = this.removeOrder(order, true);
+                const cancelled = this.removeOrder(order, false);
                 this.removePendingOrder(order);
                 if (!cancelled) {
                     return false;
@@ -1045,6 +1046,7 @@ export class PosStore extends WithLazyGetterTrap {
         if (this.config.isShareable || removeFromServer) {
             if (typeof order.id === "number" && !order.finalized) {
                 this.addPendingOrder([order.id], true);
+                this.syncAllOrdersDebounced();
             }
         }
 
@@ -1053,7 +1055,7 @@ export class PosStore extends WithLazyGetterTrap {
             return;
         }
 
-        return this.data.localDeleteCascade(order, removeFromServer);
+        return this.data.localDeleteCascade(order);
     }
 
     /**
@@ -1191,9 +1193,7 @@ export class PosStore extends WithLazyGetterTrap {
     getPendingOrder() {
         const orderToCreate = this.models["pos.order"].filter(
             (order) =>
-                this.pendingOrder.create.has(order.id) &&
-                (order.lines.length > 0 ||
-                    order.payment_ids.some((p) => p.payment_method_id.type === "pay_later"))
+                this.pendingOrder.create.has(order.id) && this.shouldCreatePendingOrder(order)
         );
         const orderToUpdate = this.models["pos.order"].readMany(
             Array.from(this.pendingOrder.write)
@@ -1207,6 +1207,13 @@ export class PosStore extends WithLazyGetterTrap {
             orderToCreate,
             orderToUpdate,
         };
+    }
+
+    shouldCreatePendingOrder(order) {
+        return (
+            order.lines.length > 0 ||
+            order.payment_ids.some((p) => p.payment_method_id.type === "pay_later")
+        );
     }
 
     getOrderIdsToDelete() {
@@ -1528,6 +1535,9 @@ export class PosStore extends WithLazyGetterTrap {
         );
     }
     showScreen(name, props = {}, newOrder = false) {
+        if (name === "PaymentScreen" && !props.orderUuid) {
+            name = "ProductScreen";
+        }
         if (name === "ProductScreen") {
             this.getOrder()?.deselectOrderline();
         }
@@ -1547,7 +1557,7 @@ export class PosStore extends WithLazyGetterTrap {
         order = this.getOrder(),
         printBillActionTriggered = false,
     } = {}) {
-        await this.printer.print(
+        const result = await this.printer.print(
             OrderReceipt,
             {
                 order,
@@ -1556,8 +1566,10 @@ export class PosStore extends WithLazyGetterTrap {
             { webPrintFallback: true }
         );
         if (!printBillActionTriggered) {
-            const nbrPrint = order.nb_print;
-            await this.data.write("pos.order", [order.id], { nb_print: nbrPrint + 1 });
+            order.nb_print += 1;
+            if (typeof order.id === "number" && result) {
+                await this.data.write("pos.order", [order.id], { nb_print: order.nb_print });
+            }
         }
         return true;
     }
@@ -1601,6 +1613,11 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
     async sendOrderInPreparationUpdateLastChange(o, cancelled = false) {
+        // Always display a "ConnectionLostError" when the user tries to send an order to the kitchen while offline
+        if (this.data.network.offline) {
+            this.data.network.warningTriggered = false;
+            throw new ConnectionLostError();
+        }
         this.addPendingOrder([o.id]);
         const uuid = o.uuid;
         const orders = await this.syncAllOrders({ orders: [o] });
@@ -1671,9 +1688,10 @@ export class PosStore extends WithLazyGetterTrap {
             }
 
             if (changes.noteUpdate.length) {
+                const { noteUpdateTitle, printNoteUpdateData = true } = orderChange;
                 orderData.changes = {
-                    title: _t("NOTE UPDATE"),
-                    data: changes.noteUpdate,
+                    title: noteUpdateTitle || _t("NOTE UPDATE"),
+                    data: printNoteUpdateData ? changes.noteUpdate : [],
                 };
                 const result = await this.printOrderChanges(orderData, printer);
                 if (!result.successful) {
@@ -1702,6 +1720,18 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     async printOrderChanges(data, printer) {
+        const dataChanges = data.changes?.data;
+        if (dataChanges && dataChanges.some((c) => c.group)) {
+            const groupedData = dataChanges.reduce((acc, c) => {
+                const { name = "", index = -1 } = c.group || {};
+                if (!acc[name]) {
+                    acc[name] = { name, index, data: [] };
+                }
+                acc[name].data.push(c);
+                return acc;
+            }, {});
+            data.changes.groupedData = Object.values(groupedData).sort((a, b) => a.index - b.index);
+        }
         const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
             data: data,
         });
@@ -2241,6 +2271,21 @@ export class PosStore extends WithLazyGetterTrap {
         );
 
         return Array.from(new Set([...exactMatches, ...fuzzyMatches]));
+    }
+
+    getPaymentMethodDisplayText(pm, order) {
+        const { cash_rounding, only_round_cash_method } = this.config;
+        const amount = order.getDefaultAmountDueToPayIn(pm);
+        const fmtAmount = this.env.utils.formatCurrency(amount, false);
+        if (
+            lte(amount, 0, { decimals: this.currency.decimal_places }) ||
+            !cash_rounding ||
+            (only_round_cash_method && pm.type !== "cash")
+        ) {
+            return pm.name;
+        } else {
+            return `${pm.name} (${fmtAmount})`;
+        }
     }
 }
 

@@ -33,7 +33,6 @@ export class PosData extends Reactive {
         this.records = {};
         this.opts = new DataServiceOptions();
         this.channels = [];
-        this.onNotified = getOnNotified(this.bus, odoo.access_token);
 
         this.network = {
             warningTriggered: false,
@@ -42,6 +41,7 @@ export class PosData extends Reactive {
             unsyncData: [],
         };
 
+        this.initializeWebsocket();
         await this.intializeDataRelation();
         browser.addEventListener("online", () => {
             if (this.network.offline) {
@@ -59,9 +59,12 @@ export class PosData extends Reactive {
         this.bus.addEventListener("connect", this.reconnectWebSocket.bind(this));
     }
 
-    reconnectWebSocket() {
+    initializeWebsocket() {
         this.onNotified = getOnNotified(this.bus, odoo.access_token);
+    }
 
+    reconnectWebSocket() {
+        this.initializeWebsocket();
         const channels = [...this.channels];
         this.channels = [];
         while (channels.length) {
@@ -214,7 +217,7 @@ export class PosData extends Reactive {
 
                 for (const id of ids) {
                     if (!serverIds.includes(id)) {
-                        this.localDeleteCascade(this.models["pos.order"].get(id), true);
+                        this.localDeleteCascade(this.models["pos.order"].get(id));
                     }
                 }
             }
@@ -242,15 +245,12 @@ export class PosData extends Reactive {
 
     async loadInitialData() {
         let localData = await this.getCachedServerDataFromIndexedDB();
-        const session = localData["pos.session"]?.[0];
+        const session = localData?.["pos.session"]?.[0];
 
-        if (session && session.id !== odoo.pos_session_id) {
-            await this.resetIndexedDB();
-            window.location.reload();
-            return {};
-        }
-
-        if (navigator.onLine && session?.state !== "opened") {
+        if (
+            (navigator.onLine && session?.state !== "opened") ||
+            session?.id !== odoo.pos_session_id
+        ) {
             try {
                 const limitedLoading = this.isLimitedLoading();
                 const serverDate = localData["pos.session"]?.[0]?._data_server_date;
@@ -535,7 +535,7 @@ export class PosData extends Reactive {
                 this.synchronizeServerDataInIndexedDB({ [model]: [baseData] });
             }
 
-            return result || true;
+            return result;
         } catch (error) {
             let throwErr = true;
             const uuids = this.network.unsyncData.map((d) => d.uuid);
@@ -748,14 +748,8 @@ export class PosData extends Reactive {
         return await this.execute({ type: "delete", model, ids, queue });
     }
 
-    localDeleteCascade(record, force = false) {
+    localDeleteCascade(record, removeFromServer = false) {
         const recordModel = record.constructor.pythonModel;
-        if (typeof record.id === "number" && !force) {
-            console.info(
-                `Record ID ${record.id} MODEL ${recordModel}. If you want to delete a record saved on the server, you need to pass the force parameter as true.`
-            );
-            return;
-        }
 
         const relationsToDelete = Object.values(this.relations[recordModel])
             .filter((rel) => this.opts.cascadeDeleteModels.includes(rel.relation))
@@ -769,11 +763,11 @@ export class PosData extends Reactive {
         this.indexedDB.delete(recordModel, [record.uuid]);
         for (const item of recordsToDelete) {
             this.indexedDB.delete(item.model.name, [item.uuid]);
-            item.delete();
+            item.delete({ silent: !removeFromServer });
         }
 
         // Delete the main record
-        const result = record.delete();
+        const result = record.delete({ silent: !removeFromServer });
         return result;
     }
 

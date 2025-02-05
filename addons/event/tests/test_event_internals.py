@@ -769,9 +769,7 @@ class TestEventRegistrationPhone(EventCase):
         customer2 = self.event_customer2.with_env(self.env)
         event = self.test_event.with_env(self.env)
 
-        self.assertFalse(customer.mobile)
         self.assertEqual(customer.phone, '0485112233')
-        self.assertEqual(customer2.mobile, '0456654321')
         self.assertEqual(customer2.phone, '0456987654')
 
         self.assertEqual(event.company_id.country_id, self.env.ref("base.be"))
@@ -791,20 +789,12 @@ class TestEventRegistrationPhone(EventCase):
     def test_registration_phone_format(self):
         """ Test phone formatting: based on partner (BE numbers) or event
         (IN numbers) or company (BE numbers). """
-        partner_mobileonly = self.env['res.partner'].sudo().create({
-            'name': 'Constantin Customer 3 Mobile',
-            'email': 'constantin3test.example.com',
-            'country_id': self.env.ref('base.be').id,
-            'phone': False,
-            'mobile': '0456987654',
-            })
         event = self.test_event.with_user(self.env.user)
 
         # customer_id, phone -> based on partner or event country
         sources = [
             (self.event_customer.id, None),  # BE local on partner
             (self.event_customer2.id, None),  # BE local on partner
-            (partner_mobileonly.id, None),  # BE local on partner
             (self.event_customer2.id, '0456001122'),  # BE local + on partner
             (False, '0456778899'),  # BE local
             (False, '7200000000'),  # IN local
@@ -814,7 +804,6 @@ class TestEventRegistrationPhone(EventCase):
         expected = [
             '0485112233',  # partner values, no format (phone only)
             '0456987654',  # partner values, no format (both: phone wins)
-            '0456987654',  # partner values, no format (mobile only)
             '+32456001122',  # BE on partner
             '0456778899',  # IN on event -> cannot format BE
             '+917200000000',  # IN on event
@@ -836,7 +825,6 @@ class TestEventRegistrationPhone(EventCase):
         expected = [
             '0485112233',  # partner values, no format (phone only)
             '0456987654',  # partner values, no format (both: phone wins)
-            '0456987654',  # partner values, no format (mobile only)
             '+32456001122',  # BE on company
             '+32456778899',  # BE on company
             '7200000000',  # BE on company -> cannot format IN

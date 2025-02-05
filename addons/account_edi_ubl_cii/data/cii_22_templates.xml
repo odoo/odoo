@@ -101,8 +101,8 @@
 
                 <ram:DefinedTradeContact t-if="not hide_dtc">
                     <ram:PersonName t-out="partner.name"/>
-                    <ram:TelephoneUniversalCommunication t-if="partner.phone or partner.mobile">
-                        <ram:CompleteNumber t-out="partner.phone or partner.mobile"/>
+                    <ram:TelephoneUniversalCommunication t-if="partner.phone">
+                        <ram:CompleteNumber t-out="partner.phone"/>
                     </ram:TelephoneUniversalCommunication>
                     <ram:EmailURIUniversalCommunication t-if="partner.email">
                         <ram:URIID schemeID='SMTP' t-out="partner.email"/>

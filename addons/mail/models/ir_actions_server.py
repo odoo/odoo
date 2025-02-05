@@ -4,7 +4,6 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
 
 
 class IrActionsServer(models.Model):
@@ -43,10 +42,10 @@ class IrActionsServer(models.Model):
     )
     followers_partner_field_name = fields.Char(
         string='Followers Field',
-        compute='_compute_followers_partner_field_name',
+        compute='_compute_followers_info',
         readonly=False, store=True
     )
-    partner_ids = fields.Many2many('res.partner', compute='_compute_partner_ids', readonly=False, store=True)
+    partner_ids = fields.Many2many('res.partner', compute='_compute_followers_info', readonly=False, store=True)
 
     # Message Post / Email
     template_id = fields.Many2one(
@@ -69,7 +68,7 @@ class IrActionsServer(models.Model):
     activity_type_id = fields.Many2one(
         'mail.activity.type', string='Activity Type',
         domain="['|', ('res_model', '=', False), ('res_model', '=', model_name)]",
-        compute='_compute_activity_type_id', readonly=False, store=True,
+        compute='_compute_activity_info', readonly=False, store=True,
         ondelete='restrict')
     activity_summary = fields.Char(
         'Title',
@@ -94,10 +93,10 @@ class IrActionsServer(models.Model):
         help="Use 'Specific User' to always assign the same user on the next activity. Use 'Dynamic User' to specify the field name of the user to choose on the record.")
     activity_user_id = fields.Many2one(
         'res.users', string='Responsible',
-        compute='_compute_activity_info', readonly=False, store=True)
+        compute='_compute_activity_user_info', readonly=False, store=True)
     activity_user_field_name = fields.Char(
         'User Field',
-        compute='_compute_activity_info', readonly=False, store=True)
+        compute='_compute_activity_user_info', readonly=False, store=True)
 
     @api.depends('state')
     def _compute_available_model_ids(self):
@@ -137,85 +136,119 @@ class IrActionsServer(models.Model):
         if other:
             other.mail_post_method = 'comment'
 
-    @api.depends('state')
+    @api.depends('model_id', 'state')
     def _compute_followers_type(self):
-        to_reset = self.filtered(lambda act: act.state not in ['followers', 'remove_followers'])
+        to_reset = self.filtered(lambda act: not act.model_id or act.state not in ['followers', 'remove_followers'])
         to_reset.followers_type = False
-        (self - to_reset).followers_type = 'specific'
+        to_default = (self - to_reset).filtered(lambda act: not act.followers_type)
+        to_default.followers_type = 'specific'
 
-    @api.depends('model_id', 'state', 'followers_type')
-    def _compute_followers_partner_field_name(self):
-        to_reset = self.filtered(
-            lambda act: not act.model_id
-            or act.state not in ["followers", "remove_followers"]
-            or act.followers_type == 'specific'
-        )
-        to_reset.followers_partner_field_name = False
-
-    @api.depends('state', 'followers_type')
-    def _compute_partner_ids(self):
-        to_reset = self.filtered(lambda act: act.state not in ['followers', 'remove_followers'] or act.followers_type == 'generic')
-        to_reset.partner_ids = False
+    @api.depends('followers_type')
+    def _compute_followers_info(self):
+        for action in self:
+            if action.followers_type == 'specific':
+                action.followers_partner_field_name = False
+            elif action.followers_type == 'generic':
+                action.partner_ids = False
+                IrModelFields = self.env['ir.model.fields']
+                domain = [('model', '=', action.model_id.model), ("relation", "=", "res.partner")]
+                action.followers_partner_field_name = (
+                    IrModelFields.search([*domain, ("name", "=", "partner_id")], limit=1)
+                    or IrModelFields.search(domain, limit=1)
+                ).name
+            else:
+                action.partner_ids = False
+                action.followers_partner_field_name = False
 
     @api.depends('model_id', 'state')
-    def _compute_activity_type_id(self):
-        to_reset = self.filtered(
-            lambda act: act.state != 'next_activity' or \
-                        (act.model_id.model != act.activity_type_id.res_model)
-        )
+    def _compute_activity_info(self):
+        to_reset = self.filtered(lambda act: not act.model_id or act.state != 'next_activity')
         if to_reset:
             to_reset.activity_type_id = False
-
-    @api.depends('state', 'activity_type_id')
-    def _compute_activity_info(self):
-        to_reset = self.filtered(lambda act: act.state != 'next_activity')
-        if to_reset:
             to_reset.activity_summary = False
             to_reset.activity_note = False
             to_reset.activity_date_deadline_range = False
             to_reset.activity_date_deadline_range_type = False
             to_reset.activity_user_type = False
-            to_reset.activity_user_id = False
-            to_reset.activity_user_field_name = False
-        to_default = self.filtered(lambda act: act.state == 'next_activity')
-        for action in to_default:
+        for action in (self - to_reset):
+            if action.activity_type_id.res_model and action.model_id.model != action.activity_type_id.res_model:
+                action.activity_type_id = False
             if not action.activity_summary:
                 action.activity_summary = action.activity_type_id.summary
             if not action.activity_date_deadline_range_type:
                 action.activity_date_deadline_range_type = 'days'
             if not action.activity_user_type:
                 action.activity_user_type = 'specific'
-            if not action.activity_user_field_name:
-                action.activity_user_field_name = 'user_id'
 
-    @api.constrains('activity_date_deadline_range')
-    def _check_activity_date_deadline_range(self):
-        if any(action.activity_date_deadline_range < 0 for action in self):
-            raise ValidationError(_("The 'Due Date In' value can't be negative."))
+    @api.depends('model_id', 'activity_user_type')
+    def _compute_activity_user_info(self):
+        to_compute = self.filtered("activity_user_type")
+        (self - to_compute).activity_user_id = False
+        (self - to_compute).activity_user_field_name = False
+        for action in to_compute:
+            if action.activity_user_type == 'specific':
+                action.activity_user_field_name = False
+            else:
+                action.activity_user_id = False
+                IrModelFields = self.env['ir.model.fields']
+                domain = [('model', '=', action.model_id.model), ("relation", "=", "res.users")]
+                action.activity_user_field_name = (
+                    IrModelFields.search([*domain, ("name", "=", "user_id")], limit=1)
+                    or IrModelFields.search(domain, limit=1)
+                ).name
 
-    @api.constrains('model_id', 'template_id')
-    def _check_mail_template_model(self):
-        for action in self.filtered(lambda action: action.state == 'mail_post'):
-            if action.template_id and action.template_id.model_id != action.model_id:
-                raise ValidationError(
-                    _('Mail template model of %(action_name)s does not match action model.',
-                      action_name=action.name
-                     )
-                )
+    @api.model
+    def _warning_depends(self):
+        return super()._warning_depends() + [
+            'activity_date_deadline_range',
+            'model_id',
+            'template_id',
+            'state',
+            'followers_type',
+            'followers_partner_field_name',
+            'activity_user_type',
+            'activity_user_field_name',
+        ]
 
-    @api.constrains('state', 'model_id', 'mail_post_method')
-    def _check_mail_model_coherency(self):
-        for action in self:
-            if action.state in {'mail_post', 'followers', 'remove_followers', 'next_activity'} and action.model_id.transient:
-                raise ValidationError(_("This action cannot be done on transient models."))
-            if (
-                (action.state in {"followers", "remove_followers"}
-                or (action.state == "mail_post" and action.mail_post_method != "email"))
-                and not action.model_id.is_mail_thread
-            ):
-                raise ValidationError(_("This action can only be done on a mail thread models"))
-            if action.state == 'next_activity' and not action.model_id.is_mail_activity:
-                raise ValidationError(_("A next activity can only be planned on models that use activities."))
+    def _get_warning_messages(self):
+        warnings = super()._get_warning_messages()
+
+        if self.activity_date_deadline_range < 0:
+            warnings.append(_("The 'Due Date In' value can't be negative."))
+
+        if self.state == 'mail_post' and self.template_id and self.template_id.model_id != self.model_id:
+            warnings.append(_("Mail template model of $(action_name)s does not match action model.", action_name=self.name))
+
+        if self.state in {'mail_post', 'followers', 'remove_followers', 'next_activity'} and self.model_id.transient:
+            warnings.append(_("This action cannot be done on transient models."))
+
+        if (
+            (self.state in {"followers", "remove_followers"}
+            or (self.state == "mail_post" and self.mail_post_method != "email"))
+            and not self.model_id.is_mail_thread
+        ):
+            warnings.append(_("This action can only be done on a mail thread models"))
+
+        if self.state == 'next_activity' and not self.model_id.is_mail_activity:
+            warnings.append(_("A next activity can only be planned on models that use activities."))
+
+        if self.state in ('followers', 'remove_followers') and self.followers_type == 'generic' and self.followers_partner_field_name:
+            fields, field_chain_str = self._get_relation_chain("followers_partner_field_name")
+            if fields and fields[-1].comodel_name != "res.partner":
+                warnings.append(_(
+                    "The field '%(field_chain_str)s' is not a partner field.",
+                    field_chain_str=field_chain_str,
+                ))
+
+        if self.state == 'next_activity' and self.activity_user_type == 'generic' and self.activity_user_field_name:
+            fields, field_chain_str = self._get_relation_chain("activity_user_field_name")
+            if fields and fields[-1].comodel_name != "res.users":
+                warnings.append(_(
+                    "The field '%(field_chain_str)s' is not a user field.",
+                    field_chain_str=field_chain_str,
+                ))
+
+        return warnings
 
     def _run_action_followers_multi(self, eval_context=None):
         Model = self.env[self.model_name]

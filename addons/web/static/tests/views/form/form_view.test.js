@@ -61,6 +61,7 @@ import { makeErrorFromResponse } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { SIZES } from "@web/core/ui/ui_service";
 import { useBus, useService } from "@web/core/utils/hooks";
+import { redirect } from "@web/core/utils/urls";
 import { CharField } from "@web/views/fields/char/char_field";
 import { DateTimeField } from "@web/views/fields/datetime/datetime_field";
 import { Field } from "@web/views/fields/field";
@@ -1682,7 +1683,6 @@ test(`reset local state when switching to another view`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "form"],
@@ -1730,14 +1730,12 @@ test(`trying to leave an invalid form view should not change the navbar`, async 
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
         },
         {
             id: 2,
             name: "Product",
             res_model: "product",
-            type: "ir.actions.act_window",
             views: [[false, "list"]],
         },
     ]);
@@ -2920,7 +2918,6 @@ test(`form views in dialogs do not have a control panel`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
             target: "new",
         },
@@ -2942,7 +2939,6 @@ test(`form views in dialogs do not add display_name field`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
             target: "new",
         },
@@ -2971,7 +2967,6 @@ test(`form views in dialogs closes on save`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
             target: "new",
         },
@@ -3001,7 +2996,6 @@ test(`form views in dialogs closes on discard on existing record`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
             target: "new",
             res_id: 1,
@@ -3040,7 +3034,6 @@ test(`form views in dialogs do not have class o_xxl_form_view`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
             target: "new",
         },
@@ -4066,7 +4059,6 @@ test(`form view properly change its title`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
             res_id: 1,
         },
@@ -4264,9 +4256,9 @@ test(`archive a record with intermediary action`, async () => {
     );
     await mountWithCleanup(WebClient);
     await getService("action").doAction({
-        type: "ir.actions.act_window",
         res_model: "partner",
         res_id: 1,
+        type: "ir.actions.act_window",
         views: [[false, "form"]],
     });
     expect(`[name='active'] input`).toHaveValue("true");
@@ -5677,7 +5669,6 @@ test(`restore the open notebook page when switching to another view`, async () =
             id: 1,
             name: "test",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[false, "list"]],
         },
         {
@@ -5685,7 +5676,6 @@ test(`restore the open notebook page when switching to another view`, async () =
             name: "test2",
             res_model: "partner",
             res_id: 1,
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
         },
     ]);
@@ -5756,7 +5746,6 @@ test(`don't restore the open notebook page when we create a new record`, async (
             id: 1,
             name: "test",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "form"],
@@ -6048,6 +6037,28 @@ test(`deleting the last record`, async () => {
     await contains(`.modal-footer button.btn-primary`).click();
     expect(`.modal`).toHaveCount(0);
     expect.verifySteps(["unlink", "history-back"]);
+});
+
+test("delete the last record (without previous action)", async () => {
+    Partner._views = {
+        form: `
+                <form>
+                    <field name="display_name"/>
+                </form>`,
+        search: "<search></search>",
+    };
+
+    redirect("/odoo/m-partner/1");
+    patchWithCleanup(WebClient.prototype, {
+        _loadDefaultApp() {
+            expect.step("__DEFAULT_ACTION__ called");
+        },
+    });
+    await mountWithCleanup(WebClient);
+    await toggleActionMenu();
+    await toggleMenuItem("Delete");
+    await contains(`.modal-footer button.btn-primary`).click();
+    expect.verifySteps(["__DEFAULT_ACTION__ called"]);
 });
 
 test(`empty required fields cannot be saved`, async () => {
@@ -6589,7 +6600,6 @@ test(`rpc complete after destroying parent`, async () => {
             name: "Partner",
             res_model: "partner",
             res_id: 1,
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
             target: "new",
         },
@@ -6597,7 +6607,6 @@ test(`rpc complete after destroying parent`, async () => {
             id: 2,
             name: "Partner 2",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[false, "list"]],
         },
     ]);
@@ -7527,7 +7536,6 @@ test(`modifiers are considered on multiple <footer/> tags`, async () => {
             name: "Partner",
             res_model: "partner",
             res_id: 1,
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
             target: "new",
         },
@@ -7559,7 +7567,6 @@ test(`buttons in footer are moved to $buttons if necessary`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
             target: "new",
         },
@@ -9659,7 +9666,6 @@ test(`coming to a form view from a grouped and sorted list`, async () => {
             id: 1,
             name: "test",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "form"],
@@ -9897,7 +9903,6 @@ test(`leave the form view while saving`, async () => {
             id: 1,
             name: "test",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "form"],
@@ -9951,7 +9956,6 @@ test(`leave the form twice (clicking on the breadcrumb) should save only once`, 
             id: 1,
             name: "test",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "form"],
@@ -10024,7 +10028,6 @@ test(`discard after a failed save (and close notifications)`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [
                 [false, "kanban"],
                 [false, "form"],
@@ -11190,7 +11193,6 @@ test(`reload form view with an empty notebook`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "form"],
@@ -11344,7 +11346,6 @@ test(`prevent recreating a deleted record`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "form"],
@@ -11409,7 +11410,6 @@ test(`coming to an action with an error from a form view with a dirty x2m`, asyn
             name: "test",
             res_model: "partner",
             res_id: 1,
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
         },
     ]);
@@ -11489,7 +11489,6 @@ test(`coming to an action with an error from a form view with a record in creati
             id: 1,
             name: "test",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
         },
     ]);
@@ -12000,7 +11999,6 @@ test(`x2many field in form dialog view is correctly saved when using a view butt
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
             view_mode: "form",
             res_id: 6,

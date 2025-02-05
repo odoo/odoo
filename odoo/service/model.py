@@ -8,9 +8,8 @@ from functools import partial
 
 from psycopg2 import IntegrityError, OperationalError, errorcodes, errors
 
-import odoo
+from odoo import api, http
 from odoo.exceptions import UserError, ValidationError
-from odoo.http import request
 from odoo.models import BaseModel, check_method_name
 from odoo.modules.registry import Registry
 from odoo.tools import lazy
@@ -95,7 +94,7 @@ def dispatch(method, params):
 def execute_cr(cr, uid, obj, method, *args, **kw):
     # clean cache etc if we retry the same transaction
     cr.reset()
-    env = odoo.api.Environment(cr, uid, {})
+    env = api.Environment(cr, uid, {})
     env.transaction.default_env = env  # ensure this is the default env for the call
     recs = env.get(obj)
     if recs is None:
@@ -148,6 +147,7 @@ def retrying(func, env):
                 env.cr.rollback()
                 env.transaction.reset()
                 env.registry.reset_changes()
+                request = http.request
                 if request:
                     request.session = request._get_session_and_dbname()[0]
                     # Rewind files in case of failure

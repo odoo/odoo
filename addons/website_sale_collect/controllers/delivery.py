@@ -13,7 +13,7 @@ class InStoreDelivery(Delivery):
         order to retrieve pickup locations when called from the the product page.
         """
         if kwargs.get('product_id'):  # Called from the product page.
-            order_sudo = request.website.sale_get_order(force_create=True)
+            order_sudo = request.cart or request.website._create_cart()
             in_store_dm = request.website.sudo().in_store_dm_id
             if order_sudo.carrier_id.delivery_type != 'in_store':
                 order_sudo.set_delivery_line(in_store_dm, in_store_dm.product_id.list_price)
@@ -29,7 +29,7 @@ class InStoreDelivery(Delivery):
         :param str pickup_location_data: The JSON-formatted pickup location data.
         :return: None
         """
-        order_sudo = request.website.sale_get_order()
+        order_sudo = request.cart
         if order_sudo.carrier_id.delivery_type != 'in_store':
             in_store_dm = request.website.sudo().in_store_dm_id
             order_sudo.set_delivery_line(in_store_dm, in_store_dm.product_id.list_price)

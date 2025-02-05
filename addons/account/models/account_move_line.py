@@ -506,7 +506,7 @@ class AccountMoveLine(models.Model):
             if line.display_type == 'payment_term':
                 term_lines = term_by_move.get(line.move_id, self.env['account.move.line'])
                 n_terms = len(line.move_id.invoice_payment_term_id.line_ids)
-                if line.move_id.payment_reference and line.move_id.ref:
+                if line.move_id.payment_reference and line.move_id.ref and line.move_id.payment_reference != line.move_id.ref:
                     name = f'{line.move_id.ref} - {line.move_id.payment_reference}'
                 else:
                     name = line.move_id.payment_reference or ''
@@ -1324,6 +1324,7 @@ class AccountMoveLine(models.Model):
         fields = fields or self._get_default_read_fields()
         return super().read(fields, load)
 
+    @api.model
     def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None, **read_kwargs):
         fields = fields or self._get_default_read_fields()
         return super().search_read(domain, fields, offset, limit, order, **read_kwargs)

@@ -238,18 +238,18 @@ export class PaymentAdyen extends PaymentInterface {
         // that will be resolved when the payment response is received.
         // In case this resolver is lost ( for example on a refresh ) we
         // we use the handlePaymentResponse method on the payment line
-        const resolver = this.paymentLineResolvers?.[line.uuid];
+        const resolver = this.paymentLineResolvers?.[line?.uuid];
         if (resolver) {
             resolver(isPaymentSuccessful);
         } else {
-            line.handlePaymentResponse(isPaymentSuccessful);
+            line?.handlePaymentResponse(isPaymentSuccessful);
         }
     }
     isPaymentSuccessful(notification, response) {
         return (
             notification &&
             notification.SaleToPOIResponse.MessageHeader.ServiceID ==
-                this.pendingAdyenline().terminalServiceId &&
+                this.pendingAdyenline()?.terminalServiceId &&
             response.Result === "Success"
         );
     }

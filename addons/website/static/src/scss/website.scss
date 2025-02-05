@@ -633,39 +633,36 @@ font[class*='bg-'] {
 
 // Badges
 .badge, .o_filter_tag {
-    background: var(--background-color, var(--bg-light)) !important;
-    color: var(--color, var(--color-light)) !important;
-    border: $border-width solid var(--bg-solid) !important;
+    --badge-color: var(--color);
+
+    background: var(--badge-bg, var(--background-color)) !important;
+    color: var(--badge-color, var(--color)) !important;
+    border: $border-width solid var(--badge-border-color) !important;
 
     // Similarly to list-group-item-x and alert-* classes, override text-bg-*
     // classes behavior when used on badges.
     @each $-color, $-value in $theme-colors {
         &.text-bg-#{$-color} {
-            --bg-light: #{tint-color($-value, 90%)};
-            --color-light: #{increase-contrast($-value, tint-color($-value, 90%))};
-            --bg-solid: #{$-value};
-            --bg-solid-contrast: #{color-contrast($-value, $min-contrast-ratio: 3)};
+            --badge-bg: #{tint-color($-value, 90%)};
+            --badge-color: #{increase-contrast($-value, tint-color($-value, 90%))};
+            --badge-color-hover: #{color-contrast($-value, $min-contrast-ratio: 3)};
+            --badge-border-color: #{$-value};
         }
 
         // Restore old badge design (needed as an exit door for some contexts)
         //(e.g cart_quantity, dropdown toggle.badge)
         &.bg-#{$-color} {
-            --bg-light: #{$-value};
-            --color-light: #{color-contrast($-value, $min-contrast-ratio: 3)};
-            --bg-solid: var(--bg-light);
-            --bg-solid-contrast: var(--color-light);
+            --badge-bg: #{$-value};
+            --badge-color: #{color-contrast($-value, $min-contrast-ratio: 3)};
+            --badge-border-color: #{$-value};
+            --badge-color-hover: #{color-contrast($-value, $min-contrast-ratio: 3)};
         }
     }
 
     @at-root a.badge:hover, a:not(.dropdown-item):hover > .badge, .o_badge_clickable.badge:hover {
-        --background-color: var(--bg-solid);
-        --color: var(--bg-solid-contrast);
-
+        --badge-bg: var(--badge-border-color);
+        --badge-color: var(--badge-color-hover);
         text-decoration: none;
-    }
-
-    .btn {
-        --btn-color: var(--color, var(--color-light));
     }
 }
 
@@ -680,22 +677,13 @@ font[class*='bg-'] {
         $-is-website-palette-dark: color-contrast($body-color) == $color-contrast-dark;
         $-bg-lightness-adjusted: if($-is-website-palette-dark, -40%, 0%);
 
-        $-bg-solid: $-color;
-        $-bg-solid-contrast: color-contrast($-bg-solid, $min-contrast-ratio: 3);
+        $-background-color: if($-is-website-palette-dark, adjust-color($-color, $lightness: $-bg-lightness-adjusted, $saturation: 5%), tint-color($-color, 90%));
 
-        $-bg-light: if($-is-website-palette-dark, adjust-color($-color, $lightness: $-bg-lightness-adjusted, $saturation: 5%), tint-color($-bg-solid, 90%));
-        $-color-light: increase-contrast($-bg-solid, $-bg-light);
-
-        $-bg-light-contrast: color-contrast($-bg-light, $min-contrast-ratio: 3);
-
-        // Print CSS variables.
-        --bg-solid: #{$-bg-solid};
-        --bg-solid-contrast: #{$-bg-solid-contrast};
-
-        --bg-light: #{$-bg-light};
-        --color-light: #{$-color-light};
-
-        --bg-light-contrast: #{$-bg-light-contrast};
+        --background-color: #{$-background-color};
+        --color: #{increase-contrast($-color, $-background-color)};
+        --background-color-contrast: #{color-contrast($-background-color, $min-contrast-ratio: 3)};
+        --badge-color-hover: #{color-contrast($-color, $min-contrast-ratio: 3)};
+        --badge-border-color: #{$-color};
     }
 }
 

@@ -7,11 +7,10 @@ from odoo.tests import tagged
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.addons.sale.tests.product_configurator_common import TestProductConfiguratorCommon
-from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_sale.controllers.product_configurator import (
     WebsiteSaleProductConfiguratorController,
 )
-from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
+from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 
 
 @tagged('post_install', '-at_install')
@@ -165,7 +164,7 @@ class TestWebsiteSaleProductConfigurator(
             'name': "Main product", 'website_published': True
         })
 
-        with (MockRequest(self.env, website=self.website)):
+        with MockRequest(self.env, website=self.website):
             show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
                 product_template_id=main_product.id, ptav_ids=[], is_product_configured=False
             )
@@ -183,7 +182,7 @@ class TestWebsiteSaleProductConfigurator(
             'optional_product_ids': [Command.set(optional_product.ids)],
         })
 
-        with (MockRequest(self.env, website=self.website)):
+        with MockRequest(self.env, website=self.website):
             show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
                 product_template_id=main_product.id, ptav_ids=[], is_product_configured=False
             )
@@ -207,7 +206,7 @@ class TestWebsiteSaleProductConfigurator(
             ],
         })
 
-        with (MockRequest(self.env, website=self.website)):
+        with MockRequest(self.env, website=self.website):
             show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
                 product_template_id=main_product.id, ptav_ids=[], is_product_configured=False
             )
@@ -238,7 +237,7 @@ class TestWebsiteSaleProductConfigurator(
             ],
         })
 
-        with (MockRequest(self.env, website=self.website)):
+        with MockRequest(self.env, website=self.website):
             show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
                 product_template_id=main_product.id, ptav_ids=[], is_product_configured=True
             )
@@ -268,7 +267,7 @@ class TestWebsiteSaleProductConfigurator(
             ],
         })
 
-        with (MockRequest(self.env, website=self.website)):
+        with MockRequest(self.env, website=self.website):
             show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
                 product_template_id=main_product.id, ptav_ids=[], is_product_configured=False
             )
@@ -298,7 +297,7 @@ class TestWebsiteSaleProductConfigurator(
             ],
         })
 
-        with (MockRequest(self.env, website=self.website)):
+        with MockRequest(self.env, website=self.website):
             show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
                 product_template_id=main_product.id, ptav_ids=[], is_product_configured=False
             )
@@ -329,7 +328,7 @@ class TestWebsiteSaleProductConfigurator(
             ],
         })
 
-        with (MockRequest(self.env, website=self.website)):
+        with MockRequest(self.env, website=self.website):
             show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
                 product_template_id=main_product.id, ptav_ids=[], is_product_configured=False
             )
@@ -349,7 +348,7 @@ class TestWebsiteSaleProductConfigurator(
             'optional_product_ids': [Command.set(optional_product.ids)],
         })
 
-        with (MockRequest(self.env, website=self.website)):
+        with MockRequest(self.env, website=self.website):
             show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
                 product_template_id=main_product.id, ptav_ids=[], is_product_configured=False
             )
@@ -384,7 +383,7 @@ class TestWebsiteSaleProductConfigurator(
             'taxes_id': tax,
         })
 
-        with (MockRequest(self.env, website=self.website)):
+        with MockRequest(self.env, website=self.website):
             ptav_price_extra = self.pc_controller._get_ptav_price_extra(
                 product.attribute_line_ids.product_template_value_ids,
                 self.currency,
@@ -443,7 +442,9 @@ class TestWebsiteSaleProductConfigurator(
             'optional_product_ids': [Command.set(optional_product.ids)],
             'taxes_id': tax,
         })
-        self.website.pricelist_id.item_ids = [
+        # Make sure the custom pricelist from the product configurator common doesn't fail the test
+        self.custom_pricelist.action_archive()
+        self.pricelist.item_ids = [
             Command.create({
                 'applied_on': '1_product',
                 'percent_price': 50,
@@ -451,4 +452,4 @@ class TestWebsiteSaleProductConfigurator(
                 'product_tmpl_id': main_product.id,
             }),
         ]
-        self.start_tour('/', 'website_sale_product_configurator_strikethrough_price')
+        self.start_tour('/shop', 'website_sale_product_configurator_strikethrough_price')

@@ -1,5 +1,6 @@
 import { Deferred } from "@web/core/utils/concurrency";
 import { useAutofocus, useForwardRefToParent, useService } from "@web/core/utils/hooks";
+import { isScrollableY, scrollTo } from "@web/core/utils/scrolling";
 import { useDebounced } from "@web/core/utils/timing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position/position_hook";
@@ -70,6 +71,7 @@ export class AutoComplete extends Component {
         });
 
         this.inputRef = useForwardRefToParent("input");
+        this.listRef = useRef("sourcesList");
         if (this.props.autofocus) {
             useAutofocus({ refName: "input" });
         }
@@ -390,6 +392,7 @@ export class AutoComplete extends Component {
                 this.cancel();
                 break;
             case "tab":
+            case "shift+tab":
                 if (!this.isOpened) {
                     return;
                 }
@@ -407,12 +410,14 @@ export class AutoComplete extends Component {
                 if (!this.isOpened) {
                     this.open(true);
                 }
+                this.scroll();
                 break;
             case "arrowdown":
                 this.navigate(+1);
                 if (!this.isOpened) {
                     this.open(true);
                 }
+                this.scroll();
                 break;
             default:
                 return;
@@ -436,6 +441,15 @@ export class AutoComplete extends Component {
     externalClose(ev) {
         if (this.isOpened && !this.root.el.contains(ev.target)) {
             this.cancel();
+        }
+    }
+
+    scroll() {
+        if (!this.activeSourceOptionId) {
+            return;
+        }
+        if (isScrollableY(this.listRef.el)) {
+            scrollTo(this.listRef.el.querySelector(`#${this.activeSourceOptionId}`));
         }
     }
 }

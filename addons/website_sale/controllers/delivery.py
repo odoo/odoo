@@ -18,7 +18,7 @@ class Delivery(WebsiteSale):
         :return: The rendered delivery form.
         :rtype: str
         """
-        order_sudo = request.website.sale_get_order()
+        order_sudo = request.cart
         values = {
             'delivery_methods': order_sudo._get_delivery_methods(),
             'selected_dm_id': order_sudo.carrier_id.id,
@@ -42,8 +42,7 @@ class Delivery(WebsiteSale):
         :return: The order summary values, if any.
         :rtype: dict
         """
-        order_sudo = request.website.sale_get_order()
-        if not order_sudo:
+        if not (order_sudo := request.cart):
             return {}
 
         dm_id = int(dm_id)
@@ -94,11 +93,10 @@ class Delivery(WebsiteSale):
         :return: The delivery rate data.
         :rtype: dict
         """
-        order = request.website.sale_get_order()
-        if not order:
+        if not (order_sudo := request.cart):
             raise ValidationError(_("Your cart is empty."))
 
-        if int(dm_id) not in order._get_delivery_methods().ids:
+        if int(dm_id) not in order_sudo._get_delivery_methods().ids:
             raise UserError(_(
                 "It seems that a delivery method is not compatible with your address. Please"
                 " refresh the page and try again."
@@ -106,15 +104,15 @@ class Delivery(WebsiteSale):
 
         Monetary = request.env['ir.qweb.field.monetary']
         delivery_method = request.env['delivery.carrier'].sudo().browse(int(dm_id)).exists()
-        rate = Delivery._get_rate(delivery_method, order)
+        rate = Delivery._get_rate(delivery_method, order_sudo)
         if rate['success']:
             rate['amount_delivery'] = Monetary.value_to_html(
-                rate['price'], {'display_currency': order.currency_id}
+                rate['price'], {'display_currency': order_sudo.currency_id}
             )
             rate['is_free_delivery'] = not bool(rate['price'])
         else:
             rate['amount_delivery'] = Monetary.value_to_html(
-                0.0, {'display_currency': order.currency_id}
+                0.0, {'display_currency': order_sudo.currency_id}
             )
         return rate
 
@@ -125,7 +123,7 @@ class Delivery(WebsiteSale):
         :param str pickup_location_data: The JSON-formatted pickup location address.
         :return: None
         """
-        order_sudo = request.website.sale_get_order()
+        order_sudo = request.cart
         order_sudo._set_pickup_location(pickup_location_data)
 
     @route('/website_sale/get_pickup_locations', type='jsonrpc', auth='public', website=True)
@@ -138,7 +136,7 @@ class Delivery(WebsiteSale):
         :return: The close pickup locations data.
         :rtype: dict
         """
-        order_sudo = request.website.sale_get_order()
+        order_sudo = request.cart
         country = order_sudo.partner_shipping_id.country_id
         return order_sudo._get_pickup_locations(zip_code, country, **kwargs)
 
@@ -154,8 +152,7 @@ class Delivery(WebsiteSale):
         :return: The available delivery methods, sorted by lowest price.
         :rtype: dict
         """
-        order_sudo = request.website.sale_get_order()
-        if not order_sudo:
+        if not (order_sudo := request.cart):
             return []
 
         self._include_country_and_state_in_address(partial_delivery_address)

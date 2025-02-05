@@ -1032,6 +1032,7 @@ class Website(models.Model):
             fallback_create_missing_industry_image('s_carousel_intro_default_image_2', 's_image_text_default_image')
             fallback_create_missing_industry_image('s_carousel_intro_default_image_3', 's_text_image_default_image')
             fallback_create_missing_industry_image('s_website_form_overlay_default_image', 's_cover_default_image')
+            fallback_create_missing_industry_image('s_website_form_cover_default_image', 's_cover_default_image')
             fallback_create_missing_industry_image('s_framed_intro_default_image', 's_cover_default_image')
             fallback_create_missing_industry_image('s_wavy_grid_default_image_1', 's_cover_default_image')
             fallback_create_missing_industry_image('s_wavy_grid_default_image_2', 's_image_text_default_image')
@@ -1545,9 +1546,9 @@ class Website(models.Model):
 
         for rule in router.iter_rules():
             if 'sitemap' in rule.endpoint.routing and rule.endpoint.routing['sitemap'] is not True:
-                if rule.endpoint.func in sitemap_endpoint_done:
+                if rule.endpoint.func.__func__ in sitemap_endpoint_done:
                     continue
-                sitemap_endpoint_done.add(rule.endpoint.func)
+                sitemap_endpoint_done.add(rule.endpoint.func.__func__)
 
                 func = rule.endpoint.routing['sitemap']
                 if func is False:

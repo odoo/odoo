@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.http import request
 
 from odoo.addons.website_sale_collect import utils
 
@@ -20,7 +21,7 @@ class ProductTemplate(models.Model):
             and product_or_template.is_storable
         ):
             res['show_click_and_collect_availability'] = True
-            order_sudo = website.sale_get_order()
+            order_sudo = request.cart
             if (
                 order_sudo
                 and order_sudo.carrier_id.delivery_type == 'in_store'

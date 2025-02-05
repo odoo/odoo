@@ -118,7 +118,6 @@ test("Only necessary requests are made when creating a new chat", async () => {
             fetch_params: [
                 "failures", // called because mail/core/web is loaded in test bundle
                 "systray_get_activities", // called because mail/core/web is loaded in test bundle
-                ["discuss.channel", [threadId]],
                 "init_messaging",
             ],
             context: {

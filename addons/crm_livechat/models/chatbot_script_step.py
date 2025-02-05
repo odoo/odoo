@@ -4,6 +4,7 @@ from ast import literal_eval
 
 from odoo import models, fields
 from odoo.osv import expression
+from odoo.tools import html2plaintext
 
 
 class ChatbotScriptStep(models.Model):
@@ -26,10 +27,14 @@ class ChatbotScriptStep(models.Model):
         self.filtered(lambda s: s.step_type == "create_lead_and_forward").is_forward_operator = True
 
     def _chatbot_crm_prepare_lead_values(self, discuss_channel, description):
+        name = self.env._("%s's New Lead", self.chatbot_script_id.title)
+        if msg := self._find_first_user_free_input(discuss_channel):
+            name = html2plaintext(msg.body)[:100]
         return {
+            "channel_id": discuss_channel.id,
             "company_id": self.crm_team_id.company_id.id,
             'description': description + discuss_channel._get_channel_history(),
-            "name": self.env._("%s's New Lead", self.chatbot_script_id.title),
+            "name": name,
             'source_id': self.chatbot_script_id.source_id.id,
             'team_id': self.crm_team_id.id,
             'type': 'lead' if self.crm_team_id.use_leads else 'opportunity',

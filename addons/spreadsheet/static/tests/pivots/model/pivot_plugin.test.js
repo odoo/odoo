@@ -1,18 +1,24 @@
-import { Deferred } from "@web/core/utils/concurrency";
-import { animationFrame } from "@odoo/hoot-mock";
-import {
-    MockServer,
-    makeServerError,
-    patchTranslations,
-    serverState,
-} from "@web/../tests/web_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-mock";
 import {
     defineSpreadsheetActions,
     defineSpreadsheetModels,
     getBasicServerData,
 } from "@spreadsheet/../tests/helpers/data";
+import {
+    makeServerError,
+    onRpc,
+    patchTranslations,
+    serverState,
+} from "@web/../tests/web_test_helpers";
+import { Deferred } from "@web/core/utils/concurrency";
 
+import {
+    addGlobalFilter,
+    setCellContent,
+    updatePivot,
+    updatePivotMeasureDisplay,
+} from "@spreadsheet/../tests/helpers/commands";
 import {
     getCell,
     getCellContent,
@@ -21,15 +27,9 @@ import {
     getEvaluatedCell,
     getFormattedValueGrid,
 } from "@spreadsheet/../tests/helpers/getters";
+import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/helpers/pivot";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
-import {
-    addGlobalFilter,
-    setCellContent,
-    updatePivot,
-    updatePivotMeasureDisplay,
-} from "@spreadsheet/../tests/helpers/commands";
-import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 
 import { user } from "@web/core/user";
 
@@ -198,6 +198,37 @@ test("Renaming a pivot does not retrigger RPCs", async () => {
     expect.verifySteps([]);
 });
 
+test("Renaming a pivot with a matching global filter does not retrigger RPCs", async () => {
+    const { model, pivotId } = await createSpreadsheetWithPivot({
+        mockRPC: function (route, { model, method, kwargs }) {
+            switch (method) {
+                case "read_group":
+                    expect.step("read_group");
+                    break;
+            }
+        },
+    });
+    expect.verifySteps(["read_group", "read_group", "read_group", "read_group"]);
+    await addGlobalFilter(
+        model,
+        {
+            id: "42",
+            type: "relation",
+            label: "test",
+            defaultValue: [41],
+            modelName: undefined,
+            rangeType: undefined,
+        },
+        {
+            pivot: { [pivotId]: { chain: "product_id", type: "many2one" } },
+        }
+    );
+    expect.verifySteps(["read_group", "read_group", "read_group", "read_group"]);
+    updatePivot(model, pivotId, { name: "name" });
+    await animationFrame();
+    expect.verifySteps([]);
+});
+
 test("Undo/Redo for RENAME_PIVOT", async function () {
     const { model, pivotId } = await createSpreadsheetWithPivot();
     expect(model.getters.getPivotName(pivotId)).toBe("Partner Pivot");
@@ -322,7 +353,7 @@ test("user context is combined with pivot context to fetch data", async function
         lang: "FR",
         uid: serverState.userId,
     };
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, { model, method, kwargs }) {
             if (model !== "partner") {
@@ -371,7 +402,7 @@ test("Context is purged from PivotView related keys", async function (assert) {
         },
     };
 
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, { model, method, kwargs }) {
             if (model === "partner" && method === "read_group") {
@@ -421,7 +452,7 @@ test("fetch metadata only once per model", async function () {
             },
         },
     };
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, { model, method, kwargs }) {
             if (model === "partner" && method === "fields_get") {
@@ -470,7 +501,7 @@ test("don't fetch pivot data if no formula use it", async function () {
             },
         },
     };
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, { model, method, kwargs }) {
             if (!["partner", "ir.model"].includes(model)) {
@@ -531,7 +562,7 @@ test("evaluates only once when two pivots are loading", async function () {
             },
         },
     };
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData,
     });
     model.config.custom.odooDataProvider.addEventListener("data-source-updated", () =>
@@ -562,7 +593,7 @@ test("concurrently load the same pivot twice", async function () {
             },
         },
     };
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData,
     });
     // the data loads first here, when we insert the first pivot function
@@ -599,31 +630,21 @@ test("display loading while data is not fully available", async function () {
             },
         },
     };
-    const model = await createModelWithDataSource({
-        spreadsheetData,
-        mockRPC: async function (route, args, performRPC) {
-            const { model, method, kwargs } = args;
-            const result = MockServer.current.callOrm(args);
-            if (model === "partner" && method === "fields_get") {
-                expect.step(`${model}/${method}`);
-                await metadataPromise;
-            }
-            if (
-                model === "partner" &&
-                method === "read_group" &&
-                kwargs.groupby[0] === "product_id"
-            ) {
-                expect.step(`${model}/${method}`);
-                await dataPromise;
-            }
-            if (model === "product" && method === "read") {
-                expect(false).toBe(true, {
-                    message: "should not be called because data is put in cache",
-                });
-            }
-            return result;
-        },
+    onRpc(async ({ kwargs, model, method, parent }) => {
+        if (model === "partner" && method === "fields_get") {
+            expect.step(`${model}/${method}`);
+            await metadataPromise;
+        }
+        if (model === "partner" && method === "read_group" && kwargs.groupby[0] === "product_id") {
+            expect.step(`${model}/${method}`);
+            await dataPromise;
+        }
+        if (model === "product" && method === "read") {
+            throw new Error("should not be called because data is put in cache");
+        }
+        return parent();
     });
+    const { model } = await createModelWithDataSource({ spreadsheetData });
     expect(getCellValue(model, "A1")).toBe("Loading...");
     expect(getCellValue(model, "A2")).toBe("Loading...");
     expect(getCellValue(model, "A3")).toBe("Loading...");
@@ -830,7 +851,7 @@ test("can import (export) contextual domain", async () => {
             },
         },
     };
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, args) {
             if (args.method === "read_group") {
@@ -860,7 +881,7 @@ test("Adding a measure should trigger a reload", async () => {
             },
         },
     };
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, args) {
             if (args.method === "read_group") {
@@ -910,7 +931,7 @@ test("Updating dimensions with undefined values does not trigger a new rpc", asy
             },
         },
     };
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, args) {
             if (args.method === "read_group") {
@@ -1507,7 +1528,7 @@ test("can import a pivot with a calculated field", async function () {
             },
         },
     };
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, { model, method, kwargs }) {
             if (model === "partner" && method === "read_group") {

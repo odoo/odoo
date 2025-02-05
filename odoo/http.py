@@ -136,6 +136,8 @@ import functools
 import glob
 import hashlib
 import hmac
+import importlib
+import importlib.metadata
 import inspect
 import json
 import logging
@@ -193,7 +195,7 @@ except ImportError:
 
 import odoo
 from .exceptions import UserError, AccessError, AccessDenied
-from .modules.module import get_manifest
+from .modules import module as module_manager
 from .modules.registry import Registry
 from .service import security, model as service_model
 from .tools import (config, consteq, file_path, get_lang, json_default,
@@ -278,7 +280,7 @@ ROUTING_KEYS = {
     'alias', 'host', 'methods',
 }
 
-if parse_version(werkzeug.__version__) >= parse_version('2.0.2'):
+if parse_version(importlib.metadata.version('werkzeug')) >= parse_version('2.0.2'):
     # Werkzeug 2.0.2 adds the websocket option. If a websocket request
     # (ws/wss) is trying to access an HTTP route, a WebsocketMismatch
     # exception is raised. On the other hand, Werkzeug 0.16 does not
@@ -1879,8 +1881,12 @@ class Request:
         try:
             directory = root.statics[module]
             filepath = werkzeug.security.safe_join(directory, path)
+            debug = (
+                'assets' in self.session.debug and
+                ' wkhtmltopdf ' not in self.httprequest.user_agent.string
+            )
             res = Stream.from_path(filepath, public=True).get_response(
-                max_age=0 if 'assets' in self.session.debug else STATIC_CACHE,
+                max_age=0 if debug else STATIC_CACHE,
                 content_security_policy=None,
             )
             root.set_csp(res)
@@ -2268,6 +2274,17 @@ class Application:
     """ Odoo WSGI application """
     # See also: https://www.python.org/dev/peps/pep-3333
 
+    def initialize(self):
+        """
+        Initialize the application.
+
+        This is to be called when setting up a WSGI application after
+        initializing the configuration values.
+        """
+        module_manager.initialize_sys_path()
+        from odoo.service.server import load_server_wide_modules  # noqa: PLC0415
+        load_server_wide_modules()
+
     @lazy_property
     def statics(self):
         """
@@ -2277,7 +2294,7 @@ class Application:
         mod2path = {}
         for addons_path in odoo.addons.__path__:
             for module in os.listdir(addons_path):
-                manifest = get_manifest(module)
+                manifest = module_manager.get_manifest(module)
                 static_path = opj(addons_path, module, 'static')
                 if (manifest
                         and (manifest['installable'] or manifest['assets'])

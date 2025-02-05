@@ -129,7 +129,6 @@ defineActions([
         name: "Partners Action",
         res_model: "partner",
         search_view_id: [false, "search"],
-        type: "ir.actions.act_window",
         views: [[false, "list"]],
     },
 ]);
@@ -1616,6 +1615,72 @@ test("select autocompleted many2one with allowed_company_ids domain (cids: 1)", 
         searchViewArch: `
             <search>
                 <field name="bar" domain="[('company', 'in', allowed_company_ids)]"/>
+            </search>
+        `,
+    });
+
+    await click(".o_searchview input");
+    await clear();
+    await animationFrame();
+
+    await editSearch("rec");
+    await contains(`.o_expand`).click();
+    await runAllTimers();
+    expect(queryAllTexts(`.o_searchview_autocomplete .o-dropdown-item`)).toEqual([
+        "Search Bar for: rec",
+        "Second record",
+        "Add Custom Filter",
+    ]);
+});
+
+test("select autocompleted many2one with companies.active_ids domain (cids: 1-5)", async () => {
+    cookie.set("cids", "1-5");
+    serverState.companies = [
+        ...serverState.companies,
+        {
+            id: 5,
+            name: "Hierophant",
+        },
+    ];
+
+    await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <field name="bar" domain="[('company', 'in', companies.active_ids)]"/>
+            </search>
+        `,
+    });
+
+    await editSearch("rec");
+    await contains(`.o_expand`).click();
+    expect(queryAllTexts(`.o_searchview_autocomplete .o-dropdown-item`)).toEqual([
+        "Search Bar for: rec",
+        "Second record",
+        "Third record",
+        "Add Custom Filter",
+    ]);
+});
+
+test("select autocompleted many2one with companies.active_ids domain (cids: 1)", async () => {
+    cookie.set("cids", "1");
+    serverState.companies = [
+        ...serverState.companies,
+        {
+            id: 5,
+            name: "Hierophant",
+        },
+    ];
+
+    await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <field name="bar" domain="[('company', 'in', companies.active_ids)]"/>
             </search>
         `,
     });

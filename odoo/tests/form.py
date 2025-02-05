@@ -13,7 +13,7 @@ from datetime import datetime, date
 
 from lxml import etree
 
-import odoo
+from odoo import api, fields
 from odoo.models import BaseModel
 from odoo.fields import Command
 from odoo.tools.safe_eval import safe_eval
@@ -142,7 +142,7 @@ class Form:
             self._init_from_defaults()
 
     @classmethod
-    def from_action(cls, env: odoo.api.Environment, action: dict) -> Form:
+    def from_action(cls, env: api.Environment, action: dict) -> Form:
         assert action['type'] == 'ir.actions.act_window', \
             f"only window actions are valid, got {action['type']}"
         # ensure the first-requested view is a form view
@@ -402,6 +402,7 @@ class Form:
             'active_ids': self._record.ids,
             'active_model': self._record._name,
             'current_date': date.today().strftime("%Y-%m-%d"),
+            'companies': Companies(self._env),
             **self._env.context,
         }
         if values is None:
@@ -970,10 +971,10 @@ class M2MProxy(X2MProxy, collections.abc.Sequence):
         self._form._perform_onchange(self._field)
 
 
-def convert_read_to_form(values, fields):
+def convert_read_to_form(values, model_fields):
     result = {}
     for fname, value in values.items():
-        field_info = {'type': 'id'} if fname == 'id' else fields[fname]
+        field_info = {'type': 'id'} if fname == 'id' else model_fields[fname]
         if field_info['type'] == 'one2many':
             if 'edition_view' in field_info:
                 subfields = field_info['edition_view']['fields']
@@ -983,9 +984,9 @@ def convert_read_to_form(values, fields):
         elif field_info['type'] == 'many2many':
             value = M2MValue({'id': id_} for id_ in (value or ()))
         elif field_info['type'] == 'datetime' and isinstance(value, datetime):
-            value = odoo.fields.Datetime.to_string(value)
+            value = fields.Datetime.to_string(value)
         elif field_info['type'] == 'date' and isinstance(value, date):
-            value = odoo.fields.Date.to_string(value)
+            value = fields.Date.to_string(value)
         result[fname] = value
     return result
 
@@ -1003,9 +1004,9 @@ def _cleanup_from_default(type_, value):
     if type_ == 'one2many':
         raise NotImplementedError()
     elif type_ == 'datetime' and isinstance(value, datetime):
-        return odoo.fields.Datetime.to_string(value)
+        return fields.Datetime.to_string(value)
     elif type_ == 'date' and isinstance(value, date):
-        return odoo.fields.Date.to_string(value)
+        return fields.Date.to_string(value)
     return value
 
 
@@ -1034,3 +1035,54 @@ class Dotter:
     def __getattr__(self, key):
         val = self.__values[key]
         return Dotter(val) if isinstance(val, dict) else val
+
+
+class Companies:
+    """ Simple object that simulates the corresponding "companies" object in
+    client-side Python expressions.  It provides access to the currently active
+    companies, and is also used to test some company "properties".
+    """
+    def __init__(self, env):
+        self.__env = env
+
+    @property
+    def active_id(self) -> int:
+        """ The ID of the main company selected.
+        (the one highlighted in the company switcher dropdown and displayed in the navbar of the webclient)
+        """
+        return self.__env.company.id
+
+    @property
+    def active_ids(self) -> list[int]:
+        """ The list of company IDs the user is connected to (selected in the company switcher dropdown). """
+        # actually equal to context['allowed_company_ids']
+        return self.__env.companies.ids
+
+    @property
+    def allowed_ids(self) -> list[int]:
+        """ The list of company IDs the user is allowed to connect to. """
+        return self.__env.user._get_company_ids()
+
+    @property
+    def multi_company(self) -> bool:
+        """ A boolean indicating whether the user has access to multiple companies. """
+        return len(self.__env.companies) > 1
+
+    def has(self, ids: int|list[int], field_name: str, value) -> bool:
+        """ Return a boolean indicating whether there is a company with id in
+        `ids` for which `field_name` matches the given `value`.
+        """
+        ids = [ids] if isinstance(ids, int) else ids
+        user_companies = self.__env['res.company'].sudo().browse(self.allowed_ids)
+        all_companies = user_companies | user_companies.parent_ids
+        company_info = {
+            company.id: company._get_session_info(user_companies)
+            for company in user_companies
+        } | {
+            company.id: company._get_session_info(all_companies)
+            for company in all_companies - user_companies
+        }
+        return any(
+            company_info[id_].get(field_name) == value
+            for id_ in ids if id_ in company_info
+        )

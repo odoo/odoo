@@ -10,13 +10,13 @@ import os
 import sys
 import tempfile
 import warnings
-import odoo
 from os.path import expandvars, expanduser, abspath, realpath, normcase
 from odoo import release
 from odoo.tools.func import classproperty
 from . import appdirs
 
 from passlib.context import CryptContext
+
 crypt_context = CryptContext(schemes=['pbkdf2_sha512', 'plaintext'],
                              deprecated=['plaintext'],
                              pbkdf2_sha512__rounds=600_000)
@@ -338,8 +338,8 @@ class configmanager:
                          help="specify the pg executable path")
         group.add_option("--db_host", dest="db_host", my_default='',
                          help="specify the database host")
-        group.add_option("--db_replica_host", dest="db_replica_host", my_default='',
-                         help="specify the replica host. Specify an empty db_replica_host to use the default unix socket.")
+        group.add_option("--db_replica_host", dest="db_replica_host", my_default=None,
+                         help="specify the replica host")
         group.add_option("--db_port", dest="db_port", my_default=None,
                          help="specify the database port", type="int")
         group.add_option("--db_replica_port", dest="db_replica_port", my_default=None,
@@ -389,9 +389,10 @@ class configmanager:
                          # optparse uses a fixed 55 chars to print the help no matter the
                          # terminal size, abuse that to align the features
                          help="Enable developer features (comma-separated list, use   "
-                              '"all" for all features). Available features:           '
+                              '"all" for reload,qweb,xml). Available features:        '
                               "- qweb: log the compiled xml with qweb errors          "
                               "- reload: restart server on change in the source code  "
+                              "- replica: simulate a deployment with readonly replica "
                               "- werkzeug: open a html debugger on http request error "
                               "- xml: read views from the source code, and not the db ")
         group.add_option("--stop-after-init", action="store_true", dest="stop_after_init", my_default=False, file_exportable=False,
@@ -532,9 +533,10 @@ class configmanager:
 
             odoo.tools.config.parse_config(sys.argv[1:])
         """
+        from odoo import modules, netsvc  # noqa: PLC0415
         opt = self._parse_config(args)
         if setup_logging is not False:
-            odoo.netsvc.init_logger()
+            netsvc.init_logger()
             # warn after having done setup, so it has a chance to show up
             # (mostly once this warning is bumped to DeprecationWarning proper)
             if setup_logging is None:
@@ -547,7 +549,7 @@ class configmanager:
                 )
         self._warn_deprecated_options()
         self._flush_log_and_warn_entries()
-        odoo.modules.module.initialize_sys_path()
+        modules.module.initialize_sys_path()
         return opt
 
     def _parse_config(self, args=None):
@@ -639,6 +641,29 @@ class configmanager:
         self._runtime_options['demo'] = dict(self['init']) if not self['without_demo'] else {}
         self._runtime_options['update'] = dict.fromkeys(self['update'], True) or {}
         self._runtime_options['translate_modules'] = sorted(self['translate_modules'])
+
+        # TODO saas-22.1: remove support for the empty db_replica_host
+        if self['db_replica_host'] == '':
+            self._runtime_options['db_replica_host'] = None
+            if 'replica' not in self['dev_mode']:
+                # Conditional warning so it is possible to have a single
+                # config file (with db_replica_host= dev_mode=replica)
+                # that works in both 18.0 and 19.0.
+                # TODO saas-21.1:
+                #   move this warning out of the if, as 18.0 won't be
+                #   supported anymore, so people remove db_replica_host=
+                #   from their config.
+                self._warn((
+                    "Since 19.0, an empty {replica_host} was the 18.0 "
+                    "way to open a replica connection on the same "
+                    "server as {db_host}, for development/testing "
+                    "purpose, the feature now exists as {dev}=replica"
+                ).format(
+                    replica_host=self.options_index['db_replica_host'],
+                    db_host=self.options_index['db_host'],
+                    dev=self.options_index['dev_mode'],
+                ), DeprecationWarning)
+                self._runtime_options['dev_mode'] = self['dev_mode'] + ['replica']
 
         if 'all' in self['dev_mode']:
             self._runtime_options['dev_mode'] = self['dev_mode'] + ['reload', 'qweb', 'xml']

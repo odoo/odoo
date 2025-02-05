@@ -308,6 +308,10 @@ class HrJob(models.Model):
                 ]
                 job.message_unsubscribe(to_unsubscribe)
                 job.message_subscribe(job.user_id.partner_id.ids)
+                application_ids = job.application_ids.filtered(lambda x: x.user_id == old_recruiters[job])
+                if application_ids:
+                    application_ids.message_unsubscribe(to_unsubscribe)
+                    application_ids.user_id = job.user_id
 
         # Update the availability on all hired candidates if the mission end date is changed
         if "date_to" in vals:
@@ -401,4 +405,17 @@ class HrJob(models.Model):
         return {
             "type": "ir.actions.client",
             "tag": "reload",
+        }
+
+    def action_job_board_modules(self):
+        return {
+            'name': _('New Job Board'),
+            'view_mode': 'kanban,form',
+            'res_model': 'ir.module.module',
+            'domain': [
+                ('name', '=like', 'hr_recruitment_integration_%'),
+                ('auto_install', '=', False),
+                ('name', '!=', 'hr_recruitment_integration_base'),
+            ],
+            'type': 'ir.actions.act_window',
         }

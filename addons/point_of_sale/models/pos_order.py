@@ -151,6 +151,9 @@ class PosOrder(models.Model):
         self.ensure_one()
         self.payment_ids.unlink()
 
+    def _compute_amount_paid(self):
+        return sum(self.payment_ids.mapped('amount'))
+
     def _process_payment_lines(self, pos_order, order, pos_session, draft):
         """Create account.bank.statement.lines from the dictionary given to the parent function.
 
@@ -168,7 +171,7 @@ class PosOrder(models.Model):
         prec_acc = order.currency_id.decimal_places
 
         # Recompute amount paid because we don't trust the client
-        order.amount_paid = sum(order.payment_ids.mapped('amount'))
+        order.amount_paid = order._compute_amount_paid()
 
         if not draft and not float_is_zero(pos_order['amount_return'], prec_acc):
             cash_payment_method = pos_session.payment_method_ids.filtered('is_cash_count')[:1]
@@ -192,7 +195,7 @@ class PosOrder(models.Model):
         :return: A list of python dictionaries (see '_prepare_base_line_for_taxes_computation' in account.tax).
         """
         self.ensure_one()
-        return self.lines._prepare_tax_base_line_values()
+        return self.lines._prepare_tax_base_line_values() or []
 
     @api.model
     def _get_invoice_lines_values(self, line_values, pos_order_line):
@@ -212,7 +215,7 @@ class PosOrder(models.Model):
 
         :return: A list of Command.create to fill 'invoice_line_ids' when calling account.move.create.
         """
-        line_values_list = self._prepare_tax_base_line_values()
+        line_values_list = self.with_context(invoicing=True)._prepare_tax_base_line_values()
         invoice_lines = []
         for line_values in line_values_list:
             line = line_values['record']
@@ -381,7 +384,7 @@ class PosOrder(models.Model):
     def _compute_contact_details(self):
         for order in self:
             order.email = order.partner_id.email or ""
-            order.mobile = order._phone_format(number=order.partner_id.mobile or order.partner_id.phone or "",
+            order.mobile = order._phone_format(number=order.partner_id.phone or "",
                         country=order.partner_id.country_id)
 
     def _compute_total_cost_in_real_time(self):
@@ -1111,7 +1114,7 @@ class PosOrder(models.Model):
         """Create a new payment for the order"""
         self.ensure_one()
         self.env['pos.payment'].create(data)
-        self.amount_paid = sum(self.payment_ids.mapped('amount'))
+        self.amount_paid = self._compute_amount_paid()
 
     def _prepare_refund_values(self, current_session):
         self.ensure_one()

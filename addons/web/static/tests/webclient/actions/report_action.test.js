@@ -119,7 +119,6 @@ test("report actions can close modals and reload views", async () => {
             name: "Create a Partner",
             res_model: "partner",
             target: "new",
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
         },
     ]);

@@ -68,7 +68,6 @@ defineActions([
         xml_id: "action_1",
         name: "Partners Action 1",
         res_model: "partner",
-        type: "ir.actions.act_window",
         views: [[1, "kanban"]],
     },
     {
@@ -76,8 +75,6 @@ defineActions([
         xml_id: "action_3",
         name: "Partners",
         res_model: "partner",
-        mobile_view_mode: "kanban",
-        type: "ir.actions.act_window",
         views: [
             [false, "list"],
             [1, "kanban"],
@@ -157,6 +154,28 @@ test("soft_reload will refresh data", async () => {
 
     await getService("action").doAction("soft_reload");
     expect.verifySteps(["web_search_read"]);
+});
+
+test("soft_reload a form view", async () => {
+    onRpc("web_read", ({ args }) => {
+        expect.step(`read ${args[0][0]}`);
+    });
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        name: "Partners",
+        res_model: "partner",
+        views: [
+            [false, "list"],
+            [false, "form"],
+        ],
+        type: "ir.actions.act_window",
+    });
+    await contains(".o_data_row .o_data_cell").click();
+    await contains(".o_form_view .o_pager_next").click();
+    expect.verifySteps(["read 1", "read 2"]);
+
+    await getService("action").doAction("soft_reload");
+    expect.verifySteps(["read 2"]);
 });
 
 test("soft_reload when there is no controller", async () => {

@@ -196,7 +196,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                         # Only acknowledge when we saved the document somewhere
                         proxy_acks.append(uuid)
 
-                if not tools.config['test_enable']:
+                if not modules.module.current_test:
                     self.env.cr.commit()
                 if proxy_acks:
                     edi_user._call_peppol_proxy(
@@ -225,7 +225,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                         # this rare edge case can happen if the participant is not active on the proxy side
                         # in this case we can't get information about the invoices
                         edi_user_moves.peppol_move_state = 'error'
-                        log_message = _("Peppol error: %s", content.get('display_message', content['message']))
+                        log_message = _("Peppol error: %s", content['message'])
                         edi_user_moves._message_log_batch(bodies={move.id: log_message for move in edi_user_moves})
                         break
 
@@ -237,7 +237,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                             continue
 
                         move.peppol_move_state = 'error'
-                        move._message_log(body=_("Peppol error: %s", content['error'].get('display_message', content['message'])))
+                        move._message_log(body=_("Peppol error: %s", content['error'].get('data', {}).get('message') or content['error']['message']))
                         continue
 
                     move.peppol_move_state = content['state']
@@ -345,7 +345,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             # so that the invoices are acknowledged
             self._cron_peppol_get_message_status()
             self._cron_peppol_get_new_documents()
-            if not tools.config['test_enable'] and not modules.module.current_test:
+            if not modules.module.current_test:
                 self.env.cr.commit()
 
         if self.company_id.account_peppol_proxy_state != 'not_registered':
