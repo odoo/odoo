@@ -186,4 +186,107 @@
         </xpath>
     </t>
 
+    <t t-name="account.MyPLSN">
+        <div class="o_field_product_label_section_and_note_cell">
+            <t t-if="isNote">
+                <textarea
+                    class="o_input d-print-none border-0 fst-italic"
+                    placeholder="Enter a description"
+                    rows="1"
+                    t-att-class="sectionAndNoteClasses"
+                    t-att-value="label"
+                    t-on-change="(ev) => this.updateLabel(ev.target.value)"
+                    t-ref="labelNodeRef"
+                />
+            </t>
+            <t t-elif="isSection">
+                <input
+                    type="text"
+                    class="o_input text-wrap border-0 fst-italic fw-bold"
+                    placeholder="Enter a description"
+                    t-att-class="sectionAndNoteClasses"
+                    t-att-value="label"
+                    t-on-change="(ev) => this.updateLabel(ev.target.value)"
+                    t-ref="labelNodeRef"
+                />
+            </t>
+            <t t-elif="props.readonly">
+                <t t-if="isProductClickable">
+                    <!-- <a t-if="(columnIsProductAndLabel.value and value) or (!columnIsProductAndLabel.value and (productName or (!productName and !label)))"
+                        class="d-flex align-items-center justify-content-between"
+                        t-attf-class="o_form_uri #{classFromDecoration}"
+                        t-att-href="value ? `/odoo/${urlRelation}/${value[0]}` : '/'"
+                        t-on-click.prevent="onClick"
+                    >
+                        <span t-ref="productNodeRef" class="w-100">
+                            <span t-esc="productName" class="text-truncate"/>
+                        </span>
+                    </a>
+                    <textarea t-if="(columnIsProductAndLabel.value and label) or (!columnIsProductAndLabel.value and !productName and label)"
+                        class="o_input d-print-none border-0 fst-italic"
+                        placeholder="Enter a description"
+                        readonly="1"
+                        rows="1"
+                        type="text"
+                        t-att-class="sectionAndNoteClasses"
+                        t-att-value="label"
+                        t-on-change="(ev) => this.updateLabel(ev.target.value)"
+                        t-ref="labelNodeRef"
+                    /> -->
+                </t>
+                <t t-else="">
+                    <!-- <span t-if="productName" t-ref="productNodeRef" class="d-flex align-items-center justify-content-between w-100">
+                        <span class="text-truncate">
+                            <t t-out="productName"/>
+                        </span>
+                    </span>
+                    <span t-if="!productName and (columnIsProductAndLabel.value and !label)" t-ref="productNodeRef" class="d-flex align-items-center justify-content-between text-muted">
+                        <span class="text-truncate">Search a product</span>
+                    </span>
+                    <t t-if="columnIsProductAndLabel.value and label">
+                        <textarea
+                            class="o_input d-print-none border-0 fst-italic"
+                            rows="1"
+                            type="text"
+                            t-att-class="sectionAndNoteClasses"
+                            t-att-value="label"
+                            t-on-change="(ev) => this.updateLabel(ev.target.value)"
+                            t-ref="labelNodeRef"
+                        />
+                    </t> -->
+                </t>
+            </t>
+            <t t-else="">
+                <Many2One t-props="m2oProps">
+                    <t t-set-slot="end">
+                        <!-- <t t-if="columnIsProductAndLabel.value and !label">
+                            <button
+                                class="btn fa fa-bars text-start o_external_button px-1"
+                                data-tooltip="Click or press enter to add a description"
+                                id="labelVisibilityButtonId"
+                                type="button"
+                                t-on-click="switchLabelVisibility"
+                            />
+                        </t> -->
+                    </t>
+                </Many2One>
+                <!-- <t t-if="columnIsProductAndLabel.value and (label or labelVisibility.value)">
+                    <textarea
+                        class="o_input d-print-none border-0 fst-italic"
+                        placeholder="Enter a description"
+                        rows="1"
+                        type="text"
+                        t-att-class="sectionAndNoteClasses"
+                        t-att-value="label"
+                        t-on-change="(ev) => this.updateLabel(ev.target.value)"
+                        t-ref="labelNodeRef"
+                    />
+                </t> -->
+            </t>
+            <t t-if="isPrintMode.value">
+                <div class="d-none d-print-block text-wrap" t-out="label"/>
+            </t>
+        </div>
+    </t>
+
 </templates>

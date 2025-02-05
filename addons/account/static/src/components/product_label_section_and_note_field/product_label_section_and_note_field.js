@@ -1,69 +1,20 @@
-import { _t } from "@web/core/l10n/translation";
+import { useProductAndLabelAutoresize } from "@account/core/utils/product_and_label_autoresize";
+import {
+    Component,
+    onMounted,
+    onPatched,
+    onWillUnmount,
+    useEffect,
+    useRef,
+    useState,
+} from "@odoo/owl";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
-import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
-import { Many2OneField, many2OneField } from "@web/views/fields/many2one/many2one_field";
-import { onMounted, onPatched, onWillUnmount, useEffect, useRef, useState } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import {
-    SectionAndNoteListRenderer,
-    sectionAndNoteFieldOne2Many,
-} from "@account/components/section_and_note_fields_backend/section_and_note_fields_backend";
-import { useProductAndLabelAutoresize } from "@account/core/utils/product_and_label_autoresize";
-import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
-
-export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRenderer {
-
-    setup() {
-        super.setup();
-        this.productColumns = ["product_id", "product_template_id"];
-    }
-
-    getCellTitle(column, record) {
-        // When using this list renderer, we don't want the product_id cell to have a tooltip with its label.
-        if (this.productColumns.includes(column.name)) {
-            return;
-        }
-        super.getCellTitle(column, record);
-    }
-
-    getActiveColumns(list) {
-        let activeColumns = super.getActiveColumns(list);
-        const productCol = activeColumns.find((col) => this.productColumns.includes(col.name));
-        const labelCol = activeColumns.find((col) => col.name === "name");
-
-        if (productCol) {
-            if (labelCol) {
-                list.records.forEach((record) => (record.columnIsProductAndLabel = true));
-            } else {
-                list.records.forEach((record) => (record.columnIsProductAndLabel = false));
-            }
-            activeColumns = activeColumns.filter((col) => col.name !== "name");
-            this.titleField = productCol.name;
-        } else {
-            this.titleField = "name";
-        }
-
-        return activeColumns;
-    }
-}
-
-export class ProductLabelSectionAndNoteOne2Many extends X2ManyField {
-    static components = {
-        ...X2ManyField.components,
-        ListRenderer: ProductLabelSectionAndNoteListRender,
-    };
-}
-
-export const productLabelSectionAndNoteOne2Many = {
-    ...x2ManyField,
-    component: ProductLabelSectionAndNoteOne2Many,
-    additionalClasses: sectionAndNoteFieldOne2Many.additionalClasses,
-};
-
-registry
-    .category("fields")
-    .add("product_label_section_and_note_field_o2m", productLabelSectionAndNoteOne2Many);
+import { Many2One, useMany2One } from "@web/views/fields/many2one/many2one";
+import { Many2OneField, many2OneField } from "@web/views/fields/many2one/many2one_field";
+import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 
 export class ProductLabelSectionAndNoteAutocomplete extends AutoComplete {
     setup() {
@@ -240,3 +191,99 @@ export const productLabelSectionAndNoteField = {
 // registry
 //     .category("fields")
 //     .add("product_label_section_and_note_field", productLabelSectionAndNoteField);
+
+class MyPLSN extends Component {
+    static template = "account.MyPLSN";
+    static components = { Many2One };
+
+    setup() {
+        this.m2o = useMany2One(() => this.props);
+
+        this.labelNode = useRef("labelNodeRef");
+        this.productNode = useRef("productNodeRef");
+
+        this.switchToLabel = false;
+        this.isPrintMode = useState({ value: false });
+        this.labelVisibility = useState({ value: false });
+        this.columnIsProductAndLabel = useState({
+            value: this.props.record.columnIsProductAndLabel,
+        });
+
+        useProductAndLabelAutoresize(this.labelNode, { targetParentName: this.props.name });
+        useProductAndLabelAutoresize(this.productNode, { targetParentName: this.props.name });
+
+        useEffect(
+            (columnIsProductAndLabel) => {
+                this.columnIsProductAndLabel.value = columnIsProductAndLabel;
+            },
+            () => [this.props.record.columnIsProductAndLabel]
+        );
+
+        onPatched(() => {
+            if (this.labelNode.el && this.switchToLabel) {
+                this.switchToLabel = false;
+                this.labelNode.el.focus();
+            }
+        });
+
+        const onBeforePrint = () => {
+            this.isPrintMode.value = true;
+        };
+        const onAfterPrint = () => {
+            this.isPrintMode.value = false;
+        };
+
+        // The following hooks are used to make a div visible only in the print view. This div is necessary in the
+        // print view in order not to have scroll bars but can't be displayed in the normal view because it adds
+        // an empty line. This is done by switching an attribute to true only during the print view life cycle and
+        // including the said div in a t-if depending on that attribute.
+        onMounted(() => {
+            window.addEventListener("beforeprint", onBeforePrint);
+            window.addEventListener("afterprint", onAfterPrint);
+        });
+        onWillUnmount(() => {
+            window.removeEventListener("beforeprint", onBeforePrint);
+            window.removeEventListener("afterprint", onAfterPrint);
+        });
+    }
+
+    get isNote() {
+        return this.props.record.data.display_type === "line_note";
+    }
+
+    get isProductClickable() {
+        return this.props.record.evalContext.parent.state !== "draft";
+    }
+
+    get isSection() {
+        return this.props.record.data.display_type === "line_section";
+    }
+
+    get label() {
+        return this.props.record.data.name;
+    }
+
+    get m2oProps() {
+        return {
+            ...this.m2o.computeProps(),
+            // isNote: this.isNote,
+            // isSection: this.isSection,
+            placeholder: _t("Search a product"),
+            // updateLabel: (value) => this.updateLabel(value),
+        };
+    }
+
+    updateLabel(value) {
+        return this.props.record.update({
+            name: value,
+        });
+    }
+}
+
+registry.category("fields").add("product_label_section_and_note_field", {
+    component: MyPLSN,
+    fieldDependencies: [
+        { name: "name", type: "char" },
+        { name: "display_type", type: "selection" },
+    ],
+});
