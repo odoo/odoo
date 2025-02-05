@@ -187,7 +187,7 @@ class I18nExport(Subcommand):
 
         # Configure Odoo
         if parsed_args.install_modules:
-            odoo.tools.config['init'] = {module: 1 for module in parsed_args.modules}
+            odoo.tools.config['init'] = {'base': 1}
         odoo.tools.config['without_demo'] = True
         if export_pot := 'pot' in parsed_args.lang:
             pot_idx = parsed_args.lang.index('pot')
@@ -199,6 +199,9 @@ class I18nExport(Subcommand):
             allow_create=True,
             update_module=parsed_args.install_modules,
         ) as env:
+
+            # {module: 1 for module in parsed_args.modules}
+
             language_codes = _get_languages(env, parsed_args.lang, force_install=False)
             language_files = _get_language_files(parsed_args.modules, language_codes, export_pot=export_pot)
             for (module, lang_code, filepath) in language_files:
