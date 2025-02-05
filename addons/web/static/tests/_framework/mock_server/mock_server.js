@@ -29,12 +29,14 @@ const { DateTime } = luxon;
  *
  * @typedef {{
  *  actionID?: string | number;
- *  appID?: number | "root";
- *  children?: MenuDefinition[];
- *  id: Number | "root";
+ *  appID?: MenuId;
+ *  children?: (MenuId | MenuDefinition)[];
+ *  id: MenuId;
  *  name: string;
- *  xmlId?: string;
+ *  xmlid?: string;
  * }} MenuDefinition
+ *
+ * @typedef {number | "root"} MenuId
  *
  * @typedef {MockServerBaseEnvironment & { [modelName: string]: Model }} MockServerEnvironment
  *
@@ -307,11 +309,16 @@ const ALLOWED_CHARS = {
     string: "[\\w:.-]",
 };
 const DEFAULT_MENU = {
-    id: 99999,
+    id: 1,
     appID: 1,
-    children: [],
-    name: "App0",
+    name: "App1",
 };
+const ROOT_MENU = {
+    id: "root",
+    name: "root",
+    appID: "root",
+};
+
 const R_DATASET_ROUTE = /\/web\/dataset\/call_(button|kw)\/[\w.-]+\/(?<step>\w+)/;
 const R_ROUTE_PARAM = /<((?<type>\w+):)?(?<name>[\w-]+)>/g;
 const R_WILDCARD = /\*+/g;
@@ -542,12 +549,8 @@ export class MockServer {
                 errorName: "odoo.addons.web.controllers.action.MissingActionError",
                 message: `The action ${JSON.stringify(id)} does not exist`,
             });
-        } else if (actions.length > 1) {
-            throw new MockServerError(
-                `found ${actions.length} actions matching the same id: ${JSON.stringify(id)}`
-            );
         }
-        return this._getAction(actions[0]);
+        return this._getAction(Object.assign({}, ...actions));
     }
 
     /**
@@ -1171,21 +1174,36 @@ export class MockServer {
      * @type {RouteCallback<"unique">}
      */
     async loadMenus() {
-        const root = { id: "root", children: [], name: "root", appID: "root" };
-        const menuDict = { root };
-
-        const recursive = [{ isRoot: true, menus: this.menus }];
-        for (const { isRoot, menus } of recursive) {
-            for (const _menu of menus) {
-                if (isRoot) {
-                    root.children.push(_menu.id);
+        /** @type {MenuId[]} */
+        const allChildIds = new Set();
+        /** @type {Record<MenuId, MenuDefinition>} */
+        const menuDict = {};
+        /** @type {MenuDefinition[]} */
+        const menuStack = [{ ...ROOT_MENU, children: this.menus }];
+        while (menuStack.length) {
+            const menu = menuStack.shift();
+            /** @type {Set<MenuId>} */
+            const childIds = new Set();
+            menuDict[menu.id] = { ...menuDict[menu.id], ...menu };
+            for (const childMenuOrId of menuDict[menu.id].children) {
+                let childId = childMenuOrId;
+                if (isObject(childMenuOrId)) {
+                    childId = childMenuOrId.id;
+                    menuStack.push({
+                        appID: childId,
+                        children: [],
+                        name: `App${childId}`,
+                        ...childMenuOrId,
+                    });
                 }
-                const menu = { ..._menu };
-                const children = menu.children || [];
-                menu.children = children.map((m) => m.id);
-                recursive.push({ isRoot: false, menus: children });
-                menuDict[menu.id] = menu;
+                allChildIds.add(childId);
+                childIds.add(childId);
             }
+            menuDict[menu.id].children = [...childIds].sort((a, b) => a - b);
+        }
+        const missingMenuIds = [...allChildIds].filter((id) => !(id in menuDict));
+        if (missingMenuIds.length) {
+            throw new MockServerError(`missing menu ID(s): ${missingMenuIds.join(", ")}`);
         }
         return menuDict;
     }
