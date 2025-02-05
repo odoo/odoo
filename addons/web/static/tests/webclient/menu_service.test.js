@@ -61,21 +61,14 @@ const { ResCompany, ResPartner, ResUsers } = webModels;
 defineModels([Partner, ResCompany, ResPartner, ResUsers]);
 defineMenus([
     {
-        id: "root",
+        id: 1,
         children: [
-            {
-                id: 1,
-                children: [
-                    { id: 2, children: [], name: "Test1", appID: 1, actionID: 666 },
-                    { id: 3, children: [], name: "Test2", appID: 1, actionID: 666 },
-                ],
-                name: "App1",
-                appID: 1,
-                actionID: 666,
-            },
+            { id: 2, name: "Test1", appID: 1, actionID: 666 },
+            { id: 3, name: "Test2", appID: 1, actionID: 666 },
         ],
-        name: "root",
-        appID: "root",
+        name: "App1",
+        appID: 1,
+        actionID: 666,
     },
 ]);
 
@@ -88,11 +81,10 @@ test(`use stored menus, and don't update on load_menus return (if identical)`, a
     // Initial Stored values
     browser.localStorage.webclient_menus_version = "1.0";
     browser.localStorage.webclient_menus = JSON.stringify({
-        1: { id: 1, children: [2, 3], name: "App1", appID: 1, actionID: 666 },
-        2: { id: 2, children: [], name: "Test1", appID: 1, actionID: 666 },
-        3: { id: 3, children: [], name: "Test2", appID: 1, actionID: 666 },
-        99999: { id: 99999, appID: 1, children: [], name: "App0" },
-        root: { id: "root", children: [1], name: "root", appID: "root" },
+        1: { appID: 1, children: [2, 3], name: "App1", id: 1, actionID: 666 },
+        2: { appID: 1, children: [], name: "Test1", id: 2, actionID: 666 },
+        3: { appID: 1, children: [], name: "Test2", id: 3, actionID: 666 },
+        root: { id: "root", name: "root", appID: "root", children: [1] },
     });
 
     const webClient = await mountWebClient();
@@ -118,7 +110,6 @@ test(`use stored menus, and update on load_menus return`, async () => {
     browser.localStorage.webclient_menus = JSON.stringify({
         1: { id: 1, children: [2], name: "App1", appID: 1, actionID: 666 },
         2: { id: 2, children: [], name: "Test1", appID: 1, actionID: 666 },
-        99999: { id: 99999, appID: 1, children: [], name: "App0" },
         root: { id: "root", children: [1], name: "root", appID: "root" },
     });
 
@@ -152,12 +143,6 @@ test(`use stored menus, and update on load_menus return`, async () => {
             children: [],
             id: 3,
             name: "Test2",
-        },
-        99999: {
-            appID: 1,
-            children: [],
-            id: 99999,
-            name: "App0",
         },
         root: {
             appID: "root",

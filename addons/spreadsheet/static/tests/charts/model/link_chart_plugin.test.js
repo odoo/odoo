@@ -1,38 +1,14 @@
-import { defineMenus, makeMockEnv } from "@web/../tests/web_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
+import { createSpreadsheetWithChart } from "@spreadsheet/../tests/helpers/chart";
+import { createBasicChart } from "@spreadsheet/../tests/helpers/commands";
+import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
+import { makeMockEnv } from "@web/../tests/web_test_helpers";
 
 import { Model } from "@odoo/o-spreadsheet";
-import { createBasicChart } from "@spreadsheet/../tests/helpers/commands";
-import { createSpreadsheetWithChart } from "@spreadsheet/../tests/helpers/chart";
-import { defineSpreadsheetModels } from "../../helpers/data";
 
 const chartId = "uuid1";
 
 describe.current.tags("headless");
-defineMenus([
-    {
-        id: "root",
-        children: [1, 2],
-        name: "root",
-        appID: "root",
-    },
-    {
-        id: 1,
-        children: [],
-        name: "test menu 1",
-        xmlid: "spreadsheet.test.menu",
-        appID: 1,
-        actionID: "menuAction",
-    },
-    {
-        id: 2,
-        children: [],
-        name: "test menu 2",
-        xmlid: "spreadsheet.test.menu2",
-        appID: 1,
-        actionID: "menuAction2",
-    },
-]);
 
 defineSpreadsheetModels();
 
