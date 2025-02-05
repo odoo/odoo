@@ -62,7 +62,10 @@ class ProductTemplate(models.Model):
         default='consu',
     )
     combo_ids = fields.Many2many(
-        string="Combo Choices", comodel_name='product.combo', check_company=True
+        string="Combo Choices",
+        comodel_name='product.combo',
+        check_company=True,
+        required="type == 'combo'",
     )
     service_tracking = fields.Selection(selection=[
             ('no', 'Nothing'),

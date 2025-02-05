@@ -8,7 +8,7 @@ import requests
 from requests.exceptions import ConnectionError as RequestConnectionError, Timeout as RequestTimeout
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, RedirectWarning
 
 _logger = logging.getLogger(__name__)
 
@@ -47,9 +47,11 @@ class ProductFetchImageWizard(models.TransientModel):
         google_pse_id_is_set = bool(ICP.get_param('google.pse.id'))
         google_custom_search_key_is_set = bool(ICP.get_param('google.custom_search.key'))
         if not (google_pse_id_is_set and google_custom_search_key_is_set):
-            raise UserError(_(
-                "The API Key and Search Engine ID must be set in the General Settings."
-            ))
+            action = self.env.ref('base.res_config_setting_act_window')
+            msg = _(
+                "Oops! Couldn't retrieve pictures from Google as the credentials are missing."
+            )
+            raise RedirectWarning(msg, action.id, _("Go to Settings"))
 
         # Compute default values
         if self._context.get('active_model') == 'product.template':

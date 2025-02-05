@@ -12,7 +12,7 @@ class ProductComboItem(models.Model):
     company_id = fields.Many2one(related='combo_id.company_id', precompute=True, store=True)
     combo_id = fields.Many2one(comodel_name='product.combo', ondelete='cascade', required=True)
     product_id = fields.Many2one(
-        string="Product",
+        string="Options",
         comodel_name='product.product',
         ondelete='cascade',
         domain=[('type', '!=', 'combo')],
@@ -21,7 +21,7 @@ class ProductComboItem(models.Model):
     )
     currency_id = fields.Many2one(comodel_name='res.currency', related='product_id.currency_id')
     lst_price = fields.Float(
-        string="Original Price",
+        string="Default Price",
         digits='Product Price',
         related='product_id.lst_price',
     )

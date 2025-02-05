@@ -42,8 +42,9 @@
             <field name="inherit_id" ref="product.product_product_tree_view"/>
             <field name="arch" type="xml">
                 <field name="type" position="after">
-                    <field name="qty_available" invisible="not is_storable" string="On Hand" optional="show" decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0" decoration-bf="1" groups="stock.group_stock_user"/>
-                    <field name="virtual_available" invisible="not is_storable" string="Forecasted" optional="show" decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0" groups="stock.group_stock_user"/>
+                    <field name="qty_available" invisible="not is_storable" string="On Hand" optional="show" decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0" decoration-bf="1" groups="stock.group_stock_user" sum="Total On Hand"/>
+                    <field name="virtual_available" invisible="not is_storable" string="Forecasted" optional="show" decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0" groups="stock.group_stock_user"
+                    sum="Total Forecasted"/>
                 </field>
             </field>
         </record>
@@ -55,8 +56,8 @@
             <field name="arch" type="xml">
                 <field name="uom_id" position="before">
                     <field name="show_on_hand_qty_status_button" column_invisible="True" groups="stock.group_stock_user"/>
-                    <field name="qty_available" invisible="not show_on_hand_qty_status_button" string="On Hand" optional="show" decoration-danger="qty_available &lt; 0" groups="stock.group_stock_user"/>
-                    <field name="virtual_available" invisible="not show_on_hand_qty_status_button" string="Forecasted" optional="show" decoration-danger="virtual_available &lt; 0" decoration-bf="1" groups="stock.group_stock_user"/>
+                    <field name="qty_available" invisible="not show_on_hand_qty_status_button" string="On Hand" optional="show" decoration-danger="qty_available &lt; 0" groups="stock.group_stock_user" sum="Total On Hand"/>
+                    <field name="virtual_available" invisible="not show_on_hand_qty_status_button" string="Forecasted" optional="show" decoration-danger="virtual_available &lt; 0" decoration-bf="1" groups="stock.group_stock_user" sum="Total Forecasted"/>
                 </field>
                 <field name="default_code" position="after">
                     <field name="responsible_id" widget="many2one_avatar_user" optional="hide" groups="stock.group_stock_user"/>
@@ -76,9 +77,6 @@
                     <separator/>
                     <field name="location_id" context="{'search_location': self}" filter_domain="[]"/>
                     <field name="warehouse_id" context="{'search_warehouse': self}" filter_domain="[]"/>
-                    <separator/>
-                    <filter name="real_stock_available" string="Available Products" domain="[('qty_available','&gt;',0)]"/>
-                    <filter name="real_stock_negative" string="Negative Forecasted Quantity" domain="[('virtual_available','&lt;',0)]"/>
                 </xpath>
             </field>
         </record>
@@ -88,8 +86,9 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_search_view"/>
             <field name="arch" type="xml">
-                <filter name="combo" position="after">
-                    <filter name="is_storable" string="Inventory Management" domain="[('is_storable','=',True)]"/>
+                <filter name="filter_to_sell" position="before">
+                    <filter name="is_storable" string="Tracked Stock" domain="[('is_storable','=',True)]"/>
+                    <separator/>
                 </filter>
             </field>
         </record>
@@ -114,7 +113,7 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='type']" position="after">
+                <xpath expr="//field[@name='product_tooltip']" position="after">
                     <label for="is_storable" class="oe_inline" invisible="type != 'consu'"/>
                     <div class="o_row w-100" invisible="type != 'consu'">
                         <field name="is_storable"/>
@@ -124,6 +123,7 @@
                 <xpath expr="//group[@name='group_lots_and_weight']" position="inside">
                     <label for="sale_delay" invisible="not sale_ok"/>
                     <div invisible="not sale_ok">
+                        <!--TODO-PDA: max-width doesn't apply to input element != oe_field_float-->
                         <field name="sale_delay" class="oe_inline" style="vertical-align:baseline"/> days
                     </div>
                 </xpath>
@@ -202,7 +202,7 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//header/button" position="before">
+                <xpath expr="//header" position="inside">
                     <button string="Update Quantity" type="object"
                         name="action_update_quantity_on_hand"
                         invisible="not is_storable"/>
@@ -251,7 +251,7 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//header/button" position="before">
+                    <xpath expr="//header" position="inside">
                         <button string="Update Quantity" type="object"
                             name="action_update_quantity_on_hand"
                             invisible="not is_storable"/>
@@ -374,7 +374,7 @@
             <field name="priority" eval="15"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//header/button" position="before">
+                    <xpath expr="//header" position="inside">
                         <button string="Update Quantity" type="object"
                             name="action_update_quantity_on_hand"
                             invisible="not is_storable"/>

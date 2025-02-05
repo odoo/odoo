@@ -19,7 +19,11 @@
                     class="fst-italic text-muted"
                 >
                     Warn the salesperson for an upsell when work done exceeds
-                    <field name="service_upsell_threshold" widget="percentage" class="oe_inline"/>
+                    <field
+                        name="service_upsell_threshold"
+                        widget="percentage"
+                        class="oe_inline o_field_highlight"
+                    />
                     of hours sold. <field name="service_upsell_threshold_ratio" class="oe_inline" invisible="not service_upsell_threshold_ratio"/>
                 </div>
             </field>
