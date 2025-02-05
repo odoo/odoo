@@ -452,7 +452,7 @@
                             </td>
                             <td class="o_survey_answer d-flex align-items-center gap-1">
                                 <span t-esc="round(choice_data['count'] * 100.0/ (len(question_data['answer_line_done_ids']) or 1), 2)"></span> %
-                                <span t-esc="'%s Votes' % choice_data['count']" class="badge text-bg-primary"/>
+                                <span t-out="choice_data['count_text']" class="badge text-bg-primary"/>
                                 <i t-if="choice_data['suggested_answer'].id and choice_data['count']"
                                     class="fa fa-filter text-primary filter-add-answer d-print-none"
                                     data-model-short-key="A" t-att-data-record-id="choice_data['suggested_answer'].id"
