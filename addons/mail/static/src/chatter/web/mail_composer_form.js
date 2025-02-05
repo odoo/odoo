@@ -27,19 +27,22 @@ export class MailComposerFormRenderer extends formView.Renderer {
         super.setup();
         // Autofocus the visible editor in edition mode.
         this.root = useRef("compiled_view_root");
-        useEffect((isInEdition, root) => {
-            if (root && root.el && isInEdition && this.props.record.data.composition_comment_option !== "reply_all") {
-                const element = root.el.querySelector(".note-editable[contenteditable]");
-                if (element) {
-                    element.focus();
-                    document.dispatchEvent(new Event("selectionchange", {}));
+        useEffect(
+            (isInEdition, el) => {
+                if (
+                    el &&
+                    isInEdition &&
+                    this.props.record.data.composition_comment_option === "reply_all"
+                ) {
+                    const element = el.querySelector(".note-editable[contenteditable]");
+                    if (element) {
+                        element.focus();
+                        document.dispatchEvent(new Event("selectionchange", {}));
+                    }
                 }
-            }
-        }, () => [
-            this.props.record.isInEdition,
-            this.root,
-            this.props.record.resId
-        ]);
+            },
+            () => [this.props.record.isInEdition, this.root.el, this.props.record.resId]
+        );
 
         // Add file dropzone on full mail composer:
         this.attachmentUploadService = useService("mail.attachment_upload");
