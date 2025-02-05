@@ -106,11 +106,13 @@ export class GifPicker extends Component {
         onWillStart(() => {
             this.loadCategories();
         });
-        if (this.store.self.type === "partner") {
-            onWillStart(() => {
-                this.loadFavorites();
+        onWillStart(() => {
+            this.store.getSelf().then((self) => {
+                if (self.type === "partner") {
+                    this.loadFavorites();
+                }
             });
-        }
+        });
         useEffect(
             () => {
                 if (this.props.state?.picker !== this.props.PICKERS?.GIF) {

@@ -7,7 +7,6 @@ import {
     inputFiles,
     insertText,
     isInViewportOf,
-    onRpcBefore,
     openDiscuss,
     openFormView,
     openListView,
@@ -23,13 +22,11 @@ import { describe, expect, test } from "@odoo/hoot";
 import { mockDate, tick } from "@odoo/hoot-mock";
 import { EventBus } from "@odoo/owl";
 import {
-    asyncStep,
     Command,
     getService,
     patchWithCleanup,
     preloadBundle,
     serverState,
-    waitForSteps,
     withUser,
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
@@ -56,7 +53,7 @@ test("Mobile: chat window shouldn't open automatically after receiving a new mes
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu-counter", { count: 0 });
     // simulate receiving a message
-    withUser(userId, () =>
+    await withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "hu", message_type: "comment" },
             thread_id: channelId,
@@ -554,21 +551,15 @@ test("chat window should open when receiving a new DM", async () => {
         ],
         channel_type: "chat",
     });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep("init_messaging");
-        }
-    });
     await start();
-    await waitForSteps(["init_messaging"]);
-    await contains(".o-mail-ChatHub");
-    withUser(userId, () =>
+    await withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "Hi, are you here?", message_type: "comment" },
             thread_id: channelId,
             thread_model: "discuss.channel",
         })
     );
+    await contains(".o-mail-ChatHub");
     await contains(".o-mail-ChatBubble");
     await contains(".o-mail-ChatBubble-counter", { text: "1" });
 });
@@ -590,7 +581,7 @@ test("chat window should not open when receiving a new DM from odoobot", async (
     });
     await start();
     await contains(".o-mail-ChatHub");
-    withUser(userId, () =>
+    await withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "Hello, I'm new", message_type: "comment" },
             thread_id: channelId,
@@ -637,7 +628,7 @@ test("chat window should remain folded when new message is received", async () =
     await start();
     await contains(".o-mail-ChatBubble");
     await contains(".o-mail-ChatBubble-counter", { count: 0 });
-    withUser(userId, () =>
+    await withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "New Message", message_type: "comment" },
             thread_id: channelId,

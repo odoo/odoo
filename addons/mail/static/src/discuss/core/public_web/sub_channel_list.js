@@ -56,6 +56,7 @@ export class SubChannelList extends Component {
     }
 
     async onClickSubThread(subThread) {
+        await this.store.getSelf();
         if (!subThread.hasSelfAsMember) {
             await rpc("/discuss/channel/join", { channel_id: subThread.id });
         }

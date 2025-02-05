@@ -3,7 +3,6 @@ import {
     contains,
     defineMailModels,
     mockGetMedia,
-    onRpcBefore,
     openDiscuss,
     patchUiSize,
     SIZES,
@@ -166,11 +165,6 @@ test("should display invitations", async () => {
         channel_member_id: memberId,
         channel_id: channelId,
     });
-    onRpcBefore("/mail/data", (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep(`/mail/data - ${JSON.stringify(args)}`);
-        }
-    });
     mockService("mail.sound_effects", {
         play(name) {
             asyncStep(`play - ${name}`);
@@ -180,14 +174,7 @@ test("should display invitations", async () => {
         },
     });
     await start();
-    await waitForSteps([
-        `/mail/data - ${JSON.stringify({
-            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
-            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
-        })}`,
-    ]);
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
-    // send after init_messaging because bus subscription is done after init_messaging
     pyEnv["bus.bus"]._sendone(
         partner,
         "mail.record/insert",

@@ -288,11 +288,6 @@ test("mark channel as fetched when a new message is loaded", async () => {
         ],
         channel_type: "chat",
     });
-    onRpcBefore("/mail/data", (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep(`/mail/data - ${JSON.stringify(args)}`);
-        }
-    });
     onRpcBefore("/discuss/channel/mark_as_read", (args) => {
         expect(args.channel_id).toBe(channelId);
         asyncStep("rpc:mark_as_read");
@@ -303,20 +298,7 @@ test("mark channel as fetched when a new message is loaded", async () => {
     });
     setupChatHub({ opened: [channelId] });
     await start();
-    await contains(".o_menu_systray i[aria-label='Messages']");
-    await waitForSteps([
-        `/mail/data - ${JSON.stringify({
-            fetch_params: [
-                "failures",
-                "systray_get_activities",
-                "init_messaging",
-                ["discuss.channel", [channelId]],
-            ],
-            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
-        })}`,
-    ]);
-    // send after init_messaging because bus subscription is done after init_messaging
-    withUser(userId, () =>
+    await withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "Hello!", message_type: "comment" },
             thread_id: channelId,
@@ -395,7 +377,7 @@ test("should scroll to bottom on receiving new message if the list is initially 
     await scroll(".o-mail-Thread", "bottom");
     await contains(".o-mail-Thread", { scroll: "bottom" });
     // simulate receiving a message
-    withUser(userId, () =>
+    await withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "hello", message_type: "comment" },
             thread_id: channelId,
@@ -429,7 +411,7 @@ test("should not scroll on receiving new message if the list is initially scroll
     await contains(".o-mail-Message", { count: 11 });
     await contains(".o-mail-Thread", { scroll: 0 });
     // simulate receiving a message
-    withUser(userId, () =>
+    await withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "hello", message_type: "comment" },
             thread_id: channelId,
@@ -656,7 +638,7 @@ test("first unseen message should be directly preceded by the new message separa
     // composer is focused by default, we remove that focus
     queryFirst(".o-mail-Composer-input").blur();
     // simulate receiving a message
-    withUser(userId, () =>
+    await withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "test", message_type: "comment" },
             thread_id: channelId,

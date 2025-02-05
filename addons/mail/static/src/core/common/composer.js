@@ -457,11 +457,12 @@ export class Composer extends Component {
         }
     }
 
-    onKeydown(ev) {
+    async onKeydown(ev) {
         const composer = toRaw(this.props.composer);
         switch (ev.key) {
             case "ArrowUp":
                 if (this.props.messageEdition && composer.text === "") {
+                    await this.store.getSelf();
                     const messageToEdit = composer.thread.lastEditableMessageOfSelf;
                     if (messageToEdit) {
                         this.props.messageEdition.editingMessage = messageToEdit;
@@ -530,7 +531,8 @@ export class Composer extends Component {
             mentionedChannels: this.props.composer.mentionedChannels,
             mentionedPartners: this.props.composer.mentionedPartners,
         });
-        const signature = this.store.self.signature;
+        const self = await this.store.getSelf();
+        const signature = self.signature;
         const default_body =
             (await prettifyMessageContent(body, validMentions)) +
             (this.props.composer.emailAddSignature && signature ? "<br>" + signature : "");
@@ -771,8 +773,8 @@ export class Composer extends Component {
     restoreContent() {
         const composer = toRaw(this.props.composer);
         try {
-            const config = JSON.parse(browser.localStorage.getItem(composer.localId));
-            if (config.text) {
+            const config = JSON.parse(browser.localStorage.getItem(composer.localId) ?? "{}");
+            if (config?.text) {
                 composer.emailAddSignature = config.emailAddSignature;
                 composer.text = config.text;
             }

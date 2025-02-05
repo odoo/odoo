@@ -10,7 +10,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
-import { asyncStep, getService, waitForSteps } from "@web/../tests/web_test_helpers";
+import { asyncStep, waitForSteps } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -32,7 +32,9 @@ test("bus subscription is refreshed when channel is joined", async () => {
     patchWebsocketWorkerWithCleanup({
         _sendToServer({ event_name, data }) {
             if (event_name === "subscribe") {
-                asyncStep(`subscribe - ${JSON.stringify(data.channels)}`);
+                if (data.channels.some((channel) => channel.includes("discuss.channel"))) {
+                    asyncStep("channel");
+                }
             }
         },
     });
@@ -41,24 +43,13 @@ test("bus subscription is refreshed when channel is joined", async () => {
         `${later.year}-${later.month}-${later.day} ${later.hour}:${later.minute}:${later.second}`
     );
     await start();
-    const expectedSubscribes = [];
-    for (const { type, id } of getService("mail.store").imStatusTrackedPersonas) {
-        const model = type === "partner" ? "res.partner" : "mail.guest";
-        expectedSubscribes.unshift(`"odoo-presence-${model}_${id}"`);
-    }
-    await waitForSteps([`subscribe - [${expectedSubscribes.join(",")}]`]);
     await openDiscuss();
-    await waitForSteps([]);
     await click("input[placeholder='Find or start a conversation']");
     await insertText("input[placeholder='Search a conversation']", "new channel");
+    await waitForSteps([]);
     await click("a", { text: "Create Channel" });
     await contains(".o-mail-DiscussSidebar-item", { text: "new channel" });
-    const [newChannel] = pyEnv["discuss.channel"].search([["name", "=", "new channel"]]);
-    expectedSubscribes.unshift(`"discuss.channel_${newChannel}"`);
-    await waitForSteps([
-        `subscribe - [${expectedSubscribes.join(",")}]`,
-        `subscribe - [${expectedSubscribes.join(",")}]`, // 1 is enough. The 2 comes from technical details (1: from channel_join, 2: from channel open), 2nd covers shadowing
-    ]);
+    await waitForSteps(["channel"]);
 });
 
 test("bus subscription is refreshed when channel is left", async () => {
@@ -67,7 +58,11 @@ test("bus subscription is refreshed when channel is left", async () => {
     patchWebsocketWorkerWithCleanup({
         _sendToServer({ event_name, data }) {
             if (event_name === "subscribe") {
-                asyncStep(`subscribe - ${JSON.stringify(data.channels)}`);
+                if (data.channels.some((channel) => channel.includes("discuss.channel"))) {
+                    asyncStep("channel");
+                } else {
+                    asyncStep("not-channel");
+                }
             }
         },
     });
@@ -75,15 +70,13 @@ test("bus subscription is refreshed when channel is left", async () => {
     mockDate(
         `${later.year}-${later.month}-${later.day} ${later.hour}:${later.minute}:${later.second}`
     );
-    const env = await start();
-    const imStatusChannels = [];
-    for (const { type, id } of env.services["mail.store"].imStatusTrackedPersonas) {
-        const model = type === "partner" ? "res.partner" : "mail.guest";
-        imStatusChannels.unshift(`"odoo-presence-${model}_${id}"`);
-    }
-    await waitForSteps([`subscribe - [${imStatusChannels.join(",")}]`]);
+    await start();
     await openDiscuss();
-    await waitForSteps([]);
+    await waitForSteps(["not-channel"]);
+    // race-condition: a second call might or might not be present
+    await waitForSteps(["not-channel"], { required: false });
     await click("[title='Leave Channel']");
-    await waitForSteps([`subscribe - [${imStatusChannels.join(",")}]`]);
+    await click("button", { text: "Leave Conversation" });
+    await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
+    await waitForSteps(["not-channel"]);
 });

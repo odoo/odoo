@@ -42,7 +42,8 @@ export class ChatBotService {
      * Start the chatbot script.
      */
     async start() {
-        if (this.chatbot.thread.isLastMessageFromCustomer) {
+        await this.store.getSelf();
+        if (this.chatbot.thread.newestPersistentOfAllMessage?.isSelfAuthored) {
             await this.chatbot?.processAnswer(
                 this.livechatService.thread.newestPersistentOfAllMessage
             );

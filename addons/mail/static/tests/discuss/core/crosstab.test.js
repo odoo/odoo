@@ -45,7 +45,7 @@ test("Remove member from channel", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-discuss-ChannelMember", { text: "Harry" });
-    withUser(userId, () =>
+    await withUser(userId, () =>
         getService("orm").call("discuss.channel", "action_unfollow", [channelId])
     );
     await contains(".o-discuss-ChannelMember", { count: 0, text: "Harry" });

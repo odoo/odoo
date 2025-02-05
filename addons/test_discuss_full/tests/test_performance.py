@@ -12,7 +12,7 @@ from odoo.tests.common import users, tagged, HttpCase, warmup
 
 @tagged('post_install', '-at_install')
 class TestDiscussFullPerformance(HttpCase, MailCommon):
-    # Queries for _query_count_init_store (in order):
+    # Queries for _query_count_init_messaging (in order):
     #   1: internalUserGroupId: ref exists
     #   5: odoobot format:
     #       - ref exists
@@ -29,8 +29,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search im_livechat_expertise_res_users_settings_rel (_format_settings)
     #       - search mail_canned_response
     #       - fetch res_groups_users_rel (for search mail_canned_response that user can use)
-    _query_count_init_store = 14
-    # Queries for _query_count_init_messaging (in order):
     #   1: insert res_device_log
     #   1: fetch res_users (for current user, first occurence _get_channels_as_member of _init_messaging)
     #   1: fetch channels (provided ids from chat hub)
@@ -73,7 +71,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #           - fetch res_groups (authorizedGroupFullName)
     #           - fetch ir_module_category (authorizedGroupFullName)
     #           - search group_ids (group_based_subscription)
-    _query_count_init_messaging = 35
+    _query_count_init_messaging = 49
     # Queries for _query_count_discuss_channels (in order):
     #   1: insert res_device_log
     #   1: fetch res_users (for current user: first occurence current persona, _search_is_member)
@@ -319,22 +317,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
 
     @users('emp')
     @warmup
-    def test_10_init_store_data(self):
-        """Test performance of `_init_store_data`."""
-
-        def test_fn():
-            store = Store()
-            self.env["res.users"].with_user(self.users[0])._init_store_data(store)
-            return store.get_result()
-
-        self._run_test(
-            fn=test_fn,
-            count=self._query_count_init_store,
-            results=self._get_init_store_data_result(),
-        )
-
-    @users('emp')
-    @warmup
     def test_20_init_messaging(self):
         """Test performance of `init_messaging`."""
         self._run_test(
@@ -358,51 +340,48 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             results=self._get_discuss_channels_result(),
         )
 
-    def _get_init_store_data_result(self):
+    def _get_init_messaging_result(self):
         """Returns the result of a call to init_messaging.
         The point of having a separate getter is to allow it to be overriden.
         """
+        # sudo: bus.bus: reading non-sensitive last id
+        bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         xmlid_to_res_id = self.env["ir.model.data"]._xmlid_to_res_id
         return {
+            "discuss.channel": [
+                self._expected_result_for_channel(self.channel_chat_1),
+                self._expected_result_for_channel(self.channel_channel_group_1),
+            ],
+            "discuss.channel.member": [
+                self._res_for_member(self.channel_chat_1, self.users[0].partner_id),
+                self._res_for_member(self.channel_chat_1, self.users[14].partner_id),
+                self._res_for_member(self.channel_channel_group_1, self.users[0].partner_id),
+                self._res_for_member(self.channel_channel_group_1, self.users[2].partner_id),
+            ],
+            "discuss.channel.rtc.session": [
+                self._expected_result_for_rtc_session(self.channel_channel_group_1, self.users[2]),
+            ],
             "res.partner": self._filter_partners_fields(
-                {
-                    "active": False,
-                    "avatar_128_access_token": limited_field_access_token(
-                        self.user_root.partner_id, "avatar_128"
-                    ),
-                    "email": "odoobot@example.com",
-                    "id": self.user_root.partner_id.id,
-                    "im_status": "bot",
-                    "isInternalUser": True,
-                    "is_company": False,
-                    "name": "OdooBot",
-                    "out_of_office_date_end": False,
-                    "userId": self.user_root.id,
-                    "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
-                },
-                {
-                    "active": True,
-                    "avatar_128_access_token": limited_field_access_token(
-                        self.users[0].partner_id, "avatar_128"
-                    ),
-                    "id": self.users[0].partner_id.id,
-                    "isAdmin": False,
-                    "isInternalUser": True,
-                    "name": "Ernest Employee",
-                    "notification_preference": "inbox",
-                    "signature": self.users[0].signature,
-                    "userId": self.users[0].id,
-                    "write_date": fields.Datetime.to_string(self.users[0].partner_id.write_date),
-                },
+                self._expected_result_for_persona(self.user_root),
+                self._expected_result_for_persona(self.users[0], init=True),
+                self._expected_result_for_persona(self.users[14]),
+                self._expected_result_for_persona(self.users[2], only_inviting=True),
             ),
             "Store": {
-                "channel_types_with_seen_infos": sorted(["chat", "group", "livechat"]),
                 "action_discuss_id": xmlid_to_res_id("mail.action_discuss"),
+                "channel_types_with_seen_infos": sorted(["chat", "group", "livechat"]),
+                "has_access_livechat": False,
                 "hasCannedResponses": False,
                 "hasGifPickerFeature": False,
                 "hasLinkPreviewFeature": True,
-                "has_access_livechat": False,
                 "hasMessageTranslationFeature": False,
+                "inbox": {
+                    "counter": 1,
+                    "counter_bus_id": bus_last_id,
+                    "id": "inbox",
+                    "model": "mail.box",
+                },
+                "initChannelsUnreadCounter": 2,
                 "internalUserGroupId": self.env.ref("base.group_user").id,
                 "mt_comment_id": xmlid_to_res_id("mail.mt_comment"),
                 "odoobot": {"id": self.user_root.partner_id.id, "type": "partner"},
@@ -420,42 +399,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "use_push_to_talk": False,
                     "user_id": {"id": self.users[0].id},
                     "voice_active_duration": 200,
-                    "volumes": [("ADD", [])],
-                },
-            },
-        }
-
-    def _get_init_messaging_result(self):
-        """Returns the result of a call to init_messaging.
-        The point of having a separate getter is to allow it to be overriden.
-        """
-        # sudo: bus.bus: reading non-sensitive last id
-        bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
-        return {
-            "discuss.channel": [
-                self._expected_result_for_channel(self.channel_chat_1),
-                self._expected_result_for_channel(self.channel_channel_group_1),
-            ],
-            "discuss.channel.member": [
-                self._res_for_member(self.channel_chat_1, self.users[0].partner_id),
-                self._res_for_member(self.channel_chat_1, self.users[14].partner_id),
-                self._res_for_member(self.channel_channel_group_1, self.users[0].partner_id),
-                self._res_for_member(self.channel_channel_group_1, self.users[2].partner_id),
-            ],
-            "discuss.channel.rtc.session": [
-                self._expected_result_for_rtc_session(self.channel_channel_group_1, self.users[2]),
-            ],
-            "res.partner": self._filter_partners_fields(
-                self._expected_result_for_persona(self.users[0]),
-                self._expected_result_for_persona(self.users[14]),
-                self._expected_result_for_persona(self.users[2], only_inviting=True),
-            ),
-            "Store": {
-                "inbox": {
-                    "counter": 1,
-                    "counter_bus_id": bus_last_id,
-                    "id": "inbox",
-                    "model": "mail.box",
+                    "volumes": [["ADD", []]],
                 },
                 "starred": {
                     "counter": 1,
@@ -463,7 +407,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "id": "starred",
                     "model": "mail.box",
                 },
-                "initChannelsUnreadCounter": 2,
             },
         }
 
@@ -1566,7 +1509,24 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         only_inviting=False,
         also_livechat=False,
         also_notification=False,
+        init=False,
     ):
+        if user == self.user_root:
+            return {
+                "active": False,
+                "avatar_128_access_token": limited_field_access_token(
+                    self.user_root.partner_id, "avatar_128"
+                ),
+                "email": "odoobot@example.com",
+                "id": self.user_root.partner_id.id,
+                "im_status": "bot",
+                "isInternalUser": True,
+                "is_company": False,
+                "name": "OdooBot",
+                "out_of_office_date_end": False,
+                "userId": self.user_root.id,
+                "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
+            }
         if user == self.users[0]:
             res = {
                 "active": True,
@@ -1593,6 +1553,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 )
             if also_notification:
                 res["name"] = "Ernest Employee"
+            if init:
+                res["isAdmin"] = False
+                res["notification_preference"] = "inbox"
+                res["signature"] = self.users[0].signature
             return res
         if user == self.users[1]:
             res = {

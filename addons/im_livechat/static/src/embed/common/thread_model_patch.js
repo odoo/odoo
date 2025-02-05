@@ -61,10 +61,6 @@ patch(Thread.prototype, {
         this.requested_by_operator = false;
     },
 
-    get isLastMessageFromCustomer() {
-        return this.newestPersistentOfAllMessage?.isSelfAuthored;
-    },
-
     get membersThatCanSeen() {
         return super.membersThatCanSeen.filter((member) => !member.is_bot);
     },

@@ -1,13 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug.exceptions import NotFound
-
 from odoo import http
 from odoo.http import request
 from odoo.addons.mail.controllers.thread import ThreadController
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 from odoo.addons.mail.tools.discuss import Store
-from odoo.osv import expression
 
 
 class WebclientController(http.Controller):
@@ -31,6 +28,12 @@ class WebclientController(http.Controller):
 
     def _process_request(self, fetch_params, context):
         store = Store()
+        if cids := request.cookies.get("cids", False):
+            allowed_company_ids = []
+            for company_id in [int(cid) for cid in cids.split("-")]:
+                if company_id in request.env.user.company_ids.ids:
+                    allowed_company_ids.append(company_id)
+            request.update_context(allowed_company_ids=allowed_company_ids)
         if context:
             request.update_context(**context)
         self._process_request_loop(store, fetch_params)
@@ -47,6 +50,7 @@ class WebclientController(http.Controller):
 
     def _process_request_for_all(self, store: Store, name, params):
         if name == "init_messaging":
+            request.env["res.users"]._init_store_data(store)
             if not request.env.user._is_public():
                 user = request.env.user.sudo(False)
                 user._init_messaging(store)

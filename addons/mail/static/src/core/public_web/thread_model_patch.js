@@ -4,7 +4,8 @@ import { router } from "@web/core/browser/router";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 
-patch(Thread.prototype, {
+/** @type {import("models").Thread} */
+const threadPatch = {
     /**
      * Handle the notification of a new message based on the notification setting of the user.
      * Thread on mute:
@@ -18,6 +19,7 @@ patch(Thread.prototype, {
      * @param {import("models").Message} message
      */
     async notifyMessageToUser(message) {
+        const self = await this.store.getSelf();
         const channel_notifications =
             this.custom_notifications || this.store.settings.channel_notifications;
         if (
@@ -27,7 +29,7 @@ patch(Thread.prototype, {
                 (this.channel_type === "channel" &&
                     (channel_notifications === "all" ||
                         (channel_notifications === "mentions" &&
-                            message.recipients?.includes(this.store.self)))))
+                            message.recipients?.includes(self)))))
         ) {
             if (this.model === "discuss.channel") {
                 await this.store.chatHub.initPromise;
@@ -120,7 +122,8 @@ patch(Thread.prototype, {
         });
     },
     async leaveChannel({ force = false } = {}) {
-        if (this.channel_type !== "group" && this.create_uid === this.store.self.userId && !force) {
+        const self = await this.store.getSelf();
+        if (this.channel_type !== "group" && this.create_uid === self.userId && !force) {
             await this.askLeaveConfirmation(
                 _t("You are the administrator of this channel. Are you sure you want to leave?")
             );
@@ -134,4 +137,5 @@ patch(Thread.prototype, {
         }
         this.leave();
     },
-});
+};
+patch(Thread.prototype, threadPatch);

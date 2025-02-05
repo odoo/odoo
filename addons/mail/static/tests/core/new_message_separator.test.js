@@ -4,7 +4,6 @@ import {
     contains,
     defineMailModels,
     insertText,
-    onRpcBefore,
     openDiscuss,
     openFormView,
     scroll,
@@ -16,14 +15,7 @@ import {
 import { describe, test } from "@odoo/hoot";
 import { press, queryFirst } from "@odoo/hoot-dom";
 import { mockDate, tick } from "@odoo/hoot-mock";
-import {
-    asyncStep,
-    Command,
-    mockService,
-    serverState,
-    waitForSteps,
-    withUser,
-} from "@web/../tests/web_test_helpers";
+import { Command, mockService, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -223,7 +215,7 @@ test("show new message separator when message is received in chat window", async
     setupChatHub({ opened: [channelId] });
     await start();
     // simulate receiving a message
-    withUser(userId, () =>
+    await withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "hu", message_type: "comment" },
             thread_id: channelId,
@@ -250,28 +242,10 @@ test("show new message separator when message is received while chat window is c
         ],
         channel_type: "chat",
     });
-    onRpcBefore("/mail/data", (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep(`/mail/data - ${JSON.stringify(args)}`);
-        }
-    });
     setupChatHub({ opened: [channelId] });
     await start();
-    await waitForSteps([
-        `/mail/data - ${JSON.stringify({
-            fetch_params: [
-                "failures",
-                "systray_get_activities",
-                "init_messaging",
-                ["discuss.channel", [channelId]],
-            ],
-            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
-        })}`,
-    ]);
     await click(".o-mail-ChatWindow-command[title*='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
-    // send after init_messaging because bus subscription is done after init_messaging
-    // simulate receiving a message
     await withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "hu", message_type: "comment" },

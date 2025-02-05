@@ -72,18 +72,20 @@ export class Chatter extends Component {
     changeThread(threadModel, threadId) {
         this.state.thread = this.store.Thread.insert({ model: threadModel, id: threadId });
         if (threadId === false) {
-            if (this.state.thread.messages.length === 0) {
-                this.state.thread.messages.push({
-                    id: this.store.getNextTemporaryId(),
-                    author: this.store.self,
-                    body: _t("Creating a new record..."),
-                    message_type: "notification",
-                    thread: this.state.thread,
-                    trackingValues: [],
-                    res_id: threadId,
-                    model: threadModel,
-                });
-            }
+            this.store.getSelf().then((self) => {
+                if (this.state.thread.messages.length === 0) {
+                    this.state.thread.messages.push({
+                        id: this.store.getNextTemporaryId(),
+                        author: self,
+                        body: _t("Creating a new record..."),
+                        message_type: "notification",
+                        thread: this.state.thread,
+                        trackingValues: [],
+                        res_id: threadId,
+                        model: threadModel,
+                    });
+                }
+            });
         }
     }
 

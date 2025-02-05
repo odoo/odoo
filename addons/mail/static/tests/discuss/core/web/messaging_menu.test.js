@@ -170,7 +170,7 @@ test("channel preview ignores messages from the past", async () => {
     await contains(".o-mail-Message-content", { text: "last message", count: 0 });
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     await contains(".o-mail-NotificationItem-text", { text: "You: last message" });
-    withUser(serverState.userId, () =>
+    await withUser(serverState.userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "it's a good idea", message_type: "comment" },
             thread_id: channelId,
@@ -230,7 +230,7 @@ test("counter is updated on receiving message on non-fetched channels", async ()
     expect(
         Boolean(getService("mail.store").Thread.get({ model: "discuss.channel", id: channelId }))
     ).toBe(false);
-    withUser(userId, () =>
+    await withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "good to know", message_type: "comment" },
             thread_id: channelId,

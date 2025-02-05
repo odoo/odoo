@@ -957,27 +957,18 @@ test("post several messages with failures", async () => {
     await insertText(".o-mail-Composer-input", "2");
     await press("Enter");
     await contains(".o-mail-Composer-input", { value: "" });
-    await contains(".o-mail-Message-author", { text: "Mitchell Admin" });
-    await contains(".o-mail-Thread", {
-        contains: [
-            [".o-mail-Message-content", { text: "0" }],
-            [".o-mail-Message-content", { text: "1" }],
-            [".o-mail-Message-content", { text: "2" }],
-        ],
-    });
-    // all are pending
-    expect(".o-mail-Message-content:eq(0)").toHaveStyle({ opacity: "0.5" });
-    expect(".o-mail-Message-content:eq(1)").toHaveStyle({ opacity: "0.5" });
-    expect(".o-mail-Message-content:eq(2)").toHaveStyle({ opacity: "0.5" });
+    await contains(".o-mail-Message-content:eq(0).opacity-50", { text: "0" });
+    await contains(".o-mail-Message-content:eq(1).opacity-50", { text: "1" });
+    await contains(".o-mail-Message-content:eq(2).opacity-50", { text: "2" });
     await contains(".o-mail-Message-pendingProgress", { count: 3 }); // visible after 0.5 sec. elapsed
     // simulate OK for 1, NOT-OK for 0, 2
     messagePostDefs[0].reject();
     messagePostDefs[1].resolve();
     messagePostDefs[2].reject();
     await contains(".o-mail-Message-pendingProgress", { count: 0 });
-    expect(".o-mail-Message-content:eq(0)").toHaveStyle({ opacity: "0.5" });
-    expect(".o-mail-Message-content:eq(1)").toHaveStyle({ opacity: "1" });
-    expect(".o-mail-Message-content:eq(2)").toHaveStyle({ opacity: "0.5" });
+    await contains(".o-mail-Message-content:eq(0).opacity-50", { text: "0" });
+    await contains(".o-mail-Message-content:eq(1):not(.opacity-50)", { text: "1" });
+    await contains(".o-mail-Message-content:eq(2).opacity-50", { text: "2" });
     // re-try failed posted messages
     messagePostDefs[0] = true;
     messagePostDefs[2] = true;
@@ -988,16 +979,9 @@ test("post several messages with failures", async () => {
         ".o-mail-Message:contains(2) button[title='Failed to post the message. Click to retry']"
     );
     // check all genuinely posted
-    await contains(".o-mail-Thread", {
-        contains: [
-            [".o-mail-Message-content:not(.opacity-50)", { text: "1" }], // was ok before
-            [".o-mail-Message-content:not(.opacity-50)", { text: "0" }],
-            [".o-mail-Message-content:not(.opacity-50)", { text: "2" }],
-        ],
-    });
-    expect(".o-mail-Message-content:eq(0)").toHaveStyle({ opacity: "1" });
-    expect(".o-mail-Message-content:eq(1)").toHaveStyle({ opacity: "1" });
-    expect(".o-mail-Message-content:eq(2)").toHaveStyle({ opacity: "1" });
+    await contains(".o-mail-Message-content:eq(0):not(.opacity-50)", { text: "1" });
+    await contains(".o-mail-Message-content:eq(1):not(.opacity-50)", { text: "0" });
+    await contains(".o-mail-Message-content:eq(2):not(.opacity-50)", { text: "2" });
 });
 
 test("starred: unstar all", async () => {
@@ -1059,7 +1043,7 @@ test("no out-of-focus notification on receiving self messages in chat", async ()
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     // simulate receiving a new message of self with odoo out-of-focused
-    withUser(serverState.userId, () =>
+    await withUser(serverState.userId, () =>
         rpc("/mail/message/post", {
             post_data: {
                 body: "New message",
@@ -1094,15 +1078,9 @@ test("out-of-focus notif on needaction message in channel", async () => {
             }
         },
     });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep("init_messaging");
-        }
-    });
     await start();
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { count: 0 });
-    await waitForSteps(["init_messaging"]);
     // simulate receiving a new needaction message with odoo out-of-focused
     const adminId = serverState.partnerId;
     await withUser(userId, () =>
@@ -1139,17 +1117,11 @@ test("receive new chat message: out of odoo focus (notification, chat)", async (
             }
         },
     });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep("init_messaging");
-        }
-    });
     await start();
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { count: 0 });
-    await waitForSteps(["init_messaging"]);
     // simulate receiving a new message with odoo out-of-focused
-    withUser(userId, () =>
+    await withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: {
                 body: "New message",
@@ -1182,17 +1154,11 @@ test("no out-of-focus notif on non-needaction message in channel", async () => {
             }
         },
     });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep("init_messaging");
-        }
-    });
     await start();
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { count: 0 });
-    await waitForSteps(["init_messaging"]);
     // simulate receving new message
-    withUser(userId, () =>
+    await withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "New message", message_type: "comment" },
             thread_id: channelId,
@@ -1312,15 +1278,9 @@ test("out-of-focus notif takes new inbox messages into account", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     mockService("presence", { isOdooFocused: () => false });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep("init_messaging");
-        }
-    });
     await start();
     await openDiscuss();
     const titleService = getService("title");
-    await waitForSteps(["init_messaging"]);
     // simulate receiving a new needaction message with odoo out-of-focused
     const adminId = serverState.partnerId;
     await withUser(userId, () =>
@@ -1335,6 +1295,7 @@ test("out-of-focus notif takes new inbox messages into account", async () => {
         })
     );
     await contains(".o-mail-DiscussSidebar-item:has(.badge:contains(1))", { text: "Inbox" });
+    await animationFrame();
     expect(titleService.current).toBe("(1) Inbox");
 });
 
@@ -1351,15 +1312,9 @@ test("out-of-focus notif on needaction message in group chat contributes only on
         channel_type: "group",
     });
     mockService("presence", { isOdooFocused: () => false });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep("init_messaging");
-        }
-    });
     await start();
     await openDiscuss();
     const titleService = getService("title");
-    await waitForSteps(["init_messaging"]);
     // simulate receiving a new needaction message with odoo out-of-focused
     const adminId = serverState.partnerId;
     await withUser(userId, () =>
@@ -1377,6 +1332,7 @@ test("out-of-focus notif on needaction message in group chat contributes only on
     await contains(".o-mail-DiscussSidebar-item:has(.badge:contains(1))", {
         text: "Mitchell Admin and Dumbledore",
     });
+    await animationFrame();
     expect(titleService.current).toBe("(1) Inbox");
 });
 
@@ -1387,18 +1343,12 @@ test("inbox notifs shouldn't play sound nor open chat bubble", async () => {
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     pyEnv["discuss.channel"].create({ name: "general", channel_type: "channel" });
     mockService("presence", { isOdooFocused: () => false });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep("init_messaging");
-        }
-    });
     patchWithCleanup(OutOfFocusService.prototype, {
         _playSound() {
             asyncStep("play_sound");
         },
     });
     await start();
-    await waitForSteps(["init_messaging"]);
     // simulate receiving a new needaction message with odoo out-of-focused
     const adminId = serverState.partnerId;
     await withUser(userId, () =>
@@ -1439,18 +1389,12 @@ test("should auto-pin chat when receiving a new DM", async () => {
         ],
         channel_type: "chat",
     });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("init_messaging")) {
-            asyncStep("init_messaging");
-        }
-    });
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-chat");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Demo" });
-    await waitForSteps(["init_messaging"]);
     // simulate receiving the first message on channel 11
-    withUser(userId, () =>
+    await withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "What do you want?", message_type: "comment" },
             thread_id: channelId,
@@ -1670,7 +1614,7 @@ test("Channel is added to discuss after invitation", async () => {
     await contains(".o-mail-DiscussSidebarChannel", { text: "my channel" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "General" });
     const adminPartnerId = serverState.partnerId;
-    withUser(userId, () =>
+    await withUser(userId, () =>
         getService("orm").call("discuss.channel", "add_members", [[channelId]], {
             partner_ids: [adminPartnerId],
         })

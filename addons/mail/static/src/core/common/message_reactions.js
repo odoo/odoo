@@ -15,10 +15,11 @@ export class MessageReactions extends Component {
         this.ui = useService("ui");
         this.addRef = useRef("add");
         this.emojiPicker = useEmojiPicker(this.addRef, {
-            onSelect: (emoji) => {
+            onSelect: async (emoji) => {
+                const self = await this.store.getSelf();
                 const reaction = this.props.message.reactions.find(
                     ({ content, personas }) =>
-                        content === emoji && personas.find((persona) => persona.eq(this.store.self))
+                        content === emoji && personas.find((persona) => persona.eq(self))
                 );
                 if (!reaction) {
                     this.props.message.react(emoji);

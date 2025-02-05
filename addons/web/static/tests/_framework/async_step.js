@@ -12,6 +12,7 @@ import { Deferred } from "@odoo/hoot-dom";
  * @typedef {{
  *  timeout?: number;
  *  ignoreOrder?: boolean;
+ *  required?: boolean;
  * }} WaitForStepsOptions
  */
 
@@ -114,7 +115,14 @@ export async function waitForSteps(steps, options = {}) {
     stepState.expectedSteps = steps;
     stepState.deferred = new Deferred();
     stepState.ignoreOrder = options.ignoreOrder;
-    stepState.timeout = setTimeout(() => checkStepState(true), options.timeout ?? 2000);
+    stepState.timeout = setTimeout(() => {
+        if (options.required) {
+            checkStepState(true);
+        } else {
+            checkStepState(false);
+            clearStepState();
+        }
+    }, options.timeout ?? 2000);
 
     // Soft check with current steps
     checkStepState(false);

@@ -11,19 +11,21 @@ const threadPatch = {
         super.setup(...arguments);
         useEffect(
             (loadNewer, mountedAndLoaded, unreadSynced) => {
-                if (
-                    loadNewer ||
-                    unreadSynced || // just marked as unread (local and server state are synced)
-                    !mountedAndLoaded ||
-                    !this.props.thread.selfMember ||
-                    !this.scrollableRef.el
-                ) {
-                    return;
-                }
-                const el = this.scrollableRef.el;
-                if (Math.abs(el.scrollTop + el.clientHeight - el.scrollHeight) <= 1) {
-                    this.props.thread.selfMember.hideUnreadBanner = true;
-                }
+                this.store.getSelf().then(() => {
+                    if (
+                        loadNewer ||
+                        unreadSynced || // just marked as unread (local and server state are synced)
+                        !mountedAndLoaded ||
+                        !this.props.thread.selfMember ||
+                        !this.scrollableRef.el
+                    ) {
+                        return;
+                    }
+                    const el = this.scrollableRef.el;
+                    if (Math.abs(el.scrollTop + el.clientHeight - el.scrollHeight) <= 1) {
+                        this.props.thread.selfMember.hideUnreadBanner = true;
+                    }
+                });
             },
             () => [
                 this.props.thread.loadNewer,
@@ -34,7 +36,11 @@ const threadPatch = {
         );
     },
     /** @override */
-    applyScrollContextually(thread) {
+    async applyScrollContextually(thread) {
+        await this.store.getSelf();
+        if (!this.scrollableRef.el) {
+            return;
+        }
         if (thread.selfMember && thread.scrollUnread) {
             if (thread.firstUnreadMessage) {
                 const messageEl = this.refByMessageId.get(thread.firstUnreadMessage.id)?.el;
@@ -55,16 +61,20 @@ const threadPatch = {
             }
             thread.scrollUnread = false;
         } else {
-            super.applyScrollContextually(...arguments);
+            await super.applyScrollContextually(...arguments);
         }
     },
     /** @override */
-    fetchMessages() {
-        if (this.props.thread.selfMember && this.props.thread.scrollUnread) {
-            toRaw(this.props.thread).loadAround(this.props.thread.selfMember.new_message_separator);
-        } else {
-            super.fetchMessages();
+    async fetchMessages() {
+        const thread = toRaw(this.props.thread);
+        if (thread.model === "discuss.channel") {
+            await this.store.getSelf();
+            if (thread.selfMember && thread.scrollUnread) {
+                thread.loadAround(thread.selfMember.new_message_separator);
+                return;
+            }
         }
+        await super.fetchMessages();
     },
     get newMessageBannerText() {
         if (this.props.thread.selfMember?.totalUnreadMessageCounter > 1) {
@@ -73,6 +83,7 @@ const threadPatch = {
         return _t("1 new message");
     },
     async onClickUnreadMessagesBanner() {
+        await this.store.getSelf();
         await this.props.thread.loadAround(this.props.thread.selfMember.localNewMessageSeparator);
         this.messageHighlight?.highlightMessage(
             this.props.thread.firstUnreadMessage,

@@ -30,9 +30,11 @@ const StorePatch = {
         this.history = Record.one("Thread");
     },
     async initialize() {
-        this.fetchStoreData("failures");
-        this.fetchStoreData("systray_get_activities");
-        await super.initialize(...arguments);
+        await Promise.all([
+            this.fetchStoreData("failures"),
+            this.fetchStoreData("systray_get_activities"),
+            super.initialize(...arguments),
+        ]);
     },
     onStarted() {
         super.onStarted(...arguments);

@@ -69,9 +69,8 @@ const storeServicePatch = {
             const chat = await this.joinChat(partners_to[0], true);
             chat.open({ focus: true });
         } else if (partners_to.length === 2) {
-            const correspondentId = partners_to.find(
-                (partnerId) => partnerId !== this.store.self.id
-            );
+            const self = await this.store.getSelf();
+            const correspondentId = partners_to.find((partnerId) => partnerId !== self.id);
             const chat = await this.joinChat(correspondentId, true);
             chat.open({ focus: true });
         } else {

@@ -190,28 +190,22 @@ export class Thread extends Component {
                 this.fetchMessages();
             }
         });
-        useEffect(
-            (isLoaded) => {
-                this.state.mountedAndLoaded = isLoaded;
-            },
-            /**
-             * Observe `mountedAndLoaded` as well because it might change from
-             * other parts of the code without `useEffect` detecting any change
-             * for `isLoaded`, and it should still be reset when patching.
-             */
-            () => [this.props.thread.isLoaded, this.state.mountedAndLoaded]
-        );
+        useEffect(() => {
+            this.state.mountedAndLoaded = this.props.thread.isLoaded;
+        });
         useEffect(
             () => {
                 if (!this.props.jumpToNewMessage) {
                     return;
                 }
-                const el = this.refByMessageId.get(
-                    this.props.thread.selfMember.localNewMessageSeparator - 1
-                )?.el;
-                if (el) {
-                    el.scrollIntoView({ behavior: "instant", block: "center" });
-                }
+                this.store.getSelf().then(() => {
+                    const el = this.refByMessageId.get(
+                        this.props.thread.selfMember.localNewMessageSeparator - 1
+                    )?.el;
+                    if (el) {
+                        el.scrollIntoView({ behavior: "instant", block: "center" });
+                    }
+                });
             },
             () => [this.props.jumpToNewMessage]
         );
@@ -346,7 +340,9 @@ export class Thread extends Component {
                 scrollTop: this.scrollableRef.el.scrollTop,
             };
         });
-        useEffect(this.applyScroll);
+        useEffect(() => {
+            this.applyScroll();
+        });
         useChildSubEnv({
             onImageLoaded: this.applyScroll,
         });
@@ -369,14 +365,14 @@ export class Thread extends Component {
         );
     }
 
-    applyScroll() {
+    async applyScroll() {
         if (!this.props.thread.isLoaded || !this.state.mountedAndLoaded) {
             this.reset();
             return;
         }
         // Use toRaw() to prevent scroll check from triggering renders.
         const thread = toRaw(this.props.thread);
-        this.applyScrollContextually(thread);
+        await this.applyScrollContextually(thread);
         this.snapshot = undefined;
         this.newestPersistentMessage = thread.newestPersistentMessage;
         this.oldestPersistentMessage = thread.oldestPersistentMessage;
@@ -389,7 +385,10 @@ export class Thread extends Component {
     }
 
     /** @param {import("models").Thread} thread */
-    applyScrollContextually(thread) {
+    async applyScrollContextually(thread) {
+        if (!this.scrollableRef.el) {
+            return;
+        }
         const olderMessages = thread.oldestPersistentMessage?.id < this.oldestPersistentMessage?.id;
         const newerMessages = thread.newestPersistentMessage?.id > this.newestPersistentMessage?.id;
         const messagesAtTop =
@@ -432,8 +431,8 @@ export class Thread extends Component {
         }
     }
 
-    fetchMessages() {
-        toRaw(this.props.thread).fetchNewMessages();
+    async fetchMessages() {
+        await toRaw(this.props.thread).fetchNewMessages();
     }
 
     get viewportEl() {
@@ -475,8 +474,11 @@ export class Thread extends Component {
     }
 
     async onClickPreferences() {
-        const actionDescription = await this.orm.call("res.users", "action_get");
-        actionDescription.res_id = this.store.self.userId;
+        const [actionDescription, self] = await Promise.all([
+            this.orm.call("res.users", "action_get"),
+            this.store.getSelf(),
+        ]);
+        actionDescription.res_id = self.userId;
         this.env.services.action.doAction(actionDescription);
     }
 

@@ -126,7 +126,7 @@ test("Ordering of chat bubbles is consistent and seems logical.", async () => {
     await click(".o-mail-ChatWindow-command[title='Fold']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     // no reorder on receiving new message
-    withUser(userId, () =>
+    await withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "test", message_type: "comment" },
             thread_id: channelId,
