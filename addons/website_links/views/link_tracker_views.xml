@@ -11,9 +11,55 @@
         </field>
     </record>
 
+    <record id="website_link_tracker_view_list" model="ir.ui.view">
+        <field name="name">website.link.tracker.view.list</field>
+        <field name="model">link.tracker</field>
+        <field name="arch" type="xml">
+            <list action="action_visit_page_statistics" type="object">
+                <field name="label" string="Name" />
+                <field name="count" string="Click"/>
+                <field name="campaign_id" string="Campaign"/>
+                <field name="medium_id" string="Medium"/>
+                <field name="source_id" string="Source"/>
+                <field name="url" widget="CopyClipboardButton"/>
+                <button name="action_visit_page" type="object" string="Visit link" icon="fa-link"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="website_link_tracker_view_form" model="ir.ui.view">
+        <field name="name">website.link.tracker.view.form</field>
+        <field name="model">link.tracker</field>
+        <field name="inherit_id" ref="link_tracker.link_tracker_view_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="replace"></xpath>
+            <xpath expr="//group[@name='link']" position="attributes">
+                <attribute name="colspan">8</attribute>
+            </xpath>
+            <xpath expr="//group[@name='utm']" position="attributes">
+                <attribute name="colspan">8</attribute>
+            </xpath>
+            <field name="title" position="replace"/>
+            <field name="label" position="replace"/>
+        </field>
+    </record>
+
+    <record id="action_link_tracker_tree" model="ir.actions.act_window">
+        <field name="name">Link Tracker</field>
+        <field name="res_model">link.tracker</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="website_link_tracker_view_list"/>
+    </record>
+
     <menuitem id="menu_link_tracker"
         name="Link Tracker"
         sequence="25"
         parent="website.menu_current_page"
         action="website.website_preview"/>
+
+    <menuitem id="menu_tracked_links_view_menu" name="Tracked Links"
+        sequence="50"
+        parent="website.menu_reporting"
+        action="website_links.action_link_tracker_tree"/>
 </odoo>
