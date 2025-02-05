@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Email template for new users -->
+        <record id="email_template_form_submission" model="mail.template">
+            <field name="name">Website: Send a copy of the form to Visitor</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="email_from">{{ object.company_id.email }}</field>
+            <field name="email_to">{{ ctx.get("to_mail","") }}</field>
+            <field name="subject">Your answers on Form</field>
+            <field name="description">Send a copy of the form to the user after successful submission</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" style="padding: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+                    <tr>
+                        <td align="center">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <h3 class="mb-2">Copy of your Form Submission</h3>
+                                            <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                            <div style="font-size: 13px;">
+                                                Hello <t t-out="ctx.get('visitor_name','')">OdooBot</t>,<br /><br />
+                                                Thanks to have filling in the form. <br /><br />
+                                                <t t-out="ctx.get('filled_values', '')"/><br />
+                                                Completed on <t t-out="format_date(datetime.datetime.now(), 'short')"/>. <br /><br />
+                                                Thank you, <br />
+                                                <t t-if="object.signature">
+                                                    <t t-out="object.signature or ''">--<br/>Mitchell Admin</t>
+                                                </t>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align:center;">
+                                            <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-size: 11px;">
+                                            <t t-out="object.company_id.name or ''">YourCompany</t> <br />
+                                            <div style="opacity: 0.7;">
+                                                <t t-if="object.company_id.phone">
+                                                    <a t-att-href="'tel:%s' % object.company_id.phone" style="text-decoration:none; color: #454748;" t-out="object.company_id.phone or ''">+1 650-123-4567</a>
+                                                </t>
+                                                <t t-if="object.company_id.email">
+                                                    | <a t-att-href="'mailto:%s' % object.company_id.email" style="text-decoration:none; color: #454748;" t-out="object.company_id.email or ''">info@yourcompany.com</a>
+                                                </t>
+                                                <t t-if="object.company_id.website">
+                                                    | <a t-att-href="'%s' % object.company_id.website" style="text-decoration:none; color: #454748;" t-out="object.company_id.website or ''">http://www.example.com</a>
+                                                </t>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+            <field name="lang">{{ object.lang }}</field>
+            <field name="use_default_to" eval="False"/>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>
