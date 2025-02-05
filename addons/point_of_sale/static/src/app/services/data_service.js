@@ -62,6 +62,13 @@ export class PosData extends Reactive {
     initializeWebsocket() {
         this.onNotified = getOnNotified(this.bus, odoo.access_token);
     }
+<<<<<<< master
+||||||| 7d540b667ed3d0a1ec0f18b3e15159edda09078e
+=======
+
+    reconnectWebSocket() {
+        this.initializeWebsocket();
+>>>>>>> e8c87a4af3de256be20bb229f42668b0bb8c852d
 
     reconnectWebSocket() {
         this.initializeWebsocket();

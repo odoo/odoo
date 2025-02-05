@@ -33,6 +33,9 @@ patch(PosData.prototype, {
             ? super.synchronizeLocalDataInIndexedDB(...arguments)
             : true;
     },
+    intializeWebsocket() {
+        return false;
+    },
     async getCachedServerDataFromIndexedDB() {
         return session.data.self_ordering_mode === "mobile"
             ? await super.getCachedServerDataFromIndexedDB(...arguments)
