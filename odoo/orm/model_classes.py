@@ -523,37 +523,33 @@ def _add_manual_models(env: Environment):
             for parent_cls in model_cls.__bases__:
                 if hasattr(parent_cls, 'pool'):
                     parent_cls._inherit_children.discard(name)
-    # add manual models
-    cr = env.cr
+
     # we cannot use self._fields to determine translated fields, as it has not been set up yet
-    cr.execute("SELECT *, name->>'en_US' AS name FROM ir_model WHERE state = 'manual'")
-    for model_data in cr.dictfetchall():
-        check_pg_name(model_data["model"].replace(".", "_"))
+    env.cr.execute("SELECT *, name->>'en_US' AS name FROM ir_model WHERE state = 'manual'")
+    for model_data in env.cr.dictfetchall():
         attrs = env['ir.model']._instanciate_attrs(model_data)
 
-        model_def = type('CustomDefinitionModel', (models.Model,), attrs)
-        model_cls = add_to_registry(env.registry, model_def)
-
-        kind = sql.table_kind(cr, model_cls._table)
-        if kind not in (sql.TableKind.Regular, None):
+        # adapt _auto and _log_access if necessary
+        table_name = model_data["model"].replace(".", "_")
+        table_kind = sql.table_kind(env.cr, table_name)
+        if table_kind not in (sql.TableKind.Regular, None):
             _logger.info(
                 "Model %r is backed by table %r which is not a regular table (%r), disabling automatic schema management",
-                model_cls._name, model_cls._table, kind,
+                model_data["model"], table_name, table_kind,
             )
-            model_cls._auto = False
-            cr.execute(
-                '''
-                SELECT a.attname
+            attrs['_auto'] = False
+            env.cr.execute(
+                """ SELECT a.attname
                     FROM pg_attribute a
-                    JOIN pg_class t
-                    ON a.attrelid = t.oid
-                    AND t.relname = %s
-                    WHERE a.attnum > 0 -- skip system columns
-                ''',
-                [model_cls._table]
+                    JOIN pg_class t ON a.attrelid = t.oid AND t.relname = %s
+                    WHERE a.attnum > 0 -- skip system columns """,
+                [table_name]
             )
-            columns = {colinfo[0] for colinfo in cr.fetchall()}
-            model_cls._log_access = set(models.LOG_ACCESS_COLUMNS) <= columns
+            columns = {colinfo[0] for colinfo in env.cr.fetchall()}
+            attrs['_log_access'] = set(models.LOG_ACCESS_COLUMNS) <= columns
+
+        model_def = type('CustomDefinitionModel', (models.Model,), attrs)
+        add_to_registry(env.registry, model_def)
 
 
 def _add_manual_fields(model: BaseModel):
