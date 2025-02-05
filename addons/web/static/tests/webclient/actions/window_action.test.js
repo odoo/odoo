@@ -220,6 +220,7 @@ test("can execute act_window actions from db ID", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
+        "has_group",
     ]);
 });
 
@@ -384,6 +385,7 @@ test("switching into a view with mode=edit lands in edit mode", async () => {
         "/web/action/load",
         "get_views",
         "web_read_group",
+        "has_group",
         "web_search_read",
         "web_search_read",
         "onchange",
@@ -1157,6 +1159,7 @@ test("execute smart button and fails on desktop", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
+        "has_group",
         "web_read",
     ]);
     expect.verifyErrors(["Oups"]);
@@ -1188,6 +1191,7 @@ test("execute smart button and fails on mobile", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
+        "has_group",
         "web_read",
     ]);
     expect.verifyErrors(["Oups"]);
@@ -2526,7 +2530,7 @@ test("action and get_views rpcs are cached", async () => {
 
     await getService("action").doAction(1);
     expect(".o_kanban_view").toHaveCount(1);
-    expect.verifySteps(["/web/action/load", "get_views", "web_search_read"]);
+    expect.verifySteps(["/web/action/load", "get_views", "web_search_read", "has_group"]);
 
     await getService("action").doAction(1);
     expect(".o_kanban_view").toHaveCount(1);
@@ -2559,7 +2563,7 @@ test("get_views rpcs are cached (different context.active_id)", async () => {
         context: { active_id: 33 },
     });
     expect(".o_kanban_view").toHaveCount(1);
-    expect.verifySteps(["get_views", "web_search_read"]);
+    expect.verifySteps(["get_views", "web_search_read", "has_group"]);
 
     await getService("action").doAction({
         name: "Partner",
