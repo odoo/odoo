@@ -4504,6 +4504,7 @@ class AccountMove(models.Model):
                 'move_type': new_move_type,
                 'partner_bank_id': False,
                 'currency_id': move.currency_id.id,
+                'fiscal_position_id': move.fiscal_position_id.id,
             })
             if move.amount_total < 0:
                 move.write({
