@@ -436,3 +436,24 @@ class FleetVehicle(models.Model):
                 'default_vehicle_ids': self.ids,
             }
         }
+
+    def action_open_odometer_report(self):
+        return {
+            'name': _('Odometer reporting'),
+            'type': 'ir.actions.act_window',
+            'target': 'current',
+            'view_mode': 'graph',
+            'res_model': 'fleet.vehicle.odometer.report',
+            'domain': [('vehicle_id', '=', self.id)],
+            'help': _("""
+                <p class="o_view_nocontent_empty_folder">
+                    No data for odometer analysis
+                </p>
+                <p>
+                    Manage efficiently your vehicle Odometers with Odoo.
+                </p>
+            """),
+            'context': {
+                'search_default_groupby_date': True
+            }
+        }
