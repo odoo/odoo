@@ -27,6 +27,7 @@ Those trackers can be used in Google Analytics to track clicks and visitors, or 
             'website_links/static/tests/**/*',
         ],
         'website.assets_editor': [
+            'website_links/static/src/components/dialog/link_tracker_dialog.js',
             'website_links/static/src/services/website_custom_menus.js',
         ],
     },

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, _
+from odoo import models, fields, _
 
 from werkzeug import urls
 
@@ -21,3 +21,9 @@ class LinkTracker(models.Model):
         for tracker in self:
             base_url = self.env['website'].get_current_website().get_base_url()
             tracker.short_url_host = urls.url_join(base_url, '/r/')
+
+class LinkTrackerDialog(models.TransientModel):
+    _name = "link.tracker.dialog"
+
+    url = fields.Char(string='Target URL', required=True)
+    name = fields.Char(string='Name', required=True)

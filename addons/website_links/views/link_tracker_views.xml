@@ -11,6 +11,21 @@
         </field>
     </record>
 
+    <record id="link_tracker_dialog_view_form" model="ir.ui.view">
+        <field name="name">link.tracker.dialog.form.view</field>
+        <field name="model">link.tracker.dialog</field>
+        <field name="arch" type="xml">
+            <form js_class="link_tracker_dialog_form">
+                <group class="mt-4">
+                    <div class="o_row">
+                        <field name="url" string="url"/>
+                        <field name="name" string="name"/>
+                    </div>
+                </group>
+            </form>
+        </field>
+    </record>
+
     <menuitem id="menu_link_tracker"
         name="Link Tracker"
         sequence="25"
