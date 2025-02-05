@@ -12,6 +12,7 @@ import * as ProductScreenPos from "@point_of_sale/../tests/pos/tours/utils/produ
 import * as ProductScreenResto from "@pos_restaurant/../tests/tours/utils/product_screen_util";
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
+import * as combo from "@point_of_sale/../tests/pos/tours/utils/combo_popup_util";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 import { registry } from "@web/core/registry";
@@ -433,6 +434,72 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_combo_preparation_receipt", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 2"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            Dialog.confirm(),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 1"),
+            combo.select("Combo Product 5"),
+            combo.select("Combo Product 8"),
+            Dialog.confirm(),
+            {
+                content: "Check if order preparation has product correctly ordered",
+                trigger: "body",
+                run: async () => {
+                    const order = posmodel.getOrder();
+                    const orderChange = posmodel.changesToOrder(
+                        order,
+                        posmodel.config.preparationCategories,
+                        false
+                    );
+                    const { orderData, changes } = posmodel.generateOrderChange(
+                        order,
+                        orderChange,
+                        Array.from(posmodel.config.preparationCategories),
+                        false
+                    );
+
+                    orderData.changes = {
+                        title: "new",
+                        data: changes.new,
+                    };
+
+                    const rendered = renderToElement("point_of_sale.OrderChangeReceipt", {
+                        data: orderData,
+                    });
+                    const orderLines = [...rendered.querySelectorAll(".orderline")];
+                    const orderLinesInnerText = orderLines.map((orderLine) => orderLine.innerText);
+                    const expectedOrderLines = [
+                        "Office Combo",
+                        "Combo Product 2",
+                        "Combo Product 4",
+                        "Combo Product 6",
+                        "Office Combo",
+                        "Combo Product 1",
+                        "Combo Product 5",
+                        "Combo Product 8",
+                    ];
+                    for (let i = 0; i < orderLinesInnerText.length; i++) {
+                        if (!orderLinesInnerText[i].includes(expectedOrderLines[i])) {
+                            throw new Error("Order line mismatch");
+                        }
+                    }
+                },
+            },
+            ProductScreen.totalAmountIs("95.00"),
+            ProductScreen.clickPayButton(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("MultiPreparationPrinter", {
     checkDelay: 50,
     steps: () =>
@@ -443,6 +510,7 @@ registry.category("web_tour.tours").add("MultiPreparationPrinter", {
             ProductScreen.clickDisplayedProduct("Product 1"),
             ProductScreen.clickOrderButton(),
             Dialog.bodyIs("Failed in printing Printer 2 changes of the order"),
+            Dialog.confirm(),
         ].flat(),
 });
 
