@@ -18,6 +18,7 @@ class AnimateOptionPlugin extends Plugin {
                 props: {
                     getDirectionsItems: this.getDirectionsItems.bind(this),
                     getEffectsItems: this.getEffectsItems.bind(this),
+                    canHaveHoverEffect: this.canHaveHoverEffect.bind(this),
                 },
                 // todo: to implement
                 // textSelector: ".o_animated_text",
@@ -28,6 +29,9 @@ class AnimateOptionPlugin extends Plugin {
         normalize_handlers: this.normalize.bind(this),
         clean_for_save_handlers: this.cleanForSave.bind(this),
     };
+    canHaveHoverEffect(editingElement) {
+        return this.getResource("is_hoverable_predicates").every((p) => p(editingElement));
+    }
 
     setup() {
         this.scrollingElement = getScrollingElement(this.document);
@@ -275,6 +279,7 @@ class AnimateOption extends Component {
     static props = {
         getDirectionsItems: Function,
         getEffectsItems: Function,
+        canHaveHoverEffect: Function,
     };
 
     setup() {
@@ -285,7 +290,7 @@ class AnimateOption extends Component {
             return {
                 isOptionActive: this.isOptionActive(editingElement),
                 hasAnimateClass: hasAnimateClass,
-                canHover: editingElement.tagName === "IMG",
+                canHover: this.props.canHaveHoverEffect(editingElement),
                 isLimitedEffect: this.limitedEffects.some((className) =>
                     editingElement.classList.contains(className)
                 ),

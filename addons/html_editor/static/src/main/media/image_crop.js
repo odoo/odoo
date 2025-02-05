@@ -299,14 +299,18 @@ export class ImageCrop extends Component {
 
 /**
  * @param {HTMLImageElement} image
+ * @returns {string|null} The mimetype of the image.
  */
 export function getMimetype(image) {
     const src = image.getAttribute("src");
-    return image.dataset.mimetype || src.endsWith(".png")
-        ? "image/png"
-        : src.endsWith(".webp")
-        ? "image/webp"
-        : "image/jpeg";
+    return (
+        image.dataset.mimetype ||
+        (src.endsWith(".png") && "image/png") ||
+        (src.endsWith(".webp") && "image/webp") ||
+        (src.endsWith(".jpg") && "image/jpeg") ||
+        (src.endsWith(".jpeg") && "image/jpeg") ||
+        null
+    );
 }
 
 /**

@@ -1,7 +1,12 @@
-import { cropperAspectRatios, processImageCrop } from "@html_editor/main/media/image_crop";
+import {
+    cropperAspectRatios,
+    getMimetype,
+    processImageCrop,
+} from "@html_editor/main/media/image_crop";
 import {
     activateCropper,
     applyModifications,
+    isGif,
     loadImage,
 } from "@html_editor/utils/image_processing";
 import { Component } from "@odoo/owl";
@@ -28,6 +33,12 @@ class ImageToolOptionPlugin extends Plugin {
             },
         ],
         builder_actions: this.getActions(),
+        is_hoverable_predicates: (el) => {
+            if (el.tagName !== "IMG") {
+                return true;
+            }
+            return this.canHaveHoverEffect(el);
+        },
     };
     getActions() {
         return {
@@ -120,6 +131,28 @@ class ImageToolOptionPlugin extends Plugin {
             },
         };
     }
+    async canHaveHoverEffect(img) {
+        return (
+            !this.isDeviceShape(img) &&
+            !this.isAnimatedShape(img) &&
+            this.isImageSupportedForShapes(img)
+        );
+    }
+    isDeviceShape(img) {
+        const shapeName = img.dataset.shape;
+        if (!shapeName) {
+            return false;
+        }
+        const shapeCategory = shapeName.split("/")[1];
+        return shapeCategory === "devices";
+    }
+    isAnimatedShape(img) {
+        // todo: to implement while implementing the animated shapes
+        return false;
+    }
+    isImageSupportedForShapes(img) {
+        return img.dataset.originalId && isImageSupportedForProcessing(getMimetype(img));
+    }
 }
 registry.category("website-plugins").add(ImageToolOptionPlugin.id, ImageToolOptionPlugin);
 
@@ -142,4 +175,17 @@ function getImageMimetype(img) {
         return img.dataset.originalMimetype;
     }
     return img.dataset.mimetype;
+}
+
+/**
+ * @param {String} mimetype
+ * @param {Boolean} [strict=false] if true, even partially supported images (GIFs)
+ *     won't be accepted.
+ * @returns {Boolean}
+ */
+function isImageSupportedForProcessing(mimetype, strict = false) {
+    if (isGif(mimetype)) {
+        return !strict;
+    }
+    return ["image/jpeg", "image/png", "image/webp"].includes(mimetype);
 }

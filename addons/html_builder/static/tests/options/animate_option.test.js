@@ -205,6 +205,28 @@ test("visibility of animation animation=onHover", async () => {
 
     // todo: check all the hover options
 });
+test("animation=onHover should not be visible when the image is a device shape", async () => {
+    await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            <img data-shape="html_builder/devices/iphone_front_portrait" src='${base64Img}'>
+        </div>
+    `);
+    await contains(":iframe .test-options-target img").click();
+
+    await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
+    expect(".o-dropdown--menu [data-action-value='onHover']").not.toBeVisible();
+});
+test("animation=onHover should not be visible when the image has a wrong mimetype", async () => {
+    await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            <img data-original-id="1" data-mimetype="foo/bar" src='${base64Img}'>
+        </div>
+    `);
+    await contains(":iframe .test-options-target img").click();
+
+    await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
+    expect(".o-dropdown--menu [data-action-value='onHover']").not.toBeVisible();
+});
 
 test("image should not be lazy onAppearance", async () => {
     await setupWebsiteBuilder(`
