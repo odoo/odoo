@@ -106,38 +106,29 @@ test("clickbot clickeverywhere test", async () => {
         },
     });
     defineMenus([
+        { id: 1, name: "App1", appID: 1, actionID: 1001, xmlid: "app1" },
         {
-            id: "root",
+            id: 2,
             children: [
-                { id: 1, children: [], name: "App1", appID: 1, actionID: 1001, xmlid: "app1" },
                 {
-                    id: 2,
-                    children: [
-                        {
-                            id: 3,
-                            children: [],
-                            name: "menu 1",
-                            appID: 2,
-                            actionID: 1002,
-                            xmlid: "app2_menu1",
-                        },
-                        {
-                            id: 4,
-                            children: [],
-                            name: "menu 2",
-                            appID: 2,
-                            actionID: 1022,
-                            xmlid: "app2_menu2",
-                        },
-                    ],
-                    name: "App2",
+                    id: 3,
+                    name: "menu 1",
                     appID: 2,
                     actionID: 1002,
-                    xmlid: "app2",
+                    xmlid: "app2_menu1",
+                },
+                {
+                    id: 4,
+                    name: "menu 2",
+                    appID: 2,
+                    actionID: 1022,
+                    xmlid: "app2_menu2",
                 },
             ],
-            name: "root",
-            appID: "root",
+            name: "App2",
+            appID: 2,
+            actionID: 1002,
+            xmlid: "app2",
         },
     ]);
     const webClient = await mountWithCleanup(WebClient);
@@ -210,44 +201,35 @@ test("clickbot clickeverywhere test (with dropdown menu)", async () => {
     defineMenus(
         [
             {
-                id: "root",
+                id: 2,
                 children: [
                     {
-                        id: 2,
+                        id: 5,
                         children: [
                             {
-                                id: 5,
-                                children: [
-                                    {
-                                        id: 3,
-                                        children: [],
-                                        name: "menu 1",
-                                        appID: 2,
-                                        actionID: 1002,
-                                        xmlid: "app2_menu1",
-                                    },
-                                    {
-                                        id: 4,
-                                        children: [],
-                                        name: "menu 2",
-                                        appID: 2,
-                                        actionID: 1022,
-                                        xmlid: "app2_menu2",
-                                    },
-                                ],
-                                name: "a dropdown",
+                                id: 3,
+                                name: "menu 1",
                                 appID: 2,
-                                xmlid: "app2_dropdown_menu",
+                                actionID: 1002,
+                                xmlid: "app2_menu1",
+                            },
+                            {
+                                id: 4,
+                                name: "menu 2",
+                                appID: 2,
+                                actionID: 1022,
+                                xmlid: "app2_menu2",
                             },
                         ],
-                        name: "App2",
+                        name: "a dropdown",
                         appID: 2,
-                        actionID: 1002,
-                        xmlid: "app2",
+                        xmlid: "app2_dropdown_menu",
                     },
                 ],
-                name: "root",
-                appID: "root",
+                name: "App2",
+                appID: 2,
+                actionID: 1002,
+                xmlid: "app2",
             },
         ],
         { mode: "replace" }
@@ -319,7 +301,6 @@ test("clickbot test waiting rpc after clicking filter", async () => {
         [
             {
                 id: 1,
-                name: "App1",
                 res_model: "foo",
                 views: [[false, "list"]],
             },
@@ -328,10 +309,9 @@ test("clickbot test waiting rpc after clicking filter", async () => {
     );
     defineMenus([
         {
-            id: "root",
-            children: [{ id: 1, children: [], name: "App1", appID: 1, actionID: 1, xmlid: "app1" }],
-            name: "root",
-            appID: "root",
+            id: 1,
+            actionID: 1,
+            xmlid: "app1",
         },
     ]);
     const webClient = await mountWithCleanup(WebClient);
@@ -398,12 +378,11 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
     ]);
     defineMenus([
         {
-            id: "root",
-            children: [
-                { id: 1, children: [], name: "App1", appID: 1, actionID: 1001, xmlid: "app1" },
-            ],
-            name: "root",
-            appID: "root",
+            id: 1,
+            name: "App1",
+            appID: 1,
+            actionID: 1001,
+            xmlid: "app1",
         },
     ]);
     const webClient = await mountWithCleanup(WebClient);
@@ -462,19 +441,15 @@ test("clickbot test waiting render after clicking filter", async () => {
     defineActions([
         {
             id: 1,
-            name: "App1",
             res_model: "foo",
             views: [[false, "list"]],
         },
     ]);
     defineMenus([
         {
-            id: "root",
-            children: [
-                { id: 1, children: [], name: "App1", appID: 1, actionID: 1001, xmlid: "app1" },
-            ],
-            name: "root",
-            appID: "root",
+            id: 1,
+            actionID: 1001,
+            xmlid: "app1",
         },
     ]);
     const webClient = await mountWithCleanup(WebClient);
@@ -532,20 +507,16 @@ test("clickbot clickeverywhere menu modal", async () => {
     ]);
     defineMenus([
         {
-            id: "root",
-            children: [
-                { id: 1, children: [], name: "App1", appID: 1, actionID: 1001, xmlid: "app1" },
-                {
-                    id: 2,
-                    children: [],
-                    name: "App Modal",
-                    appID: 2,
-                    actionID: 1099,
-                    xmlid: "test.modal",
-                },
-            ],
-            name: "root",
-            appID: "root",
+            id: 1,
+            name: "App1",
+            actionID: 1001,
+            xmlid: "app1",
+        },
+        {
+            id: 2,
+            name: "App Modal",
+            actionID: 1099,
+            xmlid: "test.modal",
         },
     ]);
     const webClient = await mountWithCleanup(WebClient);
