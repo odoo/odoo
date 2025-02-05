@@ -158,14 +158,14 @@ test("click on BuilderButton with empty value should remove styleAction", async 
             <BuilderButton styleAction="'width'" styleActionValue="'25%'"/>
         </BuilderButtonGroup>`,
     });
-    const { getEditor } = await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
-    const editor = getEditor();
+    const { getEditableContent } = await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    const editableContent = getEditableContent();
     await contains(":iframe .test-options-target").click();
     await contains("[data-style-action='width'][data-style-action-value='25%']").click();
-    expect(editor.editable).toHaveInnerHTML(
+    expect(editableContent).toHaveInnerHTML(
         `<div class="test-options-target" style="width: 25% !important;">b</div>`
     );
 
     await contains("[data-style-action='width'][data-style-action-value='']").click();
-    expect(editor.editable).toHaveInnerHTML(`<div class="test-options-target" style="">b</div>`);
+    expect(editableContent).toHaveInnerHTML(`<div class="test-options-target" style="">b</div>`);
 });

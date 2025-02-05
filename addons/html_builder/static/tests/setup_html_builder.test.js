@@ -1,7 +1,6 @@
 import {
     defineWebsiteModels,
     exampleWebsiteContent,
-    getEditable,
     modifyText,
     setupWebsiteBuilder,
 } from "./helpers";
@@ -13,7 +12,7 @@ import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 defineWebsiteModels();
 
 test("setup of the editable elements", async () => {
-    await setupWebsiteBuilder(getEditable('<h1 class="title">Hello</h1>'));
+    await setupWebsiteBuilder('<h1 class="title">Hello</h1>');
     expect(":iframe #wrap").toHaveClass("o_editable");
 });
 
@@ -28,13 +27,13 @@ test("history back", async () => {
     });
     // Navigating back in the browser history should not lead to a warning popup
     // if the website was not edited.
-    const { getEditor } = await setupWebsiteBuilder(getEditable(exampleWebsiteContent));
+    const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleWebsiteContent);
     builder_sidebar.onBeforeLeave();
     await animationFrame();
     expect(".modal-content:contains('If you proceed, your changes will be lost')").toHaveCount(0);
     // Navigating back in the browser history should lead to a warning popup if
     // the website was edited.
-    await modifyText(getEditor());
+    await modifyText(getEditor(), getEditableContent());
     await animationFrame();
     builder_sidebar.onBeforeLeave();
     await animationFrame();

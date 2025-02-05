@@ -102,19 +102,19 @@ test("hide/display BuilderSelect based on applyTo", async () => {
                     <BuilderSelectItem classAction="'b'">B</BuilderSelectItem>
                 </BuilderSelect>`,
     });
-    const { getEditor } = await setupWebsiteBuilder(
+    const { getEditableContent } = await setupWebsiteBuilder(
         `<div class="parent-target"><div class="child-target b">b</div></div>`
     );
-    const editor = getEditor();
+    const editableContent = getEditableContent();
     await contains(":iframe .parent-target").click();
-    expect(editor.editable).toHaveInnerHTML(
+    expect(editableContent).toHaveInnerHTML(
         `<div class="parent-target"><div class="child-target b">b</div></div>`
     );
     expect("[data-class-action='my-custom-class']").not.toHaveClass("active");
     expect(".options-container button.dropdown-toggle").toHaveCount(0);
 
     await contains("[data-class-action='my-custom-class']").click();
-    expect(editor.editable).toHaveInnerHTML(
+    expect(editableContent).toHaveInnerHTML(
         `<div class="parent-target"><div class="child-target b my-custom-class">b</div></div>`
     );
     expect("[data-class-action='my-custom-class']").toHaveClass("active");
@@ -137,12 +137,12 @@ test("hide/display BuilderSelectItem base on applyTo", async () => {
                     <BuilderSelectItem classAction="'c'">C</BuilderSelectItem>
                 </BuilderSelect>`,
     });
-    const { getEditor } = await setupWebsiteBuilder(
+    const { getEditableContent } = await setupWebsiteBuilder(
         `<div class="parent-target"><div class="child-target">b</div></div>`
     );
-    const editor = getEditor();
+    const editableContent = getEditableContent();
     await contains(":iframe .parent-target").click();
-    expect(editor.editable).toHaveInnerHTML(
+    expect(editableContent).toHaveInnerHTML(
         `<div class="parent-target"><div class="child-target">b</div></div>`
     );
     expect("[data-class-action='my-custom-class']").not.toHaveClass("active");
@@ -151,7 +151,7 @@ test("hide/display BuilderSelectItem base on applyTo", async () => {
     expect(queryAllTexts(".o-dropdown--menu div")).toEqual(["A", "C"]);
 
     await contains("[data-class-action='my-custom-class']").click();
-    expect(editor.editable).toHaveInnerHTML(
+    expect(editableContent).toHaveInnerHTML(
         `<div class="parent-target"><div class="child-target my-custom-class">b</div></div>`
     );
     expect("[data-class-action='my-custom-class']").toHaveClass("active");
@@ -191,8 +191,8 @@ test("use BuilderSelect with styleAction", async () => {
                     <BuilderSelectItem styleActionValue="'none'">none</BuilderSelectItem>
                 </BuilderSelect>`,
     });
-    const { getEditor } = await setupWebsiteBuilder(`<div class="parent-target">b</div>`);
-    const editor = getEditor();
+    const { getEditableContent } = await setupWebsiteBuilder(`<div class="parent-target">b</div>`);
+    const editableContent = getEditableContent();
     await contains(":iframe .parent-target").click();
     expect(".we-bg-options-container .dropdown").toHaveText("none");
 
@@ -200,7 +200,7 @@ test("use BuilderSelect with styleAction", async () => {
     expect(queryAllTexts(".o-dropdown--menu div")).toEqual(["dotted", "inset", "none"]);
 
     await contains(".o-dropdown--menu div:contains(dotted)").click();
-    expect(editor.editable).toHaveInnerHTML(
+    expect(editableContent).toHaveInnerHTML(
         `<div class="parent-target" style="border-style: dotted !important;">b</div>`
     );
     expect(".we-bg-options-container .dropdown").toHaveText("dotted");

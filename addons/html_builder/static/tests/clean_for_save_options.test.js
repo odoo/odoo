@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { xml } from "@odoo/owl";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
-import { addOption, defineWebsiteModels, getEditable, setupWebsiteBuilder } from "./helpers";
+import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "./helpers";
 
 defineWebsiteModels();
 
@@ -18,7 +18,7 @@ test("clean for save of option with selector that matches an element on the page
             expect.step("clean for save option");
         },
     });
-    await setupWebsiteBuilder(getEditable(`<div class="test-options-target">a</div>`));
+    await setupWebsiteBuilder(`<div class="test-options-target">a</div>`);
     await contains(":iframe .test-options-target").click();
     // Add an option to mark the document as 'dirty' and trigger a "clean for
     // save" at the save of the page.
@@ -49,7 +49,7 @@ test("clean for save of option with selector and exclude that matches an element
                 </BuilderButtonGroup>
             `,
     });
-    await setupWebsiteBuilder(getEditable(`<div class="test-options-target">a</div>`));
+    await setupWebsiteBuilder(`<div class="test-options-target">a</div>`);
     await contains(":iframe .test-options-target").click();
     // Add an option to mark the document as 'dirty' and trigger a "clean for
     // save" at the save of the page.

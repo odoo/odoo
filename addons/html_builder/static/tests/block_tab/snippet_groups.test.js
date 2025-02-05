@@ -285,7 +285,7 @@ test("insert snippet structure", async () => {
         ];
     };
 
-    const { getEditor } = await setupWebsiteBuilder("<section><p>Text</p></section>", {
+    const { getEditableContent } = await setupWebsiteBuilder("<section><p>Text</p></section>", {
         snippets: {
             snippet_groups: [
                 '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
@@ -295,8 +295,8 @@ test("insert snippet structure", async () => {
             ),
         },
     });
-    const editor = getEditor();
-    expect(editor.editable).toHaveInnerHTML(`<section><p>Text</p></section>`);
+    const editableContent = getEditableContent();
+    expect(editableContent).toHaveInnerHTML(`<section><p>Text</p></section>`);
 
     await click(queryFirst(`.o-snippets-menu [data-category="snippet_groups"] div`));
     await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe", { timeout: 500 });
@@ -306,7 +306,7 @@ test("insert snippet structure", async () => {
 
     await contains(previewSelector).click();
     expect(".o_add_snippet_dialog").toHaveCount(0);
-    expect(editor.editable).toHaveInnerHTML(
+    expect(editableContent).toHaveInnerHTML(
         `<section><p>Text</p></section>${snippetsDescription(true)[0].content}`
     );
 });
@@ -323,7 +323,7 @@ test("drag&drop snippet structure", async () => {
         ];
     };
 
-    const { getEditor } = await setupWebsiteBuilder("<section><p>Text</p></section>", {
+    const { getEditableContent } = await setupWebsiteBuilder("<section><p>Text</p></section>", {
         snippets: {
             snippet_groups: [
                 '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
@@ -333,21 +333,21 @@ test("drag&drop snippet structure", async () => {
             ),
         },
     });
-    const editor = getEditor();
-    expect(editor.editable).toHaveInnerHTML(`<section><p>Text</p></section>`);
+    const editableContent = getEditableContent();
+    expect(editableContent).toHaveInnerHTML(`<section><p>Text</p></section>`);
 
     const { moveTo, drop } = await contains(
         `.o-snippets-menu [data-category="snippet_groups"] div`
     ).drag();
-    expect(editor.editable).toHaveInnerHTML(
+    expect(editableContent).toHaveInnerHTML(
         unformat(`
         <div class="oe_drop_zone oe_insert"></div>
         <section><p>Text</p></section>
         <div class="oe_drop_zone oe_insert"></div>`)
     );
 
-    await moveTo(editor.editable.querySelector(".oe_drop_zone"));
-    expect(editor.editable).toHaveInnerHTML(
+    await moveTo(editableContent.querySelector(".oe_drop_zone"));
+    expect(editableContent).toHaveInnerHTML(
         unformat(`
         <div class="oe_drop_zone oe_insert o_dropzone_highlighted"></div>
         <section><p>Text</p></section>
@@ -355,7 +355,7 @@ test("drag&drop snippet structure", async () => {
     );
     await drop();
     expect(".o_add_snippet_dialog").toHaveCount(1);
-    expect(editor.editable).toHaveInnerHTML(unformat(`<section><p>Text</p></section>`));
+    expect(editableContent).toHaveInnerHTML(unformat(`<section><p>Text</p></section>`));
 
     await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe", { timeout: 500 });
     const previewSelector =
@@ -364,7 +364,44 @@ test("drag&drop snippet structure", async () => {
 
     await contains(previewSelector).click();
     expect(".o_add_snippet_dialog").toHaveCount(0);
-    expect(editor.editable).toHaveInnerHTML(
+    expect(editableContent).toHaveInnerHTML(
         `${snippetsDescription(true)[0].content}<section><p>Text</p></section>`
     );
+});
+
+test("cancel snippet drag & drop over sidebar", async () => {
+    const snippetsDescription = (withName = false) => {
+        const name = "Test";
+        return [
+            {
+                name: name,
+                groupName: "a",
+                content: getBasicSection("Yop", { name: withName ? name : "" }),
+            },
+        ];
+    };
+
+    const { getEditableContent } = await setupWebsiteBuilder("", {
+        snippets: {
+            snippet_groups: [
+                '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
+            ],
+            snippet_structure: snippetsDescription().map((snippetDesc) =>
+                getSnippetStructure(snippetDesc)
+            ),
+        },
+    });
+    const initialDropZone = `<div class="oe_drop_zone oe_insert" data-editor-message="DRAG BUILDING BLOCKS HERE"></div>`;
+    const editableContent = getEditableContent();
+    expect(editableContent).toHaveInnerHTML(initialDropZone);
+    const { moveTo, drop } = await contains(
+        `.o-snippets-menu [data-category="snippet_groups"] div`
+    ).drag();
+    expect(editableContent).toHaveInnerHTML(unformat(initialDropZone));
+
+    await moveTo(".o-website-builder_sidebar");
+    expect(editableContent).toHaveInnerHTML(unformat(initialDropZone));
+    await drop();
+    expect(".o_add_snippet_dialog").toHaveCount(0);
+    expect(editableContent).toHaveInnerHTML(unformat(initialDropZone));
 });

@@ -5,7 +5,6 @@ import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helper
 import {
     defineWebsiteModels,
     exampleWebsiteContent,
-    getEditable,
     modifyText,
     setupWebsiteBuilder,
     wrapExample,
@@ -15,9 +14,9 @@ defineWebsiteModels();
 
 test("basic save", async () => {
     const resultSave = setupSaveAndReloadIframe();
-    const { getEditor } = await setupWebsiteBuilder(getEditable(exampleWebsiteContent));
+    const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleWebsiteContent);
     expect(":iframe #wrap").not.toHaveClass("o_dirty");
-    await modifyText(getEditor());
+    await modifyText(getEditor(), getEditableContent());
 
     await contains(".o-snippets-top-actions button:contains(Save)").click();
     expect(resultSave.length).toBe(1);
@@ -31,8 +30,8 @@ test("basic save", async () => {
 
 test("nothing to save", async () => {
     const resultSave = setupSaveAndReloadIframe();
-    const { getEditor } = await setupWebsiteBuilder(getEditable(exampleWebsiteContent));
-    await modifyText(getEditor());
+    const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleWebsiteContent);
+    await modifyText(getEditor(), getEditableContent());
     await animationFrame();
     await contains(".o-snippets-menu button.fa-undo").click();
     await contains(".o-snippets-top-actions button:contains(Save)").click();
@@ -44,8 +43,8 @@ test("nothing to save", async () => {
 
 test("discard modified elements", async () => {
     setupSaveAndReloadIframe();
-    const { getEditor } = await setupWebsiteBuilder(getEditable(exampleWebsiteContent));
-    await modifyText(getEditor());
+    const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleWebsiteContent);
+    await modifyText(getEditor(), getEditableContent());
     await contains(".o-snippets-top-actions button[data-action='cancel']").click();
     await contains(".modal-content button.btn-primary").click();
     expect(":iframe #wrap").not.toHaveClass("o_dirty");
@@ -59,7 +58,7 @@ test("discard without any modifications", async () => {
             this.websiteContent.el.contentDocument.body.innerHTML = wrapExample;
         },
     });
-    await setupWebsiteBuilder(getEditable(exampleWebsiteContent));
+    await setupWebsiteBuilder(exampleWebsiteContent);
     await contains(".o-snippets-top-actions button[data-action='cancel']").click();
     expect(":iframe #wrap").not.toHaveClass("o_dirty");
     expect(":iframe #wrap").not.toHaveClass("o_editable");

@@ -4,12 +4,7 @@ import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, click, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import {
-    defineWebsiteModels,
-    getEditable,
-    openBuilderSidebar,
-    setupWebsiteBuilder,
-} from "./helpers";
+import { defineWebsiteModels, openBuilderSidebar, setupWebsiteBuilder } from "./helpers";
 
 defineWebsiteModels();
 
@@ -59,7 +54,7 @@ test("navigate between builder tab don't fetch snippet description again", async
 });
 
 test("undo and redo buttons", async () => {
-    const { getEditor } = await setupWebsiteBuilder(getEditable("<p> Text </p>"), {
+    const { getEditor, getEditableContent } = await setupWebsiteBuilder("<p> Text </p>", {
         openEditor: false,
     });
     expect(".o_menu_systray .o-website-btn-custo-primary").toHaveCount(1);
@@ -67,10 +62,8 @@ test("undo and redo buttons", async () => {
     expect(":iframe #wrap").not.toHaveClass("o_dirty");
     expect(":iframe #wrap").toHaveClass("o_editable");
     const editor = getEditor();
-    setContent(
-        editor.editable,
-        '<div id="wrap" class="oe_structure oe_empty o_editable" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch"><p> Text[] </p></div>'
-    );
+    const editableContent = getEditableContent();
+    setContent(editableContent, "<p> Text[] </p>");
     await insertText(editor, "a");
     expect(editor.editable).toHaveInnerHTML(
         '<div id="wrap" class="oe_structure oe_empty o_editable o_dirty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch"> <p> Texta </p> </div>'

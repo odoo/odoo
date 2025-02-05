@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, getEditable, setupWebsiteBuilder } from "../helpers";
+import { defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
 
 defineWebsiteModels();
 
@@ -48,7 +48,7 @@ test("check invisible element after save", async () => {
         resultSave.push(args[1]);
         return true;
     });
-    await setupWebsiteBuilder(getEditable(websiteContent));
+    await setupWebsiteBuilder(websiteContent);
     await contains(":iframe .col-lg-3").click();
 
     await contains(

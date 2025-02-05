@@ -4,7 +4,6 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
     addOption,
-    getEditable,
     getSnippetStructure,
     getInnerContent,
     getSnippetView,
@@ -81,7 +80,6 @@ test("Use the sidebar 'save snippet' buttons", async () => {
         selector: "a.btn",
         template: xml`<BuilderButton classAction="'dummy-class'"/>`,
     });
-    const websiteContent = getEditable(dummySnippet);
     const structureSnippetDesc = {
         name: "Dummy Section",
         groupName: "a",
@@ -111,7 +109,7 @@ test("Use the sidebar 'save snippet' buttons", async () => {
         snippet_content: [getInnerContent(innerContentDesc)],
         snippet_custom: [],
     };
-    await setupWebsiteBuilder(websiteContent, { snippets });
+    await setupWebsiteBuilder(dummySnippet, { snippets });
 
     onRpc("ir.ui.view", "save_snippet", ({ kwargs }) => {
         let { name, arch, snippet_key, thumbnail_url } = kwargs;
@@ -181,7 +179,7 @@ test("Use the sidebar 'create anchor' buttons", async () => {
             <p>test<p>
         </section>
     `;
-    await setupWebsiteBuilder(getEditable(websiteContent));
+    await setupWebsiteBuilder(websiteContent);
     const anchorSelector =
         ".o_customize_tab .options-container > div:contains('Dummy Section') button.oe_snippet_anchor";
     const notificationContentSelector = ".o_notification_manager .o_notification_content";

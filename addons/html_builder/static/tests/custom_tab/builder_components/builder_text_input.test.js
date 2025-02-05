@@ -25,19 +25,19 @@ test("hide/display base on applyTo", async () => {
         },
     });
 
-    const { getEditor } = await setupWebsiteBuilder(
+    const { getEditableContent } = await setupWebsiteBuilder(
         `<div class="parent-target"><div class="child-target">b</div></div>`
     );
-    const editor = getEditor();
+    const editableContent = getEditableContent();
     await contains(":iframe .parent-target").click();
-    expect(editor.editable).toHaveInnerHTML(
+    expect(editableContent).toHaveInnerHTML(
         `<div class="parent-target"><div class="child-target">b</div></div>`
     );
     expect("[data-class-action='my-custom-class']").not.toHaveClass("active");
     expect("[data-action-id='customAction']").toHaveCount(0);
 
     await contains("[data-class-action='my-custom-class']").click();
-    expect(editor.editable).toHaveInnerHTML(
+    expect(editableContent).toHaveInnerHTML(
         `<div class="parent-target"><div class="child-target my-custom-class">b</div></div>`
     );
     expect("[data-class-action='my-custom-class']").toHaveClass("active");

@@ -252,21 +252,21 @@ test("apply classAction on multi elements", async () => {
         selector: ".test-options-target",
         template: xml`<BuilderButton applyTo="'.target-apply'" classAction="'my-custom-class'"/>`,
     });
-    const { getEditor } = await setupWebsiteBuilder(`
+    const { getEditableContent } = await setupWebsiteBuilder(`
             <div class="test-options-target">
                 <div class="target-apply">a</div>
                 <div class="target-apply">b</div>
             </div>`);
-    const editor = getEditor();
+    const editableContent = getEditableContent();
     await contains(":iframe .test-options-target").click();
-    expect(editor.editable).toHaveInnerHTML(`
+    expect(editableContent).toHaveInnerHTML(`
             <div class="test-options-target">
                 <div class="target-apply">a</div>
                 <div class="target-apply">b</div>
             </div>`);
 
     await contains("[data-class-action='my-custom-class']").click();
-    expect(editor.editable).toHaveInnerHTML(`
+    expect(editableContent).toHaveInnerHTML(`
             <div class="test-options-target">
                 <div class="target-apply my-custom-class">a</div>
                 <div class="target-apply my-custom-class">b</div>
@@ -286,19 +286,19 @@ test("hide/display base on applyTo", async () => {
             </BuilderRow>`,
     });
 
-    const { getEditor } = await setupWebsiteBuilder(
+    const { getEditableContent } = await setupWebsiteBuilder(
         `<div class="parent-target"><div class="child-target">b</div></div>`
     );
-    const editor = getEditor();
+    const editableContent = getEditableContent();
     await contains(":iframe .parent-target").click();
-    expect(editor.editable).toHaveInnerHTML(
+    expect(editableContent).toHaveInnerHTML(
         `<div class="parent-target"><div class="child-target">b</div></div>`
     );
     expect("[data-class-action='my-custom-class']").not.toHaveClass("active");
     expect("[data-class-action='test']").toHaveCount(0);
 
     await contains("[data-class-action='my-custom-class']").click();
-    expect(editor.editable).toHaveInnerHTML(
+    expect(editableContent).toHaveInnerHTML(
         `<div class="parent-target"><div class="child-target my-custom-class">b</div></div>`
     );
     expect("[data-class-action='my-custom-class']").toHaveClass("active");
