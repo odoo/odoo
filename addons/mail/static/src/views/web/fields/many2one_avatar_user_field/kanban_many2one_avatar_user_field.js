@@ -22,6 +22,10 @@ export class KanbanMany2OneAvatarUserField extends Component {
         this.m2o = useMany2One(() => this.props);
     }
 
+    get displayName() {
+        return this.props.displayAvatarName ? this.m2o.displayName : "";
+    }
+
     get m2oProps() {
         return this.m2o.computeProps();
     }

@@ -50,5 +50,4 @@ export const many2ManyUomTagsField = {
     additionalClasses: ['o_field_many2many_tags'],
 };
 
-
 registry.category("fields").add("many2many_uom_tags", many2ManyUomTagsField);

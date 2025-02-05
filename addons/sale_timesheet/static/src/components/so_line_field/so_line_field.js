@@ -30,6 +30,6 @@ export class SoLineField extends Component {
     }
 }
 
-registry.category("fields").add("project", {
+registry.category("fields").add("so_line_field", {
     ...buildM2OFieldDescription(SoLineField),
 });

@@ -270,6 +270,24 @@ export class Many2XAutocomplete extends Component {
         });
     }
 
+    get autoCompleteProps() {
+        return {
+            autoComplete: "off",
+            autoSelect: this.props.autoSelect,
+            autofocus: this.props.autofocus,
+            dropdown: this.props.dropdown,
+            id: this.props.id,
+            onCancel: this.onCancel.bind(this),
+            onChange: this.onChange.bind(this),
+            onInput: this.onInput.bind(this),
+            onSelect: this.onSelect.bind(this),
+            placeholder: this.props.placeholder,
+            resetOnSelect: this.props.value === "",
+            sources: this.sources,
+            value: this.props.value,
+        };
+    }
+
     get sources() {
         return [this.optionsSource, ...this.props.otherSources];
     }

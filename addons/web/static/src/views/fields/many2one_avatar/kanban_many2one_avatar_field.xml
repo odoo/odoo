@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.KanbanMany2OneAvatarField">
-        <KanbanMany2One>
+        <KanbanMany2One t-props="m2oProps">
             <t t-set-slot="avatar">
                 <img t-attf-src="/web/image/{{m2o.relation}}/{{m2o.resId}}/avatar_128" class="rounded"/>
             </t>

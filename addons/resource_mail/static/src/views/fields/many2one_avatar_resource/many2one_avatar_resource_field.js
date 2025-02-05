@@ -6,7 +6,7 @@ import { Many2One, useMany2One } from "@web/views/fields/many2one/many2one";
 import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
 
 class AvatarResource extends Avatar {
-    static components = { ...Avatar.components, Popover: AvatarCardResourcePopover };
+    static components = { ...super.components, Popover: AvatarCardResourcePopover };
 }
 
 class Many2OneAvatarResourceField extends Component {

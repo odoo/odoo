@@ -4,7 +4,9 @@
     <t t-name="hr.Many2OneAvatarEmployeeField">
         <Many2One t-props="m2oProps">
             <t t-set-slot="start">
-                <AvatarEmployee resModel="relation" resId="m2o.resId" noSpacing="true"/>
+                <t t-if="m2o.value !== false">
+                    <AvatarEmployee resModel="relation" resId="m2o.resId" noSpacing="true"/>
+                </t>
             </t>
             <t t-set-slot="items" t-slot-scope="itemsScope">
                 <span class="o_avatar o_m2o_avatar">

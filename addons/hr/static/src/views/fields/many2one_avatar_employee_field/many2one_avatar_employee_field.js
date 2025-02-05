@@ -11,7 +11,7 @@ import {
 } from "@web/views/fields/many2one/many2one_field";
 
 class AvatarEmployee extends Avatar {
-    static components = { ...Avatar.components, Popover: AvatarCardEmployeePopover };
+    static components = { ...super.components, Popover: AvatarCardEmployeePopover };
 }
 
 export class Many2OneAvatarEmployeeField extends Component {
