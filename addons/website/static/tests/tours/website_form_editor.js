@@ -30,6 +30,9 @@ for (const data of ESSENTIAL_FIELDS_VALID_DATA_FOR_DEFAULT_FORM) {
         trigger: `:iframe .s_website_form_model_required .s_website_form_input[name="${data.name}"]`,
         run: `edit ${data.value} && press Tab`,
     });
+    essentialFieldsForDefaultFormFillInSteps.push({
+        trigger: `:iframe .s_website_form_model_required .s_website_form_input[name="${data.name}"]:value(${data.value})`,
+    });
 }
 
 // Replace all `"` character by `&quot;`.
@@ -879,40 +882,26 @@ registerWebsitePreviewTour('website_form_conditional_required_checkboxes', {
     {
         content: "Open condition item select",
         trigger: 'we-select[data-name="hidden_condition_opt"] we-toggler',
-        run(helpers) {
-            // TODO: use run: "click",
-            this.anchor.click();
-        }
+        run: "click",
     }, {
         content: "Choose first checkbox as condition item",
         trigger: 'we-button[data-set-visibility-dependency="Checkbox 1"]',
-        async run(helpers) {
-            await helpers.click();
-            // TODO:to be removed
-            await new Promise((r) => setTimeout(r, 300));
-        }
+        run: "click",
     }, {
         content: "Open condition comparator select",
         trigger: 'we-select[data-attribute-name="visibilityComparator"] we-toggler',
-        run(helpers) {
-            // TODO: use run: "click",
-            this.anchor.click();
-        }
+        run: "click",
     }, {
         content: "Choose 'not equal to' comparator",
         trigger: 'we-button[data-select-data-attribute="!selected"]',
-        async run(helpers) {
-            await helpers.click();
-            // TODO: to be removed
-            await new Promise((r) => setTimeout(r, 300));
-        }
+        run: "click",
     },
     ...clickOnSave(),
 
     // Check that the resulting form behavior is correct
     {
         content: "Wait for page reload",
-        trigger: ':iframe body:not(.editor_enable) [data-snippet="s_website_form"]',
+        trigger: 'body:not(.editor_enable) :iframe [data-snippet="s_website_form"]',
         run: function (actions) {
             // The next steps will be about removing non essential required
             // fields. For the robustness of the test, check that amount
@@ -922,6 +911,10 @@ registerWebsitePreviewTour('website_form_conditional_required_checkboxes', {
                 console.error('The amount of model-required fields seems to have changed');
             }
         },
+    },
+    {
+        content: "Wait the form is loaded before fill it",
+        trigger: ":iframe form:contains(checkbox 2)",
     },
     ...essentialFieldsForDefaultFormFillInSteps,
     {
@@ -949,6 +942,10 @@ registerWebsitePreviewTour('website_form_conditional_required_checkboxes', {
         content: "Go back to the form",
         trigger: ':iframe a.navbar-brand.logo',
         run: "click",
+    },
+    {
+        content: "Wait the form is loaded before fill it",
+        trigger: ":iframe form:contains(checkbox 2)",
     },
     ...essentialFieldsForDefaultFormFillInSteps,
     {
