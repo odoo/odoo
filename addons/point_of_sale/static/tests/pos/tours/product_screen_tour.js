@@ -455,9 +455,9 @@ registry.category("web_tour.tours").add("ProductSearchTour", {
             ProductScreen.searchProduct("Apple"),
             ProductScreen.productIsDisplayed("Test Product 1").map(negateStep),
             ProductScreen.productIsDisplayed("Test Product 2").map(negateStep),
-            ProductScreen.searchProduct("Test Produt"), // typo to test the fuzzy search
-            ProductScreen.productIsDisplayed("Test Product 1"),
-            ProductScreen.productIsDisplayed("Test Product 2"),
+            ProductScreen.searchProduct("Test Produt"),
+            ProductScreen.productIsDisplayed("Test Product 1").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 2").map(negateStep),
             ProductScreen.searchProduct("1234567890123"),
             ProductScreen.productIsDisplayed("Test Product 2").map(negateStep),
             ProductScreen.productIsDisplayed("Test Product 1"),
