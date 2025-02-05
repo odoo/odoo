@@ -244,7 +244,7 @@ export class ProductTemplate extends Base {
     }
 
     get searchString() {
-        const fields = ["display_name", "description_sale", "description"];
+        const fields = ["display_name"];
         return fields
             .map((field) => this[field] || "")
             .filter(Boolean)
@@ -253,7 +253,9 @@ export class ProductTemplate extends Base {
 
     exactMatch(searchWord) {
         const fields = ["barcode", "default_code"];
-        return fields.some((field) => this[field] && this[field].includes(searchWord));
+        return fields.some(
+            (field) => this[field] && this[field].toLowerCase().includes(searchWord)
+        );
     }
 
     _isArchivedCombination(attributeValueIds) {
