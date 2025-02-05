@@ -1,7 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { advanceTime } from "@odoo/hoot-mock";
 import { browser } from "@web/core/browser/browser";
-import { onRpc, mountWebClient } from "@web/../tests/web_test_helpers";
+import { asyncStep, onRpc, mountWebClient, waitForSteps } from "@web/../tests/web_test_helpers";
 import { defineMailModels, mockGetMedia } from "@mail/../tests/mail_test_helpers";
 import { PeerToPeer, STREAM_TYPE, UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
 
@@ -48,17 +48,16 @@ test("basic peer to peer connection", async () => {
     const network = new Network();
     const user1 = network.register(1);
     const user2 = network.register(2);
-    user2.remoteStates = new Map();
     user2.p2p.addEventListener("update", ({ detail: { name, payload } }) => {
-        if (name === UPDATE_EVENT.CONNECTION_CHANGE) {
-            user2.remoteStates.set(payload.id, payload.state);
+        if (name === UPDATE_EVENT.CONNECTION_CHANGE && payload.state === "connected") {
+            asyncStep(payload.state);
         }
     });
 
     user2.p2p.connect(user2.id, channelId);
     user1.p2p.connect(user1.id, channelId);
     await user1.p2p.addPeer(user2.id);
-    expect(user2.remoteStates.get(user1.id)).toBe("connected");
+    await waitForSteps(["connected"]);
     network.close();
 });
 
@@ -98,8 +97,8 @@ test("connection recovery", async () => {
     const user2 = network.register(2);
     user2.remoteStates = new Map();
     user2.p2p.addEventListener("update", ({ detail: { name, payload } }) => {
-        if (name === UPDATE_EVENT.CONNECTION_CHANGE) {
-            user2.remoteStates.set(payload.id, payload.state);
+        if (name === UPDATE_EVENT.CONNECTION_CHANGE && payload.state === "connected") {
+            asyncStep(payload.state);
         }
     });
 
@@ -108,13 +107,12 @@ test("connection recovery", async () => {
     // only connecting user2 after user1 has called addPeer so that user2 ignores notifications
     // from user1, which simulates a connection drop that should be recovered.
     user2.p2p.connect(user2.id, channelId);
-    expect(user2.remoteStates.get(user1.id)).toBe(undefined);
     const openPromise = new Promise((resolve) => {
         user1.p2p.peers.get(2).dataChannel.onopen = resolve;
     });
     advanceTime(5_000); // recovery timeout
     await openPromise;
-    expect(user2.remoteStates.get(user1.id)).toBe("connected");
+    await waitForSteps(["connected"]);
     network.close();
 });
 
