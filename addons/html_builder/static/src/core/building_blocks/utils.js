@@ -122,6 +122,43 @@ export function useIsActiveItem() {
     };
 }
 
+export function useGetItemValue() {
+    const env = useEnv();
+    const listenedKeys = new Set();
+
+    function getValue(itemId) {
+        const getValueFn = env.dependencyManager.get(itemId)?.getValue;
+        if (!getValueFn) {
+            return null;
+        }
+        return getValueFn();
+    }
+
+    const getState = () => {
+        const newState = {};
+        for (const itemId of listenedKeys) {
+            newState[itemId] = getValue(itemId);
+        }
+        return newState;
+    };
+    const state = useDomState(getState);
+    const listener = () => {
+        const newState = getState();
+        Object.assign(state, newState);
+    };
+    env.dependencyManager.addEventListener("dependency-updated", listener);
+    onWillDestroy(() => {
+        env.dependencyManager.removeEventListener("dependency-updated", listener);
+    });
+    return function getItemValue(itemId) {
+        listenedKeys.add(itemId);
+        if (state[itemId] === undefined) {
+            return getValue(itemId);
+        }
+        return state[itemId];
+    };
+}
+
 export function useSelectableComponent(id, { onItemChange } = {}) {
     useBuilderComponent();
     const selectableItems = [];
@@ -381,7 +418,7 @@ export function useInputBuilderComponent({ defaultValue } = {}) {
                 );
             }
             if (comp.props.unit) {
-                if (comp.props.saveUnit) {
+                if (comp.props.saveUnit || comp.props.saveUnit === "") {
                     actionValue = actionValue + comp.props.saveUnit;
                 } else {
                     actionValue = actionValue + comp.props.unit;
@@ -444,6 +481,14 @@ export function useInputBuilderComponent({ defaultValue } = {}) {
     ) {
         onInput = () => {};
     }
+
+    if (comp.props.id) {
+        useDependencyDefinition(comp.props.id, {
+            type: "input",
+            getValue: () => state.value,
+        });
+    }
+
     return {
         state,
         onChange,

@@ -6,6 +6,7 @@ import {
     useVisibilityObserver,
     useApplyVisibility,
     useIsActiveItem,
+    useGetItemValue,
 } from "../core/building_blocks/utils";
 import { getSnippetName, useOptionsSubEnv } from "@html_builder/utils/utils";
 import { BorderConfigurator } from "@html_builder/plugins/border_configurator";
@@ -30,6 +31,7 @@ export class OptionsContainer extends Component {
         this.notification = useService("notification");
         useOptionsSubEnv(() => [this.props.editingElement]);
         this.isActiveItem = useIsActiveItem();
+        this.getItemValue = useGetItemValue();
         useVisibilityObserver("content", useApplyVisibility("root"));
     }
 
