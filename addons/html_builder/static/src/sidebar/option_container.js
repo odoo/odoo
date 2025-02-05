@@ -24,6 +24,7 @@ export class OptionsContainer extends Component {
         options: { type: Array },
         editingElement: true, // HTMLElement from iframe
         isRemovable: false,
+        isClonable: false,
         canHaveAnchor: false,
     };
 

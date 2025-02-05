@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { uniqueId } from "@web/core/utils/functions";
 import { isRemovable } from "./remove/remove_plugin";
+import { isClonable } from "./clone/clone_plugin";
 import { canHaveAnchor } from "./anchor/anchor_plugin";
 import { getElementsWithOption } from "@html_builder/utils/utils";
 
@@ -77,6 +78,7 @@ export class BuilderOptionsPlugin extends Plugin {
                 options,
                 hasOverlayOptions: this.hasOverlayOptions(element),
                 isRemovable: isRemovable(element),
+                isClonable: isClonable(element),
                 canHaveAnchor: canHaveAnchor(element),
             }));
 

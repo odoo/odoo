@@ -31,7 +31,7 @@ const moveLeftOrRight = {
     exclude: ".s_showcase .row .row > div",
 };
 
-function isMovable(el) {
+export function isMovable(el) {
     const canMoveUpOrDown = el.matches(moveUpOrDown.selector);
     const canMoveLeftOrRight =
         el.matches(moveLeftOrRight.selector) && !el.matches(moveLeftOrRight.exclude);

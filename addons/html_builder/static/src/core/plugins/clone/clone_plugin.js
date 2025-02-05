@@ -3,6 +3,13 @@ import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { isElementInViewport } from "@html_builder/utils/utils";
 import { isRemovable } from "../remove/remove_plugin";
+import { isMovable } from "../move/move_plugin";
+
+const clonableSelector = "a.btn:not(.oe_unremovable)";
+
+export function isClonable(el) {
+    return el.matches(clonableSelector) || (isRemovable(el) && isMovable(el));
+}
 
 export class ClonePlugin extends Plugin {
     static id = "clone";
@@ -14,7 +21,6 @@ export class ClonePlugin extends Plugin {
         get_overlay_buttons: withSequence(2, this.getActiveOverlayButtons.bind(this)),
     };
 
-    // TODO find why the images should not have the clone buttons.
     setup() {
         this.overlayTarget = null;
     }
@@ -32,7 +38,7 @@ export class ClonePlugin extends Plugin {
     }
 
     getActiveOverlayButtons(target) {
-        if (!isRemovable(target)) {
+        if (!isClonable(target)) {
             this.overlayTarget = null;
             return [];
         }
