@@ -132,6 +132,7 @@ class TrNilveraCommon(AccountTestInvoicingCommon):
             'state_id': cls.env.ref('base.state_tr_81').id,
             'country_code': 'TR',
             'ref': 'Tax Office',
+            'bank_ids': [Command.create({'acc_number': 'TR0123456789'})],
         })
 
         cls.partner = cls.env['res.partner'].create({
