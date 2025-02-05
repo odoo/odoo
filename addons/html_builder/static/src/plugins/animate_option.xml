@@ -16,7 +16,7 @@
                             classAction="'o_animate o_animate_on_scroll'"
                             actionParam="{forceAnimation: true}"
                             id="'animation_on_scroll_opt'"
-                            t-if="!state.isLimitedAnimation">On Scroll</BuilderSelectItem>
+                            t-if="!state.isLimitedEffect">On Scroll</BuilderSelectItem>
                 <BuilderSelectItem action="'setAnimationMode'" actionValue="'onHover'"
                             classAction="'o_animate_on_hover'"
                             id="'animation_on_hover_opt'"
@@ -35,7 +35,7 @@
                 </t>
             </BuilderSelect>
         </BuilderRow>
-        <BuilderRow label.translate="Direction" t-if="state.hasAnimateClass and !state.isLimitedAnimation">
+        <BuilderRow label.translate="Direction" t-if="state.hasAnimateClass and !state.isLimitedEffect">
             <BuilderSelect id="'animation_direction_opt'" action="'forceAnimation'">
                 <t t-foreach="state.directionItems" t-as="item" t-key="item.className">
                     <BuilderSelectItem classAction="item.className" t-out="item.label" />

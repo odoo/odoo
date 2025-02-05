@@ -286,7 +286,7 @@ class AnimateOption extends Component {
                 isOptionActive: this.isOptionActive(editingElement),
                 hasAnimateClass: hasAnimateClass,
                 canHover: editingElement.tagName === "IMG",
-                isLimitedAnimation: this.limitedAnimations.some((className) =>
+                isLimitedEffect: this.limitedEffects.some((className) =>
                     editingElement.classList.contains(className)
                 ),
                 showIntensity: this.shouldShowIntensity(editingElement, hasAnimateClass),
@@ -298,7 +298,7 @@ class AnimateOption extends Component {
             };
         });
     }
-    get limitedAnimations() {
+    get limitedEffects() {
         // Animations for which the "On Scroll" and "Direction" options are not
         // available.
         return [
