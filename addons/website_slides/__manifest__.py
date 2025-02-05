@@ -24,6 +24,7 @@ Featuring
         'website',
         'website_mail',
         'website_profile',
+        'digest',
     ],
     'data': [
         'security/website_slides_security.xml',
@@ -59,6 +60,8 @@ Featuring
         'data/slide_data.xml',
         'data/website_data.xml',
         'data/slides_tour.xml',
+        'data/digest_kpi.xml',
+        'data/digest_data.xml',
     ],
     'demo': [
         'data/res_users_demo.xml',

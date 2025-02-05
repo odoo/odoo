@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="kpi_res_users_connected" model="digest.kpi" forcecreate="True">
+        <field name="name">Registrations</field>
+        <field name="res_model_id" ref="model_event_registration"/>
+        <field name="group_ids" eval="[Command.link(ref('event.group_event_manager'))]"/>
+        <field name="action_id" ref="event.action_registration"/>
+        <field name="action_menu_root_id" ref="event.event_main_menu"/>
+        <field name="module_id" ref="base.module_event"/>
+        <field name="sequence" eval="14000"/>
+    </record>
+</odoo>
