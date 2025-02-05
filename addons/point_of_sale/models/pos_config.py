@@ -618,7 +618,6 @@ class PosConfig(models.Model):
 
         if not self.current_session_id:
             self._check_before_creating_new_session()
-        self._validate_fields(self._fields)
 
         return self._action_to_open_ui()
 

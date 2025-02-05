@@ -80,9 +80,21 @@ class AnalyticPlanFieldsMixin(models.AbstractModel):
     def _get_account_node_context(self, plan):
         return {'default_plan_id': plan.id}
 
-    @api.constrains(lambda self: self._get_plan_fnames())
-    def _check_account_id(self):
+    def write(self, vals):
+        result = super().write(vals)
+        self._check_account_id(vals)
+        return result
+
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        for record, vals in zip(records, vals_list):
+            record._check_account_id(vals)
+        return records
+
+    def _check_account_id(self, vals: dict):
         fnames = self._get_plan_fnames()
+        if vals.keys().isdisjoint(fnames):
+            return
         for line in self:
             if not any(line[fname] for fname in fnames):
                 raise ValidationError(_("At least one analytic account must be set"))

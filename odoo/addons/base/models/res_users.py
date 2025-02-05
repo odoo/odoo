@@ -1531,8 +1531,6 @@ class ResGroups(models.Model):  # noqa: F811
             updated_users.invalidate_recordset(['groups_id'])
             updated_users.modified(['groups_id'])
             # explicitly check constraints
-            updated_groups._validate_fields(['users'])
-            updated_users._validate_fields(['groups_id'])
             self._check_one_user_type()
         if 'implied_ids' in values:
             self.env.registry.clear_cache('groups')

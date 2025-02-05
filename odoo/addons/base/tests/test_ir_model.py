@@ -306,6 +306,7 @@ class TestIrModel(TransactionCase):
         for order in INVALID_ORDERS:
             with self.assertRaises(ValidationError), self.cr.savepoint():
                 self.bananas_model.order = order
+                self.env.flush_all()
 
         # check that the constraint is checked at model creation
         fields_value = [
