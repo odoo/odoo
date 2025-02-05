@@ -8,7 +8,6 @@ import {
 } from "@html_builder/utils/column_layout_utils";
 import { isMobileView } from "@html_builder/utils/utils";
 
-// TODO find where to define the selectors so they are not duplicated across files
 const moveUpOrDown = {
     selector: [
         "section",
@@ -68,6 +67,7 @@ export class MovePlugin extends Plugin {
     static id = "move";
     static dependencies = ["history"];
     resources = {
+        has_overlay_options: (el) => isMovable(el),
         get_overlay_buttons: withSequence(0, this.getActiveOverlayButtons.bind(this)),
         on_clone_handlers: this.onClone.bind(this),
         on_remove_handlers: this.onRemove.bind(this),

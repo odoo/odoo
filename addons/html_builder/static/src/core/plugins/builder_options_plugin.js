@@ -2,7 +2,6 @@ import { Plugin } from "@html_editor/plugin";
 import { uniqueId } from "@web/core/utils/functions";
 import { isRemovable } from "./remove/remove_plugin";
 import { canHaveAnchor } from "./anchor/anchor_plugin";
-import { hasOverlayOptions } from "./overlay_buttons/overlay_buttons_plugin";
 
 export class BuilderOptionsPlugin extends Plugin {
     static id = "builder-options";
@@ -60,7 +59,7 @@ export class BuilderOptionsPlugin extends Plugin {
         // overlay buttons.
         let element = this.target;
         while (element && !elementToOptions.has(element)) {
-            if (hasOverlayOptions(element)) {
+            if (this.hasOverlayOptions(element)) {
                 elementToOptions.set(element, []);
                 break;
             }
@@ -74,6 +73,7 @@ export class BuilderOptionsPlugin extends Plugin {
                 id: previousElementToIdMap.get(element) || uniqueId(),
                 element,
                 options,
+                hasOverlayOptions: this.hasOverlayOptions(element),
                 isRemovable: isRemovable(element),
                 canHaveAnchor: canHaveAnchor(element),
             }));
@@ -101,6 +101,15 @@ export class BuilderOptionsPlugin extends Plugin {
 
     getContainers() {
         return this.lastContainers;
+    }
+
+    hasOverlayOptions(el) {
+        for (const hasOverlayOptions of this.getResource("has_overlay_options")) {
+            if (hasOverlayOptions(el)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 

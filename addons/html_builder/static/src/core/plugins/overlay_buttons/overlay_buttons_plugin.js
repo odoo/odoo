@@ -3,51 +3,6 @@ import { reactive } from "@odoo/owl";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { getScrollingElement, getScrollingTarget } from "@web/core/utils/scrolling";
 import { OverlayButtons } from "./overlay_buttons";
-import { sizingY, sizingX, sizingGrid } from "../builder_overlay/builder_overlay";
-
-// Moving with the arrows.
-const moveUpOrDown = {
-    selector: [
-        "section",
-        ".s_accordion .accordion-item",
-        ".s_showcase .row .row:not(.s_col_no_resize) > div",
-        ".s_hr",
-        // In snippets files
-        ".s_pricelist_boxed_item",
-        ".s_pricelist_cafe_item",
-        ".s_product_catalog_dish",
-        ".s_timeline_list_row",
-        ".s_timeline_row",
-    ].join(", "),
-};
-
-const moveLeftOrRight = {
-    selector: [
-        ".row:not(.s_col_no_resize) > div",
-        ".nav-item",
-        ".s_timeline_card", // timeline TODO custom function, other plugin ?
-    ].join(", "),
-    exclude: ".s_showcase .row .row > div",
-};
-
-function isMovable(el) {
-    const canMoveUpOrDown = el.matches(moveUpOrDown.selector);
-    const canMoveLeftOrRight =
-        el.matches(moveLeftOrRight.selector) && !el.matches(moveLeftOrRight.exclude);
-    return canMoveUpOrDown || canMoveLeftOrRight;
-}
-
-function isResizable(el) {
-    const isResizableY = el.matches(sizingY.selector) && !el.matches(sizingY.exclude);
-    const isResizableX = el.matches(sizingX.selector) && !el.matches(sizingX.exclude);
-    const isResizableGrid = el.matches(sizingGrid.selector) && !el.matches(sizingGrid.exclude);
-    return isResizableY || isResizableX || isResizableGrid;
-}
-
-// TODO improve that (resources ?)
-export function hasOverlayOptions(el) {
-    return isMovable(el) || isResizable(el);
-}
 
 export class OverlayButtonsPlugin extends Plugin {
     static id = "overlayButtons";
@@ -155,8 +110,8 @@ export class OverlayButtonsPlugin extends Plugin {
         this.removeOverlayButtons();
 
         // Find the innermost option needing the overlay buttons.
-        const optionWithOverlayButtons = optionsContainer.findLast((option) =>
-            hasOverlayOptions(option.element)
+        const optionWithOverlayButtons = optionsContainer.findLast(
+            (option) => option.hasOverlayOptions
         );
         if (optionWithOverlayButtons) {
             this.target = optionWithOverlayButtons.element;

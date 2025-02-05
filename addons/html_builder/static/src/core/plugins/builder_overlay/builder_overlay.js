@@ -23,8 +23,9 @@ export const sizingGrid = {
 };
 
 export class BuilderOverlay {
-    constructor(overlayTarget, { iframe, overlayContainer, addStep }) {
+    constructor(overlayTarget, { iframe, overlayContainer, addStep, hasOverlayOptions }) {
         this.addStep = addStep;
+        this.hasOverlayOptions = hasOverlayOptions;
         this.iframe = iframe;
         this.overlayContainer = overlayContainer;
         this.overlayElement = renderToElement("html_builder.BuilderOverlay");

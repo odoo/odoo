@@ -1,8 +1,14 @@
 import { Plugin } from "@html_editor/plugin";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { getScrollingElement, getScrollingTarget } from "@web/core/utils/scrolling";
-import { BuilderOverlay } from "./builder_overlay";
-import { hasOverlayOptions } from "../overlay_buttons/overlay_buttons_plugin";
+import { BuilderOverlay, sizingY, sizingX, sizingGrid } from "./builder_overlay";
+
+function isResizable(el) {
+    const isResizableY = el.matches(sizingY.selector) && !el.matches(sizingY.exclude);
+    const isResizableX = el.matches(sizingX.selector) && !el.matches(sizingX.exclude);
+    const isResizableGrid = el.matches(sizingGrid.selector) && !el.matches(sizingGrid.exclude);
+    return isResizableY || isResizableX || isResizableGrid;
+}
 
 export class BuilderOverlayPlugin extends Plugin {
     static id = "builderOverlay";
@@ -12,6 +18,7 @@ export class BuilderOverlayPlugin extends Plugin {
         step_added_handlers: this.refreshOverlays.bind(this),
         change_current_options_containers_listeners: this.openBuilderOverlays.bind(this),
         on_mobile_preview_clicked: this.refreshOverlays.bind(this),
+        has_overlay_options: (el) => isResizable(el),
     };
 
     setup() {
@@ -80,6 +87,7 @@ export class BuilderOverlayPlugin extends Plugin {
                 iframe: this.iframe,
                 overlayContainer: this.overlayContainer,
                 addStep: this.dependencies.history.addStep,
+                hasOverlayOptions: option.hasOverlayOptions,
             });
             this.overlays.push(overlay);
             this.overlayContainer.append(overlay.overlayElement);
@@ -91,10 +99,10 @@ export class BuilderOverlayPlugin extends Plugin {
         innermostOverlay.toggleOverlay(true);
 
         // Also activate the closest overlay that should have overlay options.
-        if (!hasOverlayOptions(innermostOverlay.overlayTarget)) {
+        if (!innermostOverlay.hasOverlayOptions) {
             for (let i = this.overlays.length - 2; i >= 0; i--) {
                 const parentOverlay = this.overlays[i];
-                if (hasOverlayOptions(parentOverlay.overlayTarget)) {
+                if (parentOverlay.hasOverlayOptions) {
                     parentOverlay.toggleOverlay(true);
                     break;
                 }
