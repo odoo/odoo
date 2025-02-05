@@ -40,9 +40,9 @@
             </xpath>
 
             <xpath expr="//t[@t-set='address']" position="inside">
-                <div t-if="o.partner_id.l10n_sa_additional_identification_scheme and o.partner_id.l10n_sa_additional_identification_number" class="text-end mt0">
-                        <span t-field="o.partner_id.l10n_sa_additional_identification_scheme"/>:
-                        <span t-field="o.partner_id.l10n_sa_additional_identification_number"/>
+                <div t-if="o.partner_id.l10n_sa_edi_additional_identification_scheme and o.partner_id.l10n_sa_edi_additional_identification_number" class="text-end mt0">
+                        <span t-field="o.partner_id.l10n_sa_edi_additional_identification_scheme"/>:
+                        <span t-field="o.partner_id.l10n_sa_edi_additional_identification_number"/>
                 </div>
             </xpath>
             <xpath expr="//div[hasclass('col-4')]//span[@t-if=&quot;o.move_type == &apos;out_invoice&apos; and o.state == &apos;posted&apos;&quot;]" position="replace">
