@@ -709,7 +709,7 @@ export class PosData extends Reactive {
 
     async callRelated(model, method, args = [], kwargs = {}, queue = true) {
         const data = await this.execute({ type: "call", model, method, args, kwargs, queue });
-        this.deviceSync.dispatch(data);
+        this.deviceSync?.dispatch && this.deviceSync.dispatch(data);
         const results = this.models.loadData(data, [], true);
         return results;
     }
@@ -720,7 +720,8 @@ export class PosData extends Reactive {
 
     async ormWrite(model, ids, values, queue = true) {
         const result = await this.execute({ type: "write", model, ids, values, queue });
-        this.deviceSync.dispatch({ [model]: ids.map((id) => ({ id })) });
+        this.deviceSync?.dispatch &&
+            this.deviceSync.dispatch({ [model]: ids.map((id) => ({ id })) });
         return result;
     }
 

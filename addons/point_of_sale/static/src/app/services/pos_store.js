@@ -461,7 +461,7 @@ export class PosStore extends WithLazyGetterTrap {
                     typeof order.id === "number" &&
                     Object.keys(order.last_order_preparation_change).length > 0
                 ) {
-                    await this.sendOrderInPreparation(order, true, true);
+                    await this.sendOrderInPreparation(order, { cancelled: true, orderDone: true });
                 }
 
                 const cancelled = this.removeOrder(order, false);
@@ -1510,15 +1510,15 @@ export class PosStore extends WithLazyGetterTrap {
         return getOrderChanges(order, skipped, this.config.preparationCategories);
     }
     // Now the printer should work in PoS without restaurant
-    async sendOrderInPreparation(order, cancelled = false, orderDone = false) {
-        if (this.config.printerCategories.size) {
+    async sendOrderInPreparation(order, opts = {}) {
+        if (this.config.printerCategories.size && !opts.byPassPrint) {
             try {
                 let reprint = false;
                 let orderChange = changesToOrder(
                     order,
                     false,
                     this.config.preparationCategories,
-                    cancelled
+                    opts.cancelled
                 );
 
                 if (
@@ -1535,7 +1535,7 @@ export class PosStore extends WithLazyGetterTrap {
                     order.uiState.lastPrint = orderChange;
                 }
 
-                if (reprint && orderDone) {
+                if (reprint && opts.orderDone) {
                     return;
                 }
 
@@ -1544,13 +1544,14 @@ export class PosStore extends WithLazyGetterTrap {
                 console.info("Failed in printing the changes in the order", e);
             }
         }
+        order.updateLastOrderChange();
     }
     async sendOrderInPreparationUpdateLastChange(o, cancelled = false) {
         if (this.data.network.offline) {
             this.data.network.warningTriggered = false;
             throw new ConnectionLostError();
         }
-        await this.sendOrderInPreparation(o, cancelled);
+        await this.sendOrderInPreparation(o, { cancelled });
     }
 
     async printChanges(order, orderChange, reprint = false) {
