@@ -103,10 +103,10 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
     def _get_partner_party_identification_vals_list(self, partner):
         """ Override to include/update values specific to ZATCA's UBL 2.1 specs """
         return [{
-            'id_attrs': {'schemeID': partner.l10n_sa_additional_identification_scheme},
+            'id_attrs': {'schemeID': partner.l10n_sa_edi_additional_identification_scheme},
             'id': (
-                partner.l10n_sa_additional_identification_number
-                if partner.l10n_sa_additional_identification_scheme != 'TIN' and partner.country_code == 'SA'
+                partner.l10n_sa_edi_additional_identification_number
+                if partner.l10n_sa_edi_additional_identification_scheme != 'TIN' and partner.country_code == 'SA'
                 else partner.vat
             ),
         }]
