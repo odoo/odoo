@@ -5479,7 +5479,7 @@ class AccountMove(models.Model):
         model_reports = self.env['ir.actions.report'].search(domain)
 
         available_reports = model_reports.filtered(
-            lambda model_template: len(self.filtered_domain(ast.literal_eval(model_template.domain))) == len(self)
+            lambda model_template: len(self.filtered_domain(ast.literal_eval(model_template.domain or '[]'))) == len(self)
         )
 
         return available_reports
@@ -5490,7 +5490,7 @@ class AccountMove(models.Model):
         self.ensure_one()
 
         if available_report := action_report.filtered(lambda available_report: not (is_invoice_report^available_report.is_invoice_report)):
-            return bool(self.filtered_domain(ast.literal_eval(available_report.domain)))
+            return bool(self.filtered_domain(ast.literal_eval(available_report.domain or '[]')))
 
         return False
 
