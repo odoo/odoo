@@ -13,6 +13,7 @@ export class EditOrderNamePopup extends TextInputPopup {
     }
     transferOrder(order) {
         this.pos.transferOrder(this.currentOrder.uuid, null, order);
+        this.pos.setOrder(order);
         this.dialog.closeAll();
     }
     get currentOrder() {
