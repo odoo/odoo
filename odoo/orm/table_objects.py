@@ -11,10 +11,15 @@ if typing.TYPE_CHECKING:
 
     from .environments import Environment
     from .models import BaseModel
+    from .registry import Registry
 
     ConstraintMessageType = (
         str
         | Callable[[Environment, psycopg2.extensions.Diagnostics | None], str]
+    )
+    IndexDefinitionType = (
+        str
+        | Callable[[Registry], str]
     )
 
 
@@ -43,8 +48,7 @@ class TableObject:
             self._module = owner._module
             owner._table_object_definitions.append(self)
 
-    @property
-    def definition(self) -> str:
+    def get_definition(self, registry: Registry) -> str:
         raise NotImplementedError
 
     def full_name(self, model: BaseModel) -> str:
@@ -98,14 +102,13 @@ class Constraint(TableObject):
         if message:
             self.message = message
 
-    @property
-    def definition(self):
+    def get_definition(self, registry: Registry):
         return self._definition
 
     def apply_to_database(self, model: BaseModel):
         cr = model.env.cr
         conname = self.full_name(model)
-        definition = self.definition
+        definition = self.get_definition(model.pool)
         current_definition = sql.constraint_definition(cr, model._table, conname)
         if current_definition == definition:
             return
@@ -124,7 +127,7 @@ class Index(TableObject):
     """
     unique: bool = False
 
-    def __init__(self, definition: str):
+    def __init__(self, definition: IndexDefinitionType):
         """ Index in SQL.
 
         The name of the SQL object will be "{model._table}_{key}". The definition
@@ -137,14 +140,17 @@ class Index(TableObject):
         super().__init__()
         self._index_definition = definition
 
-    @property
-    def definition(self):
-        return f"{'UNIQUE ' if self.unique else ''}INDEX {self._index_definition}"
+    def get_definition(self, registry: Registry):
+        if callable(self._index_definition):
+            definition = self._index_definition(registry)
+        else:
+            definition = self._index_definition
+        return f"{'UNIQUE ' if self.unique else ''}INDEX {definition}"
 
     def apply_to_database(self, model: BaseModel):
         cr = model.env.cr
         conname = self.full_name(model)
-        definition = self.definition
+        definition = self.get_definition(model.pool)
         db_definition, db_comment = sql.index_definition(cr, conname)
         if db_comment == definition or (not db_comment and db_definition):
             # keep when the definition matches the comment in the database
@@ -155,7 +161,10 @@ class Index(TableObject):
             # constraint exists but its definition may have changed
             sql.drop_index(cr, conname, model._table)
 
-        definition_clause = self._index_definition
+        if callable(self._index_definition):
+            definition_clause = self._index_definition(model.pool)
+        else:
+            definition_clause = self._index_definition
         model.pool.post_constraint(
             sql.add_index,
             cr,
@@ -174,7 +183,7 @@ class UniqueIndex(Index):
     """
     unique = True
 
-    def __init__(self, definition: str, message: ConstraintMessageType = ''):
+    def __init__(self, definition: IndexDefinitionType, message: ConstraintMessageType = ''):
         """ Unique index in SQL.
 
         The name of the SQL object will be "{model._table}_{key}". The definition
