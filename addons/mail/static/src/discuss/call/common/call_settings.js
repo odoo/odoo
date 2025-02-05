@@ -92,13 +92,12 @@ export class CallSettings extends Component {
     }
 
     onClickDownloadLogs() {
-        const data = JSON.stringify(Object.fromEntries(this.rtc.state.logs));
+        this.rtc.logSnapshot();
+        const data = JSON.stringify(this.rtc.state.globalLogs);
         const blob = new Blob([data], { type: "application/json" });
         const downloadLink = document.createElement("a");
-        const channelId = this.rtc.state.logs.get("channelId");
-        const sessionId = this.rtc.state.logs.get("selfSessionId");
         const now = luxon.DateTime.now().toFormat("yyyy-ll-dd_HH-mm");
-        downloadLink.download = `RtcLogs_Channel_${channelId}_Session_${sessionId}_${now}.json`;
+        downloadLink.download = `RtcLogs_${now}.json`;
         const url = URL.createObjectURL(blob);
         downloadLink.href = url;
         downloadLink.click();
