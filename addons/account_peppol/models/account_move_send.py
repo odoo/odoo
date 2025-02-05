@@ -49,7 +49,7 @@ class AccountMoveSend(models.AbstractModel):
                 },
             },
         }
-        info_always_on_countries = {'BE'}
+        info_always_on_countries = {'BE', 'FI', 'LU', 'LV', 'NL', 'NO', 'SE'}
         can_send = self.env['account_edi_proxy_client.user']._get_can_send_domain()
         any_moves_not_sent_peppol = any(move.peppol_move_state not in ('processing', 'done') for move in moves)
         always_on_companies = moves.company_id.filtered(
