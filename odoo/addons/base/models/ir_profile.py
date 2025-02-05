@@ -52,26 +52,33 @@ class IrProfile(models.Model):
     def _compute_speedscope(self):
         # The params variable is done to control input from the user
         # When expanding this, it should be select from an enum to input only the correct values
-        params = {
-            'constant_time' : str2bool(request.httprequest.args.get('constant_time', False)),
-            'aggregate_sql' : str2bool(request.httprequest.args.get('aggregate_sql', False)),
-            'combined_profile' : str2bool(request.httprequest.args.get('combined_profile', False)),
-            'use_context' : str2bool(request.httprequest.args.get('use_execution_context', False)),
-            'sql_no_gap_profile' : str2bool(request.httprequest.args.get('sql_no_gap_profile', False)),
-            'sql_density_profile' : str2bool(request.httprequest.args.get('sql_density_profile', False)),
-            'frames_profile' : str2bool(request.httprequest.args.get('frames_profile', False)),
-        }
+        params = self._parse_params(self.env.context)
         for execution in self:
-            sp = Speedscope(init_stack_trace=json.loads(execution.init_stack_trace))
-            if execution.sql:
-                sp.add('sql', json.loads(execution.sql), params['aggregate_sql'])
-            if execution.traces_async:
-                sp.add('frames', json.loads(execution.traces_async))
-            if execution.traces_sync:
-                sp.add('settrace', json.loads(execution.traces_sync))
+            execution.speedscope = base64.b64encode(execution._generate_speedscope(params))
 
-            result = json.dumps(sp.add_default(**params).make(**params))
-            execution.speedscope = base64.b64encode(result.encode('utf-8'))
+    def _parse_params(self, params):
+        return {
+            'constant_time' : str2bool(params.get('constant_time', False)),
+            'aggregate_sql' : str2bool(params.get('aggregate_sql', False)),
+            'use_context' : str2bool(params.get('use_execution_context', False)),
+            'combined_profile' : str2bool(params.get('combined_profile', False)),
+            'sql_no_gap_profile' : str2bool(params.get('sql_no_gap_profile', False)),
+            'sql_density_profile' : str2bool(params.get('sql_density_profile', False)),
+            'frames_profile' : str2bool(params.get('frames_profile', False)),
+            'profile_aggregation_mode': params.get('profile_aggregation_mode', 'tabs'),
+        }
+
+    def _generate_speedscope(self, params):
+        sp = Speedscope(init_stack_trace=json.loads(self.init_stack_trace))
+        if self.sql:
+            sp.add('sql', json.loads(self.sql), params['aggregate_sql'])
+        if self.traces_async:
+            sp.add('frames', json.loads(self.traces_async))
+        if self.traces_sync:
+            sp.add('settrace', json.loads(self.traces_sync))
+
+        result = json.dumps(sp.add_default(**params).make(**params))
+        self.speedscope = base64.b64encode(result.encode('utf-8'))
 
     def _compute_speedscope_url(self):
         for profile in self:
