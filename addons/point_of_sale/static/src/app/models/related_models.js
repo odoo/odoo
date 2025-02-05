@@ -30,16 +30,6 @@ const DATE_TIME_TYPE = new Set(["date", "datetime"]);
 const RELATION_TYPES = new Set(["many2many", "many2one", "one2many"]);
 const X2MANY_TYPES = new Set(["many2many", "one2many"]);
 const AVAILABLE_EVENT = ["create", "update", "delete"];
-export const SERIALIZABLE_MODELS = [
-    "pos.order",
-    "pos.order.line",
-    "pos.payment",
-    "pos.pack.operation.lot",
-    "product.attribute.custom.value",
-    "event.registration", // FIXME should be overrided from pos_event
-    "event.registration.answer",
-    "restaurant.order.course",
-];
 
 function processModelDefs(modelDefs) {
     modelDefs = clone(modelDefs);
@@ -146,9 +136,10 @@ function processModelDefs(modelDefs) {
 }
 
 export class Base extends WithLazyGetterTrap {
-    constructor({ model, traps }) {
+    constructor({ model, traps, dynamicModels }) {
         super({ traps });
         this.model = model;
+        this._dynamicModels = dynamicModels;
     }
     get models() {
         return this.model.models;
@@ -233,11 +224,11 @@ export class Base extends WithLazyGetterTrap {
                             let data = {};
 
                             if (
-                                !SERIALIZABLE_MODELS.includes(params.relation) &&
+                                !this._dynamicModels.includes(params.relation) &&
                                 typeof id === "number"
                             ) {
                                 return [4, id];
-                            } else if (!SERIALIZABLE_MODELS.includes(params.relation)) {
+                            } else if (!this._dynamicModels.includes(params.relation)) {
                                 throw new Error(
                                     "Trying to create a non serializable record" + params.relation
                                 );
@@ -497,6 +488,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         return new Model({
             model,
             traps: { set: setTrapsCache[modelName] },
+            dynamicModels: opts.dynamicModels,
         });
     }
 
@@ -1101,9 +1093,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 const fields = getFields(modelName);
 
                 for (const rawRec of rawRecords) {
-                    if (ignoreConnection[modelName].includes(rawRec.id)) {
-                        continue;
-                    }
                     const recorded = this.records[modelName].get(rawRec.id);
 
                     // Check if there are any missing fields for this record
@@ -1114,6 +1103,10 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                             connect(field, record, recorded);
                         }
                         delete missingFields[key];
+                    }
+
+                    if (ignoreConnection[modelName].includes(rawRec.id)) {
+                        continue;
                     }
 
                     for (const name in fields) {
