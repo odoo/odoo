@@ -460,6 +460,35 @@ form: module.record_id""" % (xml_id,)
             self._tag_record(child_rec, extra_vals={inverse_name: record.id})
         return rec_model, record.id
 
+    def _tag_website_image(self, el):
+        image_id = el.get("id")
+        image_url = el.get("url")
+
+        extension = image_url.rsplit(".", 1)[-1] if "." in image_url else "webp"
+
+        if "." in image_id:
+            name = image_id.rsplit(".", 1)[1]
+        else:
+            name = image_id
+
+        name += f".{extension}"
+
+        record = etree.Element("record", id=image_id, model="ir.attachment")
+
+        def create_field(name, value, **kwargs):
+            field = etree.Element("field", name=name, **kwargs)
+            if value is not None:
+                field.text = value
+            return field
+
+        record.append(create_field("public", "True", eval="True"))
+        record.append(create_field("name", el.get("name") or name))
+        record.append(create_field("type", "url"))
+        record.append(create_field("res_model", "ir.ui.view"))
+        record.append(create_field("url", image_url))
+
+        return self._tag_record(record)
+
     def _tag_template(self, el):
         # This helper transforms a <template> element into a <record> and forwards it
         tpl_id = el.get('id', el.get('t-name'))
@@ -598,6 +627,7 @@ form: module.record_id""" % (xml_id,)
         self.xml_filename = xml_filename
         self._tags = {
             'record': self._tag_record,
+            'website_image': self._tag_website_image,
             'delete': self._tag_delete,
             'function': self._tag_function,
             'menuitem': self._tag_menuitem,

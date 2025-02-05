@@ -184,6 +184,14 @@
         </rng:element>
     </rng:define>
 
+    <rng:define name="website_image">
+        <rng:element name="website_image">
+            <rng:attribute name="id"/>
+            <rng:attribute name="url"/>
+            <rng:optional><rng:attribute name="name"/></rng:optional>
+        </rng:element>
+    </rng:define>
+
     <rng:define name="template">
         <rng:element name="template">
             <rng:optional><rng:attribute name="id"/></rng:optional>
@@ -322,6 +330,7 @@
                     <rng:ref name="odoo_openerp_data"/>
                     <rng:ref name="menuitem" />
                     <rng:ref name="record" />
+                    <rng:ref name="website_image" />
                     <rng:ref name="template" />
                     <rng:ref name="delete" />
                     <rng:ref name="act_window" />
