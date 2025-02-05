@@ -71,7 +71,7 @@ wTourUtils.registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         wTourUtils.clickOnElement('add to cart button', ':iframe .s_add_to_cart_btn'),
         {
             content: "Wait for the redirection to the payment page",
-            trigger: "iframe h3:contains('Confirm order')",
+            trigger: ":iframe h3:contains('Confirm order')",
             timeout: 20000,
             run: () => null,
         },
