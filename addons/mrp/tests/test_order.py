@@ -5097,7 +5097,12 @@ class TestMrpOrder(TestMrpCommon):
     def test_workcenter_with_resource_calendar_from_another_company(self):
         """Test that only the resource calendars from the same
         company as the work center can be set."""
-        resource_calendar = self.env['resource.calendar'].search([('company_id', 'not in', [self.workcenter_1.company_id.id, False])], limit=1)
+        new_company = self.env['res.company'].create({'name': "new company"})
+        resource_calendar = self.env['resource.calendar'].create({
+            'name': 'Default Calendar',
+            'company_id': new_company.id,
+            'hours_per_day': 24,
+        })
         with self.assertRaises(UserError):
             self.workcenter_1.resource_calendar_id, = resource_calendar
 
