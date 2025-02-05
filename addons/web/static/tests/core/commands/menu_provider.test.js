@@ -15,32 +15,27 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { WebClient } from "@web/webclient/webclient";
 
 defineMenus([
-    { id: 0, children: [], name: "UglyHack", appID: 0, xmlid: "menu_0" },
-    { id: 1, children: [], name: "Contact", appID: 1, actionID: 1001, xmlid: "menu_1" },
+    { id: 0 }, // prevents auto-loading the first action
+    { id: 1, name: "Contact", actionID: 1001 },
     {
         id: 2,
+        name: "Sales",
+        actionID: 1002,
+        appID: 2,
         children: [
             {
                 id: 3,
-                children: [],
                 name: "Info",
                 appID: 2,
                 actionID: 1003,
-                xmlid: "menu_3",
             },
             {
                 id: 4,
-                children: [],
                 name: "Report",
                 appID: 2,
                 actionID: 1004,
-                xmlid: "menu_4",
             },
         ],
-        name: "Sales",
-        appID: 2,
-        actionID: 1002,
-        xmlid: "menu_2",
     },
 ]);
 const testAction = useTestClientAction();
