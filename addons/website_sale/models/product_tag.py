@@ -8,7 +8,7 @@ class ProductTag(models.Model):
     _inherit = ['website.multi.mixin', 'product.tag']
 
     visible_on_ecommerce = fields.Boolean(
-        string="Visible on eCommerce",
+        string="Show on Website",
         help="Whether the tag is displayed on the eCommerce.",
         default=True,
     )
