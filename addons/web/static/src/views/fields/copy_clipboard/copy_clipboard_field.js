@@ -48,6 +48,7 @@ export class CopyClipboardButtonField extends CopyClipboardField {
     static props = {
         ...CopyClipboardField.props,
         btnClass: { type: String, optional: true },
+        isLink: { type: Boolean, optional: true },
     };
     static defaultProps = {
         ...CopyClipboardField.defaultProps,
@@ -55,6 +56,9 @@ export class CopyClipboardButtonField extends CopyClipboardField {
     };
 
     get copyButtonClassName() {
+        if (this.props.isLink) {
+            this.props.btnClass = "link";
+        }
         return `o_btn_${this.type}_copy btn-${this.props.btnClass} rounded-2`;
     }
 }
@@ -90,6 +94,7 @@ export const copyClipboardButtonField = {
     extractProps: (fieldInfo) => ({
         ...extractProps(fieldInfo),
         btnClass: fieldInfo.options.btn_class,
+        isLink: fieldInfo.options.is_link,
     }),
 };
 
