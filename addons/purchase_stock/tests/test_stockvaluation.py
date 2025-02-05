@@ -84,7 +84,7 @@ class TestStockValuation(TransactionCase):
         kgm_price = 100
         ap_price = kgm_price * ap.factor / kgm.factor
 
-        self.product1.uom_id = ap
+        self.product1.uom_id = kgm
 
         # Set vendor
         vendor = self.env['res.partner'].create(dict(name='The Replenisher'))
@@ -117,7 +117,7 @@ class TestStockValuation(TransactionCase):
             last_po_id = self.env[model_name].browse(int(purchase_order_id))
 
         order_line = last_po_id.order_line.search([('product_id', '=', self.product1.id)])
-        self.assertEqual(order_line.product_qty,
+        self.assertEqual(order_line.product_uom_qty,
             ap._compute_quantity(replenishment_uom_qty, kgm, rounding_method='HALF-UP'),
             'Quantities does not match')
 
@@ -130,7 +130,7 @@ class TestStockValuation(TransactionCase):
         picking.button_validate()
 
         self.assertEqual(move.stock_valuation_layer_ids.unit_cost,
-            last_po_id.currency_id.round(ap_price),
+            order_line.product_uom_id._compute_price(last_po_id.currency_id.round(ap_price), move.product_uom),
             "Wrong Unit price")
 
     def test_change_unit_cost_average_1(self):
