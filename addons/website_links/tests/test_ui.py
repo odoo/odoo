@@ -24,4 +24,4 @@ class TestUi(odoo.tests.HttpCase):
             'source_id': self.env['utm.source'].create({'name': 'Super Specific Source'}).id,
             'url': self.env["ir.config_parameter"].sudo().get_str("web.base.url") + '/contactus',
         }])
-        self.start_tour("/r", 'website_links_tour', login="admin")
+        self.start_tour(self.env['website'].get_client_action_url("/r"), 'website_links_tour', login="admin")
