@@ -1,4 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
+import { withSequence } from "@html_editor/utils/resource";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { markup } from "@odoo/owl";
@@ -19,11 +20,29 @@ export class AnchorPlugin extends Plugin {
     static shared = ["createOrEditAnchorLink"];
     resources = {
         on_clone_handlers: this.onClone.bind(this),
+        get_options_container_top_buttons: withSequence(
+            0,
+            this.getOptionsContainerTopButtons.bind(this)
+        ),
     };
 
     onClone({ cloneEl }) {
         const anchorEls = getElementsWithOption(cloneEl, anchorSelector, anchorExclude);
         anchorEls.forEach((anchorEl) => this.deleteAnchor(anchorEl));
+    }
+
+    getOptionsContainerTopButtons(el) {
+        if (!canHaveAnchor(el)) {
+            return [];
+        }
+
+        return [
+            {
+                class: "fa fa-fw fa-link oe_snippet_anchor btn btn-outline-info",
+                title: _t("Create and copy a link targeting this block or edit it"),
+                handler: this.createOrEditAnchorLink.bind(this),
+            },
+        ];
     }
 
     // TODO check if no other way when doing popup options.

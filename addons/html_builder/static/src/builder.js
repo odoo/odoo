@@ -107,6 +107,8 @@ export class Builder extends Component {
                     ref: this.props.overlayRef,
                 },
                 replaceSnippet: async (snippet) => await this.snippetModel.replaceSnippet(snippet),
+                saveSnippet: (snippetEl, cleanForSaveHandlers) =>
+                    this.snippetModel.saveSnippet(snippetEl, cleanForSaveHandlers),
             },
             this.env.services
         );
@@ -179,7 +181,7 @@ export class Builder extends Component {
                     "If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."
                 ),
                 confirm: () => this.props.closeEditor(),
-                cancel: () => {},
+                cancel: () => { },
             });
         } else {
             this.props.closeEditor();
@@ -187,9 +189,8 @@ export class Builder extends Component {
     }
 
     getInvisibleSelector(isMobile = this.props.isMobile) {
-        return `.o_snippet_invisible, ${
-            isMobile ? ".o_snippet_mobile_invisible" : ".o_snippet_desktop_invisible"
-        }`;
+        return `.o_snippet_invisible, ${isMobile ? ".o_snippet_mobile_invisible" : ".o_snippet_desktop_invisible"
+            }`;
     }
 
     async save() {

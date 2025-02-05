@@ -13,6 +13,7 @@ import { OperationPlugin } from "./plugins/operation_plugin";
 import { OverlayButtonsPlugin } from "./plugins/overlay_buttons/overlay_buttons_plugin";
 import { RemovePlugin } from "./plugins/remove/remove_plugin";
 import { ReplacePlugin } from "./plugins/replace/replace_plugin";
+import { SaveSnippetPlugin } from "./plugins/save_snippet/save_snippet_plugin";
 import { SetupEditorPlugin } from "./plugins/setup_editor_plugin";
 import { VisibilityPlugin } from "./plugins/visibility_plugin";
 
@@ -27,6 +28,7 @@ export const CORE_PLUGINS = [
     ReplacePlugin,
     RemovePlugin,
     ClonePlugin,
+    SaveSnippetPlugin,
     AnchorPlugin,
     DropZonePlugin,
     MediaWebsitePlugin,

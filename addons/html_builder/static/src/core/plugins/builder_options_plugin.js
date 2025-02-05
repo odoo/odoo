@@ -2,7 +2,6 @@ import { Plugin } from "@html_editor/plugin";
 import { uniqueId } from "@web/core/utils/functions";
 import { isRemovable } from "./remove/remove_plugin";
 import { isClonable } from "./clone/clone_plugin";
-import { canHaveAnchor } from "./anchor/anchor_plugin";
 import { getElementsWithOption } from "@html_builder/utils/utils";
 
 export class BuilderOptionsPlugin extends Plugin {
@@ -79,7 +78,7 @@ export class BuilderOptionsPlugin extends Plugin {
                 hasOverlayOptions: this.hasOverlayOptions(element),
                 isRemovable: isRemovable(element),
                 isClonable: isClonable(element),
-                canHaveAnchor: canHaveAnchor(element),
+                optionsContainerTopButtons: this.getOptionsContainerTopButtons(element),
             }));
 
         // Do not update the containers if they did not change.
@@ -114,6 +113,14 @@ export class BuilderOptionsPlugin extends Plugin {
             }
         }
         return false;
+    }
+
+    getOptionsContainerTopButtons(el) {
+        const buttons = [];
+        for (const getContainerButtons of this.getResource("get_options_container_top_buttons")) {
+            buttons.push(...getContainerButtons(el));
+        }
+        return buttons;
     }
 
     cleanForSave({ root }) {

@@ -1,6 +1,5 @@
-import { Component, markup } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { _t } from "@web/core/l10n/translation";
 import { defaultBuilderComponents } from "../core/default_builder_components";
 import {
     useVisibilityObserver,
@@ -25,7 +24,7 @@ export class OptionsContainer extends Component {
         editingElement: true, // HTMLElement from iframe
         isRemovable: false,
         isClonable: false,
-        canHaveAnchor: false,
+        containerTopButtons: { type: Array },
     };
 
     setup() {
@@ -38,15 +37,6 @@ export class OptionsContainer extends Component {
 
     get title() {
         return getSnippetName(this.env.getEditingElement());
-    }
-
-    // Checks if the element can be saved as a custom snippet.
-    get isSavable() {
-        const selector = "[data-snippet], a.btn";
-        // TODO `so_submit_button_selector` ?
-        const exclude = ".o_no_save, .s_donation_donate_btn, .s_website_form_send";
-        const el = this.props.editingElement;
-        return el.matches(selector) && !el.matches(exclude);
     }
 
     selectElement() {
@@ -80,28 +70,5 @@ export class OptionsContainer extends Component {
         this.env.editor.shared.clone.cloneElement(this.props.editingElement, {
             scrollToClone: true,
         });
-    }
-
-    async saveSnippet() {
-        const savedName = await this.props.snippetModel.saveSnippet(
-            this.props.editingElement,
-            this.env.editor.resources["clean_for_save_handlers"]
-        );
-        if (savedName) {
-            const message = markup(
-                _t(
-                    "Your custom snippet was successfully saved as <strong>%s</strong>. Find it in your snippets collection.",
-                    savedName
-                )
-            );
-            this.notification.add(message, {
-                type: "success",
-                autocloseDelay: 5000,
-            });
-        }
-    }
-
-    async createOrEditAnchorLink() {
-        await this.env.editor.shared.anchor.createOrEditAnchorLink(this.props.editingElement);
     }
 }
