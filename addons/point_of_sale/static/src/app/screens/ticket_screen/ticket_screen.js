@@ -82,7 +82,14 @@ export class TicketScreen extends Component {
 
         onMounted(this.onMounted);
         onWillStart(async () => {
-            await this.pos.getServerOrders();
+            try {
+                if (!this.pos.flagTicketLoad) {
+                    this.pos.flagTicketLoad = true;
+                    await this.pos.getServerOrders();
+                }
+            } finally {
+                this.pos.flagTicketLoad = false;
+            }
         });
     }
     onMounted() {

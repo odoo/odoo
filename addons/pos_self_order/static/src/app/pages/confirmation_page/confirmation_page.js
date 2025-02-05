@@ -37,7 +37,7 @@ export class ConfirmationPage extends Component {
             () => {
                 this.printOrder();
             },
-            () => [this.confirmedOrder.uiState.receiptReady]
+            () => [this.confirmedOrder?.uiState?.receiptReady]
         );
         onWillUnmount(() => {
             clearTimeout(this.defaultTimeout);
@@ -138,7 +138,7 @@ export class ConfirmationPage extends Component {
     }
 
     backToHome() {
-        if (!this.setDefautLanguage()) {
+        if (this.confirmedOrder.uiState.receiptReady && !this.setDefautLanguage()) {
             this.router.navigate("default");
         }
     }

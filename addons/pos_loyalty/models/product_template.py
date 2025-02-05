@@ -17,8 +17,8 @@ class ProductTemplate(models.Model):
         fields = self.env['product.template']._load_pos_data_fields(data['pos.config'][0]['id'])
         product_tmpl_ids = products.product_tmpl_id.read(fields=fields, load=False)
         self._process_pos_ui_product_product(product_tmpl_ids, config_id)
-
-        data['pos.session'][0]['_pos_special_products_ids'] += [product.id for product in reward_products if product.id not in [p["id"] for p in res]]
+        res_product_ids = [product_id for product_tmpl in res for product_id in product_tmpl['product_variant_ids']]
+        data['pos.session'][0]['_pos_special_products_ids'] += [product.id for product in reward_products if product.id not in res_product_ids]
         res.extend(product_tmpl_ids)
 
         return res
