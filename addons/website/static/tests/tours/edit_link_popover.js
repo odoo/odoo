@@ -25,7 +25,7 @@ const clickEditLink = [{
     trigger: ':iframe html:not(:has(.o_edit_menu_popover))', // popover should be closed
 }];
 
-registerWebsitePreviewTour('edit_link_popover_1', {
+registerWebsitePreviewTour('edit_link_popover', {
     url: '/',
     edition: true,
 }, () => [
@@ -139,19 +139,7 @@ registerWebsitePreviewTour('edit_link_popover_1', {
     {
         content: "Check that the modal is closed",
         trigger: ":iframe html:not(.modal-body)",
-    }
-]);
-
-registerWebsitePreviewTour('edit_link_popover_2', {
-    url: '/',
-    edition: true,
-}, () => [
-    // 1. Test links in page content (web_editor)
-    ...insertSnippet({
-        id: 's_text_image',
-        name: 'Text - Image',
-        groupName: "Content",
-    }),
+    },
     // 3. Test other links (CTA in navbar & links in footer)
     {
         content: "Click CTA in navbar",

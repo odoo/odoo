@@ -53,6 +53,9 @@ registerWebsitePreviewTour('edit_menus', {
     {
         trigger: "body:not(:has(.oe_menu_editor))",
     },
+    {
+        trigger: ":iframe body:contains(welcome to your)",
+    },
     clickOnExtraMenuItem({}, true),
     {
         content: "There should be a new megamenu item.",
