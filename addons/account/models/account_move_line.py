@@ -1684,7 +1684,7 @@ class AccountMoveLine(models.Model):
             names.append(move_name)
         if move_ref and move_ref != '/':
             names.append(f"({move_ref})")
-        if line_name and line_name != move_name and line_name != '/':
+        if line_name and line_name not in ['/', move_name, f"{move_ref} - {move_name}"]:
             names.append(line_name)
         name = ' '.join(names)
         return name or _('Draft Entry')
