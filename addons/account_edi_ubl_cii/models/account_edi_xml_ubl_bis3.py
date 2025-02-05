@@ -425,6 +425,21 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                     "The VAT number of the supplier does not seem to be valid. It should be of the form: NO179728982MVA."
                 ) if not mva.is_valid(vat) or len(vat) != 14 or vat[:2] != 'NO' or vat[-3:] != 'MVA' else "",
             })
+
+        # PEPPOL-COMMON-R042: Danish organization number (CVR) MUST be stated in the correct format.
+        def check_dk_cvr(cvr_num):
+            return len(cvr_num) == 10 and cvr_num.startswith('DK')
+
+        for partner_type in ('supplier', 'customer'):
+            if vals[partner_type].country_id.code == 'DK':
+                # The CVR is the VAT number if they have one.
+                if not check_dk_cvr(vals[partner_type].peppol_endpoint) or not check_dk_cvr(vals[partner_type].vat):
+                    constraints.update({
+                        f'dk_{partner_type}_cvr_not_valid': _(
+                            "The CVR of the %s does not seem to be valid. It should be of the form: DK12345674.",
+                            partner_type,
+                        )
+                    })
         return constraints
 
     def _import_retrieve_partner_vals(self, tree, role):
