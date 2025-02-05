@@ -33,7 +33,6 @@ export class PosData extends Reactive {
         this.records = {};
         this.opts = new DataServiceOptions();
         this.channels = [];
-        this.onNotified = getOnNotified(this.bus, odoo.access_token);
 
         this.network = {
             warningTriggered: false,
@@ -42,6 +41,7 @@ export class PosData extends Reactive {
             unsyncData: [],
         };
 
+        this.initializeWebsocket();
         await this.intializeDataRelation();
         browser.addEventListener("online", () => {
             if (this.network.offline) {
@@ -59,8 +59,12 @@ export class PosData extends Reactive {
         this.bus.addEventListener("connect", this.reconnectWebSocket.bind(this));
     }
 
-    reconnectWebSocket() {
+    initializeWebsocket() {
         this.onNotified = getOnNotified(this.bus, odoo.access_token);
+    }
+
+    reconnectWebSocket() {
+        this.initializeWebsocket();
 
         const channels = [...this.channels];
         this.channels = [];
