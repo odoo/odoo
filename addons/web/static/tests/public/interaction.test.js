@@ -587,6 +587,7 @@ describe("handling crashes", () => {
         await expect(startInteraction(Test, TemplateTest)).rejects.toThrow(
             "The selector should be defined as a static property on the class Test, not on the instance"
         );
+
     });
 
     test("crash if first-level key on dynamicContent is a directive, not a selector", async () => {
