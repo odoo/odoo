@@ -286,7 +286,7 @@ patch(PosStore.prototype, {
                     ),
                 });
 
-                this.models["loyalty.reward"].delete(reward.id);
+                this.models["loyalty.reward"].delete(reward);
             }
         }
     },

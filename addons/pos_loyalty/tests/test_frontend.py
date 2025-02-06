@@ -2433,3 +2433,27 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosCheapestProductTaxInclude', login="pos_user")
+
+    def test_loyalty_program_specific_product_domain(self):
+
+        self.env['loyalty.program'].create({
+            'name': '10% Discount Coupon Program - Discount on Specific Products',
+            'program_type': 'coupons',
+            'trigger': 'with_code',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                 'minimum_qty': 1
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'required_points': 1,
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'specific',
+                'discount_product_domain': '[("product_variant_ids", "ilike", "screen")]',
+            })],
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+        })
+        self.main_pos_config.write({'gift_card_settings': 'create_set'})
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosLoyaltyTourErrorInRewardDomain', login="pos_user")
