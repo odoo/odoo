@@ -81,7 +81,7 @@ class ReportSaleDetails(models.AbstractModel):
             currency = order.session_id.currency_id
 
             for line in order.lines:
-                if line.qty >= 0:
+                if line.price_subtotal_incl >= 0:
                     products_sold, taxes = self._get_products_and_taxes_dict(line, products_sold, taxes, currency)
                 else:
                     refund_done, refund_taxes = self._get_products_and_taxes_dict(line, refund_done, refund_taxes, currency)
@@ -332,7 +332,7 @@ class ReportSaleDetails(models.AbstractModel):
         key1 = line.product_id.product_tmpl_id.pos_categ_ids[0].name if len(line.product_id.product_tmpl_id.pos_categ_ids) else _('Not Categorized')
         products.setdefault(key1, {})
         products[key1].setdefault(key2, [0.0, 0.0, 0.0])
-        products[key1][key2][0] += line.qty
+        products[key1][key2][0] += abs(line.qty)
         products[key1][key2][1] += self._get_product_total_amount(line)
         products[key1][key2][2] += line.price_subtotal
 
