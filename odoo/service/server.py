@@ -1298,9 +1298,9 @@ def preload_registries(dbnames):
     rc = 0
     for dbname in dbnames:
         try:
-            update_module = config['init'] or config['update']
             threading.current_thread().dbname = dbname
-            registry = Registry.new(dbname, update_module=update_module)
+            update_module = config['init'] or config['update']
+            registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'])
 
             # run post-install tests
             if config['test_enable']:
