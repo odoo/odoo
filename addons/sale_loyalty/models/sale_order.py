@@ -135,12 +135,14 @@ class SaleOrder(models.Model):
         return new_orders
 
     def action_confirm(self):
+        has_claimable_rewards = False
         for order in self:
             all_coupons = order.applied_coupon_ids | order.coupon_point_ids.coupon_id | order.order_line.coupon_id
             if any(order._get_real_points_for_coupon(coupon) < 0 for coupon in all_coupons):
                 raise ValidationError(_("One or more rewards on the sale order is invalid. Please check them."))
             order._update_programs_and_rewards()
             order._add_loyalty_history_lines()
+            has_claimable_rewards |= bool(order._get_claimable_rewards())
 
         # Remove any coupon from 'current' program that don't claim any reward.
         # This is to avoid ghost coupons that are lost forever.
@@ -154,6 +156,17 @@ class SaleOrder(models.Model):
             coupon.points += change
         res = super().action_confirm()
         self._send_reward_coupon_mail()
+        if has_claimable_rewards and len(self) == 1 and not isinstance(res, dict) and res:
+            res = {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'type': 'info',
+                    'title': _("Rewards Available"),
+                    'message': _("There are available rewards not added to this order."),
+                    'next': {'type': 'ir.actions.act_window_close'},
+                },
+            }
         return res
 
     def _action_cancel(self):
@@ -1467,10 +1480,3 @@ class SaleOrder(models.Model):
             self._force_lines_to_invoice_policy_order()
             invoice = self._create_invoices(final=True)
             invoice.action_post()
-
-    def get_rewards_data(self):
-        self.ensure_one()
-        self._update_programs_and_rewards()
-        return {
-            'claimable_rewards_count': len(self._get_claimable_rewards()),
-        }
