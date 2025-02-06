@@ -405,7 +405,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         })
         rinv = self.env['account.move'].browse(credit_note_wizard.refund_moves()['res_id'])
         if qty is not None:
-            rinv.invoice_line_ids.quantity = qty
+            rinv.with_context(prevent_price_compute=True).invoice_line_ids.quantity = qty
         rinv.action_post()
         return rinv
 
