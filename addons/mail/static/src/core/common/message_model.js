@@ -492,9 +492,13 @@ export class Message extends Record {
     }
 
     async toggleStar() {
-        await this.store.env.services.orm.silent.call("mail.message", "toggle_message_starred", [
-            [this.id],
-        ]);
+        this.store.insert(
+            await this.store.env.services.orm.silent.call(
+                "mail.message",
+                "toggle_message_starred",
+                [[this.id]]
+            )
+        );
     }
 
     async unfollow() {
