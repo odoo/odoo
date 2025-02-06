@@ -19,13 +19,13 @@ export class AnchorDialog extends Component {
         this.state = useState({ isValid: true });
     }
 
-    onConfirmClick() {
+    async onConfirmClick() {
         const newAnchorName = this.props.formatAnchor(this.inputRef.el.value);
         if (newAnchorName === this.props.currentAnchorName) {
             this.props.close();
         }
 
-        this.state.isValid = this.props.renameAnchor(newAnchorName);
+        this.state.isValid = await this.props.renameAnchor(newAnchorName);
         if (this.state.isValid) {
             this.props.close();
         }

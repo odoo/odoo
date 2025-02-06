@@ -103,13 +103,14 @@ export class AnchorPlugin extends Plugin {
                         // Open the "rename anchor" dialog.
                         this.services.dialog.add(AnchorDialog, {
                             currentAnchorName: decodeURIComponent(element.id),
-                            renameAnchor: (anchorName) => {
+                            renameAnchor: async (anchorName) => {
                                 const alreadyExists = !!this.document.getElementById(anchorName);
                                 if (alreadyExists) {
                                     return false;
                                 }
 
                                 this.setAnchorName(element, anchorName);
+                                await this.createOrEditAnchorLink(element);
                                 return true;
                             },
                             deleteAnchor: () => {
