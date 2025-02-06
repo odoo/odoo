@@ -253,8 +253,16 @@ export class ProductTemplate extends Base {
 
     exactMatch(searchWord) {
         const fields = ["barcode", "default_code"];
-        return fields.some(
-            (field) => this[field] && this[field].toLowerCase().includes(searchWord)
+        const variantMatch = this.product_variant_ids.some(
+            (variant) =>
+                (variant.default_code && variant.default_code.toLowerCase().includes(searchWord)) ||
+                variant.product_template_variant_value_ids.some((vv) =>
+                    vv.name.toLowerCase().includes(searchWord)
+                )
+        );
+        return (
+            variantMatch ||
+            fields.some((field) => this[field] && this[field].toLowerCase().includes(searchWord))
         );
     }
 
