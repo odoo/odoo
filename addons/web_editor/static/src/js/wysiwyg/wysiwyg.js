@@ -2168,7 +2168,10 @@ export class Wysiwyg extends Component {
         coloredElements = coloredElements.filter(element => this.odooEditor.document.contains(element));
 
         const coloredTds = coloredElements && coloredElements.length && Array.isArray(coloredElements) && coloredElements.filter(coloredElement => coloredElement.classList.contains('o_selected_td'));
-        if (coloredTds.length) {
+        if (selectedTds.length === 1 && !previewMode) {
+            const sel = this.odooEditor.document.getSelection();
+            sel.collapseToEnd();
+        } else if (coloredTds.length) {
             const propName = colorType === 'text' ? 'color' : 'background-color';
             for (const td of coloredTds) {
                 // Make it important so it has priority over selection color.
