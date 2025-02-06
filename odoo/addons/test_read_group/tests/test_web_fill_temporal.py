@@ -209,6 +209,71 @@ class TestFillTemporal(common.TransactionCase):
             [], groupby=['date:month'], aggregates=['__count', 'value:sum'])
         self.assertEqual(groups, expected)
 
+    def test_multiple_groupby(self):
+        self.Model.create([
+            {'date': '1916-08-19', 'value': 1},
+            {'date': '1916-08-20', 'value': 2},
+            {'date': '1916-12-14', 'value': 1},
+            {'date': '1916-12-14', 'value': 1},
+            {'date': False, 'value': 1},
+            {'date': False, 'value': 2},
+        ])
+
+        expected = [
+            {
+                "date:month": ("1916-08-01", "August 1916"),
+                "value": 1,
+                "__extra_domain": ["&", "&", ("date", ">=", "1916-08-01"), ("date", "<", "1916-09-01"), ("value", "=", 1)],
+                "__count": 1,
+            },
+            {
+                "date:month": ("1916-08-01", "August 1916"),
+                "value": 2,
+                "__extra_domain": ["&", "&", ("date", ">=", "1916-08-01"), ("date", "<", "1916-09-01"), ("value", "=", 2)],
+                "__count": 1,
+            },
+            {
+                "date:month": ("1916-09-01", "September 1916"),
+                "value": False,
+                "__count": 0,
+                "__extra_domain": ["&", "&", ("date", ">=", "1916-09-01"), ("date", "<", "1916-10-01"), ("value", "=", False)],
+            },
+            {
+                "date:month": ("1916-10-01", "October 1916"),
+                "value": False,
+                "__count": 0,
+                "__extra_domain": ["&", "&", ("date", ">=", "1916-10-01"), ("date", "<", "1916-11-01"), ("value", "=", False)],
+            },
+            {
+                "date:month": ("1916-11-01", "November 1916"),
+                "value": False,
+                "__count": 0,
+                "__extra_domain": ["&", "&", ("date", ">=", "1916-11-01"), ("date", "<", "1916-12-01"), ("value", "=", False)],
+            },
+            {
+                "date:month": ("1916-12-01", "December 1916"),
+                "value": 1,
+                "__extra_domain": ["&", "&", ("date", ">=", "1916-12-01"), ("date", "<", "1917-01-01"), ("value", "=", 1)],
+                "__count": 2,
+            },
+            {
+                "date:month": False,
+                "value": 1,
+                "__extra_domain": ["&", ("date", "=", False), ("value", "=", 1)],
+                "__count": 1,
+            },
+            {
+                "date:month": False,
+                "value": 2,
+                "__extra_domain": ["&", ("date", "=", False), ("value", "=", 2)],
+                "__count": 1,
+            },
+        ]
+
+        groups = self.Model.with_context(fill_temporal=True).formatted_read_group(
+            [], groupby=['date:month', 'value'], aggregates=['__count'])
+        self.assertEqual(groups, expected)
+
     def test_date_range_groupby_week(self):
         """Test data with weeks starting on Sunday."""
         self.Model.create([
