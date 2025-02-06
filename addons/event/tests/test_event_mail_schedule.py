@@ -485,48 +485,6 @@ class TestMailSchedule(EventMailCommon):
         self.assertTrue(before_scheduler.mail_done)
         self.assertFalse(before_scheduler.error_datetime)
 
-    @mute_logger('odoo.addons.event.models.event_mail', 'odoo.addons.mail.models.mail_render_mixin')
-    @users('user_eventmanager')
-    def test_event_mail_schedule_fail_global_composer_message(self):
-        """ Test message logged depending on issue when trying to send communications """
-        cron = self.env.ref("event.event_mail_scheduler").sudo()
-
-        # set template write_uid
-        user_admin = self.env.ref('base.user_admin')
-        self.template_reminder.with_user(user_admin).write({'name': 'Take Ownership', 'body_html': '<p>Failing <t t-out="object.evnetypo_id"/></p>'})
-
-        before_scheduler = self.test_event.event_mail_ids.filtered(lambda s: s.interval_type == "before_event")
-        self.assertTrue(before_scheduler)
-        self._create_registrations(self.test_event, 2)
-
-        # sending fails
-        current_dt = self.reference_now + relativedelta(days=3)
-        with self.mock_datetime_and_now(current_dt), \
-            self.mock_mail_gateway(), self.mock_mail_app():
-            cron.method_direct_trigger()
-        self.assertFalse(before_scheduler.mail_done)
-        self.assertMailNotifications(
-            self._new_msgs[0],
-            [{
-                'content': f'Communication for {self.test_event.name}',
-                'message_type': 'notification',
-                'notif': [
-                    {'partner': user_admin.partner_id, 'status': 'sent', 'type': 'inbox'},
-                    {'partner': self.user_eventmanager.partner_id, 'status': 'sent', 'type': 'inbox'},
-                    {'partner': self.user_eventmanager.company_id.partner_id, 'status': 'ready', 'type': 'email'},
-                ],
-                'subtype': 'mail.mt_note',
-                'mail_mail_values': {
-                    'body': f'<p>Communication for {self.test_event.name} scheduled on {before_scheduler.scheduled_date} failed. '
-                            f'This is due to an error in template <a href="{before_scheduler.get_base_url()}/odoo/mail.template/{self.template_reminder.id}">'
-                            f'{self.template_reminder.name} ({self.template_reminder.id})</a>.'
-                            f'<br><br>There is an issue with dynamic placeholder. Actual error received is: '
-                            '<br>\'event.registration\' object has no attribute \'evnetypo_id\'.</p>',
-                },
-            }]
-        )
-        self.assertEqual(before_scheduler.error_datetime, current_dt.replace(microsecond=0))
-
     @users('user_eventmanager')
     def test_event_mail_schedule_fail_global_no_registrations(self):
         """ Be sure no registrations = no crash in composer """

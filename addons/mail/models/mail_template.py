@@ -178,6 +178,38 @@ class MailTemplate(models.Model):
                 upd_values = target._mail_template_default_values()
                 template.update(upd_values)
 
+    def _get_dynamic_fields(self):
+        return {
+            'subject',
+            'email_from',
+            'email_to',
+            'partner_to',
+            'email_cc',
+            'reply_to',
+            'scheduled_date',
+            'lang',
+            'body_html',
+        }
+
+    def _validate_template(self, fields={}):
+        self.ensure_one()
+
+        model = self.sudo().model_id.model
+        if not model:
+            return
+        record = self.env[model].search([], limit=1)
+        if not record:
+            return
+
+        dynamic_fields = self._get_dynamic_fields()
+        if fields and 'model_id' not in fields:
+            dynamic_fields &= set(fields.keys())
+
+        try:
+            self._generate_template(record.ids, dynamic_fields, find_or_create_partners=False)
+        except (UserError, AttributeError, ValueError) as e:
+            raise ValidationError(_("Error: %(error)s!", error=str(e))) from e
+
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------
@@ -195,15 +227,22 @@ class MailTemplate(models.Model):
             if self.env[model]._abstract:
                 raise ValidationError(_('You may not define a template on an abstract model: %s', model))
 
+    def _check_template(self, vals_list):
+        for template, vals in zip(self, vals_list):
+            template._validate_template(fields=vals)
+
     @api.model_create_multi
     def create(self, vals_list):
         self._check_abstract_models(vals_list)
-        return super().create(vals_list)\
-            ._fix_attachment_ownership()
+        records = super().create(vals_list)
+        records._check_template(vals_list)
+        records._fix_attachment_ownership()
+        return records
 
     def write(self, vals):
         self._check_abstract_models([vals])
         super().write(vals)
+        self._check_template([vals])
         self._fix_attachment_ownership()
         return True
 
