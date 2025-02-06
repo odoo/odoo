@@ -111,6 +111,15 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
             ),
         }]
 
+    def _get_partner_party_legal_entity_vals_list(self, partner):
+        # EXTEND 'account.edi.xml.ubl_20'
+        partners_party_legal = super()._get_partner_party_legal_entity_vals_list(partner)
+        for partner_party_legal in partners_party_legal:
+            if partner_party_legal['commercial_partner'].country_code != 'SA':
+                partner_party_legal['company_id'] = False
+
+        return partners_party_legal
+
     def _l10n_sa_get_payment_means_code(self, invoice):
         """ Return payment means code to be used to set the value on the XML file """
         return 'unknown'
