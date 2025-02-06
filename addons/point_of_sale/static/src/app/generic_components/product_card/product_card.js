@@ -7,6 +7,8 @@ export class ProductCard extends Component {
         name: String,
         product: Object,
         productId: Number | String,
+        showProductImages: { type: Boolean, optional: true },
+        showExtraPrice: { type: Boolean, optional: true },
         comboExtraPrice: { String, optional: true },
         color: { type: [Number, undefined], optional: true },
         imageUrl: [String, Boolean],
@@ -21,6 +23,8 @@ export class ProductCard extends Component {
         onProductInfoClick: () => {},
         class: "",
         showWarning: false,
+        showProductImages: true,
+        showExtraPrice: false,
     };
 
     get productQty() {
