@@ -3,7 +3,7 @@ import { Avatar } from "@mail/views/web/fields/avatar/avatar";
 import { Component, onWillStart } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
-import { Many2One, useMany2One } from "@web/views/fields/many2one/many2one";
+import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
 import {
     buildM2OFieldDescription,
     extractM2OFieldProps,
@@ -23,23 +23,25 @@ export class Many2OneAvatarEmployeeField extends Component {
     };
 
     setup() {
-        this.m2o = useMany2One(() => this.props);
-
         onWillStart(async () => {
             this.isHrUser = await user.hasGroup("hr.group_hr_user");
         });
+    }
+
+    get m2oProps() {
+        return {
+            ...computeM2OProps(this.props),
+            relation: this.relation,
+            canQuickCreate: false,
+        };
     }
 
     get relation() {
         return this.props.relation ?? (this.isHrUser ? "hr.employee" : "hr.employee.public");
     }
 
-    get m2oProps() {
-        return {
-            ...this.m2o.computeProps(),
-            relation: this.relation,
-            canQuickCreate: false,
-        };
+    get value() {
+        return this.props.record.data[this.props.name];
     }
 }
 

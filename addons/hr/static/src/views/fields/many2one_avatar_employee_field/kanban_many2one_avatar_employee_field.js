@@ -4,7 +4,7 @@ import { Component, onWillStart } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
-import { Many2One, useMany2One } from "@web/views/fields/many2one/many2one";
+import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
 import {
     buildM2OFieldDescription,
     extractM2OFieldProps,
@@ -26,23 +26,33 @@ export class KanbanMany2OneAvatarEmployeeField extends Component {
     };
 
     setup() {
-        this.m2o = useMany2One(() => this.props);
-
         onWillStart(async () => {
             this.isHrUser = await user.hasGroup("hr.group_hr_user");
         });
+    }
+
+    get displayName() {
+        return this.props.displayAvatarName && this.value ? this.value[1] : "";
+    }
+
+    get m2oProps() {
+        return {
+            ...computeM2OProps(this.props),
+            relation: this.relation,
+            canQuickCreate: false,
+        };
     }
 
     get relation() {
         return this.props.relation ?? (this.isHrUser ? "hr.employee" : "hr.employee.public");
     }
 
-    get m2oProps() {
-        return {
-            ...this.m2o.computeProps(),
-            relation: this.relation,
-            canQuickCreate: false,
-        };
+    get resId() {
+        return this.value && this.value[0];
+    }
+
+    get value() {
+        return this.props.record.data[this.props.name];
     }
 }
 

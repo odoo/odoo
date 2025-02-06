@@ -4,16 +4,16 @@
     <t t-name="resource_mail.Many2OneAvatarResourceField">
         <Many2One t-props="m2oProps">
             <t t-set-slot="start">
-                <t t-if="m2o.value !== false">
+                <t t-if="value !== false">
                     <t t-if="resourceType === 'material'">
                         <span class="o_avatar o_m2o_avatar">
-                            <span class="d-inline-flex align-items-center justify-content-center rounded o_material_resource cursor-default me-1" t-att-title="m2o.displayName">
+                            <span class="d-inline-flex align-items-center justify-content-center rounded o_material_resource cursor-default me-1" t-att-title="value[1]">
                                 <i class="fa fa-wrench"/>
                             </span>
                         </span>
                     </t>
                     <t t-elif="resourceType === 'user'">
-                        <AvatarResource resModel="m2o.relation" resId="m2o.resId"/>
+                        <AvatarResource resModel="relation" resId="value[0]"/>
                     </t>
                 </t>
             </t>
@@ -25,7 +25,7 @@
                         </span>
                     </t>
                     <t t-elif="itemsScope.record.resource_type === 'user'">
-                        <img class="rounded me-1" t-attf-src="/web/image/{{m2o.relation}}/{{itemsScope.record.id}}/avatar_128"/>
+                        <img class="rounded me-1" t-attf-src="/web/image/{{relation}}/{{itemsScope.record.id}}/avatar_128"/>
                     </t>
                     <t t-esc="itemsScope.record.display_name"/>
                 </span>

@@ -1,7 +1,7 @@
 import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { Many2One, useMany2One } from "./many2one";
+import { computeM2OProps, Many2One } from "./many2one";
 import { standardFieldProps } from "../standard_field_props";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 
@@ -98,18 +98,11 @@ export class Many2OneField extends Component {
         string: { type: String, optional: true },
     };
 
-    setup() {
-        this.m2o = useMany2One(() => this.props);
-    }
-
     get m2oProps() {
-        return this.m2o.computeProps();
+        return computeM2OProps(this.props);
     }
 }
 
 registry.category("fields").add("many2one", {
     ...buildM2OFieldDescription(Many2OneField),
 });
-
-// @todo: MCM remove this line
-export const many2OneField = {};

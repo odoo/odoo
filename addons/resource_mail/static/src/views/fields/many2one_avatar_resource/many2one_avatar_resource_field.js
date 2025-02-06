@@ -2,7 +2,7 @@ import { Avatar } from "@mail/views/web/fields/avatar/avatar";
 import { Component } from "@odoo/owl";
 import { AvatarCardResourcePopover } from "@resource_mail/components/avatar_card_resource/avatar_card_resource_popover";
 import { registry } from "@web/core/registry";
-import { Many2One, useMany2One } from "@web/views/fields/many2one/many2one";
+import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
 import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
 
 class AvatarResource extends Avatar {
@@ -14,21 +14,25 @@ class Many2OneAvatarResourceField extends Component {
     static components = { AvatarResource, Many2One };
     static props = { ...Many2OneField.props };
 
-    setup() {
-        this.m2o = useMany2One(() => this.props);
-    }
-
     get m2oProps() {
         return {
-            ...this.m2o.computeProps(),
+            ...computeM2OProps(this.props),
             specification: {
                 resource_type: {},
             },
         };
     }
 
+    get relation() {
+        return this.props.record.fields[this.props.name].relation;
+    }
+
     get resourceType() {
         return this.props.record.data.resource_type;
+    }
+
+    get value() {
+        return this.props.record.data[this.props.name];
     }
 }
 

@@ -26,84 +26,42 @@ export function m2oTupleFromData(data) {
     return [id, name];
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// HOOKS
-///////////////////////////////////////////////////////////////////////////////
-
-export function useMany2One(getProps) {
-    const domain = (p) => getFieldDomain(p.record, p.name, p.domain);
-
-    const linkCssClass = (p) => {
-        const evalContext = p.record.evalContextWithVirtualIds;
-        for (const decorationName in p.decorations) {
-            if (evaluateBooleanExpr(p.decorations[decorationName], evalContext)) {
+export function computeM2OProps(fieldProps) {
+    const computeLinkCssClass = () => {
+        const evalContext = fieldProps.record.evalContextWithVirtualIds;
+        for (const decorationName in fieldProps.decorations) {
+            if (evaluateBooleanExpr(fieldProps.decorations[decorationName], evalContext)) {
                 return `text-${decorationName}`;
             }
         }
         return "";
     };
 
-    const openActionContext = (p) => {
-        const { context, name, openActionContext, record } = p;
-        return makeContext(
-            [openActionContext || context, record.fields[name].context],
-            record.evalContext
-        );
-    };
-
-    const definition = (p) => p.record.fields[p.name];
-
-    const relation = (p) => definition(p).relation;
-
-    const value = (p) => p.record.data[p.name];
-
-    const update = (p, value, otherChanges) =>
-        p.record.update({ [p.name]: value, ...otherChanges });
-
     return {
-        get definition() {
-            return definition(getProps());
+        canCreate: fieldProps.canCreate,
+        canCreateEdit: fieldProps.canCreateEdit,
+        canOpen: fieldProps.canOpen,
+        canQuickCreate: fieldProps.canQuickCreate,
+        canScanBarcode: fieldProps.canScanBarcode,
+        canWrite: fieldProps.canWrite,
+        context: fieldProps.context,
+        domain: () => getFieldDomain(fieldProps.record, fieldProps.name, fieldProps.domain),
+        id: fieldProps.id,
+        linkCssClass: computeLinkCssClass(),
+        nameCreateField: fieldProps.nameCreateField,
+        openActionContext: () => {
+            const { context, name, openActionContext, record } = fieldProps;
+            return makeContext(
+                [openActionContext || context, record.fields[name].context],
+                record.evalContext
+            );
         },
-        get displayName() {
-            const v = value(getProps());
-            return v ? v[1] : null;
-        },
-        get relation() {
-            return relation(getProps());
-        },
-        get resId() {
-            const v = value(getProps());
-            return v ? v[0] : false;
-        },
-        get value() {
-            return value(getProps());
-        },
-        computeProps() {
-            const p = getProps();
-            return {
-                canCreate: p.canCreate,
-                canCreateEdit: p.canCreateEdit,
-                canOpen: p.canOpen,
-                canQuickCreate: p.canQuickCreate,
-                canScanBarcode: p.canScanBarcode,
-                canWrite: p.canWrite,
-                context: p.context,
-                domain: () => domain(p),
-                id: p.id,
-                linkCssClass: linkCssClass(p),
-                nameCreateField: p.nameCreateField,
-                openActionContext: () => openActionContext(p),
-                placeholder: p.placeholder,
-                readonly: p.readonly,
-                relation: relation(p),
-                string: p.string || definition(p).string || "",
-                update: (value) => update(p, value),
-                value: value(p),
-            };
-        },
-        update(value, otherChanges = {}) {
-            return update(getProps(), value, otherChanges);
-        },
+        placeholder: fieldProps.placeholder,
+        readonly: fieldProps.readonly,
+        relation: fieldProps.record.fields[fieldProps.name].relation,
+        string: fieldProps.string || fieldProps.record.fields[fieldProps.name].string || "",
+        update: (value) => fieldProps.record.update({ [fieldProps.name]: value }),
+        value: fieldProps.record.data[fieldProps.name],
     };
 }
 

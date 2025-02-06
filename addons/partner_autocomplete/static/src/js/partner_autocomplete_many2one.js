@@ -1,7 +1,7 @@
 import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { Many2One, useMany2One } from "@web/views/fields/many2one/many2one";
+import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
 import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
 import { usePartnerAutocomplete } from "./partner_autocomplete_core";
 
@@ -11,13 +11,12 @@ class PartnerAutoCompleteMany2one extends Component {
     static props = { ...Many2OneField.props };
 
     setup() {
-        this.m2o = useMany2One(() => this.props);
         this.partnerAutocomplete = usePartnerAutocomplete();
     }
 
     get m2oProps() {
         return {
-            ...this.m2o.computeProps(),
+            ...computeM2OProps(this.props),
             otherSources: this.sources,
         };
     }

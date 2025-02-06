@@ -1,6 +1,6 @@
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { Many2One, useMany2One } from "@web/views/fields/many2one/many2one";
+import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
 import {
     buildM2OFieldDescription,
     extractM2OFieldProps,
@@ -18,20 +18,22 @@ export class Many2OneAvatarUserField extends Component {
     };
 
     setup() {
-        this.m2o = useMany2One(() => this.props);
         if (this.props.withCommand) {
             useAssignUserCommand();
         }
     }
 
-    get relation() {
-        // This getter is used by `useAssignUserCommand`
-        // @todo: remove this getter
-        return this.m2o.relation;
+    get m2oProps() {
+        return computeM2OProps(this.props);
     }
 
-    get m2oProps() {
-        return this.m2o.computeProps();
+    get relation() {
+        // This getter is used by `useAssignUserCommand`
+        return this.props.record.fields[this.props.name].relation;
+    }
+
+    get value() {
+        return this.props.record.data[this.props.name];
     }
 }
 

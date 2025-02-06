@@ -1,6 +1,6 @@
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { Many2One, useMany2One } from "@web/views/fields/many2one/many2one";
+import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
 import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
 
 export class StockPickFrom extends Component {
@@ -8,12 +8,8 @@ export class StockPickFrom extends Component {
     static components = { Many2One };
     static props = { ...Many2OneField.props };
 
-    setup() {
-        this.m2o = useMany2One(() => this.props);
-    }
-
     get m2oProps() {
-        const props = this.m2o.computeProps();
+        const props = computeM2OProps(this.props);
         return {
             ...props,
             value: props.value || [0, this._quant_display_name()],

@@ -2,7 +2,7 @@ import { Component, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useRecordObserver } from "@web/model/relational_model/utils";
-import { Many2One, useMany2One } from "../many2one/many2one";
+import { computeM2OProps, Many2One } from "../many2one/many2one";
 import { extractM2OFieldProps, Many2OneField } from "../many2one/many2one_field";
 
 /**
@@ -70,31 +70,22 @@ export class ReferenceField extends Component {
                 }
             });
         }
-
-        this.m2o = useMany2One(() => this.props);
     }
 
     get m2oProps() {
         const value = this.getValue();
-        const p = {
-            ...this.m2o.computeProps(),
+        return {
+            ...computeM2OProps(this.props),
             relation: this.getRelation(),
             value: value && [value.resId, value.displayName],
             update: this.updateM2O.bind(this),
         };
-        delete p.hideModel;
-        delete p.modelField;
-        return p;
     }
     get selection() {
         if (!this._isCharField(this.props) && !this.hideModelSelector) {
             return this.props.record.fields[this.props.name].selection;
         }
         return [];
-    }
-
-    get relation() {
-        return this.getRelation();
     }
 
     get hideModelSelector() {

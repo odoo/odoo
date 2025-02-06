@@ -15,9 +15,9 @@ export class PurchaseOrderLineProductField extends ProductLabelSectionAndNoteFie
         super.setup();
         this.orm = useService("orm");
 
-        let currentValue = this.m2o.value;
+        let currentValue = this.props.record.data[this.props.name];
         useRecordObserver((record) => {
-            if (record.isInEdition && this.m2o.value) {
+            if (record.isInEdition && this.props.record.data[this.props.name]) {
                 if (!currentValue || currentValue[0] != record.data[this.props.name][0]) {
                     // Field was updated if line was open in edit mode,
                     //      field is not emptied,

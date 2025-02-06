@@ -1,6 +1,6 @@
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { KanbanMany2One, useMany2One } from "../many2one/many2one";
+import { computeM2OProps, KanbanMany2One } from "../many2one/many2one";
 import {
     buildM2OFieldDescription,
     extractM2OFieldProps,
@@ -12,12 +12,16 @@ export class KanbanMany2OneAvatarField extends Component {
     static components = { KanbanMany2One };
     static props = { ...Many2OneField.props };
 
-    setup() {
-        this.m2o = useMany2One(() => this.props);
+    get m2oProps() {
+        return computeM2OProps(this.props);
     }
 
-    get m2oProps() {
-        return this.m2o.computeProps();
+    get relation() {
+        return this.props.record.fields[this.props.name].relation;
+    }
+
+    get value() {
+        return this.props.record.data[this.props.name];
     }
 }
 

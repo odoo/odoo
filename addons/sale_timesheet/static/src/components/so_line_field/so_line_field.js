@@ -1,6 +1,6 @@
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { Many2One, useMany2One } from "@web/views/fields/many2one/many2one";
+import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
 import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
 
 export class SoLineField extends Component {
@@ -8,23 +8,19 @@ export class SoLineField extends Component {
     static components = { Many2One };
     static props = { ...Many2OneField.props };
 
-    setup() {
-        this.m2o = useMany2One(() => this.props);
-    }
-
     get m2oProps() {
         return {
-            ...this.m2o.computeProps(),
+            ...computeM2OProps(this.props),
             update: (value) => {
-                const otherChanges = {};
+                const changes = { [this.props.name]: value };
                 if (
                     // field is unset AND the old & new so_lines are different
                     !this.props.record.data.is_so_line_edited &&
-                    this.m2o.value[0] != value[0]?.id
+                    this.props.record.data[this.props.name][0] != value[0]?.id
                 ) {
-                    otherChanges.is_so_line_edited = true;
+                    changes.is_so_line_edited = true;
                 }
-                return this.m2o.update(value, otherChanges);
+                return this.props.record.update(changes);
             },
         };
     }

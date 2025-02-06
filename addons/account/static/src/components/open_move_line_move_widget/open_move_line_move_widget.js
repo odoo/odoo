@@ -1,6 +1,7 @@
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { Many2One, useMany2One } from "@web/views/fields/many2one/many2one";
+import { useService } from "@web/core/utils/hooks";
+import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
 import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
 
 class LineOpenMoveWidget extends Component {
@@ -9,20 +10,21 @@ class LineOpenMoveWidget extends Component {
     static props = { ...Many2OneField.props };
 
     setup() {
-        this.m2o = useMany2One(() => this.props);
+        this.action = useService("action");
     }
 
     get m2oProps() {
         return {
-            ...this.m2o.computeProps(),
+            ...computeM2OProps(this.props),
             openRecordAction: () => this.openAction(),
         };
     }
 
     openAction() {
+        const value = this.props.record.data[this.props.name];
         return this.action.doActionButton({
             type: "object",
-            resId: this.m2o.resId,
+            resId: value && value[0],
             name: "action_open_business_doc",
             resModel: "account.move.line",
         });

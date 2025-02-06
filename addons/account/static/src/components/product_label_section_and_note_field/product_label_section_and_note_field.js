@@ -4,7 +4,7 @@ import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { Many2One, useMany2One } from "@web/views/fields/many2one/many2one";
+import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
 import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 
@@ -40,8 +40,6 @@ export class ProductLabelSectionAndNoteField extends Component {
     static props = { ...Many2OneField.props };
 
     setup() {
-        this.m2o = useMany2One(() => this.props);
-
         const labelNode = useRef("labelNodeRef");
         const productNode = useRef("productNodeRef");
 
@@ -107,26 +105,17 @@ export class ProductLabelSectionAndNoteField extends Component {
         return label;
     }
 
-    get linkHref() {
-        if (!this.m2o.value) {
-            return "/";
-        }
-        const relation = this.m2o.relation.includes(".")
-            ? this.m2o.relation
-            : `m-${this.m2o.relation}`;
-        return `/odoo/${relation}/${this.m2o.resId}`;
-    }
-
     get m2oProps() {
         return {
-            ...this.m2o.computeProps(),
+            ...computeM2OProps(this.props),
             canOpen: !this.props.readonly || this.isProductClickable,
             placeholder: _t("Search a product"),
         };
     }
 
     get productName() {
-        return this.m2o.displayName;
+        const value = this.props.record.data[this.props.name];
+        return value && value[1];
     }
 
     switchLabelVisibility() {

@@ -1,7 +1,7 @@
 import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { Many2One, useMany2One } from "../many2one/many2one";
+import { computeM2OProps, Many2One } from "../many2one/many2one";
 import { extractM2OFieldProps, Many2OneField } from "../many2one/many2one_field";
 
 export class Many2OneReferenceField extends Component {
@@ -9,12 +9,8 @@ export class Many2OneReferenceField extends Component {
     static components = { Many2One };
     static props = { ...Many2OneField.props };
 
-    setup() {
-        this.m2o = useMany2One(() => this.props);
-    }
-
     get m2oProps() {
-        const props = this.m2o.computeProps();
+        const props = computeM2OProps(this.props);
 
         const relation = this.relation;
         const value = this.props.record.data[this.props.name];

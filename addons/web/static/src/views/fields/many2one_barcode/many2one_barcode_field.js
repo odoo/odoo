@@ -1,7 +1,7 @@
 import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { Many2One, useMany2One } from "../many2one/many2one";
+import { computeM2OProps, Many2One } from "../many2one/many2one";
 import {
     buildM2OFieldDescription,
     extractM2OFieldProps,
@@ -13,12 +13,8 @@ export class Many2OneBarcodeField extends Component {
     static components = { Many2One };
     static props = { ...Many2OneField.props };
 
-    setup() {
-        this.m2o = useMany2One(() => this.props);
-    }
-
     get m2oProps() {
-        return this.m2o.computeProps();
+        return computeM2OProps(this.props);
     }
 }
 

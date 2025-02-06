@@ -1,7 +1,7 @@
 import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { KanbanMany2One, useMany2One } from "@web/views/fields/many2one/many2one";
+import { computeM2OProps, KanbanMany2One } from "@web/views/fields/many2one/many2one";
 import {
     buildM2OFieldDescription,
     extractM2OFieldProps,
@@ -18,16 +18,20 @@ export class KanbanMany2OneAvatarUserField extends Component {
         displayAvatarName: { type: Boolean, optional: true },
     };
 
-    setup() {
-        this.m2o = useMany2One(() => this.props);
-    }
-
     get displayName() {
-        return this.props.displayAvatarName ? this.m2o.displayName : "";
+        return this.props.displayAvatarName && this.value ? this.value[1] : "";
     }
 
     get m2oProps() {
-        return this.m2o.computeProps();
+        return computeM2OProps(this.props);
+    }
+
+    get relation() {
+        return this.props.record.fields[this.props.name].relation;
+    }
+
+    get value() {
+        return this.props.record.data[this.props.name];
     }
 }
 
