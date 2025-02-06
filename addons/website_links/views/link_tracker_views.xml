@@ -55,11 +55,12 @@
         <field name="model">link.tracker</field>
         <field name="arch" type="xml">
             <list>
-                <field name="url"/>
-                <field name="label" string="name" />
-                <field name="campaign_id"/>
-                <field name="medium_id"/>
-                <field name="source_id"/>
+                <field name="label" string="Name" />
+                <field name="count" string="Click"/>
+                <field name="url" string="Links"/>
+                <field name="campaign_id" string="Campaign"/>
+                <field name="medium_id" string="Medium"/>
+                <field name="source_id" string="Source"/>
                 <button name="action_visit_page" type="object" string="Visit link" icon="fa-link"/>
             </list>
         </field>
