@@ -92,64 +92,6 @@ class Cart(PaymentPortal):
         return {}
 
     @route(
-        route='/shop/cart/update',
-        type='jsonrpc',
-        auth='public',
-        methods=['POST'],
-        website=True,
-        sitemap=False
-    )
-    def update_cart(
-        self,
-        line_id,
-        product_id,
-        quantity,
-    ):
-        if not line_id:
-            return  # Ensures this method is only used from the cart page.
-
-        order_sudo = request.cart
-
-        values = order_sudo._cart_update(
-            line_id=line_id,
-            product_id=product_id,
-            add_qty=None,  # Needed to ensure the removal feature of the line.
-            set_qty=quantity,
-        )
-
-        # If the line is a combo product line, and it already has combo items, we need to update
-        # the combo item quantities as well.
-        line = request.env['sale.order.line'].browse(values['line_id'])
-        if line.product_type == 'combo' and line.linked_line_ids:
-            for linked_line_id in line.linked_line_ids:
-                if values['quantity'] != linked_line_id.product_uom_qty:
-                    order_sudo._cart_update(
-                        product_id=linked_line_id.product_id.id,
-                        line_id=linked_line_id.id,
-                        set_qty=values['quantity'],
-                    )
-
-        values['cart_quantity'] = order_sudo.cart_quantity
-        values['cart_ready'] = order_sudo._is_cart_ready()
-        values['amount'] = order_sudo.amount_total
-        values['minor_amount'] = payment_utils.to_minor_currency_units(
-            order_sudo.amount_total, order_sudo.currency_id
-        )
-        values['website_sale.cart_lines'] = request.env['ir.ui.view']._render_template(
-            'website_sale.cart_lines', {
-                'website_sale_order': order_sudo,
-                'date': fields.Date.today(),
-                'suggested_products': order_sudo._cart_accessories()
-            }
-        )
-        values['website_sale.total'] = request.env['ir.ui.view']._render_template(
-            'website_sale.total', {
-                'website_sale_order': order_sudo,
-            }
-        )
-        return values
-
-    @route(
         route='/shop/cart/add',
         type='jsonrpc',
         auth='public',
@@ -222,6 +164,64 @@ class Cart(PaymentPortal):
         values['tracking_info'] = self._get_tracking_information(order_sudo, line_ids.values())
         values['cart_quantity'] = order_sudo.cart_quantity
 
+        return values
+
+    @route(
+        route='/shop/cart/update',
+        type='jsonrpc',
+        auth='public',
+        methods=['POST'],
+        website=True,
+        sitemap=False
+    )
+    def update_cart(
+        self,
+        line_id,
+        product_id,
+        quantity,
+    ):
+        if not line_id:
+            return  # Ensures this method is only used from the cart page.
+
+        order_sudo = request.cart
+
+        values = order_sudo._cart_update(
+            line_id=line_id,
+            product_id=product_id,
+            add_qty=None,  # Needed to ensure the removal feature of the line.
+            set_qty=quantity,
+        )
+
+        # If the line is a combo product line, and it already has combo items, we need to update
+        # the combo item quantities as well.
+        line = request.env['sale.order.line'].browse(values['line_id'])
+        if line.product_type == 'combo' and line.linked_line_ids:
+            for linked_line_id in line.linked_line_ids:
+                if values['quantity'] != linked_line_id.product_uom_qty:
+                    order_sudo._cart_update(
+                        product_id=linked_line_id.product_id.id,
+                        line_id=linked_line_id.id,
+                        set_qty=values['quantity'],
+                    )
+
+        values['cart_quantity'] = order_sudo.cart_quantity
+        values['cart_ready'] = order_sudo._is_cart_ready()
+        values['amount'] = order_sudo.amount_total
+        values['minor_amount'] = payment_utils.to_minor_currency_units(
+            order_sudo.amount_total, order_sudo.currency_id
+        )
+        values['website_sale.cart_lines'] = request.env['ir.ui.view']._render_template(
+            'website_sale.cart_lines', {
+                'website_sale_order': order_sudo,
+                'date': fields.Date.today(),
+                'suggested_products': order_sudo._cart_accessories()
+            }
+        )
+        values['website_sale.total'] = request.env['ir.ui.view']._render_template(
+            'website_sale.total', {
+                'website_sale_order': order_sudo,
+            }
+        )
         return values
 
     @route(

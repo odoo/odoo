@@ -237,24 +237,6 @@ class SaleOrder(models.Model):
             return self.env['website'].browse(website_id).get_base_url()
         return super()._get_note_url()
 
-    def _cart_update_order_line(self, product_id, quantity, order_line, **kwargs):
-        self.ensure_one()
-
-        if order_line and quantity <= 0:
-            # Remove zero or negative lines
-            order_line.unlink()
-            order_line = self.env['sale.order.line']
-        elif order_line:
-            # Update existing line
-            update_values = self._prepare_order_line_update_values(order_line, quantity, **kwargs)
-            if update_values:
-                self._update_cart_line_values(order_line, update_values)
-        elif quantity > 0:
-            # Create new line
-            order_line_values = self._prepare_order_line_values(product_id, quantity, **kwargs)
-            order_line = self.env['sale.order.line'].sudo().create(order_line_values)
-        return order_line
-
     def _update_address(self, partner_id, fnames=None):
         if not fnames:
             return
@@ -429,6 +411,24 @@ class SaleOrder(models.Model):
     # hook to be overridden
     def _verify_updated_quantity(self, order_line, product_id, new_qty, **kwargs):
         return new_qty, ''
+
+    def _cart_update_order_line(self, product_id, quantity, order_line, **kwargs):
+        self.ensure_one()
+
+        if order_line and quantity <= 0:
+            # Remove zero or negative lines
+            order_line.unlink()
+            order_line = self.env['sale.order.line']
+        elif order_line:
+            # Update existing line
+            update_values = self._prepare_order_line_update_values(order_line, quantity, **kwargs)
+            if update_values:
+                self._update_cart_line_values(order_line, update_values)
+        elif quantity > 0:
+            # Create new line
+            order_line_values = self._prepare_order_line_values(product_id, quantity, **kwargs)
+            order_line = self.env['sale.order.line'].sudo().create(order_line_values)
+        return order_line
 
     def _prepare_order_line_values(
         self, product_id, quantity, linked_line_id=False,
