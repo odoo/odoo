@@ -4834,6 +4834,10 @@ class MailThread(models.AbstractModel):
         return {"attachment_ids", "body", "email_add_signature", "message_type", "partner_ids", "subtype_xmlid"}
 
     @api.model
+    def _get_allowed_message_update_params(self):
+        return {"attachment_ids", "body", "partner_ids", "scheduled_date"}
+
+    @api.model
     def _get_allowed_access_params(self):
         return set()
 

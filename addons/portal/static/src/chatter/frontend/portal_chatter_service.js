@@ -33,8 +33,31 @@ export class PortalChatterService {
         return shadow;
     }
 
+    async initChatter(threadModel, threadId, rpcParams) {
+        const thread = this.store.Thread.insert({ model: threadModel, id: threadId });
+        Object.assign(thread, {
+            access_token: rpcParams.token,
+            hash: rpcParams.hash,
+            pid: rpcParams.pid,
+        });
+        const data = await rpc(
+            "/portal/chatter_init",
+            {
+                thread_model: threadModel,
+                thread_id: threadId,
+                ...thread.rpcParams,
+            },
+            { silent: true }
+        );
+        this.store.insert(data);
+        odoo.portalChatterReady.resolve(true);
+    }
+
     async initialize(env) {
         const chatterEl = document.querySelector(".o_portal_chatter");
+        if (!chatterEl) {
+            return;
+        }
         const props = {
             resId: parseInt(chatterEl.getAttribute("data-res_id")),
             resModel: chatterEl.getAttribute("data-res_model"),
@@ -60,23 +83,11 @@ export class PortalChatterService {
                 dev: env.debug,
             }).mount(shadow);
         });
-        const thread = this.store.Thread.insert({ model: props.resModel, id: props.resId });
-        Object.assign(thread, {
-            access_token: chatterEl.getAttribute("data-token"),
+        await this.initChatter(props.resModel, props.resId, {
+            token: chatterEl.getAttribute("data-token"),
             hash: chatterEl.getAttribute("data-hash"),
             pid: parseInt(chatterEl.getAttribute("data-pid")),
         });
-        const data = await rpc(
-            "/portal/chatter_init",
-            {
-                thread_model: props.resModel,
-                thread_id: props.resId,
-                ...thread.rpcParams,
-            },
-            { silent: true }
-        );
-        this.store.insert(data);
-        odoo.portalChatterReady.resolve(true);
     }
 }
 

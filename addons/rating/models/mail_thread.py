@@ -3,7 +3,8 @@
 import datetime
 import markupsafe
 
-from odoo import _, fields, models, tools
+from odoo import _, api, fields, models, tools
+from odoo.addons.mail.tools.discuss import Store
 
 
 class MailThread(models.AbstractModel):
@@ -189,3 +190,38 @@ class MailThread(models.AbstractModel):
         if same_author and rating.res_model == message.model and rating.res_id == message.res_id:
             rating.message_id = message.id
         super()._message_post_after_hook(message, msg_values)
+
+    def _get_allowed_message_post_params(self):
+        return super()._get_allowed_message_post_params() | {"rating_value"}
+
+    @api.model
+    def _get_allowed_message_update_params(self):
+        return super()._get_allowed_message_update_params() | {"rating_value"}
+
+    @api.model
+    def _get_allowed_access_params(self):
+        return super()._get_allowed_access_params() | {"rating_value"}
+
+    def _message_update_content(self, message, body, *args, rating_value=None, **kwargs):
+        if rating_value:
+            message.rating_id.rating = rating_value
+            message.rating_id.feedback = tools.html2plaintext(body)
+        elif rating_value is not None:
+            rating_ids = message.rating_ids
+            rating_ids.message_id = False
+            rating_ids.unlink()
+        return super()._message_update_content(
+            message, body, *args, rating_value=rating_value, **kwargs
+        )
+
+    def _thread_to_store(self, store: Store, fields, *, request_list=None):
+        super()._thread_to_store(store, fields, request_list=request_list)
+        for thread in self:
+            if (
+                request_list
+                and "ratingStats" in request_list
+                and hasattr(thread, "rating_get_stats")
+            ):
+                store.add(
+                    thread, {"rating_stats": thread.sudo().rating_get_stats()}, as_thread=True
+                )

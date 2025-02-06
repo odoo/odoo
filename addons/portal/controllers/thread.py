@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.http import request
+from odoo.fields import Domain
 from odoo.addons.mail.controllers import thread
 from odoo.addons.portal.utils import get_portal_partner
 
@@ -24,3 +25,17 @@ class ThreadController(thread.ThreadController):
             if partner and message.author_id == partner:
                 return True
         return super()._can_edit_message(message, hash=hash, pid=pid, token=token, **kwargs)
+
+    def _get_fetch_domain(self, thread, **kwargs):
+        if in_portal := kwargs.pop("in_portal", False):
+            kwargs["external_subtype_only"] = True
+        domain = super()._get_fetch_domain(thread, **kwargs)
+        model = request.env[thread._name]
+        if in_portal:
+            domain = Domain.AND(
+                [
+                    domain,
+                    model._fields["website_message_ids"].get_comodel_domain(model),
+                ]
+            )
+        return domain

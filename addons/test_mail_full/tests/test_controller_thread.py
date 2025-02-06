@@ -4,6 +4,20 @@ from odoo.tests import tagged
 
 @tagged("-at_install", "post_install", "mail_controller")
 class TestPortalThreadController(MailControllerThreadCommon):
+    def _check_fetched_messages(self, record, messages, allowed, route_kw):
+        """Check which messages should be displayed in portal."""
+        super()._check_fetched_messages(record, messages, allowed, route_kw)
+        if allowed == "only_comments":
+            if not self.env.user._is_internal():
+                self._assert_fetched_messages(record, messages, route_kw)
+            route_kw["in_portal"] = True
+            self._assert_fetched_messages(record, messages, route_kw)
+
+    def _assert_fetched_messages(self, record, messages, route_kw):
+        fetched_data = self._message_fetch(record, route_kw)
+        self.assertNotEqual(len(fetched_data["messages"]), len(messages))
+        self.assertEqual(len(fetched_data["messages"]), 1)
+        self.assertEqual(fetched_data["data"]["mail.message"][0].get("is_note"), False)
 
     def test_message_post_portal_no_partner(self):
         """Test access of message post for portal without partner."""
@@ -121,5 +135,39 @@ class TestPortalThreadController(MailControllerThreadCommon):
                 test_partners(self.user_employee, True, all_partners, route_kw=bad_sign),
                 test_partners(self.user_employee, True, all_partners, route_kw=token),
                 test_partners(self.user_employee, True, all_partners, route_kw=sign),
+            ),
+        )
+
+    def test_message_fetch_access_portal(self):
+        record = self.env["mail.test.portal.no.partner"].create({"name": "Test"})
+        token, bad_token, sign, bad_sign, _ = self._get_sign_token_params(record)
+        self._execute_message_fetch_subtests(
+            record,
+            (
+                (self.user_public, False),
+                (self.user_public, False, bad_token),
+                (self.user_public, False, bad_sign),
+                (self.user_public, "only_comments", token),
+                (self.user_public, "only_comments", sign),
+                (self.guest, False),
+                (self.guest, False, bad_token),
+                (self.guest, False, bad_sign),
+                (self.guest, "only_comments", token),
+                (self.guest, "only_comments", sign),
+                (self.user_portal, "only_comments"),
+                (self.user_portal, "only_comments", bad_token),
+                (self.user_portal, "only_comments", bad_sign),
+                (self.user_portal, "only_comments", token),
+                (self.user_portal, "only_comments", sign),
+                (self.user_employee, "only_comments"),
+                (self.user_employee, "only_comments", bad_token),
+                (self.user_employee, "only_comments", bad_sign),
+                (self.user_employee, "only_comments", token),
+                (self.user_employee, "only_comments", sign),
+                (self.user_admin, "only_comments"),
+                (self.user_admin, "only_comments", bad_token),
+                (self.user_admin, "only_comments", bad_sign),
+                (self.user_admin, "only_comments", token),
+                (self.user_admin, "only_comments", sign),
             ),
         )
