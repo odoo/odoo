@@ -50,6 +50,7 @@ class MailMessage(models.Model):
             'model',
             'published_date_str',
             'res_id',
+            'starred',
             'subtype_id',
         }
 
