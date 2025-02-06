@@ -530,7 +530,7 @@ class L10nEsEdiTbaiDocument(models.Model):
     def _get_importe_desglose_es_partner(self, base_lines, is_refund):
         AccountTax = self.env['account.tax']
 
-        def grouping_function(base_line, tax_data):
+        def tax_details_info_grouping_function(base_line, tax_data):
             tax = tax_data['tax']
 
             return {
@@ -542,16 +542,8 @@ class L10nEsEdiTbaiDocument(models.Model):
                 'tax_scope': tax.tax_scope,
             }
 
-        base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, grouping_function)
+        base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, tax_details_info_grouping_function)
         values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
-
-        total_amount = 0.0
-        total_retention = 0.0
-        for values in values_per_grouping_key.values():
-            if values['grouping_key'] and values['grouping_key']['l10n_es_type'] == 'retencion':
-                total_retention += values['tax_amount']
-            else:
-                total_amount += values['base_amount'] + values['tax_amount']
 
         tax_details_info = self._build_tax_details_info(values_per_grouping_key.values())
         invoice_info = {
@@ -561,6 +553,25 @@ class L10nEsEdiTbaiDocument(models.Model):
                 'S2': tax_details_info['sujeto_isp'],
             },
         }
+
+        total_amount = 0.0
+        total_retention = 0.0
+        for values in values_per_grouping_key.values():
+            if values['grouping_key'] and values['grouping_key']['l10n_es_type'] == 'retencion':
+                total_retention += values['tax_amount']
+            else:
+                total_amount += values['tax_amount']
+
+        # Aggregate the base lines again (with no grouping) to add the base amount to the total.
+        def totals_grouping_function(base_line, tax_data):
+            return True
+
+        base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, totals_grouping_function)
+        values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
+
+        for values in values_per_grouping_key.values():
+            total_amount += values['base_amount']
+
         return {
             'invoice_info': invoice_info,
             'total_amount': total_amount,
@@ -571,7 +582,7 @@ class L10nEsEdiTbaiDocument(models.Model):
     def _get_importe_desglose_foreign_partner(self, base_lines, is_refund):
         AccountTax = self.env['account.tax']
 
-        def grouping_function(base_line, tax_data):
+        def tax_details_info_grouping_function(base_line, tax_data):
             tax = tax_data['tax']
 
             return {
@@ -583,16 +594,8 @@ class L10nEsEdiTbaiDocument(models.Model):
                 'tax_scope': tax.tax_scope,
             }
 
-        base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, grouping_function)
+        base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, tax_details_info_grouping_function)
         values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
-
-        total_amount = 0.0
-        total_retention = 0.0
-        for values in values_per_grouping_key.values():
-            if values['grouping_key'] and values['grouping_key']['l10n_es_type'] == 'retencion':
-                total_retention += values['tax_amount']
-            else:
-                total_amount += values['base_amount'] + values['tax_amount']
 
         invoice_info = {}
         for scope, target_key in (('service', 'PrestacionServicios'), ('consu', 'Entrega')):
@@ -608,6 +611,25 @@ class L10nEsEdiTbaiDocument(models.Model):
                     'S1': tax_details_info['sujeto'],
                     'S2': tax_details_info['sujeto_isp'],
                 }
+
+        total_amount = 0.0
+        total_retention = 0.0
+        for values in values_per_grouping_key.values():
+            if values['grouping_key'] and values['grouping_key']['l10n_es_type'] == 'retencion':
+                total_retention += values['tax_amount']
+            else:
+                total_amount += values['tax_amount']
+
+        # Aggregate the base lines again (with no grouping) to add the base amount to the total.
+        def totals_grouping_function(base_line, tax_data):
+            return True
+
+        base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, totals_grouping_function)
+        values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
+
+        for values in values_per_grouping_key.values():
+            total_amount += values['base_amount']
+
         return {
             'invoice_info': invoice_info,
             'total_amount': total_amount,
