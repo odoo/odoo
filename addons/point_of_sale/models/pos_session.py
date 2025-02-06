@@ -863,8 +863,16 @@ class PosSession(models.Model):
         if not float_is_zero(rounding_difference['amount'], precision_rounding=self.currency_id.rounding) or not float_is_zero(rounding_difference['amount_converted'], precision_rounding=self.currency_id.rounding):
             rounding_vals = [self._get_rounding_difference_vals(rounding_difference['amount'], rounding_difference['amount_converted'])]
 
-        MoveLine.create(tax_vals)
+        tax_lines = MoveLine.create(tax_vals)
         move_line_ids = MoveLine.create([self._get_sale_vals(key, amounts['amount'], amounts['amount_converted']) for key, amounts in sales.items()])
+        # tax_tag_invert of the move lines should have the same value than the corresponding tax lines
+        for move_line in move_line_ids.filtered(lambda ml: ml.tax_ids and ml.tax_tag_ids):
+            tlines = tax_lines.filtered(lambda tl: tl.tax_line_id in move_line.tax_ids and tl.tax_tag_ids)
+            for tline in tlines:
+                tax_tags = [tag for tag in tline.tax_tag_ids if tag in move_line.tax_tag_ids]
+                if tax_tags:
+                    move_line.tax_tag_invert = tline.tax_tag_invert
+                    break
         for key, ml_id in zip(sales.keys(), move_line_ids.ids):
             sales[key]['move_line_id'] = ml_id
         MoveLine.create(
