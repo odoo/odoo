@@ -40,8 +40,36 @@
                         <field name="source_id"/>
                     </div>
                 </group>
+                <group>
+                    <div class="o_row">
+                        <label for="label" string="name"/>
+                        <field name="label"/>
+                    </div>
+                </group>
             </form>
         </field>
+    </record>
+
+    <record id="website_link_tracker_view_tree" model="ir.ui.view">
+        <field name="name">link.tracker.list.view</field>
+        <field name="model">link.tracker</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="url"/>
+                <field name="label" string="name" />
+                <field name="campaign_id"/>
+                <field name="medium_id"/>
+                <field name="source_id"/>
+                <button name="action_visit_page" type="object" string="Visit link" icon="fa-link"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_link_tracker_tree" model="ir.actions.act_window">
+        <field name="name">Link Tracker</field>
+        <field name="res_model">link.tracker</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="website_link_tracker_view_tree"/>
     </record>
 
     <menuitem id="menu_link_tracker"
@@ -49,4 +77,9 @@
         sequence="25"
         parent="website.menu_current_page"
         action="website.website_preview"/>
+
+    <menuitem id="menu_tracked_link_view_menu" name="Tracked Links"
+        sequence="50"
+        parent="website.menu_reporting"
+        action="website_links.action_link_tracker_tree"/>
 </odoo>
