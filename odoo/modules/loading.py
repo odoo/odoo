@@ -25,7 +25,7 @@ from .module_graph import ModuleGraph
 from .registry import Registry
 
 if typing.TYPE_CHECKING:
-    from collections.abc import Iterable
+    from collections.abc import Collection, Iterable
     from odoo.api import Environment
     from odoo.sql_db import BaseCursor
     from odoo.tests.result import OdooTestResult
@@ -275,11 +275,12 @@ def load_module_graph(
                         lines.append(f"{module_name}.access_{xmlid},access_{xmlid},{module_name}.model_{xmlid},base.group_user,1,0,0,0")
                     _logger.warning('\n'.join(lines))
 
-        updating = tools.config.options['init'] or tools.config.options['update']
         test_time = 0.0
         test_queries = 0
         test_results = None
-        if tools.config['test_enable'] and (needs_update or not updating):
+        # allow to run at_install tests without updating modules
+        update_from_config = tools.config['update'] or tools.config['init']
+        if tools.config['test_enable'] and (needs_update or not update_from_config):
             from odoo.tests import loader  # noqa: PLC0415
             suite = loader.make_suite([module_name], 'at_install')
             if suite.countTestCases():
@@ -352,6 +353,8 @@ def load_modules(
     registry: Registry,
     *,
     update_module: bool = False,
+    upgrade_modules: Collection[str] = (),
+    install_modules: Collection[str] = (),
     new_db_demo: bool = False,
 ) -> None:
     """ Load the modules for a registry object that has just been created.  This
@@ -359,6 +362,8 @@ def load_modules(
 
         :param registry: The new inited registry object used to load modules.
         :param update_module: Whether to update (install, upgrade, or uninstall) modules. Defaults to ``False``
+        :param upgrade_modules: A collection of module names to upgrade.
+        :param install_modules: A collection of module names to install.
         :param new_db_demo: Whether to install demo data for new database. Defaults to ``False``
     """
     initialize_sys_path()
@@ -378,7 +383,7 @@ def load_modules(
             _logger.info("init db")
             modules_db.initialize(cr)
 
-        if 'base' in tools.config['update'] or 'all' in tools.config['update']:
+        if 'base' in upgrade_modules:
             cr.execute("update ir_module_module set state=%s where name=%s and state=%s", ('to upgrade', 'base', 'installed'))
 
         # STEP 1: LOAD BASE (must be done before module dependencies can be computed for later steps)
@@ -419,17 +424,15 @@ def load_modules(
             _logger.info('updating modules list')
             Module.update_list()
 
-            _check_module_names(cr, itertools.chain(tools.config['init'], tools.config['update']))
+            _check_module_names(cr, itertools.chain(install_modules, upgrade_modules))
 
-            module_names = [k for k, v in tools.config['init'].items() if v]
-            if module_names:
-                modules = Module.search([('state', '=', 'uninstalled'), ('name', 'in', module_names)])
+            if install_modules:
+                modules = Module.search([('state', '=', 'uninstalled'), ('name', 'in', tuple(install_modules))])
                 if modules:
                     modules.button_install()
 
-            module_names = [k for k, v in tools.config['update'].items() if v]
-            if module_names:
-                modules = Module.search([('state', 'in', ('installed', 'to upgrade')), ('name', 'in', module_names)])
+            if upgrade_modules:
+                modules = Module.search([('state', 'in', ('installed', 'to upgrade')), ('name', 'in', tuple(upgrade_modules))])
                 if modules:
                     modules.button_upgrade()
 
@@ -512,9 +515,6 @@ def load_modules(
             # Cleanup orphan records
             env['ir.model.data']._process_end(registry.updated_modules)
             env.flush_all()
-
-        for kind in ('init', 'update'):
-            tools.config[kind] = {}
 
         # STEP 5: Uninstall modules to remove
         if update_module:

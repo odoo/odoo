@@ -125,6 +125,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
         db_name: str,
         *,
         update_module: bool = False,
+        install_modules: Collection[str] = (),
+        upgrade_modules: Collection[str] = (),
         new_db_demo: bool | None = None,
     ) -> Registry:
         """Create and return a new registry for the given database name.
@@ -132,6 +134,12 @@ class Registry(Mapping[str, type["BaseModel"]]):
         :param db_name: The name of the database to associate with the Registry instance.
 
         :param update_module: If True, update modules while loading the registry. Defaults to ``False``.
+
+        :param install_modules: Names of modules to install. Their direct or indirect dependency
+                                modules will also be installed. Defaults to an empty tuple.
+
+        :param upgrade_modules: Names of modules to upgrade. Their direct or indirect dependent
+                                modules will also be upgraded. Defaults to an empty tuple.
 
         :param new_db_demo: Whether to install demo data for the new database. If set to ``None``, the value will be
                             determined by the ``not config['without_demo']``. Defaults to ``None``
@@ -156,7 +164,9 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     new_db_demo = not config['without_demo']
                 load_modules(
                     registry,
-                    update_module=update_module,
+                    update_module=update_module or bool(upgrade_modules or install_modules),
+                    upgrade_modules=upgrade_modules,
+                    install_modules=install_modules,
                     new_db_demo=new_db_demo,
                 )
             except Exception:
