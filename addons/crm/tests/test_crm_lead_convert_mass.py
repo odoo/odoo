@@ -89,7 +89,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
                 self.assertEqual(new_partner.name, 'Amy Wong')
                 self.assertEqual(new_partner.email, 'amy.wong@test.example.com')
 
-        # test unforced assignation
+        # test unforced assignment
         mass_convert.write({
             'user_ids': self.user_sales_salesman.ids,
         })
