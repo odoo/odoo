@@ -823,6 +823,7 @@ class MailMessage(models.Model):
         """ Toggle messages as (un)starred. Technically, the notifications related
             to uid are set to (un)starred.
         """
+        self.ensure_one()
         # a user should always be able to star a message they can read
         self.check_access('read')
         starred = not self.starred
@@ -834,6 +835,7 @@ class MailMessage(models.Model):
         self.env.user._bus_send(
             "mail.message/toggle_star", {"message_ids": [self.id], "starred": starred}
         )
+        return Store(self, {"starred": self.starred}).get_result()
 
     @api.model
     def _message_fetch(self, domain, search_term=None, before=None, after=None, around=None, limit=30):
