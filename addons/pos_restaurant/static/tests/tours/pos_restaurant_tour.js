@@ -393,6 +393,7 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
             Dialog.confirm("Open Register"),
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Product Test"),
+            Chrome.freezeDateTime(1739370000000),
             Dialog.confirm("Add"),
             ProductScreen.totalAmountIs("10"),
             {
@@ -423,6 +424,9 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
 
                     if (!rendered.innerHTML.includes("Value 1")) {
                         throw new Error("Value 1 not found in printed receipt");
+                    }
+                    if (!rendered.innerHTML.includes("14:20")) {
+                        throw new Error("14:20 not found in printed receipt");
                     }
                 },
             },
