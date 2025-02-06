@@ -262,7 +262,7 @@ class PosOrder(models.Model):
     )
     amount_difference = fields.Float(string='Difference', digits=0, readonly=True)
     amount_tax = fields.Float(string='Taxes', digits=0, readonly=True, required=True)
-    amount_total = fields.Float(string='Total', digits=0, readonly=True, required=True)
+    amount_total = fields.Monetary(string='Total', currency_field='currency_id', readonly=True, required=True)
     amount_paid = fields.Float(string='Paid', digits=0, required=True)
     amount_return = fields.Float(string='Returned', digits=0, required=True, readonly=True)
     margin = fields.Monetary(string="Margin", compute='_compute_margin')
