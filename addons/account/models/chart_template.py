@@ -759,18 +759,10 @@ class AccountChartTemplate(models.AbstractModel):
                                 template_data[model][xmlid].update(record)
         return template_data
 
-    def _setup_utility_bank_accounts(self, template_code, company, template_data):
-        """Define basic bank accounts for the company.
-
-        - Suspense Account
-        - Outstanding Receipts/Payments Accounts
-        - Cash Difference Gain/Loss Accounts
-        - Liquidity Transfer Account
-        """
-        # Create utility bank_accounts
-        bank_prefix = company.bank_account_code_prefix
-        code_digits = int(template_data.get('code_digits', 6))
-        accounts_data = {
+    def _get_accounts_data_values(self, company, template_data, bank_prefix='', code_digits=0):
+        bank_prefix = bank_prefix or company.bank_account_code_prefix
+        code_digits = code_digits or int(template_data.get('code_digits', 6))
+        return {
             'account_journal_suspense_account_id': {
                 'name': _("Bank Suspense Account"),
                 'prefix': bank_prefix,
@@ -810,6 +802,18 @@ class AccountChartTemplate(models.AbstractModel):
             },
         }
 
+    def _setup_utility_bank_accounts(self, template_code, company, template_data):
+        """Define basic bank accounts for the company.
+
+        - Suspense Account
+        - Outstanding Receipts/Payments Accounts
+        - Cash Difference Gain/Loss Accounts
+        - Liquidity Transfer Account
+        """
+        # Create utility bank_accounts
+        bank_prefix = company.bank_account_code_prefix
+        code_digits = int(template_data.get('code_digits', 6))
+        accounts_data = self._get_accounts_data_values(company, template_data, bank_prefix=bank_prefix, code_digits=code_digits)
         for fname in list(accounts_data):
             if company[fname]:
                 del accounts_data[fname]
