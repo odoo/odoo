@@ -7,8 +7,8 @@
         <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='configuration']" position="inside">
-                <field name="l10n_in_is_sandwich_leave" invisible="country_code != 'IN'" nolabel="1"/>
-                <label for="l10n_in_is_sandwich_leave" string="Sandwich Leaves" invisible="country_code != 'IN'"/>
+                <field name="l10n_in_is_sandwich_leave" invisible="country_code and country_code != 'IN'" nolabel="1"/>
+                <label for="l10n_in_is_sandwich_leave" string="Sandwich Leaves" invisible="country_code and country_code != 'IN'"/>
             </xpath>
         </field>
     </record>
