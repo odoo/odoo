@@ -3,9 +3,9 @@
 
     <t t-name="point_of_sale.Navbar">
         <div class="pos-topheader navbar-height position-relative d-flex align-items-center justify-content-between p-2 m-0 bg-view border-bottom">
-            <div class="pos-leftheader d-flex align-items-center gap-2" t-att-class="{ 'flex-grow-1': ui.isSmall, 'd-none': ui.isSmall and state.searchBarOpen }">
-                <div class="d-flex flex-shrink-0 gap-1 position-relative">
-                    <div class="navbar-menu d-flex d-lg-grid overflow-hidden position-relative">
+            <div class="pos-leftheader d-flex align-items-center gap-2" t-att-class="{ 'flex-grow-1 overflow-auto': ui.isSmall, 'd-none': ui.isSmall and state.searchBarOpen }">
+                <div class="d-flex align-items-center flex-shrink-0 gap-1 position-relative" t-att-class="{ 'w-100': !ui.isSmall }">
+                    <div class="navbar-menu d-flex d-lg-grid position-relative">
                         <button class="register-label btn btn-lg btn-light lh-lg" t-att-class="{'active fw-bolder': mainButton === 'register'}" t-on-click="() => this.pos.showOrderScreen(true)">
                             <span t-if="!ui.isSmall">Register</span>
                             <i t-else="" class="fa fa-fw fa-pencil" t-att-class="{'fa-lg' : !ui.isSmall}"/>
@@ -18,12 +18,12 @@
                         </button>
                     </div>
                     <div t-if="!ui.isSmall" class="navbar-separator"/>
+                    <OrderTabs orders="getOrderTabs()" class="'h-50'"/>
+                    <button class="btn btn-light d-flex align-items-center gap-2 h-100 fs-3" t-on-click="openPresetTiming" t-if="shouldDisplayPresetTime">
+                        <i class="fa fa-clock-o" aria-hidden="true"></i>
+                        <div class="d-inline lh-1" t-esc="this.pos.getOrder()?.presetTime || '--:--'" />
+                    </button>
                 </div>
-                <OrderTabs orders="getOrderTabs()"/>
-                <button class="btn btn-light d-flex align-items-center gap-2 h-100 fs-3" t-on-click="openPresetTiming" t-if="shouldDisplayPresetTime">
-                    <i class="fa fa-clock-o" aria-hidden="true"></i>
-                    <div class="d-inline lh-1" t-esc="this.pos.getOrder()?.presetTime || '--:--'" />
-                </button>
             </div>
             <div class="pos-centerheader d-none d-xl-flex position-absolute top-50 start-50 translate-middle w-auto z-1">
                 <div class="pos-logo w-100 flex-shrink-0 z-2" t-on-click="() => debug.toggleWidget()"/>
