@@ -16,6 +16,7 @@ from os.path import join as opj
 
 import odoo.release as release
 import odoo.upgrade
+from odoo.orm.registry import Registry
 from odoo.tools.misc import file_path
 from odoo.tools.parse_version import parse_version
 
@@ -139,7 +140,7 @@ class MigrationManager:
                 return ''
 
         for pkg in self.graph:
-            if pkg.load_state != 'to upgrade':
+            if pkg.load_state != 'to upgrade' and pkg.name not in Registry(self.cr.dbname)._force_upgrade_scripts:
                 continue
 
 
@@ -161,7 +162,7 @@ class MigrationManager:
             'post': '[%s>]',
             'end': '[$%s]',
         }
-        if pkg.load_state != 'to upgrade':
+        if pkg.load_state != 'to upgrade' and pkg.name not in Registry(self.cr.dbname)._force_upgrade_scripts:
             return
 
         def convert_version(version: str) -> str:
