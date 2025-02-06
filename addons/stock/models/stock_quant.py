@@ -5,6 +5,7 @@ from collections import namedtuple
 
 from ast import literal_eval
 from collections import defaultdict
+from markupsafe import escape
 from psycopg2 import Error
 
 from odoo import _, api, fields, models, SUPERUSER_ID
@@ -422,11 +423,12 @@ class StockQuant(models.Model):
             'help': """
                 <p class="o_view_nocontent_smiling_face">
                     {}
-                </p><p>
-                    {} <span class="fa fa-long-arrow-right"/> {}</p>
-                """.format(_('Your stock is currently empty'),
-                           _('Press the CREATE button to define quantity for each product in your stock or import them from a spreadsheet throughout Favorites'),
-                           _('Import')),
+                </p>
+                <p>
+                    {} <span class="fa fa-cog"/>
+                </p>
+                """.format(escape(_('Your stock is currently empty')),
+                           escape(_('Press the "New" button to define the quantity for a product in your stock or import quantities from a spreadsheet via the Actions menu'))),
         }
         return action
 
