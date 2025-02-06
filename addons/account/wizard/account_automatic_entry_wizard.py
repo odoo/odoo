@@ -2,6 +2,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import format_date, formatLang
+from odoo.addons.account.models.sequence_mixin import SequenceMixin
 
 from collections import defaultdict
 from odoo.tools import groupby, frozendict
@@ -380,6 +381,24 @@ class AutomaticEntryWizard(models.TransientModel):
 
         created_moves = self.env['account.move'].create(move_vals)
         created_moves._post()
+        created_moves_reset = [SequenceMixin._deduce_sequence_number_reset(m, m.name) for m in created_moves]
+
+        if len(set(created_moves_reset))>1:
+            error_details = []
+
+            for move, reset_type in zip(created_moves[1:], created_moves_reset[1:]):
+                error_details.append(f'Move "{move.name}": uses the "{reset_type}" reset sequence period')
+
+            raise UserError(_(
+            '\nSequence reset period mismatch detected.\n\n'
+            'Destination journal entry "%(dest_entry)s" uses the "%(dest_reset)s" reset sequence period.\n\n'
+            'Accrual move(s) use a different reset sequence(s):\n'
+            '%(error_details)s\n'
+            '\nAll accrual moves and the destination journal entry must use the same sequence reset period.',
+            dest_entry = created_moves[0].name,
+            dest_reset = created_moves_reset[0],
+            error_details = '\n'.join(error_details)
+            ))
 
         destination_move = created_moves[0]
         destination_move_offset = 0
