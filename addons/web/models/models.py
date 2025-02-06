@@ -556,16 +556,19 @@ class Base(models.AbstractModel):
         else:
             existing = sorted(set().union(existing, required_dates))
 
-        groups_mapped = {values[0]: values for values in groups}
+        groups_mapped = defaultdict(list)
+        for group in groups:
+            groups_mapped[group[0]].append(group)
+
         result = []
         for dt in existing:
             if dt in groups_mapped:
-                result.append(groups_mapped[dt])
+                result.extend(groups_mapped[dt])
             else:
                 result.append((dt, *empty_item))
 
         if False in groups_mapped:
-            result.append(groups_mapped[False])
+            result.extend(groups_mapped[False])
 
         return result
 
