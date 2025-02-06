@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_l10n_cz_tax_office_tree" model="ir.ui.view">
+            <field name="name">l10n_cz.tax_office.tree</field>
+            <field name="model">l10n_cz.tax_office</field>
+            <field name="arch" type="xml">
+                <list string="Tax Office">
+                    <field name="workplace_code"/>
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="region"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_l10n_cz_tax_office_search" model="ir.ui.view">
+            <field name="name">l10n_cz.tax_office.search</field>
+            <field name="model">l10n_cz.tax_office</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="workplace_code"/>
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="region"/>
+                    <filter name="group_by_region" string="By region" context="{'group_by': 'region'}"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_l10n_cz_tax_office_form" model="ir.ui.view">
+            <field name="name">l10n_cz.tax_office.form</field>
+            <field name="model">l10n_cz.tax_office</field>
+            <field name="arch" type="xml">
+                <form string="Tax Office">
+                    <sheet>
+                        <h1><field name="name" options="{'line_breaks': False}" widget="text" placeholder="Tax office name" class="text-break" default_focus="1"/></h1>
+                        <group>
+                            <field name="workplace_code"/>
+                            <field name="code"/>
+                            <field name="region"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_l10n_cz_tax_office_tree" model="ir.actions.act_window">
+            <field name="name">Tax Office</field>
+            <field name="res_model">l10n_cz.tax_office</field>
+            <field name="context">{'search_default_group_by_region': 1}</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <menuitem action="action_l10n_cz_tax_office_tree" id="menu_l10n_cz_tax_office" parent="account.account_invoicing_menu" sequence="4" groups="account.group_account_manager"/>
+    </data>
+</odoo>
