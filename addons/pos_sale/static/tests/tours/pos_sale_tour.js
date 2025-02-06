@@ -198,7 +198,7 @@ registry.category("web_tour.tours").add("PosSettleCustomPrice", {
             PosSale.settleNthOrder(1),
             ProductScreen.selectedOrderlineHas("Product A", "1", "100"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Test Partner AAA"),
+            ProductScreen.clickCustomer("A Test Partner AAA"),
             ProductScreen.selectedOrderlineHas("Product A", "1", "100"),
         ].flat(),
 });
@@ -359,11 +359,11 @@ registry.category("web_tour.tours").add("PosSaleWarning", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Test Customer 2"),
+            ProductScreen.clickCustomer("A Test Customer 2"),
             {
                 content: "Check warning popup are displayed",
                 trigger:
-                    '.modal-dialog:has(.modal-header:contains("Warning for Test Customer 2")):has(.modal-body:contains("Cannot afford our services"))',
+                    '.modal-dialog:has(.modal-header:contains("Warning for A Test Customer 2")):has(.modal-body:contains("Cannot afford our services"))',
             },
             {
                 trigger: ".modal-footer button",
@@ -374,17 +374,17 @@ registry.category("web_tour.tours").add("PosSaleWarning", {
             ProductScreen.clickDisplayedProduct("Letter Tray", true, "1"),
             ProductScreen.selectedOrderlineHas("Letter Tray", "1"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Test Customer"),
+            ProductScreen.clickCustomer("A Test Customer"),
             {
                 content: "Check warning popup are displayed",
                 trigger:
-                    '.modal-dialog:has(.modal-header:contains("Warning for Test Customer")):has(.modal-body:contains("Highly infectious disease"))',
+                    '.modal-dialog:has(.modal-header:contains("Warning for A Test Customer")):has(.modal-body:contains("Highly infectious disease"))',
             },
             {
                 trigger: ".modal-footer button",
                 run: "click",
             },
-            ProductScreen.customerIsSelected("Test Customer"),
+            ProductScreen.customerIsSelected("A Test Customer"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.remainingIs("0.0"),
