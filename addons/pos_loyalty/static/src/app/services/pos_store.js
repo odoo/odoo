@@ -633,7 +633,7 @@ patch(PosStore.prototype, {
                     ),
                 });
 
-                this.models["loyalty.reward"].delete(reward.id);
+                reward.delete();
             }
         }
     },
