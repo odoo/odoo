@@ -1586,7 +1586,7 @@ export class PosStore extends WithLazyGetterTrap {
             reprint: reprint,
             pos_reference: order.getName(),
             config_name: order.config_id.name,
-            write_date: DateTime.fromSQL(order.write_date).toFormat("HH:mm"),
+            time: DateTime.now().toFormat("HH:mm"),
             tracking_number: order.tracking_number,
             preset_name: order.preset_id?.name || "",
             employee_name: order.employee_id?.name || order.user_id?.name,
