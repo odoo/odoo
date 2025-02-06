@@ -525,17 +525,18 @@
                                    t-call="website_sale.filmstrip_categories"/>
                                 <div
                                     t-if="not is_view_active('website_sale.floating_bar')"
-                                    class="products_header btn-toolbar flex-nowrap align-items-center justify-content-between gap-2 gap-xl-3"
+                                    class="products_header btn-toolbar flex-nowrap align-items-center justify-content-between gap-1 gap-lg-2 gap-xl-3"
                                     >
                                     <t t-if="is_view_active('website_sale.search')">
-                                        <div t-attf-class="o_wsale_products_header_search_form_container d-none d-md-inline-block col-xl-5 me-auto {{not hasLeftColumn and 'col-xl-6'}}"
+                                        <t t-set="_has_all_sibligns" t-value="hasPricelistDropdown and is_view_active('website_sale.sort') and wsale_has_filters_btn"></t>
+                                        <div t-attf-class="o_wsale_products_header_search_form_container {{ _has_all_sibligns and 'd-none d-sm-inline-block'}} col-xl-5 me-auto {{not hasLeftColumn and 'col-xl-6'}}"
                                             t-call="website_sale.search"
                                             >
                                             <t t-if="category" t-set="placeholder" t-value="'Search in ' + category.name"/>
                                             <t t-set="search" t-value="original_search or search"/>
                                         </div>
                                         <a
-                                            t-attf-class="btn o_not_editable d-md-none me-auto btn-{{navClass}}"
+                                            t-attf-class="btn o_not_editable {{_has_all_sibligns and 'd-inline-block d-sm-none' or 'd-none'}} me-auto btn-{{navClass}}"
                                             data-bs-target="#o_wsale_search_modal"
                                             data-bs-toggle="modal"
                                             role="button"
