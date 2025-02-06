@@ -314,12 +314,15 @@ class AccountAutomaticEntryWizard(models.TransientModel):
             }),
         ]
 
+    def _get_lock_safe_date(self, date):
+        # Use a reference move in the correct journal because _get_accounting_date depends on the journal sequence.
+        reference_move = self.env['account.move'].new({'journal_id': self.journal_id.id, 'move_type': 'entry', 'invoice_date': date})
+        return reference_move._get_accounting_date(date, False)
+
     def _get_move_dict_vals_change_period(self):
-        reference_move = self.env['account.move'].new({'journal_id': self.journal_id.id, 'move_type': 'entry'})
 
         def get_lock_safe_date(aml):
-            # Use a reference move in the correct journal because _get_accounting_date depends on the journal sequence.
-            return reference_move._get_accounting_date(aml.date, False)
+            return self._get_lock_safe_date(aml.date)
 
         # set the change_period account on the selected journal items
 
@@ -413,7 +416,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
         accrual_move_offsets = defaultdict(int)
         for move in self.move_line_ids.move_id:
             amount = sum((self.move_line_ids._origin & move.line_ids).mapped('balance'))
-            accrual_move = created_moves[1:].filtered(lambda m: m.date == m._get_accounting_date(move.date, False))
+            accrual_move = created_moves[1:].filtered(lambda m: m.date == self._get_lock_safe_date(move.date))
 
             if accrual_account.reconcile and accrual_move.state == 'posted' and destination_move.state == 'posted':
                 destination_move_lines = destination_move.mapped('line_ids').filtered(lambda line: line.account_id == accrual_account)[destination_move_offset:destination_move_offset+2]
