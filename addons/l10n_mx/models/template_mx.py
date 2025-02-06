@@ -18,6 +18,7 @@ class AccountChartTemplate(models.AbstractModel):
             'property_stock_account_input_categ_id': 'cuenta205_06_01',
             'property_stock_account_output_categ_id': 'cuenta107_05_01',
             'property_stock_valuation_account_id': 'cuenta115_01',
+            'property_cash_basis_base_account_id': 'cuenta801_01_99',
         }
 
     @template('mx', 'res.company')
@@ -33,13 +34,12 @@ class AccountChartTemplate(models.AbstractModel):
                 'income_currency_exchange_account_id': 'cuenta702_01',
                 'expense_currency_exchange_account_id': 'cuenta701_01',
                 'deferred_expense_account_id': 'cuenta173_01',
-                'account_journal_early_pay_discount_loss_account_id': 'cuenta9993',
-                'account_journal_early_pay_discount_gain_account_id': 'cuenta9994',
+                'account_journal_early_pay_discount_loss_account_id': 'cuenta402_01',
+                'account_journal_early_pay_discount_gain_account_id': 'cuenta503_01',
                 'tax_cash_basis_journal_id': 'cbmx',
                 'tax_calculation_rounding_method': 'round_globally',
                 'account_sale_tax_id': 'tax12',
                 'account_purchase_tax_id': 'tax14',
-                'account_cash_basis_base_account_id': 'cuenta801_01_99',
             },
         }
 
@@ -54,3 +54,18 @@ class AccountChartTemplate(models.AbstractModel):
                 'show_on_dashboard': True,
             }
         }
+
+    def _get_accounts_data_values(self, company, template_data, bank_prefix='', code_digits=0):
+        accounts_data = super()._get_accounts_data_values(company, template_data, bank_prefix=bank_prefix, code_digits=code_digits)
+        if company.account_fiscal_country_id.code == 'MX':
+            accounts_data.update({
+                'default_cash_difference_income_account_id': {
+                    'name': _('Other Income'),
+                    'code': '403.01.01'
+                },
+                'default_cash_difference_expense_account_id': {
+                    'name': 'Cash Difference Loss',
+                    'code': '601.84.02',
+                }
+            })
+        return accounts_data
