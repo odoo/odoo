@@ -175,7 +175,7 @@ export class LivechatService {
      *
      * @param {Object} [saveData]
      */
-    _saveLivechatState(saveData) {
+    _saveLivechatState() {
         const { guest_token } = this.store;
         if (guest_token) {
             expirableStorage.setItem(GUEST_TOKEN_STORAGE_KEY, guest_token);
@@ -190,7 +190,7 @@ export class LivechatService {
             JSON.stringify({
                 livechatUserId: this.savedState?.livechatUserId ?? user.userId,
                 persisted,
-                store: persisted ? { "discuss.channel": [{ id: this.thread.id }] } : saveData,
+                store: persisted ? { "discuss.channel": [{ id: this.thread.id }] } : false,
             }),
             ONE_DAY_TTL
         );
@@ -223,7 +223,6 @@ export class LivechatService {
             { shadow: true }
         );
         // clean copy of data for saving in storage, because store insert will add cyclic references
-        const saveData = JSON.parse(JSON.stringify(data));
         const { Thread = [] } = this.store.insert(data);
         this.thread = Thread[0];
         if (!this.thread?.livechat_operator_id) {
@@ -232,7 +231,7 @@ export class LivechatService {
             return;
         }
         this.state = persist ? SESSION_STATE.PERSISTED : SESSION_STATE.CREATED;
-        this._saveLivechatState(saveData);
+        this._saveLivechatState();
         await Promise.all(this._onStateChangeCallbacks[this.state].map((fn) => fn()));
     }
 
