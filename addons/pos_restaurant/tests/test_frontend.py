@@ -403,3 +403,42 @@ class TestFrontend(TestFrontendCommon):
     def test_create_floor_tour(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_create_floor_tour', login="pos_admin")
+
+    def test_multiple_preparation_printer(self):
+        """This test make sure that no empty receipt are sent when using multiple printer with different categories
+           The tour will check that we tried did not try to print two receipt. We can achieve that by checking the content
+           of the error message. Because we do not have real printer an error message will be displayed, this will contain
+           all the receipt that failed to print. If it contains more than 1 it means that we tried to print a second receipt
+           and it should not be the case here. The only one we should see is 'Detailed Receipt'
+        """
+        pos_category_1 = self.env['pos.category'].create({'name': 'Category 1'})
+        pos_category_2 = self.env['pos.category'].create({'name': 'Category 2'})
+        printer_1 = self.env['pos.printer'].create({
+            'name': 'Printer 1',
+            'printer_type': 'epson_epos',
+            'epson_printer_ip': '0.0.0.0',
+            'product_categories_ids': [Command.set(pos_category_2.ids)],
+        })
+        printer_2 = self.env['pos.printer'].create({
+            'name': 'Printer 2',
+            'printer_type': 'epson_epos',
+            'epson_printer_ip': '0.0.0.0',
+            'product_categories_ids': [Command.set(pos_category_1.ids)],
+        })
+
+
+        self.main_pos_config.write({
+            'is_order_printer' : True,
+            'printer_ids': [Command.set([printer_1.id, printer_2.id])],
+        })
+
+        self.product_1 = self.env['product.product'].create({
+            'name': 'Product 1',
+            'available_in_pos': True,
+            'list_price': 10,
+            'pos_categ_ids': [(6, 0, [pos_category_1.id])],
+            'taxes_id': False,
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'MultiPreparationPrinter', login="pos_user")
