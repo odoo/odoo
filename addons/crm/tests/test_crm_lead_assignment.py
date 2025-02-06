@@ -3,7 +3,8 @@
 
 import random
 
-from datetime import datetime
+from ast import literal_eval
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
 
@@ -11,6 +12,7 @@ from odoo import fields
 from odoo.addons.crm.tests.common import TestLeadConvertCommon
 from odoo.tests.common import tagged
 from odoo.tools import mute_logger
+from odoo.fields import Datetime
 
 
 class TestLeadAssignCommon(TestLeadConvertCommon):
@@ -394,6 +396,66 @@ class TestLeadAssign(TestLeadAssignCommon):
         self.assertMemberAssign(sales_team_3_m1, 2)  # 60 max on one month -> 2 daily
         self.assertMemberAssign(sales_team_3_m2, 2)  # 60 max on one month -> 2 daily
         self.assertMemberAssign(sales_team_3_m3, 1)  # 15 max on one month -> 1 daily
+
+    def test_assign_preferred_domain(self):
+        """ Test preferred domain use """
+        random.seed(1914)
+        preferred_tag = self.env['crm.tag'].create({'name': 'preferred'})
+
+        leads = self._create_leads_batch(
+            lead_type='lead',
+            user_ids=[False],
+            count=11,
+        )
+        leads[:8].write({'tag_ids': [(6, 0, preferred_tag.ids)]})
+        # commit probability and related fields
+        leads.flush_recordset()
+        self.assertInitialData()
+        test_sales_team = self.env['crm.team'].create({
+            'name': 'Sales Team 5',
+            'sequence': 15,
+            'alias_name': False,
+            'use_leads': True,
+            'use_opportunities': True,
+            'company_id': False,
+            'user_id': False,
+        })
+        test_sales_team_m1 = self.env['crm.team.member'].create({
+            'user_id': self.user_sales_manager.id,
+            'crm_team_id': test_sales_team.id,
+            'assignment_max': 150,
+            'assignment_domain': False,
+            'assignment_domain_preferred': "[('tag_ids', 'in', %s)]" % preferred_tag.ids,
+        })
+        test_sales_team_m2 = self.env['crm.team.member'].create({
+            'user_id': self.user_sales_leads.id,
+            'crm_team_id': test_sales_team.id,
+            'assignment_max': 150,
+            'assignment_domain': False,
+            'assignment_domain_preferred': False,
+        })
+        test_sales_team_m3 = self.env['crm.team.member'].create({
+            'user_id': self.user_sales_salesman.id,
+            'crm_team_id': test_sales_team.id,
+            'assignment_max': 150,
+            'assignment_domain': False,
+            'assignment_domain_preferred': False,
+        })
+
+        test_sales_team._action_assign_leads()
+
+        member_leads = self.env['crm.lead'].search([
+            ('user_id', '=', test_sales_team_m1.user_id.id),
+            ('team_id', '=', test_sales_team_m1.crm_team_id.id),
+            ('date_open', '>=', Datetime.now() - timedelta(hours=24)),
+        ])
+        self.assertEqual(
+                member_leads.filtered_domain(literal_eval(test_sales_team_m1.assignment_domain_preferred)),
+                member_leads
+            )
+        self.assertMemberAssign(test_sales_team_m1, 5)
+        self.assertMemberAssign(test_sales_team_m2, 3)
+        self.assertMemberAssign(test_sales_team_m3, 3)
 
     def test_assign_quota(self):
         """ Test quota computation """

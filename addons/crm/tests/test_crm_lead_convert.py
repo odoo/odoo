@@ -58,7 +58,7 @@ class TestLeadConvertForm(crm_common.TestLeadConvertCommon):
 @tagged('lead_manage')
 class TestLeadConvert(crm_common.TestLeadConvertCommon):
     """
-    TODO: created partner (handle assignation) has team of lead
+    TODO: created partner (handle assignment) has team of lead
     TODO: create partner has user_id  coming from wizard
     """
 
