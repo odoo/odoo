@@ -1612,7 +1612,7 @@ export class PosStore extends WithLazyGetterTrap {
                 };
                 const result = await this.printOrderChanges(orderData, printer);
                 if (!result.successful) {
-                    unsuccedPrints.push(printer.name);
+                    unsuccedPrints.push(printer.config.name);
                 }
             }
 
@@ -1623,7 +1623,7 @@ export class PosStore extends WithLazyGetterTrap {
                 };
                 const result = await this.printOrderChanges(orderData, printer);
                 if (!result.successful) {
-                    unsuccedPrints.push(printer.name);
+                    unsuccedPrints.push(printer.config.name);
                 }
             }
 
@@ -1634,7 +1634,7 @@ export class PosStore extends WithLazyGetterTrap {
                 };
                 const result = await this.printOrderChanges(orderData, printer);
                 if (!result.successful) {
-                    unsuccedPrints.push(printer.name);
+                    unsuccedPrints.push(printer.config.name);
                 }
                 orderData.changes.noteUpdate = [];
             }
@@ -1643,7 +1643,7 @@ export class PosStore extends WithLazyGetterTrap {
                 orderData.changes = {};
                 const result = await this.printOrderChanges(orderData, printer);
                 if (!result.successful) {
-                    unsuccedPrints.push(printer.name);
+                    unsuccedPrints.push(printer.config.name);
                 }
             }
         }
@@ -1651,6 +1651,7 @@ export class PosStore extends WithLazyGetterTrap {
         // printing errors
         if (unsuccedPrints.length) {
             const failedReceipts = unsuccedPrints.join(", ");
+            //debugger;
             this.dialog.add(AlertDialog, {
                 title: _t("Printing failed"),
                 body: _t("Failed in printing %s changes of the order", failedReceipts),
