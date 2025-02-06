@@ -28,7 +28,7 @@
             Resetting Your Password
         </a>
     </li>
-    <li>
+    <li t-if="user._is_internal()">
         Contact your administrator
     </li>
 </ul>
