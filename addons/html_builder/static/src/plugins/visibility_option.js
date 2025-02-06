@@ -8,7 +8,7 @@ class VisibilityOptionPlugin extends Plugin {
     static id = "VisibilityOption";
     static dependencies = ["builder-options", "visibility"];
     websiteService = this.services.website;
-    selector = "section .row > div";
+    deviceSelector = "section .row > div";
     resources = {
         builder_options: [
             {
@@ -18,20 +18,15 @@ class VisibilityOptionPlugin extends Plugin {
             },
             {
                 template: "html_builder.DeviceVisibilityOption",
-                selector: this.selector,
+                selector: this.deviceSelector,
                 exclude: ".s_col_no_resize.row > div, .s_masonry_block .s_col_no_resize",
-                cleanForSave: this.cleanForSave.bind(this),
+                cleanForSave: this.dependencies.visibility.cleanForSaveVisibility,
             },
         ],
         builder_actions: this.getActions(),
         target_show: this.onTargetShow.bind(this),
         target_hide: this.onTargetHide.bind(this),
     };
-
-    cleanForSave(editingEl) {
-        this.dependencies.visibility.cleanForSaveVisibility(editingEl);
-        editingEl.classList.remove("o_snippet_override_invisible");
-    }
     getActions() {
         return {
             toggleDeviceVisibility: {
@@ -101,14 +96,14 @@ class VisibilityOptionPlugin extends Plugin {
         applyFunDependOnSelectorAndExclude(
             this.dependencies.visibility.hideInvisibleEl,
             editingEl,
-            this.selector
+            this.deviceSelector
         );
     }
     onTargetShow(editingEl) {
         applyFunDependOnSelectorAndExclude(
             this.dependencies.visibility.showInvisibleEl,
             editingEl,
-            this.selector
+            this.deviceSelector
         );
     }
 }

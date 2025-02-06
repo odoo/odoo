@@ -21,6 +21,13 @@ export class VisibilityPlugin extends Plugin {
             !editingEl.classList.contains("o_snippet_mobile_invisible") &&
             !editingEl.classList.contains("o_snippet_desktop_invisible");
         this.toggleTargetVisibility(editingEl, show);
+        const overrideInvisibleEls = [
+            editingEl,
+            ...editingEl.querySelectorAll(".o_snippet_override_invisible"),
+        ];
+        for (const overrideInvisibleEl of overrideInvisibleEls) {
+            overrideInvisibleEl.classList.remove("o_snippet_override_invisible");
+        }
     }
 
     onMobilePreviewClicked() {
