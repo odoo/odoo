@@ -207,6 +207,9 @@ class Registry(Mapping[str, type["BaseModel"]]):
         self._constraint_queue: deque[tuple] = deque()  # queue of functions to call on finalization of constraints
         self.__caches: dict[str, LRU] = {cache_name: LRU(cache_size) for cache_name, cache_size in _REGISTRY_CACHES.items()}
 
+        # update context during loading modules
+        self._force_upgrade_scripts = set()  # force the execution of the upgrade script for these modules
+
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules: set[str] = set()
         self.updated_modules: list[str] = []       # installed/updated modules
