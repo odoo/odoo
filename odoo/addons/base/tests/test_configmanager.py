@@ -76,7 +76,6 @@ class TestConfigManager(TransactionCase):
             'init': {},
             'update': {},
             'without_demo': False,
-            'demo': {},
             'import_partial': '',
             'pidfile': '',
             'addons_path': [],
@@ -192,7 +191,6 @@ class TestConfigManager(TransactionCase):
             'init': {},  # blacklist for save, ignored from the config file
             'update': {},  # blacklist for save, ignored from the config file
             'without_demo': True,
-            'demo': {},  # blacklist for save, ignored from the config file
             'import_partial': '/tmp/import-partial',
             'pidfile': '/tmp/pidfile',
             'addons_path': [],  # the path found in the config file is invalid
@@ -327,7 +325,7 @@ class TestConfigManager(TransactionCase):
             'db_template': 'template0',
             'db_user': '',
             'dbfilter': '',
-            'demo': {},
+            'demo': '{}',
             'email_from': '',
             'geoip_city_db': '/usr/share/GeoIP/GeoLite2-City.mmdb',
             'http_enable': True,
@@ -467,7 +465,6 @@ class TestConfigManager(TransactionCase):
             'init': {'hr': True, 'stock': True},
             'update': {'account': True, 'website': True},
             'without_demo': True,
-            'demo': {},
             'import_partial': '/tmp/import-partial',
             'pidfile': '/tmp/pidfile',
             'addons_path': [],
@@ -609,18 +606,6 @@ class TestConfigManager(TransactionCase):
             with self.subTest(args=args):
                 _, options = self.parse_reset(args)
                 self.assertEqual(options['stop_after_init'], stop_after_init)
-
-    def test_12_without_demo_equal_1(self):
-        _, options = self.parse_reset(['-i', 'mail'])
-        self.assertEqual(options['demo'], {'mail': 1})
-        _, options = self.parse_reset(['-i', 'mail', '--without-demo'])
-        self.assertEqual(options['demo'], {})
-        _, options = self.parse_reset(['--without-demo', '-i', 'mail'])
-        self.assertEqual(options['demo'], {})
-        _, options = self.parse_reset(['-i', 'mail', '--without-demo', '1'])
-        self.assertEqual(options['demo'], {})
-        _, options = self.parse_reset(['-i', 'mail', '--without-demo=1'])
-        self.assertEqual(options['demo'], {})
 
     def test_13_empty_db_replica_host(self):
         with self.assertLogs('py.warnings', 'WARNING') as capture:
