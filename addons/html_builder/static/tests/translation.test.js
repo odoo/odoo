@@ -41,7 +41,7 @@ test("systray in translate mode", async () => {
 });
 
 test("snippets menu in translate mode", async () => {
-    await setupbuilder_sidebarForTranslation({ websiteContent: `<h1> Homepage </h1>` });
+    await setupSidebarBuilderForTranslation({ websiteContent: `<h1> Homepage </h1>` });
     expect(".o-snippets-tabs button:contains('BLOCKS')").toHaveAttribute("disabled");
     expect(".o-snippets-tabs button:contains('THEME')").toHaveAttribute("disabled");
     expect(".o-snippets-tabs button:contains('CUSTOMIZE')").toHaveClass("active");
@@ -49,7 +49,7 @@ test("snippets menu in translate mode", async () => {
 });
 
 test("invisible elements in translate mode", async () => {
-    await setupbuilder_sidebarForTranslation({ websiteContent: invisibleEl });
+    await setupSidebarBuilderForTranslation({ websiteContent: invisibleEl });
     expect(
         ".o_we_invisible_el_panel  .o_we_invisible_entry:contains('Invisible Element')"
     ).toHaveCount(1);
@@ -61,10 +61,10 @@ test("translate text", async () => {
         resultSave.push(args[2]["fr_BE"]["sourceSha"]);
         return true;
     });
-    const editor = await setupbuilder_sidebarForTranslation({
+    const editor = await setupSidebarBuilderForTranslation({
         websiteContent: getTranslateEditable("Hello"),
     });
-    setContent(editor.editable, getTranslateEditable("H[]ello"));
+    setContent(editor.editable.querySelector("#wrap"), getTranslateEditable("H[]ello"));
     await insertText(editor, "1");
     await contains(".o-snippets-top-actions button:contains(Save)").click();
     expect(resultSave.length).toBe(1);
@@ -72,10 +72,10 @@ test("translate text", async () => {
 });
 
 test("add text in translate mode do not split", async () => {
-    const editor = await setupbuilder_sidebarForTranslation({
+    const editor = await setupSidebarBuilderForTranslation({
         websiteContent: getTranslateEditable("Hello"),
     });
-    setContent(editor.editable, getTranslateEditable("Hello[]"));
+    setContent(editor.editable.querySelector("#wrap"), getTranslateEditable("Hello[]"));
     // Event trigger when you press "Enter" => create a new paragraph
     await manuallyDispatchProgrammaticEvent(editor.editable, "beforeinput", {
         inputType: "insertParagraph",
@@ -110,7 +110,7 @@ function getTranslateEditable(inWrap) {
         </div>`;
 }
 
-async function setupbuilder_sidebarForTranslation(options) {
+async function setupSidebarBuilderForTranslation(options) {
     const { websiteContent, openEditor = true } = options;
     // Hack: configure the snippets menu as in translate mode when clicking
     // on the "Edit" button of the systray. The goal of this hack is to avoid
