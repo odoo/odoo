@@ -26,6 +26,7 @@ import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 import { OrderDisplay } from "@point_of_sale/app/components/order_display/order_display";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
+import { ConnectionLostError } from "@web/core/network/rpc";
 
 const NBR_BY_PAGE = 30;
 const { DateTime } = luxon;
@@ -84,7 +85,20 @@ export class TicketScreen extends Component {
 
         onMounted(this.onMounted);
         onWillStart(async () => {
-            await this.pos.getServerOrders();
+            if (!this.pos.loadingOrderState) {
+                try {
+                    this.pos.loadingOrderState = true;
+                    await this.pos.getServerOrders();
+                } catch (error) {
+                    if (error instanceof ConnectionLostError) {
+                        Promise.reject(error);
+                        return error;
+                    }
+                    throw error;
+                } finally {
+                    this.pos.loadingOrderState = false;
+                }
+            }
         });
     }
     onMounted() {
