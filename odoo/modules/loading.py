@@ -139,7 +139,7 @@ def load_module_graph(
     env: Environment,
     graph: Graph,
     status=SENTINEL,
-    perform_checks: bool = True,
+    update_module: bool = False,
     skip_modules: Collection[str] = (),
     report: OdooTestResult | None = None,
     models_to_check: set[str] | None = None,
@@ -149,8 +149,7 @@ def load_module_graph(
        :param env:
        :param graph: graph of module nodes to load
        :param status: deprecated parameter, unused, left to avoid changing signature in 8.0
-       :param perform_checks: whether module descriptors should be checked for validity (prints warnings
-                              for same cases)
+       :param update_module: whether to update modules or not
        :param skip_modules: optional list of module names (packages) which have previously been loaded and can be skipped
        :param report:
        :param set models_to_check:
@@ -187,7 +186,7 @@ def load_module_graph(
         module_cursor_query_count = env.cr.sql_log_count
         module_extra_query_count = odoo.sql_db.sql_counter
 
-        needs_update = (
+        needs_update = update_module and (
             hasattr(package, "init")
             or hasattr(package, "update")
             or package.state in ("to install", "to upgrade")
@@ -242,8 +241,7 @@ def load_module_graph(
             # registered by init_models() above.
             module = env['ir.module.module'].browse(module_id)
 
-            if perform_checks:
-                module._check()
+            module._check()
 
             if package.state == 'to upgrade':
                 # upgrading the module information
@@ -383,7 +381,7 @@ def load_marked_modules(
     progressdict: None,
     report: OdooTestResult | None,
     loaded_modules: list[str],
-    perform_checks: bool,
+    update_module: bool,
     models_to_check: set[str] | None = None,
 ) -> list[str]:
     """Loads modules marked with ``states``, adding them to ``graph`` and
@@ -407,7 +405,7 @@ def load_marked_modules(
             graph,
             report=report,
             skip_modules=loaded_modules,
-            perform_checks=perform_checks,
+            update_module=update_module,
             models_to_check=models_to_check,
         )
         processed_modules.extend(processed)
@@ -470,7 +468,7 @@ def load_modules(registry: Registry, force_demo: bool = False, status: None = No
         loaded_modules, processed_modules = load_module_graph(
             env,
             graph,
-            perform_checks=update_module,
+            update_module=update_module,
             report=report,
             models_to_check=models_to_check,
         )
@@ -561,9 +559,10 @@ def load_modules(registry: Registry, force_demo: bool = False, status: None = No
             _logger.error("Some modules are not loaded, some dependencies or manifest may be missing: %s", missing)
 
         # STEP 3.5: execute migration end-scripts
-        migrations = MigrationManager(cr, graph)
-        for package in graph.packages():
-            migrations.migrate_module(package, 'end')
+        if update_module:
+            migrations = MigrationManager(cr, graph)
+            for package in graph.packages():
+                migrations.migrate_module(package, 'end')
 
         # check that new module dependencies have been properly installed after a migration/upgrade
         cr.execute("SELECT name from ir_module_module WHERE state IN ('to install', 'to upgrade')")
