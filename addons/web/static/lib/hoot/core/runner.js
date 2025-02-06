@@ -1541,7 +1541,7 @@ export class Runner {
                 mockUserAgent(preset.platform);
             }
             if (typeof preset.touch === "boolean") {
-                mockTouch(preset.touch);
+                this.beforeEach(() => mockTouch(preset.touch));
             }
             this.checkPresetForViewPort();
         }
