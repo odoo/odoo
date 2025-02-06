@@ -32,7 +32,6 @@ export class Many2XUomTagsAutocomplete extends Many2XAutocomplete {
                 nextProps.productId !== this.props.productId
             ) {
                 await this.updateReferenceUnit(nextProps);
-                await this.render();
             }
         });
         await this.updateReferenceUnit();
