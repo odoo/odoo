@@ -586,11 +586,12 @@ class BaseModel(metaclass=MetaModel):
 
         # Assert the name is an existing field in the model, or any model in the _inherits
         # or a custom field (starting by `x_`)
+        # or is a hidden inverse field
         is_class_field = any(
             isinstance(getattr(model, name, None), Field)
             for model in [cls] + [self.env.registry[inherit] for inherit in cls._inherits]
         )
-        if not (is_class_field or self.env['ir.model.fields']._is_manual_name(name)):
+        if not (is_class_field or self.env['ir.model.fields']._is_manual_name(name) or self.env.context.get("inverse_field")):
             raise ValidationError(  # pylint: disable=missing-gettext
                 f"The field `{name}` is not defined in the `{cls._name}` Python class and does not start with 'x_'"
             )
@@ -606,6 +607,37 @@ class BaseModel(metaclass=MetaModel):
         field.__set_name__(cls, name)
         # add field as an attribute and in cls._fields (for reflection)
         cls._fields[name] = field
+
+        # generate inverse fields
+        if field.type == 'many2one':
+            from .fields_relational import One2many  # noqa: PLC0415
+            inverse_field = One2many(
+                string='Automatic inverse field',
+                comodel_name=self._name,
+                inverse_name=field.name,
+                readonly=True,
+            )
+            if not field.comodel_name:
+                raise ValidationError(  # pylint: disable=missing-gettext
+                f"The field `{name}` in the `{cls._name}` model doesn't have comodel_name."
+            )
+            self.env[field.comodel_name].with_context(inverse_field=True)._add_field(field._get_inverse_name(), inverse_field)
+        elif field.type == 'many2many':
+            from .fields_relational import Many2many  # noqa: PLC0415
+            inverse_field = Many2many(
+                string='Automatic inverse field',
+                comodel_name=self._name,
+                relation=field.relation,
+                column1=field.column2,
+                column2=field.column1,
+                readonly=True,
+                store=field.store,
+            )
+            if not field.comodel_name:
+                ValidationError(  # pylint: disable=missing-gettext
+                    f"The field `{name}` in the `{cls._name}` model doesn't have comodel_name."
+                )
+            self.env[field.comodel_name].with_context(inverse_field=True)._add_field(field._get_inverse_name(), inverse_field)
 
     @api.model
     def _pop_field(self, name):
