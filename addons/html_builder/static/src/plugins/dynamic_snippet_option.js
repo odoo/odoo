@@ -27,6 +27,11 @@ class DynamicSnippetOptionPlugin extends Plugin {
             JSON.stringify
         );
     }
+    destroy() {
+        super.destroy();
+        this.dynamicFiltersCache.invalidate();
+        this.dynamicFilterTemplatesCache.invalidate();
+    }
     getComponentProps() {
         return {
             fetchDynamicFilters: this.fetchDynamicFilters.bind(this),

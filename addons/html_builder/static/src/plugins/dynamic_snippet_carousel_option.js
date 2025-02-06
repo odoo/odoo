@@ -5,16 +5,20 @@ import { DynamicSnippetOption } from "./dynamic_snippet_option";
 
 class DynamicSnippetCarouselOptionPlugin extends Plugin {
     static id = "DynamicSnippetCarouselOption";
+    static shared = ["getComponentProps"];
     static dependencies = ["DynamicSnippetOption"];
     resources = {
         builder_options: {
             OptionComponent: DynamicSnippetCarouselOption,
-            props: {
-                ...this.dependencies.DynamicSnippetOption.getComponentProps(),
-            },
+            props: this.getComponentProps(),
             selector: ".s_dynamic_snippet_carousel",
         },
     };
+    getComponentProps() {
+        return {
+            ...this.dependencies.DynamicSnippetOption.getComponentProps(),
+        };
+    }
 }
 
 registry

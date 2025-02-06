@@ -12,6 +12,8 @@ export class BuilderTextInput extends Component {
         ...basicContainerBuilderComponentProps,
         default: { type: String, optional: true },
         placeholder: { type: String, optional: true },
+        title: { type: String, optional: true },
+        id: { type: String, optional: true },
     };
     static components = { BuilderComponent };
 
