@@ -393,3 +393,16 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
             },
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("MultiPreparationPrinter", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Product 1"),
+            ProductScreen.clickOrderButton(),
+            Dialog.bodyIs("Failed in printing Detailed Receipt changes of the order"),
+        ].flat(),
+});
