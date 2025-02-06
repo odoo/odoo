@@ -310,6 +310,7 @@ export class MailMessage extends models.ServerModel {
         const ResPartner = this.env["res.partner"];
 
         const messages = this.browse(ids);
+        const store = new mailDataHelpers.Store();
         for (const message of messages) {
             const wasStarred = message.starred_partner_ids.includes(this.env.user.partner_id);
             this.write([message.id], {
@@ -324,7 +325,9 @@ export class MailMessage extends models.ServerModel {
                 message_ids: [message.id],
                 starred: !wasStarred,
             });
+            store.add(this.browse(message.id), { starred: !wasStarred });
         }
+        return store.get_result();
     }
 
     unstar_all() {
