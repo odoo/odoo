@@ -2,9 +2,10 @@ import argparse
 import atexit
 import contextlib
 import re
+import logging
 import sys
 from inspect import cleandoc
-from contextlib import contextmanager, suppress
+from contextlib import closing, contextmanager, suppress
 from pathlib import Path
 
 import odoo.init  # import first for core setup
@@ -12,7 +13,6 @@ import odoo.cli
 from odoo.modules import initialize_sys_path, load_script
 from odoo.tools import config
 from odoo.modules.registry import Registry
-from odoo.service.db import exp_drop
 
 
 
@@ -64,15 +64,7 @@ class Command:
 ||||||| parent of 631ad8ee29b ([WIP])
 =======
     @contextmanager
-    def build_env(self, db_name, allow_create=False, update_module=False):
-        from contextlib import closing
-        from odoo.cli.server import ensure_database
-        if allow_create and ensure_database(db_name):
-            update_module = True
-            atexit.register(exp_drop, db_name)
-            logging.getLogger(self.__module__).info(
-                "%s '%s' was created, as it didn't exist.",
-                'Temporary database' if allow_create else 'Database', db_name)
+    def build_env(self, db_name, update_module=False):
         registry = Registry.new(db_name, False, update_module=update_module)
         with closing(registry.cursor()) as cr:
             yield odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
