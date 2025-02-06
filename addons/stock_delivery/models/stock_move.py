@@ -58,10 +58,13 @@ class StockMoveLine(models.Model):
 
     @api.depends('quantity', 'product_uom_id', 'product_id', 'move_id.sale_line_id', 'move_id.sale_line_id.price_reduce_taxinc', 'move_id.sale_line_id.product_uom_id')
     def _compute_sale_price(self):
+        sale_order_ids = self.mapped('move_id.sale_line_id.order_id')
+        line_global_discounts = sale_order_ids._get_line_global_discount()
         for move_line in self:
-            if move_line.move_id.sale_line_id:
-                unit_price = move_line.move_id.sale_line_id.price_reduce_taxinc
-                qty = move_line.product_uom_id._compute_quantity(move_line.quantity, move_line.move_id.sale_line_id.product_uom_id)
+            sale_line = move_line.move_id.sale_line_id
+            if sale_line and sale_line.price_reduce_taxinc:
+                unit_price = sale_line.price_reduce_taxinc - line_global_discounts[sale_line.id]
+                qty = move_line.product_uom_id._compute_quantity(move_line.quantity, sale_line.product_uom_id)
             else:
                 unit_price = move_line.product_id.list_price
                 qty = move_line.product_uom_id._compute_quantity(move_line.quantity, move_line.product_id.uom_id)
