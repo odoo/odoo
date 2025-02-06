@@ -19,8 +19,6 @@ registry.category("views").add("link_tracker_dialog_form", {
 export class LinkTrackerDialog extends FormViewDialog {
     static props = {
         ...FormViewDialog.props,
-        onClose: { type: Function, optional: true },
-        resModel: { type: String, optional: true },
     };
 
     static defaultProps = {
@@ -32,13 +30,9 @@ export class LinkTrackerDialog extends FormViewDialog {
 
     setup() {
         super.setup();
-        this.dialog = useService("dialog");
-        this.orm = useService("orm");
         this.website = useService("website");
-
         this.viewProps = {
             ...this.viewProps,
-            resId: this.resId,
             resModel: this.resModel,
             context: Object.assign(
                 {
@@ -46,30 +40,13 @@ export class LinkTrackerDialog extends FormViewDialog {
                 },
                 this.viewProps.context
             ),
-            ...{},
+            ...{ buttonTemplate: "website_link.LinkTrackerDialogButtons" },
         };
     }
-
-    get resId() {
-        return this.props.resId;
-    }
-
     get resModel() {
         if (this.props.resModel) {
             return this.props.resModel;
         }
         return "link.tracker.dialog";
-    }
-
-    get targetId() {
-        return this.website.currentWebsite?.metadata.mainObject.id;
-    }
-
-    get targetModel() {
-        return this.website.currentWebsite?.metadata.mainObject.model;
-    }
-
-    get isPage() {
-        return this.targetModel === "website.page";
     }
 }
