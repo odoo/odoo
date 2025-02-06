@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
 
+from collections import defaultdict
+
 from odoo import models
 from odoo.tools import float_round
 
@@ -82,6 +84,13 @@ class StockMove(models.Model):
         if not currency.is_zero(workcenter_total_cost):
             rslt['credit_line_vals']['balance'] += workcenter_total_cost
         return rslt
+
+    def _create_out_svl(self, forced_quantity=None):
+        product_unbuild_map = defaultdict(self.env['mrp.unbuild'].browse)
+        for move in self:
+            if move.unbuild_id:
+                product_unbuild_map[move.product_id] |= move.unbuild_id
+        return super(StockMove, self.with_context(product_unbuild_map=product_unbuild_map))._create_out_svl(forced_quantity)
 
     def _get_out_svl_vals(self, forced_quantity):
         unbuild_moves = self.filtered('unbuild_id')
