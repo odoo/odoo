@@ -338,7 +338,7 @@ class MailThread(models.AbstractModel):
         return result
 
     def unlink(self):
-        """ Override unlink to delete messages and followers. This cannot be
+        """ Override unlink to delete (scheduled) messages and followers. This cannot be
         cascaded, because link is done through (res_model, res_id). """
         if not self:
             return True
@@ -349,6 +349,7 @@ class MailThread(models.AbstractModel):
         self.env['mail.followers'].sudo().search(
             [('res_model', '=', self._name), ('res_id', 'in', self.ids)]
         ).unlink()
+        self.env['mail.scheduled.message'].sudo().search([('model', '=', self._name), ('res_id', 'in', self.ids)]).unlink()
         return res
 
     def copy_data(self, default=None):
