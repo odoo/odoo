@@ -320,9 +320,11 @@ class AccountMoveLine(models.Model):
         ondelete='restrict',
         check_company=True,
     )
+    allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     product_uom_id = fields.Many2one(
         comodel_name='uom.uom',
         string='Unit',
+        domain="[('id', 'in', allowed_uom_ids)]",
         compute='_compute_product_uom_id', store=True, readonly=False, precompute=True,
         ondelete="restrict",
     )
@@ -762,6 +764,11 @@ class AccountMoveLine(models.Model):
                 comp_curr.is_zero(line.amount_residual)
                 and foreign_curr.is_zero(line.amount_residual_currency)
             )
+
+    @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids')
+    def _compute_allowed_uom_ids(self):
+        for line in self:
+            line.allowed_uom_ids = line.product_id.uom_id | line.product_id.uom_ids
 
     @api.depends('move_id.move_type', 'tax_ids', 'tax_repartition_line_id', 'debit', 'credit', 'tax_tag_ids', 'is_refund',
                  'move_id.tax_cash_basis_origin_move_id')

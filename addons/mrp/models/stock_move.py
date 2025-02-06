@@ -211,6 +211,12 @@ class StockMove(models.Model):
         help="When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
              "If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also.")
 
+    @api.depends('product_id.bom_ids', 'product_id.bom_ids.product_uom_id')
+    def _compute_allowed_uom_ids(self):
+        super()._compute_allowed_uom_ids()
+        for move in self:
+            move.allowed_uom_ids |= move.product_id.bom_ids.product_uom_id
+
     @api.depends('production_id')
     def _compute_packaging_uom_id(self):
         super()._compute_packaging_uom_id()
