@@ -367,82 +367,6 @@ const matchFilter = (filter, nodes, index) => {
 };
 
 /**
- * @param {string} query
- * @param {number} width
- * @param {number} height
- */
-const matchesQuery = (query, width, height) =>
-    query
-        .toLowerCase()
-        .split(/\s*,\s*/)
-        .some((orPart) =>
-            orPart
-                .split(/\s*\band\b\s*/)
-                .every((andPart) => matchesQueryPart(andPart, width, height))
-        );
-
-/**
- * @param {string} query
- * @param {number} width
- * @param {number} height
- */
-const matchesQueryPart = (query, width, height) => {
-    const [, key, value] = query.match(/\(\s*([\w-]+)\s*:\s*(.+)\s*\)/) || [];
-    let result = false;
-    if (key) {
-        switch (key) {
-            case "display-mode": {
-                result = value === mockedMatchMedia.DISPLAY_MODE;
-                break;
-            }
-            case "max-height": {
-                result = height <= $parseFloat(value);
-                break;
-            }
-            case "max-width": {
-                result = width <= $parseFloat(value);
-                break;
-            }
-            case "min-height": {
-                result = height >= $parseFloat(value);
-                break;
-            }
-            case "min-width": {
-                result = width >= $parseFloat(value);
-                break;
-            }
-            case "orientation": {
-                result = value === "landscape" ? width > height : width < height;
-                break;
-            }
-            case "pointer": {
-                switch (value) {
-                    case "coarse": {
-                        result = globalThis.ontouchstart !== undefined;
-                        break;
-                    }
-                    case "fine": {
-                        result = globalThis.ontouchstart === undefined;
-                        break;
-                    }
-                }
-                break;
-            }
-            case "prefers-color-scheme": {
-                result = value === mockedMatchMedia.COLOR_SCHEME;
-                break;
-            }
-            case "prefers-reduced-motion": {
-                result = value === mockedMatchMedia.REDUCED_MOTION;
-                break;
-            }
-        }
-    }
-
-    return query.startsWith("not") ? !result : result;
-};
-
-/**
  * @template T
  * @param {T} value
  * @param {(keyof T)[]} propsA
@@ -1180,37 +1104,6 @@ export function isNodeVisible(node) {
 
     return visible;
 }
-
-/**
- * @type {typeof matchMedia}
- */
-export function mockedMatchMedia(query) {
-    let onchange = null;
-    return {
-        addEventListener: (type, callback) => window.addEventListener("resize", callback),
-        get matches() {
-            return matchesQuery(query, window.innerWidth, window.innerHeight);
-        },
-        media: query,
-        get onchange() {
-            return onchange;
-        },
-        set onchange(value) {
-            value ||= null;
-            if (value) {
-                window.addEventListener("resize", value);
-            } else {
-                window.removeEventListener("resize", onchange);
-            }
-            onchange = value;
-        },
-        removeEventListener: (type, callback) => window.removeEventListener("resize", callback),
-    };
-}
-
-mockedMatchMedia.COLOR_SCHEME = "light";
-mockedMatchMedia.DISPLAY_MODE = "browser";
-mockedMatchMedia.REDUCED_MOTION = "reduce";
 
 /**
  * @param {Dimensions} dimensions
