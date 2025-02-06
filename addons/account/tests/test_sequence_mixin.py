@@ -658,6 +658,15 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         wizard.save().resequence()
         self.assertTrue(wizard)
 
+    def test_change_same_journal_not_change_sequence(self):
+        """Changing the journal to the same journal should not change the sequence."""
+        # On first move it's always have same value
+        self.create_move(date='2025-10-17', post=True)
+        move2 = self.create_move(date='2025-10-17', post=True)
+        # we need to create another move to higer the sequence
+        self.create_move(date='2025-10-17', post=True)
+        move2.journal_id = move2.journal_id
+        self.assertEqual(move2.name, 'MISC/2025/10/0002')
 
 @tagged('post_install', '-at_install')
 class TestSequenceMixinDeletion(TestSequenceMixinCommon):
