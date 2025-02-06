@@ -1717,16 +1717,12 @@ export class PosStore extends Reactive {
     }
 
     async getRenderedReceipt(order, title, lines, fullReceipt = false, diningModeUpdate) {
-        let time;
-        if (order.write_date) {
-            time = order.write_date?.split(" ")[1].split(":");
-            time = time[0] + "h" + time[1];
-        }
+        const time = DateTime.now().toFormat("HH:mm");
 
         const printingChanges = {
             table_name: order.table_id ? order.table_id.table_number : "",
             config_name: order.config.name,
-            time: order.write_date ? time : "",
+            time: time,
             tracking_number: order.tracking_number,
             takeaway: order.config.takeaway && order.takeaway,
             employee_name: order.employee_id?.name || order.user_id?.name,

@@ -1,5 +1,6 @@
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import { negate } from "@point_of_sale/../tests/tours/utils/common";
+const { DateTime } = luxon;
 
 export function confirmPopup() {
     return [Dialog.confirm()];
@@ -82,6 +83,19 @@ export function waitRequest() {
         {
             content: "Wait for request to finish",
             trigger: "body:not(:has(.fa-circle-o-notch))",
+        },
+    ];
+}
+
+export function freezeDateTime(millis) {
+    return [
+        {
+            trigger: "body",
+            run: () => {
+                DateTime.now = () => {
+                    return DateTime.fromMillis(millis);
+                };
+            },
         },
     ];
 }
