@@ -513,7 +513,7 @@ def load_modules(
             env['ir.model.data']._process_end(registry.updated_modules)
             env.flush_all()
 
-        for kind in ('init', 'demo', 'update'):
+        for kind in ('init', 'update'):
             tools.config[kind] = {}
 
         # STEP 5: Uninstall modules to remove
