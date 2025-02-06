@@ -1658,7 +1658,6 @@ export class PosStore extends Reactive {
 
     async printChanges(order, orderChange) {
         const unsuccedPrints = [];
-        const lastChangedLines = order.last_order_preparation_change.lines;
         orderChange.new.sort((a, b) => {
             const sequenceA = a.pos_categ_sequence;
             const sequenceB = b.pos_categ_sequence;
@@ -1674,8 +1673,9 @@ export class PosStore extends Reactive {
                 printer.config.product_categories_ids,
                 orderChange
             );
+            const anyChangesToPrint = Object.values(changes).some((change) => change.length);
             const diningModeUpdate = orderChange.modeUpdate;
-            if (diningModeUpdate || !Object.keys(lastChangedLines).length) {
+            if (diningModeUpdate || anyChangesToPrint) {
                 const printed = await this.printReceipts(
                     order,
                     printer,
