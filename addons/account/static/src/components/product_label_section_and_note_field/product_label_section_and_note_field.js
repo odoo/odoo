@@ -118,6 +118,13 @@ export class ProductLabelSectionAndNoteField extends Component {
         return value && value[1];
     }
 
+    get sectionAndNoteClasses() {
+        return {
+            "fw-bold": this.isSection,
+            "fst-italic": this.isNote,
+        };
+    }
+
     switchLabelVisibility() {
         this.labelVisibility.value = !this.labelVisibility.value;
         this.switchToLabel = true;

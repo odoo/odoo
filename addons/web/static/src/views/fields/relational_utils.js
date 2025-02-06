@@ -272,7 +272,7 @@ export class Many2XAutocomplete extends Component {
 
     get autoCompleteProps() {
         return {
-            autoComplete: "off",
+            autocomplete: "off",
             autoSelect: this.props.autoSelect,
             autofocus: this.props.autofocus,
             dropdown: this.props.dropdown,

@@ -8,7 +8,7 @@ import { serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { x2ManyCommands } from "@web/core/orm_service";
-// import { registry } from "@web/core/registry";
+import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { uuid } from "@web/views/utils";
 import { ComboConfiguratorDialog } from "./combo_configurator_dialog/combo_configurator_dialog";
@@ -53,7 +53,7 @@ async function applyProduct(record, product) {
 export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
     static template = "sale.SaleProductField";
     static props = {
-        ...ProductLabelSectionAndNoteField.props,
+        ...super.props,
         readonlyField: { type: Boolean, optional: true },
     };
 
@@ -63,13 +63,12 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         this.notification = useService("notification");
         this.orm = useService("orm");
         let isMounted = false;
-        let isInternalUpdate = false;
         let wasCombo = false;
-        const { updateRecord } = this;
-        this.updateRecord = (value) => {
+        let isInternalUpdate = false;
+        this.decorateUpdate = (update) => (value) => {
             isInternalUpdate = true;
             wasCombo = this.isCombo;
-            return updateRecord.call(this, value);
+            return update(value);
         };
         useEffect(
             (value) => {
@@ -113,17 +112,8 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
                 this.props.record.model.root._isReadonly("order_line"))
         );
     }
-    get hasExternalButton() {
-        // Keep external button, even if field is specified as 'no_open' so that the user is not
-        // redirected to the product when clicking on the field content
-        const res = super.hasExternalButton;
-        return res || (!!this.props.record.data[this.props.name] && !this.state.isFloating);
-    }
     get hasConfigurationButton() {
-        return this.isConfigurableLine || this.isConfigurableTemplate || this.isCombo;
-    }
-    get isConfigurableLine() {
-        return false;
+        return this.isConfigurableTemplate || this.isCombo;
     }
     get isConfigurableTemplate() {
         return this.props.record.data.is_configurable_product;
@@ -143,21 +133,28 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
      * @override
      */
     get sectionAndNoteClasses() {
-        const className = super.sectionAndNoteClasses;
-        if (!className && !this.productName && !this.isDownpayment) {
-            return "text-warning";
-        }
-        return className;
+        return {
+            ...super.sectionAndNoteClasses,
+            "text-warning":
+                !this.isSection && !this.isNote && !this.productName && !this.isDownpayment,
+        };
     }
 
-    onClick(ev) {
-        // Override to get internal link to products in SOL that cannot be edited
-        if (this.props.readonly) {
-            ev.stopPropagation();
-            this.openAction();
-        } else {
-            super.onClick(ev);
-        }
+    get m2oProps() {
+        const p = super.m2oProps;
+        return {
+            ...p,
+            canOpen: this.props.canOpen || !this.props.readonly,
+            update: this.decorateUpdate(p.update),
+        };
+    }
+
+    get relation() {
+        return this.props.record.fields[this.props.name].relation;
+    }
+
+    get value() {
+        return this.props.record.data[this.props.name];
     }
 
     async _onProductTemplateUpdate() {
@@ -210,18 +207,17 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         }
     }
 
+    _openGridConfigurator(edit = false) {} // sale_product_matrix
+
     async _onProductUpdate() {} // event_booth_sale, event_sale, sale_renting
 
     onEditConfiguration() {
-        if (this.isConfigurableLine) {
-            this._editLineConfiguration();
-        } else if (this.isCombo) {
-            this._openComboConfigurator(true);
+        if (this.isCombo) {
+            this._openComboConfigurator();
         } else if (this.isConfigurableTemplate) {
             this._openProductConfigurator(true);
         }
     }
-    _editLineConfiguration() {} // event_booth_sale, event_sale, sale_renting
 
     async _openProductConfigurator(edit = false) {
         const saleOrderRecord = this.props.record.model.root;
@@ -390,10 +386,11 @@ export const saleOrderLineProductField = {
     ...productLabelSectionAndNoteField,
     component: SaleOrderLineProductField,
     extractProps(fieldInfo, dynamicInfo) {
-        const props = productLabelSectionAndNoteField.extractProps(...arguments);
-        props.readonlyField = dynamicInfo.readonly;
-        return props;
+        return {
+            ...productLabelSectionAndNoteField.extractProps(fieldInfo, dynamicInfo),
+            readonlyField: dynamicInfo.readonly,
+        };
     },
 };
 
-// registry.category("fields").add("sol_product_many2one", saleOrderLineProductField);
+registry.category("fields").add("sol_product_many2one", saleOrderLineProductField);

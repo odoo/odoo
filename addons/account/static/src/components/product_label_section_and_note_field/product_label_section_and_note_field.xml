@@ -44,7 +44,7 @@
                     placeholder="Enter a description"
                     rows="1"
                     type="text"
-                    t-att-class="{ 'd-none': !(columnIsProductAndLabel and (label or !props.readonly and labelVisibility.value)) }"
+                    t-att-class="{ ...sectionAndNoteClasses, 'd-none': !(columnIsProductAndLabel and (label or !props.readonly and labelVisibility.value)) }"
                     t-att-value="label"
                     t-on-change="(ev) => this.updateLabel(ev.target.value)"
                     t-ref="labelNodeRef"
