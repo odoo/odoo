@@ -894,7 +894,7 @@
         <field name="name">Confirm RFQ</field>
         <field name="model_id" ref="purchase.model_purchase_order"/>
         <field name="binding_model_id" ref="purchase.model_purchase_order"/>
-        <field name="binding_view_types">list</field>
+        <field name="binding_view_types">list,kanban</field>
         <field name="state">code</field>
         <field name="code">
 if records:
@@ -911,6 +911,6 @@ if isinstance(res, dict):
         <field name="target">new</field>
         <field name="context">{'default_res_model': 'purchase.order', 'default_res_ids': active_ids}</field>
         <field name="binding_model_id" ref="purchase.model_purchase_order"/>
-        <field name="binding_view_types">list</field>
+        <field name="binding_view_types">list,kanban</field>
     </record>
 </odoo>

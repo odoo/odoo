@@ -94,7 +94,7 @@
             <field name="name">Split</field>
             <field name="model_id" ref="mrp.model_mrp_production"/>
             <field name="binding_model_id" ref="mrp.model_mrp_production"/>
-            <field name="binding_view_types">list,form</field>
+            <field name="binding_view_types">list,kanban,form</field>
             <field name="state">code</field>
             <field name="code">action = records.action_split()</field>
         </record>
@@ -103,7 +103,7 @@
             <field name="name">Labels</field>
             <field name="model_id" ref="mrp.model_mrp_production"/>
             <field name="binding_model_id" ref="mrp.model_mrp_production"/>
-            <field name="binding_view_types">list,form</field>
+            <field name="binding_view_types">list,kanban,form</field>
             <field name="binding_type">report</field>
             <field name="state">code</field>
             <field name="code">
@@ -149,7 +149,7 @@
             <field name="name">Plan based on Components Availability</field>
             <field name="model_id" ref="mrp.model_mrp_production"/>
             <field name="binding_model_id" ref="mrp.model_mrp_production"/>
-            <field name="binding_view_types">list,form</field>
+            <field name="binding_view_types">list,kanban,form</field>
             <field name="state">code</field>
             <field name="code">action = records.action_plan_with_components_availability()</field>
         </record>
@@ -158,7 +158,7 @@
             <field name="name">Merge</field>
             <field name="model_id" ref="mrp.model_mrp_production"/>
             <field name="binding_model_id" ref="mrp.model_mrp_production"/>
-            <field name="binding_view_types">list</field>
+            <field name="binding_view_types">list,kanban</field>
             <field name="state">code</field>
             <field name="code">action = records.action_merge()</field>
         </record>
@@ -167,7 +167,7 @@
             <field name="name">Mark as Done</field>
             <field name="model_id" ref="mrp.model_mrp_production"/>
             <field name="binding_model_id" ref="mrp.model_mrp_production"/>
-            <field name="binding_view_types">list</field>
+            <field name="binding_view_types">list,kanban</field>
             <field name="state">code</field>
             <field name="code">
             if records:
@@ -725,7 +725,7 @@
             <field name="name">Unreserve</field>
             <field name="model_id" ref="mrp.model_mrp_production"/>
             <field name="binding_model_id" ref="mrp.model_mrp_production"/>
-            <field name="binding_view_types">list</field>
+            <field name="binding_view_types">list,kanban</field>
             <field name="state">code</field>
             <field name="code">
             if records:

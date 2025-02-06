@@ -1099,7 +1099,7 @@
         <field name="name">Mark Quotation as Sent</field>
         <field name="model_id" ref="sale.model_sale_order"/>
         <field name="binding_model_id" ref="sale.model_sale_order"/>
-        <field name="binding_view_types">form,list</field>
+        <field name="binding_view_types">form,list,kanban</field>
         <field name="state">code</field>
         <field name="code">action = records.action_quotation_sent()</field>
     </record>
@@ -1118,7 +1118,7 @@
         <field name="model_id" ref="sale.model_sale_order"/>
         <field name="sequence">1</field>
         <field name="binding_model_id" ref="sale.model_sale_order"/>
-        <field name="binding_view_types">list,form</field>
+        <field name="binding_view_types">list,kanban,form</field>
         <field name="state">code</field>
         <field name="code">
             if records:
@@ -1133,6 +1133,6 @@
         <field name="target">new</field>
         <field name="context">{'default_res_model': 'sale.order', 'default_res_ids': active_ids}</field>
         <field name="binding_model_id" ref="sale.model_sale_order"/>
-        <field name="binding_view_types">list</field>
+        <field name="binding_view_types">list,kanban</field>
     </record>
 </odoo>
