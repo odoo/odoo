@@ -128,7 +128,6 @@ export class PosStore extends WithLazyGetterTrap {
         this.selectedPartner = null;
         this.selectedCategory = null;
         this.searchProductWord = "";
-        this.mainProductVariant = {};
         this.ready = new Promise((resolve) => {
             this.markReady = resolve;
         });
@@ -425,7 +424,6 @@ export class PosStore extends WithLazyGetterTrap {
 
             for (let i = 0; i < nbrProduct - 1; i++) {
                 products[i].available_in_pos = false;
-                this.mainProductVariant[products[i].id] = products[nbrProduct - 1];
             }
         }
     }
@@ -2139,28 +2137,13 @@ export class PosStore extends WithLazyGetterTrap {
         return this.config.proxy_ip;
     }
 
-    addMainProductsToDisplay(products) {
-        const uniqueProductsMap = new Map();
-        for (const product of products) {
-            if (product.id in this.mainProductVariant) {
-                const mainProduct = this.mainProductVariant[product.id];
-                uniqueProductsMap.set(mainProduct.id, mainProduct);
-            } else {
-                uniqueProductsMap.set(product.id, product);
-            }
-        }
-        return Array.from(uniqueProductsMap.values());
-    }
-
     get productsToDisplay() {
         const searchWord = this.searchProductWord.trim();
         const allProducts = this.models["product.template"].getAll();
         let list = [];
 
         if (searchWord !== "") {
-            list = this.addMainProductsToDisplay(
-                this.getProductsBySearchWord(searchWord, allProducts)
-            );
+            list = this.getProductsBySearchWord(searchWord, allProducts);
         } else if (this.selectedCategory?.id) {
             list = this.selectedCategory.associatedProducts;
         } else {
