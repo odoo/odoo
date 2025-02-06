@@ -434,29 +434,29 @@ describe("Selection collapsed", () => {
         // see `anchor.nodeName === "A" && brEls.includes(anchor.firstChild)` in line_break_plugin.js
         test("should insert line breaks outside the edges of an anchor in unbreakable", async () => {
             await testEditor({
-                contentBefore: "<div>ab<a>[]cd</a></div>",
+                contentBefore: `<div class="oe_unbreakable">ab<a>[]cd</a></div>`,
                 stepFunction: splitBlockA,
-                contentAfter: "<div>ab<br><a>[]cd</a></div>",
+                contentAfter: `<div class="oe_unbreakable">ab<br><a>[]cd</a></div>`,
             });
             await testEditor({
-                contentBefore: "<div><a>a[]b</a></div>",
+                contentBefore: `<div class="oe_unbreakable"><a>a[]b</a></div>`,
                 stepFunction: splitBlockA,
-                contentAfter: "<div><a>a<br>[]b</a></div>",
+                contentAfter: `<div class="oe_unbreakable"><a>a<br>[]b</a></div>`,
             });
             await testEditor({
-                contentBefore: "<div><a>ab[]</a></div>",
+                contentBefore: `<div class="oe_unbreakable"><a>ab[]</a></div>`,
                 stepFunction: splitBlockA,
-                contentAfter: "<div><a>ab</a><br><br>[]</div>",
+                contentAfter: `<div class="oe_unbreakable"><a>ab</a><br><br>[]</div>`,
             });
             await testEditor({
-                contentBefore: "<div><a>ab[]</a>cd</div>",
+                contentBefore: `<div class="oe_unbreakable"><a>ab[]</a>cd</div>`,
                 stepFunction: splitBlockA,
-                contentAfter: "<div><a>ab</a><br>[]cd</div>",
+                contentAfter: `<div class="oe_unbreakable"><a>ab</a><br>[]cd</div>`,
             });
             await testEditor({
-                contentBefore: '<div><a style="display: block;">ab[]</a></div>',
+                contentBefore: `<div class="oe_unbreakable"><a style="display: block;">ab[]</a></div>`,
                 stepFunction: splitBlockA,
-                contentAfter: '<div><a style="display: block;">ab</a>[]<br></div>',
+                contentAfter: `<div class="oe_unbreakable"><a style="display: block;">ab</a>[]<br></div>`,
             });
         });
 

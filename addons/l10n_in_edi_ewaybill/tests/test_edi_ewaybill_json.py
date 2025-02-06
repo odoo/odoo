@@ -71,13 +71,13 @@ class TestEdiEwaybillJson(TestEdiJson):
             }
             ],
             "totalValue": 1800.0,
-            "cgstValue": 79.3,
-            "sgstValue": 79.3,
+            "cgstValue": 76.5,
+            "sgstValue": 76.5,
             "igstValue": 0.0,
             "cessValue": 45.0,
             "cessNonAdvolValue": 1.59,
             "otherValue": 0.0,
-            "totInvValue": 2005.19
+            "totInvValue": 1999.59
         }
         self.assertDictEqual(json_value, expected, "Indian EDI send json value is not matched")
 

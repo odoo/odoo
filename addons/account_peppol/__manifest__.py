@@ -43,7 +43,6 @@
     'assets': {
         'web.assets_backend': [
             'account_peppol/static/src/components/**/*',
-            'account_peppol/static/src/scss/**/*',
         ],
         'web.assets_frontend': [
             'account_peppol/static/src/js/*',

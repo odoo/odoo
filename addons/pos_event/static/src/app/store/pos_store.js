@@ -5,7 +5,7 @@ import { PosStore } from "@point_of_sale/app/store/pos_store";
 patch(PosStore.prototype, {
     async setup() {
         await super.setup(...arguments);
-        this.onNotified("UPDATE_AVAILABLE_SEATS", (data) => {
+        this.data.connectWebSocket("UPDATE_AVAILABLE_SEATS", (data) => {
             for (const ev of data) {
                 const event = this.models["event.event"].get(ev.event_id);
                 if (event) {

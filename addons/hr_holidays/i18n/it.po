@@ -2733,6 +2733,16 @@ msgstr "Solo"
 
 #. module: hr_holidays
 #. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"Only %s's Time Off Approver, a time off Officer/Responsible or Administrator"
+" can approve or refuse allocation requests."
+msgstr ""
+"Solo l'approvatore, il responsabile o l'amministratore delle ferie di %s può"
+" approvare o rifiutare le richieste di assegnazione."
+
+#. module: hr_holidays
+#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Manager can reset a refused leave."
 msgstr "Solo un supervisore ferie può reimpostare un permesso respinto."
@@ -2768,18 +2778,19 @@ msgstr "Solo i manager possono modificare un permesso annullato."
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid "Only a time off Manager can approve its own requests."
-msgstr "Solo un supervisore ferie può approvare le proprie richieste."
+msgid "Only a time off Administrator can approve their own requests."
+msgstr ""
+"Solo un amministratore delle ferie può approvare le proprie richieste."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
-"Only a time off Officer/Responsible or Manager can approve or refuse time "
-"off requests."
+"Only a time off Officer/Responsible or Administrator can approve or refuse "
+"allocation requests."
 msgstr ""
-"Solo un responsabile ferie o un supervisore può approvare o respingere le "
-"richieste."
+"Solo un responsabile o amministratore delle ferie può approvare o rifiutare "
+"le richieste di assegnazione."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4458,6 +4469,16 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You must be %s's Manager to approve this leave"
 msgstr "Devi essere il manager di %s per approvare il congedo"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid ""
+"You must be either %s's Time Off Approver or Time off Administrator to "
+"validate this allocation request."
+msgstr ""
+"Per approvare la richiesta di assegnazione, devi essere un approvatore o "
+"amministratore delle ferie di %s."
 
 #. module: hr_holidays
 #. odoo-python

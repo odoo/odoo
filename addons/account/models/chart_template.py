@@ -1365,9 +1365,9 @@ class AccountChartTemplate(models.AbstractModel):
 
         # Gather translations for records that are created from the chart_template data
         for chart_template, chart_companies in groupby(companies, lambda c: c.chart_template):
-            template_data = template_data or self.env['account.chart.template']._get_chart_template_data(chart_template)
-            template_data.pop('template_data', None)
-            for mname, data in template_data.items():
+            chart_template_data = template_data or self.env['account.chart.template']._get_chart_template_data(chart_template)
+            chart_template_data.pop('template_data', None)
+            for mname, data in chart_template_data.items():
                 for _xml_id, record in data.items():
                     fnames = {fname.split('@')[0] for fname in record if fname != '__translation_module__'}
                     for lang in langs:

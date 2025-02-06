@@ -110,7 +110,7 @@ test("load hierarchy view", async () => {
     expect(".o_hierarchy_node_button.btn-primary").toHaveCount(1);
     expect(".o_hierarchy_node_button.btn-primary.d-grid").toHaveCount(1);
     expect(".o_hierarchy_node_button.btn-primary.rounded-0").toHaveCount(1);
-    expect(".o_hierarchy_node_button.btn-primary .o_hierarchy_icon").toHaveCount(1);
+    expect(".o_hierarchy_node_button.btn-primary .fa-rotate-90.align-text-top").toHaveCount(1);
     expect(".o_hierarchy_node_button.btn-primary").toHaveText("Unfold\n1");
 
     expect(".o_hierarchy_row:eq(0) .o_hierarchy_node").toHaveCount(1);
@@ -1127,7 +1127,7 @@ test("check default icon is correctly used inside button to display child nodes"
         "Unfold\n1"
     );
     expect(
-        ".o_hierarchy_node button[name=hierarchy_search_subsidiaries] i.fa-share-alt.o_hierarchy_icon"
+        ".o_hierarchy_node button[name=hierarchy_search_subsidiaries] i.fa-share-alt.fa-rotate-90.align-text-top"
     ).toHaveCount(1, {
         message:
             "The default icon of the hierarchy view should be displayed inside the button to unfold the node.",

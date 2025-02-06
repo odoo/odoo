@@ -6,41 +6,38 @@ import { testEditor } from "./_helpers/editor";
  */
 
 describe("No orphan inline elements compatibility mode", () => {
-    test("should wrap inline node inside a p", async () => {
+    test("should wrap inline node inside a div baseContainer", async () => {
         await testEditor({
             contentBefore: "<p>abc</p> <p>def</p> orphan node",
-            contentAfter: '<p>abc</p><p>def</p><p style="margin-bottom: 0px;"> orphan node</p>',
+            contentAfter: "<p>abc</p><p>def</p><div> orphan node</div>",
         });
     });
 
-    test("should wrap inline node inside a p (2)", async () => {
+    test("should wrap inline node inside a div baseContainer (2)", async () => {
         await testEditor({
             contentBefore: "<p>ab</p>cd<p>ef</p>",
-            contentAfter: '<p>ab</p><p style="margin-bottom: 0px;">cd</p><p>ef</p>',
+            contentAfter: "<p>ab</p><div>cd</div><p>ef</p>",
         });
     });
 
-    test("should transform root <br> into <p>", async () => {
+    test("should transform root <br> into a div baseContainer", async () => {
         await testEditor({
             contentBefore: "ab<br>c",
-            contentAfter:
-                '<p style="margin-bottom: 0px;">ab</p><p style="margin-bottom: 0px;">c</p>',
+            contentAfter: "<div>ab</div><div>c</div>",
         });
     });
 
     test("should keep <br> if necessary", async () => {
         await testEditor({
             contentBefore: "ab<br><br>c",
-            contentAfter:
-                '<p style="margin-bottom: 0px;">ab</p><p style="margin-bottom: 0px;"><br></p><p style="margin-bottom: 0px;">c</p>',
+            contentAfter: "<div>ab</div><div><br></div><div>c</div>",
         });
     });
 
     test("should keep multiple conecutive <br> if necessary", async () => {
         await testEditor({
             contentBefore: "ab<br><br><br><br>c",
-            contentAfter:
-                '<p style="margin-bottom: 0px;">ab</p><p style="margin-bottom: 0px;"><br></p><p style="margin-bottom: 0px;"><br></p><p style="margin-bottom: 0px;"><br></p><p style="margin-bottom: 0px;">c</p>',
+            contentAfter: "<div>ab</div><div><br></div><div><br></div><div><br></div><div>c</div>",
         });
     });
 
@@ -48,7 +45,7 @@ describe("No orphan inline elements compatibility mode", () => {
         await testEditor({
             contentBefore: 'ab<br>c<br>d<span class="keep">xxx</span>e<br>f',
             contentAfter:
-                '<p style="margin-bottom: 0px;">ab</p><p style="margin-bottom: 0px;">c</p><p style="margin-bottom: 0px;">d<span class="keep">xxx</span>e</p><p style="margin-bottom: 0px;">f</p>',
+                '<div>ab</div><div>c</div><div>d<span class="keep">xxx</span>e</div><div>f</div>',
         });
     });
 
@@ -56,7 +53,7 @@ describe("No orphan inline elements compatibility mode", () => {
         await testEditor({
             contentBefore: "ab<br>c<ul><li>d</li><li>e</li></ul> f<br>g",
             contentAfter:
-                '<p style="margin-bottom: 0px;">ab</p><p style="margin-bottom: 0px;">c</p><ul><li>d</li><li>e</li></ul><p style="margin-bottom: 0px;"> f</p><p style="margin-bottom: 0px;">g</p>',
+                "<div>ab</div><div>c</div><ul><li>d</li><li>e</li></ul><div> f</div><div>g</div>",
         });
     });
 
@@ -71,8 +68,7 @@ describe("No orphan inline elements compatibility mode", () => {
         });
         await testEditor({
             contentBefore: "xx<p>ab<br>c</p>d<br>yy",
-            contentAfter:
-                '<p style="margin-bottom: 0px;">xx</p><p>ab<br>c</p><p style="margin-bottom: 0px;">d</p><p style="margin-bottom: 0px;">yy</p>',
+            contentAfter: "<div>xx</div><p>ab<br>c</p><div>d</div><div>yy</div>",
         });
     });
 
@@ -90,8 +86,7 @@ describe("No orphan inline elements compatibility mode", () => {
     test("should transform root .fa", async () => {
         await testEditor({
             contentBefore: '<p>ab</p><i class="fa fa-beer"></i><p>c</p>',
-            contentAfter:
-                '<p>ab</p><p style="margin-bottom: 0px;"><i class="fa fa-beer"></i></p><p>c</p>',
+            contentAfter: '<p>ab</p><div><i class="fa fa-beer"></i></div><p>c</p>',
         });
     });
 
@@ -99,9 +94,8 @@ describe("No orphan inline elements compatibility mode", () => {
         await testEditor({
             contentBefore: '<p>abc</p><div class="o_image"></div><p>def</p>',
             contentBeforeEdit:
-                '<p>abc</p><div style="margin-bottom: 0px;"><div class="o_image" contenteditable="false"></div></div><p>def</p>',
-            contentAfter:
-                '<p>abc</p><div style="margin-bottom: 0px;"><div class="o_image"></div></div><p>def</p>',
+                '<p>abc</p><div><div class="o_image" contenteditable="false"></div></div><p>def</p>',
+            contentAfter: '<p>abc</p><div><div class="o_image"></div></div><p>def</p>',
         });
     });
 });
@@ -110,7 +104,7 @@ describe("allowInlineAtRoot options", () => {
     test("should wrap inline node inside a p by default", async () => {
         await testEditor({
             contentBefore: "abc",
-            contentAfter: '<p style="margin-bottom: 0px;">abc</p>',
+            contentAfter: "<div>abc</div>",
         });
     });
 
@@ -118,7 +112,7 @@ describe("allowInlineAtRoot options", () => {
         await testEditor(
             {
                 contentBefore: "abc",
-                contentAfter: '<p style="margin-bottom: 0px;">abc</p>',
+                contentAfter: "<div>abc</div>",
             },
             { allowInlineAtRoot: false }
         );
@@ -166,6 +160,33 @@ describe("list normalization", () => {
         await testEditor({
             contentBefore: "<ul><li>abc<strong>def</strong><p>ghi</p></li></ul>",
             contentAfter: "<ul><li><p>abc<strong>def</strong></p><p>ghi</p></li></ul>",
+        });
+    });
+});
+
+describe("link normalization", () => {
+    test("should move inline color from anchor to font", async () => {
+        await testEditor({
+            contentBefore: '<p><a href="#" style="color: #008f8c">test</a></p>',
+            contentAfter:
+                '<p><a href="#"><font style="color: rgb(0, 143, 140);">test</font></a></p>',
+        });
+    });
+
+    test("should remove anchor color and retain font color", async () => {
+        await testEditor({
+            contentBefore:
+                '<p><a href="#" style="color: #008f8c"><font style="color: rgb(255, 0, 0);">test</font></a></p>',
+            contentAfter: '<p><a href="#"><font style="color: rgb(255, 0, 0);">test</font></a></p>',
+        });
+    });
+
+    test("should handle inline color styles in multiple anchor elements", async () => {
+        await testEditor({
+            contentBefore:
+                '<p><a href="#" style="color: #008f8c"><font style="color: rgb(255, 0, 0);">test</font></a></p><p><a href="#" style="color: #008f8c">test</a></p>',
+            contentAfter:
+                '<p><a href="#"><font style="color: rgb(255, 0, 0);">test</font></a></p><p><a href="#"><font style="color: rgb(0, 143, 140);">test</font></a></p>',
         });
     });
 });

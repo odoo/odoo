@@ -129,6 +129,59 @@ class TestProcRule(TransactionCase):
         ])
         self.assertEqual(len(moves.ids), 1, "It should have created a picking from Stock to Output with the original picking as destination")
 
+    def test_get_rule_respects_sequence_order(self):
+        """Test that _get_rule selects the rule associated with the route of the lowest sequence."""
+
+        # Create a warehouse and a product
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        product = self.env['product.product'].create({'name': 'Test Product', 'is_storable': True})
+
+        # Create routes with different sequences to simulate prioritization.
+        route_low_priority = self.env['stock.route'].create({'name': 'Route 1', 'sequence': 10})
+        rule_low_priority = self.env['stock.rule'].create({
+            'name': 'Rule for Route 1',
+            'route_id': route_low_priority.id,
+            'action': 'pull',
+            'location_src_id': warehouse.lot_stock_id.id,
+            'location_dest_id': warehouse.lot_stock_id.id,
+            'picking_type_id': warehouse.out_type_id.id,
+            'sequence': 20,
+        })
+
+        # Create a second route with higher priority (lower sequence).
+        route_high_priority = self.env['stock.route'].create({'name': 'Route 2', 'sequence': 5})
+        rule_high_priority = self.env['stock.rule'].create({
+            'name': 'Rule for Route 2',
+            'route_id': route_high_priority.id,
+            'action': 'pull',
+            'location_src_id': warehouse.lot_stock_id.id,
+            'location_dest_id': warehouse.lot_stock_id.id,
+            'picking_type_id': warehouse.out_type_id.id,
+            'sequence': 20,
+        })
+
+        # Assign both routes to the product. This order is set so that the method
+        # will be forced to sort the routes by their sequence.
+        product.write({'route_ids': [(4, route_low_priority.id), (4, route_high_priority.id)]})
+
+        # Create a procurement group for testing rule selection.
+        procurement_group = self.env['procurement.group'].create({'name': 'Test Procurement Group'})
+
+        # Call the _get_rule method to simulate rule selection.
+        rule = procurement_group._get_rule(
+            product_id=product,
+            location_id=warehouse.lot_stock_id,
+            values={
+                'warehouse_id': warehouse,
+                'route_ids': product.route_ids,
+            }
+        )
+
+        # Assert that the selected rule corresponds to the route with the lowest sequence.
+        self.assertEqual(rule, rule_high_priority,
+                         "The rule associated with the route having the lowest sequence "
+                         "(high_priority) should be selected.")
+
     def test_propagate_deadline_move(self):
         deadline = datetime.now()
         move_dest = self.env['stock.move'].create({

@@ -29,7 +29,7 @@ function columnIsAvailable(numberOfColumns) {
 
 export class ColumnPlugin extends Plugin {
     static id = "column";
-    static dependencies = ["selection", "history"];
+    static dependencies = ["baseContainer", "selection", "history"];
     resources = {
         user_commands: [
             {
@@ -141,14 +141,14 @@ export class ColumnPlugin extends Plugin {
         block.before(container);
         columns.shift().append(block);
         for (const column of columns) {
-            const p = this.document.createElement("p");
-            p.append(this.document.createElement("br"));
-            column.append(p);
+            const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+            baseContainer.append(this.document.createElement("br"));
+            column.append(baseContainer);
         }
         if (addParagraphAfter) {
-            const p = this.document.createElement("p");
-            p.append(this.document.createElement("br"));
-            container.after(p);
+            const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+            baseContainer.append(this.document.createElement("br"));
+            container.after(baseContainer);
         }
     }
 
@@ -172,9 +172,9 @@ export class ColumnPlugin extends Plugin {
             for (let i = 0; i < diff; i++) {
                 const column = this.document.createElement("div");
                 column.classList.add(`col-${columnSize}`);
-                const p = this.document.createElement("p");
-                p.append(this.document.createElement("br"));
-                column.append(p);
+                const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                baseContainer.append(this.document.createElement("br"));
+                column.append(baseContainer);
                 lastColumn.after(column);
                 lastColumn = column;
             }

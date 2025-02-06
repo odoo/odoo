@@ -35,5 +35,5 @@ class Digest(models.Model):
 
     def _compute_kpis_actions(self, company, user):
         res = super(Digest, self)._compute_kpis_actions(company, user)
-        res['kpi_account_total_revenue'] = 'account.action_move_out_invoice_type&menu_id=%s' % self.env.ref('account.menu_finance').id
+        res['kpi_account_total_revenue'] = 'account.action_move_out_invoice_type?menu_id=%s' % self.env.ref('account.menu_finance').id
         return res

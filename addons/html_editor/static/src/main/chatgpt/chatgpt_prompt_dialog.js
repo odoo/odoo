@@ -12,6 +12,7 @@ export class ChatGPTPromptDialog extends ChatGPTDialog {
         initialPrompt: { type: String, optional: true },
     };
     static defaultProps = {
+        ...super.defaultProps,
         initialPrompt: "",
     };
 

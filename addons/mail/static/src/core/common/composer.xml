@@ -15,7 +15,8 @@
                     'o-hasSelfAvatar': !env.inChatWindow and thread,
                     'o-focused': props.composer.isFocused,
                     'o-editing': props.composer.message,
-                    'o-chatWindow mx-2 mb-3': env.inChatWindow,
+                    'o-chatWindow mx-2': env.inChatWindow,
+                    'mb-3': env.inChatWindow and !props.composer.message,
                     'o-discussApp': env.inDiscussApp,
                 }" t-attf-class="{{ props.className }}">
             <div class="o-mail-Composer-sidebarMain flex-shrink-0" t-if="showComposerAvatar">
@@ -31,9 +32,8 @@
                 <i class="fa fa-lg fa-times-circle rounded-circle p-0 ms-1 cursor-pointer" title="Stop replying" t-on-click="() => props.messageToReplyTo.cancel()"/>
             </div>
             <div class="o-mail-Composer-coreMain d-flex flex-nowrap align-items-start flex-grow-1" t-att-class="{ 'flex-column' : extended }">
-                <div class="d-flex o-mail-Composer-bg flex-grow-1 border border-secondary rounded-3"
+                <div class="d-flex o-mail-Composer-bg m-1 shadow-sm flex-grow-1 border border-secondary rounded-3"
                     t-att-class="{
-                        'o-mail-Composer-compactContainer m-1 shadow-sm': compact and !props.composer.message,
                         'o-iosPwa': isIosPwa,
                         'align-self-stretch' : extended,
                     }"
@@ -85,7 +85,7 @@
                 <Picker t-props="picker"/>
             </div>
         </div>
-        <div t-if="props.composer.message" class="d-flex align-items-center gap-1 w-100">
+        <div t-if="props.composer.message" class="d-flex align-items-center gap-1 w-100 pe-2">
             <span t-if="props.composer.message" class="text-muted px-1 small" t-out="CANCEL_OR_SAVE_EDIT_TEXT" t-on-click="onClickCancelOrSaveEditText"/>
             <span class="flex-grow-1"/>
             <t t-call="mail.Composer.extraActions"/>
@@ -98,7 +98,7 @@
     <button class="o-mail-Composer-send btn"
         t-att-class="{
             'btn-primary btn-sm': extended,
-            'btn-link p-1 rounded-pill': !extended,
+            'btn-link rounded-circle p-0': !extended,
             'me-2': env.inDiscussApp,
             'border-start-0': env.inDiscussApp and !props.composer.message,
             'border-0': props.composer.message,
@@ -108,13 +108,13 @@
         t-att-aria-label="SEND_TEXT"
     >
         <t t-if="thread and thread.model !== 'discuss.channel'" t-out="SEND_TEXT"/>
-        <t t-else=""><i class="fa fa-fw fa-paper-plane-o"/></t>
+        <t t-else=""><i class="fa fa-fw fa-lg fa-paper-plane-o"/></t>
     </button>
 </t>
 
 <t t-name="mail.Composer.fullComposer">
-    <button t-if="props.showFullComposer and thread and thread.model !== 'discuss.channel'" class="o-mail-Composer-fullComposer btn p-1 border-0 rounded-pill" title="Full composer" aria-label="Full composer" type="button" t-on-click="onClickFullComposer" data-hotkey="shift+c">
-        <i class="fa fa-fw fa-expand"/>
+    <button t-if="props.showFullComposer and thread and thread.model !== 'discuss.channel'" class="o-mail-Composer-fullComposer btn border-0 rounded-circle p-0" title="Full composer" aria-label="Full composer" type="button" t-on-click="onClickFullComposer" data-hotkey="shift+c">
+        <i class="fa fa-fw fa-lg fa-expand"/>
     </button>
 </t>
 
@@ -125,14 +125,14 @@
             'mx-1': compact and !ui.isSmall,
             'mx-2': extended,
             'ms-3': normal,
-            'rounded': !props.composer.message,
+            'rounded-3': !props.composer.message,
             'o-mail-Composer-bg': !extended and !props.composer.message,
         }"
     >
-        <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline" t-att-class="{ 'mt-1': !props.composer.message and !env.inChatWindow and !extended }" t-ref="main-actions">
+        <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline gap-1" t-att-class="{ 'mt-2': !props.composer.message and !env.inChatWindow, 'mt-1': env.inChatWindow }" t-ref="main-actions">
             <t t-call="mail.Composer.emojiPicker"/>
             <t t-call="mail.Composer.attachFiles"/>
-            <t t-if="extended and ui.isSmall and props.composer.message" t-call="mail.Composer.sendButton"/>
+            <t t-if="ui.isSmall and props.composer.message" t-call="mail.Composer.sendButton"/>
             <t t-if="!extended" t-call="mail.Composer.fullComposer"/>
             <t t-if="hasSendButtonNonEditing" t-call="mail.Composer.sendButton"/>
         </div>
@@ -142,17 +142,17 @@
 
 <t t-name="mail.Composer.quickActions">
     <div class="o-mail-Composer-actions o-mail-Composer-quickActions d-flex rounded o-mail-Composer-bg" name="root" t-att-class="{ 'me-1': props.composer.message, 'me-2': extended }">
-        <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline" t-ref="main-actions">
+        <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline mt-2" t-ref="main-actions">
             <t t-call="mail.Composer.emojiPicker"/>
         </div>
     </div>
 </t>
 
 <t t-name="mail.Composer.extraActions">
-    <div class="o-mail-Composer-actions d-flex" name="root" t-att-class="{ 'mx-1': props.composer.message }">
+    <div class="o-mail-Composer-actions d-flex px-1 gap-1" name="root" t-att-class="{ 'mx-1': props.composer.message }">
         <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline">
             <t t-call="mail.Composer.attachFiles"/>
-            <t t-if="extended and ui.isSmall and props.composer.message" t-call="mail.Composer.sendButton"/>
+            <t t-if="ui.isSmall and props.composer.message" t-call="mail.Composer.sendButton"/>
             <t t-if="!extended" t-call="mail.Composer.fullComposer"/>
             <t t-if="hasSendButtonNonEditing" t-call="mail.Composer.sendButton"/>
         </div>
@@ -161,13 +161,13 @@
 </t>
 
 <t t-name="mail.Composer.emojiPicker">
-    <button class="btn border-0 p-1 rounded-pill" t-att-class="{'bg-300': this.picker.state.picker === this.picker.PICKERS.EMOJI}" aria-label="Emojis" t-on-click="onClickAddEmoji" t-ref="emoji-button"><i class="fa fa-fw fa-smile-o"/></button>
+    <button class="btn border-0 rounded-circle p-0" t-att-class="{'opacity-100': this.picker.state.picker === this.picker.PICKERS.EMOJI}" aria-label="Emojis" t-on-click="onClickAddEmoji" t-ref="emoji-button"><i class="fa fa-fw fa-lg fa-smile-o"/></button>
 </t>
 
 <t t-name="mail.Composer.attachFiles">
     <FileUploader t-if="allowUpload" multiUpload="true" onUploaded.bind="(data) => { attachmentUploader.uploadData(data) }">
         <t t-set-slot="toggler">
-            <button t-att-disabled="!state.active" class="o-mail-Composer-attachFiles btn border-0 rounded-pill p-1" title="Attach files" aria-label="Attach files" type="button" t-on-click="onClickAddAttachment"><i class="fa fa-fw fa-paperclip"/></button>
+            <button t-att-disabled="!state.active" class="o-mail-Composer-attachFiles btn border-0 rounded-circle p-0" title="Attach files" aria-label="Attach files" type="button" t-on-click="onClickAddAttachment"><i class="fa fa-fw fa-lg fa-paperclip"/></button>
         </t>
     </FileUploader>
 </t>

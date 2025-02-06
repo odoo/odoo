@@ -108,8 +108,7 @@ class PeppolRegistration(models.TransientModel):
                 }
             if wizard.company_id.country_code == 'BE' and wizard.peppol_eas not in (False, '0208'):
                 peppol_warnings['company_peppol_eas_warning'] = {
-                    'message': _("The recommended EAS code for Belgium is 0208. "
-                                "The Endpoint should be the Company Registry number."),
+                    'message': _("The recommended identification method for Belgium is your Company Registry Number."),
                 }
             wizard.peppol_warnings = peppol_warnings or False
 
@@ -149,7 +148,10 @@ class PeppolRegistration(models.TransientModel):
             'view_mode': 'form',
             'res_model': 'peppol.registration',
             'target': 'new',
-            'context': self.env.context,
+            'context': {
+                'dialog_size': 'medium',
+                **self.env.context,
+            },
         }
 
         if reopen:

@@ -22,6 +22,7 @@ import {
     setDimensions,
     toSelector,
 } from "./dom";
+import { getTimeOffset, microTick } from "./time";
 
 /**
  * @typedef {Target | Promise<Target>} AsyncTarget
@@ -625,34 +626,31 @@ const registerFileInput = ({ target }) => {
  * @param {ConfirmAction} confirmAction
  */
 const registerForChange = async (target, initialValue, confirmAction) => {
-    const triggerChange = () => {
-        removeChangeTargetListeners();
-
-        if (target.value !== initialValue) {
-            afterNextDispatch = () => dispatch(target, "change");
-        }
-    };
+    const dispatchChange = () => target.value !== initialValue && dispatch(target, "change");
 
     confirmAction &&= confirmAction.toLowerCase();
     if (confirmAction === "auto") {
         confirmAction = getTag(target) === "input" ? "enter" : "blur";
     }
-    if (confirmAction === "enter") {
-        if (getTag(target) === "input") {
-            changeTargetListeners.push(
-                on(
-                    target,
-                    "keydown",
-                    (ev) => !isPrevented(ev) && ev.key === "Enter" && triggerChange()
-                )
-            );
-        } else {
-            throw new HootDomError(`"enter" confirm action is only supported on <input/> elements`);
-        }
+    if (getTag(target) === "input") {
+        changeTargetListeners.push(
+            on(target, "keydown", (ev) => {
+                if (isPrevented(ev) || ev.key !== "Enter") {
+                    return;
+                }
+                removeChangeTargetListeners();
+                afterNextDispatch = dispatchChange;
+            })
+        );
+    } else if (confirmAction === "enter") {
+        throw new HootDomError(`"enter" confirm action is only supported on <input/> elements`);
     }
 
     changeTargetListeners.push(
-        on(target, "blur", triggerChange),
+        on(target, "blur", () => {
+            removeChangeTargetListeners();
+            dispatchChange();
+        }),
         on(target, "change", removeChangeTargetListeners)
     );
 
@@ -1405,6 +1403,7 @@ const _pointerDown = async (target, options) => {
     }
 
     runTime.touchStartPosition = { ...runTime.position };
+    runTime.touchStartTimeOffset = getTimeOffset();
     const prevented = await dispatchPointerEvent(pointerDownTarget, "pointerdown", eventInit, {
         mouse: !pointerDownTarget.disabled && [
             "mousedown",
@@ -1438,6 +1437,7 @@ const _pointerDown = async (target, options) => {
  * @param {PointerOptions} options
  */
 const _pointerUp = async (target, options) => {
+    const isLongTap = getTimeOffset() - runTime.touchStartTimeOffset > LONG_TAP_DELAY;
     const pointerDownTarget = runTime.pointerDownTarget;
     const eventInit = {
         ...runTime.position,
@@ -1474,9 +1474,10 @@ const _pointerUp = async (target, options) => {
     const touchStartPosition = runTime.touchStartPosition;
     runTime.touchStartPosition = {};
 
-    if (hasTouch() && isDifferentPosition(touchStartPosition)) {
-        // No further event is trigger: there was a swiping motion since the "touchstart"
-        // event.
+    if (hasTouch() && (isDifferentPosition(touchStartPosition) || isLongTap)) {
+        // No further event is triggered:
+        // there was a swiping motion since the "touchstart" event
+        // or a long press was detected.
         return;
     }
 
@@ -1590,6 +1591,7 @@ const LOG_COLORS = {
     lightBlue: "#9bbbdc",
     reset: "inherit",
 };
+const LONG_TAP_DELAY = 500;
 
 /** @type {Record<string, Event[]>} */
 const currentEvents = {};
@@ -1886,7 +1888,7 @@ export async function dispatch(target, type, eventInit) {
     if (afterNextDispatch) {
         const callback = afterNextDispatch;
         afterNextDispatch = null;
-        await callback();
+        await microTick().then(callback);
     }
 
     return event;

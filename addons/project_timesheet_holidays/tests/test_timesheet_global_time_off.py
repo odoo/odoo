@@ -7,7 +7,7 @@ from freezegun import freeze_time
 
 from odoo import Command
 from odoo.tests import common
-
+from odoo.exceptions import UserError
 
 class TestTimesheetGlobalTimeOff(common.TransactionCase):
 
@@ -509,3 +509,22 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
 
         self.assertTrue(global_time_off.timesheet_ids.filtered(lambda r: r.employee_id == test_user.employee_id))
         self.assertTrue(gto_without_calendar.timesheet_ids.filtered(lambda r: r.employee_id == test_user.employee_id))
+
+    def test_unlink_timesheet_with_global_time_off(self):
+        leave_start = datetime(2025, 1, 1, 7, 0)
+        leave_end = datetime(2025, 1, 1, 18, 0)
+
+        global_time_off = self.env['resource.calendar.leaves'].create({
+            'name': 'Public Holiday',
+            'calendar_id': self.test_company.resource_calendar_id.id,
+            'date_from': leave_start,
+            'date_to': leave_end,
+        })
+
+        timesheet = self.env['account.analytic.line'].search([
+            ('global_leave_id', '=', global_time_off.id),
+            ('employee_id', '=', self.full_time_employee.id)
+        ])
+
+        with self.assertRaises(UserError):
+            timesheet.unlink()

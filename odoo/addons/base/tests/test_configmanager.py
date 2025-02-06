@@ -117,6 +117,7 @@ class TestConfigManager(TransactionCase):
             'osv_memory_count_limit': 0,
             'transient_age_limit': 1.0,
             'max_cron_threads': 2,
+            'limit_time_worker_cron': 0,
             'unaccent': False,
             'geoip_city_db': '/usr/share/GeoIP/GeoLite2-City.mmdb',
             'geoip_country_db': '/usr/share/GeoIP/GeoLite2-Country.mmdb',
@@ -236,6 +237,7 @@ class TestConfigManager(TransactionCase):
             'osv_memory_count_limit': 71,
             'transient_age_limit': 4.0,
             'max_cron_threads': 4,
+            'limit_time_worker_cron': 600,
             'unaccent': True,
             'geoip_city_db': '/tmp/city.db',
             'geoip_country_db': '/tmp/country.db',
@@ -368,6 +370,7 @@ class TestConfigManager(TransactionCase):
             'websocket_rate_limit_burst': '10',
             'websocket_rate_limit_delay': '0.2',
             'x_sendfile': False,
+            'limit_time_worker_cron': 0,
         }
         if IS_POSIX:
             # multiprocessing
@@ -503,6 +506,7 @@ class TestConfigManager(TransactionCase):
             'osv_memory_count_limit': 71,
             'transient_age_limit': 4.0,
             'max_cron_threads': 4,
+            'limit_time_worker_cron': 0,
             'unaccent': True,
             'geoip_city_db': '/tmp/city.db',
             'geoip_country_db': '/tmp/country.db',

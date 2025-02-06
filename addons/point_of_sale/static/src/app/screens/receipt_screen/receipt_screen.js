@@ -20,7 +20,6 @@ export class ReceiptScreen extends Component {
         this.renderer = useService("renderer");
         this.notification = useService("notification");
         this.dialog = useService("dialog");
-        this.currentOrder = this.pos.get_order();
         const partner = this.currentOrder.get_partner();
         this.state = useState({
             email: partner?.email || "",
@@ -48,6 +47,9 @@ export class ReceiptScreen extends Component {
             destination: this.state.email,
             name: "Email",
         });
+    }
+    get currentOrder() {
+        return this.pos.get_order();
     }
     get orderAmountPlusTip() {
         const order = this.currentOrder;

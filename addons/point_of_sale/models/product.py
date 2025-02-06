@@ -213,6 +213,7 @@ class ProductProduct(models.Model):
             for s in list(group):
                 if not((s.date_start and s.date_start > date.today()) or (s.date_end and s.date_end < date.today()) or (s.min_qty > quantity)):
                     supplier_list.append({
+                        'id': s.id,
                         'name': s.partner_id.name,
                         'delay': s.delay,
                         'price': s.price

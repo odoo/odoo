@@ -332,6 +332,9 @@ class TestReInvoice(TestSaleCommon):
         })
         prod_gap = self.company_data['product_service_order']
         project = self.env['project.project'].create({'name': 'SO Project'})
+        if not project.account_id:
+            project._create_analytic_account()
+
         self.sale_order.write({
             'project_id': project.id,
             'order_line': [Command.create({

@@ -4,9 +4,10 @@ import { isImageUrl } from "@html_editor/utils/url";
 import { ImageDescription } from "./image_description";
 import { ImagePadding } from "./image_padding";
 import { createFileViewer } from "@web/core/file_viewer/file_viewer_hook";
-import { boundariesOut } from "@html_editor/utils/position";
+import { boundariesOut, childNodeIndex } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import { ImageTransformButton } from "./image_transform_button";
+import { isEmpty } from "@html_editor/utils/dom_info";
 
 function hasShape(imagePlugin, shapeName) {
     return () => imagePlugin.isSelectionShaped(shapeName);
@@ -255,7 +256,20 @@ export class ImagePlugin extends Plugin {
     deleteImage() {
         const selectedImg = this.getSelectedImage();
         if (selectedImg) {
+            const anchorNode = selectedImg.parentElement;
+            let anchorOffset = childNodeIndex(selectedImg);
             selectedImg.remove();
+            // When an image is added as the first element of a <p> tag,
+            // the `dom_plugin.insert` method automatically creates a #text node just before the <img>.
+            // After removing the image and setting the selection at the <p> tag (offset 0),
+            // the selection unexpectedly jumps back to the parent node during input.
+            // To address this issue, we handle this specific case separately.
+            if (anchorNode.nodeName === "P" && isEmpty(anchorNode)) {
+                const br = this.document.createElement("br");
+                anchorNode.replaceChildren(br);
+                anchorOffset = 0;
+            }
+            this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
             this.dependencies.history.addStep();
         }
     }

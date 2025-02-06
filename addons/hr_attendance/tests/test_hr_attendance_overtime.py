@@ -492,11 +492,11 @@ class TestHrAttendanceOvertime(TransactionCase):
         self.assertAlmostEqual(self.europe_employee.total_overtime, 0, 2)
 
     def test_overtime_hours_flexible_resource(self):
-        """ Test the computation of overtime hours for a flexible resource with 8 hours_per_day.
+        """ Test the computation of overtime hours for a single flexible resource with 8 hours_per_day.
+        =========  
         Test Case
-        =========
         1) | 8:00  | 16:00 | -> No overtime
-        2) | 12:00 | 18:00 | -> No overtime
+        2) | 12:00 | 18:00 | -> -2 hours of overtime
         3) | 10:00 | 22:00 | -> 4 hours of overtime
         """
         # 1) 8:00 - 16:00 should contain 0 hours of overtime
@@ -507,12 +507,13 @@ class TestHrAttendanceOvertime(TransactionCase):
         })
         self.assertEqual(attendance.overtime_hours, 0, 'There should be no overtime for the flexible resource.')
 
-        # 2) 12:00 - 18:00 should contain 0 hours of overtime
+        # 2) 12:00 - 18:00 should contain -2 hours of overtime
+        # as we expect the employee to work 8 hours per day
         attendance.write({
             'check_in': datetime(2023, 1, 3, 12, 0),
             'check_out': datetime(2023, 1, 3, 18, 0)
         })
-        self.assertEqual(attendance.overtime_hours, 0, 'There should be no overtime for the flexible resource.')
+        self.assertAlmostEqual(attendance.overtime_hours, -2, 2, 'There should be -2 hours of overtime for the flexible resource.')
 
         # 3) 10:00 - 22:00 should contain 4 hours of overtime
         attendance.write({
@@ -520,6 +521,44 @@ class TestHrAttendanceOvertime(TransactionCase):
             'check_out': datetime(2023, 1, 4, 22, 0)
         })
         self.assertAlmostEqual(attendance.overtime_hours, 4, 2, 'There should be 4 hours of overtime for the flexible resource.')
+        
+    def test_overtime_hours_multiple_flexible_resources(self):
+        """ Test the computation of overtime hours for multiple flexible resources on a single workday with 8 hours_per_day.
+        =========
+        
+        We should see that the overtime hours are recomputed correctly when new attendance records are created.
+        
+        Test Case
+        1) | 8:00  | 12:00 | -> -4 hours of overtime
+        2) (| 8:00 | 12:00 |, | 13:00 | 15:00 |) -> (0, -2) hours of overtime
+        3) (| 8:00 | 12:00 |, | 13:00 | 15:00 |, | 16:00 | 18:00 |) -> (0, 0, 0) hours of overtime
+        """
+        # 1) 8:00 - 12:00 should contain -4 hours of overtime
+        attendance_1 = self.env['hr.attendance'].create({
+            'employee_id': self.flexible_employee.id,
+            'check_in': datetime(2023, 1, 2, 8, 0),
+            'check_out': datetime(2023, 1, 2, 12, 0)
+        })
+        self.assertAlmostEqual(attendance_1.overtime_hours, -4, 2, 'There should be -4 hours of overtime for the flexible resource.')
+
+        # 2) 8:00 - 12:00 and 13:00 - 15:00 should contain 0 and -2 hours of overtime
+        attendance_2 = self.env['hr.attendance'].create({
+            'employee_id': self.flexible_employee.id,
+            'check_in': datetime(2023, 1, 2, 13, 0),
+            'check_out': datetime(2023, 1, 2, 15, 0)
+        })
+        self.assertEqual(attendance_1.overtime_hours, 0, 'There should be no overtime for the flexible resource.')
+        self.assertAlmostEqual(attendance_2.overtime_hours, -2, 2, 'There should be -2 hours of overtime for the flexible resource.')
+        
+        # 3) 8:00 - 12:00, 13:00 - 15:00 and 16:00 - 18:00 should contain 0, 0 and 0 hours of overtime
+        attendance_3 = self.env['hr.attendance'].create({
+            'employee_id': self.flexible_employee.id,
+            'check_in': datetime(2023, 1, 2, 16, 0),
+            'check_out': datetime(2023, 1, 2, 18, 0)
+        })
+        self.assertEqual(attendance_1.overtime_hours, 0, 'There should be no overtime for the flexible resource.')
+        self.assertEqual(attendance_2.overtime_hours, 0, 'There should be no overtime for the flexible resource.')
+        self.assertEqual(attendance_3.overtime_hours, 0, 'There should be no overtime for the flexible resource.') 
 
     def test_overtime_hours_fully_flexible_resource(self):
         """ Test the computation of overtime hours for a fully flexible resource.

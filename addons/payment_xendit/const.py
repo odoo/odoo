@@ -10,6 +10,7 @@ SUPPORTED_CURRENCIES = [
 # https://docs.xendit.co/payment-link/payment-channels
 CURRENCY_DECIMALS = {
     'IDR': 0,
+    'PHP': 0,
 }
 
 # The codes of the payment methods to activate when Xendit is activated.

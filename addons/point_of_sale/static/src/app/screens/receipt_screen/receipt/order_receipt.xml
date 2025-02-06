@@ -46,14 +46,14 @@
                     <t t-out="props.data.label_total"/>
                     <span t-esc="props.formatCurrency(taxTotals.order_sign * taxTotals.order_total)" class="pos-receipt-right-align"/>
                 </div>
-                <t t-if="'order_rounding' in taxTotals">
+                <t t-if="props.data.show_rounding">
                     <div class="pos-receipt-amount receipt-rounding">
                         <t t-out="props.data.label_rounding"/>
                         <span t-esc="props.formatCurrency(taxTotals.order_sign * taxTotals.order_rounding)" class="pos-receipt-right-align"/>
                     </div>
                     <div class="pos-receipt-amount receipt-to-pay">
                         To Pay
-                        <span t-esc="props.formatCurrency(taxTotals.order_sign * taxTotals.order_to_pay)" class="pos-receipt-right-align"/>
+                        <span t-esc="props.formatCurrency(taxTotals.order_sign * (taxTotals.order_total + taxTotals.order_rounding))" class="pos-receipt-right-align"/>
                     </div>
                 </t>
 
@@ -64,9 +64,9 @@
                     <span t-esc="props.formatCurrency(line.amount)" class="pos-receipt-right-align"/>
                 </div>
 
-                <div t-if="'order_change' in taxTotals" class="pos-receipt-amount receipt-change">
+                <div t-if="props.data.show_change" class="pos-receipt-amount receipt-change">
                     <t t-out="props.data.label_change"/>
-                    <span t-esc="props.formatCurrency(taxTotals.order_sign * taxTotals.order_change)" class="pos-receipt-right-align"/>
+                    <span t-esc="props.formatCurrency(props.data.order_change)" class="pos-receipt-right-align"/>
                 </div>
 
                 <!-- Extra Payment Info -->

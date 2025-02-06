@@ -236,6 +236,10 @@ export class HtmlField extends Component {
             ...this.props.editorConfig,
         };
 
+        if (!("baseContainer" in config)) {
+            config.baseContainer = "DIV";
+        }
+
         if (this.props.embeddedComponents) {
             // TODO @engagement: fill this array with default/base components
             config.resources.embedded_components = [...MAIN_EMBEDDINGS];
@@ -313,6 +317,9 @@ export const htmlField = {
         }
         if ("disableFile" in options) {
             editorConfig.disableFile = Boolean(options.disableFile);
+        }
+        if ("baseContainer" in options) {
+            editorConfig.baseContainer = options.baseContainer;
         }
         return {
             editorConfig,

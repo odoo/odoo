@@ -11,7 +11,7 @@
             The other plans will generate dynamic columns, so changing this param would require renaming the columns also.
         -->
         <function model="ir.config_parameter" name="set_param" eval="('analytic.project_plan', '1')"/>
-        <record id="analytic_plan_projects" model="account.analytic.plan">
+        <record id="analytic_plan_projects" model="account.analytic.plan" forcecreate="0">
             <field name="name">Project</field>
             <field name="default_applicability">optional</field>
         </record>

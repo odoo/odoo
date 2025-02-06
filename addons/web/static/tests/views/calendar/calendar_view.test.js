@@ -5185,6 +5185,25 @@ test("update time while drag and drop on month mode", async () => {
     expect(".o_field_widget[name='stop'] input").toHaveValue("12/29/2016 10:00:00");
 });
 
+test("html field on calendar shouldn't have a tooltip", async () => {
+    Event._fields.description = fields.Html();
+    Event._records[0].description = "<p>test html field</p>";
+    await mountView({
+        type: "calendar",
+        resModel: "event",
+        arch: `
+            <calendar date_start="start">
+                <field name="description"/>
+            </calendar>
+        `,
+    });
+
+    await clickEvent(Event._records[0].id);
+    const descriptionField = queryFirst('.o_cw_popover_field .o_field_widget[name="description"]');
+    const parentLi = descriptionField.closest("li");
+    expect(parentLi).toHaveAttribute("data-tooltip", "");
+});
+
 test.tags("mobile");
 test("simple calendar rendering in mobile", async () => {
     await mountView({

@@ -165,7 +165,8 @@ export class SuggestionService {
             thread &&
             (thread.channel_type === "group" ||
                 thread.channel_type === "chat" ||
-                (thread.channel_type === "channel" && thread.authorizedGroupFullName));
+                (thread.channel_type === "channel" &&
+                    (thread.parent_channel_id || thread).group_public_id));
         if (isNonPublicChannel) {
             // Only return the channel members when in the context of a
             // group restricted channel. Indeed, the message with the mention
@@ -176,7 +177,8 @@ export class SuggestionService {
                 .map((member) => member.persona)
                 .filter((persona) => persona.type === "partner");
             if (thread.channel_type === "channel") {
-                partners = new Set([...partners, ...(thread.group_public_id?.personas ?? [])]);
+                const group = (thread.parent_channel_id || thread).group_public_id;
+                partners = new Set([...partners, ...(group?.personas ?? [])]);
             }
         } else {
             partners = Object.values(this.store.Persona.records).filter((persona) => {

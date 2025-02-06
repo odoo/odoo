@@ -4,7 +4,7 @@ import { PosStore } from "@point_of_sale/app/store/pos_store";
 patch(PosStore.prototype, {
     async setup() {
         await super.setup(...arguments);
-        this.onNotified("VIVA_WALLET_LATEST_RESPONSE", () => {
+        this.data.connectWebSocket("VIVA_WALLET_LATEST_RESPONSE", () => {
             const pendingLine = this.getPendingPaymentLine("viva_wallet");
 
             if (pendingLine) {

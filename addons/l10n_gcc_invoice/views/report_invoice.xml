@@ -156,7 +156,7 @@
                     <thead>
                         <tr>
                             <t t-set="colspan" t-value="6"/>
-                            <th name="th_total" class="text-end">
+                            <th name="th_total" class="text-end fw-bold">
                                 <span>
                                     السعر الاجمالي
                                 </span>
@@ -166,7 +166,7 @@
                                 </span>
                             </th>
                             <th name="th_tax_amount"
-                                class="text-end">
+                                class="text-end fw-bold">
                                 <span>
                                     قيمة الضريبة
                                 </span>
@@ -175,7 +175,7 @@
                                     VAT Amount
                                 </span>
                             </th>
-                            <th name="th_subtotal" class="text-end">
+                            <th name="th_subtotal" class="text-end fw-bold">
                                 <span>
                                     مبلغ
                                 </span>
@@ -185,7 +185,7 @@
                                 </span>
                             </th>
                             <th name="th_taxes"
-                                class="text-end">
+                                class="text-end fw-bold">
                                 <span>
                                     الضرائب
                                 </span>
@@ -195,7 +195,7 @@
                                 </span>
                             </th>
                             <th name="th_price_unit" t-if="display_discount"
-                                class="text-end">
+                                class="text-end fw-bold">
                                 <span>
                                     خصم %
                                 </span>
@@ -206,7 +206,7 @@
                                 <t t-set="colspan" t-value="colspan+1"/>
                             </th>
                             <th name="th_priceunit"
-                                class="text-end">
+                                class="text-end fw-bold">
                                 <span>
                                     سعر الوحدة
                                 </span>
@@ -215,7 +215,7 @@
                                     Unit price
                                 </span>
                             </th>
-                            <th name="th_quantity" class="text-end">
+                            <th name="th_quantity" class="text-end fw-bold">
                                 <span>
                                     الكمية
                                 </span>
@@ -233,7 +233,7 @@
                                     Source Document
                                 </span>
                             </th>
-                            <th name="th_description" class="text-end">
+                            <th name="th_description" class="text-end fw-bold">
                                 <span>
                                     الوصف
                                 </span>
@@ -499,11 +499,11 @@
 
                 <p t-if="o.invoice_payment_term_id" name="payment_term">
                     <div class="row">
-                        <div class="col-6 text-start">
+                        <div class="col-4 text-start">
                             <span t-out="o.invoice_payment_term_id.note"/>
                         </div>
-                        <div class="col-6 text-end">
-                            <span dir="rtl" t-if="o.invoice_payment_term_id.note != o_sec.invoice_payment_term_id.note" t-out="o_sec.invoice_payment_term_id.note"/>
+                        <div class="col-4 text-start">
+                            <span t-if="o.invoice_payment_term_id.note != o_sec.invoice_payment_term_id.note" dir="rtl" t-out="o_sec.invoice_payment_term_id.note"/>
                         </div>
                     </div>
                     <t t-if="o.invoice_payment_term_id.display_on_invoice and o.payment_term_details">

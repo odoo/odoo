@@ -3576,7 +3576,7 @@ class BaseModel(metaclass=MetaModel):
         # registry classes; the purpose of this attribute is to behave as a
         # cache of [c for c in cls.mro() if not is_registry_class(c))], which
         # is heavily used in function fields.resolve_mro()
-        cls._model_classes = tuple(c for c in cls.mro() if getattr(c, 'pool', None) is None)
+        cls._model_classes__ = tuple(c for c in cls.mro() if getattr(c, 'pool', None) is None)
 
         # 1. determine the proper fields of the model: the fields defined on the
         # class and magic fields, not the inherited or custom ones
@@ -3589,7 +3589,7 @@ class BaseModel(metaclass=MetaModel):
 
         # collect the definitions of each field (base definition + overrides)
         definitions = defaultdict(list)
-        for klass in reversed(cls._model_classes):
+        for klass in reversed(cls._model_classes__):
             # this condition is an optimization of is_definition_class(klass)
             if isinstance(klass, MetaModel):
                 for field in klass._field_definitions:
@@ -4270,7 +4270,7 @@ class BaseModel(metaclass=MetaModel):
         """
         if not companies:
             return [('company_id', '=', False)]
-        if isinstance(companies, str):
+        if isinstance(companies, unquote):
             return [('company_id', 'in', unquote(f'{companies} + [False]'))]
         return [('company_id', 'in', to_company_ids(companies) + [False])]
 
@@ -4319,13 +4319,13 @@ class BaseModel(metaclass=MetaModel):
                     _logger.warning(_(
                         "Skipping a company check for model %(model_name)s. Its fields %(field_names)s are set as company-dependent, "
                         "but the model doesn't have a `company_id` or `company_ids` field!",
-                        model_name=self.model_name, field_names=regular_fields
+                        model_name=self._name, field_names=regular_fields
                     ))
                     continue
                 for name in regular_fields:
                     corecord = record.sudo()[name]
                     if corecord:
-                        domain = corecord._check_company_domain(companies)
+                        domain = corecord._check_company_domain(companies) # pylint: disable=0601
                         if domain and not corecord.with_context(active_test=False).filtered_domain(domain):
                             inconsistencies.append((record, name, corecord))
             # The second part of the check (for property / company-dependent fields) verifies that the records

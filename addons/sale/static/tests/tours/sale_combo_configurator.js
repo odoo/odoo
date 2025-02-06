@@ -35,15 +35,11 @@ registry
             comboConfiguratorTourUtils.selectComboItem("Product A2"),
             comboConfiguratorTourUtils.selectComboItem("Product B2"),
             comboConfiguratorTourUtils.assertConfirmButtonEnabled(),
-            // Assert that the product configurator is opened when a product with `no_variant` PTALs
-            // is selected.
+            // Assert that the product configurator is opened when a product with configurable
+            // `no_variant` PTALs is selected.
             comboConfiguratorTourUtils.selectComboItem("Product A1"),
             productConfiguratorTourUtils.selectAttribute("Product A1", "No variant attribute", "A"),
-            {
-                content: "Confirm the product configurator",
-                trigger: 'button[name="sale_product_configurator_confirm_button"]',
-                run: 'click',
-            },
+            ...productConfiguratorTourUtils.saveConfigurator(),
             // Assert that the extra price of a combo item is applied correctly.
             comboConfiguratorTourUtils.assertPrice('90.00'),
             // Assert that the extra price of a `no_variant` PTAV is applied correctly.
@@ -51,11 +47,7 @@ registry
             ...productConfiguratorTourUtils.selectAndSetCustomAttribute(
                 "Product A1", "No variant attribute", "B", "Some custom value"
             ),
-            {
-                content: "Confirm the product configurator",
-                trigger: 'button[name="sale_product_configurator_confirm_button"]',
-                run: 'click',
-            },
+            ...productConfiguratorTourUtils.saveConfigurator(),
             comboConfiguratorTourUtils.assertPrice('93.00'),
             // Assert that the order's content is correct.
             ...comboConfiguratorTourUtils.saveConfigurator(),

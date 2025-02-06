@@ -541,6 +541,7 @@
                     <field name="status_in_payment"
                            string="Status"
                            widget="badge"
+                           decoration-info="state == 'draft'"
                            decoration-danger="payment_state == 'not_paid' and invoice_date_due &lt; context_today().strftime('%Y-%m-%d')"
                            decoration-warning="payment_state in ('partial', 'in_payment')"
                            decoration-success="payment_state in ('paid', 'reversed')"
@@ -591,7 +592,7 @@
             <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <xpath expr="//list/header" position="inside">
-                    <button name="action_send_and_print" type="object" string="Print &amp; Send"/>
+                    <button name="action_send_and_print" type="object" string="Send"/>
                 </xpath>
                 <field name="currency_id" position="attributes">
                     <attribute name="string">Invoice Currency</attribute>
@@ -606,7 +607,7 @@
             <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <xpath expr="//list/header" position="inside">
-                    <button name="action_send_and_print" type="object" string="Print &amp; Send"/>
+                    <button name="action_send_and_print" type="object" string="Send"/>
                 </xpath>
                 <field name="currency_id" position="attributes">
                     <attribute name="string">Credit Note Currency</attribute>
@@ -712,15 +713,24 @@
                         <!-- Send (only invoices) -->
                         <button name="action_invoice_sent"
                                 type="object"
-                                string="Print &amp; Send"
+                                string="Send"
                                 invisible="state != 'posted' or is_being_sent or invoice_pdf_report_id or move_type not in ('out_invoice', 'out_refund')"
                                 class="oe_highlight"
                                 data-hotkey="y"/>
                         <button name="action_invoice_sent"
                                 type="object"
-                                string="Print &amp; Send"
+                                string="Send"
                                 invisible="state != 'posted' or not is_being_sent and not invoice_pdf_report_id or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')"
                                 data-hotkey="y"/>
+                        <button name="action_print_pdf"
+                                type="object"
+                                class="oe_highlight"
+                                invisible="state != 'posted' or is_being_sent or invoice_pdf_report_id"
+                                string="Print"/>
+                        <button name="action_print_pdf"
+                                type="object"
+                                invisible="state == 'posted' and not is_being_sent and not invoice_pdf_report_id"
+                                string="Print"/>
                         <!-- Register Payment (only invoices / receipts) -->
                         <button name="action_register_payment" id="account_invoice_payment_btn"
                                 type="object" class="oe_highlight"
@@ -1021,7 +1031,7 @@
                                        context="{'default_partner_id': bank_partner_id, 'display_account_trust': True}"
                                        domain="[('partner_id', '=', bank_partner_id)]"
                                        invisible="move_type not in ('in_invoice', 'in_refund', 'in_receipt')"
-                                       readonly="state != 'draft'"/>
+                                       readonly="is_move_sent"/>
 
                                 <!-- Invoice payment terms (only invoices) + due date (only invoices / receipts) -->
                                 <div class="o_td_label" invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')">
@@ -1398,7 +1408,7 @@
                                         <field name="partner_bank_id"
                                                context="{'default_partner_id': bank_partner_id, 'display_account_trust': True}"
                                                domain="[('partner_id.ref_company_ids', 'parent_of', company_id)]"
-                                               readonly="state != 'draft'"/>
+                                               readonly="is_move_sent"/>
                                         <field name="payment_reference"
                                             invisible="move_type not in ('out_invoice', 'out_refund')"
                                             readonly="inalterable_hash"

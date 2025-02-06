@@ -107,9 +107,21 @@ class MrpBom(models.Model):
     @api.onchange('product_id')
     def _onchange_product_id(self):
         if self.product_id:
+            warning = (
+                self.bom_line_ids.bom_product_template_attribute_value_ids or
+                self.operation_ids.bom_product_template_attribute_value_ids or
+                self.byproduct_ids.bom_product_template_attribute_value_ids
+            ) and {
+                'warning': {
+                    'title': _("Warning"),
+                    'message': _("Changing the product or variant will permanently reset all previously encoded variant-related data."),
+                }
+            }
             self.bom_line_ids.bom_product_template_attribute_value_ids = False
             self.operation_ids.bom_product_template_attribute_value_ids = False
             self.byproduct_ids.bom_product_template_attribute_value_ids = False
+            if warning:
+                return warning
 
     @api.constrains('active', 'product_id', 'product_tmpl_id', 'bom_line_ids')
     def _check_bom_cycle(self):
@@ -214,6 +226,16 @@ class MrpBom(models.Model):
     @api.onchange('product_tmpl_id')
     def onchange_product_tmpl_id(self):
         if self.product_tmpl_id:
+            warning = (
+                self.bom_line_ids.bom_product_template_attribute_value_ids or
+                self.operation_ids.bom_product_template_attribute_value_ids or
+                self.byproduct_ids.bom_product_template_attribute_value_ids
+            ) and {
+                'warning': {
+                    'title': _("Warning"),
+                    'message': _("Changing the product or variant will permanently reset all previously encoded variant-related data."),
+                }
+            }
             default_uom_id = self.env.context.get('default_product_uom_id')
             # Avoids updating the BoM's UoM in case a specific UoM was passed through as a default value.
             if self.product_uom_id.category_id != self.product_tmpl_id.uom_id.category_id or self.product_uom_id.id != default_uom_id:
@@ -230,6 +252,8 @@ class MrpBom(models.Model):
             number_of_bom_of_this_product = self.env['mrp.bom'].search_count(domain)
             if number_of_bom_of_this_product:  # add a reference to the bom if there is already a bom for this product
                 self.code = _("%(product_name)s (new) %(number_of_boms)s", product_name=self.product_tmpl_id.name, number_of_boms=number_of_bom_of_this_product)
+            if warning:
+                return warning
 
     @api.model_create_multi
     def create(self, vals_list):

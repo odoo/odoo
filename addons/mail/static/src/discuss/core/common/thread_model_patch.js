@@ -59,7 +59,7 @@ const threadPatch = {
             }
             const data = await rpc("/discuss/channel/info", { channel_id: this.id });
             if (data) {
-                this.store.insert(data);
+                this.store.insert(data, { html: true });
             } else {
                 this.delete();
             }

@@ -19,7 +19,7 @@ class PaymentPortal(payment.PaymentPortal):
         if sale_order.exists():
             initial_amount = sale_order.amount_total
             sale_order._update_programs_and_rewards()
-            if initial_amount != sale_order.amount_total:
+            if sale_order.currency_id.compare_amounts(sale_order.amount_total, initial_amount):
                 raise ValidationError(
                     _("Cannot process payment: applied reward was changed or has expired.")
                 )

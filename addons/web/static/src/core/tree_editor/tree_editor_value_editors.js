@@ -278,21 +278,21 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
             return makeSelectEditor(options, params);
         }
         case "many2one": {
-            if (["=", "!=", "parent_of", "child_of"].includes(operator)) {
+            if (["=", "!="].includes(operator)) {
                 return {
                     component: DomainSelectorSingleAutocomplete,
-                    extractProps: ({ value, update }) => {
-                        return {
-                            resModel: getResModel(fieldDef),
-                            fieldString: fieldDef.string,
-                            update,
-                            resId: value,
-                        };
-                    },
+                    extractProps: ({ value, update }) => ({
+                        resModel: getResModel(fieldDef),
+                        fieldString: fieldDef.string,
+                        update,
+                        resId: value,
+                    }),
                     isSupported: () => true,
                     defaultValue: () => false,
                     shouldResetValue: (value) => value !== false && !isId(value),
                 };
+            } else if (["parent_of", "child_of"].includes(operator)) {
+                return makeAutoCompleteEditor(fieldDef);
             }
             break;
         }

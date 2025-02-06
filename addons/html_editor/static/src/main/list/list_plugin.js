@@ -4,9 +4,12 @@ import { removeClass, toggleClass, wrapInlinesInBlocks } from "@html_editor/util
 import {
     getDeepestPosition,
     isEmptyBlock,
+    isListElement,
+    isListItemElement,
+    isParagraphRelatedElement,
     isProtected,
     isProtecting,
-    paragraphRelatedElements,
+    listElementSelector,
 } from "@html_editor/utils/dom_info";
 import {
     closestElement,
@@ -21,19 +24,21 @@ import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
 import { _t } from "@web/core/l10n/translation";
 import { compareListTypes, createList, insertListAfter, isListItem } from "./utils";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
-import { getListMode, switchListMode } from "@html_editor/utils/list";
 import { withSequence } from "@html_editor/utils/resource";
-
-function isListActive(listMode) {
-    return (selection) => {
-        const block = closestBlock(selection.anchorNode);
-        return block?.tagName === "LI" && getListMode(block.parentNode) === listMode;
-    };
-}
+import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 
 export class ListPlugin extends Plugin {
     static id = "list";
-    static dependencies = ["tabulation", "history", "input", "split", "selection", "delete", "dom"];
+    static dependencies = [
+        "baseContainer",
+        "tabulation",
+        "history",
+        "input",
+        "split",
+        "selection",
+        "delete",
+        "dom",
+    ];
     resources = {
         user_commands: [
             {
@@ -68,19 +73,19 @@ export class ListPlugin extends Plugin {
                 id: "bulleted_list",
                 groupId: "list",
                 commandId: "toggleListUL",
-                isActive: isListActive("UL"),
+                isActive: this.isListActive("UL"),
             },
             {
                 id: "numbered_list",
                 groupId: "list",
                 commandId: "toggleListOL",
-                isActive: isListActive("OL"),
+                isActive: this.isListActive("OL"),
             },
             {
                 id: "checklist",
                 groupId: "list",
                 commandId: "toggleListCL",
-                isActive: isListActive("CL"),
+                isActive: this.isListActive("CL"),
             },
         ],
         powerbox_items: [
@@ -115,6 +120,7 @@ export class ListPlugin extends Plugin {
         tab_overrides: this.handleTab.bind(this),
         shift_tab_overrides: this.handleShiftTab.bind(this),
         split_element_block_overrides: this.handleSplitBlock.bind(this),
+        node_to_insert_processors: this.processNodeToInsert.bind(this),
     };
 
     setup() {
@@ -221,7 +227,7 @@ export class ListPlugin extends Plugin {
             }
             const li = closestElement(block, isListItem);
             if (li) {
-                if (getListMode(li.parentElement) === mode) {
+                if (this.getListMode(li.parentElement) === mode) {
                     sameModeListItems.add(li);
                 } else {
                     listsToSwitch.add(li.parentElement);
@@ -235,7 +241,7 @@ export class ListPlugin extends Plugin {
         if (listsToSwitch.size || nonListBlocks.size) {
             for (const list of listsToSwitch) {
                 const cursors = this.dependencies.selection.preserveSelection();
-                const newList = switchListMode(list, mode);
+                const newList = this.switchListMode(list, mode);
                 cursors.remapNode(list, newList).restore();
             }
             for (const block of nonListBlocks) {
@@ -280,8 +286,8 @@ export class ListPlugin extends Plugin {
      * @param {"UL"|"OL"|"CL"} mode
      */
     blockToList(element, mode) {
-        if (element.tagName === "P") {
-            return this.pToList(element, mode);
+        if (element.matches(baseContainerGlobalSelector)) {
+            return this.baseContainerToList(element, mode);
         }
         // @todo @phoenix: check for callbacks registered as resources instead?
         if (element.matches("td, th, li.nav-item")) {
@@ -318,15 +324,18 @@ export class ListPlugin extends Plugin {
     }
 
     /**
-     * @param {HTMLParagraphElement} p
+     * @param {HTMLElement} baseContainer baseContainer Element (can be a div with the
+     *        necessary classes/attributes).
      * @param {"UL"|"OL"|"CL"} mode
      */
-    pToList(p, mode) {
+    baseContainerToList(baseContainer, mode) {
         const cursors = this.dependencies.selection.preserveSelection();
-        const list = insertListAfter(this.document, p, mode, [[...p.childNodes]]);
-        this.dependencies.dom.copyAttributes(p, list);
-        p.remove();
-        cursors.remapNode(p, list.firstChild).restore();
+        const list = insertListAfter(this.document, baseContainer, mode, [
+            childNodes(baseContainer),
+        ]);
+        this.dependencies.dom.copyAttributes(baseContainer, list);
+        baseContainer.remove();
+        cursors.remapNode(baseContainer, list.firstChild).restore();
         return list;
     }
 
@@ -335,6 +344,79 @@ export class ListPlugin extends Plugin {
         const list = insertListAfter(this.document, block.lastChild, mode, [[...block.childNodes]]);
         cursors.remapNode(block, list.firstChild).restore();
         return list;
+    }
+
+    /**
+     * Converts a list element and its nested elements to the given list mode.
+     *
+     * @see switchListMode
+     * @param {HTMLUListElement|HTMLOListElement|HTMLLIElement} node - HTML element
+     * representing a list or list item.
+     * @param {string} newMode - Target list mode
+     * @param {Object} options
+     * @returns {HTMLUListElement|HTMLOListElement|HTMLLIElement} node - Modified
+     * list element after conversion.
+     */
+    convertList(node, newMode) {
+        if (!["UL", "OL", "LI"].includes(node.tagName)) {
+            return;
+        }
+        const listMode = this.getListMode(node);
+        if (listMode && newMode !== listMode) {
+            node = this.switchListMode(node, newMode);
+        }
+        for (const child of node.children) {
+            this.convertList(child, newMode);
+        }
+        return node;
+    }
+
+    getListMode(listContainerEl) {
+        if (!["UL", "OL"].includes(listContainerEl.tagName)) {
+            return;
+        }
+        if (listContainerEl.tagName === "OL") {
+            return "OL";
+        }
+        return listContainerEl.classList.contains("o_checklist") ? "CL" : "UL";
+    }
+
+    isListActive(listMode) {
+        return (selection) => {
+            const block = closestBlock(selection.anchorNode);
+            return block?.tagName === "LI" && this.getListMode(block.parentNode) === listMode;
+        };
+    }
+
+    /**
+     * Switches the list mode of the given list element.
+     *
+     * @param {HTMLOListElement|HTMLUListElement} list - The list element to switch the mode of.
+     * @param {"UL"|"OL"|"CL"} newMode - The new mode to switch to.
+     * @param {Object} options
+     * @returns {HTMLOListElement|HTMLUListElement} The modified list element.
+     */
+    switchListMode(list, newMode) {
+        if (this.getListMode(list) === newMode) {
+            return;
+        }
+        const newTag = newMode === "CL" ? "UL" : newMode;
+        const newList = this.dependencies.dom.setTagName(list, newTag);
+        // Clear list style (@todo @phoenix - why??)
+        newList.style.removeProperty("list-style");
+        for (const li of newList.children) {
+            if (li.style.listStyle !== "none") {
+                li.style.listStyle = null;
+                if (!li.style.all) {
+                    li.removeAttribute("style");
+                }
+            }
+        }
+        removeClass(newList, "o_checklist");
+        if (newMode === "CL") {
+            newList.classList.add("o_checklist");
+        }
+        return newList;
     }
 
     /**
@@ -358,7 +440,7 @@ export class ListPlugin extends Plugin {
             return;
         }
         // Transform <li> into <p> if they are not in a <ul> / <ol>.
-        const paragraph = this.document.createElement("p");
+        const paragraph = this.dependencies.baseContainer.createBaseContainer();
         element.replaceWith(paragraph);
         paragraph.replaceChildren(...element.childNodes);
     }
@@ -398,7 +480,10 @@ export class ListPlugin extends Plugin {
             )
         ) {
             const cursors = this.dependencies.selection.preserveSelection();
-            wrapInlinesInBlocks(element, cursors);
+            wrapInlinesInBlocks(element, {
+                baseContainerNodeName: this.dependencies.baseContainer.getDefaultNodeName(),
+                cursors,
+            });
             cursors.restore();
         }
     }
@@ -433,7 +518,7 @@ export class ListPlugin extends Plugin {
             li.nextElementSibling?.querySelector("ol, ul") ||
             li.closest("ol, ul");
 
-        const ul = createList(this.document, getListMode(destul));
+        const ul = createList(this.document, this.getListMode(destul));
         lip.append(ul);
 
         const cursors = this.dependencies.selection.preserveSelection();
@@ -533,13 +618,16 @@ export class ListPlugin extends Plugin {
         const ul = li.parentNode;
         const dir = ul.getAttribute("dir");
         const textAlign = ul.style.getPropertyValue("text-align");
-        wrapInlinesInBlocks(li, cursors);
+        wrapInlinesInBlocks(li, {
+            baseContainerNodeName: this.dependencies.baseContainer.getDefaultNodeName(),
+            cursors,
+        });
         if (!li.hasChildNodes()) {
-            // Outdenting an empty LI produces an empty P
-            const p = this.document.createElement("p");
-            p.append(this.document.createElement("br"));
-            li.append(p);
-            cursors.remapNode(li, p);
+            // Outdenting an empty LI produces an empty baseContainer
+            const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+            baseContainer.append(this.document.createElement("br"));
+            li.append(baseContainer);
+            cursors.remapNode(li, baseContainer);
         }
         // Move LI's children to after UL
         for (const block of childNodes(li).reverse()) {
@@ -599,13 +687,31 @@ export class ListPlugin extends Plugin {
     // Handlers of other plugins commands
     // --------------------------------------------------------------------------
 
+    processNodeToInsert({ nodeToInsert, container }) {
+        if (isListItemElement(container) && isParagraphRelatedElement(nodeToInsert)) {
+            nodeToInsert = this.dependencies.dom.setTagName(nodeToInsert, "LI");
+        }
+        const listEl = container && closestElement(container, listElementSelector);
+        if (!listEl) {
+            return nodeToInsert;
+        }
+        const mode = container && this.getListMode(listEl);
+        if (
+            (isListItemElement(nodeToInsert) && nodeToInsert.classList.contains("oe-nested")) ||
+            isListElement(nodeToInsert)
+        ) {
+            return this.convertList(nodeToInsert, mode);
+        }
+        return nodeToInsert;
+    }
+
     handleTab() {
         const selection = this.dependencies.selection.getEditableSelection();
         const closestLI = closestElement(selection.anchorNode, "LI");
         if (closestLI) {
             const block = closestBlock(selection.anchorNode);
             const isLiContainsUnSpittable =
-                paragraphRelatedElements.includes(block.nodeName) &&
+                isParagraphRelatedElement(block) &&
                 ancestors(block, closestLI).find((node) =>
                     this.dependencies.split.isUnsplittable(node)
                 );
@@ -629,7 +735,7 @@ export class ListPlugin extends Plugin {
         if (closestLI) {
             const block = closestBlock(selection.anchorNode);
             const isLiContainsUnSpittable =
-                paragraphRelatedElements.includes(block.nodeName) &&
+                isParagraphRelatedElement(block) &&
                 ancestors(block, closestLI).find((node) =>
                     this.dependencies.split.isUnsplittable(node)
                 );
@@ -736,7 +842,8 @@ export class ListPlugin extends Plugin {
      */
     onPointerdown(ev) {
         const node = ev.target;
-        const isChecklistItem = node.tagName == "LI" && getListMode(node.parentElement) == "CL";
+        const isChecklistItem =
+            node.tagName == "LI" && this.getListMode(node.parentElement) == "CL";
         if (!isChecklistItem) {
             return;
         }

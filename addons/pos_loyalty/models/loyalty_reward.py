@@ -44,7 +44,7 @@ class LoyaltyReward(models.Model):
         search_domain = [('program_id', 'in', config._get_program_ids().ids)]
         domains = self.search_read(search_domain, fields=['reward_product_domain'], load=False)
         for domain in filter(lambda d: d['reward_product_domain'] != "null", domains):
-            domain = ast.literal_eval(domain['reward_product_domain'])
+            domain = json.loads(domain['reward_product_domain'])
             for condition in self._parse_domain(domain).values():
                 field_name, _, _ = condition
                 fields.add(field_name)

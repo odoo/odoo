@@ -123,6 +123,7 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
                     product_id: lineResume["product_id"],
                     name: lineResume["name"],
                     basic_name: lineResume["basic_name"],
+                    display_name: lineResume["display_name"],
                     isCombo: lineResume["isCombo"],
                     note: lineResume["note"],
                     attribute_value_ids: lineResume["attribute_value_ids"],

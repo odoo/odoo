@@ -217,18 +217,39 @@ patch(PosStore.prototype, {
         this._createDownpaymentLines(sale_order, proposed_down_payment);
     },
     async _createDownpaymentLines(sale_order, total_down_payment) {
-        //This function will create all the downpaymentlines. We will create on downpayment line per unique tax combination
+        //This function will create all the downpaymentlines. We will create one downpayment line per unique tax combination
+        const percentage = total_down_payment / sale_order.amount_total;
         const grouped = Object.groupBy(
             sale_order.order_line.filter((ol) => ol.product_id),
             (ol) => ol.tax_id.map((tax_id) => tax_id.id).sort((a, b) => a - b)
         );
+
+        // We need one unique line for the fixed amount taxes
+        let fixed_taxes_downpayment = 0;
+        const fixed_taxes_tab = [];
+        const down_payment_line_to_create = [];
+
         Object.keys(grouped).forEach(async (key) => {
             const group = grouped[key];
 
-            // Compute the part of the downpayment that should be assigned to this group
-            const total_price = group.reduce((total, line) => (total += line.price_total), 0);
-            const ratio = total_price / sale_order.amount_total;
-            const down_payment_line_price = total_down_payment * ratio;
+            // We compute the values for the fixed taxes downpayment
+            const fixed_taxes = group[0].tax_id.filter((tax) => tax.amount_type === "fixed");
+            const total_qty = group.reduce((total, line) => (total += line.product_uom_qty), 0);
+            fixed_taxes.forEach((tax) => {
+                fixed_taxes_downpayment += tax.amount * total_qty * percentage;
+                fixed_taxes_tab.push(group);
+            });
+
+            // We need to remove the amount of the fixed tax as they will have a separate line
+            const fixed_tax_total_amount = fixed_taxes.reduce((total, tax) => {
+                return total + tax.amount;
+            }, 0);
+            const total_price = group.reduce(
+                (total, line) =>
+                    (total += line.price_total - line.product_uom_qty * fixed_tax_total_amount),
+                0
+            );
+            const down_payment_line_price = total_price * percentage;
             const taxes_to_apply = group[0].tax_id.filter((tax) => tax.amount_type !== "fixed");
             // We apply the taxes and keep the same price
             const new_price = compute_price_force_price_include(
@@ -240,13 +261,35 @@ patch(PosStore.prototype, {
                 this.currency,
                 this.models
             );
-            const new_line = await this.addLineToCurrentOrder({
-                order_id: this.get_order(),
+            down_payment_line_to_create.push({
+                price: new_price,
+                tab: group,
+                tax_ids: taxes_to_apply,
+            });
+        });
+        if (fixed_taxes_downpayment !== 0) {
+            // We try to merge the fixed taxes in one line that has no tax if possible
+            const line = down_payment_line_to_create.find((line) => !line.tax_ids.length);
+            if (line) {
+                line.price += fixed_taxes_downpayment;
+            } else {
+                down_payment_line_to_create.push({
+                    price: fixed_taxes_downpayment,
+                    tab: fixed_taxes_tab.flat(),
+                    tax_ids: [],
+                });
+            }
+        }
+        for (const down_payment_line of down_payment_line_to_create) {
+            this.addLineToCurrentOrder({
+                pos: this,
+                order: this.get_order(),
                 product_id: this.config.down_payment_product_id,
-                price_unit: new_price,
+                price: down_payment_line.price,
+                price_unit: down_payment_line.price,
+                price_type: "automatic",
                 sale_order_origin_id: sale_order,
-                tax_ids: [["link", ...taxes_to_apply]],
-                down_payment_details: group
+                down_payment_details: down_payment_line.tab
                     .filter(
                         (line) =>
                             line.product_id &&
@@ -258,10 +301,9 @@ patch(PosStore.prototype, {
                         price_unit: line.price_unit,
                         total: line.price_total,
                     })),
+                tax_ids: [["link", ...down_payment_line.tax_ids]],
             });
-            new_line.price_type = "automatic";
-            new_line.set_unit_price(new_price);
-        });
+        }
     },
     selectOrderLine(order, line) {
         super.selectOrderLine(...arguments);

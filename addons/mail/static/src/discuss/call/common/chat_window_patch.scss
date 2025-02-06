@@ -6,8 +6,11 @@
     }
     @media (hover: hover) {
         &:hover {
-            .fa-phone, .fa-video-camera {
-                color: $success !important;
+            &:has(.fa-phone), &:has(.fa-video-camera) {
+                outline: 1px solid rgba($success, .35);
+                i {
+                    color: lighten($success, 5%) !important;
+                }
             }
         }
     }

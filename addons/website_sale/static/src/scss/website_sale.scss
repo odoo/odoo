@@ -319,7 +319,7 @@ $input-border-color: $gray-400;
                 }
 
                 &::after {
-                    width: 100vw;
+                    width: calc(100% + var(--o-wsale-products-grid-gap));
                     height: $border-width;
                     bottom: calc(var(--line-offset-y) * -1);
                     left: calc(var(--line-offset-x) * -1);
@@ -513,6 +513,17 @@ div#payment_method {
 a.no-decoration {
     cursor: pointer;
     text-decoration: none !important;
+}
+
+// TODO remove this styling and improve the image template on master to better
+// distinguish single / multiple images regardless of grid/carousel.
+// The goal is to constraint the height on extra long images.
+.o_wsale_product_page_grid_column div:only-child,
+#o-carousel-product .carousel-item:only-child {
+    img {
+        max-height: 75vh !important;
+        object-fit: contain;
+    }
 }
 
 #o-carousel-product {

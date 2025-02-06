@@ -42,6 +42,7 @@ import { UPDATE_METHODS } from "@web/core/orm_service";
 
 export const viewService = {
     dependencies: ["orm"],
+    async: ["loadViews"],
     start(env, { orm }) {
         let cache = {};
 

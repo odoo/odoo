@@ -20,6 +20,7 @@ export class MentionPlugin extends Plugin {
     }
 
     onSelect(ev, option) {
+        this.dependencies.selection.focusEditable();
         const mentionBlock = renderToElement("mail.Wysiwyg.mentionLink", {
             option,
             href: url(
@@ -47,7 +48,6 @@ export class MentionPlugin extends Plugin {
                     type: ev.data === "@" ? "partner" : "channel",
                     close: () => {
                         this.mentionList.close();
-                        this.dependencies.selection.focusEditable();
                     },
                 },
             });

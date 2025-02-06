@@ -97,6 +97,9 @@ patch(PaymentScreen.prototype, {
             ) {
                 agg[pe.coupon_id].partner_id = partner.id;
             }
+            if (program.program_type != "loyalty") {
+                agg[pe.coupon_id].expiration_date = program.date_to;
+            }
             return agg;
         }, {});
         for (const line of rewardLines) {
@@ -109,6 +112,9 @@ patch(PaymentScreen.prototype, {
                     coupon_id: couponId,
                     barcode: false,
                 };
+                if (reward.program_type != "loyalty") {
+                    couponData[couponId].expiration_date = reward.program_id.date_to;
+                }
             }
             if (!couponData[couponId].line_codes) {
                 couponData[couponId].line_codes = [];

@@ -1133,7 +1133,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'date_to': '2024-12-31',
         })
         allocation.action_validate()
-        self.env['hr.leave'].with_user(self.user_employee_id).create({
+        leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': 'Holiday Request',
             'employee_id': employee.id,
             'holiday_status_id': self.holidays_type_4.id,
@@ -1141,7 +1141,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_date_to': '2024-01-27',
         })
         holiday_status = self.holidays_type_4.with_user(self.user_employee_id)
-        self._check_holidays_status(holiday_status, employee, 20.0, 0.0, 20.0, 16.0)
+        self._check_holidays_status(holiday_status, employee, 20.0, 0.0, 20.0, 15.0)
+        self.assertEqual(leave.duration_display, '5 days')
 
     def test_default_request_date_timezone(self):
         """
@@ -1259,3 +1260,24 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertEqual(len(activities), 1, "One activity should be created for the Employee's Approver.")
         self.assertEqual(activities.activity_type_id, self.env.ref('hr_holidays.mail_act_leave_approval'), "The activity type should be for leave approval by the Employee's Approver.")
         self.assertEqual(activities.user_id, self.employee_hrmanager.leave_manager_id, "The activity should be assigned to the Employee's Approver.")
+
+    def test_time_off_date_edit(self):
+        user_id = self.employee_emp.user_id
+        employee_id = self.employee_emp.id
+
+        leave = self.env['hr.leave'].with_user(user_id).create({
+            'name': 'Test leave',
+            'employee_id': employee_id,
+            'holiday_status_id': self.holidays_type_2.id,
+            'date_from': (datetime.today() - relativedelta(days=2)),
+            'date_to': datetime.today()
+        })
+
+        two_days_after = (datetime.today() + relativedelta(days=2)).date()
+        with Form(leave.with_user(user_id)) as leave_form:
+            leave_form.request_date_from = two_days_after
+            leave_form.request_date_to = two_days_after
+        modified_leave = leave_form.save()
+
+        self.assertEqual(modified_leave.request_date_from, two_days_after)
+        self.assertEqual(modified_leave.request_date_to, two_days_after)

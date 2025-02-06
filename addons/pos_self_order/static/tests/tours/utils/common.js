@@ -15,21 +15,8 @@ export function checkBtn(buttonName) {
 
 export function checkIsNoBtn(buttonName) {
     return {
-        content: `Check if '${buttonName}' do not exist`,
-        trigger: `body`,
-        run: () => {
-            const element = document.querySelectorAll(".btn");
-
-            for (const el of element) {
-                const text = el.innerText;
-
-                if (text === buttonName) {
-                    throw new Error(`Button '${buttonName}' exist`);
-                }
-            }
-
-            return true;
-        },
+        content: `Check that '${buttonName}' do not exist`,
+        trigger: `body:not(:has(.btn:contains(${buttonName})))`,
     };
 }
 

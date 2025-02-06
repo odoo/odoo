@@ -6,7 +6,7 @@ patch(PosStore.prototype, {
     // Override
     async setup() {
         await super.setup(...arguments);
-        this.onNotified("MERCADO_PAGO_LATEST_MESSAGE", (payload) => {
+        this.data.connectWebSocket("MERCADO_PAGO_LATEST_MESSAGE", (payload) => {
             if (payload.config_id === this.config.id) {
                 const pendingLine = this.getPendingPaymentLine("mercado_pago");
 

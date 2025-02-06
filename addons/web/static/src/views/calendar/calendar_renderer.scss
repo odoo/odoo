@@ -150,6 +150,10 @@
             background: map-get($grays, "400");
         }
 
+        .fc-scrollgrid {
+            border-top: 0;
+        }
+
         .fc-scrollgrid-section-header {
             .fc-timegrid-axis-frame.fc-scrollgrid-shrink-frame.fc-timegrid-axis-frame-liquid {
                 > a.fc-timegrid-axis-cushion.fc-scrollgrid-shrink-cushion.fc-scrollgrid-sync-inner {
@@ -218,6 +222,16 @@
         // ====== Both Day and Week agenda
         .fc-timeGridDay-view,
         .fc-timeGridWeek-view {
+            .fc-scrollgrid-section-body {
+                &:not(.fc-scrollgrid-section-liquid) .fc-scroller-harness {
+                    background-color: $o-view-background-color;
+                }
+
+                &:first-child td {
+                    border-bottom: 0;
+                }
+            }
+
             .fc-col-header-cell {
                 a {
                     display: flex;
@@ -479,6 +493,7 @@
                     justify-content: start;
                     flex-direction: row;
                     max-height: 1.2em;
+                    line-height: 100%;
                 }
             }
         }
@@ -686,6 +701,10 @@
                     color: var(--o-event-bg, #{$info});
                 }
             }
+        }
+
+        &:has(.fc-dayGridYear-view){
+            border-right: $border-width solid $border-color;
         }
     }
 

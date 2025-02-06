@@ -394,6 +394,7 @@
                     .btn.o_install_btn {
                         z-index: 1;
                         @include o-position-absolute($top: 10px);
+                        @include text-truncate();
                     }
 
                     &:not(:hover) .btn.o_install_btn {

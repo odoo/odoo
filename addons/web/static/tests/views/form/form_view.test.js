@@ -59,6 +59,7 @@ import { makeErrorFromResponse } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { SIZES } from "@web/core/ui/ui_service";
 import { useBus, useService } from "@web/core/utils/hooks";
+import { redirect } from "@web/core/utils/urls";
 import { session } from "@web/session";
 import { CharField } from "@web/views/fields/char/char_field";
 import { DateTimeField } from "@web/views/fields/datetime/datetime_field";
@@ -6079,6 +6080,28 @@ test(`deleting the last record`, async () => {
     await contains(`.modal-footer button.btn-primary`).click();
     expect(`.modal`).toHaveCount(0);
     expect.verifySteps(["unlink", "history-back"]);
+});
+
+test("delete the last record (without previous action)", async () => {
+    Partner._views = {
+        form: `
+                <form>
+                    <field name="display_name"/>
+                </form>`,
+        search: "<search></search>",
+    };
+
+    redirect("/odoo/m-partner/1");
+    patchWithCleanup(WebClient.prototype, {
+        _loadDefaultApp() {
+            expect.step("__DEFAULT_ACTION__ called");
+        },
+    });
+    await mountWithCleanup(WebClient);
+    await toggleActionMenu();
+    await toggleMenuItem("Delete");
+    await contains(`.modal-footer button.btn-primary`).click();
+    expect.verifySteps(["__DEFAULT_ACTION__ called"]);
 });
 
 test(`empty required fields cannot be saved`, async () => {
@@ -12327,4 +12350,44 @@ test(`do not perform button action for records with invalid datas`, async () => 
     await contains(".btn[name='lovely action']").click();
     // the record should have been saved and the action performed.
     expect.verifySteps(["Check/prepare record datas", "web_save", "Perform Action"]);
+});
+
+test(`open x2many with non inline form view, delayed get_views, form destroyed`, async () => {
+    Partner._records[0].product_ids = [37];
+    Product._views = {
+        form: `<form><field name="name"/></form>`,
+    };
+
+    let def;
+    onRpc("get_views", async () => {
+        expect.step("get_views");
+        await def;
+    });
+
+    const form = await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="product_ids">
+                    <list>
+                        <field name="name"/>
+                    </list>
+                </field>
+            </form>`,
+        resId: 1,
+    });
+
+    // click on an x2many record to open it in dialog (get_views delayed)
+    def = new Deferred();
+    await contains(".o_data_row .o_data_cell").click();
+    expect(".o_dialog").toHaveCount(0);
+
+    // destroy the form view while get_views is pending
+    form.__owl__.destroy();
+    def.resolve();
+    await animationFrame();
+
+    // everything should have gone smoothly, nothing should have happened as the view is destroyed
+    expect.verifySteps(["get_views", "get_views"]);
 });

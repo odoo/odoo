@@ -85,7 +85,6 @@ export class OdooPivot {
      */
     onDefinitionChange(nextDefinition) {
         this.context = omit(nextDefinition.context, ...Object.keys(user.context));
-        this.domainWithGlobalFilters = nextDefinition.domain;
         const actualDefinition = this.coreDefinition;
         this.coreDefinition = nextDefinition;
         if (

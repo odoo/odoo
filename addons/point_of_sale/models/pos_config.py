@@ -10,6 +10,7 @@ from odoo import api, fields, models, _, Command, tools, SUPERUSER_ID
 from odoo.http import request
 from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tools import convert, SQL
+from odoo.osv import expression
 
 
 class PosConfig(models.Model):
@@ -201,12 +202,32 @@ class PosConfig(models.Model):
     orderlines_sequence_in_cart_by_category = fields.Boolean(string="Order cart by category's sequence", default=False,
         help="When active, orderlines will be sorted based on product category and sequence in the product screen's order cart.")
 
-    def dispatch_record_ids(self, session_id, records, login_number):
+    def notify_synchronisation(self, session_id, login_number, records={}):
+        static_records = {}
+
+        for model, ids in records.items():
+            fields = self.env[model]._load_pos_data_fields(self.id)
+            static_records[model] = self.env[model].browse(ids).read(fields, load=False)
+
         self._notify('SYNCHRONISATION', {
-            'records': records,
+            'static_records': static_records,
             'session_id': session_id,
-            'login_number': login_number
+            'login_number': login_number,
+            'records': records
         })
+
+    def read_config_open_orders(self, domain, record_ids):
+        all_domain = expression.OR([domain, [('id', 'in', record_ids.get('pos.order')), ('config_id', '=', self.id)]])
+        all_orders = self.env['pos.order'].search(all_domain)
+        delete_record_ids = {}
+
+        for model, ids in record_ids.items():
+            delete_record_ids[model] = [id for id in ids if not self.env[model].browse(id).exists()]
+
+        return {
+            'dynamic_records': all_orders.filtered_domain(domain).read_pos_data([], self.id),
+            'deleted_record_ids': delete_record_ids,
+        }
 
     def get_records(self, data):
         records = {}

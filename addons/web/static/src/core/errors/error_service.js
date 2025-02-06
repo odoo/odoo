@@ -89,6 +89,7 @@ export const errorService = {
                 "ResizeObserver loop limit exceeded",
             ];
             if (!(error instanceof Error) && errorsToIgnore.includes(message)) {
+                ev.preventDefault();
                 return;
             }
             const isRedactedError = !filename && !lineno && !colno;

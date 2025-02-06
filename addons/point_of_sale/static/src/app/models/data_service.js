@@ -6,7 +6,7 @@ import { markRaw } from "@odoo/owl";
 import { batched } from "@web/core/utils/timing";
 import IndexedDB from "./utils/indexed_db";
 import { DataServiceOptions } from "./data_service_options";
-import { uuidv4 } from "@point_of_sale/utils";
+import { getOnNotified, uuidv4 } from "@point_of_sale/utils";
 import { browser } from "@web/core/browser/browser";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
@@ -32,6 +32,7 @@ export class PosData extends Reactive {
         this.mutex = markRaw(new Mutex());
         this.records = {};
         this.opts = new DataServiceOptions();
+        this.channels = [];
 
         this.network = {
             warningTriggered: false,
@@ -40,6 +41,7 @@ export class PosData extends Reactive {
             unsyncData: [],
         };
 
+        this.intializeWebsocket();
         this.initIndexedDB();
         await this.initData();
 
@@ -62,30 +64,38 @@ export class PosData extends Reactive {
         browser.addEventListener("offline", () => {
             this.network.offline = true;
         });
+
+        this.bus.addEventListener("connect", this.reconnectWebSocket.bind(this));
+    }
+
+    intializeWebsocket() {
+        this.onNotified = getOnNotified(this.bus, odoo.access_token);
+    }
+
+    reconnectWebSocket() {
+        this.intializeWebsocket();
+
+        const channels = [...this.channels];
+        this.channels = [];
+        while (channels.length) {
+            const channel = channels.pop();
+            this.connectWebSocket(channel.channel, channel.method);
+
+            console.warn("Reconnecting to channel", channel.channel);
+        }
+    }
+
+    connectWebSocket(channel, method) {
+        this.channels.push({
+            channel,
+            method,
+        });
+
+        this.onNotified(channel, method);
     }
 
     async resetIndexedDB() {
         await this.indexedDB.reset();
-    }
-
-    dispatchData(data) {
-        let hasChanges = false;
-        const recordIds = Object.entries(data).reduce((acc, [model, records]) => {
-            acc[model] = records.map((record) => record.id);
-            hasChanges = hasChanges || acc[model].length > 0;
-            return acc;
-        }, {});
-
-        if (!hasChanges) {
-            return;
-        }
-
-        return this.call("pos.config", "dispatch_record_ids", [
-            odoo.pos_config_id,
-            odoo.pos_session_id,
-            recordIds,
-            odoo.login_number,
-        ]);
     }
 
     get databaseName() {
@@ -290,7 +300,7 @@ export class PosData extends Reactive {
 
                 for (const id of ids) {
                     if (!serverIds.includes(id)) {
-                        this.localDeleteCascade(this.models["pos.order"].get(id), true);
+                        this.localDeleteCascade(this.models["pos.order"].get(id));
                     }
                 }
             }
@@ -612,7 +622,7 @@ export class PosData extends Reactive {
 
     async callRelated(model, method, args = [], kwargs = {}, queue = true) {
         const data = await this.execute({ type: "call", model, method, args, kwargs, queue });
-        this.dispatchData(data);
+        this.deviceSync.dispatch(data);
         const results = this.models.loadData(data, [], true);
         return results;
     }
@@ -623,7 +633,7 @@ export class PosData extends Reactive {
 
     async ormWrite(model, ids, values, queue = true) {
         const result = await this.execute({ type: "write", model, ids, values, queue });
-        this.dispatchData({ [model]: ids.map((id) => ({ id })) });
+        this.deviceSync.dispatch({ [model]: ids.map((id) => ({ id })) });
         return result;
     }
 
@@ -631,14 +641,8 @@ export class PosData extends Reactive {
         return await this.execute({ type: "delete", model, ids, queue });
     }
 
-    localDeleteCascade(record, force = false) {
+    localDeleteCascade(record, removeFromServer = false) {
         const recordModel = record.constructor.pythonModel;
-        if (typeof record.id === "number" && !force) {
-            console.info(
-                `Record ID ${record.id} MODEL ${recordModel}. If you want to delete a record saved on the server, you need to pass the force parameter as true.`
-            );
-            return;
-        }
 
         const relationsToDelete = Object.values(this.relations[recordModel])
             .filter((rel) => this.opts.cascadeDeleteModels.includes(rel.relation))
@@ -652,11 +656,11 @@ export class PosData extends Reactive {
         this.indexedDB.delete(recordModel, [record.uuid]);
         for (const item of recordsToDelete) {
             this.indexedDB.delete(item.model.modelName, [item.uuid]);
-            item.delete();
+            item.delete({ silent: !removeFromServer });
         }
 
         // Delete the main record
-        const result = record.delete();
+        const result = record.delete({ silent: !removeFromServer });
         return result;
     }
 
