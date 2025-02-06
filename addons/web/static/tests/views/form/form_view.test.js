@@ -7723,7 +7723,6 @@ test(`autofocus first visible field`, async () => {
 
 test(`on a touch screen, fields are not focused`, async () => {
     mockTouch(true);
-    after(() => mockTouch(false));
 
     await mountView({
         type: "form",

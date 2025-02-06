@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { EventBus, whenReady } from "@odoo/owl";
-import { getCurrentDimensions, mockedMatchMedia } from "@web/../lib/hoot-dom/helpers/dom";
+import { getCurrentDimensions } from "@web/../lib/hoot-dom/helpers/dom";
 import {
     mockedCancelAnimationFrame,
     mockedClearInterval,
@@ -10,7 +10,8 @@ import {
     mockedSetInterval,
     mockedSetTimeout,
 } from "@web/../lib/hoot-dom/helpers/time";
-import { MockEventTarget } from "../hoot_utils";
+import { interactor } from "../../hoot-dom/hoot_dom_utils";
+import { MockEventTarget, strictEqual } from "../hoot_utils";
 import { getRunner } from "../main_runner";
 import {
     MockAnimation,
@@ -45,7 +46,6 @@ import {
 import { MockNotification } from "./notification";
 import { MockStorage } from "./storage";
 import { MockBlob } from "./sync_values";
-import { interactor } from "../../hoot-dom/hoot_dom_utils";
 
 //-----------------------------------------------------------------------------
 // Global
@@ -60,6 +60,7 @@ const {
     Map,
     Number: { isNaN: $isNaN, parseFloat: $parseFloat },
     Object: {
+        assign: $assign,
         defineProperty: $defineProperty,
         entries: $entries,
         getOwnPropertyDescriptor: $getOwnPropertyDescriptor,
@@ -103,6 +104,21 @@ const applyPropertyDescriptors = (target, descriptors) => {
 };
 
 /**
+ * @param {string[]} [changedKeys]
+ */
+const callMediaQueryChanges = (changedKeys) => {
+    for (const mediaQueryList of mediaQueryLists) {
+        if (!changedKeys || changedKeys.some((key) => mediaQueryList.media.includes(key))) {
+            const event = new MediaQueryListEvent("change", {
+                matches: mediaQueryList.matches,
+                media: mediaQueryList.media,
+            });
+            mediaQueryList.dispatchEvent(event);
+        }
+    }
+};
+
+/**
  * @template T
  * @param {T} target
  * @param {keyof T} property
@@ -130,6 +146,42 @@ const findPropertyOwner = (object, property) => {
         return findPropertyOwner(prototype, property);
     }
     return object;
+};
+
+/**
+ * @param {string} mediaQueryString
+ */
+const matchesQueryPart = (mediaQueryString) => {
+    const [, key, value] = mediaQueryString.match(R_MEDIA_QUERY_PROPERTY) || [];
+    let match = false;
+    if (mockMediaValues[key]) {
+        match = strictEqual(value, mockMediaValues[key]);
+    } else if (key) {
+        switch (key) {
+            case "max-height": {
+                match = getCurrentDimensions().height <= $parseFloat(value);
+                break;
+            }
+            case "max-width": {
+                match = getCurrentDimensions().width <= $parseFloat(value);
+                break;
+            }
+            case "min-height": {
+                match = getCurrentDimensions().height >= $parseFloat(value);
+                break;
+            }
+            case "min-width": {
+                match = getCurrentDimensions().width >= $parseFloat(value);
+                break;
+            }
+            case "orientation": {
+                const { width, height } = getCurrentDimensions();
+                match = value === "landscape" ? width > height : width < height;
+                break;
+            }
+        }
+    }
+    return mediaQueryString.startsWith("not") ? !match : match;
 };
 
 function mockedElementFromPoint(...args) {
@@ -168,6 +220,39 @@ function mockedElementsFromPoint(...args) {
     return result;
 }
 
+/**
+ * @type {typeof matchMedia}
+ */
+const mockedMatchMedia = (mediaQueryString) => new MockMediaQueryList(mediaQueryString);
+
+class MockMediaQueryList extends MockEventTarget {
+    static publicListeners = ["change"];
+
+    get matches() {
+        return this.media
+            .split(R_COMMA)
+            .some((orPart) => orPart.split(R_AND).every(matchesQueryPart));
+    }
+
+    /**
+     * @param {string} mediaQueryString
+     */
+    constructor(mediaQueryString) {
+        super(...arguments);
+
+        this.media = mediaQueryString.trim().toLowerCase();
+
+        mediaQueryLists.add(this);
+    }
+}
+
+const DEFAULT_MEDIA_VALUES = {
+    "display-mode": "browser",
+    pointer: "fine",
+    "prefers-color-scheme": "light",
+    "prefers-reduced-motion": "reduce",
+};
+
 const EVENT_TARGET_PROTOTYPES = new Map(
     [
         // Top level objects
@@ -186,11 +271,18 @@ const EVENT_TARGET_PROTOTYPES = new Map(
     ])
 );
 
+const R_AND = /\s*\band\b\s*/;
+const R_COMMA = /\s*,\s*/;
+const R_MEDIA_QUERY_PROPERTY = /\(\s*([\w-]+)\s*:\s*(.+)\s*\)/;
+
 /** @type {{ descriptor: PropertyDescriptor; owner: any; property: string; target: any }[]} */
 const originalDescriptors = [];
 
+/** @type {Set<MockMediaQueryList>} */
+const mediaQueryLists = new Set();
 const mockConsole = new MockConsole();
 const mockLocalStorage = new MockStorage();
+const mockMediaValues = { ...DEFAULT_MEDIA_VALUES };
 const mockSessionStorage = new MockStorage();
 let mockTitle = "";
 
@@ -265,6 +357,10 @@ export function cleanupWindow() {
     mockLocalStorage.clear();
     mockSessionStorage.clear();
 
+    // Media
+    mediaQueryLists.clear();
+    $assign(mockMediaValues, DEFAULT_MEDIA_VALUES);
+
     // Title
     mockTitle = "";
 
@@ -310,6 +406,15 @@ export function getViewPortWidth() {
 }
 
 /**
+ * @param {Record<string, string>} name
+ */
+export function mockMatchMedia(values) {
+    $assign(mockMediaValues, values);
+
+    callMediaQueryChanges(Object.keys(values));
+}
+
+/**
  * @param {boolean} setTouch
  * @param {typeof globalThis} [window=globalThis]
  */
@@ -332,6 +437,8 @@ export function mockTouch(setTouch, { Document, HTMLElement, SVGElement } = glob
             }
         }
     }
+
+    mockMatchMedia({ pointer: setTouch ? "coarse" : "fine" });
 }
 
 /**
@@ -343,6 +450,8 @@ export function patchWindow({ document, window } = globalThis) {
     whenReady(() => {
         applyPropertyDescriptors(document, DOCUMENT_MOCK_DESCRIPTORS);
     });
+
+    window.addEventListener("resize", () => callMediaQueryChanges());
 }
 
 /**
