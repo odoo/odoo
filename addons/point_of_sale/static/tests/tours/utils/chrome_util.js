@@ -72,3 +72,16 @@ export function fillTextArea(target, value) {
 export function createFloatingOrder() {
     return { trigger: ".pos-leftheader .list-plus-btn", run: "click" };
 }
+
+export function waitRequest() {
+    return [
+        {
+            content: "Request Start",
+            trigger: "body:has(.fa-circle-o-notch)",
+        },
+        {
+            content: "Wait for request to finish",
+            trigger: "body:not(:has(.fa-circle-o-notch))",
+        },
+    ];
+}

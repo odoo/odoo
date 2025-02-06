@@ -2,7 +2,7 @@
 
 import publicWidget from "@web/legacy/js/public/public_widget";
 
-publicWidget.registry.SignUpForm = publicWidget.Widget.extend({
+publicWidget.registry.ResetPasswordForm = publicWidget.Widget.extend({
     selector: '.oe_reset_password_form',
     events: {
         'submit': '_onSubmit',

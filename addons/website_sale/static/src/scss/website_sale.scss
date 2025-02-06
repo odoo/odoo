@@ -515,6 +515,17 @@ a.no-decoration {
     text-decoration: none !important;
 }
 
+// TODO remove this styling and improve the image template on master to better
+// distinguish single / multiple images regardless of grid/carousel.
+// The goal is to constraint the height on extra long images.
+.o_wsale_product_page_grid_column div:only-child,
+#o-carousel-product .carousel-item:only-child {
+    img {
+        max-height: 75vh !important;
+        object-fit: contain;
+    }
+}
+
 #o-carousel-product {
     transition: top 200ms;
 

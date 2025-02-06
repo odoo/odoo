@@ -122,27 +122,27 @@ describe("Selection collapsed", () => {
         });
         test("should keep inline block and then undo (1)", async () => {
             await testEditor({
-                contentBefore: "<div>ab<b>c[]</b>de</div>",
+                contentBefore: "<p>ab<b>c[]</b>de</p>",
                 stepFunction: async (editor) => {
                     deleteBackward(editor);
                     await insertText(editor, "x");
                     undo(editor);
                 },
-                contentAfterEdit: '<div>ab<b data-oe-zws-empty-inline="">[]\u200B</b>de</div>',
-                contentAfter: "<div>ab[]de</div>",
+                contentAfterEdit: '<p>ab<b data-oe-zws-empty-inline="">[]\u200B</b>de</p>',
+                contentAfter: "<p>ab[]de</p>",
             });
         });
         test("should keep inline block and then undo (2)", async () => {
             await testEditor({
-                contentBefore: "<div>ab<b>c[]</b>de</div>",
+                contentBefore: "<p>ab<b>c[]</b>de</p>",
                 stepFunction: async (editor) => {
                     deleteBackward(editor);
                     await insertText(editor, "x");
                     undo(editor);
                     undo(editor);
                 },
-                contentAfterEdit: "<div>ab<b>c[]</b>de</div>",
-                contentAfter: "<div>ab<b>c[]</b>de</div>",
+                contentAfterEdit: "<p>ab<b>c[]</b>de</p>",
+                contentAfter: "<p>ab<b>c[]</b>de</p>",
             });
         });
 
@@ -311,11 +311,11 @@ describe("Selection collapsed", () => {
 
         test('should remove contenteditable="false"', async () => {
             await testEditor({
-                contentBefore: `<div><span contenteditable="false">abc</span>[]def</div>`,
+                contentBefore: `<p><span contenteditable="false">abc</span>[]def</p>`,
                 stepFunction: async (editor) => {
                     deleteBackward(editor);
                 },
-                contentAfter: `<div>[]def</div>`,
+                contentAfter: `<p>[]def</p>`,
             });
         });
 

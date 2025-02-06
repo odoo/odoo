@@ -297,6 +297,14 @@ export class PosStore extends Reactive {
         this.models = this.data.models;
         this.models["pos.session"].getFirst().login_number = parseInt(odoo.login_number);
 
+        const models = Object.keys(this.models);
+        const dynamicModels = this.data.opts.dynamicModels;
+        const staticModels = models.filter((model) => !dynamicModels.includes(model));
+        const deviceSync = new DevicesSynchronisation(dynamicModels, staticModels, this);
+
+        this.deviceSync = deviceSync;
+        this.data.deviceSync = deviceSync;
+
         // Check cashier
         this.checkPreviousLoggedCashier();
 
@@ -579,7 +587,6 @@ export class PosStore extends Reactive {
     }
 
     async afterProcessServerData() {
-        // Adding the not synced paid orders to the pending orders
         const paidUnsyncedOrderIds = this.models["pos.order"]
             .filter((order) => order.isUnsyncedPaid)
             .map((order) => order.id);
@@ -588,6 +595,7 @@ export class PosStore extends Reactive {
             this.addPendingOrder(paidUnsyncedOrderIds);
         }
 
+        // Adding the not synced paid orders to the pending orders
         const openOrders = this.data.models["pos.order"].filter((order) => !order.finalized);
         this.syncAllOrders();
 
@@ -596,14 +604,6 @@ export class PosStore extends Reactive {
                 ? openOrders[openOrders.length - 1].uuid
                 : this.add_new_order().uuid;
         }
-
-        const models = Object.keys(this.models);
-        const dynamicModels = this.data.opts.dynamicModels;
-        const staticModels = models.filter((model) => !dynamicModels.includes(model));
-        const deviceSync = new DevicesSynchronisation(dynamicModels, staticModels, this);
-
-        this.deviceSync = deviceSync;
-        this.data.deviceSync = deviceSync;
 
         this.markReady();
         this.showScreen(this.firstScreen);

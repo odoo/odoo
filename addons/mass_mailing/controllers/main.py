@@ -150,7 +150,8 @@ class MassMailController(http.Controller):
                 </div>
             </t>
         """)
-        return request.render(template, {
+        return request.env['ir.qweb']._render(template, {
+            'main_object': mailing,
             'mailing_id': mailing_id,
             'document_id': document_id,
             'email': email,
@@ -200,7 +201,8 @@ class MassMailController(http.Controller):
                 </div>
             </t>
         """)
-        return request.render(template, {
+        return request.env['ir.qweb']._render(template, {
+            'main_object': request.env['mailing.mailing'].browse(int(mailing_id)),
             'settings_url': settings_url,
             'success_str': _('Successfully unsubscribed!'),
             'manage_btn': _('Manage Subscriptions'),

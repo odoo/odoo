@@ -72,10 +72,12 @@ class DiscussChannel(models.Model):
                 channel_info["operator"] = Store.one(
                     channel.livechat_operator_id, fields=["avatar_128", "user_livechat_username"]
                 )
-            if channel.channel_type == "livechat" and self.env.user._is_internal():
-                channel_info["livechatChannel"] = Store.one(
-                    channel.livechat_channel_id, fields=["name"]
-                )
+            if channel.channel_type == "livechat":
+                channel_info["livechat_active"] = channel.livechat_active
+                if self.env.user._is_internal():
+                    channel_info["livechatChannel"] = Store.one(
+                        channel.livechat_channel_id, fields=["name"]
+                    )
             store.add(channel, channel_info)
 
     @api.autovacuum
@@ -256,6 +258,8 @@ class DiscussChannel(models.Model):
     def _chatbot_restart(self, chatbot_script):
         # sudo: discuss.channel - visitor can clear current step to restart the script
         self.sudo().chatbot_current_step_id = False
+        # sudo: discuss.channel - visitor can reactivate livechat
+        self.sudo().livechat_active = True
         # sudo: chatbot.message - visitor can clear chatbot messages to restart the script
         self.sudo().chatbot_message_ids.unlink()
         return self._chatbot_post_message(

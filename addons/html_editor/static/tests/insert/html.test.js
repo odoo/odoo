@@ -200,7 +200,7 @@ describe("collapsed selection", () => {
         // This test is a bit odd and whitebox but this is because multiple
         // parameters of the use case are interacting
         const { editor } = await setupEditor(
-            `<div><p class="oe-unbreakable" contenteditable="true"><b class="oe_unbreakable">cont[]ent</b></p></div>`,
+            `<div><p class="oe_unbreakable" contenteditable="true"><b class="oe_unbreakable">cont[]ent</b></p></div>`,
             {}
         );
 
@@ -208,7 +208,87 @@ describe("collapsed selection", () => {
             parseHTML(editor.document, "<table><tbody><tr><td/></tr></tbody></table>")
         );
         expect(getContent(editor.editable)).toBe(
-            `<div><p class="oe-unbreakable" contenteditable="true"><b class="oe_unbreakable">content[]</b><table><tbody><tr><td></td></tr></tbody></table></p></div>`
+            `<div><p class="oe_unbreakable" contenteditable="true"><b class="oe_unbreakable">content[]</b><table><tbody><tr><td></td></tr></tbody></table></p></div>`
+        );
+    });
+
+    test("Should ensure a paragraph after an inserted unbreakable (add)", async () => {
+        const { editor } = await setupEditor(`<p>cont[]</p>`, {});
+        editor.shared.dom.insert(parseHTML(editor.document, `<p class="oe_unbreakable">1</p>`));
+        expect(getContent(editor.editable)).toBe(
+            `<p>cont</p><p class="oe_unbreakable">1[]</p><p><br></p>`
+        );
+    });
+
+    test("Should ensure a paragraph after an inserted unbreakable (keep)", async () => {
+        const { editor } = await setupEditor(`<p>cont[]</p><p>+</p>`, {});
+        editor.shared.dom.insert(parseHTML(editor.document, `<p class="oe_unbreakable">1</p>`));
+        expect(getContent(editor.editable)).toBe(
+            `<p>cont</p><p class="oe_unbreakable">1[]</p><p>+</p>`
+        );
+    });
+
+    test("Should ensure a paragraph after inserting multiple unbreakables (add)", async () => {
+        const { editor } = await setupEditor(`<p>cont[]</p>`, {});
+        editor.shared.dom.insert(
+            parseHTML(
+                editor.document,
+                `<p class="oe_unbreakable">1</p><p class="oe_unbreakable">2</p>`
+            )
+        );
+        expect(getContent(editor.editable)).toBe(
+            `<p>cont</p><p class="oe_unbreakable">1</p><p class="oe_unbreakable">2[]</p><p><br></p>`
+        );
+    });
+
+    test("Should ensure a paragraph after inserting multiple unbreakables (keep)", async () => {
+        const { editor } = await setupEditor(`<p>cont[]</p><p>+</p>`, {});
+        editor.shared.dom.insert(
+            parseHTML(
+                editor.document,
+                `<p class="oe_unbreakable">1</p><p class="oe_unbreakable">2</p>`
+            )
+        );
+        expect(getContent(editor.editable)).toBe(
+            `<p>cont</p><p class="oe_unbreakable">1</p><p class="oe_unbreakable">2[]</p><p>+</p>`
+        );
+    });
+
+    test("should unwrap a paragraphRelated element inside another", async () => {
+        const { editor } = await setupEditor(`<p>cont[]ent</p>`, {});
+        editor.shared.dom.insert(parseHTML(editor.document, `<p>in</p>`));
+        expect(getContent(editor.editable)).toBe(`<p>contin[]ent</p>`);
+    });
+
+    test("should unwrap a contenteditable='true' ancestor which is not descendant of a contenteditable='false'", async () => {
+        const { editor } = await setupEditor(`<p>cont[]ent</p>`, {});
+        editor.shared.dom.insert(parseHTML(editor.document, `<p contenteditable="true">in</p>`));
+        expect(getContent(editor.editable)).toBe(`<p>contin[]ent</p>`);
+    });
+
+    test("should not unwrap a contenteditable='false'", async () => {
+        const { editor } = await setupEditor(`<p>cont[]ent</p>`, {});
+        editor.shared.dom.insert(parseHTML(editor.document, `<p contenteditable="false">in</p>`));
+        expect(getContent(editor.editable)).toBe(
+            `<p>cont</p><p contenteditable="false">in</p><p>[]ent</p>`
+        );
+    });
+
+    test("should not unwrap an unsplittable", async () => {
+        const { editor } = await setupEditor(`<p>cont[]ent</p>`, {});
+        editor.shared.dom.insert(parseHTML(editor.document, `<p class="oe_unbreakable">in</p>`));
+        expect(getContent(editor.editable)).toBe(
+            `<p>cont</p><p class="oe_unbreakable">in[]</p><p>ent</p>`
+        );
+    });
+
+    test("should normalize the parent when inserting a single element", async () => {
+        const { editor } = await setupEditor(`<p>[]<br></p>`, {});
+        editor.shared.dom.insert(
+            parseHTML(editor.document, `<p data-oe-protected="true">in</p>`).firstElementChild
+        );
+        expect(getContent(editor.editable, { sortAttrs: true })).toBe(
+            `<p contenteditable="false" data-oe-protected="true">in</p><p>[]<br></p>`
         );
     });
 
@@ -242,32 +322,32 @@ describe("collapsed selection", () => {
 
     test("insert block in empty paragraph", async () => {
         const { el, editor } = await setupEditor(`<p>[]<br></p>`);
-        editor.shared.dom.insert(parseHTML(editor.document, `<div class="a">a</div>`));
+        editor.shared.dom.insert(parseHTML(editor.document, `<div class="oe_unbreakable">a</div>`));
         editor.shared.history.addStep();
         dispatchClean(editor);
-        expect(getContent(el)).toBe(`<div class="a">a</div><p>[]<br></p>`);
+        expect(getContent(el)).toBe(`<div class="oe_unbreakable">a</div><p>[]<br></p>`);
     });
 
     test("insert block at the end of a paragraph", async () => {
         const { el, editor } = await setupEditor(`<p>b[]</p>`);
-        editor.shared.dom.insert(parseHTML(editor.document, `<div class="a">a</div>`));
+        editor.shared.dom.insert(parseHTML(editor.document, `<div class="oe_unbreakable">a</div>`));
         editor.shared.history.addStep();
         dispatchClean(editor);
-        expect(getContent(el)).toBe(`<p>b</p><div class="a">a</div><p>[]<br></p>`);
+        expect(getContent(el)).toBe(`<p>b</p><div class="oe_unbreakable">a</div><p>[]<br></p>`);
     });
 
     test("insert block at the start of a paragraph", async () => {
         const { el, editor } = await setupEditor(`<p>[]b</p>`);
-        editor.shared.dom.insert(parseHTML(editor.document, `<div class="a">a</div>`));
+        editor.shared.dom.insert(parseHTML(editor.document, `<div class="oe_unbreakable">a</div>`));
         editor.shared.history.addStep();
-        expect(getContent(el)).toBe(`<div class="a">a</div><p>[]b</p>`);
+        expect(getContent(el)).toBe(`<div class="oe_unbreakable">a</div><p>[]b</p>`);
     });
 
     test("insert block at the middle of a paragraph", async () => {
         const { el, editor } = await setupEditor(`<p>b[]c</p>`);
-        editor.shared.dom.insert(parseHTML(editor.document, `<div class="a">a</div>`));
+        editor.shared.dom.insert(parseHTML(editor.document, `<div class="oe_unbreakable">a</div>`));
         editor.shared.history.addStep();
-        expect(getContent(el)).toBe(`<p>b</p><div class="a">a</div><p>[]c</p>`);
+        expect(getContent(el)).toBe(`<p>b</p><div class="oe_unbreakable">a</div><p>[]c</p>`);
     });
 });
 

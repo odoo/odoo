@@ -31,7 +31,7 @@
                 <xpath expr="//group[@name='group_plan_fields']/group[@name='company_id']" position="before">
                     <field name="department_assignable" invisible="1"/>
                     <group invisible="not department_assignable">
-                        <field name="department_id"/>
+                        <field name="department_id" placeholder="Available for all Departments"/>
                     </group>
                 </xpath>
             </field>

@@ -141,13 +141,13 @@ registry.category("web_tour.tours").add("course_member", {
             // check that the course is marked as completed
             trigger: 'div:contains("Basics of Gardening") span:contains("Completed")',
         },
-        // eLearning: go back on course and rate it (new rate or update it, both should work)
+        // eLearning: go back on course and rate it
         {
             trigger: 'a:contains("Basics of Gardening")',
             run: "click",
         },
         {
-            trigger: 'button[data-bs-target="#ratingpopupcomposer"]',
+            trigger: 'button[data-bs-target="#ratingpopupcomposer"]:contains("Add Review")',
             run: "click",
         },
         {
@@ -156,7 +156,20 @@ registry.category("web_tour.tours").add("course_member", {
         },
         {
             trigger: ".modal.modal_shown .modal-body textarea",
-            run: "edit This is a great course. Top !",
+            run: "edit This is a great course. Top!",
+        },
+        {
+            trigger: ".modal.modal_shown button:contains(review)",
+            run: "click",
+        },
+        // eLearning: edit the review
+        {
+            trigger: 'button[data-bs-target="#ratingpopupcomposer"]:contains("Edit Review")',
+            run: "click",
+        },
+        {
+            trigger: ".modal.modal_shown .modal-body textarea",
+            run: "edit This is a great course. I highly recommend it!",
         },
         {
             trigger: ".modal.modal_shown button:contains(review)",

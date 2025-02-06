@@ -530,12 +530,20 @@ export class HistoryPlugin extends Plugin {
 
         this.handleObserverRecords();
         const currentStep = this.currentStep;
-        if (!currentStep.mutations.length) {
+        const currentMutationsCount = currentStep.mutations.length;
+        if (currentMutationsCount === 0) {
             return false;
         }
         const stepCommonAncestor = this.getMutationsRoot(currentStep.mutations) || this.editable;
         this.dispatchTo("normalize_handlers", stepCommonAncestor);
         this.handleObserverRecords();
+        if (currentMutationsCount === currentStep.mutations.length) {
+            // If there was no registered mutation during the normalization step,
+            // force the dispatch of a content_updated to allow i.e. the hint
+            // plugin to react to non-observed changes (i.e. a div becoming
+            // a baseContainer).
+            this.dispatchContentUpdated();
+        }
 
         currentStep.previousStepId = this.steps.at(-1)?.id;
 
@@ -1031,6 +1039,21 @@ export class HistoryPlugin extends Plugin {
     }
     /**
      * Unserialize a node and its children if the collaboration is true.
+     *
+     * TODO: find a solution so that the following issue can never happen:
+     *   If there is already another node in `nodeToIdMap` pointing to the
+     *   current id before executing `this.nodeToIdMap.set(node, id)` in this
+     *   function, there will be 2 different nodes pointing to the same id.
+     *
+     *   2 different nodes for the same id is pretty common:
+     *     Unserializing a text node in `_unserializeNode` always creates
+     *     another (new) node.
+     *
+     *   If mutations concerning both nodes are bundled in the same step, they
+     *   will all be erroneously serialized as if they concern the node which
+     *   had its id set the latest, which is likely to cause issues when
+     *   applying these mutations (undo/redo, collaboration).
+     *
      * @param { SerializedNode } node
      * @returns { Node }
      */

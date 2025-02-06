@@ -28,6 +28,7 @@ patch(Thread.prototype, {
             },
         });
         this.chatbot = Record.one("Chatbot");
+        this.livechat_active;
         this._startChatbot = Record.attr(false, {
             compute() {
                 return (
