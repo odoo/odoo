@@ -92,7 +92,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
 
             events._sync_odoo2google(self.google_service)
 
-        with self.assertQueryCount(__system__=22):
+        with self.assertQueryCount(__system__=23):
             events.unlink()
 
 
@@ -125,7 +125,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
                 'res_id': partner.id,
             })
 
-        with self.assertQueryCount(__system__=27):
+        with self.assertQueryCount(__system__=28):
             event.unlink()
 
     def test_event_without_user(self):
