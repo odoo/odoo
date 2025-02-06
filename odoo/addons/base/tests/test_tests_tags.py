@@ -212,6 +212,9 @@ class TestSelector(TransactionCase):
         self.assertEqual({(None, 'module', None, None, None), }, tags.include)  # all in module
         self.assertEqual({('standard', None, None, None, None), }, tags.exclude)  # exept standard ones
 
+        tags = TagsSelector('*/some-paths/with-dash/addons/account/test/test_file.py')  # a filepath with dashes
+        self.assertEqual({(None, None, None, None, '/some-paths/with-dash/addons/account/test/test_file.py'), }, tags.include)
+
         tags = TagsSelector('/some/absolute/path/v.3/module.py')
         self.assertEqual({('standard', None, None, None, '/some/absolute/path/v.3/module.py'), }, tags.include)  # all in module
 
@@ -375,7 +378,7 @@ class TestSelectorSelection(TransactionCase):
 
         # absolute path case (used by test-file)
         tags = TagsSelector(__file__)
-        self.assertTrue(tags.check(no_tags_obj), 'Test should its absolute file path')
+        self.assertTrue(tags.check(no_tags_obj), 'Test should match its absolute file path')
 
     def test_selector_parser_parameters(self):
         tags = ','.join([

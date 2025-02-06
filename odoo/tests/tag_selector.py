@@ -12,7 +12,7 @@ class TagsSelector(object):
                                 ^
                                 ([+-]?)                     # operator_re
                                 (\*|\w*)                    # tag_re
-                                (\/[\w\/\.]+.py)?           # file_re
+                                (\/[\w\/\.-]+.py)?           # file_re
                                 (?:\/(\w+))?                # module_re
                                 (?::(\w*))?                 # test_class_re
                                 (?:\.(\w*))?                # test_method_re
