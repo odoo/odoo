@@ -638,7 +638,7 @@ class configmanager:
         ]))
 
         self._runtime_options['init'] = dict.fromkeys(self['init'], True) or {}
-        self._runtime_options['update'] = dict.fromkeys(self['update'], True) or {}
+        self._runtime_options['update'] = {'base': True} if 'all' in self['update'] else dict.fromkeys(self['update'], True)
         self._runtime_options['translate_modules'] = sorted(self['translate_modules'])
 
         # TODO saas-22.1: remove support for the empty db_replica_host
