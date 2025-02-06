@@ -429,10 +429,9 @@ class StockQuant(models.Model):
                 <p class="o_view_nocontent_smiling_face">
                     {}
                 </p><p>
-                    {} <span class="fa fa-long-arrow-right"/> {}</p>
+                    {} <span class="fa fa-cog"/> </p>
                 """.format(_('Your stock is currently empty'),
-                           _('Press the CREATE button to define quantity for each product in your stock or import them from a spreadsheet throughout Favorites'),
-                           _('Import')),
+                           _('Press the CREATE button to define quantity for each product in your stock or import them from a spreadsheet throughout the action menu')),
         }
         return action
 
