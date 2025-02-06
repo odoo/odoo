@@ -2111,6 +2111,13 @@ X[]
                         contentAfter: `<p contenteditable="false">ab[]cdef</p>`,
                     });
                 });
+                it('should delete only the button', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<p>a<a class="btn">[]</a></p>`,
+                        stepFunction: deleteBackward,
+                        contentAfter: `<p>a[]</p>`,
+                    });
+                });
             });
             describe('Line breaks', () => {
                 describe('Single', () => {
