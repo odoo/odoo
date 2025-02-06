@@ -330,12 +330,6 @@ class IrModuleModule(models.Model):
         res = super().module_uninstall()
         if modules_to_delete:
             deleted_modules_names = modules_to_delete.mapped('name')
-            assets_data = self.env['ir.model.data'].search([
-                ('model', '=', 'ir.asset'),
-                ('module', 'in', deleted_modules_names),
-            ])
-            assets = self.env['ir.asset'].search([('id', 'in', assets_data.mapped('res_id'))])
-            assets.unlink()
             _logger.info("deleting imported modules upon uninstallation: %s",
                          ", ".join(deleted_modules_names))
             modules_to_delete.unlink()
