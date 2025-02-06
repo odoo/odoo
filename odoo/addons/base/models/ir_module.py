@@ -346,12 +346,8 @@ class IrModuleModule(models.Model):
         if level < 1:
             raise UserError(_('Recursion error in modules dependencies!'))
 
-        # whether some modules are installed with demo data
-        demo = False
-
         for module in self:
             if module.state not in states_to_update:
-                demo = demo or module.demo
                 continue
 
             # determine dependency modules to update/others
@@ -367,17 +363,13 @@ class IrModuleModule(models.Model):
                 else:
                     update_mods += dep.depend_id
 
-            # update dependency modules that require it, and determine demo for module
-            update_demo = update_mods._state_update(newstate, states_to_update, level=level-1)
-            module_demo = module.demo or update_demo or any(mod.demo for mod in ready_mods)
-            demo = demo or module_demo
+            # update dependency modules that require it
+            update_mods._state_update(newstate, states_to_update, level=level-1)
 
             if module.state in states_to_update:
                 # check dependencies and update module itself
                 self.check_external_dependencies(module.name, newstate)
-                module.write({'state': newstate, 'demo': module_demo})
-
-        return demo
+                module.write({'state': newstate})
 
     @assert_log_admin_access
     def button_install(self):

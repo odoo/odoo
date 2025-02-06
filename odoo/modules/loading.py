@@ -18,12 +18,11 @@ import odoo.sql_db
 import odoo.tools.sql
 import odoo.tools.translate
 from odoo import api, tools
-from odoo.tools.misc import SENTINEL
 
 from . import db as modules_db
-from .graph import Graph
 from .migration import MigrationManager
 from .module import adapt_version, initialize_sys_path, load_openerp_module
+from .module_graph import ModuleGraph
 from .registry import Registry
 
 if typing.TYPE_CHECKING:
@@ -31,12 +30,12 @@ if typing.TYPE_CHECKING:
     from odoo.api import Environment
     from odoo.sql_db import BaseCursor
     from odoo.tests.result import OdooTestResult
-    from .graph import Node
+    from .module_graph import ModuleNode
 
 _logger = logging.getLogger(__name__)
 
 
-def load_data(env: Environment, idref, mode: str, kind: str, package: Node) -> bool:
+def load_data(env: Environment, idref, mode: str, kind: str, package: ModuleNode) -> bool:
     """
 
     kind: data, demo, test, init_xml, update_xml, demo_xml.
@@ -57,7 +56,7 @@ def load_data(env: Environment, idref, mode: str, kind: str, package: Node) -> b
             keys = [kind]
         files: list[str] = []
         for k in keys:
-            for f in package.data[k]:
+            for f in package.manifest[k]:
                 if f in files:
                     _logger.warning("File %s is imported twice in module %s %s", f, package.name, kind)
                 files.append(f)
@@ -89,15 +88,13 @@ def load_data(env: Environment, idref, mode: str, kind: str, package: Node) -> b
     return bool(filename)
 
 
-def load_demo(env: Environment, package: Node, idref, mode: str) -> bool:
+def load_demo(env: Environment, package: ModuleNode, idref, mode: str) -> bool:
     """
     Loads demo data for the specified package.
     """
-    if not package.should_have_demo():
-        return False
 
     try:
-        if package.data.get('demo') or package.data.get('demo_xml'):
+        if package.manifest.get('demo') or package.manifest.get('demo_xml'):
             _logger.info("Module %s: loading demo", package.name)
             with env.cr.savepoint(flush=False):
                 load_data(env(su=True), idref, mode, kind='demo', package=package)
@@ -120,15 +117,15 @@ def force_demo(env: Environment) -> None:
     """
     Forces the `demo` flag on all modules, and installs demo data for all installed modules.
     """
-    graph = Graph()
     env.cr.execute('UPDATE ir_module_module SET demo=True')
     env.cr.execute(
         "SELECT name FROM ir_module_module WHERE state IN ('installed', 'to upgrade', 'to remove')"
     )
     module_list = [name for (name,) in env.cr.fetchall()]
-    graph.add_modules(env.cr, module_list, ['demo'])
+    graph = ModuleGraph(env.cr, mode='load')
+    graph.extend(module_list)
 
-    for package in graph.packages():
+    for package in graph:
         load_demo(env, package, {}, 'init')
 
     env['ir.module.module'].invalidate_model(['demo'])
@@ -137,26 +134,24 @@ def force_demo(env: Environment) -> None:
 
 def load_module_graph(
     env: Environment,
-    graph: Graph,
-    status=SENTINEL,
+    graph: ModuleGraph,
     update_module: bool = False,
     skip_modules: Collection[str] = (),
     report: OdooTestResult | None = None,
     models_to_check: set[str] | None = None,
+    install_demo: bool = True,
 ) -> tuple[list[str], list[str]]:
     """Migrates+Updates or Installs all module nodes from ``graph``
 
        :param env:
        :param graph: graph of module nodes to load
-       :param status: deprecated parameter, unused, left to avoid changing signature in 8.0
        :param update_module: whether to update modules or not
        :param skip_modules: optional list of module names (packages) which have previously been loaded and can be skipped
        :param report:
        :param set models_to_check:
+       :param install_demo: whether to attempt installing demo data for newly installed modules
        :return: list of modules that were installed or updated
     """
-    if status is not SENTINEL:
-        warnings.warn("Deprecated since 19.0, status is ignored", DeprecationWarning)
     if models_to_check is None:
         models_to_check = set()
 
@@ -175,7 +170,7 @@ def load_module_graph(
 
     models_updated = set()
 
-    for index, package in enumerate(graph.packages(), 1):
+    for index, package in enumerate(graph, 1):
         module_name = package.name
         module_id = package.id
 
@@ -186,11 +181,7 @@ def load_module_graph(
         module_cursor_query_count = env.cr.sql_log_count
         module_extra_query_count = odoo.sql_db.sql_counter
 
-        needs_update = update_module and (
-            hasattr(package, "init")
-            or hasattr(package, "update")
-            or package.state in ("to install", "to upgrade")
-        )
+        needs_update = update_module and package.state in ("to install", "to upgrade")
         module_log_level = logging.DEBUG
         if needs_update:
             module_log_level = logging.INFO
@@ -209,16 +200,12 @@ def load_module_graph(
 
         if new_install:
             py_module = sys.modules['odoo.addons.%s' % (module_name,)]
-            pre_init = package.info.get('pre_init_hook')
+            pre_init = package.manifest.get('pre_init_hook')
             if pre_init:
                 registry._setup_models__(env.cr)
                 getattr(py_module, pre_init)(env)
 
         model_names = registry.load(env.cr, package)
-
-        mode = 'update'
-        if hasattr(package, 'init') or package.state == 'to install':
-            mode = 'init'
 
         loaded_modules.append(package.name)
         if needs_update:
@@ -243,12 +230,17 @@ def load_module_graph(
 
             module._check()
 
-            if package.state == 'to upgrade':
+            if new_install:  # 'to install'
+                load_data(env, idref, 'init', kind='data', package=package)
+                if install_demo and package.demo_installable:
+                    package.demo = load_demo(env, package, idref, 'init')
+            else:  # 'to upgrade'
                 # upgrading the module information
-                module.write(module.get_values_from_terp(package.data))
-            load_data(env, idref, mode, kind='data', package=package)
-            demo_loaded = package.dbdemo = load_demo(env, package, idref, mode)
-            env.cr.execute('update ir_module_module set demo=%s where id=%s', (demo_loaded, module_id))
+                module.write(module.get_values_from_terp(package.manifest))
+                load_data(env, idref, 'update', kind='data', package=package)
+                if package.demo:
+                    package.demo = load_demo(env, package, idref, 'update')
+            env.cr.execute('UPDATE ir_module_module SET demo = %s WHERE id = %s', (package.demo, module_id))
             module.invalidate_model(['demo'])
 
             migrations.migrate_module(package, 'post')
@@ -262,11 +254,10 @@ def load_module_graph(
 
         if needs_update:
             if new_install:
-                post_init = package.info.get('post_init_hook')
+                post_init = package.manifest.get('post_init_hook')
                 if post_init:
                     getattr(py_module, post_init)(env)
-
-            if mode == 'update':
+            else:  # 'to upgrade'
                 # validate the views that have not been checked yet
                 env['ir.ui.view']._validate_module_views(module_name)
 
@@ -315,16 +306,11 @@ def load_module_graph(
         if needs_update:
             processed_modules.append(package.name)
 
-            ver = adapt_version(package.data['version'])
+            ver = adapt_version(package.manifest['version'])
             # Set new modules and dependencies
             module.write({'state': 'installed', 'latest_version': ver})
 
-            package.load_state = package.state
-            package.load_version = package.installed_version
             package.state = 'installed'
-            for kind in ('init', 'demo', 'update'):
-                if hasattr(package, kind):
-                    delattr(package, kind)
             module.env.flush_all()
             module.env.cr.commit()
 
@@ -359,9 +345,7 @@ def load_module_graph(
 
 def _check_module_names(cr: BaseCursor, module_names: Iterable[str]) -> None:
     mod_names = set(module_names)
-    if 'base' in mod_names:
-        # ignore dummy 'all' module
-        mod_names.discard('all')
+    mod_names.discard('all')
     if mod_names:
         cr.execute("SELECT count(id) AS count FROM ir_module_module WHERE name in %s", (tuple(mod_names),))
         row = cr.fetchone()
@@ -375,9 +359,8 @@ def _check_module_names(cr: BaseCursor, module_names: Iterable[str]) -> None:
 
 def load_marked_modules(
     env: Environment,
-    graph: Graph,
+    graph: ModuleGraph,
     states: Collection[str],
-    force: list[str],
     progressdict: None,
     report: OdooTestResult | None,
     loaded_modules: list[str],
@@ -398,7 +381,7 @@ def load_marked_modules(
         module_list = [name for (name,) in env.cr.fetchall() if name not in graph]
         if not module_list:
             break
-        graph.add_modules(env.cr, module_list, force)
+        graph.extend(module_list)
         _logger.debug('Updating graph with %d more modules', len(module_list))
         loaded, processed = load_module_graph(
             env,
@@ -415,17 +398,20 @@ def load_marked_modules(
     return processed_modules
 
 
-def load_modules(registry: Registry, force_demo: bool = False, status: None = None, update_module: bool = False) -> None:
+def load_modules(
+    registry: Registry,
+    *,
+    update_module: bool = False,
+    new_db_demo: bool = False,
+) -> None:
     """ Load the modules for a registry object that has just been created.  This
         function is part of Registry.new() and should not be used anywhere else.
-    """
-    if status is not None:
-        warnings.warn("Deprecated since 19.0, status is deprecated, do not set it")
-    initialize_sys_path()
 
-    force: list[str] = []
-    if force_demo:
-        force.append('demo')
+        :param registry: The new inited registry object used to load modules.
+        :param update_module: Whether to update (install, upgrade, or uninstall) modules. Defaults to ``False``
+        :param new_db_demo: Whether to install demo data for new database. Defaults to ``False``
+    """
+    initialize_sys_path()
 
     models_to_check: set[str] = set()
 
@@ -441,17 +427,13 @@ def load_modules(registry: Registry, force_demo: bool = False, status: None = No
                 return
             _logger.info("init db")
             modules_db.initialize(cr)
-            update_module = True # process auto-installed modules
-            tools.config["init"]["all"] = 1
-            if not tools.config['without_demo']:
-                tools.config["demo"]['all'] = 1
 
         if 'base' in tools.config['update'] or 'all' in tools.config['update']:
             cr.execute("update ir_module_module set state=%s where name=%s and state=%s", ('to upgrade', 'base', 'installed'))
 
         # STEP 1: LOAD BASE (must be done before module dependencies can be computed for later steps)
-        graph = Graph()
-        graph.add_module(cr, 'base', force)
+        graph = ModuleGraph(cr, mode='update' if update_module else 'load')
+        graph.extend(['base'])
         if not graph:
             _logger.critical('module base cannot be loaded! (hint: verify addons-path)')
             raise ImportError('Module `base` cannot be loaded! (hint: verify addons-path)')
@@ -471,6 +453,7 @@ def load_modules(registry: Registry, force_demo: bool = False, status: None = No
             update_module=update_module,
             report=report,
             models_to_check=models_to_check,
+            install_demo=new_db_demo,
         )
 
         load_lang = tools.config._cli_options.pop('load_language', None)
@@ -525,11 +508,11 @@ def load_modules(registry: Registry, force_demo: bool = False, status: None = No
             previously_processed = len(processed_modules)
             processed_modules += load_marked_modules(
                 env, graph, ['installed', 'to upgrade', 'to remove'],
-                force, None, report, loaded_modules, update_module, models_to_check)
+                None, report, loaded_modules, update_module, models_to_check)
             if update_module:
                 processed_modules += load_marked_modules(
                     env, graph, ['to install'],
-                    force, None, report, loaded_modules, update_module, models_to_check)
+                    None, report, loaded_modules, update_module, models_to_check)
 
         if update_module:
             # set up the registry without the patch for translated fields
@@ -561,7 +544,7 @@ def load_modules(registry: Registry, force_demo: bool = False, status: None = No
         # STEP 3.5: execute migration end-scripts
         if update_module:
             migrations = MigrationManager(cr, graph)
-            for package in graph.packages():
+            for package in graph:
                 migrations.migrate_module(package, 'end')
 
         # check that new module dependencies have been properly installed after a migration/upgrade
@@ -597,9 +580,9 @@ def load_modules(registry: Registry, force_demo: bool = False, status: None = No
             cr.execute("SELECT name, id FROM ir_module_module WHERE state=%s", ('to remove',))
             modules_to_remove = dict(cr.fetchall())
             if modules_to_remove:
-                pkgs = reversed([p for p in graph.packages() if p.name in modules_to_remove])
+                pkgs = reversed([p for p in graph if p.name in modules_to_remove])
                 for pkg in pkgs:
-                    uninstall_hook = pkg.info.get('uninstall_hook')
+                    uninstall_hook = pkg.manifest.get('uninstall_hook')
                     if uninstall_hook:
                         py_module = sys.modules['odoo.addons.%s' % (pkg.name,)]
                         getattr(py_module, uninstall_hook)(env)
@@ -612,7 +595,7 @@ def load_modules(registry: Registry, force_demo: bool = False, status: None = No
                 cr.commit()
                 _logger.info('Reloading registry once more after uninstalling modules')
                 registry = Registry.new(
-                    cr.dbname, force_demo, update_module=update_module
+                    cr.dbname, update_module=update_module
                 )
                 cr.reset()
                 registry.check_tables_exist(cr)

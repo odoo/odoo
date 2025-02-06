@@ -309,6 +309,12 @@ def load_manifest(module: str, mod_path: str | None = None) -> dict:
         manifest['license'] = 'LGPL-3'
         _logger.warning("Missing `license` key in manifest for %r, defaulting to LGPL-3", module)
 
+    if module == 'base':
+        manifest['depends'] = []
+    elif not manifest['depends']:
+        # prevent the hack `'depends': []` except 'base' module
+        manifest['depends'] = ['base']
+
     depends = manifest['depends']
     assert isinstance(depends, Collection)
 
