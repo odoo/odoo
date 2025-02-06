@@ -28,10 +28,15 @@ real applications. """,
         'data/mail_message_subtype_data.xml',
         'security/ir.model.access.csv',
         'security/ir_rule_data.xml',
+        'views/test_portal_template.xml',
     ],
     'assets': {
         'web.assets_unit_tests': [
             'test_mail_full/static/tests/**/*',
+            ('remove', 'test_mail_full/static/tests/tours/**/*'),
+        ],
+        'web.assets_tests': [
+            'test_mail_full/static/tests/tours/**/*',
         ],
     },
     'installable': True,
