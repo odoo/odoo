@@ -8,6 +8,9 @@
             <field name="currency_id" position="after">
                 <field name="trade_registry" invisible="country_code != 'CZ'"/>
             </field>
+            <field name="vat" position="after">
+                <field name="l10n_cz_tax_office_id" invisible="country_code != 'CZ'"/>
+            </field>
         </field>
     </record>
 </odoo>
