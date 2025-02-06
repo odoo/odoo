@@ -11,7 +11,7 @@ from werkzeug.urls import url_encode
 from odoo import api, Command, fields, models, _
 from odoo.osv import expression
 from odoo.tools import format_amount, format_date, format_list, formatLang, groupby, SQL
-from odoo.tools.float_utils import float_is_zero
+from odoo.tools.float_utils import float_is_zero, float_repr
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -865,6 +865,7 @@ class PurchaseOrder(models.Model):
                 'late':  {'all': 0, 'priority': 0},
                 'not_acknowledged': {'all': 0, 'priority': 0},
                 'late_receipt': {'all': 0, 'priority': 0},
+                'days_to_order': 0,
             },
             'my': {
                 'draft': {'all': 0, 'priority': 0},
@@ -872,11 +873,9 @@ class PurchaseOrder(models.Model):
                 'late':  {'all': 0, 'priority': 0},
                 'not_acknowledged': {'all': 0, 'priority': 0},
                 'late_receipt': {'all': 0, 'priority': 0},
+                'days_to_order': 0,
             },
-            'all_avg_order_value': 0,
-            'all_avg_days_to_purchase': 0,
-            'all_total_last_7_days': 0,
-            'company_currency_symbol': self.env.company.currency_id.symbol
+            'days_to_purchase': 0,
         }
 
         def _update(key, dict_to_update, group):
@@ -914,24 +913,27 @@ class PurchaseOrder(models.Model):
         rfq_late_receipt_group = self.env['purchase.order']._read_group(rfq_late_receipt, groupby, aggregate)
         _update('late_receipt', result, rfq_late_receipt_group)
 
-        # Calculated values ('avg order value', 'avg days to purchase', and 'total last 7 days') note that 'avg order value' and
-        # 'total last 7 days' takes into account exchange rate and current company's currency's precision.
-        # This is done via SQL for scalability reasons
-        one_week_ago = fields.Datetime.to_string(fields.Datetime.now() - relativedelta(days=7))
+        three_months_ago = fields.Datetime.to_string(fields.Datetime.now() - relativedelta(months=3))
 
-        query = """SELECT AVG(COALESCE(po.amount_total / NULLIF(po.currency_rate, 0), po.amount_total)),
-                          AVG(extract(epoch from age(po.date_approve,po.create_date)/(24*60*60)::decimal(16,2))),
-                          SUM(CASE WHEN po.date_approve >= %s THEN COALESCE(po.amount_total / NULLIF(po.currency_rate, 0), po.amount_total) ELSE 0 END)
-                   FROM purchase_order po
-                   WHERE po.state in ('purchase', 'done')
-                     AND po.company_id = %s
-                """
-        self._cr.execute(query, (one_week_ago, self.env.company.id))
-        res = self.env.cr.fetchone()
-        result['all_avg_days_to_purchase'] = round(res[1] or 0, 2)
-        currency = self.env.company.currency_id
-        result['all_avg_order_value'] = format_amount(self.env, res[0] or 0, currency)
-        result['all_total_last_7_days'] = format_amount(self.env, res[2] or 0, currency)
+        purchases = self.env['purchase.order'].search_fetch(
+            [('state', 'in', ['purchase', 'done']), ('create_date', '>=', three_months_ago), ('date_approve', '!=', False)],
+            ['create_date', 'date_approve', 'user_id'])
+
+        global_deliveries_seconds = 0
+        my_deliveries_seconds = 0
+        my_deliveries_count = 0
+
+        for po in purchases:
+            delivery_seconds = (po.date_approve - po.create_date).total_seconds()
+            global_deliveries_seconds += delivery_seconds
+            if po.user_id == self.env.user:
+                my_deliveries_seconds += delivery_seconds
+                my_deliveries_count += 1
+
+        avg_global_deliveries_seconds = global_deliveries_seconds / len(purchases) if purchases else 0
+        avg_my_deliveries_seconds = my_deliveries_seconds / my_deliveries_count if my_deliveries_count else 0
+        result['global']['days_to_order'] = float_repr(avg_global_deliveries_seconds / 60 / 60 / 24, precision_digits=2)
+        result['my']['days_to_order'] = float_repr(avg_my_deliveries_seconds / 60 / 60 / 24, precision_digits=2)
 
         return result
 
