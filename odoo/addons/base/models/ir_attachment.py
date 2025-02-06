@@ -225,7 +225,10 @@ class IrAttachment(models.Model):
             return
 
         for attach in self:
-            attach.datas = base64.b64encode(attach.raw or b'')
+            try:
+                attach.datas = base64.b64encode(attach.raw or b'')
+            except MemoryError:
+                raise MemoryError(_('Byte-string in %s in is too large to encode.', attach.res_name))
 
     @api.depends('store_fname', 'db_datas')
     def _compute_raw(self):
