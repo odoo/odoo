@@ -5,9 +5,11 @@ import { cleanTextNode, splitTextNode, unwrapContents } from "../utils/dom";
 import {
     areSimilarElements,
     isContentEditable,
+    isEmptyTextNode,
     isSelfClosingElement,
     isTextNode,
     isVisibleTextNode,
+    isZwnbsp,
     isZWS,
 } from "../utils/dom_info";
 import { childNodes, closestElement, descendants, selectElements } from "../utils/dom_traversal";
@@ -180,7 +182,15 @@ export class FormatPlugin extends Plugin {
     isSelectionFormat(format, traversedNodes = this.dependencies.selection.getTraversedNodes()) {
         const selectedNodes = traversedNodes.filter(isTextNode);
         const isFormatted = formatsSpecs[format].isFormatted;
-        return selectedNodes.length && selectedNodes.every((n) => isFormatted(n, this.editable));
+        return (
+            selectedNodes.length &&
+            selectedNodes.every((node) => {
+                if (isZwnbsp(node) || isEmptyTextNode(node)) {
+                    return true;
+                }
+                return isFormatted(node, this.editable);
+            })
+        );
     }
 
     // @todo: issues:

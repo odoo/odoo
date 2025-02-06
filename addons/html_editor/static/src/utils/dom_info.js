@@ -14,6 +14,10 @@ export function isEmpty(el) {
     return false;
 }
 
+export function isEmptyTextNode(node) {
+    return node.nodeType === Node.TEXT_NODE && node.nodeValue.length === 0;
+}
+
 /**
  * Return true if the given node appears bold. The node is considered to appear
  * bold if its font weight is bigger than 500 (eg.: Heading 1), or if its font
