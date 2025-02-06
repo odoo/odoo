@@ -206,6 +206,17 @@ test("toolbar link buttons react to selection change", async () => {
     expect(".btn[name='unlink']").toHaveCount(1);
 });
 
+test("toolbar format buttons should react to format change", async () => {
+    await setupEditor(
+        `<div class="o-paragraph">[\ufeff<a href="http://test.com">\ufefftest.com\ufeff</a>\ufeff&nbsp;]</div>`
+    );
+    await waitFor(".o-we-toolbar");
+    expect(".btn[name='bold']").not.toHaveClass("active");
+    await contains(".btn[name='bold']").click();
+    await animationFrame();
+    expect(".btn[name='bold']").toHaveClass("active");
+});
+
 test("toolbar works: can select font", async () => {
     const { el } = await setupEditor("<p>test</p>");
     expect(getContent(el)).toBe("<p>test</p>");
