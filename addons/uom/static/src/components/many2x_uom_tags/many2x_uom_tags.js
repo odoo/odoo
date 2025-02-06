@@ -29,18 +29,12 @@ export class Many2XUomTagsAutocomplete extends Many2XAutocomplete {
         super.setup();
         onWillUpdateProps(async (nextProps) => {
             if (nextProps.productModel !== this.props.productModel || 
-                nextProps.productId !== this.props.productId ||
-                nextProps.productQuantity !== this.props.productQuantity
+                nextProps.productId !== this.props.productId
             ) {
                 await this.updateReferenceUnit(nextProps);
-                await this.render();
             }
         });
         await this.updateReferenceUnit();
-    }
-
-    async render() {
-        await super.render();
     }
 
     async updateReferenceUnit(props = this.props) {
@@ -133,13 +127,13 @@ export const many2ManyUomTagsField = {
             label: _t("Product Field Name"),
             name: "product_field",
             type: "field",
-            availableTypes: ["integer"]
+            availableTypes: ["many2one"]
         },
         {
             label: _t("Quantity Field Name"),
             name: "quantity_field",
             type: "field",
-            availableTypes: ["integer"]
+            availableTypes: ["many2one"]
         }
     ],
     extractProps({ options }) {
@@ -160,13 +154,13 @@ export const many2OneUomField = {
             label: _t("Product Field Name"),
             name: "product_field",
             type: "field",
-            availableTypes: ["integer"]
+            availableTypes: ["many2one"]
         },
         {
             label: _t("Quantity Field Name"),
             name: "quantity_field",
             type: "field",
-            availableTypes: ["integer"]
+            availableTypes: ["many2one"]
         }
     ],
     extractProps({ options }) {
