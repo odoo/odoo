@@ -144,7 +144,6 @@ class InteractionService {
         this.activeInteractions.add(el, I);
         if (I.prototype instanceof Interaction) {
             try {
-                // console.log(`[colibri] starting ${I.name}`);
                 const interaction = new Colibri(this, I, el);
                 this.interactions.push(interaction);
                 proms.push(interaction.start());

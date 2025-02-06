@@ -58,10 +58,12 @@ export async function setupWebsiteBuilder(
         styleContent,
     } = {}
 ) {
+    // TODO: fix when the iframe is reloaded and become empty (e.g. discard button)
     if (hasToCreateWebsite) {
         const pyEnv = await startServer();
         pyEnv["website"].create({});
     }
+    registry.category("services").remove("website_edit");
     let editor;
     let editableContent;
     await mountWithCleanup(WebClient);
@@ -96,6 +98,12 @@ export async function setupWebsiteBuilder(
                 isMobile: this.state.isMobile,
             };
         },
+        loadAssetsEditBundle() {
+            // To instanciate interactions in the iframe test we need to
+            // load the edit and frontend bundle in it. The problem is that
+            // Hoot does not have control of this iframe and therefore
+            // does not mock anything in it (location, rpc, ...).
+        },
     });
     await getService("action").doAction({
         name: "Website Builder",
@@ -129,6 +137,7 @@ export async function setupWebsiteBuilder(
         loadBundle("html_builder.inside_builder_style", {
             targetDoc: iframe.contentDocument,
         });
+
         loadBundle("web.assets_frontend", {
             targetDoc: iframe.contentDocument,
             js: false,
