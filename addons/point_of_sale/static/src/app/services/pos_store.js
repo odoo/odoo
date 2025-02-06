@@ -1601,7 +1601,7 @@ export class PosStore extends WithLazyGetterTrap {
                 };
                 const result = await this.printOrderChanges(orderData, printer);
                 if (!result.successful) {
-                    unsuccedPrints.push(printer.name);
+                    unsuccedPrints.push(printer.config.name);
                 }
             }
 
@@ -1612,7 +1612,7 @@ export class PosStore extends WithLazyGetterTrap {
                 };
                 const result = await this.printOrderChanges(orderData, printer);
                 if (!result.successful) {
-                    unsuccedPrints.push(printer.name);
+                    unsuccedPrints.push(printer.config.name);
                 }
             }
 
@@ -1624,7 +1624,7 @@ export class PosStore extends WithLazyGetterTrap {
                 };
                 const result = await this.printOrderChanges(orderData, printer);
                 if (!result.successful) {
-                    unsuccedPrints.push(printer.name);
+                    unsuccedPrints.push(printer.config.name);
                 }
                 orderData.changes.noteUpdate = [];
             }
@@ -1633,7 +1633,7 @@ export class PosStore extends WithLazyGetterTrap {
                 orderData.changes = {};
                 const result = await this.printOrderChanges(orderData, printer);
                 if (!result.successful) {
-                    unsuccedPrints.push(printer.name);
+                    unsuccedPrints.push(printer.config.name);
                 }
             }
         }
