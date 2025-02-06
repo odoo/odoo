@@ -118,7 +118,7 @@ export class DebugWidget extends Component {
                 );
 
                 for (const order of orders) {
-                    this.pos.data.localDeleteCascade(order, true);
+                    this.pos.data.localDeleteCascade(order, !paid);
                 }
 
                 if (!this.pos.get_order()) {
@@ -160,6 +160,10 @@ export class DebugWidget extends Component {
 
                     if (!model) {
                         continue;
+                    }
+
+                    if (!order[rel.name] && (rel.local || rel.related || rel.compute)) {
+                        order[rel.name] = [];
                     }
 
                     const existingRecords = model.getAllBy("id");

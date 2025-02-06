@@ -23,16 +23,23 @@ class PosSession(models.Model):
 
     def set_opening_control(self, cashbox_value: int, notes: str):
         super().set_opening_control(cashbox_value, notes)
-        if not self.employee_id:
-            return
-        author_id = self.employee_id._get_related_partners() or self.user_id
-        self.message_post(body=plaintext2html(_('Opened register')), author_id=author_id.id)
+        if author_id := self._get_message_author():
+            self.message_post(body=plaintext2html(_('Opened register')), author_id=author_id.id)
 
     def post_close_register_message(self):
-        if not self.employee_id:
+        if author_id := self._get_message_author():
+            self.message_post(body=plaintext2html(_('Closed Register')), author_id=author_id.id)
+        else:
             return super().post_close_register_message()
-        author_id = self.employee_id._get_related_partners() or self.user_id
-        self.message_post(body=plaintext2html(_('Closed Register')), author_id=author_id.id)
+
+    def _get_message_author(self):
+        if not self.employee_id:
+            return None
+        
+        if related_partners := self.employee_id._get_related_partners():
+            return related_partners[0]
+        
+        return self.user_id.partner_id
 
     def _aggregate_payments_amounts_by_employee(self, payments):
         payments_by_employee = []

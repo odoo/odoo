@@ -7,10 +7,10 @@
 # Janne Rättyä <janne.rattya@web-veistamo.fi>, 2024
 # Miku Laitinen <miku.laitinen@gmail.com>, 2024
 # Heikki Katajisto <heikki.katajisto@myyntivoima.fi>, 2024
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2024
 # Martin Trigaux, 2024
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2025
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # 
 msgid ""
@@ -31,7 +31,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
 msgid "%(number)s file(s) selected"
-msgstr ""
+msgstr "%(number)s tiedostoa valittu"
 
 #. module: base_import
 #. odoo-python
@@ -79,6 +79,8 @@ msgstr "Edistyneet"
 msgid ""
 "After each batch import, this delay is applied to avoid unthrottled calls"
 msgstr ""
+"Jokaisen erän tuonnin jälkeen tätä viivettä käytetään, jotta vältetään "
+"puhelujen ruuhkautuminen"
 
 #. module: base_import
 #. odoo-javascript
@@ -137,7 +139,7 @@ msgstr "Eräajon rajoitus"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "But, you can also use .csv files"
-msgstr ""
+msgstr "Voit kuitenkin käyttää myös .csv-tiedostoja"
 
 #. module: base_import
 #. odoo-javascript
@@ -155,7 +157,7 @@ msgstr "Jatka tuontia napsauttamalla 'Jatka' ja jatka tuontia rivillä %s."
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "Column %(column)s contains incorrect values (value: %(value)s)"
-msgstr ""
+msgstr "Sarake %(column)s sisältää virheellisiä arvoja (arvo: %(value)s)"
 
 #. module: base_import
 #. odoo-python
@@ -164,6 +166,8 @@ msgid ""
 "Column %(column)s contains incorrect values. Error in line %(line)d: "
 "%(error)s"
 msgstr ""
+"Sarake %(column)s sisältää virheellisiä arvoja. Virhe rivillä %(line)d: "
+"%(error)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -214,7 +218,7 @@ msgstr "Luotu"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Data to import"
-msgstr ""
+msgstr "Tuotavat tiedot"
 
 #. module: base_import
 #. odoo-python
@@ -244,13 +248,13 @@ msgstr "Desimaalien erotin:"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Defines how many megabytes can be imported in each batch import"
-msgstr ""
+msgstr "Määrittää, kuinka monta megatavua voidaan tuoda kussakin erätuonnissa"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Delay after each batch"
-msgstr ""
+msgstr "Viive jokaisen erän jälkeen"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
@@ -275,7 +279,7 @@ msgstr "Lataa"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Drop or upload a file to import"
-msgstr ""
+msgstr "Pudota tai lataa tuotava tiedosto"
 
 #. module: base_import
 #. odoo-javascript
@@ -287,13 +291,13 @@ msgstr "Merkistö:"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "Error Parsing Date [%(field)s:L%(line)d]: %(error)s"
-msgstr ""
+msgstr "Virhe päivämäärän [%(field)s:L%(line)d] jäsentämisessä: %(error)s"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Error at row %(row)s: \"%(error)s\""
-msgstr ""
+msgstr "Virhe rivillä %(row)s: \"%(error)s\""
 
 #. module: base_import
 #. odoo-python
@@ -311,6 +315,10 @@ msgid ""
 "title row has %(title_row_entries)d entries while the first row has "
 "%(first_row_entries)d. You may need to change the separator character."
 msgstr ""
+"Virhe tietueiden tuonnin aikana: kaikkien rivien pitäisi olla samankokoisia,"
+" mutta otsikkorivillä on %(title_row_entries)d merkintää, kun taas "
+"ensimmäisellä rivillä on %(first_row_entries)d. Sinun on ehkä muutettava "
+"erotinmerkkiä."
 
 #. module: base_import
 #. odoo-javascript
@@ -322,7 +330,7 @@ msgstr "Arvioitu valmistuminen:"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Everything seems valid."
-msgstr "Kaikki näyttää olevan kunnossa."
+msgstr "Kaikki vaikuttaisi olevan kunnossa."
 
 #. module: base_import
 #. odoo-javascript
@@ -378,7 +386,7 @@ msgstr "Tarkistettava ja/tai tuotava tiedosto, raaka binääri (ei base64)"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Files to import"
-msgstr ""
+msgstr "Tuotavat tiedostot"
 
 #. module: base_import
 #. odoo-javascript
@@ -514,6 +522,8 @@ msgid ""
 "Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
 "format: %(cell_format)s, as (%(format_type)s) formats are not supported."
 msgstr ""
+"Väärä solumuoto rivillä %(row)s, sarakkeessa %(col)s: %(cell_value)s, "
+"muotoa: %(cell_format)s, koska (%(format_type)s) formaatteja ei tueta."
 
 #. module: base_import
 #. odoo-python
@@ -538,7 +548,7 @@ msgstr "Viimeksi päivitetty"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Load Data File"
-msgstr ""
+msgstr "Lataa datatiedosto"
 
 #. module: base_import
 #. odoo-javascript
@@ -556,7 +566,7 @@ msgstr "Lataa..."
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Max size per batch"
-msgstr ""
+msgstr "Maksimikoko erää kohti"
 
 #. module: base_import
 #. odoo-javascript
@@ -591,7 +601,7 @@ msgstr "Ei erotinta"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
 msgid "No file selected"
-msgstr ""
+msgstr "Tiedostoa ei ole valittu"
 
 #. module: base_import
 #. odoo-javascript
@@ -609,13 +619,13 @@ msgstr "Odoon kenttä"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 msgid "Please upload a single file."
-msgstr ""
+msgstr "Lataa yksi tiedosto."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 msgid "Please upload an Excel (.xls or .xlsx) or .csv file to import."
-msgstr ""
+msgstr "Lataa Excel- (.xls tai .xlsx) tai .csv-tiedosto tuontia varten."
 
 #. module: base_import
 #. odoo-javascript
@@ -845,13 +855,13 @@ msgstr "Nimetön"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Upload Data File"
-msgstr ""
+msgstr "Lataa datatiedosto"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Upload your files"
-msgstr ""
+msgstr "Lataa tiedostosi"
 
 #. module: base_import
 #. odoo-javascript

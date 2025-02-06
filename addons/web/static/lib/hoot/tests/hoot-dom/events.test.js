@@ -1100,8 +1100,8 @@ describe(parseUrl(import.meta.url), () => {
             "mouseleave:0@input",
             // Change
             "blur@input",
-            "focusout@input",
             "change@input",
+            "focusout@input",
         ]);
     });
 
@@ -1137,6 +1137,62 @@ describe(parseUrl(import.meta.url), () => {
             ]),
             "select@input",
         ]);
+    });
+
+    test("edit with dirty value and blur", async () => {
+        await mountForTest(/* xml */ `
+            <input type="text" />
+            <button>Diversion</button>
+        `);
+        await click("input");
+        await edit("test value");
+
+        monitorEvents("input");
+        monitorEvents("button");
+
+        await click("button");
+
+        expect.verifySteps([
+            // Move to button
+            "pointermove:0@input",
+            "mousemove:0@input",
+            "pointerout:0@input",
+            "mouseout:0@input",
+            "pointerleave:0@input",
+            "mouseleave:0@input",
+            "pointerover:0@button",
+            "mouseover:0@button",
+            "pointerenter:0@button",
+            "mouseenter:0@button",
+            "pointermove:0@button",
+            "mousemove:0@button",
+            // Click on button
+            "pointerdown:0(1)@button",
+            "mousedown:0(1)@button",
+            "change@input",
+            "blur@input",
+            "focusout@input",
+            "focus@button",
+            "focusin@button",
+            "pointerup:0@button",
+            "mouseup:0@button",
+            "click:0@button",
+        ]);
+    });
+
+    test("edit with dirty value and confirm with enter", async () => {
+        await mountForTest(/* xml */ `
+            <input type="text" />
+            <button>Diversion</button>
+        `);
+        await click("input");
+        await edit("test value");
+
+        monitorEvents("input");
+
+        await press("Enter");
+
+        expect.verifySteps(["keydown:Enter@input", "change@input", "keyup:Enter@input"]);
     });
 
     test("edit: iframe", async () => {

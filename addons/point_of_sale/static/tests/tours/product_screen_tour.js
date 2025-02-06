@@ -432,6 +432,9 @@ registry.category("web_tour.tours").add("PosCategoriesOrder", {
             {
                 trigger: '.category-button:eq(3) > span:contains("AAY")',
             },
+            {
+                trigger: '.category-button:not(:contains("AAD"))',
+            },
         ].flat(),
 });
 
@@ -470,8 +473,8 @@ registry.category("web_tour.tours").add("ProductSearchTour", {
             ProductScreen.productIsDisplayed("Test Product 1").map(negateStep),
             ProductScreen.productIsDisplayed("Test Product 2").map(negateStep),
             ProductScreen.searchProduct("Test Produt"), // typo to test the fuzzy search
-            ProductScreen.productIsDisplayed("Test Product 1"),
-            ProductScreen.productIsDisplayed("Test Product 2"),
+            ProductScreen.productIsDisplayed("Test Product 1").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 2").map(negateStep),
             ProductScreen.searchProduct("1234567890123"),
             ProductScreen.productIsDisplayed("Test Product 2").map(negateStep),
             ProductScreen.productIsDisplayed("Test Product 1"),

@@ -273,9 +273,8 @@ class ReportMoOverview(models.AbstractModel):
         operations = production.bom_id.operation_ids + kit_operation if kit_operation else production.bom_id.operation_ids
         if workorder.operation_id not in operations:
             return False
-        capacity = workorder.operation_id.workcenter_id._get_capacity(production.product_id)
-        operation_cycle = float_round(production.product_uom_qty / capacity, precision_rounding=1, rounding_method='UP')
-        return workorder.operation_id._compute_operation_cost() * operation_cycle
+        duration = workorder.operation_id._get_duration_expected(production.product_id, production.product_qty)
+        return self.env.company.currency_id.round(workorder.operation_id.with_context(op_duration=duration)._compute_operation_cost())
 
     def _get_operations_data(self, production, level=0, current_index=False):
         if production.state == "done":

@@ -16,6 +16,7 @@ export class LinkPopover extends Component {
         getExternalMetaData: Function,
         getAttachmentMetadata: Function,
         isImage: Boolean,
+        type: String,
         recordInfo: Object,
         canEdit: { type: Boolean, optional: true },
         canUpload: { type: Boolean, optional: true },
@@ -63,8 +64,13 @@ export class LinkPopover extends Component {
             urlDescription: "",
             linkPreviewName: "",
             imgSrc: "",
-            classes: this.props.linkEl.className || "",
+            iconSrc: "",
+            classes:
+                this.props.type === "primary"
+                    ? "btn btn-primary"
+                    : this.props.linkEl.className || "",
             type:
+                this.props.type ||
                 this.props.linkEl.className.match(/btn(-[a-z0-9_-]*)(primary|secondary)/)?.pop() ||
                 "",
             buttonSize: this.props.linkEl.className.match(/btn-(sm|lg)/)?.[1] || "",

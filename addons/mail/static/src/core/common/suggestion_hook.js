@@ -192,11 +192,12 @@ class UseSuggestion {
                 abortSignal: this.abortController.signal,
             });
         } catch (e) {
+            this.lastFetchedSearch = null;
             if (e instanceof ConnectionAbortedError) {
                 resetFetchingState = false;
                 return;
             }
-            this.lastFetchedSearch = null;
+            throw e;
         } finally {
             if (resetFetchingState) {
                 this.state.isFetching = false;

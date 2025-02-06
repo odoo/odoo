@@ -96,6 +96,7 @@ will update the cost of every lot/serial number in stock."),
             in_stock_valuation_layers = SVL.create(in_svl_vals_list)
             if product_template.valuation == 'real_time':
                 move_vals_list += Product._svl_replenish_stock_am(in_stock_valuation_layers)
+            products._update_lots_standard_price()
 
         # Check access right
         if move_vals_list and not self.env['stock.valuation.layer'].has_access('read'):
@@ -149,6 +150,9 @@ class ProductProduct(models.Model):
     def write(self, vals):
         if 'standard_price' in vals and not self.env.context.get('disable_auto_svl'):
             self.filtered(lambda p: p.cost_method != 'fifo')._change_standard_price(vals['standard_price'])
+        if 'lot_valuated' in vals:
+            # lot_valuated must be updated from the ProductTemplate
+            self.product_tmpl_id.write({'lot_valuated': vals.pop('lot_valuated')})
         return super().write(vals)
 
     @api.onchange('standard_price')
@@ -632,6 +636,14 @@ will update the cost of every lot/serial number in stock."),
         to_reconcile_account_move_lines += new_account_move.line_ids.filtered(lambda l: not l.reconciled and l.account_id == accounts['stock_output'] and l.account_id.reconcile)
         return to_reconcile_account_move_lines.reconcile()
 
+    def _update_lots_standard_price(self):
+        grouped_lots = self.env['stock.lot']._read_group(
+            [('product_id', 'in', self.ids), ('product_id.lot_valuated', '=', True)],
+            ['product_id'], ['id:recordset']
+        )
+        for product, lots in grouped_lots:
+            lots.with_context(disable_auto_svl=True).write({"standard_price": product.standard_price})
+
     @api.model
     def _svl_empty_stock(self, description, product_category=None, product_template=None):
         impacted_product_ids = []
@@ -700,8 +712,26 @@ will update the cost of every lot/serial number in stock."),
                 lot_by_product[product][lot] += qty
         for product, location, lot, qty in neg_lots:
             if location._should_be_valued():
-                raise UserError(_("Lot %(lot)s has a negative quantity in stock. Correct this \
-                        quantity before enabling lot valuation", lot=lot))
+                raise UserError(_(
+                    "Lot %(lot)s has a negative quantity in stock.\n"
+                    "Correct this quantity before enabling/disabling lot valuation.",
+                    lot=lot.display_name
+                ))
+        lot_valuated_products = self.filtered("lot_valuated")
+        if lot_valuated_products:
+            no_lot_quants = self.env['stock.quant']._read_group([
+                ('product_id', 'in', lot_valuated_products.ids),
+                ('lot_id', '=', False),
+                ('quantity', '!=', 0),
+            ], ['product_id', 'location_id'])
+            for product, location in no_lot_quants:
+                if location._should_be_valued():
+                    raise UserError(_(
+                        "Product %(product)s has quantity in valued location %(location)s without any lot.\n"
+                        "Please assign lots to all your quantities before enabling lot valuation.",
+                        product=product.display_name,
+                        location=location.display_name
+                    ))
 
         for product in self:
             quantity_svl = products_orig_quantity_svl[product.id]
@@ -1046,6 +1076,7 @@ class ProductCategory(models.Model):
             in_stock_valuation_layers = SVL.sudo().create(in_svl_vals_list)
             if product_category.property_valuation == 'real_time':
                 move_vals_list += Product._svl_replenish_stock_am(in_stock_valuation_layers)
+            products._update_lots_standard_price()
 
         # Check access right
         if move_vals_list and not self.env['stock.valuation.layer'].has_access('read'):

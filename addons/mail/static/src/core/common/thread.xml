@@ -48,7 +48,7 @@
             </div>
         </t>
         <t t-else="">
-            <div class="o-mail-Thread-empty d-flex flex-column align-items-center justify-content-center text-muted h-100" t-att-class="{'p-4': props.showEmptyMessage}">
+            <div class="o-mail-Thread-empty d-flex flex-column align-items-center justify-content-center text-muted h-100 opacity-75" t-att-class="{'p-4': props.showEmptyMessage}">
                 <t t-if="props.thread.isLoaded and props.showEmptyMessage">
                     <t name="empty-message">
                         <span class="fs-1" style="filter: grayscale(1);">😶</span>

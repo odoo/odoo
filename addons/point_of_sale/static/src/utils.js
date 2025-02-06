@@ -1,4 +1,5 @@
 import { parseDateTime } from "@web/core/l10n/dates";
+import { roundDecimals, floatIsZero } from "@web/core/utils/numbers";
 
 /*
  * comes from o_spreadsheet.js
@@ -87,6 +88,10 @@ export function getMin(entries, options) {
     return getMax(entries, { ...options, inverted: true });
 }
 export function getOnNotified(bus, channel) {
+    if (!channel || typeof channel !== "string") {
+        return () => false;
+    }
+
     bus.addChannel(channel);
     return (notif, callback) => bus.subscribe(`${channel}-${notif}`, callback);
 }
@@ -126,4 +131,33 @@ export function loadAllImages(el) {
 }
 export function parseUTCString(utcStr) {
     return parseDateTime(utcStr, { format: "yyyy-MM-dd HH:mm:ss", tz: "utc" });
+}
+
+export function floatCompare(a, b, { decimals } = {}) {
+    if (decimals === undefined) {
+        throw new Error("decimals must be provided");
+    }
+    a = roundDecimals(a, decimals);
+    b = roundDecimals(b, decimals);
+    const delta = a - b;
+    if (floatIsZero(delta, decimals)) {
+        return 0;
+    }
+    return delta < 0 ? -1 : 1;
+}
+
+export function gte(a, b, { decimals } = {}) {
+    return floatCompare(a, b, { decimals }) >= 0;
+}
+
+export function gt(a, b, { decimals } = {}) {
+    return floatCompare(a, b, { decimals }) > 0;
+}
+
+export function lte(a, b, { decimals } = {}) {
+    return floatCompare(a, b, { decimals }) <= 0;
+}
+
+export function lt(a, b, { decimals } = {}) {
+    return floatCompare(a, b, { decimals }) < 0;
 }

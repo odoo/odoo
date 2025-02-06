@@ -354,7 +354,7 @@ class HrAttendance(models.Model):
                             local_check_out = pytz.utc.localize(attendance.check_out)
                             work_duration += (local_check_out - local_check_in).total_seconds() / 3600.0
                         # In case of fully flexible employee, no overtime is computed
-                        if not emp.is_fully_flexible and work_duration > emp.resource_id.calendar_id.hours_per_day:
+                        if not emp.is_fully_flexible:
                             overtime_duration = work_duration - emp.resource_id.calendar_id.hours_per_day
                             overtime_duration_real = overtime_duration
 

@@ -129,28 +129,29 @@ class SaleComboConfiguratorController(Controller):
         :rtype: dict
         :return: A dict containing data about the combo item.
         """
-        ptals_data = self._get_ptals_data(combo_item.product_id, selected_combo_item)
-        # If the combo choice has only one combo item, and that combo item can't be configured (i.e.
-        # it has no configurable `no_variant` attributes), then it should be preselected, as the
-        # user has to select it anyway.
-        is_preselected = (
-            len(combo.combo_item_ids) == 1
-            and not any(
-                ptal.attribute_id.create_variant == 'no_variant' and ptal._is_configurable()
-                for ptal in combo_item.product_id.attribute_line_ids
-            )
+        # A combo item is configurable if its product variant has:
+        # - Configurable `no_variant` PTALs,
+        # - Or custom PTAVs.
+        is_configurable = any(
+            ptal.attribute_id.create_variant == 'no_variant' and ptal._is_configurable()
+            for ptal in combo_item.product_id.attribute_line_ids
+        ) or any(
+            ptav.is_custom for ptav in combo_item.product_id.product_template_attribute_value_ids
         )
+        # A combo item can be preselected if its combo choice has only one combo item, and that
+        # combo item isn't configurable.
+        is_preselected = len(combo.combo_item_ids) == 1 and not is_configurable
 
         return {
             'id': combo_item.id,
             'extra_price': combo_item.extra_price,
-            'is_selected': bool(selected_combo_item),
-            'is_preselected': is_preselected,
+            'is_selected': bool(selected_combo_item) or is_preselected,
+            'is_configurable': is_configurable,
             'product': {
                 'id': combo_item.product_id.id,
                 'product_tmpl_id': combo_item.product_id.product_tmpl_id.id,
                 'display_name': combo_item.product_id.display_name,
-                'ptals': ptals_data,
+                'ptals': self._get_ptals_data(combo_item.product_id, selected_combo_item),
                 **request.env['product.template']._get_additional_configurator_data(
                     combo_item.product_id, date, currency, pricelist, **kwargs
                 ),
@@ -177,8 +178,13 @@ class SaleComboConfiguratorController(Controller):
         no_variant_ptavs = request.env['product.template.attribute.value'].browse(
             selected_combo_item.get('no_variant_ptav_ids')
         )
+        preselected_ptavs = product.attribute_line_ids.filtered(
+            lambda ptal: not ptal._is_configurable()
+        ).product_template_value_ids
+
         ptavs_by_ptal_id = dict(groupby(
-            variant_ptavs + no_variant_ptavs, lambda ptav: ptav.attribute_line_id.id
+            variant_ptavs | no_variant_ptavs | preselected_ptavs,
+            lambda ptav: ptav.attribute_line_id.id,
         ))
 
         custom_ptavs = selected_combo_item.get('custom_ptavs', [])

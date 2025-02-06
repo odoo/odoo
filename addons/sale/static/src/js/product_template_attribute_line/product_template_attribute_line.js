@@ -2,6 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { Component } from "@odoo/owl";
 import { formatCurrency } from "@web/core/currency";
 import { BadgeExtraPrice } from "../badge_extra_price/badge_extra_price";
+import { getSelectedCustomPtav } from "../sale_utils";
 
 export class ProductTemplateAttributeLine extends Component {
     static components = { BadgeExtraPrice };
@@ -126,14 +127,13 @@ export class ProductTemplateAttributeLine extends Component {
      * @return {Boolean} - Whether the selected ptav is custom or not.
      */
     isSelectedPTAVCustom() {
-        return this.props.attribute_values.find(
-            ptav => this.props.selected_attribute_value_ids.includes(ptav.id)
-        )?.is_custom;
+        return !!getSelectedCustomPtav(this.props);
     }
 
     get showValuesChoice() {
-        return this.props.attribute_values.length > 1
-            || this.props.attribute.display_type == 'multi'
+        return (this.env.canChangeVariant || this.props.create_variant === 'no_variant') && (
+            this.props.attribute_values.length > 1 || this.props.attribute.display_type === 'multi'
+        )
     }
 
     get customValuePlaceholder() {

@@ -24,16 +24,24 @@ paymentForm.include({
     async _expandInlineForm(radio) {
         const providerCode = this._getProviderCode(radio);
         if (providerCode !== 'paypal') {
-            document.getElementById('o_paypal_button').classList.add('d-none');
+            document.getElementById('o_paypal_button')?.classList.add('d-none'); // TODO Compatibility layer; to remove in master.
+            document.getElementById('o_paypal_button_container')?.classList.add('d-none');
         }
         this._super(...arguments);
     },
+
     /**
      * Prepare the inline form of Paypal for direct payment.
-     * The PayPal sdk creates the payment button based on the client_id
-     * and the currency of the order.
-     * The created button is saved and reused when switching between different payment methods,
-     * to avoid recreating the buttons.
+     *
+     * The PayPal SDK creates payment buttons based on the client_id and the currency of the order.
+     *
+     * Two payment buttons are created: one enabled and one disabled. The enabled button is shown
+     * when the user is allowed to click on it, and the disabled button is shown otherwise. This
+     * trick is necessary as the PayPal SDK does not provide a way to disable the button after it
+     * has been created.
+     *
+     * The created buttons are saved and reused when switching between different payment methods to
+     * avoid recreating the buttons.
      *
      * @override method from @payment/js/payment_form
      * @private
@@ -52,19 +60,21 @@ paymentForm.include({
 
         this._hideInputs();
         this._setPaymentFlow('direct');
-        document.getElementById('o_paypal_button').classList.remove('d-none');
         document.getElementById('o_paypal_loading').classList.remove('d-none');
         // Check if instantiation of the component is needed.
         this.paypalData ??= {}; // Store the component of each instantiated payment method.
-        const currentPayPalData = this.paypalData[paymentOptionId]
         if (this.selectedOptionId && this.selectedOptionId !== paymentOptionId) {
-            this.paypalData[this.selectedOptionId]['paypalButton'].hide()
+            this.paypalData[this.selectedOptionId]['enabledButton'].hide()
+            this.paypalData[this.selectedOptionId]['disabledButton']?.hide() // TODO Compatibility layer; remove the ? in master.
         }
+        const currentPayPalData = this.paypalData[paymentOptionId]
         if (currentPayPalData && this.selectedOptionId !== paymentOptionId) {
             const paypalSDKURL = this.paypalData[paymentOptionId]['sdkURL']
-            const paypalButton = this.paypalData[paymentOptionId]['paypalButton']
+            const enabledButton = this.paypalData[paymentOptionId]['enabledButton']
+            const disabledButton = this.paypalData[paymentOptionId]['disabledButton']
             await loadJS(paypalSDKURL);
-            paypalButton.show();
+            enabledButton?.show();
+            disabledButton?.show(); // TODO Compatibility layer; remove the ? in master.
         }
         else if (!currentPayPalData) {
             this.paypalData[paymentOptionId] = {}
@@ -78,8 +88,11 @@ paymentForm.include({
             const { client_id, currency_code } = this.inlineFormValues
             const paypalSDKURL = `https://www.paypal.com/sdk/js?client-id=${
                 client_id}&components=buttons&currency=${currency_code}&intent=capture`
+            this.paypalData[paymentOptionId]['sdkURL'] = paypalSDKURL;
             await loadJS(paypalSDKURL);
-            const paypalButton = paypal.Buttons({ // https://developer.paypal.com/sdk/js/reference
+
+            // Create the two PayPal buttons. See https://developer.paypal.com/sdk/js/reference.
+            const enabledButton = paypal.Buttons({
                 fundingSource: paypal.FUNDING.PAYPAL,
                 style: { // https://developer.paypal.com/sdk/js/reference/#link-style
                     color: this.paypalColor,
@@ -92,13 +105,36 @@ paymentForm.include({
                 onCancel: this._paypalOnCancel.bind(this),
                 onError: this._paypalOnError.bind(this),
             });
-            this.paypalData[paymentOptionId]['sdkURL'] = paypalSDKURL;
-            this.paypalData[paymentOptionId]['paypalButton'] = paypalButton;
-            paypalButton.render('#o_paypal_button');
+            const enabledButtonContainer = document.getElementById('o_paypal_enabled_button');
+            if (enabledButtonContainer) {
+                enabledButton.render('#o_paypal_enabled_button');
+            } else {
+                enabledButton.render('#o_paypal_button');  // TODO Compatibility layer; to remove in master.
+            }
+            this.paypalData[paymentOptionId]['enabledButton'] = enabledButton;
+
+            const disabledButtonContainer = document.getElementById('o_paypal_disabled_button');
+            if (disabledButtonContainer) { // TODO Compatibility layer; to remove in master.
+                const disabledButton = paypal.Buttons({
+                    fundingSource: paypal.FUNDING.PAYPAL,
+                    style: { // https://developer.paypal.com/sdk/js/reference/#link-style
+                        color: 'silver',
+                        label: 'paypal',
+                        disableMaxWidth: true,
+                        borderRadius: 6,
+                    },
+                    onInit: (data, actions) => actions.disable(),  // Permanently disable the button.
+                });
+                disabledButton.render('#o_paypal_disabled_button');
+                this.paypalData[paymentOptionId]['disabledButton'] = disabledButton;
+            }
         }
         document.getElementById('o_paypal_loading').classList.add('d-none');
+        document.getElementById('o_paypal_button')?.classList.remove('d-none'); // TODO Compatibility layer; to remove in master.
+        document.getElementById('o_paypal_button_container')?.classList.remove('d-none');  // TODO Compatibility layer; remove the ? in master.
         this.selectedOptionId = paymentOptionId;
     },
+
     // #=== PAYMENT FLOW ===#
 
     /**
@@ -138,7 +174,7 @@ paymentForm.include({
             'reference': this.paypalData[this.selectedOptionId].paypalTxRef,
         }).then(() => {
             // Close the PayPal buttons that were rendered
-            this.paypalData[this.selectedOptionId]['paypalButton'].close();
+            this.paypalData[this.selectedOptionId]['enabledButton'].close();
             window.location = '/payment/status';
         }).catch(error => {
             if (error instanceof RPCError) {
@@ -155,7 +191,7 @@ paymentForm.include({
      * @return {void}
      */
     _paypalOnCancel() {
-        this.call('ui', 'unblock');
+        this._enableButton();
     },
 
     /**
@@ -166,7 +202,7 @@ paymentForm.include({
      */
     _paypalOnError(error) {
         const message = error.message
-        this.call('ui', 'unblock');
+        this._enableButton();
         // Paypal throws an error if the popup is closed before it can load;
         // this case should be treated as an onCancel event.
         if (message !== "Detected popup close" && !(error instanceof RPCError)) {

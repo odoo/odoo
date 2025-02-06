@@ -2340,6 +2340,32 @@ test("one2many list order with handle widget", async () => {
     expect.verifySteps(["web_read"]);
 });
 
+test("one2many kanban order with handle widget", async () => {
+    onRpc("web_read", (args) => {
+        expect.step(`web_read`);
+        expect(args.kwargs.specification.p.order).toBe("int_field ASC, id ASC");
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="p">
+                    <kanban>
+                        <field name="int_field" widget="handle"/>
+                        <templates>
+                            <t t-name="card">
+                                <field name="foo"/>
+                            </t>
+                        </templates>
+                    </kanban>
+                </field>
+            </form>`,
+        resId: 1,
+    });
+    expect.verifySteps(["web_read"]);
+});
+
 test("one2many field when using the pager", async () => {
     const ids = [];
     for (let i = 0; i < 45; i++) {

@@ -22,14 +22,6 @@
                 </div>
                 <div class="mt-3">
                     <button type="button"
-                            class="btn btn-secondary me-1"
-                            t-on-click="migrate"
-                            t-if="proxyState === 'receiver' and migrationPrepared === false and ediMode != 'demo'">
-                            Migrate registration to another service
-                    </button>
-                </div>
-                <div class="mt-3">
-                    <button type="button"
                             class="btn btn-primary me-1"
                             t-on-click="checkCode"
                             t-if="['not_registered', 'in_verification'].includes(proxyState)">

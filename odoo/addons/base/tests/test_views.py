@@ -822,6 +822,40 @@ class TestTemplating(ViewCase):
         super(TestTemplating, self).setUp()
         self.patch(self.registry, '_init', False)
 
+    def test_branding_t0(self):
+        view1 = self.View.create({
+            'name': "Base view",
+            'type': 'qweb',
+            'arch': """<root>
+                <div role="search">
+                    <input type="search" name="search"/>
+                    <button type="submit">
+                        <i class="oi-search"/>
+                    </button>
+                </div>
+            </root>
+            """
+        })
+        self.View.create({
+            'name': "Extension view",
+            'type': 'qweb',
+            'inherit_id': view1.id,
+            'arch': """<xpath expr="//div[@role='search']" position="replace">
+                <form>
+                    <t>$0</t>
+                </form>
+            </xpath>
+            """
+        })
+        arch_string = view1.with_context(inherit_branding=True).get_combined_arch()
+        arch = etree.fromstring(arch_string)
+        self.View.distribute_branding(arch)
+        [initial] = arch.xpath("//div[@role='search']")
+        self.assertEqual(
+            '1',
+            initial.get('data-oe-no-branding'),
+            'Injected view must be marked as no-branding')
+
     def test_branding_inherit(self):
         view1 = self.View.create({
             'name': "Base view",
@@ -4601,19 +4635,20 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
 
         modules_without_error = set(self.env['ir.module.module'].search([('state', '=', 'intalled'), ('name', 'in', only_log_modules)]).mapped('name'))
         module_log_views = defaultdict(list)
-        module_error_views = defaultdict(list)
+        module_error_views = defaultdict(lambda: defaultdict(list)) 
         uncommented_regexp = r'''(<field [^>]*invisible=['"](True|1)['"][^>]*>)[\s\t\n ]*(.*)'''
         views = self.env['ir.ui.view'].search([('type', 'in', ('list', 'form')), '|', ('arch_db', 'like', 'invisible=_True_'), ('arch_db', 'like', 'invisible=_1_')])
-        for view in views:
+        for view in views.filtered('model_data_id'):
+            module_name = view.model_data_id.module
+            view_name = view.model_data_id.name
             for field, _val, comment in re.findall(uncommented_regexp, view.arch_db):
-                if (not comment or not comment.startswith('<!--')) and view.model_data_id:
-                    views = module = view.model_data_id.module
-                    if module in only_log_modules:
-                        modules_without_error.discard(module)
-                        module_log_views[module].append(view.model_data_id.name)
+                if (not comment or not comment.startswith('<!--')):
+                    if module_name in only_log_modules:
+                        modules_without_error.discard(module_name)
+                        module_log_views[module_name].append(view_name)
+                        break
                     else:
-                        module_error_views[module].append(view.model_data_id.name)
-                    break
+                        module_error_views[module_name][view_name].append(field)
 
         msg = 'Please indicate why the always invisible fields are present in the view, or remove the field tag.'
 
@@ -4622,8 +4657,13 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             _logger.info('%s\n%s', msg, msg_info)
 
         if module_error_views:
-            msg_info = '\n'.join(f'Addons: {module!r}   Views: {names}' for module, names in module_error_views.items())
-            _logger.error('%s\n%s', msg, msg_info)
+            error_lines = []
+            for module, view_errors in module_error_views.items():
+                error_lines.append(f"Addon: {module!r}")
+                for view, fields in view_errors.items():
+                    error_lines.extend([f"{' ' * 3}View: {view}\n{' ' * 6}Fields:"])
+                    error_lines.extend(["\n".join(f"{' ' * 9}{field}" for field in fields)])
+            _logger.error("%s\n%s", msg, "\n".join(error_lines))
 
         if modules_without_error:
             _logger.error('Please remove this module names from the white list of this current test: %r', sorted(modules_without_error))

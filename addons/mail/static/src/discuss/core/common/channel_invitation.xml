@@ -5,7 +5,7 @@
         <ActionPanel title.translate="Invite people" resizable="false" icon="'fa fa-user-plus'">
             <div class="d-flex flex-column flex-grow-1 bg-inherit" t-att-class="{ 'o-mail-Discuss-threadActionPopover w-100': props.hasSizeConstraints }">
                 <t t-if="store.self.type === 'partner'">
-                    <input class="o-discuss-ChannelInvitation-search form-control lh-1 px-2 bg-view" t-ref="input" placeholder="Type the name of a person" t-on-input="onInput"/>
+                    <input class="o-discuss-ChannelInvitation-search form-control lh-1 px-2 bg-white" t-ref="input" placeholder="Type the name of a person" t-on-input="onInput"/>
                     <ul class="d-flex flex-column mx-0 pt-1 pb-0 overflow-auto list-group border-0 flex-grow-1" t-att-class="{ 'align-items-center justify-content-center': state.selectablePartners.length === 0 }">
                         <div t-if="state.selectablePartners.length === 0" class="small text-muted mx-1 fst-italic">No user found that is not already a member of this channel.</div>
                         <div t-if="state.searchResultCount > state.selectablePartners.length" class="smaller text-muted mx-1 fst-italic">
@@ -47,7 +47,7 @@
                         </button>
                     </t>
                     <div t-if="props.thread.invitationLink" class="input-group">
-                        <input class="border form-control lh-1 px-2 py-0" type="text" t-att-value="props.thread.invitationLink" readonly="" t-on-focus="onFocusInvitationLinkInput"/>
+                        <input class="border border-secondary form-control lh-1 px-2 py-0 opacity-75" type="text" t-att-value="props.thread.invitationLink" readonly="" t-on-focus="onFocusInvitationLinkInput"/>
                         <button class="btn btn-primary px-2 py-1" t-on-click="onClickCopy">
                             <i class="fa fa-copy"/>
                         </button>

@@ -211,7 +211,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
 
         vals.append({
             'id_attrs': {'schemeID': 'TIN'},
-            'id': partner.vat,
+            'id': partner._l10n_my_edi_get_tin_for_myinvois(),
         })
 
         if partner.l10n_my_identification_type and partner.l10n_my_identification_number:
@@ -279,8 +279,8 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
                 self._l10n_my_edi_make_validation_error(constraints, 'phone_number_required', partner_type, partner.display_name)
 
             # We need to provide both l10n_my_identification_type and l10n_my_identification_number
-            if not partner.l10n_my_identification_type or not partner.l10n_my_identification_number:
-                self._l10n_my_edi_make_validation_error(constraints, 'required_id', partner_type, partner.display_name)
+            if not partner.commercial_partner_id.l10n_my_identification_type or not partner.commercial_partner_id.l10n_my_identification_number:
+                self._l10n_my_edi_make_validation_error(constraints, 'required_id', partner_type, partner.commercial_partner_id.display_name)
 
             if not partner.state_id:
                 self._l10n_my_edi_make_validation_error(constraints, 'no_state', partner_type, partner.display_name)
@@ -291,15 +291,16 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             if not partner.street:
                 self._l10n_my_edi_make_validation_error(constraints, 'no_street', partner_type, partner.display_name)
 
-            if partner.sst_registration_number and len(partner.sst_registration_number.split(';')) > 2:
-                self._l10n_my_edi_make_validation_error(constraints, 'too_many_sst', partner_type, partner.display_name)
+            if partner.commercial_partner_id.sst_registration_number and len(partner.commercial_partner_id.sst_registration_number.split(';')) > 2:
+                self._l10n_my_edi_make_validation_error(constraints, 'too_many_sst', partner_type, partner.commercial_partner_id.display_name)
 
-        invoice_lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section') and line.product_id)
-        for line in invoice_lines:
-            if not line.product_id.product_tmpl_id.l10n_my_edi_classification_code:
+        for line in invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section')):
+            if line.product_id and not line.product_id.product_tmpl_id.l10n_my_edi_classification_code:
                 self._l10n_my_edi_make_validation_error(constraints, 'class_code_required', line.product_id.id, line.product_id.display_name)
             if not line.tax_ids:
-                self._l10n_my_edi_make_validation_error(constraints, 'tax_ids_required', line.id, line.name)
+                self._l10n_my_edi_make_validation_error(constraints, 'tax_ids_required', line.id, line.display_name)
+            elif any(tax.l10n_my_tax_type == 'E' for tax in line.tax_ids) and not invoice.l10n_my_edi_exemption_reason:
+                self._l10n_my_edi_make_validation_error(constraints, 'tax_exemption_required', invoice.id, invoice.display_name)
 
         document_type_code, original_document = self._l10n_my_edi_get_document_type_code(invoice)
         if document_type_code != '01' and not original_document:
@@ -438,7 +439,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         """
         if invoice.currency_id.name != "MYR":
             # I couldn't find any information on maximum precision, so we will use the currency format.
-            return self.env.ref('base.MYR').round(invoice.amount_total_signed / (invoice.amount_total or 1))
+            return self.env.ref('base.MYR').round(abs(invoice.amount_total_signed) / (invoice.amount_total or 1))
         return ''
 
     @api.model
@@ -491,6 +492,10 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
                 "The following product must have their item classification code set: %(product_name)s",
                 product_name=record_name
             ),
+            'class_code_required_line': _(
+                "The following line must have their item classification code set: %(line_name)s",
+                line_name=record_name
+            ),
             'adjustment_origin': _(
                 "You cannot send a debit / credit note for invoice %(invoice_number)s as it has not yet been sent to MyInvois.",
                 invoice_number=record_name
@@ -502,6 +507,10 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             'tax_ids_required': _(
                 "You must set a tax on the line : %(line_name)s.\nIf taxes are not applicable, please set a 0%% tax with a tax type 'Not Applicable'.",
                 line_name=record_name
+            ),
+            'tax_exemption_required': _(
+                "You must set a Tax Exemption Reason on the invoice : %(invoice_name)s as some taxes have the type 'Tax exemption'.",
+                invoice_name=record_name
             ),
         }
 

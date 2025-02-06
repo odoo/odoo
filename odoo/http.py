@@ -1831,8 +1831,12 @@ class Request:
         try:
             directory = root.statics[module]
             filepath = werkzeug.security.safe_join(directory, path)
+            debug = (
+                'assets' in self.session.debug and
+                ' wkhtmltopdf ' not in self.httprequest.user_agent.string
+            )
             res = Stream.from_path(filepath, public=True).get_response(
-                max_age=0 if 'assets' in self.session.debug else STATIC_CACHE,
+                max_age=0 if debug else STATIC_CACHE,
                 content_security_policy=None,
             )
             root.set_csp(res)
@@ -1963,7 +1967,8 @@ class Request:
                         raise  # bubble up to odoo.http.Application.__call__
                     if 'werkzeug' in config['dev_mode'] and self.dispatcher.routing_type != 'json':
                         raise  # bubble up to werkzeug.debug.DebuggedApplication
-                    exc.error_response = self.registry['ir.http']._handle_error(exc)
+                    if not hasattr(exc, 'error_response'):
+                        exc.error_response = self.registry['ir.http']._handle_error(exc)
                     raise
 
 

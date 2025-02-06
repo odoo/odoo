@@ -192,7 +192,7 @@ export function clickOnElement(elementName, selector) {
 export function clickOnEditAndWaitEditMode(position = "bottom") {
     return [{
         content: markup(_t("<b>Click Edit</b> to start designing your homepage.")),
-        trigger: ".o_menu_systray .o_edit_website_container a",
+        trigger: "body:not(.editor_has_snippets) .o_menu_systray .o_edit_website_container a",
         tooltipPosition: position,
         run: "click",
     }, {
@@ -272,10 +272,15 @@ export function clickOnSave(position = "bottom", timeout) {
             run: "click",
         },
         {
-            isActive: ["auto"], // Just making sure save is finished in automatic tests
-            trigger: ":iframe body:not(.editor_enable)",
+            isActive: ["auto"],
+            trigger: "body:not(:has(.editor_enable))",
             noPrepend: true,
             timeout: timeout,
+        },
+        {
+            isActive: ["auto"],
+            trigger: "[is-ready=true]:iframe",
+            noPrepend: true,
         },
     ];
 }

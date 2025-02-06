@@ -9,8 +9,10 @@ PaymentForm.include({
       * @override
      */
      async start() {
-         const submitButton = document.querySelector('[name="o_payment_submit_button"]');
-         submitButton.addEventListener('click', ev => this._submitForm(ev));
+         const submitButtons = document.querySelectorAll('[name="o_payment_submit_button"]');
+         submitButtons.forEach(  // Support the additional PayPal buttons acting as submit buttons.
+             submitButton => submitButton.addEventListener('click', ev => this._submitForm(ev))
+         );
          return await this._super(...arguments);
      }
 

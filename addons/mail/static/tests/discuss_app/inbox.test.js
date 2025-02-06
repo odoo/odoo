@@ -5,6 +5,7 @@ import {
     defineMailModels,
     insertText,
     onRpcBefore,
+    onRpcAfter,
     openDiscuss,
     scroll,
     start,
@@ -445,6 +446,41 @@ test("inbox: mark as read should not display jump to present", async () => {
     await contains("[title='Jump to Present']");
     await click(".o-mail-Discuss-header button:enabled", { text: "Mark all read" });
     await contains("[title='Jump to Present']", { count: 0 });
+});
+
+test("inbox: can mark as read when received a message from the record without access to", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["res.partner"].create({ name: "General" });
+    const messageId = pyEnv["mail.message"].create({
+        body: "not empty",
+        model: "res.partner",
+        needaction: true,
+        res_id: channelId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+    onRpcAfter("/mail/inbox/messages", async (promise) => {
+        const res = await promise;
+        // simulate data with no access rights to thread of message.
+        return {
+            data: {
+                "mail.notification": res.data["mail.notification"],
+            },
+            messages: res["messages"],
+        };
+    });
+    await start();
+    await openDiscuss();
+    await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
+    await contains("h4:contains(Your inbox is empty)");
+    await click(".o-mail-Discuss-header button:enabled", { text: "Mark all read" });
+    await contains("button", {
+        text: "Inbox",
+        contains: [[".badge", { count: 0 }]],
+    });
 });
 
 test("click on (non-channel/non-partner) origin thread link should redirect to form view", async () => {

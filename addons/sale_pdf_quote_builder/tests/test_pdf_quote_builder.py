@@ -7,13 +7,13 @@ from odoo import Command
 from odoo.tests import tagged
 from odoo.tools.misc import file_open
 
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.addons.base.tests.common import BaseUsersCommon
 from odoo.addons.sale.tests.common import SaleCommon
 from .files import forms_pdf, plain_pdf
 
 
 @tagged('-at_install', 'post_install')
-class TestPDFQuoteBuilder(HttpCaseWithUserDemo, SaleCommon):
+class TestPDFQuoteBuilder(BaseUsersCommon, SaleCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -146,21 +146,13 @@ class TestPDFQuoteBuilder(HttpCaseWithUserDemo, SaleCommon):
             self.assertEqual(result, expected[form_field.name])
 
     def test_product_document_dialog_params_access(self):
-        sale_order_user_demo = self.sale_order.copy({'user_id': self.user_demo.id})
-        dialog_param = sale_order_user_demo.with_user(
-            self.user_demo.id
+        sale_order_user_internal = self.sale_order.copy({'user_id': self.user_internal.id})
+        dialog_param = sale_order_user_internal.with_user(
+            self.user_internal.id
         ).get_update_included_pdf_params()
+        # should return all document data regardless of access
         self.assertEqual('Header', dialog_param['headers']['files'][0]['name'])
-        # Line product document should only be accessible by sales user
-        self.assertFalse(dialog_param['lines'])
-
-        self.user_demo.groups_id += self.env.ref('sales_team.group_sale_salesman')
-        dialog_param = sale_order_user_demo.with_user(
-            self.user_demo.id
-        ).get_update_included_pdf_params()
-        # should return all document data for sale own document user
-        self.assertEqual('Header', dialog_param['headers']['files'][0]['name'])
-        self.assertTrue('Product > Test Product', dialog_param['lines'][0]['name'])
+        self.assertEqual('Product > Test Product', dialog_param['lines'][0]['name'])
 
     def _test_custom_content_kanban_like(self):
         # TODO VCR finish tour and uncomment
