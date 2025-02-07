@@ -1353,15 +1353,16 @@ class Field(typing.Generic[T]):
         if record is None:
             return self         # the field is accessed through the owner class
 
-        if not record._ids:
+        record_len = len(record._ids)
+        if not record_len:
             # null record -> return the null value for this field
             value = self.convert_to_cache(False, record, validate=False)
             return self.convert_to_record(value, record)
+        if record_len != 1:
+            # let ensure_one() raise the proper exception
+            record.ensure_one()
 
         env = record.env
-
-        # only a single record may be accessed
-        record.ensure_one()
 
         if self.compute and self.store:
             # process pending computations
