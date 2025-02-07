@@ -176,7 +176,9 @@ class SaleOrder(models.Model):
             line_id = line.id
             # When a reward line is deleted we remove it from the auto claimable rewards
             self = self.with_context(website_sale_loyalty_delete=True)  # noqa: PLW0642
-        res = super()._cart_update(product_id, line_id, add_qty, set_qty, **kwargs)
+        res = super()._cart_update(
+            product_id, line_id=line_id, add_qty=add_qty, set_qty=set_qty, **kwargs
+        )
         self._update_programs_and_rewards()
         self._auto_apply_rewards()
         if request:  # In case the rewards application modifies the cart quantity
