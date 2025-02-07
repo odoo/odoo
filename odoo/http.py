@@ -1707,8 +1707,19 @@ class Request:
         URL is profile-safe. Otherwise, get a context-manager that does
         nothing.
         """
-        if self.session.get('profile_session') and self.db:
-            if self.session['profile_expiration'] < str(datetime.now()):
+        if not (config['profile'] or self.session.get('profile_session')):
+            return contextlib.nullcontext()
+
+        profile_db = config['profile_database'] or self.db
+        if config['profile_database']:
+            profile_db = config['profile_database']
+        elif config['profile'] and len(config['db_name']) == 1:
+            profile_db = config['db_name'][0]
+        else:
+            profile_db = self.db
+
+        if profile_db:
+            if not config['profile'] and self.session['profile_expiration'] < str(datetime.now()):
                 # avoid having session profiling for too long if user forgets to disable profiling
                 self.session['profile_session'] = None
                 _logger.warning("Profiling expiration reached, disabling profiling")
@@ -1720,17 +1731,26 @@ class Request:
                 # only longpolling should be in a evented server, but this is an additional safety
                 _logger.debug("Profiling disabled for evented server")
             else:
-                try:
-                    return profiler.Profiler(
-                        db=self.db,
-                        description=self.httprequest.full_path,
-                        profile_session=self.session['profile_session'],
-                        collectors=self.session['profile_collectors'],
-                        params=self.session['profile_params'],
-                    )
-                except Exception:
-                    _logger.exception("Failure during Profiler creation")
-                    self.session['profile_session'] = None
+                if self.session.get('profile_session'):
+                    collectors = self.session['profile_collectors']
+                    params = self.session['profile_params']
+                    session = self.session['profile_session']
+                else:
+                    collectors = config['profile_collectors']
+                    params = json.loads(config['profile_params'])
+                    session = f'{os.getpid()} - {self.db}'
+                if not params.get('request_filter') or re.match(params['request_filter'], self.httprequest.full_path):
+                    try:
+                        return profiler.Profiler(
+                            db=profile_db,
+                            description=self.httprequest.full_path,
+                            profile_session=session,
+                            collectors=collectors,
+                            params=params,
+                        )
+                    except Exception:
+                        _logger.exception("Failure during Profiler creation")
+                        self.session['profile_session'] = None
 
         return contextlib.nullcontext()
 

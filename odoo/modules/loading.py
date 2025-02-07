@@ -5,7 +5,9 @@
 """
 from __future__ import annotations
 
+import contextlib
 import itertools
+import json
 import logging
 import sys
 import threading
@@ -150,7 +152,6 @@ def load_module_graph(
     if models_to_check is None:
         models_to_check = set()
 
-    registry = env.registry
     assert isinstance(env.cr, odoo.sql_db.Cursor), "Need for a real Cursor to load modules"
     migrations = MigrationManager(env.cr, graph)
     module_count = len(graph)
@@ -164,17 +165,62 @@ def load_module_graph(
     models_updated = set()
 
     for index, package in enumerate(graph, 1):
-        module_name = package.name
-        module_id = package.id
+        _load_one_module(
+            env,
+            update_module,
+            report,
+            models_to_check,
+            install_demo,
+            index,
+            package,
+            migrations,
+            module_count,
+            models_updated,
+        )
+    
+    _logger.runbot("%s modules loaded in %.2fs, %s queries (+%s extra)",
+                   len(graph),
+                   time.time() - t0,
+                   env.cr.sql_log_count - loading_cursor_query_count,
+                   odoo.sql_db.sql_counter - loading_extra_query_count)  # extra queries: testes, notify, any other closed cursor
 
-        if module_name in registry._init_modules:
-            continue
 
-        module_t0 = time.time()
-        module_cursor_query_count = env.cr.sql_log_count
-        module_extra_query_count = odoo.sql_db.sql_counter
+def _load_one_module(
+        env: Environment,
+        update_module: bool,
+        report: OdooTestResult | None,
+        models_to_check: set[str] | None,
+        install_demo: bool,
+        index,
+        package,
+        migrations,
+        module_count,
+        models_updated,
+    ):
+    config = odoo.tools.config
+    registry = env.registry
+    module_name = package.name
+    module_id = package.id
 
-        needs_update = update_module and package.state in ("to install", "to upgrade")
+    module_t0 = time.time()
+    module_cursor_query_count = env.cr.sql_log_count
+    module_extra_query_count = odoo.sql_db.sql_counter
+
+   
+    needs_update = update_module and package.state in ("to install", "to upgrade")
+    if config['profile'] and needs_update:
+        context_manager = odoo.tools.profiler.Profiler(
+                db=config['profile_database'] or registry.db_name,
+                description=f'Loading - {registry.db_name}, {package.name}',
+                profile_session=registry.db_name,
+                collectors=config['profile_collectors'],
+                params=json.loads(config['profile_params']),
+            )
+        context_manager = odoo.tools.profiler.Nested(odoo.tools.profiler.ExecutionContext(loading=package.name), context_manager)
+    else:
+        context_manager = contextlib.nullcontext()
+
+    with context_manager:
         module_log_level = logging.DEBUG
         if needs_update:
             module_log_level = logging.INFO
@@ -326,13 +372,6 @@ def load_module_graph(
                 module_name, test_results.failures_count, test_results.errors_count,
                 test_results.testsRun
             )
-
-    _logger.runbot("%s modules loaded in %.2fs, %s queries (+%s extra)",
-                   len(graph),
-                   time.time() - t0,
-                   env.cr.sql_log_count - loading_cursor_query_count,
-                   odoo.sql_db.sql_counter - loading_extra_query_count)  # extra queries: testes, notify, any other closed cursor
-
 
 def _check_module_names(cr: BaseCursor, module_names: Iterable[str]) -> None:
     mod_names = set(module_names)

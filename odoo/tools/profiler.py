@@ -48,7 +48,7 @@ def _get_stack_trace(frame, limit_frame=None):
         stack.append(_format_frame(frame))
         frame = frame.f_back
     if frame is None and limit_frame:
-        _logger.error("Limit frame was not found")
+        _logger.runbot("Limit frame was not found")
     return list(reversed(stack))
 
 
@@ -115,6 +115,8 @@ class Collector:
 
     def add(self, entry=None, frame=None):
         """ Add an entry (dict) to this collector. """
+        if len(self._entries) % 10000 == 0:
+            _logger.info("Collector %s entry count: %s", self.name, len(self._entries))
         self._entries.append({
             'stack': self._get_stack_trace(frame),
             'exec_context': getattr(self.profiler.init_thread, 'exec_context', ()),
@@ -390,7 +392,7 @@ class QwebTracker():
             elif ('t-' + directive) not in attrib:
                 directive_info['t-' + directive] = None
 
-            execution_context = tools.profiler.ExecutionContext(**directive_info, xpath=xpath)
+            execution_context = ExecutionContext(**directive_info, xpath=xpath)
             execution_context.__enter__()
             self.context_stack.append(execution_context)
 
