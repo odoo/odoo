@@ -2,6 +2,7 @@
 
 from odoo import models, fields, api
 from odoo.tools import SQL
+from odoo.tools.query import Query
 from odoo.addons.account.models.account_move import PAYMENT_STATE_SELECTION
 
 from functools import lru_cache
@@ -154,6 +155,16 @@ class AccountInvoiceReport(models.Model):
                 AND line.account_id IS NOT NULL
                 AND line.display_type = 'product'
             ''',
+        )
+
+    def _read_group_select(self, aggregate_spec: str, query: Query) -> SQL:
+        """ This override allows us to correctly calculate the average price of products. """
+        if aggregate_spec != 'price_average:avg':
+            return super()._read_group_select(aggregate_spec, query)
+        return SQL(
+            'SUM(%(f_price)s) / SUM(%(f_qty)s)',
+            f_qty=self._field_to_sql(self._table, 'quantity', query),
+            f_price=self._field_to_sql(self._table, 'price_subtotal', query),
         )
 
 
