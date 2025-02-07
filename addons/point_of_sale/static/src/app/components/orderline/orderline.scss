@@ -14,7 +14,7 @@
     }
 
     &.selected {
-        background-color: $o-component-active-bg;
+        background-color: var(--orderline-selected, #{$o-component-active-bg});
     }
 
     &.has-change::before {

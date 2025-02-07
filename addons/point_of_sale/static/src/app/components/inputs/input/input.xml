@@ -16,7 +16,7 @@
                 <div class="form-control form-control-lg input-container d-flex align-items-center bg-view"
                     t-att-class="{'is-invalid': !props.isValid(getValue())}">
                     <t t-if="props.iconOnLeftSide" t-call="point_of_sale.inputIcon" />
-                    <input class="border-0 mx-2" type="text" style="min-width: 60px;"
+                    <input class="o_input border-0 mx-2 text-body" type="text" style="min-width: 60px;"
                         t-on-focus="ev=>ev.target.select()"
                         t-att-placeholder="props.placeholder"
                         t-ref="input"

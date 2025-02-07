@@ -1,3 +1,12 @@
+.pos-logo {
+    height: $navbar-height / 1.5;
+    min-width: $navbar-height * 2; 
+    background-image: var(--navbar-logo, url("/web/static/img/odoo_logo.svg"));
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
 .pos-leftheader, .pos-rightheader {
     width: 45%;
     &.pos-nav-small {
@@ -41,26 +50,10 @@
     }
 }
 
-.o-dropdown--menu .dropdown-item.focus {
-    background-color: $o-gray-200;
-}
-
 @include media-breakpoint-up(sm) {
     .navbar-menu {
         grid-auto-columns: minmax(100px, 1fr);
         grid-auto-flow: column;
-    }
-}
-.btn {
-    &-primary {
-        .navbar-icon {
-            filter: invert(1);
-        }
-    }
-    &-light {
-        .navbar-icon {
-            filter: invert(0);
-        }
     }
 }
 

@@ -15,7 +15,7 @@ class RestaurantFloor(models.Model):
     name = fields.Char('Floor Name', required=True)
     pos_config_ids = fields.Many2many('pos.config', string='Point of Sales', domain="[('module_pos_restaurant', '=', True)]")
     background_image = fields.Binary('Background Image')
-    background_color = fields.Char('Background Color', help='The background color of the floor in a html-compatible format', default='rgb(249,250,251)')
+    background_color = fields.Char('Background Color', help='The background color of the floor in a html-compatible format')
     table_ids = fields.One2many('restaurant.table', 'floor_id', string='Tables')
     sequence = fields.Integer('Sequence', default=1)
     active = fields.Boolean(default=True)
@@ -109,7 +109,7 @@ class RestaurantTable(models.Model):
     width = fields.Float('Width', default=50, help="The table's width in pixels")
     height = fields.Float('Height', default=50, help="The table's height in pixels")
     seats = fields.Integer('Seats', default=1, help="The default number of customer served at this table.")
-    color = fields.Char('Color', help="The table's color, expressed as a valid 'background' CSS property value", default="#35D374")
+    color = fields.Char('Color', help="The table's color, expressed as a valid 'background' CSS property value")
     parent_id = fields.Many2one('restaurant.table', string='Parent Table', help="The parent table if this table is part of a group of tables")
     active = fields.Boolean('Active', default=True, help='If false, the table is deactivated and will not be available in the point of sale')
 

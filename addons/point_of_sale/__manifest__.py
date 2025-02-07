@@ -117,13 +117,10 @@
         'point_of_sale.base_app': [
             ("include", "web._assets_helpers"),
             ("include", "web._assets_backend_helpers"),
-            ("include", "web._assets_primary_variables"),
             "web/static/src/scss/pre_variables.scss",
-            "web/static/lib/bootstrap/scss/_functions.scss",
             "web/static/lib/bootstrap/scss/_variables.scss",
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
-            ("include", "web._assets_bootstrap"),
             ("include", "web._assets_bootstrap_backend"),
             ('include', 'web._assets_core'),
             ("remove", "web/static/src/core/browser/router.js"),
@@ -212,6 +209,9 @@
         'point_of_sale.assets_prod': [
             ('include', 'point_of_sale._assets_pos'),
             'point_of_sale/static/src/app/main.js',
+        ],
+        'point_of_sale.assets_prod_dark': [
+            ('include', 'point_of_sale.assets_prod'),
         ],
         'point_of_sale.customer_display_assets': [
             ('include', 'point_of_sale.base_app'),
