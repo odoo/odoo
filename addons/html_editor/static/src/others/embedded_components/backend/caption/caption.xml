@@ -2,9 +2,18 @@
 <templates>
     <!-- caption template -->
     <t t-name="html_editor.EmbeddedCaption">
-        <input t-attf-class="border-0 p-0"
-            t-ref="autofocus" type="text" maxLength="100" t-att-placeholder="'Write your caption here'"
-            t-on-input.stop="onInputCaptionInput" t-on-keydown.stop=""
-            t-att-value="state.caption"/>
+        <!-- <div t-ref="span" contenteditable="true" t-att-class="{'d-none': state.isEditing}" t-on-focus="onSpanFocus">
+            <span>
+                <t t-esc="state.caption"/>
+            </span>
+        </div> -->
+            <input class="border-0 p-0"
+                t-ref="autofocus" type="text" placeholder="Write your caption here"
+                t-on-input.stop.prevent="onInputCaptionInput" t-on-keydown.stop="" t-on-blur="onInputCaptionBlur"
+                t-att-value="state.caption"/>
+        <!-- <input class="border-0 p-0" t-att-class="{'d-none': !state.isEditing}"
+            t-ref="autofocus" type="text" t-att-placeholder="'Write your caption here'"
+            t-on-input.stop="onInputCaptionInput" t-on-keydown.stop="" t-on-blur="onInputCaptionBlur"
+            t-att-value="state.caption"/> -->
     </t>
 </templates>

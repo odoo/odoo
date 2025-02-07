@@ -39,7 +39,8 @@ export class Plugin {
 
     addDomListener(target, eventName, fn, capture) {
         const handler = (ev) => {
-            if ((
+            if (
+                (
                     !isProtecting(ev.target) &&
                     (!isProtected(ev.target) || isUnprotecting(ev.target))
                 ) ||
