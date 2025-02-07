@@ -48,7 +48,7 @@
     --TourPointer__translate-x: 0;
     --TourPointer__translate-y: 0;
 
-    z-index: $zindex-tooltip;
+    z-index: $zindex-tooltip + 30;
     max-width: 270px;
     border: var(--TourPointer__border-width) solid transparent;
     transform: translate(var(--TourPointer__translate-x), var(--TourPointer__translate-y));
@@ -214,6 +214,10 @@
             }
         }
     }
+}
+
+.o-overlay-item:has(.o_tour_pointer) {
+    z-index: $zindex-tooltip + 30;
 }
 
 @media print {
