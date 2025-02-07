@@ -156,7 +156,7 @@ class MrpWorkorder(models.Model):
             if workorder.state not in ('pending', 'waiting', 'ready'):
                 continue
             blocked = any(w.state not in ('done', 'cancel') for w in workorder.blocked_by_workorder_ids)
-            has_qty_ready = float_compare(workorder.qty_ready, 0, precision_rounding=workorder.product_uom_id.rounding) > 0
+            has_qty_ready = workorder.product_uom_id.compare(workorder.qty_ready, 0) > 0
             if blocked and not has_qty_ready:
                 workorder.state = 'pending'
             elif workorder.production_availability == 'assigned' or (has_qty_ready and workorder.blocked_by_workorder_ids):
@@ -465,7 +465,7 @@ class MrpWorkorder(models.Model):
         if 'qty_produced' in values:
             if any(w.state in ['done', 'cancel'] for w in self):
                 raise UserError(_('You cannot change the quantity produced of a work order that is in done or cancel state.'))
-            elif float_compare(values['qty_produced'], 0, precision_rounding=self.product_uom_id.rounding) < 0:
+            elif self.product_uom_id.compare(values['qty_produced'], 0) < 0:
                 raise UserError(_('The quantity produced must be positive.'))
             elif values['qty_produced'] not in (0, 1) and any(wo.product_tracking == 'serial' for wo in self):
                 raise UserError(_('You cannot produce more than 1 unit of a serial product at a time.'))
@@ -512,7 +512,7 @@ class MrpWorkorder(models.Model):
         if 'qty_produced' in values and float_compare(values.get('qty_produced', 0), 0, precision_rounding=self.production_id.product_uom_id.rounding) > 0:
             for production in self.production_id:
                 min_wo_qty = min(production.workorder_ids.mapped('qty_produced'))
-                if float_compare(min_wo_qty, 0, precision_rounding=self.production_id.product_uom_id.rounding) > 0:
+                if self.production_id.product_uom_id.compare(min_wo_qty, 0) > 0:
                     production.workorder_ids.filtered(lambda w: w.state != 'done').qty_producing = min_wo_qty
             self._set_qty_producing()
 
@@ -675,11 +675,11 @@ class MrpWorkorder(models.Model):
             moves = (self.move_raw_ids + self.production_id.move_byproduct_ids.filtered(lambda m: m.operation_id == self.operation_id))
             for move in moves:
                 if not move.picked:
-                    if float_is_zero(workorder.production_id.qty_producing, precision_rounding=workorder.production_id.product_uom_id.rounding):
+                    if workorder.production_id.product_uom_id.is_zero(workorder.production_id.qty_producing):
                         qty_available = workorder.production_id.product_qty
                     else:
                         qty_available = workorder.production_id.qty_producing
-                    new_qty = float_round(qty_available * move.unit_factor, precision_rounding=move.product_uom.rounding)
+                    new_qty = move.product_uom.round(qty_available * move.unit_factor)
                     move._set_quantity_done(new_qty)
             moves.picked = True
             workorder.end_all()
@@ -774,7 +774,7 @@ class MrpWorkorder(models.Model):
     def _compute_qty_remaining(self):
         for wo in self:
             if wo.production_id.product_uom_id:
-                wo.qty_remaining = max(float_round(wo.qty_production - wo.qty_reported_from_previous_wo - wo.qty_produced, precision_rounding=wo.production_id.product_uom_id.rounding), 0)
+                wo.qty_remaining = max(wo.production_id.product_uom_id.round(wo.qty_production - wo.qty_reported_from_previous_wo - wo.qty_produced), 0)
             else:
                 wo.qty_remaining = 0
 

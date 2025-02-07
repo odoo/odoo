@@ -382,7 +382,7 @@ class MrpProduction(models.Model):
         # Force to prefetch more than 1000 by 1000
         all_raw_moves._fields['forecast_availability'].compute_value(all_raw_moves)
         for production in productions:
-            if any(float_compare(move.forecast_availability, 0 if move.state == 'draft' else move.product_qty, precision_rounding=move.product_id.uom_id.rounding) == -1 for move in production.move_raw_ids):
+            if any(move.product_id.uom_id.compare(move.forecast_availability, 0 if move.state == 'draft' else move.product_qty) == -1 for move in production.move_raw_ids):
                 production.components_availability = _('Not Available')
                 production.components_availability_state = 'unavailable'
             else:
@@ -443,7 +443,7 @@ class MrpProduction(models.Model):
             moves = production.move_raw_ids.filtered(lambda move: move.unit_factor and move.product_id.type != 'consu')
             if moves:
                 production_capacity = min(moves.mapped(lambda move: move.product_id.uom_id._compute_quantity(move.product_id.qty_available, move.product_uom) / move.unit_factor))
-                production.production_capacity = min(production.product_qty, float_round(production_capacity, precision_rounding=production.product_id.uom_id.rounding))
+                production.production_capacity = min(production.product_qty, production.product_id.uom_id.round(production_capacity))
 
     @api.depends('move_finished_ids.date_deadline')
     def _compute_date_deadline(self):
@@ -561,11 +561,11 @@ class MrpProduction(models.Model):
                 production.state = 'done'
             elif production.workorder_ids and all(wo_state in ('done', 'cancel') for wo_state in production.workorder_ids.mapped('state')):
                 production.state = 'to_close'
-            elif not production.workorder_ids and float_compare(production.qty_producing, production.product_qty, precision_rounding=production.product_uom_id.rounding) >= 0:
+            elif not production.workorder_ids and production.product_uom_id.compare(production.qty_producing, production.product_qty) >= 0:
                 production.state = 'to_close'
             elif any(wo_state in ('progress', 'done') for wo_state in production.workorder_ids.mapped('state')):
                 production.state = 'progress'
-            elif production.product_uom_id and not float_is_zero(production.qty_producing, precision_rounding=production.product_uom_id.rounding):
+            elif production.product_uom_id and not production.product_uom_id.is_zero(production.qty_producing):
                 production.state = 'progress'
             elif any(production.move_raw_ids.mapped('picked')):
                 production.state = 'progress'
@@ -1275,7 +1275,7 @@ class MrpProduction(models.Model):
         update_info = []
         for move in self.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel')):
             old_qty = move.product_uom_qty
-            new_qty = float_round(old_qty * factor, precision_rounding=move.product_uom.rounding, rounding_method='UP')
+            new_qty = move.product_uom.round(old_qty * factor, rounding_method='UP')
             if new_qty > 0:
                 # procurement and assigning is now run in write
                 move.write({'product_uom_qty': new_qty})
@@ -1611,7 +1611,7 @@ class MrpProduction(models.Model):
             # origin lines from bom with different qty
             for product, qty_to_consume in expected_qty_by_product.items():
                 quantity = done_qty_by_product.get(product, 0.0)
-                if float_compare(qty_to_consume, quantity, precision_rounding=product.uom_id.rounding) != 0:
+                if product.uom_id.compare(qty_to_consume, quantity) != 0:
                     issues.append((order, product, quantity, qty_to_consume))
 
         return issues
@@ -1737,7 +1737,7 @@ class MrpProduction(models.Model):
             finish_moves = order.move_finished_ids.filtered(lambda m: m.product_id == order.product_id and m.state not in ('done', 'cancel'))
             # the finish move can already be completed by the workorder.
             for move in finish_moves:
-                move.quantity = float_round(order.qty_producing - order.qty_produced, precision_rounding=order.product_uom_id.rounding, rounding_method='HALF-UP')
+                move.quantity = order.product_uom_id.round(order.qty_producing - order.qty_produced, rounding_method='HALF-UP')
                 extra_vals = order._prepare_finished_extra_vals()
                 if extra_vals:
                     move.move_line_ids.write(extra_vals)
@@ -1810,7 +1810,7 @@ class MrpProduction(models.Model):
                 amounts[production] = _default_amounts(production)
                 continue
             total_amount = sum(mo_amounts)
-            diff = float_compare(production.product_qty, total_amount, precision_rounding=production.product_uom_id.rounding)
+            diff = production.product_uom_id.compare(production.product_qty, total_amount)
             if diff > 0 and not cancel_remaining_qty:
                 amounts[production].append(production.product_qty - total_amount)
                 has_backorder_to_ignore[production] = True
@@ -1919,7 +1919,7 @@ class MrpProduction(models.Model):
             if not initial_move.picked:
                 for move_line in initial_move.move_line_ids.sorted(key=lambda ml: ml._sorting_move_lines()):
                     available_qty = move_line.product_uom_id._compute_quantity(move_line.quantity, product_uom, rounding_method="HALF-UP")
-                    if float_compare(available_qty, 0, precision_rounding=product_uom.rounding) <= 0:
+                    if product_uom.compare(available_qty, 0) <= 0:
                         continue
                     ml_by_move.append((available_qty, move_line, move_line.copy_data()[0]))
 
@@ -1931,7 +1931,7 @@ class MrpProduction(models.Model):
             for index, (quantity, move_line, ml_vals) in enumerate(ml_by_move):
                 taken_qty = min(quantity, move_qty_to_reserve)
                 taken_qty_uom = product_uom._compute_quantity(taken_qty, move_line.product_uom_id, rounding_method="HALF-UP")
-                if float_is_zero(taken_qty_uom, precision_rounding=move_line.product_uom_id.rounding):
+                if move_line.product_uom_id.is_zero(taken_qty_uom):
                     continue
                 move_line.write({
                     'quantity': taken_qty_uom,
@@ -1940,19 +1940,19 @@ class MrpProduction(models.Model):
                 move_qty_to_reserve -= taken_qty
                 ml_by_move[index] = (quantity - taken_qty, move_line, ml_vals)
 
-                if float_compare(move_qty_to_reserve, 0, precision_rounding=move.product_uom.rounding) <= 0:
+                if move.product_uom.compare(move_qty_to_reserve, 0) <= 0:
                     assigned_moves.add(move.id)
                     move = moves and moves.pop(0)
                     move_qty_to_reserve = move and move.product_qty or 0
 
             for quantity, move_line, ml_vals in ml_by_move:
-                while float_compare(quantity, 0, precision_rounding=product_uom.rounding) > 0 and move:
+                while product_uom.compare(quantity, 0) > 0 and move:
                     # Do not create `stock.move.line` if there is no initial demand on `stock.move`
                     taken_qty = min(move_qty_to_reserve, quantity)
                     taken_qty_uom = product_uom._compute_quantity(taken_qty, move_line.product_uom_id, rounding_method="HALF-UP")
                     if move == initial_move:
                         move_line.quantity += taken_qty_uom
-                    elif not float_is_zero(taken_qty_uom, precision_rounding=move_line.product_uom_id.rounding):
+                    elif not move_line.product_uom_id.is_zero(taken_qty_uom):
                         new_ml_vals = dict(
                             ml_vals,
                             quantity=taken_qty_uom,
@@ -1962,7 +1962,7 @@ class MrpProduction(models.Model):
                     quantity -= taken_qty
                     move_qty_to_reserve -= taken_qty
 
-                    if float_compare(move_qty_to_reserve, 0, precision_rounding=move.product_uom.rounding) <= 0:
+                    if move.product_uom.compare(move_qty_to_reserve, 0) <= 0:
                         assigned_moves.add(move.id)
                         move = moves and moves.pop(0)
                         move_qty_to_reserve = move and move.product_qty or 0
@@ -2146,7 +2146,7 @@ class MrpProduction(models.Model):
         self._button_mark_done_sanity_checks()
         productions_auto = set()
         for production in self:
-            if not float_is_zero(production.qty_producing, precision_rounding=production.product_uom_id.rounding):
+            if not production.product_uom_id.is_zero(production.qty_producing):
                 production.move_raw_ids.filtered(
                     lambda move: move.manual_consumption and not move.picked
                 ).picked = True
@@ -2582,7 +2582,7 @@ class MrpProduction(models.Model):
             if move.has_tracking != 'serial' or move.product_id == self.product_id:
                 continue
             for move_line in move.move_line_ids:
-                if float_is_zero(move_line.quantity, precision_rounding=move_line.product_uom_id.rounding):
+                if move_line.product_uom_id.is_zero(move_line.quantity):
                     continue
                 if self._is_finished_sn_already_produced(move_line.lot_id, excluded_sml=move_line):
                     raise UserError(_('The serial number %(number)s used for byproduct %(product_name)s has already been produced',
@@ -2594,7 +2594,7 @@ class MrpProduction(models.Model):
             if move.has_tracking != 'serial' or not move.picked:
                 continue
             for move_line in move.move_line_ids:
-                if not move_line.picked or float_is_zero(move_line.quantity, precision_rounding=move_line.product_uom_id.rounding) or\
+                if not move_line.picked or move_line.product_uom_id.is_zero(move_line.quantity) or\
                         not move_line.lot_id:
                     continue
                 sml_sn = move_line.lot_id
@@ -2725,7 +2725,7 @@ class MrpProduction(models.Model):
         missing_lot_id_products = ""
         if self.product_tracking in ('lot', 'serial') and not self.lot_producing_id:
             self.action_generate_serial()
-        if self.product_tracking == 'serial' and float_compare(self.qty_producing, 1, precision_rounding=self.product_uom_id.rounding) == 1:
+        if self.product_tracking == 'serial' and self.product_uom_id.compare(self.qty_producing, 1) == 1:
             self.qty_producing = 1
         else:
             self.qty_producing = self.product_qty - self.qty_produced

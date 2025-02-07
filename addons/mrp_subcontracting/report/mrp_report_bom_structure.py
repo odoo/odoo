@@ -93,7 +93,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                     'route_detail': supplier.display_name,
                     'lead_time': rules_delay,
                     'supplier': supplier,
-                    'route_alert': float_compare(qty_supplier_uom, supplier.min_qty, precision_rounding=product.uom_id.rounding) < 0,
+                    'route_alert': product.uom_id.compare(qty_supplier_uom, supplier.min_qty) < 0,
                     'qty_checked': quantity,
                     'bom': bom,
                 }

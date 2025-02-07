@@ -56,7 +56,7 @@ class StockQuant(models.Model):
             if not quant.location_id or not quant.product_id or\
                     not quant.location_id._should_be_valued() or\
                     quant._should_exclude_for_valuation() or\
-                    float_is_zero(quant.quantity, precision_rounding=quant.product_id.uom_id.rounding):
+                    quant.product_id.uom_id.is_zero(quant.quantity):
                 continue
             if quant.product_id.lot_valuated:
                 quantity = quant.lot_id.with_company(quant.company_id).quantity_svl
@@ -64,7 +64,7 @@ class StockQuant(models.Model):
             else:
                 quantity = quant.product_id.with_company(quant.company_id).quantity_svl
                 value_svl = quant.product_id.with_company(quant.company_id).value_svl
-            if float_is_zero(quantity, precision_rounding=quant.product_id.uom_id.rounding):
+            if quant.product_id.uom_id.is_zero(quantity):
                 continue
             quant.value = quant.quantity * value_svl / quantity
 
