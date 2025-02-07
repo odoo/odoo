@@ -21,7 +21,6 @@ export class BomOverviewControlPanel extends Component {
         showVariants: { type: Boolean, optional: true },
         variants: { type: Object, optional: true },
         data: { type: Object, optional: true },
-        showUom: { type: Boolean, optional: true },
         uomName: { type: String, optional: true },
         currentWarehouse: Object,
         warehouses: { type: Array, optional: true },
@@ -29,7 +28,7 @@ export class BomOverviewControlPanel extends Component {
         changeWarehouse: Function,
         changeVariant: Function,
         changeBomQuantity: Function,
-        changeDisplay: Function,
+        changeMode: Function,
         precision: Number,
         allFolded: Boolean,
     };
