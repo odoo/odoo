@@ -255,7 +255,33 @@ test("input should step up or down from by the step prop", async () => {
 
     expect.verifySteps(["customAction 12", "customAction 10"]);
 });
-test("should handle save unit", async () => {
+test("should handle unit", async () => {
+    addActionOption({
+        customAction: {
+            getValue: ({ editingElement }) => editingElement.innerHTML,
+            apply: ({ editingElement, value }) => {
+                expect.step(`customAction ${value}`);
+                editingElement.innerHTML = value;
+            },
+        },
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderNumberInput action="'customAction'" unit="'px'"/>`,
+    });
+    await setupWebsiteBuilder(`
+                <div class="test-options-target">5px</div>
+            `);
+    await contains(":iframe .test-options-target").click();
+    expect(".options-container").toBeDisplayed();
+    await click(".options-container input");
+    const input = queryFirst(".options-container input");
+    expect(input).toHaveValue("5");
+    await fill(1);
+    expect.verifySteps(["customAction 51px"]);
+    expect(":iframe .test-options-target").toHaveInnerHTML("51px");
+});
+test("should handle saveUnit", async () => {
     addActionOption({
         customAction: {
             getValue: ({ editingElement }) => editingElement.innerHTML,
@@ -280,4 +306,30 @@ test("should handle save unit", async () => {
     await fill("7");
     expect.verifySteps(["customAction 57000ms"]);
     expect(":iframe .test-options-target").toHaveInnerHTML("57000ms");
+});
+test("should handle empty saveUnit", async () => {
+    addActionOption({
+        customAction: {
+            getValue: ({ editingElement }) => editingElement.innerHTML,
+            apply: ({ editingElement, value }) => {
+                expect.step(`customAction ${value}`);
+                editingElement.innerHTML = value;
+            },
+        },
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderNumberInput action="'customAction'" unit="'px'" saveUnit="''"/>`,
+    });
+    await setupWebsiteBuilder(`
+                <div class="test-options-target">5</div>
+            `);
+    await contains(":iframe .test-options-target").click();
+    expect(".options-container").toBeDisplayed();
+    await click(".options-container input");
+    const input = queryFirst(".options-container input");
+    expect(input).toHaveValue("5");
+    await fill(1);
+    expect.verifySteps(["customAction 51"]);
+    expect(":iframe .test-options-target").toHaveInnerHTML("51");
 });
