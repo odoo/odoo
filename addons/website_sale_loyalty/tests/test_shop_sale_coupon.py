@@ -337,10 +337,7 @@ class TestWebsiteSaleCoupon(TransactionCase):
             lambda l: l.coupon_id and l.coupon_id.id == self.coupon.id
         )
 
-        kwargs = {
-            'line_id': None, 'product_id': coupon_line.product_id.id, 'add_qty': None, 'set_qty': 0
-        }
-        order._cart_update(**kwargs)
+        order._cart_update(coupon_line.product_id.id, add_qty=None)
 
         msg = "The coupon should've been removed from the order"
         self.assertEqual(len(order.applied_coupon_ids), 0, msg=msg)
@@ -420,8 +417,8 @@ class TestWebsiteSaleCoupon(TransactionCase):
             lambda line: line.coupon_id and line.coupon_id.id == self.coupon.id
         )
         order._cart_update(
-            line_id=None,
             product_id=coupon_line.product_id.id,
+            line_id=None,
             add_qty=None,
             set_qty=0,
         )
