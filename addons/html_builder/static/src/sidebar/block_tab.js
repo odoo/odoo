@@ -1,7 +1,6 @@
-import { Component } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import { useDraggable } from "@web/core/utils/draggable";
 import { useService } from "@web/core/utils/hooks";
-import { AddSnippetDialog } from "./add_snippet_dialog";
 import { CustomInnerSnippet } from "./custom_inner_snippet";
 
 // TODO move it in web (copy from web_studio)
@@ -34,14 +33,12 @@ function copyElementOnDrag() {
 export class BlockTab extends Component {
     static template = "html_builder.BlockTab";
     static components = { CustomInnerSnippet };
-    static props = {
-        snippetModel: { type: Object },
-        installSnippetModule: { type: Function },
-    };
+    static props = {};
 
     setup() {
         this.dialog = useService("dialog");
         this.orm = useService("orm");
+        this.snippetModel = useState(useService("html_builder.snippets"));
 
         const copyOnDrag = copyElementOnDrag();
         useDraggable({
@@ -55,7 +52,7 @@ export class BlockTab extends Component {
             onDragStart: ({ element }) => {
                 copyOnDrag.insert();
                 const { category, id } = element.dataset;
-                const snippet = this.props.snippetModel.getSnippet(category, id);
+                const snippet = this.snippetModel.getSnippet(category, id);
                 this.dropzonePlugin.displayDropZone(snippet);
             },
             onDrag: ({ element }) => {
@@ -65,7 +62,7 @@ export class BlockTab extends Component {
                 const { x, y, height, width } = element.getClientRects()[0];
                 const position = { x, y, height, width };
                 const { category, id } = element.dataset;
-                const snippet = this.props.snippetModel.getSnippet(category, id);
+                const snippet = this.snippetModel.getSnippet(category, id);
                 if (category === "snippet_groups") {
                     this.openSnippetDialog(snippet, position);
                     return;
@@ -94,19 +91,11 @@ export class BlockTab extends Component {
         if (addElement.noDrop) {
             return;
         }
-        this.dialog.add(
-            AddSnippetDialog,
-            {
-                selectedSnippet: snippet,
-                snippetModel: this.props.snippetModel,
-                selectSnippet: (snippet) => {
-                    addElement(snippet.content.cloneNode(true));
-                },
-                installModule: this.props.installSnippetModule,
+        this.snippetModel.select(snippet, {
+            onSelect: (snippet) => {
+                addElement(snippet.content.cloneNode(true));
             },
-            {
-                onClose: () => this.dropzonePlugin.clearDropZone(),
-            }
-        );
+            onClose: () => this.dropzonePlugin.clearDropZone(),
+        });
     }
 }

@@ -11,7 +11,6 @@ import {
     useRef,
     useState,
     useSubEnv,
-    markup,
 } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -19,9 +18,6 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
-import { RPCError } from "@web/core/network/rpc";
-import { escape } from "@web/core/utils/strings";
-import { user } from "@web/core/user";
 import { useSetupAction } from "@web/search/action_hook";
 import { AnchorPlugin } from "./core/plugins/anchor/anchor_plugin";
 import { BuilderActionsPlugin } from "./core/plugins/builder_actions_plugin";
@@ -41,7 +37,6 @@ import { ReplacePlugin } from "./core/plugins/replace/replace_plugin";
 import { SetupEditorPlugin } from "./core/plugins/setup_editor_plugin";
 import { SnippetLifecyclePlugin } from "./core/plugins/snippet_lifecycle_plugin";
 import { VisibilityPlugin } from "./core/plugins/visibility_plugin";
-import { SnippetModel } from "./snippet_model";
 import { InvisibleElementsPanel } from "./sidebar/invisible_elements_panel";
 import { BlockTab } from "./sidebar/block_tab";
 import { CustomizeTab } from "./sidebar/customize_tab";
@@ -153,19 +148,7 @@ export class Builder extends Component {
             this.env.services
         );
 
-        this.context = {
-            website_id: this.websiteService.currentWebsite.id,
-            lang: this.websiteService.currentWebsite.metadata.lang,
-            user_lang: user.context.lang,
-        };
-
-        this.snippetModel = useState(
-            new SnippetModel(this.env.services, {
-                snippetsName: this.props.snippetsName,
-                installSnippetModule: this.installSnippetModule.bind(this),
-                context: this.context,
-            })
-        );
+        this.snippetModel = useState(useService("html_builder.snippets"));
 
         onWillStart(async () => {
             await this.snippetModel.load();
@@ -342,46 +325,6 @@ export class Builder extends Component {
         this.state.invisibleEls = [
             ...this.editor.editable.querySelectorAll(this.getInvisibleSelector(isMobile)),
         ];
-    }
-
-    installSnippetModule(snippet) {
-        // TODO: Should be the app name, not the snippet name ... Maybe both ?
-        const bodyText = _t("Do you want to install %s App?", snippet.title);
-        const linkText = _t("More info about this app.");
-        const linkUrl =
-            "/odoo/action-base.open_module_tree/" + encodeURIComponent(snippet.moduleId);
-
-        this.dialog.add(ConfirmationDialog, {
-            title: _t("Install %s", snippet.title),
-            body: markup(
-                `${escape(bodyText)}\n<a href="${linkUrl}" target="_blank">${escape(linkText)}</a>`
-            ),
-            confirm: async () => {
-                try {
-                    await this.orm.call("ir.module.module", "button_immediate_install", [
-                        [Number(snippet.moduleId)],
-                    ]);
-                    // TODO Need to Reload webclient
-                    // this._onSaveRequest({
-                    //     data: {
-                    //         reloadWebClient: true,
-                    //     },
-                    // });
-                } catch (e) {
-                    if (e instanceof RPCError) {
-                        const message = escape(_t("Could not install module %s", snippet.title));
-                        this.notification.add(message, {
-                            type: "danger",
-                            sticky: true,
-                        });
-                        return;
-                    }
-                    throw e;
-                }
-            },
-            confirmLabel: _t("Save and Install"),
-            cancel: () => {},
-        });
     }
 }
 

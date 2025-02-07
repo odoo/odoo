@@ -3,16 +3,20 @@ import { _t } from "@web/core/l10n/translation";
 import { uniqueId } from "@web/core/utils/functions";
 import { Reactive } from "@web/core/utils/reactive";
 import { escape } from "@web/core/utils/strings";
-import { AddSnippetDialog } from "@html_builder/sidebar/add_snippet_dialog";
+import { AddSnippetDialog } from "./add_snippet_dialog";
+import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
+import { markup } from "@odoo/owl";
+import { RPCError } from "@web/core/network/rpc";
 
 export class SnippetModel extends Reactive {
-    constructor(services, { snippetsName, installSnippetModule, context }) {
+    constructor(services, { snippetsName, context }) {
         super();
         this.orm = services.orm;
         this.dialog = services.dialog;
+        this.notification = services.notification;
         this.snippetsName = snippetsName;
         this.websiteService = services.website;
-        this.installSnippetModule = installSnippetModule;
         this.context = context;
 
         this.snippetsByCategory = {
@@ -69,6 +73,58 @@ export class SnippetModel extends Reactive {
 
     getSnippet(category, id) {
         return this.snippetsByCategory[category].filter((snippet) => snippet.id === id)[0];
+    }
+
+    installSnippetModule(snippet) {
+        // TODO: Should be the app name, not the snippet name ... Maybe both ?
+        const bodyText = _t("Do you want to install %s App?", snippet.title);
+        const linkText = _t("More info about this app.");
+        const linkUrl =
+            "/odoo/action-base.open_module_tree/" + encodeURIComponent(snippet.moduleId);
+
+        this.dialog.add(ConfirmationDialog, {
+            title: _t("Install %s", snippet.title),
+            body: markup(
+                `${escape(bodyText)}\n<a href="${linkUrl}" target="_blank">${escape(linkText)}</a>`
+            ),
+            confirm: async () => {
+                try {
+                    await this.orm.call("ir.module.module", "button_immediate_install", [
+                        [Number(snippet.moduleId)],
+                    ]);
+                    // TODO Need to Reload webclient
+                    // this._onSaveRequest({
+                    //     data: {
+                    //         reloadWebClient: true,
+                    //     },
+                    // });
+                } catch (e) {
+                    if (e instanceof RPCError) {
+                        const message = escape(_t("Could not install module %s", snippet.title));
+                        this.notification.add(message, {
+                            type: "danger",
+                            sticky: true,
+                        });
+                        return;
+                    }
+                    throw e;
+                }
+            },
+            confirmLabel: _t("Save and Install"),
+            cancel: () => {},
+        });
+    }
+
+    select(snippet, { onSelect, onClose }) {
+        this.dialog.add(
+            AddSnippetDialog,
+            {
+                selectedSnippet: snippet,
+                snippetModel: this,
+                selectSnippet: onSelect,
+            },
+            { onClose }
+        );
     }
 
     async load() {
@@ -242,7 +298,6 @@ export class SnippetModel extends Reactive {
                         newSnippet = selectedSnippet.content.cloneNode(true);
                         snippetToReplace.replaceWith(newSnippet);
                     },
-                    installModule: this.installSnippetModule,
                 },
                 { onClose: () => resolve() }
             );
@@ -314,3 +369,21 @@ export class SnippetModel extends Reactive {
         });
     }
 }
+
+registry.category("services").add("html_builder.snippets", {
+    dependencies: ["orm", "dialog", "website", "notification"],
+
+    start(env, { orm, dialog, website, notification }) {
+        const services = { orm, dialog, website, notification };
+        const context = {
+            website_id: website.currentWebsite?.id,
+            lang: website.currentWebsite?.metadata.lang,
+            user_lang: user.context.lang,
+        };
+
+        return new SnippetModel(services, {
+            snippetsName: "website.snippets",
+            context,
+        });
+    },
+});

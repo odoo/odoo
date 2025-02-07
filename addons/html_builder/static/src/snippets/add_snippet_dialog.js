@@ -12,7 +12,6 @@ export class AddSnippetDialog extends Component {
         selectedSnippet: { type: Object },
         selectSnippet: { type: Function },
         snippetModel: { type: Object },
-        installModule: { type: Function },
         close: { type: Function },
     };
 
@@ -31,7 +30,6 @@ export class AddSnippetDialog extends Component {
                 this.props.close();
             },
             snippetModel: this.props.snippetModel,
-            installModule: this.props.installModule,
         };
 
         let root;
