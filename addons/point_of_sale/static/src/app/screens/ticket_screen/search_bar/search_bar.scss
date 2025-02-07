@@ -7,11 +7,11 @@
     top: calc(100% + 5px);
     right: 2px;
     left: 2px;
-    box-shadow: 1px 1px 3px grey;
+    box-shadow: $popover-box-shadow;
     overflow: auto;
     
     li:hover, .highlight {    
-        background: #DDD;
+        background: var(--search-selected-bg, $o-gray-200);
     }
 }
 

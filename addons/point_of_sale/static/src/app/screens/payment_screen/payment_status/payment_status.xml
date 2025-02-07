@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.PaymentScreenStatus">
-        <div t-if="props.order.payment_ids.length == 0" class="alert alert-light border border-light-subtle text-center py-4 fs-4">
+        <div t-if="props.order.payment_ids.length == 0" class="text-bg-light border text-center py-4 fs-4">
     Please select a payment method 
         </div>
         <section t-else="" t-attf-class="paymentlines-container border-top pt-3 {{ props.order.getDue() > 0 ? 'text-danger' : 'text-success'}}">

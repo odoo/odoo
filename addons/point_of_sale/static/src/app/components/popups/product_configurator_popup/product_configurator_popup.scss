@@ -2,6 +2,10 @@
     // This code is copied from the sale/static/src/js/product_template_attribute_line/product_template_attribute_line.scss
     // since the POS does not directly depend on it.
     // In the future, we should explore options to import the CSS directly to avoid duplication.
+    &.active {
+        --border-color: #{$o-action};
+    }
+
     &.ptav-not-available {
         opacity: 1;
 
