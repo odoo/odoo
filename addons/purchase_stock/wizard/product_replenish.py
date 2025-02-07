@@ -87,6 +87,7 @@ class ProductReplenish(models.TransientModel):
 
     def _get_route_domain(self, product_tmpl_id):
         domain = super()._get_route_domain(product_tmpl_id)
-        if not product_tmpl_id.seller_ids:
-            domain = AND([domain, [('id', '!=', self.env.ref('purchase_stock.route_warehouse0_buy', raise_if_not_found=False).id)]])
+        buy_route = self.env.ref('purchase_stock.route_warehouse0_buy', raise_if_not_found=False)
+        if buy_route and not product_tmpl_id.seller_ids:
+            domain = AND([domain, [('id', '!=', buy_route.id)]])
         return domain
