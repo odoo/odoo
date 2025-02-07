@@ -4,6 +4,7 @@ from . import chatbot_message
 from . import chatbot_script
 from . import chatbot_script_answer
 from . import chatbot_script_step
+from . import digest
 from . import discuss_call_history
 from . import res_users
 from . import res_groups
@@ -17,4 +18,3 @@ from . import im_livechat_channel_member_history
 from . import mail_message
 from . import res_users_settings
 from . import rating_rating
-from . import digest

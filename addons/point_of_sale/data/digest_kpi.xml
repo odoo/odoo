@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="kpi_account_total_revenue" model="digest.kpi" forcecreate="True">
+        <field name="name">POS Sales</field>
+        <field name="res_model_id" ref="model_pos_order"/>
+        <field name="agg_mode">sum</field>
+        <field name="agg_field" ref="point_of_sale.field_pos_order__amount_total"/>
+        <field name="domain">[('state', 'not in', ['draft', 'cancel']), ('account_move', '=', False)]</field>
+        <field name="group_ids" eval="[Command.link(ref('point_of_sale.group_pos_user'))]"/>
+        <field name="action_id" ref="point_of_sale.action_pos_sale_graph"/>
+        <field name="action_menu_root_id" ref="point_of_sale.menu_point_root"/>
+        <field name="module_id" ref="base.module_point_of_sale"/>
+        <field name="sequence" eval="2000"/>
+    </record>
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="kpi_account_total_revenue" model="digest.kpi" forcecreate="True">
+        <field name="name">Revenue</field>
+        <field name="res_model_id" ref="model_account_move_line"/>
+        <field name="agg_mode">neg_sum</field>
+        <field name="agg_field" ref="account.field_account_move_line__balance"/>
+        <field name="date_field" ref="account.field_account_move_line__date"/>
+        <field name="domain">[('account_id.internal_group', '=', 'income'), ('parent_state', '=', 'posted')]</field>
+        <field name="group_ids" eval="[Command.link(ref('account.group_account_invoice'))]"/>
+        <field name="action_id" ref="account.action_move_out_invoice_type"/>
+        <field name="action_menu_root_id" ref="account.menu_finance"/>
+        <field name="module_id" ref="base.module_account"/>
+        <field name="sequence" eval="3000"/>
+    </record>
+</odoo>

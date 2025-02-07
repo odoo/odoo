@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="kpi_all_sale_total" model="digest.kpi" forcecreate="True">
+        <field name="name">All Sales</field>
+        <field name="res_model_id" ref="sale.model_sale_report"/>
+        <field name="agg_mode">sum</field>
+        <field name="agg_field" ref="sale.field_sale_report__price_total"/>
+        <field name="date_field" ref="sale.field_sale_report__date"/>
+        <field name="domain">[('state', 'not in', ['draft', 'cancel', 'sent'])]</field>
+        <field name="group_ids" eval="[Command.link(ref('sales_team.group_sale_salesman_all_leads'))]"/>
+        <field name="action_id" ref="sale.report_all_channels_sales_action"/>
+        <field name="action_menu_root_id" ref="sale.sale_menu_root"/>
+        <field name="module_id" ref="base.module_sale_management"/>
+        <field name="sequence" eval="1000"/>
+    </record>
+</odoo>

@@ -34,7 +34,6 @@ from . import res_country_group
 from . import account_cash_rounding
 from . import account_incoterms
 from . import decimal_precision
-from . import digest
 from . import res_users
 from . import ir_attachment
 from . import ir_actions_report

@@ -3,7 +3,6 @@
 from . import account_move
 from . import crm_team
 from . import delivery_carrier
-from . import digest
 from . import ir_http
 from . import payment_token
 from . import product_attribute
