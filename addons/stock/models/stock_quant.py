@@ -1264,6 +1264,7 @@ class StockQuant(models.Model):
             'name': _('Locations'),
             'view_mode': 'list,form',
             'res_model': 'stock.quant',
+            'path': 'stock-locations',
             'type': 'ir.actions.act_window',
             'context': ctx,
             'domain': domain or [],
