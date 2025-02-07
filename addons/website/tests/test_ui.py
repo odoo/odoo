@@ -262,6 +262,7 @@ class TestUiTranslate(odoo.tests.HttpCase):
         self.env.ref('base.user_admin').lang = fake_user_lang.code
         self.env.ref('website.s_cover').update_field_translations('arch_db', {
             parseltongue.code: {
+                # See contact_us_label
                 'Contact us': 'Contact us in Parseltongue'
             }
         })

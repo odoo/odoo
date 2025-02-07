@@ -214,7 +214,6 @@ export class DescriptionScreen extends Component {
     _autocompleteSearch(term) {
         const terms = term.toLowerCase().split(/[|,\n]+/);
         const limit = 30;
-        const sortLimit = 7;
         // `this.state.industries` is already sorted by hit count (from IAP).
         // That order should be kept after manipulating the recordset.
         let matches = this.state.industries.filter((val, index) => {
@@ -226,6 +225,20 @@ export class DescriptionScreen extends Component {
                 }
             }
         });
+        // Sort the matches by hit_count_total in order to suggest the most used
+        // matches first.
+        // FIXME, we made ffad59a1b7f36a141c6a32162a4254f5bd864a3b (on IAP) but:
+        // 1. hit_count_total seems to be 0 for all industries.
+        // 2. it is defined as the sum of the hit_count of 3 suggested themes
+        //    for that industry but... we can choose any theme with any industry
+        //    so that old field does not make sense anyway.
+        // 3. the order should just be done server-side and kept while matching
+        //    to given terms here client-side.
+        // So:
+        // - Remove this line
+        // - Review hit_count_total server side
+        // - Make sure it is retrieved ordered, and stay ordered
+        matches = matches.sort(match => match['hit_count_total']);
         if (matches.length > limit) {
             // Keep matches with the least number of words so that e.g.
             // "restaurant" remains available even if there are 30 specific
@@ -233,10 +246,6 @@ export class DescriptionScreen extends Component {
             matches = matches.sort((x, y) => x.wordCount - y.wordCount)
                              .slice(0, limit)
                              .sort((x, y) => x.hitCountOrder - y.hitCountOrder);
-        }
-        if (matches.length <= sortLimit) {
-            // Sort results by ascending label if few of them.
-            matches = matches.sort((x, y) => (x.label < y.label ? -1 : x.label > y.label ? 1 : 0));
         }
         matches = matches.length ? matches : [{ label: term, id: -1 }];
         return matches.map((match) => ({
