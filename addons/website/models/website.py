@@ -11,6 +11,7 @@ import requests
 import threading
 import uuid
 
+from collections import defaultdict
 from lxml import etree, html
 from werkzeug import urls
 from werkzeug.exceptions import NotFound
@@ -2066,8 +2067,61 @@ class Website(models.Model):
         :param limit: maximum number of records fetched per model to build the word list
         :return: yields words
         """
+        def get_similarity_subquery(model, fields, id_column, rel_table='', rel_joinkey=''):
+            """ Build a subquery retrieving the greatest word_similarity between search and fields.
+            It adds joins/left joins to the subquery when needed.
+
+            :param model: current model used to retrieve the subquery table
+            :param fields: sequence of fields used in similarity computation
+            :id_column: name of the column used to get the correct ids.
+                E.g. id for model=product_template, product_tmpl_id for model=product_product)
+            :rel_table: name of the rel table when search_fields in search_details contains a Many2many.
+            :rel_joinkey: name of the column used to join model._table with rel_table.
+            """
+            subquery = Query(self.env.cr, model._table, model._table_query)
+            unaccent = self.env.registry.unaccent
+            similarity = SQL(
+                "GREATEST(%(similarities)s) as similarity",
+                similarities=SQL(", ").join(
+                    SQL("word_similarity(%(search)s, %(field)s)",
+                        search=unaccent(SQL("%s", search)),
+                        field=unaccent(model._field_to_sql(model._table, field, subquery)),
+                    )
+                    for field in fields
+                ),
+            )
+            where_clauses = []
+            for field_name in fields:
+                field = model._fields[field_name]
+                if field.translate:
+                    alias = model._table
+                    if field.related and not field.store:
+                        _, field, alias = model._traverse_related_sql(model._table, field, subquery)
+                    where_clauses.append(SQL("(%(search)s <%% %(jsonb_path)s AND %(search)s <%% (%(field)s))",
+                        search=unaccent(SQL("%s", search)),
+                        jsonb_path=unaccent(SQL("jsonb_path_query_array(%s, '$.*')::text", SQL.identifier(alias, field.name))),
+                        field=unaccent(model._field_to_sql(model._table, field_name, subquery)),
+                    ))
+                else:
+                    where_clauses.append(SQL("%(search)s <%% %(field)s",
+                        search=unaccent(SQL("%s", search)),
+                        field=unaccent(model._field_to_sql(model._table, field_name, subquery)),
+                    ))
+            subquery.add_where(SQL(' OR ').join(where_clauses))
+            tbl_alias = model._table
+            if rel_table:
+                rel_alias = subquery.make_alias(rel_table, rel_joinkey)
+                subquery.add_join("JOIN", rel_alias, rel_table, SQL("%s = %s",
+                        SQL.identifier(rel_alias, rel_joinkey),
+                        SQL.identifier(model._table, "id"),
+                    ),
+                )
+                tbl_alias = rel_alias
+            return subquery.select(SQL("%s as id", SQL.identifier(tbl_alias, id_column)), similarity)
+
         match_pattern = r'[\w./-]{%s,}' % min(4, len(search) - 3)
-        similarity_threshold = 0.3
+        # SET the `<%` similarity threshold to 0.3 for the current transaction (cluster default is 0.6)
+        self.env.cr.execute("SET LOCAL pg_trgm.word_similarity_threshold to 0.3;")
         for search_detail in search_details:
             model_name, fields = search_detail['model'], search_detail['search_fields']
             model = self.env[model_name]
@@ -2076,68 +2130,35 @@ class Website(models.Model):
             domain = search_detail['base_domain'].copy()
             direct_fields = set(fields).intersection(model._fields)
             indirect_fields = self._search_get_indirect_fields(fields, model)
-
-            query = Query(self.env.cr, model._table, model._table_query)
-
-            unaccent = self.env.registry.unaccent
-            similarities = [
-                SQL("word_similarity(%(search)s, %(field)s)",
-                    search=unaccent(SQL('%s', search)),
-                    field=unaccent(model._field_to_sql(model._table, field, query)),
-                    )
-                for field in direct_fields
-            ]
-            indirect_similarities = []
-            for field_info in indirect_fields.values():
-                direct = field_info['direct']
-                direct_field = model._fields[direct]
-                comodel = field_info['comodel']
-                coalias = query.make_alias(model._table, direct)
-                cofield = field_info['cofield']
-                if cofield:
-                    # One2many's comodel references the model's id.
-                    query.add_join('LEFT JOIN', coalias, comodel._table, SQL("%s = %s",
-                        SQL.identifier(model._table, 'id'),
-                        SQL.identifier(coalias, cofield),
-                    ))
-                elif 'relation' in dir(direct_field):
-                    # Many2many's relation holds the model's id in column1 and
-                    # the comodel's record id in column2.
-                    rel_alias = coalias
-                    query.add_join('LEFT JOIN', rel_alias, direct_field.relation, SQL("%s = %s",
-                        SQL.identifier(model._table, 'id'),
-                        SQL.identifier(rel_alias, direct_field.column1),
-                    ))
-                    coalias = query.make_alias(coalias, direct_field.column2)
-                    query.add_join('LEFT JOIN', coalias, comodel._table, SQL("%s = %s",
-                        SQL.identifier(rel_alias, direct_field.column2),
-                        SQL.identifier(coalias, 'id'),
-                    ))
-                indirect_similarities.append(SQL("word_similarity(%(search)s, %(field)s)",
-                    search=unaccent(SQL('%s', search)),
-                    field=unaccent(comodel._field_to_sql(coalias, field_info['indirect'], query)),
-                ))
-            similarities.extend(indirect_similarities)
-            best_similarity = SQL('GREATEST(%(similarities)s)', similarities=SQL(', ').join(similarities))
-
-            # Filter unpublished records for portal and public user for
-            # performance.
-            # TODO: Same for `active` field?
-            filter_is_published = (
-                'is_published' in model._fields
-                and model._fields['is_published'].base_field.model_name == model_name
-                and not self.env.user._is_internal()
-            )
-            if filter_is_published:
-                query.add_where('is_published')
-
-            query.order = '_best_similarity desc'
-            query.limit = 1000
-            self.env.cr.execute(query.select(
-                SQL.identifier(model._table, 'id'),
-                SQL('%s AS _best_similarity', best_similarity),
-            ))
-            ids = {row[0] for row in self.env.cr.fetchall() if row[1] and row[1] >= similarity_threshold}
+            # Group indirect_fields by comodel
+            indirect_fields_info = defaultdict(dict)  # {comodel: {field_name: field_info}}
+            for name, indirect_field in indirect_fields.items():
+                indirect_fields_info[indirect_field['comodel']][name] = indirect_field
+            subqueries = [get_similarity_subquery(model, direct_fields, 'id')]
+            for comodel in indirect_fields_info:
+                comodel_similarity_fields = set()
+                id_column = rel_table = rel_joinkey = ''
+                for indirect_field_info in indirect_fields_info[comodel].values():
+                    direct_field = model._fields[indirect_field_info['direct']]
+                    if direct_field.type == 'one2many':
+                        comodel_similarity_fields.add(indirect_field_info['indirect'])
+                        id_column = indirect_field_info['cofield']
+                    elif direct_field.type == 'many2many':
+                        comodel_similarity_fields.add(indirect_field_info['indirect'])
+                        id_column = direct_field.column1
+                        rel_table = direct_field.relation
+                        rel_joinkey = direct_field.column2
+                subqueries.append(get_similarity_subquery(comodel, comodel_similarity_fields, id_column, rel_table, rel_joinkey))
+            query = SQL("""
+                SELECT id,
+                    MAX(similarity) as _best_similarity
+                FROM (%s)
+                GROUP BY id
+                ORDER BY _best_similarity DESC
+                LIMIT 1000
+            """, SQL("\nUNION ALL\n").join(subqueries))  # UNION ALL allows to hit GIST indexes in subplans.
+            self.env.cr.execute(query)
+            ids = {row[0] for row in self.env.cr.fetchall()}
             domain.append([('id', 'in', list(ids))])
             domain = AND(domain)
             records = model.search_read(domain, direct_fields, limit=limit)
