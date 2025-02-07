@@ -246,6 +246,8 @@ class PosConfig(models.Model):
 
         if not config_ids[0]['use_pricelist']:
             config_ids[0]['pricelist_id'] = False
+        if config_ids:
+            config_ids[0]['_IS_VAT'] = self.env.company.country_id.id in self.env.ref("base.europe").country_ids.ids
 
         return config_ids
 

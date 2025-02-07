@@ -4,7 +4,7 @@
         <xpath expr="//div[hasclass('pos-receipt-contact')]" position="after">
             <t t-if="order.partner_id and order.company?.country_id?.code == 'IN'">
                 <div class="pos-receipt-center-align">
-                    <div><t t-out="order.partner_id.name" /></div>
+                    <div t-if="order.preset_id?.identification != 'address'" t-out="order.partner_id.name"/>
                     <t t-if="order.partner_id.phone">
                         <div>
                             <span>Phone: </span>
@@ -27,9 +27,8 @@
             </t>
         </xpath>
         <xpath expr="//div[@class='before-footer']" position="after">
-            <br/>
             <t t-set="l10n_in_hsn_summary" t-value="order._prepareL10nInHsnSummary()"/>
-            <table t-if="l10n_in_hsn_summary and header.company.country_id?.code === 'IN' and l10n_in_hsn_summary.items.length > 0" style="width:100%;">
+            <table t-if="l10n_in_hsn_summary and header.company.country_id?.code === 'IN' and l10n_in_hsn_summary.items.length > 0" class="pt-3 w-100">
               <tr>
                     <th class="text-center fw-bolder" colspan="6">HSN Summary</th>
                 </tr>
