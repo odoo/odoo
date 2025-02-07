@@ -93,6 +93,12 @@ class AccountMoveSend(models.TransientModel):
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
+    def _link_invoice_documents(self, invoice, invoice_data):
+        # EXTENDS 'account'
+        super()._link_invoice_documents(invoice, invoice_data)
+        # The move need to be put as sent only if send by Nilvera
+        if self.env.company.country_code == 'TR' and not invoice_data.get('l10n_tr_nilvera_einvoice_xml'):
+            invoice.is_move_sent = False
 
     @api.model
     def _call_web_service_before_invoice_pdf_render(self, invoices_data):
@@ -101,9 +107,12 @@ class AccountMoveSend(models.TransientModel):
 
         for invoice, invoice_data in invoices_data.items():
             if invoice_data.get('l10n_tr_nilvera_einvoice_xml'):
-                attachment_values = invoice_data.get('ubl_cii_xml_attachment_values')
-                xml_file = BytesIO(attachment_values.get('raw'))
-                xml_file.name = attachment_values.get('name')
+                if attachment_values := invoice_data.get('ubl_cii_xml_attachment_values'):
+                    xml_file = BytesIO(attachment_values.get('raw'))
+                    xml_file.name = attachment_values['name']
+                else:
+                    xml_file = BytesIO(invoice.ubl_cii_xml_id.raw)
+                    xml_file.name = invoice.ubl_cii_xml_id.name
 
                 if not invoice.partner_id.l10n_tr_nilvera_customer_alias_id:
                     # If no alias is saved, the user is either an E-Archive user or we haven't checked before. Check again
