@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
+
 from odoo import _, api, fields, models
 from odoo.osv import expression
 
@@ -24,22 +26,31 @@ class FleetVehicleModel(models.Model):
     _description = 'Model of a vehicle'
     _order = 'name asc'
 
+    def _get_year_selection(self):
+        current_year = datetime.now().year
+        return [(str(i), i) for i in range(1990, current_year + 1)]
+
     name = fields.Char('Model name', required=True, tracking=True)
     brand_id = fields.Many2one('fleet.vehicle.model.brand', 'Manufacturer', required=True, tracking=True)
     category_id = fields.Many2one('fleet.vehicle.model.category', 'Category', tracking=True)
     vendors = fields.Many2many('res.partner', 'fleet_vehicle_model_vendors', 'model_id', 'partner_id', string='Vendors')
     image_128 = fields.Image(related='brand_id.image_128', readonly=True)
     active = fields.Boolean(default=True)
-    vehicle_type = fields.Selection([('car', 'Car'), ('bike', 'Bike')], default='car', required=True, tracking=True)
+    vehicle_type = fields.Selection([('car', 'Four-wheeler'), ('bike', 'Two-wheeler')], default='car', required=True, tracking=True,
+    help="Four-wheeler - car, van etc.\nTwo-wheeler - bike, scooter etc.")
     transmission = fields.Selection([('manual', 'Manual'), ('automatic', 'Automatic')], 'Transmission', tracking=True)
     vehicle_count = fields.Integer(compute='_compute_vehicle_count', search='_search_vehicle_count')
-    model_year = fields.Integer(tracking=True)
+    model_year = fields.Selection(selection='_get_year_selection', tracking=True)
     color = fields.Char(tracking=True)
-    seats = fields.Integer(string='Seats Number', tracking=True)
-    doors = fields.Integer(string='Doors Number', tracking=True)
-    trailer_hook = fields.Boolean(default=False, string='Trailer Hitch', tracking=True)
-    default_co2 = fields.Float('CO2 Emissions', tracking=True)
-    co2_standard = fields.Char(tracking=True)
+    seats = fields.Integer(string='Seating Capacity', tracking=True)
+    doors = fields.Integer(string='Number of Doors', tracking=True,
+        help="Specifies the total number of doors, including the truck and hatch doors of applicable.")
+    trailer_hook = fields.Boolean(default=False, string='Trailer Hitch', tracking=True,
+        help="A trailer hitch is a device attached to a vehicle's chassis for towing purposes,such as pulling trailers, boats, or other vehicles.")
+    default_co2 = fields.Float('CO₂ Emissions', tracking=True)
+    co2_emission_unit = fields.Selection([('g/km', 'g/km'), ('g/mi', 'g/mi')], default="g/km", required=True)
+    co2_standard = fields.Char(string="Emission Standard", tracking=True,
+    help="Emission Standard specifies the regulatory test procedure or guideline under which a vehicle's emissions are measured. such as WLTP, Euro 6, or EPA.")
     default_fuel_type = fields.Selection(FUEL_TYPES, 'Fuel Type', default='electric', tracking=True)
     power = fields.Integer('Power', tracking=True)
     horsepower = fields.Integer(tracking=True)
@@ -47,10 +58,18 @@ class FleetVehicleModel(models.Model):
     electric_assistance = fields.Boolean(default=False, tracking=True)
     power_unit = fields.Selection([
         ('power', 'kW'),
-        ('horsepower', 'Horsepower')
+        ('horsepower', 'Horsepower (hp)')
         ], 'Power Unit', default='power', required=True)
     vehicle_properties_definition = fields.PropertiesDefinition('Vehicle Properties')
     vehicle_range = fields.Integer(string="Range")
+    range_unit = fields.Selection([('km', 'km'), ('mi', 'mi')], default="km", required=True)
+    drive_type = fields.Selection([
+        ('fwd', 'FWD'),
+        ('awd', 'AWD'),
+        ('rwd', 'RWD'),
+        ('4wd', '4WD'),
+    ])
+    color = fields.Integer()
 
     @api.model
     def _search_display_name(self, operator, value):

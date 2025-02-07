@@ -3,6 +3,7 @@
 
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
+from datetime import datetime
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -13,9 +14,9 @@ from odoo.addons.fleet.models.fleet_vehicle_model import FUEL_TYPES
 MODEL_FIELDS_TO_VEHICLE = {
     'transmission': 'transmission', 'model_year': 'model_year', 'electric_assistance': 'electric_assistance',
     'color': 'color', 'seats': 'seats', 'doors': 'doors', 'trailer_hook': 'trailer_hook',
-    'default_co2': 'co2', 'co2_standard': 'co2_standard', 'default_fuel_type': 'fuel_type',
+    'default_co2': 'co2', 'co2_emission_unit': 'co2_emission_unit', 'co2_standard': 'co2_standard', 'default_fuel_type': 'fuel_type',
     'power': 'power', 'horsepower': 'horsepower', 'horsepower_tax': 'horsepower_tax', 'category_id': 'category_id',
-    'vehicle_range': 'vehicle_range', 'power_unit': 'power_unit'
+    'vehicle_range': 'vehicle_range', 'power_unit': 'power_unit', 'range_unit' : 'range_unit'
 }
 
 
@@ -29,6 +30,10 @@ class FleetVehicle(models.Model):
     def _get_default_state(self):
         state = self.env.ref('fleet.fleet_vehicle_state_new_request', raise_if_not_found=False)
         return state if state and state.id else False
+
+    def _get_year_selection(self):
+        current_year = datetime.now().year
+        return [(str(i), i) for i in range(1990, current_year + 1)]
 
     name = fields.Char(compute="_compute_vehicle_name", store=True)
     description = fields.Html("Vehicle Description")
@@ -73,9 +78,9 @@ class FleetVehicle(models.Model):
         tracking=True,
         help='Current state of the vehicle', ondelete="set null")
     location = fields.Char(help='Location of the vehicle (garage, ...)')
-    seats = fields.Integer('Seats Number', help='Number of seats of the vehicle', compute='_compute_model_fields', store=True, readonly=False)
-    model_year = fields.Char('Model Year', help='Year of the model', compute='_compute_model_fields', store=True, readonly=False)
-    doors = fields.Integer('Doors Number', help='Number of doors of the vehicle', compute='_compute_model_fields', store=True, readonly=False)
+    seats = fields.Integer('Seating Capacity', help='Number of seats of the vehicle', compute='_compute_model_fields', store=True, readonly=False)
+    model_year = fields.Selection(selection='_get_year_selection', string='Model Year', help='Year of the model', compute='_compute_model_fields', store=True, readonly=False)
+    doors = fields.Integer('Number of Doors', help='Number of doors of the vehicle', compute='_compute_model_fields', store=True, readonly=False)
     tag_ids = fields.Many2many('fleet.vehicle.tag', 'fleet_vehicle_vehicle_tag_rel', 'vehicle_tag_id', 'tag_id', 'Tags', copy=False)
     odometer = fields.Float(compute='_get_odometer', inverse='_set_odometer', string='Last Odometer',
         help='Odometer measure of the vehicle at the moment of this log')
@@ -94,8 +99,9 @@ class FleetVehicle(models.Model):
     horsepower = fields.Integer(compute='_compute_model_fields', store=True, readonly=False)
     horsepower_tax = fields.Float('Horsepower Taxation', compute='_compute_model_fields', store=True, readonly=False)
     power = fields.Integer('Power', help='Power in kW of the vehicle', compute='_compute_model_fields', store=True, readonly=False)
-    co2 = fields.Float('CO2 Emissions', help='CO2 emissions of the vehicle', compute='_compute_model_fields', store=True, readonly=False, tracking=True, aggregator=None)
-    co2_standard = fields.Char('CO2 Standard', compute='_compute_model_fields', store=True, readonly=False)
+    co2 = fields.Float('CO₂ Emissions', help='CO2 emissions of the vehicle', compute='_compute_model_fields', store=True, readonly=False, tracking=True, aggregator=None)
+    co2_emission_unit = fields.Selection([('g/km', 'g/km'), ('g/mi', 'g/mi')], compute='_compute_model_fields', store=True, readonly=False, default="g/km", required=True)
+    co2_standard = fields.Char('Emission Standard', compute='_compute_model_fields', store=True, readonly=False)
     category_id = fields.Many2one('fleet.vehicle.model.category', 'Category', compute='_compute_model_fields', store=True, readonly=False)
     image_128 = fields.Image(related='model_id.image_128', readonly=True)
     contract_renewal_due_soon = fields.Boolean(compute='_compute_contract_reminder', search='_search_contract_renewal_due_soon',
@@ -124,6 +130,7 @@ class FleetVehicle(models.Model):
     ], compute='_compute_service_activity')
     vehicle_properties = fields.Properties('Properties', definition='model_id.vehicle_properties_definition', copy=True)
     vehicle_range = fields.Integer(string="Range")
+    range_unit = fields.Selection([('km', 'km'), ('mi', 'mi')], compute='_compute_model_fields', store=True, readonly=False, default="km", required=True)
 
     @api.depends('log_services')
     def _compute_service_activity(self):
