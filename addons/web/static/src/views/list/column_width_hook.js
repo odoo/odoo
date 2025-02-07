@@ -278,7 +278,7 @@ export function useMagicColumnWidths(tableRef, getState) {
         const nextHash = `${columns.map((column) => column.id).join("/")}/${headers.length}`;
         if (nextHash !== hash) {
             hash = nextHash;
-            resetWidths();
+            unsetWidths();
         }
         // If the table has always been empty until now, and it now contains records, we want to
         // recompute the widths based on the records (typical case: we removed a filter).
@@ -287,7 +287,7 @@ export function useMagicColumnWidths(tableRef, getState) {
             hasAlwaysBeenEmpty = false;
             const rows = table.querySelectorAll(".o_data_row");
             if (rows.length !== 1 || !rows[0].classList.contains("o_selected_row")) {
-                resetWidths();
+                unsetWidths();
             }
         }
 
@@ -313,9 +313,9 @@ export function useMagicColumnWidths(tableRef, getState) {
     }
 
     /**
-     * Resets the widths. After next patch, ideal widths will be recomputed.
+     * Unsets the widths. After next patch, ideal widths will be recomputed.
      */
-    function resetWidths() {
+    function unsetWidths() {
         columnWidths = null;
         // Unset widths that might have been set on the table by resizing a column
         tableRef.el.style.width = null;
@@ -334,7 +334,6 @@ export function useMagicColumnWidths(tableRef, getState) {
         _resizing = true;
         const table = tableRef.el;
         const th = ev.target.closest("th");
-        const handler = th.querySelector(".o_resize");
         table.style.width = `${Math.floor(table.getBoundingClientRect().width)}px`;
         const thPosition = [...th.parentNode.children].indexOf(th);
         const resizingColumnElements = [...table.getElementsByTagName("tr")]
@@ -353,12 +352,9 @@ export function useMagicColumnWidths(tableRef, getState) {
             )}px`;
         }
 
-        // Apply classes to table and selected column
-        table.classList.add("o_resizing");
+        // Apply classes to the selected column
         for (const el of resizingColumnElements) {
             el.classList.add("o_column_resizing");
-            handler.classList.add("bg-primary", "opacity-100");
-            handler.classList.remove("bg-black-25", "opacity-50-hover");
         }
         // Mousemove event : resize header
         const resizeHeader = (ev) => {
@@ -378,9 +374,9 @@ export function useMagicColumnWidths(tableRef, getState) {
 
             // Store current column widths to freeze them
             const headers = [...table.querySelectorAll("thead th")];
-            columnWidths = headers.map((th) => {
-                return th.getBoundingClientRect().width - getHorizontalPadding(th);
-            });
+            columnWidths = headers.map(
+                (th) => th.getBoundingClientRect().width - getHorizontalPadding(th)
+            );
 
             // Ignores the 'left mouse button down' event as it used to start resizing
             if (ev.type === "pointerdown" && ev.button === 0) {
@@ -389,11 +385,8 @@ export function useMagicColumnWidths(tableRef, getState) {
             ev.preventDefault();
             ev.stopPropagation();
 
-            table.classList.remove("o_resizing");
             for (const el of resizingColumnElements) {
                 el.classList.remove("o_column_resizing");
-                handler.classList.remove("bg-primary", "opacity-100");
-                handler.classList.add("bg-black-25", "opacity-50-hover");
             }
 
             window.removeEventListener("pointermove", resizeHeader);
@@ -415,13 +408,18 @@ export function useMagicColumnWidths(tableRef, getState) {
         }
     }
 
+    /**
+     * Forces a recomputation of column widths
+     */
+    function resetWidths() {
+        unsetWidths();
+        forceColumnWidths();
+    }
+
     // Side effects
     if (renderer.constructor.useMagicColumnWidths) {
         useEffect(forceColumnWidths);
-        const debouncedResizeCallback = useDebounced(() => {
-            resetWidths();
-            forceColumnWidths();
-        }, 200);
+        const debouncedResizeCallback = useDebounced(resetWidths, 200);
         useExternalListener(window, "resize", debouncedResizeCallback);
     }
 
@@ -431,5 +429,6 @@ export function useMagicColumnWidths(tableRef, getState) {
             return _resizing;
         },
         onStartResize,
+        resetWidths,
     };
 }
