@@ -387,17 +387,9 @@ export class ProductScreen extends Component {
             ? this.getProductsByCategory(this.pos.selectedCategory)
             : this.products;
 
-        const exactMatches = products.filter((product) => product.exactMatch(words));
-
-        if (exactMatches.length > 0 && words.length > 2) {
-            return exactMatches;
-        }
-
-        const matches = products.filter((p) =>
+        return products.filter((p) =>
             unaccent(p.searchString, false).toLowerCase().includes(words)
         );
-
-        return Array.from(new Set([...exactMatches, ...matches]));
     }
 
     addMainProductsToDisplay(products) {
