@@ -279,7 +279,10 @@
     }
     @for $level from 1 through 3 {
         .o_we_sublevel_#{$level} {
+            --o-we-checkbox-color: #{$o-we-fg-light};
+
             @extend %o_we_sublevel;
+            color: $o-we-fg-light;
 
             @if $level > 1 {
                 > we-title {
@@ -882,6 +885,12 @@
                     flex-direction: column;
                 }
             }
+
+            &:hover, &.active {
+                &::after {
+                    color: $o-we-fg-lighter;
+                }
+            }
         }
         %we-icon-button {
             position: relative;
@@ -1076,6 +1085,7 @@
             border: none;
             background: none;
             cursor: default;
+            color: var(--o-we-checkbox-color, $o-we-color);
 
             > we-title {
                 cursor: pointer;
@@ -1107,9 +1117,6 @@
             &.active we-checkbox {
                 background-color: $o-we-sidebar-content-field-toggle-active-bg;
                 justify-content: flex-end;
-            }
-            &.active, &:hover {
-                color: $o-we-sidebar-content-field-clickable-color;
             }
         }
 
