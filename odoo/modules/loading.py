@@ -539,8 +539,12 @@ def load_modules(
         #   - module C is loaded and extends model M;
         #   - module B and C depend on A but not on each other;
         # The changes introduced by module C are not taken into account by the upgrade of B.
+        if update_module:
+            # We need to fix custom fields for which we have dropped the not-null constraint.
+            cr.execute("""SELECT DISTINCT model FROM ir_model_fields WHERE state = 'manual'""")
+            models_to_check.update(model_name for model_name, in cr.fetchall() if model_name in registry)
         if models_to_check:
-            registry.init_models(cr, list(models_to_check), {'models_to_check': True})
+            registry.init_models(cr, list(models_to_check), {'models_to_check': True, 'update_custom_fields': True})
 
         # STEP 6: verify custom views on every model
         if update_module:
