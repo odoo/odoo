@@ -172,12 +172,7 @@ export class ProductLabelSectionAndNoteField extends Many2OneField {
 
     get label() {
         let label = this.props.record.data.name;
-        if (label.includes(this.productName)) {
-            label = label.replace(this.productName, "");
-            if (label.includes("\n")) {
-                label = label.replace("\n", "");
-            }
-        }
+        label = label.split('\n').slice(1).join('\n');
         return label;
     }
 
