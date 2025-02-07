@@ -317,9 +317,15 @@
             // 'initial' as it will force them to 'inline', not 'table-cell'.
             display: table-cell !important;
         }
-
-        &.o_resizing tr > :not(.o_column_resizing) {
-            opacity: 0.5;
+        
+        tbody .o_column_resizing {
+            position: relative;
+            &:after {
+                @include o-position-absolute($top: 0, $bottom: 0, $right: 0);
+                background-color: #{$border-color};
+                width: 4px;
+                content: '';
+            }
         }
 
         &.o_empty_list {
