@@ -124,7 +124,6 @@ export class PosStore extends WithLazyGetterTrap {
         };
 
         this.hardwareProxy = hardware_proxy;
-        this.hiddenProductIds = new Set();
         this.selectedOrderUuid = null;
         this.selectedPartner = null;
         this.selectedCategory = null;
@@ -200,7 +199,7 @@ export class PosStore extends WithLazyGetterTrap {
         window.location.href = url.href;
     }
 
-    showLoginScreen() {
+    async showLoginScreen() {
         this.resetCashier();
         this.showScreen("LoginScreen");
         this.dialog.closeAll();
@@ -274,7 +273,7 @@ export class PosStore extends WithLazyGetterTrap {
 
         try {
             const paidOrderNotSynced = this.models["pos.order"].filter(
-                (order) => order.state === "paid" && order.id !== "number"
+                (order) => order.state === "paid" && typeof order.id !== "number"
             );
             this.addPendingOrder(paidOrderNotSynced.map((o) => o.id));
             await this.syncAllOrders({ throw: true });
@@ -297,6 +296,7 @@ export class PosStore extends WithLazyGetterTrap {
                     order.state = "cancel";
                 }
             }
+            this.session.state = "closed";
         }
 
         setTimeout(() => {
@@ -470,6 +470,8 @@ export class PosStore extends WithLazyGetterTrap {
                 } else if (typeof order.id === "number") {
                     ids.add(order.id);
                 }
+            } else {
+                return false;
             }
         }
 
@@ -484,6 +486,7 @@ export class PosStore extends WithLazyGetterTrap {
 
         if (ids.size > 0) {
             await this.data.callRelated("pos.order", "action_pos_order_cancel", [Array.from(ids)]);
+            return true;
         }
 
         return true;
@@ -609,6 +612,10 @@ export class PosStore extends WithLazyGetterTrap {
         };
     }
 
+    async setDiscountFromUI(line, val) {
+        line.setDiscount(val);
+    }
+
     async setTip(tip) {
         const currentOrder = this.getOrder();
         const tipProduct = this.config.tip_product_id;
@@ -640,13 +647,18 @@ export class PosStore extends WithLazyGetterTrap {
     // The configure parameter is available if the orderline already contains all
     // the information without having to be calculated. For example, importing a SO.
     async addLineToCurrentOrder(vals, opts = {}, configure = true) {
-        let merge = true;
         let order = this.getOrder();
         order.assertEditable();
 
         if (!order) {
-            order = await this.addNewOrder();
+            order = this.addNewOrder();
         }
+        return await this.addLineToOrder(vals, order, opts, configure);
+    }
+
+    async addLineToOrder(vals, order, opts = {}, configure = true) {
+        let merge = true;
+        order.assertEditable();
 
         const options = {
             ...opts,
@@ -656,6 +668,9 @@ export class PosStore extends WithLazyGetterTrap {
             merge = false;
         }
 
+        if (typeof vals.product_tmpl_id == "number") {
+            vals.product_tmpl_id = this.data.models["product.template"].get(vals.product_tmpl_id);
+        }
         const productTemplate = vals.product_tmpl_id;
         const values = {
             price_type: "price_unit" in vals ? "manual" : "original",
@@ -895,8 +910,9 @@ export class PosStore extends WithLazyGetterTrap {
         const line = this.data.models["pos.order.line"].create({ ...values, order_id: order });
         line.setOptions(options);
         this.selectOrderLine(order, line);
-        this.numberBuffer.reset();
-
+        if (configure) {
+            this.numberBuffer.reset();
+        }
         const selectedOrderline = order.getSelectedOrderline();
         if (options.draftPackLotLines && configure) {
             selectedOrderline.setPackLotLines({
@@ -922,12 +938,16 @@ export class PosStore extends WithLazyGetterTrap {
             this.selectOrderLine(order, order.getLastOrderline());
         }
 
-        this.numberBuffer.reset();
+        if (configure) {
+            this.numberBuffer.reset();
+        }
 
         // FIXME: Put this in an effect so that we don't have to call it manually.
         order.recomputeOrderData();
 
-        this.numberBuffer.reset();
+        if (configure) {
+            this.numberBuffer.reset();
+        }
 
         this.hasJustAddedProduct = true;
         clearTimeout(this.productReminderTimeout);
@@ -1176,7 +1196,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     // There for override
-    preSyncAllOrders(orders) {}
+    async preSyncAllOrders(orders) {}
     postSyncAllOrders(orders) {}
     async syncAllOrders(options = {}) {
         const { orderToCreate, orderToUpdate } = this.getPendingOrder();
@@ -1192,7 +1212,7 @@ export class PosStore extends WithLazyGetterTrap {
             }
 
             const context = this.getSyncAllOrdersContext(orders, options);
-            this.preSyncAllOrders(orders);
+            await this.preSyncAllOrders(orders);
 
             // Allow us to force the sync of the orders In the case of
             // pos_restaurant is usefull to get unsynced orders
@@ -1224,7 +1244,7 @@ export class PosStore extends WithLazyGetterTrap {
                 if (refundedOrderLine && ["paid", "done"].includes(line.order_id.state)) {
                     const order = refundedOrderLine.order_id;
                     if (order) {
-                        delete order.uiState.lineToRefund[refundedOrderLine.uuid];
+                        delete order.uiState?.lineToRefund[refundedOrderLine.uuid];
                     }
                     refundedOrderLine.refunded_qty += Math.abs(line.qty);
                 }
@@ -1235,8 +1255,11 @@ export class PosStore extends WithLazyGetterTrap {
             if (data["pos.session"].length > 0) {
                 // Replace the original session by the rescue one. And the rescue one will have
                 // a higher id than the original one since it's the last one created.
-                const session = this.models["pos.session"].sort((a, b) => a.id - b.id)[0];
-                session.delete();
+                const sessions = this.models["pos.session"].getAll().sort((a, b) => b.id - a.id);
+                if (sessions.length > 1) {
+                    const sessionToDelete = sessions.slice(0, -1);
+                    this.models["pos.session"].deleteMany(sessionToDelete);
+                }
                 this.models["pos.order"]
                     .getAll()
                     .filter((order) => order.state === "draft")
@@ -1454,6 +1477,14 @@ export class PosStore extends WithLazyGetterTrap {
         return false;
     }
 
+    restrictLineDiscountChange() {
+        return false;
+    }
+
+    restrictLinePriceChange() {
+        return false;
+    }
+
     switchPane() {
         this.mobile_pane = this.mobile_pane === "left" ? "right" : "left";
     }
@@ -1499,15 +1530,20 @@ export class PosStore extends WithLazyGetterTrap {
                 order,
                 basic_receipt: basic,
             },
-            { webPrintFallback: true }
+            this.printOptions
         );
         if (!printBillActionTriggered) {
-            order.nb_print += 1;
+            order.nb_print = order.nb_print ? order.nb_print + 1 : 1;
             if (typeof order.id === "number" && result) {
                 await this.data.write("pos.order", [order.id], { nb_print: order.nb_print });
             }
+        } else if (!order.nb_print) {
+            order.nb_print = 0;
         }
-        return true;
+        return result;
+    }
+    get printOptions() {
+        return { webPrintFallback: true };
     }
     getOrderChanges(skipped = false, order = this.getOrder()) {
         return getOrderChanges(order, skipped, this.config.preparationCategories);
@@ -1821,6 +1857,7 @@ export class PosStore extends WithLazyGetterTrap {
             preset = await makeAwaitable(this.dialog, SelectionPopup, {
                 title: _t("Select preset"),
                 list: selectionList,
+                size: "md",
             });
         }
 
@@ -2151,11 +2188,13 @@ export class PosStore extends WithLazyGetterTrap {
             return [];
         }
 
-        const excludedProductIds = [
-            this.config.tip_product_id?.id,
-            ...this.hiddenProductIds,
-            ...this.session._pos_special_products_ids,
-        ];
+        // _pos_special_products_ids are product.product so we need to get their product template
+        const specialProductsTemplates = this.models["product.product"]
+            .readMany(this.session._pos_special_products_ids)
+            .filter((product) => Boolean(product)) // Remove undefined values (archived products)
+            .map((product) => product.product_tmpl_id.id);
+
+        const excludedProductIds = [this.config.tip_product_id?.id, ...specialProductsTemplates];
 
         list = list
             .filter(

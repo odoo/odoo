@@ -33,7 +33,6 @@ export class PosData extends Reactive {
         this.records = {};
         this.opts = new DataServiceOptions();
         this.channels = [];
-        this.onNotified = getOnNotified(this.bus, odoo.access_token);
 
         this.network = {
             warningTriggered: false,
@@ -42,6 +41,7 @@ export class PosData extends Reactive {
             unsyncData: [],
         };
 
+        this.intializeWebsocket();
         await this.intializeDataRelation();
         browser.addEventListener("online", () => {
             if (this.network.offline) {
@@ -59,8 +59,12 @@ export class PosData extends Reactive {
         this.bus.addEventListener("connect", this.reconnectWebSocket.bind(this));
     }
 
-    reconnectWebSocket() {
+    intializeWebsocket() {
         this.onNotified = getOnNotified(this.bus, odoo.access_token);
+    }
+
+    reconnectWebSocket() {
+        this.intializeWebsocket();
 
         const channels = [...this.channels];
         this.channels = [];
@@ -518,7 +522,11 @@ export class PosData extends Reactive {
                 this.synchronizeServerDataInIndexedDB({ [model]: [baseData] });
             }
 
-            return result || true;
+            if (result === null || result === undefined) {
+                // if request does not return something, we consider it went well
+                return true;
+            }
+            return result;
         } catch (error) {
             let throwErr = true;
             const uuids = this.network.unsyncData.map((d) => d.uuid);
@@ -663,7 +671,9 @@ export class PosData extends Reactive {
             }
 
             records.push(record);
-            this.ormWrite(model, [record.id], dataToUpdate);
+            if (typeof id === "number") {
+                this.ormWrite(model, [record.id], dataToUpdate);
+            }
         }
 
         return records;

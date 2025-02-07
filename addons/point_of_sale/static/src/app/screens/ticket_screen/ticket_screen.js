@@ -63,9 +63,7 @@ export class TicketScreen extends Component {
         this.ui = useService("ui");
         this.dialog = useService("dialog");
         this.numberBuffer = useService("number_buffer");
-        this.doPrint = useTrackedAsync((_selectedSyncedOrder) =>
-            this.pos.printReceipt({ order: _selectedSyncedOrder })
-        );
+        this.doPrint = useTrackedAsync((_selectedSyncedOrder) => this.print(_selectedSyncedOrder));
         this.numberBuffer.use({
             triggerAtInput: (event) => this._onUpdateSelectedOrderline(event),
         });
@@ -84,7 +82,14 @@ export class TicketScreen extends Component {
 
         onMounted(this.onMounted);
         onWillStart(async () => {
-            await this.pos.getServerOrders();
+            try {
+                if (!this.pos.flagTicketLoad) {
+                    this.pos.flagTicketLoad = true;
+                    await this.pos.getServerOrders();
+                }
+            } finally {
+                this.pos.flagTicketLoad = false;
+            }
         });
     }
     onMounted() {
@@ -118,6 +123,9 @@ export class TicketScreen extends Component {
                 this.onClickOrder(firstFilteredOrder);
             }
         }
+    }
+    async print(order) {
+        await this.pos.printReceipt({ order: order });
     }
     async onFilterSelected(selectedFilter) {
         this.state.filter = selectedFilter;
@@ -777,6 +785,25 @@ export class TicketScreen extends Component {
 
         if (idsNotInCacheOrOutdated.length > 0) {
             await this.pos.data.read("pos.order", Array.from(new Set(idsNotInCacheOrOutdated)));
+        }
+    }
+    //#endregion
+    getPresetTimeColor(order) {
+        const slot = order.preset_id.actualPreset;
+        const presetTime = DateTime.fromSQL(order.preset_time);
+        if (!slot) {
+            if (presetTime < DateTime.now()) {
+                return "bg-danger text-white";
+            } else {
+                return "bg-light text-dark";
+            }
+        }
+        if (slot.start <= presetTime && presetTime < slot.end) {
+            return "bg-warning text-dark";
+        } else if (presetTime < slot.start) {
+            return "bg-danger text-white";
+        } else {
+            return "bg-light text-dark";
         }
     }
 }
