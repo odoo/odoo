@@ -516,7 +516,9 @@ class Website(models.Model):
     @api.model
     def configurator_skip(self):
         website = self.get_current_website()
+        theme = self.env["ir.module.module"].search([("name", "=", "theme_default")])
         website.configurator_done = True
+        return theme.button_choose_theme()
 
     @api.model
     def configurator_missing_industry(self, unknown_industry):
