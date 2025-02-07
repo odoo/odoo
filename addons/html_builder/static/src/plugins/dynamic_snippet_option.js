@@ -153,7 +153,7 @@ export class DynamicSnippetOption extends Component {
         });
         this.state = useState({
             defaultFilterId: undefined,
-            dynamicFilters: [],
+            dynamicFilters: {}, // per id, to locate default filter
             dynamicFilterTemplates: [],
         });
         this.domState = useDomState(() => ({
@@ -170,9 +170,9 @@ export class DynamicSnippetOption extends Component {
             // Additional modules are needed for dynamic filters to be defined.
             return;
         }
-        this.state.dynamicFilters.push(...dynamicFilters);
         const uniqueModelName = new Set();
         for (const dynamicFilter of dynamicFilters) {
+            this.state.dynamicFilters[dynamicFilter.id] = dynamicFilter;
             uniqueModelName.add(dynamicFilter.model_name);
         }
         this.state.defaultFilterId = dynamicFilters[0].id;

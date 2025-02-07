@@ -4,7 +4,7 @@
 <t t-name="html_builder.DynamicSnippetOption">
     <BuilderRow label.translate="Filter">
         <BuilderSelect action="'dynamicFilter'" preview="false" id="'filter_opt'">
-            <t t-foreach="state.dynamicFilters" t-as="filter" t-key="filter.id">
+            <t t-foreach="Object.values(state.dynamicFilters)" t-as="filter" t-key="filter.id">
                 <BuilderSelectItem actionParam="filter" t-out="filter.name"/>
             </t>
         </BuilderSelect>

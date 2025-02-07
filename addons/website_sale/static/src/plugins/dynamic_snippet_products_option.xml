@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="website_sale.DynamicSnippetProductsOption">
+<t t-name="website_sale.DynamicSnippetProductsOption" t-inherit="html_builder.DynamicSnippetCarouselOption">
     <xpath expr="//BuilderRow[*[@id=&quot;'filter_opt'&quot;]]" position="after">
         <BuilderRow label.translate="Category">
             <BuilderSelect dataAttributeAction="'productCategoryId'" preview="false" id="'product_category_opt'">
