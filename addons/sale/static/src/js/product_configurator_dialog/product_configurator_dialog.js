@@ -27,6 +27,13 @@ export class ProductConfiguratorDialog extends Component {
         currencyId: { type: Number, optional: true },
         soDate: String,
         edit: { type: Boolean, optional: true },
+        options: {
+            type: Object,
+            optional: true,
+            shape: {
+                showQuantity : { type: Boolean, optional: true },
+            },
+        },
         save: Function,
         discard: Function,
         close: Function, // This is the close from the env of the Dialog Component
@@ -52,6 +59,7 @@ export class ProductConfiguratorDialog extends Component {
         useSubEnv({
             mainProductTmplId: this.props.productTemplateId,
             currency: this.currency,
+            showQuantity: this.props.options?.showQuantity ?? true,
             addProduct: this._addProduct.bind(this),
             removeProduct: this._removeProduct.bind(this),
             setQuantity: this._setQuantity.bind(this),
