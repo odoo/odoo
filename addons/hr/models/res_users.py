@@ -21,6 +21,7 @@ HR_READABLE_FIELDS = [
     'is_system',
     'employee_resource_calendar_id',
     'work_contact_id',
+    'can_edit_hr_settings',
 ]
 
 HR_WRITABLE_FIELDS = [
@@ -154,6 +155,7 @@ class ResUsers(models.Model):
 
     can_edit = fields.Boolean(compute='_compute_can_edit')
     is_system = fields.Boolean(compute="_compute_is_system")
+    can_edit_hr_settings = fields.Boolean(compute='_compute_can_edit_hr_settings')
 
     @api.depends_context('uid')
     def _compute_is_system(self):
@@ -163,6 +165,11 @@ class ResUsers(models.Model):
         can_edit = self.env['ir.config_parameter'].sudo().get_param('hr.hr_employee_self_edit') or self.env.user.has_group('hr.group_hr_user')
         for user in self:
             user.can_edit = can_edit
+
+    def _compute_can_edit_hr_settings(self):
+        can_edit_hr_settings = self.env.user.has_group('hr.group_hr_user')
+        for user in self:
+            user.can_edit_hr_settings = can_edit_hr_settings
 
     @api.depends('employee_ids')
     def _compute_employee_count(self):
