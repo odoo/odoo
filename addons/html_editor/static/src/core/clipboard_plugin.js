@@ -322,14 +322,14 @@ export class ClipboardPlugin extends Plugin {
         if (this.delegateTo("paste_text_overrides", selection, text)) {
             return;
         } else {
-            this.pasteText(selection, text);
+            this.pasteText(text);
         }
     }
     /**
      * @param {EditorSelection} selection
      * @param {string} text
      */
-    pasteText(selection, text) {
+    pasteText(text) {
         const textFragments = text.split(/\r?\n/);
         let textIndex = 1;
         for (const textFragment of textFragments) {
@@ -344,6 +344,7 @@ export class ClipboardPlugin extends Plugin {
             });
             this.dependencies.dom.insert(modifiedTextFragment);
             if (textIndex < textFragments.length) {
+                const selection = this.dependencies.selection.getEditableSelection();
                 // Break line by inserting new paragraph and
                 // remove current paragraph's bottom margin.
                 const block = closestBlock(selection.anchorNode);
@@ -369,7 +370,6 @@ export class ClipboardPlugin extends Plugin {
                         blockBefore.remove();
                         cursors.remapNode(blockBefore, div).restore();
                     }
-                    selection = this.dependencies.selection.getEditableSelection();
                 }
             }
             textIndex++;

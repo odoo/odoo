@@ -90,7 +90,7 @@ export class LinkPastePlugin extends Plugin {
                     this.dependencies.link.createLink(url, splitAroundUrl[i])
                 );
             } else if (splitAroundUrl[i] !== "") {
-                this.dependencies.clipboard.pasteText(selection, splitAroundUrl[i]);
+                this.dependencies.clipboard.pasteText(splitAroundUrl[i]);
             }
         }
     }
