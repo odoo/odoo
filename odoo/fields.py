@@ -1191,7 +1191,7 @@ class Field(MetaField('DummyField', (object,), {})):
                 ])) from None
             value = env.cache.get(record, self)
 
-        elif self.store and record._origin and not (self.compute and self.readonly):
+        elif self.store and record._origin:
             # new record with origin: fetch from origin
             value = self.convert_to_cache(record._origin[self.name], record, validate=False)
             value = env.cache.patch_and_set(record, self, value)
