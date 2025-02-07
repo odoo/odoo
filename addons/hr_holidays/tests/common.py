@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import datetime
 
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests import common
@@ -76,3 +76,14 @@ class TestHrHolidaysCommon(common.TransactionCase):
 
         cls.rd_dept.write({'manager_id': cls.employee_hruser_id})
         cls.hours_per_day = cls.employee_emp.resource_id.calendar_id.hours_per_day or 8
+    
+    @classmethod
+    def _add_employee_emp_contract(cls):
+        employee_contract = cls.env['hr.contract'].create({
+            'name': "employee's contract",
+            'employee_id': cls.employee_emp.id,
+            'date_start': datetime.date(2010, 1, 1),
+            'date_end': False,
+            'wage': 2500
+        })
+        employee_contract.write({'state': 'open'})

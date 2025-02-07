@@ -31,6 +31,38 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'allocation_validation_type': 'hr',
             'request_unit': 'hour',
         })
+        cls.belgian_company = cls.env['res.company'].create({
+            'name': 'My Belgian Company - Test',
+            'country_id': cls.env.ref('base.be').id,
+            'currency_id': cls.env.ref('base.EUR').id,
+        })
+
+        cls.resource_calendar = cls.env['resource.calendar'].create({
+            'name': 'Test Calendar',
+            'company_id': cls.belgian_company.id,
+            'hours_per_day': 7.6,
+            'full_time_required_hours': 38,
+            'tz': "Europe/Brussels",
+            'two_weeks_calendar': False,
+            'attendance_ids': [
+                (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 16.6, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 16.6, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 16.6, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 16.6, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 16.6, 'day_period': 'afternoon'}),
+            ]
+        })
+
+        cls.belgian_company['resource_calendar_id'] = cls.resource_calendar
+
+        if 'hr.contract' in cls.env:
+            # Days are accrued based on the working schedules set on the employee's contracts
+            super()._add_employee_emp_contract()
 
     def setAllocationCreateDate(self, allocation_id, date):
         """ This method is a hack in order to be able to define/redefine the create_date
@@ -543,10 +575,10 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             self.env['hr.leave.allocation']._update_accrual()
             # Prorated
             self.assertAlmostEqual(allocation_not_worked_time.number_of_days, 4.2857, 4, 'There should be 4.2857 days allocated.')
-            # 3.75 -> starts 1 day after allocation date -> 31/08-3/09 => 4 days - 1 days time off => (3 / 4) * 5 days
-            # ^ result without prorata
-            # Prorated
-            self.assertAlmostEqual(allocation_worked_time.number_of_days, 3, 4, 'There should be 3 days allocated.')
+            # work_days -> starts 1 day after allocation date -> 31/08-3/09 => 4 days - 1 days time off => 3 days
+            # work_prorata = 3 / 5 (one week has 5 work days)
+            # Number of accrued days = number of accrued days for the level * work_prorata = 5 * (3/5) = 3 days
+            self.assertAlmostEqual(allocation_worked_time.number_of_days, 3, 4, 'There should be around 3 days allocated.')
             self.assertEqual(allocation_not_worked_time.nextcall, datetime.date(2021, 9, 13), 'The next call date of the cron should be the September 13th')
             self.assertEqual(allocation_worked_time.nextcall, datetime.date(2021, 9, 13), 'The next call date of the cron should be the September 13th')
 
@@ -555,7 +587,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             self.env['hr.leave.allocation']._update_accrual()
             self.assertAlmostEqual(allocation_not_worked_time.number_of_days, 9.2857, 4, 'There should be 9.2857 days allocated.')
             self.assertEqual(allocation_not_worked_time.nextcall, next_date, 'The next call date of the cron should be September 20th')
-            self.assertAlmostEqual(allocation_worked_time.number_of_days, 8, 4, 'There should be 8 days allocated.')
+            self.assertAlmostEqual(allocation_worked_time.number_of_days, 8, 4, 'There should be 5 more days allocated. 5 + 3.1243 = 8.1243')
             self.assertEqual(allocation_worked_time.nextcall, next_date, 'The next call date of the cron should be September 20th')
 
     def test_check_max_value(self):
@@ -2373,37 +2405,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         })
 
         with freeze_time('2024-08-19'):
-            attendances = []
-            for index in range(3):
-                attendances.extend([
-                    (0, 0, {
-                        'name': '%s_%d' % ('20 Hours', index),
-                        'hour_from': 8,
-                        'hour_to': 10,
-                        'dayofweek': str(index),
-                        'day_period': 'morning'
-                    }),
-                    (0, 0, {
-                        'name': '%s_%d' % ('20 Hours', index),
-                        'hour_from': 10,
-                        'hour_to': 11,
-                        'dayofweek': str(index),
-                        'day_period': 'lunch'
-                    }),
-                    (0, 0, {
-                        'name': '%s_%d' % ('20 Hours', index),
-                        'hour_from': 11,
-                        'hour_to': 13,
-                        'dayofweek': str(index),
-                        'day_period': 'afternoon'
-                    })
-                ])
-            calendar_emp = self.env['resource.calendar'].create({
-                'name': '20 Hours',
-                'tz': self.employee_hrmanager.tz,
-                'attendance_ids': attendances,
-            })
-            self.employee_hrmanager.resource_calendar_id = calendar_emp.id
 
             with Form(self.env['hr.leave.allocation']) as f:
                 f.allocation_type = "accrual"
@@ -2417,13 +2418,57 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             allocation_days = accrual_allocation.number_of_days
             self.assertEqual(accrual_allocation.number_of_days, 7.0)
 
+            attendances = []
+            for index in range(3):
+                attendances.extend([
+                    (0, 0, {
+                        'name': '%s_%d' % ('12 Hours', index),
+                        'hour_from': 8,
+                        'hour_to': 10,
+                        'dayofweek': str(index),
+                        'day_period': 'morning'
+                    }),
+                    (0, 0, {
+                        'name': '%s_%d' % ('12 Hours', index),
+                        'hour_from': 10,
+                        'hour_to': 11,
+                        'dayofweek': str(index),
+                        'day_period': 'lunch'
+                    }),
+                    (0, 0, {
+                        'name': '%s_%d' % ('12 Hours', index),
+                        'hour_from': 11,
+                        'hour_to': 13,
+                        'dayofweek': str(index),
+                        'day_period': 'afternoon'
+                    })
+                ])
+            calendar_emp = self.env['resource.calendar'].create({
+                'name': '12 Hours',
+                'tz': self.employee_hrmanager.tz,
+                'attendance_ids': attendances,
+            })
+            self.employee_hrmanager.resource_calendar_id = calendar_emp.id
+
+            if 'hr.contract' in self.env:
+
+                hrmanager_contract = self.env['hr.contract'].create({
+                    'name': "hrmanager's contract",
+                    'employee_id': self.employee_hrmanager.id,
+                    'resource_calendar_id': calendar_emp.id,
+                    'date_start': datetime.date(2024, 1, 1),
+                    'date_end': False,
+                    'wage': 2500
+                })
+                hrmanager_contract.write({'state': 'open'})
+
             with Form(accrual_allocation) as accForm:
                 accForm.employee_id = self.employee_hrmanager
 
             updated_allocation = accForm.record
-
             self.assertNotEqual(updated_allocation.number_of_days, allocation_days)
-            self.assertEqual(updated_allocation.number_of_days, 3.0)
+            # The employee should be accrued 3 * employee's schedule work_time_rate = 3 * (12 / 40) = 0.9
+            self.assertAlmostEqual(updated_allocation.number_of_days, 0.9, 2)
 
     def test_no_days_accrued_on_carryover_date(self):
         """
