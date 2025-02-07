@@ -23,6 +23,7 @@ import { InvisibleElementsPanel } from "./sidebar/invisible_elements_panel";
 import { BlockTab } from "./sidebar/block_tab";
 import { CustomizeTab } from "./sidebar/customize_tab";
 import { CORE_PLUGINS } from "./core/core_plugins";
+import { EDITOR_COLOR_CSS_VARIABLES, getCSSVariableValue } from "./utils/utils_css";
 
 export class Builder extends Component {
     static template = "html_builder.Builder";
@@ -139,6 +140,7 @@ export class Builder extends Component {
         });
 
         onMounted(() => {
+            this.setCSSVariables();
             // TODO: onload editor
             this.updateInvisibleEls();
         });
@@ -147,6 +149,27 @@ export class Builder extends Component {
                 this.updateInvisibleEls(nextProps.isMobile);
             }
         });
+    }
+
+    setCSSVariables() {
+        const el = this.builder_sidebarRef.el;
+        for (const style of EDITOR_COLOR_CSS_VARIABLES) {
+            let value = getCSSVariableValue(style);
+            if (value.startsWith("'") && value.endsWith("'")) {
+                // Gradient values are recovered within a string.
+                value = value.substring(1, value.length - 1);
+            }
+            el.style.setProperty(`--we-cp-${style}`, value);
+        }
+
+        el.classList.toggle(
+            "o_we_has_btn_outline_primary",
+            getCSSVariableValue("btn-primary-outline") === "true"
+        );
+        el.classList.toggle(
+            "o_we_has_btn_outline_secondary",
+            getCSSVariableValue("btn-secondary-outline") === "true"
+        );
     }
 
     discard() {

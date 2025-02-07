@@ -34,6 +34,7 @@
         'html_builder.assets': [
             ('include', 'web._assets_helpers'),
 
+            'html_builder/static/src/bootstrap_overriden.scss',
             'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
