@@ -3,7 +3,7 @@
 
 <t t-name="html_builder.BuilderButton">
     <BuilderComponent>
-        <button type="button" class="btn btn-primary"
+        <button type="button" class="btn btn-primary" style="width: min-content;"
             t-att-data-action-id="this.props.action || this.env.weContext.action"
             t-att-data-action-param="this.props.actionParam || this.env.weContext.actionParam"
             t-att-data-action-value="this.props.actionValue"
