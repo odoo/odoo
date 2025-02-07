@@ -36,4 +36,5 @@ class PosSession(models.Model):
     def _post_read_pos_self_data(self, data):
         if data:
             data[0]['_base_url'] = self.get_base_url()
+            data[0]['_self_order_pos'] = True
         return super()._post_read_pos_self_data(data)

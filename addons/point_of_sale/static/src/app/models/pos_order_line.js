@@ -83,7 +83,7 @@ export class PosOrderline extends Base {
                 } else {
                     const formatted = formatFloat(this.qty, { digits: [69, ProductUnit.digits] });
                     const parts = formatted.split(decimalPoint);
-                    unitPart = parts[0] + decimalPoint;
+                    unitPart = parts[0];
                     decimalPart = parts[1] || "";
                 }
             } else {
@@ -95,6 +95,7 @@ export class PosOrderline extends Base {
         return {
             qtyStr: unitPart + (decimalPart ? decimalPoint + decimalPart : ""),
             unitPart: unitPart,
+            decimalPoint: decimalPoint,
             decimalPart: decimalPart,
         };
     }

@@ -2,39 +2,31 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.ReceiptHeader">
         <img t-attf-src="/web/image?model=res.company&amp;id={{order.company.id}}&amp;field=logo" alt="Logo" class="pos-receipt-logo"/>
-        <br/>
+        <div class="text-center pt-3" style="font-size: 75%;">
+            <span>
+                <t t-if="order.config._IS_VAT"> VAT </t>
+                Ticket
+                <t t-out="order.pos_reference"/>
+            </span>
+            <div t-if="order.date_order" id="order-date" t-out="order.formatDateOrTime('date_order')"/>
+        </div>
         <div class="d-flex flex-column align-items-center">
             <div class="pos-receipt-contact">
-                <!-- contact address -->
-                <div t-if="order.company?.name" t-esc="order.company.name" />
-                <t t-if="order.company.phone">
-                    <div>Tel:<t t-esc="order.company.phone" /></div>
-                </t>
-                <t t-if="order.company.vat">
-                    <div t-esc="vatText"/>
-                </t>
-                <div t-if="order.company.email" t-esc="order.company.email" />
-                <div t-if="order.company.website" t-esc="order.company.website" />
                 <div t-if="order.config.receipt_header" style="white-space:pre-line" t-esc="order.config.receipt_header" />
                 <div t-if="order?.getCashierName() and (!order.preset_id or order.preset_id.identification === 'name')" class="cashier">
-                    <div>--------------------------------</div>
                     <div>Served by: <t t-esc="order.getCashierName()" /></div>
                 </div>
-                <div t-if="order.preset_id?.identification !== 'none'">
-                    <div>--------------------------------</div>
-                    <t t-if="order.preset_id?.identification === 'name'"> Takeout for: <t t-esc="order.floatingOrderName" /><br/></t>
-                    <t t-elif="order.preset_id?.identification === 'address'"> Delivery to: <t t-esc="order.floatingOrderName" /><br/>
-                        <span t-foreach="partnerAddress" t-as="line" t-key="line_index">
-                            <t t-esc="line"/><br/>
-                        </span>
-                    </t>
-                    <t t-if="order.presetDateTime" t-out="order.presetDateTime" />
-                </div>
-            </div>
-            <div t-if="order.tracking_number">
-                <span class="tracking-number fs-1" t-esc="order.tracking_number" />
             </div>
         </div>
-        <br />
+        <div t-if="order?.presetDateTime" class="pt-2">
+            <span>
+                <t t-out="order.preset_id.name"/>: <t t-out="order.presetDateTime"/>
+            </span>
+        </div>
+        <div t-if="order.preset_id?.identification === 'address'" t-attf-class="{{ order?.presetDateTime ? '' : 'pt-2'}}">
+            <div class="text-break">
+                <span class="fw-bolder" t-out="order.partner_id.name"/> (<span t-out="partnerAddress"/>)
+            </div>
+        </div>
     </t>
 </templates>
