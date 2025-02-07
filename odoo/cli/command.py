@@ -64,11 +64,10 @@ class SubcommandsMixin():
         """ Instead of running the command, we run the subcommands """
         self._config = odoo.tools.config.parse_config(None, setup_logging=True)
         self.subparsers = self.parser.add_subparsers(dest='subcommand', help='Subcommands help')
-
         initialized_subcommands = {sc.name: sc for Cls in self.subcommands if (sc := Cls(self))}
         parsed_args, _unknown = self.parser.parse_known_args(args=cmdargs)
         if subcommand := initialized_subcommands.get(parsed_args.subcommand):
-            subcommand.run(cmdargs)
+            subcommand.run(cmdargs[1:])
         else:
             self.parser.print_help()
             Command.die()
