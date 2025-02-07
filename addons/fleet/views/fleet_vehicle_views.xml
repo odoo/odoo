@@ -150,22 +150,28 @@
                                     <field name="electric_assistance" invisible="vehicle_type != 'bike'"/>
                                 </group>
                                 <group string="Engine" invisible="vehicle_type != 'car'">
-                                    <field name="power_unit"/>
                                     <label for="power" invisible="power_unit != 'power'"/>
                                     <div class="o_row" invisible="power_unit != 'power'">
-                                        <field name="power"/><span>kW</span>
+                                        <field name="power"/>
+                                        <field name="power_unit"/>
                                     </div>
-                                    <field name="horsepower" invisible="power_unit != 'horsepower'"/>
+                                    <label for="horsepower" invisible="power_unit != 'horsepower'"/>
+                                    <div class="o_row" invisible="power_unit != 'horsepower'">
+                                        <field name="horsepower"/>
+                                        <field name="power_unit"/>
+                                    </div>
                                     <label for="vehicle_range"/>
                                     <div class="o_row">
-                                        <field name="vehicle_range"/><span>km</span>
+                                        <field name="vehicle_range"/>
+                                        <field name="range_unit"/>
                                     </div>
                                     <field name="fuel_type"/>
                                     <label for="co2"/>
-                                    <div class="o_row" name="co2">
-                                        <field name="co2"/><span>g/km</span>
+                                    <div class="o_row">
+                                        <field name="co2"/>
+                                        <field name="co2_emission_unit"/>
                                     </div>
-                                    <field name="co2_standard"/>
+                                    <field name="co2_standard" placeholder="eg. WLTP, Euro 6, or EPA, ..."/>
                                 </group>
                             </group>
                         </page>
@@ -197,7 +203,7 @@
                 <field name="future_driver_id"  widget="many2one_avatar" readonly="1" optional="show"/>
                 <field name="log_drivers" column_invisible="True"/>
                 <field name="vin_sn" readonly="1" optional="hide"/>
-                <field name="co2" string="CO2 Emissions g/km" optional="hide"  readonly="1"/>
+                <field name="co2" string="CO2 Emissions" optional="hide" readonly="1"/>
                 <field name="acquisition_date" readonly="1"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" readonly="1"/>
                 <field name="state_id" widget="badge" readonly="1" optional="hide"/>
