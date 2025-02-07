@@ -8,6 +8,15 @@
             <xpath expr="//calendar" position="attributes">
                 <attribute name="js_class">work_entries_calendar</attribute>
                 <attribute name="show_date_picker">0</attribute>
+                <attribute name="scales">month</attribute>
+            </xpath>
+            <xpath expr="//calendar" position="inside">
+                <QuickCreate>
+                    <field name="duration"/>
+                    <field name="name"/>
+                    <field name="work_entry_type_id"/>
+                    <field name="country_id" invisible="1" />
+                </QuickCreate>
             </xpath>
         </field>
     </record>
