@@ -9,7 +9,6 @@
 
     <t t-name="website.Configurator.WelcomeScreen">
         <div class="o_configurator_screen h-100 d-flex flex-column o_welcome_screen">
-            <div class="o_configurator_odoo_logo mt-4 ms-4" style="height: 31px; width: 99px;"/>
             <div class="o_configurator_screen_content d-flex h-100">
                 <div class="container align-self-center o_configurator_show">
                     <div class="display-2 mb-2">Ready to build the <br class="d-none d-lg-inline"/>
@@ -26,7 +25,6 @@
 
 <t t-name="website.Configurator.DescriptionScreen">
     <div class="o_configurator_screen h-100 d-flex flex-column o_description_screen">
-        <div class="o_configurator_odoo_logo mt-4 ms-5" style="height: 31px; width: 99px;"/>
         <div class="o_configurator_screen_content d-flex h-100 flex-grow-1">
             <div class="container align-self-center">
                 <div class="o_configurator_typing_text d-inline d-md-block mb-md-2 mb-lg-4 o_configurator_show">
@@ -74,8 +72,8 @@
                             </a>
                         </div>
                         <div class="dropdown-menu border-0 shadow-lg" role="menu">
-                            <t t-foreach="state.getWebsitePurpose()" t-as="type" t-key="type.name">
-                                <a t-att-title="type.name" t-on-click="() => this.selectWebsitePurpose(type.id)" class="dropdown-item o_change_website_purpose">
+                            <t t-foreach="state.getWebsitePurpose()" t-as="type" t-key="type.id">
+                                <a t-on-click="() => this.selectWebsitePurpose(type.id)" class="dropdown-item o_change_website_purpose">
                                     <t t-esc="type.label"/>
                                 </a>
                             </t>
@@ -90,7 +88,6 @@
 
 <t t-name="website.Configurator.PaletteSelectionScreen">
     <div class="o_configurator_screen h-100 d-flex flex-column o_palette_selection_screen">
-        <div class="o_configurator_odoo_logo mt-4 ms-5" style="height: 31px; width: 99px;"/>
         <div class="o_configurator_screen_content container palette_selection d-flex flex-grow-1 h-100">
             <div class="o_content_container d-flex flex-row w-100 h-auto align-self-md-center o_configurator_show">
                 <div class="o_detect_logo w-25 order-lg-3 my-4 my-md-0 d-flex flex-column">
@@ -151,25 +148,24 @@
 
 <t t-name="website.Configurator.FeatureSelection">
     <div class="o_configurator_screen h-100 d-flex flex-column o_feature_selection_screen">
-        <div class="o_configurator_odoo_logo mt-4 ms-5" style="height: 31px; width: 99px;"/>
-        <div class="o_configurator_screen_content overflow-hidden container d-flex flex-grow-1 align-items-center">
+        <div class="o_configurator_screen_content container d-flex flex-grow-1 align-items-center">
             <div class="m-auto d-flex mh-100 flex-column">
                 <div class="o_configurator_typing_text o_configurator_show_fast">Add <b class="text-info">Pages</b> and <b class="text-warning">Features</b></div>
                 <h2 class="o_configurator_show_fast text-muted pb-lg-3">You'll be able to create your pages later on.</h2>
-                <div class="page_feature_selection o_configurator_show overflow-auto mt-lg-3 mx-n2">
+                <div class="page_feature_selection o_configurator_show mt-lg-3 mx-n2">
                     <div class="w-100 page_feature_selection d-flex flex-wrap">
                         <t t-foreach="state.getFeatures()" t-as="feature" t-key="feature_index">
                             <t t-set='isInstalled' t-value="feature.module_state == 'installed'"/>
                             <div class="o_feature_card_container p-2 w-25" t-if="feature.type != 'empty'">
                                 <div t-attf-class="card h-100 {{isInstalled ? 'card_installed' : (feature.selected ? 'border-success' : '')}}" t-on-click="() => state.toggleFeature(feature.id)">
-                                    <div class="h3 card-body py-3 px-4">
+                                    <div class="h3 card-body py-3 px-4 mb-0">
                                         <t t-if="isInstalled">
                                             <i t-attf-class="o_configurator_feature_status fa fa-check-circle text-success" title="Already installed"/>
                                         </t>
                                         <t t-else="">
                                             <i t-attf-class="o_configurator_feature_status fa {{feature.selected ? 'fa-check-circle text-success' : 'fa-circle-o text-300'}}" />
                                         </t>
-                                        <div t-attf-class="h2 mb-2 card-title d-flex align-items-center {{isInstalled ? 'text-muted' : ''}}">
+                                        <div t-attf-class="h2 mb-0 card-title d-flex align-items-center {{isInstalled ? 'text-muted' : ''}}">
                                             <i t-attf-class="me-2 fa {{feature.icon}} {{isInstalled ? 'text-muted' : (feature.type == 'page' ? 'text-info' : 'text-warning')}}"/>
                                             <h3 class="m-1">
                                                 <t t-esc="feature.name"/>
@@ -192,7 +188,6 @@
 
 <t t-name="website.Configurator.ThemeSelectionScreen">
     <div class="o_configurator_screen h-100 d-flex flex-column o_theme_selection_screen">
-        <div class="o_configurator_odoo_logo flex-shrink-0 mt-4 ms-5" style="height: 31px; width: 99px;"/>
         <div class="o_configurator_screen_content d-flex flex-column flex-grow-1 align-items-center">
             <div class="m-auto w-100 w-md-75 w-xl-100">
                 <div class="o_configurator_typing_text text-center mt-4 mb-lg-4">Choose your favorite <b>Theme</b>
