@@ -36,6 +36,9 @@
                 <t t-if="widget.displayImage">
                     <img t-if="result['image_url']" t-att-src="result['image_url']"
                          class="flex-shrink-0 o_image_64_contain"/>
+                    <!--  Displays emoji for the knowledge article results-->
+                    <div t-elif="result['emoji']" t-attf-class="o_image_64_contain text-center pt16"
+                         style="font-size: 34px;" t-out="result['emoji']"/>
                     <i t-else=""
                        t-attf-class="o_image_64_contain text-center pt16 fa #{result['_fa']}"
                        style="font-size: 34px;"/>
