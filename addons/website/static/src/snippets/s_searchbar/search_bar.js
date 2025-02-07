@@ -45,6 +45,7 @@ export class SearchBar extends Interaction {
             "displayDescription": dataset.displayDescription,
             "displayExtraLink": dataset.displayExtraLink,
             "displayDetail": dataset.displayDetail,
+            "displayExtraInfo": dataset.displayExtraInfo,
             // Make it easy for customization to disable fuzzy matching on specific searchboxes
             "allowFuzzy": !dataset.noFuzzy,
         };
@@ -142,6 +143,7 @@ export class SearchBar extends Interaction {
             "detail_strike",
             "extra_link",
             "name",
+            "extra_info",
         ];
     }
 

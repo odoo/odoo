@@ -76,6 +76,15 @@ options.registry.SearchBar = options.Class.extend({
         }
         return this._super(...arguments);
     },
+    /**
+     * @override
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === "display_reviews_opt") {
+            return this._getEnabledCustomizeValues(['website_sale.product_comment', ''], true);
+        }
+        return this._super(...arguments);
+    },
 });
 
 export default {
