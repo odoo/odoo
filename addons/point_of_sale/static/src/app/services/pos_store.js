@@ -1996,7 +1996,7 @@ export class PosStore extends WithLazyGetterTrap {
 
         const existingLotsName = existingLots.map((l) => l.name);
         const payload = await makeAwaitable(this.dialog, EditListPopup, {
-            title: _t("Lot/Serial Number(s) Required"),
+            title: _t("Lot/Serial number(s) required for"),
             name: product.display_name,
             isSingleItem: isAllowOnlyOneLot,
             array: packLotLinesToEdit,
