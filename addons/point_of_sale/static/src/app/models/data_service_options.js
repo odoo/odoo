@@ -20,6 +20,18 @@ export class DataServiceOptions {
         };
     }
 
+    get serializableModels() {
+        return new Set([
+            "pos.order",
+            "pos.order.line",
+            "pos.payment",
+            "pos.pack.operation.lot",
+            "product.attribute.custom.value",
+            "event.registration", // FIXME should be overrided from pos_event
+            "event.registration.answer",
+        ]);
+    }
+
     get databaseIndex() {
         const databaseTable = this.databaseTable;
         const indexes = {
