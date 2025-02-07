@@ -30,11 +30,17 @@ class TestStockLandedCostsLots(TestLotValuation):
                 'price_unit': 10,
             })],
         })
+        product2 = self.env['product.product'].create({
+            'name': 'product2',
+            'is_storable': True,
+            'tracking': 'lot',
+            'lot_valuated': True,
+        })
         picking_2 = self.env['stock.picking'].create({
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
             'move_ids': [Command.create({
                 'name': 'Picking 2',
-                'product_id': self.product1.id,
+                'product_id': product2.id,
                 'product_uom_qty': 10,
                 'product_uom': self.ref('uom.product_uom_unit'),
                 'location_id': self.supplier_location.id,
@@ -53,7 +59,7 @@ class TestStockLandedCostsLots(TestLotValuation):
             'location_dest_id': self.env.ref('stock.stock_location_stock').id,
         }) for lot_name in ['LClot1', 'LClot2', 'LClot3']]
         picking_2.move_ids.move_line_ids = [Command.clear()] + [Command.create({
-            'product_id': self.product1.id,
+            'product_id': product2.id,
             'lot_name': lot_name,
             'quantity': 5,
             'location_id': self.supplier_location.id,
@@ -89,8 +95,8 @@ class TestStockLandedCostsLots(TestLotValuation):
             {'lot_id': lot[0].id, 'product_id': self.product1.id, 'stock_valuation_layer_id': og_layer[0].id, 'quantity': 0, 'value': 1.5},
             {'lot_id': lot[1].id, 'product_id': self.product1.id, 'stock_valuation_layer_id': og_layer[1].id, 'quantity': 0, 'value': 1.5},
             {'lot_id': lot[0].id, 'product_id': self.product1.id, 'stock_valuation_layer_id': og_layer[2].id, 'quantity': 0, 'value': 1},
-            {'lot_id': lot[1].id, 'product_id': self.product1.id, 'stock_valuation_layer_id': og_layer[3].id, 'quantity': 0, 'value': 1},
-            {'lot_id': lot[2].id, 'product_id': self.product1.id, 'stock_valuation_layer_id': og_layer[4].id, 'quantity': 0, 'value': 1},
+            {'lot_id': lot[1].id, 'product_id': product2.id, 'stock_valuation_layer_id': og_layer[3].id, 'quantity': 0, 'value': 1},
+            {'lot_id': lot[2].id, 'product_id': product2.id, 'stock_valuation_layer_id': og_layer[4].id, 'quantity': 0, 'value': 1},
         ])
 
         for l, price in zip(lot, [10.75, 10.75, 10.2]):
