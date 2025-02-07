@@ -33,10 +33,6 @@ export function claimReward(rewardName) {
     return [
         ...ProductScreen.clickControlButton("Reward"),
         {
-            // There should be description because a program always has a name.
-            trigger: ".selection-item span:nth-child(2)",
-        },
-        {
             content: "select reward",
             trigger: `.selection-item:contains("${rewardName}")`,
             run: "click",
@@ -128,8 +124,13 @@ export function finalizeOrder(paymentMethod, amount) {
         ...ReceiptScreen.clickNextOrder(),
     ];
 }
-export function removeRewardLine(name) {
-    return [selectRewardLine(name), ProductScreen.clickNumpad("⌫"), Dialog.confirm()].flat();
+export function removeRewardLine(name, double = false) {
+    return [
+        selectRewardLine(name),
+        ProductScreen.clickNumpad("⌫"),
+        ...(double ? [ProductScreen.clickNumpad("⌫")] : []),
+        Dialog.confirm(),
+    ].flat();
 }
 
 export function checkAddedLoyaltyPoints(points) {

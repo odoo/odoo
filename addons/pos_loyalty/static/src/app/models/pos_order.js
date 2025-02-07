@@ -1,12 +1,13 @@
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { patch } from "@web/core/utils/patch";
-import { roundDecimals, roundPrecision } from "@web/core/utils/numbers";
+import { roundPrecision } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { loyaltyIdsGenerator } from "@pos_loyalty/app/services/pos_store";
 import {
     computePriceForcePriceInclude,
     getTaxesAfterFiscalPosition,
 } from "@point_of_sale/app/models/utils/tax_utils";
+
 const { DateTime } = luxon;
 
 function _newRandomRewardCode() {
@@ -19,39 +20,13 @@ let pointsForProgramsCountedRules = {};
  * Calculate the number of free items based on the given number
  * of items `number_items` and the rule: buy `n` take `m`.
  *
- * e.g.
- *```
- *      rule: buy 2 take 1                    rule: buy 2 take 3
- *     +------------+--------+--------+      +------------+--------+--------+
- *     |number_items| charged|    free|      |number_items| charged|    free|
- *     +------------+--------+--------+      +------------+--------+--------+
- *     |           1|       1|       0|      |           1|       1|       0|
- *     |           2|       2|       0|      |           2|       2|       0|
- *     |           3|       2|       1|      |           3|       2|       1|
- *     |           4|       3|       1|      |           4|       2|       2|
- *     |           5|       4|       1|      |           5|       2|       3|
- *     |           6|       4|       2|      |           6|       3|       3|
- *     |           7|       5|       2|      |           7|       4|       3|
- *     |           8|       6|       2|      |           8|       4|       4|
- *     |           9|       6|       3|      |           9|       4|       5|
- *     |          10|       7|       3|      |          10|       4|       6|
- *     +------------+--------+--------+      +------------+--------+--------+
- * ```
- *
  * @param {number} numberItems number of items
  * @param {number} n items to buy
  * @param {number} m item for free
  * @returns {number} number of free items
  */
 function computeFreeQuantity(numberItems, n, m) {
-    const factor = Math.trunc(numberItems / (n + m));
-    const free = factor * m;
-    const charged = numberItems - free;
-    // adjust the calculated free quantities
-    const x = (factor + 1) * n;
-    const y = x + (factor + 1) * m;
-    const adjustment = x <= charged && charged < y ? charged - x : 0;
-    return Math.floor(free + adjustment);
+    return Math.floor(numberItems / n) * m;
 }
 
 patch(PosOrder, {
@@ -324,7 +299,7 @@ patch(PosOrder.prototype, {
             won += points - this._getPointsCorrection(program);
             if (coupon_id !== 0) {
                 for (const line of this._get_reward_lines()) {
-                    if (line.coupon_id.id === coupon_id) {
+                    if (line.coupon_id?.id === coupon_id) {
                         spent += line.points_cost;
                     }
                 }
@@ -367,8 +342,6 @@ patch(PosOrder.prototype, {
                             rule.reward_point_amount * line.getPriceWithTax(),
                             0.01
                         );
-                    } else if (rule.reward_point_mode === "unit") {
-                        res += rule.reward_point_amount * line.getQuantity();
                     }
                 }
             }
@@ -426,7 +399,7 @@ patch(PosOrder.prototype, {
             return false;
         });
         for (const line of this.getOrderlines()) {
-            if (line.is_reward_line && line.coupon_id.id === coupon_id) {
+            if (line.is_reward_line && line.coupon_id?.id === coupon_id) {
                 points -= line.points_cost;
             }
         }
@@ -1233,34 +1206,21 @@ patch(PosOrder.prototype, {
         );
     },
     /**
-     * Tries to compute how many free product can be given out for the given product.
-     * Contrary to sale_loyalty, the product must be in the order lines in order to give it out
-     *  (resulting in discount lines for the product's value).
-     * As such we need to approximate the effect of removing 1 quantity on the counting of points in order
-     *  to avoid feedback loops between giving a product and it removing the required points for it.
+     * Tries to compute how many free products can be given out for the given product.
+     * Contrary to the original implementation, the product does not need to be in the orderlines
+     * to give it out. A new line will be added for the free product.
      *
      * @param {loyalty.reward} reward
      * @param {Integer} coupon_id
      * @param {Product} product
+     * @param {Integer} remainingPoints
      * @returns {Integer} Available quantity to be given as reward for the given product
      */
     _computeUnclaimedFreeProductQty(reward, coupon_id, product, remainingPoints) {
         let claimed = 0;
-        let available = 0;
         let shouldCorrectRemainingPoints = false;
         for (const line of this.getOrderlines()) {
             if (
-                reward.reward_product_ids.map((reward) => reward.id).includes(product.id) &&
-                reward.reward_product_ids.map((reward) => reward.id).includes(line.getProduct().id)
-            ) {
-                if (this._get_reward_lines() == 0) {
-                    if (line.getProduct() === product) {
-                        available += line.getQuantity();
-                    }
-                } else {
-                    available += line.getQuantity();
-                }
-            } else if (
                 reward.reward_product_ids
                     .map((reward) => reward.id)
                     .includes(line._reward_product_id?.id)
@@ -1331,7 +1291,7 @@ patch(PosOrder.prototype, {
                 (remainingPoints / reward.required_points) * reward.reward_product_qty
             );
         }
-        return Math.min(available, freeQty) - claimed;
+        return Math.max(0, freeQty - claimed);
     },
     _computePotentialFreeProductQty(reward, product, remainingPoints) {
         if (reward.program_id.trigger == "auto") {
@@ -1396,11 +1356,8 @@ patch(PosOrder.prototype, {
         );
         return [
             {
-                product_id: reward.discount_line_product_id,
-                price_unit: -roundDecimals(
-                    product.getPrice(this.pricelist_id, freeQuantity, 0, false, product),
-                    this.currency.decimal_places
-                ),
+                product_id: reward.reward_product_id || product,
+                price_unit: 0,
                 tax_ids: product.taxes_id,
                 qty: freeQuantity,
                 reward_id: reward,

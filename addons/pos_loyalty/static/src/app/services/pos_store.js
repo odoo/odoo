@@ -410,9 +410,10 @@ patch(PosStore.prototype, {
             vals.price_unit = opt.price_unit;
             delete opt.price_unit;
         }
-
-        const result = await super.addLineToCurrentOrder(vals, opt, configure);
-
+        var line;
+        if (rewardsToApply.length != 1) {
+            line = await super.addLineToCurrentOrder(vals, opt, configure);
+        }
         await this.updatePrograms();
         if (rewardsToApply.length == 1) {
             const reward = rewardsToApply[0];
@@ -423,7 +424,7 @@ patch(PosStore.prototype, {
         }
         this.updateRewards();
 
-        return result;
+        return line || true;
     },
     /**
      * Sets up the options for the gift card product.

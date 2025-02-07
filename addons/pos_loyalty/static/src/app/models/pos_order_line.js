@@ -87,4 +87,12 @@ patch(PosOrderline.prototype, {
             "fst-italic": this.is_reward_line,
         };
     },
+    getFullProductName() {
+        if (this.is_reward_line && this.reward_id) {
+            return (
+                this.reward_id.discount_line_product_id?.display_name || this.reward_id.description
+            );
+        }
+        return super.getFullProductName();
+    },
 });

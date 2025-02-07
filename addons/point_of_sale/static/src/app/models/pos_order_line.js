@@ -731,7 +731,7 @@ export class PosOrderline extends Base {
     }
     get orderDisplayProductName() {
         return {
-            name: this.product_id?.name,
+            name: this.getFullProductName(),
             attributeString: constructAttributeString(this),
         };
     }
