@@ -217,6 +217,7 @@
     <record id="stock_picking_batch_action" model="ir.actions.act_window">
         <field name="name">Batch Transfers</field>
         <field name="res_model">stock.picking.batch</field>
+        <field name="path">batch-transfers</field>
         <field name="view_mode">list,kanban,form</field>
         <field name="domain">[('is_wave', '=', False)]</field>
         <field name="context">{'search_default_draft': True, 'search_default_in_progress': True}</field>
