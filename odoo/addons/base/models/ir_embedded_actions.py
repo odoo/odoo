@@ -76,7 +76,7 @@ class IrEmbeddedActions(models.Model):
             for record in records:
                 action_groups = record.groups_ids
                 if not action_groups or (action_groups & self.env.user.group_ids):
-                    domain_model = literal_eval(record.domain)
+                    domain_model = literal_eval(record.domain or '[]')
                     record.is_visible = (
                         record.parent_res_id in (False, self.env.context.get('active_id', False))
                         and record.user_id.id in (False, self.env.uid)
