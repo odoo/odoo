@@ -4,7 +4,7 @@ from pytz import UTC
 
 from odoo import api, fields, models
 
-from odoo.addons.resource.models.utils import Intervals, sum_intervals, timezone_datetime
+from odoo.tools.date_intervals import Intervals, sum_intervals, timezone_datetime
 
 
 class CalendarEvent(models.Model):
