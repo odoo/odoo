@@ -14,6 +14,7 @@ export class BuilderButton extends Component {
         iconImg: { type: String, optional: true },
         iconImgAlt: { type: String, optional: true },
         icon: { type: String, optional: true },
+        iconActive: { type: String, optional: true },
         className: { type: String, optional: true },
 
         slots: { type: Object, optional: true },
@@ -36,7 +37,10 @@ export class BuilderButton extends Component {
             return className;
         }
         if (this.props.icon.startsWith("fa-")) {
-            return className + ` fa fa-fw ${this.props.icon}`;
+            const icon = this.props.iconActive && this.state.isActive
+                ? this.props.iconActive
+                : this.props.icon;
+            return className + ` fa fa-fw ${icon}`;
         } else if (this.props.icon.startsWith("oi-")) {
             return className + ` oi oi-fw ${this.props.icon}`;
         }
