@@ -6,6 +6,7 @@
 from __future__ import annotations
 
 import itertools
+import json
 import logging
 import sys
 import threading
@@ -176,10 +177,12 @@ def load_module_graph(
 
     models_updated = set()
 
-    for index, package in enumerate(graph.packages(), 1):
-        load_one_module(index, package)
-
     def load_one_module(index, package):
+        nonlocal models_updated
+        nonlocal loaded_modules
+        nonlocal processed_modules
+        nonlocal models_to_check
+
         module_name = package.name
         module_id = package.id
 
@@ -358,6 +361,24 @@ def load_module_graph(
                    time.time() - t0,
                    env.cr.sql_log_count - loading_cursor_query_count,
                    odoo.sql_db.sql_counter - loading_extra_query_count)  # extra queries: testes, notify, any other closed cursor
+
+    for index, package in enumerate(graph.packages(), 1):
+        config = odoo.tools.config
+        needs_update = (
+            hasattr(package, "init")
+            or hasattr(package, "update")
+            or package.state in ("to install", "to upgrade")
+        )
+        if config['profile'] and needs_update:
+            with odoo.tools.profiler.Profiler(
+                db=config['profile_database'] or registry.db_name,
+                description=f'Loading - {registry.db_name}, {package.name}',
+                profile_session=registry.db_name,
+                collectors=config['profile_collectors'],
+                params=json.loads(config['profile_params']),
+            ):
+                load_one_module(index, package)
+        load_one_module(index, package)
 
     return loaded_modules, processed_modules
 
