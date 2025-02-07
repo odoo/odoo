@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
 import logging
 import platform
 import requests
@@ -12,6 +11,8 @@ from odoo.addons.hw_drivers.main import manager
 from odoo.addons.hw_drivers.tools import helpers, wifi
 
 _logger = logging.getLogger(__name__)
+
+PAIRING_CODE_TIMEOUT_SECONDS = 300
 
 
 class ConnectionManager(Thread):
@@ -25,8 +26,8 @@ class ConnectionManager(Thread):
             return
 
         if not helpers.get_odoo_server_url():
-            end_time = datetime.now() + timedelta(minutes=5)
-            while datetime.now() < end_time:
+            end_time = time.monotonic() + PAIRING_CODE_TIMEOUT_SECONDS
+            while time.monotonic() < end_time:
                 self._connect_box()
                 time.sleep(10)
             self.pairing_code = False
