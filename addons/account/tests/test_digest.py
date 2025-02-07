@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, timedelta
+
 from odoo import Command
 from odoo.addons.digest.tests.common import TestDigestCommon
 from odoo.tools import mute_logger
@@ -36,6 +38,7 @@ class TestAccountDigest(TestDigestCommon):
         cls.env['account.move'].search([]).state = 'draft'
 
         moves = cls.env['account.move'].create({
+            'date': datetime.now() - timedelta(days=1),
             'line_ids': [
                 (0, 0, {'debit': 5, 'credit': 0, 'account_id': account1.id}),
                 (0, 0, {'debit': 0, 'credit': 5, 'account_id': account2.id}),
@@ -45,6 +48,7 @@ class TestAccountDigest(TestDigestCommon):
         })
 
         moves |= cls.env['account.move'].with_company(cls.company_2).create({
+            'date': datetime.now() - timedelta(days=1),
             'line_ids': [
                 (0, 0, {'debit': 0, 'credit': 2, 'account_id': comp2_account.id}),
                 (0, 0, {'debit': 2, 'credit': 0, 'account_id': comp2_account2.id}),
@@ -52,15 +56,19 @@ class TestAccountDigest(TestDigestCommon):
         })
 
         moves.state = 'posted'
+        cls.kpi_account_total_revenue = cls.env.ref('account.kpi_account_total_revenue')
+        for digest in cls.all_digests:
+            digest.kpi_ids = cls.kpi_account_total_revenue
 
     def test_kpi_account_total_revenue_value(self):
-        self.assertEqual(int(self.digest_1.kpi_account_total_revenue_value), -13)
-        self.assertEqual(int(self.digest_2.kpi_account_total_revenue_value), -2)
-        self.assertEqual(int(self.digest_3.kpi_account_total_revenue_value), -13)
+        kpi_name = self.kpi_account_total_revenue.name
+        self.assertEqual(self._get_values(self.digest_1, kpi_name, 'value_last_30_days'), '$-13')
+        self.assertEqual(self._get_values(self.digest_2, kpi_name, 'value_last_30_days'), '$-2')
+        self.assertEqual(self._get_values(self.digest_3, kpi_name, 'value_last_30_days'), '$-13')
 
         self.digest_3.invalidate_recordset()
         self.assertEqual(
-            int(self.digest_3.with_company(self.company_2).kpi_account_total_revenue_value),
-            -2,
+            self._get_values(self.digest_3.with_company(self.company_2), kpi_name, 'value_last_30_days'),
+            '$-2',
             msg='When no company is set, the KPI must be computed based on the current company',
         )

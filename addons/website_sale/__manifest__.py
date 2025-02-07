@@ -20,7 +20,6 @@
         'data/data.xml',
         'data/mail_template_data.xml',
         'data/product_snippet_template_data.xml',
-        'data/digest_data.xml',
         'data/ir_cron_data.xml',
         'data/tour.xml',
 
@@ -35,7 +34,6 @@
         # Model views.
         'views/account_move_views.xml',
         'views/delivery_carrier_views.xml',
-        'views/digest_views.xml',
         'views/product_attribute_views.xml',
         'views/product_document_views.xml',
         'views/product_image_views.xml',
@@ -69,6 +67,10 @@
         'views/snippets/s_mega_menu/multi_menus.xml',
         'views/snippets/s_mega_menu/odoo_menu.xml',
         'views/snippets/s_mega_menu/thumbnails.xml',
+
+        # Digest
+        'data/digest_kpi.xml',
+        'data/digest_data.xml',
     ],
     'demo': [
         'data/demo.xml',

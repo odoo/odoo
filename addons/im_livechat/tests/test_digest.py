@@ -57,7 +57,9 @@ class TestLiveChatDigest(TestDigestCommon):
             'consumed': True,
             'rating': 3,
         }])
+        cls.kpi_livechat_rating = cls.env.ref('im_livechat.kpi_livechat_rating')
+        cls.all_digests.kpi_ids = cls.kpi_livechat_rating
 
     def test_kpi_livechat_rating_value(self):
         # 1/3 of the ratings have 5/5 note (0 are ignored)
-        self.assertEqual(round(self.digest_1.kpi_livechat_rating_value, 2), 33.33)
+        self.assertEqual(self._get_values(self.digest_1, self.kpi_livechat_rating.name, 'value_last_30_days'), '33.33')
