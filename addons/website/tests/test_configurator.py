@@ -71,3 +71,12 @@ class TestConfiguratorTranslation(TestConfiguratorCommon):
         active_todo = self.env['ir.actions.todo'].search([('state', '=', 'open')], limit=1)
         active_todo.update({'state': 'done'})
         self.start_tour('/website/force/%s?path=%%2Fwebsite%%2Fconfigurator' % website_fr.id, 'configurator_translation', login='admin')
+
+@odoo.tests.common.tagged('post_install', '-at_install')
+class TestConfiguratorPages(TestConfiguratorCommon):
+
+    def test_configurator_pages(self):
+        website_id = self.env['website'].create({
+            'name': "New website",
+        }).id
+        self.start_tour('/website/force/%s?path=%%2Fwebsite%%2Fconfigurator' % website_id, 'configurator_pages', login='admin')
