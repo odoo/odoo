@@ -38,4 +38,7 @@ class SaleOrder(models.Model):
         if self.country_code == 'IN':
             invoice_vals['l10n_in_reseller_partner_id'] = self.l10n_in_reseller_partner_id.id
             invoice_vals['l10n_in_gst_treatment'] = self.l10n_in_gst_treatment
+            # Removing FPOS from `invoice_vals` to let `l10n_in` handle it per the Indian context,
+            # computing it directly on the move.
+            invoice_vals.pop('fiscal_position_id')
         return invoice_vals
