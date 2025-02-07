@@ -6,8 +6,8 @@
             <div>
                 <div class="h4" t-esc="props.product?.display_name || props.productTemplate.display_name"/>
                 <div t-if="this.props.productTemplate.is_storable" class="h4">
-                    <span>On hand: </span>
-                    <span t-if="this.fetchStock.status === 'success' || this.props.info"><t t-esc="this.state.available_quantity"/> Units</span>
+                    <span>Free To Use: </span>
+                    <span t-if="this.fetchStock.status === 'success' || this.props.info"><t t-esc="this.state.free_qty"/> <t t-esc="this.state.uom"/></span>
                     <span t-elif="this.fetchStock.status === 'error'">N/A</span>
                     <i t-else="" class="fa fa-fw fa-spin fa-circle-o-notch" aria-hidden="true" />
                 </div>

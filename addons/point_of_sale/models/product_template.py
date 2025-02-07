@@ -185,7 +185,7 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         config = self.env['pos.config'].browse(pos_config_id)
         product_variant = self.env['product.product'].browse(product_variant_id) if product_variant_id else False
-        template_or_variant = product_variant or self
+        template_or_variant = product_variant or self.product_variant_id
 
         # Tax related
         taxes = self.taxes_id.compute_all(price, config.currency_id, quantity, template_or_variant)
@@ -218,6 +218,7 @@ class ProductTemplate(models.Model):
             {'id': w.id,
             'name': w.name,
             'available_quantity': template_or_variant.with_context({'warehouse_id': w.id}).qty_available,
+            'free_qty': template_or_variant.with_context({'warehouse_id': w.id}).free_qty,
             'forecasted_quantity': template_or_variant.with_context({'warehouse_id': w.id}).virtual_available,
             'uom': template_or_variant.uom_name}
             for w in self.env['stock.warehouse'].search([('company_id', '=', config.company_id.id)])]
