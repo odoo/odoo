@@ -269,9 +269,7 @@ def is_access_point():
     :return: True if the device is in access point mode
     :rtype: bool
     """
-    # We only get the first line as `lo` can still be active when `wlan0` is up
-    device = _nmcli(['-g', 'device', 'connection', 'show', '--active'], sudo=True).splitlines()[0]
-    return device == 'lo'
+    return subprocess.run(['systemctl', 'is-active', 'hostapd']).returncode == 0
 
 @cache
 def generate_qr_code_image(qr_code_data):
