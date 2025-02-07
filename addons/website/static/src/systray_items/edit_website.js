@@ -19,6 +19,9 @@ class EditWebsiteSystray extends Component {
         this.dialogService = useService("dialog");
         this.websiteContext = useState(this.websiteService.context);
 
+        if (this.websiteContext.edition === undefined){
+            this.websiteContext.edition = true;
+        }
         this.state = useState({
             isLoading: false,
         });
