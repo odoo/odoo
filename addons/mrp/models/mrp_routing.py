@@ -120,7 +120,7 @@ class MrpRoutingWorkcenter(models.Model):
             (capacity, setup, cleanup) = workcenter._get_capacity(product, operation.bom_id.product_uom_id, quantity)
             operation.cycle_number = float_round(quantity / capacity, precision_digits=0, rounding_method="UP")
             operation.time_total = setup + cleanup + operation.cycle_number * operation.time_cycle
-            operation.show_time_total = operation.cycle_number > 0 or not float_is_zero(setup + cleanup)
+            operation.show_time_total = operation.cycle_number > 1 or not float_is_zero(setup + cleanup, precision_digits=0)
 
     @api.constrains('blocked_by_operation_ids')
     def _check_no_cyclic_dependencies(self):

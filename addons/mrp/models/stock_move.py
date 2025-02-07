@@ -342,6 +342,8 @@ class StockMove(models.Model):
             elif production_id.state == 'draft':
                 defaults['group_id'] = production_id.procurement_group_id.id
                 defaults['reference'] = production_id.name
+        if self.env.context.get('default_bom_id') and self.env.context.get('default_product_qty'):
+            defaults.pop('product_qty', None)
         return defaults
 
     @api.model_create_multi
