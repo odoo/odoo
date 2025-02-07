@@ -25,6 +25,8 @@ export class ProductInfoBanner extends Component {
         this.state = useState({
             other_warehouses: [],
             available_quantity: 0,
+            free_qty: 0,
+            uom: "",
             price_with_tax: 0,
             price_without_tax: 0,
             tax_name: "",
@@ -47,6 +49,8 @@ export class ProductInfoBanner extends Component {
                 const productInfo = result.productInfo;
                 this.state.other_warehouses = productInfo.warehouses.slice(1);
                 this.state.available_quantity = productInfo.warehouses[0]?.available_quantity;
+                this.state.free_qty = productInfo.warehouses[0]?.free_qty;
+                this.state.uom = productInfo.warehouses[0]?.uom;
                 this.state.price_with_tax = productInfo.all_prices.price_with_tax;
                 this.state.price_without_tax = productInfo.all_prices.price_without_tax;
                 this.state.tax_name = productInfo.all_prices.tax_details[0]?.name || "";
@@ -66,11 +70,11 @@ export class ProductInfoBanner extends Component {
     }
 
     get bannerBackground() {
-        if (!this.props.productTemplate.is_storable || this.state.available_quantity > 10) {
+        if (!this.props.productTemplate.is_storable || this.state.free_qty > 10) {
             return "bg-info";
         }
 
-        return this.state.available_quantity < 5 ? "bg-danger" : "bg-warning";
+        return this.state.free_qty < 5 ? "bg-danger" : "bg-warning";
     }
 
     get bannerClass() {
