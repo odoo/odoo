@@ -16,30 +16,9 @@ class BlogPostsOptionPlugin extends Plugin {
             },
             selector: ".s_dynamic_snippet_blog_posts",
         },
-        builder_actions: this.getActions(),
     };
     setup() {
         this.blogs = undefined;
-    }
-    getActions() {
-        return {
-            customizeTemplate: {
-                isApplied: ({ editingElement: el, param }) => {
-                    const customData = JSON.parse(el.dataset.customTemplateData);
-                    return customData[param];
-                },
-                apply: ({ editingElement: el, param, value }) => {
-                    const customData = JSON.parse(el.dataset.customTemplateData);
-                    customData[param] = true;
-                    el.dataset.customTemplateData = JSON.stringify(customData);
-                },
-                clean: ({ editingElement: el, param, value }) => {
-                    const customData = JSON.parse(el.dataset.customTemplateData);
-                    customData[param] = false;
-                    el.dataset.customTemplateData = JSON.stringify(customData);
-                },
-            },
-        };
     }
     async fetchBlogs() {
         if (!this.blogs) {
