@@ -7,7 +7,7 @@
             <div class="screen-full-width d-flex w-100 h-100">
                 <t t-set="usePreset" t-value="pos.config.use_presets and pos.models['pos.preset'].length > 1" />
                 <div t-if="!ui.isSmall || pos.ticket_screen_mobile_pane === 'left'" class="rightpane pane-border d-flex flex-column flex-grow-1 w-100 h-100 h-lg-100 pe-lg-0 bg-view border-end overflow-y-auto">
-                    <div class="controls d-grid d-sm-flex align-items-center justify-content-between gap-2 gap-sm-3 p-2 border-bottom">
+                    <div class="controls d-grid d-sm-flex align-items-center justify-content-between gap-2 gap-sm-3 p-2 border-bottom bg-view">
                         <div class="buttons d-flex gap-1" t-if="usePreset">
                             <button t-foreach="pos.models['pos.preset'].getAll()" t-as="preset" t-key="preset.id"
                                 class="btn btn-lg btn-secondary text-nowrap" t-on-click="() => this.onPresetSelected(preset)"
@@ -32,12 +32,12 @@
                             </div>
                         </div>
                     </div>
-                    <div class="orders overflow-y-auto flex-grow-1 rounded-bottom-3 bg-white">
+                    <div class="orders overflow-y-auto flex-grow-1 rounded-bottom-3 bg-view">
                         <t t-if="_filteredOrderList.length !== 0">
                             <table t-if="!ui.isSmall"  class="table table-striped table-hover">
                                 <tbody>
                                     <t t-foreach="_filteredOrderList" t-as="order" t-key="order.uuid">
-                                        <tr class="order-row" t-attf-class="{{ isHighlighted(order) ? 'highlight': '' }}"
+                                        <tr class="order-row" t-attf-class="{{ isHighlighted(order) ? 'highlight active': '' }}"
                                             t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() => order.uiState.locked ? ()=>{} : this._setOrder(order)" >
                                             <td>
                                                 <div class="fs-6 fw-bolder"><t t-esc="getDate(order)"></t></div>
