@@ -3,6 +3,7 @@
 
 <template id="s_searchbar_input" name="Search">
     <t t-call="website.website_search_box_input">
+        <t t-set="search_template" t-valuef="website.s_searchbar.autocomplete"/>
         <t t-set="search_type" t-valuef="all"/>
         <t t-set="action" t-valuef="/website/search"/>
         <t t-set="limit" t-valuef="5"/>
@@ -31,6 +32,13 @@
 <template id="searchbar_input_snippet_options" inherit_id="website.snippet_options" name="search bar snippet options">
     <xpath expr="." position="inside">
         <div data-js="SearchBar" data-selector=".s_searchbar_input">
+            <we-select string="Template" data-name="search_template_opt" data-attribute-name="searchTemplate"
+                       data-apply-to=".search-query">
+                <we-button data-img="/website/static/src/img/snippets_options/searchbar_template_default.png"
+                           data-select-data-attribute="website.s_searchbar.autocomplete" title="Default"/>
+                <we-button data-img="/website/static/src/img/snippets_options/searchbar_template_second.png"
+                           data-select-data-attribute="website.s_searchbar.autocomplete_second" title="Second"/>
+            </we-select>
             <we-select string="Search within" data-name="scope_opt"
                     data-attribute-name="searchType" data-apply-to=".search-query">
                 <we-button data-set-search-type="all" data-select-data-attribute="all" data-name="search_all_opt" data-form-action="/website/search">Everything</we-button>

@@ -2816,6 +2816,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 <!-- Search Bar input-group template -->
 <template id="website_search_box_input" inherit_id="website.website_search_box" primary="True">
     <xpath expr="//input[@name='search']" position="attributes">
+        <attribute name="t-att-data-search-template">search_template</attribute>
         <attribute name="t-att-data-search-type">search_type</attribute>
         <attribute name="t-att-data-limit">limit or '5'</attribute>
         <attribute name="t-att-data-display-image">display_image or 'true'</attribute>
