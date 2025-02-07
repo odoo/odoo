@@ -12,15 +12,14 @@
                 </t>
             </BuilderSelect>
         </BuilderRow>
-<!-- TODO when many2many is supported
-                <we-many2many string="Tags"
-                    data-name="product_tag_opt"
-                    data-attribute-name="productTagIds"
-                    data-no-preview="true"
-                    data-model="product.tag"
+        <BuilderRow label.translate="Tags" preview="false">
+	        <BuilderMany2Many id="'product_tag_opt'" model="'product.tag'" limit="10"
+	            dataAttributeAction="'productTagIds'"
+	        />
+	    </BuilderRow>
+<!-- TODO when many2many is fully supported
                     data-allow-delete="true"
                     data-fakem2m="true"
-                    data-select-data-attribute=""/>
 -->
         <BuilderRow label.translate="Show variants" preview="false">
             <BuilderCheckbox dataAttributeAction="'showVariants'" dataAttributeActionValue="'true'"/>

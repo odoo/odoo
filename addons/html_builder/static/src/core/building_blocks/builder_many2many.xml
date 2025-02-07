@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BuilderMany2Many">
+    <BuilderComponent>
+        <div>
+            <table>
+                <tr t-foreach="domState.selection" t-as="entry" t-key="entry.id">
+                    <td>
+                        <input type="text" disabled="" t-att-value="entry.name"/>
+                    </td>
+                    <td>
+                        <button class="o_we_link o_we_text_danger fa fa-fw fa-minus" t-on-click="() => this.unselect(entry.id)"/>
+                    </td>
+                </tr>
+            </table>
+            <Dropdown>
+                <button class="btn">Choose a record...</button>
+                <t t-set-slot="content">
+                    <div>
+                        <input placeholder="Search for records..." t-on-input="onSearch" t-on-focus="onSearch" t-ref="autofocus"/>
+                    </div>
+                    <t t-foreach="state.searchResults" t-as="entry" t-key="entry.id">
+                        <t t-if="!domState.selection.some((sel) => sel.id == entry.id)">
+	                        <DropdownItem onSelected="() => this.select(entry)">
+	                            <div t-out="entry.name"/>
+	                        </DropdownItem>
+                        </t>
+                    </t>
+                </t>
+            </Dropdown>
+        </div>
+    <!--
+        <div class="d-flex flex-row flex-nowrap align-items-center" t-att-data-action-id="props.action" style="width: 60px">
+            <input
+                type="text"
+                autocomplete="chrome-off"
+                t-att-placeholder="props.placeholder"
+                t-att-title="props.title"
+                t-on-change="this.onChange"
+                t-on-blur="this.onChange"
+                t-on-input="this.onInput"
+                t-att-value="this.state.value" />
+        </div>
+    -->
+<!--
+<div class="o_we_user_value_widget o_we_m2m" data-name="event_tag_opt" 
+    data-domain="[[&quot;category_id.website_published&quot;, &quot;=&quot;, true], [&quot;color&quot;, &quot;not in&quot;, [&quot;0&quot;, false]]]"
+    data-limit="10" data-attribute-name="filterByTagIds" data-fields="[&quot;category_id&quot;]" data-select-data-attribute="" data-no-preview="true" style="position: relative;"
+>
+    <we-title>Event Tags</we-title>
+    <div>
+        <we-list class="o_we_user_value_widget o_we_fw" data-unsortable="true" data-not-editable="true" data-allow-empty="true">
+            <div>
+                <div class="o_we_table_wrapper">
+                    <table>
+                        <tr>
+                            <td class="o_we_list_record_name">
+                                <input type="text" name="5" data-name="Culture" data-category_id="2,Activity" disabled="">
+                            </td>
+                            <td>
+                                <we-button class="o_we_select_remove_option o_we_link o_we_text_danger fa fa-fw fa-minus" data-remove-option="5"></we-button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <we-select class="o_we_user_value_widget o_we_many2one o_we_widget_opened" data-add-record="" style="position: static;">
+                    <div>
+                        <we-toggler data-placeholder-text="None" class="active">Choose a record...</we-toggler>
+                        <we-selection-items data-placeholder-text="None">
+                            <div class="o_we_m2o_search">
+                                <input placeholder="Search for records...">
+                            </div>
+                            <we-button class="o_we_user_value_widget" data-record-data="{&quot;id&quot;:6,&quot;category_id&quot;:[2,&quot;Activity&quot;],&quot;display_name&quot;:&quot;Music&quot;}" data-add-record="6">
+                                <div>Music</div>
+                            </we-button>
+                            ...
+                        </we-selection-items>
+                        <span class="o_we_dropdown_caret"></span>
+                    </div>
+                </we-select>
+            </div>
+        </we-list>
+    </div>
+</div>
+-->
+    </BuilderComponent>
+</t>
+
+</templates>

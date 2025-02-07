@@ -3,19 +3,16 @@
 
 <t t-name="website_event.DynamicSnippetEventsOption" t-inherit="html_builder.DynamicSnippetOption">
     <xpath expr="//BuilderRow[*[@id=&quot;'filter_opt'&quot;]]" position="after">
-        <div/>
-<!-- TODO when many2many is supported
-        <we-many2many t-if="snippet_name == 'event_upcoming_snippet'"
-            string="Event Tags"
-            data-name="event_tag_opt"
-            data-model="event.tag"
+    <div/>
+        <BuilderRow label.translate="Event Tags" preview="false">
+            <BuilderMany2Many id="'event_tag_opt'" model="'event.tag'" limit="10"
+                dataAttributeAction="'filterByTagIds'"
+                fields="['category_id']"
+                domain="[['category_id.website_published', '=', true], ['color', 'not in', ['0', false]]]"
+            />
+        </BuilderRow>
+<!-- TODO when many2many is fully supported
             data-fakem2m="true"
-            data-domain='[["category_id.website_published", "=", true], ["color", "not in", ["0", false]]]'
-            data-limit="10"
-            data-attribute-name="filterByTagIds"
-            data-fields="[&quot;category_id&quot;]"
-            data-select-data-attribute=""
-            data-no-preview="true"/>
 -->
     </xpath>
     <xpath expr="//BuilderRow[*[@id=&quot;'template_opt'&quot;]]" position="after">
