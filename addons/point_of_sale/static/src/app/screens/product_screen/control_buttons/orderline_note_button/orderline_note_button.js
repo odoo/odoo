@@ -99,8 +99,15 @@ export class InternalNoteButton extends NoteButton {
     reframeNotes(payload) {
         const notesArray = [];
         for (const noteName of payload.split("\n")) {
-            const defaultNote = this.pos.models["pos.note"].find((note) => note.name === noteName);
-            notesArray.push({ text: noteName, colorIndex: defaultNote ? defaultNote.color : 0 });
+            if (noteName.trim()) {
+                const defaultNote = this.pos.models["pos.note"].find(
+                    (note) => note.name === noteName
+                );
+                notesArray.push({
+                    text: noteName,
+                    colorIndex: defaultNote ? defaultNote.color : 0,
+                });
+            }
         }
         return JSON.stringify(notesArray);
     }
