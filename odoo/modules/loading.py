@@ -5,7 +5,9 @@
 """
 from __future__ import annotations
 
+import contextlib
 import itertools
+import json
 import logging
 import sys
 import threading
@@ -177,24 +179,46 @@ def load_module_graph(
     models_updated = set()
 
     for index, package in enumerate(graph.packages(), 1):
-        load_one_module(index, package)
+        _load_one_module(index, package, env, report, migrations, perform_checks, skip_modules, module_count, models_updated, loaded_modules, processed_modules, models_to_check)
 
-    def load_one_module(index, package):
-        module_name = package.name
-        module_id = package.id
+    _logger.runbot("%s modules loaded in %.2fs, %s queries (+%s extra)",
+                   len(graph),
+                   time.time() - t0,
+                   env.cr.sql_log_count - loading_cursor_query_count,
+                   odoo.sql_db.sql_counter - loading_extra_query_count)  # extra queries: testes, notify, any other closed cursor
 
-        if module_name in skip_modules:
-            return
+    return loaded_modules, processed_modules
 
-        module_t0 = time.time()
-        module_cursor_query_count = env.cr.sql_log_count
-        module_extra_query_count = odoo.sql_db.sql_counter
+def _load_one_module(index, package, env, report, migrations, perform_checks, skip_modules, module_count, models_updated, loaded_modules, processed_modules, models_to_check):
+    config = odoo.tools.config
+    registry = env.registry
+    module_name = package.name
+    module_id = package.id
 
-        needs_update = (
-            hasattr(package, "init")
-            or hasattr(package, "update")
-            or package.state in ("to install", "to upgrade")
-        )
+    if module_name in skip_modules:
+        return
+
+    module_t0 = time.time()
+    module_cursor_query_count = env.cr.sql_log_count
+    module_extra_query_count = odoo.sql_db.sql_counter
+
+    needs_update = (
+        hasattr(package, "init")
+        or hasattr(package, "update")
+        or package.state in ("to install", "to upgrade")
+    )
+    if config['profile'] and needs_update:
+        context_manager = odoo.tools.profiler.Profiler(
+                db=config['profile_database'] or registry.db_name,
+                description=f'Loading - {registry.db_name}, {package.name}',
+                profile_session=registry.db_name,
+                collectors=config['profile_collectors'],
+                params=json.loads(config['profile_params']),
+            )
+    else:
+        context_manager = contextlib.nullcontext()
+
+    with context_manager:
         module_log_level = logging.DEBUG
         if needs_update:
             module_log_level = logging.INFO
@@ -352,15 +376,6 @@ def load_module_graph(
                 module_name, test_results.failures_count, test_results.errors_count,
                 test_results.testsRun
             )
-
-    _logger.runbot("%s modules loaded in %.2fs, %s queries (+%s extra)",
-                   len(graph),
-                   time.time() - t0,
-                   env.cr.sql_log_count - loading_cursor_query_count,
-                   odoo.sql_db.sql_counter - loading_extra_query_count)  # extra queries: testes, notify, any other closed cursor
-
-    return loaded_modules, processed_modules
-
 
 def _check_module_names(cr: BaseCursor, module_names: Iterable[str]) -> None:
     mod_names = set(module_names)

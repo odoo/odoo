@@ -115,6 +115,8 @@ class Collector:
 
     def add(self, entry=None, frame=None):
         """ Add an entry (dict) to this collector. """
+        if len(self._entries) % 10000 == 0:
+            _logger.info("Collector %s entry count: %s", self.name, len(self._entries))
         self._entries.append({
             'stack': self._get_stack_trace(frame),
             'exec_context': getattr(self.profiler.init_thread, 'exec_context', ()),
