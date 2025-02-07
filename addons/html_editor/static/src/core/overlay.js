@@ -137,7 +137,18 @@ export class EditorOverlay extends Component {
         if (this.env.isSmall) {
             return;
         }
-        const containerRect = this.props.getContainer().getBoundingClientRect();
-        overlayElement.style.visibility = solution.top > containerRect.top ? "visible" : "hidden";
+        const overlayRect = overlayElement.getBoundingClientRect();
+        const container = this.props.getContainer();
+        const overlayedElement = container.ownerDocument.elementFromPoint(overlayRect.x, solution.top - 1);
+        let visibility = "visible";
+        if (!container.contains(overlayedElement) ) {
+            visibility = "hidden";
+        } else {
+            const overlayedElementStyles = container.ownerDocument.defaultView.getComputedStyle(overlayedElement);
+            if (overlayedElementStyles.position === "sticky" && overlayedElementStyles.top === "0px") {
+                visibility = "hidden";
+            }
+        }
+        overlayElement.style.visibility = visibility;
     }
 }
