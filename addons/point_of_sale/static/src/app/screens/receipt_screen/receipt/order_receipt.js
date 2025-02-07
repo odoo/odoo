@@ -57,4 +57,14 @@ export class OrderReceipt extends Component {
     getPortalURL() {
         return `${this.order.session._base_url}/pos/ticket`;
     }
+
+    get vatText() {
+        if (this.order.company.country_id?.vat_label) {
+            return _t("%(vatLabel)s: %(vatId)s", {
+                vatLabel: this.order.company.country_id.vat_label,
+                vatId: this.order.company.vat,
+            });
+        }
+        return _t("Tax ID: %(vatId)s", { vatId: this.order.company.vat });
+    }
 }

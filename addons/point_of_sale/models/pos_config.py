@@ -241,6 +241,8 @@ class PosConfig(models.Model):
     def _post_read_pos_data(self, data):
         if not data[0]['use_pricelist']:
             data[0]['pricelist_id'] = False
+        if data:
+            data[0]['_IS_VAT'] = self.env.company.country_id.id in self.env.ref("base.europe").country_ids.ids
         return super()._post_read_pos_data(data)
 
     @api.depends('payment_method_ids')
