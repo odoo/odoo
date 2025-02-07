@@ -4888,7 +4888,7 @@ class BaseModel(metaclass=MetaModel):
             parent_records._parent_store_update()
 
     @api.model_create_multi
-    def create(self, vals_list: list[ValuesType]) -> Self:
+    def create(self, vals_list: list[ValuesType] | ValuesType) -> Self:
         """ create(vals_list) -> records
 
         Creates new records for the model.
