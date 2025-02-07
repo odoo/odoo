@@ -123,7 +123,8 @@ export class PartnerList extends Component {
             const search_fields = [
                 "name",
                 "parent_name",
-                "phone_mobile_search",
+                "phone",
+                "mobile",
                 "email",
                 "barcode",
                 "street",
