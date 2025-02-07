@@ -1,7 +1,10 @@
 import { Builder } from "@html_builder/builder";
+import { DropZonePlugin } from "@html_builder/core/plugins/drop_zone_plugin";
 import { WebsiteBuilder } from "@html_builder/website_preview/website_builder_action";
 import { setContent } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
+import { Plugin } from "@html_editor/plugin";
+import { withSequence } from "@html_editor/utils/resource";
 import { defineMailModels, startServer } from "@mail/../tests/mail_test_helpers";
 import { after, describe } from "@odoo/hoot";
 import { advanceTime, animationFrame, click, queryOne } from "@odoo/hoot-dom";
@@ -13,13 +16,11 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { loadBundle } from "@web/core/assets";
+import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
 import { WebClient } from "@web/webclient/webclient";
 import { getWebsiteSnippets } from "./snippets_getter.hoot";
-import { Plugin } from "@html_editor/plugin";
-import { DropZonePlugin } from "@html_builder/core/plugins/drop_zone_plugin";
-import { withSequence } from "@html_editor/utils/resource";
 
 class Website extends models.Model {
     _name = "website";
@@ -67,6 +68,7 @@ export async function setupWebsiteBuilder(
     let editor;
     let editableContent;
     await mountWithCleanup(WebClient);
+    let originalIframeLoaded;
     let resolveIframeLoaded = () => {};
     const iframeLoaded = new Promise((resolve) => {
         resolveIframeLoaded = (el) => {
@@ -76,10 +78,16 @@ export async function setupWebsiteBuilder(
                 style.innerHTML = styleContent;
                 iframe.contentDocument.body.appendChild(style);
             }
+            iframe.contentDocument.body.innerHTML = `<div id="wrapwrap"><div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${websiteContent}</div></div>`;
             resolve(el);
         };
     });
+
     patchWithCleanup(WebsiteBuilder.prototype, {
+        setup() {
+            super.setup();
+            originalIframeLoaded = this.iframeLoaded;
+        },
         get systrayProps() {
             return {
                 onNewPage: this.onNewPage.bind(this),
@@ -132,7 +140,6 @@ export async function setupWebsiteBuilder(
     }
 
     const iframe = queryOne("iframe[data-src^='/website/force/1']");
-    iframe.contentDocument.body.innerHTML = `<div id="wrapwrap"><div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${websiteContent}</div></div>`;
     if (loadIframeBundles) {
         loadBundle("html_builder.inside_builder_style", {
             targetDoc: iframe.contentDocument,
@@ -142,6 +149,9 @@ export async function setupWebsiteBuilder(
             targetDoc: iframe.contentDocument,
             js: false,
         });
+    }
+    if (isBrowserFirefox()) {
+        await originalIframeLoaded;
     }
     resolveIframeLoaded(iframe);
     await animationFrame();
