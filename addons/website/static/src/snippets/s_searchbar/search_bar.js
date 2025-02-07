@@ -30,6 +30,7 @@ export class SearchBar extends Interaction {
         this.inputEl = this.el.querySelector(".search-query");
         this.menuEl = null;
         this.searchType = this.inputEl.dataset.searchType;
+        this.template = this.inputEl.dataset.searchTemplate || "website.s_searchbar.autocomplete";
         const orderByEl = this.el.querySelector(".o_search_order_by");
         const form = orderByEl.closest("form");
         this.order = orderByEl.value;
@@ -117,7 +118,7 @@ export class SearchBar extends Interaction {
         const prevMenuEl = this.menuEl;
         if (res && this.limit) {
             const results = res["results"];
-            let template = "website.s_searchbar.autocomplete";
+            let template = this.template;
             const candidate = template + "." + this.searchType;
             if (getTemplate(candidate)) {
                 template = candidate;
