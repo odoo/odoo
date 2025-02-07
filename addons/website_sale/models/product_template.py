@@ -7,13 +7,25 @@ from odoo import _, api, fields, models
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import float_is_zero, is_html_empty
+from odoo.tools.sql import create_column, column_exists, SQL
 from odoo.tools.translate import html_translate
 
 from odoo.addons.website.models import ir_http
 from odoo.addons.website.tools import text_from_html
 from odoo.addons.website_sale.const import SHOP_PATH
 
+# A delimiter that users aren't likely to search for in product codes.
+RARE_DELIMITER = '\u241E'
+
 _logger = logging.getLogger(__name__)
+
+
+def get_translated_field_gist_index(registry, column_name):
+    if not registry.has_trigram:
+        return ""
+    if registry.has_unaccent:
+        return f"USING GIST(unaccent((JSONB_PATH_QUERY_ARRAY({column_name}, '$.*'::jsonpath))::text) gist_trgm_ops)"
+    return f"USING GIST((JSONB_PATH_QUERY_ARRAY({column_name}, '$.*'::jsonpath)::text) gist_trgm_ops)"
 
 
 class ProductTemplate(models.Model):
@@ -52,6 +64,7 @@ class ProductTemplate(models.Model):
         sanitize_overridable=True,
         sanitize_attributes=False,
         sanitize_form=False,
+        index='trigram',
     )
     description_ecommerce = fields.Html(
         string="eCommerce Description",
@@ -142,6 +155,47 @@ class ProductTemplate(models.Model):
         help="Add a strikethrough price to your /shop and product pages for comparison purposes."
              "It will not be displayed if pricelists apply.",
     )
+    variants_default_code = fields.Char(
+        compute='_compute_variants_default_code',
+        store=True,
+        index='trigram',
+        help="Technical field to enhance performance when looking up default code of product"
+             "variants (LIKE/ILIKE)",
+    )
+    description = fields.Html(index='trigram')
+    description_sale = fields.Text(index='trigram')
+
+    # === INDEXES === #
+
+    # We need gist indexes for similarity check in ecommerce fuzzy search.
+    _name_gist_idx = models.Index(lambda registry: get_translated_field_gist_index(registry, "name"))
+    _description_gist_idx = models.Index(lambda registry: get_translated_field_gist_index(registry, "description"))
+    _description_sale_gist_idx = models.Index(lambda registry: get_translated_field_gist_index(registry, "description_sale"))
+    _default_code_gist_idx = models.Index(
+        lambda registry: 'USING GIST(unaccent(default_code) gist_trgm_ops)'
+        if registry.has_trigram and registry.has_unaccent
+        else ('USING GIST(default_code gist_trgm_ops)' if registry.has_trigram else '')
+    )
+
+    def _auto_init(self):
+        """Override _auto_init to prevent MemoryError on ecommerce installation in dbs with lots of products"""
+        if not column_exists(self.env.cr, 'product_template', 'variants_default_code'):
+            create_column(self.env.cr, 'product_template', 'variants_default_code', 'varchar')
+            self.env.cr.execute(SQL(
+                """
+                    UPDATE product_template
+                    SET variants_default_code = variants.default_codes
+                    FROM (
+                        SELECT pt.id AS template_id,
+                               STRING_AGG(pv.default_code, %s) AS default_codes
+                        FROM product_template pt
+                        JOIN product_product pv ON pv.product_tmpl_id = pt.id
+                        WHERE pv.default_code IS NOT NULL
+                        GROUP BY pt.id
+                    ) AS variants
+                    WHERE product_template.id = variants.template_id
+                """, RARE_DELIMITER))
+        return super()._auto_init()
 
     #=== COMPUTE METHODS ===#
 
@@ -191,6 +245,13 @@ class ProductTemplate(models.Model):
         for product in self:
             if product.id:
                 product.website_url = "/shop/%s" % self.env['ir.http']._slug(product)
+
+    @api.depends('product_variant_ids.default_code')
+    def _compute_variants_default_code(self):
+        for template in self:
+            template.variants_default_code = RARE_DELIMITER.join(
+                template.product_variant_ids.filtered('default_code').mapped('default_code')
+            )
 
     #=== CRUD METHODS ===#
 
@@ -801,7 +862,7 @@ class ProductTemplate(models.Model):
             domains.append([('list_price', '<=', max_price)])
         if attribute_value_dict:
             domains.extend(self._get_attribute_value_domain(attribute_value_dict))
-        search_fields = ['name', 'default_code', 'product_variant_ids.default_code']
+        search_fields = ['name', 'default_code', 'variants_default_code']
         fetch_fields = ['id', 'name', 'website_url']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
