@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 {
     'name': 'Maintenance - HR',
     'version': '1.0',
@@ -13,7 +11,7 @@ Bridge between HR and Maintenance.""",
         'security/equipment.xml',
         'views/maintenance_views.xml',
         'views/hr_views.xml',
-        'views/hr_employee_departure_views.xml',
+        'wizard/hr_employee_departure_wizard_views.xml',
     ],
     'installable': True,
     'auto_install': True,

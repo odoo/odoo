@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Fleet History',
@@ -12,7 +11,7 @@
         'views/employee_views.xml',
         'views/fleet_vehicle_views.xml',
         'views/fleet_vehicle_cost_views.xml',
-        'views/hr_employee_departure_views.xml',
+        'wizard/hr_employee_departure_wizard_views.xml',
         'data/hr_fleet_data.xml',
     ],
     'demo': [
