@@ -3,11 +3,11 @@ import logging
 import io
 
 from lxml import etree
-from xml.sax.saxutils import escape, quoteattr
 
 from odoo import _, api, fields, models, tools, SUPERUSER_ID
 from odoo.tools import cleanup_xml_node
 from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
+from odoo.addons.account.tools import dict_to_xml
 
 _logger = logging.getLogger(__name__)
 
@@ -172,36 +172,31 @@ class AccountMoveSend(models.AbstractModel):
         if not anchor_elements:
             return
 
-        xmlns_move_type = 'Invoice' if invoice.move_type == 'out_invoice' else 'CreditNote'
         pdf_values = invoice.invoice_pdf_report_id or invoice_data.get('pdf_attachment_values') or invoice_data['proforma_pdf_attachment_values']
         filename = pdf_values['name']
         content = pdf_values['raw']
 
-        doc_type_node = ""
         edi_model = invoice_data["ubl_cii_xml_options"]["builder"]
-        doc_type_code_vals = edi_model._get_document_type_code_vals(invoice, invoice_data)
-        if doc_type_code_vals['value']:
-            doc_type_code_attrs = " ".join(f'{name}="{value}"' for name, value in doc_type_code_vals['attrs'].items())
-            doc_type_node = f"<cbc:DocumentTypeCode {doc_type_code_attrs}>{doc_type_code_vals['value']}</cbc:DocumentTypeCode>"
-        to_inject = f'''
-            <cac:AdditionalDocumentReference
-                xmlns="urn:oasis:names:specification:ubl:schema:xsd:{xmlns_move_type}-2"
-                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
-                <cbc:ID>{escape(filename)}</cbc:ID>
-                {doc_type_node}
-                <cac:Attachment>
-                    <cbc:EmbeddedDocumentBinaryObject
-                        mimeCode="application/pdf"
-                        filename={quoteattr(filename)}>
-                        {base64.b64encode(content).decode()}
-                    </cbc:EmbeddedDocumentBinaryObject>
-                </cac:Attachment>
-            </cac:AdditionalDocumentReference>
-        '''
+        doc_type_code_node = edi_model._get_document_type_code_node(invoice, invoice_data)
+        vals = {'invoice': invoice}
+        edi_model._add_invoice_config_vals(vals)
+        nsmap = edi_model._get_document_nsmap(vals)
+
+        additional_document_reference_node = {
+            '_tag': 'cac:AdditionalDocumentReference',
+            'cbc:ID': {'_text': filename},
+            'cbc:DocumentTypeCode': doc_type_code_node,
+            'cac:Attachment': {
+                'cbc:EmbeddedDocumentBinaryObject': {
+                    '_text': base64.b64encode(content).decode(),
+                    'mimeCode': 'application/pdf',
+                    'filename': filename
+                }
+            }
+        }
 
         anchor_index = tree.index(anchor_elements[0])
-        tree.insert(anchor_index, etree.fromstring(to_inject))
+        tree.insert(anchor_index, dict_to_xml(additional_document_reference_node, nsmap=nsmap))
         invoice_data['ubl_cii_xml_attachment_values']['raw'] = etree.tostring(
             cleanup_xml_node(tree), xml_declaration=True, encoding='UTF-8'
         )

@@ -67,7 +67,7 @@ class TestEdiZatca(TestSaEdiCommon):
             self.partner_us.vat = 'US12345677'
 
             pricelist = self.env['product.pricelist'].create({'name': 'SAR', 'currency_id': self.env.ref('base.SAR').id})
-            sale_order = self.env['sale.order'].create({
+            sale_order = self.env['sale.order'].sudo().create({
                 'partner_id': self.partner_us.id,
                 'pricelist_id': pricelist.id,
                 'order_line': [
@@ -78,7 +78,7 @@ class TestEdiZatca(TestSaEdiCommon):
                         'tax_ids': [Command.set(self.tax_15.ids)],
                     })
                 ]
-            })
+            }).sudo(False)
             sale_order.action_confirm()
 
             context = {
@@ -87,11 +87,11 @@ class TestEdiZatca(TestSaEdiCommon):
                 'active_id': sale_order.id,
                 'default_journal_id': self.company_data['default_journal_sale'].id,
             }
-            downpayment = self.env['sale.advance.payment.inv'].with_context(context).create({
+            downpayment = self.env['sale.advance.payment.inv'].with_context(context).sudo().create({
                 'advance_payment_method': 'fixed',
                 'fixed_amount': 115,
-            })._create_invoices(sale_order)
-            final = self.env['sale.advance.payment.inv'].with_context(context).create({})._create_invoices(sale_order)
+            })._create_invoices(sale_order).sudo(False)
+            final = self.env['sale.advance.payment.inv'].with_context(context).sudo().create({})._create_invoices(sale_order).sudo(False)
             final.invoice_line_ids.filtered('is_downpayment').write({
                 'name': 'Down payment',
             })
