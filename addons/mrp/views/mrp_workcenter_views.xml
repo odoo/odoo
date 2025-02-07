@@ -111,8 +111,9 @@
         </record>
 
         <record model="ir.actions.act_window" id="mrp_workorder_report">
-            <field name="name">Work Orders</field>
+            <field name="name">Work Orders Analysis</field>
             <field name="res_model">mrp.workorder</field>
+            <field name="path">work-orders-analysis</field>
             <field name="domain">[]</field>
             <field name="context">{'search_default_workcenter': 1,
                                    'search_default_ready': True,
@@ -570,6 +571,7 @@
     <record model="ir.actions.act_window" id="mrp_workcenter_productivity_report">
         <field name="name">Overall Equipment Effectiveness</field>
         <field name="res_model">mrp.workcenter.productivity</field>
+        <field name="path">equipement-effectiveness</field>
         <field name="view_mode">graph,pivot,list,form</field>
         <field name="domain">[]</field>
         <field name="context">{'search_default_workcenter_group': 1, 'search_default_loss_group': 2, 'create':False,'edit':False}</field>
