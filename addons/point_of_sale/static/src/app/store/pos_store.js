@@ -1586,8 +1586,13 @@ export class PosStore extends Reactive {
         if (name === "ProductScreen") {
             this.get_order()?.deselect_orderline();
         }
-        this.previousScreen = this.mainScreen.component?.name;
         const component = registry.category("pos_screens").get(name);
+        if (
+            (component.updatePreviousScreen ?? true) &&
+            (this.mainScreen.component?.updatePreviousScreen ?? true)
+        ) {
+            this.previousScreen = this.mainScreen.component?.name;
+        }
         this.mainScreen = { component, props };
         // Save the screen to the order so that it is shown again when the order is selected.
         if (component.storeOnOrder ?? true) {
