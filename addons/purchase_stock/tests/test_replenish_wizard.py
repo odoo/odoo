@@ -484,3 +484,14 @@ class TestReplenishWizard(TestStockCommon):
             ('partner_id', '=', partner_b.id)
         ])
         self.assertEqual(po.amount_untaxed, 10, "best price is 10$")
+
+    def test_delete_buy_route_and_replenish(self):
+        """ Test that the replenish wizard does not crash when the 'buy' route is deleted """
+        self.env.ref('purchase_stock.route_warehouse0_buy', raise_if_not_found=False).unlink()
+        self.product1.product_tmpl_id.seller_ids.unlink()
+        replenish_wizard = self.env['product.replenish'].create({
+            'product_id': self.product1.id,
+            'product_tmpl_id': self.product1.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+        })
+        self.assertTrue(replenish_wizard._get_route_domain(self.product1.product_tmpl_id))
