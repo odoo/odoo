@@ -204,7 +204,8 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
                 const search_fields = [
                     "name",
                     "parent_name",
-                    "phone_mobile_search",
+                    "phone",
+                    "mobile",
                     "email",
                     "vat",
                 ];
