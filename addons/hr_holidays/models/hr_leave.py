@@ -195,6 +195,7 @@ class HolidaysRequest(models.Model):
         inverse='_inverse_supported_attachment_ids')
     supported_attachment_ids_count = fields.Integer(compute='_compute_supported_attachment_ids')
     # UX fields
+    leave_type_time_type = fields.Selection(related="holiday_status_id.time_type", readonly=True)
     leave_type_request_unit = fields.Selection(related='holiday_status_id.request_unit', readonly=True)
     leave_type_support_document = fields.Boolean(related="holiday_status_id.support_document")
     # Interface fields used when not using hour-based computation
@@ -553,6 +554,8 @@ class HolidaysRequest(models.Model):
             ('state', 'not in', ['cancel', 'refuse']),
         ])
         for holiday in self:
+            if holiday.leave_type_time_type == "other":
+                continue
             domain = [
                 ('employee_id', '=', holiday.employee_id.id),
                 ('date_from', '<', holiday.date_to),
