@@ -1793,18 +1793,24 @@ class HttpCase(TransactionCase):
 
         return session
 
-    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, **kw):
-        """ Test js code running in the browser
-        - optionnally log as 'login'
-        - load page given by url_path
-        - wait for ready object to be available
-        - eval(code) inside the page
-        - open another chrome window to watch code execution if watch is True
+    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, cpu_throttling=None, **kw):
+        """ Test JavaScript code running in the browser.
 
-        To signal success test do: console.log('test successful')
-        To signal test failure raise an exception or call console.error with a message.
-        Test will stop when a failure occurs if error_checker is not defined or returns True for this message
+        To signal success test do: `console.log('test successful')`
+        To signal test failure raise an exception or call `console.error` with a message.
+        Test will stop when a failure occurs if `error_checker` is not defined or returns `True` for this message
 
+        :param string url_path: URL path to load the browser page on
+        :param string code: JavaScript code to be executed
+        :param string ready: JavaScript object to wait for before proceeding with the test
+        :param string login: logged in user which will execute the test. e.g. 'admin', 'demo'
+        :param int timeout: maximum time to wait for the test to complete (in seconds). Default is 60 seconds
+        :param dict cookies: dictionary of cookies to set before loading the page
+        :param error_checker: function to filter failures out. 
+            If provided, the function is called with the error log message, and if it returns `False` the log is ignored and the test continue
+            If not provided, every error log triggers a failure
+        :param bool watch: open a new browser window to watch the test execution
+        :param int cpu_throttling: CPU throttling rate as a slowdown factor (1 is no throttle, 2 is 2x slowdown, etc)
         """
         if not self.env.registry.loaded:
             self._logger.warning('HttpCase test should be in post_install only')
@@ -1841,6 +1847,18 @@ class HttpCase(TransactionCase):
             if cookies:
                 for name, value in cookies.items():
                     self.browser.set_cookie(name, value, '/', HOST)
+
+            cpu_throttling_os = os.environ.get('ODOO_BROWSER_CPU_THROTTLING') # used by dedicated runbot builds
+            cpu_throttling = int(cpu_throttling_os) if cpu_throttling_os else cpu_throttling
+
+            if cpu_throttling:
+                assert 1 <= cpu_throttling <= 50  # arbitrary upper limit
+                timeout *= cpu_throttling  # extend the timeout as test will be slower to execute
+                _logger.log(
+                    logging.INFO if cpu_throttling_os else logging.WARNING,
+                    'CPU throttling mode is only suitable for local testing - ' \
+                    'Throttling browser CPU to %sx slowdown and extending timeout to %s sec', cpu_throttling, timeout)
+                self.browser._websocket_request('Emulation.setCPUThrottlingRate', params={'rate': cpu_throttling})
 
             self.browser.navigate_to(url, wait_stop=not bool(ready))
 
