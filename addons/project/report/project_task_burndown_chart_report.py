@@ -4,7 +4,7 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import SQL
-from odoo.addons.resource.models.utils import filter_domain_leaf
+from odoo.addons.base.models.utils import filter_domain_leaf
 
 
 class ProjectTaskBurndownChartReport(models.AbstractModel):

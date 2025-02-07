@@ -11,7 +11,7 @@ from odoo.addons.web_editor.tools import handle_history_divergence
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.osv import expression
 from odoo.tools import format_list, SQL, LazyTranslate
-from odoo.addons.resource.models.utils import filter_domain_leaf
+from odoo.addons.base.models.utils import filter_domain_leaf
 from odoo.addons.project.controllers.project_sharing_chatter import ProjectSharingChatter
 from odoo.addons.mail.tools.discuss import Store
 
