@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields, models
+from odoo import _, fields, models, api
 from odoo.exceptions import ValidationError, RedirectWarning
 from odoo.addons.l10n_in.models.iap_account import IAP_SERVICE_NAME
 from odoo.tools.sql import column_exists, create_column
@@ -36,6 +36,8 @@ class ResConfigSettings(models.TransientModel):
     module_l10n_in_reports = fields.Boolean('GST E-Filing & Matching')
     module_l10n_in_edi = fields.Boolean('Indian Electronic Invoicing')
     module_l10n_in_ewaybill = fields.Boolean('Indian Electronic Waybill')
+
+    l10n_in_is_advanced_template = fields.Boolean(related='company_id.l10n_in_is_advanced_template')
 
     def set_values(self):
         super().set_values()

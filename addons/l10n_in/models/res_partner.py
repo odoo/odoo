@@ -43,6 +43,7 @@ class ResPartner(models.Model):
     l10n_in_gstin_verified_status = fields.Boolean(string="GST Status", tracking=True)
     l10n_in_gstin_verified_date = fields.Date(string="GSTIN Verified Date", tracking=True)
     l10n_in_gstin_status_feature_enabled = fields.Boolean(compute="_compute_l10n_in_gst_registered_and_status")
+    l10n_in_is_advanced_template = fields.Boolean(related='company_id.l10n_in_is_advanced_template')
 
     @api.depends('vat', 'state_id', 'country_id', 'fiscal_country_codes')
     def _compute_l10n_in_gst_state_warning(self):

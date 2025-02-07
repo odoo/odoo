@@ -199,7 +199,7 @@ class AccountChartTemplate(models.AbstractModel):
         reload_template = template_code == company.chart_template
         company.chart_template = template_code
 
-        if not reload_template and (not company.root_id._existing_accounting() or self.env.ref('base.module_account').demo):
+        if not reload_template and not self._context.get('skip_unlink') and (not company.root_id._existing_accounting() or self.env.ref('base.module_account').demo):
             children_companies = self.env['res.company'].search([('id', 'child_of', company.id)])
             for model in ('account.move',) + TEMPLATE_MODELS[::-1]:
                 if not company.parent_id:

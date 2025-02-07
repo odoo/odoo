@@ -7,6 +7,7 @@ class TestHSNsummary(TestTaxCommon):
 
     @classmethod
     @TestTaxCommon.setup_country('in')
+    @TestTaxCommon.setup_chart_template('in_adv')
     def setUpClass(cls):
         super().setUpClass()
 
