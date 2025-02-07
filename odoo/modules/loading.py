@@ -177,11 +177,14 @@ def load_module_graph(
     models_updated = set()
 
     for index, package in enumerate(graph.packages(), 1):
+        load_one_module(index, package)
+
+    def load_one_module(index, package):
         module_name = package.name
         module_id = package.id
 
         if module_name in skip_modules:
-            continue
+            return
 
         module_t0 = time.time()
         module_cursor_query_count = env.cr.sql_log_count

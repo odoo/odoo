@@ -48,7 +48,7 @@ def _get_stack_trace(frame, limit_frame=None):
         stack.append(_format_frame(frame))
         frame = frame.f_back
     if frame is None and limit_frame:
-        _logger.error("Limit frame was not found")
+        _logger.runbot("Limit frame was not found")
     return list(reversed(stack))
 
 
@@ -390,7 +390,7 @@ class QwebTracker():
             elif ('t-' + directive) not in attrib:
                 directive_info['t-' + directive] = None
 
-            execution_context = tools.profiler.ExecutionContext(**directive_info, xpath=xpath)
+            execution_context = ExecutionContext(**directive_info, xpath=xpath)
             execution_context.__enter__()
             self.context_stack.append(execution_context)
 

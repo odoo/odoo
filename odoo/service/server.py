@@ -4,6 +4,7 @@
 import contextlib
 import datetime
 import errno
+import json
 import logging
 import os
 import os.path
@@ -54,7 +55,7 @@ except ImportError:
 from odoo import api, sql_db
 from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
-from odoo.tools import config, osutil
+from odoo.tools import config, osutil, profiler
 from odoo.tools.cache import log_ormcache_stats
 from odoo.tools.misc import stripped_sys_argv, dumpstacks
 from .db import list_dbs
@@ -1290,8 +1291,20 @@ def _reexec(updated_modules=None):
     # We should keep the LISTEN_* environment variabled in order to support socket activation on reexec
     os.execve(sys.executable, args, os.environ)
 
-
 def preload_registries(dbnames):
+    if dbnames and config['profile']:
+        with profiler.Profiler(
+            db=config['profile_database'] or dbnames[0],
+            description=f'_preload_registries - {dbnames[0]}',
+            profile_session=f'{os.getpid()} - {dbnames[0]}',
+            collectors=config['profile_collectors'],
+            params=json.loads(config['profile_params']),
+        ):
+            return _preload_registries(dbnames)
+    else:
+        return _preload_registries(dbnames)
+
+def _preload_registries(dbnames):
     """ Preload a registries, possibly run a test file."""
     # TODO: move all config checks to args dont check tools.config here
     dbnames = dbnames or []
