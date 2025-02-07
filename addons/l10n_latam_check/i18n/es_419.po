@@ -8,9 +8,6 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-18 16:55+0000\n"
 "PO-Revision-Date: 2024-06-18 13:58-0300\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -40,7 +37,7 @@ msgstr "<span>Asiento conciliado</span>"
 #. module: l10n_latam_check
 #: model:ir.model,name:l10n_latam_check.model_account_chart_template
 msgid "Account Chart Template"
-msgstr "Plantilla de Plan de Cuentas"
+msgstr "Plantilla de plan de cuentas"
 
 #. module: l10n_latam_check
 #: model:ir.model,name:l10n_latam_check.model_l10n_latam_check
@@ -501,9 +498,9 @@ msgid ""
 "check you are not encoding the same check more than once. List of other "
 "payments/checks: %s"
 msgstr ""
-"Se encontraron otros cheques con el mismo número, emisor y banco. Verifique "
-"que no esté codificando el mismo cheque más de una vez. Lista de otros "
-"pagos/cheques: %s"
+"Otros cheques fueron encontrados con el mismo número, emisor y banco. Por "
+"favor chquear que no estas ingresando el mismo cheque más de una vez. Lista "
+"de otros pagos/cheques: %s"
 
 #. module: l10n_latam_check
 #: model:account.payment.method,name:l10n_latam_check.account_payment_method_own_checks
@@ -665,10 +662,13 @@ msgstr "Moneda del pago."
 #. module: l10n_latam_check
 #. odoo-python
 #: code:addons/l10n_latam_check/wizards/l10n_latam_payment_mass_transfer.py:0
+#, python-format
 msgid ""
 "The register payment wizard should only be called on account.payment "
 "records."
 msgstr ""
+"El wizard del pago registrado solo debería ser llamado en registros del "
+"account.payment."
 
 #. module: l10n_latam_check
 #. odoo-python
@@ -727,8 +727,8 @@ msgid ""
 "You can't use checks when paying invoices of different partners or same "
 "partner without grouping"
 msgstr ""
-"No puede utilizar cheques al pagar facturas de diferentes partners o del "
-"mismo partner sin agrupar"
+"No puede utilizar cheques cuando esta pagando facturas de diferentes "
+"contactos o mismo contacto sin agrupar"
 
 #. module: l10n_latam_check
 #: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_payment_form_inherited
