@@ -159,7 +159,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             for srch in search.split(" "):
                 subdomains = [
                     Domain('name', 'ilike', srch),
-                    Domain('product_variant_ids.default_code', 'ilike', srch),
+                    Domain('variants_default_code', 'ilike', srch),
                 ]
                 if search_in_description:
                     subdomains.extend((
