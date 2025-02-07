@@ -121,7 +121,7 @@ class StockLandedCost(models.Model):
             }
             valuation_layer_ids = []
             cost_to_add_byproduct = defaultdict(lambda: 0.0)
-            cost_to_add_bylot = defaultdict(lambda: 0.0)
+            cost_to_add_bylot = defaultdict(lambda: defaultdict(float))
             for line in cost.valuation_adjustment_lines.filtered(lambda line: line.move_id):
                 remaining_qty = sum(line.move_id._get_stock_valuation_layer_ids().mapped('remaining_qty'))
                 linked_layer = line.move_id._get_stock_valuation_layer_ids()
@@ -137,7 +137,7 @@ class StockLandedCost(models.Model):
                             lot_layer = linked_layer.filtered(lambda l: l.lot_id == lot_id)[:1]
                             value = cost_to_add * sum(sml.mapped('quantity')) / line.move_id.quantity
                             if product.cost_method in ['average', 'fifo']:
-                                cost_to_add_bylot[lot_id] += value
+                                cost_to_add_bylot[product][lot_id] += value
                             vals_list.append({
                                 'value': value,
                                 'unit_cost': 0,
@@ -189,7 +189,7 @@ class StockLandedCost(models.Model):
                 if not float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
                     product.sudo().with_context(disable_auto_svl=True).standard_price += cost_to_add_byproduct[product] / product.quantity_svl
                 if product.lot_valuated:
-                    for lot, value in cost_to_add_bylot.items():
+                    for lot, value in cost_to_add_bylot[product].items():
                         if float_is_zero(lot.quantity_svl, precision_rounding=product.uom_id.rounding):
                             continue
                         lot.sudo().with_context(disable_auto_svl=True).standard_price += value / lot.quantity_svl
