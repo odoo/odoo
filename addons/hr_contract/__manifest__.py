@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -28,7 +27,7 @@ You can assign several contracts per employee.
         'views/hr_employee_views.xml',
         'views/resource_calendar_views.xml',
         'views/res_config_settings_views.xml',
-        'views/hr_employee_departure_views.xml',
+        'wizard/hr_employee_departure_wizard_views.xml',
     ],
     'demo': ['data/hr_contract_demo.xml'],
     'installable': True,

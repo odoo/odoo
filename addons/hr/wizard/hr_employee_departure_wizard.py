@@ -3,8 +3,8 @@
 from odoo import api, fields, models
 
 
-class HrEmployeeDeparture(models.Model):
-    _name = "hr.employee.departure"
+class HrEmployeeDepartureWizard(models.TransientModel):
+    _name = "hr.employee.departure.wizard"
     _description = "Employee Departure"
     _rec_name = "employee_id"
 
@@ -20,11 +20,6 @@ class HrEmployeeDeparture(models.Model):
     employee_id = fields.Many2one(
         'hr.employee', string='Employee', required=True,
         default=lambda self: self.env.context.get('active_id', None))
-    state = fields.Selection([
-        ('draft', 'Draft'),
-        ('scheduled', 'Scheduled'),
-        ('done', 'Done'),
-        ('cancelled', 'Cancelled')], default="draft", required=True)
     departure_reason_id = fields.Many2one(
         "hr.departure.reason",
         string="End Reason",
@@ -48,24 +43,27 @@ class HrEmployeeDeparture(models.Model):
     apply_immediately = fields.Boolean(compute="_compute_apply_immediately")
     apply_date = fields.Date(compute='_compute_apply_date', store=True)
 
-    def action_register_departure(self):
+    def _get_departure_values(self):
         self.ensure_one()
-        employee = self.employee_id
-        if self.do_archive_employee and employee.active:
-            employee.action_archive()
-        employee.departure_reason_id = self.departure_reason_id
-        employee.departure_description = self.departure_description
-        employee.departure_date = self.departure_date
-        self.state = 'done'
+        today = fields.Date.today()
+        return {
+            'departure_reason_id': self.departure_reason_id,
+            'departure_description': self.departure_description,
+            'departure_date': self.departure_date,
+            'departure_do_archive': self.do_archive_employee,
+            'departure_action_at': self.action_at,
+            'departure_action_other_date': self.action_other_date,
+            'departure_apply_date': self.apply_date or today,
+            'departure_applied': False,
+        }
 
-    def action_schedule(self):
-        self.state = 'scheduled'
-
-    def action_cancel(self):
-        self.state = 'cancelled'
-
-    def action_draft(self):
-        self.state = 'draft'
+    def action_register_departure(self):
+        for wizard in self:
+            employee = wizard.employee_id
+            departure_values = wizard._get_departure_values()
+            employee.write(departure_values)
+            if wizard.apply_immediately:
+                employee._register_departure()
 
     def _get_action_fields(self):
         return [f for f in self._fields if f.startswith('do_')]
@@ -80,9 +78,7 @@ class HrEmployeeDeparture(models.Model):
     def _compute_apply_immediately(self):
         today = fields.Date.today()
         for departure in self:
-            if departure.state in ['done', 'cancel']:
-                departure.apply_immediately = False
-            elif departure.action_at == "departure_date":
+            if departure.action_at == "departure_date":
                 departure.apply_immediately = departure.departure_date <= today
             elif departure.action_at == "other":
                 departure.apply_immediately = not departure.action_other_date or departure.action_other_date <= today
@@ -97,13 +93,3 @@ class HrEmployeeDeparture(models.Model):
                 departure.apply_date = max(departure.departure_date, today)
             else:
                 departure.apply_date = departure.action_other_date or today
-
-
-    def _cron_apply_departure(self):
-        today = fields.Date.today()
-        departures = self.env['hr.employee.departure'].search([
-            ('state', '=', 'scheduled'),
-            ('apply_date', '<=', today),
-        ])
-        for departure in departures:
-            departure.action_register_departure()
