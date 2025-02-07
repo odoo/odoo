@@ -1,8 +1,13 @@
 import { isColorGradient } from "@web/core/utils/colors";
 import { Component, useState } from "@odoo/owl";
-import { useColorPicker } from "@web/core/color_picker/color_picker";
+import {
+    useColorPicker,
+    DEFAULT_COLORS,
+    DEFAULT_THEME_COLORS,
+} from "@web/core/color_picker/color_picker";
 import { effect } from "@web/core/utils/reactive";
 import { toolbarButtonProps } from "../toolbar/toolbar";
+import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 
 export class ColorSelector extends Component {
     static template = "html_editor.ColorSelector";
@@ -23,6 +28,7 @@ export class ColorSelector extends Component {
         effect(
             (selectedColors) => {
                 this.state.selectedColor = selectedColors[this.props.mode];
+                this.state.defaultTab = this.getCorrespondingColorTab(this.state.selectedColor);
             },
             [this.props.getSelectedColors()]
         );
@@ -39,6 +45,23 @@ export class ColorSelector extends Component {
             },
             { onClose: () => this.props.applyColorResetPreview() }
         );
+    }
+
+    getCorrespondingColorTab(color) {
+        if (
+            !color ||
+            [
+                ...DEFAULT_COLORS.flat(),
+                ...DEFAULT_THEME_COLORS,
+                getCSSVariableValue("body-color", getHtmlStyle(document)), // Default applied color
+            ].includes(color.toUpperCase())
+        ) {
+            return "solid";
+        } else if (isColorGradient(color)) {
+            return "gradient";
+        } else {
+            return "custom";
+        }
     }
 
     getSelectedColorStyle() {
