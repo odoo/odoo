@@ -6,6 +6,7 @@ from babel.dates import format_date
 from dateutil import relativedelta
 from datetime import timedelta, datetime
 from functools import partial
+from markupsafe import Markup
 from pytz import timezone
 from random import randint
 
@@ -265,6 +266,7 @@ class MrpWorkcenter(models.Model):
             raise exceptions.UserError(_("It has already been unblocked."))
         times = self.env['mrp.workcenter.productivity'].search([('workcenter_id', '=', self.id), ('date_end', '=', False)])
         times.write({'date_end': datetime.now()})
+        self._log_block_status(blocking=False)
         return True
 
     @api.model_create_multi
@@ -406,6 +408,21 @@ class MrpWorkcenter(models.Model):
         """
         capacity = self.capacity_ids.filtered(lambda p: p.product_id == product_id)
         return capacity.time_start + capacity.time_stop if capacity else self.time_start + self.time_stop
+
+    def _log_block_status(self, loss_reason='', description='', blocking=True):
+        if blocking and not loss_reason:
+            raise ValidationError(_('You must provide `loss_reason` when blocking a workcenter.'))
+
+        title = _('The workcenter has been blocked') if blocking else _('The workcenter has been unblocked')
+
+        message = Markup("<div>") +  title + Markup("<ul>")
+        if blocking:
+            message += Markup("<li>") + _('Reason: ') + loss_reason + Markup("</li>")
+            if description:
+                message += Markup("<li>") + _('Description: ') + description + Markup("</li>")
+            message += Markup("</ul></div>")
+
+        self.message_post(body=message)
 
 
 class MrpWorkcenterTag(models.Model):
@@ -552,6 +569,7 @@ class MrpWorkcenterProductivity(models.Model):
     def button_block(self):
         self.ensure_one()
         self.workcenter_id.order_ids.end_all()
+        self.workcenter_id._log_block_status(self.loss_id.display_name, self.description)
 
     def _loss_type_change(self):
         self.ensure_one()
