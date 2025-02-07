@@ -425,9 +425,19 @@ class HolidaysRequest(models.Model):
                 continue
             hours, days = (0, 0)
             if leave.employee_id:
-                if leave.employee_id.is_flexible and leave.leave_type_request_unit in ['day','half_day']:
-                    duration = leave.date_to - leave.date_from
-                    days = ceil(duration.total_seconds() / (24 * 3600))
+                if leave.employee_id.is_flexible and leave.leave_type_request_unit in ['day', 'half_day']:
+                    if leave.leave_type_request_unit == 'half_day' and leave.request_unit_half:
+                        daily_hours = calendar.get_work_hours_count(
+                            datetime.combine(leave.date_from.date(), time.min),
+                            datetime.combine(leave.date_from.date(), time.max),
+                            False
+                        )
+                        # For a half-day leave, force days = 0.5.
+                        days = 0.5
+                        hours = daily_hours / 2 if daily_hours else 0
+                    else:
+                        duration = leave.date_to - leave.date_from
+                        days = ceil(duration.total_seconds() / (24 * 3600))
                 elif leave.leave_type_request_unit == 'day' and check_leave_type:
                     # list of tuples (day, hours)
                     work_time_per_day_list = work_time_per_day_mapped[(leave.date_from, leave.date_to, calendar)][leave.employee_id.id]
