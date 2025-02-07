@@ -324,8 +324,11 @@ class MailComposer(models.TransientModel):
                 composer.email_from = self.env.user.email_formatted
             # removing template or void from -> fallback on current user as default
             elif not composer.template_id or not composer.email_from:
-                composer.email_from = self.env.user.email_formatted
-                updated_author_id = self.env.user.partner_id.id
+                if self.env.context.get('default_email_from'):
+                    composer.email_from = self.env.context['default_email_from']
+                else:
+                    composer.email_from = self.env.user.email_formatted
+                    updated_author_id = self.env.user.partner_id.id
 
             # Update author. When being in rendered mode: link with rendered
             # email_from or fallback on current user if email does not match.
