@@ -248,9 +248,10 @@ class ProductPricelist(models.Model):
             templates_domain = ('product_tmpl_id', 'in', products.product_tmpl_id.ids)
             products_domain = ('product_id', 'in', products.ids)
 
+        categ_ids = self.env['product.category'].search([('id', 'parent_of', products.categ_id.ids)]).ids
         return [
             ('pricelist_id', '=', self.id),
-            '|', ('categ_id', '=', False), ('categ_id', 'parent_of', products.categ_id.ids),
+            '|', ('categ_id', '=', False), ('categ_id', 'in', categ_ids),
             '|', ('product_tmpl_id', '=', False), templates_domain,
             '|', ('product_id', '=', False), products_domain,
             '|', ('date_start', '=', False), ('date_start', '<=', date),

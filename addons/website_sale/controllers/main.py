@@ -125,7 +125,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             for srch in search.split(" "):
                 subdomains = [
                     [('name', 'ilike', srch)],
-                    [('product_variant_ids.default_code', 'ilike', srch)]
+                    [('variants_default_code', 'ilike', srch)]
                 ]
                 if search_in_description:
                     subdomains.append([('website_description', 'ilike', srch)])
