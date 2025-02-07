@@ -214,7 +214,6 @@ export class DescriptionScreen extends Component {
     _autocompleteSearch(term) {
         const terms = term.toLowerCase().split(/[|,\n]+/);
         const limit = 30;
-        const sortLimit = 7;
         // `this.state.industries` is already sorted by hit count (from IAP).
         // That order should be kept after manipulating the recordset.
         let matches = this.state.industries.filter((val, index) => {
@@ -226,6 +225,8 @@ export class DescriptionScreen extends Component {
                 }
             }
         });
+        // Sort the matches by hit_count_total in order to suggest the most used matches first.
+        matches = matches.sort((match) => match.hit_count_total);
         if (matches.length > limit) {
             // Keep matches with the least number of words so that e.g.
             // "restaurant" remains available even if there are 30 specific
@@ -233,10 +234,6 @@ export class DescriptionScreen extends Component {
             matches = matches.sort((x, y) => x.wordCount - y.wordCount)
                              .slice(0, limit)
                              .sort((x, y) => x.hitCountOrder - y.hitCountOrder);
-        }
-        if (matches.length <= sortLimit) {
-            // Sort results by ascending label if few of them.
-            matches = matches.sort((x, y) => (x.label < y.label ? -1 : x.label > y.label ? 1 : 0));
         }
         return matches.length ? matches : [{ label: term, id: -1 }];
     }
@@ -254,6 +251,17 @@ export class DescriptionScreen extends Component {
         this.checkDescriptionCompletion();
     }
 
+    _setSelectedOnShop(selectedPurpose){
+        if (selectedPurpose === 3){
+            for (const feature_id in this.state.features){
+                if (this.state.features[feature_id]['name'] === "Shop"){
+                    this.state.features[feature_id]['selected'] = 1;
+                    break;
+                }
+            }
+        }
+    }
+
     checkDescriptionCompletion() {
         const {selectedType, selectedPurpose, selectedIndustry} = this.state;
         if (selectedType && selectedPurpose && selectedIndustry) {
@@ -264,6 +272,7 @@ export class DescriptionScreen extends Component {
                     'unknown_industry': selectedIndustry.label,
                 });
             }
+            this._setSelectedOnShop(selectedPurpose)
             this.props.navigate(ROUTES.paletteSelectionScreen);
         }
     }
