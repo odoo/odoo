@@ -466,7 +466,7 @@ export class FormController extends Component {
     }
 
     async beforeLeave() {
-        if (this.model.root.dirty) {
+        if (await this.model.root.isDirty()) {
             return this.save({
                 reload: false,
                 onError: this.onSaveError.bind(this),
