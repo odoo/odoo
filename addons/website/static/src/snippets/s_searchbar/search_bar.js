@@ -127,7 +127,7 @@ export class SearchBar extends Interaction {
                 hasMoreResults: results.length < res["results_count"],
                 search: this.inputEl.value,
                 fuzzySearch: res["fuzzy_search"],
-                widget: this,
+                widget: this.options,
             }, this.el)[0];
         }
         this.hasDropdown = !!res;
