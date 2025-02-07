@@ -254,8 +254,13 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         self.executeConsumptionTriggers(mo_serial)
         self.executeConsumptionTriggers(mo_none)
         self.executeConsumptionTriggers(mo_lot)
-        for mov in mo_all.move_raw_ids:
-            self.assertTrue(mov.picked, "All components should be picked")
+        done_mos = mo_all.filtered(lambda mo: mo.state == 'done')
+        to_close_mos = mo_all - done_mos
+
+        for mov in done_mos.move_raw_ids:
+            self.assertTrue(mov.picked, "All components of a 'done' MO should be picked")
+        for mov in to_close_mos.move_raw_ids:
+            self.assertFalse(mov.picked, "All components of a 'to_close' MO should not be picked")
 
     def test_option_enabled_and_qty_not_available(self):
         """Option enabled, qty not available
@@ -279,11 +284,13 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         self.executeConsumptionTriggers(mo_none)
         self.executeConsumptionTriggers(mo_lot)
 
-        for mov in mo_all.move_raw_ids:
-            if mov.has_tracking == 'none':
-                self.assertTrue(mov.picked, "components should be picked even without no quantity reserved")
-            else:
-                self.assertEqual(mov.product_qty, mov.quantity, "Done quantity shall be equal to To Consume quantity.")
+        done_mos = mo_all.filtered(lambda mo: mo.state == 'done')
+        to_close_mos = mo_all - done_mos
+
+        for mov in done_mos.move_raw_ids:
+            self.assertTrue(mov.picked, "All components of a 'done' MO should be picked")
+        for mov in to_close_mos.move_raw_ids:
+            self.assertFalse(mov.picked, "All components of a 'to_close' MO should not be picked")
 
     def test_option_enabled_and_qty_partially_available(self):
         """Option enabled, qty partially available
@@ -328,7 +335,10 @@ class TestConsumeComponent(TestConsumeComponentCommon):
 
             for mov in mo.move_raw_ids:
                 if mov.has_tracking == "none":
-                    self.assertTrue(mov.picked, "non tracked components should be picked")
+                    if mo.state == 'done':
+                        self.assertTrue(mov.picked, "non tracked components of a 'done' MO should be picked")
+                    else:
+                        self.assertFalse(mov.picked, "non tracked components of a 'to_close' MO should be picked")
                 else:
                     self.assertEqual(mov.product_qty, mov.quantity, "Done quantity shall be equal to To Consume quantity.")
             mo.action_cancel()
@@ -376,25 +386,29 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         with Form(mo) as mo_form:
             mo_form.qty_producing = 1.0
         self.assertRecordValues(mo.move_raw_ids, [
-            {'should_consume_qty': 3.0, 'quantity': 3.0, 'picked': True, 'lot_ids': []},
+            {'should_consume_qty': 3.0, 'quantity': 3.0, 'picked': False, 'lot_ids': []},
             {'should_consume_qty': 2.0, 'quantity': 0.0, 'picked': False, 'lot_ids': []},
             {'should_consume_qty': 1.0, 'quantity': 0.0, 'picked': False, 'lot_ids': []},
         ])
         mo.action_generate_serial()
         self.assertRecordValues(mo.move_raw_ids, [
-            {'should_consume_qty': 3.0, 'quantity': 3.0, 'picked': True, 'lot_ids': []},
+            {'should_consume_qty': 3.0, 'quantity': 3.0, 'picked': False, 'lot_ids': []},
             {'should_consume_qty': 2.0, 'quantity': 0.0, 'picked': False, 'lot_ids': []},
             {'should_consume_qty': 1.0, 'quantity': 0.0, 'picked': False, 'lot_ids': []},
         ])
         self.assertTrue(mo.lot_producing_id)
         mo.picking_ids.button_validate()
         self.assertRecordValues(mo.move_raw_ids, [
-            {'quantity': 3.0, 'picked': True, 'lot_ids': []},
+            {'quantity': 3.0, 'picked': False, 'lot_ids': []},
             {'quantity': 2.0, 'picked': False, 'lot_ids': lot_1.ids},
             {'quantity': 1.0, 'picked': False, 'lot_ids': lot_2.ids},
         ])
-        mo.move_raw_ids.picked = True
         mo.button_mark_done()
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'quantity': 3.0, 'picked': True},
+            {'quantity': 2.0, 'picked': True},
+            {'quantity': 1.0, 'picked': True},
+        ])
 
     def test_automatic_consume_new_added_component(self):
         """
@@ -441,7 +455,7 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         with Form(mo) as mo_form:
             mo_form.qty_producing = 1.0
         self.assertRecordValues(mo.move_raw_ids, [
-            {'should_consume_qty': 1.0, 'quantity': 1.0, 'picked': True},
+            {'should_consume_qty': 1.0, 'quantity': 1.0, 'picked': False},
         ])
         move = self.env['stock.move'].create({
             'name': mo.name,
@@ -454,6 +468,6 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         move.quantity = 1
         move._action_assign()
         self.assertRecordValues(mo.move_raw_ids, [
-            {'should_consume_qty': 1.0, 'quantity': 1.0, 'picked': True},
+            {'should_consume_qty': 1.0, 'quantity': 1.0, 'picked': False},
             {'should_consume_qty': 1.0, 'quantity': 1.0, 'picked': True},
         ])

@@ -271,8 +271,8 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         self.assertEqual(mo.procurement_group_id.mrp_production_ids.lot_producing_id.mapped('name'), ["sn#5", "sn#6", "sn#7"])
         # check the component quantity
         self.assertRecordValues(mo.procurement_group_id.mrp_production_ids.move_raw_ids, [
-            {'quantity': 1.0, 'picked': True},
-            {'quantity': 1.0, 'picked': True},
+            {'quantity': 1.0, 'picked': False},
+            {'quantity': 1.0, 'picked': False},
             {'quantity': 1.0, 'picked': False},
             {'quantity': 0.0, 'picked': False},
             {'quantity': 1.0, 'picked': False},

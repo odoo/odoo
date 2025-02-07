@@ -198,7 +198,7 @@ class TestManualConsumption(TestMrpCommon):
         move_auto, move_manual = get_moves(mo)
         self.assertEqual(move_auto.manual_consumption, False)
         self.assertEqual(move_auto.quantity, 5)
-        self.assertTrue(move_auto.picked)
+        self.assertFalse(move_auto.picked)
         self.assertEqual(move_manual.manual_consumption, True)
         self.assertEqual(move_manual.quantity, 5)
         self.assertFalse(move_manual.picked)
@@ -273,4 +273,4 @@ class TestManualConsumption(TestMrpCommon):
             fmo.qty_producing = 2.0
         self.assertEqual(mo.move_raw_ids.mapped('manual_consumption'), [True, False])
         self.assertEqual(components[0].stock_quant_ids.reserved_quantity, 3.0)
-        self.assertRecordValues(mo.move_raw_ids, [{'quantity': 3.0, 'picked': True}, {'quantity': 2.0, 'picked': True}])
+        self.assertRecordValues(mo.move_raw_ids, [{'quantity': 3.0, 'picked': True}, {'quantity': 2.0, 'picked': False}])
