@@ -19,48 +19,10 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
 import { useSetupAction } from "@web/search/action_hook";
-import { AnchorPlugin } from "./core/plugins/anchor/anchor_plugin";
-import { BuilderActionsPlugin } from "./core/plugins/builder_actions_plugin";
-import { BuilderOptionsPlugin } from "./core/plugins/builder_options_plugin";
-import { BuilderOverlayPlugin } from "./core/plugins/builder_overlay/builder_overlay_plugin";
-import { ClonePlugin } from "./core/plugins/clone/clone_plugin";
-import { DropZonePlugin } from "./core/plugins/drop_zone_plugin";
-import { DropZoneSelectorPlugin } from "./core/plugins/dropzone_selector_plugin";
-import { GridLayoutPlugin } from "./core/plugins/grid_layout/grid_layout_plugin";
-import { HandleDirtyElementPlugin } from "./core/plugins/handle_dirty_element_plugin";
-import { MediaWebsitePlugin } from "./core/plugins/media_website_plugin";
-import { MovePlugin } from "./core/plugins/move/move_plugin";
-import { OperationPlugin } from "./core/plugins/operation_plugin";
-import { OverlayButtonsPlugin } from "./core/plugins/overlay_buttons/overlay_buttons_plugin";
-import { RemovePlugin } from "./core/plugins/remove/remove_plugin";
-import { ReplacePlugin } from "./core/plugins/replace/replace_plugin";
-import { SetupEditorPlugin } from "./core/plugins/setup_editor_plugin";
-import { SnippetLifecyclePlugin } from "./core/plugins/snippet_lifecycle_plugin";
-import { VisibilityPlugin } from "./core/plugins/visibility_plugin";
 import { InvisibleElementsPanel } from "./sidebar/invisible_elements_panel";
 import { BlockTab } from "./sidebar/block_tab";
 import { CustomizeTab } from "./sidebar/customize_tab";
-
-const BUILDER_PLUGINS = [
-    BuilderOptionsPlugin,
-    BuilderActionsPlugin,
-    OperationPlugin,
-    BuilderOverlayPlugin,
-    OverlayButtonsPlugin,
-    MovePlugin,
-    GridLayoutPlugin,
-    ReplacePlugin,
-    RemovePlugin,
-    ClonePlugin,
-    AnchorPlugin,
-    DropZonePlugin,
-    MediaWebsitePlugin,
-    SetupEditorPlugin,
-    HandleDirtyElementPlugin,
-    SnippetLifecyclePlugin,
-    VisibilityPlugin,
-    DropZoneSelectorPlugin,
-];
+import { CORE_PLUGINS } from "./core/core_plugins";
 
 export class Builder extends Component {
     static template = "html_builder.Builder";
@@ -100,7 +62,7 @@ export class Builder extends Component {
         const websitePlugins = registry.category("website-plugins").getAll();
         this.editor = new Editor(
             {
-                Plugins: [...MAIN_PLUGINS, ...BUILDER_PLUGINS, ...websitePlugins],
+                Plugins: [...MAIN_PLUGINS, ...CORE_PLUGINS, ...websitePlugins],
                 onChange: ({ isPreviewing }) => {
                     this.state.canUndo = this.editor.shared.history.canUndo();
                     this.state.canRedo = this.editor.shared.history.canRedo();

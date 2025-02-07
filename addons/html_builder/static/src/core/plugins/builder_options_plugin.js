@@ -2,6 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { uniqueId } from "@web/core/utils/functions";
 import { isRemovable } from "./remove/remove_plugin";
 import { canHaveAnchor } from "./anchor/anchor_plugin";
+import { getElementsWithOption } from "@html_builder/utils/utils";
 
 export class BuilderOptionsPlugin extends Plugin {
     static id = "builder-options";
@@ -9,6 +10,7 @@ export class BuilderOptionsPlugin extends Plugin {
     static shared = ["getContainers", "updateContainers"];
     resources = {
         step_added_handlers: () => this.updateContainers(),
+        clean_for_save_handlers: this.cleanForSave.bind(this),
     };
 
     setup() {
@@ -110,6 +112,18 @@ export class BuilderOptionsPlugin extends Plugin {
             }
         }
         return false;
+    }
+
+    cleanForSave({ root }) {
+        for (const option of this.builderOptions) {
+            const { selector, exclude, cleanForSave } = option;
+            if (!cleanForSave) {
+                continue;
+            }
+            for (const el of getElementsWithOption(root, selector, exclude)) {
+                cleanForSave(el);
+            }
+        }
     }
 }
 
