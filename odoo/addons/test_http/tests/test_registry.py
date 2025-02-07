@@ -9,6 +9,7 @@ import odoo
 from odoo.modules.registry import Registry
 from odoo.sql_db import close_db, db_connect
 from odoo.tests import HOST, BaseCase, Like, get_db_name, tagged
+from odoo.tests.common import HOST
 from odoo.tools import lazy_property, mute_logger, SQL
 
 
@@ -79,7 +80,7 @@ class TestHttpRegistry(BaseCase):
         session.update(odoo.http.get_default_session(), db=db or get_db_name())
         session.context['lang'] = odoo.http.DEFAULT_LANG
         odoo.http.root.session_store.save(session)
-        self.opener.cookies['session_id'] = session.sid
+        self.opener.cookies.set("session_id", session.sid, domain=HOST)
         return session
 
     def url_open(self, path, *, allow_redirects=False):

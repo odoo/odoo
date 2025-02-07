@@ -231,6 +231,7 @@ DEFAULT_LANG = 'en_US'
 def get_default_session():
     return {
         'context': {},  # 'lang': request.default_lang()  # must be set at runtime
+        'create_time': time.time(),
         'db': None,
         'debug': '',
         'login': None,
@@ -294,6 +295,20 @@ if parse_version(importlib.metadata.version('werkzeug')) >= parse_version('2.0.2
 # server-side as well with a threshold that can be set via an optional
 # config parameter `sessions.max_inactivity_seconds` (default: SESSION_LIFETIME)
 SESSION_LIFETIME = 60 * 60 * 24 * 7
+
+# The default duration (8h) before a session is rotated, changing the
+# session id (also on the cookie) but keeping the same content. Can be
+# set via an optional config parameter `sessions.rotation_seconds`.
+SESSION_ROTATION = 60 * 60 * 8
+
+# After a session is rotated, the session should be kept for a couple of
+# seconds to account for network delay between multiple requests which are
+# made at the same time and all use the same old cookie.
+SESSION_DELETION_TIMER = 15
+
+# The amount of bytes of the session that will remain static and can be used
+# for calculating the csrf token and be stored inside the database.
+STORED_SESSION_BYTES = 42
 
 # The cache duration for static content from the filesystem, one week.
 STATIC_CACHE = 60 * 60 * 24 * 7
@@ -399,6 +414,20 @@ def dispatch_rpc(service_name, method, params):
 
         dispatch = rpc_dispatchers[service_name]
         return dispatch(method, params)
+
+
+def get_session_rotation_interval(request):
+    if not request.db or not request.env or request.env.cr._closed:
+        return SESSION_ROTATION
+
+    ICP = request.env['ir.config_parameter'].sudo()
+    rotation_time = ICP.get_param('sessions.rotation_seconds', SESSION_ROTATION)
+
+    try:
+        return int(rotation_time)
+    except ValueError:
+        _logger.warning("Invalid value for 'sessions.rotation_seconds', using default value.")
+        return SESSION_ROTATION
 
 
 def get_session_max_inactivity(env):
@@ -917,6 +946,18 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
                 os.mkdir(dirname, 0o0755)
         super().save(session)
 
+    def delete_old_sessions(self, session):
+        if 'previous_sid' in session:
+            if session['create_time'] + SESSION_DELETION_TIMER < time.time():
+                self.delete_old_sessions(super().get(session['previous_sid']))
+                fn = self.get_session_filename(session['previous_sid'])
+                try:
+                    os.unlink(fn)
+                except OSError:
+                    pass
+                del session['previous_sid']
+                self.save(session)
+
     def get(self, sid):
         # retro compatibility
         old_path = super().get_session_filename(sid)
@@ -928,14 +969,33 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
                     os.mkdir(dirname, 0o0755)
             with contextlib.suppress(OSError):
                 os.rename(old_path, session_path)
-        return super().get(sid)
+        session = super().get(sid)
+        self.delete_old_sessions(session)
+        return session
 
-    def rotate(self, session, env):
-        self.delete(session)
-        session.sid = self.generate_key()
+    def rotate(self, session, env, soft=False):
+        if soft:
+            # Reference old session to new one
+            static = session.sid[:STORED_SESSION_BYTES]
+            previous_sid = session.sid
+            next_sid = static + self.generate_key()[STORED_SESSION_BYTES:]
+            if 'next_sid' in session:
+                next_sid = session['next_sid']
+            session['next_sid'] = next_sid
+            session['deletion_time'] = time.time() + SESSION_DELETION_TIMER
+            self.save(session)
+            # Now prepare the new session
+            session.sid = next_sid
+            session['previous_sid'] = previous_sid
+            del session['deletion_time']
+            del session['next_sid']
+        else:
+            self.delete(session)
+            session.sid = self.generate_key()
         if session.uid and env:
             session.session_token = security.compute_session_token(session, env)
         session.should_rotate = False
+        session['create_time'] = time.time()
         self.save(session)
 
     def vacuum(self, max_lifetime=SESSION_LIFETIME):
@@ -974,7 +1034,7 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
             # Avoid to remove a session if less than 42 chars.
             # This prevent malicious user to delete sessions from a different
             # database by specifying a ``res.device.log`` with only 2 characters.
-            if len(identifier) < 42:
+            if len(identifier) < STORED_SESSION_BYTES:
                 continue
             normalized_path = os.path.normpath(os.path.join(self.path, identifier[:2], identifier + '*'))
             if normalized_path.startswith(self.path):
@@ -1637,7 +1697,7 @@ class Request:
 
         # if no `time_limit` => distant 1y expiry so max_ts acts as salt, e.g. vs BREACH
         max_ts = int(time.time() + (time_limit or CSRF_TOKEN_SALT))
-        msg = f'{self.session.sid}{max_ts}'.encode('utf-8')
+        msg = f'{self.session.sid[:STORED_SESSION_BYTES]}{max_ts}'.encode('utf-8')
 
         hm = hmac.new(secret.encode('ascii'), msg, hashlib.sha1).hexdigest()
         return f'{hm}o{max_ts}'
@@ -1658,7 +1718,7 @@ class Request:
             raise ValueError("CSRF protection requires a configured database secret")
 
         hm, _, max_ts = csrf.rpartition('o')
-        msg = f'{self.session.sid}{max_ts}'.encode('utf-8')
+        msg = f'{self.session.sid[:STORED_SESSION_BYTES]}{max_ts}'.encode('utf-8')
 
         if max_ts:
             try:
@@ -1854,6 +1914,8 @@ class Request:
 
         if sess.should_rotate:
             root.session_store.rotate(sess, self.env)  # it saves
+        elif sess.uid and time.time() >= sess['create_time'] + get_session_rotation_interval(self):
+            root.session_store.rotate(sess, self.env, True)
         elif sess.is_dirty:
             root.session_store.save(sess)
 
