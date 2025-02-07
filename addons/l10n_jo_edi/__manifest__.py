@@ -10,7 +10,6 @@
     """,
     'depends': ['account_edi_ubl_cii', 'l10n_jo'],
     'data': [
-        'data/ubl_jo_templates.xml',
         'views/account_move_views.xml',
         'views/report_invoice.xml',
         'views/res_config_settings_views.xml',

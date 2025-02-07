@@ -1,6 +1,4 @@
 from odoo import _, models, tools
-from markupsafe import Markup
-from odoo.tools import html2plaintext
 
 DANISH_NATIONAL_IT_AND_TELECOM_AGENCY_ID = '320'
 
@@ -29,7 +27,6 @@ UBL_TO_OIOUBL_TAX_CATEGORY_ID_MAPPING = {
     'L': 'ZeroRated',
     'M': 'ZeroRated',
 }
-TAX_POSSIBLE_VALUES = set(UBL_TO_OIOUBL_TAX_CATEGORY_ID_MAPPING.values())
 EAS_SCHEME_ID_MAPPING = {
     '0007': 'SE:ORGNR',
     '0009': 'FR:SIRET',
@@ -113,233 +110,6 @@ class AccountEdiXmlOioubl_201(models.AbstractModel):
     def _export_invoice_filename(self, invoice):
         return f"{invoice.name.replace('/', '_')}_oioubl_201.xml"
 
-    def _export_invoice_ecosio_schematrons(self):
-        return {
-            'invoice': 'org.oasis-open:invoice:2.0',
-            'credit_note': 'org.oasis-open:creditnote:2.0',
-        }
-
-    def _export_invoice_vals(self, invoice):
-        # EXTENDS account.edi.xml.ubl_20
-        vals = super()._export_invoice_vals(invoice)
-        vals['PaymentTermsType_template'] = 'l10n_dk_oioubl.oioubl_PaymentTermsType'
-        if self.env.ref('l10n_dk_oioubl.oioubl_PaymentMeansType', raise_if_not_found=False):
-            vals['PaymentMeansType_template'] = 'l10n_dk_oioubl.oioubl_PaymentMeansType'
-        else:
-            module = self.env['ir.module.module']._get('l10n_dk_oioubl')
-            module_url = f"/web#id={module.id}&model={module._name}&view_type=form"
-            message = _("The payment method in the generated XML may be incorrect. Please update the following module ")
-            message += Markup("<a href='%s' style='color:#017e84; font-weight: bold;'>(%s)</a>") % (module_url, _("Denmark E-Invoicing"))
-            invoice.message_post(body=message)
-        vals['vals'].update({
-            'customization_id': 'OIOUBL-2.01',
-            # ProfileID is the property that define which documents the company can send and receive
-            # 'Procurement-BilSim-1.0' is the simplest one: invoice and bill
-            # https://www.oioubl.info/documents/en/en/Guidelines/OIOUBL_GUIDE_PROFILES.pdf
-            'profile_id': 'Procurement-BilSim-1.0',
-            'profile_id_attrs': {
-                'schemeID': 'urn:oioubl:id:profileid-1.6',
-                'schemeAgencyID': DANISH_NATIONAL_IT_AND_TELECOM_AGENCY_ID,
-            }
-        })
-        vals['vals'].setdefault('document_type_code_attrs', {}).update({
-            'listID': 'urn:oioubl:codelist:invoicetypecode-1.2',
-            'listAgencyID': DANISH_NATIONAL_IT_AND_TELECOM_AGENCY_ID,
-        })
-
-        return vals
-
-    def _get_partner_party_vals(self, partner, role):
-        # EXTENDS account.edi.xml.ubl_20
-        """ The scheme_id needs to be in letters and the VAT number (if there is one) should be preceded by 2 letters"""
-        vals = super()._get_partner_party_vals(partner, role)
-        if partner.peppol_endpoint and partner.peppol_eas in EAS_SCHEME_ID_MAPPING:
-            # if we don't know the mapping with real names for the Peppol Endpoint, fallback on VAT simply
-            endpoint_id = partner.peppol_endpoint
-            scheme_id = EAS_SCHEME_ID_MAPPING[partner.peppol_eas]
-            if (scheme_id in ('DK:CVR', 'FR:SIRET') or scheme_id[3:] == 'VAT') and endpoint_id.isnumeric():
-                endpoint_id = scheme_id[:2] + endpoint_id
-        else:
-            endpoint_id = format_vat_number(partner)
-            country_code = endpoint_id[:2]
-            match country_code:
-                case 'DK':
-                    scheme_id = 'DK:CVR'
-                case 'FR':
-                    scheme_id = 'FR:SIRET'
-                    # SIRET is the french company registry
-                    endpoint_id = (partner.company_registry or "").replace(" ", "")
-                case _:
-                    scheme_id = f'{country_code}:VAT'
-
-        vals.update({
-            # list of possible endpointID available at
-            # https://www.oioubl.info/documents/en/en/Guidelines/OIOUBL_GUIDE_ENDPOINT.pdf
-            'endpoint_id': endpoint_id,
-            'endpoint_id_attrs': {'schemeID': scheme_id},
-        })
-        for party_tax_scheme in vals['party_tax_scheme_vals']:
-            # the doc says it could be empty but the schematron says otherwise
-            # https://www.oioubl.info/Classes/en/TaxScheme.html
-            party_tax_scheme.update({
-                'tax_scheme_vals': {
-                    'id': 'VAT',
-                    'id_attrs': {'schemeID': 'urn:oioubl:id:taxschemeid-1.5'},
-                    'name': 'VAT',
-                },
-            })
-        return vals
-
-    def _get_partner_address_vals(self, partner):
-        # EXTENDS account.edi.xml.ubl_20
-        vals = super()._get_partner_address_vals(partner)
-        # https://www.oioubl.info/Classes/en/Address.html
-        address = tools.street_split(partner.street)
-        street_name = address.get('street_name')
-        building_number = address.get('street_number')
-        vals.update({
-            # could be 'UN/CEFACT codeliste 3477' instead of StructuredDK' for partner out of DK
-            # not implemented yet because `StructuredDK` seems more than enough
-            'address_format_code': 'StructuredDK',
-            'address_format_code_attrs': {
-                'listAgencyID': DANISH_NATIONAL_IT_AND_TELECOM_AGENCY_ID,
-                'listID': 'urn:oioubl:codelist:addressformatcode-1.1',
-            },
-            'street_name': street_name,
-            'building_number': building_number,
-        })
-        return vals
-
-    def _get_partner_party_tax_scheme_vals_list(self, partner, role):
-        # EXTENDS account.edi.xml.ubl_20
-        vals_list = super()._get_partner_party_tax_scheme_vals_list(partner, role)
-        vat = format_vat_number(partner)
-        schemeID = 'DK:SE' if vat[:2] == 'DK' else 'ZZZ'
-        for vals in vals_list:
-            if partner.vat:
-                # SE is the danish vat number
-                # DK:SE indicates we're using it and 'ZZZ' is for international number
-                # https://www.oioubl.info/Codelists/en/urn_oioubl_scheme_partytaxschemecompanyid-1.1.html
-                vals.update({
-                    'company_id_attrs': {'schemeID': schemeID},
-                    'company_id': vat,
-                })
-
-        return vals_list
-
-    def _get_partner_party_legal_entity_vals_list(self, partner):
-        # EXTENDS account.edi.xml.ubl_20
-        vals_list = super()._get_partner_party_legal_entity_vals_list(partner)
-        vat = format_vat_number(partner)
-        schemeID = 'DK:CVR' if vat[:2] == 'DK' else 'ZZZ'
-        for vals in vals_list:
-            vals.update({
-                'company_id': vat,
-                'company_id_attrs': {'schemeID': schemeID},
-            })
-        return vals_list
-
-    def _get_invoice_payment_means_vals_list(self, invoice):
-        # EXTENDS account.edi.xml.ubl_20
-        vals_list = super()._get_invoice_payment_means_vals_list(invoice)
-        for vals in vals_list:
-            # Hardcoded 'unknown' for now
-            # Later on, it would be nice to create a dynamically selected template that would depends on the payment means
-            vals['payment_means_code'] = PAYMENT_MEANS_CODE['unknown']
-
-        return vals_list
-
-    def _get_invoice_tax_totals_vals_list(self, invoice, taxes_vals):
-        # EXTENDS account.edi.xml.ubl_20
-        vals_list = super()._get_invoice_tax_totals_vals_list(invoice, taxes_vals)
-        for tax_total_vals in vals_list:
-            for subtotal_vals in tax_total_vals.get('tax_subtotal_vals', []):
-                # https://www.oioubl.info/Classes/en/TaxSubtotal.html
-                # No 'percent' node in OIOUBL
-                subtotal_vals.pop('percent', None)
-
-                # TaxCategory https://www.oioubl.info/Classes/en/TaxCategory.html
-                subtotal_vals['tax_category_vals']['id_attrs'] = {
-                    'schemeID': 'urn:oioubl:id:taxcategoryid-1.3',
-                    'schemeAgencyID': DANISH_NATIONAL_IT_AND_TELECOM_AGENCY_ID,
-                }
-
-                # TaxCategory id list: https://www.oioubl.info/codelists/en/urn_oioubl_id_taxcategoryid-1.1.html
-                # The condition prevents the value to be mapped again when the methods is run several time
-                if subtotal_vals['tax_category_vals']['id'] not in TAX_POSSIBLE_VALUES:
-                    subtotal_vals['tax_category_vals']['id'] = UBL_TO_OIOUBL_TAX_CATEGORY_ID_MAPPING.get(subtotal_vals['tax_category_vals']['id'])
-
-                subtotal_vals['tax_category_vals']['tax_scheme_vals']['name'] = 'VAT'
-                subtotal_vals['tax_category_vals']['tax_scheme_vals']['id_attrs'] = {'schemeID': 'urn:oioubl:id:taxschemeid-1.5'}
-
-                # /Invoice[1]/cac:TaxTotal[1]/cac:TaxSubtotal[1]/cac:TaxCategory[1]
-                # [W-LIB230] Name should only be used within NES profiles
-                # (cbc:Name != '') and not(contains(/doc:Invoice/cbc:ProfileID, 'nesubl.eu'))
-                if 'name' in subtotal_vals['tax_category_vals']:
-                    del subtotal_vals['tax_category_vals']['name']
-
-        return vals_list
-
-    def _get_invoice_monetary_total_vals(self, invoice, taxes_vals, line_extension_amount, allowance_total_amount, charge_total_amount):
-        # EXTENDS account.edi.xml.ubl_20
-        vals = super()._get_invoice_monetary_total_vals(invoice, taxes_vals, line_extension_amount, allowance_total_amount, charge_total_amount)
-        # In OIOUBL context, tax_exclusive_amount means "tax only"
-        vals['tax_exclusive_amount'] = taxes_vals['tax_amount_currency']
-        if invoice.currency_id.is_zero(vals['prepaid_amount']):
-            del vals['prepaid_amount']
-        return vals
-
-    def _get_invoice_payment_terms_vals_list(self, invoice):
-        # OVERRIDES 'account_edi_ubl_cii'
-        if not invoice.invoice_payment_term_id:
-            return []
-
-        sign = 1 if invoice.is_inbound(include_receipts=True) else -1
-        return [
-            {
-                'id': line.id,
-                'amount': sign * line.amount_currency,
-                'currency_name': line.currency_id.name,
-                'currency_dp': self._get_currency_decimal_places(line.currency_id),
-                'note_vals': [{'note_vals': [{'note': html2plaintext(invoice.invoice_payment_term_id.note)}]}],
-                'settlement_period': {
-                    'start_date': invoice.invoice_date,
-                    'end_date': line.date_maturity,
-                }
-            }
-            for line in invoice.line_ids.filtered(lambda line: line.display_type == 'payment_term').sorted('date_maturity')
-        ]
-
-    def _get_tax_category_list(self, customer, supplier, taxes):
-        # EXTENDS account.edi.common
-        vals_list = super()._get_tax_category_list(customer, supplier, taxes)
-        for vals in vals_list:
-            # TaxCategory https://www.oioubl.info/Classes/en/TaxCategory.html
-            vals['id'] = UBL_TO_OIOUBL_TAX_CATEGORY_ID_MAPPING.get(vals['id'])
-            vals['id_attrs'] = {
-                'schemeID': 'urn:oioubl:id:taxcategoryid-1.3',
-                'schemeAgencyID': DANISH_NATIONAL_IT_AND_TELECOM_AGENCY_ID,
-            }
-            vals['tax_scheme_vals']['id_attrs'] = {'schemeID': 'urn:oioubl:id:taxschemeid-1.5'}
-            vals['tax_scheme_vals']['name'] = 'VAT'
-            # OIOUBL can't contain name for category
-            # /Invoice[1]/cac:InvoiceLine[1]/cac:Item[1]/cac:ClassifiedTaxCategory[1]
-            # [W-LIB230] Name should only be used within NES profiles
-            # (cbc:Name != '') and not(contains(/doc:Invoice/cbc:ProfileID, 'nesubl.eu'))
-            if 'name' in vals:
-                del vals['name']
-
-        return vals_list
-
-    def _get_document_type_code_vals(self, invoice, invoice_data):
-        # EXTENDS 'account_edi_ubl_cii
-        # http://www.datypic.com/sc/ubl20/e-cbc_DocumentTypeCode.html
-        vals = super()._get_document_type_code_vals(invoice, invoice_data)
-        vals['value'] = "380" if invoice.move_type == 'out_invoice' else "381"
-        vals['attrs']['listAgencyID'] = "6"
-        vals['attrs']['listID'] = "UN/ECE 1001"
-        return vals
-
     def _export_invoice_constraints(self, invoice, vals):
         # EXTENDS account.edi.xml.ubl_20
         constraints = super()._export_invoice_constraints(invoice, vals)
@@ -360,3 +130,225 @@ class AccountEdiXmlOioubl_201(models.AbstractModel):
     def _get_currency_decimal_places(self, currency_id):
         # OIOUBL needs the data to be formated to 2 decimals
         return 2
+
+    # -------------------------------------------------------------------------
+    # EXPORT: Templates
+    # -------------------------------------------------------------------------
+
+    def _add_invoice_header_nodes(self, document_node, vals):
+        super()._add_invoice_header_nodes(document_node, vals)
+
+        document_node.update({
+            'cbc:CustomizationID': {'_text': 'OIOUBL-2.01'},
+
+            # ProfileID is the property that defines which documents the company can send and receive
+            # 'Procurement-BilSim-1.0' is the simplest one: invoice and bill
+            # https://www.oioubl.info/documents/en/en/Guidelines/OIOUBL_GUIDE_PROFILES.pdf
+            'cbc:ProfileID': {
+                '_text': 'Procurement-BilSim-1.0',
+                'schemeID': 'urn:oioubl:id:profileid-1.6',
+                'schemeAgencyID': DANISH_NATIONAL_IT_AND_TELECOM_AGENCY_ID,
+            },
+
+            'cbc:InvoiceTypeCode': {
+                '_text': 380,
+                'listID': 'urn:oioubl:codelist:invoicetypecode-1.2',
+                'listAgencyID': DANISH_NATIONAL_IT_AND_TELECOM_AGENCY_ID,
+            } if vals['document_type'] == 'invoice' else None,
+        })
+
+    def _add_invoice_payment_means_nodes(self, document_node, vals):
+        # EXTENDS account.edi.xml.ubl_20
+        super()._add_invoice_payment_means_nodes(document_node, vals)
+        payment_means_node = document_node['cac:PaymentMeans']
+
+        # Hardcoded 'unknown' for now
+        # Later on, it would be nice to create a dynamically selected template that would depends on the payment means
+        payment_means_node['cbc:PaymentMeansCode']['_text'] = PAYMENT_MEANS_CODE['unknown']
+
+        invoice = vals['invoice']
+        supplier = vals['supplier']
+        if (
+            invoice.partner_bank_id in supplier.bank_ids
+            and payment_means_node.get('cac:PayeeFinancialAccount')
+            and payment_means_node['cac:PayeeFinancialAccount'].get('cac:FinancialInstitutionBranch')
+            and payment_means_node['cac:PayeeFinancialAccount']['cac:FinancialInstitutionBranch'].get('cac:FinancialInstitution')
+        ):
+            payment_means_node['cac:PayeeFinancialAccount']['cac:FinancialInstitutionBranch']['cac:FinancialInstitution']['cac:Address'] = None
+
+    def _add_invoice_payment_terms_nodes(self, document_node, vals):
+        # OVERRIDES 'account_edi_ubl_cii'
+        invoice = vals['invoice']
+        if not invoice.invoice_payment_term_id:
+            return
+
+        sign = 1 if invoice.is_inbound(include_receipts=True) else -1
+        document_node['cac:PaymentTerms'] = [
+            {
+                'cbc:ID': {'_text': line.id},
+                'cbc:Amount': {
+                    '_text': self.format_float(sign * line.amount_currency, self._get_currency_decimal_places(line.currency_id)),
+                    'currencyID': line.currency_id.name
+                },
+                'cac:SettlementPeriod': {
+                    'cbc:StartDate': {'_text': invoice.invoice_date},
+                    'cbc:EndDate': {'_text': line.date_maturity},
+                }
+            }
+            for line in invoice.line_ids.filtered(lambda line: line.display_type == 'payment_term').sorted('date_maturity')
+        ]
+
+    def _add_invoice_monetary_total_nodes(self, document_node, vals):
+        super()._add_invoice_monetary_total_nodes(document_node, vals)
+        monetary_total_tag = 'cac:LegalMonetaryTotal' if vals['document_type'] in {'invoice', 'credit_note'} else 'cac:RequestedMonetaryTotal'
+        monetary_total_node = document_node[monetary_total_tag]
+
+        # In OIOUBL context, tax_exclusive_amount means "tax only"
+        tax_exclusive_amount = monetary_total_node['cbc:TaxInclusiveAmount']['_text'] - monetary_total_node['cbc:TaxExclusiveAmount']['_text']
+        monetary_total_node['cbc:TaxExclusiveAmount'] = {
+            '_text': self.format_float(tax_exclusive_amount, vals['currency_dp']),
+            'currencyID': vals['currency_name'],
+        }
+        monetary_total_node['cbc:PrepaidAmount'] = None
+
+    def _get_address_node(self, vals):
+        # https://www.oioubl.info/Classes/en/Address.html
+        partner = vals['partner']
+        model = vals.get('model', 'res.partner')
+        country = partner['country' if model == 'res.bank' else 'country_id']
+        state = partner['state' if model == 'res.bank' else 'state_id']
+        address = tools.street_split(partner.street)
+
+        return {
+            'cbc:AddressFormatCode': {
+                '_text': 'StructuredDK',
+                'listAgencyID': DANISH_NATIONAL_IT_AND_TELECOM_AGENCY_ID,
+                'listID': 'urn:oioubl:codelist:addressformatcode-1.1',
+            },
+            'cbc:StreetName': {'_text': address.get('street_name')},
+            'cbc:BuildingNumber': {'_text': address.get('street_number')},
+            'cbc:AdditionalStreetName': {'_text': partner.street2},
+            'cbc:CityName': {'_text': partner.city},
+            'cbc:PostalZone': {'_text': partner.zip},
+            'cbc:CountrySubentity': {'_text': state.name},
+            'cbc:CountrySubentityCode': {'_text': state.code},
+            'cac:Country': {
+                'cbc:IdentificationCode': {'_text': country.code},
+                'cbc:Name': {'_text': country.name},
+            },
+        }
+
+    def _get_party_node(self, vals):
+        partner = vals['partner']
+        commercial_partner = partner.commercial_partner_id
+        vat = format_vat_number(commercial_partner)
+
+        if partner.peppol_endpoint and partner.peppol_eas in EAS_SCHEME_ID_MAPPING:
+            # if we don't know the mapping with real names for the Peppol Endpoint, fallback on VAT simply
+            endpoint_id = partner.peppol_endpoint
+            scheme_id = EAS_SCHEME_ID_MAPPING[partner.peppol_eas]
+            if (scheme_id in ('DK:CVR', 'FR:SIRET') or scheme_id[3:] == 'VAT') and endpoint_id.isnumeric():
+                endpoint_id = scheme_id[:2] + endpoint_id
+        else:
+            endpoint_id = format_vat_number(partner)
+            country_code = endpoint_id[:2]
+            match country_code:
+                case 'DK':
+                    scheme_id = 'DK:CVR'
+                case 'FR':
+                    scheme_id = 'FR:SIRET'
+                    # SIRET is the french company registry
+                    endpoint_id = (partner.company_registry or "").replace(" ", "")
+                case _:
+                    scheme_id = f'{country_code}:VAT'
+
+        return {
+            'cbc:EndpointID': {
+                # list of possible endpointID available at
+                # https://www.oioubl.info/documents/en/en/Guidelines/OIOUBL_GUIDE_ENDPOINT.pdf
+                '_text': endpoint_id,
+                'schemeID': scheme_id,
+            },
+            'cbc:IndustryClassificationCode': None,
+            'cac:PartyIdentification': [
+                {
+                    'cbc:ID': {
+                        '_text': party_vals.get('id'),
+                        'schemeName': party_vals.get('id_attrs', {}).get('schemeName'),
+                        'schemeID': party_vals.get('id_attrs', {}).get('schemeID'),
+                    }
+                }
+                for party_vals in vals.get('party_identification_vals', [])
+            ],
+            'cac:PartyName': {
+                'cbc:Name': {'_text': partner.display_name}
+            },
+            'cac:PostalAddress': self._get_address_node(vals),
+            'cac:PartyTaxScheme': {
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': vat,
+                    # SE is the danish vat number
+                    # DK:SE indicates we're using it and 'ZZZ' is for international number
+                    # https://www.oioubl.info/Codelists/en/urn_oioubl_scheme_partytaxschemecompanyid-1.1.html
+                    'schemeID': 'DK:SE' if vat[:2] == 'DK' else 'ZZZ',
+                },
+                'cac:RegistrationAddress': self._get_address_node({'partner': commercial_partner}),
+                'cac:TaxScheme': {
+                    # [BR-CO-09] if the PartyTaxScheme/TaxScheme/ID == 'VAT', CompanyID must start with a country code prefix.
+                    # In some countries however, the CompanyID can be with or without country code prefix and still be perfectly
+                    # valid (RO, HU, non-EU countries).
+                    # We have to handle their cases by changing the TaxScheme/ID to 'something other than VAT',
+                    # preventing the trigger of the rule.
+                    'cbc:ID': {
+                        '_text': 'VAT',
+                        # the doc says it could be empty but the schematron says otherwise
+                        # https://www.oioubl.info/Classes/en/TaxScheme.html
+                        'schemeID': 'urn:oioubl:id:taxschemeid-1.5',
+                    },
+                    'cbc:Name': {'_text': 'VAT'},
+                },
+            },
+            'cac:PartyLegalEntity': {
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': vat,
+                    'schemeID': 'DK:CVR' if vat[:2] == 'DK' else 'ZZZ',
+                },
+                'cac:RegistrationAddress': self._get_address_node({'partner': commercial_partner}),
+            },
+            'cac:Contact': {
+                'cbc:ID': {'_text': partner.id},
+                'cbc:Name': {'_text': partner.name},
+                'cbc:Telephone': {'_text': partner.phone},
+                'cbc:ElectronicMail': {'_text': partner.email},
+            }
+        }
+
+    def _get_document_type_code_node(self, invoice, invoice_data):
+        # http://www.datypic.com/sc/ubl20/e-cbc_DocumentTypeCode.html
+        return {
+            '_text': '380' if invoice.move_type == 'out_invoice' else '381',
+            'listAgencyID': '6',
+            'listID': 'UN/ECE 1001',
+        }
+
+    def _get_tax_category_node(self, vals):
+        # TaxCategory id list: https://www.oioubl.info/codelists/en/urn_oioubl_id_taxcategoryid-1.1.html
+        grouping_key = vals['grouping_key']
+        grouping_key = {**grouping_key, 'tax_category_code': UBL_TO_OIOUBL_TAX_CATEGORY_ID_MAPPING.get(grouping_key['tax_category_code'])}
+        tax_category_node = super()._get_tax_category_node({**vals, 'grouping_key': grouping_key})
+
+        # TaxCategory https://www.oioubl.info/Classes/en/TaxCategory.html
+        tax_category_node['cbc:ID']['schemeID'] = 'urn:oioubl:id:taxcategoryid-1.3'
+        tax_category_node['cbc:ID']['schemeAgencyID'] = DANISH_NATIONAL_IT_AND_TELECOM_AGENCY_ID
+
+        tax_category_node['cac:TaxScheme']['cbc:ID']['schemeID'] = 'urn:oioubl:id:taxschemeid-1.5'
+        tax_category_node['cac:TaxScheme']['cbc:Name'] = {'_text': 'VAT'}
+
+        return tax_category_node
+
+    def _get_tax_subtotal_node(self, vals):
+        tax_subtotal_node = super()._get_tax_subtotal_node(vals)
+        tax_subtotal_node['cbc:Percent'] = None
+        return tax_subtotal_node
