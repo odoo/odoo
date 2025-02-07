@@ -219,7 +219,10 @@ class AccountAnalyticLine(models.Model):
         company = self.env['res.company'].browse(vals.get('company_id'))
         accounts = self.env['account.analytic.account'].browse([
             int(account_id) for account_id in next(iter(distribution)).split(',')
-        ])
+        ]).exists()
+
+        if not accounts:
+            return super()._timesheet_preprocess_get_accounts(vals)
 
         plan_column_names = {account.root_plan_id._column_name() for account in accounts}
         mandatory_plans = [plan for plan in self._get_mandatory_plans(company, business_domain='timesheet') if plan['column_name'] != 'account_id']
