@@ -14,7 +14,6 @@
     'data': [
         'data/ir_cron.xml',
         'data/l10n_my_edi.industry_classification.csv',
-        'data/my_ubl_templates.xml',
 
         'security/ir.model.access.csv',
 
