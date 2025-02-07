@@ -9,6 +9,7 @@
         <t t-set="display_image" t-valuef="true"/>
         <t t-set="display_description" t-valuef="true"/>
         <t t-set="display_extra_link" t-valuef="true"/>
+        <t t-set="display_extra_info" t-valuef="true"/>
         <t t-set="display_detail" t-valuef="true"/>
         <t t-set="default_style" t-value="True"/>
     </t>
@@ -46,6 +47,8 @@
                     data-apply-to=".search-query"/>
                 <we-checkbox string="Extra Link" data-dependencies="search_all_opt" data-select-data-attribute="true" data-attribute-name="displayExtraLink"
                     data-apply-to=".search-query"/>
+                <we-checkbox string="Extra Info" data-dependencies="search_all_opt" data-select-data-attribute="true" data-attribute-name="displayExtraInfo"
+                    data-apply-to=".search-query" data-name="display_extra_info_opt"/>
                 <we-checkbox string="Detail" data-dependencies="search_all_opt" data-select-data-attribute="true" data-attribute-name="displayDetail"
                     data-apply-to=".search-query"/>
                 <we-checkbox string="Image" data-dependencies="search_all_opt" data-select-data-attribute="true" data-attribute-name="displayImage"
