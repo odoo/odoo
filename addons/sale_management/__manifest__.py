@@ -37,8 +37,6 @@ The Dashboard for the Sales Manager will include
     'website': 'https://www.odoo.com/app/sales',
     'depends': ['sale', 'digest'],
     'data': [
-        'data/digest_data.xml',
-
         'security/ir.model.access.csv',
         'security/sale_management_security.xml',
 
@@ -47,12 +45,14 @@ The Dashboard for the Sales Manager will include
         # Define SO template views & actions before their place of use
         'views/sale_order_template_views.xml',
 
-        'views/digest_views.xml',
         'views/res_config_settings_views.xml',
         'views/sale_order_views.xml',
         'views/sale_portal_templates.xml',
 
         'views/sale_management_menus.xml',
+
+        'data/digest_kpi.xml',
+        'data/digest_data.xml',
     ],
     'demo': [
         'data/sale_order_template_demo.xml',
