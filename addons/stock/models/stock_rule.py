@@ -325,9 +325,7 @@ class StockRule(models.Model):
         # a new move with the correct qty
         qty_left = product_qty
 
-        move_dest_ids = []
-        if not self.location_dest_id.should_bypass_reservation():
-            move_dest_ids = values.get('move_dest_ids', False) and [(4, x.id) for x in values['move_dest_ids']] or []
+        move_dest_ids = values.get('move_dest_ids') and [(4, x.id) for x in values['move_dest_ids']] or []
 
         # when create chained moves for inter-warehouse transfers, set the warehouses as partners
         if not partner and move_dest_ids:
@@ -581,7 +579,7 @@ class ProcurementGroup(models.Model):
 
         def extract_rule(rule_dict, route_ids, warehouse_id, location_dest_id):
             rule = self.env['stock.rule']
-            for route_id in route_ids:
+            for route_id in sorted(route_ids, key=lambda r: r.sequence):
                 sub_dict = rule_dict.get((location_dest_id.id, route_id.id))
                 if not sub_dict:
                     continue

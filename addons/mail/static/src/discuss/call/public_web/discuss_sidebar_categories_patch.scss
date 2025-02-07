@@ -1,9 +1,3 @@
 .o-mail-DiscussSidebarChannel-container.o-bordered.o-selfInCall {
-    @include o-mail-call-bordered;
-
-    .o-mail-DiscussSidebar-item {
-        &.o-active, &:hover {
-            background-color: mix(mix($white, $o-action, 95%), $gray-200, 15%) !important;
-        }
-    }
+    @include o-mail-call-bordered(var(--o-mail-DiscussSidebarChannel-inCallBorderOpacity, .15));
 }

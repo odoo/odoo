@@ -203,13 +203,9 @@ class ProductTemplate(models.Model):
 
     def _compute_product_document_count(self):
         for template in self:
-            template.product_document_count = template.env['product.document'].search_count([
-                '|',
-                    '&', ('res_model', '=', 'product.template'), ('res_id', '=', template.id),
-                    '&',
-                        ('res_model', '=', 'product.product'),
-                        ('res_id', 'in', template.product_variant_ids.ids),
-            ])
+            template.product_document_count = template.env['product.document'].search_count(
+                template._get_product_document_domain()
+            )
 
     @api.depends('image_1920', 'image_1024')
     def _compute_can_image_1024_be_zoomed(self):
@@ -630,13 +626,7 @@ class ProductTemplate(models.Model):
                 'default_res_id': self.id,
                 'default_company_id': self.company_id.id,
             },
-            'domain': [
-                '|',
-                    '&', ('res_model', '=', 'product.template'), ('res_id', '=', self.id),
-                    '&',
-                        ('res_model', '=', 'product.product'),
-                        ('res_id', 'in', self.product_variant_ids.ids),
-            ],
+            'domain': self._get_product_document_domain(),
             'target': 'current',
             'help': """
                 <p class="o_view_nocontent_smiling_face">
@@ -1462,6 +1452,16 @@ class ProductTemplate(models.Model):
         This method is meant to be overriden in other standard modules.
         """
         return self.env['product.pricelist'].browse(self.env.context.get('pricelist'))
+
+    def _get_product_document_domain(self):
+        self.ensure_one()
+        return expression.OR([
+            expression.AND([[('res_model', '=', 'product.template')], [('res_id', '=', self.id)]]),
+            expression.AND([
+                [('res_model', '=', 'product.product')],
+                [('res_id', 'in', self.product_variant_ids.ids)],
+            ])
+        ])
 
     ###################
     # DEMO DATA SETUP #

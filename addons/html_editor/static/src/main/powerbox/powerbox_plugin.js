@@ -6,6 +6,7 @@ import { rotate } from "@web/core/utils/arrays";
 import { Powerbox } from "./powerbox";
 import { withSequence } from "@html_editor/utils/resource";
 import { omit, pick } from "@web/core/utils/objects";
+import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 
 /** @typedef { import("@html_editor/core/selection_plugin").EditorSelection } EditorSelection */
 /** @typedef { import("@html_editor/core/user_command_plugin").UserCommand } UserCommand */
@@ -84,7 +85,7 @@ function target(selectionData) {
     const el = node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement;
     if (
         selectionData.documentSelectionIsInEditable &&
-        (el.tagName === "DIV" || el.tagName === "P") &&
+        el.matches(baseContainerGlobalSelector) &&
         isEmptyBlock(el)
     ) {
         return el;

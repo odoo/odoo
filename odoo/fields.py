@@ -82,7 +82,7 @@ def resolve_mro(model, name, predicate):
         classes are ignored.
     """
     result = []
-    for cls in model._model_classes:
+    for cls in model._model_classes__:
         value = cls.__dict__.get(name, SENTINEL)
         if value is SENTINEL:
             continue
@@ -3110,6 +3110,11 @@ class _Relational(Field[M], typing.Generic[M]):
                 no_company_domain = env[self.comodel_name]._check_company_domain(companies='')
                 return f"({field_to_check} and {company_domain} or {no_company_domain}) + ({domain or []})"
         return domain
+
+    def _description_allow_hierachy_operators(self, env):
+        """ Return if the child_of/parent_of makes sense on this field """
+        comodel = env[self.comodel_name]
+        return comodel._parent_name in comodel._fields
 
 
 class Many2one(_Relational[M]):

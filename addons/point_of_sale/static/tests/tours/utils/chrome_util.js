@@ -42,7 +42,7 @@ export function isSyncStatusConnected() {
 export function clickPlanButton() {
     return {
         content: "go back to the floor screen",
-        trigger: ".pos-leftheader .back-button:not(:has(.btn-primary))",
+        trigger: ".pos-leftheader .back-button:not(.btn-primary)",
         run: "click",
     };
 }
@@ -71,4 +71,17 @@ export function fillTextArea(target, value) {
 }
 export function createFloatingOrder() {
     return { trigger: ".pos-leftheader .list-plus-btn", run: "click" };
+}
+
+export function waitRequest() {
+    return [
+        {
+            content: "Request Start",
+            trigger: "body:has(.fa-circle-o-notch)",
+        },
+        {
+            content: "Wait for request to finish",
+            trigger: "body:not(:has(.fa-circle-o-notch))",
+        },
+    ];
 }

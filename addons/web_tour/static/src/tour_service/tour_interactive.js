@@ -354,7 +354,15 @@ export class TourInteractive {
         if (runCommand === "drop") {
             consumeEvents.push({
                 name: "pointerup",
-                target: document,
+                target: element.ownerDocument,
+                conditional: (ev) =>
+                    element.ownerDocument
+                        .elementsFromPoint(ev.clientX, ev.clientY)
+                        .includes(element),
+            });
+            consumeEvents.push({
+                name: "drop",
+                target: element.ownerDocument,
                 conditional: (ev) =>
                     element.ownerDocument
                         .elementsFromPoint(ev.clientX, ev.clientY)
@@ -374,8 +382,10 @@ export class TourInteractive {
         if (consumeEvent === "drag") {
             // jQuery-ui draggable triggers 'drag' events on the .ui-draggable element,
             // but the tip is attached to the .ui-draggable-handle element which may
-            // be one of its children (or the element itself)
-            return el.closest(".ui-draggable, .o_draggable, .o_we_draggable, .o-draggable");
+            // be one of its children (or the element itself
+            return el.closest(
+                ".ui-draggable, .o_draggable, .o_we_draggable, .o-draggable, [draggable='true']"
+            );
         }
 
         if (consumeEvent === "input" && !["textarea", "input"].includes(el.tagName.toLowerCase())) {

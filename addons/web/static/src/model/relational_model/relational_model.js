@@ -692,7 +692,12 @@ export class RelationalModel extends Model {
 
     async _webReadGroup(config, orderBy) {
         const aggregates = Object.values(config.fields)
-            .filter((field) => field.aggregator && field.name in config.activeFields)
+            .filter(
+                (field) =>
+                    field.aggregator &&
+                    field.name in config.activeFields &&
+                    field.name !== config.groupBy[0]
+            )
             .map((field) => `${field.name}:${field.aggregator}`);
         return this.orm.webReadGroup(
             config.resModel,

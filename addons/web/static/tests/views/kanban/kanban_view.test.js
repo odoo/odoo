@@ -1353,7 +1353,10 @@ test("pager, ungrouped, with count limit reached, edit pager", async () => {
     ]);
 
     await contains("span.o_pager_value").click();
-    await contains("input.o_pager_value").edit("2-4");
+    // FIXME: we have to click out instead of confirming, because somehow if the
+    // web_search_read calls come back too fast when pressing "Enter", another
+    // RPC is triggered right after.
+    await contains("input.o_pager_value").edit("2-4", { confirm: "blur" });
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(3);
     expect(".o_pager_value").toHaveText("2-4");
@@ -1361,7 +1364,7 @@ test("pager, ungrouped, with count limit reached, edit pager", async () => {
     expect.verifySteps(["web_search_read"]);
 
     await contains("span.o_pager_value").click();
-    await contains("input.o_pager_value").edit("2-14");
+    await contains("input.o_pager_value").edit("2-14", { confirm: "blur" });
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4);
     expect(".o_pager_value").toHaveText("2-5");
@@ -13477,4 +13480,32 @@ test("click on empty kanban must shake the NEW button", async () => {
     await click(".o_kanban_renderer");
 
     expect("[data-bounce-button]").toHaveClass("o_catch_attention");
+});
+
+test("group by numeric field (with aggregator)", async () => {
+    onRpc("web_read_group", ({ kwargs }) => {
+        expect(kwargs.groupby).toEqual(["int_field"]);
+        expect(kwargs.fields).toEqual(["float_field:sum"], {
+            message: "Don't aggregate int_field since it is grouped by itself",
+        });
+        expect.step("web_read_group");
+    });
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban class="o_kanban_test">
+                <field name="int_field" />
+                <field name="float_field" />
+                <templates>
+                    <t t-name="card">
+                        <div>
+                            <field name="foo" />
+                        </div>
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["int_field"],
+    });
+    expect.verifySteps(["web_read_group"]);
 });

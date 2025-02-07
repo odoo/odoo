@@ -75,8 +75,10 @@ options.registry.SnippetPopup = options.Class.extend({
      * @override
      */
     onTargetShow: async function () {
+        this.options.wysiwyg.odooEditor.observerUnactive();
         this.$bsTarget.modal('show');
         $(this.$target[0].ownerDocument.body).children('.modal-backdrop:last').addClass('d-none');
+        this.options.wysiwyg.odooEditor.observerActive();
     },
     /**
      * @override

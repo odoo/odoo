@@ -1,3 +1,4 @@
+import { BaseContainerPlugin } from "./core/base_container_plugin";
 import { ClipboardPlugin } from "./core/clipboard_plugin";
 import { CommentPlugin } from "./core/comment_plugin";
 import { DeletePlugin } from "./core/delete_plugin";
@@ -99,6 +100,7 @@ import { QWebPlugin } from "./others/qweb_plugin";
  */
 
 export const CORE_PLUGINS = [
+    BaseContainerPlugin,
     ClipboardPlugin,
     CommentPlugin,
     DeletePlugin,

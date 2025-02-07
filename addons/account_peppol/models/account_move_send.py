@@ -55,6 +55,7 @@ class AccountMoveSend(models.AbstractModel):
                         'target': 'new',
                         'context': {
                             'footer': False,
+                            'dialog_size': 'medium',
                             'action_on_activate': self.action_what_is_peppol_activate(moves),
                         },
                     },

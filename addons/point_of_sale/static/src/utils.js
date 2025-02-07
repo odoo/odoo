@@ -88,6 +88,10 @@ export function getMin(entries, options) {
     return getMax(entries, { ...options, inverted: true });
 }
 export function getOnNotified(bus, channel) {
+    if (!channel || typeof channel !== "string") {
+        return () => false;
+    }
+
     bus.addChannel(channel);
     return (notif, callback) => bus.subscribe(`${channel}-${notif}`, callback);
 }
@@ -130,7 +134,7 @@ export function parseUTCString(utcStr) {
 }
 
 export function floatCompare(a, b, { decimals } = {}) {
-    if (!decimals) {
+    if (decimals === undefined) {
         throw new Error("decimals must be provided");
     }
     a = roundDecimals(a, decimals);

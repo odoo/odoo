@@ -40,7 +40,7 @@ class AccountMoveSend(models.AbstractModel):
             )
             if not_configured_partners:
                 alerts['account_edi_ubl_cii_configure_partner'] = {
-                    'message': _("Missing partner(s) VAT or Peppol Address"),
+                    'message': _("Please fill in your VAT or Peppol Address"),
                     'level': 'info',
                     'action_text': _("View Partner(s)"),
                     'action': not_configured_partners._get_records_action(name=_("Check Partner(s)"))

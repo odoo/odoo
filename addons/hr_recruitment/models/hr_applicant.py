@@ -139,7 +139,7 @@ class Applicant(models.Model):
     @api.depends('candidate_id')
     def _compute_other_applications_count(self):
         for applicant in self:
-            same_candidate_applications = max(len(applicant.candidate_id.applicant_ids) - 1, 0)
+            same_candidate_applications = max(len(applicant.with_context(active_test=False).candidate_id.applicant_ids) - 1, 0)
             if applicant.candidate_id:
                 domain = applicant.candidate_id._get_similar_candidates_domain()
                 similar_candidates = self.env['hr.candidate'].with_context(active_test=False).search(domain) - applicant.candidate_id
@@ -518,7 +518,7 @@ class Applicant(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': 'hr.applicant',
             'view_mode': 'list,kanban,form,pivot,graph,calendar,activity',
-            'domain': [('id', 'in', (self.candidate_id.applicant_ids - self + similar_candidates.applicant_ids).ids)],
+            'domain': [('id', 'in', (self.candidate_id.applicant_ids + similar_candidates.applicant_ids).ids)],
             'context': {
                 'active_test': False,
                 'search_default_stage': 1,

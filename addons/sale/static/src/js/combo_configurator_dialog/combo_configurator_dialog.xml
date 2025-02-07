@@ -41,7 +41,7 @@
                 <!-- This div acts as a spacer to left-align the elements before it and right-align
                 the elements after it. -->
                 <div style="flex: 1" class="d-none d-md-block"/>
-                <div class="w-100 w-md-auto mx-0 mx-md-2">
+                <div t-if="this.props.options.showQuantity" class="w-100 w-md-auto mx-0 mx-md-2">
                     <QuantityButtons
                         quantity="state.quantity"
                         setQuantity="quantity => this.setQuantity(quantity)"

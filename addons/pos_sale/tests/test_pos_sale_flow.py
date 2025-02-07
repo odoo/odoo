@@ -1079,3 +1079,22 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PoSDownPaymentFixedTax', login="accountman")
+
+    def test_settle_quotation_delivered_qty(self):
+        """ Test if a quotation (unconfirmed sale order) is settled in the PoS, the delivered quantity is updated correctly """
+
+        product1 = self.env['product.product'].create({
+            'name': 'product1',
+            'available_in_pos': True,
+            'is_storable': True,
+            'lst_price': 10,
+            'taxes_id': [odoo.Command.clear()],
+        })
+        partner_1 = self.env['res.partner'].create({'name': 'Test Partner 1'})
+        order = self.env['sale.order'].create({
+            'partner_id': partner_1.id,
+            'order_line': [odoo.Command.create({'product_id': product1.id})],
+        })
+        self.main_pos_config.open_ui()
+        self.start_pos_tour('PoSSettleQuotation', login="accountman")
+        self.assertEqual(order.order_line.qty_delivered, 1)

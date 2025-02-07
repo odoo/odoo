@@ -29,7 +29,8 @@ import { PartnerList } from "../screens/partner_list/partner_list";
 import { ScaleScreen } from "../screens/scale_screen/scale_screen";
 import { computeComboItems } from "../models/utils/compute_combo_items";
 import { changesToOrder, getOrderChanges } from "../models/utils/order_change";
-import { getTaxesAfterFiscalPosition, getTaxesValues } from "../models/utils/tax_utils";
+import { getTaxesAfterFiscalPosition } from "../models/utils/tax_utils";
+import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { QRPopup } from "@point_of_sale/app/utils/qr_code_popup/qr_code_popup";
 import { ActionScreen } from "@point_of_sale/app/screens/action_screen";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
@@ -124,7 +125,6 @@ export class PosStore extends Reactive {
             create: new Set(),
         };
 
-        this.synch = { status: "connected", pending: 0 };
         this.hardwareProxy = hardware_proxy;
         this.hiddenProductIds = new Set();
         this.selectedOrderUuid = null;
@@ -296,6 +296,14 @@ export class PosStore extends Reactive {
         this.pickingType = this.data.models["stock.picking.type"].getFirst();
         this.models = this.data.models;
         this.models["pos.session"].getFirst().login_number = parseInt(odoo.login_number);
+
+        const models = Object.keys(this.models);
+        const dynamicModels = this.data.opts.dynamicModels;
+        const staticModels = models.filter((model) => !dynamicModels.includes(model));
+        const deviceSync = new DevicesSynchronisation(dynamicModels, staticModels, this);
+
+        this.deviceSync = deviceSync;
+        this.data.deviceSync = deviceSync;
 
         // Check cashier
         this.checkPreviousLoggedCashier();
@@ -579,7 +587,6 @@ export class PosStore extends Reactive {
     }
 
     async afterProcessServerData() {
-        // Adding the not synced paid orders to the pending orders
         const paidUnsyncedOrderIds = this.models["pos.order"]
             .filter((order) => order.isUnsyncedPaid)
             .map((order) => order.id);
@@ -588,6 +595,7 @@ export class PosStore extends Reactive {
             this.addPendingOrder(paidUnsyncedOrderIds);
         }
 
+        // Adding the not synced paid orders to the pending orders
         const openOrders = this.data.models["pos.order"].filter((order) => !order.finalized);
         this.syncAllOrders();
 
@@ -596,14 +604,6 @@ export class PosStore extends Reactive {
                 ? openOrders[openOrders.length - 1].uuid
                 : this.add_new_order().uuid;
         }
-
-        const models = Object.keys(this.models);
-        const dynamicModels = this.data.opts.dynamicModels;
-        const staticModels = models.filter((model) => !dynamicModels.includes(model));
-        const deviceSync = new DevicesSynchronisation(dynamicModels, staticModels, this);
-
-        this.deviceSync = deviceSync;
-        this.data.deviceSync = deviceSync;
 
         this.markReady();
         this.showScreen(this.firstScreen);
@@ -1066,6 +1066,37 @@ export class PosStore extends Reactive {
     cashierHasPriceControlRights() {
         return !this.config.restrict_price_control || this.get_cashier()._role == "manager";
     }
+    get currentSequenceNumber() {
+        return this._sequenceNumber || 1;
+    }
+    getNextSequenceNumber() {
+        const sessionId = this.session.id;
+        const configId = this.config.id;
+        const storedData = localStorage.getItem("pos.sequenceNumbers") || "{}";
+        const cache = JSON.parse(storedData);
+
+        if (!cache[configId]) {
+            cache[configId] = {};
+        }
+        // Cleanup: Remove sequence numbers for previous sessions under the same configId
+        // If we used only sessionId, we wouldn't be able to remove outdated session data properly,
+        // because some session IDs might belong to a different configuration, which we must preserve.
+        for (const sid in cache[configId]) {
+            if (sid !== String(sessionId)) {
+                delete cache[configId][sid];
+            }
+        }
+
+        if (!cache[configId][sessionId]) {
+            cache[configId][sessionId] = 0;
+        }
+
+        cache[configId][sessionId] += 1;
+        this._sequenceNumber = cache[configId][sessionId];
+        localStorage.setItem("pos.sequenceNumbers", JSON.stringify(cache));
+
+        return this._sequenceNumber;
+    }
     generate_unique_id() {
         // Generates a public identification number for the order.
         // The generated number must be unique and sequential. They are made 12 digit long
@@ -1083,7 +1114,7 @@ export class PosStore extends Reactive {
             "-" +
             zero_pad(this.session.login_number, 3) +
             "-" +
-            zero_pad(this.session.sequence_number, 4)
+            zero_pad(this.getNextSequenceNumber(), 4)
         );
     }
     createNewOrder(data = {}) {
@@ -1098,7 +1129,7 @@ export class PosStore extends Reactive {
             config_id: this.config,
             picking_type_id: this.pickingType,
             user_id: this.user,
-            sequence_number: this.session.sequence_number,
+            sequence_number: this.currentSequenceNumber,
             access_token: uuidv4(),
             ticket_code: random5Chars(),
             fiscal_position_id: fiscalPosition,
@@ -1107,7 +1138,6 @@ export class PosStore extends Reactive {
             ...data,
         });
 
-        this.session.sequence_number++;
         order.set_pricelist(this.config.pricelist_id);
         return order;
     }
@@ -1155,10 +1185,7 @@ export class PosStore extends Reactive {
 
     getPendingOrder() {
         const orderToCreate = this.models["pos.order"].filter(
-            (order) =>
-                this.pendingOrder.create.has(order.id) &&
-                (order.lines.length > 0 ||
-                    order.payment_ids.some((p) => p.payment_method_id.type === "pay_later"))
+            (order) => this.pendingOrder.create.has(order.id) && order.hasItemsOrPayLater
         );
         const orderToUpdate = this.models["pos.order"].readMany(
             Array.from(this.pendingOrder.write)
@@ -1437,9 +1464,11 @@ export class PosStore extends Reactive {
         }
     }
 
-    getProducePriceDetails(product, p = false) {
-        const pricelist = this.getDefaultPricelist();
-        const price = p === false ? product.get_price(pricelist, 1) : p;
+    prepareProductBaseLineForTaxesComputationExtraValues(product, p = false) {
+        const currency = this.config.currency_id;
+        const extraValues = { currency_id: currency };
+        const priceList = this.getDefaultPricelist();
+        const priceUnit = p === false ? product.get_price(priceList, 1) : p;
 
         let taxes = product.taxes_id;
 
@@ -1449,17 +1478,32 @@ export class PosStore extends Reactive {
             taxes = getTaxesAfterFiscalPosition(taxes, order.fiscal_position_id, this.models);
         }
 
-        // Taxes computation.
-        const taxesData = getTaxesValues(
-            taxes,
-            price,
-            1,
-            product,
-            this.config._product_default_values,
-            this.company,
-            this.currency
+        return {
+            ...extraValues,
+            product_id: accountTaxHelpers.eval_taxes_computation_prepare_product_values(
+                this.config._product_default_values,
+                product
+            ),
+            quantity: 1,
+            price_unit: priceUnit,
+            tax_ids: taxes,
+        };
+    }
+
+    getProducePriceDetails(product, p = false) {
+        const company = this.company;
+        const baseLine = accountTaxHelpers.prepare_base_line_for_taxes_computation(
+            {},
+            this.prepareProductBaseLineForTaxesComputationExtraValues(product, p)
         );
-        return taxesData;
+        accountTaxHelpers.add_tax_details_in_base_line(baseLine, company);
+        accountTaxHelpers.round_base_lines_tax_details([baseLine], company);
+
+        const results = baseLine.tax_details;
+        for (const taxData of results.taxes_data) {
+            Object.assign(taxData, taxData.tax);
+        }
+        return results;
     }
 
     getProductPrice(product, p = false) {
@@ -1560,7 +1604,7 @@ export class PosStore extends Reactive {
         order = this.get_order(),
         printBillActionTriggered = false,
     } = {}) {
-        await this.printer.print(
+        const result = await this.printer.print(
             OrderReceipt,
             {
                 data: this.orderExportForPrinting(order),
@@ -1570,8 +1614,10 @@ export class PosStore extends Reactive {
             { webPrintFallback: true }
         );
         if (!printBillActionTriggered) {
-            const nbrPrint = order.nb_print;
-            await this.data.write("pos.order", [order.id], { nb_print: nbrPrint + 1 });
+            order.nb_print += 1;
+            if (typeof order.id === "number" && result) {
+                await this.data.write("pos.order", [order.id], { nb_print: order.nb_print });
+            }
         }
         return true;
     }
@@ -1597,6 +1643,11 @@ export class PosStore extends Reactive {
         order.updateLastOrderChange();
     }
     async sendOrderInPreparationUpdateLastChange(o, cancelled = false) {
+        // Always display a "ConnectionLostError" when the user tries to send an order to the kitchen while offline
+        if (this.data.network.offline) {
+            this.data.network.warningTriggered = false;
+            throw new ConnectionLostError();
+        }
         await this.sendOrderInPreparation(o, cancelled);
     }
 

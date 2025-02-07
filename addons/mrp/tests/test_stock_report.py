@@ -349,6 +349,14 @@ class TestMrpStockReports(TestReportsCommon):
             'name': 'Choco Cake',
             'is_storable': True,
         })
+        workcenter = self.env['mrp.workcenter'].create({
+            'name': 'workcenter test',
+            'costs_hour': 10,
+            'time_start': 10,
+            'time_stop': 10,
+            'time_efficiency': 90,
+        })
+
         self.env['mrp.bom'].create({
             'product_id': product_chococake.id,
             'product_tmpl_id': product_chococake.product_tmpl_id.id,
@@ -358,6 +366,14 @@ class TestMrpStockReports(TestReportsCommon):
             'bom_line_ids': [
                 (0, 0, {'product_id': product_chocolate.id, 'product_qty': 4}),
             ],
+            'operation_ids': [
+                Command.create({
+                    'name': 'Cutting Machine',
+                    'workcenter_id': workcenter.id,
+                    'time_cycle': 60,
+                    'sequence': 1
+                }),
+            ],
         })
         mo = self.env['mrp.production'].create({
             'name': 'MO',
@@ -366,6 +382,10 @@ class TestMrpStockReports(TestReportsCommon):
         })
 
         mo.action_confirm()
+        # check that the mo and bom cost are correctly calculated after mo confirmation
+        overview_values = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
+        self.assertEqual(round(overview_values['data']['operations']['summary']['mo_cost'], 2), 14.45)
+        self.assertEqual(round(overview_values['data']['operations']['summary']['bom_cost'], 2), 14.44)
         mo.button_mark_done()
         mo.qty_produced = 0.
 

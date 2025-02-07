@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2025-01-27 13:02+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -466,11 +466,6 @@ msgid "54326786758"
 msgstr "54326786758"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_inventory
-msgid "98"
-msgstr "98"
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
 msgid ""
 "<br/>\n"
@@ -731,7 +726,7 @@ msgstr "<span>OBTRETU</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_view_kanban_catalog
 msgid "<span>On Hand: </span>"
-msgstr "<span>手元にある： </span>"
+msgstr "<span>手持在庫: </span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
@@ -5449,7 +5444,7 @@ msgstr "新規移動: %(product)s"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__new_quantity
 msgid "New Quantity on Hand"
-msgstr "新しい手持数量"
+msgstr "新規手持在庫数"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_form
@@ -5765,12 +5760,12 @@ msgstr "手持在庫"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "On Hand Quantity"
-msgstr "手持数量"
+msgstr "手持在庫数"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "On hand Quantity"
-msgstr "手持数量"
+msgstr "手持在庫数"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__available_quantity
@@ -7077,7 +7072,7 @@ msgstr "倍乗基準数量"
 #: model:ir.model.fields,field_description:stock.field_product_template__qty_available
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
 msgid "Quantity On Hand"
-msgstr "手持数量"
+msgstr "手持在庫数"
 
 #. module: stock
 #. odoo-javascript
@@ -7671,6 +7666,11 @@ msgid "Return"
 msgstr "返却"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
+msgid "Return All"
+msgstr "全て返品"
+
+#. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
 msgstr "ピッキングの戻し"
@@ -8197,7 +8197,7 @@ msgstr "0に設定"
 #. module: stock
 #: model:ir.actions.server,name:stock.action_view_set_quants_tree
 msgid "Set to quantity on hand"
-msgstr "手持数量に設定"
+msgstr "手持在庫数に設定"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_config_settings
@@ -8318,7 +8318,7 @@ msgstr "次のピッキングを表示"
 #: model:ir.model.fields,field_description:stock.field_product_product__show_on_hand_qty_status_button
 #: model:ir.model.fields,field_description:stock.field_product_template__show_on_hand_qty_status_button
 msgid "Show On Hand Qty Status Button"
-msgstr "手元数量ステータスボタンを表示"
+msgstr "手元在庫数ステータスボタンを表示"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__is_favorite
@@ -9675,7 +9675,7 @@ msgstr "保管可能な製品を作成して、在庫数を追跡します。"
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "Tracked Products in Inventory Adjustment"
-msgstr "在庫調整に追跡対象製品あり"
+msgstr "在庫調整に追跡対象プロダクトあり"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__tracking
