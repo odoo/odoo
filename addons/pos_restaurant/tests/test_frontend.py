@@ -62,12 +62,12 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
 
         cls.pos_config.floor_ids.unlink()
 
-        main_floor = cls.env['restaurant.floor'].create({
+        cls.main_floor = cls.env['restaurant.floor'].create({
             'name': 'Main Floor',
             'pos_config_ids': [(4, cls.pos_config.id)],
             'floor_prefix': 1,
         })
-        second_floor = cls.env['restaurant.floor'].create({
+        cls.second_floor = cls.env['restaurant.floor'].create({
             'name': 'Second Floor',
             'pos_config_ids': [(4, cls.pos_config.id)],
             'floor_prefix': 2,
@@ -75,14 +75,14 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
 
         cls.main_floor_table_5 = cls.env['restaurant.table'].create([{
             'table_number': 105,
-            'floor_id': main_floor.id,
+            'floor_id': cls.main_floor.id,
             'seats': 4,
             'position_h': 100,
             'position_v': 100,
         }])
         cls.env['restaurant.table'].create([{
             'table_number': 104,
-            'floor_id': main_floor.id,
+            'floor_id': cls.main_floor.id,
             'seats': 4,
             'shape': 'square',
             'position_h': 350,
@@ -90,7 +90,7 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
         },
         {
             'table_number': 102,
-            'floor_id': main_floor.id,
+            'floor_id': cls.main_floor.id,
             'seats': 4,
             'position_h': 250,
             'position_v': 100,
@@ -98,7 +98,7 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
         {
 
             'table_number': 201,
-            'floor_id': second_floor.id,
+            'floor_id': cls.second_floor.id,
             'seats': 4,
             'shape': 'square',
             'position_h': 100,
@@ -106,7 +106,7 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
         },
         {
             'table_number': 203,
-            'floor_id': second_floor.id,
+            'floor_id': cls.second_floor.id,
             'seats': 4,
             'position_h': 100,
             'position_v': 250,
