@@ -621,6 +621,15 @@ class Website(models.Model):
         pages_views = {}
         modules = self.env['ir.module.module']
         module_data = {}
+        untouched_configurator_pages = {}
+        standard_homepage = self.env.ref('website.homepage', raise_if_not_found=False)
+        homepage_id = self.env['website.page'].search([
+            ('website_id', '=',  website.id),
+            ('key', '=', standard_homepage.key),
+        ], limit=1).id
+        if homepage_id:
+            untouched_configurator_pages['Home Page'] = homepage_id
+
         for feature in features:
             add_menu = bool(feature.menu_sequence)
             if feature.module_id:
@@ -645,6 +654,7 @@ class Website(models.Model):
                     template=feature.page_view_id.key
                 )
                 pages_views[feature.iap_page_code] = result['view_id']
+                untouched_configurator_pages[feature.name] = result['page_id']
 
         if modules:
             modules.button_immediate_install()
@@ -938,6 +948,11 @@ class Website(models.Model):
                     logger.warning(e)
             page_view_id.save(value=f'<div class="oe_structure">{"".join(rendered_snippets)}</div>',
                               xpath="(//div[hasclass('oe_structure')])[last()]")
+
+        # untouched_configurator_pages should be set in ir.config_parameter after saving the pages
+
+        param_key = f'website.untouched_configurator_pages.{website.id}'
+        self.env['ir.config_parameter'].sudo().set_param(param_key, json.dumps(untouched_configurator_pages))
 
         # Configure the images
         images = custom_resources.get('images', {})
