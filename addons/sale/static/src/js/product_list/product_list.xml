@@ -12,8 +12,15 @@
             <thead t-if="!this.props.areProductsOptional">
                 <tr>
                     <th class="px-0 border-bottom-0" colspan="2">Product</th>
-                    <th class="px-0 text-center border-bottom-0">Quantity</th>
-                    <th class="px-0 text-end border-bottom-0">Price</th>
+                    <th t-if="env.showQuantity" class="px-0 text-center border-bottom-0">
+                        Quantity
+                    </th>
+                    <th
+                        class="px-0 text-end border-bottom-0"
+                        t-att-colspan="env.showQuantity ? 1 : 2"
+                    >
+                        Price
+                    </th>
                 </tr>
             </thead>
             <tbody class="border-top-0">

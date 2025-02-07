@@ -29,7 +29,7 @@
             </t>
         </td>
         <td class="o_sale_product_configurator_qty py-3 px-0 text-end">
-            <t t-if="!this.props.optional">
+            <t t-if="!this.props.optional &amp;&amp; env.showQuantity">
                 <div
                     name="sale_product_configurator_quantity_buttons"
                     class="input-group justify-content-center">
@@ -56,7 +56,7 @@
                     </button>
                 </div>
             </t>
-            <t t-else="">
+            <t t-elif="this.props.optional">
                 <t t-call="sale.product_price" name="sale_product_configurator_optional_price"/>
             </t>
             <a
