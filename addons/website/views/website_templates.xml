@@ -231,10 +231,7 @@
         <attribute name="data-name">Footer</attribute>
         <!-- Background now controlled by css configuration, using color combinations -->
         <attribute name="t-attf-class" add="o_colored_level o_cc" remove="bg-light" separator=" "/>
-        <!-- Add the main object as a cache key so that the footer_visible page
-        option is properly reflected across pages. Controllers and other objects
-        do not have any page option (yet) so they can share the same cache -->
-        <attribute name="t-cache" add="website,main_object._name == 'website.page' and main_object"/>
+        <attribute name="t-cache" add="website" separator=","/>
     </xpath>
     <xpath expr="//div[hasclass('o_footer_copyright')]" position="attributes">
         <attribute name="data-name">Copyright</attribute>
@@ -339,6 +336,7 @@
     <xpath expr="//footer[@id='bottom']" position="attributes">
         <attribute name="t-attf-class" add="#{'d-none o_snippet_invisible' if 'footer_visible' in main_object and not main_object.footer_visible else ''}" separator=" "/>
         <attribute name="t-att-data-invisible">'1' if 'footer_visible' in main_object and not main_object.footer_visible else None</attribute>
+        <attribute name="t-cache" add="main_object.footer_visible if 'footer_visible' in main_object else True" separator=","/>
     </xpath>
 </template>
 
