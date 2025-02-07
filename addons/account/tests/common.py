@@ -62,6 +62,7 @@ class AccountTestInvoicingCommon(ProductCommon):
             'property_account_income_categ_id': cls.company_data['default_account_revenue'].id,
             'property_account_expense_categ_id': cls.company_data['default_account_expense'].id,
         })
+        cls.tax_number = 0
 
         # ==== Taxes ====
         cls.tax_sale_a = cls.company_data['default_tax_sale']
@@ -408,6 +409,42 @@ class AccountTestInvoicingCommon(ProductCommon):
                 suffix_nb += 1
             else:
                 return account.copy(default={'code': new_code, 'name': account.name, **(default or {})})
+
+    def group_of_taxes(self, taxes, **kwargs):
+        self.tax_number += 1
+        return self.env['account.tax'].create({
+            **kwargs,
+            'name': f"group_({self.tax_number})",
+            'amount_type': 'group',
+            'children_tax_ids': [Command.set(taxes.ids)],
+        })
+
+    def percent_tax(self, amount, **kwargs):
+        self.tax_number += 1
+        return self.env['account.tax'].create({
+            **kwargs,
+            'name': f"percent_{amount}_({self.tax_number})",
+            'amount_type': 'percent',
+            'amount': amount,
+        })
+
+    def division_tax(self, amount, **kwargs):
+        self.tax_number += 1
+        return self.env['account.tax'].create({
+            **kwargs,
+            'name': f"division_{amount}_({self.tax_number})",
+            'amount_type': 'division',
+            'amount': amount,
+        })
+
+    def fixed_tax(self, amount, **kwargs):
+        self.tax_number += 1
+        return self.env['account.tax'].create({
+            **kwargs,
+            'name': f"fixed_{amount}_({self.tax_number})",
+            'amount_type': 'fixed',
+            'amount': amount,
+        })
 
     @classmethod
     def setup_armageddon_tax(cls, tax_name, company_data, **kwargs):
@@ -895,6 +932,13 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
                     'company_id': self.env.company.id,
                 })
             ]
+
+    def new_currency(self, rounding):
+        self.number += 1
+        return self.env.company.currency_id.copy({
+            'name': f"{self.number}",
+            'rounding': rounding,
+        })
 
     @contextmanager
     def with_tax_calculation_rounding_method(self, rounding_method):

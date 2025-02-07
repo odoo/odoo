@@ -239,7 +239,7 @@ class TestUBLRO(TestUBLCommon):
         self.partner_a.write({'vat': False})
         invoice = self.create_move("out_invoice", currency_id=self.company.currency_id.id)
         attachment = self.get_attachment(invoice)
-        self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_invoice_no_prefix_vat.xml')
+        self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_invoice_no_prefix_company_registry.xml')
 
     def test_export_no_vat_and_no_company_registry_raises_error(self):
         self.company_data['company'].write({'vat': False, 'company_registry': False})

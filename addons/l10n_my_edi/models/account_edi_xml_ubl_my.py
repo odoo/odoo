@@ -51,159 +51,155 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
     _description = "Malaysian implementation of ubl for the MyInvois portal"
 
     # -----------------------
-    # CRUD, inherited methods
+    # EXPORT
     # -----------------------
 
     def _export_invoice_filename(self, invoice):
         # OVERRIDE 'account_edi_ubl_cii'
         return f"{invoice.name.replace('/', '_')}_myinvois.xml"
 
-    def _export_invoice_vals(self, invoice):
-        # EXTENDS 'account_edi_ubl_cii'
-        vals = super()._export_invoice_vals(invoice)
+    def _add_invoice_config_vals(self, vals):
+        super()._add_invoice_config_vals(vals)
+        invoice = vals['invoice']
 
-        vals.update({
-            # MyInvois integration requires some template changes. All documents use the same template (Invoice)
-            'InvoiceType_template': 'l10n_my_edi.ubl_21_InvoiceType_my',
-            'CreditNoteType_template': 'l10n_my_edi.ubl_21_InvoiceType_my',
-            'DebitNoteType_template': 'l10n_my_edi.ubl_21_InvoiceType_my',
-            'main_template': 'account_edi_ubl_cii.ubl_20_Invoice',
+        # In MyInvois, all documents use the same template (Invoice)
+        vals['document_type'] = 'invoice'
 
-            'InvoiceLineType_template': 'l10n_my_edi.ubl_20_InvoiceLineType_my',
-            'CreditNoteLineType_template': 'l10n_my_edi.ubl_20_InvoiceLineType_my',
-            'DebitNoteLineType_template': 'l10n_my_edi.ubl_20_InvoiceLineType_my',
-
-            'DeliveryType_template': 'l10n_my_edi.ubl_20_DeliveryType_my',
-        })
-
+        # Invert customer and supplier if this is a self-invoice.
         document_type_code, original_document = self._l10n_my_edi_get_document_type_code(invoice)
-        vals['vals'].update({
-            # These data are not in the API description and thus removed to avoid issues.
-            'customization_id': None,
-            'profile_id': None,
-            'ubl_version_id': None,
-            'due_date': None,
-            'order_reference': None,
-            # The current version is 1.1 (document with signature), the type code depends on the move type.
-            'document_type_code_attrs': {'listVersionID': 1.1},
-            'document_type_code': document_type_code,
-            # The issue time must be the current time set in the UTC time zone
-            'issue_time': datetime.now(tz=UTC).strftime("%H:%M:%SZ"),
-            # Exchange rate information must be provided if applicable
-            'tax_exchange_rate': self._l10n_my_edi_get_tax_exchange_rate(invoice),
-            'invoice_incoterm_code': invoice.invoice_incoterm_id.code,
-            # Depending on the move type, it will either be about exports (invoices) or imports (bills)
-            'custom_form_reference': invoice.l10n_my_edi_custom_form_reference if document_type_code in {"11", "12", "13", "14"} else None,
-            'export_custom_form_reference': invoice.l10n_my_edi_custom_form_reference if document_type_code in {"01", "02", "03", "04"} else None,
-        })
+        if document_type_code in ('01', '02', '03', '04'):  # Regular invoice
+            vals['supplier'] = invoice.company_id.partner_id
+            vals['customer'] = invoice.partner_id.commercial_partner_id
+        elif document_type_code in ('11', '12', '13', '14'):  # Self billed.
+            vals['supplier'] = invoice.partner_id.commercial_partner_id
+            vals['customer'] = invoice.company_id.partner_id
+            vals['partner_shipping'] = vals['customer']
 
-        # these are optional, and since we can't have the correct one at the time of generating, we avoid adding them.
-        vals['vals'].pop('payment_means_vals_list', None)
+        vals['document_type_code'] = document_type_code
+        vals['original_document'] = original_document
 
-        other_party = opposite_generic_tin = expected_generic_tin = None
-        # We add the company industrial classification to the supplier vals.
-        if vals['vals']['document_type_code'] in ('01', '02', '03', '04'):  # Regular invoices
-            vals['vals']['accounting_supplier_party_vals']['party_vals'].update({
-                'industry_classification_code_attrs': {'name': invoice.company_id.l10n_my_edi_industrial_classification.name},
-                'industry_classification_code': invoice.company_id.l10n_my_edi_industrial_classification.code,
-            })
-
-            other_party = vals["vals"]["accounting_customer_party_vals"]["party_vals"]
-            opposite_generic_tin = 'EI00000000030'
-            expected_generic_tin = 'EI00000000020'
-        elif vals['vals']['document_type_code'] in ('11', '12', '13', '14'):  # Self billed.
-            vals['vals']['accounting_supplier_party_vals']['party_vals'] = self._get_partner_party_vals(invoice.partner_id, role='supplier')
-            vals['vals']['accounting_customer_party_vals']['party_vals'] = self._get_partner_party_vals(invoice.company_id.partner_id, role='customer')
-            vals['vals']['accounting_supplier_party_vals']['party_vals'].update({
-                'industry_classification_code_attrs': {'name': invoice.partner_id.commercial_partner_id.l10n_my_edi_industrial_classification.name},
-                'industry_classification_code': invoice.partner_id.commercial_partner_id.l10n_my_edi_industrial_classification.code,
-            })
-
-            other_party = vals["vals"]["accounting_supplier_party_vals"]["party_vals"]
-            opposite_generic_tin = 'EI00000000020'
-            expected_generic_tin = 'EI00000000030'
-            # Self-billed invoices must use the number given by the supplier.
-            if invoice.ref:
-                vals['vals']['id'] = invoice.ref
-
-        # Switch the generic tin to the correct one when it makes sense (For example when a supplier has the buyer generic tin set)
-        if other_party:
-            for identification_val in other_party['party_identification_vals']:
-                if identification_val.get('id_attrs', {}).get('schemeID') == 'TIN' and identification_val.get('id') == opposite_generic_tin:
-                    identification_val['id'] = expected_generic_tin
-
-        # We ensure that the customer does not have their ttx set (it could be on the record if they're also supplier)
-        customer_identification_vals = [
-            vals for vals in vals['vals']['accounting_customer_party_vals']['party_vals']['party_identification_vals'] if vals.get('id_attrs', {}) != {'schemeID': 'TTX'}
-        ]
-        vals['vals']['accounting_customer_party_vals']['party_vals']['party_identification_vals'] = customer_identification_vals
-
-        # Debit/Credit note original invoice ref.
-        if original_document:
-            vals['vals'].update({
-                'billing_reference_vals': {
-                    'id': original_document.name,
-                    'uuid': original_document.l10n_my_edi_external_uuid,
-                },
-            })
-
-        return vals
-
-    def _get_delivery_vals_list(self, invoice):
+    def _add_document_tax_grouping_function_vals(self, vals):
         # OVERRIDE 'account_edi_ubl_cii'
-        customer = invoice.company_id.partner_id if invoice.is_purchase_document() else invoice.partner_id
-        return [{
-            'accounting_delivery_party_vals': self._l10n_my_edi_get_delivery_party_vals(customer),
-        }]
+        def total_grouping_function(base_line, tax_data):
+            return True
 
-    def _get_partner_contact_vals(self, partner):
-        # EXTENDS 'account_edi_ubl_cii'
-        res = super()._get_partner_contact_vals(partner)
-        res['telephone'] = self._l10n_my_edi_get_formatted_phone_number(res['telephone'])
-        return res
+        def tax_grouping_function(base_line, tax_data):
+            tax = tax_data and tax_data['tax']
+            invoice = base_line['record'].move_id
+            return {
+                'tax_category_code': tax.l10n_my_tax_type if tax else 'E',
+                'tax_exemption_reason': invoice.l10n_my_edi_exemption_reason if not tax or tax.l10n_my_tax_type == 'E' else None,
+                'amount': tax.amount if tax else 0.0,
+                'amount_type': tax.amount_type if tax else 'percent',
+            }
 
-    def _get_country_vals(self, country):
-        # EXTENDS 'account_edi_ubl_cii'
-        vals = super()._get_country_vals(country)
-        vals.update({
-            'identification_code_attrs': {
-                'listID': 'ISO3166-1',
-                'listAgencyID': '6',
+        vals['total_grouping_function'] = total_grouping_function
+        vals['tax_grouping_function'] = tax_grouping_function
+
+    # -------------------------------------------------------------------------
+    # EXPORT: Templates
+    # -------------------------------------------------------------------------
+
+    def _add_invoice_header_nodes(self, document_node, vals):
+        super()._add_invoice_header_nodes(document_node, vals)
+
+        invoice = vals['invoice']
+
+        # Self-billed invoices must use the number given by the supplier.
+        if vals['document_type_code'] in ('11', '12', '13', '14') and invoice.ref:
+            document_node['cbc:ID']['_text'] = invoice.ref
+
+        document_node.update({
+            'cbc:UBLVersionID': None,
+            # The issue time must be the current time set in the UTC time zone
+            'cbc:IssueTime': {'_text': datetime.now(tz=UTC).strftime("%H:%M:%SZ")},
+
+            'cbc:DueDate': None,
+
+            # The current version is 1.1 (document with signature), the type code depends on the move type.
+            'cbc:InvoiceTypeCode': {
+                '_text': vals['document_type_code'],
+                'listVersionID': '1.1',
             },
-            'identification_code': COUNTRY_CODE_MAP.get(country.code),
-        })
-        return vals
+            'cac:OrderReference': None,
 
-    def _get_partner_address_vals(self, partner):
-        # EXTENDS 'account_edi_ubl_cii'
-        vals = super()._get_partner_address_vals(partner)
-        # We do not want to display the streets, but instead use the AddressLine element.
-        vals.pop('street_name', None)
-        vals.pop('additional_street_name', None)
+            # Debit/Credit note original invoice ref.
+            'cac:BillingReference': {
+                'cac:InvoiceDocumentReference': {
+                    'cbc:ID': {'_text': vals['original_document'].name},
+                    'cbc:UUID': {'_text': vals['original_document'].l10n_my_edi_external_uuid},
+                }
+            } if vals['original_document'] else None,
+            'cac:AdditionalDocumentReference': [
+                {
+                    'cbc:ID': {'_text': invoice.l10n_my_edi_custom_form_reference},
+                    'cbc:DocumentType': {'_text': 'CustomsImportForm'},
+                } if vals['document_type_code'] in {'11', '12', '13', '14'} and invoice.l10n_my_edi_custom_form_reference else None,
+                {
+                    'cbc:ID': {'_text': invoice.invoice_incoterm_id.code}
+                } if invoice.invoice_incoterm_id else None,
+                {
+                    'cbc:ID': {'_text': invoice.l10n_my_edi_custom_form_reference},
+                    'cbc:DocumentType': {'_text': 'K2'},
+                } if vals['document_type_code'] in {'01', '02', '03', '04'} and invoice.l10n_my_edi_custom_form_reference else None,
+            ],
+        })
+
+    def _add_invoice_delivery_nodes(self, document_node, vals):
+        document_node['cac:Delivery'] = {
+            'cac:DeliveryParty': self._get_party_node({**vals, 'partner': vals['customer'], 'role': 'delivery'}),
+        }
+
+    def _add_invoice_payment_means_nodes(self, document_node, vals):
+        # PaymentMeans is optional, and since we can't have the correct one at the time of generating, we don't add it.
+        pass
+
+    def _add_invoice_exchange_rate_nodes(self, document_node, vals):
+        invoice = vals['invoice']
+        if invoice.currency_id.name != 'MYR':
+            # Exchange rate information must be provided if applicable
+            document_node['cac:TaxExchangeRate'] = {
+                'cbc:SourceCurrencyCode': {'_text': invoice.currency_id.name},
+                'cbc:TargetCurrencyCode': {'_text': 'MYR'},
+                'cbc:CalculationRate': {'_text': self._l10n_my_edi_get_tax_exchange_rate(vals['invoice'])},
+            }
+
+    def _get_address_node(self, vals):
+        partner = vals['partner']
 
         # The API expects the iso3166-2 code for the state, in the same way as it expects the iso3166 code for the countries.
         # In Odoo, we mostly use these (although there is no standard format) so we'll try to use what Odoo gives us.
-        # For malaysia, the codes where updated..
+        # For malaysia, the codes were updated..
         subentity_code = partner.state_id.code or ''
+        country = partner.country_id
 
         # The API does not expect the country code inside the state code, only the number part.
-        if f'{partner.country_id.code}-' in subentity_code:
+        if f'{country.code}-' in subentity_code:
             subentity_code = subentity_code.split('-')[1]
 
-        vals.update({
-            'address_lines': [partner.street or '', partner.street2 or ''],
-            'country_subentity_code': subentity_code,
-        })
-        return vals
+        return {
+            'cbc:CityName': {'_text': partner.city},
+            'cbc:PostalZone': {'_text': partner.zip},
+            'cbc:CountrySubentity': {'_text': partner.state_id.name},
+            'cbc:CountrySubentityCode': {'_text': subentity_code},
+            'cac:AddressLine': [
+                {'cbc:Line': {'_text': partner.street}},
+                {'cbc:Line': {'_text': partner.street2}},
+            ],
+            'cac:Country': {
+                'cbc:IdentificationCode': {
+                    '_text': COUNTRY_CODE_MAP.get(country.code),
+                    'listAgencyID': '6',
+                    'listID': 'ISO3166-1',
+                },
+                'cbc:Name': {
+                    '_text': country.name,
+                    'languageID': vals.get('country_vals', {}).get('name_attrs', {}).get('languageID'),
+                },
+            },
+        }
 
-    def _get_partner_party_legal_entity_vals_list(self, partner):
-        # OVERRIDE 'account_edi_ubl_cii'
-        # We only want to display the registration name here.
-        return [{
-            'registration_name': partner.name,
-        }]
-
-    def _get_partner_party_identification_vals_list(self, partner):
+    def _get_party_identification_node(self, vals):
         """ The id vals list must be filled with two values.
         The TIN, and then one of either:
             - Business registration number (BNR)
@@ -213,53 +209,116 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         Additionally, companies registered to use SST (sales & services tax) must provide their SST number.
         Finally, if a supplier is using TTX (tourism tax), once again that number must be provided.
         """
-        # OVERRIDE 'account_edi_ubl_cii'
-        vals = [{
-            'id_attrs': {'schemeID': 'TIN'},
-            'id': partner._l10n_my_edi_get_tin_for_myinvois(),
-        }]
+        partner = vals['partner']
+
+        tin = partner._l10n_my_edi_get_tin_for_myinvois()
+
+        # If the invoice's commercial partner uses a Generic TIN, set it to the correct generic TIN
+        # depending on whether the invoice is self-billed or not.
+        if vals['document_type_code'] in ('01', '02', '03', '04') and tin == 'EI00000000030' and vals['role'] == 'customer':
+            tin = 'EI00000000020'  # For normal invoices, this partner TIN should be used
+        elif vals['document_type_code'] in ('11', '12', '13', '14') and tin == 'EI00000000020' and vals['role'] == 'supplier':
+            tin = 'EI00000000030'  # For self-billed invoices, this partner TIN should be used
+
+        party_identification_node = [
+            {
+                'cbc:ID': {
+                    '_text': tin,
+                    'schemeID': 'TIN',
+                }
+            }
+        ]
 
         if partner.l10n_my_identification_type and partner.l10n_my_identification_number:
-            vals.append({
-                'id_attrs': {'schemeID': partner.l10n_my_identification_type},
-                'id': partner.l10n_my_identification_number,
+            party_identification_node.append({
+                'cbc:ID': {
+                    '_text': partner.l10n_my_identification_number,
+                    'schemeID': partner.l10n_my_identification_type,
+                }
             })
             if partner.sst_registration_number:
-                # The supplier can input up to 2 SST numbers, in which case they need to separate both by a ;
-                # They can do so in the existing field if they want.
-                vals.append({
-                    'id_attrs': {'schemeID': 'SST'},
-                    'id': partner.sst_registration_number,
+                party_identification_node.append({
+                    'cbc:ID': {
+                        '_text': partner.sst_registration_number,
+                        'schemeID': 'SST',
+                    }
                 })
-            if partner.ttx_registration_number:
-                vals.append({
-                    'id_attrs': {'schemeID': 'TTX'},
-                    'id': partner.ttx_registration_number,
+            if partner.ttx_registration_number and vals['role'] == 'supplier':
+                party_identification_node.append({
+                    'cbc:ID': {
+                        '_text': partner.ttx_registration_number,
+                        'schemeID': 'TTX',
+                    }
                 })
-        return vals
+        return party_identification_node
 
-    def _get_partner_party_tax_scheme_vals_list(self, partner, role):
-        """ This information is not needed. Instead, the party identification vals must be filled. """
-        # OVERRIDE 'account_edi_ubl_cii'
-        return []
+    def _get_party_node(self, vals):
+        partner = vals['partner']
+        role = vals['role']
 
-    def _get_tax_unece_codes(self, customer, supplier, tax):
-        # OVERRIDE 'account_edi_ubl_cii'
         return {
-            'tax_category_code': tax.l10n_my_tax_type,
-            'tax_exemption_reason_code': None,  # Unused in this file.
-            'tax_exemption_reason': None,  # Should be set here but we no longer have access to the invoice info...
+            'cbc:IndustryClassificationCode': {
+                '_text': partner.l10n_my_edi_industrial_classification.code,
+                'name': partner.l10n_my_edi_industrial_classification.name
+            } if role == 'supplier' else None,
+            'cac:PartyIdentification': self._get_party_identification_node({**vals, 'partner': partner.commercial_partner_id}),
+            'cac:PartyName': {
+                'cbc:Name': {'_text': partner.display_name}
+            } if role != 'delivery' else None,
+            'cac:PostalAddress': self._get_address_node(vals),
+            'cac:PartyLegalEntity': {
+                'cbc:RegistrationName': {'_text': partner.commercial_partner_id.name},
+            },
+            'cac:Contact': {
+                'cbc:ID': {'_text': partner.id},
+                'cbc:Name': {'_text': partner.name},
+                'cbc:Telephone': {'_text': self._l10n_my_edi_get_formatted_phone_number(partner.phone)},
+                'cbc:ElectronicMail': {'_text': partner.email},
+            } if role != 'delivery' else None,
         }
 
-    def _get_tax_category_list(self, customer, supplier, taxes):
-        # EXTENDS 'account_edi_ubl_cii'
-        vals_list = super()._get_tax_category_list(customer, supplier, taxes)
+    def _get_tax_category_node(self, vals):
+        grouping_key = vals['grouping_key']
+        return {
+            'cbc:ID': {'_text': grouping_key['tax_category_code']},
+            'cbc:Name': {'_text': grouping_key['tax_exemption_reason']},
+            'cbc:Percent': {'_text': grouping_key['amount']} if grouping_key['amount_type'] == 'percent' else None,
+            'cbc:TaxExemptionReason': {'_text': grouping_key['tax_exemption_reason']},
+            'cac:TaxScheme': {
+                'cbc:ID': {
+                    '_text': 'OTH',
+                    'schemeID': 'UN/ECE 5153',
+                    'schemeAgencyID': '6',
+                }
+            }
+        }
 
-        for vals in vals_list:
-            vals['tax_scheme_vals']['id'] = 'OTH'
-            vals['tax_scheme_vals']['id_attrs'] = {'schemeID': 'UN/ECE 5153', 'schemeAgencyID': '6'}
+    def _add_invoice_line_amount_nodes(self, line_node, vals):
+        super()._add_invoice_line_amount_nodes(line_node, vals)
 
-        return vals_list
+        base_line = vals['base_line']
+        line_node['cac:ItemPriceExtension'] = {
+            'cbc:Amount': {
+                '_text': self.format_float(base_line['tax_details']['total_excluded_currency'], vals['currency_dp']),
+                'currencyID': vals['currency_name'],
+            }
+        }
+
+    def _add_invoice_line_item_nodes(self, line_node, vals):
+        super()._add_invoice_line_item_nodes(line_node, vals)
+
+        base_line = vals['base_line']
+        if base_line['record'].l10n_my_edi_classification_code:
+            line_node['cac:Item']['cac:CommodityClassification'] = {
+                'cbc:ItemClassificationCode': {
+                    '_text': base_line['record'].l10n_my_edi_classification_code,
+                    'listID': 'CLASS',
+                }
+            }
+
+    # -------------------------------------------------------------------------
+    # EXPORT: Constraints
+    # -------------------------------------------------------------------------
 
     def _export_invoice_constraints(self, invoice, vals):
         # EXTENDS 'account_edi_ubl_cii'
@@ -307,44 +366,14 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             elif any(tax.l10n_my_tax_type == 'E' for tax in line.tax_ids) and not invoice.l10n_my_edi_exemption_reason:
                 self._l10n_my_edi_make_validation_error(constraints, 'tax_exemption_required', invoice.id, invoice.display_name)
 
-        document_type_code, original_document = self._l10n_my_edi_get_document_type_code(invoice)
-        if document_type_code not in ('01', '11') and not original_document:
+        if vals['document_type_code'] not in ('01', '11') and not vals['original_document']:
             self._l10n_my_edi_make_validation_error(constraints, 'adjustment_origin', invoice.id, invoice.display_name)
 
         return constraints
 
-    def _get_invoice_line_item_vals(self, line, taxes_vals):
-        # EXTENDS 'account_edi_ubl_cii'
-        vals = super()._get_invoice_line_item_vals(line, taxes_vals)
-        vals['commodity_classification_vals'] = [{
-            'item_classification_code': line.l10n_my_edi_classification_code,
-            'item_classification_attrs': {'listID': 'CLASS'},
-        }]
-        # User the tax_details in order to fill the classified_tax_category_vals as would be expected.
-        for tax_detail in taxes_vals['tax_details']:
-            tax_category_vals = tax_detail['_tax_category_vals_']
-            for classified_tax_category_vals in vals['classified_tax_category_vals']:
-                if tax_category_vals['id'] == classified_tax_category_vals['id']:
-                    classified_tax_category_vals['name'] = tax_category_vals['name']
-                    classified_tax_category_vals['tax_exemption_reason'] = tax_category_vals['tax_exemption_reason']
-
-        return vals
-
-    def _get_tax_grouping_key(self, base_line, tax_data):
-        # EXTENDS 'account_edi_ubl_cii'
-        grouping_key = super()._get_tax_grouping_key(base_line, tax_data)
-        # Add the tax exemption here as well to ensure consistency.
-        tax = tax_data['tax']
-        invoice = base_line['record'].move_id
-        grouping_key['_tax_category_vals_']['name'] = invoice.l10n_my_edi_exemption_reason if tax.l10n_my_tax_type == 'E' else None
-        grouping_key['_tax_category_vals_']['tax_exemption_reason'] = invoice.l10n_my_edi_exemption_reason if tax.l10n_my_tax_type == 'E' else None
-        return grouping_key
-
-    def _get_invoice_line_vals(self, line, line_id, taxes_vals):
-        # EXTENDS 'account_edi_ubl_cii'
-        vals = super()._get_invoice_line_vals(line, line_id, taxes_vals)
-        vals['item_price_extension_amount'] = line.price_subtotal
-        return vals
+    # -------------------------------------------------------------------------
+    # IMPORT
+    # -------------------------------------------------------------------------
 
     def _import_retrieve_partner_vals(self, tree, role):
         """ Returns a dict of values that will be used to retrieve the partner """
@@ -417,15 +446,6 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
     # ----------------
     # Business methods
     # ----------------
-
-    def _l10n_my_edi_get_delivery_party_vals(self, partner):
-        """ Returns the vals required to display the delivery information in the invoice. """
-        return {
-            'partner': partner,
-            'party_identification_vals': self._get_partner_party_identification_vals_list(partner.commercial_partner_id),
-            'postal_address_vals': self._get_partner_address_vals(partner),
-            'party_legal_entity_vals': self._get_partner_party_legal_entity_vals_list(partner.commercial_partner_id),
-        }
 
     @api.model
     def _l10n_my_edi_get_document_type_code(self, invoice):
