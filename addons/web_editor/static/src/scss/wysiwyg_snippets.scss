@@ -138,7 +138,6 @@
     border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
     border-radius: $o-we-sidebar-content-field-border-radius;
     background-color: $o-we-sidebar-content-field-clickable-bg;
-    color: $o-we-sidebar-content-field-clickable-color;
     text-align: center;
 
     &:not([disabled]):hover, &.active:not(.o_we_no_toggle) {
@@ -279,7 +278,15 @@
     }
     @for $level from 1 through 3 {
         .o_we_sublevel_#{$level} {
+            --o-we-checkbox-hover-color: #{$o-we-fg-light};
+            --o-we-sub-option-field-spacing: #{$o-we-sidebar-content-field-spacing * .5};
+
             @extend %o_we_sublevel;
+            color: $o-we-fg-light;
+
+            & + .o_we_sublevel_#{$level + 1} {
+                padding-bottom: 4px;
+            }
 
             @if $level > 1 {
                 > we-title {
@@ -871,6 +878,11 @@
                 background-color: $o-we-sidebar-content-field-dropdown-bg;
                 box-shadow: $o-we-sidebar-content-field-dropdown-shadow;
             }
+
+            &:hover, &.active {
+                color: $o-we-item-clickable-color;
+            }
+
             &.active {
                 @include we-icon-button('\f0d8');
                 + * {
@@ -1019,7 +1031,7 @@
 
         .o_we_user_value_widget {
             @extend %o-we-inline;
-            margin-top: $o-we-sidebar-content-field-spacing;
+            margin-top: var(--o-we-sub-option-field-spacing, $o-we-sidebar-content-field-spacing);
 
             > div {
                 display: flex;
@@ -1109,7 +1121,7 @@
                 justify-content: flex-end;
             }
             &.active, &:hover {
-                color: $o-we-sidebar-content-field-clickable-color;
+                color: var(--o-we-checkbox-hover-color, $o-we-color);
             }
         }
 
@@ -1764,7 +1776,7 @@
         we-row {
             position: relative;
             @extend %o-we-inline;
-            margin-top: $o-we-sidebar-content-field-spacing;
+            margin-top: var(--o-we-sub-option-field-spacing, $o-we-sidebar-content-field-spacing);
 
             .o_we_user_value_widget {
                 margin-top: 0;
