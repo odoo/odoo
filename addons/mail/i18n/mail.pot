@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 08:41+0000\n"
-"PO-Revision-Date: 2025-01-20 08:41+0000\n"
+"POT-Creation-Date: 2025-02-06 13:57+0000\n"
+"PO-Revision-Date: 2025-02-06 13:57+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -473,13 +473,6 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
 msgid "<span>We suggest you start by</span>"
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
-msgid ""
-"<strong>Internal communication</strong>: Replying will post an internal "
-"note. Followers won't receive any email notification."
 msgstr ""
 
 #. module: mail
@@ -1510,6 +1503,11 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
+msgid "Available for all Companies"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_window.xml:0
 #: code:addons/mail/static/src/core/common/message_in_reply.xml:0
@@ -2151,12 +2149,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
-msgid "Click on your message"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_in_reply.xml:0
 msgid "Click to see the attachments"
 msgstr ""
@@ -2493,11 +2485,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message__body
 #: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__body
 msgid "Contents"
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_discuss_channel_member__fold_state
-msgid "Conversation Fold State"
 msgstr ""
 
 #. module: mail
@@ -3816,12 +3803,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
-msgid "Expand options"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss_sidebar.xml:0
 msgid "Expand panel"
 msgstr ""
@@ -4041,6 +4022,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread_actions.js:0
 msgid "Fold"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_discuss_channel_member__fold_state
+msgid "Fold State"
 msgstr ""
 
 #. module: mail
@@ -4479,6 +4465,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__server
 msgid "Hostname or IP of the mail server"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "Hover on your message and mark as todo"
 msgstr ""
 
 #. module: mail
@@ -6162,12 +6154,6 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
 msgid "Messages Search"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
-msgid "Messages can be <b>starred</b> to remind you to check back later."
 msgstr ""
 
 #. module: mail
@@ -7882,6 +7868,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_status__ready
 msgid "Ready to Send"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/bus_connection_alert.xml:0
+msgid "Real-time connection lost..."
 msgstr ""
 
 #. module: mail
@@ -9767,6 +9759,7 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__allow_public_upload
+#: model:ir.model.fields,help:mail.field_discuss_channel_member__fold_state
 msgid ""
 "This field is deprecated and has no effect, it will be removed in future "
 "versions."
