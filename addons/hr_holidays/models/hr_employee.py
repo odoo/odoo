@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 import pytz
@@ -13,6 +13,11 @@ class HrEmployee(models.Model):
 
     current_leave_id = fields.Many2one('hr.leave.type', compute='_compute_current_leave', string="Current Time Off Type",
                                        groups="hr.group_hr_user")
+
+    departure_do_cancel_time_off_requests = fields.Boolean(
+        string="Cancel Time Off Requests",
+        default=True, groups="hr.group_hr_user",
+        help="Set the running allocations validity's end and delete future time off.")
 
     def _compute_current_leave(self):
         self.current_leave_id = False
@@ -355,3 +360,63 @@ class HrEmployee(models.Model):
             return 0
         calendars = self._get_calendars(date_from)
         return calendars[self.id].hours_per_day if calendars[self.id] else 24
+
+    def _register_departure(self):
+        super()._register_departure()
+        if not self.departure_do_cancel_time_off_requests:
+            return
+        employee_leaves = self.env['hr.leave'].search([
+            ('employee_id', '=', self.id),
+            ('date_to', '>', self.departure_date),
+        ])
+
+        if employee_leaves:
+            leaves_with_departure = employee_leaves.filtered(
+                lambda leave: leave.date_from.date() <= self.departure_date)
+            leaves_after_departure = employee_leaves - leaves_with_departure
+
+            new_leaves = leaves_with_departure._split_leaves(
+                split_date_from=(self.departure_date + timedelta(days=1)))
+            # Post message for changes leaves
+            changes_leaves = leaves_with_departure.filtered(lambda leave: leave.date_to.date() <= self.departure_date)
+            changes_msg = self.env._('End date has been updated because '
+                'the employee will leave the company on %(departure_date)s.',
+                departure_date=self.departure_date
+            )
+            for leave in changes_leaves:
+                leave.message_post(body=changes_msg, message_type="comment", subtype_xmlid="mail.mt_comment")
+
+            # Cancel approved leaves
+            leaves_after_departure |= leaves_with_departure - changes_leaves
+            leaves_after_departure |= new_leaves
+            leaves_to_cancel = leaves_after_departure.filtered(lambda leave: leave.state in ['validate', 'validate1'])
+            cancel_msg = _('The employee will leave the company on %(departure_date)s.',
+                departure_date=self.departure_date)
+            leaves_to_cancel._force_cancel(cancel_msg, notify_responsibles=False)
+            # Delete others leaves
+            leaves_to_delete = leaves_after_departure - leaves_to_cancel
+            leaves_to_delete.with_context(leave_skip_state_check=True).unlink()
+
+        employee_allocations = self.env['hr.leave.allocation'].search([
+            ('employee_id', '=', self.id),
+            '|',
+                ('date_to', '=', False),
+                ('date_to', '>', self.departure_date),
+        ])
+        if employee_allocations:
+            to_delete = self.env['hr.leave.allocation']
+            to_modify = self.env['hr.leave.allocation']
+            allocation_msg = _('Validity End date has been updated because '
+                'the employee will leave the company on %(departure_date)s.',
+                departure_date=self.departure_date
+            )
+            for allocation in employee_allocations:
+                if allocation.date_from > self.departure_date:
+                    to_delete |= allocation
+                else:
+                    to_modify |= allocation
+                    allocation.message_post(body=allocation_msg, subtype_xmlid='mail.mt_comment')
+            to_delete.with_context(allocation_skip_state_check=True).unlink()
+            to_modify.date_to = self.departure_date
+
+        self.message_post(body=self.env._("Time off and allocation requests have been cleaned for %s", self.name))

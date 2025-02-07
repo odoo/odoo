@@ -71,19 +71,10 @@
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action"
                             groups="hr.group_hr_user" invisible="not active or not id" context="{'sort_by_responsible': True}"/>
                         <button name="action_new_departure" string="End of Collaboration" type="object"
-                            groups="hr.group_hr_user" invisible="not id"/>
+                            groups="hr.group_hr_user" invisible="not id or departure_reason_id"/>
                     </header>
                     <sheet>
                         <div name="button_box" class="oe_button_box">
-                            <button name="action_open_departures"
-                                icon="fa-minus"
-                                type="object"
-                                invisible="not departure_ids"
-                                groups="hr.group_hr_user">
-                                <div class="o_stat_info">
-                                    <span class="o_stat_text">Departures</span>
-                                </div>
-                            </button>
                         </div>
                         <field name="avatar_128" invisible="1"/>
                         <div class="row justify-content-between position-relative w-100 m-0 mb-2">
@@ -138,11 +129,6 @@
                                         </group>
                                         <group name="managers" string="Approvers" class="hide-group-if-empty" invisible="1">
                                             <!-- is overridden in other hr related modules -->
-                                        </group>
-                                        <group name="departure" string="Departure" invisible="active">
-                                            <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
-                                            <field name="departure_description"/>
-                                            <field name="departure_date"/>
                                         </group>
                                         <group name="schedule" string="Schedule">
                                             <field name="resource_calendar_id" help="The default working hours are set in configuration."/>
@@ -243,6 +229,48 @@
                                         </div>
                                     </group>
                                     <group name="application_group" string="Application Settings" invisible="1"/>
+                                </group>
+                            </page>
+                            <page name="departure" string="Departure" groups="hr.group_hr_user" invisible="not departure_reason_id">
+                                <group>
+                                    <group>
+                                        <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"
+                                            readonly="departure_applied"/>
+                                        <label for="departure_date" string="Contract End Date"/>
+                                        <div invisible="not departure_reason_id">
+                                            <field name="departure_date" nolabel="1" class="oe_inline" readonly="departure_applied"/>
+                                        </div>
+                                    </group>
+                                    <group>
+                                        <div id="detailed_reason" colspan="2">
+                                            <span class="o_form_label o_hr_form_label cursor-default">Note</span>
+                                            <field name="departure_description" placeholder="Add more details about the reason to end the collaboration with this employee."/>
+                                        </div>
+                                    </group>
+                                </group>
+                                <group string="Planned Actions" name="planned_actions">
+                                    <group name="planned_actions_left">
+                                        <label for="departure_do_archive" string="Employee"/>
+                                        <div class="o_row">
+                                            <field name="departure_do_archive" nolabel="1"/>
+                                            <span>Archive</span>
+                                        </div>
+                                    </group>
+                                    <group name="planned_actions_right"/>
+                                </group>
+                                <group class="mt-4" invisible="not departure_has_selected_actions">
+                                    <group invisible="departure_applied">
+                                        <field name="departure_action_at"/>
+                                        <field name="departure_action_other_date"
+                                            invisible="departure_action_at == 'departure_date'"
+                                            placeholder="Immediately"/>
+                                    </group>
+                                    <div invisible="not departure_applied">
+                                        <span class="alert alert-warning" role="alert">
+                                            All selected actions have been executed on the
+                                            <field name="departure_apply_date" class="oe_inline"/>
+                                        </span>
+                                    </div>
                                 </group>
                             </page>
                         </notebook>

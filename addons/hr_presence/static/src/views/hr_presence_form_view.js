@@ -1,20 +1,10 @@
-/** @odoo-module */
-
-import { registry } from "@web/core/registry";
-
-import { formView } from "@web/views/form/form_view";
-import { FormController } from "@web/views/form/form_controller";
+import { patch } from "@web/core/utils/patch";
+import { EmployeeFormController } from "@hr/views/form_view";
 import { HrPresenceCogMenu } from "../search/hr_presence_cog_menu/hr_presence_cog_menu";
 
-
-export class EmployeeFormController extends FormController {
-    static components = {
-        ...FormController.components,
+patch(EmployeeFormController, {
+    components: {
+        ...EmployeeFormController.components,
         CogMenu: HrPresenceCogMenu,
-    };
-}
-
-registry.category("views").add("hr_employee_form", {
-    ...formView,
-    Controller: EmployeeFormController,
+    },
 });

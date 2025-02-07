@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import resource
 from . import hr_employee_base
 from . import hr_employee
-from . import hr_employee_departure
 from . import hr_department
 from . import hr_leave
 from . import hr_leave_allocation

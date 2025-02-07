@@ -148,11 +148,6 @@ class HrEmployee(models.Model):
     barcode = fields.Char(string="Badge ID", help="ID used for employee identification.", groups="hr.group_hr_user", copy=False)
     pin = fields.Char(string="PIN", groups="hr.group_hr_user", copy=False,
         help="PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if enabled in Configuration) and to change the cashier in the Point of Sale application.")
-    departure_reason_id = fields.Many2one("hr.departure.reason", string="Departure Reason", groups="hr.group_hr_user",
-                                          copy=False, tracking=True, ondelete='restrict')
-    departure_description = fields.Html(string="Additional Information", groups="hr.group_hr_user", copy=False)
-    departure_date = fields.Date(string="Departure Date", groups="hr.group_hr_user", copy=False, tracking=True)
-    departure_ids = fields.One2many('hr.employee.departure', 'employee_id', groups="hr.group_hr_user")
     message_main_attachment_id = fields.Many2one(groups="hr.group_hr_user")
     id_card = fields.Binary(string="ID Card Copy", groups="hr.group_hr_user")
     driving_license = fields.Binary(string="Driving License", groups="hr.group_hr_user")
@@ -187,6 +182,26 @@ class HrEmployee(models.Model):
     message_attachment_count = fields.Integer(groups="hr.group_hr_user")
     address_id = fields.Many2one(tracking=True)
     work_phone = fields.Char(tracking=True)
+
+    # departure
+    departure_reason_id = fields.Many2one("hr.departure.reason",
+        string="Departure Reason", groups="hr.group_hr_user",
+        copy=False, ondelete='restrict')
+    departure_description = fields.Html(string="Additional Information",
+        groups="hr.group_hr_user", copy=False)
+    departure_date = fields.Date(string="Departure Date", groups="hr.group_hr_user", copy=False)
+    departure_do_archive = fields.Boolean(default=True, groups="hr.group_hr_user")
+    departure_action_at = fields.Selection(
+        selection=[
+            ('departure_date', 'Departure Date'),
+            ('other', 'Other Date'),
+        ], default='departure_date',
+        groups="hr.group_hr_user", copy=False)
+    departure_action_other_date = fields.Date(groups="hr.group_hr_user", copy=False)
+    departure_has_selected_actions = fields.Boolean(compute='_compute_has_selected_actions', groups="hr.group_hr_user")
+    departure_apply_date = fields.Date(compute='_compute_departure_apply_date', store=True,
+        groups="hr.group_hr_user", copy=False)
+    departure_applied = fields.Boolean(default=False, groups="hr.group_hr_user")
 
     _barcode_uniq = models.Constraint(
         'unique (barcode)',
@@ -281,6 +296,26 @@ class HrEmployee(models.Model):
     @api.depends(lambda self: self._get_partner_count_depends())
     def _compute_related_partners_count(self):
         self.related_partners_count = len(self._get_related_partners())
+
+    def _get_action_fields(self):
+        return [f for f in self._fields if f.startswith('departure_do_')]
+
+    @api.depends(lambda self: self._get_action_fields())
+    def _compute_has_selected_actions(self):
+        action_fields = self._get_action_fields()
+        for employee in self:
+            employee.departure_has_selected_actions = any(employee[field] for field in action_fields)
+
+    @api.depends('departure_action_at', 'departure_date', 'departure_action_other_date')
+    def _compute_departure_apply_date(self):
+        today = fields.Date.today()
+        for employee in self:
+            if not employee.departure_date:
+                employee.departure_apply_date = False
+            elif employee.departure_action_at == 'departure_date':
+                employee.departure_apply_date = max(employee.departure_date, today)
+            else:
+                employee.departure_apply_date = employee.departure_action_other_date or today
 
     def _get_related_partners(self):
         return self.work_contact_id | self.user_id.partner_id
@@ -658,39 +693,6 @@ class HrEmployee(models.Model):
     def _get_user_m2o_to_empty_on_archived_employees(self):
         return []
 
-    def _get_departure_date(self):
-        # for overloads
-        self.ensure_one()
-        return self.departure_date
-
-    def action_unarchive(self):
-        res = super().action_unarchive()
-        self.write({
-            'departure_reason_id': False,
-            'departure_description': False,
-            'departure_date': False
-        })
-        return res
-
-    def action_archive(self):
-        archived_employees = self.filtered('active')
-        res = super().action_archive()
-        if archived_employees:
-            # Empty links to this employees (example: manager, coach, time off responsible, ...)
-            employee_fields_to_empty = self._get_employee_m2o_to_empty_on_archived_employees()
-            user_fields_to_empty = self._get_user_m2o_to_empty_on_archived_employees()
-            employee_domain = [[(field, 'in', archived_employees.ids)] for field in employee_fields_to_empty]
-            user_domain = [[(field, 'in', archived_employees.user_id.ids) for field in user_fields_to_empty]]
-            employees = self.env['hr.employee'].search(expression.OR(employee_domain + user_domain))
-            for employee in employees:
-                for field in employee_fields_to_empty:
-                    if employee[field] in archived_employees:
-                        employee[field] = False
-                for field in user_fields_to_empty:
-                    if employee[field] in archived_employees.user_id:
-                        employee[field] = False
-        return res
-
     @api.onchange('company_id')
     def _onchange_company_id(self):
         if self._origin:
@@ -787,6 +789,84 @@ class HrEmployee(models.Model):
         convert.convert_file(self.env, 'hr', 'data/scenarios/hr_scenario.xml', None, mode='init', kind='data')
 
     # ---------------------------------------------------------
+    # Archive Methods
+    # ---------------------------------------------------------
+
+    def action_unarchive(self):
+        res = super().action_unarchive()
+        self.write({
+            'departure_reason_id': False,
+            'departure_description': False,
+            'departure_date': False,
+            'departure_action_at': 'departure_date',
+            'departure_action_other_date': False,
+            'departure_has_selected_actions': False,
+            'departure_apply_date': False,
+            'departure_applied': False,
+        })
+        return res
+
+    def action_archive(self):
+        archived_employees = self.filtered('active')
+        res = super().action_archive()
+        if archived_employees:
+            # Empty links to this employees (example: manager, coach, time off responsible, ...)
+            employee_fields_to_empty = self._get_employee_m2o_to_empty_on_archived_employees()
+            user_fields_to_empty = self._get_user_m2o_to_empty_on_archived_employees()
+            employee_domain = [[(field, 'in', archived_employees.ids)] for field in employee_fields_to_empty]
+            user_domain = [[(field, 'in', archived_employees.user_id.ids) for field in user_fields_to_empty]]
+            employees = self.env['hr.employee'].search(expression.OR(employee_domain + user_domain))
+            for employee in employees:
+                for field in employee_fields_to_empty:
+                    if employee[field] in archived_employees:
+                        employee[field] = False
+                for field in user_fields_to_empty:
+                    if employee[field] in archived_employees.user_id:
+                        employee[field] = False
+        return res
+
+    def _get_departure_date(self):
+        # for overloads
+        self.ensure_one()
+        return self.departure_date
+
+    def _register_departure(self):
+        self.ensure_one()
+        if self.departure_do_archive and self.active:
+            self.action_archive()
+        self.message_post(body=self.env._(
+            """
+            This employee has been archived.\n
+            Reason: %(reason)s\n
+            Additional Information:\n %(description)s
+            """,
+            reason=self.departure_reason_id,
+            description=self.departure_description,
+        ))
+        self.departure_applied = True
+
+    def _cron_apply_departure(self):
+        today = fields.Date.today()
+        employees = self.env['hr.employee'].search([
+            ('departure_apply_date', '<=', today),
+            ('departure_applied', '=', False),
+        ])
+        for employee in employees:
+            employee._register_departure()
+
+    def action_new_departure(self):
+        self.ensure_one()
+        action = {
+            'name': _('End of collaboration'),
+            'res_model': 'hr.employee.departure.wizard',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_employee_id': self.id},
+        }
+        return action
+
+    # ---------------------------------------------------------
     # Business Methods
     # ---------------------------------------------------------
 
@@ -821,21 +901,3 @@ class HrEmployee(models.Model):
 
     def _mail_get_partner_fields(self, introspect_fields=False):
         return ['work_contact_id', 'user_partner_id']
-
-    def action_new_departure(self):
-        self.ensure_one()
-        action = {
-            'name': _('End of collaboration'),
-            'res_model': 'hr.employee.departure',
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'target': 'new',
-            'domain': [('employee_id', '=', self.id)],
-        }
-        return action
-
-    def action_open_departures(self):
-        self.ensure_one()
-        action = self.env['ir.actions.act_window']._for_xml_id("hr.hr_employee_departure_action")
-        action['domain'] = [('employee_id', '=', self.id)]
-        return action

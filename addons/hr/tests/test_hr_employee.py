@@ -449,11 +449,15 @@ class TestHrEmployee(TestHrCommon):
         ])
         archiving_employees = [employee.id for employee in (employee_A, employee_C)]
 
-        wizard = self.env['hr.departure.wizard'].with_context(
+        wizards = self.env['hr.employee.departure.wizard'].with_context(
             employee_termination=True,
             active_ids=archiving_employees,
-        ).create({})
-        wizard.action_register_departure()
+        ).create([{
+            'employee_id': employee_A.id,
+        }, {
+            'employee_id': employee_C.id,
+        }])
+        wizards.action_register_departure()
 
         all_employees = employee_A | employee_B | employee_C
         self.assertEqual(all_employees.filtered(lambda e: e.active), employee_B, "Employees should have been archived")
