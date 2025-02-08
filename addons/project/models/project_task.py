@@ -327,10 +327,12 @@ class ProjectTask(models.Model):
 
     @property
     def SELF_READABLE_FIELDS(self):
+        # TODO rename
         return PROJECT_TASK_READABLE_FIELDS | self.SELF_WRITABLE_FIELDS
 
     @property
     def SELF_WRITABLE_FIELDS(self):
+        # TODO rename
         return PROJECT_TASK_WRITABLE_FIELDS
 
     @api.depends('parent_id.project_id')
@@ -792,9 +794,15 @@ class ProjectTask(models.Model):
             'dependent_ids': False,
         })
         vals_list = super().copy_data(default=default)
-        not_project_user = not self.env.user.has_group('project.group_project_user')
-        if not_project_user:
-            vals_list = [{k: v for k, v in vals.items() if k in self.SELF_READABLE_FIELDS} for vals in vals_list]
+        # filter only readable fields
+        vals_list = [
+            {
+                k: v
+                for k, v in vals.items()
+                if self._has_field_access(self._fields[k], 'read')
+            }
+            for vals in vals_list
+        ]
 
         active_users = self.env['res.users']
         has_default_users = 'user_ids' in default
@@ -916,21 +924,6 @@ class ProjectTask(models.Model):
     # ------------------------------------------------
     # CRUD overrides
     # ------------------------------------------------
-    @api.model
-    def fields_get(self, allfields=None, attributes=None):
-        fields = super().fields_get(allfields=allfields, attributes=attributes)
-        if not self.env.user._is_portal():
-            return fields
-        readable_fields = self.SELF_READABLE_FIELDS
-        public_fields = {field_name: description for field_name, description in fields.items() if field_name in readable_fields}
-
-        writable_fields = self.SELF_WRITABLE_FIELDS
-        for field_name, description in public_fields.items():
-            if field_name not in writable_fields and not description.get('readonly', False):
-                # If the field is not in Writable fields and it is not readonly then we force the readonly to True
-                description['readonly'] = True
-
-        return public_fields
 
     @api.model
     def _get_view_cache_key(self, view_id=None, view_type='form', **options):
@@ -987,7 +980,8 @@ class ProjectTask(models.Model):
         """
         assert operation in ('read', 'write'), 'Invalid operation'
         if fields and (not check_group_user or self.env.user._is_portal()) and not self.env.su:
-            unauthorized_fields = set(fields) - (self.SELF_READABLE_FIELDS if operation == 'read' else self.SELF_WRITABLE_FIELDS)
+            readable, writeable = self._portal_accessible_fields()
+            unauthorized_fields = set(fields) - (readable if operation == 'read' else writeable)
             if unauthorized_fields:
                 if operation == 'read':
                     error_message = _('You cannot read the following fields on tasks: %(field_list)s', field_list=unauthorized_fields)
@@ -995,20 +989,29 @@ class ProjectTask(models.Model):
                     error_message = _('You cannot write on the following fields on tasks: %(field_list)s', field_list=unauthorized_fields)
                 raise AccessError(error_message)
 
+    @api.model
+    @tools.ormcache()
+    def _portal_accessible_fields(self) -> tuple[frozenset[str], frozenset[str]]:
+        """Readable and writable fields by portal users."""
+        readable = frozenset(self.SELF_READABLE_FIELDS)
+        writeable = frozenset(self.SELF_WRITABLE_FIELDS)
+        return readable | writeable, writeable
+
     def _has_field_access(self, field, operation):
         if not super()._has_field_access(field, operation):
             return False
         if not self.env.su and self.env.user._is_portal():
             # additional checks for portal users
+            readable, writeable = self._portal_accessible_fields()
             if operation == 'read':
-                return field.name in self.SELF_READABLE_FIELDS
+                return field.name in readable
             if operation == 'write':
-                return field.name in self.SELF_WRITABLE_FIELDS
+                return field.name in writeable
         return True
 
     def _determine_fields_to_fetch(self, field_names, ignore_when_in_cache=False):
         if not self.env.su and self.env.user._is_portal():
-            valid_names = self.SELF_READABLE_FIELDS
+            valid_names, _ = self._portal_accessible_fields()
             field_names = [fname for fname in field_names if fname in valid_names]
         return super()._determine_fields_to_fetch(field_names, ignore_when_in_cache)
 
@@ -1021,10 +1024,11 @@ class ProjectTask(models.Model):
         """
         vals_no_sudo = {key: val for key, val in vals.items() if self._fields[key].type in ('one2many', 'many2many')}
         if defaults:
+            _, writeable = self._portal_accessible_fields()
             vals_no_sudo.update({
                 key[8:]: value
                 for key, value in self.env.context.items()
-                if key.startswith('default_') and key[8:] in self.SELF_WRITABLE_FIELDS and self._fields[key[8:]].type in ('one2many', 'many2many')
+                if key.startswith('default_') and key[8:] in writeable and self._fields[key[8:]].type in ('one2many', 'many2many')
             })
         vals_sudo = {key: val for key, val in vals.items() if key not in vals_no_sudo}
         return vals_no_sudo, vals_sudo
