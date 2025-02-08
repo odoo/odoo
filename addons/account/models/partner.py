@@ -527,7 +527,6 @@ class ResPartner(models.Model):
         compute='_compute_use_partner_credit_limit', inverse='_inverse_use_partner_credit_limit',
         help='Set a value greater than 0.0 to activate a credit limit check')
     show_credit_limit = fields.Boolean(
-        default=lambda self: self.env.company.account_use_credit_limit,
         compute='_compute_show_credit_limit', groups='account.group_account_invoice,account.group_account_readonly')
     days_sales_outstanding = fields.Float(
         string='Days Sales Outstanding (DSO)',
@@ -705,8 +704,7 @@ class ResPartner(models.Model):
 
     @api.depends_context('company')
     def _compute_show_credit_limit(self):
-        for partner in self:
-            partner.show_credit_limit = self.env.company.account_use_credit_limit
+        self.show_credit_limit = self.env.company.account_use_credit_limit
 
     def _get_suggested_invoice_edi_format(self):
         # TO OVERRIDE
