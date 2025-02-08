@@ -19,7 +19,6 @@ from odoo.tools import mute_logger
 from odoo.addons.base.models.ir_cron import (
     MIN_DELTA_BEFORE_DEACTIVATION,
     MIN_FAILURE_COUNT_BEFORE_DEACTIVATION,
-    MIN_TIME_PER_JOB,
     CompletionStatus,
     IrCron,
 )
@@ -230,6 +229,7 @@ class TestIrCron(TransactionCase, CronMixinCase):
         ten_days_ago = fields.Datetime.now() - MIN_DELTA_BEFORE_DEACTIVATION - timedelta(days=2)
         almost_failed = MIN_FAILURE_COUNT_BEFORE_DEACTIVATION - 1
         frozen_datetime = self.frozen_datetime
+        RUN_TIME = 10
 
         def nothing(cron):
             state = {'call_count': 0}
@@ -237,19 +237,7 @@ class TestIrCron(TransactionCase, CronMixinCase):
                 state['call_count'] += 1
             return f, state
 
-        def success_121(cron):
-            state = {'call_count': 0}
-            CALL_TARGET = 121
-            def f(self):
-                frozen_datetime.tick(delta=timedelta(seconds=1))
-                state['call_count'] += 1
-                self.env['ir.cron']._commit_progress(
-                    processed=1,
-                    remaining=CALL_TARGET - state['call_count']
-                )
-            return f, state
-
-        def success_5(cron):
+        def five_5(cron):
             state = {'call_count': 0}
             CALL_TARGET = 5
             def f(self):
@@ -263,7 +251,7 @@ class TestIrCron(TransactionCase, CronMixinCase):
         def end_time(cron):
             state = {
                 'call_count': 0,
-                'remaining': MIN_TIME_PER_JOB + 1,
+                'remaining': RUN_TIME + 1,
             }
             def f(self):
                 state['call_count'] += 1
@@ -307,11 +295,9 @@ class TestIrCron(TransactionCase, CronMixinCase):
             #       callback, curr_failures, trigger, call_count, done_count, fail_count, active,
             (        nothing,             0,   False,          1,          0,          0,  True),
             (        nothing, almost_failed,   False,          1,          0,          0,  True),
-            (    success_121,             0,    True,        120,        120,          0,  True),
-            (    success_121, almost_failed,    True,        120,        120,          0,  True),
-            (      success_5,             0,   False,          5,          5,          0,  True),
-            (      success_5, almost_failed,   False,          5,          5,          0,  True),
-            (       end_time,             0,    True,          2,        120,          0,  True),
+            (         five_5,             0,   False,          5,          5,          0,  True),
+            (         five_5, almost_failed,   False,          5,          5,          0,  True),
+            (       end_time,             0,    True,          1,   RUN_TIME,          0,  True),
             (        failure,             0,   False,          1,          0,          1,  True),
             (        failure, almost_failed,   False,          1,          0,          0, False),
             (failure_partial,             0,   False,          5,          5,          1,  True),
@@ -321,7 +307,7 @@ class TestIrCron(TransactionCase, CronMixinCase):
         ]
 
         for cb, curr_failures, trigger, call_count, done_count, fail_count, active in CASES:
-            with self.subTest(cb=cb, failure=curr_failures), closing(self.cr.savepoint()):
+            with self.subTest(cb=cb.__name__, failure=curr_failures), closing(self.cr.savepoint()):
                 self.cron.write({
                     'active': True,
                     'failure_count': curr_failures,
@@ -339,7 +325,8 @@ class TestIrCron(TransactionCase, CronMixinCase):
                             self.registry.cursor() as cr:
                         self.registry['ir.cron']._process_job(
                             cr,
-                            {**self.cron.read(load=None)[0], **default_progress_values}
+                            {**self.cron.read(load=None)[0], **default_progress_values},
+                            end_time=time.monotonic() + RUN_TIME,
                         )
                 self.cron.invalidate_recordset()
                 capture.records.invalidate_recordset()
@@ -356,8 +343,8 @@ class TestIrCron(TransactionCase, CronMixinCase):
         default_progress_values = {'done': 0, 'remaining': 0, 'timed_out_counter': 0}
         frozen_datetime = self.frozen_datetime
 
-        CALL_TARGET = 31
-        mocked_run_state = {'call_count': 0, 'duration': 0}
+        mocked_run_state = state = dict(call_count=0, duration=1)
+        CALL_TARGET = 23
 
         def mocked_run(self):
             frozen_datetime.tick(delta=timedelta(seconds=mocked_run_state['duration']))
@@ -367,18 +354,23 @@ class TestIrCron(TransactionCase, CronMixinCase):
                 remaining=CALL_TARGET - mocked_run_state['call_count'],
             )
 
+        def mocked_time():
+            return float(state['call_count'] * state['duration'])
+
         self.cron._trigger()
         self.env.flush_all()
         with (
             self.enter_registry_test_mode(),
             patch.object(self.registry['ir.actions.server'], 'run', mocked_run),
             self.registry.cursor() as cr,
+            patch.object(time, 'monotonic', mocked_time),
         ):
             # make it run 10 times, 120 seconds in total
             mocked_run_state['duration'] = 120 / 10
             self.registry['ir.cron']._process_job(
                 cr,
-                {**self.cron.read(load=None)[0], **default_progress_values}
+                {**self.cron.read(load=None)[0], **default_progress_values},
+                end_time=time.monotonic() + 120,
             )
 
         self.assertEqual(
@@ -394,22 +386,25 @@ class TestIrCron(TransactionCase, CronMixinCase):
             "One trigger should have been kept",
         )
 
-        self.env.flush_all()
+        # make each run 0.5 seconds, so that it is run 20 times, 10 seconds in total
+        mocked_run_state.update(duration=0.5, call_count=0)
         with (
             self.enter_registry_test_mode(),
             patch.object(self.registry['ir.actions.server'], 'run', mocked_run),
             self.registry.cursor() as cr,
+            patch.object(time, 'monotonic', mocked_time),
         ):
             # make it run 20 times, 120 seconds in total
             mocked_run_state['duration'] = 120 / 20
             self.registry['ir.cron']._process_job(
                 cr,
-                {**self.cron.read(load=None)[0], **default_progress_values}
+                {**self.cron.read(load=None)[0], **default_progress_values},
+                end_time=time.monotonic() + 120,
             )
 
         self.assertEqual(
-            mocked_run_state['call_count'], 30,
-            '`run` should have been called 10 times',
+            mocked_run_state['call_count'], 20,
+            '`run` should have been called 20 times',
         )
         self.assertEqual(
             Progress.search_count([('done', '=', 1), ('cron_id', '=', self.cron.id)]), 30,
@@ -420,15 +415,18 @@ class TestIrCron(TransactionCase, CronMixinCase):
             "One trigger should have been kept",
         )
 
-        self.env.flush_all()
+        Progress.search([('cron_id', '=', self.cron.id)]).unlink()
+        mocked_run_state.update(duration=1, call_count=0)
         with (
             self.enter_registry_test_mode(),
             patch.object(self.registry['ir.actions.server'], 'run', mocked_run),
             self.registry.cursor() as cr,
+            patch.object(time, 'monotonic', mocked_time),
         ):
             self.registry['ir.cron']._process_job(
                 cr,
-                {**self.cron.read(load=None)[0], **default_progress_values}
+                {**self.cron.read(load=None)[0], **default_progress_values},
+                end_time=time.monotonic() + 120,
             )
 
         ready_jobs = self.registry['ir.cron']._get_all_ready_jobs(self.cr)
@@ -437,12 +435,12 @@ class TestIrCron(TransactionCase, CronMixinCase):
             'The cron has finished executing'
         )
         self.assertEqual(
-            mocked_run_state['call_count'], 31,
-            '`run` should have been called one additional time',
+            mocked_run_state['call_count'], 23,
+            '`run` should have been called for all additional runs',
         )
         self.assertEqual(
-            Progress.search_count([('done', '=', 1), ('cron_id', '=', self.cron.id)]), 31,
-            'There should be 11 progress log for this cron',
+            Progress.search_count([('done', '=', 1), ('cron_id', '=', self.cron.id)]), 23,
+            'There should be 23 progress log for this cron',
         )
 
     def test_cron_failed_increase(self):
@@ -657,6 +655,16 @@ class TestIrCron(TransactionCase, CronMixinCase):
             process_jobs()
             run.assert_called_once()
 
+    def test_cron_process_jobs_limit_reached(self):
+        with (
+            self.patch_cron_process_jobs_loop() as process_jobs,
+            self.patch_run_job() as run,
+            patch.object(time, 'monotonic', return_value=42.0),
+        ):
+            self.cron._trigger()
+            process_jobs(end_time=42.0)
+            run.assert_not_called()
+
     def test_cron_process_jobs_locked(self):
         with (
             self.patch_cron_process_jobs_loop() as process_jobs,
@@ -666,9 +674,34 @@ class TestIrCron(TransactionCase, CronMixinCase):
             patch.object(time, 'monotonic', side_effect=lambda: 42 + run.call_count),
         ):
             self.cron._trigger()
-            process_jobs()
+            process_jobs(end_time=43)  # prevent endless loop
             run.assert_not_called()
             acquire.assert_called_once()
+
+    def test_cron_process_jobs_split_remaining_time_between_jobs(self):
+        with self.patch_cron_process_jobs_loop() as process_jobs, self.patch_run_job() as run:
+            cron = self.cron.create(self._get_cron_data(self.env))
+            crons = cron + self.cron
+
+            def trigger_crons():
+                run.reset_mock()
+                self.cron._trigger()
+                cron._trigger()
+
+            trigger_crons()
+            with patch.object(time, 'monotonic', side_effect=lambda: 42 + run.call_count):
+                process_jobs(job_ids=crons.ids, end_time=50)
+                self.assertEqual([call.kwargs['end_time'] for call in run.mock_calls], [46, 50])
+
+            trigger_crons()
+            with patch.object(time, 'monotonic', side_effect=lambda: 42 + run.call_count * 5):
+                process_jobs(job_ids=crons.ids, end_time=50)
+                self.assertEqual([call.kwargs['end_time'] for call in run.mock_calls], [46, 50])
+
+            trigger_crons()
+            with patch.object(time, 'monotonic', side_effect=lambda: 42 + run.call_count * 10):
+                process_jobs(job_ids=crons.ids, end_time=50)
+                self.assertEqual([call.kwargs['end_time'] for call in run.mock_calls], [46])
 
     def test_cron_commit_progress(self):
         with self.enter_registry_test_mode(), self.registry.cursor() as cr:
