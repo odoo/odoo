@@ -89,6 +89,7 @@
             'crm/static/tests/forecast_kanban_tests.js',
             'crm/static/tests/forecast_view_tests.js',
             'crm/static/tests/crm_rainbowman_tests.js',
+            'crm/static/tests/crm_kanban_currency_tests.js',
         ],
     },
     'license': 'LGPL-3',
