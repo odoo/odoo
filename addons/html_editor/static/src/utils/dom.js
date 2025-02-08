@@ -159,9 +159,11 @@ export function setTagName(el, newTagName) {
  * @param {...string} classNames - The class names to be removed.
  */
 export function removeClass(element, ...classNames) {
-    element.classList.remove(...classNames);
-    if (!element.classList.length) {
+    const classNamesSet = new Set(classNames);
+    if ([...element.classList].every((className) => classNamesSet.has(className))) {
         element.removeAttribute("class");
+    } else {
+        element.classList.remove(...classNames);
     }
 }
 
