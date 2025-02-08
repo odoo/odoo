@@ -25,8 +25,7 @@ _logger = logging.getLogger(__name__)
 
 BASE_VERSION = odoo.modules.get_manifest('base')['version']
 MAX_FAIL_TIME = timedelta(hours=5)  # chosen with a fair roll of the dice
-MIN_RUNS_PER_JOB = 10
-MIN_TIME_PER_JOB = 10  # seconds
+MAX_BATCH_PER_CRON_JOB = 10
 CONSECUTIVE_TIMEOUT_FOR_FAILURE = 3
 MIN_FAILURE_COUNT_BEFORE_DEACTIVATION = 5
 MIN_DELTA_BEFORE_DEACTIVATION = timedelta(days=7)
@@ -432,15 +431,10 @@ class IrCron(models.Model):
 
             status = None
             loop_count = 0
-            start_time = time.monotonic()
+            loop_start_time = time.monotonic()
             _logger.info('Job %r (%s) starting', job['cron_name'], job['id'])
 
-            # stop after MIN_RUNS_PER_JOB runs and MIN_TIME_PER_JOB seconds, or
-            # upon full completion or failure
-            while (
-                loop_count < MIN_RUNS_PER_JOB
-                or time.monotonic() < start_time + MIN_TIME_PER_JOB
-            ):
+            while loop_count < MAX_BATCH_PER_CRON_JOB:
                 cron, progress = cron._add_progress(timed_out_counter=timed_out_counter)
                 job_cr.commit()
 
@@ -474,17 +468,15 @@ class IrCron(models.Model):
                     progress.timed_out_counter = 0
                     timed_out_counter = 0
                     job_cr.commit()  # ensure we have no leftovers
-
                     _logger.debug('Job %r (%s) processed %s records, %s records remaining',
                         job['cron_name'], job['id'], done, remaining)
-
                 if status in (CompletionStatus.FULLY_DONE, CompletionStatus.FAILED):
                     break
 
             _logger.info(
                 'Job %r (%s) %s (#loop %s; done %s; remaining %s; duration %.2fs)',
                 job['cron_name'], job['id'], status,
-                loop_count, done, remaining, time.monotonic() - start_time)
+                loop_count, done, remaining, time.monotonic() - loop_start_time)
 
         return status
 
