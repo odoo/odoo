@@ -1047,7 +1047,7 @@ class PosGlobalState extends PosModel {
                 self.set_synch('connected');
                 return server_ids;
             }).catch(function (error){
-                ordersToSync.forEach(order_id => self.syncingOrders.delete(order_id));
+                ordersToSync.forEach(order => self.syncingOrders.delete(order.id));
                 console.warn('Failed to send orders:', ordersToSync);
                 if(error.code === 200 ){    // Business Logic Error, not a connection problem
                     // Hide error if already shown before ...
