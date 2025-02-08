@@ -1655,6 +1655,21 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             self.assertEqual(record_company.count, 0)
             self.assertEqual(record_company.phi, 0.0)
 
+    def test_27_company_dependent_missing_many2one(self):
+        """ test assign missing records to company dependent many2one """
+        Model = self.env['test_new_api.company']
+        record = Model.create({})
+
+        tag = self.env['test_new_api.multi.tag'].create({'name': 'Foo'})
+        record.tag_id = tag
+        tag.unlink()
+
+        with self.assertRaises(MissingError):
+            record.tag_id = 1000
+
+        with self.assertRaises(MissingError):
+            record = Model.create({'tag_id': 1000})
+
     def test_28_company_dependent_search(self):
         """ Test the search on company-dependent fields in all corner cases.
             This assumes that filtered_domain() correctly filters records when
@@ -1811,7 +1826,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             'child_of': (company0.id, company1.id, company2.id),
             'parent_of': (company0.id, company1.id, company2.id),
         })
-        test_field('partner_id', [company1.id, company2.id], {
+        test_field('partner_id', [company1.partner_id.id, company2.partner_id.id], {
             'child_of': (company0.partner_id.id, company1.partner_id.id, company2.partner_id.id),
             'parent_of': (company0.partner_id.id, company1.partner_id.id, company2.partner_id.id),
         })

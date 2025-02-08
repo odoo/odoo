@@ -4597,6 +4597,10 @@ class BaseModel(metaclass=MetaModel):
             # records as value
             Defaults.discard_records(records)
 
+        # remove these records from _ensure_exists_callback check
+        if self._name in self.env.registry.many2one_company_dependents and (data := self.env.cr.precommit.data.get('ensure_exists')):
+            data[self._name].difference_update(set(self._ids))
+
         # invalidate the *whole* cache, since the orm does not handle all
         # changes made in the database, like cascading delete!
         self.env.invalidate_all(flush=False)
@@ -5172,6 +5176,7 @@ class BaseModel(metaclass=MetaModel):
         records = self.browse(ids)
         inverses_update = defaultdict(list)     # {(field, value): ids}
         common_set_vals = set(LOG_ACCESS_COLUMNS + ['id', 'parent_path'])
+        company_dependent_many2one_refs = defaultdict(set)  # {comodel_name: corecord_ids}
         for data, record in zip(data_list, records.with_context(bin_size=False)):
             data['record'] = record
             # DLE P104: test_inherit.py, test_50_search_one2many
@@ -5198,6 +5203,13 @@ class BaseModel(metaclass=MetaModel):
                     self.env.cache.set(record, field, cache_value)
                     if field.type in ('many2one', 'many2one_reference') and self.pool.field_inverses[field]:
                         inverses_update[(field, cache_value)].append(record.id)
+                    if cache_value and field.company_dependent and field.type == 'many2one':
+                        # no need to ensure fallback value since it won't be stored in the column
+                        if cache_value != field.convert_to_cache(field.get_company_dependent_fallback(self), record):
+                            company_dependent_many2one_refs[field.comodel_name].add(cache_value)
+        
+        for comodel_name, corecord_ids in company_dependent_many2one_refs.items():
+            self.env[comodel_name].browse(corecord_ids)._ensure_exists()
 
         for (field, value), record_ids in inverses_update.items():
             field._update_inverses(self.browse(record_ids), value)
@@ -6709,6 +6721,39 @@ class BaseModel(metaclass=MetaModel):
         if self.env.cache.has_dirty_fields(self, fields_):
             self._flush(fnames)
 
+    def _ensure_exists(self):
+        if not self:
+            return
+        precommit = self.env.cr.precommit
+        if 'ensure_exists' not in precommit.data:
+            precommit.data['ensure_exists'] = defaultdict(set)
+            precommit.add(self._ensure_exists_callback)
+        precommit.data['ensure_exists'][self._name].update(self._ids)
+
+    def _ensure_exists_callback(self):
+        """ Enusre records' existence in the current and all concurrent transactions """
+        data = self.env.cr.precommit.data.get('ensure_exists')
+        if not data:
+            return
+        for model_name, ids in data.items():
+            if not ids:
+                continue
+            model = self.env[model_name]
+            # Lock referenced records by performing a dummy update to prevent concurrent deletion
+            self.env.cr.execute(SQL("""
+                UPDATE %(table)s
+                SET id = id
+                WHERE id IN %(ids)s
+                """,
+                table = SQL.identifier(model._table),
+                ids = tuple(ids),
+            ))
+            if self.env.cr.rowcount == len(ids):
+                continue
+            records = model.browse(ids)
+            missing = records - records.exists()
+            raise MissingError(f'Missing many2one reference: {missing!r}')
+
     def _flush(self, fnames=None):
         if fnames is None:
             fields = self._fields.values()
@@ -6752,6 +6797,19 @@ class BaseModel(metaclass=MetaModel):
                 if id_ in ids
             ),
         )
+
+        # Check existence of referenced records in company-dependent many2one fields and 
+        # lock them to prevent concurrent deletion
+        company_dependent_many2one_refs = defaultdict(set)  # {model_name: ids}
+        for field, ids_ in dirty_field_ids.items():
+            if field.company_dependent and field.type == 'many2one':
+                records = self.env[field.model_name].browse(ids_)
+                many2one_ids = self.env.cache._get_company_dependent_many2one_ids(field, records)
+                many2one_ids.discard(field.get_company_dependent_fallback(records).id or None)
+                company_dependent_many2one_refs[field.comodel_name].update(many2one_ids)
+
+        for comodel_name, ref_ids in company_dependent_many2one_refs.items():
+            self.env[comodel_name].browse(ref_ids)._ensure_exists()
 
         # perform updates in batches in order to limit memory footprint
         BATCH_SIZE = 1000

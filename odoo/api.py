@@ -1513,6 +1513,19 @@ class Cache:
             for context_key, field_cache in field_caches.items()
         }
         return GroupedCompanyDependentFieldCache(company_field_cache)
+    
+    def _get_company_dependent_many2one_ids(self, field, records):
+        """
+        return all company dependent many2one ids cached by the records
+        """
+        assert field.company_dependent and field.type == 'many2one'
+        field_caches = self._data.get(field, EMPTY_DICT)
+        return  {
+            value
+            for field_cache in field_caches.values()
+            for id_ in records._ids
+            if (value := field_cache.get(id_))
+        }
 
 
 class GroupedCompanyDependentFieldCache:
