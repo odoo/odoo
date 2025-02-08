@@ -54,4 +54,5 @@ class ProductProduct(models.Model):
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    create_repair = fields.Boolean('Create Repair', help="Create a linked Repair Order on Sale Order confirmation of this product.", groups='stock.group_stock_user')
+    service_tracking = fields.Selection(selection_add=[('repair', 'Repair Order')],
+                                        ondelete={'repair': 'set default'})
