@@ -103,6 +103,12 @@ class MrpBom(models.Model):
             self.operation_ids.bom_product_template_attribute_value_ids = False
             self.byproduct_ids.bom_product_template_attribute_value_ids = False
 
+    @api.constrains('product_uom_id')
+    def _check_product_uom_id(self):
+        for r in self:
+            if r.product_uom_id.category_id.id != r.product_tmpl_id.uom_id.category_id.id:
+                raise ValidationError(_('The Product Unit of Measure you chose has a different category than in the product form.'))
+
     @api.constrains('active', 'product_id', 'product_tmpl_id', 'bom_line_ids')
     def _check_bom_cycle(self):
         subcomponents_dict = dict()
@@ -461,6 +467,12 @@ class MrpBomLine(models.Model):
             'Lines with 0 quantities can be used as optional lines. \n'
             'You should install the mrp_byproduct module if you want to manage extra products on BoMs !'),
     ]
+
+    @api.constrains('product_uom_id')
+    def _check_product_uom_id(self):
+        for r in self:
+            if r.product_uom_id.category_id.id != r.product_id.uom_id.category_id.id:
+                raise ValidationError(_('The Product Unit of Measure you chose has a different category than in the product form.'))
 
     @api.depends('product_id', 'tracking', 'operation_id')
     def _compute_manual_consumption(self):
