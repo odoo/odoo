@@ -131,11 +131,12 @@ function processModelDefs(modelDefs) {
 }
 
 export class Base {
-    constructor({ models, records, model, dynamicModels }) {
+    constructor({ models, records, model, dynamicModels, baseData }) {
         this.models = models;
         this.records = records;
         this.model = model;
         this._dynamicModels = dynamicModels;
+        this.baseData = baseData;
     }
     /**
      * Called during instantiation when the instance is fully-populated with field values.
@@ -290,7 +291,7 @@ export class Base {
         return this[cacheName];
     }
     get raw() {
-        return this._raw ?? {};
+        return this.baseData[this.id];
     }
 }
 
@@ -441,7 +442,13 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
 
         const Model = modelClasses[model] || Base;
         const record = reactive(
-            new Model({ models, records, model: models[model], dynamicModels: opts.dynamicModels })
+            new Model({
+                models,
+                records,
+                model: models[model],
+                dynamicModels: opts.dynamicModels,
+                baseData: baseData[model],
+            })
         );
         const id = vals["id"];
         record.id = id;
@@ -454,7 +461,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             baseData[model][id] = vals;
         }
 
-        record._raw = baseData[model][id];
         records[model].set(id, record);
 
         const fields = getFields(model);
@@ -563,7 +569,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 continue;
             } else if (name === "id" && vals[name] !== record.id) {
                 records[model].delete(record.id);
-                delete baseData[model][record.id];
 
                 for (const key of indexes[model] || []) {
                     const keyVal = record.raw[key];
@@ -573,6 +578,8 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                         }
                     }
                 }
+
+                delete baseData[model][record.id];
 
                 record.id = vals[name];
                 records[model].set(record.id, record);
@@ -584,7 +591,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
 
             const field = fields[name];
             const comodelName = field.relation;
-            if (X2MANY_TYPES.has(field.type)) {
+            if (X2MANY_TYPES.has(field.type) && comodelName in models) {
                 for (const command of vals[name]) {
                     const [type, ...items] = command;
                     if (type === "unlink") {
@@ -613,7 +620,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                         const existingRecords = items.filter((record) =>
                             exists(comodelName, record.id)
                         );
-
                         for (const record2 of [...linkedRecs]) {
                             disconnect(field, record, record2);
                         }
@@ -622,7 +628,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                         }
                     }
                 }
-            } else if (field.type === "many2one") {
+            } else if (field.type === "many2one" && comodelName in models) {
                 if (vals[name]) {
                     const id = vals[name]?.id || vals[name];
                     const exist = exists(comodelName, id);
@@ -639,7 +645,9 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                     const linkedRec = record[name];
                     disconnect(field, record, linkedRec);
                 }
-            } else {
+            }
+
+            if (!RELATION_TYPES.has(field.type)) {
                 record[name] = vals[name];
             }
         }
@@ -806,7 +814,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                     if (field.type === "many2one") {
                         result[name] = record[name]?.id || record.raw[name] || false;
                     } else if (X2MANY_TYPES.has(field.type)) {
-                        const ids = [...record[name]].map((record) => record.id);
+                        const ids = [...record[name]].map((record) => record.id).filter(Boolean);
                         result[name] = ids.length ? ids : (!orm && record.raw[name]) || [];
                     } else if (typeof record[name] === "object") {
                         result[name] = JSON.stringify(record[name]);
@@ -946,18 +954,34 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
 
                 if (oldRecord && keepLocalRelation) {
                     for (const [field, value] of Object.entries(record)) {
-                        if (field === "id") {
+                        const params = getFields(model)[field];
+                        if (field === "id" || !params) {
                             continue;
                         }
 
-                        const params = getFields(model)[field];
-                        if (params && X2MANY_TYPES.has(params.type)) {
+                        if (X2MANY_TYPES.has(params.type)) {
                             value.push(
                                 ...oldRecord[field]
                                     .filter((r) => typeof r.id === "string")
                                     .map((r) => r.id)
                             );
-                            record[field] = ["set", value];
+                            const existingRecords = value
+                                .map((r) => models[params.relation]?.get(r))
+                                .filter(Boolean);
+                            if (existingRecords.length) {
+                                record[field] = [["set", ...existingRecords]];
+                            }
+                        } else if (
+                            params.type === "many2one" &&
+                            value &&
+                            !exists(params.relation, value)
+                        ) {
+                            const key = `${params.relation}_${value}`;
+                            if (!missingFields[key]) {
+                                missingFields[key] = [[oldRecord, params]];
+                            } else {
+                                missingFields[key].push([oldRecord, params]);
+                            }
                         }
                     }
 
