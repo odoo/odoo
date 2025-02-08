@@ -231,7 +231,6 @@
                 <page name="sales_purchases" position="after">
                     <page string="Invoicing" name="accounting" invisible="not is_company and parent_id" groups="account.group_account_invoice,account.group_account_readonly">
                         <field name="duplicated_bank_account_partners_count" invisible="1"/>
-                        <field name="show_credit_limit" invisible="1"/>
                         <group>
                             <group string="General" name="general" groups="account.group_account_invoice,account.group_account_readonly">
                                 <field name="bank_ids" context="{'default_partner_id': id}" domain="[('partner_id','=', id)]" widget="many2many_tags_banks" options="{'color_field': 'color', 'allow_out_payment_field': 'allow_out_payment', 'edit_tags': True}"/>

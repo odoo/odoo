@@ -3001,17 +3001,19 @@ class BaseModel(metaclass=MetaModel):
                 continue
 
             description = field.get_description(self.env, attributes=attributes)
+            if 'readonly' in description:
+                description['readonly'] = description['readonly'] or not self._has_field_access(field, 'write')
             res[fname] = description
 
         return res
 
     @api.model
-    def _has_field_access(self, field: Field, operation: str) -> bool:
+    def _has_field_access(self, field: Field, operation: typing.Literal['read', 'write']) -> bool:
         """ Determine whether the user access rights on the given field for the given operation.
         You may override this method to customize the access to fields.
 
         :param field: the field to check
-        :param operation: one of ``create``, ``read``, ``write``, ``unlink``
+        :param operation: one of ``read``, ``write``
         :return: whether the field is accessible
         """
         if not field.groups or self.env.su:
@@ -3021,11 +3023,11 @@ class BaseModel(metaclass=MetaModel):
         return self.env.user.has_groups(field.groups)
 
     @api.model
-    def _check_field_access(self, field: Field, operation: str) -> None:
+    def _check_field_access(self, field: Field, operation: typing.Literal['read', 'write']) -> None:
         """Check the user access rights on the given field.
 
         :param field: the field to check
-        :param operation: one of ``create``, ``read``, ``write``, ``unlink``
+        :param operation: one of ``read``, ``write``
         :raise AccessError: if the user is not allowed to access the provided field
         """
         if self._has_field_access(field, operation):
@@ -4262,6 +4264,21 @@ class BaseModel(metaclass=MetaModel):
 
         self = self.browse()
         self.check_access('create')
+
+        # check access to all user-provided fields
+        field_names = OrderedSet(fname for vals in vals_list for fname in vals)
+        field_names.update(
+            field_name
+            for context_key in self.env.context
+            if context_key.startswith('default_')
+            and (field_name := context_key[8:])
+            and field_name in self._fields
+        )
+        for field_name in field_names:
+            field = self._fields.get(field_name)
+            if field is None:
+                raise ValueError(f"Invalid field {field_name!r} in {self._name!r}")
+            self._check_field_access(field, 'write')
 
         new_vals_list = self._prepare_create_values(vals_list)
 
