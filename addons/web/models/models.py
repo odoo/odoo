@@ -1447,7 +1447,6 @@ class Base(models.AbstractModel):
         self.env.flush_all()
 
         env = self.env
-        cache = env.cache
         first_call = not field_names
 
         if not (self and self._name == 'res.users'):
@@ -1500,11 +1499,9 @@ class Base(models.AbstractModel):
                 new_lines = lines.browse(map(NewId, line_ids))
                 for field_name in sub_fields_spec:
                     field = lines._fields[field_name]
-                    line_values = [
-                        field.convert_to_cache(line[field_name], new_line, validate=False)
-                        for new_line, line in zip(new_lines, lines)
-                    ]
-                    cache.update(new_lines, field, line_values)
+                    for new_line, line in zip(new_lines, lines):
+                        line_value = field.convert_to_cache(line[field_name], new_line, validate=False)
+                        field._update_cache(new_line, line_value)
 
         # Isolate changed values, to handle inconsistent data sent from the
         # client side: when a form view contains two one2many fields that

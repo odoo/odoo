@@ -2,7 +2,7 @@
 from collections import defaultdict
 from operator import attrgetter
 
-from odoo.tools import unique
+from odoo.tools import OrderedSet, unique
 from odoo.tools.sql import pg_varchar
 
 from .fields import Field
@@ -82,11 +82,10 @@ class Many2oneReference(Integer):
             value = value._ids[0] if value._ids else None
         return super().convert_to_cache(value, record, validate)
 
-    def _update_inverses(self, records, value):
+    def _update_inverses(self, records: BaseModel, value):
         """ Add `records` to the cached values of the inverse fields of `self`. """
         if not value:
             return
-        cache = records.env.cache
         model_ids = self._record_ids_per_res_model(records)
 
         for invf in records.pool.field_inverses[self]:
@@ -97,16 +96,16 @@ class Many2oneReference(Integer):
             records = records.filtered_domain(invf.get_comodel_domain(corecord))
             if not records:
                 continue
-            ids0 = cache.get(corecord, invf, None)
+            ids0 = invf._get_cache(corecord.env).get(corecord.id)
             # if the value for the corecord is not in cache, but this is a new
             # record, assign it anyway, as you won't be able to fetch it from
             # database (see `test_sale_order`)
             if ids0 is not None or not corecord.id:
                 ids1 = tuple(unique((ids0 or ()) + records._ids))
-                cache.set(corecord, invf, ids1)
+                invf._update_cache(corecord, ids1)
 
-    def _record_ids_per_res_model(self, records):
-        model_ids = defaultdict(set)
+    def _record_ids_per_res_model(self, records: BaseModel) -> dict[str, OrderedSet]:
+        model_ids = defaultdict(OrderedSet)
         for record in records:
             model = record[self.model_field]
             if not model and record._fields[self.model_field].compute:

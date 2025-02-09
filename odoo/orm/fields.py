@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import functools
+import collections
 import itertools
 import logging
 import typing
@@ -21,10 +22,12 @@ from .domains import NEGATIVE_CONDITION_OPERATORS, Domain
 from .utils import COLLECTION_TYPES, SQL_OPERATORS, SUPERUSER_ID, expand_ids
 
 if typing.TYPE_CHECKING:
-    from collections.abc import Callable, Collection, Iterable, Iterator
+    from collections.abc import Callable, Collection, Iterable, Iterator, MutableMapping
 
+    from .environments import Environment
+    from .identifiers import IdType
     from .registry import Registry
-    from .types import BaseModel, DomainType, Environment, ModelType, Self, ValuesType
+    from .types import BaseModel, DomainType, ModelType, Self, ValuesType
 T = typing.TypeVar("T")
 
 IR_MODELS = (
@@ -647,9 +650,6 @@ class Field(typing.Generic[T]):
             delegate_field = model._fields[self.related.split('.')[0]]
             self._modules = tuple({*self._modules, *delegate_field._modules, *field._modules})
 
-        if self.store and self.translate:
-            _logger.warning("Translated stored related field (%s) will not be computed correctly in all languages", self)
-
     def traverse_related(self, record: BaseModel) -> tuple[BaseModel, Field]:
         """ Traverse the fields of the related field `self` except for the last
         one, and return it as a pair `(last_record, last_field)`. """
@@ -999,14 +999,31 @@ class Field(typing.Generic[T]):
             return None
         return PsycopgJson({record.env.company.id: value})
 
-    def convert_to_column_update(self, value, record):
-        """ Convert ``value`` from the ``to_flush`` format to the SQL parameter
-        format for UPDATE queries. The ``to_flush`` format is the same as the
-        cache format, except for translated fields (``{'lang_code': 'value', ...}``
-        or ``None``) and company-dependent fields (``{company_id: value, ...}``).
+    def get_column_update(self, record: BaseModel):
+        """ Return the value of record in cache as an SQL parameter formatted
+        for UPDATE queries.
         """
+        field_cache = record.env.transaction.field_data[self]
+        record_id = record.id
         if self.company_dependent:
-            return PsycopgJson(value)
+            values = {}
+            for ctx_key, cache in field_cache.items():
+                if (value := cache.get(record_id, SENTINEL)) is not SENTINEL:
+                    values[ctx_key[0]] = self.convert_to_column(value, record)
+            return PsycopgJson(values) if values else None
+        if self in record.env._field_depends_context:
+            # field that will be written to the database depends on context;
+            # find the first value that is set
+            # If we have more than one value, it is a logical error in the
+            # design of the model. In that case, we pick one at random because
+            # a stored field can have only one value.
+            for ctx_key, cache in field_cache.items():
+                if (value := cache.get(record_id, SENTINEL)) is not SENTINEL:
+                    break
+            else:
+                raise AssertionError(f"Value not in cache for field {self} and id={record_id}")
+        else:
+            value = field_cache[record_id]
         return self.convert_to_column_insert(value, record, validate=False)
 
     def convert_to_cache(self, value, record, validate=True):
@@ -1388,15 +1405,130 @@ class Field(typing.Generic[T]):
         records.env.remove_to_compute(self, records)
 
         # discard the records that are not modified
-        cache = records.env.cache
         cache_value = self.convert_to_cache(value, records)
-        records = cache.get_records_different_from(records, self, cache_value)
+        records = self._filter_not_equal(records, cache_value)
         if not records:
             return
 
         # update the cache
-        dirty = self.store and any(records._ids)
-        cache.update(records, self, itertools.repeat(cache_value), dirty=dirty)
+        self._update_cache(records, cache_value, dirty=True)
+
+    ############################################################################
+    #
+    # Cache management methods
+    #
+
+    def _get_cache(self, env: Environment) -> MutableMapping[IdType, typing.Any]:
+        """ Return the field's cache, i.e., a mutable mapping from record id to
+        a cache value.  The cache may be environment-specific.  This mapping is
+        the way to retrieve a field's value for a given record.
+
+        Calling this function multiple times, always returns the same mapping
+        instance for a given environment, unless the transaction was entirely
+        invalidated.
+        """
+        try:
+            return env._field_cache_memo[self]
+        except KeyError:
+            field_cache = self._get_cache_impl(env)
+            env._field_cache_memo[self] = field_cache
+            return field_cache
+
+    def _get_cache_impl(self, env: Environment) -> MutableMapping[IdType, typing.Any]:
+        """ Implementation of :meth:`_get_cache`.  This method may provide a
+        view to the actual cache, depending on the needs of the field.
+        """
+        cache = env.transaction.field_data[self]
+        if self in env._field_depends_context:
+            cache = cache.setdefault(env.cache_key(self), {})
+        return cache
+
+    def _invalidate_cache(self, env: Environment, ids: Collection[IdType] | None = None) -> None:
+        """ Invalidate the field's cache for the given ids, or all record ids if ``None``. """
+        cache = env.transaction.field_data.get(self)
+        if not cache:
+            return
+
+        caches = cache.values() if self in env._field_depends_context else (cache,)
+        for field_cache in caches:
+            if ids is None:
+                field_cache.clear()
+                continue
+            for id_ in ids:
+                field_cache.pop(id_, None)
+
+    def _get_all_cache_ids(self, env: Environment) -> Collection[IdType]:
+        """ Return all the record ids that have a value in cache in any environment. """
+        cache = env.transaction.field_data[self]
+        if self in env._field_depends_context:
+            # trick to cheaply "merge" the keys of the environment-specific dicts
+            return collections.ChainMap(*cache.values())
+        return cache
+
+    def _cache_missing_ids(self, records: BaseModel) -> Iterator[IdType]:
+        """ Generator of ids that have no value in cache. """
+        field_cache = self._get_cache(records.env)
+        return (id_ for id_ in records._ids if id_ not in field_cache)
+
+    def _filter_not_equal(self, records: ModelType, cache_value: typing.Any) -> ModelType:
+        """ Return the subset of ``records`` for which the value of ``self`` is
+        either not in cache, or different from ``cache_value``.
+        """
+        field_cache = self._get_cache(records.env)
+        return records.browse(
+            record_id
+            for record_id in records._ids
+            if field_cache.get(record_id, SENTINEL) != cache_value
+        )
+
+    def _to_prefetch(self, record: ModelType) -> ModelType:
+        """ Return a recordset including ``record`` to prefetch the field. """
+        ids = expand_ids(record.id, record._prefetch_ids)
+        field_cache = self._get_cache(record.env)
+        prefetch_ids = (id_ for id_ in ids if id_ not in field_cache)
+        return record.browse(itertools.islice(prefetch_ids, PREFETCH_MAX))
+
+    def _insert_cache(self, records: BaseModel, values: Iterable) -> None:
+        """ Update the cache of the given records with the corresponding values,
+        ignoring the records that don't have a value in cache already.  This
+        enables to keep the pending updates of records, and flush them later.
+        """
+        field_cache = self._get_cache(records.env)
+        # call setdefault for all ids, values (looping in C)
+        # this is ~15% faster than the equivalent:
+        # ```
+        # for record, value in zip(records._ids, values):
+        #   field_cache.setdefault(record, value)
+        # ```
+        collections.deque(map(field_cache.setdefault, records._ids, values), maxlen=0)
+
+    def _update_cache(self, records: BaseModel, cache_value: typing.Any, dirty: bool = False) -> None:
+        """ Update the value in the cache for the given records, and optionally
+        make the field dirty for those records (for stored column fields only).
+
+        One can normally make a clean field dirty but not the other way around.
+        Updating a dirty field without ``dirty=True`` is a programming error and
+        logs an error.
+
+        :param dirty: whether ``field`` must be made dirty on ``record`` after
+            the update
+        """
+        env = records.env
+        field_cache = self._get_cache(env)
+        for id_ in records._ids:
+            field_cache[id_] = cache_value
+
+        # dirty only makes sense for stored column fields
+        if self.column_type and self.store:
+            if dirty:
+                env._field_dirty[self].update(id_ for id_ in records._ids if id_)
+            else:
+                dirty_ids = env._field_dirty.get(self)
+                if dirty_ids and not dirty_ids.isdisjoint(records._ids):
+                    _logger.error(
+                        "Field._update_cache() updating the value on %s.%s where dirty flag is already set",
+                        records, self.name, stack_info=True,
+                    )
 
     ############################################################################
     #
@@ -1415,20 +1547,26 @@ class Field(typing.Generic[T]):
             record._check_field_access(self, 'read')
 
         record_len = len(record._ids)
-        if not record_len:
+        if record_len != 1:
+            if record_len:
+                # let ensure_one() raise the proper exception
+                record.ensure_one()
+                assert False, "unreachable"
             # null record -> return the null value for this field
             value = self.convert_to_cache(False, record, validate=False)
             return self.convert_to_record(value, record)
-        if record_len != 1:
-            # let ensure_one() raise the proper exception
-            record.ensure_one()
 
         if self.compute and self.store:
             # process pending computations
             self.recompute(record)
 
+        record_id = record._ids[0]
+        field_cache = self._get_cache(env)
         try:
-            value = env.cache.get(record, self)
+            value = field_cache[record_id]
+            # convert to record may also throw a KeyError if the value is not
+            # in cache, in that case, the fallbacks should be implemented to
+            # read it correctly
             return self.convert_to_record(value, record)
         except KeyError:
             pass
@@ -1451,64 +1589,68 @@ class Field(typing.Generic[T]):
         #       not stored and computed -> compute
         #       not stored and not computed -> default
         #
-        if self.store and record.id:
+        if self.store and record_id:
             # real record: fetch from database
-            recs = self._in_cache_without(record, PREFETCH_MAX)
+            recs = self._to_prefetch(record)
             try:
                 recs._fetch_field(self)
             except AccessError:
                 if len(recs) == 1:
                     raise
                 record._fetch_field(self)
-            if not env.cache.contains(record, self):
+            value = field_cache.get(record_id, SENTINEL)
+            if value is SENTINEL:
                 raise MissingError("\n".join([
                     env._("Record does not exist or has been deleted."),
                     env._("(Record: %(record)s, User: %(user)s)", record=record, user=env.uid),
                 ])) from None
-            value = env.cache.get(record, self)
 
         elif self.store and record._origin and not (self.compute and self.readonly):
             # new record with origin: fetch from origin, and assign the
             # records to prefetch in cache (which is necessary for
             # relational fields to "map" prefetching ids to their value)
-            recs = self._in_cache_without(record, PREFETCH_MAX)
+            recs = self._to_prefetch(record)
             try:
                 for rec in recs:
                     if (rec_origin := rec._origin):
                         value = self.convert_to_cache(rec_origin[self.name], rec, validate=False)
-                        env.cache.patch_and_set(rec, self, value)
-                value = env.cache.get(record, self)
-            except (AccessError, MissingError):
+                        self._update_cache(rec, value)
+            except (AccessError, KeyError, MissingError):
                 if len(recs) == 1:
                     raise
                 value = self.convert_to_cache(record._origin[self.name], record, validate=False)
-                value = env.cache.patch_and_set(record, self, value)
+                self._update_cache(record, value)
+            # get the final value (see patches in x2many fields)
+            value = field_cache[record_id]
 
         elif self.compute:
             # non-stored field or new record without origin: compute
             if env.is_protected(self, record):
                 value = self.convert_to_cache(False, record, validate=False)
-                env.cache.set(record, self, value)
+                self._update_cache(record, value)
             else:
-                recs = record if self.recursive else self._in_cache_without(record, PREFETCH_MAX)
+                recs = record if self.recursive else self._to_prefetch(record)
                 try:
                     self.compute_value(recs)
                 except (AccessError, MissingError):
                     self.compute_value(record)
                     recs = record
 
-                missing_recs_ids = tuple(env.cache.get_missing_ids(recs, self))
+                missing_recs_ids = tuple(self._cache_missing_ids(recs))
                 if missing_recs_ids:
                     missing_recs = record.browse(missing_recs_ids)
                     if self.readonly and not self.store:
                         raise ValueError(f"Compute method failed to assign {missing_recs}.{self.name}")
                     # fallback to null value if compute gives nothing, do it for every unset record
                     false_value = self.convert_to_cache(False, record, validate=False)
-                    env.cache.update(missing_recs, self, itertools.repeat(false_value))
+                    self._update_cache(missing_recs, false_value)
 
-                value = env.cache.get(record, self)
+                # cache could have been entirely invalidated by compute
+                # as some compute methods call indirectly env.invalidate_all()
+                field_cache = self._get_cache(env)
+                value = field_cache[record_id]
 
-        elif self.type == 'many2one' and self.delegate and not record.id:
+        elif self.type == 'many2one' and self.delegate and not record_id:
             # parent record of a new record: new record, with the same
             # values as record for the corresponding inherited fields
             def is_inherited_field(name):
@@ -1522,13 +1664,18 @@ class Field(typing.Generic[T]):
             })
             # in case the delegate field has inverse one2many fields, this
             # updates the inverse fields as well
-            record._update_cache({self.name: parent}, validate=False)
-            value = env.cache.get(record, self)
+            value = self.convert_to_cache(parent, record, validate=False)
+            self._update_cache(record, value)
+            # set inverse fields on new records in the comodel
+            # TODO move this logic to _update_cache?
+            if inv_recs := parent.filtered(lambda r: not r.id):
+                for invf in env.registry.field_inverses[self]:
+                    invf._update_inverse(inv_recs, record)
 
         else:
             # non-stored field or stored field on new record: default value
             value = self.convert_to_cache(False, record, validate=False)
-            value = env.cache.patch_and_set(record, self, value)
+            self._update_cache(record, value)
             defaults = record.default_get([self.name])
             if self.name in defaults:
                 # The null value above is necessary to convert x2many field
@@ -1538,22 +1685,11 @@ class Field(typing.Generic[T]):
                 # to determine the field's value, and generates an infinite
                 # recursion.
                 value = self.convert_to_cache(defaults[self.name], record)
-                env.cache.set(record, self, value)
+                self._update_cache(record, value)
+            # get the final value (see patches in x2many fields)
+            value = field_cache[record_id]
 
         return self.convert_to_record(value, record)
-
-    def _in_cache_without(self, record: ModelType, limit: int | None = None) -> ModelType:
-        """ Return records to prefetch that have no value in cache. """
-        ids = expand_ids(record.id, record._prefetch_ids)
-        ids = record.env.cache.get_missing_ids(record.browse(ids), self)
-        if limit:
-            ids = itertools.islice(ids, limit)
-        # Those records are aimed at being either fetched, or computed.  But the
-        # method '_fetch_field' is not correct with new records: it considers
-        # them as forbidden records, and clears their cache!  On the other hand,
-        # compute methods are not invoked with a mix of real and new records for
-        # the sake of code simplicity.
-        return record.browse(ids)
 
     def __set__(self, records: BaseModel, value) -> None:
         """ set the value of field ``self`` on ``records`` """

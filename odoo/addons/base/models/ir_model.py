@@ -920,7 +920,7 @@ class IrModelFields(models.Model):
             model = self.env.get(record.model)
             field = model and model._fields.get(record.name)
             if field:
-                self.env.cache.clear_dirty_field(field)
+                self.env._field_dirty.pop(field)
         # remove fields from registry, and check that views are not broken
         fields = [pop_field(self.env[record.model], record.name) for record in records]
         domain = Domain.OR([('arch_db', 'like', record.name)] for record in records)

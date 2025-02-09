@@ -39,7 +39,7 @@ class _Relational(Field[M], typing.Generic[M]):
     auto_join: bool = False         # whether joins are generated upon search
     check_company: bool = False
 
-    def __get__(self, records, owner=None):
+    def __get__(self, records: BaseModel, owner=None):
         # base case: do the regular access
         if records is None or len(records._ids) <= 1:
             return super().__get__(records, owner)
@@ -50,23 +50,31 @@ class _Relational(Field[M], typing.Generic[M]):
         if self.compute and self.store:
             self.recompute(records)
 
-        # retrieve values in cache, and fetch missing ones
+        # get the cache
         env = records.env
-        vals = env.cache.get_until_miss(records, self)
+        field_cache = self._get_cache(env)
 
-        if self.store and len(vals) < len(records) - PREFETCH_MAX:
-            # a lot of missing records, just fetch that field
-            remaining = records[len(vals):]
-            remaining.fetch([self.name])
-            vals += records.env.cache.get_until_miss(remaining, self)
+        # retrieve values in cache, and fetch missing ones
+        vals = []
+        for record_id in records._ids:
+            try:
+                vals.append(field_cache[record_id])
+            except KeyError:
+                if self.store and len(vals) < len(records) - PREFETCH_MAX:
+                    # a lot of missing records, just fetch that field
+                    remaining = records[len(vals):]
+                    remaining.fetch([self.name])
+                else:
+                    remaining = records.__class__(env, (record_id,), records._prefetch_ids)
+                    super().__get__(remaining, owner)
+                # we have the record now
+                vals.append(field_cache[record_id])
 
-        while len(vals) < len(records):
-            remaining = records.__class__(records.env, records._ids[len(vals):], records._prefetch_ids)
-            self.__get__(next(iter(remaining)))
-            vals += records.env.cache.get_until_miss(remaining, self)
-
-        assert len(vals) == len(records), "Some records are not in cache"
         return self.convert_to_record_multi(vals, records)
+
+    def _update_inverse(self, records: BaseModel, value: BaseModel):
+        """ Update the cached value of ``self`` for ``records`` with ``value``. """
+        raise NotImplementedError
 
     def convert_to_record_multi(self, values, records):
         """ Convert a list of (relational field) values from the cache format to
@@ -264,11 +272,9 @@ class Many2one(_Relational[M]):
             model, self._module
         )
 
-    def _update(self, records, value):
-        """ Update the cached value of ``self`` for ``records`` with ``value``. """
-        cache = records.env.cache
+    def _update_inverse(self, records, value):
         for record in records:
-            cache.set(record, self, self.convert_to_cache(value, record, validate=False))
+            self._update_cache(record, self.convert_to_cache(value, record, validate=False))
 
     def convert_to_column(self, value, record, values=None, validate=True):
         return value or None
@@ -349,9 +355,8 @@ class Many2one(_Relational[M]):
         records.env.remove_to_compute(self, records)
 
         # discard the records that are not modified
-        cache = records.env.cache
         cache_value = self.convert_to_cache(value, records)
-        records = cache.get_records_different_from(records, self, cache_value)
+        records = self._filter_not_equal(records, cache_value)
         if not records:
             return
 
@@ -359,48 +364,51 @@ class Many2one(_Relational[M]):
         self._remove_inverses(records, cache_value)
 
         # update the cache of self
-        dirty = self.store and any(records._ids)
-        cache.update(records, self, itertools.repeat(cache_value), dirty=dirty)
+        self._update_cache(records, cache_value, dirty=True)
 
         # update the cache of one2many fields of new corecord
         self._update_inverses(records, cache_value)
 
-    def _remove_inverses(self, records, value):
-        """ Remove `records` from the cached values of the inverse fields of `self`. """
-        cache = records.env.cache
-        record_ids = set(records._ids)
+    def _remove_inverses(self, records: BaseModel, value):
+        """ Remove `records` from the cached values of the inverse fields (o2m) of `self`. """
+        inverse_fields = records.pool.field_inverses[self]
+        if not inverse_fields:
+            return
 
+        record_ids = set(records._ids)
         # align(id) returns a NewId if records are new, a real id otherwise
         align = (lambda id_: id_) if all(record_ids) else (lambda id_: id_ and NewId(id_))
+        field_cache = self._get_cache(records.env)
+        corecords = records.env[self.comodel_name].browse(
+            align(coid) for record_id in records._ids
+            if (coid := field_cache.get(record_id)) is not None
+        )
 
-        for invf in records.pool.field_inverses[self]:
-            corecords = records.env[self.comodel_name].browse(
-                align(id_) for id_ in cache.get_values(records, self)
-            )
+        for invf in inverse_fields:
+            inv_cache = invf._get_cache(corecords.env)
             for corecord in corecords:
-                ids0 = cache.get(corecord, invf, None)
+                ids0 = inv_cache.get(corecord.id)
                 if ids0 is not None:
                     ids1 = tuple(id_ for id_ in ids0 if id_ not in record_ids)
-                    cache.set(corecord, invf, ids1)
+                    invf._update_cache(corecord, ids1)
 
-    def _update_inverses(self, records, value):
-        """ Add `records` to the cached values of the inverse fields of `self`. """
+    def _update_inverses(self, records: BaseModel, value):
+        """ Add `records` to the cached values of the inverse fields (o2m) of `self`. """
         if value is None:
             return
-        cache = records.env.cache
         corecord = self.convert_to_record(value, records)
         for invf in records.pool.field_inverses[self]:
             valid_records = records.filtered_domain(invf.get_comodel_domain(corecord))
             if not valid_records:
                 continue
-            ids0 = cache.get(corecord, invf, None)
+            ids0 = invf._get_cache(corecord.env).get(corecord.id)
             # if the value for the corecord is not in cache, but this is a new
             # record, assign it anyway, as you won't be able to fetch it from
             # database (see `test_sale_order`)
             if ids0 is not None or not corecord.id:
                 ids1 = tuple(unique((ids0 or ()) + valid_records._ids))
-                cache.set(corecord, invf, ids1)
-    
+                invf._update_cache(corecord, ids1)
+
     def to_sql(self, model: BaseModel, alias: str, flush: bool = True) -> SQL:
         sql_field = super().to_sql(model, alias, flush)
         if self.company_dependent:
@@ -482,10 +490,31 @@ class _RelationalMulti(_Relational[M], typing.Generic[M]):
     # including inactive records.  Inactive records are filtered out by
     # convert_to_record(), depending on the context.
 
-    def _update(self, records, value):
-        """ Update the cached value of ``self`` for ``records`` with ``value``. """
-        records.env.cache.patch(records, self, value.id)
+    def _update_inverse(self, records, value):
+        new_id = value.id
+        assert not new_id, "Field._update_inverse can only be called with a new id"
+        field_cache = self._get_cache(records.env)
+        for record_id in records._ids:
+            assert not record_id, "Field._update_inverse can only be called with new records"
+            cache_value = field_cache.get(record_id, SENTINEL)
+            if cache_value is SENTINEL:
+                records.env.transaction.field_data_patches[self][record_id].append(new_id)
+            else:
+                field_cache[record_id] = tuple(unique(cache_value + (new_id,)))
         records.modified([self.name])
+
+    def _update_cache(self, records, cache_value, dirty=False):
+        field_patches = records.env.transaction.field_data_patches.get(self)
+        if field_patches and records:
+            for record in records:
+                ids = field_patches.pop(record.id, ())
+                if ids:
+                    value = tuple(unique(itertools.chain(cache_value, ids)))
+                else:
+                    value = cache_value
+                super()._update_cache(record, value, dirty)
+            return
+        super()._update_cache(records, cache_value, dirty)
 
     def convert_to_cache(self, value, record, validate=True):
         # cache format: tuple(ids)
@@ -858,7 +887,7 @@ class One2many(_RelationalMulti[M]):
 
         # store result in cache
         values = [tuple(group[id_]) for id_ in records._ids]
-        records.env.cache.insert_missing(records, self, values)
+        self._insert_cache(records, values)
 
     def write_real(self, records_commands_list, create=False):
         """ Update real records. """
@@ -941,15 +970,14 @@ class One2many(_RelationalMulti[M]):
         else:
             ids = OrderedSet(rid for recs, cs in records_commands_list for rid in recs._ids)
             records = records_commands_list[0][0].browse(ids)
-            cache = records.env.cache
 
             def link(record, lines):
                 ids = record[self.name]._ids
-                cache.set(record, self, tuple(unique(ids + lines._ids)))
+                self._update_cache(record, tuple(unique(ids + lines._ids)))
 
             def unlink(lines):
                 for record in records:
-                    cache.set(record, self, (record[self.name] - lines)._ids)
+                    self._update_cache(record, (record[self.name] - lines)._ids)
 
             for recs, commands in records_commands_list:
                 for command in (commands or ()):
@@ -966,16 +994,15 @@ class One2many(_RelationalMulti[M]):
                         link(recs[-1], comodel.browse(command[1]))
                     elif command[0] in (Command.CLEAR, Command.SET):
                         # assign the given lines to the last record only
-                        cache.update(recs, self, itertools.repeat(()))
+                        self._update_cache(recs, ())
                         lines = comodel.browse(command[2] if command[0] == Command.SET else [])
-                        cache.set(recs[-1], self, lines._ids)
+                        self._update_cache(recs[-1], lines._ids)
 
     def write_new(self, records_commands_list):
         if not records_commands_list:
             return
 
         model = records_commands_list[0][0].browse()
-        cache = model.env.cache
         comodel = model.env[self.comodel_name].with_context(**self.context)
         comodel = self._check_sudo_commands(comodel)
 
@@ -994,7 +1021,7 @@ class One2many(_RelationalMulti[M]):
             # make sure self's inverse is in cache
             inverse_field = comodel._fields[inverse]
             for record in records:
-                cache.update(record[self.name], inverse_field, itertools.repeat(record.id))
+                inverse_field._update_cache(record[self.name], record.id)
 
             for recs, commands in records_commands_list:
                 for command in commands:
@@ -1011,22 +1038,22 @@ class One2many(_RelationalMulti[M]):
                     elif command[0] == Command.LINK:
                         browse([command[1]])[inverse] = recs[-1]
                     elif command[0] == Command.CLEAR:
-                        cache.update(recs, self, itertools.repeat(()))
+                        self._update_cache(recs, ())
                     elif command[0] == Command.SET:
                         # assign the given lines to the last record only
-                        cache.update(recs, self, itertools.repeat(()))
+                        self._update_cache(recs, ())
                         last, lines = recs[-1], browse(command[2])
-                        cache.set(last, self, lines._ids)
-                        cache.update(lines, inverse_field, itertools.repeat(last.id))
+                        self._update_cache(last, lines._ids)
+                        inverse_field._update_cache(lines, last.id)
 
         else:
             def link(record, lines):
                 ids = record[self.name]._ids
-                cache.set(record, self, tuple(unique(ids + lines._ids)))
+                self._update_cache(record, tuple(unique(ids + lines._ids)))
 
             def unlink(lines):
                 for record in records:
-                    cache.set(record, self, (record[self.name] - lines)._ids)
+                    self._update_cache(record, (record[self.name] - lines)._ids)
 
             for recs, commands in records_commands_list:
                 for command in commands:
@@ -1043,9 +1070,9 @@ class One2many(_RelationalMulti[M]):
                         link(recs[-1], browse([command[1]]))
                     elif command[0] in (Command.CLEAR, Command.SET):
                         # assign the given lines to the last record only
-                        cache.update(recs, self, itertools.repeat(()))
+                        self._update_cache(recs, ())
                         lines = browse(command[2] if command[0] == Command.SET else [])
-                        cache.set(recs[-1], self, lines._ids)
+                        self._update_cache(recs[-1], lines._ids)
 
     def _get_query_for_condition_value(self, model: BaseModel, comodel: BaseModel, value) -> Query:
         inverse_field = comodel._fields[self.inverse_name]
@@ -1282,7 +1309,7 @@ class Many2many(_RelationalMulti[M]):
 
         # store result in cache
         values = [tuple(group[id_]) for id_ in records._ids]
-        records.env.cache.insert_missing(records, self, values)
+        self._insert_cache(records, values)
 
     def write_real(self, records_commands_list, create=False):
         # records_commands_list = [(records, commands), ...]
@@ -1304,7 +1331,7 @@ class Many2many(_RelationalMulti[M]):
             # is not in cache: one that actually checks access rules for
             # records, and the other one fetching the actual data. We use
             # `self.read` instead to shortcut the first query.
-            missing_ids = list(records.env.cache.get_missing_ids(records, self))
+            missing_ids = tuple(self._cache_missing_ids(records))
             if missing_ids:
                 self.read(records.browse(missing_ids))
 
@@ -1366,9 +1393,8 @@ class Many2many(_RelationalMulti[M]):
                 relation_delete(to_delete)
 
         # update the cache of self
-        cache = records.env.cache
         for record in records:
-            cache.set(record, self, tuple(new_relation[record.id]))
+            self._update_cache(record, tuple(new_relation[record.id]))
 
         # determine the corecords for which the relation has changed
         modified_corecord_ids = set()
@@ -1395,12 +1421,13 @@ class Many2many(_RelationalMulti[M]):
                 valid_ids = set(records.filtered_domain(domain)._ids)
                 if not valid_ids:
                     continue
+                inv_cache = invf._get_cache(comodel.env)
                 for y, xs in y_to_xs.items():
                     corecord = comodel.browse(y)
                     try:
-                        ids0 = cache.get(corecord, invf)
+                        ids0 = inv_cache[corecord.id]
                         ids1 = tuple(set(ids0) | (xs & valid_ids))
-                        cache.set(corecord, invf, ids1)
+                        invf._update_cache(corecord, ids1)
                     except KeyError:
                         pass
 
@@ -1434,12 +1461,13 @@ class Many2many(_RelationalMulti[M]):
 
             # update the cache of inverse fields
             for invf in records.pool.field_inverses[self]:
+                inv_cache = invf._get_cache(comodel.env)
                 for y, xs in y_to_xs.items():
                     corecord = comodel.browse(y)
                     try:
-                        ids0 = cache.get(corecord, invf)
+                        ids0 = inv_cache[corecord.id]
                         ids1 = tuple(id_ for id_ in ids0 if id_ not in xs)
-                        cache.set(corecord, invf, ids1)
+                        invf._update_cache(corecord, ids1)
                     except KeyError:
                         pass
 
@@ -1504,9 +1532,8 @@ class Many2many(_RelationalMulti[M]):
         records = model.browse(old_relation)
 
         # update the cache of self
-        cache = records.env.cache
         for record in records:
-            cache.set(record, self, tuple(new_relation[record.id]))
+            self._update_cache(record, tuple(new_relation[record.id]))
 
         # determine the corecords for which the relation has changed
         modified_corecord_ids = set()
@@ -1524,12 +1551,13 @@ class Many2many(_RelationalMulti[M]):
                 valid_ids = set(records.filtered_domain(domain)._ids)
                 if not valid_ids:
                     continue
+                inv_cache = invf._get_cache(comodel.env)
                 for y, xs in y_to_xs.items():
-                    corecord = comodel.browse([y])
+                    corecord = comodel.browse((y,))
                     try:
-                        ids0 = cache.get(corecord, invf)
+                        ids0 = inv_cache[corecord.id]
                         ids1 = tuple(set(ids0) | (xs & valid_ids))
-                        cache.set(corecord, invf, ids1)
+                        invf._update_cache(corecord, ids1)
                     except KeyError:
                         pass
 
@@ -1542,12 +1570,13 @@ class Many2many(_RelationalMulti[M]):
                 y_to_xs[y].add(x)
                 modified_corecord_ids.add(y)
             for invf in records.pool.field_inverses[self]:
+                inv_cache = invf._get_cache(comodel.env)
                 for y, xs in y_to_xs.items():
-                    corecord = comodel.browse([y])
+                    corecord = comodel.browse((y,))
                     try:
-                        ids0 = cache.get(corecord, invf)
+                        ids0 = inv_cache[corecord.id]
                         ids1 = tuple(id_ for id_ in ids0 if id_ not in xs)
-                        cache.set(corecord, invf, ids1)
+                        invf._update_cache(corecord, ids1)
                     except KeyError:
                         pass
 
@@ -1593,37 +1622,47 @@ class Many2many(_RelationalMulti[M]):
 
 class PrefetchMany2one(Reversible):
     """ Iterable for the values of a many2one field on the prefetch set of a given record. """
-    __slots__ = 'record', 'field'
+    __slots__ = ('field', 'record')
 
-    def __init__(self, record, field):
+    def __init__(self, record: BaseModel, field: Many2one):
         self.record = record
         self.field = field
 
     def __iter__(self):
-        records = self.record.browse(self.record._prefetch_ids)
-        ids = self.record.env.cache.get_values(records, self.field)
-        return unique(id_ for id_ in ids if id_ is not None)
+        field_cache = self.field._get_cache(self.record.env)
+        return unique(
+            coid for id_ in self.record._prefetch_ids
+            if (coid := field_cache.get(id_)) is not None
+        )
 
     def __reversed__(self):
-        records = self.record.browse(reversed(self.record._prefetch_ids))
-        ids = self.record.env.cache.get_values(records, self.field)
-        return unique(id_ for id_ in ids if id_ is not None)
+        field_cache = self.field._get_cache(self.record.env)
+        return unique(
+            coid for id_ in reversed(self.record._prefetch_ids)
+            if (coid := field_cache.get(id_)) is not None
+        )
 
 
 class PrefetchX2many(Reversible):
     """ Iterable for the values of an x2many field on the prefetch set of a given record. """
-    __slots__ = 'record', 'field'
+    __slots__ = ('field', 'record')
 
-    def __init__(self, record, field):
+    def __init__(self, record: BaseModel, field: _RelationalMulti):
         self.record = record
         self.field = field
 
     def __iter__(self):
-        records = self.record.browse(self.record._prefetch_ids)
-        ids_list = self.record.env.cache.get_values(records, self.field)
-        return unique(id_ for ids in ids_list for id_ in ids)
+        field_cache = self.field._get_cache(self.record.env)
+        return unique(
+            coid
+            for id_ in self.record._prefetch_ids
+            for coid in field_cache.get(id_, ())
+        )
 
     def __reversed__(self):
-        records = self.record.browse(reversed(self.record._prefetch_ids))
-        ids_list = self.record.env.cache.get_values(records, self.field)
-        return unique(id_ for ids in ids_list for id_ in ids)
+        field_cache = self.field._get_cache(self.record.env)
+        return unique(
+            coid
+            for id_ in reversed(self.record._prefetch_ids)
+            for coid in field_cache.get(id_, ())
+        )

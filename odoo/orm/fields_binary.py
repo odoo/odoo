@@ -4,14 +4,13 @@ import base64
 import binascii
 import contextlib
 import functools
-import itertools
 import typing
 import warnings
 from operator import attrgetter
 
 import psycopg2
 
-from odoo.exceptions import CacheMiss, UserError
+from odoo.exceptions import UserError
 from odoo.tools import SQL, human_size, image_process
 from odoo.tools.mimetypes import guess_mimetype
 
@@ -85,6 +84,12 @@ class Binary(Field):
         except UnicodeEncodeError:
             raise UserError(record.env._("ASCII characters are required for %(value)s in %(field)s", value=value, field=self.name))
 
+    def get_column_update(self, record: BaseModel):
+        # since the field depends on context, force the value where we have the data
+        bin_size_name = 'bin_size_' + self.name
+        record_no_bin_size = record.with_context(**{'bin_size': False, bin_size_name: False})
+        return self._get_cache(record_no_bin_size.env)[record.id]
+
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, _BINARY):
             return bytes(value)
@@ -115,10 +120,11 @@ class Binary(Field):
             records_no_bin_size = records.with_context(**{'bin_size': False, bin_size_name: False})
             super().compute_value(records_no_bin_size)
             # manually update the bin_size cache
-            cache = records.env.cache
-            for record_no_bin_size, record in zip(records_no_bin_size, records):
+            field_cache_data = self._get_cache(records_no_bin_size.env)
+            field_cache_size = self._get_cache(records.env)
+            for record in records:
                 try:
-                    value = cache.get(record_no_bin_size, self)
+                    value = field_cache_data[record.id]
                     # don't decode non-attachments to be consistent with pg_size_pretty
                     if not (self.store and self.column_type):
                         with contextlib.suppress(TypeError, binascii.Error):
@@ -130,8 +136,8 @@ class Binary(Field):
                         pass
                     cache_value = self.convert_to_cache(value, record)
                     # the dirty flag is independent from this assignment
-                    cache.set(record, self, cache_value, check_dirty=False)
-                except CacheMiss:
+                    field_cache_size[record.id] = cache_value
+                except KeyError:
                     pass
         else:
             super().compute_value(records)
@@ -149,7 +155,7 @@ class Binary(Field):
             att.res_id: att.datas
             for att in records.env['ir.attachment'].sudo().search(domain)
         }
-        records.env.cache.insert_missing(records, self, map(data.get, records._ids))
+        self._insert_cache(records, map(data.get, records._ids))
 
     def create(self, record_values):
         assert self.attachment
@@ -180,16 +186,15 @@ class Binary(Field):
         records.env.remove_to_compute(self, records)
 
         # update the cache, and discard the records that are not modified
-        cache = records.env.cache
         cache_value = self.convert_to_cache(value, records)
-        records = cache.get_records_different_from(records, self, cache_value)
+        records = self._filter_not_equal(records, cache_value)
         if not records:
             return
         if self.store:
             # determine records that are known to be not null
-            not_null = cache.get_records_different_from(records, self, None)
+            not_null = self._filter_not_equal(records, None)
 
-        cache.update(records, self, itertools.repeat(cache_value))
+        self._update_cache(records, cache_value)
 
         # retrieve the attachments that store the values, and adapt them
         if self.store and any(records._ids):
@@ -271,7 +276,7 @@ class Image(Binary):
             # cache to let the inverse method use the original image; the image
             # will be resized once the inverse has been applied
             cache_value = self.convert_to_cache(value if self.related else new_value, record)
-            record.env.cache.update(record, self, itertools.repeat(cache_value))
+            self._update_cache(record, cache_value)
         super().create(new_record_values)
 
     def write(self, records, value):
@@ -289,8 +294,7 @@ class Image(Binary):
 
         super().write(records, new_value)
         cache_value = self.convert_to_cache(value if self.related else new_value, records)
-        dirty = self.column_type and self.store and any(records._ids)
-        records.env.cache.update(records, self, itertools.repeat(cache_value), dirty=dirty)
+        self._update_cache(records, cache_value, dirty=True)
 
     def _inverse_related(self, records):
         super()._inverse_related(records)
@@ -300,7 +304,7 @@ class Image(Binary):
         # cache with the resized value
         for record in records:
             value = self._process_related(record[self.name], record.env)
-            record.env.cache.set(record, self, value, dirty=(self.store and self.column_type))
+            self._update_cache(record, value, dirty=True)
 
     def _image_process(self, value, env):
         if self.readonly and not self.max_width and not self.max_height:
