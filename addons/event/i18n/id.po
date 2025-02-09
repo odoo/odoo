@@ -3,16 +3,16 @@
 # 	* event
 # 
 # Translators:
-# Abe Manyo, 2025
 # Wil Odoo, 2025
+# Abe Manyo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 08:41+0000\n"
+"POT-Creation-Date: 2025-02-06 13:58+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Abe Manyo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -83,7 +83,7 @@ msgstr "%s (salin)"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.js:0
 msgid "'%(name)s' %(type)s badge sent to printer '%(printer)s'"
-msgstr ""
+msgstr "Lencana '%(name)s' %(type)s dikirim ke printer '%(printer)s'"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_attendee_list
@@ -1689,7 +1689,7 @@ msgstr ""
 "                            <ul>\n"
 "                                <li><t t-out=\"event_organizer.name or ''\">PerusahaanAnda</t></li>\n"
 "                                <t t-if=\"event_organizer.email\">\n"
-"                                    <li>Email: <a t-attf-href=\"mailto:{{ event_organizer.email }}\" style=\"text-decoration:none;color:#875A7B;\" t-out=\"event_organizer.email or ''\">info@yourcompany.com</a></li>\n"
+"                                    <li>Email: <a t-attf-href=\"mailto:{{ event_organizer.email }}\" style=\"text-decoration:none;color:#875A7B;\" t-out=\"event_organizer.email or ''\">info@perusahaanAnda.com</a></li>\n"
 "                                </t>\n"
 "                                <t t-if=\"event_organizer.phone\">\n"
 "                                    <li>Telepon: <t t-out=\"event_organizer.phone\">+1 650-123-4567</t></li>\n"
@@ -1746,7 +1746,7 @@ msgstr ""
 "    <t t-if=\"object.company_id\">\n"
 "        <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
 "        <tr><td style=\"text-align: center; font-size: 14px;\">\n"
-"            Dikirim oleh <a target=\"_blank\" t-attf-href=\"{{ object.company_id.website }}\" style=\"color: #875A7B;\" t-out=\"object.company_id.name or ''\">YourCompany</a>\n"
+"            Dikirim oleh <a target=\"_blank\" t-attf-href=\"{{ object.company_id.website }}\" style=\"color: #875A7B;\" t-out=\"object.company_id.name or ''\">PerusahaanAnda</a>\n"
 "            <t t-if=\"is_online\">\n"
 "                <br/>\n"
 "                Temukan <a href=\"/event\" style=\"color:#875A7B;\">semua acara kami</a>.\n"
@@ -1862,13 +1862,13 @@ msgstr "Setelah setiap pendaftaran"
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_event
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__after_event
 msgid "After the event ended"
-msgstr ""
+msgstr "Setelah acara berakhir"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_event_start
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__after_event_start
 msgid "After the event started"
-msgstr ""
+msgstr "Setelah acara dimulai"
 
 #. module: event
 #: model:event.tag.category,name:event.event_tag_category_1
@@ -2124,13 +2124,13 @@ msgstr "Barcode harus unik"
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__before_event_end
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__before_event_end
 msgid "Before the event ends"
-msgstr ""
+msgstr "Sebelum acara berakhir"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__before_event
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__before_event
 msgid "Before the event starts"
-msgstr ""
+msgstr "Sebelum acara dimulai"
 
 #. module: event
 #. odoo-python
@@ -2275,6 +2275,7 @@ msgstr "Komunikasi"
 msgid ""
 "Communication for %(event_name)s scheduled on %(scheduled_date)s failed."
 msgstr ""
+"Komunikasi untuk %(event_name)s dijadwalkan pada %(scheduled_date)s gagal."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_registration_ids
@@ -2527,6 +2528,11 @@ msgid "Display Sponsors and Exhibitors on your event pages"
 msgstr "Tampilkan Sponsor dan Exhibitor pada halaman acara Anda"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__date_tz
+msgid "Display Timezone"
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
 msgid "Display order"
 msgstr "Tampilkan order"
@@ -2539,7 +2545,7 @@ msgstr "Selesai"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "Download Tickets"
-msgstr ""
+msgstr "Unduh Tiket"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
@@ -3272,16 +3278,18 @@ msgid "In Progress"
 msgstr "Dalam Proses"
 
 #. module: event
-#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
-msgid "Insert dynamic Google Maps in your email templates"
-msgstr "Masukkan Google Map dinamik di templat email Anda"
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_event__date_tz
 msgid ""
 "Indicates the timezone in which the event dates/times will be displayed on "
 "the website."
 msgstr ""
+"Mengindikasikan zona waktu di mana tanggal/waktu acara akan ditampilkan pada"
+" website."
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid "Insert dynamic Google Maps in your email templates"
+msgstr "Masukkan Google Map dinamik di templat email Anda"
 
 #. module: event
 #. odoo-javascript
@@ -3347,7 +3355,7 @@ msgstr "Sedang Berlangsung"
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "It failed with error %(error)s."
-msgstr ""
+msgstr "Gagal dengan error %(error)s."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__seats_max
@@ -3430,7 +3438,7 @@ msgstr "Peserta Terakhir"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__error_datetime
 msgid "Last Error"
-msgstr ""
+msgstr "Error Terakhir"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__write_uid
@@ -4157,7 +4165,7 @@ msgstr "Pendaftaran dimulai"
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "Rendering of template failed with error: %(error)s."
-msgstr ""
+msgstr "Rendering templat gagal dengan error: %(error)s."
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
@@ -4635,6 +4643,8 @@ msgid ""
 "There is an issue with dynamic placeholder. Actual error received is: "
 "%(error)s."
 msgstr ""
+"Terdapat masalah dengan placeholder dinamik. Error sebenarnya yang diterima "
+"adalah: %(error)s."
 
 #. module: event
 #: model:ir.model.constraint,message:event.constraint_event_registration_answer_value_check
@@ -4671,7 +4681,7 @@ msgstr "Informasi ini akan dicetak pada tiket Anda."
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "This is due to an error in template %(template_link)s."
-msgstr ""
+msgstr "Ini karena error di templat %(template_link)s."
 
 #. module: event
 #. odoo-javascript
@@ -4702,7 +4712,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "This may be linked to template %(template_link)s."
-msgstr ""
+msgstr "Ini dapat dihubungkan ke templat %(template_link)s."
 
 #. module: event
 #. odoo-python
@@ -4799,7 +4809,6 @@ msgid "Tickets with Sale"
 msgstr "Tiket dengan Sale"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event__date_tz
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
 msgid "Timezone"
 msgstr "Zona Waktu"
@@ -5044,17 +5053,19 @@ msgid "Welcome to"
 msgstr "Selamat datang ke"
 
 #. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "What's new?"
+msgstr "Apa yang baru?"
+
+#. module: event
 #: model:ir.model.fields,help:event.field_event_event__date_begin
 #: model:ir.model.fields,help:event.field_event_registration__event_begin_date
 msgid ""
 "When the event is scheduled to take place (expressed in your local timezone "
 "on the form view)."
 msgstr ""
-
-#. module: event
-#: model_terms:event.event,description:event.event_0
-msgid "What's new?"
-msgstr "Apa yang baru?"
+"Saat acara dijadwalkan untuk terjadi (diekspresikan dalam zona waktu lokal "
+"Anda di tampilan formulir)."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing

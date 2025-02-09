@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 08:42+0000\n"
+"POT-Creation-Date: 2025-02-06 13:59+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -41,8 +41,12 @@ msgstr "账户"
 
 #. module: spreadsheet_account
 #. odoo-javascript
-#. odoo-python
 #: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Bank and Cash"
+msgstr "银行和现金"
+
+#. module: spreadsheet_account
+#. odoo-python
 #: code:addons/spreadsheet_account/models/account.py:0
 msgid "Cell Audit"
 msgstr ""
@@ -144,24 +148,6 @@ msgstr "收入"
 
 #. module: spreadsheet_account
 #. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-msgid "Offset applied to the years."
-msgstr ""
-
-#. module: spreadsheet_account
-#. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-msgid "Return the partner balance for the specified account(s) and period"
-msgstr ""
-
-#. module: spreadsheet_account
-#. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-msgid "Return the residual amount for the specified account(s) and period"
-msgstr ""
-
-#. module: spreadsheet_account
-#. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
 msgid "Non-current Assets"
 msgstr "非流动资产"
@@ -177,6 +163,12 @@ msgstr "非流动负债"
 #: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
 msgid "Off-Balance Sheet"
 msgstr "资产负债表外"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "Offset applied to the years."
+msgstr ""
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -201,6 +193,18 @@ msgstr "预付款"
 #: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
 msgid "Receivable"
 msgstr "应收账款"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "Return the partner balance for the specified account(s) and period"
+msgstr ""
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "Return the residual amount for the specified account(s) and period"
+msgstr ""
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -238,7 +242,7 @@ msgstr "设为 \"true\"，则包括未发布的条目。"
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/plugins/accounting_plugin.js:0
 msgid "The balance for given partners could not be computed."
-msgstr ""
+msgstr "特定合作伙伴的余额无法计算。"
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -282,7 +286,7 @@ msgstr "用作提取财政年度开始的日期。"
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 msgid "The partner ids (separated by a comma)."
-msgstr ""
+msgstr "合作伙伴 ID（用逗号分隔）。"
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -293,19 +297,19 @@ msgstr "账户前缀。"
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-msgid "The technical account type (possible values are: %s)."
-msgstr "技术账户类型（可能的值为：%s）。"
-
-#. module: spreadsheet_account
-#. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 msgid ""
 "The prefix of the accounts. If none provided, all receivable and payable "
 "accounts will be used."
-msgstr ""
+msgstr "账户的前缀。如果没有提供，将使用所有应收和应付账款。"
 
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/plugins/accounting_plugin.js:0
 msgid "The residual amount for given accounts could not be computed."
-msgstr ""
+msgstr "特定账户的剩余金额无法计算。"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "The technical account type (possible values are: %s)."
+msgstr "技术账户类型（可能的值为：%s）。"

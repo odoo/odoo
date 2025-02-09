@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 08:42+0000\n"
+"POT-Creation-Date: 2025-02-06 13:59+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Chloe Wang, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -134,6 +134,12 @@ msgid "Reference Unit"
 msgstr ""
 
 #. module: uom
+#. odoo-python
+#: code:addons/uom/models/uom_uom.py:0
+msgid "Reference unit of measure is missing."
+msgstr ""
+
+#. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__related_uom_ids
 msgid "Related UoMs"
 msgstr ""
@@ -158,19 +164,16 @@ msgid ""
 "As units of measure impact the whole system, this may cause critical issues.\n"
 "Therefore, changing core units of measure in a running database is not recommended."
 msgstr ""
+"一些关键字段已在%s上修改。\n"
+"请注意，现有数据不会因这一更改而更新。\n"
+"\n"
+"由于度量单位会影响整个系统，这可能会导致关键问题。\n"
+"因此，不建议在运行中的数据库中更改核心度量单位。"
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
 msgid "The conversion ratio for a unit of measure cannot be 0!"
 msgstr "计量单位的转换比率不能为 0！"
-
-#. module: uom
-#. odoo-python
-#: code:addons/uom/models/uom_uom.py:0
-msgid ""
-"The conversion ratio for a unit of measure without a reference unit must be "
-"1!"
-msgstr ""
 
 #. module: uom
 #. odoo-python
@@ -185,7 +188,7 @@ msgstr ""
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_ton
 msgid "Ton"
-msgstr ""
+msgstr "吨"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__active
@@ -285,6 +288,11 @@ msgstr "lb"
 #: model:uom.uom,name:uom.product_uom_mile
 msgid "mi"
 msgstr "英里"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_milliliter
+msgid "ml"
+msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_millimeter

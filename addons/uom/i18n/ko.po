@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 08:42+0000\n"
+"POT-Creation-Date: 2025-02-06 13:59+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Daye Jeong, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -23,7 +23,7 @@ msgstr ""
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor
 msgid "Absolute Quantity"
-msgstr ""
+msgstr "절대 수량"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__active
@@ -110,7 +110,7 @@ msgstr "복수의 단위 관리"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_pack_6
 msgid "Pack of 6"
-msgstr ""
+msgstr "6개 묶음"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__parent_path
@@ -131,12 +131,18 @@ msgstr "수량"
 #: model:ir.model.fields,field_description:uom.field_uom_uom__relative_uom_id
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 msgid "Reference Unit"
+msgstr "기준 단위"
+
+#. module: uom
+#. odoo-python
+#: code:addons/uom/models/uom_uom.py:0
+msgid "Reference unit of measure is missing."
 msgstr ""
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__related_uom_ids
 msgid "Related UoMs"
-msgstr ""
+msgstr "관련 단위"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
@@ -173,14 +179,6 @@ msgstr "단위의 변환 비율은 0 일 수 없습니다!"
 #. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 msgid ""
-"The conversion ratio for a unit of measure without a reference unit must be "
-"1!"
-msgstr "참조 단위가 없는 측정 단위의 변환 비율은 1이어야 합니다."
-
-#. module: uom
-#. odoo-python
-#: code:addons/uom/models/uom_uom.py:0
-msgid ""
 "The following units of measure are used by the system and cannot be deleted: %s\n"
 "You can archive them instead."
 msgstr ""
@@ -212,7 +210,7 @@ msgstr "단위"
 #: model:ir.actions.act_window,name:uom.product_uom_form_action
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_tree_view
 msgid "Units & Packagings"
-msgstr ""
+msgstr "단위 & 포장"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
@@ -290,6 +288,11 @@ msgstr "lb"
 #: model:uom.uom,name:uom.product_uom_mile
 msgid "mi"
 msgstr "mi"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_milliliter
+msgid "ml"
+msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_millimeter

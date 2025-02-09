@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 12:52+0000\n"
+"POT-Creation-Date: 2025-02-07 10:32+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
 "Last-Translator: Chloe Wang, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -1709,6 +1709,9 @@ msgid ""
 "Accounting reports for Netherlands\n"
 "Submit your Tax Reports to the Dutch tax authorities\n"
 msgstr ""
+"\n"
+"荷兰会计报告\n"
+"向荷兰税务机关提交税务报告\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_no_reports
@@ -2467,6 +2470,8 @@ msgid ""
 "\n"
 "Allow users to add a product to wishlist if the product is not available for the selected pickup location.\n"
 msgstr ""
+"\n"
+"如果所选取货地点没有该产品，允许用户将该产品添加到愿望清单。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_oauth
@@ -3484,6 +3489,15 @@ msgstr ""
 "Brazilian Accounting EDI for eCommerce\n"
 "======================================\n"
 "Allows tax calculation and EDI for eCommerce users.\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_br_edi_stock
+msgid ""
+"\n"
+"Brazilian Accounting EDI for stock\n"
+"==================================\n"
+"Adds delivery-related information to the NF-e.\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_livechat
@@ -5092,6 +5106,8 @@ msgid ""
 "\n"
 "Enhancements for the Point of Sale UrbanPiper module. Includes features such as store timing configuration, scheduled order handling, and improved toggle options.\n"
 msgstr ""
+"\n"
+"增强销售点 UrbanPiper 模块。包括商店定时配置、计划订单处理和改进的切换选项等功能。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_appointment_crm
@@ -6110,6 +6126,22 @@ msgstr ""
 "* Support for both Fulfilment by Amazon (FBA) and Fulfilment by Merchant (FBM):\n"
 "    * FBA: A stock location and stock moves allow to monitor your stock in Amazon Fulfilment Centers.\n"
 "    * FBM: Delivery notifications are sent to Amazon for each confirmed picking (partial delivery friendly).\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_sale_shopee
+msgid ""
+"\n"
+"Import your Shopee orders in Odoo and synchronize deliveries\n"
+"============================================================\n"
+"\n"
+"Key Features\n"
+"------------\n"
+"* Import orders from multiple accounts and shops\n"
+"* Orders are matched with Odoo products based on their internal reference (item_id or model_id in Shopee)\n"
+"* Support for both Fulfillment by Shopee (FBS), Fulfillment by Merchant (FBM) and Fulfilled by Cross Border Seller (Hybrid):\n"
+"* FBS: Importing the completed orders\n"
+"* FBM/Hybrid: Delivery information is fetched from Shopee, track and synchronize the stock level to Shopee\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_debit_note
@@ -8516,6 +8548,19 @@ msgstr ""
 "=============================\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_delivery_envia
+msgid ""
+"\n"
+"Send your shippings through Envia and track them online\n"
+"=======================================================\n"
+"\n"
+"Envia is a provider of integrated shipping and tracking solutions for growing e-commerce businesses.\n"
+"Seamlessly integrating with a large range of couriers and platforms,\n"
+"you can streamline every step of your fulfilment process,\n"
+"reduce handling time and improve customer experience.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_delivery_starshipit
 msgid ""
 "\n"
@@ -10349,6 +10394,19 @@ msgstr ""
 "==================================================================\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_cz_reports_2025
+msgid ""
+"\n"
+"This module adds the following reports for the Czech Republic:\n"
+"==============================================================\n"
+"1. VAT Control Statement (creation and XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHKH1\n"
+"\n"
+"2. Souhrnné hlášení VIES Report (creation and XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHSHV\n"
+"\n"
+"3. Tax report (XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHDP3\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_approvals_purchase
 msgid ""
 "\n"
@@ -11478,6 +11536,14 @@ msgstr ""
 "\n"
 "使用 SYSCOHADA 会计账目总表。\n"
 "\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_my_edi_extended
+msgid ""
+"\n"
+"This module improves the MyInvois E-invoicing feature by adding proper support for self billing, rendering the MyInvois\n"
+"QR code in the invoice PDF file and allows better management of foreign customer TIN.\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_iban
@@ -13925,12 +13991,12 @@ msgstr "抽象模型"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Abstract: False"
-msgstr ""
+msgstr "摘要：假"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Abstract: True"
-msgstr ""
+msgstr "摘要：真"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__user_ids
@@ -14497,6 +14563,11 @@ msgstr "在群发邮件中添加线索/机会 UTM 信息"
 #: model:ir.module.module,summary:base.module_mass_mailing_crm_sms
 msgid "Add lead / opportunities info on mass mailing sms"
 msgstr "在短信群发中添加线索/机会信息"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_hr_payroll_localisation
+msgid "Add models and fields for complete mexican localisation"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_social_sale
@@ -16295,6 +16366,8 @@ msgid ""
 "An SSL exception occurred. Check connection security type.\n"
 " CertificateError: %s"
 msgstr ""
+"出现 SSL 异常。检查连接安全类型。\n"
+" 证书错误：%s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_client__tag
@@ -17248,7 +17321,7 @@ msgstr "为联系人指定标签，以便对其进行整理、筛选和跟踪。
 #. module: base
 #: model:ir.module.module,summary:base.module_google_address_autocomplete
 msgid "Assist with automatic completion & suggestions when filling address"
-msgstr ""
+msgstr "填写地址时协助自动完成和建议"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_autocomplete
@@ -17631,7 +17704,7 @@ msgstr "自动完成合作伙伴公司的数据"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_payroll_sale_commission
 msgid "Autofill employee commission"
-msgstr ""
+msgstr "自动填写员工佣金"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__auto_install
@@ -18200,7 +18273,7 @@ msgstr "Belgian Intrastat Declaration"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_pos_restaurant
 msgid "Belgian POS Restaurant Localization"
-msgstr ""
+msgstr "比利时 POS 餐厅本地化"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_attendance
@@ -18554,6 +18627,11 @@ msgid "Brazilian Accounting EDI for eCommerce"
 msgstr "巴西电子商务会计 EDI"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_br_edi_stock
+msgid "Brazilian Accounting EDI for stock"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_renting_sign
 msgid "Bridge Sign functionalities with the Rental application"
 msgstr "使用租赁应用程序桥接符号功能"
@@ -18635,7 +18713,7 @@ msgstr "Amazon Connector 和 Avatax 之间的桥接模块"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_collect_wishlist
 msgid "Bridge module between Click & Collect and Wishlist"
-msgstr ""
+msgstr "点击即收和愿望清单之间的桥接模块"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet_margin
@@ -18774,7 +18852,7 @@ msgstr "建立漂亮的报价单"
 #. module: base
 #: model:ir.module.module,summary:base.module_iot_box_image
 msgid "Build tools for the IoT Box image"
-msgstr ""
+msgstr "为物联网盒图像构建工具"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_board
@@ -19590,6 +19668,14 @@ msgid ""
 "- encryption and validation: encrypt the data and authentify the server using its SSL certificate (Recommended)\n"
 "- encryption only: encrypt the data but skip server authentication"
 msgstr ""
+"选择连接加密方案：\n"
+"- 无：SMTP 会话以明文方式进行。\n"
+"- TLS (starttls)： 在 SMTP 会话开始时请求 TLS 加密（建议使用）\n"
+"- SSL/TLS：通过专用端口（默认值：465）使用 SSL/TLS 对 SMTP 会话进行加密\n"
+"\n"
+"为 SSL 或 TLS 选择附加变量：\n"
+"- 加密和验证：使用 SSL 证书加密数据和验证服务器（推荐）\n"
+"- 仅加密：加密数据，但跳过服务器验证"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_documents
@@ -19720,7 +19806,7 @@ msgstr "群组视图"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_collect_wishlist
 msgid "Collect & Wishlist"
-msgstr ""
+msgstr "收藏和愿望清单"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_sepa_direct_debit
@@ -19878,7 +19964,7 @@ msgstr "佣金"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_sale_commission
 msgid "Commission in Payslips"
-msgstr ""
+msgstr "工资单中的佣金"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_iap_extract
@@ -21218,6 +21304,11 @@ msgstr "捷克语 - 会计"
 #: model:res.country,name:base.cz
 msgid "Czech Republic"
 msgstr "捷克共和国"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_cz_reports_2025
+msgid "Czech Republic - Accounting Reports 2025"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cz_reports
@@ -23021,6 +23112,11 @@ msgid "Entry count"
 msgstr "参赛人数"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_envia
+msgid "Envia Shipping"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_pos_epson_printer
 msgid "Epson ePOS Printers in PoS"
 msgstr "PoS使用的爱普生 ePOS 打印机"
@@ -24011,6 +24107,11 @@ msgstr "表达式"
 #: model:ir.module.module,shortdesc:base.module_base_address_extended
 msgid "Extended Addresses"
 msgstr "扩展地址"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_my_edi_extended
+msgid "Extended features for the E-invoicing using MyInvois"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__mode__extension
@@ -26728,6 +26829,11 @@ msgid "Import QIF Bank Statement"
 msgstr "导入QIF银行对账单"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_sale_shopee
+msgid "Import Shopee orders and sync deliveries"
+msgstr ""
+
+#. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "Import Template for Customers"
@@ -29310,6 +29416,11 @@ msgid "Malaysia - E-invoicing"
 msgstr "马来西亚 - 电子发票"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_my_edi_extended
+msgid "Malaysia - E-invoicing Extended Features"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_my_ubl_pint
 msgid "Malaysia - UBL PINT"
 msgstr "马来西亚 - UBL PINT"
@@ -30023,6 +30134,11 @@ msgstr "墨西哥 - 第13月试算平衡表"
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_hr_payroll
 msgid "Mexico - Payroll"
 msgstr "墨西哥 - 工资"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_hr_payroll_localisation
+msgid "Mexico - Payroll - Localisation"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_hr_payroll_account
@@ -38183,8 +38299,11 @@ msgstr "通过UPS运输货物并线上跟踪物流信息"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_usps
-msgid "Send your shippings through USPS and track them online"
-msgstr "通过USPS运输货物并线上跟踪物流信息"
+msgid ""
+"This is the legacy integration with USPS. Please install the new \"United "
+"States Postal Service (USPS) Shipping\" module and uninstall this one as "
+"soon as possible."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_survey
@@ -38492,6 +38611,11 @@ msgstr "Shiprocket 航运"
 #: model:ir.module.module,shortdesc:base.module_website_sale_shiprocket
 msgid "Shiprocket: Cash on Delivery"
 msgstr "Shiprocket：货到现金付款"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_shopee
+msgid "Shopee Connector"
+msgstr "Shopee 连接器"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_wishlist
@@ -42475,8 +42599,8 @@ msgstr "美国 - 工资与会计"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_usps
-msgid "United States Postal Service (USPS) Shipping"
-msgstr "美国邮政(USPS)货运"
+msgid "United States Postal Service (USPS) Shipping (Legacy)"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_uom
@@ -43787,7 +43911,7 @@ msgstr "值是否存储在数据库。"
 #: model:ir.model.fields,help:base.field_res_partner__employee
 #: model:ir.model.fields,help:base.field_res_users__employee
 msgid "Whether this contact is an Employee."
-msgstr ""
+msgstr "该联系人是否为员工。"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_module_module_dependency__auto_install_required

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-02-06 13:57+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Chloe Wang, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -430,9 +430,8 @@ msgstr "高级员工出席控制"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_crm_team__alias_contact
-#: model:ir.model.fields,field_description:hr.field_documents_document__alias_contact
-#: model:ir.model.fields,field_description:hr.field_helpdesk_team__alias_contact
 #: model:ir.model.fields,field_description:hr.field_mail_alias__alias_contact
+#: model:ir.model.fields,field_description:hr.field_mail_group__alias_contact
 #: model:ir.model.fields,field_description:hr.field_maintenance_equipment_category__alias_contact
 msgid "Alias Contact Security"
 msgstr "别名授权于"
@@ -440,12 +439,12 @@ msgstr "别名授权于"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Allow employees to update Work Information on My Profile"
-msgstr ""
+msgstr "允许员工更新 “我的个人资料” 中的工作信息"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Allow employees to update Work Information on My Profile."
-msgstr ""
+msgstr "允许员工在 “我的个人资料” 中更新 “工作信息”。"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -571,6 +570,11 @@ msgid "Available"
 msgstr "可用"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.mail_activity_plan_view_form
+msgid "Available for all Departments"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_1920
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_1920
 msgid "Avatar"
@@ -681,7 +685,7 @@ msgstr "二进制文件"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday
 #: model:ir.model.fields,field_description:hr.field_res_users__birthday
 msgid "Birthday"
-msgstr ""
+msgstr "生日"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__can_edit
@@ -2593,9 +2597,8 @@ msgstr "和同事一起健身，<br>公司支付账单。"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_crm_team__alias_contact
-#: model:ir.model.fields,help:hr.field_documents_document__alias_contact
-#: model:ir.model.fields,help:hr.field_helpdesk_team__alias_contact
 #: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
+#: model:ir.model.fields,help:hr.field_mail_group__alias_contact
 #: model:ir.model.fields,help:hr.field_maintenance_equipment_category__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
@@ -2730,7 +2733,7 @@ msgstr "属性"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday_public_display_string
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__birthday_public_display_string
 msgid "Public Date of Birth"
-msgstr ""
+msgstr "出生日期"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_public
@@ -3013,7 +3016,7 @@ msgstr "显示员工"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday_public_display
 #: model:ir.model.fields,field_description:hr.field_res_users__birthday_public_display
 msgid "Show to all employees"
-msgstr ""
+msgstr "向所有员工展示"
 
 #. module: hr
 #. odoo-python
@@ -3467,6 +3470,9 @@ msgid ""
 "                driving business growth. Strong analytical skills and a proven track record in delivering results are\n"
 "                essential."
 msgstr ""
+"We are looking for a Consultant to provide expert advice and strategic solutions,\n"
+"                driving business growth. Strong analytical skills and a proven track record in delivering results are\n"
+"                essential."
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_marketing
@@ -3475,6 +3481,9 @@ msgid ""
 "                develop and monitor the annual budget with Sales, and align product and customer portfolios with the\n"
 "                marketing plan. This role requires strong collaboration with Technical Service and Sales."
 msgstr ""
+"We are looking for a Marketing and Community manager to define the global mid- to long- term strategy,\n"
+"                develop and monitor the annual budget with Sales, and align product and customer portfolios with the\n"
+"                marketing plan. This role requires strong collaboration with Technical Service and Sales."
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_developer
@@ -3483,6 +3492,9 @@ msgid ""
 "                Someone who can snap out of coding and perform analysis or meet clients to explain the technical\n"
 "                possibilities that can meet their needs."
 msgstr ""
+"We are looking for an experience developer to join our Web team.\n"
+"                Someone who can snap out of coding and perform analysis or meet clients to explain the technical\n"
+"                possibilities that can meet their needs."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__website_message_ids
@@ -3533,7 +3545,7 @@ msgstr "员工是活动用户部门的成员还是其子部门之一的成员。
 #: model:ir.model.fields,help:hr.field_res_partner__employee
 #: model:ir.model.fields,help:hr.field_res_users__employee
 msgid "Whether this contact is an Employee."
-msgstr ""
+msgstr "该联系人是否为员工。"
 
 #. module: hr
 #. odoo-python

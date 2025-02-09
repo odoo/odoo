@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 08:42+0000\n"
+"POT-Creation-Date: 2025-02-06 13:58+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Daye Jeong, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -1253,7 +1253,7 @@ msgstr "그리드에서 주문서로 여러 세부선택 항목을 추가합니�
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "허용된 단위"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1395,6 +1395,15 @@ msgid ""
 msgstr ""
 "예를 들어, 서비스를 선불 시간제 품목으로 판매하는 경우, Odoo에서는\n"
 "            주문 시간을 전부 소진한 후에 추가 시간을 판매하는 것을 추천하고 있습니다."
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/product_product.py:0
+msgid ""
+"As other units of measure (ex : %(problem_uom)s) than %(uom)s have already "
+"been used for this product, the change of unit of measure can not be done.If"
+" you want to change it, please archive the product and create a new one."
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -2420,12 +2429,6 @@ msgstr "만료일"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Expiration Date:"
 msgstr "만료일:"
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-msgid "Expires on %(date)s"
-msgstr "만료일 %(date)s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4457,7 +4460,7 @@ msgstr "판매: 결제 완료"
 #. module: sale
 #: model:mail.template,name:sale.email_template_proforma
 msgid "Sales: Send Proforma"
-msgstr ""
+msgstr "판매: 견적서 보내기"
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
@@ -5353,7 +5356,7 @@ msgstr "단가"
 #: model:ir.ui.menu,name:sale.menu_product_uom_form_action
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Units & Packagings"
-msgstr ""
+msgstr "단위 & 포장"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5418,7 +5421,7 @@ msgstr "추가판매 기회"
 #. module: sale
 #: model:mail.template,description:sale.email_template_proforma
 msgid "Used by salespeople when they send proforma to prospects"
-msgstr ""
+msgstr "영업 담당자가 잠재고객에게 견적서를 보낼 때 사용됩니다."
 
 #. module: sale
 #: model:mail.template,description:sale.email_template_edi_sale

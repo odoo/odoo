@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 12:52+0000\n"
+"POT-Creation-Date: 2025-02-07 10:32+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
 "Last-Translator: Fernanda Alvarez, 2025\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
@@ -3504,6 +3504,15 @@ msgstr ""
 "Permite el cálculo de impuestos y EDI para los usuarios de comercio electrónico.\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_br_edi_stock
+msgid ""
+"\n"
+"Brazilian Accounting EDI for stock\n"
+"==================================\n"
+"Adds delivery-related information to the NF-e.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_hr_livechat
 msgid ""
 "\n"
@@ -6137,6 +6146,33 @@ msgstr ""
 "    * FBM: las notificaciones de entrega se envían a Amazon para cada recolección confirmada (es posible realizar entregas parciales).\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_sale_shopee
+msgid ""
+"\n"
+"Import your Shopee orders in Odoo and synchronize deliveries\n"
+"============================================================\n"
+"\n"
+"Key Features\n"
+"------------\n"
+"* Import orders from multiple accounts and shops\n"
+"* Orders are matched with Odoo products based on their internal reference (item_id or model_id in Shopee)\n"
+"* Support for both Fulfillment by Shopee (FBS), Fulfillment by Merchant (FBM) and Fulfilled by Cross Border Seller (Hybrid):\n"
+"* FBS: Importing the completed orders\n"
+"* FBM/Hybrid: Delivery information is fetched from Shopee, track and synchronize the stock level to Shopee\n"
+msgstr ""
+"\n"
+"Importe sus órdenes de Shopee en Odoo y sincronice las entregas\n"
+"================================================ ==========\n"
+"\n"
+"Funciones clave\n"
+"------------\n"
+"* Importe las órdenes de varias cuentas y tiendas.\n"
+"* Las órdenes coinciden con los productos de Odoo de acuerdo a su referencia interna (item_id o model_id en Shopee).\n"
+"* Compatibilidad con Logística por Shopee (FBS), Logística por el comerciante (FBM) y Logística por el vendedor transfronterizo (Híbrido):\n"
+"    * FBS: Importación de las órdenes completas.\n"
+"    * FBM/Híbrido: La información de entrega se obtiene de Shopee, rastrea y sincroniza el nivel de existencias con Shopee.\n"
+
+#. module: base
 #: model:ir.module.module,description:base.module_account_debit_note
 msgid ""
 "\n"
@@ -8535,6 +8571,19 @@ msgstr ""
 "=============================\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_delivery_envia
+msgid ""
+"\n"
+"Send your shippings through Envia and track them online\n"
+"=======================================================\n"
+"\n"
+"Envia is a provider of integrated shipping and tracking solutions for growing e-commerce businesses.\n"
+"Seamlessly integrating with a large range of couriers and platforms,\n"
+"you can streamline every step of your fulfilment process,\n"
+"reduce handling time and improve customer experience.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_delivery_starshipit
 msgid ""
 "\n"
@@ -10370,6 +10419,19 @@ msgstr ""
 "==================================================================\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_cz_reports_2025
+msgid ""
+"\n"
+"This module adds the following reports for the Czech Republic:\n"
+"==============================================================\n"
+"1. VAT Control Statement (creation and XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHKH1\n"
+"\n"
+"2. Souhrnné hlášení VIES Report (creation and XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHSHV\n"
+"\n"
+"3. Tax report (XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHDP3\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_approvals_purchase
 msgid ""
 "\n"
@@ -11494,6 +11556,17 @@ msgstr ""
 "\n"
 "El plan de cuentas es de SYSCOHADA.\n"
 "\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_my_edi_extended
+msgid ""
+"\n"
+"This module improves the MyInvois E-invoicing feature by adding proper support for self billing, rendering the MyInvois\n"
+"QR code in the invoice PDF file and allows better management of foreign customer TIN.\n"
+msgstr ""
+"\n"
+"Este módulo mejora la función de facturación electrónica de MyInvois. Agrega la compatibilidad adecuada para la autofacturación, muestra el código QR de MyInvois\n"
+"en el archivo PDF de la factura y permite una mejor gestión del TIN de clientes extranjeros.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_iban
@@ -14601,6 +14674,11 @@ msgstr "Agregue la información UTM de leads y oportunidades en correo masivo"
 msgid "Add lead / opportunities info on mass mailing sms"
 msgstr ""
 "Agregue información de leads y oportunidades en los SMS de envío masivo"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_hr_payroll_localisation
+msgid "Add models and fields for complete mexican localisation"
+msgstr "Agregue modelos y campos para una localización mexicana completa"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_social_sale
@@ -18783,6 +18861,11 @@ msgid "Brazilian Accounting EDI for eCommerce"
 msgstr "EDI para contabilidad brasileña para comercio electrónico"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_br_edi_stock
+msgid "Brazilian Accounting EDI for stock"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_renting_sign
 msgid "Bridge Sign functionalities with the Rental application"
 msgstr "Funciones enlace de Firma electrónica con la aplicación Alquiler"
@@ -21545,6 +21628,11 @@ msgid "Czech Republic"
 msgstr "República Checa"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_cz_reports_2025
+msgid "Czech Republic - Accounting Reports 2025"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cz_reports
 msgid "Czech Republic- Accounting Reports"
 msgstr "República Checa - Reportes contables"
@@ -21955,7 +22043,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_inventory_delivery
 #: model:ir.module.category,name:base.module_category_sales_delivery
 msgid "Delivery"
-msgstr "Envío"
+msgstr "Entrega"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_delivery
@@ -23404,6 +23492,11 @@ msgid "Entry count"
 msgstr "Número de asientos"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_envia
+msgid "Envia Shipping"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_pos_epson_printer
 msgid "Epson ePOS Printers in PoS"
 msgstr "Impresoras Epson ePOS en el punto de venta"
@@ -24406,6 +24499,11 @@ msgstr "Expresión"
 #: model:ir.module.module,shortdesc:base.module_base_address_extended
 msgid "Extended Addresses"
 msgstr "Direcciones ampliadas"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_my_edi_extended
+msgid "Extended features for the E-invoicing using MyInvois"
+msgstr "Más funciones para la facturación electrónica con MyInvois"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__mode__extension
@@ -27237,6 +27335,11 @@ msgid "Import QIF Bank Statement"
 msgstr "Importar estado de cuenta bancario QIF"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_sale_shopee
+msgid "Import Shopee orders and sync deliveries"
+msgstr "Importe las órdenes de Shopee y sincronice las entregas"
+
+#. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "Import Template for Customers"
@@ -29891,6 +29994,11 @@ msgid "Malaysia - E-invoicing"
 msgstr "Malasia - Facturación electrónica"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_my_edi_extended
+msgid "Malaysia - E-invoicing Extended Features"
+msgstr "Malasia - Funciones extensas para facturación electrónica"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_my_ubl_pint
 msgid "Malaysia - UBL PINT"
 msgstr "Malasia - UBL PINT"
@@ -30626,6 +30734,11 @@ msgstr "México - Balanza de comprobación del mes 13 "
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_hr_payroll
 msgid "Mexico - Payroll"
 msgstr "México - Nómina"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_hr_payroll_localisation
+msgid "Mexico - Payroll - Localisation"
+msgstr "México - Nómina - Localización"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_hr_payroll_account
@@ -38869,8 +38982,11 @@ msgstr "Haga sus envíos a través de UPS y rastréelos en línea"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_usps
-msgid "Send your shippings through USPS and track them online"
-msgstr "Haga sus envíos a través de USPS y rastréelos en línea"
+msgid ""
+"This is the legacy integration with USPS. Please install the new \"United "
+"States Postal Service (USPS) Shipping\" module and uninstall this one as "
+"soon as possible."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_survey
@@ -39187,6 +39303,11 @@ msgstr "Envío por Shiprocket"
 #: model:ir.module.module,shortdesc:base.module_website_sale_shiprocket
 msgid "Shiprocket: Cash on Delivery"
 msgstr "Shiprocket: pago contra entrega"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_shopee
+msgid "Shopee Connector"
+msgstr "Conector de Shopee"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_wishlist
@@ -43380,8 +43501,8 @@ msgstr "Estados Unidos - Nómina y contabilidad"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_usps
-msgid "United States Postal Service (USPS) Shipping"
-msgstr "Envíos por USPS (United States Postal Service)"
+msgid "United States Postal Service (USPS) Shipping (Legacy)"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_uom

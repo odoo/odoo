@@ -3,16 +3,16 @@
 # 	* base
 # 
 # Translators:
-# Jessica Jakara, 2025
 # Richard Mouthier (RMO) <rmo@odoo.com>, 2025
 # Wil Odoo, 2025
+# Jessica Jakara, 2025
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 12:52+0000\n"
+"POT-Creation-Date: 2025-02-07 10:32+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -1723,6 +1723,9 @@ msgid ""
 "Accounting reports for Netherlands\n"
 "Submit your Tax Reports to the Dutch tax authorities\n"
 msgstr ""
+"\n"
+"Kirjanpitoraportit Alankomaille\n"
+"Lähetä veroilmoituksesi Alankomaiden veroviranomaisille\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_no_reports
@@ -2485,6 +2488,8 @@ msgid ""
 "\n"
 "Allow users to add a product to wishlist if the product is not available for the selected pickup location.\n"
 msgstr ""
+"\n"
+"Salli käyttäjien lisätä tuote toivelistalle, jos tuotetta ei ole saatavilla valitussa noutopaikassa.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_oauth
@@ -3504,6 +3509,15 @@ msgstr ""
 "Brasilialainen kirjanpito EDI sähköistä kaupankäyntiä varten\n"
 "======================================\n"
 "Mahdollistaa verolaskennan ja EDI:n sähköisen kaupankäynnin käyttäjille.\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_br_edi_stock
+msgid ""
+"\n"
+"Brazilian Accounting EDI for stock\n"
+"==================================\n"
+"Adds delivery-related information to the NF-e.\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_livechat
@@ -5915,6 +5929,9 @@ msgid ""
 "Generates Netherlands Intrastat report for declaration based on invoices\n"
 "and submit your Intracommunity Services to the Dutch tax authorities.\n"
 msgstr ""
+"\n"
+"Generoi Alankomaiden Intrastat-raportti veroilmoitusta varten perustuen laskuihin\n"
+"ja lähetä yhteisökauppapalvelut Alankomaiden veroviranomaisille.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_generator
@@ -6143,6 +6160,33 @@ msgstr ""
 "    * FBM: Toimitusilmoitukset lähetetään Amazonille jokaisesta vahvistetusta poiminnasta (osatoimitusystävällinen).\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_sale_shopee
+msgid ""
+"\n"
+"Import your Shopee orders in Odoo and synchronize deliveries\n"
+"============================================================\n"
+"\n"
+"Key Features\n"
+"------------\n"
+"* Import orders from multiple accounts and shops\n"
+"* Orders are matched with Odoo products based on their internal reference (item_id or model_id in Shopee)\n"
+"* Support for both Fulfillment by Shopee (FBS), Fulfillment by Merchant (FBM) and Fulfilled by Cross Border Seller (Hybrid):\n"
+"* FBS: Importing the completed orders\n"
+"* FBM/Hybrid: Delivery information is fetched from Shopee, track and synchronize the stock level to Shopee\n"
+msgstr ""
+"\n"
+"Tuo Shopee-tilauksesi Odoon ja synkronoi toimitukset\n"
+"============================================================\n"
+"\n"
+"Tärkeimmät ominaisuudet\n"
+"------------\n"
+"* Tuo tilauksia useilta tileiltä ja kaupoista\n"
+"* Tilaukset yhdistetään Odoo-tuotteisiin niiden sisäisen viitteen perusteella (item_id tai model_id Shopeessa)\n"
+"* Tuki sekä Fulfillment by Shopee (FBS), Fulfillment by Merchant (FBM) että Fulfilled by Cross Border Seller (Hybrid):\n"
+"* FBS: Valmiiden tilausten tuonti\n"
+"* FBM/Hybridi: Toimitustiedot haetaan Shopeesta, seurataan ja synkronoidaan varastotaso Shopeen\n"
+
+#. module: base
 #: model:ir.module.module,description:base.module_account_debit_note
 msgid ""
 "\n"
@@ -6287,6 +6331,10 @@ msgid ""
 "====================================\n"
 "This module enables to generate E-waybill through IRN.\n"
 msgstr ""
+"\n"
+"Intia - eRahtikirja IRN:n kautta\n"
+"====================================\n"
+"Tämä moduuli mahdollistaa eRahtikirjan luomisen IRN:n kautta.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in
@@ -8118,6 +8166,11 @@ msgid ""
 "\n"
 "This application allows you to pay commission in payslips.\n"
 msgstr ""
+"\n"
+"Työntekijöiden palkkioiden maksaminen\n"
+"=====================================\n"
+"\n"
+"Tämä sovellus mahdollistaa palkkioiden maksamisen tilinauhoissa.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_appraisal
@@ -8552,6 +8605,19 @@ msgstr ""
 "=============================\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_delivery_envia
+msgid ""
+"\n"
+"Send your shippings through Envia and track them online\n"
+"=======================================================\n"
+"\n"
+"Envia is a provider of integrated shipping and tracking solutions for growing e-commerce businesses.\n"
+"Seamlessly integrating with a large range of couriers and platforms,\n"
+"you can streamline every step of your fulfilment process,\n"
+"reduce handling time and improve customer experience.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_delivery_starshipit
 msgid ""
 "\n"
@@ -8740,6 +8806,20 @@ msgid ""
 "\n"
 "5.3: Update taxes starting Q4 2024 according to BOE-A-2024-12944 (Royal Decree 4/2024) https://www.boe.es/buscar/act.php?id=BOE-A-2024-12944\n"
 msgstr ""
+"\n"
+"Espanjan tilikartat (PGCE 2008).\n"
+"========================================\n"
+"\n"
+"    * Määrittelee seuraavat tilikarttamallit::\n"
+"        * Espanjan yleinen tilikartta 2008\n"
+"        * Espanjan yleinen PK-yritysten tilikartta 2008\n"
+"        * Espanjan yleinen yhdistysten tilikartta 2008 \n"
+"    * Määrittelee myynti- ja ostoarvonlisäveromallit VAT\n"
+"    * Määrittelee veromallit\n"
+"    * Määrittelee veroalueet Espanjan verolainsäädännön mukaan\n"
+"    * Määrittelee veroraportit mod. 111, 115, 130 ja 303\n"
+"\n"
+"5.3: Päivitä verot alkaen Q4 2024 BOE-A-2024-12944 mukaisesti (Royal Decree 4/2024) https://www.boe.es/buscar/act.php?id=BOE-A-2024-12944\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_renting
@@ -8762,6 +8842,10 @@ msgid ""
 "====================\n"
 "Open the record of the serial number from an equipment form\n"
 msgstr ""
+"\n"
+"Varasto huollossa\n"
+"====================\n"
+"Avaa sarjanumeron tiedot varustelomakkeelta\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_studio
@@ -10176,6 +10260,8 @@ msgid ""
 "\n"
 "This module Auto complete the address data.\n"
 msgstr ""
+"\n"
+"Tämä moduuli täyttää automaattisesti osoitetiedot.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_hr_restaurant
@@ -10365,6 +10451,19 @@ msgstr ""
 "\n"
 "Tämä moduuli lisää eräsiirtovaihtoehdon varastonhallintaan\n"
 "==================================================================\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_cz_reports_2025
+msgid ""
+"\n"
+"This module adds the following reports for the Czech Republic:\n"
+"==============================================================\n"
+"1. VAT Control Statement (creation and XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHKH1\n"
+"\n"
+"2. Souhrnné hlášení VIES Report (creation and XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHSHV\n"
+"\n"
+"3. Tax report (XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHDP3\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_approvals_purchase
@@ -11497,6 +11596,17 @@ msgstr ""
 "\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_my_edi_extended
+msgid ""
+"\n"
+"This module improves the MyInvois E-invoicing feature by adding proper support for self billing, rendering the MyInvois\n"
+"QR code in the invoice PDF file and allows better management of foreign customer TIN.\n"
+msgstr ""
+"\n"
+"Tämä moduuli parantaa MyInvois-verkkolaskutusominaisuutta lisäämällä asianmukaisen tuen itselaskutukselle, jolloin MyInvois\n"
+"QR-koodi laskun PDF-tiedostossa ja mahdollistaa ulkomaisen asiakkaan TIN-tunnuksen paremman hallinnan.\n"
+
+#. module: base
 #: model:ir.module.module,description:base.module_base_iban
 msgid ""
 "\n"
@@ -11584,6 +11694,8 @@ msgid ""
 "\n"
 "This module integrates with UrbanPiper to receive and manage orders from Swiggy and Zomato (Food delivery providers for India).\n"
 msgstr ""
+"\n"
+"Tämä moduuli integroituu UrbanPiper:in kanssa, jotta tilauksia voi vastaanottaa ja hallita Swiggy:stä ja Zomato:sta (ruokatoimituspalvelut Intiassa).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_urban_piper_ubereats
@@ -12804,12 +12916,12 @@ msgstr "'new' on varattu, eikä sitä voi käyttää polkuna."
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "(Same Company Registry"
-msgstr ""
+msgstr "(Sama, kuin yritysrekisteri"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "(Same Tax ID"
-msgstr ""
+msgstr "(Sama verotunnus"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -13208,7 +13320,7 @@ msgstr "<span class=\"o_stat_text\">Poista \"Tulosta\"-valikosta</span>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_form
 msgid "<span class=\"text-bg-primary\">Archived</span>"
-msgstr ""
+msgstr "<span class=\"text-bg-primary\">Arkistoitu</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -14016,17 +14128,17 @@ msgstr "Abstrakti"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__abstract
 msgid "Abstract Model"
-msgstr ""
+msgstr "Abstrakti malli"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Abstract: False"
-msgstr ""
+msgstr "Abstrakti: Epätosi"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Abstract: True"
-msgstr ""
+msgstr "Abstrakti: Tosi"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__user_ids
@@ -14613,6 +14725,12 @@ msgstr ""
 msgid "Add lead / opportunities info on mass mailing sms"
 msgstr ""
 "Lisää liidin tai myyntimahdollisuuden info massapostituksen tekstiviesteihin"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_hr_payroll_localisation
+msgid "Add models and fields for complete mexican localisation"
+msgstr ""
+"Lisää malleja ja kenttiä täydellistä meksikolaista lokalisointia varten"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_social_sale
@@ -16484,6 +16602,8 @@ msgid ""
 "An SSL exception occurred. Check connection security type.\n"
 " CertificateError: %s"
 msgstr ""
+"Tapahtui SSL-poikkeus. Tarkista yhteyden suojaustyyppi.\n"
+" CertificateError: %s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_client__tag
@@ -17453,6 +17573,7 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_google_address_autocomplete
 msgid "Assist with automatic completion & suggestions when filling address"
 msgstr ""
+"Auttaa automaattisessa täytössä & ehdotuksissa, kun täytetään osoitetta"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_autocomplete
@@ -17837,7 +17958,7 @@ msgstr "Täydennä kumppaniyritysten tiedot automaattisesti"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_payroll_sale_commission
 msgid "Autofill employee commission"
-msgstr ""
+msgstr "Työntekijän palkkion automaattinen täyttö"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__auto_install
@@ -18771,6 +18892,11 @@ msgid "Brazilian Accounting EDI for eCommerce"
 msgstr "Brasilialainen kirjanpito EDI sähköistä kaupankäyntiä varten"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_br_edi_stock
+msgid "Brazilian Accounting EDI for stock"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sale_renting_sign
 msgid "Bridge Sign functionalities with the Rental application"
 msgstr "Yhdistä Sign -toiminnot Vuokrasovelluksen kanssa"
@@ -18862,7 +18988,7 @@ msgstr "Siltamoduuli Amazon Connectorin ja Avataxin välillä"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_collect_wishlist
 msgid "Bridge module between Click & Collect and Wishlist"
-msgstr ""
+msgstr "Yhdistävä moduuli 'Click & Collect' ja Toivelistan välillä"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet_margin
@@ -19011,7 +19137,7 @@ msgstr "Rakenna hienoja tarjouksia"
 #. module: base
 #: model:ir.module.module,summary:base.module_iot_box_image
 msgid "Build tools for the IoT Box image"
-msgstr ""
+msgstr "Rakennustyökalut IoT-mokkulan -kuvan luomiseen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_board
@@ -19845,6 +19971,14 @@ msgid ""
 "- encryption and validation: encrypt the data and authentify the server using its SSL certificate (Recommended)\n"
 "- encryption only: encrypt the data but skip server authentication"
 msgstr ""
+"Valitse yhteyden salausmalli:\n"
+"- Ei mitään:  SMTP-istunnot tehdään cleartext-muodossa.\n"
+"- TLS (STARTTLS):  TLS-salaus pyydetään aloitettaessa SMTP-istunnon (suositeltu)\n"
+"- SMTP-istunnot salataan SSL/TLS:llä erillisellä portilla (default: 465)\n"
+"\n"
+"Valitse lisävariantti SSL- tai TLS-salausta varten::\n"
+"- salaus ja todentaminen: salaa tiedot ja tunnista palvelin sen SSL-varmenteen avulla (suositeltu)\n"
+"- vain salaus: salaa tiedot, mutta ohita palvelimen todentaminen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_documents
@@ -19975,7 +20109,7 @@ msgstr "Kohorttinäkymä"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_collect_wishlist
 msgid "Collect & Wishlist"
-msgstr ""
+msgstr "Nouda & Toivelista"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_sepa_direct_debit
@@ -20135,7 +20269,7 @@ msgstr "Komissio"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_sale_commission
 msgid "Commission in Payslips"
-msgstr ""
+msgstr "Palkkiot tilinauhalla"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_iap_extract
@@ -20250,7 +20384,7 @@ msgstr "Yrityksen hinta"
 #: model:ir.model.fields,field_description:base.field_res_partner__company_registry_placeholder
 #: model:ir.model.fields,field_description:base.field_res_users__company_registry_placeholder
 msgid "Company Registry Placeholder"
-msgstr ""
+msgstr "Yritysrekisterin paikkamerkki"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__report_header
@@ -20426,12 +20560,12 @@ msgstr "Vahvista salasana"
 #. module: base
 #: model:res.country,name:base.cd
 msgid "Congo (DRC)"
-msgstr ""
+msgstr "Kongon Demokraattinen Tasavalta (DRC)"
 
 #. module: base
 #: model:res.country,name:base.cg
 msgid "Congo (Republic)"
-msgstr ""
+msgstr "Kongon Tasavalta"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cg
@@ -21350,7 +21484,7 @@ msgstr "Valuutan numerokoodi."
 #. odoo-python
 #: code:addons/base/models/res_currency.py:0
 msgid "Currency rates should only be created for main companies"
-msgstr ""
+msgstr "Valuuttakursseja tulee luoda vain pääyrityksille"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__symbol
@@ -21505,6 +21639,11 @@ msgstr "Tšekki - Kirjanpito"
 #: model:res.country,name:base.cz
 msgid "Czech Republic"
 msgstr "Tšekki"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_cz_reports_2025
+msgid "Czech Republic - Accounting Reports 2025"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cz_reports
@@ -22799,7 +22938,7 @@ msgstr "Sähköinen laskutus, Universal Business Language"
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es_website_sale
 msgid "E-commerce localization for Spain."
-msgstr ""
+msgstr "Espanjan verkkokaupan lokalisaatio."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_my_edi
@@ -22912,7 +23051,7 @@ msgstr "Ecuador - ATS-raportti"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ec_sale
 msgid "Ecuador - Sale"
-msgstr ""
+msgstr "Ecuador - Myynti"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec_stock
@@ -22923,7 +23062,7 @@ msgstr "Ecuador - Varasto"
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec_sale
 msgid "Ecuador Sale"
-msgstr ""
+msgstr "Ecuador myynti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ec
@@ -23366,6 +23505,11 @@ msgstr "Viihde"
 #: model:ir.model.fields,field_description:base.field_ir_profile__entry_count
 msgid "Entry count"
 msgstr "Lukumäärä"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_envia
+msgid "Envia Shipping"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_epson_printer
@@ -24370,6 +24514,12 @@ msgid "Extended Addresses"
 msgstr "Laajennetut osoitteet"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_my_edi_extended
+msgid "Extended features for the E-invoicing using MyInvois"
+msgstr ""
+"Laajennetut ominaisuudet sähköiseen laskutukseen MyInvois-palvelun avulla"
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__mode__extension
 msgid "Extension View"
 msgstr "Lisäosan näkymä"
@@ -24612,7 +24762,7 @@ msgstr "Kenttä \"%s\" ei ole välimuistissa"
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 msgid "Field %s cannot be modified on models."
-msgstr ""
+msgstr "Kenttää %s ei voi muokata malleissa."
 
 #. module: base
 #. odoo-python
@@ -25737,7 +25887,7 @@ msgstr "Siirry käyttäjiin"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_address_autocomplete
 msgid "Google Address Autocomplete"
-msgstr ""
+msgstr "Google osoitteen automaattinen täydennys"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_calendar
@@ -27179,6 +27329,11 @@ msgid "Import QIF Bank Statement"
 msgstr "Sisäänlue QIF-tiliote"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_sale_shopee
+msgid "Import Shopee orders and sync deliveries"
+msgstr "Tuo Shopee-tilauksia ja synkronoi toimitukset"
+
+#. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "Import Template for Customers"
@@ -27365,7 +27520,7 @@ msgstr "Intialainen - E-waybill Stock"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_ewaybill_irn
 msgid "Indian - E-waybill thru IRN"
-msgstr ""
+msgstr "Intia - eRahtikirja IRN:n kautta"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_reports_gstr
@@ -29818,6 +29973,11 @@ msgid "Malaysia - E-invoicing"
 msgstr "Malesia - Sähköinen laskutus"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_my_edi_extended
+msgid "Malaysia - E-invoicing Extended Features"
+msgstr "Malesia - Sähköisen laskutuksen laajennetut ominaisuudet"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_my_ubl_pint
 msgid "Malaysia - UBL PINT"
 msgstr "Malesia - UBL PINT"
@@ -30547,6 +30707,11 @@ msgstr "Meksiko - kuukauden 13 koetase"
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_hr_payroll
 msgid "Mexico - Payroll"
 msgstr "Meksiko - Palkanlaskenta"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_hr_payroll_localisation
+msgid "Mexico - Payroll - Localisation"
+msgstr "Meksiko - Palkanlaskenta - Lokalisointi"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_hr_payroll_account
@@ -34718,7 +34883,7 @@ msgstr "Kassa Stripe"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_pos_urban_piper
 msgid "POS UrbanPiper - India"
-msgstr ""
+msgstr "POS UrbanPiper - Intia"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_urban_piper_ubereats
@@ -35720,7 +35885,7 @@ msgstr "Kassa Valmistelun näyttö ravintolassa"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_pricer
 msgid "PoS Pricer"
-msgstr ""
+msgstr "PoS Pricer"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_point_of_sale
@@ -35877,7 +36042,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Potential duplicates:"
-msgstr ""
+msgstr "Mahdolliset kaksoiskappaleet:"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.EGP
@@ -38782,8 +38947,11 @@ msgstr "Lähetä lähetyksesi UPSin kautta ja seuraa niitä verkossa"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_usps
-msgid "Send your shippings through USPS and track them online"
-msgstr "Lähetä lähetyksesi USPS:n kautta ja seuraa niitä verkossa"
+msgid ""
+"This is the legacy integration with USPS. Please install the new \"United "
+"States Postal Service (USPS) Shipping\" module and uninstall this one as "
+"soon as possible."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_survey
@@ -39096,6 +39264,11 @@ msgstr "Shiprocket Shipping"
 #: model:ir.module.module,shortdesc:base.module_website_sale_shiprocket
 msgid "Shiprocket: Cash on Delivery"
 msgstr "Shiprocket: Postiennakko"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_shopee
+msgid "Shopee Connector"
+msgstr "Shopee-liitin"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_wishlist
@@ -43252,8 +43425,8 @@ msgstr "Yhdysvallat - Palkanlaskenta ja kirjanpito"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_usps
-msgid "United States Postal Service (USPS) Shipping"
-msgstr "United States Postal Service (USPS) Toimitukset"
+msgid "United States Postal Service (USPS) Shipping (Legacy)"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_uom

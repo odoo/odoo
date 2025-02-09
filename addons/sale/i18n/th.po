@@ -3,16 +3,16 @@
 # 	* sale
 # 
 # Translators:
-# Rasareeyar Lappiam, 2025
 # Wil Odoo, 2025
+# Rasareeyar Lappiam, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 08:42+0000\n"
+"POT-Creation-Date: 2025-02-06 13:58+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Rasareeyar Lappiam, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -935,7 +935,7 @@ msgstr "<span>คำเตือน: ใบเสนอราคานี้ �
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<span>Warning: this order might be a duplicate of</span>"
-msgstr ""
+msgstr "<span>คำเตือน: คำสั่งนี้อาจซ้ำซ้อนกับ</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1342,6 +1342,15 @@ msgid ""
 msgstr ""
 "ตัวอย่างเช่น หากคุณขายการบริการแบบชำระเงินล่วงหน้า Odoo แนะนำให้คุณ\n"
 "           ขายชั่วโมงเพิ่มเติม เมื่อชั่วโมงที่สั่งซื้อถูกใช้หมดแล้ว"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/product_product.py:0
+msgid ""
+"As other units of measure (ex : %(problem_uom)s) than %(uom)s have already "
+"been used for this product, the change of unit of measure can not be done.If"
+" you want to change it, please archive the product and create a new one."
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -2382,12 +2391,6 @@ msgstr "สิ้นสุด"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Expiration Date:"
 msgstr "วันหมดอายุ:"
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-msgid "Expires on %(date)s"
-msgstr "หมดอายุวันที่ %(date)s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -5100,7 +5103,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_category__property_account_downpayment_categ_id
 msgid "This account will be used on Downpayment invoices."
-msgstr ""
+msgstr "บัญชีนี้จะใช้ในใบแจ้งหนี้เงินดาวน์"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5563,7 +5566,7 @@ msgstr "ประวัติการสื่อสารของเว็บ
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
 msgid "You can invoice goods before they are delivered."
-msgstr ""
+msgstr "คุณสามารถออกใบแจ้งหนี้สินค้าได้ก่อนที่จะได้รับการส่งมอบ"
 
 #. module: sale
 #. odoo-python

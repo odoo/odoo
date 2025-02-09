@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-02-06 13:57+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Maitê Dietze, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -111,7 +111,7 @@ msgstr "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" title=
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "<i class=\"fa fa-fw me-2 fa-birthday-cake text-primary\" title=\"Birthday\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw me-2 fa-birthday-cake text-primary\" title=\"Birthday\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -190,7 +190,7 @@ msgstr "<span class=\"o_stat_text\">Conectado desde</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 msgid "<span class=\"o_stat_text\">Contact</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Contato</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form_smartbutton_inherited
@@ -442,9 +442,8 @@ msgstr "Presença dos funcionários"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_crm_team__alias_contact
-#: model:ir.model.fields,field_description:hr.field_documents_document__alias_contact
-#: model:ir.model.fields,field_description:hr.field_helpdesk_team__alias_contact
 #: model:ir.model.fields,field_description:hr.field_mail_alias__alias_contact
+#: model:ir.model.fields,field_description:hr.field_mail_group__alias_contact
 #: model:ir.model.fields,field_description:hr.field_maintenance_equipment_category__alias_contact
 msgid "Alias Contact Security"
 msgstr "Segurança de contato do alias"
@@ -453,11 +452,15 @@ msgstr "Segurança de contato do alias"
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Allow employees to update Work Information on My Profile"
 msgstr ""
+"Permitir que os funcionários atualizem as informações de trabalho em Meu "
+"perfil"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Allow employees to update Work Information on My Profile."
 msgstr ""
+"Permitir que os funcionários atualizem as informações de trabalho em Meu "
+"perfil."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -583,6 +586,11 @@ msgid "Available"
 msgstr "Disponível"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.mail_activity_plan_view_form
+msgid "Available for all Departments"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_1920
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_1920
 msgid "Avatar"
@@ -693,7 +701,7 @@ msgstr "Arquivo binário"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday
 #: model:ir.model.fields,field_description:hr.field_res_users__birthday
 msgid "Birthday"
-msgstr ""
+msgstr "Aniversário"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__can_edit
@@ -2645,9 +2653,8 @@ msgstr "Jogue qualquer esporte com colegas, <br>a conta está paga."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_crm_team__alias_contact
-#: model:ir.model.fields,help:hr.field_documents_document__alias_contact
-#: model:ir.model.fields,help:hr.field_helpdesk_team__alias_contact
 #: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
+#: model:ir.model.fields,help:hr.field_mail_group__alias_contact
 #: model:ir.model.fields,help:hr.field_maintenance_equipment_category__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
@@ -2782,7 +2789,7 @@ msgstr "Propriedades"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday_public_display_string
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__birthday_public_display_string
 msgid "Public Date of Birth"
-msgstr ""
+msgstr "Data de nascimento pública"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_public
@@ -2861,7 +2868,7 @@ msgstr "Registrar desligamento"
 #: code:addons/hr/models/res_users.py:0
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 msgid "Related Contact"
-msgstr ""
+msgstr "Contato relacionado"
 
 #. module: hr
 #. odoo-python
@@ -3069,7 +3076,7 @@ msgstr "Mostrar funcionários"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday_public_display
 #: model:ir.model.fields,field_description:hr.field_res_users__birthday_public_display
 msgid "Show to all employees"
-msgstr ""
+msgstr "Mostrar a todos os funcionários"
 
 #. module: hr
 #. odoo-python
@@ -3538,6 +3545,9 @@ msgid ""
 "                driving business growth. Strong analytical skills and a proven track record in delivering results are\n"
 "                essential."
 msgstr ""
+"Estamos procurando um consultor para oferecer consultoria especializada e soluções estratégicas,\n"
+"impulsionando o crescimento dos negócios. Habilidades analíticas sólidas e um histórico comprovado de obtenção de resultados são\n"
+"essenciais."
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_marketing
@@ -3546,6 +3556,9 @@ msgid ""
 "                develop and monitor the annual budget with Sales, and align product and customer portfolios with the\n"
 "                marketing plan. This role requires strong collaboration with Technical Service and Sales."
 msgstr ""
+"Estamos procurando um gerente de Marketing e Comunidade para definir a estratégia global de médio e longo prazo,\n"
+"desenvolver e monitorar o orçamento anual com Vendas e alinhar as carteiras de produtos e clientes com o plano de marketing\n"
+". Essa função exige uma forte colaboração com o Serviço Técnico e Vendas."
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_developer
@@ -3554,6 +3567,8 @@ msgid ""
 "                Someone who can snap out of coding and perform analysis or meet clients to explain the technical\n"
 "                possibilities that can meet their needs."
 msgstr ""
+"Estamos procurando um desenvolvedor experiente para se juntar à nossa equipe de web.\n"
+"Alguém que possa ir além da codificação e realizar análises ou se reunir com clientes para explicar as possibilidades técnicas que podem atender às suas necessidades."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__website_message_ids
@@ -3606,7 +3621,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_res_partner__employee
 #: model:ir.model.fields,help:hr.field_res_users__employee
 msgid "Whether this contact is an Employee."
-msgstr "Whether this contact is an Employee."
+msgstr "Se esse contato é um funcionário."
 
 #. module: hr
 #. odoo-python

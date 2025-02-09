@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 08:42+0000\n"
+"POT-Creation-Date: 2025-02-06 13:59+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -134,6 +134,12 @@ msgid "Reference Unit"
 msgstr "参照単位"
 
 #. module: uom
+#. odoo-python
+#: code:addons/uom/models/uom_uom.py:0
+msgid "Reference unit of measure is missing."
+msgstr ""
+
+#. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__related_uom_ids
 msgid "Related UoMs"
 msgstr "関連単位"
@@ -168,14 +174,6 @@ msgstr ""
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
 msgid "The conversion ratio for a unit of measure cannot be 0!"
 msgstr "単位の変換比率は0にできません。"
-
-#. module: uom
-#. odoo-python
-#: code:addons/uom/models/uom_uom.py:0
-msgid ""
-"The conversion ratio for a unit of measure without a reference unit must be "
-"1!"
-msgstr "基準単位を持たない測定単位の換算比率は1でなければなりません!"
 
 #. module: uom
 #. odoo-python
@@ -290,6 +288,11 @@ msgstr "lb"
 #: model:uom.uom,name:uom.product_uom_mile
 msgid "mi"
 msgstr "mi"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_milliliter
+msgid "ml"
+msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_millimeter

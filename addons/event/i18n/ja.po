@@ -3,16 +3,16 @@
 # 	* event
 # 
 # Translators:
-# Junko Augias, 2025
 # Wil Odoo, 2025
+# Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 08:41+0000\n"
+"POT-Creation-Date: 2025-02-06 13:58+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2483,6 +2483,11 @@ msgid "Display Sponsors and Exhibitors on your event pages"
 msgstr "イベントページへのスポンサー・出展者の表示"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__date_tz
+msgid "Display Timezone"
+msgstr "タイムゾーンを表示"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
 msgid "Display order"
 msgstr "注文を表示する"
@@ -3205,16 +3210,16 @@ msgid "In Progress"
 msgstr "進行中"
 
 #. module: event
-#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
-msgid "Insert dynamic Google Maps in your email templates"
-msgstr "EメールテンプレートにダイナミックGoogleマップを挿入"
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_event__date_tz
 msgid ""
 "Indicates the timezone in which the event dates/times will be displayed on "
 "the website."
 msgstr "ウェブサイトに表示されるイベントの日付/時間のタイムゾーンを示します。"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid "Insert dynamic Google Maps in your email templates"
+msgstr "EメールテンプレートにダイナミックGoogleマップを挿入"
 
 #. module: event
 #. odoo-javascript
@@ -4685,7 +4690,6 @@ msgid "Tickets with Sale"
 msgstr "販売でのチケット"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event__date_tz
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
 msgid "Timezone"
 msgstr "時間帯"
@@ -4920,17 +4924,17 @@ msgid "Welcome to"
 msgstr "ようこそ"
 
 #. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "What's new?"
+msgstr "新着情報"
+
+#. module: event
 #: model:ir.model.fields,help:event.field_event_event__date_begin
 #: model:ir.model.fields,help:event.field_event_registration__event_begin_date
 msgid ""
 "When the event is scheduled to take place (expressed in your local timezone "
 "on the form view)."
 msgstr "イベント予定日時 (フォームビューに表示されている現地時間)"
-
-#. module: event
-#: model_terms:event.event,description:event.event_0
-msgid "What's new?"
-msgstr "新着情報"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing

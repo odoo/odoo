@@ -3,16 +3,17 @@
 # 	* account
 # 
 # Translators:
-# Wil Odoo, 2025
+# Andy Yiu, 2025
 # Junko Augias, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 08:40+0000\n"
+"POT-Creation-Date: 2025-02-06 13:57+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
-"Last-Translator: Junko Augias, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -339,7 +340,7 @@ msgstr "... (%(nb_of_values)s その他)"
 #. odoo-javascript
 #: code:addons/account/static/src/components/x2many_buttons/x2many_buttons.xml:0
 msgid "... (View all)"
-msgstr "... (全てを見る)"
+msgstr "... (全てを表示)"
 
 #. module: account
 #. odoo-python
@@ -1840,6 +1841,11 @@ msgstr "口座番号"
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_payable_id
 msgid "Account Payable"
 msgstr "買掛金勘定"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix_placeholder
+msgid "Account Prefix Placeholder"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
@@ -3956,7 +3962,6 @@ msgstr "売上仕訳帳以外で売上文書を作成することができない
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
-#, python-format
 msgid "Cannot create an accrual entry with orders in different currencies."
 msgstr "異なる通貨のオーダを含む未収計上は作成できません。"
 
@@ -4600,12 +4605,6 @@ msgstr "当社は勘定科目表を持っています"
 #: model:ir.model.fields,help:account.field_account_payment_method_line__company_id
 msgid "Company related to this journal"
 msgstr "この仕訳と関係する会社"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/js/tours/account.js:0
-msgid "Complete the partner data with email."
-msgstr "取引先データをEメールで記入して下さい。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__use_sections
@@ -6512,6 +6511,7 @@ msgstr "ドラフト仕訳"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_line.py:0
 msgid "Draft Entry"
 msgstr "ドラフト仕訳"
 
@@ -7199,8 +7199,8 @@ msgstr "財務会計勘定科目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix
-msgid "Financial Accounts Prefix"
-msgstr "勘定科目のプレフィックス"
+msgid "Financial Accounts Prefixes"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__journal_id
@@ -7703,12 +7703,6 @@ msgstr "特定の顧客に請求する際に警告を表示"
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__lock_date_field__fiscalyear_lock_date
 msgid "Global Lock Date"
 msgstr "全体ロック日"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/js/tours/account.js:0
-msgid "Go back"
-msgstr "戻る"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
@@ -12274,6 +12268,7 @@ msgstr "価格"
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_move_form/account_move_form.js:0
 #: code:addons/account/static/src/views/account_move_list/account_move_list_controller.js:0
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Print"
 msgstr "印刷"
 
@@ -12578,11 +12573,6 @@ msgstr "受取人の銀行"
 #: model:ir.model.fields,field_description:account.field_account_payment_register__partner_bank_id
 msgid "Recipient Bank Account"
 msgstr "受取人の銀行口座"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_move_send_wizard_form
-msgid "Recipients"
-msgstr "宛先"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -13595,12 +13585,6 @@ msgstr "メールで領収書を送信"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
-msgid "Send the invoice and check what the customer will receive."
-msgstr "請求書を送信し、顧客が受け取るものを確認します。"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/js/tours/account.js:0
 msgid "Send the invoice to the customer and check what he'll receive."
 msgstr "顧客に請求書を送り、顧客が受取るものを確認します。"
 
@@ -13758,6 +13742,12 @@ msgstr "日付を設定して下さい。この日付までの仕訳が確定さ
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Set a price."
 msgstr "価格を設定します。"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+#: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
+msgid "Set a value greater than 0.0 to activate a credit limit check"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -15284,6 +15274,12 @@ msgid ""
 msgstr "請求書にはすでに明細がありました。添付ファイルから更新されたものではありません。"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/js/tours/account.js:0
+msgid "The invoice having been sent, the button has changed priority."
+msgstr "請求書は送信されました。ボタンの優先順位が変わりました。"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The invoice is not a draft, it was not updated from the attachment."
@@ -16223,6 +16219,7 @@ msgstr "ヒント: 必要なドキュメントを追いかけるのを止めま�
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__destination_account_id
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__mail_partner_ids
+#: model_terms:ir.ui.view,arch_db:account.account_move_send_wizard_form
 msgid "To"
 msgstr "終了日"
 
@@ -16554,7 +16551,9 @@ msgstr "%sの振替"
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
 "Total Receivable amount exceeding a limit."
-msgstr "請求書や販売オーダを作成する際に、売掛金総額が上限を超えたパートナーに対してアラートを発生させることができます。"
+"                                      Set a value greater than 0.0 to "
+"activate a credit limit check"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -17061,6 +17060,12 @@ msgid ""
 msgstr "明細行を自動的に有効化(自分の規則に基づいて消込)します。"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/js/tours/account.js:0
+msgid "Validate."
+msgstr "有効化。"
+
+#. module: account
 #: model:mail.message.subtype,name:account.mt_invoice_validated
 msgid "Validated"
 msgstr "検証済"
@@ -17475,12 +17480,6 @@ msgstr "ジャーナルはハッシュでロックされているときは、日
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move_send.py:0
-msgid "You can only Print & Send sales documents."
-msgstr "販売ドキュメントのみ印刷・送信することができます。"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid ""
 "You can only change the period/account for items that are not yet "
@@ -17492,6 +17491,12 @@ msgstr "まだ消込していない項目のみ期間/アカウントを変更�
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "You can only change the period/account for posted journal items."
 msgstr "記帳済仕訳項目のみに期間・勘定科目を変更することができます。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid "You can only generate sales documents."
+msgstr "販売ドキュメントのみ作成できます。"
 
 #. module: account
 #. odoo-python
@@ -17531,12 +17536,6 @@ msgid ""
 "invoices, once validated, to help the customer to refer to that particular "
 "invoice when making the payment."
 msgstr "ここで、検証後に顧客の請求書に表示されるデフォルト参照を設定できます。これで、顧客が決済する時に請求書を参照できるようになります。"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move_send.py:0
-msgid "You can't Print & Send invoices that are not posted."
-msgstr "記帳されていない顧客請求書を印刷・送信することはできません、"
 
 #. module: account
 #. odoo-python
@@ -17605,6 +17604,12 @@ msgstr "計上した仕訳項目を削除することはできません。仕訳
 #: code:addons/account/models/account_report.py:0
 msgid "You can't delete a report that has variants."
 msgstr "変形型を含むレポートは削除できません。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid "You can't generate invoices that are not posted."
+msgstr "記帳されていない顧客請求書は作成できません。"
 
 #. module: account
 #. odoo-python
@@ -18303,6 +18308,7 @@ msgstr "例 GEBABEBB"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_analytic_distribution_model.py:0
+#: code:addons/account/models/account_analytic_plan.py:0
 msgid "e.g. %(prefix)s"
 msgstr "例: %(prefix)s"
 

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 08:40+0000\n"
+"POT-Creation-Date: 2025-02-06 13:57+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -1874,6 +1874,11 @@ msgstr "หมายเลขบัญชี"
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_payable_id
 msgid "Account Payable"
 msgstr "เจ้าหนี้"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix_placeholder
+msgid "Account Prefix Placeholder"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
@@ -4032,7 +4037,6 @@ msgstr "ไม่สามารถสร้างเอกสารการข
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
-#, python-format
 msgid "Cannot create an accrual entry with orders in different currencies."
 msgstr "ไม่สามารถสร้างรายการคงค้างด้วยคำสั่งซื้อในสกุลเงินที่แตกต่างกันได้"
 
@@ -4695,12 +4699,6 @@ msgstr "ผังบัญชี"
 #: model:ir.model.fields,help:account.field_account_payment_method_line__company_id
 msgid "Company related to this journal"
 msgstr "บริษัทที่เกี่ยวข้องกับสมุดรายวันนี้"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/js/tours/account.js:0
-msgid "Complete the partner data with email."
-msgstr "กรอกข้อมูลพาร์ทเนอร์ให้ครบถ้วนทางอีเมล"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__use_sections
@@ -6624,6 +6622,7 @@ msgstr "รายการฉบับร่าง"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_line.py:0
 msgid "Draft Entry"
 msgstr "รายการฉบับร่าง"
 
@@ -7308,7 +7307,7 @@ msgstr "กรอง Multivat"
 #. odoo-python
 #: code:addons/account/models/account_root.py:0
 msgid "Filter on the Account or its Display Name instead"
-msgstr ""
+msgstr "กรองตามบัญชีหรือชื่อที่แสดงแทน"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__general_account_id
@@ -7318,8 +7317,8 @@ msgstr "เลขที่บัญชี"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix
-msgid "Financial Accounts Prefix"
-msgstr "คำนำหน้าบัญชีการเงิน"
+msgid "Financial Accounts Prefixes"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__journal_id
@@ -7834,12 +7833,6 @@ msgstr "รับคำเตือนเมื่อออกใบแจ้ง
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__lock_date_field__fiscalyear_lock_date
 msgid "Global Lock Date"
 msgstr "วันล็อคสากล"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/js/tours/account.js:0
-msgid "Go back"
-msgstr "กลับไป"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
@@ -12496,6 +12489,7 @@ msgstr "ราคา"
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_move_form/account_move_form.js:0
 #: code:addons/account/static/src/views/account_move_list/account_move_list_controller.js:0
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Print"
 msgstr "พิมพ์"
 
@@ -12800,11 +12794,6 @@ msgstr "ธนาคารผู้รับ"
 #: model:ir.model.fields,field_description:account.field_account_payment_register__partner_bank_id
 msgid "Recipient Bank Account"
 msgstr "บัญชีธนาคารของผู้รับ"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_move_send_wizard_form
-msgid "Recipients"
-msgstr "ผู้รับ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -13835,12 +13824,6 @@ msgstr "ส่งใบเสร็จทางอีเมล"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
-msgid "Send the invoice and check what the customer will receive."
-msgstr "ส่งใบแจ้งหนี้และตรวจสอบสิ่งที่ลูกค้าจะได้รับ"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/js/tours/account.js:0
 msgid "Send the invoice to the customer and check what he'll receive."
 msgstr "ส่งใบแจ้งหนี้ไปให้ลูกค้าและตรวจสอบสิ่งที่เขาจะได้รับ"
 
@@ -14004,6 +13987,12 @@ msgstr "กำหนดวันที่ โดยจะยืนยันก�
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Set a price."
 msgstr "ตั้งราคาไว้"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+#: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
+msgid "Set a value greater than 0.0 to activate a credit limit check"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -14326,7 +14315,7 @@ msgstr "รายการเดินบัญชีธนาคาร"
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "Statement %(date)s"
-msgstr ""
+msgstr "รายการเดินบัญชี %(date)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
@@ -15591,6 +15580,12 @@ msgid ""
 msgstr "ใบแจ้งหนี้มีบรรทัดอยู่แล้ว ไม่ได้รับการอัปเดตจากสิ่งที่แนบมา"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/js/tours/account.js:0
+msgid "The invoice having been sent, the button has changed priority."
+msgstr "ส่งใบแจ้งหนี้แล้ว ปุ่มได้เปลี่ยนลำดับความสำคัญแล้ว"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The invoice is not a draft, it was not updated from the attachment."
@@ -16599,6 +16594,7 @@ msgstr "เคล็ดลับ: ไม่ต้องวิ่งตามเ�
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__destination_account_id
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__mail_partner_ids
+#: model_terms:ir.ui.view,arch_db:account.account_move_send_wizard_form
 msgid "To"
 msgstr "ถึง"
 
@@ -16937,8 +16933,9 @@ msgstr "โอนย้ายไปยัง %s"
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
 "Total Receivable amount exceeding a limit."
+"                                      Set a value greater than 0.0 to "
+"activate a credit limit check"
 msgstr ""
-"ทริกเกอร์การแจ้งเตือนเมื่อสร้างใบแจ้งหนี้และใบสั่งขายสำหรับคู่ค้าที่มียอดรวมลูกหนี้เกินขีดจำกัด"
 
 #. module: account
 #. odoo-python
@@ -17459,6 +17456,12 @@ msgstr ""
 "(การกระทบยอดตามกฎของคุณ)"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/js/tours/account.js:0
+msgid "Validate."
+msgstr "ตรวจสอบความถูกต้อง"
+
+#. module: account
 #: model:mail.message.subtype,name:account.mt_invoice_validated
 msgid "Validated"
 msgstr "ตรวจสอบแล้ว"
@@ -17890,12 +17893,6 @@ msgstr "คุณไม่สามารถเรียงลำดับให
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move_send.py:0
-msgid "You can only Print & Send sales documents."
-msgstr "คุณสามารถพิมพ์และส่งเอกสารการขายได้เท่านั้น"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid ""
 "You can only change the period/account for items that are not yet "
@@ -17910,6 +17907,12 @@ msgid "You can only change the period/account for posted journal items."
 msgstr ""
 "คุณสามารถเปลี่ยนแปลงได้เฉพาะ รอบระยะเวลา/บัญชี "
 "สำหรับรายการสมุดรายวันที่ผ่านรายการแล้วเท่านั้น"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid "You can only generate sales documents."
+msgstr "คุณสามารถสร้างเอกสารการขายได้เท่านั้น"
 
 #. module: account
 #. odoo-python
@@ -17953,12 +17956,6 @@ msgstr ""
 "คุณสามารถตั้งค่าการสื่อสารเริ่มต้นที่จะแสดงในใบแจ้งหนี้ของลูกค้าได้ที่นี่ "
 "เมื่อได้รับการตรวจสอบแล้ว "
 "เพื่อช่วยให้ลูกค้าอ้างอิงถึงใบแจ้งหนี้นั้นเมื่อทำการชำระเงิน"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move_send.py:0
-msgid "You can't Print & Send invoices that are not posted."
-msgstr "คุณไม่สามารถพิมพ์และส่งใบแจ้งหนี้ที่ไม่ได้โพสต์ได้"
 
 #. module: account
 #. odoo-python
@@ -18035,6 +18032,12 @@ msgstr ""
 #: code:addons/account/models/account_report.py:0
 msgid "You can't delete a report that has variants."
 msgstr "คุณไม่สามารถลบรายงานที่มีความหลากหลายได้"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid "You can't generate invoices that are not posted."
+msgstr "คุณไม่สามารถสร้างใบแจ้งหนี้ที่ไม่ได้ถูกโพสต์ได้"
 
 #. module: account
 #. odoo-python
@@ -18801,6 +18804,7 @@ msgstr "เช่น GEBABEBB"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_analytic_distribution_model.py:0
+#: code:addons/account/models/account_analytic_plan.py:0
 msgid "e.g. %(prefix)s"
 msgstr "เช่น %(prefix)s"
 

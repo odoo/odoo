@@ -3,16 +3,16 @@
 # 	* event
 # 
 # Translators:
-# Larissa Manderfeld, 2025
 # Wil Odoo, 2025
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 08:41+0000\n"
+"POT-Creation-Date: 2025-02-06 13:58+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2537,6 +2537,11 @@ msgstr ""
 "Muestre a los patrocinadores y expositores en las páginas de sus eventos"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__date_tz
+msgid "Display Timezone"
+msgstr "Mostrar la zona horaria"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
 msgid "Display order"
 msgstr "Orden de visualización"
@@ -3287,11 +3292,6 @@ msgid "In Progress"
 msgstr "En proceso"
 
 #. module: event
-#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
-msgid "Insert dynamic Google Maps in your email templates"
-msgstr "Inserte Google Maps dinámico en sus plantillas de correo electrónico"
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_event__date_tz
 msgid ""
 "Indicates the timezone in which the event dates/times will be displayed on "
@@ -3299,6 +3299,11 @@ msgid ""
 msgstr ""
 "Indica la zona horaria en la que se mostrarán las fechas y horas del evento "
 "en el sitio web."
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid "Insert dynamic Google Maps in your email templates"
+msgstr "Inserte Google Maps dinámico en sus plantillas de correo electrónico"
 
 #. module: event
 #. odoo-javascript
@@ -4825,7 +4830,6 @@ msgid "Tickets with Sale"
 msgstr "Entradas con Ventas"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event__date_tz
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
 msgid "Timezone"
 msgstr "Zona horaria"
@@ -5072,6 +5076,11 @@ msgid "Welcome to"
 msgstr "Bienvenido/a a"
 
 #. module: event
+#: model_terms:event.event,description:event.event_0
+msgid "What's new?"
+msgstr "¿Qué hay de nuevo?"
+
+#. module: event
 #: model:ir.model.fields,help:event.field_event_event__date_begin
 #: model:ir.model.fields,help:event.field_event_registration__event_begin_date
 msgid ""
@@ -5080,11 +5089,6 @@ msgid ""
 msgstr ""
 "Cuándo está previsto que tenga lugar el evento (expresado en su zona horaria"
 " local en la vista del formulario)."
-
-#. module: event
-#: model_terms:event.event,description:event.event_0
-msgid "What's new?"
-msgstr "¿Qué hay de nuevo?"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing

@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
+# Jessica Jakara, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-24 15:31+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025\n"
+"Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,6 +28,8 @@ msgid ""
 "Adding a new Razorpay payment line is not allowed under the current "
 "conditions."
 msgstr ""
+"Uuden Razorpay-maksurivin lisäämistä ei sallita nykyisiä ehtoja "
+"sovellettaessa."
 
 #. module: pos_razorpay
 #: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__all
@@ -200,7 +203,7 @@ msgstr "Razorpay Käyttäjätunnus"
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_p2p_request_id
 msgid "Razorpay p2pRequestId"
-msgstr ""
+msgstr "Razorpay p2pRequestId"
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -211,14 +214,14 @@ msgstr "Viitenumero ei täsmää"
 #. module: pos_razorpay
 #: model:ir.model.fields,help:pos_razorpay.field_pos_payment__razorpay_p2p_request_id
 msgid "Required to fetch payment status during the refund order process"
-msgstr ""
+msgstr "Maksun tilan noutaminen vaaditaan tilauksen palautusprosessin aikana"
 
 #. module: pos_razorpay
 #. odoo-python
 #: code:addons/pos_razorpay/models/pos_payment_method.py:0
 msgid ""
 "The Razorpay POS refund request has encountered an unexpected error code."
-msgstr ""
+msgstr "Razorpay POS-palautuspyynnössä ilmeni odottamaton virhekoodi."
 
 #. module: pos_razorpay
 #. odoo-python
@@ -264,7 +267,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_razorpay/static/src/app/utls/payment/payment_razorpay.js:0
 msgid "Void Payment Confirmation"
-msgstr ""
+msgstr "Maksun mitätöintivahvistus"
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -279,3 +282,5 @@ msgid ""
 "Your transaction isn't settled yet, and the refund is less than the amount paid.\n"
 "The full amount will be cancelled, do you want to proceed?"
 msgstr ""
+"Tleä tapahtumahyvitykselle ei ole tehty lopullista päätöstä ja palautettava summa on maksettua summaa pienempi.\n"
+"Kokonaissumma peruutetaan, haluatko jatkaa?"

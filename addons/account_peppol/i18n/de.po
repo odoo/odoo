@@ -3,16 +3,16 @@
 # 	* account_peppol
 # 
 # Translators:
-# Wil Odoo, 2024
 # Larissa Manderfeld, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 08:41+0000\n"
+"POT-Creation-Date: 2025-02-06 13:58+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
-"Last-Translator: Larissa Manderfeld, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -186,6 +186,7 @@ msgid "Can send, pending registration to receive"
 msgstr "Kann senden, ausstehende Registrierung zum Empfangen"
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_service_configuration
 msgid "Cancel"
 msgstr "Abbrechen"
@@ -722,6 +723,11 @@ msgid "Peppol warnings"
 msgstr "Peppol-Warnungen"
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid "Phone"
+msgstr "Telefon"
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_company.py:0
 msgid ""
@@ -938,11 +944,11 @@ msgstr "Dem Partner fehlt die Peppol-EAS- und/oder Endpunkt-Kennung."
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid ""
-"The recommended EAS code for Belgium is 0208. The Endpoint should be the "
-"Company Registry number."
+"The recommended identification method for Belgium is your Company Registry "
+"Number."
 msgstr ""
-"Der empfohlene EAS-Code für Belgien lautet 0208. Der Endpunkt sollte die "
-"Unternehmensregisternummer sein."
+"Der empfohlene Identifizierungsmethode für Belgien ist die "
+"Unternehmensregisternummer."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_edi_identification
@@ -951,11 +957,7 @@ msgstr ""
 "Die eindeutige ID, die diesen Benutzer identifiziert, in der Regel die MwSt."
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
-msgid "This will delete your Peppol registration."
-msgstr "Dadurch wird Ihre Peppol-Registrierung gelöscht."
-
-#. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid ""
 "This feature is deprecated. Contact odoo support if you need a migration "
@@ -963,6 +965,11 @@ msgid ""
 msgstr ""
 "Diese Funktion ist veraltet. Kontaktieren Sie den Odoo-Support, wenn Sie "
 "einen Migrationsschlüssel benötigen."
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "This will delete your Peppol registration."
+msgstr "Dadurch wird Ihre Peppol-Registrierung gelöscht."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -1016,6 +1023,7 @@ msgid "View Partner(s)"
 msgstr "Partner ansehen"
 
 #. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid ""
 "We could not find a user with this information on our server. Please check "
@@ -1073,6 +1081,7 @@ msgid "You can now send invoices in demo mode."
 msgstr "Sie können nun Rechnungen im Demomodus versenden."
 
 #. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "You can send this invoice electronically via Peppol."
 msgstr "Sie können diese Rechnung elektronisch über Peppol versenden."
@@ -1107,11 +1116,6 @@ msgstr "Ihr Endpunkt"
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Your migration key is:"
 msgstr "Ihr Migrationsschlüssel lautet:"
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "Your mobile"
-msgstr "Ihre Telefonnummer"
 
 #. module: account_peppol
 #. odoo-python

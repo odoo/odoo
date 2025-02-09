@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 08:40+0000\n"
+"POT-Creation-Date: 2025-02-06 13:57+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -1295,6 +1295,15 @@ msgid "Are you sure you want to cancel this transfer?"
 msgstr "この転送を本当に取消しますか？"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/product.py:0
+msgid ""
+"As other units of measure (ex : %(problem_uom)s) than %(uom)s have already "
+"been used for this product, the change of unit of measure can not be done.If"
+" you want to change it, please archive the product and create a new one."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__move_type__direct
 msgid "As soon as possible"
@@ -1446,7 +1455,7 @@ msgstr "利用可能プロダクト"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "Available Quantity"
-msgstr "利用可能な数量"
+msgstr "利用可能数量"
 
 #. module: stock
 #. odoo-python
@@ -1578,7 +1587,7 @@ msgstr "数量"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__serial
 msgid "By Unique Serial Number"
-msgstr "シリアル番号"
+msgstr "固有のシリアル番号"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__procure_method
@@ -3167,7 +3176,7 @@ msgstr "将来的に入荷が予定されているため、余剰在庫が発生
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.duplicated_sn_warning
 msgid "Duplicated SN Warning"
-msgstr "重複SN警告"
+msgstr "重複シリアル番号警告"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__sn_duplicated
@@ -3368,7 +3377,7 @@ msgstr "初めのロット番号"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial
 msgid "First SN/Lot"
-msgstr "初めのシリアル/ロット"
+msgstr "最初のシリアル番号/ロット"
 
 #. module: stock
 #. odoo-javascript
@@ -4999,12 +5008,12 @@ msgstr "ロット番号"
 #: model:ir.model.fields.selection,name:stock.selection__picking_label_type__label_type__lots
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Lot/SN Labels"
-msgstr "ロット/SNラベル"
+msgstr "ロット/シリアル番号ラベル"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_kanban
 msgid "Lot/SN:"
-msgstr "ロット/SN："
+msgstr "ロット/シリアル番号:"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_lot
@@ -5064,7 +5073,7 @@ msgstr "ロット/シリアル："
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_production_lot
 msgid "Lots & Serial Numbers"
-msgstr "ロット&シリアル番号"
+msgstr "ロット/シリアル番号"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5705,7 +5714,7 @@ msgstr "アクション数"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Number of SN"
-msgstr "SNの数"
+msgstr "シリアル番号の数"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial_count
@@ -9365,17 +9374,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/product.py:0
 msgid ""
-"This product has been used in at least one inventory movement. It is not "
-"advised to change the Unit of Measure since it can lead to inconsistencies. "
-"The existing moves will not be recalculated with the new unit of measure."
-msgstr ""
-"このプロダクトは少なくとも1つの在庫移動で使用されています。 測定単位を変更すると不整合が生じる可能性があるため、変更しないことをお勧めします。 "
-"既存の仕訳は新しい測定単位で再計算されません。"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/product.py:0
-msgid ""
 "This product's company cannot be changed as long as there are quantities of "
 "it belonging to another company."
 msgstr "このプロダクトの会社は、他の会社に属するものがある限り変更できません。"
@@ -10079,13 +10077,13 @@ msgstr "プロダクト棚卸を割当られたユーザ"
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Validate"
-msgstr "検証"
+msgstr "確認"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/xml/inventory_lines.xml:0
 msgid "Validate Inventory"
-msgstr "棚卸の検証"
+msgstr "棚卸の確認"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__product_variant_count

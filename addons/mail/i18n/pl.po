@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 08:41+0000\n"
+"POT-Creation-Date: 2025-02-06 13:57+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
@@ -539,15 +539,6 @@ msgid "<span>We suggest you start by</span>"
 msgstr "<span>Sugerujemy zacząć od</span>"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
-msgid ""
-"<strong>Internal communication</strong>: Replying will post an internal "
-"note. Followers won't receive any email notification."
-msgstr ""
-"<strong>Komunikacja wewnętrzna</strong>: Odpowiadanie wyśle wewnętrzną "
-"wiadomość. Obserwujący nie otrzymają żadnego powiadomienia e-mail."
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid ""
 "<strong>Save</strong> this page and come back here to set up the feature."
@@ -635,6 +626,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "A scheduled date is needed to schedule a message"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_scheduled_message.py:0
+msgid "A scheduled message could not be sent"
 msgstr ""
 
 #. module: mail
@@ -1608,6 +1605,11 @@ msgstr ""
 "skończona."
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
+msgid "Available for all Companies"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_window.xml:0
 #: code:addons/mail/static/src/core/common/message_in_reply.xml:0
@@ -2275,12 +2277,6 @@ msgstr "Kliknij tutaj aby spróbować ponownie"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
-msgid "Click on your message"
-msgstr "Kliknij na swoją wiadomość"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_in_reply.xml:0
 msgid "Click to see the attachments"
 msgstr "Kliknij aby zobaczyć załączniki"
@@ -2632,11 +2628,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__body
 msgid "Contents"
 msgstr "Zawartość"
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_discuss_channel_member__fold_state
-msgid "Conversation Fold State"
-msgstr "Stan foldera rozmowy"
 
 #. module: mail
 #. odoo-javascript
@@ -3994,12 +3985,6 @@ msgstr "Rozwiń"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
-msgid "Expand options"
-msgstr "Rozwiń opcje"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss_sidebar.xml:0
 msgid "Expand panel"
 msgstr "Rozwiń panel"
@@ -4232,6 +4217,11 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/thread_actions.js:0
 msgid "Fold"
 msgstr "Zwiń"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_discuss_channel_member__fold_state
+msgid "Fold State"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel_member__fold_state__folded
@@ -4675,6 +4665,12 @@ msgstr "Historia"
 #: model:ir.model.fields,help:mail.field_fetchmail_server__server
 msgid "Hostname or IP of the mail server"
 msgstr "Nazwa hosta lub IP serwera pocztowego"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "Hover on your message and mark as todo"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings__voice_active_duration
@@ -6438,14 +6434,6 @@ msgstr "Wiadomości"
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
 msgid "Messages Search"
 msgstr "Przeszukiwanie wiadomości"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
-msgid "Messages can be <b>starred</b> to remind you to check back later."
-msgstr ""
-"Wiadomości mogą być <b>oznaczone gwiazdką</b>, aby przypomnieć o późniejszym"
-" sprawdzeniu"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_from_message_id_unique
@@ -8230,6 +8218,12 @@ msgid "Ready to Send"
 msgstr "Gotowe do wysłania"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/bus_connection_alert.xml:0
+msgid "Real-time connection lost..."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__reason
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
 msgid "Reason"
@@ -9993,6 +9987,14 @@ msgstr ""
 "Spróbuj ponownie później lub skontaktuj się z %(company_name)s."
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_scheduled_message.py:0
+msgid ""
+"The message scheduled on %(model)s(%(id)s) with the following content could "
+"not be sent:%(original_message)s"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__from_message_id
 msgid "The message the channel was created from."
 msgstr "Wiadomość, z której został stworzony kanał"
@@ -10160,6 +10162,7 @@ msgstr "To pole nie uwzględnia wielkości liter."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__allow_public_upload
+#: model:ir.model.fields,help:mail.field_discuss_channel_member__fold_state
 msgid ""
 "This field is deprecated and has no effect, it will be removed in future "
 "versions."

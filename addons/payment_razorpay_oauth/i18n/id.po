@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Abe Manyo, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-20 08:43+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Abe Manyo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,22 +34,22 @@ msgstr "Terjadi eror"
 #. odoo-python
 #: code:addons/payment_razorpay_oauth/models/payment_provider.py:0
 msgid "An error occurred when communicating with the proxy."
-msgstr ""
+msgstr "Terjadi error saat berkomunikasi dengan proxy."
 
 #. module: payment_razorpay_oauth
 #: model_terms:ir.ui.view,arch_db:payment_razorpay_oauth.authorization_error
 msgid "An error occurred while linking your Razorpay account with Odoo."
-msgstr ""
+msgstr "Terjadi error saat menghubungkan akun Razorpay Anda dengan Odoo."
 
 #. module: payment_razorpay_oauth
 #: model_terms:ir.ui.view,arch_db:payment_razorpay_oauth.payment_provider_form_razorpay_oauth
 msgid "Are you sure you want to disconnect?"
-msgstr ""
+msgstr "Apakah Anda yakin ingin memutuskan hubungan?"
 
 #. module: payment_razorpay_oauth
 #: model_terms:ir.ui.view,arch_db:payment_razorpay_oauth.authorization_error
 msgid "Back to the Razorpay provider"
-msgstr ""
+msgstr "Kembali ke penyedia Razorpay"
 
 #. module: payment_razorpay_oauth
 #: model_terms:ir.ui.view,arch_db:payment_razorpay_oauth.payment_provider_form_razorpay_oauth
@@ -59,13 +60,13 @@ msgstr "Connect"
 #. odoo-python
 #: code:addons/payment_razorpay_oauth/models/payment_provider.py:0
 msgid "Could not establish the connection."
-msgstr ""
+msgstr "Tidak dapat membuat koneksi."
 
 #. module: payment_razorpay_oauth
 #. odoo-python
 #: code:addons/payment_razorpay_oauth/controllers/onboarding.py:0
 msgid "Could not find Razorpay provider with id %s"
-msgstr ""
+msgstr "Tidak dapat menemukan provider Razorpay dengan id %s"
 
 #. module: payment_razorpay_oauth
 #: model:ir.model.fields,field_description:payment_razorpay_oauth.field_payment_provider__display_name
@@ -96,17 +97,17 @@ msgstr "Penyedia Pembayaran"
 #. module: payment_razorpay_oauth
 #: model:ir.model.fields,field_description:payment_razorpay_oauth.field_payment_provider__razorpay_access_token
 msgid "Razorpay Access Token"
-msgstr ""
+msgstr "Token Akses Razorpay"
 
 #. module: payment_razorpay_oauth
 #: model:ir.model.fields,field_description:payment_razorpay_oauth.field_payment_provider__razorpay_access_token_expiry
 msgid "Razorpay Access Token Expiry"
-msgstr ""
+msgstr "Kadaluwarsa Token Akses Razorpay"
 
 #. module: payment_razorpay_oauth
 #: model:ir.model.fields,field_description:payment_razorpay_oauth.field_payment_provider__razorpay_account_id
 msgid "Razorpay Account ID"
-msgstr ""
+msgstr "ID Akun Razorpay"
 
 #. module: payment_razorpay_oauth
 #: model:ir.model.fields,field_description:payment_razorpay_oauth.field_payment_provider__razorpay_key_id
@@ -121,12 +122,12 @@ msgstr "Razorpay Key Secret"
 #. module: payment_razorpay_oauth
 #: model:ir.model.fields,field_description:payment_razorpay_oauth.field_payment_provider__razorpay_public_token
 msgid "Razorpay Public Token"
-msgstr ""
+msgstr "Token Publik Razorpay"
 
 #. module: payment_razorpay_oauth
 #: model:ir.model.fields,field_description:payment_razorpay_oauth.field_payment_provider__razorpay_refresh_token
 msgid "Razorpay Refresh Token"
-msgstr ""
+msgstr "Token Refresh Razorpay"
 
 #. module: payment_razorpay_oauth
 #: model:ir.model.fields,field_description:payment_razorpay_oauth.field_payment_provider__razorpay_webhook_secret
@@ -140,11 +141,13 @@ msgid ""
 "Razorpay is not available in your country; please use another payment "
 "provider."
 msgstr ""
+"Razorpay tidak tersedia di negara Anda; silakan gunakan penyedia pembayaran "
+"lain."
 
 #. module: payment_razorpay_oauth
 #: model_terms:ir.ui.view,arch_db:payment_razorpay_oauth.payment_provider_form_razorpay_oauth
 msgid "Reset Your Razorpay Account"
-msgstr ""
+msgstr "Reset Akun Razorpay Anda"
 
 #. module: payment_razorpay_oauth
 #: model:ir.model.fields,help:payment_razorpay_oauth.field_payment_provider__razorpay_key_id
@@ -154,7 +157,7 @@ msgstr "Key yang hanya digunakan untuk mengidentifikasi akun dengan Razorpay."
 #. module: payment_razorpay_oauth
 #: model_terms:ir.ui.view,arch_db:payment_razorpay_oauth.payment_provider_form_razorpay_oauth
 msgid "This provider is linked with your Razorpay account."
-msgstr ""
+msgstr "Penyedia ini terhubung dengan akun Razorpay Anda."
 
 #. module: payment_razorpay_oauth
 #: model_terms:ir.ui.view,arch_db:payment_razorpay_oauth.payment_provider_form_razorpay_oauth
@@ -168,9 +171,12 @@ msgid ""
 "                    deprecated. Click the \"Connect\" button below to use the recommended OAuth\n"
 "                    method."
 msgstr ""
+"Anda saat ini terhubung ke Razorpay melalui metode kredensial, yang sudah\n"
+"                    deprecated. Klik tombol \"Connect\" di bawah untuk menggunakan metode OAuth\n"
+"                    yang direkomendasikan."
 
 #. module: payment_razorpay_oauth
 #. odoo-python
 #: code:addons/payment_razorpay_oauth/models/payment_provider.py:0
 msgid "Your Razorpay webhook was successfully set up!"
-msgstr ""
+msgstr "Webhook Razorpay Anda secara sukses disetup!"

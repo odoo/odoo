@@ -3,16 +3,17 @@
 # 	* account
 # 
 # Translators:
-# Wil Odoo, 2025
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2025
 # Marta Wacławek, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 08:40+0000\n"
+"POT-Creation-Date: 2025-02-06 13:57+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
-"Last-Translator: Marta Wacławek, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1431,7 +1432,7 @@ msgid ""
 "                        Changing its rounding factor now will not change the rounding made on previous entries; possibly causing an inconsistency with the new ones."
 msgstr ""
 "<strong>Ta waluta została już wykorzystana do generowania wpisów księgowych.</strong><br/>\n"
-"Zmiana jej współczynnika zaokrąglenia teraz nie zmieni zaokrąglenia dokonanego na poprzednich wpisach; być może powodując niespójność z nowymi."
+"Zmiana jej współczynnika zaokrąglenia teraz nie zmieni zaokrąglenia dokonanego na poprzednich wpisach oraz może powodować niespójność z nowymi."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1888,6 +1889,11 @@ msgstr "Numer konta"
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_payable_id
 msgid "Account Payable"
 msgstr "Konto zobowiązań"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix_placeholder
+msgid "Account Prefix Placeholder"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
@@ -2783,7 +2789,7 @@ msgstr "Kwota"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_company_currency_signed
 msgid "Amount Company Currency Signed"
-msgstr "Kwota waluty firmy Podpisano"
+msgstr "Podpisana kwota w walucie firmy"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_amount
@@ -4067,9 +4073,9 @@ msgstr "Nie można utworzyć dokumentu sprzedaży w niesprzedażowym dzienniku"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
-#, python-format
 msgid "Cannot create an accrual entry with orders in different currencies."
 msgstr ""
+"Nie można stworzyć zapisu memoriałowego z zamówieniami w różnych walutach."
 
 #. module: account
 #. odoo-python
@@ -4735,12 +4741,6 @@ msgstr "Firma ma plan kont"
 #: model:ir.model.fields,help:account.field_account_payment_method_line__company_id
 msgid "Company related to this journal"
 msgstr "Firma związana z tym dziennikiem"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/js/tours/account.js:0
-msgid "Complete the partner data with email."
-msgstr "Dopełnij dane partnera e-mailem."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__use_sections
@@ -6673,6 +6673,7 @@ msgstr "Wersje robocze wpisów"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_line.py:0
 msgid "Draft Entry"
 msgstr "Wersja robocza wpisu"
 
@@ -7365,7 +7366,7 @@ msgstr "Filtr Multivat"
 #. odoo-python
 #: code:addons/account/models/account_root.py:0
 msgid "Filter on the Account or its Display Name instead"
-msgstr ""
+msgstr "Zamiast tego filtruj według Konta lub jego Nazwy Wyświetlanej"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__general_account_id
@@ -7375,8 +7376,8 @@ msgstr "Konto księgowe"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix
-msgid "Financial Accounts Prefix"
-msgstr "Prefiks rachunków finansowych"
+msgid "Financial Accounts Prefixes"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__journal_id
@@ -7894,12 +7895,6 @@ msgstr "Otrzymuj ostrzeżenia podczas fakturowania określonych klientów"
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__lock_date_field__fiscalyear_lock_date
 msgid "Global Lock Date"
 msgstr "Globalna data blokady"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/js/tours/account.js:0
-msgid "Go back"
-msgstr "Wróć"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
@@ -10247,7 +10242,7 @@ msgstr "Partner główny"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__currency_id
 msgid "Main currency of the company."
-msgstr "Główna waluta dla firmy."
+msgstr "Główna waluta firmy."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -12613,6 +12608,7 @@ msgstr "Ceny"
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_move_form/account_move_form.js:0
 #: code:addons/account/static/src/views/account_move_list/account_move_list_controller.js:0
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Print"
 msgstr "Drukuj"
 
@@ -12917,11 +12913,6 @@ msgstr "Bank Odbiorcy"
 #: model:ir.model.fields,field_description:account.field_account_payment_register__partner_bank_id
 msgid "Recipient Bank Account"
 msgstr "Konto bankowe odbiorcy"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_move_send_wizard_form
-msgid "Recipients"
-msgstr "Odbiorcy"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -13268,8 +13259,7 @@ msgstr "Ograniczenie stosowania podatków do rodzaju produktu."
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_same_currency
 msgid ""
 "Restrict to propositions having the same currency as the statement line."
-msgstr ""
-"Ogranicz się do propozycji mających tę samą walutę co wiersz oświadczenia."
+msgstr "Ogranicz do propozycji mających tę samą walutę co wiersz wyciągu."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -13956,12 +13946,6 @@ msgstr "Wyślij potwierdzenia przez e-mail"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
-msgid "Send the invoice and check what the customer will receive."
-msgstr "Wyślij fakturę i sprawdź, co otrzyma klient."
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/js/tours/account.js:0
 msgid "Send the invoice to the customer and check what he'll receive."
 msgstr "Wyślij fakturę klientowi i sprawdź, co otrzyma."
 
@@ -14128,6 +14112,12 @@ msgid "Set a price."
 msgstr "Ustaw cenę."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+#: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
+msgid "Set a value greater than 0.0 to activate a credit limit check"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
 msgid "Set active to false to hide the Account Tag without removing it."
 msgstr ""
@@ -14222,7 +14212,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
 msgid "Show Accounting Features - Readonly"
-msgstr "Pokaż cechy księgowe - tylko do odczytu"
+msgstr "Tylko do odczytu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__show_credit_limit
@@ -14255,7 +14245,7 @@ msgstr "Podatek Show Force wliczony w cenę"
 #. module: account
 #: model:res.groups,name:account.group_account_user
 msgid "Show Full Accounting Features"
-msgstr "Pokaż wszystkie funkcje księgowości"
+msgstr "Pełen dostęp"
 
 #. module: account
 #: model:res.groups,name:account.group_account_secured
@@ -14456,7 +14446,7 @@ msgstr "Wyciąg"
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "Statement %(date)s"
-msgstr ""
+msgstr "Wyciąg bankowy %(date)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
@@ -15754,6 +15744,12 @@ msgid ""
 msgstr "Faktura zawiera już wiersze, nie została zaktualizowana z załącznika."
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/js/tours/account.js:0
+msgid "The invoice having been sent, the button has changed priority."
+msgstr "Faktura została wysłana, przycisk zmienił priorytet."
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The invoice is not a draft, it was not updated from the attachment."
@@ -16111,6 +16107,8 @@ msgid ""
 "The sending of invoices is not set up properly, make sure the report used is"
 " set for invoices."
 msgstr ""
+"Wysyłanie faktur nie jest poprawnie skonfigurowane. Upewnij się, że używany "
+"raport jest skonfigurowany pod kątem faktur."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__sequence
@@ -16797,6 +16795,7 @@ msgstr "Wskazówka: Przestań gonić za dokumentami, których potrzebujesz"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__destination_account_id
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__mail_partner_ids
+#: model_terms:ir.ui.view,arch_db:account.account_move_send_wizard_form
 msgid "To"
 msgstr "Do"
 
@@ -17047,13 +17046,13 @@ msgstr "Suma za raty przed %(date)s."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_total_currency
 msgid "Total in Currency"
-msgstr "Razem w walucie"
+msgstr "Suma w walucie"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_total_in_currency_signed
 #: model:ir.model.fields,field_description:account.field_account_move__amount_total_in_currency_signed
 msgid "Total in Currency Signed"
-msgstr "Razem w walucie podpisane"
+msgstr "Podpisana suma w walucie"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -17137,9 +17136,9 @@ msgstr "Przelew do %s"
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
 "Total Receivable amount exceeding a limit."
+"                                      Set a value greater than 0.0 to "
+"activate a credit limit check"
 msgstr ""
-"Wyzwalaj alerty podczas tworzenia faktur i zamówień sprzedaży dla partnerów "
-"z łączną kwotą należności przekraczającą limit."
 
 #. module: account
 #. odoo-python
@@ -17266,7 +17265,7 @@ msgstr "Stany Zjednoczone Ameryki (ogólne)"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Units & Packagings"
-msgstr ""
+msgstr "Jednostki i opakowania"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -17665,6 +17664,12 @@ msgid ""
 msgstr ""
 "Zatwierdzanie linii zestawienia automatycznie (uzgadnianie na podstawie "
 "Twojej reguły)."
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/js/tours/account.js:0
+msgid "Validate."
+msgstr "Zweryfikuj."
 
 #. module: account
 #: model:mail.message.subtype,name:account.mt_invoice_validated
@@ -18106,12 +18111,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move_send.py:0
-msgid "You can only Print & Send sales documents."
-msgstr "Możesz jedynie drukować i wysyłać dokumenty sprzedaży."
-
-#. module: account
-#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid ""
 "You can only change the period/account for items that are not yet "
@@ -18126,6 +18125,12 @@ msgstr ""
 msgid "You can only change the period/account for posted journal items."
 msgstr ""
 "Okres/rachunek można zmienić tylko dla zaksięgowanych pozycji dziennika."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid "You can only generate sales documents."
+msgstr "Możesz jedynie generować dokumenty sprzedaży."
 
 #. module: account
 #. odoo-python
@@ -18170,13 +18175,6 @@ msgstr ""
 "Możesz ustawić tutaj domyślny komunikat, który pojawi się na fakturach "
 "klientów, po zatwierdzeniu, aby pomóc klientowi odnieść się do tej "
 "konkretnej faktury podczas dokonywania płatności."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move_send.py:0
-msgid "You can't Print & Send invoices that are not posted."
-msgstr ""
-"Nie możesz drukować i wysyłać dokumentów, które nie były opublikowane."
 
 #. module: account
 #. odoo-python
@@ -18257,6 +18255,12 @@ msgstr ""
 #: code:addons/account/models/account_report.py:0
 msgid "You can't delete a report that has variants."
 msgstr "Nie można usunąć raportu, który ma warianty."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid "You can't generate invoices that are not posted."
+msgstr "Nie możesz generować faktur, które nie zostały opublikowane."
 
 #. module: account
 #. odoo-python
@@ -19053,6 +19057,7 @@ msgstr "np. GEBABEBB"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_analytic_distribution_model.py:0
+#: code:addons/account/models/account_analytic_plan.py:0
 msgid "e.g. %(prefix)s"
 msgstr "np. %(prefix)s"
 

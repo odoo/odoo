@@ -3,13 +3,14 @@
 # 	* im_livechat
 # 
 # Translators:
+# Abe Manyo, 2025
 # Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-15 08:33+0000\n"
+"POT-Creation-Date: 2025-02-06 13:57+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
@@ -457,7 +458,7 @@ msgstr "Kode"
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_im_livechat_channel_max_sessions_mode_greater_than_zero
 msgid "Concurrent session number should be greater than zero."
-msgstr ""
+msgstr "Nomor sesi yang concurrent harus lebih besar dari nol."
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.livechat_config
@@ -473,6 +474,12 @@ msgstr "Konfigurasi Channel"
 #: model:ir.model,name:im_livechat.model_res_partner
 msgid "Contact"
 msgstr "Kontak"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/chat_window_patch.xml:0
+msgid "Continue"
+msgstr "Lanjutkan"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__channel_id
@@ -729,7 +736,7 @@ msgstr "Diaktifkan hanya bila tidak ada operator"
 #: model:ir.actions.act_window,name:im_livechat.expertise_action
 #: model:ir.ui.menu,name:im_livechat.expertise_menu
 msgid "Expertise"
-msgstr ""
+msgstr "Keahlian"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -792,7 +799,7 @@ msgstr "Input Gratis (Multi-Line)"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/embed/common/chat_window_patch.xml:0
 msgid "Give your feedback"
-msgstr ""
+msgstr "Berikan feedback Anda"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__sequence
@@ -936,6 +943,8 @@ msgid ""
 "If limited, operators will only handle the selected number of sessions at a "
 "time. While on a call, they will not receive new conversations."
 msgstr ""
+"Bila dibatasi, operator hanya akan menangani jumlah sesi yang terpilih. "
+"Selagi dalam panggilan, mereka tidak akan menerima percakapan baru."
 
 #. module: im_livechat
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_documentation_exit
@@ -978,7 +987,7 @@ msgstr "Adalah Follower"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__is_forward_operator
 msgid "Is Forward Operator"
-msgstr ""
+msgstr "Apakah Forward Operator"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__is_forward_operator_child
@@ -988,7 +997,7 @@ msgstr "Apakah Forward Operator Anak"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__is_in_call
 msgid "Is in call"
-msgstr ""
+msgstr "Apakah dalam panggilan"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__livechat_active
@@ -1087,12 +1096,12 @@ msgstr "Keluar dari Channel"
 #: code:addons/im_livechat/static/src/core/common/close_confirmation.xml:0
 #: code:addons/im_livechat/static/src/core/public_web/thread_model_patch.js:0
 msgid "Leaving will end the livechat. Proceed leaving?"
-msgstr ""
+msgstr "Keluar dari chat akan mengakhiri livechat. Tetap keluar?"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel__max_sessions_mode__limited
 msgid "Limited"
-msgstr ""
+msgstr "Terbatas"
 
 #. module: im_livechat
 #: model:ir.module.category,name:im_livechat.module_category_im_livechat
@@ -1111,7 +1120,7 @@ msgstr "Tombol Live Chat"
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__livechat_expertise_ids
 #: model:ir.model.fields,field_description:im_livechat.field_res_users_settings__livechat_expertise_ids
 msgid "Live Chat Expertise"
-msgstr ""
+msgstr "Keahlian Live Chat"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_search
@@ -1225,6 +1234,7 @@ msgid ""
 "Livechat session is active until visitor or operator leaves the "
 "conversation."
 msgstr ""
+"Sesi livechat aktif sampai pengunjung atau operator meninggalkan percakapan."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__sequence
@@ -1234,12 +1244,12 @@ msgstr "Order cocok"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__max_sessions
 msgid "Maximum Sessions"
-msgstr ""
+msgstr "Sesi Maksimum"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__max_sessions
 msgid "Maximum number of concurrent sessions per operator."
-msgstr ""
+msgstr "Jumlah maksimum sesi concurrent per operator."
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_mail_message
@@ -1408,7 +1418,7 @@ msgstr "Analisis Operator"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__operator_expertise_ids
 msgid "Operator Expertise"
-msgstr ""
+msgstr "Keahlian Operator"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__user_ids
@@ -1737,7 +1747,7 @@ msgstr "Sejarah Sesi"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__max_sessions_mode
 msgid "Sessions per Operator"
-msgstr ""
+msgstr "Sesi per Operator"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__display_button
@@ -1893,7 +1903,7 @@ msgstr ""
 #: code:addons/im_livechat/static/src/core/common/thread_model_patch.js:0
 #: code:addons/im_livechat/static/src/embed/common/thread_model_patch.js:0
 msgid "This livechat conversation has ended"
-msgstr ""
+msgstr "Percakapan livechat ini telah berakhir"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_res_users_settings__livechat_username
@@ -2068,6 +2078,8 @@ msgid ""
 "When forwarding live chat conversations, the chatbot will prioritize users "
 "with matching expertise."
 msgstr ""
+"Saat forward percakapan live chat, chatbot akan memprioritaskan user dengan "
+"keahlian yang cocok."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -2123,7 +2135,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/common/thread_model_patch.js:0
 msgid "You ended the conversation with %(name)s."
-msgstr ""
+msgstr "Anda mengakhiri percakapan dengan %(name)s"
 
 #. module: im_livechat
 #. odoo-javascript

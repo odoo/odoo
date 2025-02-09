@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 08:40+0000\n"
+"POT-Creation-Date: 2025-02-06 13:57+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Chloe Wang, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -1289,6 +1289,15 @@ msgstr "已归档"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Are you sure you want to cancel this transfer?"
 msgstr "你真的想取消此库存调拨吗？"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/product.py:0
+msgid ""
+"As other units of measure (ex : %(problem_uom)s) than %(uom)s have already "
+"been used for this product, the change of unit of measure can not be done.If"
+" you want to change it, please archive the product and create a new one."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
@@ -9340,15 +9349,6 @@ msgid ""
 "better solution could be to archive the product and create a new one "
 "instead."
 msgstr "该产品已至少在库存调拨中使用过一次。 不建议更改产品类型，因为它可能导致不一致。 更好的解决方案是将产品存档，然后创建一个新产品。"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/product.py:0
-msgid ""
-"This product has been used in at least one inventory movement. It is not "
-"advised to change the Unit of Measure since it can lead to inconsistencies. "
-"The existing moves will not be recalculated with the new unit of measure."
-msgstr "该产品至少在一次库存移动中使用过。不建议更改计量单位，因为这会导致不一致。新的计量单位不会重新计算现有的移动。"
 
 #. module: stock
 #. odoo-python

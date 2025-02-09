@@ -3,13 +3,14 @@
 # 	* spreadsheet_account
 # 
 # Translators:
+# Thi Huong Nguyen, 2025
 # Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 08:42+0000\n"
+"POT-Creation-Date: 2025-02-06 13:59+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -42,11 +43,15 @@ msgstr "Tài khoản"
 
 #. module: spreadsheet_account
 #. odoo-javascript
-#. odoo-python
 #: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Bank and Cash"
+msgstr "Ngân hàng và Tiền mặt"
+
+#. module: spreadsheet_account
+#. odoo-python
 #: code:addons/spreadsheet_account/models/account.py:0
 msgid "Cell Audit"
-msgstr ""
+msgstr "Kiểm toán ô"
 
 #. module: spreadsheet_account
 #: model:ir.model,name:spreadsheet_account.model_res_company
@@ -145,24 +150,6 @@ msgstr "Doanh thu"
 
 #. module: spreadsheet_account
 #. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-msgid "Offset applied to the years."
-msgstr ""
-
-#. module: spreadsheet_account
-#. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-msgid "Return the partner balance for the specified account(s) and period"
-msgstr ""
-
-#. module: spreadsheet_account
-#. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-msgid "Return the residual amount for the specified account(s) and period"
-msgstr ""
-
-#. module: spreadsheet_account
-#. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
 msgid "Non-current Assets"
 msgstr "Tài sản dài hạn"
@@ -178,6 +165,12 @@ msgstr "Nợ dài hạn"
 #: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
 msgid "Off-Balance Sheet"
 msgstr "Ngoài bảng cân đối"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "Offset applied to the years."
+msgstr "Offset được áp dụng cho năm."
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -206,8 +199,20 @@ msgstr "Khoản phải thu"
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "Return the partner balance for the specified account(s) and period"
+msgstr "Trả về số dư của đối tác cho (các) tài khoản và kỳ xác định"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "Return the residual amount for the specified account(s) and period"
+msgstr "Trả về số tiền còn lại cho (các) tài khoản và kỳ xác định"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 msgid "Returns the account codes of a given group."
-msgstr ""
+msgstr "Trả về mã tài khoản của một nhóm nhất định."
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -239,7 +244,7 @@ msgstr "Đặt thành TRUE để bao gồm cả các bút toán chưa ghi sổ."
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/plugins/accounting_plugin.js:0
 msgid "The balance for given partners could not be computed."
-msgstr ""
+msgstr "Không thể tính toán số dư của các đối tác đã cho."
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -285,7 +290,7 @@ msgstr "Ngày để trích xuất ngày bắt đầu năm tài chính."
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 msgid "The partner ids (separated by a comma)."
-msgstr ""
+msgstr "ID đối tác (phân tách bằng dấu phẩy)."
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -296,19 +301,21 @@ msgstr "Tiền tố tài khoản."
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-msgid "The technical account type (possible values are: %s)."
-msgstr ""
-
-#. module: spreadsheet_account
-#. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 msgid ""
 "The prefix of the accounts. If none provided, all receivable and payable "
 "accounts will be used."
 msgstr ""
+"Tiền tố của các tài khoản. Nếu không cung cấp, tất cả tài khoản phải thu và "
+"phải trả sẽ được sử dụng."
 
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/plugins/accounting_plugin.js:0
 msgid "The residual amount for given accounts could not be computed."
-msgstr ""
+msgstr "Không thể tính toán số tiền còn lại của các tài khoản đã cho."
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "The technical account type (possible values are: %s)."
+msgstr "Loại tài khoản kỹ thuật (các giá trị có thể là: %s)."

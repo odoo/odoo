@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 08:41+0000\n"
+"POT-Creation-Date: 2025-02-06 13:57+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -519,13 +519,6 @@ msgid "<span>We suggest you start by</span>"
 msgstr "<span>我們建議你首先</span>"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
-msgid ""
-"<strong>Internal communication</strong>: Replying will post an internal "
-"note. Followers won't receive any email notification."
-msgstr "<strong>內部溝通</strong>: 回復會發佈內部留言， 關注者不會收到郵件通知"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid ""
 "<strong>Save</strong> this page and come back here to set up the feature."
@@ -606,6 +599,12 @@ msgid "A scheduled date is needed to schedule a message"
 msgstr "要預排訊息，需要設定預定日期"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_scheduled_message.py:0
+msgid "A scheduled message could not be sent"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__google_translate_api_key
 msgid ""
 "A valid Google API key is required to enable message translation. "
@@ -653,7 +652,7 @@ msgstr "存取組"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__access_token
 msgid "Access Token"
-msgstr "存取代碼(token)"
+msgstr "存取權杖(token)"
 
 #. module: mail
 #. odoo-javascript
@@ -1256,7 +1255,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/ir_attachment.py:0
 msgid "An access token must be provided for each attachment."
-msgstr "必須為每個附件提供存取代碼(token)。"
+msgstr "必須為每個附件提供存取權杖(token)。"
 
 #. module: mail
 #. odoo-python
@@ -1557,6 +1556,11 @@ msgstr "自動化訊息"
 msgid ""
 "Automatically schedule this activity once the current one is marked as done."
 msgstr "一旦當前活動被標記為完成，則自動安排此活動。"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
+msgid "Available for all Companies"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -2205,12 +2209,6 @@ msgstr "點選此處重試"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
-msgid "Click on your message"
-msgstr "點選你的訊息"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_in_reply.xml:0
 msgid "Click to see the attachments"
 msgstr "點擊查看附件"
@@ -2548,11 +2546,6 @@ msgstr "將會自動取代你選擇的捷徑的內容。發送訊息前，仍可
 #: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__body
 msgid "Contents"
 msgstr "內容"
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_discuss_channel_member__fold_state
-msgid "Conversation Fold State"
-msgstr "對話框收攏狀態"
 
 #. module: mail
 #. odoo-javascript
@@ -3877,12 +3870,6 @@ msgstr "展開"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
-msgid "Expand options"
-msgstr "展開選項"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss_sidebar.xml:0
 msgid "Expand panel"
 msgstr "展開面板"
@@ -4108,6 +4095,11 @@ msgstr "尋找或開始對話"
 #: code:addons/mail/static/src/core/common/thread_actions.js:0
 msgid "Fold"
 msgstr "收攏"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_discuss_channel_member__fold_state
+msgid "Fold State"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel_member__fold_state__folded
@@ -4546,6 +4538,12 @@ msgstr "歷史"
 #: model:ir.model.fields,help:mail.field_fetchmail_server__server
 msgid "Hostname or IP of the mail server"
 msgstr "信件伺服器的主機名或IP"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
+msgid "Hover on your message and mark as todo"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings__voice_active_duration
@@ -6239,12 +6237,6 @@ msgstr "訊息"
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
 msgid "Messages Search"
 msgstr "訊息搜尋"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
-msgid "Messages can be <b>starred</b> to remind you to check back later."
-msgstr "訊息可以 <b> 打星號</b> 以提醒您後面再來檢查。"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_from_message_id_unique
@@ -7974,6 +7966,12 @@ msgstr "準備好"
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_status__ready
 msgid "Ready to Send"
 msgstr "準備好發送"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/bus_connection_alert.xml:0
+msgid "Real-time connection lost..."
+msgstr "實時連線已斷線⋯"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__reason
@@ -9711,6 +9709,14 @@ msgstr ""
 "請稍後再試，或改為聯絡 %(company_name)s。"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_scheduled_message.py:0
+msgid ""
+"The message scheduled on %(model)s(%(id)s) with the following content could "
+"not be sent:%(original_message)s"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__from_message_id
 msgid "The message the channel was created from."
 msgstr "建立訊息的來源渠道。"
@@ -9872,6 +9878,7 @@ msgstr "此欄位不區分大小寫。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__allow_public_upload
+#: model:ir.model.fields,help:mail.field_discuss_channel_member__fold_state
 msgid ""
 "This field is deprecated and has no effect, it will be removed in future "
 "versions."

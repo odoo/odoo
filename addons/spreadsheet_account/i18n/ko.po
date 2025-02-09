@@ -3,15 +3,15 @@
 # 	* spreadsheet_account
 # 
 # Translators:
-# Daye Jeong, 2025
 # Sarah Park, 2025
+# Daye Jeong, 2025
 # Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 08:42+0000\n"
+"POT-Creation-Date: 2025-02-06 13:59+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -44,11 +44,15 @@ msgstr "계정"
 
 #. module: spreadsheet_account
 #. odoo-javascript
-#. odoo-python
 #: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
+msgid "Bank and Cash"
+msgstr "은행 및 현금"
+
+#. module: spreadsheet_account
+#. odoo-python
 #: code:addons/spreadsheet_account/models/account.py:0
 msgid "Cell Audit"
-msgstr ""
+msgstr "셀 감사"
 
 #. module: spreadsheet_account
 #: model:ir.model,name:spreadsheet_account.model_res_company
@@ -147,24 +151,6 @@ msgstr "수익"
 
 #. module: spreadsheet_account
 #. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-msgid "Offset applied to the years."
-msgstr ""
-
-#. module: spreadsheet_account
-#. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-msgid "Return the partner balance for the specified account(s) and period"
-msgstr ""
-
-#. module: spreadsheet_account
-#. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-msgid "Return the residual amount for the specified account(s) and period"
-msgstr ""
-
-#. module: spreadsheet_account
-#. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
 msgid "Non-current Assets"
 msgstr "고정자산"
@@ -180,6 +166,12 @@ msgstr "비유동부채"
 #: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
 msgid "Off-Balance Sheet"
 msgstr "부외항목"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "Offset applied to the years."
+msgstr "연도에 적용된 오프셋."
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -204,6 +196,18 @@ msgstr "선급금"
 #: code:addons/spreadsheet_account/static/src/account_group_auto_complete.js:0
 msgid "Receivable"
 msgstr "미수금"
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "Return the partner balance for the specified account(s) and period"
+msgstr "지정된 계정과 기간에 대한 파트너 잔액을 반환합니다."
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "Return the residual amount for the specified account(s) and period"
+msgstr "지정된 계정과 기간에 대한 잔액을 반환합니다."
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -241,7 +245,7 @@ msgstr "게시되지 않은 항목을 포함하려면 TRUE로 설정하세요."
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/plugins/accounting_plugin.js:0
 msgid "The balance for given partners could not be computed."
-msgstr ""
+msgstr "지정된 파트너의 잔액을 계산할 수 없습니다."
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -285,7 +289,7 @@ msgstr "회계연도 시작일을 추출하는 날짜입니다."
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 msgid "The partner ids (separated by a comma)."
-msgstr ""
+msgstr "파트너 ID (쉼표로 구분)."
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -296,19 +300,19 @@ msgstr "계정 접두사."
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-msgid "The technical account type (possible values are: %s)."
-msgstr "기술 계정 유형 (가능한 값: %s)."
-
-#. module: spreadsheet_account
-#. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 msgid ""
 "The prefix of the accounts. If none provided, all receivable and payable "
 "accounts will be used."
-msgstr ""
+msgstr "계정의 접두사를 설정하세요. 입력하지 않으면 모든 미수금 및 미지급금 계정이 사용됩니다."
 
 #. module: spreadsheet_account
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/plugins/accounting_plugin.js:0
 msgid "The residual amount for given accounts could not be computed."
-msgstr ""
+msgstr "지정된 계정의 잔액을 계산할 수 없습니다."
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+msgid "The technical account type (possible values are: %s)."
+msgstr "기술 계정 유형 (가능한 값: %s)."

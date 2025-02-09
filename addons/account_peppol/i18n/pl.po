@@ -3,16 +3,16 @@
 # 	* account_peppol
 # 
 # Translators:
-# Wil Odoo, 2024
 # Marta Wacławek, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 08:41+0000\n"
+"POT-Creation-Date: 2025-02-06 13:58+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
-"Last-Translator: Marta Wacławek, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -181,6 +181,7 @@ msgid "Can send, pending registration to receive"
 msgstr "Może wysyłać, oczekuje na rejestrację aby otrzymywać"
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_service_configuration
 msgid "Cancel"
 msgstr "Anuluj"
@@ -411,7 +412,7 @@ msgstr "W pełni zautomatyzowane"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.js:0
 msgid "Got it !"
-msgstr ""
+msgstr "Mamy to!"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -514,7 +515,7 @@ msgstr "Numer telefonu kom."
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid
 msgid "Not on Peppol"
-msgstr ""
+msgstr "Nie ma w Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__not_registered
@@ -658,7 +659,7 @@ msgstr "Kreator usług Peppol"
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Peppol document (UUID: %(uuid)s) has been received successfully"
-msgstr ""
+msgstr "Dokument Peppol (UUID: %(uuid)s) został pomyślnie odebrany"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.portal_my_details_fields
@@ -710,6 +711,11 @@ msgstr "Aktualizacja statusu Peppol: %s"
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_warnings
 msgid "Peppol warnings"
 msgstr "Ostrzeżenia Peppol"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid "Phone"
+msgstr "Telefon"
 
 #. module: account_peppol
 #. odoo-python
@@ -811,7 +817,7 @@ msgstr "Zarejestrowano do otrzymywania dokumentów przez Peppol."
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Registration rejected."
-msgstr ""
+msgstr "Rejestracja odrzucona."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__rejected
@@ -928,11 +934,9 @@ msgstr ""
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid ""
-"The recommended EAS code for Belgium is 0208. The Endpoint should be the "
-"Company Registry number."
+"The recommended identification method for Belgium is your Company Registry "
+"Number."
 msgstr ""
-"Zalecany kod EAS dla Belgii to 0208. Punktem końcowym powinien być numer "
-"rejestru firmy."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_edi_identification
@@ -940,16 +944,19 @@ msgid "The unique id that identifies this user, typically the vat"
 msgstr "Unikalny id, który identyfikuje użytkownika, zazwyczaj vat"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
-msgid "This will delete your Peppol registration."
-msgstr ""
-
-#. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid ""
 "This feature is deprecated. Contact odoo support if you need a migration "
 "key."
 msgstr ""
+"Ta funkcja jest przestarzała. Skontaktuj się ze wsparciem Odoo, jeśli "
+"potrzebujesz klucza migracji."
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "This will delete your Peppol registration."
+msgstr "To działanie usunie Twoją rejestrację Peppol."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -1003,11 +1010,14 @@ msgid "View Partner(s)"
 msgstr "Wyświetl partnera/-ów"
 
 #. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid ""
 "We could not find a user with this information on our server. Please check "
 "your information."
 msgstr ""
+"Nie byliśmy w stanie znaleźć użytkownika z takimi informacjami na naszym "
+"serwerze. Zweryfikuj swoje informacje."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1057,9 +1067,10 @@ msgid "You can now send invoices in demo mode."
 msgstr "Możesz teraz wysyłać faktury w trybie demo."
 
 #. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "You can send this invoice electronically via Peppol."
-msgstr ""
+msgstr "Możesz wysłać tę fakturę elektronicznie poprzez Peppol."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1093,17 +1104,14 @@ msgid "Your migration key is:"
 msgstr "Twój klucz migracji to:"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "Your mobile"
-msgstr "Twój telefon komórkowy"
-
-#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid ""
 "Your registration has been rejected. Please contact the support for further "
 "assistance."
 msgstr ""
+"Twoja rejestracja została odrzucona. Skontaktuj się ze wsparciem w celu "
+"uzyskania dalszego wsparcia."
 
 #. module: account_peppol
 #. odoo-python

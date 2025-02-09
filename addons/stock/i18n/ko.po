@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 08:40+0000\n"
+"POT-Creation-Date: 2025-02-06 13:57+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Daye Jeong, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -1158,7 +1158,7 @@ msgstr "허용된 위치"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_replenishment_uom_ids
 msgid "Allowed Replenishment Uom"
-msgstr ""
+msgstr "허용된 보충 단위"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__allowed_route_ids
@@ -1171,12 +1171,12 @@ msgstr "이동 경로 사용 허용"
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__allowed_uom_ids
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "허용된 단위"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__alternative
 msgid "Alternative (2.00\" x 1.00\")"
-msgstr ""
+msgstr "대안 (2.00“ x 1.00”)"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__create_backorder__always
@@ -1235,7 +1235,7 @@ msgstr "적용 가능"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__package_type_selectable
 msgid "Applicable on Package Type"
-msgstr ""
+msgstr "적용 가능한 패키지 유형"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__product_selectable
@@ -1297,6 +1297,15 @@ msgstr "보관됨"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Are you sure you want to cancel this transfer?"
 msgstr "이 이송을 취소하시겠습니까?"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/product.py:0
+msgid ""
+"As other units of measure (ex : %(problem_uom)s) than %(uom)s have already "
+"been used for this product, the change of unit of measure can not be done.If"
+" you want to change it, please archive the product and create a new one."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
@@ -4561,7 +4570,7 @@ msgstr "1월"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__jewelry
 msgid "Jewelry (2.20\" x 0.50\")"
-msgstr ""
+msgstr "주얼리 (2.20\" x 0.50\")"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -5677,7 +5686,7 @@ msgstr "일반"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__normal
 msgid "Normal (2.25\" x 1.25\")"
-msgstr ""
+msgstr "일반 (2.25\" x 1.25\")"
 
 #. module: stock
 #. odoo-javascript
@@ -6337,7 +6346,7 @@ msgstr "패키지 폭"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__packaging_uom_id
 msgid "Packaging unit from sale or purchase orders"
-msgstr ""
+msgstr "판매 또는 구매 주문에서 사용되는 포장 단위."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_pack_stock_loc_id
@@ -6491,7 +6500,7 @@ msgstr "계획 문제"
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "Please contact your administrator to configure your warehouse."
-msgstr ""
+msgstr "창고를 설정하려면 관리자에게 문의하세요."
 
 #. module: stock
 #. odoo-python
@@ -7158,7 +7167,7 @@ msgstr "이 양은 품목의 기본 단위로 수량이 표시됩니다"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__packaging_uom_qty
 msgid "Quantity in the packaging unit"
-msgstr ""
+msgstr "포장 단위 수량"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__incoming_qty
@@ -7562,7 +7571,7 @@ msgstr "%(product)s 중 %(warehouse)s에 위치한 품목에 대한 보충 정�
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__replenishment_uom_id
 msgid "Replenishment Multiple"
-msgstr ""
+msgstr "보충 단위 배수"
 
 #. module: stock
 #. odoo-python
@@ -7704,7 +7713,7 @@ msgstr "반납"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 msgid "Return All"
-msgstr ""
+msgstr "모두 반환"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
@@ -7825,7 +7834,7 @@ msgstr "이 품목에 대한 이동경로를 선택할 수 있습니다"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_uom_uom__route_ids
 msgid "Routes propagated from the package type"
-msgstr ""
+msgstr "패키지 유형에서 전파된 경로"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__resupply_wh_ids
@@ -8446,7 +8455,7 @@ msgstr "사이즈: 길이 × 너비 × 높이"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__small
 msgid "Small (1.25\" x 1.00\")"
-msgstr ""
+msgstr "소형 (1.25“ x 1.00”)"
 
 #. module: stock
 #. odoo-javascript
@@ -9399,17 +9408,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/product.py:0
 msgid ""
-"This product has been used in at least one inventory movement. It is not "
-"advised to change the Unit of Measure since it can lead to inconsistencies. "
-"The existing moves will not be recalculated with the new unit of measure."
-msgstr ""
-"이 제품은 적어도 한 번의 재고 이동에 사용되었습니다. 측정 단위를 변경하면 일관성이 유지되지 않을 수 있으므로 측정 단위를 변경하지 "
-"않는 것이 좋습니다. 기존 이동은 새로운 측정 단위를 반영하여 다시 계산되지 않습니다."
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/product.py:0
-msgid ""
 "This product's company cannot be changed as long as there are quantities of "
 "it belonging to another company."
 msgstr "다른 회사에서 사용 중인 수량이 있는 경우, 이 품목의 회사는 변경할 수 없습니다."
@@ -9971,7 +9969,7 @@ msgstr "단위"
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Units & Packagings"
-msgstr ""
+msgstr "단위 & 포장"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
@@ -10456,7 +10454,7 @@ msgstr "선택 시, 품목 서식의 재고 탭에서 이동 경로를 설정할
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__package_type_selectable
 msgid "When checked, the route will be selectable on package types"
-msgstr ""
+msgstr "이 옵션을 선택하면 패키지 유형에서 경로를 선택할 수 있습니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__product_categ_selectable

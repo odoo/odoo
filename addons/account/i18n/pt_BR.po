@@ -3,16 +3,17 @@
 # 	* account
 # 
 # Translators:
-# Wil Odoo, 2025
+# a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2025
 # Maitê Dietze, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 08:40+0000\n"
+"POT-Creation-Date: 2025-02-06 13:57+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
-"Last-Translator: Maitê Dietze, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1097,7 +1098,8 @@ msgstr "<span class=\"text-warning\">Médio risco</span>: IBAN"
 msgid ""
 "<span invisible=\"name or name_placeholder or quick_edit_mode\">Draft</span>"
 msgstr ""
-"<span invisible=\"name or name_placeholder or quick_edit_mode\">Draft</span>"
+"<span invisible=\"name or name_placeholder or "
+"quick_edit_mode\">Rascunho</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -1885,6 +1887,11 @@ msgid "Account Payable"
 msgstr "Conta a pagar"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix_placeholder
+msgid "Account Prefix Placeholder"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
 msgid "Account Properties"
 msgstr "Propriedades da conta"
@@ -2382,7 +2389,7 @@ msgstr "Adicionar uma conta bancária"
 #: model:ir.actions.server,name:account.action_new_credit_card_setting
 #: model:ir.ui.menu,name:account.menu_action_account_credit_card_journal_form
 msgid "Add a Credit Card Account"
-msgstr ""
+msgstr "Adicionar uma conta de cartão de crédito"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__terms_type__plain
@@ -2481,13 +2488,13 @@ msgstr "Valor de ajuste"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Adjusting Entries"
-msgstr ""
+msgstr "Lançamentos de ajuste"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__adjusting_entries_count
 #: model:ir.model.fields,field_description:account.field_account_move__adjusting_entries_count
 msgid "Adjusting Entries Count"
-msgstr ""
+msgstr "Total de lançamentos de ajuste"
 
 #. module: account
 #. odoo-python
@@ -2505,19 +2512,19 @@ msgstr "Lançamento de ajuste"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__adjusting_entry_origin_label
 #: model:ir.model.fields,field_description:account.field_account_move__adjusting_entry_origin_label
 msgid "Adjusting Entry Origin Label"
-msgstr ""
+msgstr "Rótulo de origem do lançamento de ajuste"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__adjusting_entry_origin_move_ids
 #: model:ir.model.fields,field_description:account.field_account_move__adjusting_entry_origin_move_ids
 msgid "Adjusting Entry Origin Moves"
-msgstr ""
+msgstr "Movimentação de origem do lançamento de ajuste"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__adjusting_entry_origin_moves_count
 #: model:ir.model.fields,field_description:account.field_account_move__adjusting_entry_origin_moves_count
 msgid "Adjusting Entry Origin Moves Count"
-msgstr ""
+msgstr "Total de movimentações de origem do lançamento de ajuste"
 
 #. module: account
 #. odoo-python
@@ -2707,7 +2714,7 @@ msgstr "Contas permitidas"
 #. odoo-javascript
 #: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.js:0
 msgid "Allows out payments"
-msgstr ""
+msgstr "Permite pagamentos externos"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3374,7 +3381,7 @@ msgstr "Disponibilidade"
 #: model:ir.model.fields,field_description:account.field_res_partner__available_invoice_template_pdf_report_ids
 #: model:ir.model.fields,field_description:account.field_res_users__available_invoice_template_pdf_report_ids
 msgid "Available Invoice Template Pdf Report"
-msgstr ""
+msgstr "Relatório em pdf do modelo de fatura disponível"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__available_journal_ids
@@ -3404,7 +3411,7 @@ msgstr "Linha do método de pagamento disponível"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__available_pdf_report_ids
 msgid "Available Pdf Report"
-msgstr ""
+msgstr "Relatório em PDF disponível"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_average
@@ -4064,6 +4071,8 @@ msgid ""
 "Cannot change Price Tax computation method on a company that has already "
 "started invoicing."
 msgstr ""
+"Não é possível alterar o método de cálculo do imposto sobre preços em uma "
+"empresa que já tenha iniciado o faturamento."
 
 #. module: account
 #. odoo-python
@@ -4084,9 +4093,10 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
-#, python-format
 msgid "Cannot create an accrual entry with orders in different currencies."
 msgstr ""
+"Não é possível criar um lançamento de provisionamento com pedidos em moedas "
+"diferentes."
 
 #. module: account
 #. odoo-python
@@ -4755,12 +4765,6 @@ msgid "Company related to this journal"
 msgstr "Empresa relacionada a este diário"
 
 #. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/js/tours/account.js:0
-msgid "Complete the partner data with email."
-msgstr "Complete os dados do parceiro com o e-mail."
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__use_sections
 msgid "Composite Report"
 msgstr "Relatório composto"
@@ -5224,7 +5228,7 @@ msgstr "Criar o produto."
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__adjusting_entries_move_ids
 #: model:ir.model.fields,field_description:account.field_account_move__adjusting_entries_move_ids
 msgid "Created Adjusting Entries"
-msgstr ""
+msgstr "Lançamentos de ajuste criados"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -6701,6 +6705,7 @@ msgstr "Lançamentos provisórios"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_line.py:0
 msgid "Draft Entry"
 msgstr "Lançamento provisório"
 
@@ -7144,12 +7149,12 @@ msgstr "Erro."
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_model__euro
 msgid "European (RF83INV202400001)"
-msgstr ""
+msgstr "Europeu (RF83INV202400001)"
 
 #. module: account
 #: model:res.country.group,name:account.europe_vat
 msgid "European Union VAT"
-msgstr ""
+msgstr "VAT da União Europeia"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__decimal_separator
@@ -7399,7 +7404,7 @@ msgstr "Filtro multi NIF"
 #. odoo-python
 #: code:addons/account/models/account_root.py:0
 msgid "Filter on the Account or its Display Name instead"
-msgstr ""
+msgstr "Em vez disso, filtre na conta ou em seu nome de exibição"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__general_account_id
@@ -7409,8 +7414,8 @@ msgstr "Conta financeira"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix
-msgid "Financial Accounts Prefix"
-msgstr "Prefixo de contas financeiras"
+msgid "Financial Accounts Prefixes"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__journal_id
@@ -7488,7 +7493,7 @@ msgstr "Códigos do país fiscal"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_country_group__exclude_state_ids
 msgid "Fiscal Exceptions"
-msgstr ""
+msgstr "Exceções fiscais"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -7852,7 +7857,7 @@ msgstr "Reconciliação completa"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_model__odoo
 msgid "Full Reference (INV/2024/00001)"
-msgstr ""
+msgstr "Referência completa (INV/2024/00001)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -7930,12 +7935,6 @@ msgstr "Obter avisos ao faturar clientes específicos"
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__lock_date_field__fiscalyear_lock_date
 msgid "Global Lock Date"
 msgstr "Data de travamento geral"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/js/tours/account.js:0
-msgid "Go back"
-msgstr "Voltar"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
@@ -9397,7 +9396,7 @@ msgstr "Está entre"
 #: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
 #: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
 msgid "Is Coa Installed"
-msgstr "Is Coa Installed"
+msgstr "Tem Coa instalado"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
@@ -10815,7 +10814,7 @@ msgstr "Nome"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__name_placeholder
 #: model:ir.model.fields,field_description:account.field_account_move__name_placeholder
 msgid "Name Placeholder"
-msgstr "Name Placeholder"
+msgstr "Marcador de posição do nome"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__name_searchable
@@ -11194,12 +11193,12 @@ msgstr "Agora, vamos criar sua primeira fatura"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__num_journals_without_account_bank
 msgid "Num Journals Without Account Bank"
-msgstr ""
+msgstr "Diários sem conta bancária"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__num_journals_without_account_credit
 msgid "Num Journals Without Account Credit"
-msgstr ""
+msgstr "Diários sem conta de crédito"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__name
@@ -11292,7 +11291,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_model__number
 msgid "Numbers only (202400001)"
-msgstr ""
+msgstr "Somente números (202400001)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__value
@@ -11819,7 +11818,7 @@ msgstr "PDF sem pagamento"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "PEPPOL Electronic Invoicing"
-msgstr "PEPPOL Electronic Invoicing"
+msgstr "Faturamento eletrônico PEPPOL"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_peppol
@@ -12658,6 +12657,7 @@ msgstr "Preços"
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_move_form/account_move_form.js:0
 #: code:addons/account/static/src/views/account_move_list/account_move_list_controller.js:0
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Print"
 msgstr "Imprimir"
 
@@ -12962,11 +12962,6 @@ msgstr "Banco destinatário"
 #: model:ir.model.fields,field_description:account.field_account_payment_register__partner_bank_id
 msgid "Recipient Bank Account"
 msgstr "Conta bancária destinatária"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_move_send_wizard_form
-msgid "Recipients"
-msgstr "Destinatários"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -13935,7 +13930,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure or packagings"
 msgstr ""
-"Sell and purchase products in different units of measure or packagings"
+"Vender e comprar produtos em diferentes unidades de medida ou embalagens"
 
 #. module: account
 #. odoo-python
@@ -14005,12 +14000,6 @@ msgstr "Enviar recibo por e-mail"
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
 msgid "Send receipts by email"
 msgstr "Enviar recibos por e-mail"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/js/tours/account.js:0
-msgid "Send the invoice and check what the customer will receive."
-msgstr "Envie a fatura e verifique o que o cliente receberá."
 
 #. module: account
 #. odoo-javascript
@@ -14181,6 +14170,12 @@ msgid "Set a price."
 msgstr "Defina um preço."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+#: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
+msgid "Set a value greater than 0.0 to activate a credit limit check"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
 msgid "Set active to false to hide the Account Tag without removing it."
 msgstr ""
@@ -14252,7 +14247,7 @@ msgstr "Definir conta bancária"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Setup Credit Card Account"
-msgstr ""
+msgstr "Configurar conta de cartão de crédito"
 
 #. module: account
 #: model:ir.actions.server,name:account.model_account_move_action_share
@@ -14511,7 +14506,7 @@ msgstr "Demonstrativo"
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "Statement %(date)s"
-msgstr ""
+msgstr "Extrato %(date)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
@@ -15023,6 +15018,8 @@ msgid ""
 "Tax names must be unique!\n"
 "%(taxes)s"
 msgstr ""
+"Os nomes dos impostos devem ser exclusivos!\n"
+"%(taxes)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_src_id
@@ -15682,6 +15679,8 @@ msgid ""
 "The existing PDFs will be used for sending. If you want to regenerate them, "
 "please delete the attachment from the invoice."
 msgstr ""
+"Os PDFs existentes serão usados para o envio. Se você quiser gerá-los "
+"novamente, exclua o anexo da fatura."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -15748,6 +15747,8 @@ msgid ""
 "The following accounts must be assigned to at least one company:\n"
 "%(accounts)s"
 msgstr ""
+"As contas a seguir devem ser atribuídas a pelo menos uma empresa:\n"
+"%(accounts)s"
 
 #. module: account
 #. odoo-python
@@ -15756,6 +15757,8 @@ msgid ""
 "The following error prevented '%(candidate)s' QR-code to be generated though"
 " it was detected as eligible: "
 msgstr ""
+"O seguinte erro impediu que o código QR '%(candidate)s' fosse gerado, embora"
+" tenha sido detectado como elegível:"
 
 #. module: account
 #. odoo-python
@@ -15808,6 +15811,12 @@ msgstr "O titular da conta bancária do diário deve ser a empresa (%s)."
 msgid ""
 "The invoice already contains lines, it was not updated from the attachment."
 msgstr "A fatura já contém linhas, não foi atualizada do anexo."
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/js/tours/account.js:0
+msgid "The invoice having been sent, the button has changed priority."
+msgstr "A fatura foi enviada, o botão mudou a prioridade."
 
 #. module: account
 #. odoo-python
@@ -16169,6 +16178,8 @@ msgid ""
 "The sending of invoices is not set up properly, make sure the report used is"
 " set for invoices."
 msgstr ""
+"O envio de faturas não está configurado corretamente. Verifique se o "
+"relatório usado está definido para faturas."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__sequence
@@ -16451,13 +16462,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "There is no template that applies to invoices."
-msgstr ""
+msgstr "Não há um modelo que se aplique a faturas."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "There is no template that applies to this move type."
-msgstr ""
+msgstr "Não há um modelo que se aplique a esse tipo de movimento."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
@@ -16831,7 +16842,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_res_country_group__exclude_state_ids
 msgid "Those states are ignored by the fiscal positions"
-msgstr ""
+msgstr "Esses estados são ignorados pelas posições fiscais"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_merge_wizard__is_group_by_name
@@ -16858,6 +16869,7 @@ msgstr "Dica: Não perca tempo procurando os documentos de que você precisa"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__destination_account_id
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__mail_partner_ids
+#: model_terms:ir.ui.view,arch_db:account.account_move_send_wizard_form
 msgid "To"
 msgstr "Para"
 
@@ -17197,9 +17209,9 @@ msgstr "Transferir para %s"
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
 "Total Receivable amount exceeding a limit."
+"                                      Set a value greater than 0.0 to "
+"activate a credit limit check"
 msgstr ""
-"Acione alertas ao criar faturas e pedidos de venda para usuários com valor "
-"total a receber superior a um certo limite."
 
 #. module: account
 #. odoo-python
@@ -17326,7 +17338,7 @@ msgstr "Estados Unidos da América (genérico)"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Units & Packagings"
-msgstr "Units & Packagings"
+msgstr "Unidades e embalagens"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -17725,6 +17737,12 @@ msgid ""
 msgstr ""
 "Validar a linha de extrato automaticamente (reconciliação com base na sua "
 "regra)."
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/js/tours/account.js:0
+msgid "Validate."
+msgstr "Valide."
 
 #. module: account
 #: model:mail.message.subtype,name:account.mt_invoice_validated
@@ -18167,12 +18185,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move_send.py:0
-msgid "You can only Print & Send sales documents."
-msgstr "Você só pode imprimir e enviar documentos de vendas."
-
-#. module: account
-#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid ""
 "You can only change the period/account for items that are not yet "
@@ -18186,6 +18198,12 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "You can only change the period/account for posted journal items."
 msgstr "Só é possível alterar o período/conta para itens de diário lançados."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid "You can only generate sales documents."
+msgstr "Você só pode gerar documentos de vendas."
 
 #. module: account
 #. odoo-python
@@ -18230,12 +18248,6 @@ msgstr ""
 "Você pode definir aqui a comunicação padrão que aparecerá nas faturas do "
 "cliente, uma vez validadas, para ajudar o cliente a consultar essa fatura "
 "específica ao efetuar o pagamento."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move_send.py:0
-msgid "You can't Print & Send invoices that are not posted."
-msgstr "Não é possível imprimir e enviar faturas que não foram lançadas."
 
 #. module: account
 #. odoo-python
@@ -18318,6 +18330,12 @@ msgstr ""
 #: code:addons/account/models/account_report.py:0
 msgid "You can't delete a report that has variants."
 msgstr "Não é possível excluir um relatório que tem variantes."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid "You can't generate invoices that are not posted."
+msgstr "Não é possível gerar faturas que não foram lançadas."
 
 #. module: account
 #. odoo-python
@@ -19063,7 +19081,7 @@ msgstr "contas de"
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
 msgid "by %s"
-msgstr "by %s"
+msgstr "por %s"
 
 #. module: account
 #. odoo-python
@@ -19108,7 +19126,7 @@ msgstr "com data de vencimento se pago até"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "e-Invoicing & Email"
-msgstr ""
+msgstr "Faturamento eletrônico e e-mail"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
@@ -19130,6 +19148,7 @@ msgstr "ex: GEBABEBB"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_analytic_distribution_model.py:0
+#: code:addons/account/models/account_analytic_plan.py:0
 msgid "e.g. %(prefix)s"
 msgstr "ex.: %(prefix)s"
 

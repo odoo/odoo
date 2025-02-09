@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 08:40+0000\n"
+"POT-Creation-Date: 2025-02-06 13:57+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
@@ -1337,6 +1337,15 @@ msgstr "Archivado"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Are you sure you want to cancel this transfer?"
 msgstr "¿Está seguro de que desea cancelar este traslado?"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/product.py:0
+msgid ""
+"As other units of measure (ex : %(problem_uom)s) than %(uom)s have already "
+"been used for this product, the change of unit of measure can not be done.If"
+" you want to change it, please archive the product and create a new one."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
@@ -9682,19 +9691,6 @@ msgstr ""
 " recomienda cambiar el tipo de producto, ya que puede provocar "
 "incoherencias. Una mejor solución podría ser archivar el producto y crear "
 "uno nuevo."
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/product.py:0
-msgid ""
-"This product has been used in at least one inventory movement. It is not "
-"advised to change the Unit of Measure since it can lead to inconsistencies. "
-"The existing moves will not be recalculated with the new unit of measure."
-msgstr ""
-"Este producto se ha utilizado en al menos un movimiento de inventario. No se"
-" recomienda cambiar la unidad de medida, ya que puede provocar "
-"inconsistencias. Los movimientos existentes no se volverán a calcular con la"
-" nueva unidad de medida."
 
 #. module: stock
 #. odoo-python
