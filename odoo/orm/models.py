@@ -3566,11 +3566,9 @@ class BaseModel(metaclass=MetaModel):
                     # PG 9.2 introduces conflicting pg_size_pretty(numeric) -> need ::cast
                     sql = self._field_to_sql(self._table, field.name, query)
                     sql = SQL("pg_size_pretty(length(%s)::bigint)", sql)
-                elif field.translate and self.env.context.get('prefetch_langs'):
-                    sql = field.to_raw_sql(self, self._table)
                 else:
                     # flushing is necessary to retrieve the en_US value of fields without a translation
-                    sql = self._field_to_sql(self._table, field.name, query, flush=field.translate)
+                    sql = self._field_to_sql(self._table, field.name, query, flush=bool(field.translate))
                 sql_terms.append(sql)
 
             # select the given columns from the rows in the query

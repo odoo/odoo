@@ -717,14 +717,6 @@ class Cache:
         """
         field_cache = self._set_field_cache(record, field)
         record_id = record.id
-
-        if field.translate and value is not None:
-            # only for model translated fields
-            lang = record.env.lang or 'en_US'
-            cache_value = field_cache.get(record_id) or {}
-            cache_value[lang] = value
-            value = cache_value
-
         field_cache[record_id] = value
 
         if not check_dirty:
@@ -756,7 +748,7 @@ class Cache:
         if field.translate:
             # only for model translated fields
             lang = records.env.lang or 'en_US'
-            field_cache = self._get_field_cache(records, field)
+            field_cache = records.with_context(prefetch_langs=True).env._field_cache(field)
             cache_values = []  # type: ignore
             for id_, value in zip(records._ids, values):
                 if value is None:
@@ -773,14 +765,16 @@ class Cache:
         """ This is a variant of method :meth:`~update` without the logic for
         translated fields.
         """
-        field_cache = self._set_field_cache(records, field)
+        if field.translate:
+            records = records.with_context(prefetch_langs=True)
+        field_cache = records.env._field_cache(field)
         field_cache.update(zip(records._ids, values))
         if not check_dirty:
             return
         if dirty:
             assert field.column_type and field.store and all(records._ids)
             self.transaction.dirty[field].update(records._ids)
-            if not field.company_dependent and field in records.pool.field_depends_context:
+            if not field.translate and not field.company_dependent and field in records.pool.field_depends_context:
                 # put the values under conventional context key values {'context_key': None},
                 # in order to ease the retrieval of those values to flush them
                 records = records.with_env(records.env(context={}))
