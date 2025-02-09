@@ -1418,6 +1418,18 @@ class Field(typing.Generic[T]):
         # ```
         collections.deque(map(cache.setdefault, records._ids, values), maxlen=0)
 
+    def _cache_to_prefetch(self, record: BaseModel) -> BaseModel:
+        """ Generator of ids to prefetch that have no value in cache. """
+        ids = expand_ids(record.id, record._prefetch_ids)
+        field_cache = self._get_cache(record.env)
+        prefetch_ids = (id_ for id_ in ids if id_ not in field_cache)
+        return record.browse(itertools.islice(prefetch_ids, PREFETCH_MAX))
+
+    def _cache_missing_ids(self, records: ModelType) -> Iterator[IdType]:
+        """ Generator of ids that have no value in cache. """
+        field_cache = self._get_cache(records.env)
+        return (id_ for id_ in records._ids if id_ not in field_cache)
+
     def _invalidate_cache(self, transaction: Transaction, ids: Collection[IdType] | None) -> None:
         """ Invalidate the cache for the given ids.
 
@@ -1551,7 +1563,7 @@ class Field(typing.Generic[T]):
         #
         if self.store and record_id:
             # real record: fetch from database
-            recs = self._in_cache_without(record, PREFETCH_MAX)
+            recs = self._cache_to_prefetch(record)
             try:
                 recs._fetch_field(self)
             except AccessError:
@@ -1569,7 +1581,7 @@ class Field(typing.Generic[T]):
             # new record with origin: fetch from origin, and assign the
             # records to prefetch in cache (which is necessary for
             # relational fields to "map" prefetching ids to their value)
-            recs = self._in_cache_without(record, PREFETCH_MAX)
+            recs = self._cache_to_prefetch(record)
             try:
                 for rec in recs:
                     if (rec_origin := rec._origin):
@@ -1588,14 +1600,14 @@ class Field(typing.Generic[T]):
                 value = self.convert_to_cache(False, record, validate=False)
                 env.cache.set(record, self, value)
             else:
-                recs = record if self.recursive else self._in_cache_without(record, PREFETCH_MAX)
+                recs = record if self.recursive else self._cache_to_prefetch(record)
                 try:
                     self.compute_value(recs)
                 except (AccessError, MissingError):
                     self.compute_value(record)
                     recs = record
 
-                missing_recs_ids = tuple(env.cache.get_missing_ids(recs, self))
+                missing_recs_ids = tuple(self._cache_missing_ids(recs))
                 if missing_recs_ids:
                     missing_recs = record.browse(missing_recs_ids)
                     if self.readonly and not self.store:
@@ -1639,19 +1651,6 @@ class Field(typing.Generic[T]):
                 env.cache.set(record, self, value)
 
         return self.convert_to_record(value, record)
-
-    def _in_cache_without(self, record: ModelType, limit: int | None = None) -> ModelType:
-        """ Return records to prefetch that have no value in cache. """
-        ids = expand_ids(record.id, record._prefetch_ids)
-        ids = record.env.cache.get_missing_ids(record.browse(ids), self)
-        if limit:
-            ids = itertools.islice(ids, limit)
-        # Those records are aimed at being either fetched, or computed.  But the
-        # method '_fetch_field' is not correct with new records: it considers
-        # them as forbidden records, and clears their cache!  On the other hand,
-        # compute methods are not invoked with a mix of real and new records for
-        # the sake of code simplicity.
-        return record.browse(ids)
 
     def __set__(self, records: BaseModel, value) -> None:
         """ set the value of field ``self`` on ``records`` """

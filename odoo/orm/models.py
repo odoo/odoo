@@ -3505,10 +3505,8 @@ class BaseModel(metaclass=MetaModel):
         if not field_names:
             return []
 
-        cache = self.env.cache
-
         fields_to_fetch: list[Field] = []
-        fields_todo = deque()
+        fields_todo = deque[Field]()
         fields_done = {self._fields['id']}  # trick: ignore 'id'
         for field_name in field_names:
             try:
@@ -3523,7 +3521,7 @@ class BaseModel(metaclass=MetaModel):
             if field in fields_done:
                 continue
             fields_done.add(field)
-            if ignore_when_in_cache and not any(cache.get_missing_ids(self, field)):
+            if ignore_when_in_cache and not any(field._cache_missing_ids(self)):
                 # field is already in cache: don't fetch it
                 continue
             if field.store:
@@ -4166,7 +4164,7 @@ class BaseModel(metaclass=MetaModel):
             for fields in determine_inverses.values():
                 # write again on non-stored fields that have been invalidated from cache
                 for field in fields:
-                    if not field.store and any(self.env.cache.get_missing_ids(real_recs, field)):
+                    if not field.store and any(field._cache_missing_ids(real_recs)):
                         field.write(real_recs, vals[field.name])
 
                 # inverse records that are not being computed

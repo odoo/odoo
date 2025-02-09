@@ -1308,7 +1308,7 @@ class Many2many(_RelationalMulti[M]):
             # is not in cache: one that actually checks access rules for
             # records, and the other one fetching the actual data. We use
             # `self.read` instead to shortcut the first query.
-            missing_ids = list(records.env.cache.get_missing_ids(records, self))
+            missing_ids = tuple(self._cache_missing_ids(records))
             if missing_ids:
                 self.read(records.browse(missing_ids))
 
