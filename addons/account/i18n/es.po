@@ -9,9 +9,9 @@
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
 # Pilar Vargas, 2024
 # Suresh, 2024
-# Larissa Manderfeld, 2025
 # Wil Odoo, 2025
 # jabiri7, 2025
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-27 13:02+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: jabiri7, 2025\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -13982,6 +13982,11 @@ msgid "Set a price."
 msgstr "Establezca un precio."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+msgid "Set a value greater than 0.0 to activate a credit limit check"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
 msgid "Set active to false to hide the Account Tag without removing it."
 msgstr ""
@@ -17037,10 +17042,9 @@ msgstr "Transferir a %s"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
-"Total Receivable amount exceeding a limit."
+"Total Receivable amount exceeding a limit.Set a value greater than 0.0 to "
+"activate a credit limit check"
 msgstr ""
-"Active alertas al crear facturas y pedidos de venta para contactos con un "
-"importe total por cobrar que exceden un límite."
 
 #. module: account
 #. odoo-python
@@ -18037,7 +18041,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can only generate sales documents."
-msgstr ""
+msgstr "Solo puede generar documentos de ventas."
 
 #. module: account
 #. odoo-python
@@ -18167,7 +18171,7 @@ msgstr "No se puede eliminar un informe que tiene variantes"
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can't generate invoices that are not posted."
-msgstr ""
+msgstr "No puede generar facturas que no están publicadas."
 
 #. module: account
 #. odoo-python

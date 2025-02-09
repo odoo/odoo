@@ -1200,7 +1200,7 @@ msgstr "<span> Van </span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "<span> To </span>"
-msgstr "<span> tot </span>"
+msgstr "<span> t/m </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -13964,6 +13964,11 @@ msgid "Set a price."
 msgstr "Stel een prijs vast."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+msgid "Set a value greater than 0.0 to activate a credit limit check"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
 msgid "Set active to false to hide the Account Tag without removing it."
 msgstr ""
@@ -17009,10 +17014,9 @@ msgstr "Overboeken naar %s"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
-"Total Receivable amount exceeding a limit."
+"Total Receivable amount exceeding a limit.Set a value greater than 0.0 to "
+"activate a credit limit check"
 msgstr ""
-"Activeer waarschuwingen bij het maken van facturen en verkooporders voor "
-"partners met een totaal te ontvangen bedrag dat een limiet overschrijdt."
 
 #. module: account
 #. odoo-python
@@ -18010,7 +18014,7 @@ msgstr "Je kunt alleen de periode/rekening van geboekte boekingen wijzigen."
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can only generate sales documents."
-msgstr ""
+msgstr "Je kunt alleen verkoopdocumenten genereren."
 
 #. module: account
 #. odoo-python
@@ -18142,7 +18146,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can't generate invoices that are not posted."
-msgstr ""
+msgstr "Je kunt geen facturen genereren die niet zijn geboekt."
 
 #. module: account
 #. odoo-python

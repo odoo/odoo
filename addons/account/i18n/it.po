@@ -13989,6 +13989,11 @@ msgid "Set a price."
 msgstr "Imposta un prezzo."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+msgid "Set a value greater than 0.0 to activate a credit limit check"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
 msgid "Set active to false to hide the Account Tag without removing it."
 msgstr ""
@@ -17039,10 +17044,9 @@ msgstr "Trasferimento a %s"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
-"Total Receivable amount exceeding a limit."
+"Total Receivable amount exceeding a limit.Set a value greater than 0.0 to "
+"activate a credit limit check"
 msgstr ""
-"Mostra avvisi durante la creazione di fatture e ordini di vendita per i "
-"partner con un importo totale del credito superiore a un limite."
 
 #. module: account
 #. odoo-python
@@ -18041,7 +18045,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can only generate sales documents."
-msgstr ""
+msgstr "Puoi generare solo documenti di vendita."
 
 #. module: account
 #. odoo-python
@@ -18175,7 +18179,7 @@ msgstr "Non è possibile eliminare un rendiconto che presenta varianti."
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can't generate invoices that are not posted."
-msgstr ""
+msgstr "Non è possibile generare fatture non registrate."
 
 #. module: account
 #. odoo-python
