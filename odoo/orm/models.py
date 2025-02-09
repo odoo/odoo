@@ -3327,7 +3327,7 @@ class BaseModel(metaclass=MetaModel):
                 _old_translations = {src: values[lang] for src, values in old_translation_dictionary.items() if lang in values}
                 _new_translations = {**_old_translations, **_translations}
                 new_values[lang] = field.translate(_new_translations.get, old_source_lang_value)
-            self.env.cache.update_raw(self, field, [new_values], dirty=True)
+            field._update_cache(self.with_context(prefetch_langs=True), new_values, dirty=True)
 
         # the following write is incharge of
         # 1. mark field as modified
@@ -3505,10 +3505,8 @@ class BaseModel(metaclass=MetaModel):
         if not field_names:
             return []
 
-        cache = self.env.cache
-
         fields_to_fetch: list[Field] = []
-        fields_todo = deque()
+        fields_todo = deque[Field]()
         fields_done = {self._fields['id']}  # trick: ignore 'id'
         for field_name in field_names:
             try:
@@ -3523,7 +3521,7 @@ class BaseModel(metaclass=MetaModel):
             if field in fields_done:
                 continue
             fields_done.add(field)
-            if ignore_when_in_cache and not any(cache.get_missing_ids(self, field)):
+            if ignore_when_in_cache and not any(field._cache_missing_ids(self)):
                 # field is already in cache: don't fetch it
                 continue
             if field.store:
@@ -3568,11 +3566,9 @@ class BaseModel(metaclass=MetaModel):
                     # PG 9.2 introduces conflicting pg_size_pretty(numeric) -> need ::cast
                     sql = self._field_to_sql(self._table, field.name, query)
                     sql = SQL("pg_size_pretty(length(%s)::bigint)", sql)
-                elif field.translate and self.env.context.get('prefetch_langs'):
-                    sql = field.to_raw_sql(self, self._table)
                 else:
                     # flushing is necessary to retrieve the en_US value of fields without a translation
-                    sql = self._field_to_sql(self._table, field.name, query, flush=field.translate)
+                    sql = self._field_to_sql(self._table, field.name, query, flush=bool(field.translate))
                 sql_terms.append(sql)
 
             # select the given columns from the rows in the query
@@ -3590,10 +3586,9 @@ class BaseModel(metaclass=MetaModel):
             # If we assume that the value of a pending update is in cache, we
             # can avoid flushing pending updates if the fetched values do not
             # overwrite values in cache.
-            for field in column_fields:
-                values = next(column_values)
+            for field, values in zip(column_fields, column_values, strict=True):
                 # store values in cache, but without overwriting
-                self.env.cache.insert_missing(fetched, field, values)
+                field._insert_cache(fetched, values)
         else:
             fetched = self.browse(query)
 
@@ -4167,7 +4162,7 @@ class BaseModel(metaclass=MetaModel):
             for fields in determine_inverses.values():
                 # write again on non-stored fields that have been invalidated from cache
                 for field in fields:
-                    if not field.store and any(self.env.cache.get_missing_ids(real_recs, field)):
+                    if not field.store and any(field._cache_missing_ids(real_recs)):
                         field.write(real_recs, vals[field.name])
 
                 # inverse records that are not being computed
@@ -4577,15 +4572,15 @@ class BaseModel(metaclass=MetaModel):
                 if not field.store:
                     continue
                 if field.type in ('one2many', 'many2many'):
-                    self.env.cache.set(record, field, ())
+                    field._update_cache(record, ())
                 elif field.name not in set_vals:
-                    self.env.cache.set(record, field, None)
+                    field._update_cache(record, None)
 
             for fname, value in vals.items():
                 field = self._fields[fname]
                 if field.type not in ('one2many', 'many2many'):
                     cache_value = field.convert_to_cache(value, record)
-                    self.env.cache.set(record, field, cache_value)
+                    field._update_cache(record, cache_value)
                     if field.type in ('many2one', 'many2one_reference') and self.pool.field_inverses[field]:
                         inverses_update[(field, cache_value)].append(record.id)
 
@@ -4632,7 +4627,7 @@ class BaseModel(metaclass=MetaModel):
         if not self._parent_store:
             return
 
-        self._cr.execute(SQL(
+        updated = self.env.execute_query(SQL(
             """ UPDATE %(table)s node
                 SET parent_path=concat((
                         SELECT parent.parent_path
@@ -4647,9 +4642,9 @@ class BaseModel(metaclass=MetaModel):
         ))
 
         # update the cache of updated nodes, and determine what to recompute
-        updated = dict(self._cr.fetchall())
-        records = self.browse(updated)
-        self.env.cache.update(records, self._fields['parent_path'], updated.values())
+        field = self._fields['parent_path']
+        for id_, path in updated:
+            field._update_cache(self.browse(id_), path)
 
     def _parent_store_update_prepare(self, vals_list: list[ValuesType]) -> Self:
         """ Return the records in ``self`` that must update their parent_path
@@ -4699,7 +4694,7 @@ class BaseModel(metaclass=MetaModel):
                     raise UserError(_("Recursion Detected."))
 
             # update parent_path of all records and their descendants
-            rows = self.env.execute_query(SQL(
+            updated = dict(self.env.execute_query(SQL(
                 """ UPDATE %(table)s child
                     SET parent_path = concat(%(prefix)s, substr(child.parent_path,
                             length(node.parent_path) - length(node.id || '/') + 1))
@@ -4711,12 +4706,13 @@ class BaseModel(metaclass=MetaModel):
                 prefix=prefix,
                 ids=tuple(records.ids),
                 wildcard='%',
-            ))
+            )))
 
             # update the cache of updated nodes, and determine what to recompute
-            updated = dict(rows)
+            field = self._fields['parent_path']
+            for id_, path in updated.items():
+                field._update_cache(self.browse(id_), path)
             records = self.browse(updated)
-            self.env.cache.update(records, self._fields['parent_path'], updated.values())
             records.modified(['parent_path'])
 
     def _clean_properties(self) -> None:
@@ -5754,7 +5750,6 @@ class BaseModel(metaclass=MetaModel):
             :param validate: whether values must be checked
         """
         self.ensure_one()
-        cache = self.env.cache
         fields = self._fields
         try:
             field_values = [(fields[name], value) for name, value in values.items() if name != 'id']
@@ -5764,7 +5759,7 @@ class BaseModel(metaclass=MetaModel):
         # convert monetary fields after other columns for correct value rounding
         for field, value in sorted(field_values, key=lambda item: item[0].write_sequence):
             value = field.convert_to_cache(value, self, validate)
-            cache.set(self, field, value, check_dirty=False)
+            field._update_cache(self, value)
 
             # set inverse fields on new records in the comodel
             if field.relational:
@@ -5774,7 +5769,7 @@ class BaseModel(metaclass=MetaModel):
                 # we need to adapt the value of the inverse fields to integrate self into it:
                 # x2many fields should add self, while many2one fields should replace with self
                 for invf in self.pool.field_inverses[field]:
-                    invf._update(inv_recs, self)
+                    invf._update_inverse(inv_recs, self)
 
     def _convert_to_record(self, values):
         """ Convert the ``values`` dictionary from the cache format to the
@@ -6142,7 +6137,9 @@ class BaseModel(metaclass=MetaModel):
         :param fnames: optional iterable of field names to flush
         """
         self._recompute_model(fnames)
-        self._flush(fnames)
+        dirty_fields = self.env._field_dirty
+        if fnames is None or any(self._fields[fname] in dirty_fields for fname in fnames):
+            self._flush()
 
     @api.private
     def flush_recordset(self, fnames: Collection[str] | None = None) -> None:
@@ -6153,42 +6150,32 @@ class BaseModel(metaclass=MetaModel):
 
         :param fnames: optional iterable of field names to flush
         """
+        if not self:
+            return
         self._recompute_recordset(fnames)
-        fields_ = None if fnames is None else (self._fields[fname] for fname in fnames)
-        if self.env.cache.has_dirty_fields(self, fields_):
-            self._flush(fnames)
-
-    def _flush(self, fnames: Collection[str] | None = None) -> None:
         if fnames is None:
             fields = self._fields.values()
         else:
             fields = [self._fields[fname] for fname in fnames]
+        ids = set(self._ids)
+        dirty_fields = self.env._field_dirty
+        if not all(ids.isdisjoint(dirty_fields.get(field, ())) for field in fields):
+            self._flush()
 
-        dirty_fields = self.env.cache.get_dirty_fields()
-        if not any(field in dirty_fields for field in fields):
+    def _flush(self) -> None:
+        # pop dirty fields and their corresponding record ids from cache
+        dirty_fields = self.env._field_dirty
+        dirty_field_ids = {
+            field: ids
+            for field in self._fields.values()
+            if (ids := dirty_fields.pop(field, None))
+        }
+        if not dirty_field_ids:
             return
 
-        # if any field is context-dependent, the values to flush should
-        # be found with a context where the context keys are all None
-        model = self.with_context({})
-
-        # pop dirty fields and their corresponding record ids from cache
-        dirty_field_ids = {
-            field: self.env.cache.clear_dirty_field(field)
-            for field in model._fields.values()
-            if field in dirty_fields
-        }
-        # Memory optimization: get a reference to each dirty field's cache.
-        # This avoids allocating extra memory for storing the data taken
-        # from cache. Beware that this breaks the cache abstraction!
-        dirty_field_cache = {
-            field: (
-                self.env.cache._get_field_cache(model, field)
-                if not field.company_dependent else
-                self.env.cache._get_grouped_company_dependent_field_cache(field)
-            )
-            for field in dirty_field_ids
-        }
+        # for context-dependent fields, `get_column_update` contains the
+        # logic to find which value to flush
+        model = self
 
         # sort dirty record ids so that records with the same set of modified
         # fields are grouped together; for that purpose, map each dirty id to
@@ -6196,7 +6183,7 @@ class BaseModel(metaclass=MetaModel):
         dirty_ids = sorted(
             OrderedSet(id_ for ids in dirty_field_ids.values() for id_ in ids),
             key=lambda id_: sum(
-                2 ** field_index
+                1 << field_index
                 for field_index, ids in enumerate(dirty_field_ids.values())
                 if id_ in ids
             ),
@@ -6210,7 +6197,7 @@ class BaseModel(metaclass=MetaModel):
                 for id_ in some_ids:
                     record = model.browse((id_,))
                     vals_list.append({
-                        f.name: f.convert_to_column_update(dirty_field_cache[f][id_], record)
+                        f.name: f.get_column_update(record)
                         for f, ids in dirty_field_ids.items()
                         if id_ in ids
                     })
@@ -6531,14 +6518,14 @@ class BaseModel(metaclass=MetaModel):
             fields = self._fields.values()
         else:
             fields = [self._fields[fname] for fname in fnames]
-        spec = []
+
+        env = self.env
         for field in fields:
-            spec.append((field, ids))
+            field._invalidate_cache(env, ids)
             # TODO VSC: used to remove the inverse of many_to_one from the cache, though we might not need it anymore
             for invf in self.pool.field_inverses[field]:
                 self.env[invf.model_name].flush_model([invf.name])
-                spec.append((invf, None))
-        self.env.cache.invalidate(spec)
+                invf._invalidate_cache(env)
 
     @api.private
     def modified(self, fnames: Collection[str], create: bool = False, before: bool = False) -> None:
@@ -6603,7 +6590,9 @@ class BaseModel(metaclass=MetaModel):
                     ids = (marked.get(field) or set()) | (tomark.get(field) or set())
                     records = records.browse(id_ for id_ in records._ids if id_ not in ids)
                 else:
-                    records = records & self.env.cache.get_records(records, field, all_contexts=True)
+                    # get only records that have a value in cache (in any context)
+                    ids_in_cache = field._get_all_cache_ids(self.env)
+                    records = records.browse(id_ for id_ in records._ids if id_ in ids_in_cache)
                 if not records:
                     continue
                 # recursively trigger recomputation of field's dependents
@@ -6615,7 +6604,7 @@ class BaseModel(metaclass=MetaModel):
             else:
                 # Don't force the recomputation of compute fields which are
                 # not stored as this is not really necessary.
-                self.env.cache.invalidate([(field, records._ids)])
+                field._invalidate_cache(self.env, records._ids)
 
         if before:
             # effectively mark for recomputation now
@@ -6628,7 +6617,6 @@ class BaseModel(metaclass=MetaModel):
         traversing backwards field dependencies along the way, and yielding
         tuple ``(field, records, created)`` to recompute.
         """
-        cache = self.env.cache
 
         # The fields' trigger trees are merged in order to evaluate all triggers
         # at once. For non-stored computed fields, `_modified_triggers` might
@@ -6638,7 +6626,7 @@ class BaseModel(metaclass=MetaModel):
         # This allows us to discard subtrees from the merged tree when they
         # only contain such fields.
         def select(field):
-            return (field.compute and field.store) or cache.contains_field(field)
+            return (field.compute and field.store) or bool(field._get_all_cache_ids(self.env))
 
         tree = self.pool.get_trigger_tree(fields, select=select)
         if not tree:
@@ -6697,7 +6685,8 @@ class BaseModel(metaclass=MetaModel):
                 if real_records:
                     records = model.search([(field.name, 'in', real_records.ids)], order='id')
                 if new_records:
-                    cache_records = self.env.cache.get_records(model, field)
+                    field_cache = field._get_cache(model.env)
+                    cache_records = model.browse(field_cache)
                     new_ids = set(self._ids)
                     records |= cache_records.filtered(lambda r: not set(r[field.name]._ids).isdisjoint(new_ids))
 
@@ -6798,24 +6787,30 @@ class RecordCache(Mapping[str, typing.Any]):
     """ A mapping from field names to values, to read the cache of a record. """
     __slots__ = ['_record']
 
-    def __init__(self, record):
+    def __init__(self, record: BaseModel):
         assert len(record) == 1, "Unexpected RecordCache(%s)" % record
         self._record = record
 
     def __contains__(self, name):
         """ Return whether `record` has a cached value for field ``name``. """
-        field = self._record._fields[name]
-        return self._record.env.cache.contains(self._record, field)
+        record = self._record
+        field = record._fields[name]
+        return record.id in field._get_cache(record.env)
 
     def __getitem__(self, name):
         """ Return the cached value of field ``name`` for `record`. """
-        field = self._record._fields[name]
-        return self._record.env.cache.get(self._record, field)
+        record = self._record
+        field = record._fields[name]
+        return field._get_cache(record.env)[record.id]
 
     def __iter__(self):
         """ Iterate over the field names with a cached value. """
-        for field in self._record.env.cache.get_fields(self._record):
-            yield field.name
+        record = self._record
+        id_ = record.id
+        env = record.env
+        for name, field in record._fields.items():
+            if id_ in field._get_cache(env):
+                yield name
 
     def __len__(self):
         """ Return the number of fields with a cached value. """
