@@ -1857,6 +1857,7 @@ export class ListRenderer extends Component {
         this.saveOptionalActiveFields(
             this.allColumns.filter((col) => this.optionalActiveFields[col.name] && col.optional)
         );
+        this.columns = this.getActiveColumns(this.props.list);
         this.render();
     }
 
