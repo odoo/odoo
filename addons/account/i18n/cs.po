@@ -8,11 +8,11 @@
 # Jiří Podhorecký <jirka.p@volny.cz>, 2024
 # Marta Wacławek, 2024
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
-# Stanislav Kurinec, 2025
 # Wil Odoo, 2025
 # Michael Svoboda, 2025
 # Jakub Smolka, 2025
 # Tomáš Píšek, 2025
+# Stanislav Kurinec, 2025
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-27 13:02+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Tomáš Píšek, 2025\n"
+"Last-Translator: Stanislav Kurinec, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -8241,7 +8241,7 @@ msgstr "K potvrzení této faktury je třeba"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "In payment"
-msgstr ""
+msgstr "V platbě"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -10685,7 +10685,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Not Sent"
-msgstr ""
+msgstr "Neodesláno"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_secure_entries_wizard
@@ -12206,7 +12206,7 @@ msgstr "Tisk"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Print & Send"
-msgstr ""
+msgstr "Vytisknout a odeslat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__print_on_new_page
@@ -13464,7 +13464,7 @@ msgstr "Prodej a nákup produktů v různých měrných jednotkách"
 #: model_terms:ir.ui.view,arch_db:account.view_out_credit_note_tree
 #: model_terms:ir.ui.view,arch_db:account.view_out_invoice_tree
 msgid "Send"
-msgstr "Odchozí"
+msgstr "Odeslat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__allow_out_payment
@@ -13688,6 +13688,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Set a price."
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+msgid "Set a value greater than 0.0 to activate a credit limit check"
 msgstr ""
 
 #. module: account
@@ -16351,7 +16356,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "To pay"
-msgstr ""
+msgstr "K zaplacení"
 
 #. module: account
 #. odoo-python
@@ -16630,10 +16635,9 @@ msgstr "Převést na %s"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
-"Total Receivable amount exceeding a limit."
+"Total Receivable amount exceeding a limit.Set a value greater than 0.0 to "
+"activate a credit limit check"
 msgstr ""
-"Spustí upozornění při vytváření faktur a prodejních objednávek pro partnery,"
-" u kterých celková výše pohledávek překračuje limit."
 
 #. module: account
 #. odoo-python

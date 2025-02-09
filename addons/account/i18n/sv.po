@@ -62,7 +62,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Flytten (%(move)s) är inte balanserad.\n"
+"Verifikatet (%(move)s) är inte balanserad.\n"
 "Summan av debiteringar är lika med %(debit_total)s och summan av krediteringar är lika med %(credit_total)s.\n"
 "Du kanske vill ange ett standardkonto på verifikatet \"%(journal)s\" för att automatiskt balansera varje flytt."
 
@@ -1792,7 +1792,7 @@ msgstr "Skicka Transaktioner"
 #. module: account
 #: model:ir.model,name:account.model_account_move_send_batch_wizard
 msgid "Account Move Send Batch Wizard"
-msgstr "Guiden Flytta konto Skicka Batch"
+msgstr "Guiden skicka verifikat i bakgrunden"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_send_wizard
@@ -5201,7 +5201,7 @@ msgstr "Kreditgränser"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__credit_move_id
 msgid "Credit Move"
-msgstr "Krediten flyttar"
+msgstr "Kreditverifikat"
 
 #. module: account
 #. odoo-python
@@ -5718,7 +5718,7 @@ msgstr "Debet Belopp Valuta"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__debit_move_id
 msgid "Debit Move"
-msgstr "Debitering Flyttning"
+msgstr "Debitverifikat"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_debit_ids
@@ -6965,7 +6965,7 @@ msgstr "Valutavinst- eller förlustjournal"
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__exchange_move_id
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__exchange_move_id
 msgid "Exchange Move"
-msgstr "Valutaflytt"
+msgstr "Valutaverifikat"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -12988,7 +12988,7 @@ msgstr "Återföringsdatum"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reversal_move_ids
 #: model:ir.model.fields,field_description:account.field_account_move__reversal_move_ids
 msgid "Reversal Move"
-msgstr "Återkalla Flytt"
+msgstr "Vänd verifikat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date
@@ -13795,13 +13795,18 @@ msgstr "Ställ in perioder"
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 msgid "Set a date. The moves will be secured up to including this date."
 msgstr ""
-"Fastställ ett datum. Flyttarna kommer att säkras fram till och med detta "
+"Fastställ ett datum. Verifikaten kommer att säkras fram till och med detta "
 "datum."
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Set a price."
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+msgid "Set a value greater than 0.0 to activate a credit limit check"
 msgstr ""
 
 #. module: account
@@ -16819,10 +16824,9 @@ msgstr "Överför till %s"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
-"Total Receivable amount exceeding a limit."
+"Total Receivable amount exceeding a limit.Set a value greater than 0.0 to "
+"activate a credit limit check"
 msgstr ""
-"Utlösa varningar när du skapar fakturor och försäljningsorder för partners "
-"med ett totalt fordringsbelopp som överstiger en gräns."
 
 #. module: account
 #. odoo-python
@@ -17337,7 +17341,7 @@ msgstr "Validera"
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move
 msgid "Validate Account Move"
-msgstr "Bekräfta flytt av konto"
+msgstr "Bokför verifikat"
 
 #. module: account
 #: model:res.groups,name:account.group_validate_bank_account
@@ -18064,8 +18068,8 @@ msgid ""
 "You cannot create a fiscal position with a foreign VAT within your fiscal "
 "country without assigning it a state."
 msgstr ""
-"Du kan inte skapa en skatteposition med utländsk moms inom ditt skatteland "
-"utan att tilldela det en stat."
+"Du kan inte skapa en nytt skatteområde med utländsk moms inom ditt "
+"skatteområde utan att tilldela det en stat."
 
 #. module: account
 #. odoo-python
@@ -18074,8 +18078,8 @@ msgid ""
 "You cannot create a move already in the posted state. Please create a draft "
 "move and post it after."
 msgstr ""
-"Du kan inte skapa en flytt redan i postat tillstånd. Vänligen skapa ett "
-"utkast, flytta och posta det sedan."
+"Du kan inte ändra ett bokfört verifikat. Vänligen skapa ett nytt och bokför "
+"det sedan."
 
 #. module: account
 #. odoo-python
