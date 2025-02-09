@@ -1243,12 +1243,13 @@ class WorkerCron(Worker):
         if not self.db_queue:
             # list databases
             db_names = OrderedSet(cron_database_list())
+            pg_conn = self.dbcursor._cnx
             notified = OrderedSet(
                 notif.payload
-                for notif in self.dbcursor.notifies
+                for notif in pg_conn.notifies
                 if notif.channel == 'cron_trigger'
             )
-            self.dbcursor.notifies.clear()  # free resources
+            pg_conn.notifies.clear()  # free resources
             # add notified databases (in order) first in the queue
             self.db_queue.extend(db for db in notified if db in db_names)
             self.db_queue.extend(db for db in db_names if db not in notified)
