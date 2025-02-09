@@ -6127,7 +6127,9 @@ class BaseModel(metaclass=MetaModel):
         :param fnames: optional iterable of field names to flush
         """
         self._recompute_model(fnames)
-        self._flush(fnames)
+        dirty_fields = self.env._field_dirty
+        if fnames is None or any(self._fields[fname] in dirty_fields for fname in fnames):
+            self._flush()
 
     @api.private
     def flush_recordset(self, fnames: Collection[str] | None = None) -> None:
@@ -6138,31 +6140,37 @@ class BaseModel(metaclass=MetaModel):
 
         :param fnames: optional iterable of field names to flush
         """
+        ids = self._ids
+        if not ids:
+            return
         self._recompute_recordset(fnames)
-        fields_ = None if fnames is None else (self._fields[fname] for fname in fnames)
-        if self.env.cache.has_dirty_fields(self, fields_):
-            self._flush(fnames)
-
-    def _flush(self, fnames: Collection[str] | None = None) -> None:
         if fnames is None:
             fields = self._fields.values()
         else:
             fields = [self._fields[fname] for fname in fnames]
+        dirty_fields = self.env._field_dirty
+        if any(
+            not dirty_fields[field].isdisjoint(ids)
+            for field in fields
+            if field in dirty_fields
+        ):
+            self._flush()
 
-        dirty_fields = self.env.cache.get_dirty_fields()
-        if not any(field in dirty_fields for field in fields):
+    def _flush(self) -> None:
+        # pop dirty fields and their corresponding record ids from cache
+        dirty_fields = self.env._field_dirty
+        dirty_field_ids = {
+            field: ids
+            for field in self._fields.values()
+            if (ids := dirty_fields.pop(field, None))
+        }
+        if not dirty_field_ids:
             return
 
         # if any field is context-dependent, the values to flush should
         # be found with a context where the context keys are all None
         model = self.with_context({})
 
-        # pop dirty fields and their corresponding record ids from cache
-        dirty_field_ids = {
-            field: self.env.cache.clear_dirty_field(field)
-            for field in model._fields.values()
-            if field in dirty_fields
-        }
         # Memory optimization: get a reference to each dirty field's cache.
         # This avoids allocating extra memory for storing the data taken
         # from cache. Beware that this breaks the cache abstraction!
@@ -6181,7 +6189,7 @@ class BaseModel(metaclass=MetaModel):
         dirty_ids = sorted(
             OrderedSet(id_ for ids in dirty_field_ids.values() for id_ in ids),
             key=lambda id_: sum(
-                2 ** field_index
+                1 << field_index
                 for field_index, ids in enumerate(dirty_field_ids.values())
                 if id_ in ids
             ),

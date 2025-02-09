@@ -363,7 +363,7 @@ class Environment(Mapping[str, "BaseModel"]):
     def flush_all(self) -> None:
         """ Flush all pending computations and updates to the database. """
         self._recompute_all()
-        for model_name in OrderedSet(field.model_name for field in self.cache.get_dirty_fields()):
+        for model_name in OrderedSet(field.model_name for field in self._field_dirty):
             self[model_name].flush_model()
 
     def is_protected(self, field: Field, record: BaseModel) -> bool:
@@ -480,6 +480,11 @@ class Environment(Mapping[str, "BaseModel"]):
             result = tuple(get(key) for key in self.registry.field_depends_context[field])
             self._cache_key[field] = result
             return result
+
+    @lazy_property
+    def _field_dirty(self):
+        """ Map fields to set of dirty ids. """
+        return self.transaction.dirty
 
     @lazy_property
     def _field_depends_context(self):
@@ -956,15 +961,18 @@ class Cache:
 
     def get_dirty_fields(self) -> Collection[Field]:
         """ Return the fields that have dirty records in cache. """
+        warnings.warn("Since 19.0, don't use Cache to manipulate dirty fields")
         return self.transaction.dirty.keys()
 
     def filtered_dirty_records(self, records: BaseModel, field: Field) -> BaseModel:
         """ Filtered ``records`` where ``field`` is dirty. """
+        warnings.warn("Since 19.0, don't use Cache to manipulate dirty fields")
         dirties = self.transaction.dirty.get(field, ())
         return records.browse(id_ for id_ in records._ids if id_ in dirties)
 
     def filtered_clean_records(self, records: BaseModel, field: Field) -> BaseModel:
         """ Filtered ``records`` where ``field`` is not dirty. """
+        warnings.warn("Since 19.0, don't use Cache to manipulate dirty fields")
         dirties = self.transaction.dirty.get(field, ())
         return records.browse(id_ for id_ in records._ids if id_ not in dirties)
 
@@ -974,6 +982,7 @@ class Cache:
         :param fields: a collection of fields or ``None``; the value ``None`` is
             interpreted as any field on ``records``
         """
+        warnings.warn("Since 19.0, don't use Cache to manipulate dirty fields")
         if fields is None:
             return any(
                 not ids.isdisjoint(records._ids)
@@ -990,6 +999,7 @@ class Cache:
         """ Make the given field clean on all records, and return the ids of the
         formerly dirty records for the field.
         """
+        warnings.warn("Since 19.0, don't use Cache to manipulate dirty fields")
         return self.transaction.dirty.pop(field, ())
 
     def invalidate(self, spec: Collection[tuple[Field, Collection[IdType] | None]] | None = None) -> None:

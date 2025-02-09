@@ -202,9 +202,10 @@ class BaseString(Field[str | typing.Literal[False]]):
         records = cache.get_records_different_from(records, self, cache_value)
         if not records:
             return
+        dirty_ids = records.env._field_dirty.get(self, ())
 
         # flush dirty None values
-        dirty_records = cache.filtered_dirty_records(records, self)
+        dirty_records = records.filtered(lambda rec: rec.id in dirty_ids)
         if any(v is None for v in cache.get_values(dirty_records, self)):
             dirty_records.flush_recordset([self.name])
 
@@ -219,7 +220,7 @@ class BaseString(Field[str | typing.Literal[False]]):
         # model translation
         if not callable(self.translate):
             # invalidate clean fields because them may contain fallback value
-            clean_records = cache.filtered_clean_records(records, self)
+            clean_records = records.filtered(lambda rec: rec.id not in dirty_ids)
             clean_records.invalidate_recordset([self.name])
             cache.update(records, self, itertools.repeat(cache_value), dirty=True)
             if lang != 'en_US' and not records.env['res.lang']._get_data(code='en_US'):
