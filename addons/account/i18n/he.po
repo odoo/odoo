@@ -10014,7 +10014,7 @@ msgstr "ניתן להדפיס רק חשבוניות."
 #: model:ir.model.fields,help:account.field_account_payment_register__group_payment
 msgid ""
 "Only one payment will be created by partner (bank), instead of one per bill."
-msgstr ""
+msgstr "רק תשלום אחד ייווצר על ידי שותף (בנק), במקום אחד לכל חשבון."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__period_lock_date
@@ -12240,6 +12240,9 @@ msgid ""
 "analytic default (e.g. create new customer invoice or Sales order if we "
 "select this product, it will automatically take this as an analytic account)"
 msgstr ""
+"בחר קטגוריית מוצר שתשתמש בחשבון אנליטי שצוין כברירת מחדל אנליטית (לדוגמה, "
+"צור חשבונית לקוח חדשה או הזמנת מכירות אם נבחר במוצר זה, הוא ייקח זאת באופן "
+"אוטומטי כחשבון אנליטי)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_distribution_model__product_id
@@ -12489,6 +12492,12 @@ msgstr "שירותים"
 #, python-format
 msgid "Set a price"
 msgstr "קבע מחיר"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+#: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+msgid "Set a value greater than 0.0 to activate a credit limit check"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -13501,7 +13510,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move__bank_partner_id
 #: model:ir.model.fields,help:account.field_account_payment__bank_partner_id
 msgid "Technical field to get the domain on the bank"
-msgstr ""
+msgstr "שדה טכני כדי לקבל את הדומיין על הבנק"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence_override_regex
@@ -13607,7 +13616,7 @@ msgstr ""
 msgid ""
 "The Availability is set to 'Country Matches' but the field Country is not "
 "set."
-msgstr ""
+msgstr "הזמינות מוגדרת ל'התאמת מדינה' אך השדה מדינה לא מוגדר."
 
 #. module: account
 #. odoo-python
@@ -13694,6 +13703,8 @@ msgid ""
 "The account selected on your journal entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account."
 msgstr ""
+"החשבון שנבחר ברישום היומן שלך מאלץ לספק מטבע משני. עליך להסיר את המטבע המשני"
+" בחשבון."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__journal_id
@@ -14128,7 +14139,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The move could not be posted for the following reason: %(error_message)s"
-msgstr ""
+msgstr "לא היה ניתן לפרסם את התנועה הזאת מהסיבה הבאה:"
 
 #. module: account
 #. odoo-javascript
@@ -14364,14 +14375,14 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move_line__amount_residual
 msgid ""
 "The residual amount on a journal item expressed in the company currency."
-msgstr ""
+msgstr "הסכום הנותר על פריט יומן מבוטא בשער מטבע החברה."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "The running balance (%s) doesn't match the specified ending balance."
-msgstr ""
+msgstr "היתרה הפעילה (%s) אינה תואמת את יתרת הסיום שצוינה."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -14867,7 +14878,7 @@ msgstr "תנועה זו מוגדרת לרישום אוטומטי ב- %s"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "This move is configured to be posted automatically at the accounting date:"
-msgstr ""
+msgstr "תנועה זו מוגדרת לרישום אוטומטי בתאריך החשבונאי:"
 
 #. module: account
 #. odoo-python

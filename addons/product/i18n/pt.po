@@ -7,16 +7,15 @@
 # Diogo Fonseca <dsf@thinkopensolutions.pt>, 2022
 # Daniel C Santos <dcs@thinkopensolutions.pt>, 2022
 # Pedro Castro Silva <pedrocs@exo.pt>, 2022
+# Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2022
 # Luiz Fernando <lfpsgs@outlook.com>, 2022
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2022
-# Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2022
 # Pedro Filipe <pedro2.10@hotmail.com>, 2022
 # Nuno Silva <nuno.silva@arxi.pt>, 2022
 # Martin Trigaux, 2022
 # Mónica Pinheiro, 2023
 # Manuela Silva <mmsrs@sky.com>, 2023
 # Rita Bastos, 2024
-# Samuel Afonso, 2024
 # Maitê Dietze, 2024
 # Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2025
 # 
@@ -270,9 +269,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Um produto armazenável é um produto no qual você pode gerenciar o estoque. O aplicativo Inventário deve ser instalado.\n"
-"Um produto consumível é um produto para o qual o estoque não é gerenciado.\n"
-"Um serviço é um produto não material que você fornece."
+"Um artigo armazenável é um artigo que pode gerir em inventário. O módulo de Inventário deve estar instalado.\n"
+"Um artigo consumível é um artigo para o qual a quantidade em armazém não é gerida.\n"
+"Um serviço é um artigo não tangível que você fornece."
 
 #. module: product
 #: model:product.template,name:product.product_product_25_product_template
@@ -700,7 +699,7 @@ msgid ""
 "Consumables are physical products for which you don't manage the inventory "
 "level: they are always available."
 msgstr ""
-"Consumíveis são produtos físicos que não são geridos no inventário: "
+"Consumíveis são artigos físicos que não são geridos no inventário: "
 "consideram-se sempre disponíveis."
 
 #. module: product
@@ -777,7 +776,7 @@ msgstr "Criar novo artigo"
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
 #: model_terms:ir.actions.act_window,help:product.product_variant_action
 msgid "Create a new product variant"
-msgstr "Criar uma nova variante do produto"
+msgstr "Criar uma nova variante do artigo"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_uid
@@ -1333,7 +1332,7 @@ msgstr ""
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Import Template for Products"
-msgstr "Importar modelo de produtos"
+msgstr "Modelo de Importação para Artigos"
 
 #. module: product
 #. odoo-python
@@ -1408,7 +1407,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template__is_product_variant
 msgid "Is a product variant"
-msgstr "É uma variante de produto"
+msgstr "É uma variante de artigo"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_custom
@@ -1998,7 +1997,7 @@ msgstr "Imprimir Etiquetas"
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 msgid "Product"
-msgstr "Produto"
+msgstr "Artigo"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute
@@ -2064,7 +2063,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Product Name"
-msgstr "Nome do Produto"
+msgstr "Nome do Artigo"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__packaging_ids
@@ -2119,7 +2118,7 @@ msgstr "Etiquetas do Artigo"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__product_tmpl_id
 #: model_terms:ir.ui.view,arch_db:product.product_search_form_view
 msgid "Product Template"
-msgstr "Modelo de Produto"
+msgstr "Modelo de Artigo"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_exclusion
@@ -2134,7 +2133,7 @@ msgstr "Linha de Atributo do Modelo de Artigo"
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_value
 msgid "Product Template Attribute Value"
-msgstr "Valor de Atributo do Modelo de Produto"
+msgstr "Valor de Atributo do Modelo de Artigo"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -2187,7 +2186,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_activity
 msgid "Product Variants"
-msgstr "Variantes de Produto"
+msgstr "Variantes de Artigo"
 
 #. module: product
 #. odoo-python
@@ -3237,8 +3236,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
-"Você deve definir um produto para tudo o que você vende ou compra,\n"
-"                seja um produto armazenável, consumível, ou um serviço."
+"Deve definir um artigo para tudo o que vende ou compra,\n"
+"                seja um artigo armazenável, consumível, ou um serviço."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_variant_action

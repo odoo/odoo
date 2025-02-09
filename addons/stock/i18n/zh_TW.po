@@ -3274,7 +3274,7 @@ msgstr "高(Z)"
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_positive_height
 msgid "Height must be positive"
-msgstr "高度必須是正數"
+msgstr "高度必須是大於 0 的正數"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__snoozed_until
@@ -4268,7 +4268,7 @@ msgstr "長度"
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_positive_length
 msgid "Length must be positive"
-msgstr "長度必須大於0"
+msgstr "長度必須是大於 0 的正數"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__length_uom_name
@@ -4604,7 +4604,7 @@ msgstr "最大重量"
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_positive_max_weight
 msgid "Max Weight must be positive"
-msgstr "最大重量必須是正數"
+msgstr "重量上限必須是大於 0 的正數"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_positive_max_weight
@@ -6936,8 +6936,8 @@ msgid ""
 "Reusable boxes are used for batch picking and emptied afterwards to be reused. In the barcode application, scanning a reusable box will add the products in this box.\n"
 "        Disposable boxes aren't reused, when scanning a disposable box in the barcode application, the contained products are added to the transfer."
 msgstr ""
-"可重複使用的包裝用於批量揀選，然後清空以重複使用.在條碼模組中，掃描可重複使用的包裝將增加此包裝中的產品.\n"
-"        一次性包裝不會重複使用，在條碼模組中掃描一次性包裝時，包含的產品會添加到調撥中."
+"可重複使用的包裝用於批量揀選，然後清空以重複使用.在條碼模組中，掃瞄可重複使用的包裝將增加此包裝中的產品.\n"
+"        一次性包裝不會重複使用，在條碼模組中掃瞄一次性包裝時，包含的產品會添加到調撥中."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
@@ -7577,7 +7577,7 @@ msgstr "尺寸"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
 msgid "Size: Length × Width × Height"
-msgstr "尺寸: 長×寬×高"
+msgstr "尺寸：長 × 寬 × 高"
 
 #. module: stock
 #. odoo-javascript
@@ -8099,7 +8099,7 @@ msgstr "將根據此提前期計算建立調撥的預期日期."
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__sequence
 msgid "The first in the sequence is the default one."
-msgstr "第一個序列中是預設的."
+msgstr "預設使用序列中的第一個項目。"
 
 #. module: stock
 #. odoo-javascript
@@ -9471,7 +9471,7 @@ msgstr "寬"
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_positive_width
 msgid "Width must be positive"
-msgstr "寬度必須是正數"
+msgstr "寬度必須是大於 0 的正數"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__wizard_id

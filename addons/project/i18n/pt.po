@@ -334,7 +334,7 @@ msgstr ""
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "<b>Drag &amp; drop</b> the card to change your task from stage."
-msgstr ""
+msgstr "<b>Arraste &amp; solte</b> o cartão para mudar a sua tarefa de etapa."
 
 #. module: project
 #. odoo-javascript
@@ -412,6 +412,68 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"></t>\n"
+"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"></t>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
+"    <tbody>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            <t t-if=\"partner.name\">\n"
+"                Olá <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br><br>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                Olá,<br><br>\n"
+"            </t>\n"
+"            Por favor, reserve um momento para avaliar os nossos serviços relacionados com a tarefa\"<strong t-out=\"object.name or ''\">Planeamento e orçamento</strong>\"\n"
+"            <t t-if=\"object._rating_get_operator().name\">\n"
+"                atribuída a <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                .<br>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"        <tr><td style=\"text-align: center;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <strong>Diga-nos o que achou do nosso serviço</strong><br>\n"
+"                    <span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(clique num dos smileys)</span>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <table style=\"width:100%;text-align:center;margin-top:2rem;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/5\">\n"
+"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\">\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/3\">\n"
+"                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\">\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/1\">\n"
+"                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\">\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td></tr>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            Agradecemos os seus comentários, Ajuda-nos a melhorar continuamente.\n"
+"            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
+"                <br><br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Este inquérito a cliente foi enviado porque a sua tarefa mudou para a etapa <b t-out=\"object.stage_id.name or ''\">Em progresso</b></span>\n"
+"            </t>\n"
+"            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
+"                <br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Este inquérito a cliente é enviado <b t-out=\"object.project_id.rating_status_period or ''\">Semanalmente</b> enquanto a tarefa se encontrar na etapa <b t-out=\"object.stage_id.name or ''\">Em progresso</b>.</span>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"    </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.project_done_email_template
@@ -427,6 +489,16 @@ msgid ""
 "<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    Caro(a) <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br>\n"
+"    Tenho o prazer de o informar que concluímos o projeto com sucesso \"<strong t-out=\"object.name or ''\">Renovações</strong>\".\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">Está a receber este e-mail porque o seu projecto mudou para a fase <b t-out=\"object.stage_id.name or ''\">Concluído</b></span>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -500,7 +572,7 @@ msgstr "<p><em>Número de tarefas: %(tasks_count)s</em></p>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-end\">Stage:</small>"
-msgstr "<small class=\"text-end\">Estado:</small>"
+msgstr "<small class=\"text-end\">Etapa:</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -670,6 +742,8 @@ msgid ""
 "A personal stage cannot be linked to a project because it is only visible to"
 " its corresponding user."
 msgstr ""
+"Uma fase pessoal não pode ser vinculada a um projeto porque só é visível "
+"para o utilizador correspondente."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
@@ -679,7 +753,7 @@ msgstr "Etiqueta já existe."
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
 msgid "A task can only have a single personal stage per user."
-msgstr ""
+msgstr "Uma tarefa só pode ter uma única etapa pessoal por utilizador."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -782,6 +856,8 @@ msgid ""
 "Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In "
 "Progress - Done</i>."
 msgstr ""
+"Adicione colunas para organizar as suas tarefas por <b>etapas</b> <i>ex.:  "
+"novo – em andamento – concluído</i>."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -943,7 +1019,7 @@ msgstr "Arquivar"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid "Archive Stages"
-msgstr "Arquivar Estágios"
+msgstr "Arquivar Etapas"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -975,7 +1051,7 @@ msgstr "Tem certeza de que deseja continuar?"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid "Are you sure you want to delete those stages ?"
-msgstr "Tem certeza de que deseja excluir esses estágios?"
+msgstr "Tem certeza que deseja eliminar essas etapas?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1078,6 +1154,8 @@ msgid ""
 "At each stage, employees can block tasks or mark them as ready for the next step.\n"
 "                                    You can customize here the labels for each state."
 msgstr ""
+"Em cada etapa, os funcionários podem bloquear tarefas ou marcá-las como prontas para o próximo passo.\n"
+"                                    Pode personalizar aqui os rótulos para cada estado."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_attachment_count
@@ -1121,6 +1199,9 @@ msgid ""
 " * Good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * Neutral or bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
+"Modificar automaticamente o estado kanban quando o cliente responder ao feedback para esta etapa.\n"
+"*Feedbacks positivos irão atualizar o estado kanban para 'pronto para a nova etapa' (marcador verde).\n"
+"*Feedbacks neutros ou negativos definirão o estado kanban como 'bloqueado' (marcador vermelho).\n"
 
 #. module: project
 #. odoo-javascript
@@ -1344,7 +1425,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__is_closed
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__is_closed
 msgid "Closing Stage"
-msgstr "Estágio de Encerramento"
+msgstr "Etapa de Encerramento"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_collaborator_action
@@ -1380,6 +1461,9 @@ msgid ""
 "Rating when changing stage: an email will be automatically sent when the task reaches the stage on which the rating email template is set.\n"
 "Periodic rating: an email will be automatically sent at regular intervals as long as the task remains in the stage in which the rating email template is set."
 msgstr ""
+"Recolha feedback dos seus clientes enviand-lhes uma solicitação de avaliação quando a tarefa entrar numa determinada etapa. Para tanto, defina um modelo de e-mail de avaliação nas etapas correspondentes.\n"
+"Avaliação ao mudar de etapa: será automaticamente enviado um e-mail quando a tarefa chegar à etapa na qual o modelo de e-mail de avaliação está definido.\n"
+"Avaliação periódica: será automaticamente enviado um e-mail a intervalos regulares, desde que a tarefa permaneça na etapa em que o modelo de e-mail de avaliação está definido."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags__color
@@ -1433,7 +1517,7 @@ msgstr "Configuração"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Configure Stages"
-msgstr "Configurar Estágios"
+msgstr "Configurar Etapas"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -1516,7 +1600,7 @@ msgstr "Criar um Projeto"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form_domain
 msgid "Create a new stage in the task pipeline"
-msgstr ""
+msgstr "Criar uma nova etapa no funil de tarefas"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_footer
@@ -1735,7 +1819,7 @@ msgstr "Data"
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_search_model.js:0
 #, python-format
 msgid "Date and Stage"
-msgstr ""
+msgstr "Data e Etapa"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_on_month__date
@@ -1755,6 +1839,8 @@ msgid ""
 "Date on which the stage of your task has last been modified.\n"
 "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage to another."
 msgstr ""
+"Data em que a etapa da sua tarefa foi modificada pela última vez.\n"
+"Com base nestas informações, poderá identificar as tarefas que estão paradas e obter estatísticas sobre o tempo que normalmente leva para mover as tarefas de uma etapa para a outra."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__date
@@ -1897,7 +1983,7 @@ msgstr "Apagar Milestone"
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_unarchive_wizard
 #, python-format
 msgid "Delete Stage"
-msgstr "Excluir Estágio"
+msgstr "Eliminar Etapa"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__milestone_id
@@ -2079,7 +2165,7 @@ msgstr "Editar"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_renderer.js:0
 #, python-format
 msgid "Edit Personal Stage"
-msgstr ""
+msgstr "Editar Etapa Pessoal"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -2531,6 +2617,9 @@ msgid ""
 "Alternatively, it will be sent at a regular interval as long as the task remains in this stage, depending on the configuration of your project. \n"
 "To use this feature make sure that the 'Customer Ratings' option is enabled on your project."
 msgstr ""
+"Se estiver definido, será automaticamente enviada uma solicitação de avaliação por e-mail ao cliente quando a tarefa atingir esta etapa. \n"
+"Em alternativa, ela será enviada a intervalos regulares enquanto a tarefa permanecer nesta etapa, dependendo da configuração do seu projeto. \n"
+"Para usar esta funcionalidade, certifique-se de que a opção “Avaliações de cliente” está activa no seu projeto."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
@@ -3000,7 +3089,7 @@ msgstr ""
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>stage</b>."
-msgstr ""
+msgstr "Vamos criar a sua primeira <b>etapa</b>."
 
 #. module: project
 #. odoo-javascript
@@ -3014,7 +3103,7 @@ msgstr "Vamos criar a sua primeira <b>tarefa</b>."
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your second <b>stage</b>."
-msgstr ""
+msgstr "Vamos criar a sua segunda <b>etapa</b>."
 
 #. module: project
 #. odoo-javascript
@@ -3131,6 +3220,8 @@ msgid ""
 "Measure your customer satisfaction by sending rating requests when your "
 "tasks reach a certain stage."
 msgstr ""
+"Meça a satisfação dos seus clientes enviando-lhes solicitações de "
+"classificação quando as tarefas que tem atingirem uma determinada etapa."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__favorite_user_ids
@@ -3501,7 +3592,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 #: model_terms:ir.actions.act_window,help:project.project_project_stage_configure
 msgid "No stages found. Let's create one!"
-msgstr "Nenhum estágio encontrado. Vamos criar um!"
+msgstr "Nenhuma fase encontrada. Vamos criar uma!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
@@ -3814,22 +3905,22 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Personal Stage"
-msgstr ""
+msgstr "Etapa Pessoal"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_id
 msgid "Personal Stage State"
-msgstr ""
+msgstr "Estado da Etapa Pessoal"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_stage_personal
 msgid "Personal Task Stage"
-msgstr ""
+msgstr "Etapa de Tarefa Pessoal"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_type_id
 msgid "Personal User Stage"
-msgstr ""
+msgstr "Etapa Pessoal de Utilizador"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__partner_phone
@@ -4074,19 +4165,19 @@ msgstr "Estágio do Projeto"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_stage_change
 msgid "Project Stage Changed"
-msgstr "Estágio do Projeto Alterado"
+msgstr "A Fase do Projeto Mudou"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type_delete_wizard
 msgid "Project Stage Delete Wizard"
-msgstr ""
+msgstr "Assistente de Eliminação de Fases de Projeto"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_project_stage_configure
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_stages
 #: model:ir.ui.menu,name:project.menu_project_config_project_stage
 msgid "Project Stages"
-msgstr "Estágios do Projeto"
+msgstr "Fases do Projeto"
 
 #. module: project
 #: model:ir.model,name:project.model_project_tags
@@ -4196,6 +4287,9 @@ msgid ""
 " several projects, you can share this stage among them and get consolidated "
 "information this way."
 msgstr ""
+"Projetos em que esta fase está presente. Se seguir um fluxo de trabalho "
+"semelhante em vários projetos, poderá vir a partilhar esta fase com os "
+"mesmos e obter informações consolidadas dessa forma."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__task_properties
@@ -4309,7 +4403,7 @@ msgstr "Contagem de classificações"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__stage
 msgid "Rating when changing stage"
-msgstr ""
+msgstr "Avaliação na mudança de fase"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_task
@@ -4360,7 +4454,7 @@ msgstr "Pronto"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__done
 msgid "Ready for Next Stage"
-msgstr "Pronto para a Próxima Etapa"
+msgstr "Pronto para a Próxima Fase"
 
 #. module: project
 #: model:project.task.type,legend_done:project.project_stage_3
@@ -4698,7 +4792,7 @@ msgstr ""
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Stages"
-msgstr "Procurar em Etapas"
+msgstr "Procurar em Fases"
 
 #. module: project
 #. odoo-python
@@ -4764,7 +4858,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Set a Rating Email Template on Stages"
-msgstr ""
+msgstr "Definir um Modelo de E-mail de Avaliação nas Etapas"
 
 #. module: project
 #: model:mail.template,description:project.project_done_email_template
@@ -4772,6 +4866,8 @@ msgid ""
 "Set on project's stages to inform customers when a project reaches that "
 "stage"
 msgstr ""
+"Definir as fases do projeto para informar os clientes quando um projeto "
+"chegar a essa fase"
 
 #. module: project
 #: model:mail.template,description:project.rating_project_request_email_template
@@ -4779,6 +4875,8 @@ msgid ""
 "Set this template on a project stage to request feedback from your "
 "customers. Enable the \"customer ratings\" feature on the project"
 msgstr ""
+"Definir este modelo numa fase de projeto para solicitar feedback aos seus "
+"clientes. Ative o recurso \"avaliações de clientes\" no projeto"
 
 #. module: project
 #: model:mail.template,description:project.mail_template_data_project_task
@@ -4786,7 +4884,7 @@ msgid ""
 "Set this template on a project's stage to automate email when tasks reach "
 "stages"
 msgstr ""
-"Define este modelo na etapa de um projeto para automatizar um email quando "
+"Define este modelo na fase de um projeto para automatizar um email quando "
 "tarefas alcançam etapas."
 
 #. module: project
@@ -4925,7 +5023,7 @@ msgstr "Descrição da Etapa e Dicas"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__user_id
 msgid "Stage Owner"
-msgstr ""
+msgstr "Dono da Etapa"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
@@ -5162,7 +5260,7 @@ msgstr "Tarefa Recorrente"
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_tree
 msgid "Task Stage"
-msgstr "Estado da Tarefa"
+msgstr "Etapa da Tarefa"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_stage
@@ -5314,12 +5412,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_id
 msgid "The current user's personal stage."
-msgstr ""
+msgstr "A etapa pessoal do utilizador atual."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_type_id
 msgid "The current user's personal task stage."
-msgstr ""
+msgstr "A etapa da tarefa pessoal do utilizador atual."
 
 #. module: project
 #. odoo-python
@@ -5424,7 +5522,7 @@ msgstr ""
 #: code:addons/project/report/project_task_burndown_chart_report.py:0
 #, python-format
 msgid "The view must be grouped by date and by stage_id"
-msgstr ""
+msgstr "A vista deve ser agrupada por data e por stage_id"
 
 #. module: project
 #. odoo-javascript
@@ -5514,6 +5612,8 @@ msgid ""
 "This will archive the stages and all the tasks they contain from the "
 "following projects:"
 msgstr ""
+"Isto arquivará as etapas e todas as tarefas nelas contidas nos seguintes "
+"projetos:"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.mail_activity_type_action_config_project_types
@@ -5552,7 +5652,7 @@ msgstr ""
 #: model:digest.tip,name:project.digest_tip_project_0
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "Tip: Customize tasks and stages according to the project"
-msgstr ""
+msgstr "Dica: Personalize tarefas e etapas de acordo com o projeto."
 
 #. module: project
 #. odoo-python
@@ -5793,7 +5893,7 @@ msgstr "Usar Tarefas Recorrentes"
 #. module: project
 #: model:res.groups,name:project.group_project_stages
 msgid "Use Stages on Project"
-msgstr "Usar Estágios nos Projetos"
+msgstr "Usar Fases nos Projetos"
 
 #. module: project
 #: model:res.groups,name:project.group_subtask_project
@@ -5990,6 +6090,7 @@ msgid ""
 "Would you like to unarchive all of the tasks contained in these stages as "
 "well?"
 msgstr ""
+"Gostaria de repor do arquivo todas as tarefas contidas nestas etapas também?"
 
 #. module: project
 #. odoo-javascript
@@ -6032,7 +6133,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You can only set a personal stage on a private task."
-msgstr ""
+msgstr "Só pode definir uma etapa pessoal numa tarefa privada."
 
 #. module: project
 #. odoo-python
@@ -6068,8 +6169,8 @@ msgid ""
 "You cannot delete stages containing tasks. You should first delete all of "
 "their tasks."
 msgstr ""
-"Não pode apagar etapas que contenham tarefas. Pode arquivá-las ou apagar "
-"todas as tarefas primeiro."
+"Não pode apagar etapas que contenham tarefas. Deverá apagar todas as suas "
+"tarefas primeiro."
 
 #. module: project
 #. odoo-python
@@ -6129,6 +6230,8 @@ msgid ""
 "You should at least have one personal stage. Create a new stage to which the"
 " tasks can be transferred after this one is deleted."
 msgstr ""
+"Deverá ter pelo menos uma etapa pessoal. Crie uma nova etapa para a qual as "
+"tarefas possam ser copiadas depois desta ser eliminada."
 
 #. module: project
 #. odoo-python
@@ -6186,6 +6289,8 @@ msgstr ""
 msgid ""
 "button to inform your colleagues that a task is ready for the next stage."
 msgstr ""
+"botão para informar os seus colegas de que a tarefa está pronta para a "
+"próxima etapa."
 
 #. module: project
 #. odoo-javascript

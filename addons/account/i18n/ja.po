@@ -1365,7 +1365,7 @@ msgstr "この移動の明細の一つは減価償却勘定科目に使われて
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "A payment must always belongs to a bank or cash journal."
-msgstr "支払いは銀行あるいは現金仕訳に紐づいている必要があります。"
+msgstr "支払いは銀行仕訳帳または現金出納帳に紐づいている必要があります。"
 
 #. module: account
 #. odoo-python
@@ -8267,7 +8267,7 @@ msgstr "仕訳グループ"
 #: model:ir.ui.menu,name:account.menu_action_account_journal_group_list
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_form
 msgid "Journal Groups"
-msgstr "仕訳帳グループ"
+msgstr "仕訳グループ"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line
@@ -8313,25 +8313,25 @@ msgstr "仕訳明細"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__name
 msgid "Journal Name"
-msgstr "仕訳帳名"
+msgstr "仕訳名"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_payment_credit_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_payment_credit_account_id
 msgid "Journal Outstanding Payments Account"
-msgstr ""
+msgstr "仕訳未消込支払勘定"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_payment_debit_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_payment_debit_account_id
 msgid "Journal Outstanding Receipts Account"
-msgstr ""
+msgstr "仕訳未消込入金勘定"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_suspense_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_suspense_account_id
 msgid "Journal Suspense Account"
-msgstr "ジャーナルサスペンスアカウント"
+msgstr "仕訳保留勘定"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_code_company_uniq
@@ -12433,6 +12433,12 @@ msgstr "サービス"
 #, python-format
 msgid "Set a price"
 msgstr "価格を設定します"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+#: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+msgid "Set a value greater than 0.0 to activate a credit limit check"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
