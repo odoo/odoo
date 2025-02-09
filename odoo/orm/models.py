@@ -6523,7 +6523,7 @@ class BaseModel(metaclass=MetaModel):
             for invf in self.pool.field_inverses[field]:
                 self.env[invf.model_name].flush_model([invf.name])
                 spec.append((invf, None))
-        self.env.cache.invalidate(spec)
+        self.env.transaction.invalidate(spec)
 
     @api.private
     def modified(self, fnames: Collection[str], create: bool = False, before: bool = False) -> None:
@@ -6600,7 +6600,7 @@ class BaseModel(metaclass=MetaModel):
             else:
                 # Don't force the recomputation of compute fields which are
                 # not stored as this is not really necessary.
-                self.env.cache.invalidate([(field, records._ids)])
+                self.env.transaction.invalidate([(field, records._ids)])
 
         if before:
             # effectively mark for recomputation now

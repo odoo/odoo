@@ -22,8 +22,10 @@ from .utils import COLLECTION_TYPES, SQL_OPERATORS, SUPERUSER_ID, expand_ids
 if typing.TYPE_CHECKING:
     from collections.abc import Callable, Collection, Iterable, Iterator
 
+    from .environments import Environment, Transaction
+    from .identifiers import IdType
     from .registry import Registry
-    from .types import BaseModel, DomainType, Environment, ModelType, Self, ValuesType
+    from .types import BaseModel, DomainType, ModelType, Self, ValuesType
 T = typing.TypeVar("T")
 
 IR_MODELS = (
@@ -1396,6 +1398,27 @@ class Field(typing.Generic[T]):
         # update the cache
         dirty = self.store and any(records._ids)
         cache.update(records, self, itertools.repeat(cache_value), dirty=dirty)
+
+    ############################################################################
+    #
+    # Cache management methods
+    #
+
+    def _invalidate_cache(self, transaction: Transaction, ids: Collection[IdType] | None) -> None:
+        """ Invalidate the cache for the given ids. """
+        if ids is None:
+            transaction.data.pop(self, None)
+            return
+        cache = transaction.data.get(self)
+        if not cache:
+            return
+        elif self in transaction.registry.field_depends_context:
+            caches = cache.values()
+        else:
+            caches = (cache,)
+        for field_cache in caches:
+            for id_ in ids:
+                field_cache.pop(id_, None)
 
     ############################################################################
     #
