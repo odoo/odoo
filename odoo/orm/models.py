@@ -6791,24 +6791,30 @@ class RecordCache(Mapping[str, typing.Any]):
     """ A mapping from field names to values, to read the cache of a record. """
     __slots__ = ['_record']
 
-    def __init__(self, record):
+    def __init__(self, record: BaseModel):
         assert len(record) == 1, "Unexpected RecordCache(%s)" % record
         self._record = record
 
     def __contains__(self, name):
         """ Return whether `record` has a cached value for field ``name``. """
-        field = self._record._fields[name]
-        return self._record.env.cache.contains(self._record, field)
+        record = self._record
+        field = record._fields[name]
+        return record.id in field._cache_view(record.env)
 
     def __getitem__(self, name):
         """ Return the cached value of field ``name`` for `record`. """
-        field = self._record._fields[name]
-        return self._record.env.cache.get(self._record, field)
+        record = self._record
+        field = record._fields[name]
+        return field._cache_view(record.env)[record.id]
 
     def __iter__(self):
         """ Iterate over the field names with a cached value. """
-        for field in self._record.env.cache.get_fields(self._record):
-            yield field.name
+        record = self._record
+        id_ = record.id
+        env = record.env
+        for name, field in record._fields.items():
+            if id_ in field._cache_view(env):
+                yield name
 
     def __len__(self):
         """ Return the number of fields with a cached value. """

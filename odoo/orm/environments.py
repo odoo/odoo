@@ -664,17 +664,11 @@ class Cache:
 
     def _get_field_cache(self, model: BaseModel, field: Field) -> Mapping[IdType, typing.Any]:
         """ Return the field cache of the given field, but not for modifying it. """
-        field_cache = self.transaction.data.get(field, EMPTY_DICT)
-        if field_cache and field in model.pool.field_depends_context:
-            field_cache = field_cache.get(model.env.cache_key(field), EMPTY_DICT)
-        return field_cache
+        return field._cache_view(model.env)
 
     def _set_field_cache(self, model: BaseModel, field: Field) -> dict[IdType, typing.Any]:
         """ Return the field cache of the given field for modifying it. """
-        field_cache = self.transaction.data[field]
-        if field in model.pool.field_depends_context:
-            field_cache = field_cache.setdefault(model.env.cache_key(field), {})
-        return field_cache
+        return field._get_cache_impl(model.env)
 
     def contains(self, record: BaseModel, field: Field) -> bool:
         """ Return whether ``record`` has a value for ``field``. """

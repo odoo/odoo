@@ -1420,6 +1420,31 @@ class Field(typing.Generic[T]):
             for id_ in ids:
                 field_cache.pop(id_, None)
 
+    def _cache_view(self, env: Environment) -> dict[IdType, typing.Any]:
+        """ A mapping from id to a cache value for the given environment.
+
+        A new empty dict is returned when there are no values yet in the cache.
+        Otherwise, the result is similar to `_get_cache_impl`.
+        """
+        cache = env.transaction.data.get(self)
+        if not cache:
+            return {}
+        if self in env._field_depends_context:
+            cache = cache.get(env.cache_key(self)) or {}
+        return cache
+
+    def _get_cache_impl(self, env: Environment) -> dict[IdType, typing.Any]:
+        """ A mutable mapping from id to a cache value for the given environment.
+
+        Calling this function multiple times, always returns the same mapping
+        instance for a given environment, unless the transaction was entirely
+        invalidated.
+        """
+        cache = env.transaction.data[self]
+        if self in env._field_depends_context:
+            cache = cache.setdefault(env.cache_key(self), {})
+        return cache
+
     ############################################################################
     #
     # Descriptor methods
