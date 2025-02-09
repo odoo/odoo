@@ -5,7 +5,7 @@
 # Translators:
 # a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2024
 # Wil Odoo, 2024
-# Maitê Dietze, 2024
+# Maitê Dietze, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-11-14 14:13+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Maitê Dietze, 2024\n"
+"Last-Translator: Maitê Dietze, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3637,6 +3637,8 @@ msgstr ""
 #, python-format
 msgid "Cannot create an accrual entry with orders in different currencies."
 msgstr ""
+"Não é possível criar um lançamento de provisionamento com pedidos em moedas "
+"diferentes."
 
 #. module: account
 #. odoo-python
@@ -13113,6 +13115,11 @@ msgid "Set a price"
 msgstr "Defina um preço"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+msgid "Set a value greater than 0.0 to activate a credit limit check"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
 msgid "Set active to false to hide the Account Tag without removing it."
 msgstr ""
@@ -15993,10 +16000,9 @@ msgstr "Transferir para %s"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
-"Total Receivable amount exceeding a limit."
+"Total Receivable amount exceeding a limit.Set a value greater than 0.0 to "
+"activate a credit limit check"
 msgstr ""
-"Acione alertas ao criar faturas e pedidos de venda para usuários com valor "
-"total a receber superior a um certo limite."
 
 #. module: account
 #. odoo-python
