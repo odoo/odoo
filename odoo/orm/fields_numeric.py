@@ -32,11 +32,6 @@ class Integer(Field[int]):
     def convert_to_column(self, value, record, values=None, validate=True):
         return int(value or 0)
 
-    def convert_to_column_update(self, value, record):
-        if self.company_dependent:
-            value = {k: int(v or 0) for k, v in value.items()}
-        return super().convert_to_column_update(value, record)
-
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, dict):
             # special case, when an integer field is used as inverse for a one2many
@@ -53,10 +48,8 @@ class Integer(Field[int]):
             return float(value)
         return value
 
-    def _update(self, records, value):
-        cache = records.env.cache
-        for record in records:
-            cache.set(record, self, value.id or 0)
+    def _update_inverse(self, records: BaseModel, value: BaseModel):
+        self._update_cache(records, value.id or 0)
 
     def convert_to_export(self, value, record):
         if value or value == 0:
@@ -143,11 +136,6 @@ class Float(Field[float]):
         if self.company_dependent:
             return value_float
         return value
-
-    def convert_to_column_update(self, value, record):
-        if self.company_dependent:
-            value = {k: float(v or 0.0) for k, v in value.items()}
-        return super().convert_to_column_update(value, record)
 
     def convert_to_cache(self, value, record, validate=True):
         # apply rounding here, otherwise value in cache may be wrong!
@@ -279,3 +267,24 @@ class Monetary(Field[float]):
         if value or value == 0.0:
             return value
         return ''
+
+    def _filter_not_equal(self, records: BaseModel, cache_value: typing.Any) -> BaseModel:
+        records = super()._filter_not_equal(records, cache_value)
+        if not records:
+            return records
+        # check that the values were rounded properly when put in cache
+        # see fix odoo/odoo#177200 (commit 7164d5295904b08ec3a0dc1fb54b217671ff531c)
+        env = records.env
+        field_cache = self._get_cache(env)
+        currency_field = records._fields[self.get_currency_field(records)]
+        return records.browse(
+            record_id
+            for record_id, record_sudo in zip(
+                records._ids, records.sudo().with_context(prefetch_fields=False)
+            )
+            if not (
+                (value := field_cache.get(record_id))
+                and (currency := currency_field.__get__(record_sudo))
+                and currency.with_env(env).round(value) == cache_value
+            )
+        )

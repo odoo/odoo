@@ -237,11 +237,8 @@ class Website(models.Model):
                 # don't add child menu if parent is forbidden
                 if menu.parent_id and menu.parent_id in menus:
                     children[menu.parent_id] += (menu.id,)
-            menus.env.cache.update(
-                menus.browse(child.id for child in children),
-                menus._fields['child_id'],
-                children.values(),
-            )
+            for menu, child_items in children.items():
+                menu._fields['child_id']._update_cache(menu, child_items)
 
             # prefetch every website.page and ir.ui.view at once
             menus.mapped('is_visible')
