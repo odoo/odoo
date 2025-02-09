@@ -14,6 +14,7 @@ from odoo import fields
 from odoo.tests.common import TransactionCase, RecordCapturer
 from odoo.tools import mute_logger
 from odoo.addons.base.models.ir_cron import MIN_FAILURE_COUNT_BEFORE_DEACTIVATION, MIN_DELTA_BEFORE_DEACTIVATION
+from odoo.addons.base.models import ir_cron
 
 
 class CronMixinCase:
@@ -74,6 +75,9 @@ class TestIrCron(TransactionCase, CronMixinCase):
 
         cls.cron = cls.env['ir.cron'].create(cls._get_cron_data(cls.env))
         cls.partner = cls.env['res.partner'].create(cls._get_partner_data(cls.env))
+        max_time_disable = patch.object(ir_cron, 'MAX_BATCH_TIME_PER_CRON_JOB', 0)
+        max_time_disable.start()
+        cls.addClassCleanup(max_time_disable.stop)
 
     def setUp(self):
         super().setUp()

@@ -450,7 +450,7 @@ class IrCron(models.Model):
                              job['cron_name'], job['id'], progress.done, progress.remaining)
                 if status in (CompletionStatus.FULLY_DONE, CompletionStatus.FAILED):
                     break
-                if loop_count >= MAX_BATCH_PER_CRON_JOB and loop_start_time + MAX_BATCH_TIME_PER_CRON_JOB >= time.monotonic():
+                if loop_count >= MAX_BATCH_PER_CRON_JOB and time.monotonic() - loop_start_time >= MAX_BATCH_TIME_PER_CRON_JOB:
                     break
 
         return status
