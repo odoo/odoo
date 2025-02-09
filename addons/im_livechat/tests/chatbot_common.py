@@ -160,6 +160,7 @@ class ChatbotCase(MailCommon, common.HttpCase):
                 "/chatbot/step/validate_email", {"channel_id": discuss_channel.id}
             )
         if chatbot_script_answer:
+<<<<<<< saas-18.1
             message = self.env["mail.message"].browse(data["mail.message"][0]["id"])
             self.make_jsonrpc_request(
                 "/chatbot/answer/save",
@@ -170,3 +171,19 @@ class ChatbotCase(MailCommon, common.HttpCase):
                 },
             )
         self.make_jsonrpc_request("/chatbot/step/trigger", {"channel_id": discuss_channel.id})
+||||||| e7368048e64e0afa12dfdf6738af576ac6200d7a
+            cls.env['chatbot.message'].search([
+                ('mail_message_id', '=', mail_message.id)
+            ], limit=1).user_script_answer_id = chatbot_script_answer.id
+
+        next_step = discuss_channel.chatbot_current_step_id._process_answer(discuss_channel, mail_message.body)
+        next_step._process_step(discuss_channel)
+=======
+            cls.env['chatbot.message'].search([
+                ('mail_message_id', '=', mail_message.id)
+            ], limit=1).user_script_answer_id = chatbot_script_answer.id
+
+        # sudo: chatbot.script.step - members of a channel can access the current chatbot step
+        next_step = discuss_channel.chatbot_current_step_id.sudo()._process_answer(discuss_channel, mail_message.body)
+        next_step._process_step(discuss_channel)
+>>>>>>> 1d0d13f4ed90ca7b0b52122e48f967a395aa6d1e
