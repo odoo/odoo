@@ -5244,8 +5244,9 @@ class AccountMove(models.Model):
 
     def _get_mail_thread_data_attachments(self):
         res = super()._get_mail_thread_data_attachments()
+        wizard_attachments = self.env['account.move.send']._get_invoice_extra_attachments(self)    # res field included
         # else, attachments with 'res_field' get excluded
-        return res | self.env['account.move.send']._get_invoice_extra_attachments(self)
+        return wizard_attachments if wizard_attachments else res
 
     # -------------------------------------------------------------------------
     # TOOLING
