@@ -260,6 +260,8 @@ class StockMove(models.Model):
         # Init a dict that will group the moves by valuation type, according to `move._is_valued_type`.
         valued_moves = {valued_type: self.env['stock.move'] for valued_type in self._get_valued_types()}
         for move in self:
+            if move.state == 'done':
+                continue
             if float_is_zero(move.quantity, precision_rounding=move.product_uom.rounding):
                 continue
             if not any(move.move_line_ids.mapped('picked')):
