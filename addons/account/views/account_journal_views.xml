@@ -179,6 +179,10 @@
                                         <field name="invoice_reference_type"/>
                                         <field name="invoice_reference_model" invisible="invoice_reference_type == 'none'"/>
                                     </group>
+                                    <group string="Incoming E-Invoice Notifications" invisible="type != 'purchase'">
+                                        <field name="notify_on_incoming_einvoice"/>
+                                        <field name="incoming_einvoice_notification_email" invisible="not notify_on_incoming_einvoice" required="True"/>
+                                    </group>
                                 </group>
                             </page>
                         </notebook>

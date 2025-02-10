@@ -14,6 +14,8 @@
                 <field name="activity_state"/>
                 <field name="alias_domain_id"/>
                 <field name="bank_account_id"/>
+                <field name="show_fetch_in_einvoices_button"/>
+                <field name="show_refresh_out_einvoices_status_button"/>
                 <templates>
                     <t t-name="card">
                         <t t-value="JSON.parse(record.kanban_dashboard.raw_value)" t-set="dashboard"/>
@@ -41,7 +43,7 @@
 
                     <t t-name="JournalTop">
                         <span class="d-flex d-flew-row align-items-baseline">
-                            <a class="fs-4 fw-bold" type="object" name="open_action"><field name="name"/></a>
+                            <a class="fs-4 fw-bold" type="object" name="open_action" context="{'show_fetch_in_einvoices_button': show_fetch_in_einvoices_button, 'show_refresh_out_einvoices_status_button': show_refresh_out_einvoices_status_button}"><field name="name"/></a>
                             <t t-if="dashboard.show_company" groups="base.group_multi_company" >
                                 <span class="small fw-bold ms-1"> - <field name="company_id"/></span>
                             </t>
