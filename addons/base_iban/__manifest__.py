@@ -11,6 +11,7 @@ The ability to extract the correctly represented local accounts from IBAN accoun
 with a single statement.
     """,
     'depends': ['account', 'web'],
+    'auto_install': True,
     'data': [
         'views/partner_view.xml',
         'views/setup_wizards_view.xml'
