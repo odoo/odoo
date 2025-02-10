@@ -133,6 +133,8 @@ class UomUom(models.Model):
         """ Check if `self` and `other_uom` have a common reference unit """
         self.ensure_one()
         other_uom.ensure_one()
+        if not self.parent_path or not other_uom.parent_path:
+            return False
         self_path = self.parent_path.split('/')
         other_path = other_uom.parent_path.split('/')
         common_path = []
