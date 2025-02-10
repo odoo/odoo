@@ -27,7 +27,6 @@ export class DataServiceOptions {
             "pos.payment",
             "pos.pack.operation.lot",
             "product.attribute.custom.value",
-            "restaurant.order.course",
         ];
     }
 
