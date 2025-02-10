@@ -14,19 +14,28 @@
         </xpath>
     </t>
 
-    <t t-name="partner_autocomplete.CharFieldDropdownOption">
-        <img t-att-src="option.logo" onerror="this.src='/base/static/img/company_image.png'" alt="Placeholder"/>
-        <div class="o_partner_autocomplete_info">
-            <strong t-esc="option.label or '&#160;'"/>
+    <t t-name="partner_autocomplete.DropdownOption">
+        <span class="o_partner_autocomplete_info d-flex align-items-center py-1 gap-5">
+        <div class="flex-grow-1">
+            <strong t-esc="option.name or '&#160;'"/>
             <div t-esc="option.description"/>
         </div>
+        <div style="width: 32px; height: 32px">
+            <img t-att-src="option.logoUrl" onerror="this.style.display='none'" alt="Placeholder" class="float-end img-fluid"/>
+        </div>
+        </span>
+    </t>
+
+    <t t-name="partner_autocomplete.CharFieldDropdownOption">
+        <span class="o_partner_autocomplete_info d-flex align-items-center py-1 gap-5">
+            <t t-call="partner_autocomplete.DropdownOption"/>
+        </span>
     </t>
 
     <t t-name="partner_autocomplete.Many2oneDropdownOption">
-        <i class="fa fa-magic text-muted pe-1"/>
-        <t t-esc="option.label or '&#160;'"/>,
-        <span class="text-muted" t-esc="option.description"/>
-        <img class="ms-1" t-att-src="option.logo" onerror="this.src='/base/static/img/company_image.png'" alt="Placeholder"/>
+        <span class="o_partner_autocomplete_info d-flex align-items-center gap-5">
+            <t t-call="partner_autocomplete.DropdownOption"/>
+        </span>
     </t>
 
     <t t-name="partner_autocomplete.InsufficientCreditNotification">
