@@ -61,7 +61,7 @@ class TestLivechatCommon(TransactionCaseWithUserDemo):
 
         self.send_feedback_url = f"{self.livechat_base_url}/im_livechat/feedback"
         self.leave_session_url = f"{self.livechat_base_url}/im_livechat/visitor_leave_session"
-        self.env["bus.presence"].create({"user_id": self.operator.id, "status": "online"})
+        self.env["mail.presence"]._update_presence(self.operator)
 
         # override the _get_visitor_from_request to return self.visitor
         self.target_visitor = self.visitor

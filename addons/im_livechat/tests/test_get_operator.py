@@ -401,7 +401,7 @@ class TestGetOperator(MailCommon, TestGetOperatorCommon):
                 livechat_channels[1]: operator,
             },
         )
-        self.env["bus.presence"].search([("user_id", "=", operator.id)]).status = "offline"
+        operator.presence_ids.status = "offline"
         self.assertEqual(
             livechat_channels._get_available_operators_by_livechat_channel(operator),
             {

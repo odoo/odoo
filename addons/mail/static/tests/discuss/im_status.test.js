@@ -1,29 +1,21 @@
-import { AWAY_DELAY } from "@bus/im_status_service";
+import { AWAY_DELAY } from "@mail/core/common/im_status_service";
+import { defineMailModels, start, startServer } from "@mail/../tests/mail_test_helpers";
+
 import { beforeEach, describe, test } from "@odoo/hoot";
 import { advanceTime, freezeTime } from "@odoo/hoot-dom";
-import {
-    asyncStep,
-    makeMockEnv,
-    makeMockServer,
-    mockService,
-    serverState,
-    waitForSteps,
-} from "@web/../tests/web_test_helpers";
-import { defineBusModels } from "./bus_test_helpers";
 
-defineBusModels();
+import { asyncStep, mockService, serverState, waitForSteps } from "@web/../tests/web_test_helpers";
 
+defineMailModels();
 beforeEach(freezeTime);
-
 describe.current.tags("headless");
 
 test("update presence if IM status changes to offline while this device is online", async () => {
     mockService("bus_service", { send: (type) => asyncStep(type) });
-
-    const { env } = await makeMockServer();
-    await makeMockEnv();
+    const pyEnv = await startServer();
+    await start();
     await waitForSteps(["update_presence"]);
-    env["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
+    pyEnv["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
         im_status: "offline",
         partner_id: serverState.partnerId,
     });
@@ -32,13 +24,11 @@ test("update presence if IM status changes to offline while this device is onlin
 
 test("update presence if IM status changes to away while this device is online", async () => {
     mockService("bus_service", { send: (type) => asyncStep(type) });
-
     localStorage.setItem("presence.lastPresence", Date.now());
-
-    const { env } = await makeMockServer();
-    await makeMockEnv();
+    const pyEnv = await startServer();
+    await start();
     await waitForSteps(["update_presence"]);
-    env["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
+    pyEnv["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
         im_status: "away",
         partner_id: serverState.partnerId,
     });
@@ -47,13 +37,11 @@ test("update presence if IM status changes to away while this device is online",
 
 test("do not update presence if IM status changes to away while this device is away", async () => {
     mockService("bus_service", { send: (type) => asyncStep(type) });
-
     localStorage.setItem("presence.lastPresence", Date.now() - AWAY_DELAY);
-
-    const { env } = await makeMockServer();
-    await makeMockEnv();
+    const pyEnv = await startServer();
+    await start();
     await waitForSteps(["update_presence"]);
-    env["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
+    pyEnv["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
         im_status: "away",
         partner_id: serverState.partnerId,
     });
@@ -62,13 +50,11 @@ test("do not update presence if IM status changes to away while this device is a
 
 test("do not update presence if other user's IM status changes to away", async () => {
     mockService("bus_service", { send: (type) => asyncStep(type) });
-
     localStorage.setItem("presence.lastPresence", Date.now());
-
-    const { env } = await makeMockServer();
-    await makeMockEnv();
+    const pyEnv = await startServer();
+    await start();
     await waitForSteps(["update_presence"]);
-    env["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
+    pyEnv["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
         im_status: "away",
         partner_id: serverState.publicPartnerId,
     });
@@ -83,14 +69,10 @@ test("update presence when user comes back from away", async () => {
             }
         },
     });
-
     localStorage.setItem("presence.lastPresence", Date.now() - AWAY_DELAY);
-
-    await makeMockEnv();
+    await start();
     await waitForSteps([AWAY_DELAY]);
-
     localStorage.setItem("presence.lastPresence", Date.now());
-
     await waitForSteps([0]);
 });
 
@@ -102,13 +84,9 @@ test("update presence when user status changes to away", async () => {
             }
         },
     });
-
     localStorage.setItem("presence.lastPresence", Date.now());
-
-    await makeMockEnv();
+    await start();
     await waitForSteps([0]);
-
     await advanceTime(AWAY_DELAY);
-
     await waitForSteps([AWAY_DELAY]);
 });

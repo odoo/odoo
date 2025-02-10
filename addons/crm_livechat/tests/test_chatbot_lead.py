@@ -35,7 +35,7 @@ class CrmChatbotCase(chatbot_common.CrmChatbotCase):
         self.assertFalse(not_available_lead.user_id)
         self.assertEqual(discuss_channel.livechat_operator_id, chatbot_partner)
         # sales team member is available
-        self.env["bus.presence"].create({"user_id": self.user_employee.id, "status": "online"})
+        self.env["mail.presence"]._update_presence(self.user_employee)
         discuss_channel = self._play_session_with_lead()
         assigned_lead = self.env["crm.lead"].sudo().search([], limit=1, order="id desc")
         self.assertEqual(assigned_lead.user_id, self.user_employee)

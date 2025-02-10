@@ -1,13 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug.exceptions import NotFound
-
 from odoo import http
 from odoo.http import request
 from odoo.addons.mail.controllers.thread import ThreadController
-from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
-from odoo.addons.mail.tools.discuss import Store
-from odoo.osv import expression
+from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
 
 
 class WebclientController(http.Controller):
