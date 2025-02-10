@@ -2,7 +2,7 @@
 
 from odoo import Command
 from odoo.addons.crm_livechat.tests import chatbot_common
-from odoo.tests.common import new_test_user, tagged
+from odoo.tests.common import tagged
 
 
 @tagged("post_install", "-at_install")
@@ -151,7 +151,6 @@ class CrmChatbotCase(chatbot_common.CrmChatbotCase):
         self.start_tour(
             f"/im_livechat/support/{livechat_channel.id}", "crm_livechat.create_lead_from_chatbot"
         )
-        lead = self.env["crm.lead"].search([("channel_id", "=", livechat_channel.channel_ids.id)])
+        lead = self.env["crm.lead"].search([("origin_channel_id", "=", livechat_channel.channel_ids.id)])
         self.assertEqual(lead.name, "I'd like to know more about the CRM application.")
-        self.assertTrue(lead.channel_id)
-        self.assertTrue(lead.channel_id.has_crm_lead)
+        self.assertTrue(lead.origin_channel_id.has_crm_lead)

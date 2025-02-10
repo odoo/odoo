@@ -231,7 +231,7 @@ class TestPartnerLeadPortal(TestCrmCommon):
         if using filter 'Today Activities' or 'Overdue Activities')."""
 
         lead_today = self.lead_portal
-        lead_yesterday = self.lead_portal.copy()
+        lead_yesterday = self.lead_portal.sudo().copy()
 
         (lead_today | lead_yesterday).type = "opportunity"
 
