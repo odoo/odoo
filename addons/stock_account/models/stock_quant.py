@@ -36,6 +36,34 @@ class StockQuant(models.Model):
                 or (quant.company_id or self.env.company).cost_method
             )
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        tracked_product_ids = self.env["product.product"].search([("id", "in", [val["product_id"] for val in vals_list]), ("tracking", "in", ['lot', 'serial'])])._ids
+        quants_of_tracked_product = [q for q in vals_list if q["product_id"] in tracked_product_ids]
+        quants_of_untracked_product = [q for q in vals_list if q["product_id"] not in tracked_product_ids]
+
+        product_ids = [val["product_id"] for val in quants_of_tracked_product]
+        location_ids = [val["location_id"] for val in quants_of_tracked_product]
+        query = self._search([
+            ('product_id', 'in', product_ids),
+            ('location_id', 'in', location_ids),
+            ('accounting_date', '<', fields.Date().today())], order='accounting_date desc')
+        # list of tuple of product_id, location_id and accounting_date
+        nearest_date_quants = self.env.execute_query(query.select('product_id', 'location_id', 'accounting_date'))
+        quant_groups = {}
+        for quant in nearest_date_quants:
+            key = (quant[0], quant[1])
+            quant_groups[key] = max(quant_groups.get(key, quant[2]), quant[2])
+
+        for quant in quants_of_tracked_product:
+            # nearest_date == date which is closest from today in past
+            key = (quant["product_id"], quant["location_id"])
+            if key in quant_groups:
+                quant["accounting_date"] = quant_groups[key]
+
+        vals_list = quants_of_tracked_product + quants_of_untracked_product
+        return super().create(vals_list)
+
     @api.model
     def _should_exclude_for_valuation(self):
         """
@@ -86,7 +114,6 @@ class StockQuant(models.Model):
             inventories = self.env['stock.quant'].concat(*inventory_ids)
             if accounting_date:
                 super(StockQuant, inventories.with_context(force_period_date=accounting_date))._apply_inventory()
-                inventories.accounting_date = False
             else:
                 super(StockQuant, inventories)._apply_inventory()
 
