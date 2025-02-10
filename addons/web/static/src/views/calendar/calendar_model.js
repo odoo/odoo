@@ -192,10 +192,6 @@ export class CalendarModel extends Model {
     }
 
     async createRecordNoInteraction(dates) {
-        // TODO get companies ids ...
-        // const context = this.makeContextDefaults(rawRecord);
-        const context = {};
-
         const extraFields = this.data.quickCreateValuesCallback();
 
         const [section] = this.filterSections;
@@ -212,9 +208,7 @@ export class CalendarModel extends Model {
                 }
             }
         }
-        await this.orm.create(this.meta.resModel, records, {
-            context,
-        });
+        await this.orm.create(this.meta.resModel, records, { context: this.meta.context });
         await this.load();
     }
 
