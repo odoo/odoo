@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_holidays.BooleanFieldLabeled" t-inherit="web.BooleanField" >
+        <xpath expr="//CheckBox" position="attributes">
+            <attribute name="className">'o_field_boolean o_boolean_toggle align-middle'</attribute>
+        </xpath>
+        <xpath expr="//CheckBox" position="inside">
+            <t t-out="this.state.label"></t>
+        </xpath>
+    </t>
+</templates>

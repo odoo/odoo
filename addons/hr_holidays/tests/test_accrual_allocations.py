@@ -1669,6 +1669,9 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })
             allocation.action_approve()
 
+        with freeze_time("2023-05-20"):
+            allocation._update_accrual()
+
         with freeze_time("2024-04-20"):
             allocation._update_accrual()
         self.assertEqual(allocation.number_of_days, 69, "Carryover at other date, level's maximum leave is 69.")
