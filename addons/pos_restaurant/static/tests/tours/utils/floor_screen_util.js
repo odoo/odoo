@@ -1,5 +1,6 @@
 import { queryOne } from "@odoo/hoot-dom";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
+import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 
 export function table({ name, withClass = "", withoutClass, run = () => {}, numOfSeats }) {
     let trigger = `.floor-map .table${withClass}`;
@@ -51,6 +52,9 @@ export function clickSaveEditButton() {
             content: "add table",
             trigger: '.edit-buttons button:contains("Save")',
             run: "click",
+        },
+        {
+            trigger: negate(".edit-buttons button:contains('Save')"),
         },
     ];
 }
@@ -149,6 +153,24 @@ export function isChildTable(child) {
 }
 export function clickNewOrder() {
     return { trigger: ".left-buttons .new-order", run: "click" };
+}
+
+export function addFloor(floorName) {
+    return [
+        {
+            trigger: ".floor-selector button i[aria-label='Add Floor']",
+            run: "click",
+        },
+        {
+            trigger: ".modal-body textarea",
+            run: `edit ${floorName}`,
+        },
+        {
+            trigger: ".modal-footer button.btn-primary",
+            run: "click",
+        },
+        ...selectedFloorIs(floorName),
+    ];
 }
 
 import { TourHelpers } from "@web_tour/tour_service/tour_helpers";
