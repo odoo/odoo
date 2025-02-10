@@ -4,7 +4,7 @@
 from collections import defaultdict
 
 from odoo import api, Command, fields, models, _
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tools import format_amount
 from odoo.tools.sql import column_exists, create_column
 
@@ -76,12 +76,17 @@ class SaleOrderLine(models.Model):
 
     @api.model
     def name_create(self, name):
+        ensure_is_service_product = False
         # To get the right product when creating a SOL on the fly, we need to get
         # the name that was entered in the field from the `default_get` method.
         # The easiest way of doing that is to store it in the context.
         if self.env.context.get('form_view_ref') == 'sale_project.sale_order_line_view_form_editable' and not self.env.context.get('action_view_sols'):
             self = self.with_context(sol_product_name=name)
-        return super().name_create(name)
+            ensure_is_service_product = True
+        result = super().name_create(name)
+        if ensure_is_service_product and result and not self.browse(result[0]).is_service:
+            raise ValidationError(_("The Sale Order Item should contain a service product."))
+        return result
 
     @api.model
     def _add_missing_default_values(self, values):
