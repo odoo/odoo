@@ -911,17 +911,12 @@ class WebsocketRequest:
             )
 
     def _serve_ir_websocket(self, event_name, data):
-        """
-        Delegate most of the processing to the ir.websocket model
-        which is extensible by applications. Directly call the
-        appropriate ir.websocket method since only two events are
-        tolerated: `subscribe` and `update_presence`.
-        """
-        self.env['ir.websocket']._authenticate()
-        if event_name == 'subscribe':
-            self.env['ir.websocket']._subscribe(data)
-        if event_name == 'update_presence':
-            self.env['ir.websocket']._update_bus_presence(**data)
+        """Process websocket events, in particular authenticate and subscribe, and delegate extra
+        processing to the ir.websocket model which is extensible by applications."""
+        self.env["ir.websocket"]._authenticate()
+        if event_name == "subscribe":
+            self.env["ir.websocket"]._subscribe(data)
+        self.env["ir.websocket"]._serve_ir_websocket(event_name, data)
 
     def _get_session(self):
         session = root.session_store.get(self.ws._session.sid)

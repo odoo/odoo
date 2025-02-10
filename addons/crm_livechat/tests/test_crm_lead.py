@@ -12,8 +12,7 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
     @classmethod
     def setUpClass(cls):
         super(TestLivechatLead, cls).setUpClass()
-
-        cls.env['bus.presence'].create({'user_id': cls.user_sales_leads.id, 'status': 'online'})
+        cls.env["mail.presence"]._update_presence(cls.user_sales_leads)
         cls.livechat_channel = cls.env['im_livechat.channel'].create({
             'name': 'Test Livechat Channel',
             'user_ids': [Command.link(cls.user_sales_leads.id)],

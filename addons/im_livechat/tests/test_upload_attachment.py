@@ -10,7 +10,7 @@ class TestUploadAttachment(HttpCase):
     def test_visitor_cannot_upload_on_closed_livechat(self):
         self.authenticate(None, None)
         operator = self.env["res.users"].create({"name": "Operator", "login": "operator"})
-        self.env["bus.presence"].create({"user_id": operator.id, "status": "online"})
+        self.env["mail.presence"]._update_presence(operator)
         livechat_channel = self.env["im_livechat.channel"].create(
             {"name": "Test Livechat Channel", "user_ids": [operator.id]}
         )

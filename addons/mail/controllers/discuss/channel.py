@@ -6,8 +6,7 @@ from odoo import http
 from odoo.http import request
 from odoo.tools.misc import OrderedSet
 from odoo.addons.mail.controllers.webclient import WebclientController
-from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
-from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
 
 
 class DiscussChannelWebclientController(WebclientController):

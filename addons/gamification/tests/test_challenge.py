@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import datetime
 from freezegun import freeze_time
 
@@ -92,26 +92,16 @@ class test_challenge(TestGamificationCommon):
         })
 
         # Setup user presence
-        self.env['bus.presence'].search([('user_id', 'in', challenge.user_ids.ids)]).unlink()
-        now = self.env.cr.now()
+        challenge.user_ids.presence_ids.unlink()
 
         # Create "old" log in records
-        twenty_minutes_ago = now - datetime.timedelta(minutes=20)
-        with freeze_time(twenty_minutes_ago):
-            # Not using BusPresence.update_presence to avoid lower level cursor handling there.
-            self.env['bus.presence'].create([
-                {
-                    'user_id': user.id,
-                    'last_presence': twenty_minutes_ago,
-                    'last_poll': twenty_minutes_ago,
-                }
-                for user in (
-                    portal_last_active_old,
-                    portal_last_active_recent,
-                    internal_last_active_old,
-                    internal_last_active_recent,
-                )
-            ])
+        for user in (
+            portal_last_active_old,
+            portal_last_active_recent,
+            internal_last_active_old,
+            internal_last_active_recent,
+        ):
+            self.env["mail.presence"]._update_presence(user, 20 * 60 * 1000)  # 20 min
 
         # Reset goal objective values
         all_test_users.partner_id.tz = False
@@ -128,11 +118,8 @@ class test_challenge(TestGamificationCommon):
         self.assertEqual(set(goal_ids.mapped('state')), {'inprogress'})
 
         # Update presence for 2 users
-        users_recent = internal_last_active_recent | portal_last_active_recent
-        users_recent_presence = self.env['bus.presence'].search([('user_id', 'in', users_recent.ids)])
-        users_recent_presence.last_presence = now
-        users_recent_presence.last_poll = now
-        users_recent_presence.flush_recordset()
+        self.env["mail.presence"]._update_presence(internal_last_active_recent)
+        self.env["mail.presence"]._update_presence(portal_last_active_recent)
 
         # Update goal objective checked by goal definition
         all_test_users.partner_id.write({'tz': 'Europe/Paris'})

@@ -1,11 +1,7 @@
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
-import { session } from "@web/session";
 
 export const AWAY_DELAY = 30 * 60 * 1000; // 30 minutes
-export const FIRST_UPDATE_DELAY = 500;
-export const UPDATE_BUS_PRESENCE_DELAY = 60000;
 
 /**
  * This service keeps the user's presence up to date with the server. When the
@@ -18,6 +14,7 @@ export const UPDATE_BUS_PRESENCE_DELAY = 60000;
  */
 export const imStatusService = {
     dependencies: ["bus_service", "presence"],
+    // and cyclic dependecy with "mail.store" (both services should be merged together)
 
     start(env, { bus_service, presence }) {
         let lastSentInactivity;
@@ -28,7 +25,6 @@ export const imStatusService = {
             startAwayTimeout();
             bus_service.send("update_presence", { inactivity_period: lastSentInactivity });
         };
-        this.updateBusPresence = updateBusPresence;
 
         const startAwayTimeout = () => {
             clearTimeout(becomeAwayTimeout);
@@ -38,18 +34,30 @@ export const imStatusService = {
             }
         };
         bus_service.addEventListener("connect", () => updateBusPresence(), { once: true });
-        bus_service.subscribe("bus.bus/im_status_updated", async ({ partner_id, im_status }) => {
-            if (session.is_public || !partner_id || partner_id !== user.partnerId) {
-                return;
+        bus_service.subscribe(
+            "bus.bus/im_status_updated",
+            async ({ im_status, partner_id, guest_id }) => {
+                const store = env.services["mail.store"];
+                const persona = store.Persona.get({
+                    type: partner_id ? "partner" : "guest",
+                    id: partner_id ?? guest_id,
+                });
+                if (!persona) {
+                    return; // Do not store unknown persona's status
+                }
+                persona.debouncedSetImStatus(im_status);
+                if (persona.notEq(store.self)) {
+                    return;
+                }
+                const isOnline = presence.getInactivityPeriod() < AWAY_DELAY;
+                if ((im_status === "away" && isOnline) || im_status === "offline") {
+                    updateBusPresence();
+                }
             }
-            const isOnline = presence.getInactivityPeriod() < AWAY_DELAY;
-            if (im_status === "offline" || (im_status === "away" && isOnline)) {
-                this.updateBusPresence();
-            }
-        });
+        );
         presence.bus.addEventListener("presence", () => {
             if (lastSentInactivity >= AWAY_DELAY) {
-                this.updateBusPresence();
+                updateBusPresence();
             }
             startAwayTimeout();
         });

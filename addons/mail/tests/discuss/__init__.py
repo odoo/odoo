@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import test_avatar_acl
-from . import test_bus_presence
 from . import test_discuss_attachment_controller
 from . import test_discuss_binary_controller
 from . import test_discuss_action
@@ -9,6 +8,7 @@ from . import test_discuss_channel
 from . import test_discuss_channel_access
 from . import test_discuss_channel_as_guest
 from . import test_discuss_channel_member
+from . import test_discuss_mail_presence
 from . import test_discuss_message_update_controller
 from . import test_discuss_reaction_controller
 from . import test_discuss_sub_channels

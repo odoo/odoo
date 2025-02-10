@@ -10,10 +10,8 @@ from odoo import _, http
 from odoo.addons.mail.controllers.thread import ThreadController
 from odoo.exceptions import AccessError
 from odoo.http import request, content_disposition
-
 from odoo.tools import consteq
-from ..models.discuss.mail_guest import add_guest_to_context
-from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
 
 logger = logging.getLogger(__name__)
 

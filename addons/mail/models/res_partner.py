@@ -2,7 +2,6 @@
 
 import re
 
-import odoo
 from odoo import _, api, fields, models, tools
 from odoo.osv import expression
 from odoo.tools.misc import limited_field_access_token
@@ -27,6 +26,8 @@ class ResPartner(models.Model):
     # we need this to be readable inline as tracking messages use inline HTML nodes
     contact_address_inline = fields.Char(compute='_compute_contact_address_inline', string='Inlined Complete Address', tracking=True)
     starred_message_ids = fields.Many2many('mail.message', 'mail_message_res_partner_starred_rel')
+    # sudo: res.partner - can access presence of accessible partner
+    im_status = fields.Char("IM Status", compute="_compute_im_status", compute_sudo=True)
 
     @api.depends('contact_address')
     def _compute_contact_address_inline(self):
@@ -35,8 +36,19 @@ class ResPartner(models.Model):
             # replace any successive \n with a single comma
             partner.contact_address_inline = re.sub(r'\n(\s|\n)*', ', ', partner.contact_address).strip().strip(',')
 
+    @api.depends("user_ids.presence_ids.status")
     def _compute_im_status(self):
-        super()._compute_im_status()
+        for partner in self:
+            all_status = partner.user_ids.presence_ids.mapped("status")
+            partner.im_status = (
+                "online"
+                if "online" in all_status
+                else "away"
+                if "away" in all_status
+                else "offline"
+                if partner.user_ids
+                else "im_partner"
+            )
         odoobot_id = self.env['ir.model.data']._xmlid_to_res_id('base.partner_root')
         odoobot = self.env['res.partner'].browse(odoobot_id)
         if odoobot in self:

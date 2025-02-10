@@ -26,6 +26,9 @@ class ResUsers(models.Model):
         help="Policy on how to handle Chatter notifications:\n"
              "- Handle by Emails: notifications are sent to your email address\n"
              "- Handle in Odoo: notifications appear in your Odoo Inbox")
+    presence_ids = fields.One2many("mail.presence", "user_id", groups="base.group_system")
+    # sudo: res.users - can access presence of accessible user
+    im_status = fields.Char("IM Status", compute="_compute_im_status", compute_sudo=True)
 
     _notification_type = models.Constraint(
         "CHECK (notification_type = 'email' OR NOT share)",
@@ -51,6 +54,11 @@ class ResUsers(models.Model):
 
         # Special case: internal users with inbox notifications converted to portal must be converted to email users
         self.filtered_domain([('share', '=', True), ('notification_type', '=', 'inbox')]).notification_type = 'email'
+
+    @api.depends("presence_ids.status")
+    def _compute_im_status(self):
+        for user in self:
+            user.im_status = user.presence_ids.status or "offline"
 
     def _inverse_notification_type(self):
         inbox_group = self.env.ref('mail.group_mail_notification_type_inbox')

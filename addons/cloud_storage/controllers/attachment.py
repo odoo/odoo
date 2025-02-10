@@ -2,8 +2,8 @@
 
 from odoo import _
 from odoo.http import route, request
-from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 from odoo.addons.mail.controllers.attachment import AttachmentController
+from odoo.addons.mail.tools.discuss import add_guest_to_context
 
 
 class CloudAttachmentController(AttachmentController):
