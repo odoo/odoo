@@ -483,7 +483,7 @@ overridden by modules), because:
 <template id="new_page_template_s_features" inherit_id="website.s_features" primary="True"/>
 
 <template id="new_page_template_about_s_features" inherit_id="website.new_page_template_s_features" primary="True">
-    <xpath expr="//h3" position="replace">
+    <xpath expr="//h2" position="replace">
         <h3 class="h5-fs">My Skills</h3>
     </xpath>
     <xpath expr="//div[hasclass('row')]/div[1]/div/h3" position="replace">
@@ -846,13 +846,13 @@ overridden by modules), because:
 <template id="new_page_template_s_showcase" inherit_id="website.s_showcase" primary="True"/>
 
 <template id="new_page_template_landing_s_showcase" inherit_id="website.new_page_template_s_showcase" primary="True">
-    <xpath expr="//h5" position="replace" mode="inner">
+    <xpath expr="//h3" position="replace" mode="inner">
         Intuitive Touch Controls
     </xpath>
-    <xpath expr="(//h5)[2]" position="replace" mode="inner">
+    <xpath expr="(//h3)[2]" position="replace" mode="inner">
         Secure and Comfortable Fit
     </xpath>
-    <xpath expr="(//h5)[3]" position="replace" mode="inner">
+    <xpath expr="(//h3)[3]" position="replace" mode="inner">
         On-the-Go Charging
     </xpath>
     <xpath expr="//p" position="replace">
