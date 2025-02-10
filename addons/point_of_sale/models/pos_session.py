@@ -1501,7 +1501,7 @@ class PosSession(models.Model):
         }
     
     def _get_captured_payments_domain(self):
-        return [('session_id', '=', self.id), ('pos_order_id.state', 'in', ['paid', 'invoiced'])]
+        return [('session_id', 'in', self.ids), ('pos_order_id.state', 'in', ['done', 'paid', 'invoiced'])]
 
     def open_frontend_cb(self):
         """Open the pos interface with config_id as an extra argument.
