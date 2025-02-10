@@ -106,6 +106,29 @@ class TestWebReadGroup(common.TransactionCase):
             ]
         )
 
+    def test_groupby_id(self):
+        Model = self.env['test_read_group.aggregate']
+        rec1, rec2 = Model.create([
+            {'value': 1, 'display_name': 'record1'},
+            {'value': 2, 'display_name': 'record2'},
+        ])
+
+        self.assertEqual(
+            Model.formatted_read_group([], groupby=['id'], aggregates=['value:sum']),
+            [
+                {
+                    '__extra_domain': [('id', '=', rec1.id)],
+                    'id': (rec1.id, "record1"),
+                    'value:sum': 1,
+                },
+                {
+                    '__extra_domain': [('id', '=', rec2.id)],
+                    'id': (rec2.id, "record2"),
+                    'value:sum': 2,
+                },
+            ],
+        )
+
     def test_limit_offset(self):
         Model = self.env['test_read_group.aggregate']
         Model.create({'key': 1, 'value': 1})
