@@ -98,7 +98,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
 
     def _cron_peppol_get_new_documents(self):
         edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'receiver')])
-        edi_users._peppol_get_new_documents()
+        edi_users._peppol_get_new_documents(skip_no_journal=True)
 
     def _cron_peppol_get_message_status(self):
         edi_users = self.search([('company_id.account_peppol_proxy_state', 'in', self._get_can_send_domain())])
@@ -120,19 +120,20 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             return f'{company.peppol_eas}:{company.peppol_endpoint}'
         return super()._get_proxy_identification(company, proxy_type)
 
-    def _peppol_import_invoice(self, attachment, partner_endpoint, peppol_state, uuid):
+    def _peppol_import_invoice(self, attachment, partner_endpoint, peppol_state, uuid, journal=None):
         """Save new documents in an accounting journal, when one is specified on the company.
 
         :param attachment: the new document
         :param partner_endpoint: DEPRECATED - to be removed in master
         :param peppol_state: the state of the received Peppol document
         :param uuid: the UUID of the Peppol document
-        :return: `True` if the document was saved, `False` if it was not
+        :param journal: journal to use for the new move (otherwise the company's peppol journal will be used)
+        :return: the created move (if any)
         """
-        self.ensure_one()
-        journal = self.company_id.peppol_purchase_journal_id
+
+        journal = journal or self.company_id.peppol_purchase_journal_id
         if not journal:
-            return False
+            return self.env['account.move']
 
         move = self.env['account.move'].create({
             'journal_id': journal.id,
@@ -152,9 +153,9 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             attachment_ids=attachment.ids,
         )
         attachment.write({'res_model': 'account.move', 'res_id': move.id})
-        return True
+        return move
 
-    def _peppol_get_new_documents(self):
+    def _peppol_get_new_documents(self, skip_no_journal=False):
         params = {
             'domain': {
                 'direction': 'incoming',
@@ -162,6 +163,14 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             }
         }
         for edi_user in self:
+            journal = edi_user.company_id.peppol_purchase_journal_id
+            if not journal:
+                msg = _('Please set a journal for Peppol invoices on %s before receiving documents.', edi_user.company_id.display_name)
+                if skip_no_journal:
+                    _logger.warning(msg)
+                else:
+                    raise UserError(msg)
+
             params['domain']['receiver_identifier'] = edi_user.edi_identification
             try:
                 # request all messages that haven't been acknowledged
@@ -182,7 +191,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 continue
 
             for uuids in split_every(BATCH_SIZE, message_uuids):
-                proxy_acks = []
+                created_moves = self.env['account.move']
                 # retrieve attachments for filtered messages
                 all_messages = edi_user._call_peppol_proxy(
                     "/api/peppol/1/get_document",
@@ -202,17 +211,16 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                             "mimetype": "application/xml",
                         }
                     )
-                    if edi_user._peppol_import_invoice(attachment, None, content["state"], uuid):
-                        # Only acknowledge when we saved the document somewhere
-                        proxy_acks.append(uuid)
+                    created_moves |= edi_user._peppol_import_invoice(attachment, None, content["state"], uuid, journal)
 
-                if not modules.module.current_test:
+                if not (modules.module.current_test or tools.config['test_enable']):
                     self.env.cr.commit()
-                if proxy_acks:
+                if created_moves:
                     edi_user._call_peppol_proxy(
                         "/api/peppol/1/ack",
-                        params={'message_uuids': proxy_acks},
+                        params={'message_uuids': created_moves.mapped('peppol_message_uuid')},
                     )
+                    journal._notify_einvoices_received(created_moves)
 
     def _peppol_get_message_status(self):
         for edi_user in self:
