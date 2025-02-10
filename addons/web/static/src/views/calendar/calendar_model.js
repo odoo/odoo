@@ -208,8 +208,10 @@ export class CalendarModel extends Model {
                 }
             }
         }
-        await this.orm.create(this.meta.resModel, records, { context: this.meta.context });
-        await this.load();
+        if (records.length) {
+            await this.orm.create(this.meta.resModel, records, { context: this.meta.context });
+            await this.load();
+        }
     }
 
     async unlinkFilter(fieldName, recordId) {
