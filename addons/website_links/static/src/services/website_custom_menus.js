@@ -3,7 +3,6 @@ import { LinkTrackerDialog } from "../components/dialog/link_tracker_dialog";
 import { browser } from "@web/core/browser/browser";
 
 registry.category("website_custom_menus").add("website_links.menu_link_tracker", {
-    // openWidget: (services) => services.website.goToWebsite({ path: `/r?u=${encodeURIComponent(services.website.contentWindow.location.href)}` }),
     Component: LinkTrackerDialog,
     isDisplayed: (env) => env.services.website.currentWebsite && env.services.website.contentWindow,
     getProps: async ({ orm, website }) => {
