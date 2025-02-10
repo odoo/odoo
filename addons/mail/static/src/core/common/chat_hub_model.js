@@ -51,6 +51,7 @@ export class ChatHub extends Record {
     /** From top to bottom. Bottom-most will actually be hidden */
     folded = Record.many("ChatWindow", { inverse: "hubAsFolded" });
     initPromise = new Deferred();
+    preFirstFetchPromise = new Deferred();
     loadMutex = new Mutex();
 
     async closeAll() {
@@ -80,6 +81,7 @@ export class ChatHub extends Record {
         const getThread = (data) => this.store.Thread.getOrFetch(data, ["display_name"]);
         const openPromises = opened.map(getThread);
         const foldPromises = folded.map(getThread);
+        this.preFirstFetchPromise.resolve();
         const foldThreads = await Promise.all(foldPromises);
         const openThreads = await Promise.all(openPromises);
         /** @param {import("models").Thread[]} threads */
