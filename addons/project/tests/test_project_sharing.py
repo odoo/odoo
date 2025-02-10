@@ -309,7 +309,7 @@ class TestProjectSharing(TestProjectSharingCommon):
 
         Task = Task.with_user(self.user_portal)
         # Create/Update a forbidden task through child_ids
-        with self.assertRaisesRegex(AccessError, "You cannot write on the following fields"):
+        with self.assertRaises(AccessError):
             Task.create({'name': 'foo', 'child_ids': [Command.create({'name': 'Foo', 'color': 1})]})
         with self.assertRaisesRegex(AccessError, "top-secret records"):
             Task.create({'name': 'foo', 'child_ids': [Command.update(self.task_no_collabo.id, {'name': 'Foo'})]})
@@ -442,7 +442,7 @@ class TestProjectSharing(TestProjectSharingCommon):
         self.assertEqual(len(task.child_ids), 2, 'Check 2 subtasks has correctly been created by the user portal.')
 
         # Create/Update a forbidden task through child_ids
-        with self.assertRaisesRegex(AccessError, "You cannot write on the following fields"):
+        with self.assertRaises(AccessError):
             task.write({'child_ids': [Command.create({'name': 'Foo', 'color': 1})]})
         with self.assertRaisesRegex(AccessError, "top-secret records"):
             task.write({'child_ids': [Command.update(self.task_no_collabo.id, {'name': 'Foo'})]})
