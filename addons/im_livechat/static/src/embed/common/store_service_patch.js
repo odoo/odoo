@@ -7,11 +7,11 @@ import { patch } from "@web/core/utils/patch";
 storeService.dependencies.push("im_livechat.initialized");
 
 patch(Store.prototype, {
-    async initialize() {
+    async initialize({ force } = {}) {
         const livechatInitialized = this.env.services["im_livechat.initialized"];
         await livechatInitialized.ready;
         const livechatService = this.env.services["im_livechat.livechat"];
-        if (livechatService.state === SESSION_STATE.PERSISTED) {
+        if (livechatService.state === SESSION_STATE.PERSISTED || force) {
             try {
                 await super.initialize();
                 livechatService.thread ??= this.store.Thread.get({
