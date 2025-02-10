@@ -2,7 +2,13 @@
 <odoo>
 <template id="report_saleorder_document_inherit_sale_management" inherit_id="sale.report_saleorder_document">
     <xpath expr="//div[@name='signature']" position="after">
-        <div t-if="not (doc.sale_order_option_ids and doc.state in ['draft', 'sent'])" class="oe_structure">&#8203;</div>
+        <div
+            t-if="not (doc.sale_order_option_ids and doc.state in ['draft', 'sent'])
+                  or (len(doc.sale_order_option_ids)==1 and doc.sale_order_option_ids[0].is_present)"
+            class="oe_structure"
+        >
+            &#8203;
+        </div>
         <div t-else="">
             <t t-set="has_option_discount" t-value="any(option.discount != 0.0 for option in doc.sale_order_option_ids)" />
             <h4 name="h_optional_products">
@@ -17,7 +23,7 @@
                     </tr>
                 </thead>
                 <tbody class="sale_tbody">
-                    <tr t-foreach="doc.sale_order_option_ids" t-as="option">
+                    <tr t-foreach="doc.sale_order_option_ids" t-as="option" t-if="not option.is_present">
                         <td name="td_option_name">
                             <span t-field="option.name">Extra Chips</span>
                         </td>
