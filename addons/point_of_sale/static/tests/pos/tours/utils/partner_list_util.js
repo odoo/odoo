@@ -49,8 +49,15 @@ export function checkContactValues(name, address = "", phone = "", email = "") {
     return steps;
 }
 
-export function searchCustomerValue(val) {
-    return [
+export function checkCustomerShown(val) {
+    return {
+        content: `Check "${val}" is shown`,
+        trigger: `.partner-list .partner-info:nth-child(1):contains("${val}")`,
+    };
+}
+
+export function searchCustomerValue(val, pressEnter = false) {
+    const steps = [
         {
             isActive: ["mobile"],
             content: `Click search field`,
@@ -62,9 +69,38 @@ export function searchCustomerValue(val) {
             trigger: `.modal-dialog .input-group input`,
             run: `edit ${val}`,
         },
-        {
-            content: `Check "${val}" is shown`,
-            trigger: `.partner-list .partner-info:nth-child(1):contains("${val}")`,
-        },
     ];
+
+    if (pressEnter) {
+        steps.push({
+            content: `Manually trigger keyup event`,
+            trigger: ".modal-header .input-group input",
+            run: function () {
+                document
+                    .querySelector(".modal-header .input-group input")
+                    .dispatchEvent(new KeyboardEvent("keyup", { key: "" }));
+            },
+        });
+        steps.push({
+            content: `Press Enter to trigger "search more"`,
+            trigger: `.modal-dialog .input-group input`,
+            run: () =>
+                document
+                    .querySelector(".modal-dialog .input-group input")
+                    .dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Enter" })),
+        });
+    }
+    steps.push(checkCustomerShown(val));
+    return steps;
+}
+
+export function scrollBottom() {
+    return {
+        content: `Scroll to the bottom of the partner list`,
+        trigger: `.modal-body.partner-list`,
+        run: () => {
+            const partnerList = document.querySelector(".modal-body.partner-list");
+            partnerList.scrollTop = partnerList.scrollHeight;
+        },
+    };
 }
