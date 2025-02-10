@@ -70,6 +70,20 @@ export function clickDisplayedProduct(
 
     return step;
 }
+export function searchProduct(name) {
+    return [
+        {
+            isActive: ["mobile"],
+            content: "click more button",
+            trigger: ".fa-search",
+            run: "click",
+        },
+        {
+            trigger: ".input-group input",
+            run: "edit " + name,
+        },
+    ];
+}
 export function clickInfoProduct(name) {
     return [
         {

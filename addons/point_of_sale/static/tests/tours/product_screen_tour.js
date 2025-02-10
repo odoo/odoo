@@ -292,6 +292,22 @@ registry.category("web_tour.tours").add("DecimalCommaOrderlinePrice", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("SearchProducts", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.searchProduct("chair"),
+            ProductScreen.clickDisplayedProduct("Test chair 1"),
+            ProductScreen.clickDisplayedProduct("Test CHAIR 2"),
+            ProductScreen.clickDisplayedProduct("Test sofa"),
+            ProductScreen.searchProduct("CHAIR"),
+            ProductScreen.clickDisplayedProduct("Test chair 1"),
+            ProductScreen.clickDisplayedProduct("Test CHAIR 2"),
+            ProductScreen.clickDisplayedProduct("Test sofa"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("CheckProductInformation", {
     test: true,
     steps: () =>
