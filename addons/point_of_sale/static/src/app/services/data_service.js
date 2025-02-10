@@ -229,7 +229,8 @@ export class PosData extends Reactive {
 
         if (
             (navigator.onLine && session?.state !== "opened") ||
-            session?.id !== odoo.pos_session_id
+            session?.id !== odoo.pos_session_id ||
+            odoo.from_backend
         ) {
             try {
                 const limitedLoading = this.isLimitedLoading();
