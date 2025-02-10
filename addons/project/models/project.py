@@ -2627,7 +2627,7 @@ class Task(models.Model):
                 if project._check_project_sharing_access():
                     url = f"/my/projects/{self.parent_id.project_id.id}?task_id={self.parent_id.id}"
                 return {
-                    "name": "Portal Parent Task",
+                    "name": _("Portal Parent Task"),
                     "type": "ir.actions.act_url",
                     "url": url,
                 }
@@ -2668,7 +2668,7 @@ class Task(models.Model):
                 action['res_id'] = subtasks.id
             return action
         return {
-            'name': 'Portal Sub-tasks',
+            'name': _('Portal Sub-tasks'),
             'type': 'ir.actions.act_url',
             'url': f'/my/projects/{self.project_id.id}/task/{self.id}/subtasks' if len(subtasks) > 1 else subtasks.get_portal_url(query_string='project_sharing=1'),
         }
