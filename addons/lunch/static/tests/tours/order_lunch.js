@@ -48,6 +48,6 @@ registry.category("web_tour.tours").add('order_lunch_tour', {
     tooltipPosition: 'left',
     run: 'click',
 }, {
-    trigger: '.o_lunch_widget_lines .badge:contains("Ordered")',
+    trigger: ".o_lunch_widget_line li[name='o_lunch_order_line'] .badge:contains('Ordered')",
     content: 'Check that order is ordered',
 }]});

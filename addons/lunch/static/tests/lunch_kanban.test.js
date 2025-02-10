@@ -206,7 +206,7 @@ test("Manager: user change", async () => {
         ".lunch_user li:not(.o_m2o_dropdown_option) .dropdown-item:contains('David Elora')"
     ).click();
 
-    expect(".o_lunch_banner .w-100 > .d-flex > span:nth-child(2)").toHaveText("-10000.00\n€", {
+    expect(".o_lunch_banner span[name='o_lunch_balance']").toHaveText("Available Balance\n-10000.00€", {
         message: "David Elora is poor",
     });
 
@@ -252,20 +252,20 @@ test("Trash existing order", async () => {
     });
     await mountLunchView();
 
-    expect("div.o_lunch_banner > .row > div").toHaveCount(3);
-    expect("div.o_lunch_banner > .row > div:nth-child(2) button.fa-trash").toHaveCount(1, {
-        message: "should have trash icon",
+    expect("div.o_lunch_banner > div > div").toHaveCount(3);
+    expect("div.o_lunch_banner div[name='o_lunch_order_buttons'] > button:contains(Clear Order)").toHaveCount(1, {
+        message: "should have clear order button",
     });
-    expect("div.o_lunch_banner > .row > div:nth-child(2) table > tr").toHaveCount(1, {
+    expect("div.o_lunch_banner li[name='o_lunch_order_line']").toHaveCount(1, {
         message: "should have one order line",
     });
 
-    expect("div.o_lunch_banner > .row > div:nth-child(3) button:contains(Order Now)").toHaveCount(
+    expect("div.o_lunch_banner div[name='o_lunch_order_buttons'] > button:contains(Order Now)").toHaveCount(
         1
     );
 
-    await contains("div.o_lunch_banner > .row > div:nth-child(2) button.fa-trash").click();
-    expect("div.o_lunch_banner > .row > div").toHaveCount(1);
+    await contains("div.o_lunch_banner > div button:contains(Clear Order)").click();
+    expect("div.o_lunch_banner li[name='o_lunch_order_line']").toHaveCount(0);
 });
 
 test("Change existing order", async () => {
@@ -312,7 +312,7 @@ test("Change existing order", async () => {
     });
     await mountLunchView();
 
-    await contains("div.o_lunch_banner > .row > div:nth-child(2) span.fa-plus-circle").click();
+    await contains("div.o_lunch_banner li[name='o_lunch_order_line']:contains(Big Plate) i.oi-plus").click();
 });
 
 test("Confirm existing order", async () => {
@@ -357,11 +357,11 @@ test("Confirm existing order", async () => {
         return true;
     });
     await mountLunchView();
-    expect(".o_lunch_banner .w-100 > .d-flex > span:nth-child(2)").toHaveText("12.05\n€");
+    expect("div.o_lunch_banner span[name='o_lunch_balance'] span:nth-child(2)").toHaveText("12.05€");
 
-    await contains("div.o_lunch_banner > .row > div:nth-child(3) button").click();
+    await contains("div.o_lunch_banner div[name='o_lunch_order_buttons'] > button:contains(Order Now)").click();
 
-    expect(".o_lunch_banner .w-100 > .d-flex > span:nth-child(2)").toHaveText("7.10\n€", {
+    expect("div.o_lunch_banner span[name='o_lunch_balance'] span:nth-child(2)").toHaveText("7.10€", {
         message: "Wallet should update",
     });
 });
