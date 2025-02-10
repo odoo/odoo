@@ -172,13 +172,16 @@ class AccountMove(models.Model):
                 groupby=['l10n_tr_nilvera_uuid'],
                 aggregates=['__count'],
             ))
+            moves = self.env['account.move']
             for document_uuid in document_uuids:
                 # Skip invoices that have already been downloaded.
                 if document_uuid in document_uuids_count:
                     continue
                 move = self._l10n_tr_nilvera_get_invoice_from_uuid(client, journal, document_uuid)
                 self._l10n_tr_nilvera_add_pdf_to_invoice(client, move, document_uuid)
+                moves |= move
                 self._cr.commit()
+            journal._notify_einvoices_received(moves)
 
     def _l10n_tr_nilvera_get_invoice_from_uuid(self, client, journal, document_uuid):
         response = client.request(
