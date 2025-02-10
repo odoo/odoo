@@ -70,10 +70,14 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
             );
             const props = this.getPopoverProps(date, records);
             props["records"] = mandatory_days_data.concat(props["records"]);
-            this.mandatoryDayPopover.open(target, props, "o_cw_popover");
+            this.mandatoryDayPopover.open(target, props, "o_cw_popover_holidays");
         } else {
             super.onDateClick(info);
         }
+    }
+
+    openPopover(target, date, records) {
+        this.popover.open(target, this.getPopoverProps(date, records), "o_cw_popover_holidays");
     }
 
     getDayCellClassNames(info) {

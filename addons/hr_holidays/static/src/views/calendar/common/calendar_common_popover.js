@@ -7,11 +7,13 @@ export class TimeOffCalendarCommonPopover extends CalendarCommonPopover {
     static subTemplates = {
         ...CalendarCommonPopover.subTemplates,
         footer: "hr_holidays.TimeOffCalendarCommonPopover.footer",
+        popover: "hr_holidays.TimeOffCalendarCommonPopover.popover",
     };
 
     setup() {
         super.setup();
         this.orm = useService("orm");
+        this.actionService = useService("action");
         this.viewType = "calendar";
         onWillStart(async () => {
             this.record = this.props.record.rawRecord;
@@ -21,17 +23,45 @@ export class TimeOffCalendarCommonPopover extends CalendarCommonPopover {
     }
 
     get isEventDeletable() {
-        return this.props.record.rawRecord.can_cancel || this.state && !['validate', 'refuse', 'cancel'].includes(this.state);
+        return this.isManager && this.state === 'confirm';
     }
 
     get isEventEditable() {
-        return this.state !== undefined;
+        return this.isManager && this.state;
     }
 
-    async onClickButton(ev) {
-        const args = (ev.target.name === "action_approve") ? [this.record.id, false] : [this.record.id];
-        await this.orm.call("hr.leave", ev.target.name, args);
-        await this.props.model.load();
-        this.props.close();
+    get canBeApproved() {
+        return this.isManager && ['confirm', 'refuse'].includes(this.state);
+    }
+
+    get canBeValidated() {
+        return this.isManager && this.state === 'validate1';
+    }
+
+    get canBeRefused() {
+        return this.isManager && this.state !== 'refuse';
+    }
+
+    onEditEvent() {
+        this.props.close()
+        this.actionService.doAction({
+            name: this.record.display_name,
+            type: "ir.actions.act_window",
+            res_model: this.props.model.resModel,
+            res_id: this.record.id,
+            views: [[false, "form"]],
+        });
+    }
+
+    async onClickApproveEvent(ev) {
+        debugger
+    }
+
+    async onClickValidateEvent(ev) {
+        debugger
+    }
+
+    async onClickRefuseEvent(ev) {
+        debugger
     }
 }

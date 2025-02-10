@@ -62,7 +62,7 @@ class HrLeaveEmployeeTypeReport(models.Model):
                             THEN aggregate_allocation.number_of_hours - COALESCE(aggregate_leave.number_of_hours, 0)
                             ELSE 0
                     END as number_of_hours,
-                    allocation.department_id as department_id,
+                    employee.department_id as department_id,
                     allocation.holiday_status_id as leave_type,
                     allocation.state as state,
                     allocation.date_from as date_from,
@@ -102,7 +102,7 @@ class HrLeaveEmployeeTypeReport(models.Model):
                     employee.active as active_employee,
                     request.number_of_days as number_of_days,
                     request.number_of_hours as number_of_hours,
-                    request.department_id as department_id,
+                    employee.department_id as department_id,
                     request.holiday_status_id as leave_type,
                     request.state as state,
                     request.date_from as date_from,

@@ -4,6 +4,8 @@
 from datetime import date
 from dateutil.relativedelta import relativedelta, MO, FR
 
+from odoo.exceptions import UserError
+
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
@@ -36,7 +38,12 @@ class TestChangeDepartment(TestHrHolidaysCommon):
         self.employee_emp.department_id = self.hr_dept
         hol2_employee_group = create_holiday("hol2", -1, -1)
         hol2_user_group = hol2_employee_group.with_user(self.user_hruser_id)
-        hol2_user_group.action_approve()
+        # This user is not a Time Off Administrator so he can't approved this leave in the past
+        with self.assertRaises(UserError):
+            hol2_user_group.action_approve()
+
+        hol2_manager_group = hol2_employee_group.with_user(self.user_hrmanager_id)
+        hol2_manager_group.action_approve()
         self.employee_emp.department_id = self.rd_dept
         self.assertEqual(hol2_employee_group.department_id, self.hr_dept, 'hr_holidays: approved passed leave request should stay in previous department if employee change department')
 
@@ -51,8 +58,12 @@ class TestChangeDepartment(TestHrHolidaysCommon):
         # Refused passed leave request change department
         self.employee_emp.department_id = self.rd_dept
         hol3_employee_group = create_holiday("hol3", -2, -2)
-        hol3_user_group = hol3_employee_group.with_user(self.user_hruser_id)
-        hol3_user_group.action_refuse()
+        # This user is not a Time Off Administrator so he can't refused this leave in the past
+        with self.assertRaises(UserError):
+            hol3_employee_group.action_refuse()
+
+        hol3_manager_group = hol3_employee_group.with_user(self.user_hrmanager_id)
+        hol3_manager_group.action_refuse()
         self.employee_emp.department_id = self.hr_dept # Change department
         self.assertEqual(hol3_employee_group.department_id, self.rd_dept, 'hr_holidays: refused passed leave request should stay in previous department if employee change department')
 

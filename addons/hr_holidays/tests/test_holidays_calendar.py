@@ -36,7 +36,7 @@ class TestHolidaysCalendar(HttpCase, TestHrHolidaysCommon):
         expected_leave_end = leave.date_to.hour
 
         # Tour that takes a leave on the first thursday of the year.
-        self.start_tour('/', 'time_off_request_calendar_view', login='enguerran')
+        self.start_tour('/', 'time_off_request_calendar_view', login='enguerran', watch=True)
 
         last_leave = self.env['hr.leave'].search([('employee_id.id', '=', self.employee_emp.id)]).sorted(lambda leave: leave.create_date)[-1]
         self.assertEqual(last_leave.date_from.weekday(), 3, "It should be Thursday")

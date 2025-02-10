@@ -9,8 +9,8 @@ from odoo.exceptions import UserError
 DAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
 MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
 # Used for displaying the days and reversing selection -> integer
-DAY_SELECT_VALUES = [str(i) for i in range(1, 29)] + ['last']
-DAY_SELECT_SELECTION_NO_LAST = tuple(zip(DAY_SELECT_VALUES, (str(i) for i in range(1, 29))))
+DAY_SELECT_VALUES = [str(i) for i in range(1, 31)] + ['last']
+DAY_SELECT_SELECTION_NO_LAST = tuple(zip(DAY_SELECT_VALUES, (str(i) for i in range(1, 31))))
 
 def _get_selection_days(self):
     return DAY_SELECT_SELECTION_NO_LAST + (("last", _("last day")),)
