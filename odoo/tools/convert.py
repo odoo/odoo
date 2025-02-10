@@ -219,14 +219,19 @@ class xml_import(object):
         uid = node.get('uid')
         context = node.get('context')
         if uid or context:
+            safe_eval_context = {
+                'env': self.env,
+                'ref': self.id_get,
+                **(eval_context or {})
+            }
+            uid = uid and safe_eval(uid, safe_eval_context)
+            if isinstance(uid, str):
+                uid = self.id_get(uid)
             return self.env(
-                user=uid and self.id_get(uid),
+                user=uid,
                 context=context and {
                     **self.env.context,
-                    **safe_eval(context, {
-                        'ref': self.id_get,
-                        **(eval_context or {})
-                    }),
+                    **safe_eval(context, safe_eval_context),
                 }
             )
         return self.env
