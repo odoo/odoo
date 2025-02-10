@@ -12,11 +12,11 @@ import datetime
 import pytz
 
 from odoo import api, models
-from odoo.fields import Command, Date
+from odoo.fields import Command, Date, Domain
 from odoo.api import NewId
 from odoo.osv.expression import AND, OR, TRUE_DOMAIN, normalize_domain
 from odoo.models import READ_GROUP_DISPLAY_FORMAT, READ_GROUP_NUMBER_GRANULARITY, READ_GROUP_TIME_GRANULARITY, BaseModel
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, date_utils, get_lang, unique, OrderedSet
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, SQL, Query, date_utils, get_lang, unique, OrderedSet
 from odoo.exceptions import AccessError, UserError
 from odoo.tools.translate import LazyTranslate
 
@@ -252,6 +252,141 @@ class Base(models.AbstractModel):
         for i, record in enumerate(self, start=offset):
             record.write({field_name: i})
         return self.web_read(specification)
+
+    @api.model
+    @api.readonly
+    def web_read_group_unity(self, domain, groupby, aggregates, read_specification, limit_group=0, limit_unfold=10):
+        # self = env['project.task']
+        # aggregates = ["__count", "progress:avg", "remaining_hours:sum", "allocated_hours:sum", "color:sum"]
+        # groupby = ["stage_id"]
+        # Make read_group
+
+        pass
+
+    def multi_search(self, base_domain, multi_domains, order=None, group_limit=0):
+        """
+        WITH "ir_module_module_dependency__CTE" AS (
+            SELECT "ir_module_module_dependency".*
+            FROM
+                "ir_module_module_dependency"
+            WHERE
+                (
+                    "ir_module_module_dependency"."module_id" IN (1118 ,1049 ,1050 ,1061 ,1068 ,1069 ,1048)
+                )
+            ORDER BY
+                "ir_module_module_dependency"."id"
+        ) (
+            SELECT 0, "ir_module_module_dependency__CTE"."id"
+            FROM
+                "ir_module_module_dependency__CTE"
+            WHERE
+                "ir_module_module_dependency__CTE"."module_id" = 1118
+            LIMIT
+                40
+        )
+        UNION ALL (
+            SELECT 1, "ir_module_module_dependency__CTE"."id"
+            FROM
+                "ir_module_module_dependency__CTE"
+            WHERE
+                "ir_module_module_dependency__CTE"."module_id" = 1049
+            LIMIT
+                40
+        );
+        """
+        if not multi_domains:
+            return []
+
+        merged_domain = Domain.AND([base_domain, Domain.OR(multi_domains)])
+        if len(multi_domains) == 1:
+            return self.search(merged_domain, order=order, limit=group_limit)
+
+        cte_alias = f'{self._table}__CTE'
+        group_queries = []
+        for i, domain in enumerate(multi_domains):
+            query = Query(self.env, cte_alias)
+            sql_domain = Domain(domain)._optimize(self)._to_sql(self, cte_alias, query)
+            query.add_where(sql_domain)
+            query.limit = group_limit
+            group_queries.append(query.subselect(SQL('%s', i), SQL.identifier(cte_alias, 'id')))
+
+        cte_query = self._search(merged_domain, order=order or self._order)
+
+        final_sql = SQL(
+            """WITH %s AS (
+    %s)
+%s
+            """,
+            SQL.identifier(cte_alias),
+            cte_query.select(SQL("%s.*", SQL.identifier(self._table))),
+            SQL('\nUNION ALL ').join(group_queries)
+        )
+
+        result = [[] for __ in multi_domains]
+        for i_group, id_ in self.env.execute_query(final_sql):
+            result[i_group].append(id_)
+
+        return [self.browse(ids) for ids in result]
+
+    def multi_search_2(self, base_domain, multi_domains, order=None, group_limit=0):
+        """
+        loop + search
+        """
+        return [
+           self.search(base_domain + domain, order=order, limit=group_limit)
+           for domain in multi_domains
+        ]
+
+    def multi_search_3(self, base_domain, multi_domains, order=None, group_limit=0):
+        """
+        _search + UNION ALL
+        """
+        sql_select = [
+            self._search(base_domain + domain, order=order, limit=group_limit).select(
+                SQL('%s', i),
+                SQL.identifier(self._table, 'id'),
+            )
+            for i, domain in enumerate(multi_domains)
+        ]
+        final_sql = SQL('\nUNION ALL ').join(sql_select)
+        result = [[] for __ in multi_domains]
+        for i_group, id_ in self.env.execute_query(final_sql):
+            result[i_group].append(id_)
+
+        return [self.browse(ids) for ids in result]
+
+    def multi_search_4(self, base_domain, multi_domains, order=None, group_limit=0):
+        """
+        WITH "ir_module_module_dependency__CTE" AS (
+            SELECT
+                "ir_module_module_dependency"."id",
+                "module_id",
+                ROW_NUMBER() OVER (PARTITION BY "module_id" ORDER BY "ir_module_module_dependency"."id") AS "__row_nb"
+            FROM
+                "ir_module_module_dependency"
+            WHERE
+                (
+                    "ir_module_module_dependency"."module_id" IN (1118, 1049, 1050, 1061, 1068, 1069, 1048)
+                )
+        )
+        SELECT "ir_module_module_dependency__CTE"."id", "ir_module_module_dependency__CTE"."module_id"
+        FROM "ir_module_module_dependency__CTE"
+        WHERE __row_nb <= 40;
+        """
+        if not multi_domains:
+            return []
+
+        merged_domain = Domain.AND([base_domain, *multi_domains])
+        if len(multi_domains) == 1:
+            return self.search(merged_domain, order=order, limit=group_limit)
+
+        cte_alias = f'{self._table}__CTE'
+        cte_query = self._search(merged_domain, order=order or self._order)
+
+        result = [[] for __ in multi_domains]
+
+        return [self.browse(ids) for ids in result]
+
 
     @api.model
     @api.readonly
