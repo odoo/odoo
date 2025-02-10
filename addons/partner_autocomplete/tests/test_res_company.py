@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from odoo.tests import common
+from odoo.tests import common, tagged
 from odoo.addons.partner_autocomplete.tests.common import MockIAPPartnerAutocomplete
 
+
+@tagged('post_install', '-at_install')
 class TestResCompany(common.TransactionCase, MockIAPPartnerAutocomplete):
 
     @classmethod
@@ -23,7 +22,6 @@ class TestResCompany(common.TransactionCase, MockIAPPartnerAutocomplete):
             res = company._enrich()
             self.assertTrue(res)
             self.assertEqual(company.country_id, self.env.ref('base.de'))
-            self.assertEqual(len(company.partner_id.child_ids), 2)
 
     def test_extract_company_domain(self):
         company_1 = self.env['res.company'].create({'name': "Test Company 1"})

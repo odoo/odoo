@@ -38,7 +38,7 @@ class IapAutocompleteApi(models.AbstractModel):
         :return tuple: results, error code
         """
         try:
-            results = self._contact_iap('/iap/partner_autocomplete', action, params, timeout=timeout)
+            results = self._contact_iap('/api/dnb/1', action, params, timeout=timeout)
         except exceptions.ValidationError:
             return False, 'Insufficient Credit'
         except (ConnectionError, HTTPError, exceptions.AccessError, exceptions.UserError) as exception:

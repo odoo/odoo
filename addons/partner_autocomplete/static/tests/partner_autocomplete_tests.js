@@ -18,6 +18,44 @@ async function editInputNoChangeEvent(input, value) {
     await triggerEvent(input, null, "input");
 }
 
+
+const iapSuggestions = [
+    {
+        "name": "First Company",
+        "duns": "123",
+        "city": "FirstCity",
+        "country_id": {"id": 1, "display_name": "Belgium"},
+    },
+    {
+        "name": "Second Company",
+        "duns": "456",
+        "city": "SecondCity",
+        "country_id": {"id": 1, "display_name": "Belgium"},
+    },
+    {
+        "name": "Third Company",
+        "duns": "789",
+        "city": "ThirdCity",
+        "country_id": {"id": 1, "display_name": "Belgium"},
+    },
+];
+
+const clearbitSuggestions = [
+    {
+        "name": "First Company",
+        "domain": "firstcompany.com",
+    },
+    {
+        "name": "MyCompany",
+        "domain": "mycompany.com",
+    },
+    {
+        "name": "YourCompany",
+        "domain": "yourcompany.com",
+    },
+];
+
+
 QUnit.module('partner_autocomplete', {
     async before() {
         // Load the lib before the tests to prevent them from
@@ -50,9 +88,11 @@ QUnit.module('partner_autocomplete', {
                         name: {string: "Name", type: "char", searchable: true},
                         parent_id: {string: "Company", type: "many2one", relation: "res.partner", searchable: true},
                         website: {string: "Website", type: "char", searchable: true},
+                        email: {string: "Email", type: "char", searchable: true},
                         image_1920: {string: "Image", type: "binary", searchable: true},
                         phone: {string: "Phone", type: "char", searchable: true},
                         street: {string: "Street", type: "char", searchable: true},
+                        street2: {string: "Street2", type: "char", searchable: true},
                         city: {string: "City", type: "char", searchable: true},
                         zip: {string: "Zip", type: "char", searchable: true},
                         state_id: {string: "State", type: "many2one", relation: "res.country.state", searchable: true},
@@ -60,7 +100,6 @@ QUnit.module('partner_autocomplete', {
                         comment: {string: "Comment", type: "char", searchable: true},
                         vat: {string: "Vat", type: "char", searchable: true},
                         is_company: {string: "Is company", type: "bool", searchable: true},
-                        partner_gid: {string: "Company data ID", type: "integer", searchable: true},
                     },
                     records: [],
                     onchanges: {
@@ -75,16 +114,16 @@ QUnit.module('partner_autocomplete', {
                     },
                     records: [{
                         id: 1,
-                        name: 'United States',
+                        display_name: 'Belgium',
                     }],
                 },
                 'res.country.state': {
                     fields: {
-                        display_name: {string: "Name", type: "char", searchable: true},
+                        name: {string: "Name", type: "char", searchable: true},
                     },
                     records: [{
                         id: 1,
-                        name: 'California (US)',
+                        name: 'Walloon Brabant',
                     }],
                 },
             },
@@ -98,85 +137,51 @@ QUnit.module('partner_autocomplete', {
                 <field name="parent_id" widget="res_partner_many2one"/>
                 <field name="website"/>
                 <field name="image_1920" widget="image"/>
+                <field name="email"/>
                 <field name="phone"/>
                 <field name="street"/>
+                <field name="street2"/>
                 <field name="city"/>
                 <field name="state_id"/>
                 <field name="zip"/>
                 <field name="country_id"/>
-                <field name="comment"/>
                 <field name="vat" widget="field_partner_autocomplete"/>
             </form>`,
         async mockRPC(route, args) {
-            if (route === "/web/dataset/call_kw/res.partner/autocomplete" || route === "/web/dataset/call_kw/res.partner/read_by_vat") {
-                return Promise.resolve([
-                    {
-                        "partner_gid": 1,
-                        "website": "firstcompany.com",
-                        "name": "First company",
-                        "ignored": false,
-                        "vat": ""
-                    },
-                    {
-                        "partner_gid": 2,
-                        "website": "secondcompany.com",
-                        "name": "Second company",
-                        "ignored": false,
-                        "vat": ""
-                    },
-                    {
-                        "partner_gid": 3,
-                        "website": "thirdcompany.com",
-                        "name": "Third company",
-                        "ignored": false,
-                        "vat": ""
-                    },
-                ]);
+            if (route === "/web/dataset/call_kw/res.partner/autocomplete_by_name" || route === "/web/dataset/call_kw/res.partner/autocomplete_by_vat") {
+                return Promise.resolve(iapSuggestions);
             }
-            else if (route === "/web/dataset/call_kw/res.partner/enrich_company") {
+            else if (route === "/web/dataset/call_kw/res.partner/enrich_by_duns") {
                 return Promise.resolve({
-                    "partner_gid": args.args[1],
-                    "website": args.args[0],
-                    "name": args.args[1] === 1 ? "First company" : "Second company",
-                    'logo': false,
-                    "ignored": false,
-                    "vat": "Some VAT number",
-                    "street": "Some street",
-                    "city": "Some city",
-                    "zip": "1234",
-                    "phone": "+0123456789",
-                    "email": "info@firstcompany.com",
+                    "name": iapSuggestions.filter((sugg) => sugg.duns === args.args[0])[0].name,
+                    "vat": "BE0477472701",
+                    "duns": "372441183",
+                    "city": "Ramillies",
+                    "zip": "1367",
+                    "street": "Chaussée de Namur 40",
+                    "street2": false,
+                    "email": "hello@odoo.com",
+                    "phone": "3281813700",
+                    "website": "www.odoo.com",
+                    "domain": "odoo.com",
                     "country_id": {
-                        'id': 1,
-                        'display_name': "United States",
+                        "id": 1,
+                        "name": "Belgium"
                     },
                     "state_id": {
-                        'id': 1,
-                        'display_name': "California (US)",
+                        "id": 1,
+                        "name": "Walloon Brabant"
                     },
                 });
             }
             else if (route.startsWith("https://autocomplete.clearbit.com/v1/companies/suggest")) {
-                return Promise.resolve([
-                    {
-                        "name": "Odoo",
-                        "domain": "odoo.com",
-                    },
-                    {
-                        "name": "MyCompany",
-                        "domain": "mycompany.com",
-                    },
-                    {
-                        "name": "YourCompany",
-                        "domain": "yourcompany.com",
-                    },
-                ])
+                return Promise.resolve(clearbitSuggestions)
             }
         }
     }
 
     QUnit.test("Partner autocomplete : Company type = Individual", async function (assert) {
-        assert.expect(13);
+        assert.expect(12);
         await makeView(makeViewParams);
 
         // Set company type to Individual
@@ -206,8 +211,8 @@ QUnit.module('partner_autocomplete', {
         assert.containsN(
             autocompleteContainer,
             ".o-autocomplete--dropdown-item.partner_autocomplete_dropdown_many2one",
-            6,
-            "Clearbit and Odoo autocomplete options should be shown"
+            3,
+            "Odoo autocomplete options should be shown"
         );
 
         // Click on the first option - "First company"
@@ -216,15 +221,14 @@ QUnit.module('partner_autocomplete', {
         const modalContent = target.querySelector('.modal-content');
         // Check that the fields of the modal have been pre-filled
         const expectedValues = {
-            "website": "firstcompany.com",
-            "name": "First company",
-            "vat": "Some VAT number",
-            "street": "Some street",
-            "city": "Some city",
-            "zip": "1234",
-            "phone": "+0123456789",
-            "country_id": "United States",
-            "state_id": "California (US)",
+            "name": "First Company",
+            "vat": "BE0477472701",
+            "street": "Chaussée de Namur 40",
+            "city": "Ramillies",
+            "zip": "1367",
+            "phone": "3281813700",
+            "country_id": "Belgium",
+            "state_id": "Walloon Brabant",
         };
         for (const [fieldName, expectedValue] of Object.entries(expectedValues)) {
             assert.strictEqual(modalContent.querySelector(`[name=${fieldName}] input`).value, expectedValue, `${fieldName} should be pre-filled`);
@@ -232,7 +236,7 @@ QUnit.module('partner_autocomplete', {
     });
 
     QUnit.test("Partner autocomplete : Company type = Company / Name search", async function (assert) {
-        assert.expect(12);
+        assert.expect(11);
         await makeView(makeViewParams);
 
         // Set company type to Company
@@ -259,24 +263,23 @@ QUnit.module('partner_autocomplete', {
         assert.containsN(
             autocompleteContainer,
             ".o-autocomplete--dropdown-item",
-            6,
-            "Clearbit and Odoo autocomplete options should be shown"
+            4,  // 3 options + 1 for the worldwide option
+            "Odoo autocomplete options should be shown"
         );
 
-        // Click on the first option - "First company"
+        // Click on the first option - "First Company"
         await click(autocompleteContainer.querySelectorAll('ul li')[0], null);
 
         // Check that the fields have been filled
         const expectedValues = {
-            "website": "firstcompany.com",
-            "name": "First company",
-            "vat": "Some VAT number",
-            "street": "Some street",
-            "city": "Some city",
-            "zip": "1234",
-            "phone": "+0123456789",
-            "country_id": "United States",
-            "state_id": "California (US)",
+            "name": "First Company",
+            "vat": "BE0477472701",
+            "street": "Chaussée de Namur 40",
+            "city": "Ramillies",
+            "zip": "1367",
+            "phone": "3281813700",
+            "country_id": "Belgium",
+            "state_id": "Walloon Brabant",
         };
         for (const [fieldName, expectedValue] of Object.entries(expectedValues)) {
             assert.strictEqual(target.querySelector(`[name=${fieldName}] input`).value, expectedValue, `${fieldName} should be filled`);
@@ -284,7 +287,7 @@ QUnit.module('partner_autocomplete', {
     });
 
     QUnit.test("Partner autocomplete : Company type = Company / VAT search", async function (assert) {
-        assert.expect(12);
+        assert.expect(11);
 
         await makeView(makeViewParams);
 
@@ -312,7 +315,7 @@ QUnit.module('partner_autocomplete', {
         assert.containsN(
             autocompleteContainer,
             ".o-autocomplete--dropdown-item",
-            3,
+            4,  // 3 options + 1 for the worldwide option
             "Odoo read_by_vat options should be shown"
         );
 
@@ -321,15 +324,14 @@ QUnit.module('partner_autocomplete', {
 
         // Check that the fields have been filled
         const expectedValues = {
-            "website": "firstcompany.com",
-            "name": "First company",
-            "vat": "Some VAT number",
-            "street": "Some street",
-            "city": "Some city",
-            "zip": "1234",
-            "phone": "+0123456789",
-            "country_id": "United States",
-            "state_id": "California (US)",
+            "name": "First Company",
+            "vat": "BE0477472701",
+            "street": "Chaussée de Namur 40",
+            "city": "Ramillies",
+            "zip": "1367",
+            "phone": "3281813700",
+            "country_id": "Belgium",
+            "state_id": "Walloon Brabant",
         };
         for (const [fieldName, expectedValue] of Object.entries(expectedValues)) {
             assert.strictEqual(target.querySelector(`[name=${fieldName}] input`).value, expectedValue, `${fieldName} should be filled`);
@@ -386,8 +388,8 @@ QUnit.module('partner_autocomplete', {
         assert.containsN(
             autocompleteContainer,
             ".o-autocomplete--dropdown-item",
-            9,
-            "Clearbit and Odoo autocomplete options should be shown"
+            7,  //3 suggestions + create + search more + create & edit + search worldwide
+            "Odoo autocomplete options should be shown"
         );
     });
 
@@ -405,8 +407,8 @@ QUnit.module('partner_autocomplete', {
         assert.containsN(
             autocompleteContainer,
             ".o-autocomplete--dropdown-item",
-            6,
-            "Clearbit and Odoo autocomplete options should be shown"
+            4,  // 3 options + 1 for the worldwide option
+            "Odoo autocomplete options should be shown"
         );
         // Click on the second option (include realistic events) - "Second company"
         await triggerEvent(
@@ -425,15 +427,14 @@ QUnit.module('partner_autocomplete', {
 
         // Check that the fields have been filled
         const expectedValues = {
-            "website": "secondcompany.com",
-            "name": "Second company",
-            "vat": "Some VAT number",
-            "street": "Some street",
-            "city": "Some city",
-            "zip": "1234",
-            "phone": "+0123456789",
-            "country_id": "United States",
-            "state_id": "California (US)",
+            "name": "Second Company",
+            "vat": "BE0477472701",
+            "street": "Chaussée de Namur 40",
+            "city": "Ramillies",
+            "zip": "1367",
+            "phone": "3281813700",
+            "country_id": "Belgium",
+            "state_id": "Walloon Brabant",
         };
         for (const [fieldName, expectedValue] of Object.entries(expectedValues)) {
             assert.strictEqual(target.querySelector(`[name=${fieldName}] input`).value, expectedValue, `${fieldName} should be filled`);
