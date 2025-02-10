@@ -196,6 +196,15 @@ class RepairOrder(models.Model):
     reserve_visible = fields.Boolean(
         'Allowed to Reserve Production', compute='_compute_unreserve_visible',
         help='Technical field to check when we can reserve quantities')
+    has_multiple_picking_types = fields.Boolean(compute='_compute_has_multiple_picking_types')
+
+    def _compute_has_multiple_picking_types(self):
+        for ro in self:
+            picking_count = self.env['stock.picking.type'].search_count([
+                ('code', '=', 'repair_operation'),
+                ('company_id', '=', ro.company_id.id)
+            ])
+            ro.has_multiple_picking_types = picking_count > 1
 
     @api.depends('product_id', 'picking_id', 'lot_id')
     def _compute_product_qty(self):
