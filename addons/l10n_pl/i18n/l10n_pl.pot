@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.5alpha1+e\n"
+"Project-Id-Version: Odoo Server 18.3a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-27 12:37+0000\n"
-"PO-Revision-Date: 2023-09-27 12:37+0000\n"
+"POT-Creation-Date: 2025-04-02 11:59+0000\n"
+"PO-Revision-Date: 2025-04-02 11:59+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,21 +31,18 @@ msgstr ""
 #. module: l10n_pl
 #: model:ir.model.fields,field_description:l10n_pl.field_account_bank_statement_line__l10n_pl_vat_b_mpv_prowizja
 #: model:ir.model.fields,field_description:l10n_pl.field_account_move__l10n_pl_vat_b_mpv_prowizja
-#: model:ir.model.fields,field_description:l10n_pl.field_account_payment__l10n_pl_vat_b_mpv_prowizja
 msgid "B_MPV_Prowizja"
 msgstr ""
 
 #. module: l10n_pl
 #: model:ir.model.fields,field_description:l10n_pl.field_account_bank_statement_line__l10n_pl_vat_b_spv
 #: model:ir.model.fields,field_description:l10n_pl.field_account_move__l10n_pl_vat_b_spv
-#: model:ir.model.fields,field_description:l10n_pl.field_account_payment__l10n_pl_vat_b_spv
 msgid "B_SPV"
 msgstr ""
 
 #. module: l10n_pl
 #: model:ir.model.fields,field_description:l10n_pl.field_account_bank_statement_line__l10n_pl_vat_b_spv_dostawa
 #: model:ir.model.fields,field_description:l10n_pl.field_account_move__l10n_pl_vat_b_spv_dostawa
-#: model:ir.model.fields,field_description:l10n_pl.field_account_payment__l10n_pl_vat_b_spv_dostawa
 msgid "B_SPV_Dostawa"
 msgstr ""
 
@@ -86,19 +83,18 @@ msgid "Created on"
 msgstr ""
 
 #. module: l10n_pl
-#. odoo-python
-#: code:addons/l10n_pl/models/account_move.py:0
-#, python-format
-msgid "Credit notes can't have a total amount greater than the invoice's"
-msgstr ""
-
-#. module: l10n_pl
 #: model:ir.model.fields,field_description:l10n_pl.field_l10n_pl_l10n_pl_tax_office__name
 msgid "Description"
 msgstr ""
 
 #. module: l10n_pl
+#: model:ir.model.fields,field_description:l10n_pl.field_account_chart_template__display_name
+#: model:ir.model.fields,field_description:l10n_pl.field_account_move__display_name
 #: model:ir.model.fields,field_description:l10n_pl.field_l10n_pl_l10n_pl_tax_office__display_name
+#: model:ir.model.fields,field_description:l10n_pl.field_product_template__display_name
+#: model:ir.model.fields,field_description:l10n_pl.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_pl.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:l10n_pl.field_res_partner__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -180,7 +176,18 @@ msgid "GTU_13 - Transport services and warehouse management services"
 msgstr ""
 
 #. module: l10n_pl
+#: model:account.account.tag,name:l10n_pl.gold_tag
+msgid "Gold"
+msgstr ""
+
+#. module: l10n_pl
+#: model:ir.model.fields,field_description:l10n_pl.field_account_chart_template__id
+#: model:ir.model.fields,field_description:l10n_pl.field_account_move__id
 #: model:ir.model.fields,field_description:l10n_pl.field_l10n_pl_l10n_pl_tax_office__id
+#: model:ir.model.fields,field_description:l10n_pl.field_product_template__id
+#: model:ir.model.fields,field_description:l10n_pl.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_pl.field_res_config_settings__id
+#: model:ir.model.fields,field_description:l10n_pl.field_res_partner__id
 msgid "ID"
 msgstr ""
 
@@ -228,7 +235,6 @@ msgstr ""
 #. module: l10n_pl
 #: model:ir.model.fields,help:l10n_pl.field_account_bank_statement_line__l10n_pl_vat_b_mpv_prowizja
 #: model:ir.model.fields,help:l10n_pl.field_account_move__l10n_pl_vat_b_mpv_prowizja
-#: model:ir.model.fields,help:l10n_pl.field_account_payment__l10n_pl_vat_b_mpv_prowizja
 msgid ""
 "Supply of agency and other services pertaining to the transfer of a single-"
 "purpose voucher"
@@ -237,7 +243,6 @@ msgstr ""
 #. module: l10n_pl
 #: model:ir.model.fields,help:l10n_pl.field_account_bank_statement_line__l10n_pl_vat_b_spv_dostawa
 #: model:ir.model.fields,help:l10n_pl.field_account_move__l10n_pl_vat_b_spv_dostawa
-#: model:ir.model.fields,help:l10n_pl.field_account_payment__l10n_pl_vat_b_spv_dostawa
 msgid ""
 "Supply of goods and/or services covered by a single-purpose voucher to a "
 "taxpayer"
@@ -269,7 +274,6 @@ msgstr ""
 #. module: l10n_pl
 #: model:ir.model.fields,help:l10n_pl.field_account_bank_statement_line__l10n_pl_vat_b_spv
 #: model:ir.model.fields,help:l10n_pl.field_account_move__l10n_pl_vat_b_spv
-#: model:ir.model.fields,help:l10n_pl.field_account_payment__l10n_pl_vat_b_spv
 msgid ""
 "Transfer of a single-purpose voucher effected by a taxable person acting on "
 "his/its own behalf"

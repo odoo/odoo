@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="turkey_tax_report" model="account.report">
-        <field name="name">Türkiye Tax Report</field>
-        <field name="name@tr">Türkiye Vergi Raporu</field>
+        <field name="name">Tax Report</field>
+        <field name="name@tr">Vergi Raporu</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.tr"/>
         <field name="filter_fiscal_position" eval="True"/>
@@ -484,7 +484,7 @@
                             <record id="net_vat_expression_total" model="account.report.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">(SAL_1.tax + SAL_10.tax + SAL_20.tax) - 
+                                <field name="formula">(SAL_1.tax + SAL_10.tax + SAL_20.tax) -
                                                       (PUR_0.tax + PUR_1.tax + PUR_10.tax + PUR_20.tax)</field>
                             </record>
                         </field>
@@ -506,7 +506,7 @@
                             <record id="wh_vat_expression_p_tax" model="account.report.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">PUR_WH_2.tax + PUR_WH_3.tax + PUR_WH_4.tax + PUR_WH_5.tax 
+                                <field name="formula">PUR_WH_2.tax + PUR_WH_3.tax + PUR_WH_4.tax + PUR_WH_5.tax
                                                         + PUR_WH_7.tax + PUR_WH_9.tax + PUR_WH_10.tax</field>
                             </record>
                         </field>
@@ -520,7 +520,7 @@
                             <record id="wh_vat_expression_s_tax" model="account.report.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">SAL_WH_2.tax + SAL_WH_3.tax + SAL_WH_4.tax + SAL_WH_5.tax 
+                                <field name="formula">SAL_WH_2.tax + SAL_WH_3.tax + SAL_WH_4.tax + SAL_WH_5.tax
                                                         + SAL_WH_7.tax + SAL_WH_9.tax + SAL_WH_10.tax</field>
                             </record>
                         </field>
