@@ -1716,7 +1716,7 @@ export class PosStore extends Reactive {
         }
     }
 
-    async printReceipts(order, printer, title, lines, fullReceipt = false, diningModeUpdate) {
+    async getRenderedReceipt(order, title, lines, fullReceipt = false, diningModeUpdate) {
         let time;
         if (order.write_date) {
             time = order.write_date?.split(" ")[1].split(":");
@@ -1740,6 +1740,18 @@ export class PosStore extends Reactive {
             changedlines: lines,
             fullReceipt: fullReceipt,
         });
+
+        return receipt;
+    }
+
+    async printReceipts(order, printer, title, lines, fullReceipt = false, diningModeUpdate) {
+        const receipt = await this.getRenderedReceipt(
+            order,
+            title,
+            lines,
+            fullReceipt,
+            diningModeUpdate
+        );
         const result = await printer.printReceipt(receipt);
         return result.successful;
     }
