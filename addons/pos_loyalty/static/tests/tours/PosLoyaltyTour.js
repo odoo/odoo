@@ -567,3 +567,8 @@ registry.category("web_tour.tours").add("RefundRulesProduct", {
             ProductScreen.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosLoyaltyTourErrorInRewardDomain", {
+    test: true,
+    steps: () => [Dialog.confirm("Open session")].flat(),
+});
