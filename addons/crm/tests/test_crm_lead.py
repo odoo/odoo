@@ -34,6 +34,18 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.state_id, state)
         self.assertEqual(lead.country_id, country)
 
+    @users('user_sales_manager')
+    def test_action_view_opportunity(self):
+        """ Test that the action returns a 'list' view as a default view. """
+        lead = self.env['crm.lead'].create({
+            'name': 'TestActionOpportunity',
+            'partner_id': self.contact_1.id,
+        })
+        expected_view = (self.env.ref('crm.crm_case_tree_view_oppor').id, 'list')
+        action = lead.partner_id.action_view_opportunity()
+        views = action.get('views', [])
+        self.assertEqual(views[0], expected_view)
+
     @users('user_sales_leads')
     def test_crm_lead_contact_fields_mixed(self):
         """ Test mixed configuration from partner: both user input and coming

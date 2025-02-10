@@ -61,7 +61,13 @@ class ResPartner(models.Model):
         This function returns an action that displays the opportunities from partner.
         '''
         action = self.env['ir.actions.act_window']._for_xml_id('crm.crm_lead_opportunities')
-        action['context'] = {}
+        action['context'] = {
+            'search_default_filter_won': 1,
+            'search_default_filter_ongoing': 1,
+            'search_default_filter_lost': 1
+        }
+        list_view = self.env.ref('crm.crm_case_tree_view_oppor')
+        action['views'] = [(list_view.id, 'list')] + [(state, view) for state, view in action['views'] if view != 'list']
         if self.is_company:
             action['domain'] = [('partner_id.commercial_partner_id', '=', self.id)]
         else:
