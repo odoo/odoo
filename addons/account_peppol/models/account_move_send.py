@@ -107,8 +107,7 @@ class AccountMoveSend(models.AbstractModel):
         if len(moves.company_id) == 1:
             can_send = self.env['account_edi_proxy_client.user']._get_can_send_domain()
             if moves.company_id.account_peppol_proxy_state not in can_send:
-                registration_wizard = self.env['peppol.registration'].create({'company_id': moves.company_id.id})
-                return registration_wizard._action_open_peppol_form(reopen=False)
+                return self.env['peppol.registration'].with_context(default_company_id=moves.company_id.id)._action_open_peppol_form(reopen=False)
 
         for move in moves:
             if move.peppol_move_state in ('ready', False):

@@ -1,6 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import contextlib
 import re
+import requests
+from lxml import etree
 from stdnum import get_cc_module, ean
 
 from odoo import _, api, fields, models
@@ -44,6 +47,7 @@ PEPPOL_ENDPOINT_SANITIZERS = {
     '0192': _re_sanitizer(r'\d{9}'),
     '0208': _re_sanitizer(r'\d{10}'),
 }
+TIMEOUT = 10
 
 
 class ResCompany(models.Model):
@@ -74,11 +78,14 @@ class ResCompany(models.Model):
     peppol_endpoint = fields.Char(related='partner_id.peppol_endpoint', readonly=False)
     peppol_purchase_journal_id = fields.Many2one(
         comodel_name='account.journal',
-        string='PEPPOL Purchase Journal',
+        string='Peppol Purchase Journal',
         domain=[('type', '=', 'purchase')],
-        compute='_compute_peppol_purchase_journal_id', store=True, readonly=False,
+        compute='_compute_peppol_purchase_journal_id',
+        store=True,
+        readonly=False,
         inverse='_inverse_peppol_purchase_journal_id',
     )
+    peppol_external_provider = fields.Char(tracking=True)
 
     # -------------------------------------------------------------------------
     # HELPER METHODS
@@ -268,3 +275,42 @@ class ResCompany(models.Model):
         # by design, we can only have zero or one proxy user per company with type Peppol
         peppol_user = self.sudo().account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol')
         return peppol_user.edi_mode or config_param or 'prod'
+
+    def _get_company_info_on_peppol(self, edi_identification):
+
+        def _get_peppol_provider(participant_info):
+            service_metadata = participant_info.find('.//{*}ServiceMetadataReference')
+            service_href = ''
+            if service_metadata is not None:
+                service_href = service_metadata.attrib.get('href', '')
+            if not service_href:
+                return None
+
+            provider_name = None
+            with contextlib.suppress(requests.exceptions.RequestException, etree.XMLSyntaxError):
+                response = requests.get(service_href, timeout=TIMEOUT)
+                if response.status_code == 200:
+                    access_point_info = etree.fromstring(response.content)
+                    provider_name = access_point_info.findtext('.//{*}ServiceDescription')
+            return provider_name
+
+        self.ensure_one()
+        is_company_on_peppol = False
+        external_provider = None
+        error_msg = ''
+        if (
+            (participant_info := self.partner_id._get_participant_info(edi_identification)) is not None
+            and (is_company_on_peppol := self.partner_id._check_peppol_participant_exists(participant_info, edi_identification))
+        ):
+            error_msg = _(
+                "A participant with these details has already been registered on the network. "
+                "If you have previously registered to an alternative Peppol service, please deregister from that service, "
+                "or request a migration key before trying again. "
+            )
+            if (external_provider := _get_peppol_provider(participant_info)) and "Odoo" not in external_provider:
+                error_msg += _("The Peppol service that is used is %s.", external_provider)
+        return {
+            'is_on_peppol': is_company_on_peppol,
+            'external_provider': external_provider,
+            'error_msg': error_msg,
+        }

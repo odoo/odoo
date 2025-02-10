@@ -44,7 +44,11 @@ class PeppolRegistration(models.TransientModel):
     phone_number = fields.Char(related='company_id.account_peppol_phone_number', readonly=False)
     peppol_eas = fields.Selection(related='company_id.peppol_eas', readonly=False, required=True)
     peppol_endpoint = fields.Char(related='company_id.peppol_endpoint', readonly=False, required=True)
-    smp_registration = fields.Boolean(string='Register as a receiver', default=True)
+    smp_registration = fields.Boolean(  # you're registering to SMP when you register as a sender+receiver
+        string='Register as a receiver',
+        compute='_compute_smp_registration_external_provider'
+    )
+    peppol_external_provider = fields.Char(compute='_compute_smp_registration_external_provider')
 
     # -------------------------------------------------------------------------
     # ONCHANGE METHODS
@@ -80,7 +84,7 @@ class PeppolRegistration(models.TransientModel):
         for wizard in self:
             wizard.edi_user_id = wizard.company_id.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol')[:1]
 
-    @api.depends('peppol_eas', 'peppol_endpoint')
+    @api.depends('peppol_eas', 'peppol_endpoint', 'smp_registration', 'peppol_external_provider')
     def _compute_peppol_warnings(self):
         for wizard in self:
             peppol_warnings = {}
@@ -97,12 +101,28 @@ class PeppolRegistration(models.TransientModel):
                 peppol_warnings['company_peppol_eas_warning'] = {
                     'message': _("The recommended identification method for Belgium is your Company Registry Number."),
                 }
+            if not wizard.smp_registration:
+                peppol_warnings['company_on_another_smp'] = {
+                    'message': _("Your company is already registered on another Access Point (%s) for receiving invoices."
+                                 "We will register you on Odoo as a sender only.", wizard.peppol_external_provider)
+                }
             wizard.peppol_warnings = peppol_warnings or False
 
     @api.depends('company_id', 'edi_user_id')
     def _compute_edi_mode(self):
         for wizard in self:
             wizard.edi_mode = wizard.company_id._get_peppol_edi_mode()
+
+    @api.depends('peppol_eas', 'peppol_endpoint')
+    def _compute_smp_registration_external_provider(self):
+        for wizard in self:
+            is_company_on_peppol = True
+            external_provider = None
+            if wizard.peppol_eas and wizard.peppol_endpoint:
+                edi_identification = f'{wizard.peppol_eas}:{wizard.peppol_endpoint}'
+                peppol_info = wizard.company_id._get_company_info_on_peppol(edi_identification)
+            wizard.smp_registration = not peppol_info['is_on_peppol']  # Register on smp if not on Peppol
+            wizard.peppol_external_provider = peppol_info['external_provider']
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
@@ -111,6 +131,8 @@ class PeppolRegistration(models.TransientModel):
     def _ensure_mandatory_fields(self):
         if not self.contact_email or not self.phone_number:
             raise ValidationError(_("Contact email and phone number are required."))
+        if not self.peppol_eas or not self.peppol_endpoint:
+            raise ValidationError(_("Peppol Address should be provided."))
 
     def _action_open_peppol_form(self, reopen=True):
         action_dict = {
@@ -167,7 +189,7 @@ class PeppolRegistration(models.TransientModel):
         if not modules.module.current_test:
             self.env.cr.commit()
 
-        edi_user._peppol_register_sender()
+        edi_user._peppol_register_sender(peppol_external_provider=self.peppol_external_provider)
 
         if self.smp_registration:
             try:
