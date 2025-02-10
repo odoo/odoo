@@ -1099,9 +1099,16 @@
         }
         return true;
     }
-    /** Check if the given array contains all the values of the other array. */
+    /**
+     * Check if the given array contains all the values of the other array.
+     * It makes the assumption that both array do not contain duplicates.
+     */
     function includesAll(arr, values) {
-        return values.every((value) => arr.includes(value));
+        if (arr.length < values.length) {
+            return false;
+        }
+        const set = new Set(arr);
+        return values.every((value) => set.has(value));
     }
     /**
      * Return an object with all the keys in the object that have a falsy value removed.
@@ -36605,6 +36612,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.waitingAck = true;
             this.sendPendingMessage();
         }
+        dropPendingRevision(revisionId) {
+            this.revisions.drop(revisionId);
+            const revisionIds = this.pendingMessages
+                .filter((message) => message.type === "REMOTE_REVISION")
+                .map((message) => message.nextRevisionId);
+            this.trigger("pending-revisions-dropped", { revisionIds });
+            this.waitingAck = false;
+            this.waitingUndoRedoAck = false;
+        }
         /**
          * Send the next pending message
          */
@@ -36619,13 +36635,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                      * The command is empty, we have to drop all the next local revisions
                      * to avoid issues with undo/redo
                      */
-                    this.revisions.drop(revision.id);
-                    const revisionIds = this.pendingMessages
-                        .filter((message) => message.type === "REMOTE_REVISION")
-                        .map((message) => message.nextRevisionId);
-                    this.trigger("pending-revisions-dropped", { revisionIds });
-                    this.waitingAck = false;
-                    this.waitingUndoRedoAck = false;
+                    this.dropPendingRevision(revision.id);
                     this.pendingMessages = [];
                     return;
                 }
@@ -36651,7 +36661,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             switch (message.type) {
                 case "REMOTE_REVISION":
                 case "REVISION_REDONE":
-                case "REVISION_UNDONE":
                 case "SNAPSHOT_CREATED":
                     this.waitingAck = false;
                     this.pendingMessages = this.pendingMessages.filter((msg) => msg.nextRevisionId !== message.nextRevisionId);
@@ -36659,6 +36668,27 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     this.processedRevisions.add(message.nextRevisionId);
                     this.sendPendingMessage();
                     break;
+                case "REVISION_UNDONE": {
+                    this.waitingAck = false;
+                    this.pendingMessages = this.pendingMessages.filter((msg) => msg.nextRevisionId !== message.nextRevisionId);
+                    const pendingRemoteRevisions = this.pendingMessages.filter((message) => message.type === "REMOTE_REVISION");
+                    const firstTransformedRevisionIndex = pendingRemoteRevisions.findIndex((message) => !deepEquals(message.commands, this.revisions.get(message.nextRevisionId).commands));
+                    if (firstTransformedRevisionIndex !== -1) {
+                        /**
+                         * Some revisions undergo transformations that may cause issues with
+                         * undo/redo if the transformation is destructive (we don't get back
+                         * the original command by transforming it with the inverse).
+                         * To prevent these problems, we must discard all subsequent local
+                         * revisions.
+                         */
+                        this.dropPendingRevision(this.pendingMessages[firstTransformedRevisionIndex].nextRevisionId);
+                        this.pendingMessages = this.pendingMessages.slice(0, firstTransformedRevisionIndex);
+                    }
+                    this.serverRevisionId = message.nextRevisionId;
+                    this.processedRevisions.add(message.nextRevisionId);
+                    this.sendPendingMessage();
+                    break;
+                }
             }
         }
         isAlreadyProcessed(message) {
@@ -40083,7 +40113,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         /**
          * Drop the operation and all following operations in every
-         * branch
+         * branches
          */
         drop(operationId) {
             for (const branch of this.branches) {
@@ -43589,9 +43619,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.60';
-    __info__.date = '2025-02-05T07:20:03.554Z';
-    __info__.hash = 'd098699';
+    __info__.version = '16.0.61';
+    __info__.date = '2025-02-10T09:46:48.793Z';
+    __info__.hash = 'a350bc7';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
