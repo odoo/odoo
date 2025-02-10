@@ -150,15 +150,42 @@ class ResCountry(models.Model):
                 except (ValueError, KeyError):
                     raise UserError(_('The layout contains an invalid format key'))
 
+    def belongs_to_country_group(self, country_group):
+        """This method is used to determine if a country belongs to a given country group.
+
+        param country_group: the country group's code
+        return: True if the country belongs to the given country group, False otherwise.
+        """
+        if not self:
+            return False
+        self.ensure_one()
+        return country_group in self.country_group_ids.mapped('code')
 
 class ResCountryGroup(models.Model):
     _name = 'res.country.group'
     _description = "Country Group"
 
     name = fields.Char(required=True, translate=True)
+    code = fields.Char(string="Country Group Code", help="The country group code.")
     country_ids = fields.Many2many('res.country', 'res_country_res_country_group_rel',
                                    'res_country_group_id', 'res_country_id', string='Countries')
 
+    _check_code_uniq = models.Constraint(
+        'unique(code)',
+        "The country group code must be unique!",
+    )
+
+    def _sanitize_vals(self, vals):
+        if code := vals.get('code'):
+            vals['code'] = code.upper()
+        return vals
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        return super().create([self._sanitize_vals(vals) for vals in vals_list])
+
+    def write(self, vals):
+        return super().write(self._sanitize_vals(vals))
 
 class ResCountryState(models.Model):
     _name = 'res.country.state'

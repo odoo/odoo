@@ -54,6 +54,7 @@ class TestSessionInfo(common.HttpCase):
                 'sequence': company.sequence,
                 'child_ids': company.child_ids.ids,
                 'parent_id': company.parent_id.id,
+                'country_group_codes': company.country_id.country_group_ids.mapped('code')
             } for company in self.allowed_companies
         }
 
@@ -64,6 +65,7 @@ class TestSessionInfo(common.HttpCase):
                 'sequence': company.sequence,
                 'child_ids': company.child_ids.ids,
                 'parent_id': company.parent_id.id,
+                'country_group_codes': company.country_id.country_group_ids.mapped('code')
             } for company in self.disallowed_ancestor_companies
         }
 
