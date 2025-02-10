@@ -38,7 +38,7 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
         channel = self.env["discuss.channel"].browse(data["discuss.channel"][0]["id"])
         lead = channel._convert_visitor_to_lead(self.env.user.partner_id, '/lead TestLead command')
 
-        self.assertEqual(lead.sudo().channel_id, channel)
+        self.assertEqual(lead.origin_channel_id, channel)
         self.assertTrue(any(m.partner_id == self.user_sales_leads.partner_id for m in channel.channel_member_ids))
         self.assertTrue(any(bool(m.guest_id) for m in channel.channel_member_ids))
         self.assertEqual(lead.name, 'TestLead command')
