@@ -1682,6 +1682,13 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'SortOrderlinesByCategories', login="pos_user")
 
+    def test_customer_popup(self):
+        """Verify that the customer popup search & inifnite scroll work properly"""
+        self.env["res.partner"].create([{"name": "Z partner to search"}, {"name": "Z partner to scroll"}])
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'CustomerPopupTour', login="pos_user")
+
+
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
     browser_size = '375x667'
