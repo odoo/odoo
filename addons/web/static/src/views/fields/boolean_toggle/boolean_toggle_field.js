@@ -14,6 +14,22 @@ export class BooleanToggleField extends BooleanField {
         const changes = { [this.props.name]: newValue };
         await this.props.record.update(changes, { save: this.props.autosave });
     }
+
+    get hasTooltip() {
+        return this.tooltipHelp;
+    }
+    get tooltipHelp() {
+        const field = this.props.record.fields[this.props.name];
+        let help =  field.help || "";
+        return help;
+    }
+    get tooltipInfo() {
+        return JSON.stringify({
+            field: {
+                help: this.tooltipHelp,
+            },
+        });
+    }
 }
 
 export const booleanToggleField = {
