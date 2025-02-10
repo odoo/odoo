@@ -45,17 +45,6 @@ def attrsetter(attr, value) -> Decorator:
     return setter
 
 
-def propagate(method1: T | None, method2: T) -> T:
-    """ Propagate decorators from ``method1`` to ``method2``, and return the
-        resulting method.
-    """
-    if method1:
-        for attr in ('_returns',):
-            if hasattr(method1, attr) and not hasattr(method2, attr):
-                setattr(method2, attr, getattr(method1, attr))
-    return method2
-
-
 @typing.overload
 def constrains(func: Callable[[BaseModel], Collection[str]], /) -> Decorator:
     ...
