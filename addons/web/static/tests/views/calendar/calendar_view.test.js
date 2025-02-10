@@ -4672,6 +4672,104 @@ test(`calendar with option show_date_picker set to false and filters`, async () 
     expect(`.o_sidebar_toggler`).toHaveCount(1);
 });
 
+test(`calendar with option month_overflow not set (default)`, async () => {
+    Event._records = [
+        {
+            id: 1,
+            name: "event november",
+            start: "2016-11-30 10:00:00",
+            stop: "2016-11-30 15:00:00",
+            user_id: serverState.userId,
+            partner_id: 1,
+        },
+        {
+            id: 2,
+            name: "event december",
+            start: "2016-12-14 10:00:00",
+            stop: "2016-12-14 15:00:00",
+            user_id: serverState.userId,
+            partner_id: 1,
+        },
+        {
+            id: 3,
+            name: "event january",
+            start: "2017-01-02 10:00:00",
+            stop: "2016-01-02 15:00:00",
+            user_id: serverState.userId,
+            partner_id: 1,
+        },
+    ];
+
+    onRpc("search_read", ({ kwargs }) => {
+        expect.step("search_read");
+        expect(kwargs.domain).toEqual([
+            ["start", "<=", "2017-01-07 22:59:59"],
+            ["start", ">=", "2016-11-26 23:00:00"],
+        ]);
+    });
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" mode="month">
+                <field name="name"/>
+            </calendar>
+        `,
+    });
+    expect(`.o_event`).toHaveCount(3);
+    expect(".fc-day-disabled").toHaveCount(0);
+    expect.verifySteps(["search_read"]);
+});
+
+test(`calendar with option month_overflow set to false`, async () => {
+    Event._records = [
+        {
+            id: 1,
+            name: "event november",
+            start: "2016-11-30 10:00:00",
+            stop: "2016-11-30 15:00:00",
+            user_id: serverState.userId,
+            partner_id: 1,
+        },
+        {
+            id: 2,
+            name: "event december",
+            start: "2016-12-14 10:00:00",
+            stop: "2016-12-14 15:00:00",
+            user_id: serverState.userId,
+            partner_id: 1,
+        },
+        {
+            id: 3,
+            name: "event january",
+            start: "2017-01-02 10:00:00",
+            stop: "2016-01-02 15:00:00",
+            user_id: serverState.userId,
+            partner_id: 1,
+        },
+    ];
+
+    onRpc("search_read", ({ kwargs }) => {
+        expect.step("search_read");
+        expect(kwargs.domain).toEqual([
+            ["start", "<=", "2016-12-31 22:59:59"],
+            ["start", ">=", "2016-11-30 23:00:00"],
+        ]);
+    });
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" mode="month" month_overflow="0">
+                <field name="name"/>
+            </calendar>
+        `,
+    });
+    expect(".o_event").toHaveCount(1);
+    expect(".fc-day-disabled").toHaveCount(11);
+    expect.verifySteps(["search_read"]);
+});
+
 test.tags("desktop");
 test(`can not select invalid scale from datepicker`, async () => {
     await mountView({
