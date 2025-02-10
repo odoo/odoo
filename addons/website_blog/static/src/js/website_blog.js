@@ -11,6 +11,8 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
         'click #o_wblog_next_container': '_onNextBlogClick',
         'click #o_wblog_post_content_jump': '_onContentAnchorClick',
         'click .o_twitter, .o_facebook, .o_linkedin, .o_google, .o_twitter_complete, .o_facebook_complete, .o_linkedin_complete, .o_google_complete': '_onShareArticle',
+        // TODO handle from xml in master
+        "click #edit-in-backend": "_onUpdateBackendHref",
     },
 
     /**
@@ -27,6 +29,21 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     * @param {Element} el
+     *
+     * Updates the href of an anchor tag when tags list is empty.
+     * This will redirect to backend part of the website blog post.
+     * TODO : Remove this in the master branch as it will be directly modified.
+     */
+    _onUpdateBackendHref(el) {
+        const match = window.location.href.match(/\/([\w-]+)-(\d+)$/i);
+        if (!match) {
+            return;
+        }
+        el.currentTarget.href = `/odoo/website/blog.post/${match[2]}`;
+    },
     /**
      * @private
      * @param {Event} ev
