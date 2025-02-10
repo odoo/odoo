@@ -2,6 +2,7 @@
 
 import base64
 import json
+import re
 
 from datetime import datetime
 
@@ -14,6 +15,7 @@ from odoo.fields import Command
 from odoo.http import request, route
 from odoo.osv import expression
 from odoo.tools import SQL, clean_context, float_round, groupby, lazy, str2bool
+from odoo.tools import microdata as md
 from odoo.tools.image import image_data_uri
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import _
@@ -708,29 +710,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :return: The JSON-LD markup data.
         :rtype: dict
         """
-        return {
-            '@context': 'https://schema.org',
-            '@type': 'BreadcrumbList',
-            'itemListElement': [
-                {
-                    '@type': 'ListItem',
-                    'position': 1,
-                    'name': 'All Products',
-                    'item': f'{base_url}/shop',
-                },
-                {
-                    '@type': 'ListItem',
-                    'position': 2,
-                    'name': category.name,
-                    'item': f'{base_url}/shop/category/{self.env["ir.http"]._slug(category)}',
-                },
-                {
-                    '@type': 'ListItem',
-                    'position': 3,
-                    'name': product_name,
-                }
+        return md.BreadcrumbList(
+            [
+                md.ListItem('All Products', 1, f'{base_url}/shop'),
+                md.ListItem(category.name, 2, f'{base_url}/shop/category/{self.env["ir.http"]._slug(category)}'),
+                md.ListItem(product_name, 3, None),
             ]
-        }
+        ).to_dict()
 
     @route(
         '/shop/change_pricelist/<model("product.pricelist"):pricelist>',

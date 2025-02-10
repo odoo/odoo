@@ -9,9 +9,11 @@ import werkzeug.urls
 from pytz import utc, timezone
 
 from odoo import api, fields, models, _
+from odoo.tools import microdata as md
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools.misc import get_lang, format_date
+from odoo.tools.json import scriptsafe as json_safe
 
 GOOGLE_CALENDAR_URL = 'https://www.google.com/calendar/render?'
 
@@ -467,6 +469,45 @@ class EventEvent(models.Model):
     # ------------------------------------------------------------
     # TOOLS
     # ------------------------------------------------------------
+
+    def _to_markup_data(self) -> md.Event:
+        if not self.address_id:
+            location = md.VirtualLocation(
+                url=werkzeug.urls.url_join(self.get_base_url(), str(self.id))
+            )
+        else:
+            location = self.sudo().address_id._address_to_markup_data()
+
+        offers = []
+        for ticket in self.event_ticket_ids:
+            offers.append(ticket._to_markup_data())
+        if len(offers) == 0:
+            offers = md.Offer(
+                availability=md.ItemAvailability.InStock,
+                valid_from=self.create_date or None,
+                url=self.event_register_url
+            )
+        event_cover_properties = json.loads(self.cover_properties)
+        image = event_cover_properties.get('background-image', 'none')[4:-1].strip("'")
+        image_url = werkzeug.urls.url_join(self.get_base_url(), image)
+        organizer = self.organizer_id.sudo()._to_markup_data()
+        data = md.Event(
+            name=self.name,
+            location=location,
+            start_date=self.date_begin,
+            end_date=self.date_end,
+            event_attendance_mode=md.EventAttendanceModeEnumeration.Offline if self.address_id else md.EventAttendanceModeEnumeration.Online,
+            event_status=md.EventStatusType.Scheduled,
+            offers=offers,
+            image=image_url,
+            description=self._get_external_description(),
+            organizer=organizer
+        )
+        return data
+
+    def _get_microdata(self):
+        data = self._to_markup_data()
+        return json_safe.dumps(data.to_dict(), indent=2)
 
     def google_map_link(self, zoom=8):
         """ Temporary method for stable """

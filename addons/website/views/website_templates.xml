@@ -81,6 +81,9 @@
 </template>
 
 <template id="layout" name="Main layout" inherit_id="portal.frontend_layout">
+    <xpath expr="//head" position="inside">
+        <script t-if="seo_microdata" type="application/ld+json" t-out="seo_microdata"></script>
+    </xpath>
     <xpath expr="//html" position="before">
         <t t-set="html_data" t-value="{
             'lang': lang.replace('_', '-'),

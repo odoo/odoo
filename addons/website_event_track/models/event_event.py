@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.tools import microdata as md
+from odoo.tools.json import scriptsafe as json_safe
 
 
 class EventEvent(models.Model):
@@ -93,3 +95,15 @@ class EventEvent(models.Model):
             (_('Agenda'), '/event/%s/agenda' % self.env['ir.http']._slug(self), False, 70, 'track'),
             (_('Talk Proposals'), '/event/%s/track_proposal' % self.env['ir.http']._slug(self), False, 15, 'track_proposal')
         ]
+
+    def _to_markup_data(self):
+        md_event = super()._to_markup_data()
+        performers = []
+        if self.track_count:
+            partner_ids = []
+            for track in self.track_ids:
+                if track.partner_id and track.partner_id not in partner_ids:
+                    performers.append(md.Person(track.partner_name))
+                    partner_ids.append(track.partner_id)
+        md_event.set_property('performer', performers)
+        return md_event

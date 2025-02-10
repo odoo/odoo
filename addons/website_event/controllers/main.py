@@ -178,6 +178,7 @@ class WebsiteEventController(http.Controller):
             # Every event page view should have its own SEO.
             page = view.key if view else page
             values['seo_object'] = request.website.get_template(page)
+            values['seo_microdata'] = event._get_microdata()
             values['main_object'] = event
         except ValueError:
             # page not found
@@ -213,6 +214,7 @@ class WebsiteEventController(http.Controller):
             'iCal_url': lazy(lambda: urls.get('iCal_url')),
             'registration_error_code': post.get('registration_error_code'),
             'website_visitor_timezone': request.env['website.visitor']._get_visitor_timezone(),
+            'seo_microdata': event._get_microdata()
         }
 
     def _process_tickets_form(self, event, form_details):
