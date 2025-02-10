@@ -193,8 +193,7 @@ class AccountMoveSend(models.TransientModel):
         writer.addAttachment('factur-x.xml', xml_facturx, subtype='text/xml')
 
         # PDF-A.
-        if invoice_data.get('ubl_cii_xml_options', {}).get('ubl_cii_format') == 'facturx' \
-                and not writer.is_pdfa:
+        if not writer.is_pdfa:
             try:
                 writer.convert_to_pdfa()
             except Exception as e:
