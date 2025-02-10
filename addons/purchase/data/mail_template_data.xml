@@ -26,12 +26,12 @@
         <br/><br/>
             <a t-att-href="object.get_confirm_url(confirm_type='reception')"
                 target="_blank"
-                style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
+                t-attf-style="padding: 5px 10px; color: {{object.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{object.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;">
                 Accept</a>
 
             <a t-att-href="object.get_confirm_url(confirm_type='decline')"
                 target="_blank"
-                style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
+                t-attf-style="padding: 5px 10px; color: {{object.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{object.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;">
                 Decline</a>
         <br/><br/>
         Best regards,
