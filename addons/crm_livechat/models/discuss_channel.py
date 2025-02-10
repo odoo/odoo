@@ -11,12 +11,12 @@ class DiscussChannel(models.Model):
 
     lead_ids = fields.One2many(
         "crm.lead",
-        "channel_id",
+        "origin_channel_id",
         string="Leads",
-        groups="base.group_erp_manager",
+        groups="sales_team.group_sale_salesman",
         help="The channel becomes accessible to sales users when leads are set.",
     )
-    has_crm_lead = fields.Boolean(compute="_compute_has_crm_lead", compute_sudo=True, store=True)
+    has_crm_lead = fields.Boolean(compute="_compute_has_crm_lead", store=True)
     _has_crm_lead_index = models.Index("(has_crm_lead) WHERE has_crm_lead IS TRUE")
 
     @api.depends("lead_ids")
@@ -60,7 +60,7 @@ class DiscussChannel(models.Model):
 
         utm_source = self.env.ref('crm_livechat.utm_source_livechat', raise_if_not_found=False)
         return self.env['crm.lead'].create({
-            "channel_id": self.id,
+            "origin_channel_id": self.id,
             'name': html2plaintext(key[5:]),
             'partner_id': customers[0].id if customers else False,
             'user_id': False,

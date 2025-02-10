@@ -1,3 +1,6 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo.exceptions import AccessError
 from odoo.tests.common import HttpCase, new_test_user, tagged
 
 
@@ -35,3 +38,31 @@ class TestDiscussChannelAccess(HttpCase):
                 f"user_grp={user_grp}, has_lead={has_lead}, expected_result={expected_result}",
             )
 
+    def test_cannot_link_lead_to_restricted_channel(self):
+        user = new_test_user(self.env, login="bob_user", groups="sales_team.group_sale_salesman")
+        channel = (
+            self.env["discuss.channel"]
+            .create(
+                {
+                    "name": f"Visitor #11",
+                    "livechat_operator_id": self.env.user.partner_id.id,
+                    "channel_type": "livechat",
+                }
+            )
+            .with_user(user)
+        )
+        self.assertFalse(channel.has_access("read"))
+        with self.assertRaises(
+            AccessError,
+            msg="You cannot create a lead linked to a channel you don't have access to.",
+        ):
+            self.env["crm.lead"].with_user(user).create(
+                {"name": "lead", "origin_channel_id": channel.id}
+            )
+
+        lead = self.env["crm.lead"].with_user(user).create({"name": "lead"})
+        with self.assertRaises(
+            AccessError,
+            msg="You cannot update a lead and link it to a channel you don't have access to.",
+        ):
+            lead.write({"origin_channel_id": channel.id})
