@@ -105,8 +105,10 @@ export class CalendarController extends Component {
             showSideBar:
                 !this.env.isSmall &&
                 Boolean(sessionShowSidebar != null ? JSON.parse(sessionShowSidebar) : true),
-            quickCreateDeleteMode: false,
+            isQuickCreateMode: false,
+            isQuickDeleteMode: false,
         });
+        this.hasQuick = Object.keys(this.model.meta.quickFields).length > 0;
 
         this.searchBarToggler = useSearchBarToggler();
 
@@ -205,7 +207,8 @@ export class CalendarController extends Component {
             deleteRecord: this.deleteRecord.bind(this),
             editRecord: this.editRecord.bind(this),
             setDate: this.setDate.bind(this),
-            quickCreateDeleteMode: this.state.quickCreateDeleteMode,
+            isQuickCreateMode: this.state.isQuickCreateMode,
+            isQuickDeleteMode: this.state.isQuickDeleteMode,
         };
     }
     get containerProps() {
@@ -447,7 +450,7 @@ export class CalendarController extends Component {
     // quick Month
 
     get showQuickCreate() {
-        return this.model.meta.scale === "month" && Object.keys(this.quickCreateFields).length;
+        return this.model.meta.scale === "month" && this.state.isQuickCreateMode;
     }
 
     get quickFieldsValues() {
@@ -459,7 +462,11 @@ export class CalendarController extends Component {
         this.model.data.quickCreateValuesCallback = record.getChanges.bind(record);
     }
 
-    quickCreateToggleModeDelete() {
-        this.state.quickCreateDeleteMode = !this.state.quickCreateDeleteMode;
+    quickCreateToggleMode() {
+        this.state.isQuickCreateMode = !this.state.isQuickCreateMode;
+    }
+
+    quickCreateToggleDeleteMode() {
+        this.state.isQuickDeleteMode = !this.state.isQuickDeleteMode;
     }
 }

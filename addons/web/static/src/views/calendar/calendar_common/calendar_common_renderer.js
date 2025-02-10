@@ -38,15 +38,6 @@ const HOUR_FORMATS = {
     },
 };
 
-const MODE = {
-    normal: "NORMAL",
-    quick: "QUICK",
-};
-const QUICK_MODE = {
-    normal: "NORMAL",
-    delete: "DELETE",
-};
-
 const { DateTime } = luxon;
 
 export class CalendarCommonRenderer extends Component {
@@ -64,15 +55,17 @@ export class CalendarCommonRenderer extends Component {
         editRecord: Function,
         deleteRecord: Function,
         setDate: { type: Function, optional: true },
-        quickCreateDeleteMode: { type: Boolean, optional: true },
+        isQuickCreateMode: { type: Boolean, optional: true },
+        isQuickDeleteMode: { type: Boolean, optional: true },
+    };
+
+    static defaultProps = {
+        isQuickCreateMode: false,
+        isQuickDeleteMode: false,
     };
 
     setup() {
         this.calendarRef = useRef("fullCalendar");
-        this.mode =
-            Object.keys(this.props.model.meta.quickFields).length > 0 ? MODE.quick : MODE.normal;
-        console.log(`>>> MODE ${this.mode}`);
-        this.quickCreateMode = QUICK_MODE.normal;
 
         this.fc = useFullCalendar("fullCalendar", this.options);
         this.click = useClickHandler(this.onClick, this.onDblClick);
@@ -119,10 +112,12 @@ export class CalendarCommonRenderer extends Component {
         );
 
         onWillUpdateProps((nextProps) => {
-            if ("quickCreateDeleteMode" in nextProps) {
-                this.quickCreateMode = nextProps.quickCreateDeleteMode
-                    ? QUICK_MODE.delete
-                    : QUICK_MODE.normal;
+            if ("isQuickCreateMode" in nextProps) {
+                if (nextProps.isQuickCreateMode) {
+                    this.fc.api.setOption("selectable", false);
+                } else {
+                    this.fc.api.setOption("selectable", this.props.model.canCreate);
+                }
             }
         });
     }
@@ -139,7 +134,7 @@ export class CalendarCommonRenderer extends Component {
             initialDate: this.props.model.date.toISO(),
             initialView: SCALE_TO_FC_VIEW[this.props.model.scale],
             direction: localization.direction,
-            droppable: this.mode === MODE.normal,
+            droppable: true,
             editable: this.props.model.canEdit,
             eventClick: this.onEventClick,
             eventDragStart: this.onEventDragStart,
@@ -166,7 +161,7 @@ export class CalendarCommonRenderer extends Component {
             selectAllow: this.isSelectionAllowed,
             selectMinDistance: 5, // needed to not trigger select when click
             selectMirror: true,
-            selectable: this.mode === MODE.normal ? this.props.model.canCreate : false,
+            selectable: this.props.model.canCreate,
             slotLabelFormat: is24HourFormat() ? HOUR_FORMATS[24] : HOUR_FORMATS[12],
             snapDuration: { minutes: 15 },
             timeZone: luxon.Settings.defaultZone.name,
@@ -263,7 +258,7 @@ export class CalendarCommonRenderer extends Component {
         this.highlightEvent(info.event, "o_cw_custom_highlight");
     }
     onDateClick(info) {
-        if (this.mode === MODE.quick) {
+        if (this.props.isQuickCreateMode) {
             return;
         }
         if (info.jsEvent.defaultPrevented) {
@@ -504,7 +499,7 @@ export class CalendarCommonRenderer extends Component {
     }
 
     quickCreatePointerDown(ev) {
-        if (this.mode !== MODE.quick) {
+        if (!this.props.isQuickCreateMode) {
             return;
         }
         const targetElement = ev.target.closest(".fc-day:not(.fc-col-header-cell)");
@@ -519,7 +514,7 @@ export class CalendarCommonRenderer extends Component {
     }
 
     quickCreatePointerMove(ev) {
-        if (this.mode !== MODE.quick) {
+        if (!this.props.isQuickCreateMode) {
             return;
         }
         const targetElement = ev.target.closest(".fc-day:not(.fc-col-header-cell)");
@@ -534,7 +529,7 @@ export class CalendarCommonRenderer extends Component {
     }
 
     async quickCreatePointerUp(ev) {
-        if (this.mode !== MODE.quick) {
+        if (!this.props.isQuickCreateMode) {
             return;
         }
         const targetElement = ev.target.closest(".fc-day:not(.fc-col-header-cell)");
@@ -543,14 +538,14 @@ export class CalendarCommonRenderer extends Component {
             this.quickCreateDrawHighlight();
             return;
         }
-        if (this.quickCreateMode === QUICK_MODE.normal) {
+        if (!this.props.isQuickDeleteMode) {
             const dates = [];
             for (const element of this.currentSelectionElement) {
                 const date = DateTime.fromISO(element.dataset.date);
                 dates.push(date);
             }
             await this.props.model.createRecordNoInteraction(dates);
-        } else if (this.quickCreateMode === QUICK_MODE.delete) {
+        } else {
             const ids = [];
             for (const element of this.currentSelectionElement) {
                 for (const event of [...element.querySelectorAll(".fc-event")]) {

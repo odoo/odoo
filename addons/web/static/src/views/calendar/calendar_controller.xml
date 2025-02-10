@@ -18,6 +18,14 @@
                 </t>
                 <div class="o_calendar_container d-grid h-100 bg-view">
                     <div class="o_calendar_header d-flex align-items-center gap-1 px-3 pe-md-1 py-2 px-print-0 pt-print-0 border-bottom">
+                        <button
+                            t-if="!env.isSmall and this.hasQuick"
+                            class="btn btn-secondary"
+                            title="QuickCreate"
+                            aria-label="QuickCreate"
+                            t-on-click.stop="() => this.quickCreateToggleMode()"
+                            t-att-class="{'active': this.state.isQuickCreateMode}"
+                        ><i class="fa fa-pencil"/></button>
                         <div t-if="!env.isSmall" class="o_calendar_navigation_buttons btn-group d-print-none">
                             <button
                                 class="o_calendar_button_prev btn btn-secondary d-none d-md-block"
@@ -60,8 +68,11 @@
                     </div>
                     <MobileFilterPanel t-if="env.isSmall and hasSideBar" t-props="mobileFilterPanelProps" />
                     <div class="o_calendar_wrapper d-flex overflow-hidden">
-                        <div t-if="showQuickCreate">
-                            <div><button class="btn btn-primary" t-att-class="{'active': state.quickCreateDeleteMode}" title="Mass remove" accesskey="d" t-on-click="quickCreateToggleModeDelete"><i class="fa fa-eraser"/></button></div>
+                        <div t-if="showQuickCreate" class="o_calendar_left_panel overflow-auto d-flex flex-column gap-1">
+                            <div class="btn-group">
+                                <button class="btn btn-secondary" t-att-class="{'active': !state.isQuickDeleteMode}" title="Mass remove" accesskey="c" t-on-click="quickCreateToggleDeleteMode">Create</button>
+                                <button class="btn btn-secondary" t-att-class="{'active': state.isQuickDeleteMode}" title="Mass remove" accesskey="d" t-on-click="quickCreateToggleDeleteMode"><i class="fa fa-trash"/>Delete</button>
+                            </div>
                             <div class="o_form_view o_form_nosheet o_xxs_form_view o_form_renderer">
                                 <Record fields="props.fields" fieldNames="Object.keys(quickCreateFields)" resModel="props.resModel" onRootLoaded.bind="onQuickCreateRootLoaded" context="props.context" t-slot-scope="data">
                                     <FormRenderer record="data.record" archInfo="archInfo"/>
