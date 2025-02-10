@@ -145,12 +145,6 @@ class BaseCommon(TransactionCase):
             **({'login': 'portal_user'} | kwargs),
         )
 
-    @classmethod
-    def quick_ref(cls, xmlid):
-        """Find the matching record, without an existence check."""
-        model, id = cls.env['ir.model.data']._xmlid_to_res_model_res_id(xmlid)
-        return cls.env[model].browse(id)
-
 
 class TransactionCaseWithUserDemo(TransactionCase):
 

@@ -969,6 +969,12 @@ class TransactionCase(BaseCase):
             registry.leave_test_mode()
             env.invalidate_all()
 
+    @classmethod
+    def quick_ref(cls, xmlid):
+        """Find the matching record, without an existence check."""
+        model, id = cls.env['ir.model.data']._xmlid_to_res_model_res_id(xmlid)
+        return cls.env[model].browse(id)
+
 
 class SingleTransactionCase(BaseCase):
     """ TestCase in which all test methods are run in the same transaction,
