@@ -5,6 +5,7 @@
 """
 from __future__ import annotations
 
+import datetime
 import itertools
 import logging
 import sys
@@ -513,6 +514,12 @@ def load_modules(
 
             # Cleanup orphan records
             env['ir.model.data']._process_end(registry.updated_modules)
+            # Cleanup cron
+            vacuum_cron = env.ref('base.autovacuum_job', raise_if_not_found=False)
+            if vacuum_cron:
+                # trigger after a small delay to give time for assets to regenerate
+                vacuum_cron._trigger(at=datetime.datetime.now() + datetime.timedelta(minutes=1))
+
             env.flush_all()
 
         # STEP 5: Uninstall modules to remove
