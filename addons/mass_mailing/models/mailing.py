@@ -134,7 +134,7 @@ class MassMailing(models.Model):
         default='draft', required=True,
         copy=False, tracking=True,
         group_expand='_group_expand_states')
-    color = fields.Integer(string='Color Index')
+    color = fields.Integer(string='Color Index', aggregator='avg')
     user_id = fields.Many2one(
         'res.users', string='Responsible',
         tracking=True,

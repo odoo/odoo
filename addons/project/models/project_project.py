@@ -105,7 +105,7 @@ class Project(models.Model):
     open_task_count = fields.Integer(compute='_compute_task_count', string="Open Task Count")
     task_ids = fields.One2many('project.task', 'project_id', string='Tasks',
                                domain=lambda self: [('is_closed', '=', False)])
-    color = fields.Integer(string='Color Index')
+    color = fields.Integer(string='Color Index', aggregator=False)
     user_id = fields.Many2one('res.users', string='Project Manager', default=lambda self: self.env.user, tracking=True)
     alias_id = fields.Many2one(help="Internal email associated with this project. Incoming emails are automatically synchronized "
                                     "with Tasks (or optionally Issues if the Issue Tracker module is installed).")
@@ -174,7 +174,7 @@ class Project(models.Model):
         ('to_define', 'Set Status'),
         ('done', 'Done'),
     ], default='to_define', compute='_compute_last_update_status', store=True, readonly=False, required=True)
-    last_update_color = fields.Integer(compute='_compute_last_update_color')
+    last_update_color = fields.Integer(compute='_compute_last_update_color', aggregator='avg')
     milestone_ids = fields.One2many('project.milestone', 'project_id', copy=True)
     milestone_count = fields.Integer(compute='_compute_milestone_count', groups='project.group_project_milestone')
     milestone_count_reached = fields.Integer(compute='_compute_milestone_reached_count', groups='project.group_project_milestone')

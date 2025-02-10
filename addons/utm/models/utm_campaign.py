@@ -26,7 +26,7 @@ class UtmCampaign(models.Model):
         'tag_id', 'campaign_id', string='Tags')
 
     is_auto_campaign = fields.Boolean(default=False, string="Automatically Generated Campaign", help="Allows us to filter relevant Campaigns")
-    color = fields.Integer(string='Color Index')
+    color = fields.Integer(string='Color Index', aggregator='avg')
 
     _sql_constraints = [
         ('unique_name', 'UNIQUE(name)', 'The name must be unique'),

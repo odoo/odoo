@@ -34,7 +34,7 @@ class MrpWorkcenter(models.Model):
     sequence = fields.Integer(
         'Sequence', default=1, required=True,
         help="Gives the sequence order when displaying a list of work centers.")
-    color = fields.Integer('Color')
+    color = fields.Integer('Color', aggregator='avg')
     currency_id = fields.Many2one('res.currency', 'Currency', related='company_id.currency_id', readonly=True, required=True)
     costs_hour = fields.Float(string='Cost per hour', help='Hourly processing cost.', default=0.0)
     time_start = fields.Float('Setup Time')
