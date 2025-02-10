@@ -15,6 +15,7 @@ export class BuilderButton extends Component {
         iconImgAlt: { type: String, optional: true },
         icon: { type: String, optional: true },
         className: { type: String, optional: true },
+        classActive: { type: String, optional: true },
 
         slots: { type: Object, optional: true },
     };
@@ -28,9 +29,12 @@ export class BuilderButton extends Component {
     }
 
     get className() {
-        let className = this.state.isActive ? "active" : "";
-        if (this.props.className) {
-            className = `${className} ${this.props.className}`;
+        let className = this.props.className || "";
+        if (this.state.isActive) {
+            className = `active ${className}`;
+            if (this.props.classActive) {
+                className += ` ${this.props.classActive}`;
+            }
         }
         if (!this.props.icon) {
             return className;

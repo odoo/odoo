@@ -247,6 +247,32 @@ test("add the active class if the condition is met", async () => {
     expect("[data-class-action='my-custom-class1']").toHaveClass("active");
     expect("[data-class-action='my-custom-class2']").not.toHaveClass("active");
 });
+test("add classActive to class when active", async () => {
+    addOption({
+        selector: ".test-options-target",
+        template: xml`
+                        <BuilderButton classAction="'my-custom-class1'"
+                                       className="'base-class btn1'"
+                                       classActive="'active-class'"/>
+                        <BuilderButton classAction="'my-custom-class2'"
+                                       className="'base-class btn2'"
+                                       classActive="'active-class'"/>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target my-custom-class1">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    const permanentClass = "base-class";
+    const activeClass = "active-class";
+    expect(".btn1").toHaveClass([permanentClass, activeClass]);
+    expect(".btn2").toHaveClass(permanentClass);
+    expect(".btn2").not.toHaveClass(activeClass);
+
+    await contains(".btn2").click();
+    expect(".btn2").toHaveClass([permanentClass, activeClass]);
+
+    await contains(".btn2").click();
+    expect(".btn2").toHaveClass(permanentClass);
+    expect(".btn2").not.toHaveClass(activeClass);
+});
 test("apply classAction on multi elements", async () => {
     addOption({
         selector: ".test-options-target",
