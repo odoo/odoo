@@ -25,7 +25,7 @@ class HrCandidate(models.Model):
 
     active = fields.Boolean("Active", default=True, index=True)
     company_id = fields.Many2one('res.company', "Company", default=lambda self: self.env.company)
-    applicant_ids = fields.One2many('hr.applicant', 'candidate_id')
+    applicant_ids = fields.One2many('hr.applicant', 'candidate_id', context={'active_test': False})
     application_count = fields.Integer(compute="_compute_application_count")
     partner_id = fields.Many2one('res.partner', "Contact", copy=False, index='btree_not_null')
     partner_name = fields.Char("Candidates's Name")
@@ -185,7 +185,7 @@ class HrCandidate(models.Model):
             candidate.attachment_count = attach_data.get(candidate.id, 0)
 
     def _compute_application_count(self):
-        read_group_res = self.env['hr.applicant']._read_group(
+        read_group_res = self.env['hr.applicant'].with_context(active_test=False)._read_group(
             [('candidate_id', 'in', self.ids)],
             ['candidate_id'], ['__count'])
         application_data = dict(read_group_res)
