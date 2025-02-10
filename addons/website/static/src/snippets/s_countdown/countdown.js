@@ -88,8 +88,8 @@ export class Countdown extends Interaction {
             if (this.hereBeforeTimerEnds) {
                 this.waitForTimeout(() => window.location = redirectUrl, 500);
             } else {
-                if (!this.el.querySelector(".s_countdown_end_redirect_message").length) {
-                    const container = this.el.querySelector("> .container, > .container-fluid, > .o_container_small");
+                if (!this.el.querySelector(".s_countdown_end_redirect_message")) {
+                    const container = this.el.querySelector(":scope > .container, :scope > .container-fluid, :scope > .o_container_small");
                     this.renderAt("website.s_countdown.end_redirect_message", {
                         redirectUrl: redirectUrl,
                     }, container);
