@@ -3,62 +3,36 @@
 import re
 
 from odoo import models
-from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
-from odoo.addons.mail.tools.discuss import Store
+from odoo.fields import Domain
 
 
 class IrWebsocket(models.AbstractModel):
+    """Override to handle discuss specific features (channel in particular)."""
+
     _inherit = "ir.websocket"
 
-    def _get_missed_presences_identity_domains(self, presence_channels):
-        identity_domain = super()._get_missed_presences_identity_domains(presence_channels)
-        if guest_ids := [
-            g.id for g, _ in presence_channels if isinstance(g, self.pool["mail.guest"])
-        ]:
-            identity_domain.append([("guest_id", "in", guest_ids)])
-        return identity_domain
-
-    def _get_missed_presences_bus_target(self):
-        if self.env.user and not self.env.user._is_public():
-            return super()._get_missed_presences_bus_target()
-        if guest := self.env["mail.guest"]._get_guest_from_context():
-            return guest
-        return None
-
-    @add_guest_to_context
-    def _build_presence_channel_list(self, presences):
-        channels = super()._build_presence_channel_list(presences)
-        guest_ids = [int(p[1]) for p in presences if p[0] == "mail.guest"]
+    def _filter_accessible_presences(self, partners, guests):
+        allowed_partners, allowed_guests = super()._filter_accessible_presences(partners, guests)
         if self.env.user and self.env.user._is_internal():
-            channels.extend(
-                (guest, "presence")
-                for guest in self.env["mail.guest"].search([("id", "in", guest_ids)])
-            )
-            # Partners already handled in super call (bus)
-            return channels
-        self_discuss_channels = self.env["discuss.channel"]
-        if self.env.user and not self.env.user._is_public():
-            self_discuss_channels = self.env.user.partner_id.channel_ids
-        elif guest := self.env["mail.guest"]._get_guest_from_context():
-            # sudo - mail.guest: guest can access their own channels.
-            self_discuss_channels = guest.sudo().channel_ids
-        partner_domain = [
-            ("id", "in", [int(p[1]) for p in presences if p[0] == "res.partner"]),
-            ("channel_ids", "in", self_discuss_channels.ids),
-        ]
+            return allowed_partners, allowed_guests
+        current_partner, current_guest = self.env["res.partner"]._get_current_persona()
+        # sudo - mail.guest: guest can access their own channels.
+        channels_domain = Domain(
+            "channel_ids", "in", (current_partner or current_guest.sudo()).channel_ids.ids
+        )
         # sudo - res.partner: allow access when sharing a common channel.
-        channels.extend(
-            (partner, "presence")
-            for partner in self.env["res.partner"].sudo().search(partner_domain)
+        allowed_partners |= (
+            self.env["res.partner"]
+            .with_context(active_test=False)
+            .sudo()
+            .search(Domain("id", "in", partners.ids) & channels_domain)
         )
-        guest_domain = [("id", "in", guest_ids), ("channel_ids", "in", self_discuss_channels.ids)]
         # sudo - mail.guest: allow access when sharing a common channel.
-        channels.extend(
-            (guest, "presence") for guest in self.env["mail.guest"].sudo().search(guest_domain)
+        allowed_guests |= (
+            self.env["mail.guest"].sudo().search(Domain("id", "in", guests.ids) & channels_domain)
         )
-        return channels
+        return allowed_partners, allowed_guests
 
-    @add_guest_to_context
     def _build_bus_channel_list(self, channels):
         channels = list(channels)  # do not alter original list
         discuss_channel_ids = list()
@@ -81,26 +55,3 @@ class IrWebsocket(models.AbstractModel):
         member_specific_channels = [(c, "members") for c in all_user_channels if c.id not in discuss_channel_ids]
         channels.extend([*all_user_channels, *member_specific_channels])
         return super()._build_bus_channel_list(channels)
-
-    @add_guest_to_context
-    def _update_bus_presence(self, inactivity_period):
-        super()._update_bus_presence(inactivity_period)
-        if not self.env.user or self.env.user._is_public():
-            guest = self.env["mail.guest"]._get_guest_from_context()
-            if not guest:
-                return
-            # sudo: bus.presence - guests currently need sudo to write their own presence
-            self.env["bus.presence"].sudo().update_presence(
-                inactivity_period,
-                identity_field="guest_id",
-                identity_value=guest.id,
-            )
-
-    def _on_websocket_closed(self, cookies):
-        super()._on_websocket_closed(cookies)
-        if self.env.user and not self.env.user._is_public():
-            return
-        token = cookies.get(self.env["mail.guest"]._cookie_name, "")
-        if guest := self.env["mail.guest"]._get_guest_from_token(token):
-            # sudo - bus.presence: guests can write their own presence
-            self.env["bus.presence"].sudo().search([("guest_id", "=", guest.id)]).status = "offline"

@@ -3,7 +3,6 @@
 import pytz
 import uuid
 from datetime import datetime, timedelta
-from functools import wraps
 
 from odoo.tools import consteq
 from odoo import _, api, fields, models
@@ -11,33 +10,7 @@ from odoo.http import request
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
 from odoo.tools.misc import limited_field_access_token
-from odoo.addons.bus.websocket import wsrequest
 from odoo.addons.mail.tools.discuss import Store
-
-
-def add_guest_to_context(func):
-    """ Decorate a function to extract the guest from the request.
-    The guest is then available on the context of the current
-    request.
-    """
-    @wraps(func)
-    def wrapper(self, *args, **kwargs):
-        req = request or wsrequest
-        token = (
-            req.cookies.get(req.env["mail.guest"]._cookie_name, "")
-        )
-        guest = req.env["mail.guest"]._get_guest_from_token(token)
-        if guest and not guest.timezone and not req.env.cr.readonly:
-            timezone = req.env["mail.guest"]._get_timezone_from_request(req)
-            if timezone:
-                guest._update_timezone(timezone)
-        if guest:
-            req.update_context(guest=guest)
-            if hasattr(self, "env"):
-                self.env.context = {**self.env.context, "guest": guest}
-        return func(self, *args, **kwargs)
-
-    return wrapper
 
 
 class MailGuest(models.Model):
@@ -58,14 +31,14 @@ class MailGuest(models.Model):
     lang = fields.Selection(string="Language", selection=_lang_get)
     timezone = fields.Selection(string="Timezone", selection=_tz_get)
     channel_ids = fields.Many2many(string="Channels", comodel_name='discuss.channel', relation='discuss_channel_member', column1='guest_id', column2='channel_id', copy=False)
-    im_status = fields.Char('IM Status', compute='_compute_im_status')
+    presence_ids = fields.One2many("mail.presence", "guest_id", groups="base.group_system")
+    # sudo: mail.guest - can access presence of accessible guest
+    im_status = fields.Char("IM Status", compute="_compute_im_status", compute_sudo=True)
 
+    @api.depends("presence_ids.status")
     def _compute_im_status(self):
-        # sudo - bus.presence: guests can access other guest's presences
-        presences = self.env["bus.presence"].sudo().search([("guest_id", "in", self.ids)])
-        im_status_by_guest = {presence.guest_id: presence.status for presence in presences}
         for guest in self:
-            guest.im_status = im_status_by_guest.get(guest, "offline")
+            guest.im_status = guest.presence_ids.status or "offline"
 
     def _get_guest_from_token(self, token=""):
         """Returns the guest record for the given token, if applicable."""

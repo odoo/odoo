@@ -14,12 +14,7 @@ class TestCorsLivechat(HttpCase):
                 "login": "operator",
             }
         )
-        cls.env["bus.presence"].create(
-            {
-                "user_id": cls.operator.id,
-                "status": "online",
-            }
-        )
+        cls.env["mail.presence"]._update_presence(cls.operator)
         cls.livechat_channel = cls.env["im_livechat.channel"].create(
             {"name": "Test Livechat Channel", "user_ids": [cls.operator.id]}
         )

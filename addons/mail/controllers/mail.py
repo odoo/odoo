@@ -1,13 +1,13 @@
 import logging
 
 from werkzeug.urls import url_encode
-from werkzeug.exceptions import NotFound, Unauthorized
+from werkzeug.exceptions import Unauthorized
 
 from odoo import _, http
 from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.tools import consteq
-from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
+from odoo.addons.mail.tools.discuss import add_guest_to_context
 
 _logger = logging.getLogger(__name__)
 

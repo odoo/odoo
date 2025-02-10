@@ -8,7 +8,7 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     def _compute_im_status(self):
-        super(ResPartner, self)._compute_im_status()
+        super()._compute_im_status()
         absent_now = self._get_on_leave_ids()
         for partner in self:
             if partner.id in absent_now:

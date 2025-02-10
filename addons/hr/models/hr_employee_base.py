@@ -154,15 +154,19 @@ class HrEmployeeBase(models.AbstractModel):
         This method is overritten in several other modules which add additional
         presence criterions. e.g. hr_attendance, hr_holidays
         """
-        # Check on login
-        employee_to_check_working = self.filtered(lambda e: 'offline' in str(e.user_id.im_status))
+        # sudo: res.users - can access presence of accessible user
+        employee_to_check_working = self.filtered(
+            lambda e: (e.user_id.sudo().presence_ids.status or "offline") == "offline"
+        )
         working_now_list = employee_to_check_working._get_employee_working_now()
         for employee in self:
             state = 'out_of_working_hour'
             if employee.company_id.sudo().hr_presence_control_login:
-                if employee.user_id._is_user_available():
+                # sudo: res.users - can access presence of accessible user
+                presence_status = employee.user_id.sudo().presence_ids.status or "offline"
+                if presence_status == "online":
                     state = 'present'
-                elif 'offline' in str(employee.user_id.im_status) and employee.id in working_now_list:
+                elif presence_status == "offline" and employee.id in working_now_list:
                     state = 'absent'
             if not employee.active:
                 state = 'archive'
@@ -170,14 +174,10 @@ class HrEmployeeBase(models.AbstractModel):
 
     @api.depends('user_id')
     def _compute_last_activity(self):
-        presences = self.env['bus.presence'].search_read([('user_id', 'in', self.mapped('user_id').ids)], ['user_id', 'last_presence'])
-        # transform the result to a dict with this format {user.id: last_presence}
-        presences = {p['user_id'][0]: p['last_presence'] for p in presences}
-
         for employee in self:
             tz = employee.tz
-            last_presence = presences.get(employee.user_id.id, False)
-            if last_presence:
+            # sudo: res.users - can access presence of accessible user
+            if last_presence := employee.user_id.sudo().presence_ids.last_presence:
                 last_activity_datetime = last_presence.replace(tzinfo=UTC).astimezone(timezone(tz)).replace(tzinfo=None)
                 employee.last_activity = last_activity_datetime.date()
                 if employee.last_activity == fields.Date.today():

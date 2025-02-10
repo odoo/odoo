@@ -2,7 +2,6 @@
 
 from . import bus
 from . import bus_listener_mixin
-from . import bus_presence
 from . import ir_attachment
 from . import ir_http
 from . import ir_model

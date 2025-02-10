@@ -306,7 +306,7 @@ class ResUsersLog(models.Model):
     _order = 'id desc'
     _description = 'Users Log'
     # Uses the magical fields `create_uid` and `create_date` for recording logins.
-    # See `bus.presence` for more recent activity tracking purposes.
+    # See `mail.presence` for more recent activity tracking purposes.
 
     @api.autovacuum
     def _gc_user_logs(self):
