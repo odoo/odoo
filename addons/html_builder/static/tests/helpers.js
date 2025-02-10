@@ -76,7 +76,7 @@ export async function setupWebsiteBuilder(
             if (styleContent) {
                 const style = iframe.contentDocument.createElement("style");
                 style.innerHTML = styleContent;
-                iframe.contentDocument.body.appendChild(style);
+                iframe.contentDocument.head.appendChild(style);
             }
             iframe.contentDocument.body.innerHTML = `<div id="wrapwrap"><div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${websiteContent}</div></div>`;
             resolve(el);
