@@ -11,6 +11,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.http import request
+from odoo.tools import str2bool
 
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.auth_signup.models.res_partner import SignupError
@@ -336,6 +337,12 @@ class ResUsers(models.Model):
             if request.httprequest.user_agent.platform:
                 values['useros'] = request.httprequest.user_agent.platform.capitalize()
         return values
+
+    def _alert_untrusted_location(self):
+        ICP = self.env['ir.config_parameter'].sudo()
+        if not str2bool(ICP.get_param("auth_signup.alert_untrusted_location", 'true')):
+            return
+        self._alert_new_device()
 
     @api.model
     def web_create_users(self, emails):
