@@ -2,6 +2,7 @@ import json
 from contextlib import contextmanager
 from requests import Session, PreparedRequest, Response
 from psycopg2 import IntegrityError
+from unittest.mock import patch
 
 from odoo.exceptions import ValidationError, UserError
 from odoo.tests.common import tagged, TransactionCase, freeze_time
@@ -44,6 +45,8 @@ class TestPeppolParticipant(TransactionCase):
             '/api/peppol/1/register_sender': {'result': {}},
             '/api/peppol/1/register_receiver': {'result': {}},
             '/api/peppol/1/register_sender_as_receiver': {'result': {}},
+            '/api/peppol/1/cancel_peppol_registration': {'result': {}},
+            '/api/peppol/2/get_services': {'result': {'services': cls.env['res.company']._peppol_supported_document_types()}},
         }
 
     @classmethod
@@ -51,10 +54,12 @@ class TestPeppolParticipant(TransactionCase):
         response = Response()
         response.status_code = 200
         if r.url.endswith('/iso6523-actorid-upis%3A%3A9925%3A0000000000'):
+            # 9925:0000000000 is not on Peppol
             response.status_code = 404
             return response
 
         if r.url.endswith('/iso6523-actorid-upis%3A%3A0208%3A0000000000'):
+            # 0208:0000000000 is on Peppol
             response._content = b'<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0208:0000000000</id:ParticipantIdentifier></smp:ServiceGroup>'
             return response
 
@@ -108,23 +113,13 @@ class TestPeppolParticipant(TransactionCase):
         with self.assertRaises(ValidationError), self.cr.savepoint():
             wizard.button_register_peppol_participant()
 
-    def test_create_participant_already_exists(self):
-        # creating a receiver participant that already exists on Peppol network should not be possible
+    def test_create_success_sender(self):
+        company = self.env.company
         vals = self._get_participant_vals()
         vals['peppol_eas'] = '0208'
         wizard = self.env['peppol.registration'].create(vals)
-        with self.assertRaises(UserError):
-            wizard.button_register_peppol_participant()
-
-    def test_create_success_sender(self):
-        # should be possible to apply with all data
-        # the account_peppol_proxy_state should correctly change to sender
-        # then the account_peppol_proxy_state should not change
-        # after running the cron checking participant status
-        company = self.env.company
-        wizard = self.env['peppol.registration'].create({'smp_registration': False, **self._get_participant_vals()})
+        self.assertFalse(wizard.smp_registration)
         wizard.button_register_peppol_participant()
-        # since we did not select receiver registration, we're now just a sender
         self.assertEqual(company.account_peppol_proxy_state, 'sender')
         # running the cron should not do anything for the company
         with self._set_context({'participant_state': 'sender'}):
@@ -132,25 +127,23 @@ class TestPeppolParticipant(TransactionCase):
         self.assertEqual(company.account_peppol_proxy_state, 'sender')
 
     def test_create_success_receiver(self):
-        # should be possible to apply with all data
-        # the account_peppol_proxy_state should correctly change to smp_registration
-        # then the account_peppol_proxy_state should change successfully
-        # after checking participant status
         company = self.env.company
         wizard = self.env['peppol.registration'].create(self._get_participant_vals())
-        wizard.smp_registration = True  # choose to register as a receiver right away
+        self.assertTrue(wizard.smp_registration)
         wizard.button_register_peppol_participant()
         self.assertIn(company.account_peppol_proxy_state, ('smp_registration', 'receiver'))
 
     def test_create_success_receiver_two_steps(self):
-        # it should be possible to first register as a sender in the wizard
-        # and then come back to settings and register as a receiver
-        # first step: use the peppol wizard to register only as a sender
         company = self.env.company
-        wizard = self.env['peppol.registration'].create({'smp_registration': False, **self._get_participant_vals()})
-        wizard.button_register_peppol_participant()
+
+        def _get_company_info_on_peppol(self, edi_identification):
+            return {'is_on_peppol': True, 'external_provider': None, 'error_msg': ''}
+
+        with patch('odoo.addons.account_peppol.models.res_company.ResCompany._get_company_info_on_peppol',
+                   _get_company_info_on_peppol):
+            wizard = self.env['peppol.registration'].create(self._get_participant_vals())
+            wizard.button_register_peppol_participant()
         self.assertEqual(company.account_peppol_proxy_state, 'sender')
-        # second step: open settings and register as a receiver
         settings = self.env['res.config.settings'].create({})
         settings.button_peppol_register_sender_as_receiver()
         self.assertIn(company.account_peppol_proxy_state, ('smp_registration', 'receiver'))
@@ -177,3 +170,21 @@ class TestPeppolParticipant(TransactionCase):
         with self.assertRaises(IntegrityError), self.cr.savepoint():
             wizard.account_peppol_proxy_state = 'not_registered'
             wizard.button_register_peppol_participant()
+
+    def test_config_unregister_participant(self):
+        wizard = self.env['peppol.registration'].create({**self._get_participant_vals(), 'peppol_eas': '0208'})
+        wizard.button_register_peppol_participant()
+        config_wizard = self.env['peppol.config.wizard'].new({})
+        config_wizard.button_peppol_unregister()
+        self.assertEqual(self.env.company.account_peppol_proxy_state, 'not_registered')
+
+    def test_config_update_email(self):
+        wizard = self.env['peppol.registration'].create({**self._get_participant_vals(), 'peppol_eas': '0208'})
+        wizard.button_register_peppol_participant()
+        self.assertEqual(self.env.company.account_peppol_contact_email, self._get_participant_vals()['contact_email'])
+        config_wizard = self.env['peppol.config.wizard'].new({})
+        config_wizard.account_peppol_contact_email = 'another@email.be'
+        with patch('odoo.addons.account_peppol.models.account_edi_proxy_user.Account_Edi_Proxy_ClientUser._call_peppol_proxy') as mocked_patch:
+            config_wizard.button_sync_form_with_peppol_proxy()
+            args = {'endpoint': '/api/peppol/1/update_user', 'params': {'update_data': {'peppol_contact_email': 'another@email.be'}}}
+            mocked_patch.assert_called_once_with(**args)
