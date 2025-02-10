@@ -1,3 +1,5 @@
+/* global posmodel */
+
 import * as BillScreen from "@pos_restaurant/../tests/tours/utils/bill_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
@@ -14,6 +16,7 @@ import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 import { registry } from "@web/core/registry";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
+import { renderToElement } from "@web/core/utils/render";
 
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 
@@ -378,7 +381,6 @@ registry.category("web_tour.tours").add("PoSPaymentSyncTour3", {
 });
 
 registry.category("web_tour.tours").add("PreparationPrinterContent", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -386,13 +388,37 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Product Test"),
             Dialog.confirm("Add"),
-            ProductScreen.clickOrderButton(),
+            ProductScreen.totalAmountIs("10"),
             {
-                trigger:
-                    ".render-container .pos-receipt-body .product-name:contains('Product Test (Value 1)')",
-            },
-            {
-                trigger: ".render-container .pos-receipt-body .p-0:contains('Value 1')",
+                content: "Check if order preparation contains always Variant",
+                trigger: "body",
+                run: async () => {
+                    const order = posmodel.getOrder();
+                    const orderChange = posmodel.changesToOrder(
+                        order,
+                        posmodel.config.preparationCategories,
+                        false
+                    );
+                    const { orderData, changes } = posmodel.generateOrderChange(
+                        order,
+                        orderChange,
+                        Array.from(posmodel.config.preparationCategories),
+                        false
+                    );
+
+                    orderData.changes = {
+                        title: "new",
+                        data: changes.new,
+                    };
+
+                    const rendered = renderToElement("point_of_sale.OrderChangeReceipt", {
+                        data: orderData,
+                    });
+
+                    if (!rendered.innerHTML.includes("Value 1")) {
+                        throw new Error("Value 1 not found in printed receipt");
+                    }
+                },
             },
         ].flat(),
 });
