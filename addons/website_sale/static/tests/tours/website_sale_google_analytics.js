@@ -35,11 +35,7 @@ registry.category("web_tour.tours").add('google_analytics_view_item', {
         timeout: 25000,
         run: () => {
             itemId = document.body.getAttribute("view-event-id");
-            document.body.removeAttribute("view-event-id");
         }
-    },
-    {
-        trigger: 'body:not([view-event-id])',
     },
     {
         content: 'select another variant',
