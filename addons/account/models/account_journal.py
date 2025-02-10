@@ -251,6 +251,28 @@ class AccountJournal(models.Model):
     accounting_date = fields.Date(compute='_compute_accounting_date')
     display_alias_fields = fields.Boolean(compute='_compute_display_alias_fields')
 
+    show_fetch_in_einvoices_button = fields.Boolean(
+        string="Show E-Invoice Buttons",
+        compute='_compute_show_fetch_in_einvoices_button',
+    )
+    show_refresh_out_einvoices_status_button = fields.Boolean(
+        string="Show E-Invoice Status Buttons",
+        compute='_compute_show_refresh_out_einvoices_status_button',
+    )
+
+    notify_on_incoming_einvoice = fields.Boolean(
+        string="Send Email on Incoming E-Invoice",
+        help="Send an email to the customer/vendor when receiving an e-invoice.",
+        default=True,
+    )
+    incoming_einvoice_notification_email = fields.Char(
+        string="Email on Incoming E-Invoice",
+        help="Email address to send the email to when receiving an e-invoice.",
+        compute='_compute_incoming_einvoice_notification_email',
+        store=True,
+        readonly=False,
+    )
+
     _code_company_uniq = models.Constraint(
         'unique (company_id, code)',
         'Journal codes must be unique per company.',
@@ -464,6 +486,22 @@ class AccountJournal(models.Model):
         for journal in self:
             temp_move = self.env['account.move'].new({'journal_id': journal.id})
             journal.accounting_date = temp_move._get_accounting_date(move_date, has_tax)
+
+    @api.depends('company_id')
+    def _compute_incoming_einvoice_notification_email(self):
+        for journal in self:
+            if not journal.incoming_einvoice_notification_email:
+                journal.incoming_einvoice_notification_email = journal.company_id.email
+
+    @api.depends('type')
+    def _compute_show_fetch_in_einvoices_button(self):
+        # TO OVERRIDE
+        self.show_fetch_in_einvoices_button = False
+
+    @api.depends('type')
+    def _compute_show_refresh_out_einvoices_status_button(self):
+        # TO OVERRIDE
+        self.show_refresh_out_einvoices_status_button = False
 
     @api.onchange('type')
     def _onchange_type(self):
@@ -1124,3 +1162,45 @@ class AccountJournal(models.Model):
         '''
         self.ensure_one()
         return order_reference
+
+    # -------------------------------------------------------------------------
+    # E-Invoice Related Methods
+    # -------------------------------------------------------------------------
+
+    def _notify_einvoices_received(self, moves):
+        self.ensure_one()
+
+        if not moves:
+            return
+
+        self._send_einvoice_received_mail_if_needed(moves)
+
+    def _send_einvoice_received_mail_if_needed(self, moves):
+        self.ensure_one()
+        if not all((
+            moves,
+            self.notify_on_incoming_einvoice,
+            self.incoming_einvoice_notification_email,
+        )):
+            return
+
+        mail_template = self.env.ref('account.mail_template_einvoice_notification', raise_if_not_found=False)
+        if not mail_template:
+            return
+        mail_template.with_context(einvoices=moves).send_mail(self.id, force_send=True)
+
+    def button_fetch_in_einvoices(self):
+        # TO OVERRIDE
+        """
+        Abstract method to fetch e-invoices.
+        Should fetch vendor bill invoices synchronously and doesn't return anything.
+        """
+        pass
+
+    def button_refresh_out_einvoices_status(self):
+        # TO OVERRIDE
+        """
+        Abstract method to fetch e-invoice statuses.
+        Should fetch customer invoices statuses synchronously and doesn't return anything.
+        """
+        pass
