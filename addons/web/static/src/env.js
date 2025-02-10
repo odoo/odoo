@@ -237,7 +237,12 @@ export async function mountComponent(component, target, appConfig = {}) {
         warnIfNoStaticProps: !session.test_mode,
         name: component.constructor.name,
         translatableAttributes: ["data-tooltip"],
-        translateFn: _t,
+        translateFn: (str, ctx) => {
+            if (ctx) {
+                console.log(`term: "${str}", ctx: "${ctx}"`);
+            }
+            return _t(str);
+        },
         customDirectives,
         globalValues,
         ...appConfig,
