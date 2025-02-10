@@ -3839,11 +3839,17 @@ class AccountMove(models.Model):
 
     def _hash_moves(self, **kwargs):
         chains_to_hash = self._get_chains_to_hash(**kwargs)
+        grant_secure_group_access = False
         for chain in chains_to_hash:
             move_hashes = chain['moves']._calculate_hashes(chain['previous_hash'])
             for move, move_hash in move_hashes.items():
                 move.inalterable_hash = move_hash
+            # If any secured entries belong to journals without 'hash on post', the user should be granted access rights
+            if not chain['journal_restrict_mode']:
+                grant_secure_group_access = True
             chain['moves']._message_log_batch(bodies={m.id: self.env._("This journal entry has been secured.") for m in chain['moves']})
+        if grant_secure_group_access:
+            self.env['res.groups']._activate_group_account_secured()
 
     def _get_chain_info(self, force_hash=False, include_pre_last_hash=False, early_stop=False):
         """All records in `self` must belong to the same journal and sequence_prefix
@@ -3928,6 +3934,7 @@ class AccountMove(models.Model):
 
                 if not chain_info:
                     continue
+                chain_info['journal_restrict_mode'] = journal.restrict_mode_hash_table
                 if early_stop:
                     return True
 
@@ -4701,9 +4708,13 @@ class AccountMove(models.Model):
         for move, reverse_move in zip(self, reverse_moves):
             group = (move.line_ids + reverse_move.line_ids) \
                 .filtered(lambda l: not l.reconciled) \
+                .sorted(lambda l: l.account_type not in ('asset_receivable', 'liability_payable')) \
                 .grouped(lambda l: (l.account_id, l.currency_id))
             for (account, _currency), lines in group.items():
-                if account.reconcile or account.account_type in ('asset_cash', 'liability_credit_card'):
+                if (
+                    all(not line.reconciled for line in lines) # if it was reconciled due to a previous group
+                    and account.reconcile or account.account_type in ('asset_cash', 'liability_credit_card')
+                ):
                     lines.with_context(move_reverse_cancel=move_reverse_cancel).reconcile()
         return reverse_moves
 

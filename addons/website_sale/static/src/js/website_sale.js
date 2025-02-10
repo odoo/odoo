@@ -186,7 +186,8 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         let attributeIds = [];
         inputs.forEach((element) => attributeIds.push(element.dataset.attributeValueId));
         if (attributeIds.length > 0) {
-            window.location.hash = `attribute_values=${attributeIds.join(',')}`;
+            // Avoid adding new entries in session history by replacing the current one
+            history.replaceState(null, '', '#attribute_values=' + attributeIds.join(','));
         }
     },
     /**

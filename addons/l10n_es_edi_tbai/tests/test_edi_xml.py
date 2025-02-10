@@ -150,6 +150,25 @@ class TestEdiTbaiXmls(TestEsEdiTbaiCommon):
             xml_expected = self.with_applied_xpath(xml_expected_base, xpath)
             self.assertXmlTreeEqual(xml_doc, xml_expected)
 
+    def test_xml_tree_post_multitax(self):
+        self.out_invoice.invoice_line_ids.tax_ids = [self._get_tax_by_xml_id('s_req52').id, self._get_tax_by_xml_id('s_iva21b').id]
+        with freeze_time(self.frozen_today):
+            edi_document = self.out_invoice._l10n_es_tbai_create_edi_document(cancel=False)
+            edi_document._generate_xml(self.out_invoice._l10n_es_tbai_get_values(cancel=False))
+            xml_doc = edi_document._get_xml()
+            xml_doc.remove(xml_doc.find("Signature", namespaces=NS_MAP))
+            xml_expected_base = etree.fromstring(super()._get_sample_xml('xml_post.xml'))
+            xpath = """
+                <xpath expr="//ImporteTotal" position="replace">
+                    <ImporteTotal>5048.00000000</ImporteTotal>
+                </xpath>
+                <xpath expr="//ImporteTotalFactura" position="replace">
+                    <ImporteTotalFactura>5048.00</ImporteTotalFactura>
+                </xpath>
+            """
+            xml_expected = self.with_applied_xpath(xml_expected_base, xpath)
+            self.assertXmlTreeEqual(xml_doc, xml_expected)
+
     def test_xml_tree_in_post(self):
         """Test XML of vendor bill for LROE Batuz"""
         self.company_data['company'].l10n_es_tbai_tax_agency = 'bizkaia'

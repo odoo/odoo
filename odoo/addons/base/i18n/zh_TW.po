@@ -5142,6 +5142,8 @@ msgid ""
 "\n"
 "Enhancements for the Point of Sale UrbanPiper module. Includes features such as store timing configuration, scheduled order handling, and improved toggle options.\n"
 msgstr ""
+"\n"
+"銷售點 UrbanPiper 模組的增強功能套裝。包括：店舖計時配置、預定訂單處理等功能，並已改進切換選項。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_appointment_crm
@@ -6019,10 +6021,11 @@ msgstr ""
 "硬體代理\n"
 "=============\n"
 "\n"
-"这个模块可以使您远程使用并行埠位址连接到服务器.\n"
+"此模組讓你可遠端使用已連接至此伺服器的周邊硬件設備。\n"
 "\n"
-"这个模块只包含启用的框架. 实际的设备驱动可以在\n"
-"其它必须单独安装的模块中找到.\n"
+"此模組只包括最基礎啟用功能的架構。實際運用的硬件驅動程式\n"
+"是在其他模組中，須另行安裝。\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk
@@ -6175,6 +6178,17 @@ msgid ""
 "* FBS: Importing the completed orders\n"
 "* FBM/Hybrid: Delivery information is fetched from Shopee, track and synchronize the stock level to Shopee\n"
 msgstr ""
+"\n"
+"將你的 Shopee 蝦皮訂單匯入 Odoo，並同步送貨資料\n"
+"============================================================\n"
+"\n"
+"主要功能\n"
+"------------\n"
+"* 可從多個帳戶及商店匯入訂單資料\n"
+"* 根據訂單的內部參考編號（蝦皮的 item_id 或 model_id），配對至相符的 Odoo 產品\n"
+"* 同時支援由蝦皮 Shopee 配送（FBS）、商家配送（FBM）及跨境賣家配送（混合模式）：\n"
+"* FBS 蝦皮 Shopee 配送：可匯入已完成的訂單\n"
+"* FBM 商家配送/混合模式：會從蝦皮讀取送貨資料，可追蹤庫存水平並同步至蝦皮系統\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_debit_note
@@ -14138,7 +14152,7 @@ msgstr "訪問權限不匹配"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__access_token
 msgid "Access Token"
-msgstr "存取代碼(token)"
+msgstr "存取權杖(token)"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_hr
@@ -14589,7 +14603,7 @@ msgstr "向網站增加任務建議表"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_mail_group
 msgid "Add a website snippet for the mail groups."
-msgstr "為郵件組增加網站片段."
+msgstr "為郵件群組加入網站小摘要。"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_reports_cash_basis
@@ -26918,7 +26932,7 @@ msgstr "匯入QIF銀行對帳單"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_shopee
 msgid "Import Shopee orders and sync deliveries"
-msgstr ""
+msgstr "匯入蝦皮訂單，同步送貨資料"
 
 #. module: base
 #. odoo-python
@@ -35171,7 +35185,7 @@ msgstr "付款服務商：Xendit"
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_payment_providers
 msgid "Payment Providers"
-msgstr "支付提供商"
+msgstr "付款服務商"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_payment
@@ -35479,7 +35493,7 @@ msgstr "POS 銷售點管理 - UrbanPiper"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_urban_piper_enhancements
 msgid "Point of Sale - UrbanPiper Enhancements"
-msgstr ""
+msgstr "POS 銷售點 - UrbanPiper 增強功能"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_discount
@@ -38604,12 +38618,12 @@ msgstr "支援請求階段變動時發送文字訊息"
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_easypost
 msgid "Send your parcels through Easypost and track them online"
-msgstr "通過Easypost發送您的包裹，並線上追蹤它們"
+msgstr "通過Easypost發送您的貨件，並線上追蹤它們"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_shiprocket
 msgid "Send your parcels through shiprocket and track them online"
-msgstr "通過 shiprocket 發送包裹並在線跟蹤"
+msgstr "通過 shiprocket 發送貨件並在線跟蹤"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_dhl
@@ -38628,8 +38642,11 @@ msgstr "通過UPS運輸貨物並線上追蹤物流資訊"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_usps
-msgid "Send your shippings through USPS and track them online"
-msgstr "通過USPS運輸貨物並線上追蹤物流資訊"
+msgid ""
+"This is the legacy integration with USPS. Please install the new \"United "
+"States Postal Service (USPS) Shipping\" module and uninstall this one as "
+"soon as possible."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_survey
@@ -38941,7 +38958,7 @@ msgstr "Shiprocket：貨到現金付款"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_shopee
 msgid "Shopee Connector"
-msgstr ""
+msgstr "Shopee 蝦皮連接器"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_wishlist
@@ -42684,7 +42701,7 @@ msgstr "UNSPSC 產品代碼"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups_rest
 msgid "UPS Shipping"
-msgstr "UPS 發貨"
+msgstr "UPS 貨運"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups
@@ -43029,8 +43046,8 @@ msgstr "United States - Payroll with Accounting"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_usps
-msgid "United States Postal Service (USPS) Shipping"
-msgstr "美國郵政(USPS)貨運"
+msgid "United States Postal Service (USPS) Shipping (Legacy)"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_uom

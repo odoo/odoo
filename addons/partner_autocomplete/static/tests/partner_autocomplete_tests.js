@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
 import {
     click,
     editInput,
@@ -12,8 +11,6 @@ import {
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { loadJS } from "@web/core/assets";
-
-const serviceRegistry = registry.category("services");
 
 let target;
 
@@ -38,29 +35,6 @@ QUnit.module('partner_autocomplete', {
         });
 
         setupViewRegistries();
-        const fakeHTTPService = {
-            start() {
-                return {
-                    get: (route) => {
-                        return Promise.resolve([
-                            {
-                                "name": "Odoo",
-                                "domain": "odoo.com",
-                            },
-                            {
-                                "name": "MyCompany",
-                                "domain": "mycompany.com",
-                            },
-                            {
-                                "name": "YourCompany",
-                                "domain": "yourcompany.com",
-                            },
-                        ]);
-                    },
-                };
-            },
-        };
-        serviceRegistry.add("http", fakeHTTPService);
     },
 }, function () {
 
@@ -183,6 +157,22 @@ QUnit.module('partner_autocomplete', {
                         'display_name': "California (US)",
                     },
                 });
+            }
+            else if (route.startsWith("https://autocomplete.clearbit.com/v1/companies/suggest")) {
+                return Promise.resolve([
+                    {
+                        "name": "Odoo",
+                        "domain": "odoo.com",
+                    },
+                    {
+                        "name": "MyCompany",
+                        "domain": "mycompany.com",
+                    },
+                    {
+                        "name": "YourCompany",
+                        "domain": "yourcompany.com",
+                    },
+                ])
             }
         }
     }

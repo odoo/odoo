@@ -586,6 +586,12 @@ msgid "A next activity can only be planned on models that use activities."
 msgstr "只可在使用活動的模組計劃下一活動。"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_scheduled_message.py:0
+msgid "A scheduled message could not be sent"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__google_translate_api_key
 msgid ""
 "A valid Google API key is required to enable message translation. "
@@ -631,7 +637,7 @@ msgstr "存取組"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__access_token
 msgid "Access Token"
-msgstr "存取代碼(token)"
+msgstr "存取權杖(token)"
 
 #. module: mail
 #. odoo-javascript
@@ -1216,7 +1222,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/ir_attachment.py:0
 msgid "An access token must be provided for each attachment."
-msgstr "必須為每個附件提供存取代碼(token)。"
+msgstr "必須為每個附件提供存取權杖(token)。"
 
 #. module: mail
 #. odoo-python
@@ -9502,6 +9508,14 @@ msgid ""
 msgstr ""
 "以下訊息未能被地址 %(alias_display_name)s 接收。\n"
 "請稍後再試，或改為聯絡 %(company_name)s。"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_scheduled_message.py:0
+msgid ""
+"The message scheduled on %(model)s(%(id)s) with the following content could "
+"not be sent:%(original_message)s"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__from_message_id

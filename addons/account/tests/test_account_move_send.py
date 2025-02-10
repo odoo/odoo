@@ -542,7 +542,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             'extra_edis': False,
             'extra_edi_checkboxes': False,
             'pdf_report_id': wizard._get_default_pdf_report_id(invoice).id,
-            'display_pdf_report_id': True,
+            'display_pdf_report_id': False,
             'mail_template_id': wizard._get_default_mail_template_id(invoice).id,
             'mail_lang': 'en_US',
             'mail_partner_ids': wizard.move_id.partner_id.ids,
@@ -574,7 +574,9 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
 
         # Send it again. The PDF must not be created again.
         wizard = self.create_send_and_print(invoice, sending_methods=['email', 'manual'])
-        results = wizard.action_send_and_print()
+        with patch('odoo.addons.account.models.account_move_send.AccountMoveSend._hook_invoice_document_after_pdf_report_render') as mocked_method:
+            results = wizard.action_send_and_print()
+            mocked_method.assert_not_called()
         self.assertEqual(results['type'], 'ir.actions.act_url')
         self.assertFalse(invoice.sending_data)
         self.assertRecordValues(invoice, [{'invoice_pdf_report_id': pdf_report.id}])

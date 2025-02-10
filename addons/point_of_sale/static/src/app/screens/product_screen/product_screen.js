@@ -54,6 +54,7 @@ export class ProductScreen extends Component {
             currentOffset: 0,
             quantityByProductTmplId: {},
         });
+        this._searchTriggered = false;
         onMounted(() => {
             this.pos.openOpeningControl();
             this.pos.addPendingOrder([this.currentOrder.id]);
@@ -341,11 +342,18 @@ export class ProductScreen extends Component {
         let list = [];
 
         if (this.searchWord !== "") {
+            if (!this._searchTriggered) {
+                this.pos.setSelectedCategory(0);
+                this._searchTriggered = true;
+            }
             list = this.addMainProductsToDisplay(this.getProductsBySearchWord(this.searchWord));
-        } else if (this.pos.selectedCategory?.id) {
-            list = this.getProductsByCategory(this.pos.selectedCategory);
         } else {
-            list = this.products;
+            this._searchTriggered = false;
+            if (this.pos.selectedCategory?.id) {
+                list = this.getProductsByCategory(this.pos.selectedCategory);
+            } else {
+                list = this.products;
+            }
         }
 
         if (!list || list.length === 0) {
@@ -375,13 +383,17 @@ export class ProductScreen extends Component {
 
     getProductsBySearchWord(searchWord) {
         const words = searchWord.toLowerCase();
-        const exactMatches = this.products.filter((product) => product.exactMatch(words));
+        const products = this.pos.selectedCategory?.id
+            ? this.getProductsByCategory(this.pos.selectedCategory)
+            : this.products;
+
+        const exactMatches = products.filter((product) => product.exactMatch(words));
 
         if (exactMatches.length > 0 && words.length > 2) {
             return exactMatches;
         }
 
-        const matches = this.products.filter((p) =>
+        const matches = products.filter((p) =>
             unaccent(p.searchString, false).toLowerCase().includes(words)
         );
 

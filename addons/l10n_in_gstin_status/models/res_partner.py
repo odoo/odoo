@@ -34,6 +34,9 @@ class ResPartner(models.Model):
 
     def action_l10n_in_verify_gstin_status(self):
         self.ensure_one()
+        self.check_access('write')
+        if self.env.company.sudo().account_fiscal_country_id.code != 'IN':
+            raise UserError(_('You must be logged in an Indian company to use this feature'))
         if not self.vat:
             raise ValidationError(_("Please enter the GSTIN"))
         is_production = self.env.company.sudo().l10n_in_edi_production_env

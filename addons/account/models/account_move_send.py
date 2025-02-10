@@ -617,7 +617,7 @@ class AccountMoveSend(models.AbstractModel):
             self._prepare_invoice_pdf_report(batch)
 
         for invoice, invoice_data in invoices_data_pdf.items():
-            if not invoice_data.get('error'):
+            if not invoice_data.get('error') and not invoice.invoice_pdf_report_id:
                 self._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
 
         # Cleanup the error if we don't want to block the regular pdf generation.

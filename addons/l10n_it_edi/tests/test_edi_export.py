@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.tests import tagged
+from odoo.tests import freeze_time, tagged
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 
 
@@ -495,3 +495,34 @@ class TestItEdiExport(TestItEdi):
         })
         invoice.action_post()
         self._assert_export_invoice(invoice, 'export_foreign_currency_global_discount.xml')
+
+    @freeze_time("2025-02-03")
+    def test_export_invoice_with_two_downpayments(self):
+        if self.env['ir.module.module']._get('sale').state != 'installed':
+            self.skipTest("sale module is not installed")
+
+        sale_order = self.env['sale.order'].with_company(self.company).create({
+            'partner_id': self.italian_partner_a.id,
+            'order_line': [
+                Command.create({'product_id': self.service_product.id, 'price_unit': 200.00}),
+            ],
+        })
+        sale_order.action_confirm()
+
+        for amount in (50, 100):
+            self.env['account.move'].with_company(self.company).browse(
+                self.env['sale.advance.payment.inv'].create([{
+                    'advance_payment_method': 'fixed',
+                    'fixed_amount': amount,
+                    'sale_order_ids': [Command.link(sale_order.id)],
+                }]).create_invoices()['res_id']
+            ).action_post()
+
+        invoice = self.env['account.move'].with_company(self.company).browse(
+            self.env['sale.advance.payment.inv'].create([{
+                'advance_payment_method': 'delivered',
+                'sale_order_ids': [Command.link(sale_order.id)],
+            }]).create_invoices()['res_id']
+        )
+        invoice.action_post()
+        self._assert_export_invoice(invoice, 'test_export_invoice_with_two_downpayments.xml')

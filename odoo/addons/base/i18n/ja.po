@@ -6133,18 +6133,18 @@ msgid ""
 "    * FBA: A stock location and stock moves allow to monitor your stock in Amazon Fulfilment Centers.\n"
 "    * FBM: Delivery notifications are sent to Amazon for each confirmed picking (partial delivery friendly).\n"
 msgstr ""
-"Amazonの注文をOdooにインポートし、配信を同期します\n"
-"============================================================\n"
 "\n"
+"Amazonの注文をOdooにインポートし、配送を同期します\n"
+"============================================================\n"
 "\n"
 "主な機能\n"
 "------------ \n"
 "*複数のアカウントとマーケットプレイスから注文をインポートします。 \n"
-"*注文は、内部参照(AmazonのSKU)に基づいてOdoo製品と照合されます。 \n"
+"*注文は、内部参照(AmazonのSKU)に基づいてOdooプロダクトと照合されます。 \n"
 "* Odooで確認された配送はAmazonで同期されます。 \n"
 "* Fulfillment by Amazon(FBA)とFulfillment by Merchant(FBM)の両方のサポート:\n"
 "* FBA:在庫の場所と在庫の移動により、Amazonフルフィルメントセンターで在庫を監視できます。\n"
-"* FBM:配達通知は、確認されたピッキングごとにAmazonに送信されます(部分配達に適しています)。"
+"* FBM:配達通知は、確認されたピッキングごとにAmazonに送信されます(部分配達に適しています)。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_shopee
@@ -6161,6 +6161,17 @@ msgid ""
 "* FBS: Importing the completed orders\n"
 "* FBM/Hybrid: Delivery information is fetched from Shopee, track and synchronize the stock level to Shopee\n"
 msgstr ""
+"\n"
+"ShopeeのオーダをOdooにインポートし、配送を同期します。\n"
+"============================================================\n"
+"\n"
+"主な機能\n"
+"------------\n"
+"* 複数のアカウントとショップからオーダをインポートします。 \n"
+"* オーダは内部参照番号 (Shopee内の item_id または model_id) に基づいてOdooプロダクトと照合されます。\n"
+"* Shopeeによるフルフィルメント(FBS)、マーチャントによるフルフィルメント(FBM)、および越境販売者によるフルフィルメント(ハイブリッド)の両方に対応しています。:\n"
+"* FBS: 完了したオーダをインポート\n"
+"* FBM/ハイブリッド: 配送情報はShopeeから取得し、在庫レベルをShopeeに追跡および同期します。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_debit_note
@@ -11520,6 +11531,9 @@ msgid ""
 "This module improves the MyInvois E-invoicing feature by adding proper support for self billing, rendering the MyInvois\n"
 "QR code in the invoice PDF file and allows better management of foreign customer TIN.\n"
 msgstr ""
+"\n"
+"このモジュールにより、MyInvoisの電子請求書発行機能を改善し、適切な自己請求書のサポートを追加することで、MyInvois\n"
+"の顧客請求書PDFファイル内のQRコードをレンダリングし、外国顧客の納税者番号をより適切に管理することができます。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_iban
@@ -14636,7 +14650,7 @@ msgstr "一括送信SMSにリード/案件情報を追加"
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_hr_payroll_localisation
 msgid "Add models and fields for complete mexican localisation"
-msgstr ""
+msgstr "メキシコの完全ローカライズのためのモデルとフィールドを追加"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_social_sale
@@ -24171,7 +24185,7 @@ msgstr "拡張アドレス"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_my_edi_extended
 msgid "Extended features for the E-invoicing using MyInvois"
-msgstr ""
+msgstr "MyInvoisを使用した電子請求書の機能拡張"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__mode__extension
@@ -26891,7 +26905,7 @@ msgstr "QIF銀行取引明細書をインポート"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_shopee
 msgid "Import Shopee orders and sync deliveries"
-msgstr ""
+msgstr "Shopeeオーダインポートおよび運送同期"
 
 #. module: base
 #. odoo-python
@@ -29503,7 +29517,7 @@ msgstr "マレーシア - 電子請求"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_my_edi_extended
 msgid "Malaysia - E-invoicing Extended Features"
-msgstr ""
+msgstr "マレーシア - 電子請求の機能拡張"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_my_ubl_pint
@@ -30229,7 +30243,7 @@ msgstr "メキシコ - 給与"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_hr_payroll_localisation
 msgid "Mexico - Payroll - Localisation"
-msgstr ""
+msgstr "メキシコ - 給与 - ローカリゼーション"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_hr_payroll_account
@@ -38358,8 +38372,11 @@ msgstr "UPSを通して発送し、オンラインで追跡します"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_usps
-msgid "Send your shippings through USPS and track them online"
-msgstr "USPSを通して発送し、オンラインで追跡します"
+msgid ""
+"This is the legacy integration with USPS. Please install the new \"United "
+"States Postal Service (USPS) Shipping\" module and uninstall this one as "
+"soon as possible."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_survey
@@ -38669,7 +38686,7 @@ msgstr "Shiprocket: 代金引換"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_shopee
 msgid "Shopee Connector"
-msgstr ""
+msgstr "Shopeeコネクタ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_wishlist
@@ -42753,8 +42770,8 @@ msgstr "アメリカ合衆国 - 会計の給与"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_usps
-msgid "United States Postal Service (USPS) Shipping"
-msgstr "アメリカ合衆国郵便公社 (USPS)配送"
+msgid "United States Postal Service (USPS) Shipping (Legacy)"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_uom

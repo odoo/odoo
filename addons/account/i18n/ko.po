@@ -5,9 +5,9 @@
 # Translators:
 # JH CHOI <hwangtog@gmail.com>, 2024
 # Martin Trigaux, 2024
-# Daye Jeong, 2025
 # Wil Odoo, 2025
 # Sarah Park, 2025
+# Daye Jeong, 2025
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-27 13:02+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Sarah Park, 2025\n"
+"Last-Translator: Daye Jeong, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7085,7 +7085,7 @@ msgstr "복수 변수 필터"
 #. odoo-python
 #: code:addons/account/models/account_root.py:0
 msgid "Filter on the Account or its Display Name instead"
-msgstr ""
+msgstr "계정 또는 표시 이름을 기준으로 필터링합니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__general_account_id
@@ -13577,6 +13577,11 @@ msgid "Set a price."
 msgstr "가격을 설정합니다."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+msgid "Set a value greater than 0.0 to activate a credit limit check"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
 msgid "Set active to false to hide the Account Tag without removing it."
 msgstr "계정 태그를 제거하지 않고 숨기려면 false로 설정합니다."
@@ -16403,8 +16408,9 @@ msgstr "이동 후: %s"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
-"Total Receivable amount exceeding a limit."
-msgstr "협력사의 미수금 총액 한도가 초과된 경우, 청구서나 판매주문서를 생성할 때 주의 알림을 표시합니다."
+"Total Receivable amount exceeding a limit.Set a value greater than 0.0 to "
+"activate a credit limit check"
+msgstr ""
 
 #. module: account
 #. odoo-python

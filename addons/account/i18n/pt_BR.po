@@ -3,9 +3,9 @@
 # 	* account
 # 
 # Translators:
-# Maitê Dietze, 2025
 # Wil Odoo, 2025
 # a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2025
+# Maitê Dietze, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-27 13:02+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2025\n"
+"Last-Translator: Maitê Dietze, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4032,6 +4032,8 @@ msgstr ""
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Cannot create an accrual entry with orders in different currencies."
 msgstr ""
+"Não é possível criar um lançamento de provisionamento com pedidos em moedas "
+"diferentes."
 
 #. module: account
 #. odoo-python
@@ -7274,7 +7276,7 @@ msgstr "Filtro multi NIF"
 #. odoo-python
 #: code:addons/account/models/account_root.py:0
 msgid "Filter on the Account or its Display Name instead"
-msgstr ""
+msgstr "Em vez disso, filtre na conta ou em seu nome de exibição"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__general_account_id
@@ -10621,7 +10623,7 @@ msgstr "Nome"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__name_placeholder
 #: model:ir.model.fields,field_description:account.field_account_move__name_placeholder
 msgid "Name Placeholder"
-msgstr "Nome do marcador de posição"
+msgstr "Marcador de posição do nome"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__name_searchable
@@ -13954,6 +13956,11 @@ msgid "Set a price."
 msgstr "Defina um preço."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+msgid "Set a value greater than 0.0 to activate a credit limit check"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
 msgid "Set active to false to hide the Account Tag without removing it."
 msgstr ""
@@ -15941,6 +15948,8 @@ msgid ""
 "The sending of invoices is not set up properly, make sure the report used is"
 " set for invoices."
 msgstr ""
+"O envio de faturas não está configurado corretamente. Verifique se o "
+"relatório usado está definido para faturas."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__sequence
@@ -16989,10 +16998,9 @@ msgstr "Transferir para %s"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
-"Total Receivable amount exceeding a limit."
+"Total Receivable amount exceeding a limit.Set a value greater than 0.0 to "
+"activate a credit limit check"
 msgstr ""
-"Acione alertas ao criar faturas e pedidos de venda para usuários com valor "
-"total a receber superior a um certo limite."
 
 #. module: account
 #. odoo-python
@@ -17989,7 +17997,7 @@ msgstr "Só é possível alterar o período/conta para itens de diário lançado
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can only generate sales documents."
-msgstr ""
+msgstr "Você só pode gerar documentos de vendas."
 
 #. module: account
 #. odoo-python
@@ -18121,7 +18129,7 @@ msgstr "Não é possível excluir um relatório que tem variantes."
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can't generate invoices that are not posted."
-msgstr ""
+msgstr "Não é possível gerar faturas que não foram lançadas."
 
 #. module: account
 #. odoo-python

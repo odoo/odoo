@@ -280,6 +280,19 @@ $o-wblog-loader-size: 50px;
 
     }
 
+    > nav > .container {
+        > ul.navbar-nav {
+            flex-wrap: wrap;
+            flex-shrink: 2;
+        }
+        // If the navbar contains at least 10 items (random choice), the search
+        // input is placed at the top to avoid being centered in a multi-line
+        // navbar, which wouldn’t look good.
+        &:has(> ul.navbar-nav .nav-item:nth-child(10)) .o_searchbar_form {
+            align-self: start;
+        }
+    }
+
     //  Editor Helpers
     // ==============================================
     body.editor_enable & {
