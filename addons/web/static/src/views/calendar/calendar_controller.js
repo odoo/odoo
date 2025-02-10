@@ -117,7 +117,12 @@ export class CalendarController extends Component {
         this.quickCreateFields = this.model.meta.quickFields;
 
         const archFields = Object.entries(this.quickCreateFields)
-            .map(([name, field]) => `<field name="${name}" widget="${field.widget ?? ""}" invisible="${field.invisible ?? ""}" />`)
+            .map(
+                ([name, field]) =>
+                    `<field name="${name}" widget="${field.widget ?? ""}" invisible="${
+                        field.invisible ?? ""
+                    }" />`
+            )
             .join("\n");
 
         const arch = `
@@ -399,8 +404,7 @@ export class CalendarController extends Component {
     }
 
     deleteRecord(record) {
-        // this.displayDialog(ConfirmationDialog, this.deleteConfirmationDialogProps(record));
-        this.model.unlinkRecord(record.id);
+        this.displayDialog(ConfirmationDialog, this.deleteConfirmationDialogProps(record));
     }
 
     onWillStartModel() {}
