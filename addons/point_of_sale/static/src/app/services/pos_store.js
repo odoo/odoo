@@ -1515,6 +1515,9 @@ export class PosStore extends WithLazyGetterTrap {
     getOrderChanges(order = this.getOrder()) {
         return getOrderChanges(order, this.config.preparationCategories);
     }
+    changesToOrder(order, skipped = false, orderPreparationCategories, cancelled = false) {
+        return changesToOrder(order, skipped, orderPreparationCategories, cancelled);
+    }
     // Now the printer should work in PoS without restaurant
     async sendOrderInPreparation(order, opts = {}) {
         if (this.config.printerCategories.size && !opts.byPassPrint) {
@@ -1559,8 +1562,7 @@ export class PosStore extends WithLazyGetterTrap {
         await this.sendOrderInPreparation(o, { cancelled });
     }
 
-    async printChanges(order, orderChange, reprint = false) {
-        const unsuccedPrints = [];
+    generateOrderChange(order, orderChange, categories, reprint = false) {
         orderChange.new.sort((a, b) => {
             const sequenceA = a.pos_categ_sequence;
             const sequenceB = b.pos_categ_sequence;
@@ -1570,7 +1572,6 @@ export class PosStore extends WithLazyGetterTrap {
 
             return sequenceA - sequenceB;
         });
-
         const orderData = {
             reprint: reprint,
             pos_reference: order.getName(),
@@ -1587,10 +1588,19 @@ export class PosStore extends WithLazyGetterTrap {
             },
         };
 
+        const changes = this.filterChangeByCategories(categories, orderChange);
+        return { orderData, changes };
+    }
+
+    async printChanges(order, orderChange, reprint = false) {
+        const unsuccedPrints = [];
+
         for (const printer of this.unwatched.printers) {
-            const changes = this.filterChangeByCategories(
+            const { orderData, changes } = this.generateOrderChange(
+                order,
+                orderChange,
                 printer.config.product_categories_ids,
-                orderChange
+                reprint
             );
 
             if (changes.new.length) {
