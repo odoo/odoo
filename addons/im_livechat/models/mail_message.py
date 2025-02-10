@@ -43,7 +43,7 @@ class MailMessage(models.Model):
                 )
                 if step := chatbot_message.script_step_id:
                     step_data = {
-                        "id": (step.id, channel.id),
+                        "id": (step.id, message.id),
                         "message": Store.one(message, only_id=True),
                         "scriptStep": Store.one(step, only_id=True),
                         "operatorFound": step.step_type == "forward_operator"
