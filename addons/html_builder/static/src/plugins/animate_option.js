@@ -5,6 +5,7 @@ import { registry } from "@web/core/registry";
 import { getScrollingElement } from "@web/core/utils/scrolling";
 import { defaultBuilderComponents } from "../core/default_builder_components";
 import { useDomState, useIsActiveItem } from "../core/building_blocks/utils";
+import { KeepLast } from "@web/core/utils/concurrency";
 
 class AnimateOptionPlugin extends Plugin {
     static id = "AnimateOption";
@@ -29,8 +30,12 @@ class AnimateOptionPlugin extends Plugin {
         normalize_handlers: this.normalize.bind(this),
         clean_for_save_handlers: this.cleanForSave.bind(this),
     };
-    canHaveHoverEffect(editingElement) {
-        return this.getResource("is_hoverable_predicates").every((p) => p(editingElement));
+    async canHaveHoverEffect(editingElement) {
+        return (
+            await Promise.all(
+                this.getResource("is_hoverable_predicates").map((p) => p(editingElement))
+            )
+        ).every(Boolean);
     }
 
     setup() {
@@ -285,12 +290,19 @@ class AnimateOption extends Component {
     setup() {
         this.isActiveItem = useIsActiveItem();
 
+        const keeplast = new KeepLast();
         this.state = useDomState((editingElement) => {
             const hasAnimateClass = editingElement.classList.contains("o_animate");
+
+            // todo: maybe add a spinner
+            keeplast.add(this.props.canHaveHoverEffect(editingElement)).then((result) => {
+                this.state.canHover = result;
+            });
+
             return {
                 isOptionActive: this.isOptionActive(editingElement),
                 hasAnimateClass: hasAnimateClass,
-                canHover: this.props.canHaveHoverEffect(editingElement),
+                canHover: false,
                 isLimitedEffect: this.limitedEffects.some((className) =>
                     editingElement.classList.contains(className)
                 ),

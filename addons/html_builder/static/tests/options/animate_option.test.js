@@ -2,11 +2,14 @@ import { describe, expect, test } from "@odoo/hoot";
 import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "../helpers";
 import { animationFrame, queryFirst } from "@odoo/hoot-dom";
+import { mockFetch } from "@odoo/hoot-mock";
 
 defineWebsiteModels();
 
 const base64Img =
     "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
+
+const testImg = `<img data-original-id="1" data-mimetype="image/png" src='/base/static/img/logo_white.png'>`;
 
 const styleContent = `
 .o_animate {
@@ -18,7 +21,7 @@ const styleContent = `
 test("visibility of animation animation=none", async () => {
     await setupWebsiteBuilder(`
         <div class="test-options-target">
-            <img src='${base64Img}'>
+            ${testImg}
         </div>
     `);
     await contains(":iframe .test-options-target img").click();
@@ -35,7 +38,7 @@ describe("onAppearance", () => {
         await setupWebsiteBuilder(
             `
                 <div class="test-options-target">
-                    <img src='${base64Img}'>
+                    ${testImg}
                 </div>
             `,
             { styleContent }
@@ -62,7 +65,7 @@ describe("onAppearance", () => {
         await setupWebsiteBuilder(
             `
                 <div class="test-options-target">
-                    <img src='${base64Img}'>
+                    ${testImg}
                 </div>
             `,
             { styleContent }
@@ -89,7 +92,7 @@ describe("onAppearance", () => {
         await setupWebsiteBuilder(
             `
                 <div class="test-options-target">
-                    <img src='${base64Img}'>
+                    ${testImg}
                 </div>
             `,
             { styleContent }
@@ -116,7 +119,7 @@ describe("onAppearance", () => {
         await setupWebsiteBuilder(
             `
                 <div class="test-options-target">
-                    <img src='${base64Img}'>
+                    ${testImg}
                 </div>
             `,
             { styleContent }
@@ -143,7 +146,7 @@ describe("onAppearance", () => {
 test("visibility of animation animation=onScroll", async () => {
     await setupWebsiteBuilder(`
         <div class="test-options-target">
-            <img src='${base64Img}'>
+            ${testImg}
         </div>
     `);
     await contains(":iframe .test-options-target img").click();
@@ -166,7 +169,7 @@ test("animation=onScroll should not be visible when the animation is limited", a
     await setupWebsiteBuilder(
         `
                 <div class="test-options-target">
-                    <img src='${base64Img}'>
+                    ${testImg}
                 </div>
             `,
         { styleContent }
@@ -186,7 +189,7 @@ test("animation=onScroll should not be visible when the animation is limited", a
 test("visibility of animation animation=onHover", async () => {
     await setupWebsiteBuilder(`
         <div class="test-options-target">
-            <img src='${base64Img}'>
+            ${testImg}
         </div>
     `);
     await contains(":iframe .test-options-target img").click();
@@ -227,11 +230,27 @@ test("animation=onHover should not be visible when the image has a wrong mimetyp
     await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
     expect(".o-dropdown--menu [data-action-value='onHover']").not.toBeVisible();
 });
+test("animation=onHover should not be visible when the image has a cors protected image", async () => {
+    await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            <img data-original-id="1" src='/web/image/0-redirect/foo.jpg'>
+        </div>
+    `);
+    mockFetch((route) => {
+        expect.step(route);
+        throw new Error("simulated cors error");
+    });
+    await contains(":iframe .test-options-target img").click();
+
+    await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
+    expect.verifySteps(["/web/image/0-redirect/foo.jpg"]);
+    expect(".o-dropdown--menu [data-action-value='onHover']").not.toBeVisible();
+});
 
 test("image should not be lazy onAppearance", async () => {
     await setupWebsiteBuilder(`
         <div class="test-options-target">
-            <img src='${base64Img}'>
+            ${testImg}
         </div>
     `);
     await contains(":iframe .test-options-target img").click();
@@ -252,7 +271,7 @@ test("image should not be lazy onAppearance", async () => {
 test("should not show the animation options if the image has a parent [data-oe-type='image']", async () => {
     const { getEditor } = await setupWebsiteBuilder(`
         <div class="test-options-target">
-            <img src='${base64Img}'>
+            ${testImg}
         </div>
     `);
     const editor = getEditor();
@@ -270,7 +289,7 @@ test("should not show the animation options if the image has a parent [data-oe-t
 test("should not show the animation options if the image has is [data-oe-xpath]", async () => {
     const { getEditor } = await setupWebsiteBuilder(`
         <div class="test-options-target">
-            <img src='${base64Img}'>
+            ${testImg}
         </div>
     `);
     const editor = getEditor();

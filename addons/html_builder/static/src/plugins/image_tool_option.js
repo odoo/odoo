@@ -16,6 +16,7 @@ import { AddElementOption } from "./add_element_option";
 import { SpacingOption } from "./spacing_option";
 import { Plugin } from "@html_editor/plugin";
 import { useIsActiveItem } from "../core/building_blocks/utils";
+import { isImageCorsProtected } from "@html_builder/utils/utils_css";
 
 class ImageToolOptionPlugin extends Plugin {
     static id = "ImageToolOption";
@@ -135,7 +136,8 @@ class ImageToolOptionPlugin extends Plugin {
         return (
             !this.isDeviceShape(img) &&
             !this.isAnimatedShape(img) &&
-            this.isImageSupportedForShapes(img)
+            this.isImageSupportedForShapes(img) &&
+            !(await isImageCorsProtected(img))
         );
     }
     isDeviceShape(img) {
