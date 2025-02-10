@@ -14,7 +14,7 @@ from odoo.addons.bus.models.bus import channel_with_db, json_dump
 
 
 @tagged("post_install", "-at_install")
-class TestBusPresence(WebsocketCase, MailCommon):
+class TestMailPresence(WebsocketCase, MailCommon):
     def _receive_presence(self, sender, recipient):
         self._reset_bus()
         sent_from_user = isinstance(sender, self.env.registry["res.users"])
@@ -32,9 +32,7 @@ class TestBusPresence(WebsocketCase, MailCommon):
             [f"odoo-presence-{sender_bus_target._name}_{sender_bus_target.id}"],
             self.env["bus.bus"]._bus_last_id(),
         )
-        self.env["bus.presence"].create(
-            {"user_id" if sent_from_user else "guest_id": sender.id, "status": "online"}
-        )
+        self.env["mail.presence"]._update_presence(sender)
         self.trigger_notification_dispatching([(sender_bus_target, "presence")])
         notifications = json.loads(websocket.recv())
         self._close_websockets()
@@ -68,6 +66,7 @@ class TestBusPresence(WebsocketCase, MailCommon):
         channel.add_members(guest_ids=[other_guest.id])
         # Now that they share a channel, guest should receive guest's presence.
         self._receive_presence(sender=other_guest, recipient=guest)
+        self.assertEqual(other_guest.im_status, "online")
 
     def test_receive_presences_as_portal(self):
         portal = new_test_user(self.env, login="portal_user", groups="base.group_portal")
@@ -87,6 +86,7 @@ class TestBusPresence(WebsocketCase, MailCommon):
         channel.add_members(guest_ids=[guest.id])
         # Now that they share a channel, portal should receive guest's presence.
         self._receive_presence(sender=guest, recipient=portal)
+        self.assertEqual(guest.im_status, "online")
 
     def test_receive_presences_as_internal(self):
         internal = new_test_user(self.env, login="internal_user", groups="base.group_user")
@@ -96,3 +96,4 @@ class TestBusPresence(WebsocketCase, MailCommon):
         # Internal can access users's presence regardless of their channels.
         bob = new_test_user(self.env, login="bob_user", groups="base.group_user")
         self._receive_presence(sender=bob, recipient=internal)
+        self.assertEqual(bob.im_status, "online")
