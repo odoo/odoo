@@ -14,6 +14,7 @@ export class BuilderRange extends Component {
         max: { type: Number, optional: true },
         step: { type: Number, optional: true },
         displayRangeValue: { type: Boolean, optional: true },
+        computedOutput: { type: Function, optional: true },
     };
     static defaultProps = {
         ...BuilderComponent.defaultProps,
@@ -34,5 +35,10 @@ export class BuilderRange extends Component {
             onInput(e);
         };
         this.state = state;
+    }
+    getOutput(value) {
+        // TODO: adapt when agau's PR that adapts `useInputBuilderComponent` is
+        // merged.
+        return this.props.computedOutput ? this.props.computedOutput(value) : value;
     }
 }

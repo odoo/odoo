@@ -605,3 +605,30 @@ test("click on BuilderButton with inverseAction", async () => {
     expect(":iframe .test-options-target").toHaveClass("my-custom-class");
     expect("[data-class-action='my-custom-class']").not.toHaveClass("active");
 });
+
+test("do not load when an operation is cleaned", async () => {
+    addActionOption({
+        customAction: {
+            isApplied: ({ editingElement }) => editingElement.classList.contains("applied"),
+            clean: () => {
+                expect.step("clean");
+            },
+            load: async () => {
+                expect.step("load");
+            },
+            apply: ({ editingElement }) => {
+                expect.step("apply");
+                editingElement.classList.add("applied");
+            },
+        },
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderButton action="'customAction'" preview="false"/>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    await contains("[data-action-id='customAction']").click();
+    await contains("[data-action-id='customAction']").click();
+    expect.verifySteps(["load", "apply", "clean"]);
+});

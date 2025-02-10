@@ -14,6 +14,7 @@ export class BuilderColorPicker extends Component {
         ...basicContainerBuilderComponentProps,
         noTransparency: { type: Boolean, optional: true },
         unit: { type: String, optional: true },
+        title: { type: String, optional: true },
     };
     static components = {
         ColorSelector,

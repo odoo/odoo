@@ -7,6 +7,20 @@ import { loadBundle } from "@web/core/assets";
 // initializing the cropper to reuse the previous crop.
 export const cropperDataFields = ["x", "y", "width", "height", "rotate", "scaleX", "scaleY"];
 export const isGif = (mimetype) => mimetype === "image/gif";
+const modifierFields = [
+    'filter',
+    'quality',
+    'mimetype',
+    'glFilter',
+    'originalId',
+    'originalSrc',
+    'resizeWidth',
+    'aspectRatio',
+    "bgSrc",
+    "mimetypeBeforeConversion",
+];
+
+export const removeOnImageChangeAttrs = [...cropperDataFields, ...modifierFields];
 
 // webgl color filters
 const _applyAll = (result, filter, filters) => {

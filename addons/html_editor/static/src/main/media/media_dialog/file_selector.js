@@ -366,7 +366,7 @@ export class FileSelector extends Component {
             .then(async (result) => {
                 const blob = await result.blob();
                 blob.id = new Date().getTime();
-                blob.name = new URL(url).pathname.split("/").findLast((s) => s);
+                blob.name = new URL(url, window.location.href).pathname.split("/").findLast((s) => s);
                 await this.uploadFiles([blob]);
             })
             .catch(async () => {
@@ -472,9 +472,7 @@ export class FileSelector extends Component {
         if (firstHiddenAttachmentEl) {
             const attachmentBottom = firstHiddenAttachmentEl.getBoundingClientRect().bottom;
             const attachmentIndex = attachmentEls.indexOf(firstHiddenAttachmentEl);
-            const firstNextRowAttachmentEl = attachmentEls.slice(attachmentIndex).find((el) => {
-                return el.getBoundingClientRect().bottom > attachmentBottom;
-            });
+            const firstNextRowAttachmentEl = attachmentEls.slice(attachmentIndex).find((el) => el.getBoundingClientRect().bottom > attachmentBottom);
             scrollToEl = firstNextRowAttachmentEl || scrollToEl;
         }
         scrollToEl.scrollIntoView({ block: "end", inline: "nearest", behavior: "smooth" });

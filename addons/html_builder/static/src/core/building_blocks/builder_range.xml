@@ -12,7 +12,7 @@
             t-att-value="state.value"
             t-on-change="this.onChange"
             t-on-input="this.onInput" />
-            <output t-if="props.displayRangeValue" t-ref="output" t-out="state.value" />
+            <output t-if="props.displayRangeValue" t-out="getOutput(state.value)" />
         </div>
     </BuilderComponent>
 </t>
