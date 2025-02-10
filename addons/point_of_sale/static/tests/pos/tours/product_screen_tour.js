@@ -340,6 +340,21 @@ registry.category("web_tour.tours").add("DecimalCommaOrderlinePrice", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("SearchProducts", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.searchProduct("chair"),
+            ProductScreen.clickDisplayedProduct("Test chair 1"),
+            ProductScreen.clickDisplayedProduct("Test CHAIR 2"),
+            ProductScreen.searchProduct("CHAIR"),
+            ProductScreen.clickDisplayedProduct("Test chair 1"),
+            ProductScreen.clickDisplayedProduct("Test CHAIR 2"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("CheckProductInformation", {
     checkDelay: 50,
     steps: () =>
