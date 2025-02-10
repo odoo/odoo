@@ -159,5 +159,28 @@
     <t t-esc="company_name"/>
 </p>
         </template>
+        <record id="mail_template_einvoice_notification" model="mail.template">
+            <field name="name">New eInvoice Notification</field>
+            <field name="subject">New Electronic Invoices Received</field>
+            <field name="email_from">{{ object.company_id.email_formatted }}</field>
+            <field name="email_to">{{ object.incoming_einvoice_notification_email }}</field>
+            <field name="use_default_to" eval="False"/>
+            <field name="model_id" ref="account.model_account_journal"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="description">Notification email for newly received eInvoices</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear User,
+        <br /><br />
+        You have received <strong><t t-out="len(ctx.get('einvoices', ())) or 'new'"/></strong> electronic invoice(s) in
+        <strong><t t-out="object.name or 'Vendor Bills'"/></strong>.
+        These invoices are now available for review in Odoo.
+        <br /><br />
+        You can unsubscribe from these notifications from <strong><t t-out="object.name or 'Vendor Bills'"/></strong> journal settings.
+    </p>
+</div>
+            </field>
+        </record>
     </data>
 </odoo>
