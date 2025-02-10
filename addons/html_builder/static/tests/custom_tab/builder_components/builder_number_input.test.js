@@ -1,14 +1,14 @@
 import { expect, test } from "@odoo/hoot";
-import { advanceTime, animationFrame, click, fill, queryFirst } from "@odoo/hoot-dom";
+import { advanceTime, animationFrame, clear, click, fill, queryFirst } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
+import { delay } from "@web/core/utils/concurrency";
 import {
     addActionOption,
     addOption,
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "../../helpers";
-import { delay } from "@web/core/utils/concurrency";
 
 defineWebsiteModels();
 
@@ -332,4 +332,56 @@ test("should handle empty saveUnit", async () => {
     await fill(1);
     expect.verifySteps(["customAction 51"]);
     expect(":iframe .test-options-target").toHaveInnerHTML("51");
+});
+
+test("clear BuilderNumberInput without default value", async () => {
+    addActionOption({
+        customAction: {
+            getValue: ({ editingElement }) => editingElement.innerHTML,
+            apply: ({ editingElement, value }) => {
+                editingElement.innerHTML = value;
+            },
+        },
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderNumberInput action="'customAction'" />`,
+    });
+    await setupWebsiteBuilder(`
+                <div class="test-options-target">10</div>
+            `);
+    await contains(":iframe .test-options-target").click();
+    await click("[data-action-id='customAction'] input");
+    expect("[data-action-id='customAction'] input").toHaveValue("10");
+
+    await clear();
+    await click(".options-container");
+    expect("[data-action-id='customAction'] input").toHaveValue("");
+    expect(":iframe .test-options-target").toHaveInnerHTML("");
+});
+
+test("clear BuilderNumberInput with default value", async () => {
+    addActionOption({
+        customAction: {
+            getValue: ({ editingElement }) => editingElement.innerHTML,
+            apply: ({ editingElement, value }) => {
+                editingElement.innerHTML = value;
+            },
+        },
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderNumberInput action="'customAction'" default="1"/>`,
+    });
+    await setupWebsiteBuilder(`
+                <div class="test-options-target">10</div>
+            `);
+    await contains(":iframe .test-options-target").click();
+    await click("[data-action-id='customAction'] input");
+    expect("[data-action-id='customAction'] input").toHaveValue("10");
+
+    await clear();
+    await click(".options-container");
+    expect("[data-action-id='customAction'] input").toHaveValue("1");
+    expect(":iframe .test-options-target").toHaveInnerHTML("1");
 });

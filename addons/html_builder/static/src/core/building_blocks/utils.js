@@ -461,7 +461,9 @@ export function useInputBuilderComponent({ defaultValue } = {}) {
     }
 
     function onChange(e) {
-        e.target.value ||= defaultValue;
+        if (defaultValue !== undefined) {
+            e.target.value ||= defaultValue;
+        }
         const userValueInput = e.target.value;
         callOperation(applyOperation.commit, { userValueInput: userValueInput });
     }
