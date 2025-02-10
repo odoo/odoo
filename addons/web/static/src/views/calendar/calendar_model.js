@@ -79,6 +79,9 @@ export class CalendarModel extends Model {
             !this.meta.fields[this.meta.fieldMapping.date_start].readonly
         );
     }
+    get dateStartType() {
+        return this.fields[this.fieldMapping.date_start].type;
+    }
     get eventLimit() {
         return this.meta.eventLimit;
     }
@@ -117,6 +120,9 @@ export class CalendarModel extends Model {
     }
     get isTimeHidden() {
         return this.meta.isTimeHidden;
+    }
+    get monthOverflow() {
+        return this.meta.monthOverflow;
     }
     get popoverFieldNodes() {
         return this.meta.popoverFieldNodes;
@@ -256,7 +262,7 @@ export class CalendarModel extends Model {
             }
         }
 
-        const isDateEvent = this.fields[this.meta.fieldMapping.date_start].type === "date";
+        const isDateEvent = this.dateStartType === "date";
         // An "all day" event without the "all_day" option is not considered
         // as a 24h day. It's just a part of the day (by default: 7h-19h).
         if (partialRecord.isAllDay) {
@@ -272,17 +278,14 @@ export class CalendarModel extends Model {
         }
 
         data[this.meta.fieldMapping.date_start] =
-            (partialRecord.isAllDay && this.hasAllDaySlot
-                ? "date"
-                : this.fields[this.meta.fieldMapping.date_start].type) === "date"
+            (partialRecord.isAllDay && this.hasAllDaySlot ? "date" : this.dateStartType) === "date"
                 ? serializeDate(start)
                 : serializeDateTime(start);
 
         if (this.meta.fieldMapping.date_stop) {
             data[this.meta.fieldMapping.date_stop] =
-                (partialRecord.isAllDay && this.hasAllDaySlot
-                    ? "date"
-                    : this.fields[this.meta.fieldMapping.date_start].type) === "date"
+                (partialRecord.isAllDay && this.hasAllDaySlot ? "date" : this.dateStartType) ===
+                "date"
                     ? serializeDate(end)
                     : serializeDateTime(end);
         }
@@ -378,7 +381,7 @@ export class CalendarModel extends Model {
             end = end.endOf(scale);
         }
 
-        if (["week", "month"].includes(scale)) {
+        if (scale === "week" || (scale === "month" && this.monthOverflow)) {
             const currentWeekOffset = (start.weekday - firstDayOfWeek + 7) % 7;
             start = start.minus({ days: currentWeekOffset });
             end = start.plus({ weeks: scale === "week" ? 1 : 6, days: -1 });
@@ -455,8 +458,9 @@ export class CalendarModel extends Model {
      */
     computeRangeDomain(data) {
         const { fieldMapping } = this.meta;
-        const formattedEnd = serializeDateTime(data.range.end);
-        const formattedStart = serializeDateTime(data.range.start);
+        const serializeFn = this.dateStartType === "date" ? serializeDate : serializeDateTime;
+        const formattedEnd = serializeFn(data.range.end);
+        const formattedStart = serializeFn(data.range.start);
 
         const domain = [[fieldMapping.date_start, "<=", formattedEnd]];
         if (fieldMapping.date_stop) {
