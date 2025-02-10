@@ -1641,6 +1641,16 @@ class PosSession(models.Model):
             'domain': [('session_id', '=', self.id)],
             'context': {'search_default_group_by_payment_method': 1}
         }
+<<<<<<< 18.0
+||||||| 1ddebea29e14aa49ad85f98d79ca561d64992296
+    
+    def _get_captured_payments_domain(self):
+        return [('session_id', '=', self.id), ('pos_order_id.state', 'in', ['paid', 'invoiced'])]
+=======
+    
+    def _get_captured_payments_domain(self):
+        return [('session_id', 'in', self.ids), ('pos_order_id.state', 'in', ['done', 'paid', 'invoiced'])]
+>>>>>>> ab829b5f95f2f728ee1d28deb083c36ca2121d8b
 
     def open_frontend_cb(self):
         """Open the pos interface with config_id as an extra argument.
