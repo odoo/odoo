@@ -18,6 +18,8 @@
                     <field name="coach_id" domain="[('company_id', 'in', allowed_company_ids)]"/>
                     <field name="category_ids" groups="hr.group_hr_user"/>
                     <field name="private_car_plate" />
+                    <field name="resource_calendar_id" domain="[('company_id', 'in', allowed_company_ids)]"/>
+                    <field name="company_id"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]" groups="mail.group_mail_notification_type_inbox"/>
                     <separator/>
@@ -129,7 +131,7 @@
                                             <field name="departure_description"/>
                                             <field name="departure_date"/>
                                         </group>
-                                        <group string="Schedule">
+                                        <group name="schedule" string="Schedule">
                                             <field name="resource_calendar_id" help="The default working hours are set in configuration."/>
                                             <field name="id" invisible="1"/>
                                             <field name="tz" required="id"/>
