@@ -17,7 +17,7 @@ export class LunchCurrency extends Component {
 
 export class LunchOrderLine extends Component {
     static template = "lunch.LunchOrderLine";
-    static props = ["line", "currency", "onUpdateQuantity", "openOrderLine", "infos"];
+    static props = ["line", "currency", "onUpdateQuantity", "openOrderLine", "infos", "isToOrder"];
     static components = {
         LunchCurrency,
     };
@@ -44,7 +44,7 @@ export class LunchOrderLine extends Component {
     }
 
     get badgeClass() {
-        const mapping = {'new': 'warning', 'confirmed': 'success', 'sent': 'info', 'ordered': 'danger'};
+        const mapping = {'new': 'secondary', 'confirmed': 'success', 'sent': 'info', 'ordered': 'primary'};
         return mapping[this.line.raw_state];
     }
 
@@ -108,6 +108,7 @@ export class LunchDashboard extends Component {
         LunchOrderLine,
         LunchUser,
         Many2XAutocomplete,
+        DateTimeInput,
     };
     static props = ["openOrderLine"];
     static template = "lunch.LunchDashboard";
@@ -192,15 +193,3 @@ export class LunchDashboard extends Component {
         this.env.searchModel.updateDate(this.state.date);
     }
 }
-
-LunchDashboard.components = {
-    LunchAlerts,
-    LunchCurrency,
-    LunchLocation,
-    LunchOrderLine,
-    LunchUser,
-    Many2XAutocomplete,
-    DateTimeInput,
-};
-LunchDashboard.props = ["openOrderLine"];
-LunchDashboard.template = 'lunch.LunchDashboard';
