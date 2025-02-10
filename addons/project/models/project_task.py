@@ -352,7 +352,7 @@ class ProjectTask(models.Model):
             )
 
     def _inverse_parent_id(self):
-        for task in self:
+        for task in self.sudo():
             if not task.parent_id:
                 task.display_in_project = True
             elif task.display_in_project and task.project_id == task.parent_id.project_id:
@@ -938,6 +938,9 @@ class ProjectTask(models.Model):
     def default_get(self, default_fields):
         vals = super().default_get(default_fields)
 
+        if project_id := self.env.context.get('default_create_in_project_id'):
+            vals['project_id'] = project_id
+
         # prevent creating new task in the waiting state
         if 'state' in default_fields and vals.get('state') == '04_waiting_normal':
             vals['state'] = '01_in_progress'
@@ -968,29 +971,6 @@ class ProjectTask(models.Model):
 
         return vals
 
-    def _ensure_fields_are_accessible(self, fields, operation='read', check_group_user=True):
-        """" ensure all fields are accessible by the current user
-
-            This method checks if the portal user can access to all fields given in parameter.
-            By default, it checks if the current user is a portal user and then checks if all fields are accessible for this user.
-
-            :param fields: list of fields to check if the current user can access.
-            :param operation: contains either 'read' to check readable fields or 'write' to check writable fields.
-            :param check_group_user: contains boolean value.
-                - True, if the method has to check if the current user is a portal one.
-                - False if we are sure the user is a portal user,
-        """
-        assert operation in ('read', 'write'), 'Invalid operation'
-        if fields and (not check_group_user or self.env.user._is_portal()) and not self.env.su:
-            readable, writeable = self._portal_accessible_fields()
-            unauthorized_fields = set(fields) - (readable if operation == 'read' else writeable)
-            if unauthorized_fields:
-                if operation == 'read':
-                    error_message = _('You cannot read the following fields on tasks: %(field_list)s', field_list=unauthorized_fields)
-                else:
-                    error_message = _('You cannot write on the following fields on tasks: %(field_list)s', field_list=unauthorized_fields)
-                raise AccessError(error_message)
-
     @api.model
     @tools.ormcache()
     def _portal_accessible_fields(self) -> tuple[frozenset[str], frozenset[str]]:
@@ -1010,40 +990,6 @@ class ProjectTask(models.Model):
             if operation == 'write':
                 return field.name in writeable
         return True
-
-    def _determine_fields_to_fetch(self, field_names, ignore_when_in_cache=False):
-        if not self.env.su and self.env.user._is_portal():
-            valid_names, _ = self._portal_accessible_fields()
-            field_names = [fname for fname in field_names if fname in valid_names]
-        return super()._determine_fields_to_fetch(field_names, ignore_when_in_cache)
-
-    def _get_portal_sudo_vals(self, vals, defaults=False):
-        """ returns the values which must be written without and with sudo when a portal user creates / writes a task.
-            :param vals: dict of {field: value}, the values to create/write
-            :return: a tuple with 2 dicts:
-                - the first with the values to write without sudo
-                - the second with the values to write with sudo
-        """
-        vals_no_sudo = {key: val for key, val in vals.items() if self._fields[key].type in ('one2many', 'many2many')}
-        if defaults:
-            _, writeable = self._portal_accessible_fields()
-            vals_no_sudo.update({
-                key[8:]: value
-                for key, value in self.env.context.items()
-                if key.startswith('default_') and key[8:] in writeable and self._fields[key[8:]].type in ('one2many', 'many2many')
-            })
-        vals_sudo = {key: val for key, val in vals.items() if key not in vals_no_sudo}
-        return vals_no_sudo, vals_sudo
-
-    @api.model
-    def _get_portal_sudo_context(self):
-        return {
-            key: value for key, value in self.env.context.items()
-            if key == 'default_project_id'
-            or key == 'default_user_ids' and value is False
-            or not key.startswith('default_')
-            or key[8:] in (field for field in self.SELF_WRITABLE_FIELDS if self._fields[field].type not in ('one2many', 'many2many'))
-        }
 
     def _set_stage_on_project_from_task(self):
         stage_ids_per_project = defaultdict(list)
@@ -1069,33 +1015,44 @@ class ProjectTask(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        # Some values are determined by this override and must be written as
+        # sudo for portal users, because they do not have access to these
+        # fields. Other values must not be written as sudo.
+        additional_vals_list = [{} for _ in vals_list]
+
         new_context = dict(self.env.context)
         default_personal_stage = new_context.pop('default_personal_stage_type_ids', False)
-        default_project_id = new_context.get("default_project_id", False)
+        default_project_id = new_context.pop('default_project_id', False)
+        if not default_project_id:
+            parent_task = self.browse({parent_id for vals in vals_list if (parent_id := vals.get('parent_id'))})
+            if len(parent_task) == 1:
+                default_project_id = parent_task.sudo().project_id.id
+        # (portal) users that don't have write access can still create a task
+        # in the project that will be checked using record rules
+        new_context["default_create_in_project_id"] = default_project_id
+        if not self._has_field_access(self._fields['user_ids'], 'write'):
+            # remove user_ids if we have no access to it
+            new_context.pop('default_user_ids', False)
         self = self.with_context(new_context)
 
-        is_portal_user = self.env.user._is_portal()
-        if is_portal_user:
-            self.browse().check_access('create')
+        self.browse().check_access('create')
         default_stage = dict()
-        for vals in vals_list:
+        for vals, additional_vals in zip(vals_list, additional_vals_list):
             project_id = vals.get('project_id') or default_project_id
 
             if vals.get('user_ids'):
-                vals['date_assign'] = fields.Datetime.now()
+                additional_vals['date_assign'] = fields.Datetime.now()
                 if not (vals.get('parent_id') or project_id):
                     user_ids = self._fields['user_ids'].convert_to_cache(vals.get('user_ids', []), self.env['project.task'])
                     if self.env.user.id not in list(user_ids) + [SUPERUSER_ID]:
-                        vals['user_ids'] = [Command.set(list(user_ids) + [self.env.user.id])]
+                        additional_vals['user_ids'] = [Command.set(list(user_ids) + [self.env.user.id])]
             if default_personal_stage and 'personal_stage_type_id' not in vals:
-                vals['personal_stage_type_id'] = default_personal_stage[0]
+                additional_vals['personal_stage_type_id'] = default_personal_stage[0]
             if not vals.get('name') and vals.get('display_name'):
                 vals['name'] = vals['display_name']
-            if is_portal_user:
-                self._ensure_fields_are_accessible(vals.keys(), operation='write', check_group_user=False)
 
             if project_id and not "company_id" in vals:
-                vals["company_id"] = self.env["project.project"].browse(
+                additional_vals["company_id"] = self.env["project.project"].browse(
                     project_id
                 ).company_id.id
             if not project_id and ("stage_id" in vals or self.env.context.get('default_stage_id')):
@@ -1113,37 +1070,31 @@ class ProjectTask(models.Model):
 
             # Stage change: Update date_end if folded stage and date_last_stage_update
             if vals.get('stage_id'):
-                vals.update(self.update_date_end(vals['stage_id']))
-                vals['date_last_stage_update'] = fields.Datetime.now()
+                additional_vals.update(self.update_date_end(vals['stage_id']))
+                additional_vals['date_last_stage_update'] = fields.Datetime.now()
             # recurrence
             rec_fields = vals.keys() & self._get_recurrence_fields()
             if rec_fields and vals.get('recurring_task') is True:
                 rec_values = {rec_field: vals[rec_field] for rec_field in rec_fields}
                 recurrence = self.env['project.task.recurrence'].create(rec_values)
                 vals['recurrence_id'] = recurrence.id
-        # The sudo is required for a portal user as the record creation
-        # requires the read access on other models, as mail.template
-        # in order to compute the field tracking
-        was_in_sudo = self.env.su
-        if is_portal_user:
-            vals_list_no_sudo, vals_list = zip(*(self._get_portal_sudo_vals(vals, defaults=True) for vals in vals_list))
-            self_no_sudo, self = self, self.sudo().with_context(self._get_portal_sudo_context())
+
+        # create the task, write computed inaccessible fields in sudo
+        for vals, computed_vals in zip(vals_list, additional_vals_list):
+            for field_name in list(computed_vals):
+                if self._has_field_access(self._fields[field_name], 'write'):
+                    vals[field_name] = computed_vals.pop(field_name)
         tasks = super(ProjectTask, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
-        if is_portal_user:
-            for task, vals in zip(tasks.with_env(self_no_sudo.env), vals_list_no_sudo):
-                task.write(vals)
-        tasks._populate_missing_personal_stages()
+        for task, computed_vals in zip(tasks.sudo(), additional_vals_list):
+            if computed_vals:
+                task.write(computed_vals)
+        tasks.sudo()._populate_missing_personal_stages()
         self._task_message_auto_subscribe_notify({task: task.user_ids - self.env.user for task in tasks})
 
-        # in case we were already in sudo, we don't check the rights.
-        if is_portal_user and not was_in_sudo:
-            # since we use sudo to create tasks, we need to check
-            # if the portal user could really create the tasks based on the ir rule.
-            tasks.browse().with_user(self.env.user).check_access('create')
         current_partner = self.env.user.partner_id
 
         all_partner_emails = []
-        for task in tasks:
+        for task in tasks.sudo():
             all_partner_emails += tools.email_normalize_all(task.email_cc)
         partners = self.env['res.partner'].search([('email', 'in', all_partner_emails)])
         partner_per_email = {
@@ -1153,7 +1104,7 @@ class ProjectTask(models.Model):
         }
         if tasks.project_id:
             tasks.sudo()._set_stage_on_project_from_task()
-        for task in tasks:
+        for task in tasks.sudo():
             if task.project_id.privacy_visibility == 'portal':
                 task._portal_ensure_token()
             for follower in task.parent_id.message_follower_ids:
@@ -1173,16 +1124,15 @@ class ProjectTask(models.Model):
         return tasks
 
     def write(self, vals):
+        self.check_access('write')
         if len(self) == 1:
             handle_history_divergence(self, 'description', vals)
-        portal_can_write = False
-        project_link_per_task_id = {}
         partner_ids = []
-        if self.env.user._is_portal() and not self.env.su:
-            # Check if all fields in vals are in SELF_WRITABLE_FIELDS
-            self._ensure_fields_are_accessible(vals.keys(), operation='write', check_group_user=False)
-            self.check_access('write')
-            portal_can_write = True
+
+        # Some values are determined by this override and must be written as
+        # sudo for portal users, because they do not have access to these
+        # fields. Other values must not be written as sudo.
+        additional_vals = {}
 
         if 'milestone_id' in vals:
             # WARNING: has to be done after 'project_id' vals is written on subtasks
@@ -1195,9 +1145,9 @@ class ProjectTask(models.Model):
                 unvalid_milestone_tasks = self if not vals['milestone_id'] or milestone.project_id.id != vals['project_id'] else self.env['project.task']
             valid_milestone_tasks = self - unvalid_milestone_tasks
             if unvalid_milestone_tasks:
-                unvalid_milestone_tasks.write({'milestone_id': False})
+                unvalid_milestone_tasks.sudo().write({'milestone_id': False})
                 if valid_milestone_tasks:
-                    valid_milestone_tasks.write({'milestone_id': vals['milestone_id']})
+                    valid_milestone_tasks.sudo().write({'milestone_id': vals['milestone_id']})
                 del vals['milestone_id']
 
             # 2. Parent's milestone is set to subtask with no milestone recursively
@@ -1221,7 +1171,7 @@ class ProjectTask(models.Model):
                                   task.milestone_id == task.parent_id.milestone_id  and \
                                   task.state not in CLOSED_STATES))
             if subtasks_to_update:
-                subtasks_to_update.write({'milestone_id': vals['milestone_id']})
+                subtasks_to_update.sudo().write({'milestone_id': vals['milestone_id']})
 
         if vals.get('parent_id') in self.ids:
             raise UserError(_("Sorry. You can't set a task as its parent task."))
@@ -1232,8 +1182,8 @@ class ProjectTask(models.Model):
             if not 'project_id' in vals and self.filtered(lambda t: not t.project_id):
                 raise UserError(_('You can only set a personal stage on a private task.'))
 
-            vals.update(self.update_date_end(vals['stage_id']))
-            vals['date_last_stage_update'] = now
+            additional_vals.update(self.update_date_end(vals['stage_id']))
+            additional_vals['date_last_stage_update'] = now
         task_ids_without_user_set = set()
         if 'user_ids' in vals and 'date_assign' not in vals:
             # prepare update of date_assign after super call
@@ -1255,13 +1205,6 @@ class ProjectTask(models.Model):
             self.recurrence_id.unlink()
             tasks_in_recurrence.write({'recurring_task': False})
 
-        # The sudo is required for a portal user as the record update
-        # requires the write access on others models, as rating.rating
-        # in order to keep the same name than the task.
-        if portal_can_write:
-            self_no_sudo, self = self, self.sudo().with_context(self._get_portal_sudo_context())
-            vals_no_sudo, vals = self._get_portal_sudo_vals(vals)
-
         # Track user_ids to send assignment notifications
         old_user_ids = {t: t.user_ids for t in self.sudo()}
 
@@ -1270,6 +1213,7 @@ class ProjectTask(models.Model):
 
         # sends an email to the 'Task Creation' subtype subscribers
         # When project_id is changed
+        project_link_per_task_id = {}
         if vals.get('project_id'):
             project = self.env['project.project'].browse(vals.get('project_id'))
             notification_subtype_id = self.env['ir.model.data']._xmlid_to_res_id('project.mt_project_task_new')
@@ -1282,16 +1226,22 @@ class ProjectTask(models.Model):
                         if not project_link:
                             project_link = link_per_project_id[task.project_id.id] = task.project_id._get_html_link(title=task.project_id.display_name)
                         project_link_per_task_id[task.id] = project_link
+        if vals.get('parent_id') is False:
+            additional_vals['display_in_project'] = True
+
+        # write changes
+        if self.env.su or not self.env.user._is_portal():
+            vals.update(additional_vals)
+        elif additional_vals:
+            super(ProjectTask, self.sudo()).write(additional_vals)
         result = super().write(vals)
-        if portal_can_write:
-            super(ProjectTask, self_no_sudo).write(vals_no_sudo)
 
         if 'user_ids' in vals:
             self._populate_missing_personal_stages()
 
         # user_ids change: update date_assign
         if 'user_ids' in vals:
-            for task in self:
+            for task in self.sudo():
                 if not task.user_ids and task.date_assign:
                     task.date_assign = False
                 elif 'date_assign' not in vals and task.id in task_ids_without_user_set:
@@ -1299,11 +1249,11 @@ class ProjectTask(models.Model):
 
         # rating on stage
         if 'stage_id' in vals and vals.get('stage_id'):
-            self.filtered(lambda x: x.project_id.rating_active and x.project_id.rating_status == 'stage')._send_task_rating_mail(force_send=True)
+            self.sudo().filtered(lambda x: x.project_id.rating_active and x.project_id.rating_status == 'stage')._send_task_rating_mail(force_send=True)
 
         if 'state' in vals:
             # specific use case: when the blocked task goes from 'forced' done state to a not closed state, we fix the state back to waiting
-            for task in self:
+            for task in self.sudo():
                 if task.allow_task_dependencies:
                     if task.is_blocked_by_dependences() and vals['state'] not in CLOSED_STATES and vals['state'] != '04_waiting_normal':
                         task.state = '04_waiting_normal'
@@ -1324,7 +1274,7 @@ class ProjectTask(models.Model):
                     body = _(
                         'Task Transferred from Project %(source_project)s to %(destination_project)s',
                         source_project=project_link,
-                        destination_project=self.project_id._get_html_link(title=self.project_id.display_name),
+                        destination_project=task.project_id._get_html_link(title=task.project_id.display_name),
                     )
                 else:
                     body = _('Task Converted from To-Do')
