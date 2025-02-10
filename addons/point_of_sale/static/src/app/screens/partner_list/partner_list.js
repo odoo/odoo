@@ -1,10 +1,10 @@
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
+import { useChildRef, useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
 import { PartnerLine } from "@point_of_sale/app/screens/partner_list/partner_line/partner_line";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
-import { Component, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, useEffect, useState } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { unaccent } from "@web/core/utils/strings";
 import { debounce } from "@web/core/utils/timing";
@@ -26,7 +26,8 @@ export class PartnerList extends Component {
         this.ui = useService("ui");
         this.notification = useService("notification");
         this.dialog = useService("dialog");
-        this.list = useRef("partner-list");
+        this.modalRef = useChildRef();
+        this.modalContent = null;
         this.state = useState({
             initialPartners: this.pos.models["res.partner"].getAll(),
             loadedPartners: [],
@@ -41,29 +42,31 @@ export class PartnerList extends Component {
 
         useEffect(
             () => {
-                if (!this.list || !this.list.el) {
+                if (this.state.loading || !this.modalRef.el) {
                     return;
+                } else if (!this.modalContent) {
+                    this.modalContent = this.modalRef.el.querySelector(".modal-body");
                 }
 
                 const scrollMethod = this.onScroll.bind(this);
-                this.list.el.addEventListener("scroll", scrollMethod);
+                this.modalContent.addEventListener("scroll", scrollMethod);
                 return () => {
-                    this.list.el.removeEventListener("scroll", scrollMethod);
+                    this.modalContent.removeEventListener("scroll", scrollMethod);
                 };
             },
-            () => [this.list]
+            () => [this.modalRef.el]
         );
     }
     get globalState() {
         return this.pos.screenState.partnerList;
     }
     onScroll(ev) {
-        if (this.state.loading || !this.list || !this.list.el) {
+        if (this.state.loading || !this.modalContent) {
             return;
         }
-        const height = this.list.el.offsetHeight;
-        const scrollTop = this.list.el.scrollTop;
-        const scrollHeight = this.list.el.scrollHeight;
+        const height = this.modalContent.offsetHeight;
+        const scrollTop = this.modalContent.scrollTop;
+        const scrollHeight = this.modalContent.scrollHeight;
 
         if (scrollTop + height >= scrollHeight * 0.8) {
             this.getNewPartners();
