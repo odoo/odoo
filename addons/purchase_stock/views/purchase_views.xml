@@ -38,7 +38,7 @@
                 <div>
                     <button name="%(action_purchase_vendor_delay_report)d" class="oe_link" type="action" context="{'search_default_partner_id': partner_id}" invisible="state in ['purchase', 'done'] or not partner_id">
                         <span invisible="on_time_rate &lt; 0"><field name="on_time_rate" digits="[42, 0]" class="oe_inline"/>% On-Time Delivery</span>
-                        <span invisible="on_time_rate &gt;= 0">No On-time Delivery Data</span>
+                        <span invisible="on_time_rate &gt;= 0">No data yet</span>
                     </button>
                 </div>
             </xpath>

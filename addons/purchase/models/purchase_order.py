@@ -75,7 +75,7 @@ class PurchaseOrder(models.Model):
     name = fields.Char('Order Reference', required=True, index='trigram', copy=False, default='New')
     priority = fields.Selection(
         [('0', 'Normal'), ('1', 'Urgent')], 'Priority', default='0', index=True)
-    origin = fields.Char('Source Document', copy=False,
+    origin = fields.Char('Source', copy=False,
         help="Reference of the document that generated this purchase order "
              "request (e.g. a sales order)")
     partner_ref = fields.Char('Vendor Reference', copy=False,
@@ -120,7 +120,7 @@ class PurchaseOrder(models.Model):
     tax_totals = fields.Binary(compute='_compute_tax_totals', exportable=False)
     amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
     amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all')
-    amount_total_cc = fields.Monetary(string="Company Total", store=True, readonly=True, compute="_amount_all", currency_field="company_currency_id")
+    amount_total_cc = fields.Monetary(string="Total in currency", store=True, readonly=True, compute="_amount_all", currency_field="company_currency_id")
 
     fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     tax_country_id = fields.Many2one(
@@ -155,8 +155,8 @@ class PurchaseOrder(models.Model):
     mail_reception_confirmed = fields.Boolean("Reception Confirmed", default=False, readonly=True, copy=False, help="True if PO reception is confirmed by the vendor.")
     mail_reception_declined = fields.Boolean("Reception Declined", readonly=True, copy=False, help="True if PO reception is declined by the vendor.")
 
-    receipt_reminder_email = fields.Boolean('Receipt Reminder Email', compute='_compute_receipt_reminder_email')
-    reminder_date_before_receipt = fields.Integer('Days Before Receipt', compute='_compute_receipt_reminder_email')
+    receipt_reminder_email = fields.Boolean('Receipt Reminder Email', compute='_compute_receipt_reminder_email', store=True, readonly=False)
+    reminder_date_before_receipt = fields.Integer('Days Before Receipt', compute='_compute_receipt_reminder_email', store=True, readonly=False)
 
     is_late = fields.Boolean('Is Late', store=False, search='_search_is_late')
 
@@ -271,17 +271,9 @@ class PurchaseOrder(models.Model):
             purchase_lines_on_time = self.env['purchase.order.line']._search([('order_id', 'in', purchase_ids), ('qty_received', '>=', SQL('product_qty'))])
             return [('id', 'in', purchase_lines_on_time.order_id.ids)]
 
-    def write(self, vals):
-        vals, partner_vals = self._write_partner_values(vals)
-        res = super().write(vals)
-        if partner_vals:
-            self.partner_id.sudo().write(partner_vals)  # Because the purchase user doesn't have write on `res.partner`
-        return res
-
     @api.model_create_multi
     def create(self, vals_list):
         orders = self.browse()
-        partner_vals_list = []
         for vals in vals_list:
             company_id = vals.get('company_id', self.default_get(['company_id'])['company_id'])
             # Ensures default picking type and currency are taken from the right company.
@@ -291,12 +283,7 @@ class PurchaseOrder(models.Model):
                 if 'date_order' in vals:
                     seq_date = fields.Datetime.context_timestamp(self, fields.Datetime.to_datetime(vals['date_order']))
                 vals['name'] = self_comp.env['ir.sequence'].next_by_code('purchase.order', sequence_date=seq_date) or '/'
-            vals, partner_vals = self._write_partner_values(vals)
-            partner_vals_list.append(partner_vals)
             orders |= super(PurchaseOrder, self_comp).create(vals)
-        for order, partner_vals in zip(orders, partner_vals_list):
-            if partner_vals:
-                order.sudo().write(partner_vals)  # Because the purchase user doesn't have write on `res.partner`
         return orders
 
     @api.ondelete(at_uninstall=False)
@@ -1249,14 +1236,6 @@ class PurchaseOrder(models.Model):
                 original_receipt_date=line.date_planned.date(),
                 new_receipt_date=date.date()
             )
-
-    def _write_partner_values(self, vals):
-        partner_values = {}
-        if 'receipt_reminder_email' in vals:
-            partner_values['receipt_reminder_email'] = vals.pop('receipt_reminder_email')
-        if 'reminder_date_before_receipt' in vals:
-            partner_values['reminder_date_before_receipt'] = vals.pop('reminder_date_before_receipt')
-        return vals, partner_values
 
     def _is_readonly(self):
         """ Return whether the purchase order is read-only or not based on the state.
