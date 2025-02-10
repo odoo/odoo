@@ -31,7 +31,7 @@ class ChatbotScriptStep(models.Model):
         if msg := self._find_first_user_free_input(discuss_channel):
             name = html2plaintext(msg.body)[:100]
         return {
-            "channel_id": discuss_channel.id,
+            "origin_channel_id": discuss_channel.id,
             "company_id": self.crm_team_id.company_id.id,
             'description': description + discuss_channel._get_channel_history(),
             "name": name,

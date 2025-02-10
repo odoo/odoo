@@ -179,9 +179,9 @@ class DiscussChannel(models.Model):
             if message.author_id == chatbot_op and not last_msg_from_chatbot:
                 parts.append(Markup("<br/>"))
             if message.author_id == chatbot_op:
-                parts.append(Markup("<strong>%s</strong></br>") % html2plaintext(message.body))
+                parts.append(Markup("<strong>%s</strong><br/>") % html2plaintext(message.body))
             else:
-                parts.append(Markup("%s</br>") % html2plaintext(message.body))
+                parts.append(Markup("%s<br/>") % html2plaintext(message.body))
             last_msg_from_chatbot = message.author_id == chatbot_op
         return Markup("").join(parts)
 
