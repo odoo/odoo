@@ -21,6 +21,10 @@ export class EmployeeListController extends ListController {
         )
         return menuItems;
     }
+
+    async createRecord() {
+        await this.props.createRecord();
+    }
 }
 
 registry.category('views').add('hr_employee_list', {
