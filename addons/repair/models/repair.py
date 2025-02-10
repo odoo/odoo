@@ -196,6 +196,15 @@ class RepairOrder(models.Model):
     reserve_visible = fields.Boolean(
         'Allowed to Reserve Production', compute='_compute_unreserve_visible',
         help='Technical field to check when we can reserve quantities')
+    picking_type_visible = fields.Boolean(compute='_compute_picking_type_visible')
+
+    def _compute_picking_type_visible(self):
+        repair_type_by_company = dict(self.env['stock.picking.type']._read_group([
+                ('code', '=', 'repair_operation'),
+                ('company_id', 'in', self.company_id.ids)
+            ], groupby=['company_id'], aggregates=['__count']))
+        for ro in self:
+            ro.picking_type_visible = repair_type_by_company.get(ro.company_id, 0) > 1
 
     @api.depends('product_id', 'picking_id', 'lot_id')
     def _compute_product_qty(self):
