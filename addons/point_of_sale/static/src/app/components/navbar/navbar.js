@@ -69,7 +69,7 @@ export class Navbar extends Component {
             if (!isSpecialKey) {
                 this.bufferedInput += event.key;
             }
-            if (document.activeElement == this.inputRef.el) {
+            if (document.activeElement == this.inputRef?.el) {
                 this.checkInput(event);
             } else {
                 this.timeout = setTimeout(() => {

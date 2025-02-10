@@ -269,3 +269,13 @@ registry.category("web_tour.tours").add("TableMergeUnmergeTour", {
             FloorScreen.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_create_floor_tour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            Chrome.clickMenuOption("Edit Plan"),
+            FloorScreen.addFloor("AAA"),
+        ].flat(),
+});
