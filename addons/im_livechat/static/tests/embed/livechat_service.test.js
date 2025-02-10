@@ -19,6 +19,7 @@ import {
     asyncStep,
     Command,
     mountWithCleanup,
+    onRpc,
     serverState,
     waitForSteps,
 } from "@web/../tests/web_test_helpers";
@@ -145,4 +146,31 @@ test("Only necessary requests are made when creating a new chat", async () => {
             },
         })}`,
     ]);
+});
+
+test("do not create new thread when operator answers to visitor", async () => {
+    const pyEnv = await startServer();
+    const livechatChannelId = await loadDefaultEmbedConfig();
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
+    onRpc("/im_livechat/get_session", async () => asyncStep("/im_livechat/get_session"));
+    onRpc("/mail/message/post", async () => asyncStep("/mail/message/post"));
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ guest_id: guestId }),
+        ],
+        channel_type: "livechat",
+        livechat_active: true,
+        livechat_channel_id: livechatChannelId,
+        livechat_operator_id: serverState.partnerId,
+        create_uid: serverState.publicUserId,
+    });
+    setupChatHub({ opened: [channelId] });
+    await start({
+        authenticateAs: pyEnv["res.users"].search_read([["id", "=", serverState.userId]])[0],
+    });
+    await insertText(".o-mail-Composer-input", "Hello!");
+    await triggerHotkey("Enter");
+    await contains(".o-mail-Message", { text: "Hello!" });
+    await waitForSteps(["/mail/message/post"]);
 });
