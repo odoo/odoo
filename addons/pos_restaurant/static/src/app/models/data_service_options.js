@@ -15,4 +15,7 @@ patch(DataServiceOptions.prototype, {
     get cascadeDeleteModels() {
         return [...super.cascadeDeleteModels, "restaurant.order.course"];
     },
+    get dynamicModels() {
+        return [...super.dynamicModels, "restaurant.order.course"];
+    },
 });
