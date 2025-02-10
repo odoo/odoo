@@ -1,74 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="lunch.LunchCurrency">
-        <div class="text-end d-flex" >
-            <span class="col-4" t-if="props.currency.position == 'before'" t-esc="props.currency.symbol"/>
-            <span class="col-8" t-esc="amount"/>
-            <span class="col-4" t-if="props.currency.position == 'after'" t-esc="props.currency.symbol"/>
-        </div>
+        <span>
+            <t t-if="props.currency.position == 'before'" t-esc="props.currency.symbol"/>
+            <t t-esc="amount"/>
+            <t t-if="props.currency.position == 'after'" t-esc="props.currency.symbol"/>
+        </span>
     </t>
 
     <t t-name="lunch.LunchOrderLine">
-        <tr>
-            <td class="text-center">
-                <span
-                    t-if="canEdit"
-                    type="button"
-                    class="btn btn-sm btn-icon btn-link fa fa-minus-circle px-0"
-                    t-on-click="() => this.updateQuantity(-1)"/>
-                <span
-                    t-else=""
-                    type="button"
-                    class="btn btn-sm btn-icon btn-link disabled fa fa-minus-circle px-0"/>
-            </td>
-            <td t-esc="line.quantity" class="text-center"/>
-            <td class="text-center">
-                <span
-                    t-if="canAdd"
-                    type="button"
-                    class="btn btn-sm btn-icon btn-link fa fa-plus-circle px-0"
-                    t-on-click="() => this.updateQuantity(1)"/>
-                <span
-                    t-else=""
-                    type="button"
-                    class="btn btn-sm btn-icon btn-link disabled fa fa-plus-circle px-0"/>
-            </td>
-            <td
-                t-if="canEdit"
-                t-esc="line.product[1]"
-                t-on-click="() => props.openOrderLine(line.product[0], line.id)"
-                role="button"
-                title="Edit order"/>
-            <td t-else="" t-esc="line.product[1]"/>
-            <td>
-                <span t-esc="line.state" t-attf-class="badge rounded-pill text-bg-#{badgeClass} border-#{badgeClass}" style="vertical-align: bottom;"/>
-            </td>
-            <td t-esc="line.location"/>
-            <td t-esc="line.date" class="mx-4"/>
-            <td>
-                <LunchCurrency currency="props.currency" amount="line.product[2]"/>
-            </td>
-            </tr>
-            <t t-if="hasToppings" t-foreach="line.toppings" t-as="topping" t-key="topping">
-                <tr>
-                    <td/>
-                    <td/>
-                    <td/>
-                    <td class="lunch_topping" t-esc="topping[0]"/>
-                    <td/>
-                    <td/>
-                    <td/>
-                    <td>
-                        <LunchCurrency currency="props.currency" amount="topping[1]"/>
-                    </td>
-                </tr>
-            </t>
-            <tr t-if="line.note">
-                <td/>
-                <td/>
-                <td/>
-                <td t-esc="line.note" class="text-muted"/>
-            </tr>
+        <li
+            class="d-flex flex-column gap-2 border rounded p-2 w-100 mb-2"
+            name="o_lunch_order_line"
+            t-attf-aria-label="{{line.quantity}} {{line.product[1]}} - {{line.state}}"
+            tabindex="0"
+        >
+            <div class="d-flex justify-content-between align-items-start gap-2">
+                <h6 class="mb-0">
+                    <span t-if="!props.isToOrder"><t t-out="line.quantity"/> x </span>
+                    <t t-out="line.product[1]"/>
+                    <span t-if="!props.isToOrder"> &#8226; <LunchCurrency currency="props.currency" amount="line.product[2]"/></span>
+                </h6>
+                <span t-esc="line.state" t-attf-class="badge flex-shrink-0 rounded-pill text-bg-#{badgeClass}"/>
+            </div>
+            <div t-if="line.note" class="p-2 rounded bg-100 text-muted">
+                <i class="fa fa-fw fa-sticky-note pe-2"/>
+                <t t-out="line.note"/>
+            </div>
+            <div class="d-flex justify-content-between">
+                <span class="text-nowrap" t-esc="line.location"/>
+                <span class="text-nowrap" t-esc="line.date"/>
+            </div>
+            <ul t-if="hasToppings" class="list-group list-group-flush" t-foreach="line.toppings" t-as="topping" t-key="topping">
+                <li class="list-group-item d-flex justify-content-between ps-2 pe-0 py-1">
+                    <span>+ <t t-esc="topping[0]"/></span>
+                    <LunchCurrency currency="props.currency" amount="topping[1]"/>
+                </li>
+            </ul>
+            <div t-if="props.isToOrder" class="d-flex justify-content-between">
+                <div class="o_lunch_order_line_quantity input-group">
+                    <button
+                        role="button"
+                        type="button"
+                        t-attf-class="o_lunch_qty_btn btn btn-sm btn-outline-secondary border-end-0 {{canEdit ? '' : 'opacity-100 disabled'}}"
+                        t-on-click="() => this.updateQuantity(-1)"
+                        aria-label="Decrease quantity"
+                    >
+                        <i class="oi oi-minus" role="img"/>
+                    </button>
+                    <input
+                        type="text"
+                        t-attf-class="form-control border border-start-0 border-end-0 text-center bg-view {{canAdd or canEdit ? '' : 'o_lunch_order_line_input_disabled'}}"
+                        t-att-value="line.quantity"
+                        disabled="true"
+                    />
+                    <button
+                        role="button"
+                        type="button"
+                        t-attf-class="o_lunch_qty_btn btn btn-sm btn-outline-secondary border-start-0 {{canAdd ? '' : 'opacity-100 disabled'}}"
+                        t-on-click="() => this.updateQuantity(1)"
+                        aria-label="Increase quantity"
+                    >
+                        <i class="oi oi-plus" role="img"/>
+                    </button>
+                </div>
+                <span class="align-content-end fs-3">
+                    <LunchCurrency currency="props.currency" amount="line.product[2]"/>
+                </span>
+            </div>
+        </li>
     </t>
 
     <t t-name="lunch.LunchAlerts">
@@ -80,31 +80,34 @@
     </t>
 
     <t t-name="lunch.LunchUser">
-        <div class="lunch_user pb-1">
+        <div class="lunch_user flex-grow-1">
             <span t-if="!props.isManager" t-esc="props.username"/>
-            <Many2XAutocomplete
-                t-else=""
-                value="props.username"
-                resModel="'res.users'"
-                getDomain="getDomain"
-                fieldString="props.username"
-                activeActions="{}"
-                update.bind="props.onUpdateUser"
-            />
+            <div t-else="" class="o_field_widget w-100">
+                <Many2XAutocomplete
+                    value="props.username"
+                    resModel="'res.users'"
+                    getDomain="getDomain"
+                    fieldString="props.username"
+                    activeActions="{}"
+                    update.bind="props.onUpdateUser"
+                />
+            </div>
         </div>
     </t>
 
     <t t-name="lunch.LunchLocation">
-        <div class="lunch_location pb-1">
+        <div class="lunch_location">
             <t t-if="props.location">
-                <Many2XAutocomplete
-                    value="props.location"
-                    resModel="'lunch.location'"
-                    fieldString="props.location"
-                    getDomain="getDomain"
-                    activeActions="{}"
-                    update.bind="props.onUpdateLunchLocation"
-                />
+                <div class="o_field_widget w-100">
+                    <Many2XAutocomplete
+                        value="props.location"
+                        resModel="'lunch.location'"
+                        fieldString="props.location"
+                        getDomain="getDomain"
+                        activeActions="{}"
+                        update.bind="props.onUpdateLunchLocation"
+                    />
+                </div>
             </t>
             <t t-else="">
                 <p>No lunch location available.</p>
@@ -113,81 +116,134 @@
     </t>
 
     <t t-name="lunch.LunchDashboardOrder">
-        <LunchAlerts alerts="state.infos.alerts"/>
 
-        <div class="o_lunch_banner container-fluid mt-3 mt-md-0 py-md-4 bg-view">
-            <div class="row row-gap-3 h-100">
-                <div class="col-12 col-lg-3">
-                    <div class="d-flex gap-2 align-content-center h-100">
-                        <div>
-                            <img class="o_image_64_cover rounded" t-att-src="state.infos.userimage"/>
-                        </div>
-                        <div class="w-100">
-                            <LunchUser
-                                isManager="state.infos.is_manager"
-                                username="state.infos.username"
-                                onUpdateUser.bind="onUpdateUser"/>
+        <div class="o_lunch_banner d-flex flex-column border-start h-100 bg-view">
+            <div class="p-3 overflow-y-auto w-100">
+                <div class="d-flex flex-column w-100 gap-2">
+                    <LunchAlerts alerts="state.infos.alerts"/>
+                    <div class="d-flex gap-2 align-content-center">
+                        <img class="o_image_24_cover rounded" t-att-src="state.infos.userimage"/>
+                        <LunchUser
+                            isManager="state.infos.is_manager"
+                            username="state.infos.username"
+                            onUpdateUser.bind="onUpdateUser"/>
+                    </div>
+                    <LunchLocation
+                        location="location"
+                        onUpdateLunchLocation.bind="onUpdateLunchLocation"/>
 
-                            <LunchLocation
-                                location="location"
-                                onUpdateLunchLocation.bind="onUpdateLunchLocation"/>
-
-                            <div id="lunch_order_date">
-                                <DateTimeInput
-                                    type="'date'"
-                                    value="this.state.date"
-                                    onChange.bind="onUpdateLunchTime"/>
-                            </div>
-
-                            <div class="d-flex pb-1">
-                                <span class="flex-grow-1">Your Account</span>
-                                <span>
-                                    <LunchCurrency currency="currency" amount="state.infos.wallet"/>
-                                </span>
+                    <div id="lunch_order_date">
+                        <DateTimeInput
+                            type="'date'"
+                            value="this.state.date"
+                            onChange.bind="onUpdateLunchTime"/>
+                    </div>
+                </div>
+                <div id="o_lunch_orders" class="o_lunch_widget_line">
+                    <div t-if="hasLines" class="accordion">
+                        <button
+                            t-if="state.infos.lines.some(line => ['sent', 'confirmed'].includes(line.raw_state))"
+                            class="accordion-button collapsed py-2 px-0 bg-view shadow-none"
+                            data-bs-toggle="collapse"
+                            href="#o_lunch_passed_orders"
+                            role="button"
+                            aria-expanded="false"
+                            aria-controls="o_lunch_passed_orders"
+                        >
+                            Passed orders
+                            <span
+                                class="badge rounded-pill ms-2 text-bg-secondary"
+                                t-out="state.infos.lines.filter(line => ['sent', 'confirmed'].includes(line.raw_state)).length"
+                            />
+                        </button>
+                        <div
+                            id="o_lunch_passed_orders"
+                            class="accordion-collapse collapse"
+                            tabindex="-1"
+                            aria-labelledby="o_lunch_passed_orders"
+                        >
+                            <div class="accordion-body px-0 pt-0">
+                                <ul class="list-unstyled">
+                                    <t
+                                        t-foreach="state.infos.lines"
+                                        t-as="line" t-key="line.id"
+                                        t-if="line.raw_state != 'new' &amp;&amp; line.raw_state != 'ordered'"
+                                    >
+                                        <LunchOrderLine
+                                            line="line"
+                                            currency="currency"
+                                            onUpdateQuantity.bind="onUpdateQuantity"
+                                            openOrderLine.bind="props.openOrderLine"
+                                            infos="state.infos"
+                                            isToOrder="false"
+                                        />
+                                    </t>
+                                </ul>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-12 col-lg-6" t-if="hasLines">
-                    <h4 class="">
-                        Your Order
-                        <button
-                            t-if="(['new', 'ordered'].includes(state.infos.raw_state))"
-                            class="btn btn-sm btn-icon btn-link fa fa-trash"
-                            t-on-click.prevent="emptyCart"/>
-                    </h4>
-                    <table class="o_lunch_widget_lines w-100">
-                        <t t-foreach="state.infos.lines" t-as="line" t-key="line.id">
-                            <LunchOrderLine line="line" currency="currency" onUpdateQuantity.bind="onUpdateQuantity" openOrderLine.bind="props.openOrderLine" infos="state.infos"/>
-                        </t>
-                    </table>
-                </div>
-                <div class="col-12 col-lg-2 offset-lg-1 d-flex flex-column row-gap-1" t-if="hasLines">
-                    <span class="d-flex flex-row text-muted">
-                        <span class="flex-grow-1 column-gap-1">
-                            Total
-                        </span>
-                        <span class="col-5">
-                            <LunchCurrency currency="currency" amount="state.infos.total"/>
-                        </span>
+                    <span
+                        class="d-flex justify-content-between p-2 bg-100 rounded"
+                        t-attf-class="{{hasLines and state.infos.lines.some(line => ['sent', 'confirmed'].includes(line.raw_state)) ? '' : 'mt-2'}}"
+                        name="o_lunch_balance" role="status" tabindex="0" t-attf-aria-label="Available Balance {{state.infos.wallet}} {{currency.symbol}}"
+                    >
+                        <span><i class="fa fa-money me-2"/>Available Balance</span>
+                        <LunchCurrency currency="currency" amount="state.infos.wallet"/>
                     </span>
-                    <span class="d-flex column-gap-1 text-muted">
-                        <span class="flex-grow-1">
-                            Already Paid
-                        </span>
-                        <span class="col-5">
-                            <LunchCurrency currency="currency" amount="state.infos.paid_subtotal"/>
-                        </span>
-                    </span>
-                    <h4 class="d-flex column-gap-1 mt-auto">
-                        <span class="flex-grow-1">
-                            To Pay
-                        </span>
-                        <span class="col-5">
-                            <LunchCurrency currency="currency" amount="state.infos.unpaid_subtotal"/>
-                        </span>
-                    </h4>
-                    <button class="btn btn-primary" t-if="canOrder" t-on-click="orderNow">Order Now</button>
+                    <h4 class="mt-3 pt-3 border-top">Your Order</h4>
+                    <p t-if="!(['new', 'ordered'].includes(state.infos.raw_state))" class="text-muted">
+                        Nothing to order, add some meals to begin.
+                    </p>
+                    <t t-if="hasLines">
+                        <ul class="list-unstyled">
+                            <t
+                                t-foreach="state.infos.lines"
+                                t-as="line" t-key="line.id"
+                                t-if="line.raw_state == 'new' || line.raw_state == 'ordered'"
+                            >
+                                <LunchOrderLine
+                                    line="line"
+                                    currency="currency"
+                                    onUpdateQuantity.bind="onUpdateQuantity"
+                                    openOrderLine.bind="props.openOrderLine"
+                                    infos="state.infos"
+                                    isToOrder="true"
+                                />
+                            </t>
+                        </ul>
+                    </t>
+                </div>
+            </div>
+            <div t-if="hasLines" class="mt-auto p-3 border-top">
+                <span class="d-flex justify-content-between text-muted">
+                    Total
+                    <LunchCurrency currency="currency" amount="state.infos.total"/>
+                </span>
+                <span class="d-flex justify-content-between text-muted">
+                    Already Paid
+                    <LunchCurrency currency="currency" amount="state.infos.paid_subtotal"/>
+                </span>
+                <h4 class="d-flex justify-content-between">
+                    To Pay
+                    <LunchCurrency currency="currency" amount="state.infos.unpaid_subtotal"/>
+                </h4>
+                <div class="d-flex flex-column gap-2" name="o_lunch_order_buttons">
+                    <button
+                        t-if="canOrder"
+                        type="button"
+                        class="btn btn-primary"
+                        t-on-click="orderNow"
+                        t-attf-aria-label="Order Now {{state.infos.unpaid_subtotal}}{{currency.symbol}}"
+                    >
+                        Order Now
+                    </button>
+                    <button
+                        type="button"
+                        t-if="(['new', 'ordered'].includes(state.infos.raw_state))"
+                        class="btn btn-secondary"
+                        t-on-click.prevent="emptyCart">
+                        Clear Order
+                    </button>
                 </div>
             </div>
         </div>
@@ -199,14 +255,37 @@
             <t t-call="lunch.LunchDashboardOrder"/>
         </t>
         <t t-else="">
-            <details class="fixed-bottom mh-100 bg-view p-2 overflow-y-auto" t-att-open="state.mobileOpen">
-                <summary class="btn btn-primary w-100" t-on-click="() => state.mobileOpen = !state.mobileOpen">
-                    <i class="fa fa-fw fa-shopping-cart"/>
+            <div class="sticky-bottom d-flex gap-2 border-top p-3 pb-4 bg-view">
+                <button
+                    class="btn btn-primary w-100"
+                    type="button"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#lunch_order_mobile"
+                    aria-controls="lunch_order_mobile"
+                >
                     Your Cart (<LunchCurrency currency="currency" amount="state.infos.total || 0"/>)
-                </summary>
-
-                <t t-call="lunch.LunchDashboardOrder"/>
-            </details>
+                </button>
+            </div>
+            <div
+                id="lunch_order_mobile"
+                class="offcanvas offcanvas-end bg-view"
+                tabindex="-1"
+                aria-labelledby="lunch_order_mobile"
+            >
+                <div class="offcanvas-header">
+                    <button
+                        type="button"
+                        class="btn btn-secondary oi oi-chevron-left"
+                        data-bs-dismiss="offcanvas"
+                        aria-label="Close"
+                    />
+                </div>
+                <div class="offcanvas-body p-0">
+                    <t t-call="lunch.LunchDashboardOrder">
+                        <t t-set="_user_classes" t-value="'rounded p-3 bg-100'"/>
+                    </t>
+                </div>
+            </div>
         </t>
     </t>
 </templates>

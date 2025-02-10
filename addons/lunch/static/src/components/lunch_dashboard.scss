@@ -1,17 +1,25 @@
-.lunch_topping:before {
-    content: '+ ';
-}
-
 .o_lunch_content {
     .o-autocomplete--input {
         cursor: pointer;
     }
-    // Force LunchCurrency in primary button to be inline
-    summary div {
-        display: inline-flex !important;
+}
 
-        span {
-            width: auto;
+.o_lunch_banner {
+    @include media-breakpoint-up(md) {
+        min-width: 18rem;
+    }
+
+    .o_lunch_order_line_quantity {
+        input {
+            max-width: 3rem;
+        }
+
+        .o_lunch_qty_btn.disabled .oi{
+            opacity: $btn-disabled-opacity;
+        }
+
+        &.o_lunch_order_line_input_disabled {
+            opacity: $btn-disabled-opacity;
         }
     }
 }
