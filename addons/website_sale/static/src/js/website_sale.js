@@ -667,7 +667,11 @@ publicWidget.registry.websiteSaleProductPageReviews = publicWidget.Widget.extend
     selector: '#o_product_page_reviews',
     disabledInEditableMode: false,
 
+    /**
+     * @override
+     */
     init() {
+        this._super(...arguments);
         this.website_menus = this.bindService("website_menus");
     },
 
