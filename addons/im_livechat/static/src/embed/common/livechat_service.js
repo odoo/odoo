@@ -96,6 +96,14 @@ export class LivechatService {
         }
         if (this.state === SESSION_STATE.PERSISTED) {
             await this.busService.addChannel(`mail.guest_${this.guestToken}`);
+        } else {
+            this.store.chatHub.preFirstFetchPromise.then(() => {
+                if (!this.store.fetchParams.length) {
+                    return;
+                }
+                this.store.initialize({ force: true });
+                this.store.env.services.bus_service.start();
+            });
         }
         this.initialized = true;
         this.env.services["im_livechat.initialized"].ready.resolve();
@@ -118,7 +126,7 @@ export class LivechatService {
      * @returns {Promise<import("models").Thread|undefined>}
      */
     async persist() {
-        if (this.state === SESSION_STATE.PERSISTED) {
+        if (this.thread && !this.thread.isTransient) {
             return this.thread;
         }
         const temporaryThread = this.thread;

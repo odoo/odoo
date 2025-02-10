@@ -3,7 +3,6 @@ import { Thread } from "@mail/core/common/thread_model";
 import "@mail/discuss/core/common/thread_model_patch";
 
 import { patch } from "@web/core/utils/patch";
-import { SESSION_STATE } from "./livechat_service";
 import { _t } from "@web/core/l10n/translation";
 
 /** @type {typeof Thread} */
@@ -89,10 +88,7 @@ patch(Thread.prototype, {
     },
     /** @returns {Promise<import("models").Message} */
     async post() {
-        if (
-            this.channel_type === "livechat" &&
-            this.store.env.services["im_livechat.livechat"].state !== SESSION_STATE.PERSISTED
-        ) {
+        if (this.channel_type === "livechat" && this.isTransient) {
             const thread = await this.store.env.services["im_livechat.livechat"].persist();
             if (!thread) {
                 return;
