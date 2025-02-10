@@ -73,7 +73,7 @@
                                 <button class="btn btn-secondary" t-att-class="{'active': !state.isQuickDeleteMode}" title="Mass remove" accesskey="c" t-on-click="quickCreateToggleDeleteMode">Create</button>
                                 <button class="btn btn-secondary" t-att-class="{'active': state.isQuickDeleteMode}" title="Mass remove" accesskey="d" t-on-click="quickCreateToggleDeleteMode"><i class="fa fa-trash"/>Delete</button>
                             </div>
-                            <div class="o_form_view o_form_nosheet o_xxs_form_view o_form_renderer">
+                            <div t-if="!state.isQuickDeleteMode" class="o_form_view o_form_nosheet o_xxs_form_view o_form_renderer">
                                 <Record fields="props.fields" fieldNames="Object.keys(quickCreateFields)" resModel="props.resModel" onRootLoaded.bind="onQuickCreateRootLoaded" context="props.context" t-slot-scope="data">
                                     <FormRenderer record="data.record" archInfo="archInfo"/>
                                 </Record>
