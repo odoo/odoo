@@ -1549,9 +1549,8 @@ class TestStockValuation(TestStockValuationBase):
                 'quantity': 10.0,
             })]
         })
-        move2.picked = True
-        move2._action_done()
-
+        # Move is automatically set to Done as it is linked to a Done picking
+        self.assertEqual(move2.state, 'done')
         self.assertEqual(move2.stock_valuation_layer_ids.value, 200.0)
         self.assertEqual(move2.stock_valuation_layer_ids.remaining_qty, 10.0)
         self.assertEqual(move2.stock_valuation_layer_ids.unit_cost, 20.0)
@@ -4495,3 +4494,27 @@ class TestStockValuation(TestStockValuationBase):
 
         self.assertEqual(move.quantity, 24)
         self.assertRecordValues(move.stock_valuation_layer_ids, [{'quantity': 12}, {'quantity': 12}])
+
+    def test_action_done_with_state_already_done(self):
+        """ This test ensure that calling _action_done on a move already done
+        has no effect on the valuation.
+        """
+        self.product1.standard_price = 10
+
+        in_move = self.env['stock.move'].create({
+            'name': 'IN 10 units',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom_qty': 10.0,
+            'picked': True,
+            'quantity': 10,
+        })
+        # Call _action_done twice, only 1 layer should be created
+        in_move._action_done()
+        self.assertEqual(in_move.state, 'done')
+        in_move._action_done()
+
+        self.assertEqual(len(in_move.stock_valuation_layer_ids), 1)
+        self.assertEqual(in_move.stock_valuation_layer_ids.value, 100)
+        self.assertEqual(in_move.stock_valuation_layer_ids.quantity, 10)
