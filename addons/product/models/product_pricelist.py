@@ -48,11 +48,7 @@ class ProductPricelist(models.Model):
         comodel_name='product.pricelist.item',
         inverse_name='pricelist_id',
         string="Pricelist Rules",
-        domain=[
-            '&',
-            '|', ('product_tmpl_id', '=', None), ('product_tmpl_id.active', '=', True),
-            '|', ('product_id', '=', None), ('product_id.active', '=', True),
-        ],
+        domain=lambda self: self._compute_item_ids(),
         copy=True)
 
     @api.depends('currency_id')
@@ -157,6 +153,14 @@ class ProductPricelist(models.Model):
         """
         self and self.ensure_one()  # self is at most one record
         return self._compute_price_rule(product, *args, compute_price=False, **kwargs)[product.id][1]
+
+    def _compute_item_ids(self):
+        domain = [
+            '&',
+            '|', ('product_tmpl_id', '=', None), ('product_tmpl_id.active', '=', True),
+            '|', ('product_id', '=', None), ('product_id.active', '=', True),
+        ]
+        return domain
 
     def _compute_price_rule(
             self, products, quantity, currency=None, uom=None, date=False, compute_price=True,
