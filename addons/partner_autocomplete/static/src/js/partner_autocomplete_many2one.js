@@ -3,17 +3,32 @@ import { registry } from "@web/core/registry";
 import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
 import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
 import { Component } from "@odoo/owl";
+import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 
-import { usePartnerAutocomplete } from "@partner_autocomplete/js/partner_autocomplete_core"
+import { usePartnerAutocomplete } from "@partner_autocomplete/js/partner_autocomplete_core";
+import { PartnerAutoComplete } from "@partner_autocomplete/js/partner_autocomplete_component";
+
+class PartnerMany2XAutocomplete extends Many2XAutocomplete {
+    static components = {
+        ...super.components,
+        AutoComplete: PartnerAutoComplete,
+    };
+}
+class PartnerMany2One extends Many2One {
+    static components = {
+        ...super.components,
+        Many2XAutocomplete: PartnerMany2XAutocomplete,
+    };
+}
 
 class PartnerAutoCompleteMany2one extends Component {
     static template = "partner_autocomplete.PartnerAutoCompleteMany2one";
-    static components = { Many2One };
+    static components = { Many2One: PartnerMany2One };
     static props = { ...Many2OneField.props };
 
     setup() {
         super.setup();
-        this.partner_autocomplete = usePartnerAutocomplete();
+        this.partnerAutocomplete = usePartnerAutocomplete();
     }
 
     validateSearchTerm(request) {
@@ -33,9 +48,13 @@ class PartnerAutoCompleteMany2one extends Component {
         }
         return [
             {
-                options: async (request) => {
+                options: async (request, shouldSearchWorldWide) => {
                     if (this.validateSearchTerm(request)) {
-                        const suggestions = await this.partner_autocomplete.autocomplete(request);
+                        let queryCountryId = false;
+                    	if (shouldSearchWorldWide){
+							queryCountryId = 0;
+						}
+                        const suggestions = await this.partnerAutocomplete.autocomplete(request, queryCountryId);
                         suggestions.forEach((suggestion) => {
                             suggestion.classList = "partner_autocomplete_dropdown_many2one";
                             suggestion.action = this.onSelectPartnerAutocompleteOption.bind(this);
@@ -46,14 +65,17 @@ class PartnerAutoCompleteMany2one extends Component {
                         return [];
                     }
                 },
-                optionTemplate: "partner_autocomplete.Many2oneDropdownOption",
+                optionTemplate: "partner_autocomplete.DropdownOption",
                 placeholder: _t("Searching Autocomplete..."),
             },
         ];
     }
 
     async onSelectPartnerAutocompleteOption(option, params, { openRecord }) {
-        const data = await this.partner_autocomplete.getCreateData(Object.getPrototypeOf(option));
+        const data = await this.partnerAutocomplete.getCreateData(Object.getPrototypeOf(option));
+		if (!data?.company) {
+			return;
+		}
         let context = {
             'default_is_company': true
         };
