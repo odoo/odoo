@@ -24,6 +24,7 @@ export class HrRecruitmentForm extends Interaction {
         this.linkedinInputEl = this.el.querySelector("#recruitment4");
         this.linkedinMessageEl = document.querySelector("#linkedin-message");
         this.warningMessageEl = document.querySelector("#warning-message");
+        this.resumeInputEl = document.querySelector("#recruitment6");
         this.isIncomplete = false;
     }
 
