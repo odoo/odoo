@@ -3934,9 +3934,9 @@ class AccountMove(models.Model):
 
                 if not chain_info:
                     continue
-                chain_info['journal_restrict_mode'] = journal.restrict_mode_hash_table
                 if early_stop:
                     return True
+                chain_info['journal_restrict_mode'] = journal.restrict_mode_hash_table
 
                 if 'unreconciled' in chain_info['warnings']:
                     raise UserError(_("An error occurred when computing the inalterability. All entries have to be reconciled."))
