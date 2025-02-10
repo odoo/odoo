@@ -628,7 +628,7 @@ class Base(models.AbstractModel):
 
             return formatter_many2many
 
-        if field.type == 'many2one':
+        if field.type == 'many2one' or field_name == 'id':
 
             def formatter_many2one(value):
                 if not value:
