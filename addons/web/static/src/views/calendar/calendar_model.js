@@ -191,12 +191,28 @@ export class CalendarModel extends Model {
         await this.load();
     }
 
-    async createRecordNoInteraction(record, extraFields) {
-        const rawRecord = this.buildRawRecord(record);
+    async createRecordNoInteraction(dates) {
         // TODO get companies ids ...
         // const context = this.makeContextDefaults(rawRecord);
         const context = {};
-        await this.orm.create(this.meta.resModel, [{ ...rawRecord, ...extraFields }], {
+
+        const extraFields = this.data.quickCreateValuesCallback();
+
+        const [section] = this.filterSections;
+        const records = [];
+        for (const filter of section.filters) {
+            if (filter.active && filter.type === "record") {
+                for (const date of dates) {
+                    const rawRecord = this.buildRawRecord({ start: date });
+                    records.push({
+                        ...rawRecord,
+                        ...extraFields,
+                        [section.fieldName]: filter.value,
+                    });
+                }
+            }
+        }
+        await this.orm.create(this.meta.resModel, records, {
             context,
         });
         await this.load();

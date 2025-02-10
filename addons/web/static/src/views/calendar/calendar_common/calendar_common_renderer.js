@@ -544,27 +544,12 @@ export class CalendarCommonRenderer extends Component {
             return;
         }
         if (this.quickCreateMode === QUICK_MODE.normal) {
-            const quickCreateValues = this.props.model.data.quickCreateValuesCallback();
+            const dates = [];
             for (const element of this.currentSelectionElement) {
                 const date = DateTime.fromISO(element.dataset.date);
-                for (const section of this.props.model.filterSections) {
-                    for (const filter of section.filters) {
-                        if (filter.active && filter.type === "record") {
-                            await this.props.model.createRecordNoInteraction(
-                                {
-                                    start: date,
-                                },
-                                {
-                                    ...quickCreateValues,
-                                    [section.fieldName]: filter.value,
-                                }
-                            );
-                        }
-                    }
-                    // Get only the first section
-                    // break;
-                }
+                dates.push(date);
             }
+            await this.props.model.createRecordNoInteraction(dates);
         } else if (this.quickCreateMode === QUICK_MODE.delete) {
             const ids = [];
             for (const element of this.currentSelectionElement) {
