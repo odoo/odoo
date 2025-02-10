@@ -399,3 +399,7 @@ class TestFrontend(TestFrontendCommon):
             })
             self.main_pos_config.with_user(self.pos_user).open_ui()
             self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PreparationPrinterContent', login="pos_user")
+
+    def test_create_floor_tour(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_create_floor_tour', login="pos_admin")
