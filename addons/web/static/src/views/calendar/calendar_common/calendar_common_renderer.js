@@ -106,6 +106,7 @@ export class CalendarCommonRenderer extends Component {
             selectMinDistance: 5, // needed to not trigger select when click
             selectMirror: true,
             selectable: this.props.model.canCreate,
+            showNonCurrentDates: this.props.model.monthOverflow,
             slotLabelFormat: is24HourFormat() ? HOUR_FORMATS[24] : HOUR_FORMATS[12],
             snapDuration: { minutes: 15 },
             timeZone: luxon.Settings.defaultZone.name,
@@ -171,10 +172,9 @@ export class CalendarCommonRenderer extends Component {
             title: record.title,
             start: record.start.toISO(),
             end:
-                ["week", "month"].includes(this.props.model.scale) && allDay ||
-                (record.isAllDay ||
-                    (allDay && record.end.toMillis() !== record.end.startOf("day").toMillis())
-                )
+                (["week", "month"].includes(this.props.model.scale) && allDay) ||
+                record.isAllDay ||
+                (allDay && record.end.toMillis() !== record.end.startOf("day").toMillis())
                     ? record.end.plus({ days: 1 }).toISO()
                     : record.end.toISO(),
             allDay: allDay,
