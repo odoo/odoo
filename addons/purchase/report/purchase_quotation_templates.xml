@@ -37,7 +37,7 @@
                                     <span t-field="order_line.name"/>
                                 </td>
                                 <td class="text-center">
-                                    <span t-field="order_line.date_planned"/>
+                                    <span t-field="order_line.date_planned" t-options="{'date_only': 'true'}"/>
                                 </td>
                                 <td class="text-end">
                                     <span t-field="order_line.product_qty"/>
