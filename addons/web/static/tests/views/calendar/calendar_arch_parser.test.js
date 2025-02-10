@@ -22,6 +22,7 @@ const DEFAULT_ARCH_RESULTS = {
     quickCreateViewId: null,
     isDateHidden: false,
     isTimeHidden: false,
+    monthOverflow: true,
     popoverFieldNodes: {},
     scale: "week",
     scales: ["day", "week", "month", "year"],
