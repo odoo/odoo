@@ -18,6 +18,6 @@ class StockMove(models.Model):
             'is_from_order': False,
             'taxes': (
                 self.picking_code == "incoming" and
-                self.product_id.supplier_taxes_id or self.product_id.taxes_id
+                self.product_id.supplier_tax_ids or self.product_id.tax_ids
             ),
         }

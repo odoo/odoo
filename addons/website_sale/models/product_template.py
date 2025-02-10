@@ -290,7 +290,7 @@ class ProductTemplate(models.Model):
         for template in self:
             pricelist_price, pricelist_rule_id = pricelist_prices[template.id]
 
-            product_taxes = template.sudo().taxes_id._filter_taxes_by_company(self.env.company)
+            product_taxes = template.sudo().tax_ids._filter_taxes_by_company(self.env.company)
             taxes = fiscal_position_sudo.map_tax(product_taxes)
 
             base_price = None
@@ -508,7 +508,7 @@ class ProductTemplate(models.Model):
             )
 
         # Apply taxes
-        product_taxes = product_or_template.sudo().taxes_id._filter_taxes_by_company(self.env.company)
+        product_taxes = product_or_template.sudo().tax_ids._filter_taxes_by_company(self.env.company)
         taxes = self.env['account.tax']
         if product_taxes:
             taxes = request.fiscal_position.map_tax(product_taxes)
@@ -874,7 +874,7 @@ class ProductTemplate(models.Model):
         )
 
         if website := ir_http.get_request_website():
-            product_taxes = product_or_template.sudo().taxes_id._filter_taxes_by_company(
+            product_taxes = product_or_template.sudo().tax_ids._filter_taxes_by_company(
                 self.env.company
             )
             if product_taxes:

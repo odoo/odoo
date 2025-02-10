@@ -58,29 +58,29 @@ class WebsiteSaleLoyaltyTestUi(TestSaleProductAttributeValueCommon, HttpCase):
             'is_published': True,
             'sale_ok': True,
             'public_categ_ids': [(4, public_category.id)],
-            'taxes_id': False,
+            'tax_ids': False,
         })
 
         free_large_cabinet = self.env['product.product'].create({
             'name': 'Free Product - Small Cabinet',
             'type': 'service',
-            'supplier_taxes_id': False,
+            'supplier_tax_ids': False,
             'sale_ok': False,
             'purchase_ok': False,
             'invoice_policy': 'order',
             'default_code': 'FREELARGECABINET',
-            'taxes_id': False,
+            'tax_ids': False,
         })
 
         ten_percent = self.env['product.product'].create({
             'name': '10.0% discount on total amount',
             'type': 'service',
-            'supplier_taxes_id': False,
+            'supplier_tax_ids': False,
             'sale_ok': False,
             'purchase_ok': False,
             'invoice_policy': 'order',
             'default_code': '10PERCENTDISC',
-            'taxes_id': False,
+            'tax_ids': False,
         })
 
         self.env['loyalty.program'].search([]).write({'active': False})
@@ -154,7 +154,7 @@ class WebsiteSaleLoyaltyTestUi(TestSaleProductAttributeValueCommon, HttpCase):
             'is_published': True,
             'sale_ok': True,
             'public_categ_ids': [(4, public_category.id)],
-            'taxes_id': False,
+            'tax_ids': False,
         })
         self.env['product.product'].create({
             'name': 'TEST - Small Drawer',
@@ -163,7 +163,7 @@ class WebsiteSaleLoyaltyTestUi(TestSaleProductAttributeValueCommon, HttpCase):
             'is_published': True,
             'sale_ok': True,
             'public_categ_ids': [(4, public_category.id)],
-            'taxes_id': False,
+            'tax_ids': False,
         })
         # Disable any other program
         self.env['loyalty.program'].search([]).write({'active': False})
@@ -227,7 +227,7 @@ class WebsiteSaleLoyaltyTestUi(TestSaleProductAttributeValueCommon, HttpCase):
             'is_published': True,
             'sale_ok': True,
             'public_categ_ids': [(4, public_category.id)],
-            'taxes_id': False,
+            'tax_ids': False,
         })
         # Disable any other program
         self.env['loyalty.program'].search([]).write({'active': False})
@@ -406,7 +406,7 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
             'name': 'Product',
             'list_price': 100,
             'sale_ok': True,
-            'taxes_id': [],
+            'tax_ids': [],
         })
 
         order = self.empty_cart
@@ -487,7 +487,7 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
                 'name': name,
                 'list_price': 100,
                 'sale_ok': True,
-                'taxes_id': [Command.set(taxes_id)],
+                'tax_ids': [Command.set(taxes_id)],
             } for name, taxes_id in products_data]
         )
 

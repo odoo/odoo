@@ -23,7 +23,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
     def compute_tax(self, product, price, qty=1, taxes=None):
         if not taxes:
-            taxes = product.taxes_id.filtered(lambda t: t.company_id.id == self.env.company.id)
+            taxes = product.tax_ids.filtered(lambda t: t.company_id.id == self.env.company.id)
         currency = self.pos_config.currency_id
         res = taxes.compute_all(price, currency, qty, product=product)
         untax = res['total_excluded']
@@ -35,7 +35,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             product = self.env['product.product'].create({
                 'name': 'Dummy product',
                 'is_storable': True,
-                'taxes_id': self.tax_sale_a.ids,
+                'tax_ids': self.tax_sale_a.ids,
             })
             self.pos_config.open_ui()
             pos_session = self.pos_config.current_session_id
@@ -56,7 +56,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                     'price_subtotal': 500.0,
                     'price_subtotal_incl': 575.0,
                     'qty': 1,
-                    'tax_ids': [(6, 0, product.taxes_id.ids)]
+                    'tax_ids': [(6, 0, product.tax_ids.ids)]
                 })],
                 'partner_id': False,
                 'session_id': pos_session.id,
@@ -89,7 +89,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'price_unit': 450,
                 'discount': 5.0,
                 'qty': 2.0,
-                'tax_ids': [(6, 0, self.product3.taxes_id.filtered(lambda t: t.company_id.id == self.env.company.id).ids)],
+                'tax_ids': [(6, 0, self.product3.tax_ids.filtered(lambda t: t.company_id.id == self.env.company.id).ids)],
                 'price_subtotal': 450 * (1 - 5/100.0) * 2,
                 'price_subtotal_incl': 450 * (1 - 5/100.0) * 2,
             }), (0, 0, {
@@ -98,7 +98,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'price_unit': 300,
                 'discount': 5.0,
                 'qty': 3.0,
-                'tax_ids': [(6, 0, self.product4.taxes_id.filtered(lambda t: t.company_id.id == self.env.company.id).ids)],
+                'tax_ids': [(6, 0, self.product4.tax_ids.filtered(lambda t: t.company_id.id == self.env.company.id).ids)],
                 'price_subtotal': 300 * (1 - 5/100.0) * 3,
                 'price_subtotal_incl': 300 * (1 - 5/100.0) * 3,
             })],
@@ -471,7 +471,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'price_unit': 450,
                 'discount': 0.0,
                 'qty': 2.0,
-                'tax_ids': [(6, 0, self.product3.taxes_id.filtered(lambda t: t.company_id.id == self.env.company.id).ids)],
+                'tax_ids': [(6, 0, self.product3.tax_ids.filtered(lambda t: t.company_id.id == self.env.company.id).ids)],
                 'price_subtotal': untax1,
                 'price_subtotal_incl': untax1 + atax1,
             }), (0, 0, {
@@ -480,7 +480,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'price_unit': 300,
                 'discount': 0.0,
                 'qty': 3.0,
-                'tax_ids': [(6, 0, self.product4.taxes_id.filtered(lambda t: t.company_id.id == self.env.company.id).ids)],
+                'tax_ids': [(6, 0, self.product4.tax_ids.filtered(lambda t: t.company_id.id == self.env.company.id).ids)],
                 'price_subtotal': untax2,
                 'price_subtotal_incl': untax2 + atax2,
             })],
@@ -537,7 +537,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'price_unit': 450,
                 'discount': 0.0,
                 'qty': (-2.0),
-                'tax_ids': [(6, 0, self.product3.taxes_id.filtered(lambda t: t.company_id.id == self.env.company.id).ids)],
+                'tax_ids': [(6, 0, self.product3.tax_ids.filtered(lambda t: t.company_id.id == self.env.company.id).ids)],
                 'price_subtotal': untax1,
                 'price_subtotal_incl': untax1 + atax1,
             }), (0, 0, {
@@ -546,7 +546,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'price_unit': 300,
                 'discount': 0.0,
                 'qty': (-3.0),
-                'tax_ids': [(6, 0, self.product4.taxes_id.filtered(lambda t: t.company_id.id == self.env.company.id).ids)],
+                'tax_ids': [(6, 0, self.product4.tax_ids.filtered(lambda t: t.company_id.id == self.env.company.id).ids)],
                 'price_subtotal': untax2,
                 'price_subtotal_incl': untax2 + atax2,
             })],
@@ -602,7 +602,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'price_unit': 450,
                 'discount': 0.0,
                 'qty': (-2.0),
-                'tax_ids': [(6, 0, self.product3.taxes_id.filtered(lambda t: t.company_id.id == self.env.company.id).ids)],
+                'tax_ids': [(6, 0, self.product3.tax_ids.filtered(lambda t: t.company_id.id == self.env.company.id).ids)],
                 'price_subtotal': untax1,
                 'price_subtotal_incl': untax1 + atax1,
             }), (0, 0, {
@@ -611,7 +611,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'price_unit': 300,
                 'discount': 0.0,
                 'qty': 3.0,
-                'tax_ids': [(6, 0, self.product4.taxes_id.filtered(lambda t: t.company_id.id == self.env.company.id).ids)],
+                'tax_ids': [(6, 0, self.product4.tax_ids.filtered(lambda t: t.company_id.id == self.env.company.id).ids)],
                 'price_subtotal': untax2,
                 'price_subtotal_incl': untax2 + atax2,
             })],
@@ -703,7 +703,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                     'price_unit': 1.15,
                     'discount': 0.0,
                     'qty': 1.0,
-                    'tax_ids': [(6, 0, tracked_product.taxes_id.filtered(lambda t: t.company_id.id == self.env.company.id).ids)],
+                    'tax_ids': [(6, 0, tracked_product.tax_ids.filtered(lambda t: t.company_id.id == self.env.company.id).ids)],
                     'price_subtotal': untax,
                     'price_subtotal_incl': untax + atax,
                     'pack_lot_ids': [[0, 0, {'lot_name': lot.name}]],
@@ -713,7 +713,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                     'price_unit': 1.15,
                     'discount': 0.0,
                     'qty': 1.0,
-                    'tax_ids': [(6, 0, untracked_product.taxes_id.filtered(lambda t: t.company_id.id == self.env.company.id).ids)],
+                    'tax_ids': [(6, 0, untracked_product.tax_ids.filtered(lambda t: t.company_id.id == self.env.company.id).ids)],
                     'price_subtotal': untax,
                     'price_subtotal_incl': untax + atax,
                 })],
@@ -770,7 +770,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'price_unit': 450,
                 'discount': 5.0,
                 'qty': 2.0,
-                'tax_ids': [(6, 0, self.product3.taxes_id.filtered(lambda t: t.company_id.id == self.env.company.id).ids)],
+                'tax_ids': [(6, 0, self.product3.tax_ids.filtered(lambda t: t.company_id.id == self.env.company.id).ids)],
                 'price_subtotal': untax1,
                 'price_subtotal_incl': untax1 + atax1,
             }), (0, 0, {
@@ -779,7 +779,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'price_unit': 300,
                 'discount': 5.0,
                 'qty': 3.0,
-                'tax_ids': [(6, 0, self.product4.taxes_id.filtered(lambda t: t.company_id.id == self.env.company.id).ids)],
+                'tax_ids': [(6, 0, self.product4.tax_ids.filtered(lambda t: t.company_id.id == self.env.company.id).ids)],
                 'price_subtotal': untax2,
                 'price_subtotal_incl': untax2 + atax2,
             })],
@@ -879,7 +879,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'price_unit': 450,
                 'discount': 0.0,
                 'qty': 2.0,
-                'tax_ids': [(6, 0, self.product3.taxes_id.filtered(lambda t: t.company_id == self.env.company).ids)],
+                'tax_ids': [(6, 0, self.product3.tax_ids.filtered(lambda t: t.company_id == self.env.company).ids)],
                 'price_subtotal': untax1,
                 'price_subtotal_incl': untax1 + atax1,
             }), (0, 0, {
@@ -888,7 +888,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'price_unit': 300,
                 'discount': 0.0,
                 'qty': 3.0,
-                'tax_ids': [(6, 0, self.product4.taxes_id.filtered(lambda t: t.company_id == self.env.company).ids)],
+                'tax_ids': [(6, 0, self.product4.tax_ids.filtered(lambda t: t.company_id == self.env.company).ids)],
                 'price_subtotal': untax2,
                 'price_subtotal_incl': untax2 + atax2,
             })],
@@ -1036,7 +1036,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         product5 = self.env['product.product'].create({
             'name': 'product5',
             'is_storable': True,
-            'taxes_id': dummy_50_perc_tax.ids
+            'tax_ids': dummy_50_perc_tax.ids
         })
 
         # sell product thru pos
@@ -1059,7 +1059,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'price_subtotal': 10.0,
                 'price_subtotal_incl': 15.0,
                 'qty': 1,
-                'tax_ids': [(6, 0, product5.taxes_id.ids)]}]],
+                'tax_ids': [(6, 0, product5.tax_ids.ids)]}]],
             'partner_id': False,
             'session_id': pos_session.id,
             'payment_ids': [[0,
@@ -1198,7 +1198,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'price_unit': 450,
                 'discount': 5.0,
                 'qty': 2.0,
-                'tax_ids': [(6, 0, self.product3.taxes_id.ids)],
+                'tax_ids': [(6, 0, self.product3.tax_ids.ids)],
                 'price_subtotal': 450 * (1 - 5/100.0) * 2,
                 'price_subtotal_incl': 450 * (1 - 5/100.0) * 2,
             })],
@@ -1752,7 +1752,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'name': 'Product Test',
             'available_in_pos': True,
             'list_price': 49.99,
-            'taxes_id': False,
+            'tax_ids': False,
         })
 
         self.pos_config.write({

@@ -23,7 +23,7 @@ class TestSaleTimesheetMargin(TestCommonSaleTimesheet):
             'service_type': 'timesheet',
             'service_tracking': 'task_in_project',
             'project_id': False,
-            'taxes_id': False,
+            'tax_ids': False,
         })
         self.employee_manager.hourly_cost = 10
 

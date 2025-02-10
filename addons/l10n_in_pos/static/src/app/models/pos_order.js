@@ -17,7 +17,7 @@ patch(PosOrder.prototype, {
                 return;
             }
 
-            let taxes = line.tax_ids || line.product.taxes_id;
+            let taxes = line.tax_ids || line.product.tax_ids;
             if (fiscalPosition) {
                 taxes = getTaxesAfterFiscalPosition(taxes, this.fiscal_position_id, this.models);
             }

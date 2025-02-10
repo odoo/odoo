@@ -41,7 +41,7 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
             'name': 'Coca-Cola',
             'is_storable': True,
             'list_price': 2.2,
-            'taxes_id': False,
+            'tax_ids': False,
             'available_in_pos': True,
             'pos_categ_ids': [(4, pos_categ_misc.id)],
             'default_code': '12345',
@@ -50,7 +50,7 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
             'name': 'Free',
             'is_storable': True,
             'list_price': 0,
-            'taxes_id': False,
+            'tax_ids': False,
             'available_in_pos': True,
             'pos_categ_ids': [(4, pos_categ_misc.id)],
             'default_code': '12345',
@@ -59,7 +59,7 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
             'name': 'Fanta',
             'is_storable': True,
             'list_price': 2.2,
-            'taxes_id': False,
+            'tax_ids': False,
             'available_in_pos': True,
             'pos_categ_ids': [(4, pos_categ_misc.id)],
         })
@@ -142,7 +142,7 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
         )
 
         self.env['product.product'].search([]).with_company(new_company).write({
-            'taxes_id': [Command.link(id) for id in self.other_company_tax.ids],
+            'tax_ids': [Command.link(id) for id in self.other_company_tax.ids],
         })
 
     def setUp(self):
@@ -223,7 +223,7 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
 
         # we need a default tax fixed at 15% to all product because in the test prices are based on this tax.
         # some time with the localization this may not be the case. So we force it.
-        self.env["product.product"].search([]).taxes_id = self.default_tax15
+        self.env["product.product"].search([]).tax_ids = self.default_tax15
 
         # A new tax is added to each product and this tax is from a different company.
         # This is important in the test because the added tax should not be used in the tour.

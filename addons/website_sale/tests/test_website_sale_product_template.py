@@ -14,7 +14,7 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
     def test_website_sale_get_configurator_display_price(self):
         self.website.show_line_subtotals_tax_selection = 'tax_included'
         tax = self.env['account.tax'].create({'name': "Test tax", 'amount': 10})
-        product = self._create_product(list_price=100, taxes_id=[Command.link(tax.id)])
+        product = self._create_product(list_price=100, tax_ids=[Command.link(tax.id)])
 
         env = self.env(user=self.public_user)
         with MockRequest(env, website=self.website.with_env(env)):

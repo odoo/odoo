@@ -30,7 +30,7 @@ export class ProductTemplate extends Base {
         const currency = config.currency_id;
         const extraValues = { currency_id: currency };
 
-        let taxes = this.taxes_id;
+        let taxes = this.tax_ids;
 
         // Fiscal position.
         if (fiscalPosition) {

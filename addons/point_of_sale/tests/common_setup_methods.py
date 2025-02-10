@@ -35,7 +35,7 @@ def setup_product_combo_items(self):
             "is_storable": True,
             "available_in_pos": True,
             "list_price": 10,
-            "taxes_id": [(6, 0, [tax10.id])],
+            "tax_ids": [(6, 0, [tax10.id])],
         }
     )
 
@@ -45,7 +45,7 @@ def setup_product_combo_items(self):
             "is_storable": True,
             "available_in_pos": True,
             "list_price": 11,
-            "taxes_id": [(6, 0, [tax20in.id])],
+            "tax_ids": [(6, 0, [tax20in.id])],
         }
     )
 
@@ -55,7 +55,7 @@ def setup_product_combo_items(self):
             "is_storable": True,
             "available_in_pos": True,
             "list_price": 16,
-            "taxes_id": [(6, 0, [tax30.id])],
+            "tax_ids": [(6, 0, [tax30.id])],
         }
     )
 
@@ -85,7 +85,7 @@ def setup_product_combo_items(self):
             "is_storable": True,
             "available_in_pos": True,
             "list_price": 20,
-            "taxes_id": [(6, 0, [tax10.id])],
+            "tax_ids": [(6, 0, [tax10.id])],
         }
     )
 
@@ -95,7 +95,7 @@ def setup_product_combo_items(self):
             "is_storable": True,
             "available_in_pos": True,
             "list_price": 25,
-            "taxes_id": [(6, 0, [tax20in.id])],
+            "tax_ids": [(6, 0, [tax20in.id])],
         }
     )
 
@@ -121,7 +121,7 @@ def setup_product_combo_items(self):
             "is_storable": True,
             "available_in_pos": True,
             "list_price": 30,
-            "taxes_id": [(6, 0, [tax30.id])],
+            "tax_ids": [(6, 0, [tax30.id])],
         }
     )
 
@@ -131,7 +131,7 @@ def setup_product_combo_items(self):
             "is_storable": True,
             "available_in_pos": True,
             "list_price": 32,
-            "taxes_id": [(6, 0, [tax10.id])],
+            "tax_ids": [(6, 0, [tax10.id])],
         }
     )
 
@@ -141,7 +141,7 @@ def setup_product_combo_items(self):
             "is_storable": True,
             "available_in_pos": True,
             "list_price": 40,
-            "taxes_id": [(6, 0, [tax20in.id])],
+            "tax_ids": [(6, 0, [tax20in.id])],
         }
     )
 
@@ -151,7 +151,7 @@ def setup_product_combo_items(self):
             "is_storable": True,
             "available_in_pos": True,
             "list_price": 50,
-            "taxes_id": [(6, 0, [tax20in.id])],
+            "tax_ids": [(6, 0, [tax20in.id])],
         }
     )
 

@@ -41,7 +41,7 @@ class StockMove(models.Model):
         self.ensure_one()
 
         fpos = order.fiscal_position_id or order.fiscal_position_id._get_fiscal_position(order.partner_id)
-        product_taxes = self.product_id.taxes_id._filter_taxes_by_company(order.company_id)
+        product_taxes = self.product_id.tax_ids._filter_taxes_by_company(order.company_id)
         taxes = fpos.map_tax(product_taxes)
 
         return {

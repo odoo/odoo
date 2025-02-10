@@ -30,7 +30,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.env['product.product'].create({
             'name': 'Test Product',
             'lst_price': 100,
-            'taxes_id': [Command.set(tax_group_10_20.ids)],
+            'tax_ids': [Command.set(tax_group_10_20.ids)],
             'available_in_pos': True,
         })
 
@@ -62,7 +62,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.env['product.product'].create({
             'name': 'Test Product',
             'lst_price': 100,
-            'taxes_id': [Command.set(tax_group_10_20.ids)],
+            'tax_ids': [Command.set(tax_group_10_20.ids)],
             'available_in_pos': True,
         })
 

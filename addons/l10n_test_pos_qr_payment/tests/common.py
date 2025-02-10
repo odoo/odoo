@@ -17,7 +17,7 @@ class TestPosQrCommon(AccountTestInvoicingHttpCommon):
             'name': 'Hand Bag',
             'available_in_pos': True,
             'list_price': 4.8,
-            'taxes_id': False,
+            'tax_ids': False,
         })
 
         # Create user.

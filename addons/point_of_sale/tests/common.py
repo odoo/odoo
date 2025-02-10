@@ -105,7 +105,7 @@ class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
 
         # assign this 10 percent tax on the [PCSC234] PC Assemble SC234 product
         # as a sale tax
-        cls.product3.taxes_id = [(6, 0, [account_tax_10_incl.id])]
+        cls.product3.tax_ids = [(6, 0, [account_tax_10_incl.id])]
 
         # create a VAT tax of 5%, which is added to the public price
         account_tax_05_incl = Tax.create({
@@ -129,7 +129,7 @@ class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
         cls.product4.company_id = False
         # I assign those 5 percent taxes on the PCSC349 product as a sale taxes
         cls.product4.write(
-            {'taxes_id': [(6, 0, [account_tax_05_incl.id, account_tax_05_incl_chicago.id])]})
+            {'tax_ids': [(6, 0, [account_tax_05_incl.id, account_tax_05_incl_chicago.id])]})
 
         # Set account_id in the generated repartition lines. Automatically, nothing is set.
         invoice_rep_lines = (account_tax_05_incl | account_tax_10_incl).mapped('invoice_repartition_line_ids')
@@ -510,7 +510,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
 
         def create_order_line(product, quantity, **kwargs):
             price_unit = self.pricelist._get_product_price(product, quantity)
-            tax_ids = fiscal_position.map_tax(product.taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(self.env.company)))
+            tax_ids = fiscal_position.map_tax(product.tax_ids.filtered_domain(self.env['account.tax']._check_company_domain(self.env.company)))
             discount = kwargs.get('discount', 0.0)
             price_unit_after_discount = price_unit * (1 - discount / 100.0)
             tax_values = (
@@ -587,7 +587,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         product = cls.env['product.product'].create({
             'is_storable': True,
             'available_in_pos': True,
-            'taxes_id': [(5, 0, 0)] if not tax_ids else [(6, 0, tax_ids)],
+            'tax_ids': [(5, 0, 0)] if not tax_ids else [(6, 0, tax_ids)],
             'name': name,
             'categ_id': category.id,
             'lst_price': lst_price,
