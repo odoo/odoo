@@ -8,8 +8,8 @@ class TestWebsiteAttachment(odoo.tests.HttpCase):
     def test_01_type_url_301_image(self):
         IMD = self.env['ir.model.data']
 
-        img1 = create_image_attachment(self.env, '/website/static/src/img/snippets_demo/s_banner.jpg', 's_banner_default_image.jpg')
-        img2 = create_image_attachment(self.env, '/web/image/test.an_image_url', 's_banner_default_image.jpg')
+        img1 = create_image_attachment(self.env, '/website/static/src/img/snippets_demo/s_banner.webp', 's_banner_default_image.webp')
+        img2 = create_image_attachment(self.env, '/web/image/test.an_image_url', 's_banner_default_image.webp')
 
         IMD.create({
             'name': 'an_image_url',
