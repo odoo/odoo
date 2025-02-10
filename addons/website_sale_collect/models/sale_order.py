@@ -11,17 +11,22 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     def set_delivery_line(self, carrier, amount):
-        """ Override of `website_sale` to recompute warehouse when a new delivery method
-        is not in-store anymore. """
-        self.filtered(
+        """ Override of `website_sale` to recompute warehouse and fiscal position when a new
+        delivery method is not in-store anymore. """
+        in_store_orders = self.filtered(
             lambda so: (
                 so.carrier_id.delivery_type == 'in_store' and carrier.delivery_type != 'in_store'
             )
-        )._compute_warehouse_id()
+        )
+        in_store_orders._compute_warehouse_id()
+        in_store_orders._compute_fiscal_position_id()
         return super().set_delivery_line(carrier, amount)
 
     def _set_pickup_location(self, pickup_location_data):
-        """ Override `website_sale` to set the pickup location for in-store delivery methods. """
+        """ Override `website_sale` to set the pickup location for in-store delivery methods.
+        Set account fiscal position depending on selected pickup location to correctly calculate
+        taxes.
+        """
         res = super()._set_pickup_location(pickup_location_data)
         if self.carrier_id.delivery_type != 'in_store':
             return res
@@ -29,6 +34,10 @@ class SaleOrder(models.Model):
         self.pickup_location_data = json.loads(pickup_location_data)
         if self.pickup_location_data:
             self.warehouse_id = self.pickup_location_data['id']
+            AccountFiscalPosition = self.env['account.fiscal.position'].sudo()
+            self.fiscal_position_id = AccountFiscalPosition._get_fiscal_position(
+                self.partner_id, delivery=self.warehouse_id.partner_id
+            )
         else:
             self._compute_warehouse_id()
 
