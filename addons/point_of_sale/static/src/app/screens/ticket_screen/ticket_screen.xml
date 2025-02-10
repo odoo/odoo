@@ -126,7 +126,10 @@
                     </div>
                     <div class="switchpane d-flex gap-2 m-2" t-if="ui.isSmall">
                         <t t-set="_selectedSyncedOrder" t-value="getSelectedOrder()" />
-                        <button class="btn-switchpane load-order-button primary btn btn-primary btn-lg lh-lg w-50 py-3" t-if="!isOrderSynced" t-on-click="() => this._setOrder(_selectedSyncedOrder)">
+                        <button class="btn-switchpane load-order-button primary btn btn-primary btn-lg lh-lg w-50 py-3"
+                            t-att-disabled="!_selectedSyncedOrder"
+                            t-if="!isOrderSynced"
+                            t-on-click="() => this._setOrder(_selectedSyncedOrder)">
                             <span class="d-block">Load Order</span>
                         </button>
                         <button class="btn-switchpane btn btn-lg lh-lg w-50 py-3 secondary review-button" t-att-class="{'btn-primary': isOrderSynced, 'btn-light': !isOrderSynced}" t-on-click="switchPane">
@@ -191,7 +194,9 @@
                             </t>
                             <div t-else="" class="pads d-flex gap-2 m-2 mt-0" >
                                 <BackButton onClick="() => pos.onClickBackButton()"/>
-                                <button class="button validation load-order-button w-100 btn btn-lg btn-primary py-3" t-on-click="() => this._setOrder(_selectedSyncedOrder)">
+                                <button class="button validation load-order-button w-100 btn btn-lg btn-primary py-3"
+                                    t-att-disabled="!_selectedSyncedOrder"
+                                    t-on-click="() => this._setOrder(_selectedSyncedOrder)">
                                     <span class="d-block">Load Order</span>
                                 </button>
                             </div>
