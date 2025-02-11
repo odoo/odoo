@@ -35,9 +35,9 @@
                 personas="sessions.map((s) => s.channel_member_id.persona)"
             >
                 <t t-set-slot="avatarExtraInfo" t-slot-scope="scope">
-                    <div class="o-mail-DiscussSidebarCallParticipants-status small" t-att-class="{
+                    <div class="o-mail-DiscussSidebarCallParticipants-status small bg-opacity-100" t-att-class="{
                         'position-absolute bg-inherit p-0 rounded-circle o-compact d-flex o-xsmaller text-start': compact,
-                        'ms-1 d-flex align-items-center justify-content-center': !compact,
+                        'd-flex align-items-center justify-content-center': !compact,
                     }">
                         <t t-call="mail.DiscussSidebarCallParticipants.participantShortStatus">
                             <t t-set="session" t-value="scope.persona.currentRtcSession"/>
