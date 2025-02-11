@@ -280,11 +280,12 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         for partner_type in ('supplier', 'customer'):
             partner = vals[partner_type]
             phone_number = partner.phone
-            if phone_number:
+            # 'NA' is a valid value in some cases, e.g. consolidated invoices.
+            if phone_number != 'NA':
                 phone = self._l10n_my_edi_get_formatted_phone_number(phone_number)
                 if E_164_REGEX.match(phone) is None:
                     self._l10n_my_edi_make_validation_error(constraints, 'phone_number_format', partner_type, partner.display_name)
-            else:
+            elif not phone_number:
                 self._l10n_my_edi_make_validation_error(constraints, 'phone_number_required', partner_type, partner.display_name)
 
             # We need to provide both l10n_my_identification_type and l10n_my_identification_number
@@ -439,7 +440,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             counterpart_amls = payment_terms.matched_debit_ids.debit_move_id + payment_terms.matched_credit_ids.credit_move_id
             counterpart_move_type = 'out_invoice' if invoice.move_type == 'out_refund' else 'out_refund'
             has_payments = bool(counterpart_amls.move_id.filtered(lambda move: move.move_type != counterpart_move_type))
-            is_paid = invoice.payment_state in ('in_payment', 'paid')
+            is_paid = invoice.payment_state in ('in_payment', 'paid', 'reversed')
             if is_paid and has_payments:
                 code = '04' if invoice.move_type == 'out_refund' else '14'
             else:
@@ -523,8 +524,14 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
                 line_name=record_name
             ),
             'tax_exemption_required': _(
-                "You must set a Tax Exemption Reason on the invoice : %(invoice_name)s as some taxes have the type 'Tax exemption'.",
+                "You must set a Tax Exemption Reason on the invoice : %(invoice_name)s as some taxes have the type 'Tax exemption' without a reason set.",
                 invoice_name=record_name
+            ),
+            'tax_exemption_required_on_tax': _(
+                "You must set a Tax Exemption Reason on each tax exempt taxes in order to use them in a Myinvois Document.",
+            ),
+            'missing_general_public': _(
+                "You must have a commercial partner named 'General Public' with a VAT number set to 'EI00000000010' in order to proceed.",
             ),
         }
 
