@@ -122,6 +122,7 @@ def _create_empty_database(name):
         db = odoo.sql_db.db_connect(name)
         with db.cursor() as cr:
             cr.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
+            cr.execute("CREATE EXTENSION IF NOT EXISTS vector")
             if odoo.tools.config['unaccent']:
                 cr.execute("CREATE EXTENSION IF NOT EXISTS unaccent")
                 # From PostgreSQL's point of view, making 'unaccent' immutable is incorrect
