@@ -38,7 +38,7 @@
                                 <field name="label">balance</field>
                                 <field name="engine">domain</field>
                                 <field name="formula" eval="['|', '|', '|', ('tax_tag_ids', '=', '+mod115[02]'), ('tax_tag_ids', '=', '+mod115[03]'), ('tax_tag_ids', '=', '-mod115[02]'), ('tax_tag_ids', '=', '-mod115[03]')]"/>
-                                <field name="subformula">count_rows</field>
+                                <field name="subformula">count_rows(id)</field>
                                 <field name="figure_type">integer</field>
                             </record>
                         </field>
