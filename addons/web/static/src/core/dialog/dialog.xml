@@ -46,7 +46,7 @@
             <button type="button" class="fa fa-expand btn o_expand_button" aria-label="Expand" tabindex="-1" t-on-click="onExpand"/>
         </t>
         <t t-if="!fullscreen">
-            <button type="button" class="btn-close position-absolute top-0 end-0 mt-1 me-1" aria-label="Close" tabindex="-1" t-on-click="dismiss"></button>
+            <button type="button" class="btn-close" t-att-class="getDesign == 'minimal' ? 'position-absolute top-0 end-0 mt-1 me-1' : ''" aria-label="Close" tabindex="-1" t-on-click="dismiss"></button>
         </t>
     </t>
 </templates>

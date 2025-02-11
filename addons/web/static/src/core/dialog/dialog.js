@@ -175,10 +175,12 @@ export class Dialog extends Component {
 
             // Add the CSS class that triggers the dismissal animation and
             // force a browser redraw
+            [modalEl, modalCard].forEach(el => {
+                el.style.animation = 'none';
+                void el.offsetWidth; // Force reflow
+                el.style.animation = '';
+            });
             modalEl.classList.add('o_modal_is_dismissing');
-            modalCard.style.animation = 'none';
-            void modalCard.offsetWidth;
-            modalCard.style.animation = '';
 
             await new Promise(resolve => {
                 // Wait for the animation to finish.
