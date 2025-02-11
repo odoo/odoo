@@ -39,9 +39,6 @@
                         </setting>
                     </block>
                     <block title="Invoicing" name="invoicing_settings_container">
-                        <setting id="quantities_billed_vendor" title="This default value is applied to any new product created. This can be changed in the product detail form." documentation="/applications/inventory_and_mrp/purchase/manage_deals/control_bills.html" help="Quantities billed by vendors">
-                            <field name="default_purchase_method" class="o_light_label" widget="radio"/>
-                        </setting>
                         <setting id="three_way_matching" title="If enabled, activates 3-way matching on vendor bills : the items must be received in order to pay the invoice." documentation="/applications/inventory_and_mrp/purchase/manage_deals/control_bills.html" help="Make sure you only pay bills for which you received the goods you ordered">
                             <field name="module_account_3way_match" string="3-way matching" widget="upgrade_boolean"/>
                         </setting>
