@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_blog.BlogPostTagsOption">
+    <BuilderRow label.translate="Tags" preview="false">
+        <ModelMany2Many baseModel="'blog.post'"
+            applyTo="'#o_wblog_post_name'"
+            action="'setTags'"
+            createAction="'createTag'"
+            m2oField="'tag_ids'"
+            recordId="domState.blogId"
+            useModelEditState="props.useModelEditState"
+        />
+    </BuilderRow>
+
+<!-- TODO when many2many is fully converted
+                data-no-check="true"
+-->
+</t>
+</templates>

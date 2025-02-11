@@ -1,31 +1,47 @@
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { xml } from "@odoo/owl";
+import { Component, reactive, xml } from "@odoo/owl";
 import { delay } from "@web/core/utils/concurrency";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../../helpers";
+import { defaultBuilderComponents } from "@html_builder/core/default_builder_components";
 
 defineWebsiteModels();
 
-test("many2many: find tag, select tag, unselect tag", async () => {
+test("basic many2many: find tag, select tag, unselect tag", async () => {
     onRpc("/web/dataset/call_kw/test/name_search", async (args) => [
         [1, "First"],
         [2, "Second"],
         [3, "Third"],
     ]);
+    class TestComponent extends Component {
+        static template = xml`<BasicMany2Many selection="props.selection" model="'test'" setSelection="props.setSelection.bind(this)"/>`;
+        static props = {
+            selection: Array,
+            setSelection: Function,
+        };
+        static components = { ...defaultBuilderComponents };
+    }
+    const selection = reactive([]);
     addOption({
         selector: ".test-options-target",
-        template: xml`<BuilderMany2Many dataAttributeAction="'test'" model="'test'" limit="10"/>`,
+        Component: TestComponent,
+        props: {
+            selection: selection,
+            setSelection(newSelection) {
+                selection.length = 0;
+                for (const item of newSelection) {
+                    selection.push(item);
+                }
+            },
+        },
     });
-    const { getEditableContent } = await setupWebsiteBuilder(
-        `<div class="test-options-target">b</div>`
-    );
-    const editableContent = getEditableContent();
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
 
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toBeDisplayed();
     expect("table tr").toHaveCount(0);
-    expect(editableContent).toHaveInnerHTML(`<div class="test-options-target">b</div>`);
+    expect(selection).toEqual([]);
 
     await contains(".btn.o-dropdown").click();
     expect("input").toHaveCount(1);
@@ -34,9 +50,7 @@ test("many2many: find tag, select tag, unselect tag", async () => {
     await animationFrame();
     expect("span.o-dropdown-item").toHaveCount(3);
     await contains("span.o-dropdown-item").click();
-    expect(editableContent).toHaveInnerHTML(
-        `<div class="test-options-target" data-test="[{&quot;id&quot;:1,&quot;name&quot;:&quot;First&quot;}]">b</div>`
-    );
+    expect(selection).toEqual([{ id: 1, name: "First" }]);
     expect("table tr").toHaveCount(1);
 
     await contains(".btn.o-dropdown").click();
@@ -45,15 +59,14 @@ test("many2many: find tag, select tag, unselect tag", async () => {
     await animationFrame();
     expect("span.o-dropdown-item").toHaveCount(2);
     await contains("span.o-dropdown-item").click();
-    expect(editableContent).toHaveInnerHTML(
-        `<div class="test-options-target" data-test="[{&quot;id&quot;:1,&quot;name&quot;:&quot;First&quot;},{&quot;id&quot;:2,&quot;name&quot;:&quot;Second&quot;}]">b</div>`
-    );
+    expect(selection).toEqual([
+        { id: 1, name: "First" },
+        { id: 2, name: "Second" },
+    ]);
     expect("table tr").toHaveCount(2);
 
     await contains("button.fa-minus").click();
-    expect(editableContent).toHaveInnerHTML(
-        `<div class="test-options-target" data-test="[{&quot;id&quot;:2,&quot;name&quot;:&quot;Second&quot;}]">b</div>`
-    );
+    expect(selection).toEqual([{ id: 2, name: "Second" }]);
     expect("table tr").toHaveCount(1);
     expect("table input").toHaveValue("Second");
 });

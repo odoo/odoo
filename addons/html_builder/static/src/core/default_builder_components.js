@@ -11,7 +11,9 @@ import { BuilderTextInput } from "./building_blocks/builder_text_input";
 import { BuilderCheckbox } from "./building_blocks/builder_checkbox";
 import { BuilderRange } from "./building_blocks/builder_range";
 import { BuilderContext } from "./building_blocks/builder_context";
+import { BasicMany2Many } from "./building_blocks/basic_many2many";
 import { BuilderMany2Many } from "./building_blocks/builder_many2many";
+import { ModelMany2Many } from "./building_blocks/model_many2many";
 
 export const defaultBuilderComponents = {
     BuilderContext,
@@ -27,5 +29,7 @@ export const defaultBuilderComponents = {
     BuilderSelect,
     BuilderSelectItem,
     BuilderCheckbox,
+    BasicMany2Many,
     BuilderMany2Many,
+    ModelMany2Many,
 };

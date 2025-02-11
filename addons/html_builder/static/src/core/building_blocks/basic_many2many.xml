@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BasicMany2ManySearchInput">
+    <input placeholder="Search for records..." t-on-input="props.onSearch" t-on-focus="props.onSearch" t-ref="autofocus"/>
+</t>
+
+<t t-name="html_builder.BasicMany2Many">
+    <div>
+        <table>
+            <tr t-foreach="props.selection" t-as="entry" t-key="entry.id">
+                <td>
+                    <input type="text" disabled="" t-att-value="entry.name"/>
+                </td>
+                <td>
+                    <button class="o_we_link o_we_text_danger fa fa-fw fa-minus" t-on-click="() => this.unselect(entry.id)"/>
+                </td>
+            </tr>
+        </table>
+        <Dropdown>
+            <button class="btn">Choose a record...</button>
+            <t t-set-slot="content">
+                <div>
+                    <BasicMany2ManySearchInput onSearch="onSearch.bind(this)"/>
+                </div>
+                <t t-foreach="state.searchResults" t-as="entry" t-key="entry.id">
+                    <t t-if="!props.selection.some((sel) => sel.id == entry.id)">
+                     <DropdownItem onSelected="() => this.select(entry)">
+                         <div t-out="entry.name"/>
+                     </DropdownItem>
+                    </t>
+                </t>
+                <t t-if="props.hasCreate">
+                    <div class="o_we_m2o_create">
+                        <input type="text" autocomplete="chrome-off" placeholder="" class="text-start" t-ref="createInput"/>
+                        <button class="btn active" t-on-click="() => this.create()">Create</button>
+                    </div>
+                </t>
+            </t>
+        </Dropdown>
+    </div>
+</t>
+
+</templates>
