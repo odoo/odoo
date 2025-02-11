@@ -101,6 +101,9 @@ class PurchaseOrder(models.Model):
         ('cancel', 'Cancelled')
     ], string='Status', readonly=True, index=True, copy=False, default='draft', tracking=True)
     order_line = fields.One2many('purchase.order.line', 'order_id', string='Order Lines', copy=True)
+    acknowledged = fields.Boolean(
+        'Acknowledged', copy=False, tracking=True,
+        help="It indicates that the vendor has acknowledged the receipt of the purchase order.")
     notes = fields.Html('Terms and Conditions')
 
     partner_bill_count = fields.Integer(related='partner_id.supplier_invoice_count')
@@ -500,6 +503,9 @@ class PurchaseOrder(models.Model):
             'context': ctx,
         }
 
+    def action_acknowledge(self):
+        self.acknowledged = True
+
     def print_quotation(self):
         self.write({'state': "sent"})
         return self.env.ref('purchase.report_purchase_quotation').report_action(self)
@@ -892,7 +898,7 @@ class PurchaseOrder(models.Model):
         rfq_late_group = self.env['purchase.order']._read_group(rfq_late_domain, groupby, aggregate)
         _update('late', result, rfq_late_group)
 
-        rfq_not_acknowledge = [('state', '=', 'purchase'), ('mail_reception_confirmed', '=', False)]
+        rfq_not_acknowledge = [('state', '=', 'purchase'), ('acknowledged', '=', False)]
         rfq_not_acknowledge_group = self.env['purchase.order']._read_group(rfq_not_acknowledge, groupby, aggregate)
         _update('not_acknowledged', result, rfq_not_acknowledge_group)
 
@@ -1081,6 +1087,9 @@ class PurchaseOrder(models.Model):
             )
 
         return product_infos
+
+    def get_acknowledge_url(self):
+        return self.get_portal_url(query_string='&acknowledge=True')
 
     def get_confirm_url(self, confirm_type=None):
         """Create url for confirm reminder or purchase reception email for sending

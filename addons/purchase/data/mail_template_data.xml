@@ -62,6 +62,11 @@
             The receipt is expected for <span style="font-weight:bold;" t-out="format_date(object.date_planned) or ''">05/05/2021</span>.
             <br/><br/>
             Could you please acknowledge the receipt of this order?
+            <br/><br/>
+            <a t-att-href="object.get_acknowledge_url()"
+                target="_blank"
+                style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
+                Acknowledge</a>
         </t>
         <t t-if="not is_html_empty(object.user_id.signature)">
             <br/><br/>
