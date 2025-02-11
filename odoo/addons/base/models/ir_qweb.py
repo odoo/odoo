@@ -245,6 +245,7 @@ Serves the called template in place of the current ``t-call`` node.
 Here are the different steps performed by the generated python code:
 
 #. copy the ``values`` dictionary;
+#  define values from ``t-argf``,  ``t-arg`` and  ``t-args``;
 #. render the content (``_compile_directive_inner_content``) of the tag in a
    separate method called with the previous copied values. This values can be
    updated via t-set. The visible content of the rendering of the sub-content
@@ -732,8 +733,8 @@ class IrQweb(models.AbstractModel):
         options = {k: compile_context.get(k) for k in self._get_template_cache_keys() + ['ref', 'ref_name', 'ref_xml']}
 
         # generate code
-
-        def_name = TO_VARNAME_REGEXP.sub(r'_', f'template_{ref}')
+        ref_name = compile_context['ref_name'] or ''
+        def_name = TO_VARNAME_REGEXP.sub(r'_', f'template_{ref_name if "<" not in ref_name else ""}_{ref}')
 
         name_gen = count()
         compile_context['make_name'] = lambda prefix: f"{def_name}_{prefix}_{next(name_gen)}"
@@ -2168,17 +2169,41 @@ class IrQweb(models.AbstractModel):
         # values (t-out="0" from content and variables from t-set)
         def_name = compile_context['make_name']('t_call')
 
-        # values from content (t-out="0" and t-set inside the content)
+        # values from content (t-out="0")
         code_content = [f"def {def_name}(self, values):"]
         code_content.extend(self._compile_directive(el, compile_context, 'inner-content', 1))
         self._append_text('', compile_context) # To ensure the template function is a generator and doesn't become a regular function
         code_content.extend(self._flush_text(compile_context, 1, rstrip=True))
         compile_context['template_functions'][def_name] = code_content
 
+        # values
         code.append(indent_code(f"""
             t_call_values = values.copy()
             t_call_values[{T_CALL_SLOT}] = list({def_name}(self, t_call_values))
             """, level))
+
+        # args
+        for key in list(el.attrib):
+            if key.startswith('t-argf-'):
+                value = el.attrib.pop(key)
+                code.append(indent_code(f"t_call_values[{key[7:]!r}] = {self._compile_format(value)}", level))
+            elif key.startswith('t-argt-'):
+                value = el.attrib.pop(key)
+                code.append(indent_code(f"t_call_values[{key[7:]!r}] = {value!r}", level))
+            elif key.startswith('t-arg-'):
+                value = el.attrib.pop(key)
+                code.append(indent_code(f"t_call_values[{key[6:]!r}] = {self._compile_expr(value)}", level))
+            elif key == 't-args':
+                value = el.attrib.pop(key)
+                code.append(indent_code(f"""
+                    atts_value = {self._compile_expr(value)}
+                    if isinstance(atts_value, dict):
+                        t_call_values.update(atts_value)
+                    elif isinstance(atts_value, (list, tuple)) and not isinstance(atts_value[0], (list, tuple)):
+                        t_call_values.update([atts_value])
+                    elif isinstance(atts_value, (list, tuple)):
+                        t_call_values.update(dict(atts_value))
+                    """, level))
 
         template = self._compile_format(expr)
 
