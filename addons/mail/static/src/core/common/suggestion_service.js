@@ -263,12 +263,7 @@ export class SuggestionService {
     sortPartnerSuggestions(partners, searchTerm = "", thread = undefined) {
         const cleanedSearchTerm = cleanTerm(searchTerm);
         const compareFunctions = partnerCompareRegistry.getAll();
-        const context = this.sortPartnerSuggestionsContext();
-        const memberPartnerIds = new Set(
-            thread?.channel_member_ids
-                .filter((member) => member.persona.type === "partner")
-                .map((member) => member.persona.id)
-        );
+        const context = this.sortPartnerSuggestionsContext(thread);
         return partners.sort((p1, p2) => {
             p1 = toRaw(p1);
             p2 = toRaw(p2);
@@ -278,7 +273,6 @@ export class SuggestionService {
             for (const fn of compareFunctions) {
                 const result = fn(p1, p2, {
                     env: this.env,
-                    memberPartnerIds,
                     searchTerm: cleanedSearchTerm,
                     thread,
                     context,
