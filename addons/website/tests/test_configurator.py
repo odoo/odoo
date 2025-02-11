@@ -61,8 +61,8 @@ class TestConfiguratorTranslation(TestConfiguratorCommon):
             'overwrite': True,
             'lang_ids': [(6, 0, [parseltongue.id])],
         }).lang_install()
-        feature = self.env['website.configurator.feature'].search([('name', '=', 'Privacy Policy')])
-        feature.with_context(lang=parseltongue.code).write({'name': 'Parseltongue_privacy'})
+        feature = self.env['website.configurator.feature'].search([('name', '=', 'About Us')])
+        feature.with_context(lang=parseltongue.code).write({'name': 'Parseltongue_aboutus'})
         self.env.ref('base.user_admin').write({'lang': parseltongue.code})
         website_fr = self.env['website'].create({
             'name': "New website",
