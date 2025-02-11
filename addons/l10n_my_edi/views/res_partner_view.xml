@@ -22,6 +22,8 @@
                                 <span class="text-danger fa fa-close" title="Validation Failed" invisible="not l10n_my_edi_display_tin_warning or l10n_my_tin_validation_state != 'invalid'"/>
                             </span>
                         </div>
+                        <field name="l10n_my_edi_industrial_classification" readonly="parent_id" options='{"no_open": True}'/>
+                        <field name="l10n_my_edi_malaysian_tin" placeholder="EI00000000020" readonly="parent_id"/>
                     </group>
                 </group>
             </group>
