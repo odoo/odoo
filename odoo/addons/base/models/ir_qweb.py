@@ -222,8 +222,8 @@ expression and add each key-value ``t-options-key="expression value"`` to this
 dict. (for example: ``t-options="{'widget': 'float'}"`` is equal to
 ``t-options-widget="'float'"``)
 
-``t-att``, ``t-att-*`` and ``t-attf-*``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+``t-att``, ``t-att-*``, ``t-attf-*`` and ``t-attf-*.translate``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 **Values**: python expression (or format string expression for ``t-attf-``)
 
 Compile the attributes to create ``values['__qweb_attrs__']`` dictionary code
@@ -234,7 +234,8 @@ and is equal to ``t-attf-class="float_{{1}}")
 
 The attributes come from new namespaces, static elements (not preceded
 by ``t-``) and dynamic attributes ``t-att``, attributes prefixed by ``t-att-``
-(python expression) or ``t-attf`` (format string expression).
+(python expression) or ``t-attf`` (format string expression, translated if
+use ``.translate``).
 
 ``t-call``
 ~~~~~~~~~~
@@ -245,6 +246,7 @@ Serves the called template in place of the current ``t-call`` node.
 Here are the different steps performed by the generated python code:
 
 #. copy the ``values`` dictionary;
+#  define values from ``t-arg``, ``t-argf`` or ``t-argf-*.translate``;
 #. render the content (``_compile_directive_inner_content``) of the tag in a
    separate method called with the previous copied values. This values can be
    updated via t-set. The visible content of the rendering of the sub-content
@@ -316,19 +318,14 @@ The generated code update the key ``values`` dictionary equal to the value
 defined by ``t-value`` expression, ``t-valuef`` format string expression or
 to the ``MarkupSafe`` rendering come from the content of the node.
 
-``t-value``
-~~~~~~~~~~~
-**Values**: python expression
+``t-value``, ``t-valuef`` and ``t-valuef.translate``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+**Values**: python expression (or format string expression for ``t-attf-``)
 
-The compilation method only validates if ``t-value`` and ``t-set`` are on the
+The compilation method only validates if this directive and ``t-set`` are on the
 same node.
+The format string expression can be translated if use ``.translate``.
 
-``t-valuef``
-~~~~~~~~~~~~
-**Values**: format string expression
-
-The compilation method only validates if ``t-valuef`` and ``t-set`` are on the
-same node.
 
 Technical directives
 --------------------
@@ -737,8 +734,8 @@ class IrQweb(models.AbstractModel):
         options = {k: compile_context.get(k) for k in self._get_template_cache_keys() + ['ref', 'ref_name', 'ref_xml']}
 
         # generate code
-
-        def_name = TO_VARNAME_REGEXP.sub(r'_', f'template_{ref}')
+        ref_name = compile_context['ref_name'] or ''
+        def_name = TO_VARNAME_REGEXP.sub(r'_', f'template_{ref_name if "<" not in ref_name else ""}_{ref}')
 
         name_gen = count()
         compile_context['make_name'] = lambda prefix: f"{def_name}_{prefix}_{next(name_gen)}"
@@ -1433,7 +1430,8 @@ class IrQweb(models.AbstractModel):
 
         # compile the directives still present on the element
         for directive in compile_context['iter_directives']:
-            if ('t-' + directive) in el.attrib:
+            t_directive = f't-{directive}'
+            if t_directive in el.attrib or any(t_directive == key.partition('.')[0] for key in el.attrib):
                 code.extend(self._compile_directive(el, compile_context, directive, level))
             elif directive == 'groups':
                 if directive in el.attrib:
@@ -1564,7 +1562,8 @@ class IrQweb(models.AbstractModel):
         for key in list(el.attrib):
             if key.startswith('t-attf-'):
                 value = el.attrib.pop(key)
-                code.append(indent_code(f"attrs[{key[7:]!r}] = {self._compile_format(value)}", level))
+                name = key[7:-10] if key.endswith('.translate') else key[7:]
+                code.append(indent_code(f"attrs[{name!r}] = {self._compile_format(value)}", level))
             elif key.startswith('t-att-'):
                 value = el.attrib.pop(key)
                 code.append(indent_code(f"attrs[{key[6:]!r}] = {self._compile_expr(value)}", level))
@@ -1649,6 +1648,7 @@ class IrQweb(models.AbstractModel):
         There are 3 kinds of `t-set`:
         * `t-value` containing python code;
         * `t-valuef` containing strings to format;
+        * `t-valuef.translate` containing translated strings to format;
         * whose value is the content of the tag (being Markup safe).
 
         The code will contain the assignment of the dynamically generated value.
@@ -1663,7 +1663,7 @@ class IrQweb(models.AbstractModel):
             if varname != T_CALL_SLOT and varname[0] != '{' and not VARNAME_REGEXP.match(varname):
                 raise ValueError('The varname can only contain alphanumeric characters and underscores.')
 
-            if 't-value' in el.attrib or 't-valuef' in el.attrib or varname[0] == '{':
+            if 't-value' in el.attrib or 't-valuef' in el.attrib or 't-valuef.translate' in el.attrib or varname[0] == '{':
                 el.attrib.pop('t-inner-content') # The content is considered empty.
                 if varname == T_CALL_SLOT:
                     raise SyntaxError('t-set="0" should not be set from t-value or t-valuef')
@@ -1673,6 +1673,9 @@ class IrQweb(models.AbstractModel):
                 code.append(indent_code(f"values[{varname!r}] = {self._compile_expr(expr)}", level))
             elif 't-valuef' in el.attrib:
                 exprf = el.attrib.pop('t-valuef')
+                code.append(indent_code(f"values[{varname!r}] = {self._compile_format(exprf)}", level))
+            elif 't-valuef.translate' in el.attrib:
+                exprf = el.attrib.pop('t-valuef.translate')
                 code.append(indent_code(f"values[{varname!r}] = {self._compile_format(exprf)}", level))
             elif varname[0] == '{':
                 code.append(indent_code(f"values.update({self._compile_expr(varname)})", level))
@@ -2173,17 +2176,39 @@ class IrQweb(models.AbstractModel):
         # values (t-out="0" from content and variables from t-set)
         def_name = compile_context['make_name']('t_call')
 
-        # values from content (t-out="0" and t-set inside the content)
+        # values from content (t-out="0")
         code_content = [f"def {def_name}(self, values):"]
         code_content.extend(self._compile_directive(el, compile_context, 'inner-content', 1))
         self._append_text('', compile_context) # To ensure the template function is a generator and doesn't become a regular function
         code_content.extend(self._flush_text(compile_context, 1, rstrip=True))
         compile_context['template_functions'][def_name] = code_content
 
+        # values
         code.append(indent_code(f"""
             t_call_values = values.copy()
             t_call_values[{T_CALL_SLOT}] = list({def_name}(self, t_call_values))
             """, level))
+
+        # args
+        for key in list(el.attrib):
+            if key.startswith('t-argf-'):
+                name = key[7:-10] if key.endswith('.translate') else key[7:]
+                value = el.attrib.pop(key)
+                code.append(indent_code(f"t_call_values[{name!r}] = {self._compile_format(value)}", level))
+            elif key.startswith('t-arg-'):
+                value = el.attrib.pop(key)
+                code.append(indent_code(f"t_call_values[{key[6:]!r}] = {self._compile_expr(value)}", level))
+            elif key == 't-args':
+                value = el.attrib.pop(key)
+                code.append(indent_code(f"""
+                    atts_value = {self._compile_expr(value)}
+                    if isinstance(atts_value, dict):
+                        t_call_values.update(atts_value)
+                    elif isinstance(atts_value, (list, tuple)) and not isinstance(atts_value[0], (list, tuple)):
+                        t_call_values.update([atts_value])
+                    elif isinstance(atts_value, (list, tuple)):
+                        t_call_values.update(dict(atts_value))
+                    """, level))
 
         template = self._compile_format(expr)
 
