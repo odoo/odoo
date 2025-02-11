@@ -1,37 +1,31 @@
-import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
+import { Interaction } from "@web/public/interaction";
 
 export class PortalPrepayment extends Interaction {
     static selector = ".o_portal_sale_sidebar";
     dynamicSelectors = {
         ...this.dynamicSelectors,
         _amountPrepaymentButton: () => this.amountPrepaymentButton,
-        _amountTotalButton: () => this.amountPrepaymentButton,
+        _amountTotalButton: () => this.amountTotalButton,
     };
     dynamicContent = {
         _amountPrepaymentButton: {
-            "t-on-click": this.onAmountPrepaymentButtonClick,
+            "t-on-click": () => this.reloadAmount(true),
             "t-att-class": () => ({ "active": this.isPartialPayment }),
         },
         _amountTotalButton: {
-            "t-on-click": this.onAmountTotalButtonClick,
+            "t-on-click": () => this.reloadAmount(false),
             "t-att-class": () => ({ "active": !this.isPartialPayment }),
         },
-        "span[id='o_sale_portal_use_amount_prepayment'], span[id='o_sale_portal_use_amount_total']": {
-            "t-att-style": () => ({
-                "transition-duration": "400ms",
-                "transition-property": "opacity",
-            }),
-        },
         "span[id='o_sale_portal_use_amount_prepayment']": {
-            "t-att-style": () => ({ "opacity": this.displayTotal ? 0 : 1 }),
+            "t-att-class": () => ({ "d-none": !this.isPartialPayment }),
         },
         "span[id='o_sale_portal_use_amount_total']": {
-            "t-att-style": () => ({ "opacity": this.displayTotal ? 1 : 0 }),
+            "t-att-class": () => ({ "d-none": this.isPartialPayment }),
         },
     };
 
-    start() {
+    setup() {
         this.amountTotalButton = document.querySelector("button[name='o_sale_portal_amount_total_button']");
         this.amountPrepaymentButton = document.querySelector("button[name='o_sale_portal_amount_prepayment_button']");
 
@@ -42,29 +36,20 @@ export class PortalPrepayment extends Interaction {
         }
 
         const params = new URLSearchParams(window.location.search);
-        this.isPartialPayment = !(params.has('downpayment') ? params.get('downpayment') === 'true' : true);
-        this.displayTotal = !this.isPartialPayment;
-        const showPaymentModal = params.get('showPaymentModal') === 'true';
+        this.isPartialPayment = params.has('downpayment') ? params.get('downpayment') === 'true' : true;
+        this.showPaymentModal = params.get('showPaymentModal') === 'true';
+    }
 
+    start() {
         // When updating the amount re-open the modal.
-        if (showPaymentModal) {
-            this.querySelector("#o_sale_portal_paynow")?.click();
+        if (this.showPaymentModal) {
+            document.querySelector("#o_sale_portal_paynow")?.click();
         }
     }
 
-    onAmountPrepaymentButtonClick() {
-        this.isPartialPayment = true;
-        this.reloadAmount();
-    }
-
-    onAmountTotalButtonClick() {
-        this.isPartialPayment = false;
-        this.reloadAmount();
-    }
-
-    reloadAmount() {
+    reloadAmount(isPartialPayment) {
         const searchParams = new URLSearchParams(window.location.search);
-        searchParams.set("downpayment", this.isPartialPayment);
+        searchParams.set("downpayment", isPartialPayment);
         searchParams.set("showPaymentModal", true);
         window.location.search = searchParams.toString();
     }
