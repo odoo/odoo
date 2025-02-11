@@ -416,16 +416,18 @@ export function getClientActionUrl(path, edition) {
 }
 
 export function clickOnExtraMenuItem(stepOptions, backend = false) {
-    return Object.assign(
-        {
-            content: "Click on the extra menu dropdown toggle if it is there and not shown",
-            trigger: `${
-                backend ? ":iframe" : ""
-            } ul.top_menu .o_extra_menu_items a[role=menuitem]:not(.show)`,
-            run: "click",
+    return Object.assign({
+        content: "Click on the extra menu dropdown toggle if it is there",
+        trigger: `${backend ? ":iframe" : ""} .top_menu`,
+        async run(actions) {
+            // Note: the button might not exist (it only appear if there is many menu items)
+            const extraMenuButton = this.anchor.querySelector(".o_extra_menu_items a.nav-link");
+            // Don't click on the extra menu button if it's already visible.
+            if (extraMenuButton && !extraMenuButton.classList.contains("show")) {
+                await actions.click(extraMenuButton);
+            }
         },
-        stepOptions
-    );
+    }, stepOptions);
 }
 
 /**
