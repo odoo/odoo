@@ -69,7 +69,7 @@ registerWebsitePreviewTour('course_publisher_standard', {
     run: "click",
 }, {
     content: 'eLearning: is the Corgi set ?',
-    trigger: ':iframe img.o_wslides_course_pict[data-original-src$="GoldWinnerPembrookeWelshCorgi.jpg"]',
+    trigger: ':iframe img.o_wslides_course_pict.o_modified_image_to_save[data-original-src$="GoldWinnerPembrookeWelshCorgi.jpg"][src^="data:image"]',
     run: "click",
 }, {
     content: 'eLearning: save course edition',
@@ -96,9 +96,17 @@ registerWebsitePreviewTour('course_publisher_standard', {
     content: "eLearning: save article",
     trigger: '.o_we_website_top_actions button.btn-primary:contains("Save")',
     run: "click",
-}, {
+},
+{
+    trigger: "[is-ready=true]:iframe body:not(.editor_enable)",
+},
+{
+    trigger:
+        ":iframe main:has(.o_wslides_course_nav a:contains(Déboulonnate)):has(.o_wslides_lesson_header_container:contains(completed)):has(.o_wslides_lesson_content:contains(screen to edit))",
+},
+{
     content: "eLearning: use breadcrumb to go back to channel",
-    trigger: ':iframe .o_wslides_course_nav a:contains("Déboulonnate")',
+    trigger: ':iframe .o_wslides_course_nav a:contains("Déboulonnate")[href^="/slides/how-to-deboulonnate"]',
     run: "click",
 }],
     slidesTourTools.addImageToSection('Introduction', 'Overview', true),
