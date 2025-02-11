@@ -39,20 +39,17 @@ list of filtered posts (by date or tag).
             <t t-if="not tag and not date_begin and not search">
                 <div id="o_wblog_blog_top_droppable"/>
                 <t t-if="blog">
-                    <t t-set="oe_structure_blog_single_header_description">Edit the '<t t-esc="blog.name"/>' page header.</t>
-                    <div t-field="blog.content" t-att-data-editor-sub-message="oe_structure_blog_single_header_description"/>
+                    <div t-field="blog.content" t-attf-data-editor-sub-message.translate="Edit the '{{blog.name}}' page header."/>
                 </t>
                 <t t-elif="blogs">
-                    <t t-set="oe_structure_blog_all_header_description">Edit the 'All Blogs' page header.</t>
-                    <div class="oe_structure" t-att-data-editor-sub-message="oe_structure_blog_all_header_description"/>
+                    <div class="oe_structure" data-editor-sub-message.translate="Edit the 'All Blogs' page header."/>
                 </t>
             </t>
             <t t-else="">
                 <!-- Droppable-area for filtered results (tags or date) -->
-                <t t-set="oe_structure_blog_filtered_header_description">Edit the 'Filter Results' page header.</t>
                 <div class="oe_structure"
                     id="oe_structure_blog_filtered_header"
-                    t-att-data-editor-sub-message="oe_structure_blog_filtered_header_description"/>
+                    data-editor-sub-message.translate="Edit the 'Filter Results' page header."/>
             </t>
         </div>
 

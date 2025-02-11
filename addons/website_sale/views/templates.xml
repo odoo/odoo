@@ -1285,8 +1285,7 @@
         <t t-call="website.layout">
             <t t-set="additional_title" t-value="product.name" />
             <div id="wrap" class="js_sale o_wsale_product_page">
-                <t t-set="editor_message">DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS</t>
-                <div class="oe_structure oe_empty oe_structure_not_nearest" id="oe_structure_website_sale_product_1" t-att-data-editor-message="editor_message"/>
+                <div class="oe_structure oe_empty oe_structure_not_nearest" id="oe_structure_website_sale_product_1" data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"/>
                 <section id="product_detail"
                          t-attf-class="oe_website_sale container my-3 my-lg-4 #{'discount'
                             if combination_info['has_discounted_price'] else ''}"
@@ -1502,7 +1501,7 @@
                     t-field="product.website_description"
                     class="oe_structure oe_empty mt16"
                 />
-                <div class="oe_structure oe_empty oe_structure_not_nearest mt16" id="oe_structure_website_sale_product_2" t-att-data-editor-message="editor_message"/>
+                <div class="oe_structure oe_empty oe_structure_not_nearest mt16" id="oe_structure_website_sale_product_2" data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"/>
             </div>
         </t>
     </template>

@@ -309,6 +309,39 @@ class TranslationToolsTestCase(BaseCase):
             f'translation {invalid!r} has non-translatable elements(elements not in TRANSLATED_ELEMENTS)',
         )
 
+    def test_translate_xml_fstring(self):
+        """ Test xml_translate() with formated string (ruby or jinja). """
+        terms = []
+        source = """<t t-name="stuff">
+                        <t t-set="first" t-value="33"/>
+                        <t t-set="second" t-valuef="no-translate-{{first}}"/>
+                        <t t-set="toto" t-valuef.translate="My ro-{{first}}"/>
+                        <span t-attf-title="Big #{toto} first {{first}} second:{{second}}"/>
+
+                        <div data-stuff.translate="cat"/>
+                    </t>"""
+        result = xml_translate(terms.append, source)
+        self.assertEqual(result, source)
+        self.assertItemsEqual(terms,
+            ['My ro-{{0}}', 'Big {{0}} first {{1}} second:{{2}}', 'cat'])
+
+        # try to insert malicious expression
+        malicous = {
+            'My ro-{{0}}': 'Translated ro-{{0}} and {{1+1}}',
+            'Big {{0}} first {{1}} second:{{2}}': 'Big Translated {{0}} second ({{2}}) first {{1+1}}',
+            'cat': 'dog',
+        }
+        result = xml_translate(malicous.get, source)
+
+        self.assertEqual(result, """<t t-name="stuff">
+                        <t t-set="first" t-value="33"/>
+                        <t t-set="second" t-valuef="no-translate-{{first}}"/>
+                        <t t-set="toto" t-valuef.translate="Translated ro-{{first}} and None"/>
+                        <span t-attf-title="Big Translated #{toto} second ({{second}}) first None"/>
+
+                        <div data-stuff.translate="dog"/>
+                    </t>""")
+
     def test_translate_html(self):
         """ Test html_translate(). """
         source = """<blockquote>A <h2>B</h2> C</blockquote>"""
