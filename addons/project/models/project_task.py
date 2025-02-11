@@ -1475,8 +1475,17 @@ class ProjectTask(models.Model):
             message, msg_vals=msg_vals, model_description=model_description,
             force_email_company=force_email_company, force_email_lang=force_email_lang
         )
-        if self.stage_id:
-            render_context['subtitles'].append(_('Stage: %s', self.stage_id.name))
+        project_name = self.project_id.sudo().name
+        stage_name = self.stage_id.name
+        subtitles = ""
+        if project_name and stage_name:
+            subtitles = _('Project: %(project_name)s, Stage: %(stage_name)s', project_name=project_name, stage_name=stage_name)
+        elif project_name:
+            subtitles = _('Project: %(project_name)s', project_name=project_name)
+        elif stage_name:
+            subtitles = _('Stage: %(stage_name)s', stage_name=stage_name)
+        if subtitles:
+            render_context['subtitles'].append(subtitles)
         return render_context
 
     def _send_email_notify_to_cc(self, partners_to_notify):

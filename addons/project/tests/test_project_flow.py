@@ -424,3 +424,15 @@ class TestProjectFlow(TestProjectCommon, MailCase):
         self.user_projectmanager.action_archive()
         task_1_copy = self.task_1.copy()
         self.assertFalse(task_1_copy.child_ids.user_ids)
+
+    def test_task_email_context_with_subtitles(self):
+        task = self.env['project.task'].create({
+            'name': 'Task',
+            'user_ids': [Command.set([self.user_projectuser.id])],
+            'project_id': self.project_goats.id,
+        })
+        self.assertFalse(self.project_goats.message_follower_ids)
+        self.assertEqual(self.project_goats.privacy_visibility, 'followers')
+        self.project_goats.invalidate_recordset()
+        render_context = task.with_user(self.user_projectuser)._notify_by_email_prepare_rendering_context(task.message_ids, {})
+        self.assertListEqual(render_context['subtitles'], ['Task', 'Project: Goats, Stage: New'])
