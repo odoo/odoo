@@ -809,6 +809,7 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
 
         # The test is here: while having access only to self.company2 records,
         # archive should not raise an error
+        self.demo_user.group_ids += self.env.ref('product.group_product_manager')
         self.c2_pl.with_user(self.demo_user).with_context(allowed_company_ids=self.company2.ids).write({'active': False})
 
 
