@@ -183,6 +183,36 @@ class TestForumKarma(TestForumCommon):
         })
         self.assertEqual(self.user_portal.karma, KARMA['post'] + KARMA['gen_que_new'], 'website_forum: wrong karma generation when asking question')
 
+        # check karma done on right forum, using context values
+        self.user_portal.karma = KARMA['post']
+        for karma_value, has_nofollow in [
+            (self.user_portal.karma + 1, True),
+            (self.user_portal.karma, False),
+        ]:
+            with self.subTest(karma_value=karma_value):
+                self.forum.karma_dofollow = karma_value
+                post = Post.with_user(self.user_portal).with_context(default_content='<p>Super <a href="www.link.com">Link</a></p>').create({
+                    'name': "Bypass",
+                    'forum_id': self.forum.id,
+                })
+                if has_nofollow:
+                    self.assertTrue("nofollow" in post.content, 'website_forum: default_content in context should not bypass karma check.')
+                else:
+                    self.assertFalse("nofollow" in post.content, 'website_forum: default_content in context should not bypass karma check.')
+                # reset karma
+                self.user_portal.karma = KARMA['post']
+
+                post = Post.with_user(self.user_portal).with_context(default_forum_id=self.forum.id).create({
+                    'name': "Bypass",
+                    'content': '<p>Super <a href="www.link.com">Link</a></p>',
+                })
+                if has_nofollow:
+                    self.assertTrue("nofollow" in post.content, 'website_forum: default_forum_id in context should not bypass karma check.')
+                else:
+                    self.assertFalse("nofollow" in post.content, 'website_forum: default_forum_id in context should not bypass karma check.')
+                # reset karma
+                self.user_portal.karma = KARMA['post']
+
     def test_close_post_all(self):
         self.user_portal.karma = KARMA['close_all']
         self.post.with_user(self.user_portal).close(None)
