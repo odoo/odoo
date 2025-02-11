@@ -359,7 +359,7 @@ export class Composer extends Component {
         }
         const suggestions = this.suggestion.state.items.suggestions;
         switch (this.suggestion.state.items.type) {
-            case "Partner":
+            case "PartnerAndRole":
                 return {
                     ...props,
                     optionTemplate: "mail.Composer.suggestionPartner",
@@ -369,6 +369,13 @@ export class Composer extends Component {
                                 ...suggestion,
                                 group: 1,
                                 optionTemplate: "mail.Composer.suggestionSpecial",
+                                classList: "o-mail-Composer-suggestion",
+                            };
+                        } else if (suggestion.isRole) {
+                            return {
+                                label: suggestion.name,
+                                role: suggestion,
+                                optionTemplate: "mail.Composer.suggestionRole",
                                 classList: "o-mail-Composer-suggestion",
                             };
                         } else {
@@ -534,6 +541,7 @@ export class Composer extends Component {
         const validMentions = this.store.getMentionsFromText(body, {
             mentionedChannels: this.props.composer.mentionedChannels,
             mentionedPartners: this.props.composer.mentionedPartners,
+            mentionedRoles: this.props.composer.mentionedRoles,
         });
         let default_body = await prettifyMessageContent(body, validMentions);
         if (!default_body) {
@@ -675,6 +683,7 @@ export class Composer extends Component {
             isNote: this.props.type === "note",
             mentionedChannels: composer.mentionedChannels || [],
             mentionedPartners: composer.mentionedPartners || [],
+            mentionedRoles: composer.mentionedRoles || [],
             cannedResponseIds: composer.cannedResponses.map((c) => c.id),
             parentId: this.props.messageToReplyTo?.message?.id,
         };
@@ -720,6 +729,7 @@ export class Composer extends Component {
                 composer.message.edit(value, composer.attachments, {
                     mentionedChannels: composer.mentionedChannels,
                     mentionedPartners: composer.mentionedPartners,
+                    mentionedRoles: composer.mentionedRoles,
                 })
             );
         } else {

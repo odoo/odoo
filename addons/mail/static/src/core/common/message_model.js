@@ -402,13 +402,18 @@ export class Message extends Record {
         this.store.env.services.notification.add(notification, { type });
     }
 
-    async edit(body, attachments = [], { mentionedChannels = [], mentionedPartners = [] } = {}) {
+    async edit(
+        body,
+        attachments = [],
+        { mentionedChannels = [], mentionedPartners = [], mentionedRoles = [] } = {}
+    ) {
         if (convertBrToLineBreak(this.body) === body && attachments.length === 0) {
             return;
         }
         const validMentions = this.store.getMentionsFromText(body, {
             mentionedChannels,
             mentionedPartners,
+            mentionedRoles,
         });
         const data = await rpc("/mail/message/update_content", {
             attachment_ids: attachments
@@ -420,6 +425,7 @@ export class Message extends Record {
             body: await prettifyMessageContent(body, validMentions),
             message_id: this.id,
             partner_ids: validMentions?.partners?.map((partner) => partner.id),
+            role_ids: validMentions?.roles?.map((role) => role.id),
             ...this.thread.rpcParams,
         });
         this.store.insert(data, { html: true });

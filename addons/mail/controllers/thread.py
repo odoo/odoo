@@ -133,6 +133,11 @@ class ThreadController(http.Controller):
         if not request.env.user._is_internal():
             partners = partners & self._filter_message_post_partners(thread, partners)
         post_data["partner_ids"] = partners.ids
+        roles = request.env["mail.role"].browse(post_data.pop("role_ids", []))
+        user_ids = request.env["res.users"].search([("mail_role_ids", "in", roles.ids)])
+        post_data["partner_ids"] = (
+            post_data.get("partner_ids", []) + user_ids.mapped("partner_id").ids
+        )
         return post_data
 
     def _filter_message_post_partners(self, thread, partners):

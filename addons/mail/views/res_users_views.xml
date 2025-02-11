@@ -9,9 +9,13 @@
             <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
             <field name="arch" type="xml">
                 <data>
-                    <field name="email" position="before">
-                        <field name="notification_type" widget="radio" readonly="0"/>
-                    </field>
+                    <group name="preferences" position="after">
+                        <group string="Discuss" name="discuss">
+                            <field name="notification_type" widget="radio" readonly="0"/>
+                            <field name="is_readonly_mail_role_ids" invisible="1"/>
+                            <field name="mail_role_ids" widget="many2many_tags" readonly="is_readonly_mail_role_ids"/>
+                        </group>
+                    </group>
                     <field name="signature" position="attributes">
                         <attribute name="widget">html_mail</attribute>
                     </field>
@@ -26,10 +30,14 @@
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <field name="signature" position="before">
-                        <field name="notification_type" widget="radio"
-                            invisible="share"/>
-                    </field>
+                    <group name="preferences" position="after">
+                        <group string="Discuss" name="discuss">
+                            <field name="notification_type" widget="radio"
+                                    invisible="share"/>
+                            <field name="is_readonly_mail_role_ids" invisible="1"/>
+                            <field name="mail_role_ids" widget="many2many_tags" readonly="is_readonly_mail_role_ids"/>
+                        </group>
+                    </group>
                     <field name="signature" position="attributes">
                         <attribute name="widget">html_mail</attribute>
                     </field>

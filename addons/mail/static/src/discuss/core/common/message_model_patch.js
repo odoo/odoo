@@ -56,7 +56,11 @@ const messagePatch = {
     /**
      * @override
      */
-    async edit(body, attachments = [], { mentionedChannels = [], mentionedPartners = [] } = {}) {
+    async edit(
+        body,
+        attachments = [],
+        { mentionedChannels = [], mentionedPartners = [], mentionedRoles = [] } = {}
+    ) {
         const validChannels = (await Promise.all(this.mentionedChannelPromises)).filter(
             (channel) => channel !== undefined
         );
@@ -64,6 +68,7 @@ const messagePatch = {
         super.edit(body, attachments, {
             mentionedChannels: allChannels,
             mentionedPartners,
+            mentionedRoles,
         });
     },
 };

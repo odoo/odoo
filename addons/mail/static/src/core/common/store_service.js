@@ -434,7 +434,12 @@ export class Store extends BaseStore {
 
     getMentionsFromText(
         body,
-        { mentionedChannels = [], mentionedPartners = [], specialMentions = [] } = {}
+        {
+            mentionedChannels = [],
+            mentionedPartners = [],
+            mentionedRoles = [],
+            specialMentions = [],
+        } = {}
     ) {
         const validMentions = {};
         validMentions.threads = mentionedChannels.filter((thread) => {
@@ -448,6 +453,7 @@ export class Store extends BaseStore {
         validMentions.partners = mentionedPartners.filter((partner) =>
             body.includes(`@${partner.name}`)
         );
+        validMentions.roles = mentionedRoles.filter((role) => body.includes(`@${role.name}`));
         validMentions.specialMentions = this.specialMentions
             .filter((special) => body.includes(`@${special.label}`))
             .map((special) => special.label);
@@ -465,13 +471,16 @@ export class Store extends BaseStore {
             isNote,
             mentionedChannels,
             mentionedPartners,
+            mentionedRoles,
         } = postData;
         const subtype = isNote ? "mail.mt_note" : "mail.mt_comment";
         const validMentions = this.getMentionsFromText(body, {
             mentionedChannels,
             mentionedPartners,
+            mentionedRoles,
         });
         const partner_ids = validMentions?.partners.map((partner) => partner.id) ?? [];
+        const role_ids = validMentions?.roles.map((role) => role.id) ?? [];
         const recipientEmails = [];
         if (!isNote) {
             const recipientIds = thread.suggestedRecipients
@@ -495,6 +504,9 @@ export class Store extends BaseStore {
         }
         if (partner_ids.length) {
             Object.assign(postData, { partner_ids });
+        }
+        if (role_ids.length) {
+            Object.assign(postData, { role_ids });
         }
         if (thread.model === "discuss.channel" && validMentions?.specialMentions.length) {
             postData.special_mentions = validMentions.specialMentions;

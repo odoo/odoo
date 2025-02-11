@@ -12,6 +12,7 @@ export class ResUsers extends webModels.ResUsers {
         ],
         default: "email",
     });
+    mail_role_ids = fields.Many2many({ relation: "mail.role", string: "Roles" });
 
     /** Simulates `_init_store_data` on `res.users`. */
     _init_store_data(store) {

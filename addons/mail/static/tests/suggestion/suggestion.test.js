@@ -3,12 +3,13 @@ import {
     contains,
     defineMailModels,
     insertText,
+    onRpcBefore,
     openDiscuss,
     openFormView,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { beforeEach, describe, test } from "@odoo/hoot";
+import { beforeEach, expect, describe, test } from "@odoo/hoot";
 import { Deferred, tick } from "@odoo/hoot-mock";
 import {
     asyncStep,
@@ -415,4 +416,101 @@ test("Mention with @everyone", async () => {
     await contains(".o-mail-Composer-input", { value: "@everyone " });
     await press("Enter");
     await contains(".o-mail-Message-bubble.o-orange");
+});
+
+test("Mention with @-role", async () => {
+    const pyEnv = await startServer();
+    const [roleId1, roleId2] = pyEnv["mail.role"].create([
+        { name: "rd-Discuss" },
+        { name: "rd-JS" },
+    ]);
+    const [userId1, userId2, userId3] = pyEnv["res.users"].create([
+        {
+            mail_role_ids: [roleId1],
+        },
+        {
+            mail_role_ids: [roleId2],
+        },
+        {
+            mail_role_ids: [roleId1, roleId2],
+        },
+    ]);
+    const [partnerId1, partnerId2, partnerId3] = pyEnv["res.partner"].create([
+        { name: "Person A", user_ids: [userId1] },
+        { name: "Person B", user_ids: [userId2] },
+        { name: "Person C", user_ids: [userId3] },
+    ]);
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_type: "channel",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId1 }),
+            Command.create({ partner_id: partnerId2 }),
+            Command.create({ partner_id: partnerId3 }),
+        ],
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer-suggestionList");
+    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    await contains(".o-mail-Composer-input", { value: "" });
+    await insertText(".o-mail-Composer-input", "@discuss");
+    await click(".o-mail-Composer-suggestion");
+    await contains(".o-mail-Composer-input", { value: "@rd-Discuss " });
+    await press("Enter");
+    await contains(".o-mail-Message a.o-discuss-mention", {
+        text: "@rd-Discuss",
+    });
+});
+
+test("Mention with @-role send correct role id", async () => {
+    const pyEnv = await startServer();
+    const [roleId1, roleId2] = pyEnv["mail.role"].create([
+        { name: "rd-Discuss" },
+        { name: "rd-JS" },
+    ]);
+    const [userId1, userId2, userId3] = pyEnv["res.users"].create([
+        {
+            mail_role_ids: [roleId1],
+        },
+        {
+            mail_role_ids: [roleId2],
+        },
+        {
+            mail_role_ids: [roleId1, roleId2],
+        },
+    ]);
+    const [partnerId1, partnerId2, partnerId3] = pyEnv["res.partner"].create([
+        { name: "Person A", user_ids: [userId1] },
+        { name: "Person B", user_ids: [userId2] },
+        { name: "Person C", user_ids: [userId3] },
+    ]);
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_type: "channel",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId1 }),
+            Command.create({ partner_id: partnerId2 }),
+            Command.create({ partner_id: partnerId3 }),
+        ],
+    });
+    onRpcBefore("/mail/message/post", (args) => {
+        asyncStep("message_post");
+        expect(args.post_data.role_ids).toEqual([roleId1]);
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer-suggestionList");
+    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    await contains(".o-mail-Composer-input", { value: "" });
+    await insertText(".o-mail-Composer-input", "@discuss");
+    await click(".o-mail-Composer-suggestion");
+    await contains(".o-mail-Composer-input", { value: "@rd-Discuss " });
+    await press("Enter");
+    await contains(".o-mail-Message a.o-discuss-mention", {
+        text: "@rd-Discuss",
+    });
+    await waitForSteps(["message_post"]);
 });
