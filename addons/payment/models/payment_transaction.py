@@ -13,6 +13,7 @@ from markupsafe import Markup
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import format_amount
+from datetime import datetime, timedelta
 
 from odoo.addons.payment import utils as payment_utils
 
@@ -1010,3 +1011,12 @@ class PaymentTransaction(models.Model):
         :rtype: recordset of `payment.transaction`
         """
         return self.filtered(lambda t: t.state != 'draft').sorted()[:1]
+
+    def _get_tx_time_difference(self):
+        self.ensure_one()
+        if self.create_date:
+            # Get the current time and compare with the transaction's creation time
+            one_hour_ago = datetime.now() - timedelta(hours=1)
+            if self.create_date >= one_hour_ago:
+                return True
+        return False
