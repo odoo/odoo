@@ -7,9 +7,9 @@
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//header/button[@name='action_rfq_send']" position="after">
-                <button name="action_view_picking" 
-                    string="Receive Products" class="oe_highlight" type="object" 
-                    invisible="is_shipped or state not in ('purchase', 'done') or incoming_picking_count == 0" 
+                <button name="action_view_picking"
+                    string="Receive" class="oe_highlight" type="object"
+                    invisible="is_shipped or state not in ('purchase', 'done') or incoming_picking_count == 0"
                     data-hotkey="y" groups="stock.group_stock_user"/>
             </xpath>
             <xpath expr="//header/button[@name='confirm_reminder_mail']" position="attributes">
