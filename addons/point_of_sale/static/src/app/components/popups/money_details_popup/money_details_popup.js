@@ -1,7 +1,6 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { Component, useState } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { floatIsZero } from "@web/core/utils/numbers";
 import { NumericInput } from "@point_of_sale/app/components/inputs/numeric_input/numeric_input";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -46,7 +45,7 @@ export class MoneyDetailsPopup extends Component {
         }, 0);
     }
     confirm() {
-        let moneyDetailsNotes = !floatIsZero(this.computeTotal(), this.currency.decimal_places)
+        let moneyDetailsNotes = !this.pos.currency.isZero(this.computeTotal())
             ? this.props.context + " details: \n"
             : null;
         this.pos.models["pos.bill"].forEach((bill) => {
