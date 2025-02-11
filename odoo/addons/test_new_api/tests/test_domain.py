@@ -793,6 +793,35 @@ class TestDomainOptimize(TransactionCase):
             OrderedSet, "Check we can optimize something else than OrderedSet"
         )
 
+    def test_nary_optimize_in_relational(self):
+        model = self.env['test_new_api.discussion']
+
+        # check when the optimizations are applied, the results are checked
+        # by the previous test function
+        with self.subTest(field_type='many2one'):
+            d1 = Domain('moderator', 'in', [1]).optimize(model)
+            d2 = Domain('moderator', 'in', [1, 2]).optimize(model)
+            self.assertEqual((d1 & d2).optimize(model), d1)
+            self.assertEqual((d1 | d2).optimize(model), d2)
+            self.assertEqual((~d1 & ~d2).optimize(model), ~d2)
+            self.assertEqual((~d1 | ~d2).optimize(model), ~d1)
+
+        with self.subTest(field_type='one2many'):
+            d1 = Domain('messages', 'in', [1]).optimize(model)
+            d2 = Domain('messages', 'in', [1, 2]).optimize(model)
+            self.assertEqual((d1 & d2).optimize(model), (d1 & d2))
+            self.assertEqual((d1 | d2).optimize(model), d2)
+            self.assertEqual((~d1 & ~d2).optimize(model), ~d2)
+            self.assertEqual((~d1 | ~d2).optimize(model), ~d1 | ~d2)
+
+        with self.subTest(field_type='many2many'):
+            d1 = Domain('categories', 'in', [1]).optimize(model)
+            d2 = Domain('categories', 'in', [1, 2]).optimize(model)
+            self.assertEqual((d1 & d2).optimize(model), (d1 & d2))
+            self.assertEqual((d1 | d2).optimize(model), d2)
+            self.assertEqual((~d1 & ~d2).optimize(model), ~d2)
+            self.assertEqual((~d1 | ~d2).optimize(model), ~d1 | ~d2)
+
     def test_nary_optimize_any(self):
         model = self.env['test_new_api.discussion']
 
