@@ -496,6 +496,10 @@ class SaleOrder(models.Model):
         for order in self:
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
             base_lines = [line._prepare_base_line_for_taxes_computation() for line in order_lines]
+
+            if order._pay_term_is_early_discount_mixed():
+                epd_lines = order._add_lines_for_early_payment_discount_tax_correction()
+                base_lines += epd_lines
             AccountTax._add_tax_details_in_base_lines(base_lines, order.company_id)
             AccountTax._round_base_lines_tax_details(base_lines, order.company_id)
             tax_totals = AccountTax._get_tax_totals_summary(
@@ -506,6 +510,36 @@ class SaleOrder(models.Model):
             order.amount_untaxed = tax_totals['base_amount_currency']
             order.amount_tax = tax_totals['tax_amount_currency']
             order.amount_total = tax_totals['total_amount_currency']
+
+    def _pay_term_is_early_discount_mixed(self):
+        self.ensure_one()
+        pay_term = self.payment_term_id
+        return pay_term and pay_term.early_discount and pay_term.early_pay_discount_computation == 'mixed'
+
+    def _add_lines_for_early_payment_discount_tax_correction(self):
+        self.ensure_one()
+        epd_lines = []
+        percentage = self.payment_term_id.discount_percentage
+        for line in self.order_line.filtered(lambda x: not x.display_type):
+            line_amount_after_discount = (line.price_subtotal / 100) * percentage
+            epd_lines.append(self.env['account.tax']._prepare_base_line_for_taxes_computation(
+                record=self,
+                price_unit=-line_amount_after_discount,
+                quantity=1.0,
+                currency_id=self.currency_id,
+                sign=1,
+                special_type='early_payment',
+                tax_ids=line.tax_id,
+            ))
+            epd_lines.append(self.env['account.tax']._prepare_base_line_for_taxes_computation(
+                record=self,
+                price_unit=line_amount_after_discount,
+                quantity=1.0,
+                currency_id=self.currency_id,
+                sign=1,
+                special_type='early_payment',
+            ))
+        return epd_lines
 
     @api.depends('order_line.invoice_lines')
     def _get_invoiced(self):
@@ -737,12 +771,15 @@ class SaleOrder(models.Model):
                 )
 
     @api.depends_context('lang')
-    @api.depends('order_line.price_subtotal', 'currency_id', 'company_id')
+    @api.depends('order_line.price_subtotal', 'currency_id', 'company_id', 'payment_term_id')
     def _compute_tax_totals(self):
         AccountTax = self.env['account.tax']
         for order in self:
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
             base_lines = [line._prepare_base_line_for_taxes_computation() for line in order_lines]
+            if order._pay_term_is_early_discount_mixed():
+                epd_lines = order._add_lines_for_early_payment_discount_tax_correction()
+                base_lines += epd_lines
             AccountTax._add_tax_details_in_base_lines(base_lines, order.company_id)
             AccountTax._round_base_lines_tax_details(base_lines, order.company_id)
             order.tax_totals = AccountTax._get_tax_totals_summary(
