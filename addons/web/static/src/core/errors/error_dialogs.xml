@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.WarningDialog">
-        <Dialog title="title" size="'xl'" contentClass="'o_error_dialog'">
+        <Dialog title="title" size="'sm'" contentClass="'o_error_dialog'">
             <div role="alert">
                 <p t-esc="message" class="text-prewrap"/>
             </div>
@@ -51,24 +51,26 @@
     </t>
 
     <t t-name="web.ErrorDialog">
-        <Dialog title.translate="Oops!" size="'xl'" contentClass="'o_error_dialog'">
+        <Dialog title.translate="Oops!" size="state.showTraceback ? 'xl' : 'sm'" contentClass="'o_error_dialog'">
             <div role="alert">
-                <p class="text-prewrap">
+                <p>
                     Something went wrong... If you really are stuck, share the report with your friendly support service
                 </p>
-                <button class="btn btn-link p-0" t-on-click="() => { state.showTraceback = !state.showTraceback }" t-esc="state.showTraceback ? this.constructor.hideTracebackButtonText : this.constructor.showTracebackButtonText"/>
-                <div t-if="state.showTraceback" class="bg-100 mb-0 clearfix mt-3 position-relative o_error_detail">
-                    <button class="btn position-absolute bg-100" t-ref="copyButton" t-on-click="onClickClipboard">
-                        <span class="fa fa-clipboard"/>
-                    </button>
-                    <div class="ps-3 pt-3">
-                        <p class="m-0"><b t-esc="title or this.constructor.title"></b></p>
-                        <code t-if="props.name" t-esc="props.name"></code>
-                        <p class="m-0" t-if="props.message" t-esc="props.message"></p>
-                        <p class="m-0" t-if="contextDetails" t-esc="contextDetails"></p>
-                        <pre class="m-0 p-0 mt-2" t-esc="traceback or props.traceback"/>
+                <details t-on-toggle="() => { state.showTraceback = !state.showTraceback }">
+                    <summary t-esc="state.showTraceback ? this.constructor.hideTracebackButtonText : this.constructor.showTracebackButtonText" class="mb-1 link-info"/>
+                    <div class="text-bg-100 clearfix mt-2 position-relative o_error_detail pb-2">
+                        <button class="btn position-absolute top-0 end-0 pt-2 btn-link link-body-emphasis" t-ref="copyButton" t-on-click="onClickClipboard">
+                            <span class="fa fa-clipboard"/>
+                        </button>
+                        <div class="ps-1 pt-1 ps-md-3 pt-md-3">
+                            <p class="m-0"><b t-esc="title or this.constructor.title"></b></p>
+                            <p class="d-block small text-info" t-if="contextDetails" t-esc="contextDetails"/>
+                            <code t-if="props.name" t-esc="props.name"></code>
+                            <code class="d-block" t-if="props.message" t-esc="props.message"/>
+                            <pre class="border-0 m-0 p-0 mt-3 smaller" t-esc="traceback or props.traceback"/>
+                        </div>
                     </div>
-                </div>
+                </details>
             </div>
             <t t-set-slot="footer">
                 <button class="btn btn-primary o-default-button" t-on-click="props.close">Close</button>
