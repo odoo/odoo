@@ -94,8 +94,8 @@
       &:has(.modal.o_modal_full:not(.o_modal_is_dismissing)) {
         .o_navbar, .o_action_manager {
           transform: translateX(-100%);
-          transition-duration: $o-modal-slide-duration;
-          transition-delay: .3s;
+          transition: transform $o-modal-slide-duration * .7 $o-easing-exit;
+          // transition-delay: .3s;
         }
       }
     }
@@ -108,7 +108,7 @@
     }
 
     .o_navbar, .o_action_manager {
-        transition: transform $o-modal-slide-duration * .5 ease-in-out;
+        transition: transform $o-modal-slide-duration $o-easing-enter;
     }
 }
 

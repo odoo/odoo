@@ -2,6 +2,7 @@
     --o-control-pale-breadcrumbs-display: none;
 
     animation: modalBackdropIn .8s cubic-bezier(.19, 1, .22, 1) backwards;
+    backdrop-filter: blur(.5px) grayscale(50%);
 
     .modal-dialog {
         transition: max-width .1s ease-in;
@@ -141,13 +142,13 @@
             }
 
             .modal-content {
-                animation: modalInSm $o-modal-slide-duration * 0.6 ease-out forwards;
+                animation: modalInSm $o-modal-slide-duration $o-easing-enter forwards;
             }
 
             &.o_modal_is_dismissing, &.o_modal_is_dismissing .modal-content {
                 animation-direction: reverse;
-                animation-duration: $o-modal-slide-duration * 0.3;
-                animation-timing-function: ease-in;
+                animation-duration: $o-modal-slide-duration * 0.7;
+                animation-timing-function: $o-easing-exit;
             }
         }
     }
@@ -201,6 +202,7 @@
 @keyframes modalBackdropIn {
     from {
         background-color: transparent;
+        backdrop-filter: none;
     }
 }
 
