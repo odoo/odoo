@@ -371,7 +371,7 @@ export class LinkPlugin extends Plugin {
         const selectionTextContent = selection?.textContent();
         const isImage = !!findInSelection(selection, "img");
 
-        const applyCallback = (url, label, classes) => {
+        const applyCallback = (url, label, classes, previewMode) => {
             if (this.linkInDocument && isImage) {
                 if (url) {
                     this.linkInDocument.href = url;
@@ -429,15 +429,23 @@ export class LinkPlugin extends Plugin {
                     this.dependencies.dom.insert(link);
                 }
             }
-            this.closeLinkTools(cursorsToRestore);
-            this.dependencies.selection.focusEditable();
+            if (!previewMode) {
+                this.closeLinkTools(cursorsToRestore);
+                this.dependencies.selection.focusEditable();
+            }
             this.dependencies.history.addStep();
         };
 
+        const restoreSavePoint = this.dependencies.history.makeSavePoint();
         const props = {
             linkElement,
             isImage: isImage,
             onApply: applyCallback,
+            onDiscard: () => {
+                restoreSavePoint();
+                this.closeLinkTools();
+                this.dependencies.selection.focusEditable();
+            },
             onRemove: () => {
                 this.removeLinkInDocument();
                 this.linkInDocument = null;
