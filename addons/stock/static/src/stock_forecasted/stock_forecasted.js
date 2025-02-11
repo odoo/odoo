@@ -8,6 +8,7 @@ import { ForecastedButtons } from "./forecasted_buttons";
 import { ForecastedDetails } from "./forecasted_details";
 import { ForecastedHeader } from "./forecasted_header";
 import { ForecastedWarehouseFilter } from "./forecasted_warehouse_filter";
+import { ForecastedProductVariantFilter } from "./forecasted_product_variant_filter";
 import { Component, onWillStart, useState } from "@odoo/owl";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 
@@ -17,6 +18,7 @@ export class StockForecasted extends Component {
         ControlPanel,
         ForecastedButtons,
         ForecastedWarehouseFilter,
+        ForecastedProductVariantFilter,
         ForecastedHeader,
         View,
         ForecastedDetails,
@@ -35,18 +37,25 @@ export class StockForecasted extends Component {
             this.reloadReport();
         }
         this.warehouses = useState([]);
+        this.variants = useState([]);
 
         onWillStart(this._getReportValues);
     }
 
     async _getReportValues() {
         await this._getResModel();
-        const isTemplate = !this.resModel || this.resModel === 'product.template';
+        const isTemplate = (!this.resModel || this.resModel === 'product.template' ||
+            (this.context.active_model === 'product.template' && !this.context.variant_id));
         this.reportModelName = `stock.forecasted_product_${isTemplate ? "template" : "product"}`;
         await this._loadWarehouses();
+
+        if (isTemplate || this.context.active_model === 'product.template') {
+            await this._loadVariants();
+        }
+        const variant_id = this.context?.variant_id;
         const reportValues = await this.orm.call(this.reportModelName, "get_report_values", [], {
             context: this.context,
-            docids: [this.productId],
+            docids: [(variant_id && variant_id !== 0) ? variant_id : this.productId],
         });
         this.docs = {
             ...reportValues.docs,
@@ -59,7 +68,9 @@ export class StockForecasted extends Component {
     }
 
     async _getResModel(){
-        this.resModel = this.context.active_model || this.context.params?.active_model;
+        const variant_id = this.context.variant_id;
+        const active_model = this.context.active_model || this.context.params?.active_model;
+        this.resModel = variant_id && variant_id !== 0 ? "product.product" : active_model;
         //Following is used as a fallback when the forecast is not called by an action but through browser's history
         if (!this.resModel) {
             let resModel = this.props.action.res_model;
@@ -94,9 +105,33 @@ export class StockForecasted extends Component {
         }
     }
 
+    async _loadVariants() {
+        const variants = await this.orm.searchRead(
+            "product.product",
+            [["product_tmpl_id", "=", this.productId]],
+            ["id", "display_name"]
+        );
+        if (variants.length > 1) {
+            this.variants = [{ id: 0, display_name: _t("All Variants") }, ...variants];
+
+            // If no variant ID is set in the context, set a default.
+            if (this.context.variant_id === undefined) {
+                this.updateVariant(this.variants[0].id);
+            }
+        }
+    }
+
     async updateWarehouse(id) {
         const hasPreviousValue = this.context.warehouse_id !== undefined;
         this.context.warehouse_id = id;
+        if (hasPreviousValue) {
+            await this.reloadReport();
+        }
+    }
+
+    async updateVariant(id) {
+        const hasPreviousValue = this.context.variant_id !== undefined;
+        this.context.variant_id = id;
         if (hasPreviousValue) {
             await this.reloadReport();
         }
@@ -132,7 +167,11 @@ export class StockForecasted extends Component {
         if (this.resModel === "product.template") {
             domain.push(["product_tmpl_id", "=", this.productId]);
         } else if (this.resModel === "product.product") {
-            domain.push(["product_id", "=", this.productId]);
+            if (this.context.active_model === 'product.template') {
+                domain.push(["product_id", "=", this.context.variant_id]);
+            } else {
+                domain.push(["product_id", "=", this.productId]);
+            }
         }
         return domain;
     }
