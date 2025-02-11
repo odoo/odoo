@@ -6,8 +6,13 @@
                 <ForecastedButtons action="props.action" reloadReport.bind="reloadReport" resModel="resModel"/>
             </t>
             <t t-set-slot="layout-actions">
-                <div class="btn-group o_search_options position-static" role="search">
-                    <ForecastedWarehouseFilter action="props.action" warehouses="warehouses" setWarehouseInContext.bind="updateWarehouse"/>
+                <div class="d-flex gap-4">
+                    <div class="btn-group o_search_options position-static" role="search">
+                        <ForecastedWarehouseFilter action="props.action" warehouses="warehouses" setWarehouseInContext.bind="updateWarehouse"/>
+                    </div>
+                    <div class="btn-group o_search_options position-static" role="search">
+                        <ForecastedProductVariantFilter action="props.action" variants="variants" setVariantInContext.bind="updateVariant"/>
+                    </div>
                 </div>
             </t>
         </ControlPanel>
