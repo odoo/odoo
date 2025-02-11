@@ -110,10 +110,19 @@ export class VideoSelector extends Component {
                 if (src) {
                     this.state.urlInput = "https:" + src;
                     await this.updateVideo();
-                    this.state.options = this.state.options.map((option) => {
-                        const { urlParameter } = this.OPTIONS[option.id];
-                        return { ...option, value: src.indexOf(urlParameter) >= 0 };
-                    });
+                    if(URL.canParse(this.state.urlInput)) {
+                        const urlParams = new URLSearchParams(new URL(this.state.urlInput).search);
+                        this.state.options = this.state.options.map((option) => {
+                            const { urlParameter } = this.OPTIONS[option.id];
+                            if (urlParameter() === "#t=") {
+                                return { ...option, value: src.split("#t=")[1]};
+                            } else {
+                                return { ...option, value: urlParams.get(urlParameter()) || src.indexOf(urlParameter()) >= 0 };
+                            }
+                        });
+                        await this.updateVideo();
+                    }
+                    
                 }
             }
         });
@@ -122,7 +131,20 @@ export class VideoSelector extends Component {
 
         useAutofocus();
 
-        this.onChangeUrl = debounce((ev) => this.updateVideo(ev.target.value), 500);
+        this.onChangeUrl = debounce(async (ev) => {
+            if (URL.canParse(this.state.urlInput)) {
+                const urlParams = new URLSearchParams(new URL(this.state.urlInput).search);
+                this.state.options = this.state.options.map((option) => {
+                    const { urlParameter } = this.OPTIONS[option.id];
+                    if (urlParameter() === "#t=") {
+                        return { ...option, value: this.state.urlInput.split("#t=")[1]};
+                    } else {
+                        return { ...option, value: urlParams.get(urlParameter()) || this.state.urlInput.indexOf(urlParameter()) >= 0 };
+                    }
+                });
+            }
+            this.updateVideo(ev.target.value);
+        }, 500);
 
         this.onChangeStartAt = debounce(async (ev, optionId) => {
             // Regular expression for HH:MM:SS format
@@ -142,6 +164,7 @@ export class VideoSelector extends Component {
                 return option;
             });
             await this.updateVideo();
+            this.state.urlInput = "https:" + this.state.src;
         }, 1000);
 
     }
@@ -162,6 +185,7 @@ export class VideoSelector extends Component {
             return option;
         });
         await this.updateVideo();
+        this.state.urlInput = "https:" + this.state.src;
     }
 
     async onClickSuggestion(src) {
