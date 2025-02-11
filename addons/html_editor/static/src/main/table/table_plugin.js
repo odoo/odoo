@@ -109,6 +109,7 @@ export class TablePlugin extends Plugin {
             node.nodeName === "TABLE" || tableInnerComponents.has(node.nodeName),
         fully_selected_node_predicates: (node) => !!closestElement(node, ".o_selected_td"),
         traversed_nodes_processors: this.adjustTraversedNodes.bind(this),
+        move_node_whitelist_selectors: "table",
     };
 
     setup() {
