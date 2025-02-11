@@ -222,8 +222,8 @@ expression and add each key-value ``t-options-key="expression value"`` to this
 dict. (for example: ``t-options="{'widget': 'float'}"`` is equal to
 ``t-options-widget="'float'"``)
 
-``t-att``, ``t-att-*`` and ``t-attf-*``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+``t-att``, ``t-att-*``, ``t-attf-*`` and ``t-attf-*.translate``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 **Values**: python expression (or format string expression for ``t-attf-``)
 
 Compile the attributes to create ``values['__qweb_attrs__']`` dictionary code
@@ -234,7 +234,8 @@ and is equal to ``t-attf-class="float_{{1}}")
 
 The attributes come from new namespaces, static elements (not preceded
 by ``t-``) and dynamic attributes ``t-att``, attributes prefixed by ``t-att-``
-(python expression) or ``t-attf`` (format string expression).
+(python expression) or ``t-attf`` (format string expression, translated if
+ending by ``.translate``).
 
 ``t-call``
 ~~~~~~~~~~
@@ -316,19 +317,14 @@ The generated code update the key ``values`` dictionary equal to the value
 defined by ``t-value`` expression, ``t-valuef`` format string expression or
 to the ``MarkupSafe`` rendering come from the content of the node.
 
-``t-value``
-~~~~~~~~~~~
-**Values**: python expression
+``t-value``, ``t-valuef`` and ``t-valuef.translate``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+**Values**: python expression (or format string expression for ``t-attf-``)
 
-The compilation method only validates if ``t-value`` and ``t-set`` are on the
+The compilation method only validates if this directive and ``t-set`` are on the
 same node.
+The format string expression can be translated if use ``.translate``.
 
-``t-valuef``
-~~~~~~~~~~~~
-**Values**: format string expression
-
-The compilation method only validates if ``t-valuef`` and ``t-set`` are on the
-same node.
 
 Technical directives
 --------------------
@@ -400,6 +396,7 @@ from odoo.tools.json import scriptsafe
 from odoo.tools.lru import LRU
 from odoo.tools.misc import str2bool, file_open, file_path
 from odoo.tools.image import image_data_uri, FILETYPE_BASE64_MAGICWORD
+from odoo.tools.translate import FORMAT_REGEX
 from odoo.http import request
 from odoo.tools.profiler import QwebTracker
 from odoo.exceptions import UserError, AccessDenied, AccessError, MissingError, ValidationError
@@ -465,8 +462,6 @@ VOID_ELEMENTS = frozenset([
     'link', 'menuitem', 'meta', 'param', 'source', 'track', 'wbr'])
 # Terms allowed in addition to AVAILABLE_OBJECTS when compiling python expressions
 ALLOWED_KEYWORD = frozenset(['False', 'None', 'True', 'and', 'as', 'elif', 'else', 'for', 'if', 'in', 'is', 'not', 'or'] + list(_BUILTINS))
-# regexpr for string formatting and extract ( ruby-style )|( jinja-style  ) used in `_compile_format`
-FORMAT_REGEX = re.compile(r'(?:#\{(.+?)\})|(?:\{\{(.+?)\}\})')
 RSTRIP_REGEXP = re.compile(r'\n[ \t]*$')
 LSTRIP_REGEXP = re.compile(r'^[ \t]*\n')
 FIRST_RSTRIP_REGEXP = re.compile(r'^(\n[ \t]*)+(\n[ \t])')
@@ -746,8 +741,8 @@ class IrQweb(models.AbstractModel):
         options = {k: compile_context.get(k) for k in self._get_template_cache_keys() + ['ref', 'ref_name', 'ref_xml']}
 
         # generate code
-
-        def_name = TO_VARNAME_REGEXP.sub(r'_', f'template_{ref}')
+        ref_name = compile_context['ref_name'] or ''
+        def_name = TO_VARNAME_REGEXP.sub(r'_', f'template_{ref_name if "<" not in ref_name else ""}_{ref}')
 
         name_gen = count()
         compile_context['make_name'] = lambda prefix: f"{def_name}_{prefix}_{next(name_gen)}"
@@ -1387,11 +1382,12 @@ class IrQweb(models.AbstractModel):
             ns = chain(compile_context['nsmap'].items(), el.nsmap.items())
             nsprefixmap = {v: k for k, v in ns}
             for key, value in el.attrib.items():
-                attrib_qname = etree.QName(key)
+                name = key.removesuffix(".translate")
+                attrib_qname = etree.QName(name)
                 if attrib_qname.namespace:
                     attrib[f'{nsprefixmap[attrib_qname.namespace]}:{attrib_qname.localname}'] = value
                 else:
-                    attrib[key] = value
+                    attrib[name] = value
 
             attrib = self._post_processing_att(el.tag, attrib)
 
@@ -1402,7 +1398,7 @@ class IrQweb(models.AbstractModel):
             original_nsmap = dict(compile_context['nsmap'])
 
         if unqualified_el_tag != 't':
-            attributes = ''.join(f' {name}="{escape(str(value))}"'
+            attributes = ''.join(f' {name.removesuffix(".translate")}="{escape(str(value))}"'
                                 for name, value in attrib.items() if value or isinstance(value, str))
             self._append_text(f'<{el_tag}{"".join(attributes)}', compile_context)
             if el_tag in VOID_ELEMENTS:
@@ -1557,15 +1553,16 @@ class IrQweb(models.AbstractModel):
         # attributes. As we only have the namespace definition, we'll use
         # an nsmap where the keys are the definitions and the values the
         # prefixes in order to get back the right prefix and restore it.
-        if any(not name.startswith('t-') for name in el.attrib):
+        if any(not key.startswith('t-') for key in el.attrib):
             nsprefixmap = {v: k for k, v in chain(compile_context['nsmap'].items(), el.nsmap.items())}
             for key in list(el.attrib):
                 if not key.startswith('t-'):
                     value = el.attrib.pop(key)
-                    attrib_qname = etree.QName(key)
+                    name = key.removesuffix(".translate")
+                    attrib_qname = etree.QName(name)
                     if attrib_qname.namespace:
-                        key = f'{nsprefixmap[attrib_qname.namespace]}:{attrib_qname.localname}'
-                    code.append(indent_code(f'attrs[{key!r}] = {value!r}', level))
+                        name = f'{nsprefixmap[attrib_qname.namespace]}:{attrib_qname.localname}'
+                    code.append(indent_code(f'attrs[{name!r}] = {value!r}', level))
 
         # Compile the dynamic attributes of the given element. All
         # attributes will be add to the ``attrs`` dictionary in the
@@ -1573,7 +1570,8 @@ class IrQweb(models.AbstractModel):
         for key in list(el.attrib):
             if key.startswith('t-attf-'):
                 value = el.attrib.pop(key)
-                code.append(indent_code(f"attrs[{key[7:]!r}] = {self._compile_format(value)}", level))
+                name = key[7:].removesuffix(".translate")
+                code.append(indent_code(f"attrs[{name!r}] = {self._compile_format(value)}", level))
             elif key.startswith('t-att-'):
                 value = el.attrib.pop(key)
                 code.append(indent_code(f"attrs[{key[6:]!r}] = {self._compile_expr(value)}", level))
@@ -1658,6 +1656,7 @@ class IrQweb(models.AbstractModel):
         There are 3 kinds of `t-set`:
         * `t-value` containing python code;
         * `t-valuef` containing strings to format;
+        * `t-valuef.translate` containing translated strings to format;
         * whose value is the content of the tag (being Markup safe).
 
         The code will contain the assignment of the dynamically generated value.
@@ -1672,7 +1671,7 @@ class IrQweb(models.AbstractModel):
             if varname != T_CALL_SLOT and varname[0] != '{' and not VARNAME_REGEXP.match(varname):
                 raise ValueError('The varname can only contain alphanumeric characters and underscores.')
 
-            if 't-value' in el.attrib or 't-valuef' in el.attrib or varname[0] == '{':
+            if 't-value' in el.attrib or 't-valuef' in el.attrib or 't-valuef.translate' in el.attrib or varname[0] == '{':
                 el.attrib.pop('t-inner-content') # The content is considered empty.
                 if varname == T_CALL_SLOT:
                     raise SyntaxError('t-set="0" should not be set from t-value or t-valuef')
@@ -1682,6 +1681,9 @@ class IrQweb(models.AbstractModel):
                 code.append(indent_code(f"values[{varname!r}] = {self._compile_expr(expr)}", level))
             elif 't-valuef' in el.attrib:
                 exprf = el.attrib.pop('t-valuef')
+                code.append(indent_code(f"values[{varname!r}] = {self._compile_format(exprf)}", level))
+            elif 't-valuef.translate' in el.attrib:
+                exprf = el.attrib.pop('t-valuef.translate')
                 code.append(indent_code(f"values[{varname!r}] = {self._compile_format(exprf)}", level))
             elif varname[0] == '{':
                 code.append(indent_code(f"values.update({self._compile_expr(varname)})", level))
