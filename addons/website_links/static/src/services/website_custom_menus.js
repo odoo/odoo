@@ -10,19 +10,20 @@ registry.category("website_custom_menus").add("website_links.menu_link_tracker",
         return {
             resModel: model,
             onRecordSaved: async (record) => {
+                const { url, campaign_id, medium_id, source_id, label } = record.data;
                 const params = {
-                    url: record.data.url,
-                    campaign_id: record.data.campaign_id[0],
-                    medium_id: record.data.medium_id[0],
-                    source_id: record.data.source_id[0],
-                    label: record.data.label,
+                    url,
+                    campaign_id: campaign_id[0],
+                    medium_id: medium_id[0],
+                    source_id: source_id[0],
+                    label,
                 };
                 const isRecordCreated = await orm.call(model, "search_or_create", [params]);
 
                 if (isRecordCreated) {
-                    browser.navigator.clipboard.writeText(record.data.url);
+                    await browser.navigator.clipboard.writeText(url);
                     website.websiteRootInstance.options.services.notification.add(
-                        "Your tracked link is now created & copied !",
+                        "Your tracked link is now created & copied!",
                         { type: "success" }
                     );
                 }
