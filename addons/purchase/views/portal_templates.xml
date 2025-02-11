@@ -57,7 +57,6 @@
                         <span class='d-block d-md-none'>Ref.</span>
                     </th>
                       <th class="text-end">Order Deadline</th>
-                      <th class="text-end">Total</th>
                   </tr>
               </thead>
               <t t-foreach="rfqs" t-as="rfq">
@@ -66,9 +65,6 @@
                       <td class="text-end">
                           <span t-field="rfq.date_order" t-options="{'widget': 'date'}"/>&amp;nbsp;
                           <span class='d-none d-md-inline' t-field="rfq.date_order" t-options="{'time_only': True}"/>
-                      </td>
-                      <td class="text-end">
-                          <span t-field="rfq.amount_total"/>
                       </td>
                   </tr>
               </t>
@@ -155,7 +151,7 @@
                     </div>
 
                       <div class="d-flex flex-column gap-4 mt-3">
-                        <a class="btn btn-secondary o_print_btn o_portal_invoice_print" t-att-href="order.get_portal_url(report_type='pdf')" id="print_invoice_report" title="View Details" role="button" target="_blank"><i class="fa fa-print me-1"/>Download / Print</a>
+                          <a class="btn btn-secondary o_print_btn o_portal_invoice_print" t-att-href="order.get_portal_url(report_type='pdf')" id="print_invoice_report" title="View Details" role="button" target="_blank"><i class="fa fa-print me-1"/>Download / Print</a>
                           <div class="navspy flex-grow-1 ps-0" t-ignore="true" role="complementary">
                               <ul class="nav flex-column bs-sidenav"></ul>
                           </div>
@@ -275,7 +271,9 @@
                   <div class="col-lg-6">
                     <strong class="d-block mb-1">From:</strong>
                     <address t-field="order.company_id.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
-                    <strong>Confirmation Date:</strong> <span t-field="order.date_approve" t-options='{"widget": "date"}'/><br/>
+                    <t t-if="order.date_approve">
+                      <strong>Confirmation Date:</strong> <span t-field="order.date_approve" t-options='{"widget": "date"}'/><br/>
+                    </t>
                     <div t-att-class="'d-inline' if order.date_planned else 'd-none'">
                       <strong>Receipt Date:</strong><span class="ms-1" t-field="order.date_planned" t-options='{"widget": "date"}'/>
                     </div>
@@ -311,7 +309,7 @@
 
               <div class="table-responsive">
                 <table t-att-data-order-id="order.id" t-att-data-token="order.access_token" class="table table-sm" id="purchase_order_table">
-                    <t t-set="display_price_and_taxes" t-value="not update_dates and order.state in ['sent', 'purchase', 'done']"/>
+                    <t t-set="display_price_and_taxes" t-value="not update_dates and order.state in ['purchase', 'done']"/>
                     <thead class="bg-100">
                         <tr>
                             <th class="text-start">Products</th>
@@ -322,7 +320,7 @@
                                 <span>Taxes</span>
                             </th>
                             <th t-if="display_price_and_taxes" t-attf-class="text-end {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">Disc.%</th>
-                            <th class="text-end" t-if="not update_dates and order.state in ['purchase', 'done']" >
+                            <th class="text-end" t-if="display_price_and_taxes" >
                                 <span>Amount</span>
                             </th>
                         </tr>
