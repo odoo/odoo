@@ -1,5 +1,4 @@
 /* global posmodel */
-import { roundDecimals as round_di } from "@web/core/utils/numbers";
 
 function assert(condition, message) {
     if (!condition) {
@@ -19,10 +18,10 @@ function assertProductPrice(product, pricelist_name, quantity, expected_price) {
             false,
             product.product_variant_ids[0]
         );
-        const dp = posmodel.data.models["decimal.precision"].find(
+        const ProductPrice = posmodel.data.models["decimal.precision"].find(
             (dp) => dp.name === "Product Price"
         );
-        frontend_price = round_di(frontend_price, dp.digits);
+        frontend_price = ProductPrice.round(frontend_price);
         var diff = Math.abs(expected_price - frontend_price);
 
         assert(

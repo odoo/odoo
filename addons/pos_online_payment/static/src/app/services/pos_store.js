@@ -1,6 +1,5 @@
 import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/services/pos_store";
-import { floatIsZero } from "@web/core/utils/numbers";
 
 patch(PosStore.prototype, {
     async setup() {
@@ -69,7 +68,7 @@ patch(PosStore.prototype, {
             const matchingLineIndex = opLinesToUpdate.findIndex(
                 (pl) =>
                     pl.payment_method_id.id === op.payment_method_id &&
-                    floatIsZero(pl.amount - op.amount, this.currency.decimal_places)
+                    this.currency.isZero(pl.amount - op.amount)
             );
             let opLine = null;
             if (matchingLineIndex > -1) {

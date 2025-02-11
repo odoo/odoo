@@ -1,6 +1,5 @@
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { patch } from "@web/core/utils/patch";
-import { roundDecimals, roundPrecision } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { loyaltyIdsGenerator } from "@pos_loyalty/app/services/pos_store";
 import {
@@ -358,14 +357,16 @@ patch(PosOrder.prototype, {
     _getPointsCorrection(program) {
         const rewardLines = this.lines.filter((line) => line.is_reward_line);
         let res = 0;
+        const ProductPrice = this.models["decimal.precision"].find(
+            (dp) => dp.name === "Product Price"
+        );
         for (const rule of program.rule_ids) {
             for (const line of rewardLines) {
                 const reward = line.reward_id;
                 if (this._validForPointsCorrection(reward, line, rule)) {
                     if (rule.reward_point_mode === "money") {
-                        res -= roundPrecision(
-                            rule.reward_point_amount * line.getPriceWithTax(),
-                            0.01
+                        res -= ProductPrice.round(
+                            rule.reward_point_amount * line.getPriceWithTax()
                         );
                     } else if (rule.reward_point_mode === "unit") {
                         res += rule.reward_point_amount * line.getQuantity();
@@ -478,6 +479,9 @@ patch(PosOrder.prototype, {
      * @returns {Object} Containing the points gained per program
      */
     pointsForPrograms(programs) {
+        const ProductPrice = this.models["decimal.precision"].find(
+            (dp) => dp.name === "Product Price"
+        );
         pointsForProgramsCountedRules = {};
         const orderLines = this.getOrderlines();
         const linesPerRule = {};
@@ -600,10 +604,9 @@ patch(PosOrder.prototype, {
                             ) {
                                 continue;
                             }
-                            const pointsPerUnit = roundPrecision(
+                            const pointsPerUnit = ProductPrice.round(
                                 (rule.reward_point_amount * line.getPriceWithTax()) /
-                                    line.getQuantity(),
-                                0.01
+                                    line.getQuantity()
                             );
                             if (pointsPerUnit > 0) {
                                 splitPoints.push(
@@ -627,10 +630,7 @@ patch(PosOrder.prototype, {
                         points += rule.reward_point_amount;
                     } else if (rule.reward_point_mode === "money") {
                         // NOTE: unlike in sale_loyalty this performs a round half-up instead of round down
-                        points += roundPrecision(
-                            rule.reward_point_amount * orderedProductPaid,
-                            0.01
-                        );
+                        points += ProductPrice.round(rule.reward_point_amount * orderedProductPaid);
                     } else if (rule.reward_point_mode === "unit") {
                         points += rule.reward_point_amount * totalProductQty;
                     }
@@ -1245,6 +1245,9 @@ patch(PosOrder.prototype, {
      * @returns {Integer} Available quantity to be given as reward for the given product
      */
     _computeUnclaimedFreeProductQty(reward, coupon_id, product, remainingPoints) {
+        const ProductPrice = this.models["decimal.precision"].find(
+            (dp) => dp.name === "Product Price"
+        );
         let claimed = 0;
         let available = 0;
         let shouldCorrectRemainingPoints = false;
@@ -1295,9 +1298,8 @@ patch(PosOrder.prototype, {
                         if (rule.reward_point_mode === "order") {
                             orderPoints += rule.reward_point_amount;
                         } else if (rule.reward_point_mode === "money") {
-                            factor += roundPrecision(
-                                rule.reward_point_amount * product.lst_price,
-                                0.01
+                            factor += ProductPrice.round(
+                                rule.reward_point_amount * product.lst_price
                             );
                         } else if (rule.reward_point_mode === "unit") {
                             factor += rule.reward_point_amount;
@@ -1397,9 +1399,8 @@ patch(PosOrder.prototype, {
         return [
             {
                 product_id: reward.discount_line_product_id,
-                price_unit: -roundDecimals(
-                    product.getPrice(this.pricelist_id, freeQuantity, 0, false, product),
-                    this.currency.decimal_places
+                price_unit: -this.currency.round(
+                    product.getPrice(this.pricelist_id, freeQuantity, 0, false, product)
                 ),
                 tax_ids: product.taxes_id,
                 qty: freeQuantity,

@@ -2,7 +2,6 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { Component, useState, onMounted } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { ProductCard } from "@point_of_sale/app/components/product_card/product_card";
-import { floatIsZero } from "@web/core/utils/numbers";
 
 export class ComboConfiguratorPopup extends Component {
     static template = "point_of_sale.ComboConfiguratorPopup";
@@ -59,7 +58,7 @@ export class ComboConfiguratorPopup extends Component {
 
     formattedComboPrice(comboItem) {
         const extra_price = comboItem.extra_price;
-        if (floatIsZero(extra_price)) {
+        if (this.pos.currency.isZero(extra_price)) {
             return "";
         } else {
             const product = comboItem.product_id;

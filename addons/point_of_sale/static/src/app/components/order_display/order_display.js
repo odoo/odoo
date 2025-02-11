@@ -3,7 +3,6 @@ import { CenteredIcon } from "@point_of_sale/app/components/centered_icon/center
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { formatCurrency } from "@web/core/currency";
 import { _t } from "@web/core/l10n/translation";
-import { floatIsZero } from "@web/core/utils/numbers";
 
 // This methods is service-less, see PoS knowledges for more information
 export class OrderDisplay extends Component {
@@ -25,10 +24,6 @@ export class OrderDisplay extends Component {
                 ?.querySelector(".orderline.selected")
                 ?.scrollIntoView({ behavior: "smooth", block: "start" });
         });
-    }
-
-    floatIsZero(float) {
-        return floatIsZero(float);
     }
 
     formatCurrency(amount) {
