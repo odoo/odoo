@@ -1,7 +1,6 @@
 import { Component, onMounted, useRef, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { attributeFlatter, attributeFormatter } from "@pos_self_order/app/utils";
-import { floatIsZero } from "@web/core/utils/numbers";
 
 export class AttributeSelection extends Component {
     static template = "pos_self_order.AttributeSelection";
@@ -134,7 +133,7 @@ export class AttributeSelection extends Component {
 
     shouldShowPriceExtra(value) {
         const priceExtra = value.price_extra;
-        return !floatIsZero(priceExtra, this.selfOrder.config.currency_decimals);
+        return !this.selfOrder.config.currency_id.isZero(priceExtra);
     }
 
     getfPriceExtra(value) {
