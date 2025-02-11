@@ -80,9 +80,14 @@ const suggestionServicePatch = {
         };
     },
     /** @override */
-    sortPartnerSuggestionsContext() {
+    sortPartnerSuggestionsContext(thread) {
         return Object.assign(super.sortPartnerSuggestionsContext(), {
             recentChatPartnerIds: this.store.getRecentChatPartnerIds(),
+            memberPartnerIds: new Set(
+                thread?.channel_member_ids
+                    .filter((member) => member.persona.type === "partner")
+                    .map((member) => member.persona.id)
+            ),
         });
     },
 };
