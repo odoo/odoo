@@ -1,8 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
 from unittest.mock import patch
 
-from odoo.tests import TransactionCase
+from odoo.tests import TransactionCase, mute_logger
 
 
 class MockedConnection:
@@ -68,3 +69,38 @@ class TestFetchmail(TransactionCase):
             process.assert_called_once()
             self.assertFalse(self.connection.mock_messages, "message not handled")
         self.assertEqual(partner.name, 'processed', "message_process side effect should be saved")
+
+    def test_fetchmail_deactivation(self):
+        mail_server = self.env['fetchmail.server'].create({
+            'name': 'test deactivation server',
+        })
+        mail_server.search([('id', '!=', mail_server.id)]).action_archive()
+        mail_server.button_confirm_login()
+        self.assertEqual(mail_server.state, 'done')
+
+        # fetch mail
+        connection_failed_exception = Exception("mocked connection that fails")
+
+        def connect(obj, **kw):
+            raise connection_failed_exception
+        with (
+            self.enter_registry_test_mode(),
+            self.registry.cursor() as cr,
+            patch.object(self.registry['fetchmail.server'], 'connect', side_effect=connect, autospec=True) as connect,
+            mute_logger('odoo.addons.mail.models'),
+            self.assertLogs('odoo.addons.base.models.ir_cron') as cron_log_catcher,
+        ):
+            server = mail_server.with_env(mail_server.env(cr=cr))
+            self.assertFalse(server.error_date)
+            self.assertFalse(server.error_message)
+            exc = server._fetch_mail()
+            self.assertIs(exc, connection_failed_exception)
+            self.assertTrue(server.error_date)
+            self.assertIn("mocked connection", server.error_message)
+
+            # set the date in past for deactivation
+            server.error_date = server.error_date - timedelta(days=7, minutes=1)
+            exc = server._fetch_mail()
+            self.assertIs(exc, connection_failed_exception)
+            self.assertEqual(server.state, 'draft')
+            self.assertIn('WARNING:odoo.addons.base.models.ir_cron:Deactivating fetchmail imap server test deactivation server (too many failures)', cron_log_catcher.output)
