@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.ActionpadWidget">
-        <div class="actionpad d-flex flex-column gap-2">
+        <div class="actionpad d-flex flex-column gap-2" t-if="currentOrder">
             <div t-if="ui.isSmall" class="d-flex gap-2">
                 <BackButton t-if="!props.showActionButton and pos.showBackButton()" onClick="() => pos.onClickBackButton()"/>
                 <SelectPartnerButton partner="props.partner"/>

@@ -9,7 +9,7 @@
                 type="'internal'"
                 class="buttonClass"/>
         </t>
-        <button t-if="pos.config.use_presets and !props.showRemainingButtons"
+        <button t-if="pos.config.use_presets and !props.showRemainingButtons and currentOrder"
             class="btn btn-light btn-lg flex-shrink-0 border-0"
             t-attf-class="{{`o_colorlist_item_color_${currentOrder.preset_id?.color}`}}"
             t-on-click="() => this.pos.selectPreset()">

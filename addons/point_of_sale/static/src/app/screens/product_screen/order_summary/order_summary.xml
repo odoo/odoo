@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.OrderSummary">
-		<OrderDisplay order="currentOrder" t-slot-scope="scope">
+		<OrderDisplay order="currentOrder" t-slot-scope="scope" t-if="currentOrder">
 			<t t-set="line" t-value="scope.line" />
 			<Orderline line="line" t-on-click="(event) => this.clickLine(event, line)">
 				<t t-set-slot="pack-lot-icon">
