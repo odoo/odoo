@@ -150,7 +150,13 @@ class Department(models.Model):
             ('department_id', '=', False),
             ('department_id', 'in', self.ids),
         ]
-        action['domain'] = expression.AND([ast.literal_eval(action['domain']), domain]) if 'domain' in action else domain
+        if 'domain' in action:
+            allowed_company_ids = self.env.context.get('allowed_company_ids', [])
+            action['domain'] = expression.AND([
+                ast.literal_eval(action['domain'].replace('allowed_company_ids', str(allowed_company_ids))), domain
+            ])
+        else:
+            action['domain'] = domain
         if self.plans_count == 0:
             action['views'] = [(False, 'form')]
         return action
