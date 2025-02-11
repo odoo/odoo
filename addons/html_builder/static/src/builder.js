@@ -163,15 +163,6 @@ export class Builder extends Component {
             }
             el.style.setProperty(`--we-cp-${style}`, value);
         }
-
-        el.classList.toggle(
-            "o_we_has_btn_outline_primary",
-            getCSSVariableValue("btn-primary-outline") === "true"
-        );
-        el.classList.toggle(
-            "o_we_has_btn_outline_secondary",
-            getCSSVariableValue("btn-secondary-outline") === "true"
-        );
     }
 
     discard() {
