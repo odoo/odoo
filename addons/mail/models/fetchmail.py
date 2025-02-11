@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import datetime
 import functools
 import imaplib
 import logging
@@ -17,6 +18,7 @@ from odoo.fields import Domain
 _logger = logging.getLogger(__name__)
 MAIL_TIMEOUT = 60
 MAIL_SERVER_DOMAIN = Domain('state', '=', 'done') & Domain('server_type', '!=', 'local')
+MAIL_SERVER_DEACTIVATE_TIME = datetime.timedelta(days=5)  # deactivate cron when has general connection issues
 
 # Workaround for Python 2.7.8 bug https://bugs.python.org/issue23906
 poplib._MAXLINE = 65536
@@ -124,6 +126,8 @@ class FetchmailServer(models.Model):
     original = fields.Boolean('Keep Original', help="Whether a full original copy of each email should be kept for reference "
                                                     "and attached to each processed message. This will usually double the size of your message database.")
     date = fields.Datetime(string='Last Fetch Date', readonly=True)
+    error_date = fields.Datetime(string='Last Error Date', readonly=True,
+        help="Date of last failure, reset on success.")
     user = fields.Char(string='Username', readonly=False)
     password = fields.Char()
     object_id = fields.Many2one('ir.model', string="Create a New Record", help="Process each incoming mail as part of a conversation "
@@ -252,6 +256,9 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
         """ Method called by cron to fetch mails from servers """
         assert self.env.context.get('cron_id') == self.env.ref('mail.ir_cron_mail_gateway_action').id, "Meant for cron usage only"
         self.search(MAIL_SERVER_DOMAIN)._fetch_mail(**kw)
+        if not self.search_count(MAIL_SERVER_DOMAIN):
+            # no server is active anymore
+            self.env['ir.cron']._commit_progress(deactivate=True)
 
     def _fetch_mail(self, batch_limit=50) -> Exception | None:
         """ Fetch e-mails from multiple servers.
@@ -304,9 +311,15 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
                         server_connection.handled_message(message_num)
                     if count >= batch_limit or not remaining_time:
                         break
+                server.error_date = False
             except Exception as e:  # noqa: BLE001
                 result_exception = e
                 _logger.info("General failure when trying to fetch mail from %s server %s.", *server_type_and_name, exc_info=True)
+                if not server.error_date:
+                    server.error_date = fields.Datetime.now()
+                elif server.error_date < fields.Datetime.now() - MAIL_SERVER_DEACTIVATE_TIME:
+                    _logger.info("Deactivating %s server %s (too many failures)", *server_type_and_name)
+                    server.set_draft()
             finally:
                 if message_cr is not None:
                     message_cr.close()
