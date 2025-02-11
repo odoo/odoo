@@ -54,6 +54,10 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         self.env.ref('website_blog.opt_blog_sidebar_show').active = True
         self.env.ref('website_blog.opt_sidebar_blog_index_follow_us').active = False
         self.start_tour("/blog", 'blog_autocomplete_with_date')
+    
+    def test_blog_context_and_social_media(self):
+        self.start_tour("/blog", "blog_context", login="admin")
+        self.start_tour("/blog", "blog_social_media", login="admin")
 
     def test_avatar_comment(self):
         mail_message = self.env['mail.message'].create({
