@@ -140,11 +140,6 @@ class Website(models.Model):
     product_page_grid_columns = fields.Integer(default=2)
 
     prevent_zero_price_sale = fields.Boolean(string="Hide 'Add To Cart' when price = 0")
-    prevent_zero_price_sale_text = fields.Char(
-        string="Text to show instead of price",
-        translate=True,
-        default="Not Available For Sale",
-    )
 
     currency_id = fields.Many2one(
         string="Default Currency",
