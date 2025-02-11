@@ -1,34 +1,24 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-
 {
     'name': 'Members',
     'version': '1.0',
     'category': 'Sales/Sales',
     'description': """
-This module allows you to manage all operations for managing memberships.
-=========================================================================
+    
+    Todo
 
-It supports different kind of members:
---------------------------------------
-    * Free member
-    * Associated member (e.g.: a group subscribes to a membership for all subsidiaries)
-    * Paid members
-    * Special member prices
 
-It is integrated with sales and accounting to allow you to automatically
-invoice and send propositions for membership renewal.
     """,
-    'depends': ['account'],
+    'depends': ['crm', 'sale'],
     'data': [
         'security/ir.model.access.csv',
-        'wizard/membership_invoice_views.xml',
-        'data/membership_data.xml',
-        'views/product_views.xml',
-        'views/partner_views.xml',
-        'report/report_membership_views.xml',
+        'data/res_partner_grade_data.xml',
+        # 'views/product_views.xml',
+        # 'views/partner_views.xml',
+        'views/res_partner.xml',
+        'views/res_parter_grade_views.xml',
+        'views/product_template.xml',
     ],
-    'website': 'https://www.odoo.com/app/forum',
+    'website': 'https://www.odoo.com/app/forum',  #TODO
     'license': 'LGPL-3',
 }
