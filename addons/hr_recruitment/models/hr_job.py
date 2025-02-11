@@ -59,8 +59,6 @@ class HrJob(models.Model):
     interviewer_ids = fields.Many2many('res.users', string='Interviewers', domain="[('share', '=', False), ('company_ids', 'in', company_id)]", tracking=True, help="The Interviewers set on the job position can see all Applicants in it. They have access to the information, the attachments, the meeting management and they can refuse him. You don't need to have Recruitment rights to be set as an interviewer.")
     extended_interviewer_ids = fields.Many2many('res.users', 'hr_job_extended_interviewer_res_users', compute='_compute_extended_interviewer_ids', store=True)
     industry_id = fields.Many2one('res.partner.industry', 'Industry', tracking=True)
-    date_from = fields.Date(help="Is set, update candidates availability once hired for that specific mission.")
-    date_to = fields.Date()
 
     activities_overdue = fields.Integer(compute='_compute_activities')
     activities_today = fields.Integer(compute='_compute_activities')
@@ -73,6 +71,8 @@ class HrJob(models.Model):
         string='Hired', copy=False,
         help='Number of hired employees for this job position during recruitment phase.',
         store=True)
+
+    job_source_ids = fields.One2many('hr.recruitment.source', 'job_id')
 
     @api.depends('application_ids.date_closed')
     def _compute_no_of_hired_employee(self):
@@ -312,13 +312,6 @@ class HrJob(models.Model):
                 if application_ids:
                     application_ids.message_unsubscribe(to_unsubscribe)
                     application_ids.user_id = job.user_id
-
-        # Update the availability on all hired candidates if the mission end date is changed
-        if "date_to" in vals:
-            for job in self:
-                hired_candidates = job.application_ids.filtered(lambda a: a.application_status == 'hired')
-                for candidate in hired_candidates:
-                    candidate.availability = job.date_to + relativedelta(days=1)
 
         # Since the alias is created upon record creation, the default values do not reflect the current values unless
         # specifically rewritten

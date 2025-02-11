@@ -36,7 +36,7 @@ class HrApplicant(models.Model):
 
     active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.", index=True)
 
-    candidate_id = fields.Many2one('hr.candidate', required=True, index=True)
+    candidate_id = fields.Many2one('hr.candidate', required=True, index=True, ondelete='cascade')
     partner_id = fields.Many2one(related="candidate_id.partner_id")
     partner_name = fields.Char(compute="_compute_partner_name", search="_search_partner_name", inverse="_inverse_name", compute_sudo=True)
     email_from = fields.Char(related="candidate_id.email_from", readonly=False)
@@ -396,10 +396,6 @@ class HrApplicant(models.Model):
                     record_name=self.display_name,
                     model_description="Applicant",
                 )
-        if vals.get('date_closed'):
-            for applicant in self:
-                if applicant.job_id.date_to:
-                    applicant.candidate_id.availability = applicant.job_id.date_to + relativedelta(days=1)
 
         if vals.get("company_id") and not self.env.context.get('do_not_propagate_company', False):
             self.candidate_id.with_context(do_not_propagate_company=True).write({"company_id": vals["company_id"]})
@@ -418,18 +414,7 @@ class HrApplicant(models.Model):
         nocontent_body = Markup("""
 <p class="o_view_nocontent_smiling_face">%(help_title)s</p>
 """) % {
-            'help_title': _("No application found. Let's create one !"),
-        }
-
-        if hr_job:
-            pattern = r'(.*)<a>(.*?)<\/a>(.*)'
-            match = re.fullmatch(pattern, _('Have you tried to <a>add skills to your job position</a> and search into the Reserve ?'))
-            nocontent_body += Markup("""
-<p>%(para_1)s<a href="%(link)s">%(para_2)s</a>%(para_3)s</p>""") % {
-            'para_1': match[1],
-            'para_2': match[2],
-            'para_3': match[3],
-            'link': f'/odoo/recruitment/{hr_job.id}',
+            'help_title': _("No applications found."),
         }
 
         if hr_job.alias_email:
