@@ -40,7 +40,7 @@ class IrQweb(models.AbstractModel):
     def _compile_expr(self, expr, raise_on_missing=False):
         model = self.env.context.get("raise_on_forbidden_code_for_model")
         if model is not None and not self._is_expression_allowed(expr, model):
-            raise PermissionError("This directive is not allowed for this rendering mode.")
+            raise PermissionError(f"This directive expression is not allowed for this rendering mode: {expr!r}")
         return super()._compile_expr(expr, raise_on_missing)
 
     def _compile_directive_out(self, el, compile_context, level):

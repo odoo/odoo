@@ -2,16 +2,15 @@
 <odoo>
 
 <template id="s_searchbar_input" name="Search">
-    <t t-call="website.website_search_box_input">
-        <t t-set="search_type" t-valuef="all"/>
-        <t t-set="action" t-valuef="/website/search"/>
-        <t t-set="limit" t-valuef="5"/>
-        <t t-set="display_image" t-valuef="true"/>
-        <t t-set="display_description" t-valuef="true"/>
-        <t t-set="display_extra_link" t-valuef="true"/>
-        <t t-set="display_detail" t-valuef="true"/>
-        <t t-set="default_style" t-value="True"/>
-    </t>
+    <t t-call="website.website_search_box_input"
+        search_type.f="all"
+        action.f="/website/search"
+        limit.f="5"
+        display_image.f="true"
+        display_description.f="true"
+        display_extra_link.f="true"
+        display_detail.f="true"
+        default_style="True"/>
 </template>
 <template id="s_searchbar" name="Search">
     <section class="s_searchbar o_colored_level o_cc o_cc2 pt48 pb48">

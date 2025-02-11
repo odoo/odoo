@@ -752,10 +752,9 @@
 </template>
 
 <template id="snippet_options_border_widgets">
-    <t t-call="website.snippet_options_border_line_widgets">
-        <t t-set="label">Border</t>
-        <t t-set="with_bs_class" t-value="True"/>
-    </t>
+    <t t-call="website.snippet_options_border_line_widgets"
+        label.translate="Border"
+        with_bs_class="True"/>
     <we-input string="Round Corners"
               t-if="not no_border_radius"
               t-att-data-apply-to="apply_to"
@@ -792,17 +791,15 @@
 </template>
 
 <template id="snippet_options_header_box">
-    <t t-call="website.snippet_options_border_widgets">
-        <t t-set="so_rounded_no_dependencies" t-value="True"/>
-        <t t-set="width_variable" t-value="'menu-border-width'"/>
-        <t t-set="style_variable" t-value="'menu-border-style'"/>
-        <t t-set="color_variable" t-value="'menu-border-color'"/>
-        <t t-set="radius_variable" t-value="'menu-border-radius'"/>
-        <t t-set="no_border_radius" t-value="_no_border_radius"/>
-    </t>
-    <t t-call="website.snippet_options_shadow_widgets">
-        <t t-set="shadow_variable" t-value="'menu-box-shadow'"/>
-    </t>
+    <t t-call="website.snippet_options_border_widgets"
+        so_rounded_no_dependencies="True"
+        width_variable.f="menu-border-width"
+        style_variable.f="menu-border-style"
+        color_variable.f="menu-border-color"
+        radius_variable.f="menu-border-radius"
+        no_border_radius="_no_border_radius"/>
+    <t t-call="website.snippet_options_shadow_widgets"
+        shadow_variable.f="menu-box-shadow"/>
 </template>
 
 <template id="snippet_options_conditional_visibility">
@@ -910,24 +907,21 @@
 
         <!-- Binding the option on the snippet if it is not a s_card or a s_blockquote with a
              handler parent -->
-        <t t-call="web_editor.snippet_options_version_control">
-            <t t-set="selector" t-value="'[data-snippet]'"/>
-            <t t-set="exclude" t-valuef="div:is(#{card_parent_handlers}) > .s_card, div:is(#{blockquote_parent_handlers}) > .s_blockquote"/>
-        </t>
+        <t t-call="web_editor.snippet_options_version_control"
+            selector="'[data-snippet]'"
+            exclude.f="div:is(#{card_parent_handlers}) > .s_card, div:is(#{blockquote_parent_handlers}) > .s_blockquote"/>
 
         <!-- Binding the option on the s_card or s_blockquote handler parent -->
-        <t t-call="web_editor.snippet_options_version_control">
-            <t t-set="selector" t-valuef="#{card_parent_handlers}, #{blockquote_parent_handlers}"/>
-            <t t-set="target" t-value="'> .s_card, > .s_blockquote'"/>
-        </t>
+        <t t-call="web_editor.snippet_options_version_control"
+            selector.f="#{card_parent_handlers}, #{blockquote_parent_handlers}"
+            target="'> .s_card, > .s_blockquote'"/>
     </xpath>
 
     <!-- Font Awesome icons -->
     <xpath expr="//div[@data-js='FontawesomeTools']" position="inside">
-        <t t-call="website.snippet_options_border_line_widgets">
-            <t t-set="label">Border</t>
-            <t t-set="with_bs_class" t-value="True"/>
-        </t>
+        <t t-call="website.snippet_options_border_line_widgets"
+            label.translate="Border"
+            with_bs_class="True"/>
     </xpath>
 
     <!-- =================================================================== -->
@@ -986,16 +980,15 @@
     <!-- Carousel | .s_carousel | .s_quotes_carousel -->
     <!-- Dedicated colorpicker so that there is not 3 level of
          o_colored_level. Use inline-style color for the same reason. -->
-    <t t-call="website.snippet_options_background_options">
-        <t t-set="selector" t-value="'section'"/>
-        <t t-set="target" t-value="'> .carousel:not(.s_carousel_cards)'"/>
-        <t t-set="with_colors" t-value="True"/>
-        <t t-set="with_images" t-value="True"/>
-        <t t-set="with_videos" t-value="True"/>
-        <t t-set="with_shapes" t-value="True"/>
-        <t t-set="with_gradients" t-value="True"/>
-        <t t-set="with_color_combinations" t-value="True"/>
-    </t>
+    <t t-call="website.snippet_options_background_options"
+        selector.f="section"
+        target.f="> .carousel:not(.s_carousel_cards)"
+        with_colors="True"
+        with_images="True"
+        with_videos="True"
+        with_shapes="True"
+        with_gradients="True"
+        with_color_combinations="True"/>
 
     <t t-call="website.snippet_options_carousel"/>
     <t t-call="website.snippet_options_carousel_bottom_controllers"/>
@@ -1063,22 +1056,19 @@
                 <we-button data-select-layout="grid" data-name="grid_mode">Grid</we-button>
                 <we-button data-select-layout="normal" data-name="normal_mode">Cols</we-button>
             </we-button-group>
-            <t t-call="website.column_count_option">
-                <t t-set="with_grid" t-value="True"/>
-            </t>
+            <t t-call="website.column_count_option"
+                with_grid="True"/>
         </we-row>
-        <t t-call="website.grid_layout_options">
-            <t t-set="indent" t-value="True"/>
-        </t>
+        <t t-call="website.grid_layout_options"
+            indent="True"/>
     </div>
 
     <!--  Vertical Alignment -->
     <div data-js="vAlignment" id="row_valign_snippet_option"
          data-selector=".s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse, .s_references, .s_accordion_image, .s_shape_image, .s_reviews_wall"
          data-target=".row">
-        <t t-call="website.vertical_alignment_option">
-            <t t-set="indent" t-value="True"/>
-        </t>
+        <t t-call="website.vertical_alignment_option"
+            indent="True"/>
     </div>
 
     <!-- Move snippets around -->
@@ -1105,34 +1095,31 @@
     <t t-set="both_bg_color_image_selector" t-value="'section, .carousel-item, .s_masonry_block .row > div, .s_color_blocks_2 .row > div, .parallax, .s_text_cover .row > .o_not_editable, .s_website_form_cover .row > .o_not_editable, .s_split_intro .row > .o_not_editable'"/>
     <t t-set="both_bg_color_image_exclude" t-value="base_only_bg_image_selector + ', .s_carousel_wrapper, .s_image_gallery .carousel-item, .s_google_map, .s_map, [data-snippet] :not(.oe_structure) > [data-snippet], .s_masonry_block .s_col_no_resize, .s_quotes_carousel_wrapper, .s_carousel_intro_wrapper, .s_carousel_cards_item'"/>
 
-    <t t-call="website.snippet_options_background_options">
-        <t t-set="selector" t-value="both_bg_color_image_selector"/>
-        <t t-set="exclude" t-value="both_bg_color_image_exclude"/>
-        <t t-set="with_colors" t-value="True"/>
-        <t t-set="with_images" t-value="True"/>
-        <t t-set="with_videos" t-value="True"/>
-        <t t-set="with_shapes" t-value="True"/>
-        <t t-set="with_color_combinations" t-value="True"/>
-        <t t-set="with_gradients" t-value="True"/>
-    </t>
+    <t t-call="website.snippet_options_background_options"
+        selector="both_bg_color_image_selector"
+        exclude="both_bg_color_image_exclude"
+        with_colors="True"
+        with_images="True"
+        with_videos="True"
+        with_shapes="True"
+        with_color_combinations="True"
+        with_gradients="True"/>
 
-    <t t-call="website.snippet_options_background_options">
-        <t t-set="selector" t-value="only_bg_color_selector"/>
-        <t t-set="exclude" t-value="only_bg_color_exclude"/>
-        <t t-set="with_colors" t-value="True"/>
-        <t t-set="with_images" t-value="False"/>
-        <t t-set="with_color_combinations" t-value="True"/>
-        <t t-set="with_gradients" t-value="True"/>
-    </t>
+    <t t-call="website.snippet_options_background_options"
+        selector="only_bg_color_selector"
+        exclude="only_bg_color_exclude"
+        with_colors="True"
+        with_images="False"
+        with_color_combinations="True"
+        with_gradients="True"/>
 
-    <t t-call="website.snippet_options_background_options">
-        <t t-set="selector" t-value="only_bg_image_selector"/>
-        <t t-set="exclude" t-value="only_bg_image_exclude"/>
-        <t t-set="with_colors" t-value="False"/>
-        <t t-set="with_images" t-value="True"/>
-        <t t-set="with_videos" t-value="True"/>
-        <t t-set="with_shapes" t-value="True"/>
-    </t>
+    <t t-call="website.snippet_options_background_options"
+        selector="only_bg_image_selector"
+        exclude="only_bg_image_exclude"
+        with_colors="False"
+        with_images="True"
+        with_videos="True"
+        with_shapes="True"/>
 
     <!-- Grid mode columns -->
     <div data-js="GridColumns"
@@ -1354,9 +1341,8 @@
          data-target="nav"
          data-no-check="true"
          groups="website.group_website_designer">
-        <t t-call="website.snippet_options_header_box">
-            <t t-set="_no_border_radius" t-value="True"/>
-        </t>
+        <t t-call="website.snippet_options_header_box"
+            _no_border_radius="True"/>
     </div>
 
     <div data-selector="#wrapwrap > header"
@@ -1820,10 +1806,9 @@
 
     <div data-js="CoverProperties" data-selector=".o_record_cover_container" data-no-check="true">
         <we-row string="Background" class="o_we_full_row">
-            <t t-call="web_editor.snippet_options_background_color_widget">
-                <t t-set="with_color_combinations" t-value="True"/>
-                <t t-set="with_gradients" t-value="True"/>
-            </t>
+            <t t-call="web_editor.snippet_options_background_color_widget"
+                with_color_combinations="True"
+                with_gradients="True"/>
             <we-button-group class="ms-auto">
                 <we-imagepicker title="Image" data-background="" data-button-style="true"/>
                 <we-button class="fa fa-fw fa-ban" title="None" data-background="">
@@ -1947,52 +1932,47 @@
             </we-row>
 
             <t t-if="request.geoip.country_code">
-                <t t-call="website.snippet_options_conditional_visibility">
-                    <t t-set="option_name">Country</t>
-                    <t t-set="attribute_rule" t-valuef="visibilityValueCountryRule"/>
-                    <t t-set="save_attribute" t-valuef="visibilityValueCountry"/>
-                    <t t-set="attribute_name" t-valuef="data-country"/>
-                    <t t-set="model" t-valuef="res.country"/>
-                    <t t-set="call_with" t-valuef="code"/>
-                    <t t-set="data_fields" t-valuef="[&quot;code&quot;]"/>
-                </t>
+                <t t-call="website.snippet_options_conditional_visibility"
+                    option_name.translate="Country"
+                    attribute_rule.f="visibilityValueCountryRule"
+                    save_attribute.f="visibilityValueCountry"
+                    attribute_name.f="data-country"
+                    model.f="res.country"
+                    call_with.f="code"
+                    data_fields.f="[&quot;code&quot;]"/>
             </t>
             <t t-if="len(current_website.language_ids) > 1">
-                <t t-call="website.snippet_options_conditional_visibility">
-                    <t t-set="option_name">Languages</t>
-                    <t t-set="attribute_rule" t-valuef="visibilityValueLangRule"/>
-                    <t t-set="save_attribute" t-valuef="visibilityValueLang"/>
-                    <t t-set="attribute_name" t-valuef="lang"/>
-                    <t t-set="model" t-valuef="res.lang"/>
-                    <t t-set="call_with" t-valuef="code"/>
-                    <t t-set="domain" t-translation="off">[["id", "in", <t t-out="current_website.language_ids.ids"/>]]</t>
-                    <t t-set="data_fields" t-valuef="[&quot;code&quot;]"/>
-                </t>
+                <t t-call="website.snippet_options_conditional_visibility"
+                    option_name.translate="Languages"
+                    attribute_rule.f="visibilityValueLangRule"
+                    save_attribute.f="visibilityValueLang"
+                    attribute_name.f="lang"
+                    model.f="res.lang"
+                    call_with.f="code"
+                    domain.f="[[&quot;id&quot;, &quot;in&quot;, {{current_website.language_ids.ids}}]]"
+                    data_fields.f="[&quot;code&quot;]"/>
             </t>
-            <t t-call="website.snippet_options_conditional_visibility">
-                <t t-set="option_name">UTM Campaign</t>
-                <t t-set="attribute_rule" t-valuef="visibilityValueUtmCampaignRule"/>
-                <t t-set="save_attribute" t-valuef="visibilityValueUtmCampaign"/>
-                <t t-set="attribute_name" t-valuef="data-utm-campaign"/>
-                <t t-set="model" t-valuef="utm.campaign"/>
-                <t t-set="call_with" t-valuef="display_name"/>
-            </t>
-            <t t-call="website.snippet_options_conditional_visibility">
-                <t t-set="option_name">UTM Medium</t>
-                <t t-set="attribute_rule" t-valuef="visibilityValueUtmMediumRule"/>
-                <t t-set="save_attribute" t-valuef="visibilityValueUtmMedium"/>
-                <t t-set="attribute_name" t-valuef="data-utm-medium"/>
-                <t t-set="model" t-valuef="utm.medium"/>
-                <t t-set="call_with" t-valuef="display_name"/>
-            </t>
-            <t t-call="website.snippet_options_conditional_visibility">
-                <t t-set="option_name">UTM Source</t>
-                <t t-set="attribute_rule" t-valuef="visibilityValueUtmSourceRule"/>
-                <t t-set="save_attribute" t-valuef="visibilityValueUtmSource"/>
-                <t t-set="attribute_name" t-valuef="data-utm-source"/>
-                <t t-set="model" t-valuef="utm.source"/>
-                <t t-set="call_with" t-valuef="display_name"/>
-            </t>
+            <t t-call="website.snippet_options_conditional_visibility"
+                option_name.translate="UTM Campaign"
+                attribute_rule.f="visibilityValueUtmCampaignRule"
+                save_attribute.f="visibilityValueUtmCampaign"
+                attribute_name.f="data-utm-campaign"
+                model.f="utm.campaign"
+                call_with.f="display_name"/>
+            <t t-call="website.snippet_options_conditional_visibility"
+                option_name.translate="UTM Medium"
+                attribute_rule.f="visibilityValueUtmMediumRule"
+                save_attribute.f="visibilityValueUtmMedium"
+                attribute_name.f="data-utm-medium"
+                model.f="utm.medium"
+                call_with.f="display_name"/>
+            <t t-call="website.snippet_options_conditional_visibility"
+                option_name.translate="UTM Source"
+                attribute_rule.f="visibilityValueUtmSourceRule"
+                save_attribute.f="visibilityValueUtmSource"
+                attribute_name.f="data-utm-source"
+                model.f="utm.source"
+                call_with.f="display_name"/>
             <we-select string="Users"
                 class="o_we_sublevel_1"
                 data-dependencies="visibility_conditional"

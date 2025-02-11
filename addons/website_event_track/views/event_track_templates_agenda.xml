@@ -8,7 +8,7 @@
         <div t-if="not tracks_by_days" class="container">
             <div class="row">
                 <div class="col-12 text-center">
-                    <div t-call="website_event.event_empty_events_svg" class="my-4"/>
+                    <div class="my-4"><t t-call="website_event.event_empty_events_svg"/></div>
                     <h2 class="mb-2">No track found.</h2>
                     <p t-if="search_key">We could not find any track matching your search for: <strong t-out="search_key"/>.</p>
                     <p t-else="">We could not find any track at this moment.</p>

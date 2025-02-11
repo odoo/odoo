@@ -4063,14 +4063,14 @@
                 <t t-set="secondaryIcon" t-value="menuItem.secondaryIcon(env)"/>
                 <div
                   t-if="isMenuRoot"
-                  class="o-menu-item-root align-middle ms-auto"
-                  t-call="o-spreadsheet-Icon.CARET_RIGHT"
-                />
+                  class="o-menu-item-root align-middle ms-auto">
+                  <t t-call="o-spreadsheet-Icon.CARET_RIGHT"/>
+                </div>
                 <div
                   t-elif="secondaryIcon"
-                  class="o-menu-item-root align-middle ms-auto"
-                  t-call="{{secondaryIcon}}"
-                />
+                  class="o-menu-item-root align-middle ms-auto">
+                  <t t-call="{{secondaryIcon}}"/>
+                </div>
               </div>
             </div>
           </t>

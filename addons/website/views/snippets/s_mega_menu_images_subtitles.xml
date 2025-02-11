@@ -7,40 +7,34 @@
             <div class="row">
                 <div class="col-12 col-lg-4 py-2">
                     <nav class="nav flex-column w-100">
-                        <t t-call="website.s_mega_menu_images_subtitles_item">
-                            <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_images_subtitles_default_image_1"/>
-                            <t t-set="_title">About us</t>
-                            <t t-set="_text">Discover our culture and our values</t>
-                        </t>
-                        <t t-call="website.s_mega_menu_images_subtitles_item">
-                            <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_images_subtitles_default_image_2"/>
-                            <t t-set="_title">Customers</t>
-                            <t t-set="_text">They trust us since years</t>
-                        </t>
-                        <t t-call="website.s_mega_menu_images_subtitles_item">
-                            <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_images_subtitles_default_image_3"/>
-                            <t t-set="_title">Services</t>
-                            <t t-set="_text">Find the perfect solution for you</t>
-                        </t>
+                        <t t-call="website.s_mega_menu_images_subtitles_item"
+                            _img_src.f="/web/image/website.s_mega_menu_images_subtitles_default_image_1"
+                            _title.translate="About us"
+                            _text.translate="Discover our culture and our values"/>
+                        <t t-call="website.s_mega_menu_images_subtitles_item"
+                            _img_src.f="/web/image/website.s_mega_menu_images_subtitles_default_image_2"
+                            _title.translate="Customers"
+                            _text.translate="They trust us since years"/>
+                        <t t-call="website.s_mega_menu_images_subtitles_item"
+                            _img_src.f="/web/image/website.s_mega_menu_images_subtitles_default_image_3"
+                            _title.translate="Services"
+                            _text.translate="Find the perfect solution for you"/>
                     </nav>
                 </div>
                 <div class="col-12 col-lg-4 py-2">
                     <nav class="nav flex-column w-100">
-                        <t t-call="website.s_mega_menu_images_subtitles_item">
-                            <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_images_subtitles_default_image_4"/>
-                            <t t-set="_title">Blog</t>
-                            <t t-set="_text">Latests news and case studies</t>
-                        </t>
-                        <t t-call="website.s_mega_menu_images_subtitles_item">
-                            <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_images_subtitles_default_image_5"/>
-                            <t t-set="_title">Events</t>
-                            <t t-set="_text">Our seminars and trainings for you</t>
-                        </t>
-                        <t t-call="website.s_mega_menu_images_subtitles_item">
-                            <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_images_subtitles_default_image_6"/>
-                            <t t-set="_title">Help center</t>
-                            <t t-set="_text">Contact us for any issue or question</t>
-                        </t>
+                        <t t-call="website.s_mega_menu_images_subtitles_item"
+                            _img_src.f="/web/image/website.s_mega_menu_images_subtitles_default_image_4"
+                            _title.translate="Blog"
+                            _text.translate="Latests news and case studies"/>
+                        <t t-call="website.s_mega_menu_images_subtitles_item"
+                            _img_src.f="/web/image/website.s_mega_menu_images_subtitles_default_image_5"
+                            _title.translate="Events"
+                            _text.translate="Our seminars and trainings for you"/>
+                        <t t-call="website.s_mega_menu_images_subtitles_item"
+                            _img_src.f="/web/image/website.s_mega_menu_images_subtitles_default_image_6"
+                            _title.translate="Help center"
+                            _text.translate="Contact us for any issue or question"/>
                     </nav>
                 </div>
                 <div class="col-12 col-lg-4 py-2">

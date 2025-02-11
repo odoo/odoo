@@ -397,7 +397,6 @@ class IrHttp(models.AbstractModel):
         values = super()._get_values_500_error(env, values, exception)
         if 'qweb_exception' in values:
             if not env.user.has_group('base.group_user'):
-                values.pop('qweb_exception', None)
                 values.pop('traceback', None)
             try:
                 # exception.name might be int, string
