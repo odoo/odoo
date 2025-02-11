@@ -5,13 +5,12 @@ import { markup, Component } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
 
 import { RecipientList } from "@mail/core/web/recipient_list";
-import { SuggestedRecipientsList } from "@mail/core/web/suggested_recipient_list";
 import { Thread } from "@mail/core/common/thread_model";
 
 
 export class BaseRecipientsList extends Component {
     static template = "mail.BaseRecipientsList";
-    static components = { SuggestedRecipientsList };
+    static components = {};
     static props = { thread: { type: Thread } };
 
     setup() {
@@ -22,10 +21,9 @@ export class BaseRecipientsList extends Component {
     getRecipientListToHTML() {
         const recipients = this.props.thread.recipients.slice(0, 5).map((
             { partner }) => {
-                const text = partner.email ? partner.emailWithoutDomain : partner.name;
                 return `<span class="text-muted" title="${escape(
                     partner.email || _t("no email address")
-                )}">${escape(text)}</span>`;
+                )}">${escape(partner.name)}</span>`;
             });
         if (this.props.thread.recipients.length > 5) {
             recipients.push(escape(

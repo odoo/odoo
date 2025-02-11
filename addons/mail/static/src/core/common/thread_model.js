@@ -14,7 +14,6 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
  * @property {import("models").Persona|false} persona
  * @property {string} lang
  * @property {string} reason
- * @property {boolean} checked
  */
 
 export class Thread extends Record {
@@ -221,12 +220,23 @@ export class Thread extends Record {
      */
     scrollTop = "bottom";
     transientMessages = Record.many("mail.message");
+    /* The additional recipients are the recipients that are manually added
+     * by the user by using the "To" field of the Chatter. */
+    additionalRecipients = Record.attr([], {
+        onUpdate() {
+            for (const recipient of this.additionalRecipients) {
+                recipient.persona = recipient.partner_id
+                    ? { type: "partner", id: recipient.partner_id }
+                    : false;
+            }
+        },
+    });
+    /* The suggested recipients are the recipients that are suggested by the
+     * current model and includes the recipients of the last message. (e.g: for
+     * a crm lead, the model will suggest the customer associated to the lead). */
     suggestedRecipients = Record.attr([], {
         onUpdate() {
             for (const recipient of this.suggestedRecipients) {
-                if (recipient.checked === undefined) {
-                    recipient.checked = true;
-                }
                 recipient.persona = recipient.partner_id
                     ? { type: "partner", id: recipient.partner_id }
                     : false;

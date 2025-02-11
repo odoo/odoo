@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="mail.MailComposerBccPopover">
+        <div class="o-mail-MailComposerBccPopover overflow-auto">
+            <ul class="list-unstyled m-0">
+                <li class="px-2" t-foreach="props.records" t-as="record" t-key="record.id">
+                    <t t-out="getRecipientText(record)"/>
+                </li>
+            </ul>
+        </div>
+    </t>
+</templates>
