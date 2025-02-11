@@ -3,7 +3,6 @@
     'name': 'France - Accounting',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/france.html',
     'icon': '/account/static/description/l10n.png',
-    'countries': ['fr'],
     'version': '2.1',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
@@ -34,7 +33,7 @@ configuration of their taxes and fiscal positions manually.
         'account',
         'l10n_fr',
     ],
-    'auto_install': ['account'],
+    'auto_install': ['account', 'l10n_fr'],
     'data': [
         'data/account_chart_template_data.xml',
         'data/account_data.xml',
