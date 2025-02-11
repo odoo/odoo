@@ -1079,7 +1079,7 @@ class PosSession(models.Model):
         outstanding_account = payment_method.outstanding_account_id
         destination_account = self._get_receivable_account(payment_method)
 
-        account_payment = self.env['account.payment'].create({
+        account_payment = self.env['account.payment'].with_context(pos_payment=True).create({
             'amount': abs(amounts['amount']),
             'journal_id': payment_method.journal_id.id,
             'force_outstanding_account_id': outstanding_account.id,
@@ -1090,10 +1090,17 @@ class PosSession(models.Model):
             'company_id': self.company_id.id,
         })
 
+        # In community the outstanding account is computed on the creation of account.payment records
+        accounting_installed = self.env['account.move']._get_invoice_in_payment_state() == 'in_payment'
+        if not account_payment.outstanding_account_id and accounting_installed:
+            account_payment.outstanding_account_id = account_payment._get_outstanding_account(account_payment.payment_type)
+
         if float_compare(amounts['amount'], 0, precision_rounding=self.currency_id.rounding) < 0:
             # revert the accounts because account.payment doesn't accept negative amount.
-            account_payment.outstanding_account_id = account_payment.destination_account_id
-            account_payment.destination_account_id = account_payment.outstanding_account_id
+            account_payment.write({
+                'outstanding_account_id': account_payment.destination_account_id,
+                'destination_account_id': account_payment.outstanding_account_id,
+            })
 
         account_payment.action_post()
 
