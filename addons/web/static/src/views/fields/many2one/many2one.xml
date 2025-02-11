@@ -15,10 +15,10 @@
     </t>
 
     <t t-name="web.Many2One.linkContent">
-        <span t-esc="displayName"/>
+        <t t-esc="displayName"/>
         <t t-foreach="extraLines" t-as="extraLine" t-key="extraLine_index">
             <br/>
-            <span t-esc="extraLine"/>
+            <t t-esc="extraLine"/>
         </t>
     </t>
 

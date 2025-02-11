@@ -27,6 +27,7 @@ export class KanbanMany2OneAvatarField extends Component {
 
 registry.category("fields").add("kanban.many2one_avatar", {
     ...buildM2OFieldDescription(KanbanMany2OneAvatarField),
+    additionalClasses: ["o_field_many2one_avatar_kanban"],
     extractProps(staticInfo, dynamicInfo) {
         return {
             ...extractM2OFieldProps(staticInfo, dynamicInfo),

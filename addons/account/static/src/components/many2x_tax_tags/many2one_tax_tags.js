@@ -41,4 +41,5 @@ export class Many2OneTaxTagsField extends Component {
 
 registry.category("fields").add("many2one_tax_tags", {
     ...buildM2OFieldDescription(Many2OneTaxTagsField),
+    additionalClasses: ["o_field_many2one"],
 });

@@ -63,8 +63,8 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         this.notification = useService("notification");
         this.orm = useService("orm");
         let isMounted = false;
-        let wasCombo = false;
         let isInternalUpdate = false;
+        let wasCombo = false;
         this.decorateUpdate = (update) => (value) => {
             isInternalUpdate = true;
             wasCombo = this.isCombo;
@@ -213,7 +213,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
 
     onEditConfiguration() {
         if (this.isCombo) {
-            this._openComboConfigurator();
+            this._openComboConfigurator(true);
         } else if (this.isConfigurableTemplate) {
             this._openProductConfigurator(true);
         }

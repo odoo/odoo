@@ -37,4 +37,5 @@ export class Many2OneUomField extends Component {
 
 registry.category("fields").add("many2one_uom", {
     ...buildM2OFieldDescription(Many2OneUomField),
+    additionalClasses: ["o_field_many2one"],
 });

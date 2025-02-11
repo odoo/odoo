@@ -39,6 +39,7 @@ export class Many2OneAvatarUserField extends Component {
 
 registry.category("fields").add("many2one_avatar_user", {
     ...buildM2OFieldDescription(Many2OneAvatarUserField),
+    additionalClasses: ["o_field_many2one_avatar"],
     extractProps(staticInfo, dynamicInfo) {
         const props = extractM2OFieldProps(staticInfo, dynamicInfo);
         props.withCommand = ["form", "list"].includes(staticInfo.viewType);

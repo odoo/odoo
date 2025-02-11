@@ -38,6 +38,7 @@ export class KanbanMany2OneAvatarUserField extends Component {
 /** @type {import("registries").FieldsRegistryItemShape} */
 const fieldDescr = {
     ...buildM2OFieldDescription(KanbanMany2OneAvatarUserField),
+    additionalClasses: ["o_field_many2one_avatar_kanban", "o_field_many2one_avatar"],
     extractProps(staticInfo, dynamicInfo) {
         return {
             ...extractM2OFieldProps(staticInfo, dynamicInfo),
