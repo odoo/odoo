@@ -106,7 +106,7 @@ class PosConfig(models.Model):
     def load_onboarding_restaurant_scenario(self):
         ref_name = 'pos_restaurant.pos_config_main_restaurant'
         if not self.env.ref(ref_name, raise_if_not_found=False):
-            self._load_restaurant_data()
+            self.with_context(load_data=True)._load_restaurant_data()
 
         journal, payment_methods_ids = self._create_journal_and_payment_methods(cash_journal_vals={'name': 'Cash Restaurant', 'show_on_dashboard': False})
         restaurant_categories = self.get_record_by_ref([
