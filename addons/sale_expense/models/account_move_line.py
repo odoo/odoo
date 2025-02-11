@@ -41,6 +41,7 @@ class AccountMoveLine(models.Model):
                 'name': self.name,
                 'expense_ids': [Command.set(self.expense_id.ids)],
                 'product_uom_qty': self.expense_id.quantity,
+                'analytic_distribution': self.analytic_distribution,
             })
         return res
 
