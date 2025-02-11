@@ -37,6 +37,7 @@ class PosPrinterService extends PrinterService {
         try {
             return await super.printHtml(...arguments);
         } catch (error) {
+<<<<<<< saas-18.1:addons/point_of_sale/static/src/app/services/pos_printer_service.js
             this.dialog.add(ConfirmationDialog, {
                 title: error.title || _t("Printing error"),
                 body: error.body + _t("Do you want to print using the web printer? "),
@@ -47,6 +48,38 @@ class PosPrinterService extends PrinterService {
                     this.printWeb(...arguments);
                 },
             });
+||||||| 56dde2704be7437876e179b08c50d8c5bb9f48d7:addons/point_of_sale/static/src/app/printer/pos_printer_service.js
+            return this.printHtmlAlternative(error, ...arguments);
+        }
+    }
+    async printHtmlAlternative(error, ...printArguments) {
+        const confirmed = await ask(this.dialog, {
+            title: error.title || _t("Printing error"),
+            body: error.body + _t("Do you want to print using the web printer? "),
+        });
+        if (confirmed) {
+            // We want to call the _printWeb when the dialog is fully gone
+            // from the screen which happens after the next animation frame.
+            await new Promise(requestAnimationFrame);
+            this.printWeb(...printArguments);
+=======
+            return this.printHtmlAlternative(error, ...arguments);
+        }
+    }
+    async printHtmlAlternative(error, ...printArguments) {
+        if (error.body === undefined) {
+            console.error("An unknown error occured in printHtml:", error);
+        }
+        const confirmed = await ask(this.dialog, {
+            title: error.title || _t("Printing error"),
+            body: (error.body ?? "") + _t("Do you want to print using the web printer? "),
+        });
+        if (confirmed) {
+            // We want to call the _printWeb when the dialog is fully gone
+            // from the screen which happens after the next animation frame.
+            await new Promise(requestAnimationFrame);
+            this.printWeb(...printArguments);
+>>>>>>> a5ea9a5b4a93a29316db6492d31765144402a62d:addons/point_of_sale/static/src/app/printer/pos_printer_service.js
         }
     }
 }
