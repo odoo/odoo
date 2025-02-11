@@ -79,6 +79,7 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(quant.location_id, stock_location)
 
     def test_basic_move(self):
+        self.user_stock_manager.group_ids += self.env.ref("product.group_product_manager")
         product = self.product_3.with_user(self.user_stock_manager)
         product.is_storable = True
         picking_out = self.env['stock.picking'].create({

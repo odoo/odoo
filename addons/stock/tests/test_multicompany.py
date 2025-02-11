@@ -316,6 +316,7 @@ class TestMultiCompany(TransactionCase):
         depending of its `company_id`."""
         # Creates a new product with no company_id and set a responsible.
         # The product must be created as there is no company on the product.
+        self.user_a.group_ids += self.env.ref("product.group_product_manager")
         product_form = Form(self.env['product.template'].with_user(self.user_a))
         product_form.name = 'Paramite Pie'
         product_form.responsible_id = self.user_b
