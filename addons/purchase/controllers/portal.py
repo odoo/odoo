@@ -161,6 +161,10 @@ class CustomerPortal(portal.CustomerPortal):
         if confirm_type == 'decline':
             order_sudo._decline_reception_mail()
 
+        if kw.get('acknowledge'):
+            order_sudo.action_acknowledge()
+
+
         values = self._purchase_order_get_page_view_values(order_sudo, access_token, **kw)
         update_date = kw.get('update')
         if order_sudo.company_id:
