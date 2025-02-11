@@ -265,7 +265,6 @@ registry.category("web_tour.tours").add("TableMergeUnmergeTour", {
             FloorScreen.isShown(),
             FloorScreen.clickTable("104"),
             inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1")),
-            inLeftSide(ProductScreen.orderLineHas("Minute Maid", "1")),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
         ].flat(),

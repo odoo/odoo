@@ -61,6 +61,7 @@ import { makeErrorFromResponse } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { SIZES } from "@web/core/ui/ui_service";
 import { useBus, useService } from "@web/core/utils/hooks";
+import { redirect } from "@web/core/utils/urls";
 import { CharField } from "@web/views/fields/char/char_field";
 import { DateTimeField } from "@web/views/fields/datetime/datetime_field";
 import { Field } from "@web/views/fields/field";
@@ -1613,100 +1614,6 @@ test(`autofocus on second notebook page`, async () => {
     expect(`.o_notebook .nav .nav-item:eq(1) .nav-link`).toHaveClass("active");
 });
 
-test(`notebook page is changing when an anchor is clicked from another page`, async () => {
-    await mountWithCleanup(`
-        <div class="scrollable-view" style="overflow: auto; max-height: 400px;"/>
-    `);
-
-    await mountView(
-        {
-            resModel: "partner",
-            type: "form",
-            arch: `
-            <form>
-                <a class="outerLink2" href="#anchor2">TO ANCHOR 2 FROM OUTSIDE THE NOTEPAD</a>
-                <sheet>
-                    <notebook>
-                        <page string="Non scrollable page">
-                            <div id="anchor1">No scrollbar!</div>
-                            <a href="#anchor2" class="link2">TO ANCHOR 2</a>
-                        </page>
-                        <page string="Other scrollable page">
-                            <p style="font-size: large">
-                                Aliquam convallis sollicitudin purus. Praesent aliquam, enim at fermentum mollis,
-                                ligula massa adipiscing nisl, ac euismod nibh nisl eu lectus. Fusce vulputate sem
-                                at sapien. Vivamus leo. Aliquam euismod libero eu enim. Nulla nec felis sed leo
-                                placerat imperdiet. Aenean suscipit nulla in justo. Suspendisse cursus rutrum
-                                augue.
-                            </p>
-                            <p style="font-size: large">
-                                Aliquam convallis sollicitudin purus. Praesent aliquam, enim at fermentum mollis,
-                                ligula massa adipiscing nisl, ac euismod nibh nisl eu lectus. Fusce vulputate sem
-                                at sapien. Vivamus leo. Aliquam euismod libero eu enim. Nulla nec felis sed leo
-                                placerat imperdiet. Aenean suscipit nulla in justo. Suspendisse cursus rutrum
-                                augue.
-                            </p>
-                            <h2 id="anchor2">There is a scroll bar</h2>
-                            <a href="#anchor1" class="link1">TO ANCHOR 1</a>
-                            <p style="font-size: large">
-                                Aliquam convallis sollicitudin purus. Praesent aliquam, enim at fermentum mollis,
-                                ligula massa adipiscing nisl, ac euismod nibh nisl eu lectus. Fusce vulputate sem
-                                at sapien. Vivamus leo. Aliquam euismod libero eu enim. Nulla nec felis sed leo
-                                placerat imperdiet. Aenean suscipit nulla in justo. Suspendisse cursus rutrum
-                                augue.
-                            </p>
-                        </page>
-                    </notebook>
-                </sheet>
-            </form>
-        `,
-            resId: 1,
-        },
-        queryFirst`.scrollable-view`
-    );
-    expect(`.tab-pane.active #anchor1`).toHaveCount(1);
-    expect(`#anchor2`).toHaveCount(0);
-
-    await contains(`.link2`).click();
-    expect(`.tab-pane.active #anchor2`).toHaveCount(1);
-    expect(`#anchor2`).toBeVisible();
-
-    await contains(`.link1`).click();
-    expect(`.tab-pane.active #anchor1`).toHaveCount(1);
-    expect(`#anchor1`).toBeVisible();
-
-    await contains(`.outerLink2`).click();
-    expect(`.tab-pane.active #anchor2`).toHaveCount(1);
-    expect(`#anchor2`).toBeVisible();
-});
-
-test(`have a link to an id in the DOM, and open a form view with a node with that id`, async () => {
-    await mountWithCleanup(`
-        <div>
-            <a class="my_link" href="#my_special_id">My link</a>
-        </div>
-    `);
-    expect(".my_link").toHaveAttribute("href", "#my_special_id");
-
-    await mountView({
-        resModel: "partner",
-        type: "form",
-        arch: `
-            <form>
-                <notebook>
-                    <page string="A page">
-                        <div id="my_special_id">Something</div>
-                    </page>
-                </notebook>
-            </form>
-        `,
-        resId: 1,
-    });
-
-    expect(".o_form_view").toHaveCount(1);
-    expect("#my_special_id").toHaveCount(1);
-});
-
 test(`invisible attrs on group are re-evaluated on field change`, async () => {
     await mountView({
         resModel: "partner",
@@ -1776,7 +1683,6 @@ test(`reset local state when switching to another view`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "form"],
@@ -1824,14 +1730,12 @@ test(`trying to leave an invalid form view should not change the navbar`, async 
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
         },
         {
             id: 2,
             name: "Product",
             res_model: "product",
-            type: "ir.actions.act_window",
             views: [[false, "list"]],
         },
     ]);
@@ -3014,7 +2918,6 @@ test(`form views in dialogs do not have a control panel`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
             target: "new",
         },
@@ -3036,7 +2939,6 @@ test(`form views in dialogs do not add display_name field`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
             target: "new",
         },
@@ -3065,7 +2967,6 @@ test(`form views in dialogs closes on save`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
             target: "new",
         },
@@ -3095,7 +2996,6 @@ test(`form views in dialogs closes on discard on existing record`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
             target: "new",
             res_id: 1,
@@ -3134,7 +3034,6 @@ test(`form views in dialogs do not have class o_xxl_form_view`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
             target: "new",
         },
@@ -4160,7 +4059,6 @@ test(`form view properly change its title`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
             res_id: 1,
         },
@@ -4358,9 +4256,9 @@ test(`archive a record with intermediary action`, async () => {
     );
     await mountWithCleanup(WebClient);
     await getService("action").doAction({
-        type: "ir.actions.act_window",
         res_model: "partner",
         res_id: 1,
+        type: "ir.actions.act_window",
         views: [[false, "form"]],
     });
     expect(`[name='active'] input`).toHaveValue("true");
@@ -5771,7 +5669,6 @@ test(`restore the open notebook page when switching to another view`, async () =
             id: 1,
             name: "test",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[false, "list"]],
         },
         {
@@ -5779,7 +5676,6 @@ test(`restore the open notebook page when switching to another view`, async () =
             name: "test2",
             res_model: "partner",
             res_id: 1,
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
         },
     ]);
@@ -5850,7 +5746,6 @@ test(`don't restore the open notebook page when we create a new record`, async (
             id: 1,
             name: "test",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "form"],
@@ -6142,6 +6037,28 @@ test(`deleting the last record`, async () => {
     await contains(`.modal-footer button.btn-primary`).click();
     expect(`.modal`).toHaveCount(0);
     expect.verifySteps(["unlink", "history-back"]);
+});
+
+test("delete the last record (without previous action)", async () => {
+    Partner._views = {
+        form: `
+                <form>
+                    <field name="display_name"/>
+                </form>`,
+        search: "<search></search>",
+    };
+
+    redirect("/odoo/m-partner/1");
+    patchWithCleanup(WebClient.prototype, {
+        _loadDefaultApp() {
+            expect.step("__DEFAULT_ACTION__ called");
+        },
+    });
+    await mountWithCleanup(WebClient);
+    await toggleActionMenu();
+    await toggleMenuItem("Delete");
+    await contains(`.modal-footer button.btn-primary`).click();
+    expect.verifySteps(["__DEFAULT_ACTION__ called"]);
 });
 
 test(`empty required fields cannot be saved`, async () => {
@@ -6683,7 +6600,6 @@ test(`rpc complete after destroying parent`, async () => {
             name: "Partner",
             res_model: "partner",
             res_id: 1,
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
             target: "new",
         },
@@ -6691,7 +6607,6 @@ test(`rpc complete after destroying parent`, async () => {
             id: 2,
             name: "Partner 2",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[false, "list"]],
         },
     ]);
@@ -7621,7 +7536,6 @@ test(`modifiers are considered on multiple <footer/> tags`, async () => {
             name: "Partner",
             res_model: "partner",
             res_id: 1,
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
             target: "new",
         },
@@ -7653,7 +7567,6 @@ test(`buttons in footer are moved to $buttons if necessary`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
             target: "new",
         },
@@ -9753,7 +9666,6 @@ test(`coming to a form view from a grouped and sorted list`, async () => {
             id: 1,
             name: "test",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "form"],
@@ -9991,7 +9903,6 @@ test(`leave the form view while saving`, async () => {
             id: 1,
             name: "test",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "form"],
@@ -10045,7 +9956,6 @@ test(`leave the form twice (clicking on the breadcrumb) should save only once`, 
             id: 1,
             name: "test",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "form"],
@@ -10118,7 +10028,6 @@ test(`discard after a failed save (and close notifications)`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [
                 [false, "kanban"],
                 [false, "form"],
@@ -11284,7 +11193,6 @@ test(`reload form view with an empty notebook`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "form"],
@@ -11438,7 +11346,6 @@ test(`prevent recreating a deleted record`, async () => {
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "form"],
@@ -11503,7 +11410,6 @@ test(`coming to an action with an error from a form view with a dirty x2m`, asyn
             name: "test",
             res_model: "partner",
             res_id: 1,
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
         },
     ]);
@@ -11583,7 +11489,6 @@ test(`coming to an action with an error from a form view with a record in creati
             id: 1,
             name: "test",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
         },
     ]);
@@ -12094,7 +11999,6 @@ test(`x2many field in form dialog view is correctly saved when using a view butt
             id: 1,
             name: "Partner",
             res_model: "partner",
-            type: "ir.actions.act_window",
             views: [[false, "form"]],
             view_mode: "form",
             res_id: 6,
@@ -12633,4 +12537,44 @@ test(`do not perform button action for records with invalid datas`, async () => 
     await contains(".btn[name='lovely action']").click();
     // the record should have been saved and the action performed.
     expect.verifySteps(["Check/prepare record datas", "web_save", "Perform Action"]);
+});
+
+test(`open x2many with non inline form view, delayed get_views, form destroyed`, async () => {
+    Partner._records[0].product_ids = [37];
+    Product._views = {
+        form: `<form><field name="name"/></form>`,
+    };
+
+    let def;
+    onRpc("get_views", async () => {
+        expect.step("get_views");
+        await def;
+    });
+
+    const form = await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="product_ids">
+                    <list>
+                        <field name="name"/>
+                    </list>
+                </field>
+            </form>`,
+        resId: 1,
+    });
+
+    // click on an x2many record to open it in dialog (get_views delayed)
+    def = new Deferred();
+    await contains(".o_data_row .o_data_cell").click();
+    expect(".o_dialog").toHaveCount(0);
+
+    // destroy the form view while get_views is pending
+    form.__owl__.destroy();
+    def.resolve();
+    await animationFrame();
+
+    // everything should have gone smoothly, nothing should have happened as the view is destroyed
+    expect.verifySteps(["get_views", "get_views"]);
 });

@@ -54,6 +54,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 # commit the above changes before raising below
                 if not modules.module.current_test:
                     self.env.cr.commit()
+                raise UserError(_('We could not find a user with this information on our server. Please check your information.'))
             raise UserError(e.message)
 
         if 'error' in response:
@@ -113,7 +114,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         """Save new documents in an accounting journal, when one is specified on the company.
 
         :param attachment: the new document
-        :param partner_endpoint: a string containing the sender's Peppol endpoint
+        :param partner_endpoint: DEPRECATED - to be removed in master
         :param peppol_state: the state of the received Peppol document
         :param uuid: the UUID of the Peppol document
         :return: `True` if the document was saved, `False` if it was not
@@ -135,9 +136,8 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         move._extend_with_attachments(attachment, new=True)
         move._message_log(
             body=_(
-                "Peppol document (UUID: %(uuid)s) has been received successfully.\n(Sender endpoint: %(endpoint)s)",
+                "Peppol document (UUID: %(uuid)s) has been received successfully",
                 uuid=uuid,
-                endpoint=partner_endpoint,
             ),
             attachment_ids=attachment.ids,
         )
@@ -183,7 +183,6 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                     enc_key = content["enc_key"]
                     document_content = content["document"]
                     filename = content["filename"] or 'attachment'  # default to attachment, which should not usually happen
-                    partner_endpoint = content["accounting_supplier_party"]
                     decoded_document = edi_user._decrypt_data(document_content, enc_key)
                     attachment = self.env["ir.attachment"].create(
                         {
@@ -193,11 +192,11 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                             "mimetype": "application/xml",
                         }
                     )
-                    if edi_user._peppol_import_invoice(attachment, partner_endpoint, content["state"], uuid):
+                    if edi_user._peppol_import_invoice(attachment, None, content["state"], uuid):
                         # Only acknowledge when we saved the document somewhere
                         proxy_acks.append(uuid)
 
-                if not tools.config['test_enable']:
+                if not modules.module.current_test:
                     self.env.cr.commit()
                 if proxy_acks:
                     edi_user._call_peppol_proxy(
@@ -238,7 +237,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                             continue
 
                         move.peppol_move_state = 'error'
-                        move._message_log(body=_("Peppol error: %s", content['error']['message']))
+                        move._message_log(body=_("Peppol error: %s", content['error'].get('data', {}).get('message') or content['error']['message']))
                         continue
 
                     move.peppol_move_state = content['state']
@@ -346,7 +345,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             # so that the invoices are acknowledged
             self._cron_peppol_get_message_status()
             self._cron_peppol_get_new_documents()
-            if not tools.config['test_enable'] and not modules.module.current_test:
+            if not modules.module.current_test:
                 self.env.cr.commit()
 
         if self.company_id.account_peppol_proxy_state != 'not_registered':

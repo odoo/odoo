@@ -13,7 +13,6 @@ import { user } from "@web/core/user";
  * @typedef LivechatRule
  * @property {"auto_popup"|"display_button_and_text"|undefined} [action]
  * @property {number?} [auto_popup_timer]
- * @property {import("@im_livechat/embed/common/chatbot/chatbot_model").IChatbot} [chatbot]
  */
 
 export const RATING = Object.freeze({
@@ -96,6 +95,14 @@ export class LivechatService {
         }
         if (this.state === SESSION_STATE.PERSISTED) {
             await this.busService.addChannel(`mail.guest_${this.guestToken}`);
+        } else {
+            this.store.chatHub.preFirstFetchPromise.then(() => {
+                if (!this.store.fetchParams.length) {
+                    return;
+                }
+                this.store.initialize({ force: true });
+                this.store.env.services.bus_service.start();
+            });
         }
         this.initialized = true;
         this.env.services["im_livechat.initialized"].ready.resolve();
@@ -108,7 +115,7 @@ export class LivechatService {
      */
     async open() {
         await this._createThread({ persist: false });
-        this.thread?.openChatWindow();
+        await this.thread?.openChatWindow({ focus: true });
     }
 
     /**
@@ -118,22 +125,25 @@ export class LivechatService {
      * @returns {Promise<import("models").Thread|undefined>}
      */
     async persist() {
-        if (this.state === SESSION_STATE.PERSISTED) {
+        if (this.thread && !this.thread.isTransient) {
             return this.thread;
         }
         const temporaryThread = this.thread;
         await this._createThread({ persist: true });
         if (temporaryThread) {
+            await this.store.chatHub.initPromise;
             const chatWindow = this.store.ChatWindow.get({ thread: temporaryThread });
+            await chatWindow.close({ force: true });
             temporaryThread.delete();
-            await chatWindow.close();
         }
         if (!this.thread) {
             return;
         }
-        this.store.chatHub.opened.add({ thread: this.thread }).autofocus++;
-        await this.busService.addChannel(`mail.guest_${this.guestToken}`);
-        await this.env.services["mail.store"].initialize();
+        this.busService.addChannel(`mail.guest_${this.guestToken}`);
+        await Promise.all([
+            this.thread.openChatWindow({ focus: true }),
+            this.env.services["mail.store"].initialize(),
+        ]);
         return this.thread;
     }
 
@@ -239,7 +249,7 @@ export class LivechatService {
     }
 
     get savedState() {
-        return JSON.parse(expirableStorage.getItem(SAVED_STATE_STORAGE_KEY) ?? false);
+        return JSON.parse(expirableStorage.getItem(SAVED_STATE_STORAGE_KEY) ?? "null");
     }
 
     /**

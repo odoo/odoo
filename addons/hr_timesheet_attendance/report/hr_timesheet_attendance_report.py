@@ -63,9 +63,7 @@ class HrTimesheetAttendanceReport(models.Model):
         """ % self._table)
 
     @api.model
-    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        if not orderby and groupby:
-            orderby_list = [groupby] if isinstance(groupby, str) else groupby
-            orderby_list = [field.split(':')[0] for field in orderby_list]
-            orderby = ','.join([f"{field} desc" if field == 'date' else field for field in orderby_list])
-        return super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+    def formatted_read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None) -> list[dict]:
+        if not order and groupby:
+            order = ', '.join(f"{spec} DESC" if spec.startswith('date:') else spec for spec in groupby)
+        return super().formatted_read_group(domain, groupby, aggregates, having=having, offset=offset, limit=limit, order=order)

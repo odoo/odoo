@@ -48,7 +48,6 @@ class TestCrmPerformance(CrmPerformanceCase):
                  'email_from': 'address.email.%02d@test.example.com' % idx,
                  'function': 'Noisy Customer',
                  'lang_id': lang_be_id,
-                 'mobile': '04551111%02d' % idx,
                  'name': 'Test Lead %02d' % idx,
                  'phone': '04550000%02d' % idx,
                  'street': 'Super Street, %092d' % idx,
@@ -76,7 +75,6 @@ class TestCrmPerformance(CrmPerformanceCase):
                 lead_form.email_from = 'address.email@test.example.com'
                 lead_form.function = 'Noisy Customer'
                 lead_form.lang_id = lang_be
-                lead_form.mobile = '0455111100'
                 lead_form.name = 'Test Lead'
                 lead_form.phone = '0455000011'
                 lead_form.street = 'Super Street, 00'
@@ -113,7 +111,6 @@ class TestCrmPerformance(CrmPerformanceCase):
                  'email_from': 'address.email.00@test.example.com',
                  'function': 'Noisy Customer',
                  'lang_id': lang_be_id,
-                 'mobile': '0455111100',
                  'name': 'Test Lead',
                  'phone': '0455000000',
                  'street': 'Super Street, 00',

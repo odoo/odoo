@@ -20,10 +20,7 @@ from operator import attrgetter
 
 import psycopg2.sql
 
-import odoo
-from odoo import SUPERUSER_ID
-from odoo.modules.db import FunctionStatus
-from odoo.sql_db import TestCursor
+from odoo import sql_db
 from odoo.tools import (
     SQL,
     OrderedSet,
@@ -36,6 +33,9 @@ from odoo.tools import (
 from odoo.tools.func import locked
 from odoo.tools.lru import LRU
 from odoo.tools.misc import Collector, format_frame
+
+from .utils import SUPERUSER_ID
+from . import model_classes
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable, Collection, Iterable, Iterator, MutableMapping
@@ -170,7 +170,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         self.models: dict[str, type[BaseModel]] = {}    # model name/model instance mapping
         self._sql_constraints = set()  # type: ignore
         self._database_translated_fields: set[str] = set()  # names of translated fields in database "{model}.{field_name}"
-        if config['test_enable'] or config['test_file']:
+        if config['test_enable']:
             from odoo.tests.result import OdooTestResult  # noqa: PLC0415
             self._assertion_report: OdooTestResult | None = OdooTestResult()
         else:
@@ -185,10 +185,10 @@ class Registry(Mapping[str, type["BaseModel"]]):
         self.loaded_xmlids: set[str] = set()
 
         self.db_name = db_name
-        self._db: Connection = odoo.sql_db.db_connect(db_name, readonly=False)
+        self._db: Connection = sql_db.db_connect(db_name, readonly=False)
         self._db_readonly: Connection | None = None
-        if config['db_replica_host'] or config['test_enable']:  # by default, only use readonly pool if we have a db_replica_host defined. Allows to have an empty replica host for testing
-            self._db_readonly = odoo.sql_db.db_connect(db_name, readonly=True)
+        if config['db_replica_host'] or config['test_enable'] or 'replica' in config['dev_mode']:  # by default, only use readonly pool if we have a db_replica_host defined.
+            self._db_readonly = sql_db.db_connect(db_name, readonly=True)
 
         # cursor for test mode; None means "normal" mode
         self.test_cr: Cursor | None = None
@@ -217,9 +217,10 @@ class Registry(Mapping[str, type["BaseModel"]]):
         # Flags indicating invalidation of the registry or the cache.
         self._invalidation_flags = threading.local()
 
+        from odoo.modules import db  # noqa: PLC0415
         with closing(self.cursor()) as cr:
-            self.has_unaccent = odoo.modules.db.has_unaccent(cr)
-            self.has_trigram = odoo.modules.db.has_trigram(cr)
+            self.has_unaccent = db.has_unaccent(cr)
+            self.has_trigram = db.has_trigram(cr)
 
         self.unaccent = _unaccent if self.has_unaccent else lambda x: x  # type: ignore
         self.unaccent_python = remove_accents if self.has_unaccent else lambda x: x
@@ -307,19 +308,20 @@ class Registry(Mapping[str, type["BaseModel"]]):
         # Instantiate registered classes (via the MetaModel automatic discovery
         # or via explicit constructor call), and add them to the pool.
         model_names = []
-        for cls in models.MetaModel.module_to_models.get(module.name, []):
+        for model_def in models.MetaModel.module_to_models.get(module.name, []):
             # models register themselves in self.models
-            model = cls._build_model(self, cr)
-            model_names.append(model._name)
+            model_cls = model_classes.add_to_registry(self, model_def)
+            model_names.append(model_cls._name)
 
         return self.descendants(model_names, '_inherit', '_inherits')
 
     @locked
-    def setup_models(self, cr: BaseCursor) -> None:
+    def _setup_models__(self, cr: BaseCursor) -> None:
         """ Complete the setup of models.
             This must be called after loading modules and before using the ORM.
         """
-        env = odoo.api.Environment(cr, SUPERUSER_ID, {})
+        from .environments import Environment  # noqa: PLC0415
+        env = Environment(cr, SUPERUSER_ID, {})
         env.invalidate_all()
 
         # Uninstall registry hooks. Because of the condition, this only happens
@@ -337,39 +339,15 @@ class Registry(Mapping[str, type["BaseModel"]]):
         self._is_modifying_relations.clear()
         self.registry_invalidated = True
 
-        # we must setup ir.model before adding manual fields because _add_manual_models may
-        # depend on behavior that is implemented through overrides, such as is_mail_thread which
-        # is implemented through an override to env['ir.model']._instanciate
-        env['ir.model']._prepare_setup()
-
-        # add manual models
-        if self._init_modules:
-            env['ir.model']._add_manual_models()
-
-        # prepare the setup on all models
-        models = list(env.values())
-        for model in models:
-            model._prepare_setup()
-
         self.field_depends.clear()
         self.field_depends_context.clear()
         self.field_inverses.clear()
         self.many2one_company_dependents.clear()
 
-        # do the actual setup
-        for model in models:
-            model._setup_base()
-
-        self._m2m: defaultdict[tuple[str, str, str], list[Field]] = defaultdict(list)
-        for model in models:
-            model._setup_fields()
-        del self._m2m
-
-        for model in models:
-            model._setup_complete()
+        model_classes.setup_model_classes(env)
 
         # determine field_depends and field_depends_context
-        for model in models:
+        for model in env.values():
             for field in model._fields.values():
                 depends, depends_context = field.get_depends(model)
                 self.field_depends[field] = tuple(depends)
@@ -604,7 +582,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
         elif context.get('models_to_check', False):
             _logger.info("verifying fields for every extended model")
 
-        env = odoo.api.Environment(cr, SUPERUSER_ID, context)
+        from .environments import Environment  # noqa: PLC0415
+        env = Environment(cr, SUPERUSER_ID, context)
         models = [env[model_name] for model_name in model_names]
 
         try:
@@ -673,6 +652,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     # add `unaccent` to the trigram index only because the
                     # trigram indexes are mainly used for (=)ilike search and
                     # unaccent is added only in these cases when searching
+                    from odoo.modules.db import FunctionStatus  # noqa: PLC0415
                     if self.has_unaccent == FunctionStatus.INDEXABLE:
                         column_expression = self.unaccent(column_expression)
                     elif self.has_unaccent:
@@ -756,7 +736,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
         """
         Verify that all tables are present and try to initialize those that are missing.
         """
-        env = odoo.api.Environment(cr, SUPERUSER_ID, {})
+        from .environments import Environment  # noqa: PLC0415
+        env = Environment(cr, SUPERUSER_ID, {})
         table2model = {
             model._table: name
             for name, model in env.registry.items()
@@ -958,7 +939,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         """ Reset the registry and cancel all invalidations. """
         if self.registry_invalidated:
             with closing(self.cursor()) as cr:
-                self.setup_models(cr)
+                self._setup_models__(cr)
                 self.registry_invalidated = False
         if self.cache_invalidated:
             for cache_name in self.cache_invalidated:
@@ -1014,7 +995,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
             if readonly and not self.test_readonly_enabled:
                 _logger.info('Explicitly ignoring readonly flag when generating a cursor')
             assert self.test_lock is not None
-            return TestCursor(self.test_cr, self.test_lock, readonly and self.test_readonly_enabled)
+            return sql_db.TestCursor(self.test_cr, self.test_lock, readonly and self.test_readonly_enabled)
 
         if readonly and self._db_readonly is not None:
             try:

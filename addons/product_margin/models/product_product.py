@@ -90,6 +90,12 @@ class ProductProduct(models.Model):
         return result
 
     def _compute_product_margin_fields_values(self):
+        if not self.ids:
+            for field_name, field in self._fields.items():
+                if field.compute == '_compute_product_margin_fields_values':
+                    self[field_name] = False
+            return
+
         date_from = self.env.context.get('date_from', time.strftime('%Y-01-01'))
         date_to = self.env.context.get('date_to', time.strftime('%Y-12-31'))
         invoice_state = self.env.context.get('invoice_state', 'open_paid')
@@ -127,7 +133,7 @@ class ProductProduct(models.Model):
                         l.quantity * (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END) * ((100 - l.discount) * 0.01)
                     ) / NULLIF(SUM(l.quantity * (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END)), 0) AS avg_unit_price,
                     SUM(l.quantity * (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END)) AS num_qty,
-                    SUM(ABS(l.balance) * (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END)) AS total,
+                    SUM(CASE WHEN i.move_type = 'out_invoice' THEN -l.balance WHEN i.move_type = 'in_invoice' THEN l.balance ELSE -ABS(l.balance) END) AS total,
                     SUM(l.quantity * pt.list_price * (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END)) AS sale_expected
                 FROM account_move_line l
                 LEFT JOIN account_move i ON (l.move_id = i.id)

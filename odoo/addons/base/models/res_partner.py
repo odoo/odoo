@@ -14,7 +14,7 @@ from collections import defaultdict
 from random import randint
 from werkzeug import urls
 
-from odoo import api, fields, models, tools, SUPERUSER_ID, _, Command
+from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 
 import typing
@@ -272,7 +272,6 @@ class ResPartner(models.Model):
         'Formatted Email', compute='_compute_email_formatted',
         help='Format email address "Name <email@domain>"')
     phone = fields.Char()
-    mobile = fields.Char()
     is_company = fields.Boolean(string='Is a Company', default=False,
         help="Check if the contact is a company, otherwise it is a person")
     is_public = fields.Boolean(compute='_compute_is_public', compute_sudo=True)
@@ -392,7 +391,7 @@ class ResPartner(models.Model):
 
     @api.depends('user_ids.share', 'user_ids.active')
     def _compute_partner_share(self):
-        super_partner = self.env['res.users'].browse(SUPERUSER_ID).partner_id
+        super_partner = self.env['res.users'].browse(api.SUPERUSER_ID).partner_id
         if super_partner in self:
             super_partner.partner_share = False
         for partner in self - super_partner:

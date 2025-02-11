@@ -61,6 +61,17 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
         self.action.with_context(self.context).run()
         self.assertEqual(self.test_partner.message_partner_ids, self.env.ref('base.partner_admin') | random_partner)
 
+    def test_action_followers_warning(self):
+        self.test_partner.message_unsubscribe(self.test_partner.message_partner_ids.ids)
+        self.action.write({
+            'state': 'followers',
+            "followers_type": "generic",
+            "followers_partner_field_name": "user_id.name"
+        })
+        self.assertEqual(self.action.warning, "The field 'Salesperson > Name' is not a partner field.")
+        self.action.write({"followers_partner_field_name": "parent_id.child_ids"})
+        self.assertEqual(self.action.warning, False)
+
     def test_action_message_post(self):
         # initial state
         self.assertEqual(len(self.test_partner.message_ids), 1,
@@ -120,6 +131,18 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
         self.assertEqual(self.env['mail.activity'].search_count([]), before_count + 1)
         self.assertEqual(self.env['mail.activity'].search_count([('summary', '=', 'TestNew')]), 1)
 
+    def test_action_next_activity_warning(self):
+        self.action.write({
+            'state': 'next_activity',
+            'activity_user_type': 'generic',
+            "activity_user_field_name": "user_id.name",
+            'activity_type_id': self.env.ref('mail.mail_activity_data_meeting').id,
+            'activity_summary': 'TestNew',
+        })
+        self.assertEqual(self.action.warning, "The field 'Salesperson > Name' is not a user field.")
+        self.action.write({"activity_user_field_name": "parent_id.user_id"})
+        self.assertEqual(self.action.warning, False)
+
     def test_action_next_activity_due_date(self):
         """ Make sure we don't crash if a due date is set without a type. """
         self.action.write({
@@ -176,4 +199,4 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
                 'subject': 'About Test NoMailThread',
             }
         )
-        self.assertIn('Powered by', mail.body_html, 'Body should contain the notification layout')
+        self.assertNotIn('Powered by', mail.body_html, 'Body should contain the notification layout')

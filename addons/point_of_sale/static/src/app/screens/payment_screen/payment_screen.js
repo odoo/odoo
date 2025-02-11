@@ -77,12 +77,12 @@ export class PaymentScreen extends Component {
 
     getNumpadButtons() {
         const colorClassMap = {
-            [this.env.services.localization.decimalPoint]: "o_colorlist_item_color_transparent_6",
-            Backspace: "o_colorlist_item_color_transparent_1",
-            "+10": "o_colorlist_item_color_transparent_10",
-            "+20": "o_colorlist_item_color_transparent_10",
-            "+50": "o_colorlist_item_color_transparent_10",
-            "-": "o_colorlist_item_color_transparent_3",
+            [this.env.services.localization.decimalPoint]: "o_colorlist_item_numpad_color_6",
+            Backspace: "o_colorlist_item_numpad_color_1",
+            "+10": "o_colorlist_item_numpad_color_10",
+            "+20": "o_colorlist_item_numpad_color_10",
+            "+50": "o_colorlist_item_numpad_color_10",
+            "-": "o_colorlist_item_numpad_color_3",
         };
 
         return enhancedButtons().map((button) => ({
@@ -205,7 +205,7 @@ export class PaymentScreen extends Component {
             this.selectedPaymentLine.setAmount(amount);
         }
     }
-    toggleIsToInvoice() {
+    async toggleIsToInvoice() {
         this.currentOrder.setToInvoice(!this.currentOrder.isToInvoice());
     }
     openCashbox() {
@@ -300,11 +300,6 @@ export class PaymentScreen extends Component {
 
             for (const line of toRemove) {
                 this.currentOrder.removePaymentline(line);
-            }
-
-            const cash = this.payment_methods_from_config.find((pm) => pm.is_cash_count);
-            if (this.currentOrder.getDue() > 0 && this.pos.config.cash_rounding && cash) {
-                this.currentOrder.addPaymentline(cash, 0);
             }
 
             await this._finalizeValidation();
@@ -510,7 +505,7 @@ export class PaymentScreen extends Component {
         }
 
         if (
-            this.currentOrder.getTotalWithTax() != 0 &&
+            !floatIsZero(this.currentOrder.getTotalWithTax(), this.pos.currency.decimal_places) &&
             this.currentOrder.payment_ids.length === 0
         ) {
             this.notification.add(_t("Select a payment method to validate the order."));

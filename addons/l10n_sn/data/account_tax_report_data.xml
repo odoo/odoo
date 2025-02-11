@@ -2,6 +2,7 @@
 <odoo>
     <record id="account_tax_report_sn" model="account.report">
         <field name="name">VAT Report</field>
+        <field name="name@fr">Déclaration TVA</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.sn"/>
         <field name="filter_fiscal_position" eval="True"/>
@@ -9,16 +10,19 @@
         <field name="column_ids">
             <record id="account_tax_report_sn_base" model="account.report.column">
                 <field name="name">Base</field>
+                <field name="name@fr">Base</field>
                 <field name="expression_label">base</field>
             </record>
             <record id="account_tax_report_sn_tax" model="account.report.column">
                 <field name="name">Tax</field>
+                <field name="name@fr">Taxe</field>
                 <field name="expression_label">tax</field>
             </record>
         </field>
         <field name="line_ids">
             <record id="account_tax_report_line_sn_operations" model="account.report.line">
                 <field name="name">Total amount of operations</field>
+                <field name="name@fr">Montant total des opérations</field>
                 <field name="code">SN_OPE</field>
                 <field name="expression_ids">
                     <record id="account_tax_report_line_sn_operations_base" model="account.report.expression">
@@ -35,6 +39,7 @@
                 <field name="children_ids">
                     <record id="account_tax_report_line_sn_exportation" model="account.report.line">
                         <field name="name">Exportations</field>
+                        <field name="name@fr">Affaires à l'exportation</field>
                         <field name="code">SN_Export</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_sn_exportation_base" model="account.report.expression">
@@ -46,6 +51,7 @@
                     </record>
                     <record id="account_tax_report_line_sn_non_taxed" model="account.report.line">
                         <field name="name">Non Taxed Domestic Operation</field>
+                        <field name="name@fr">Affaires réalisées à l'intérieur non taxées</field>
                         <field name="code">SN_NON_TAXED</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_sn_non_taxed_base" model="account.report.expression">
@@ -57,6 +63,7 @@
                     </record>
                     <record id="account_tax_report_line_sn_suspension" model="account.report.line">
                         <field name="name">Operation done under suspension of VAT</field>
+                        <field name="name@fr">Affaires réalisées en suspension de la TVA</field>
                         <field name="code">SN_SUSPENSION</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_sn_suspension_base" model="account.report.expression">
@@ -68,6 +75,7 @@
                     </record>
                     <record id="account_tax_report_line_sn_exempt" model="account.report.line">
                         <field name="name">Operations exempted</field>
+                        <field name="name@fr">Affaires non soumises à la TVA</field>
                         <field name="code">SN_EXEMPT</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_sn_exempt_base" model="account.report.expression">
@@ -79,6 +87,7 @@
                     </record>
                     <record id="account_tax_report_line_sn_self_delivery" model="account.report.line">
                         <field name="name">Self delivery or service</field>
+                        <field name="name@fr">Prélèvements et livraisons ou prestations à soi-même</field>
                         <field name="code">SN_SELF</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_sn_self_delivery_base" model="account.report.expression">
@@ -90,6 +99,7 @@
                     </record>
                     <record id="account_tax_report_line_sn_taxable" model="account.report.line">
                         <field name="name">Taxable operations</field>
+                        <field name="name@fr">Opérations tasables</field>
                         <field name="code">SN_TAXABLE</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_sn_taxable_base" model="account.report.expression">
@@ -106,6 +116,7 @@
                         <field name="children_ids">
                             <record id="account_tax_report_line_sn_taxable_18" model="account.report.line">
                                 <field name="name">Taxable - normal rate</field>
+                                <field name="name@fr">TVA - taux normal</field>
                                 <field name="code">SN_TAXABLE_18</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_sn_taxable_18_base" model="account.report.expression">
@@ -122,6 +133,7 @@
                             </record>
                             <record id="account_tax_report_line_sn_taxable_10" model="account.report.line">
                                 <field name="name">Taxable - reduced rate</field>
+                                <field name="name@fr">TVA - taux réduit</field>
                                 <field name="code">SN_TAXABLE_10</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_sn_taxable_10_base" model="account.report.expression">
@@ -142,6 +154,7 @@
             </record>
             <record id="account_tax_report_line_sn_deductible" model="account.report.line">
                 <field name="name">Deductible</field>
+                <field name="name@fr">Déductible</field>
                 <field name="code">SN_VAT_DEDUCT</field>
                 <field name="expression_ids">
                     <record id="account_tax_report_line_sn_deductible_base" model="account.report.expression">
@@ -158,6 +171,7 @@
                 <field name="children_ids">
                     <record id="account_tax_report_line_sn_prepayment" model="account.report.line">
                         <field name="name">Tax Prepayment</field>
+                        <field name="name@fr">Précompte de TVA</field>
                         <field name="code">SN_PREPAY</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_sn_prepayment_base" model="account.report.expression">
@@ -174,6 +188,7 @@
                         <field name="children_ids">
                             <record id="account_tax_report_line_sn_withholding" model="account.report.line">
                                 <field name="name">Withholding</field>
+                                <field name="name@fr">Retenues à la source</field>
                                 <field name="code">SN_WITHHOLDING</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_sn_withholding_base" model="account.report.expression">
@@ -190,6 +205,7 @@
                             </record>
                             <record id="account_tax_report_line_sn_ddi" model="account.report.line">
                                 <field name="name">DDI checks</field>
+                                <field name="name@fr">Imputation de chèques DDI</field>
                                 <field name="code">SN_DDI</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_sn_ddi_tax" model="account.report.expression">
@@ -203,6 +219,7 @@
                     </record>
                     <record id="account_tax_report_line_sn_deductible_import" model="account.report.line">
                         <field name="name">Importations</field>
+                        <field name="name@fr">Importations</field>
                         <field name="code">SN_IMPORT</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_sn_deductible_import_base" model="account.report.expression">
@@ -219,6 +236,7 @@
                     </record>
                     <record id="account_tax_report_line_sn_deductible_taxable" model="account.report.line">
                         <field name="name">Domestic purchases</field>
+                        <field name="name@fr">Achats intérieurs</field>
                         <field name="code">SN_DOMESTIC</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_sn_deductible_taxable_base" model="account.report.expression">
@@ -235,6 +253,7 @@
                     </record>
                     <record id="account_tax_report_line_sn_reimbursement_accepted" model="account.report.line">
                         <field name="name">Reimbursements accepted</field>
+                        <field name="name@fr">Remboursements demandés et accordés</field>
                         <field name="code">SN_REIMBURSEMENT_ACCEPTED</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_reimbursement_accepted_tax" model="account.report.expression">
@@ -247,6 +266,7 @@
                     </record>
                     <record id="account_tax_report_line_sn_tva_credit" model="account.report.line">
                         <field name="name">Last month's credit</field>
+                        <field name="name@fr">Crédit de TVA du mois précédent</field>
                         <field name="code">SN_CREDIT</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_sn_tva_credit_tax" model="account.report.expression">
@@ -267,6 +287,7 @@
 
             <record id="account_tax_report_line_sn_due" model="account.report.line">
                 <field name="name">Balance due</field>
+                <field name="name@fr">Solde Total Exigible</field>
                 <field name="code">SN_DUE</field>
                 <field name="expression_ids">
                     <record id="account_tax_report_line_sn_due_tax" model="account.report.expression">
@@ -279,6 +300,7 @@
             </record>
             <record id="account_tax_report_line_sn_to_report" model="account.report.line">
                 <field name="name">Credit to report</field>
+                <field name="name@fr">Crédit de TVA à reporter</field>
                 <field name="code">SN_REPORT</field>
                 <field name="expression_ids">
                     <record id="account_tax_report_line_sn_to_report_tax" model="account.report.expression">
@@ -298,6 +320,7 @@
             </record>
             <record id="account_tax_report_line_sn_reimbursement_review" model="account.report.line">
                 <field name="name">Reimbursement under review</field>
+                <field name="name@fr">Remboursements demandés et en instruction</field>
                 <field name="code">SN_REIMBURSEMENT_REVIEW</field>
                 <field name="expression_ids">
                     <record id="account_tax_report_line_sn_reimbursement_review_tax" model="account.report.expression">

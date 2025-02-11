@@ -22,7 +22,6 @@ try:
 except ImportError:
     jingtrang = None
 
-import odoo
 from .config import config
 from .misc import file_open, file_path, SKIPPED_ELEMENT_TYPES
 from odoo.exceptions import ValidationError
@@ -40,14 +39,15 @@ class ParseError(Exception):
     ...
 
 def _get_idref(self, env, model_str, idref):
+    from odoo import fields, release  # noqa: PLC0415
     idref2 = dict(idref,
-                  Command=odoo.fields.Command,
+                  Command=fields.Command,
                   time=time,
                   DateTime=datetime,
                   datetime=datetime,
                   timedelta=timedelta,
                   relativedelta=relativedelta,
-                  version=odoo.release.major_version,
+                  version=release.major_version,
                   ref=self.id_get,
                   pytz=pytz)
     if model_str:
@@ -187,8 +187,8 @@ def _eval_xml(self, node, env):
         if 'context' in kwargs:
             model = model.with_context(**kwargs.pop('context'))
         method = getattr(model, method_name)
-        api = getattr(method, '_api', None)
-        if api and api.startswith('model'):
+        is_model_method = getattr(method, '_api_model', False)
+        if is_model_method:
             pass  # already bound to an empty recordset
         else:
             record_ids, *args = args
@@ -312,15 +312,15 @@ form: module.record_id""" % (xml_id,)
         if not values.get('name'):
             values['name'] = rec_id or '?'
 
-
+        from odoo.fields import Command  # noqa: PLC0415
         groups = []
         for group in rec.get('groups', '').split(','):
             if group.startswith('-'):
                 group_id = self.id_get(group[1:])
-                groups.append(odoo.Command.unlink(group_id))
+                groups.append(Command.unlink(group_id))
             elif group:
                 group_id = self.id_get(group)
-                groups.append(odoo.Command.link(group_id))
+                groups.append(Command.link(group_id))
         if groups:
             values['groups_id'] = groups
 
@@ -380,11 +380,14 @@ form: module.record_id""" % (xml_id,)
                     return None
                 raise Exception("Cannot update missing record %r" % xid)
 
+        from odoo.fields import Command  # noqa: PLC0415
         res = {}
         sub_records = []
         for field in rec.iterchildren('field'):
             #TODO: most of this code is duplicated above (in _eval_xml)...
             f_name = field.get("name")
+            if '@' in f_name:
+                continue  # used for translations
             f_model = field.get("model")
             if not f_model and f_name in model._fields:
                 f_model = model._fields[f_name].comodel_name
@@ -401,7 +404,7 @@ form: module.record_id""" % (xml_id,)
                 _fields = env[rec_model]._fields
                 # if the current field is many2many
                 if (f_name in _fields) and _fields[f_name].type == 'many2many':
-                    f_val = [odoo.Command.set([x[f_use] for x in s])]
+                    f_val = [Command.set([x[f_use] for x in s])]
                 elif len(s):
                     # otherwise (we are probably in a many2one field),
                     # take the first element of the search
@@ -644,10 +647,19 @@ def convert_csv_import(env, module, fname, csvcontent, idref=None, mode='init',
         _logger.error("Import specification does not contain 'id' and we are in init mode, Cannot continue.")
         return
 
+    translate_indexes = {i for i, field in enumerate(fields) if '@' in field}
+    def remove_translations(row):
+        return [cell for i, cell in enumerate(row) if i not in translate_indexes]
+
+    fields = remove_translations(fields)
+    if not fields:
+        return
+
+    # clean the data from translations (treated during translation import), then
     # filter out empty lines (any([]) == False) and lines containing only empty cells
     datas = [
-        line for line in reader
-        if any(line)
+        data_line for line in reader
+        if any(data_line := remove_translations(line))
     ]
 
     context = {

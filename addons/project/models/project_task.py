@@ -199,14 +199,16 @@ class ProjectTask(models.Model):
         domain="[('user_id', '=', uid)]", string='Personal Stages', export_string_translation=False)
     # Personal Stage computed from the user
     personal_stage_id = fields.Many2one('project.task.stage.personal', string='Personal Stage State', compute_sudo=False,
-        compute='_compute_personal_stage_id', help="The current user's personal stage.")
+        compute='_compute_personal_stage_id', group_expand='_read_group_personal_stage_type_ids',
+        help="The current user's personal stage.")
     # This field is actually a related field on personal_stage_id.stage_id
     # However due to the fact that personal_stage_id is computed, the orm throws out errors
     # saying the field cannot be searched.
     personal_stage_type_id = fields.Many2one('project.task.type', string='Personal Stage',
         compute='_compute_personal_stage_type_id', inverse='_inverse_personal_stage_type_id', store=False,
         search='_search_personal_stage_type_id', default=_default_personal_stage_type_id,
-        help="The current user's personal task stage.", domain="[('user_id', '=', uid)]")
+        help="The current user's personal task stage.", domain="[('user_id', '=', uid)]",
+        group_expand='_read_group_personal_stage_type_ids')
     partner_id = fields.Many2one('res.partner',
         string='Customer', recursive=True, tracking=True, compute='_compute_partner_id', store=True, readonly=False,
         domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]", )
@@ -214,6 +216,8 @@ class ProjectTask(models.Model):
         compute='_compute_partner_phone', inverse='_inverse_partner_phone',
         string="Contact Number", readonly=False, store=True, copy=False
     )
+    # Need this field to check there is no email loops when Odoo reply automatically
+    email_from = fields.Char('Email From')
     email_cc = fields.Char(help='Email addresses that were in the CC of the incoming emails from this task and that are not currently linked to an existing customer.')
     company_id = fields.Many2one('res.company', string='Company', compute='_compute_company_id', store=True, readonly=False, recursive=True, copy=True, default=_default_company_id)
     color = fields.Integer(string='Color Index', export_string_translation=False)
@@ -630,18 +634,15 @@ class ProjectTask(models.Model):
         for task in self:
             task.subtask_count, task.closed_subtask_count = total_and_closed_subtask_count_per_parent_id.get(task.id, (0, 0))
 
-    @api.depends('partner_id.phone', 'partner_id.mobile')
+    @api.depends('partner_id.phone')
     def _compute_partner_phone(self):
         for task in self:
-            task.partner_phone = task.partner_id.mobile or task.partner_id.phone or False
+            task.partner_phone = task.partner_id.phone or False
 
     def _inverse_partner_phone(self):
         for task in self:
             if task.partner_id:
-                if task.partner_id.mobile or not task.partner_id.phone:
-                    task.partner_id.mobile = task.partner_phone
-                else:
-                    task.partner_id.phone = task.partner_phone
+                task.partner_id.phone = task.partner_phone
 
     @api.onchange('company_id')
     def _onchange_task_company(self):
@@ -1346,15 +1347,6 @@ class ProjectTask(models.Model):
                 task.recurrence_id.unlink()
         return super().unlink()
 
-    def _where_calc(self, domain, active_test=True):
-        """ Tasks views don't show the sub-tasks / ('display_in_project', '=', True).
-            The pseudo-filter "Show Sub-tasks" adds the key 'show_subtasks' in the context.
-            In that case, we pop the leaf from the domain.
-        """
-        if self.env.context.get('show_subtasks'):
-            domain = filter_domain_leaf(domain, lambda field: field != 'display_in_project')
-        return super()._where_calc(domain, active_test)
-
     def update_date_end(self, stage_id):
         project_task_type = self.env['project.task.type'].browse(stage_id)
         if project_task_type.fold:
@@ -1983,17 +1975,18 @@ class ProjectTask(models.Model):
         }
 
     @api.model
-    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        # A read_group can not be performed if records are grouped by personal_stage_type_id as it is a computed field.
-        # personal_stage_type_ids behaves like a M2O from the point of view of the user, we therefore use this field instead.
-        if 'personal_stage_type_id' in groupby and (not lazy or groupby[0] == 'personal_stage_type_id'):
-            groupby = ["personal_stage_type_ids" if field == "personal_stage_type_id" else field for field in groupby] # limitation: problem when both personal_stage_type_id and personal_stage_type_ids appear in read_group, but this has no functional utility
-            result = super().read_group(domain, fields, groupby, offset, limit, orderby, lazy)
-            for group in result:
-                group['personal_stage_type_id'] = group.pop('personal_stage_type_ids', False)
-                group['personal_stage_type_id_count'] = group.pop('personal_stage_type_ids_count', 0)
-            return result
-        return super().read_group(domain, fields, groupby, offset, limit, orderby, lazy)
+    def _read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None) -> list[tuple]:
+        # A _read_group cannot be performed if records are grouped by personal_stage_type_id
+        # as it is a computed field. personal_stage_type_ids behaves like a M2O from the point
+        # of view of the user, we therefore use this field instead.
+        if 'personal_stage_type_id' in groupby:
+            # limitation: problem when both personal_stage_type_id and personal_stage_type_ids 
+            # appear in read_group, but this has no functional utility
+            groupby = ['personal_stage_type_ids' if fname == 'personal_stage_type_id' else fname for fname in groupby]
+            if order:
+                order = order.replace('personal_stage_type_id', 'personal_stage_type_ids')
+            return super()._read_group(domain, groupby, aggregates, having, offset, limit, order)
+        return super()._read_group(domain, groupby, aggregates, having, offset, limit, order)
 
     # ---------------------------------------------------
     # Project Sharing

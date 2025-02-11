@@ -17,7 +17,7 @@ from odoo.tools import format_list, get_lang, html_escape
 from odoo.tools.misc import OrderedSet
 
 channel_avatar = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530.06 530.06">
-<circle cx="265.03" cy="265.03" r="265.03" fill="#875a7b"/>
+<rect width="530.06" height="530.06" fill="#875a7b"/>
 <path d="M416.74,217.29l5-28a8.4,8.4,0,0,0-8.27-9.88H361.09l10.24-57.34a8.4,8.4,0,0,0-8.27-9.88H334.61a8.4,8.4,0,0,0-8.27,6.93L315.57,179.4H246.5l10.24-57.34a8.4,8.4,0,0,0-8.27-9.88H220a8.4,8.4,0,0,0-8.27,6.93L201,179.4H145.6a8.42,8.42,0,0,0-8.28,6.93l-5,28a8.4,8.4,0,0,0,8.27,9.88H193l-16,89.62H121.59a8.4,8.4,0,0,0-8.27,6.93l-5,28a8.4,8.4,0,0,0,8.27,9.88H169L158.73,416a8.4,8.4,0,0,0,8.27,9.88h28.45a8.42,8.42,0,0,0,8.28-6.93l10.76-60.29h69.07L273.32,416a8.4,8.4,0,0,0,8.27,9.88H310a8.4,8.4,0,0,0,8.27-6.93l10.77-60.29h55.38a8.41,8.41,0,0,0,8.28-6.93l5-28a8.4,8.4,0,0,0-8.27-9.88H337.08l16-89.62h55.38A8.4,8.4,0,0,0,416.74,217.29ZM291.56,313.84H222.5l16-89.62h69.07Z" fill="#ffffff"/>
 </svg>'''
 group_avatar = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530.06 530.06">
@@ -74,7 +74,12 @@ class DiscussChannel(models.Model):
     # sudo: discuss.channel - sudo for performance, invited members can be accessed on accessible channel
     invited_member_ids = fields.One2many("discuss.channel.member", compute="_compute_invited_member_ids", compute_sudo=True)
     member_count = fields.Integer(string="Member Count", compute='_compute_member_count', compute_sudo=True)
-    last_interest_dt = fields.Datetime("Last Interest", index=True, help="Contains the date and time of the last interesting event that happened in this channel. This updates itself when new message posted.")
+    last_interest_dt = fields.Datetime(
+        "Last Interest",
+        default=lambda self: fields.Datetime.now() - timedelta(seconds=1),
+        index=True,
+        help="Contains the date and time of the last interesting event that happened in this channel. This updates itself when new message posted.",
+    )
     group_ids = fields.Many2many(
         'res.groups', string='Auto Subscription',
         help="Members of those groups will automatically added as followers. "
@@ -297,7 +302,7 @@ class DiscussChannel(models.Model):
                 if cmd[0] != 0:
                     raise ValidationError(_('Invalid value when creating a channel with memberships, only 0 is allowed.'))
                 for field_name in cmd[2]:
-                    if field_name not in ["partner_id", "guest_id", "unpin_dt", "last_interest_dt", "fold_state"]:
+                    if field_name not in ["partner_id", "guest_id", "unpin_dt", "last_interest_dt"]:
                         raise ValidationError(
                             _(
                                 "Invalid field “%(field_name)s” when creating a channel with members.",
@@ -435,7 +440,9 @@ class DiscussChannel(models.Model):
     def _action_unfollow(self, partner=None, guest=None):
         self.ensure_one()
         self.message_unsubscribe(partner.ids)
-        custom_store = Store(self, {"is_pinned": False, "isLocallyPinned": False})
+        custom_store = Store(
+            self, {"close_chat_window": True, "is_pinned": False, "isLocallyPinned": False}
+        )
         member = self.env["discuss.channel.member"].search(
             [
                 ("channel_id", "=", self.id),
@@ -443,8 +450,7 @@ class DiscussChannel(models.Model):
             ]
         )
         if not member:
-            target = partner or guest
-            target._bus_send_store(custom_store, notification_type="discuss.channel/leave")
+            (partner or guest)._bus_send_store(custom_store)
             return
         notification = Markup('<div class="o_mail_notification">%s</div>') % _(
             "left the channel"
@@ -454,7 +460,7 @@ class DiscussChannel(models.Model):
             body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id
         )
         # send custom store after message_post to avoid is_pinned reset to True
-        member._bus_send_store(custom_store, notification_type="discuss.channel/leave")
+        member._bus_send_store(custom_store)
         member.unlink()
         self._bus_send_store(
             self,
@@ -1024,11 +1030,6 @@ class DiscussChannel(models.Model):
                     ],
                     only_data=True,
                 ),
-                Store.Attr(
-                    "state",
-                    lambda c: c.self_member_id.fold_state or "closed",
-                    predicate=lambda c: c.self_member_id,
-                ),
             ]
         return res
 
@@ -1038,13 +1039,12 @@ class DiscussChannel(models.Model):
     # User methods
 
     @api.model
-    def _get_or_create_chat(self, partners_to, pin=True, force_open=False):
+    def _get_or_create_chat(self, partners_to, pin=True):
         """ Get the canonical private channel between some partners, create it if needed.
             To reuse an old channel (conversation), this one must be private, and contains
             only the given partners.
             :param partners_to : list of res.partner ids to add to the conversation
             :param pin : True if getting the channel should pin it for the current user
-            :param force_open : True if getting the channel should open it for the current user
             :returns: channel_info of the created or existing channel
             :rtype: dict
         """
@@ -1076,13 +1076,11 @@ class DiscussChannel(models.Model):
             # get the existing channel between the given partners
             channel = self.browse(result[0].get('channel_id'))
             # pin or open the channel for the current partner
-            if pin or force_open:
+            if pin:
                 member = self.env['discuss.channel.member'].search([('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', channel.id)])
                 vals = {'last_interest_dt': fields.Datetime.now()}
                 if pin:
                     vals['unpin_dt'] = False
-                if force_open:
-                    vals['fold_state'] = "open"
                 member.write(vals)
             channel._broadcast(self.env.user.partner_id.ids)
         else:
@@ -1092,9 +1090,7 @@ class DiscussChannel(models.Model):
                     Command.create({
                         'partner_id': partner_id,
                         # only pin for the current user, so the chat does not show up for the correspondent until a message has been sent
-                        # manually set the last_interest_dt to make sure that it works well with the default last_interest_dt (datetime.now())
                         'unpin_dt': False if partner_id == self.env.user.partner_id.id else fields.Datetime.now(),
-                        'last_interest_dt': fields.Datetime.now() if partner_id == self.env.user.partner_id.id else fields.Datetime.now() - timedelta(seconds=30),
                     }) for partner_id in partners_to
                 ],
                 'channel_type': 'chat',
@@ -1110,7 +1106,7 @@ class DiscussChannel(models.Model):
         if member:
             member.write({'unpin_dt': False if pinned else fields.Datetime.now()})
         if not pinned:
-            self.env.user._bus_send("discuss.channel/unpin", {"id": self.id})
+            self.env.user._bus_send_store(self, {"close_chat_window": True, "is_pinned": False})
         else:
             self.env.user._bus_send_store(self)
 

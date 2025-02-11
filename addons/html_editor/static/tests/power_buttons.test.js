@@ -1,10 +1,13 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { click, press, waitFor } from "@odoo/hoot-dom";
+import { click, press, tick, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "./_helpers/editor";
-import { getContent } from "./_helpers/selection";
+import { getContent, setSelection } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
 import { onRpc } from "@web/../tests/web_test_helpers";
+import { Plugin } from "@html_editor/plugin";
+import { closestElement } from "@html_editor/utils/dom_traversal";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 
 describe.tags("desktop");
 describe("visibility", () => {
@@ -121,5 +124,37 @@ describe("buttons", () => {
         click(".o_we_power_buttons .power_button.fa-ellipsis-v");
         await animationFrame();
         expect(".o-we-powerbox").toHaveCount(1);
+    });
+});
+
+describe.tags("desktop");
+describe("individual button availability", () => {
+    test("should not display button when isAvailable returns false", async () => {
+        class TestPlugin extends Plugin {
+            static id = "test";
+            resources = {
+                user_commands: {
+                    id: "test",
+                    title: "TestButton",
+                    icon: "fa-bug",
+                    isAvailable: ({ anchorNode }) =>
+                        !closestElement(anchorNode, ".hide_test_button"),
+                    run: () => {},
+                },
+                power_buttons: { commandId: "test" },
+            };
+        }
+        const { el } = await setupEditor(`<p>[]<br></p><p class="hide_test_button"><br></p>`, {
+            config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
+        });
+        expect(".o_we_power_buttons").toBeVisible();
+        expect(".power_button.fa-bug").toBeVisible();
+
+        // Place cursor in the second paragraph
+        setSelection({ anchorNode: el.children[1], anchorOffset: 0 });
+        await tick();
+
+        expect(".o_we_power_buttons").toBeVisible();
+        expect(".power_button.fa-bug").not.toBeVisible();
     });
 });

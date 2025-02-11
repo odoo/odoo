@@ -360,6 +360,7 @@
                     date_start="date_from"
                     date_stop="date_to"
                     quick_create="0"
+                    show_date_picker="0"
                     show_unusual_days="True"
                     color="color"
                     hide_time="True"
@@ -386,6 +387,7 @@
                     date_stop="date_to"
                     mode="year"
                     quick_create="0"
+                    show_date_picker="0"
                     show_unusual_days="True"
                     color="color"
                     hide_time="True">
@@ -410,7 +412,7 @@
                 <attribute name="invisible">0</attribute>
             </xpath>
             <xpath expr="//field[@name='holiday_status_id']" position="before">
-                <field name="employee_id" groups="hr_holidays.group_hr_holidays_user" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" widget="many2one_avatar_user"/>
+                <field name="employee_id" groups="hr_holidays.group_hr_holidays_user" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" widget="many2one_avatar_employee"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="department_id" groups="hr_holidays.group_hr_holidays_user" readonly="1"/>
             </xpath>
@@ -475,16 +477,16 @@
                 <field name="message_needaction" column_invisible="True"/>
                 <button string="Approve" name="action_approve" type="object"
                     icon="fa-thumbs-up"
-                    invisible="state != 'confirm'"
+                    invisible="not can_approve or state != 'confirm'"
                     groups="hr_holidays.group_hr_holidays_responsible"/>
                 <field name="company_id" optional="hidden" groups="base.group_multi_company"/>
                 <button string="Validate" name="action_validate" type="object"
                     icon="fa-check"
-                    invisible="state != 'validate1'"
+                    invisible="not can_approve or state != 'validate1'"
                     groups="hr_holidays.group_hr_holidays_responsible"/>
                 <button string="Refuse" name="action_refuse" type="object"
                     icon="fa-times"
-                    invisible="state not in ('confirm', 'validate1')"
+                    invisible="not can_approve or state not in ('confirm', 'validate1')"
                     groups="hr_holidays.group_hr_holidays_responsible"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </list>

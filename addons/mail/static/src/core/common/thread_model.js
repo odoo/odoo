@@ -40,24 +40,23 @@ export class Thread extends Record {
     static insert(data) {
         return super.insert(...arguments);
     }
-    static new() {
-        const thread = super.new(...arguments);
-        Record.onChange(thread, ["state"], () => {
-            if (thread.state === "open" && !this.store.env.services.ui.isSmall) {
-                const cw = this.store.ChatWindow?.insert({ thread });
-                thread.store.chatHub.opened.delete(cw);
-                thread.store.chatHub.opened.unshift(cw);
+    static async getOrFetch(data, fieldNames = []) {
+        let thread = this.get(data);
+        if (
+            data.id > 0 &&
+            (!thread || fieldNames.some((fieldName) => thread[fieldName] === undefined))
+        ) {
+            await this.store.fetchStoreData("mail.thread", {
+                thread_model: data.model,
+                thread_id: data.id,
+                request_list: fieldNames,
+            });
+            thread = this.get(data);
+            if (!thread.exists() || !thread.hasReadAccess) {
+                return;
             }
-            if (thread.state === "folded") {
-                const cw = this.store.ChatWindow?.insert({ thread });
-                thread.store.chatHub.folded.delete(cw);
-                thread.store.chatHub.folded.unshift(cw);
-            }
-        });
+        }
         return thread;
-    }
-    static async getOrFetch(data) {
-        return this.get(data);
     }
 
     /** @type {number} */
@@ -90,6 +89,15 @@ export class Thread extends Record {
     get canUnpin() {
         return this.channel_type === "chat" && this.importantCounter === 0;
     }
+    close_chat_window = Record.attr(undefined, {
+        /** @this {import("models").Thread} */
+        onUpdate() {
+            if (this.close_chat_window) {
+                this.close_chat_window = undefined;
+                this.closeChatWindow({ force: true });
+            }
+        },
+    });
     composer = Record.one("Composer", {
         compute: () => ({}),
         inverse: "thread",
@@ -205,8 +213,6 @@ export class Thread extends Record {
         inverse: "threadAsNeedaction",
         sort: (message1, message2) => message1.id - message2.id,
     });
-    /** @type {'open' | 'folded' | 'closed'} */
-    state;
     status = "new";
     /**
      * Stored scoll position of thread from top in ASC order.
@@ -692,20 +698,26 @@ export class Thread extends Record {
     /** @param {Object} [options] */
     open(options) {}
 
-    openChatWindow({ fromMessagingMenu } = {}) {
+    async openChatWindow({ focus = false, fromMessagingMenu } = {}) {
+        const thread = await this.store.Thread.getOrFetch(this);
+        if (!thread) {
+            return;
+        }
+        await this.store.chatHub.initPromise;
         const cw = this.store.ChatWindow.insert(
             assignDefined({ thread: this }, { fromMessagingMenu })
         );
-        this.store.chatHub.opened.delete(cw);
-        this.store.chatHub.opened.unshift(cw);
-        if (!isMobileOS()) {
-            cw.focus();
-        } else {
+        cw.open({ focus: focus });
+        if (isMobileOS()) {
             this.markAsRead();
         }
-        this.state = "open";
-        cw.notifyState();
         return cw;
+    }
+
+    async closeChatWindow(options = {}) {
+        await this.store.chatHub.initPromise;
+        const chatWindow = this.store.ChatWindow.get({ thread: this });
+        await chatWindow?.close({ notifyState: false, ...options });
     }
 
     pin() {

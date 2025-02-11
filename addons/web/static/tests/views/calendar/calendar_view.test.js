@@ -3741,14 +3741,14 @@ test(`form_view_id attribute works (for creating events)`, async () => {
         },
     });
 
-    onRpc("create", () => {
+    onRpc("create", () =>
         // we simulate here the case where a create call with just
         // the field name fails.  This is a normal flow, the server
         // reject the create rpc (quick create), then the web client
         // fall back to a form view. This happens typically when a
         // model has required fields
-        return Promise.reject("None shall pass!");
-    });
+        Promise.reject("None shall pass!")
+    );
 
     await mountView({
         resModel: "event",
@@ -3805,14 +3805,14 @@ test(`calendar fallback to form view id in action if necessary`, async () => {
         },
     });
 
-    onRpc("create", () => {
+    onRpc("create", () =>
         // we simulate here the case where a create call with just
         // the field name fails.  This is a normal flow, the server
         // reject the create rpc (quick create), then the web client
         // fall back to a form view. This happens typically when a
         // model has required fields
-        return Promise.reject("None shall pass!");
-    });
+        Promise.reject("None shall pass!")
+    );
     await mountView({
         resModel: "event",
         type: "calendar",
@@ -3857,7 +3857,6 @@ test(`initial_date given in the context`, async () => {
             id: 1,
             name: "context initial date",
             res_model: "event",
-            type: "ir.actions.act_window",
             views: [[1, "calendar"]],
             context: { initial_date: "2016-01-30 08:00:00" }, // 30th of january
         },
@@ -4641,6 +4640,39 @@ test(`popover ignores readonly field modifier`, async () => {
 });
 
 test.tags("desktop");
+test(`calendar with option show_date_picker set to false and no filter`, async () => {
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" date_stop="stop" show_date_picker="0">
+                <field name="name"/>
+            </calendar>
+        `,
+    });
+    expect(`.o_datetime_picker`).toHaveCount(0);
+    expect(`.o_calendar_sidebar`).toHaveCount(0);
+    expect(`.o_sidebar_toggler`).toHaveCount(0);
+});
+
+test.tags("desktop");
+test(`calendar with option show_date_picker set to false and filters`, async () => {
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" date_stop="stop" show_date_picker="0">
+                <field name="name"/>
+                <field name="partner_id" filters="1"/>
+            </calendar>
+        `,
+    });
+    expect(`.o_datetime_picker`).toHaveCount(0);
+    expect(`.o_calendar_sidebar`).toHaveCount(1);
+    expect(`.o_sidebar_toggler`).toHaveCount(1);
+});
+
+test.tags("desktop");
 test(`can not select invalid scale from datepicker`, async () => {
     await mountView({
         resModel: "event",
@@ -4985,7 +5017,6 @@ test("sample data are not removed when switching back from calendar view", async
             id: 1,
             name: "Partners",
             res_model: "event",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "calendar"],
@@ -5039,7 +5070,6 @@ test(`Retaining the 'all' filter value on re-rendering`, async () => {
             id: 1,
             name: "Partners",
             res_model: "event",
-            type: "ir.actions.act_window",
             views: [
                 [false, "calendar"],
                 [false, "list"],
@@ -5099,7 +5129,6 @@ test("save selected date during view switching", async () => {
             id: 1,
             name: "Partners",
             res_model: "event",
-            type: "ir.actions.act_window",
             views: [
                 [false, "list"],
                 [false, "calendar"],
@@ -5190,6 +5219,25 @@ test("update time while drag and drop on month mode", async () => {
     expect(".o_field_widget[name='stop'] input").toHaveValue("12/29/2016 10:00:00");
 });
 
+test("html field on calendar shouldn't have a tooltip", async () => {
+    Event._fields.description = fields.Html();
+    Event._records[0].description = "<p>test html field</p>";
+    await mountView({
+        type: "calendar",
+        resModel: "event",
+        arch: `
+            <calendar date_start="start">
+                <field name="description"/>
+            </calendar>
+        `,
+    });
+
+    await clickEvent(Event._records[0].id);
+    const descriptionField = queryFirst('.o_cw_popover_field .o_field_widget[name="description"]');
+    const parentLi = descriptionField.closest("li");
+    expect(parentLi).toHaveAttribute("data-tooltip", "");
+});
+
 test.tags("mobile");
 test("simple calendar rendering in mobile", async () => {
     await mountView({
@@ -5200,7 +5248,6 @@ test("simple calendar rendering in mobile", async () => {
 
     expect(".o_calendar_button_prev").toHaveCount(0, { message: "prev button should be hidden" });
     expect(".o_calendar_button_next").toHaveCount(0, { message: "next button should be hidden" });
-    await displayCalendarPanel();
     expect(".o_calendar_container .o_calendar_header button.o_calendar_button_today").toBeVisible({
         message: "today button should be visible",
     });
@@ -5266,9 +5313,7 @@ test("calendar: today button", async () => {
 
     expect(queryFirst(".fc-col-header-cell[data-date]").dataset.date).toBe("2016-12-11");
 
-    await contains(".o_other_calendar_panel").click();
     await contains(".o_calendar_button_today").click();
-    await contains(".o_other_calendar_panel").click();
     expect(queryFirst(".fc-col-header-cell[data-date]").dataset.date).toBe("2016-12-12");
 });
 
@@ -5466,7 +5511,7 @@ test("calendar: check context is correclty sent to fetch data", async () => {
 });
 
 test(`disable editing without write access rights`, async () => {
-    onRpc("has_access", ({ args }) => args[1] != 'write');
+    onRpc("has_access", ({ args }) => args[1] != "write");
     await mountView({
         resModel: "event",
         type: "calendar",
@@ -5476,5 +5521,7 @@ test(`disable editing without write access rights`, async () => {
             </calendar>
         `,
     });
-    expect(`.fc-event-draggable`).toHaveCount(0, { message: "Record should not be draggable/editable" });
+    expect(`.fc-event-draggable`).toHaveCount(0, {
+        message: "Record should not be draggable/editable",
+    });
 });

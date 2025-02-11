@@ -88,26 +88,6 @@ messageActionsRegistry
         onClick: (component) => component.props.message.unfollow(),
         sequence: 60,
     })
-    .add("reply-all", {
-        condition: (component) =>
-            component.props.message.canReplyAllandForward(component.props.thread),
-        icon: "fa fa-reply",
-        title: _t("Reply All"),
-        onClick: (component) => {
-            component.onClickMessageReplyAll();
-        },
-        sequence: 71,
-    })
-    .add("forward", {
-        condition: (component) =>
-            component.props.message.canReplyAllandForward(component.props.thread),
-        icon: "fa fa-share",
-        title: _t("Forward"),
-        onClick: (component) => {
-            component.onClickMessageForward();
-        },
-        sequence: 72,
-    })
     .add("edit", {
         condition: (component) => component.props.message.editable,
         icon: "fa fa-pencil",
@@ -130,6 +110,7 @@ messageActionsRegistry
     })
     .add("delete", {
         condition: (component) => component.props.message.editable,
+        btnClass: "text-danger",
         icon: "fa fa-trash",
         title: _t("Delete"),
         onClick: async (component) => {
@@ -190,6 +171,11 @@ messageActionsRegistry
 
 function transformAction(component, id, action) {
     return {
+        get btnClass() {
+            return typeof action.btnClass === "function"
+                ? action.btnClass(component)
+                : action.btnClass;
+        },
         component: action.component,
         id,
         mobileCloseAfterClick: action.mobileCloseAfterClick ?? true,

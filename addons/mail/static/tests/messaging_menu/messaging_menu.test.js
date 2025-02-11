@@ -99,13 +99,13 @@ test("rendering with chat push notification default permissions", async () => {
 test("can quickly dismiss 'Turn on notification' suggestion", async () => {
     patchBrowserNotification("default");
     await start();
-    await contains(".o-mail-MessagingMenu-counter");
     await contains(".o-mail-MessagingMenu-counter", { text: "1" });
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem");
     await contains(".o-mail-NotificationItem", { text: "Turn on notifications" });
     await click(".o-mail-NotificationItem:contains(Turn on notifications) [title='Dismiss']");
     await contains(".o-mail-NotificationItem", { text: "Turn on notifications", count: 0 });
+    await contains(".o-mail-MessagingMenu-counter", { count: 0 });
 });
 
 test("rendering with chat push notification permissions denied", async () => {
@@ -1092,7 +1092,7 @@ test("can open messaging menu even if messaging is not initialized", async () =>
     await startServer();
     const def = new Deferred();
     onRpcBefore("/mail/data", async (args) => {
-        if (args.init_messaging) {
+        if (args.fetch_params.includes("init_messaging")) {
             await def;
         }
     });
@@ -1107,12 +1107,12 @@ test("can open messaging menu even if channels are not fetched", async () => {
     pyEnv["discuss.channel"].create({ name: "General" });
     const def = new Deferred();
     onRpcBefore("/mail/action", async (args) => {
-        if (args.channels_as_member) {
+        if (args.fetch_params.includes("channels_as_member")) {
             await def;
         }
     });
     onRpcBefore("/mail/data", async (args) => {
-        if (args.channels_as_member) {
+        if (args.fetch_params.includes("channels_as_member")) {
             await def;
         }
     });

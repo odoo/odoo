@@ -11,7 +11,7 @@ import {
 } from "@html_editor/others/embedded_components/embedding_sets";
 import { normalizeHTML } from "@html_editor/utils/html";
 import { Wysiwyg } from "@html_editor/wysiwyg";
-import { Component, status, useRef, useState } from "@odoo/owl";
+import { Component, markup, status, useRef, useState } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -22,6 +22,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { TranslationButton } from "@web/views/fields/translation_button";
 import { HtmlViewer } from "./html_viewer";
 import { withSequence } from "@html_editor/utils/resource";
+import { fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
 
 /**
  * Check whether the current value contains nodes that would break
@@ -84,17 +85,12 @@ export class HtmlField extends Component {
 
         useRecordObserver((record) => {
             // Reset Wysiwyg when we discard or onchange value
-            const newValue = record.data[this.props.name];
+            const newValue = fixInvalidHTML(record.data[this.props.name]);
             if (!this.isDirty) {
-                const value = normalizeHTML(
-                    newValue.toString(),
-                    this.clearElementToCompare.bind(this)
-                );
+                const value = normalizeHTML(newValue, this.clearElementToCompare.bind(this));
                 if (this.lastValue !== value) {
                     this.state.key++;
-                    this.state.containsComplexHTML = computeContainsComplexHTML(
-                        record.data[this.props.name]
-                    );
+                    this.state.containsComplexHTML = computeContainsComplexHTML(newValue);
                     this.lastValue = value;
                 }
             }
@@ -109,7 +105,12 @@ export class HtmlField extends Component {
     }
 
     get value() {
-        return this.props.record.data[this.props.name];
+        const value = this.props.record.data[this.props.name];
+        const newVal = fixInvalidHTML(value);
+        if (instanceofMarkup(value)) {
+            return markup(newVal);
+        }
+        return newVal;
     }
 
     get displayReadonly() {
@@ -236,6 +237,10 @@ export class HtmlField extends Component {
             ...this.props.editorConfig,
         };
 
+        if (!("baseContainer" in config)) {
+            config.baseContainer = "DIV";
+        }
+
         if (this.props.embeddedComponents) {
             // TODO @engagement: fill this array with default/base components
             config.resources.embedded_components = [...MAIN_EMBEDDINGS];
@@ -313,6 +318,9 @@ export const htmlField = {
         }
         if ("disableFile" in options) {
             editorConfig.disableFile = Boolean(options.disableFile);
+        }
+        if ("baseContainer" in options) {
+            editorConfig.baseContainer = options.baseContainer;
         }
         return {
             editorConfig,

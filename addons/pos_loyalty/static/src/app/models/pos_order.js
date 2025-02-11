@@ -75,12 +75,12 @@ patch(PosOrder.prototype, {
         this.invalidCoupons = true;
         this.uiState = {
             ...this.uiState,
-            disabledRewards: new Set(),
-            codeActivatedProgramRules: [],
-            couponPointChanges: {},
+            disabledRewards: this.uiState.disabledRewards || new Set(),
+            codeActivatedProgramRules: this.uiState.codeActivatedProgramRules || [],
+            couponPointChanges: this.uiState.couponPointChanges || {},
         };
         const oldCouponMapping = {};
-        if (this.uiState.couponPointChanges) {
+        if (Object.keys(this.uiState.couponPointChanges).length === 0) {
             for (const [key, pe] of Object.entries(this.uiState.couponPointChanges)) {
                 if (!this.models["loyalty.program"].get(pe.program_id)) {
                     // Remove points changes for programs that are not available anymore.
@@ -908,11 +908,17 @@ patch(PosOrder.prototype, {
         return { discountable, discountablePerTax };
     },
     /**
-     * @returns the order's cheapest line
+     * @param {loyalty.reward} reward
+     * @returns the cheapest line from all the lines where the program is applicable
      */
-    _getCheapestLine() {
+    _getCheapestLine(reward) {
+        const applicableProductIds = new Set(reward.all_discount_product_ids.map((p) => p.id));
         const filtered_lines = this.getOrderlines().filter(
-            (line) => !line.comboParent && !line.reward_id && line.getQuantity
+            (line) =>
+                !line.combo_parent_id &&
+                !line.reward_id &&
+                line.getQuantity() &&
+                applicableProductIds.has(line.getProduct().id)
         );
         return filtered_lines.toSorted(
             (lineA, lineB) => lineA.getComboTotalPrice() - lineB.getComboTotalPrice()
@@ -922,7 +928,7 @@ patch(PosOrder.prototype, {
      * @returns the discountable and discountable per tax for this discount on cheapest reward.
      */
     _getDiscountableOnCheapest(reward) {
-        const cheapestLine = this._getCheapestLine();
+        const cheapestLine = this._getCheapestLine(reward);
         if (!cheapestLine) {
             return { discountable: 0, discountablePerTax: {} };
         }
@@ -1010,7 +1016,7 @@ patch(PosOrder.prototype, {
             }
             let discountedLines = orderLines;
             if (lineReward.discount_applicability === "cheapest") {
-                cheapestLine = cheapestLine || this._getCheapestLine();
+                cheapestLine = cheapestLine || this._getCheapestLine(lineReward);
                 discountedLines = [cheapestLine];
             } else if (lineReward.discount_applicability === "specific") {
                 discountedLines = this._getSpecificDiscountableLines(lineReward);

@@ -228,7 +228,9 @@ class HrLeaveAllocation(models.Model):
     def _compute_can_approve(self):
         for allocation in self:
             try:
-                if allocation.state == 'confirm' and allocation.validation_type != 'no_validation':
+                if allocation.state == 'confirm' and allocation.validation_type == 'both':
+                    allocation._check_approval_update('validate1')
+                else:
                     allocation._check_approval_update('validate')
             except (AccessError, UserError):
                 allocation.can_approve = False
@@ -424,7 +426,7 @@ class HrLeaveAllocation(models.Model):
             # even if the value doesn't change. This is the best performance atm.
             first_level = level_ids[0]
             first_level_start_date = allocation.date_from + get_timedelta(first_level.start_count, first_level.start_type)
-            leaves_taken = allocation.leaves_taken if first_level.added_value_type == "day" else allocation.leaves_taken / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+            leaves_taken = allocation.leaves_taken if allocation.holiday_status_id.request_unit in ["day", "half_day"] else allocation.leaves_taken / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
             allocation.already_accrued = already_accrued[allocation.id]
             # first time the plan is run, initialize nextcall and take carryover / level transition into account
             if not allocation.nextcall:
@@ -504,9 +506,12 @@ class HrLeaveAllocation(models.Model):
                 if allocation.nextcall == carryover_date:
                     allocation.last_executed_carryover_date = carryover_date
                     if current_level.action_with_unused_accruals in ['lost', 'maximum']:
-                        allocation_days = allocation.number_of_days + leaves_taken
-                        allocation_max_days = current_level.postpone_max_days + leaves_taken
-                        allocation.number_of_days = min(allocation_days, allocation_max_days)
+                        allocated_days_left = allocation.number_of_days - leaves_taken
+                        allocation_max_days = 0 # default if unused_accrual are lost
+                        if current_level.action_with_unused_accruals == 'maximum':
+                            postpone_max_days = current_level.postpone_max_days if current_level.added_value_type == 'day' else current_level.postpone_max_days / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+                            allocation_max_days = min(postpone_max_days, allocated_days_left)
+                        allocation.number_of_days = min(allocation.number_of_days, allocation_max_days) + leaves_taken
                     allocation.expiring_carryover_days = allocation.number_of_days
 
                 # Only accrue on the end of the accrual period or on level transition date
@@ -547,9 +552,15 @@ class HrLeaveAllocation(models.Model):
                     if accrued and last_carryover_date <= allocation.nextcall <= carryover_period_end:
                         if carryover_level.action_with_unused_accruals in ['lost', 'maximum']:
                             allocation.last_executed_carryover_date = carryover_date
-                            allocation_days = allocation.number_of_days + leaves_taken
-                            allocation_max_days = current_level.postpone_max_days + leaves_taken
-                            allocation.number_of_days = min(allocation_days, allocation_max_days)
+                            allocated_days_left = allocation.number_of_days - leaves_taken
+                            postpone_max_days = current_level.postpone_max_days if current_level.added_value_type == 'day' \
+                                else current_level.postpone_max_days / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+                            allocated_days_left = allocation.number_of_days - leaves_taken
+                            allocation_max_days = 0 # default if unused_accrual are lost
+                            if current_level.action_with_unused_accruals == 'maximum':
+                                postpone_max_days = current_level.postpone_max_days
+                                allocation_max_days = min(postpone_max_days, allocated_days_left)
+                            allocation.number_of_days = min(allocation.number_of_days, allocation_max_days) + leaves_taken
 
                 if is_accrual_date:
                     allocation.lastcall = allocation.nextcall
@@ -604,9 +615,10 @@ class HrLeaveAllocation(models.Model):
 
         fake_allocation = self.env['hr.leave.allocation'].with_context(default_date_from=accrual_date).new(origin=self)
         fake_allocation.sudo().with_context(default_date_from=accrual_date)._process_accrual_plans(accrual_date, log=False)
-        if self.type_request_unit in ['hour']:
-            return float_round(fake_allocation.number_of_hours_display - self.number_of_hours_display, precision_digits=2)
-        res = round((fake_allocation.number_of_days - self.number_of_days), 2)
+        if self.holiday_status_id.request_unit in ['hour']:
+            res = float_round(fake_allocation.number_of_hours_display - self.number_of_hours_display, precision_digits=2)
+        else:
+            res = round((fake_allocation.number_of_days - self.number_of_days), 2)
         fake_allocation.invalidate_recordset()
         return res
 
@@ -808,18 +820,24 @@ class HrLeaveAllocation(models.Model):
         is_manager = self.env.user.has_group('hr_holidays.group_hr_holidays_manager')
         for allocation in self:
             val_type = allocation.holiday_status_id.sudo().allocation_validation_type
-            if state == 'confirm':
+            if state == 'confirm' or is_manager or val_type == 'no_validation':
                 continue
 
-            if not is_officer and self.env.user != allocation.employee_id.leave_manager_id and not val_type == 'no_validation':
-                raise UserError(_('Only a time off Officer/Responsible or Manager can approve or refuse time off requests.'))
+            if not is_officer and self.env.user != allocation.employee_id.leave_manager_id:
+                raise UserError(_('Only %s\'s Time Off Approver, a time off Officer/Responsible or Administrator can approve or refuse allocation requests.', allocation.employee_id.name))
+
+            # both -> 1st approver and 2nd officer
+            if (val_type == 'manager' or state == 'validate1') and self.env.user != allocation.employee_id.leave_manager_id:
+                raise UserError(_('You must be either %s\'s Time Off Approver or Time off Administrator to validate this allocation request.', allocation.employee_id.name))
+            if (val_type == 'both' and state == 'validate' or val_type == 'hr') and not is_officer:
+                raise UserError(_('Only a time off Officer/Responsible or Administrator can approve or refuse allocation requests.'))
 
             if is_officer or self.env.user == allocation.employee_id.leave_manager_id:
                 # use ir.rule based first access check: department, members, ... (see security.xml)
                 allocation.check_access('write')
 
-            if allocation.employee_id == current_employee and not is_manager and not val_type == 'no_validation':
-                raise UserError(_('Only a time off Manager can approve its own requests.'))
+            if allocation.employee_id == current_employee:
+                raise UserError(_('Only a time off Administrator can approve their own requests.'))
 
     @api.onchange('allocation_type')
     def _onchange_allocation_type(self):
@@ -855,7 +873,7 @@ class HrLeaveAllocation(models.Model):
 
     def _get_responsible_for_approval(self):
         self.ensure_one()
-        responsible = self.env.user
+        responsible = self.env['res.users']
 
         if self.validation_type == 'manager' or (self.validation_type == 'both' and self.state == 'confirm'):
             if self.employee_id.leave_manager_id:
@@ -892,7 +910,7 @@ class HrLeaveAllocation(models.Model):
                             allocation_type=allocation.holiday_status_id.name,
                         )
                         to_second_do |= allocation
-                    user_ids = allocation.sudo()._get_responsible_for_approval().ids or self.env.user.ids
+                    user_ids = allocation.sudo()._get_responsible_for_approval().ids
                     for user_id in user_ids:
                         activity_vals.append({
                             'activity_type_id': activity_type.id,

@@ -1,39 +1,33 @@
-import { describe, expect, test } from "@odoo/hoot";
-import { leave } from "@odoo/hoot-dom";
-
-import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
-import { asyncStep, Command, serverState, waitForSteps } from "@web/../tests/web_test_helpers";
-import { rpc } from "@web/core/network/rpc";
 import {
+    assertChatHub,
     click,
     contains,
     defineMailModels,
     hover,
     insertText,
     onRpcBefore,
+    setupChatHub,
     start,
     startServer,
 } from "../mail_test_helpers";
+
+import { describe, expect, test } from "@odoo/hoot";
+import { leave } from "@odoo/hoot-dom";
+
+import { rpc } from "@web/core/network/rpc";
+import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
 
 test("Folded chat windows are displayed as chat bubbles", async () => {
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create([
-        {
-            name: "Channel A",
-            channel_member_ids: [
-                Command.create({ fold_state: "folded", partner_id: serverState.partnerId }),
-            ],
-        },
-        {
-            name: "Channel B",
-            channel_member_ids: [
-                Command.create({ fold_state: "folded", partner_id: serverState.partnerId }),
-            ],
-        },
+    const channelIds = pyEnv["discuss.channel"].create([
+        { name: "Channel A" },
+        { name: "Channel B" },
     ]);
+    setupChatHub({ folded: channelIds });
     await start();
     await contains(".o-mail-ChatBubble", { count: 2 });
     await click(".o-mail-ChatBubble", { count: 2 });
@@ -73,14 +67,11 @@ test("No duplicated chat bubbles", async () => {
 
 test("Up to 7 chat bubbles", async () => {
     const pyEnv = await startServer();
+    const channelIds = [];
     for (let i = 1; i <= 8; i++) {
-        pyEnv["discuss.channel"].create({
-            name: String(i),
-            channel_member_ids: [
-                Command.create({ fold_state: "folded", partner_id: serverState.partnerId }),
-            ],
-        });
+        channelIds.push(pyEnv["discuss.channel"].create({ name: String(i) }));
     }
+    setupChatHub({ folded: channelIds.reverse() });
     await start();
     for (let i = 8; i > 1; i--) {
         await contains(`.o-mail-ChatBubble[name='${String(i)}']`);
@@ -101,19 +92,16 @@ test("Ordering of chat bubbles is consistent and seems logical.", async () => {
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ fold_state: "folded", partner_id: serverState.partnerId }),
-            Command.create({ fold_state: "folded", partner_id: partnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
+    const channelIds = [channelId];
     for (let i = 1; i <= 7; i++) {
-        pyEnv["discuss.channel"].create({
-            name: String(i),
-            channel_member_ids: [
-                Command.create({ fold_state: "folded", partner_id: serverState.partnerId }),
-            ],
-        });
+        channelIds.push(pyEnv["discuss.channel"].create({ name: String(i) }));
     }
+    setupChatHub({ folded: channelIds.reverse() });
     await start();
     // FIXME: expect arbitrary order 7, 6, 5, 4, 3, 2, 1
     await contains(":nth-child(1 of .o-mail-ChatBubble)[name='7']");
@@ -154,8 +142,8 @@ test("Hover on chat bubble shows chat name + last message preview", async () => 
     const marcPartnerId = pyEnv["res.partner"].create({ name: "Marc" });
     const marcChannelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ fold_state: "folded", partner_id: serverState.partnerId }),
-            Command.create({ fold_state: "folded", partner_id: marcPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: marcPartnerId }),
         ],
         channel_type: "chat",
     });
@@ -168,11 +156,12 @@ test("Hover on chat bubble shows chat name + last message preview", async () => 
     const demoPartnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const demoChannelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ fold_state: "folded", partner_id: serverState.partnerId }),
-            Command.create({ fold_state: "folded", partner_id: demoPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: demoPartnerId }),
         ],
         channel_type: "chat",
     });
+    setupChatHub({ folded: [marcChannelId, demoChannelId] });
     await start();
     await hover(".o-mail-ChatBubble[name='Marc']");
     await contains(".o-mail-ChatBubble-preview", { text: "MarcHello!" });
@@ -218,13 +207,14 @@ test("Chat bubble preview works on author as email address", async () => {
 test("chat bubbles are synced between tabs", async () => {
     const pyEnv = await startServer();
     const marcPartnerId = pyEnv["res.partner"].create({ name: "Marc" });
-    pyEnv["discuss.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ fold_state: "folded", partner_id: serverState.partnerId }),
-            Command.create({ fold_state: "folded", partner_id: marcPartnerId }),
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: marcPartnerId }),
         ],
         channel_type: "chat",
     });
+    setupChatHub({ folded: [channelId] });
     const tab1 = await start({ asTab: true });
     const tab2 = await start({ asTab: true });
     await contains(".o-mail-ChatBubble", { target: tab1 });
@@ -240,18 +230,8 @@ test("chat bubbles are synced between tabs", async () => {
 test("Chat bubbles do not fetch messages until becoming open", async () => {
     const pyEnv = await startServer();
     const [channeId1, channelId2] = pyEnv["discuss.channel"].create([
-        {
-            name: "Orange",
-            channel_member_ids: [
-                Command.create({ fold_state: "folded", partner_id: serverState.partnerId }),
-            ],
-        },
-        {
-            name: "Apple",
-            channel_member_ids: [
-                Command.create({ fold_state: "folded", partner_id: serverState.partnerId }),
-            ],
-        },
+        { name: "Orange" },
+        { name: "Apple" },
     ]);
     pyEnv["mail.message"].create([
         {
@@ -268,6 +248,7 @@ test("Chat bubbles do not fetch messages until becoming open", async () => {
         },
     ]);
     onRpcBefore("/discuss/channel/messages", () => expect.step("fetch_messages"));
+    setupChatHub({ folded: [channeId1, channelId2] });
     await start();
     await contains(".o-mail-ChatBubble[name='Orange']");
     expect.verifySteps([]);
@@ -280,14 +261,11 @@ test("Chat bubbles do not fetch messages until becoming open", async () => {
 
 test("More than 7 actually folded chat windows shows a 'hidden' chat bubble menu", async () => {
     const pyEnv = await startServer();
+    const channelIds = [];
     for (let i = 1; i <= 8; i++) {
-        pyEnv["discuss.channel"].create({
-            name: String(i),
-            channel_member_ids: [
-                Command.create({ fold_state: "folded", partner_id: serverState.partnerId }),
-            ],
-        });
+        channelIds.push(pyEnv["discuss.channel"].create({ name: String(i) }));
     }
+    setupChatHub({ folded: channelIds.reverse() });
     await start();
     // Can make chat from hidden menu
     await hover(".o-mail-ChatHub-hiddenBtn");
@@ -314,26 +292,13 @@ test("More than 7 actually folded chat windows shows a 'hidden' chat bubble menu
 });
 
 test("Can close all chat windows at once", async () => {
-    const closed = new Set();
-    onRpcBefore("/discuss/channel/fold", (args) => {
-        if (args.state === "closed") {
-            closed.add(args.channel_id);
-        }
-        if (closed.size === 20) {
-            asyncStep("ALL_CLOSED");
-        }
-    });
     const pyEnv = await startServer();
     const channelIds = pyEnv["discuss.channel"].create(
         Array(20)
             .keys()
-            .map((i) => ({
-                name: String(i),
-                channel_member_ids: [
-                    Command.create({ fold_state: "folded", partner_id: serverState.partnerId }),
-                ],
-            }))
+            .map((i) => ({ name: String(i) }))
     );
+    setupChatHub({ folded: channelIds.reverse() });
     await start();
     await contains(".o-mail-ChatBubble", { count: 8 }); // max reached
     await contains(".o-mail-ChatBubble", { text: "+13" });
@@ -341,27 +306,17 @@ test("Can close all chat windows at once", async () => {
     await click("button.fa.fa-ellipsis-h[title='Chat Options']");
     await click("button.o-mail-ChatHub-option", { text: "Close all conversations" });
     await contains(".o-mail-ChatBubble", { count: 0 });
-    await waitForSteps(["ALL_CLOSED"]);
-    const members = pyEnv["discuss.channel.member"].search_read([
-        ["channel_id", "in", channelIds],
-        ["partner_id", "=", serverState.partnerId],
-    ]);
-    expect(members.map((member) => member.fold_state)).toEqual(
-        [...Array(20).keys()].map(() => "closed")
-    );
+    assertChatHub({});
 });
 
 test("Can compact chat hub", async () => {
     // allows to temporarily reduce footprint of chat windows on UI
     const pyEnv = await startServer();
+    const channelIds = [];
     for (let i = 1; i <= 20; i++) {
-        pyEnv["discuss.channel"].create({
-            name: String(i),
-            channel_member_ids: [
-                Command.create({ fold_state: "folded", partner_id: serverState.partnerId }),
-            ],
-        });
+        channelIds.push(pyEnv["discuss.channel"].create({ name: String(i) }));
     }
+    setupChatHub({ folded: channelIds.reverse() });
     await start();
     await contains(".o-mail-ChatBubble", { count: 8 }); // max reached
     await contains(".o-mail-ChatBubble", { text: "+13" });
@@ -378,19 +333,18 @@ test("Can compact chat hub", async () => {
 
 test("Compacted chat hub shows badge with amount of hidden chats with important messages", async () => {
     const pyEnv = await startServer();
+    const channelIds = [];
     for (let i = 1; i <= 20; i++) {
         const partner_id = pyEnv["res.partner"].create({ name: `partner_${i}` });
         const chatId = pyEnv["discuss.channel"].create({
             name: String(i),
             channel_member_ids: [
-                Command.create({
-                    fold_state: "folded",
-                    partner_id: serverState.partnerId,
-                }),
+                Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ partner_id }),
             ],
             channel_type: "chat",
         });
+        channelIds.push(chatId);
         if (i < 10) {
             pyEnv["mail.message"].create({
                 body: "Hello!",
@@ -400,6 +354,7 @@ test("Compacted chat hub shows badge with amount of hidden chats with important 
             });
         }
     }
+    setupChatHub({ folded: channelIds });
     await start();
     await contains(".o-mail-ChatBubble", { count: 8 }); // max reached
     await contains(".o-mail-ChatBubble", { text: "+13" });
@@ -411,16 +366,14 @@ test("Compacted chat hub shows badge with amount of hidden chats with important 
 test("Show IM status", async () => {
     const pyEnv = await startServer();
     const demoId = pyEnv["res.partner"].create({ name: "Demo User", im_status: "online" });
-    pyEnv["discuss.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({
-                fold_state: "folded",
-                partner_id: serverState.partnerId,
-            }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: demoId }),
         ],
         channel_type: "chat",
     });
+    setupChatHub({ folded: [channelId] });
     await start();
     await contains(".o-mail-ChatBubble .fa-circle.text-success[aria-label='User is online']");
 });

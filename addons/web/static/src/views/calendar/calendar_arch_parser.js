@@ -37,6 +37,7 @@ export class CalendarArchParser {
         let isDateHidden = false;
         let isTimeHidden = false;
         let formViewId = false;
+        let showDatePicker = true;
         const popoverFieldNodes = {};
         const filtersInfo = {};
 
@@ -111,6 +112,9 @@ export class CalendarArchParser {
                     }
                     if (node.hasAttribute("form_view_id")) {
                         formViewId = parseInt(node.getAttribute("form_view_id"), 10);
+                    }
+                    if (node.hasAttribute("show_date_picker")) {
+                        showDatePicker = exprToBoolean(node.getAttribute("show_date_picker"));
                     }
 
                     break;
@@ -203,6 +207,7 @@ export class CalendarArchParser {
             scale,
             scales,
             showUnusualDays,
+            showDatePicker,
         };
     }
 }

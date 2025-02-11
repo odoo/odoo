@@ -13,7 +13,6 @@ from contextlib import contextmanager
 from pprint import pformat
 from weakref import WeakSet
 
-from odoo import SUPERUSER_ID
 from odoo.exceptions import AccessError, UserError, CacheMiss
 from odoo.sql_db import BaseCursor
 from odoo.tools import clean_context, frozendict, lazy_property, OrderedSet, Query, SQL
@@ -21,6 +20,7 @@ from odoo.tools.translate import get_translation, get_translated_module, LazyGet
 from odoo.tools.misc import StackMap, SENTINEL
 
 from .registry import Registry
+from .utils import SUPERUSER_ID
 
 if typing.TYPE_CHECKING:
     from collections.abc import Collection, Iterable, Iterator
@@ -534,6 +534,12 @@ class Transaction:
         """ Flush pending computations and updates in the transaction. """
         if self.default_env is not None:
             self.default_env.flush_all()
+        else:
+            for env in self.envs:
+                _logger.warning("Missing default_env, flushing as public user")
+                public_user = env.ref('base.public_user')
+                Environment(env.cr, public_user.id, {}).flush_all()
+                break
 
     def clear(self):
         """ Clear the caches and pending computations and updates in the transactions. """

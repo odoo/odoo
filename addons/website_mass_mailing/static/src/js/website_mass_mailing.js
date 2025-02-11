@@ -129,7 +129,7 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
             'list_id': this._getListId(),
             'value': $input.length ? $input.val() : false,
             'subscription_type': inputName,
-            recaptcha_token_response: tokenObj.token,
+            ...(tokenObj.token ? { recaptcha_token_response: tokenObj.token } : {}),
         }).then(function (result) {
             let toastType = result.toast_type;
             if (toastType === 'success') {

@@ -1,5 +1,6 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 import { useBarcodeReader } from "@point_of_sale/app/hooks/barcode_reader_hook";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
@@ -21,7 +22,7 @@ import {
     ControlButtons,
     ControlButtonsPopup,
 } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
-import { CameraBarcodeScanner } from "@point_of_sale/app/screens/product_screen/camera_barcode_scanner";
+import { BarcodeVideoScanner } from "@web/core/barcode/barcode_video_scanner";
 
 const { DateTime } = luxon;
 
@@ -36,7 +37,7 @@ export class ProductScreen extends Component {
         ControlButtons,
         OrderSummary,
         ProductCard,
-        CameraBarcodeScanner,
+        BarcodeVideoScanner,
     };
     static props = {};
 
@@ -83,6 +84,7 @@ export class ProductScreen extends Component {
         });
 
         this.barcodeReader = useService("barcode_reader");
+        this.sound = useService("mail.sound_effects");
 
         useBarcodeReader({
             product: this._barcodeProductAction,
@@ -97,6 +99,8 @@ export class ProductScreen extends Component {
         this.numberBuffer.use({
             useWithBarcode: true,
         });
+
+        this.doLoadSampleData = useTrackedAsync(() => this.pos.loadSampleData());
 
         useEffect(
             () => {
@@ -113,9 +117,9 @@ export class ProductScreen extends Component {
 
     getNumpadButtons() {
         const colorClassMap = {
-            [this.env.services.localization.decimalPoint]: "o_colorlist_item_color_transparent_6",
-            Backspace: "o_colorlist_item_color_transparent_1",
-            "-": "o_colorlist_item_color_transparent_3",
+            [this.env.services.localization.decimalPoint]: "o_colorlist_item_numpad_color_6",
+            Backspace: "o_colorlist_item_numpad_color_1",
+            "-": "o_colorlist_item_numpad_color_3",
         };
 
         const defaultLastRowValues =
@@ -168,6 +172,18 @@ export class ProductScreen extends Component {
     }
     getProductName(product) {
         return product.name;
+    }
+    get barcodeVideoScannerProps() {
+        return {
+            facingMode: "environment",
+            onResult: (result) => {
+                this.barcodeReader.scan(result);
+                this.sound.play("beep");
+            },
+            onError: console.error,
+            delayBetweenScan: 2000,
+            cssClass: "w-100 h-100",
+        };
     }
     async _getProductByBarcode(code) {
         let product = this.pos.models["product.product"].getBy("barcode", code.base_code);

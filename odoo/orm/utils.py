@@ -1,4 +1,5 @@
 import re
+import warnings
 from collections.abc import Set as AbstractSet
 
 import dateutil.relativedelta
@@ -14,8 +15,10 @@ regex_private = re.compile(r'^(_.*|init)$')
 
 # types handled as collections
 COLLECTION_TYPES = (list, tuple, AbstractSet)
+# The hard-coded super-user id (a.k.a. root user, or OdooBot).
+SUPERUSER_ID = 1
 
-# read_group stuff
+# _read_group stuff
 READ_GROUP_TIME_GRANULARITY = {
     'hour': dateutil.relativedelta.relativedelta(hours=1),
     'day': dateutil.relativedelta.relativedelta(days=1),
@@ -65,6 +68,7 @@ SQL_OPERATORS = {
 
 def check_method_name(name):
     """ Raise an ``AccessError`` if ``name`` is a private method name. """
+    warnings.warn("Since 19.0, use odoo.service.model.get_public_method", DeprecationWarning)
     if regex_private.match(name):
         raise AccessError('Private methods (such as %s) cannot be called remotely.' % name)
 

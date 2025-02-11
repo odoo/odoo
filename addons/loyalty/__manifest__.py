@@ -37,6 +37,7 @@
         ],
         'web.assets_frontend': [
             'loyalty/static/src/js/portal/**/*',
+            'loyalty/static/src/interactions/*',
         ],
     },
     'installable': True,

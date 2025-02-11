@@ -50,20 +50,19 @@
                         <div class="oe_title">
                             <h1><field class="text-break" options="{'line_breaks': False}" widget="text" name="name" placeholder="e.g. Product Pricing"/></h1>
                             <h2 class="row g-0 pb-3 pb-sm-4">
-                                <div class="col-auto pb-2 pb-md-0" invisible="type == 'lead'">
+                                <div class="col-auto pb-2 pb-md-0 w-100 w-sm-auto" invisible="type == 'lead'">
                                     <label for="expected_revenue" class="oe_edit_only"/>
-                                    <div class="d-flex align-items-baseline">
+                                    <div class="d-flex flex-wrap align-items-baseline">
                                         <field name="company_currency" invisible="1"/>
                                         <field name="expected_revenue" class="o_input_13ch" widget='monetary' options="{'currency_field': 'company_currency'}"/>
                                         <span class="opacity-50 p-2" groups="crm.group_use_recurring_revenues"> + </span>
                                         <span class="opacity-50 p-2" groups="!crm.group_use_recurring_revenues"> at </span>
-                                        <div class="d-flex align-items-baseline gap-3" groups="crm.group_use_recurring_revenues">
-                                            <field name="recurring_revenue" class="o_input_10ch" widget="monetary" options="{'currency_field': 'company_currency'}"/>
-                                            <div class="d-flex align-items-baseline">
-                                                <field name="recurring_plan" class="oe_inline o_input_13ch" placeholder='e.g. "Monthly"'
-                                                    required="recurring_revenue != 0" options="{'no_create': True, 'no_open': True}"/>
-                                                <span class="opacity-50 p-2 text-nowrap"> at </span>
-                                            </div>
+                                        <field name="recurring_revenue" class="o_input_10ch mx-auto mx-sm-0" widget="monetary"
+                                            options="{'currency_field': 'company_currency'}" groups="crm.group_use_recurring_revenues"/>
+                                        <div class="d-flex align-items-baseline" groups="crm.group_use_recurring_revenues">
+                                            <field name="recurring_plan" class="oe_inline o_input_13ch" placeholder='e.g. "Monthly"'
+                                                required="recurring_revenue != 0" options="{'no_create': True, 'no_open': True}"/>
+                                            <span class="opacity-50 p-2 text-nowrap d-none d-sm-block"> at </span>
                                         </div>
                                     </div>
                                 </div>
@@ -99,7 +98,6 @@
                                         'default_country_id': country_id,
                                         'default_function': function,
                                         'default_phone': phone,
-                                        'default_mobile': mobile,
                                         'default_email': email_from,
                                         'default_user_id': user_id,
                                         'default_team_id': team_id,
@@ -140,7 +138,6 @@
                                         'default_country_id': country_id,
                                         'default_function': function,
                                         'default_phone': phone,
-                                        'default_mobile': mobile,
                                         'default_email': email_from,
                                         'default_user_id': user_id,
                                         'default_team_id': team_id,
@@ -152,7 +149,6 @@
                                 <field name="is_blacklisted" invisible="1"/>
                                 <field name="partner_is_blacklisted" invisible="1"/>
                                 <field name="phone_blacklisted" invisible="1"/>
-                                <field name="mobile_blacklisted" invisible="1"/>
                                 <field name="email_state" invisible="1"/>
                                 <field name="phone_state" invisible="1"/>
                                 <field name="partner_email_update" invisible="1"/>
@@ -218,14 +214,6 @@
                                         title="By saving this change, the customer phone number will also be updated."
                                         invisible="not partner_phone_update"/>
                                 </div>
-                                <label for="mobile" class="oe_inline"/>
-                                <div class="o_row o_row_readonly">
-                                    <button name="phone_action_blacklist_remove" class="fa fa-ban text-danger"
-                                        title="This phone number is blacklisted for SMS Marketing. Click to unblacklist."
-                                        type="object" context="{'default_phone': mobile}" groups="base.group_user"
-                                        invisible="not mobile_blacklisted"/>
-                                    <field name="mobile" widget="phone" string="Mobile"/>
-                                </div>
                             </group>
                             <field name="type" invisible="1"/>
                             <group invisible="type == 'lead'">
@@ -263,7 +251,8 @@
                                     <group string="Marketing" name="categorization">
                                         <field name="company_id"
                                             groups="base.group_multi_company"
-                                            options="{'no_create': True}"/>
+                                            options="{'no_create': True}"
+                                            placeholder="Visible to all"/>
                                         <field name="campaign_id" options="{'create_name_field': 'title'}"/>
                                         <field name="medium_id"/>
                                         <field name="source_id"/>
@@ -299,14 +288,6 @@
                                             <field name="contact_name" id="contact_name_page_lead"/>
                                         </div>
                                         <field name="function"/>
-                                        <label for="mobile_page_lead" class="oe_inline"/>
-                                        <div class="o_row o_row_readonly">
-                                            <button name="phone_action_blacklist_remove" class="fa fa-ban text-danger"
-                                                title="This phone number is blacklisted for SMS Marketing. Click to unblacklist."
-                                                type="object" context="{'default_phone': mobile}" groups="base.group_user"
-                                                invisible="not mobile_blacklisted"/>
-                                            <field name="mobile" id="mobile_page_lead" widget="phone"/>
-                                        </div>
                                     </group>
                                     <group string="Marketing">
                                         <field name="campaign_id" options="{'create_name_field': 'title'}"/>
@@ -317,7 +298,8 @@
                                     <group string="Tracking" name="Misc">
                                         <field name="company_id"
                                             groups="base.group_multi_company"
-                                            options="{'no_create': True}"/>
+                                            options="{'no_create': True}"
+                                            placeholder="Visible to all"/>
                                         <field name="team_id" options="{'no_open': True, 'no_create': True}" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
                                         <field name="day_open" />
                                         <field name="day_close"/>
@@ -469,7 +451,6 @@
                         <field name="street" invisible="1"/>
                         <field name="street2" invisible="1"/>
                         <field name="zip" invisible="1"/>
-                        <field name="mobile" invisible="1"/>
                         <field name="website" invisible="1"/>
                         <field name="function" invisible="1"/>
                         <field name="activity_ids" invisible="1"/>
@@ -1251,6 +1232,16 @@
                 'default_type': 'lead',
             }</field>
             <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
+        </record>
+
+        <record id="mail_followers_edit_action_from_lead" model="ir.actions.act_window">
+            <field name="name">Add/Remove Followers</field>
+            <field name="res_model">mail.followers.edit</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'default_res_model': 'crm.lead', 'default_res_ids': active_ids}</field>
+            <field name="binding_model_id" ref="model_crm_lead"/>
+            <field name="binding_view_types">list</field>
         </record>
 
 </odoo>

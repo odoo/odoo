@@ -1,12 +1,12 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from types import SimpleNamespace
 from unittest.mock import patch
 
-from odoo import Command, SUPERUSER_ID
 from odoo.addons.base.models.res_users import is_selection_groups, get_selection_groups, name_selection_groups
+from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.fields import Command
 from odoo.http import _request_stack
 from odoo.tests import Form, TransactionCase, new_test_user, tagged, HttpCase, users, warmup
 from odoo.tools import mute_logger
@@ -386,7 +386,7 @@ class TestUsers2(UsersCommonCase):
 
         # Verify that the read_group is raising an error if reified field is used as groupby
         with self.assertRaises(ValueError):
-            User.read_group([], fnames + [reified_fname], [reified_fname])
+            User._read_group([], fnames + [reified_fname], ['__count'])
 
     def test_reified_groups_on_change(self):
         """Test that a change on a reified fields trigger the onchange of groups_id."""

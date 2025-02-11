@@ -8,7 +8,7 @@
             <Dropdown position="!env.isSmall ? 'bottom-end' : ''" menuClass="'o-form-buttonbox p-0 border-0 ' + (!env.isSmall ? 'o_dropdown_more' : 'o-form-buttonbox-small')">
                 <button class="o_button_more btn d-flex justify-content-center align-items-center" t-att-class="!env.isSmall ? 'o-dropdown-caret btn-outline-secondary' : 'btn-secondary'">
                     <span t-if="!env.isSmall">More</span>
-                    <i t-else="" class="fa fa-bolt lh-base" aria-hidden="true"/>
+                    <i t-else="" class="fa fa-fw fa-bolt lh-base" aria-hidden="true"/>
                 </button>
                 <t t-set-slot="content">
                     <DropdownItem t-foreach="additionalButtons" t-as="button" t-key="button_value" class="'d-flex flex-column p-0'">

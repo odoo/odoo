@@ -21,10 +21,6 @@ const threadPatch = {
     get recipientsFullyLoaded() {
         return this.recipientsCount === this.recipients.length;
     },
-    closeChatWindow() {
-        const chatWindow = this.store.ChatWindow.get({ thread: this });
-        chatWindow?.close({ notifyState: false });
-    },
     computeIsDisplayed() {
         if (this.store.discuss.isActive && !this.store.env.services.ui.isSmall) {
             return this.eq(this.store.discuss.thread);
@@ -32,7 +28,7 @@ const threadPatch = {
         return super.computeIsDisplayed();
     },
     async leave() {
-        this.closeChatWindow();
+        await this.closeChatWindow();
         super.leave(...arguments);
     },
     async loadMoreFollowers() {
@@ -72,9 +68,10 @@ const threadPatch = {
             });
             return;
         }
-        super.open();
+        super.open(...arguments);
     },
     async unpin() {
+        await this.store.chatHub.initPromise;
         const chatWindow = this.store.ChatWindow.get({ thread: this });
         await chatWindow?.close();
         super.unpin(...arguments);

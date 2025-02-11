@@ -27,8 +27,7 @@ class ProjectProject(models.Model):
     timesheet_encode_uom_id = fields.Many2one('uom.uom', compute='_compute_timesheet_encode_uom_id', export_string_translation=False)
     total_timesheet_time = fields.Integer(
         compute='_compute_total_timesheet_time', groups='hr_timesheet.group_hr_timesheet_user',
-        string="Total amount of time (in the proper unit) recorded in the project, rounded to the unit.",
-        compute_sudo=True, export_string_translation=False)
+        string="Total amount of time (in the proper unit) recorded in the project, rounded to the unit.", export_string_translation=False)
     encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days', export_string_translation=False)
     is_internal_project = fields.Boolean(compute='_compute_is_internal_project', search='_search_is_internal_project', export_string_translation=False)
     remaining_hours = fields.Float(compute='_compute_remaining_hours', string='Time Remaining', compute_sudo=True)
@@ -215,7 +214,8 @@ class ProjectProject(models.Model):
 
     def action_project_timesheets(self):
         action = self.env['ir.actions.act_window']._for_xml_id('hr_timesheet.act_hr_timesheet_line_by_project')
-        action['display_name'] = _("%(name)s's Timesheets", name=self.name)
+        if not self.env.context.get('from_embedded_action'):
+            action['display_name'] = _("%(name)s's Timesheets", name=self.name)
         return action
 
     # ----------------------------

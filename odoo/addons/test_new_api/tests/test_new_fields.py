@@ -94,19 +94,6 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             cat.read(['zzz'])
 
         with self.assertRaisesRegex(ValueError, 'Invalid field'):
-            cat.read_group([('zzz', '=', 42)], fields=['color'], groupby=['parent'])
-        with self.assertRaisesRegex(ValueError, 'Invalid field'):
-            cat.read_group([], fields=['zzz'], groupby=['parent'])
-        with self.assertRaisesRegex(ValueError, 'Invalid field'):
-            cat.read_group([], fields=['zzz:sum'], groupby=['parent'])
-        with self.assertRaisesRegex(ValueError, 'Invalid field'):
-            cat.read_group([], fields=['color'], groupby=['zzz'])
-        with self.assertRaisesRegex(ValueError, 'is not a valid aggregate'):
-            cat.read_group([], fields=['color'], groupby=['parent'], orderby='zzz')
-        # exception: accept '__count' as field to aggregate
-        cat.read_group([], fields=['__count'], groupby=['parent'])
-
-        with self.assertRaisesRegex(ValueError, 'Invalid field'):
             cat.create({'name': 'Foo', 'zzz': 42})
 
         with self.assertRaisesRegex(ValueError, 'Invalid field'):
@@ -262,7 +249,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             WHERE model = 'x_test_10_compute_store_x_name' AND name = 'x_name'
         """)
         # setting up models should not crash
-        self.registry.setup_models(self.cr)
+        self.registry._setup_models__(self.cr)
 
     def test_10_display_name(self):
         """ test definition of automatic field 'display_name' """
@@ -596,7 +583,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
         # this must re-evaluate the field's dependencies
         self.env.flush_all()
-        self.registry.setup_models(self.cr)
+        self.registry._setup_models__(self.cr)
         self.assertEqual(self.registry.field_depends[Model.full_name], ('name1', 'name2'))
 
     def test_12_one2many_reference_domain(self):
@@ -3884,13 +3871,13 @@ class TestMagicFields(TransactionCase):
 
         # check setup of models in alphanumeric order
         self.patch(registry, 'models', OrderedDict(sorted(models.items())))
-        registry.setup_models(self.cr)
+        registry._setup_models__(self.cr)
         field = registry['test_new_api.display'].display_name
         self.assertTrue(field.store)
 
         # check setup of models in reverse alphanumeric order
         self.patch(registry, 'models', OrderedDict(sorted(models.items(), reverse=True)))
-        registry.setup_models(self.cr)
+        registry._setup_models__(self.cr)
         field = registry['test_new_api.display'].display_name
         self.assertTrue(field.store)
 
@@ -4380,9 +4367,11 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
         # necessary cleanup for resetting changes in the registry
         for model_name in (self.MODEL_BASE, self.MODEL_REQUIRED):
             Model = self.registry[model_name]
-            self.addCleanup(setattr, Model, '_BaseModel__base_classes', Model._BaseModel__base_classes)
+            self.addCleanup(setattr, Model, '_base_classes__', Model._base_classes__)
 
     def test_ondelete_unexisting_policy(self):
+        from odoo.orm.model_classes import add_to_registry
+
         class Foo(models.Model):
             _module = None
             _name = self.MODEL_REQUIRED
@@ -4392,12 +4381,14 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
                 ('random', "Random stuff"),
             ], ondelete={'random': 'poop'})
 
-        Foo._build_model(self.registry, self.env.cr)
+        add_to_registry(self.registry, Foo)
 
         with self.assertRaises(ValueError):
-            self.registry.setup_models(self.env.cr)
+            self.registry._setup_models__(self.env.cr)
 
     def test_ondelete_default_no_default(self):
+        from odoo.orm.model_classes import add_to_registry
+
         class Foo(models.Model):
             _module = None
             _name = self.MODEL_BASE
@@ -4407,12 +4398,14 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
                 ('corona', "Corona beers suck"),
             ], ondelete={'corona': 'set default'})
 
-        Foo._build_model(self.registry, self.env.cr)
+        add_to_registry(self.registry, Foo)
 
         with self.assertRaises(AssertionError):
-            self.registry.setup_models(self.env.cr)
+            self.registry._setup_models__(self.env.cr)
 
     def test_ondelete_value_no_valid(self):
+        from odoo.orm.model_classes import add_to_registry
+
         class Foo(models.Model):
             _module = None
             _name = self.MODEL_BASE
@@ -4422,12 +4415,14 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
                 ('westvleteren', "Westvleteren beers is overrated"),
             ], ondelete={'westvleteren': 'set foooo'})
 
-        Foo._build_model(self.registry, self.env.cr)
+        add_to_registry(self.registry, Foo)
 
         with self.assertRaises(AssertionError):
-            self.registry.setup_models(self.env.cr)
+            self.registry._setup_models__(self.env.cr)
 
     def test_ondelete_required_null_explicit(self):
+        from odoo.orm.model_classes import add_to_registry
+
         class Foo(models.Model):
             _module = None
             _name = self.MODEL_REQUIRED
@@ -4437,12 +4432,14 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
                 ('brap', "Brap"),
             ], ondelete={'brap': 'set null'})
 
-        Foo._build_model(self.registry, self.env.cr)
+        add_to_registry(self.registry, Foo)
 
         with self.assertRaises(ValueError):
-            self.registry.setup_models(self.env.cr)
+            self.registry._setup_models__(self.env.cr)
 
     def test_ondelete_required_null_implicit(self):
+        from odoo.orm.model_classes import add_to_registry
+
         class Foo(models.Model):
             _module = None
             _name = self.MODEL_REQUIRED
@@ -4452,14 +4449,15 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
                 ('boing', "Boyoyoyoing"),
             ])
 
-        Foo._build_model(self.registry, self.env.cr)
+        add_to_registry(self.registry, Foo)
 
         with self.assertRaises(ValueError):
-            self.registry.setup_models(self.env.cr)
+            self.registry._setup_models__(self.env.cr)
 
 
 class TestFieldParametersValidation(TransactionCase):
     def test_invalid_parameter(self):
+        from odoo.orm.model_classes import add_to_registry
 
         class Foo(models.Model):
             _module = None
@@ -4467,11 +4465,11 @@ class TestFieldParametersValidation(TransactionCase):
 
             name = fields.Char(invalid_parameter=42)
 
-        Foo._build_model(self.registry, self.env.cr)
+        add_to_registry(self.registry, Foo)
         self.addCleanup(self.registry.__delitem__, Foo._name)
 
         with self.assertLogs('odoo.fields', level='WARNING') as cm:
-            self.registry.setup_models(self.env.cr)
+            self.registry._setup_models__(self.env.cr)
 
         self.assertTrue(cm.output[0].startswith(
             "WARNING:odoo.fields:Field test_new_api.field_parameter_validation.name: "
@@ -4733,13 +4731,15 @@ class TestUnlinkConstraints(TransactionCase):
 @tagged('wrong_related_path')
 class TestWrongRelatedError(TransactionCase):
     def test_wrong_related_path(self):
+        from odoo.orm.model_classes import add_to_registry
+
         class Foo(models.Model):
             _module = None
             _name = _description = 'test_new_api.wrong_related_path'
 
             foo_id = fields.Many2one('test_new_api.foo')
             foo_non_existing = fields.Char(related='foo_id.non_existing_field')
-        Foo._build_model(self.registry, self.env.cr)
+        add_to_registry(self.registry, Foo)
         self.addCleanup(self.registry.__delitem__, Foo._name)
 
         errMsg = (
@@ -4747,7 +4747,7 @@ class TestWrongRelatedError(TransactionCase):
             "test_new_api.wrong_related_path.foo_non_existing does not exist."
         )
         with self.assertRaisesRegex(KeyError, errMsg):
-            self.registry.setup_models(self.env.cr)
+            self.registry._setup_models__(self.env.cr)
 
 
 class TestPrecomputeModel(TransactionCase):
@@ -4762,7 +4762,7 @@ class TestPrecomputeModel(TransactionCase):
         self.addCleanup(self.registry.reset_changes)
         self.patch(Model.upper, 'precompute', False)
         with self.assertWarns(UserWarning):
-            self.registry.setup_models(self.cr)
+            self.registry._setup_models__(self.cr)
             self.registry.field_computed
 
     def test_precompute_dependencies_base(self):
@@ -4780,7 +4780,7 @@ class TestPrecomputeModel(TransactionCase):
         self.patch(Model.upper, 'precompute', False)
 
         with self.assertWarns(UserWarning):
-            self.registry.setup_models(self.cr)
+            self.registry._setup_models__(self.cr)
             self.registry.get_trigger_tree(Model._fields.values())
 
 
@@ -4801,11 +4801,11 @@ class TestPrecomputeModel(TransactionCase):
 
         # see what happens if precompute depends on non-precompute
         self.addCleanup(self.registry.reset_changes)
-        # ensure that Model.size.precompute is restored after setup_models()
+        # ensure that Model.size.precompute is restored after _setup_models__()
         self.patch(Model.size, 'precompute', True)
         self.patch(Line.size, 'precompute', False)
         with self.assertWarns(UserWarning):
-            self.registry.setup_models(self.cr)
+            self.registry._setup_models__(self.cr)
             self.registry.get_trigger_tree(Model._fields.values())
 
 

@@ -4,9 +4,7 @@ from odoo.fields import Command
 from odoo.tests import tagged
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
-from odoo.addons.sale.tests.product_configurator_common import (
-    TestProductConfiguratorCommon,
-)
+from odoo.addons.sale.tests.product_configurator_common import TestProductConfiguratorCommon
 from odoo.addons.website.tests.common import HttpCaseWithWebsiteUser
 
 
@@ -60,10 +58,10 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
             else:
                 ptav.price_extra = 50.4
 
-        # Update the pricelist currency regarding env.company_id currency_id in case company has changed currency with COA installation.
-        website = cls.env['website'].get_current_website()
-        pricelist = website.pricelist_id
-        pricelist.write({'currency_id': cls.env.company.currency_id.id})
+        # Ensure that no pricelist is available during the test.
+        # This ensures that tours which triggers on the amounts will run properly, and that the
+        # currency will be the company currency.
+        cls.env['product.pricelist'].action_archive()
 
     def test_01_admin_shop_customize_tour(self):
         # Enable Variant Group
@@ -71,9 +69,6 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
         self.start_tour(self.env['website'].get_client_action_url('/shop?search=Test Product'), 'shop_customize', login="admin", timeout=120)
 
     def test_01_admin_shop_custom_attribute_value_tour(self):
-        # Ensure that no pricelist is available during the test.
-        # This ensures that tours which triggers on the amounts will run properly.
-        self.env['product.pricelist'].search([]).action_archive()
         self.start_tour("/", 'a_shop_custom_attribute_value', login="admin")
 
     def test_02_admin_shop_custom_attribute_value_tour(self):

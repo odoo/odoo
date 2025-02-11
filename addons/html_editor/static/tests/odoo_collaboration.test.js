@@ -1,17 +1,16 @@
 import { stripHistoryIds } from "@html_editor/others/collaboration/collaboration_odoo_plugin";
 import { HISTORY_SNAPSHOT_INTERVAL } from "@html_editor/others/collaboration/collaboration_plugin";
 import { COLLABORATION_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { normalizeHTML } from "@html_editor/utils/html";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { advanceTime, animationFrame, tick, waitUntil } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
 import { mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
 import { Mutex } from "@web/core/utils/concurrency";
-import { normalizeHTML } from "@html_editor/utils/html";
 import { patch } from "@web/core/utils/patch";
 import { getContent, getSelection, setSelection } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
-import { animationFrame, advanceTime } from "@odoo/hoot-mock";
-import { tick, waitUntil } from "@odoo/hoot-dom";
 
 /**
  * @typedef PeerPool
@@ -1172,9 +1171,11 @@ describe("Selection", () => {
         peers.p1.plugins.delete.delete("backward", "character");
         await waitUntil(() => {
             const selectionInAvatarPlugin =
-                peers.p2.plugins.collaborationSelectionAvatar.selectionInfos.get("p1").selection.anchorOffset == 0;
+                peers.p2.plugins.collaborationSelectionAvatar.selectionInfos.get("p1").selection
+                    .anchorOffset == 0;
             const selectionInCollabSelectionPlugin =
-                peers.p2.plugins.collaborationSelection.selectionInfos.get("p1").selection.anchorOffset == 0;
+                peers.p2.plugins.collaborationSelection.selectionInfos.get("p1").selection
+                    .anchorOffset == 0;
             return selectionInAvatarPlugin && selectionInCollabSelectionPlugin;
         });
         expect(

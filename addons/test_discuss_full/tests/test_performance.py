@@ -20,17 +20,20 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - _compute_im_status (_read_format/_to_store)
     #       - _get_on_leave_ids (_compute_im_status override)
     #       - fetch res_users (_to_store)
-    #   6: settings:
+    #   8: settings:
     #       - search (_find_or_create_for_user)
     #       - fetch res_partner (_format_settings: display_name of user_id because classic load)
     #       - fetch res_users_settings (_format_settings)
     #       - search res_users_settings_volumes (_format_settings)
     #       - search res_lang_res_users_settings_rel (_format_settings)
     #       - search im_livechat_expertise_res_users_settings_rel (_format_settings)
-    _query_count_init_store = 12
+    #       - search mail_canned_response
+    #       - fetch res_groups_users_rel (for search mail_canned_response that user can use)
+    _query_count_init_store = 14
     # Queries for _query_count_init_messaging (in order):
     #   1: insert res_device_log
     #   1: fetch res_users (for current user, first occurence _get_channels_as_member of _init_messaging)
+    #   1: fetch channels (provided ids from chat hub)
     #   4: _get_channels_as_member
     #       - search channel_ids of current partner (_search_is_member, building member_domain)
     #       - fetch channel_ids of current partner (active test filtering, _search_is_member)
@@ -70,7 +73,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #           - fetch res_groups (authorizedGroupFullName)
     #           - fetch ir_module_category (authorizedGroupFullName)
     #           - search group_ids (group_based_subscription)
-    _query_count_init_messaging = 34
+    _query_count_init_messaging = 35
     # Queries for _query_count_discuss_channels (in order):
     #   1: insert res_device_log
     #   1: fetch res_users (for current user: first occurence current persona, _search_is_member)
@@ -214,7 +217,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         self.channel_group_1 = Channel._create_group((self.users[0] + self.users[12]).partner_id.ids)
         # create livechats
         self.im_livechat_channel = self.env['im_livechat.channel'].sudo().create({'name': 'support', 'user_ids': [Command.link(self.users[0].id)]})
-        self.env['bus.presence'].create({'user_id': self.users[0].id, 'status': 'online'})  # make available for livechat (ignore leave)
+        self.env['mail.presence']._update_presence(self.users[0])
         self.authenticate('test1', self.password)
         self.channel_livechat_1 = Channel.browse(
             self.make_jsonrpc_request(
@@ -268,7 +271,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         # add folded channel
         members = self.channel_chat_1.channel_member_ids
         member = members.with_user(self.users[0]).filtered(lambda m: m.is_self)
-        member.fold_state = "open"
         # add call invitation
         members = self.channel_channel_group_1.channel_member_ids
         member_0 = members.with_user(self.users[0]).filtered(lambda m: m.is_self)
@@ -336,7 +338,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     def test_20_init_messaging(self):
         """Test performance of `init_messaging`."""
         self._run_test(
-            fn=lambda: self.make_jsonrpc_request("/mail/action", {"init_messaging": {}}),
+            fn=lambda: self.make_jsonrpc_request(
+                "/mail/data",
+                {"fetch_params": [["discuss.channel", [self.channel_chat_1.id]], "init_messaging"]},
+            ),
             count=self._query_count_init_messaging,
             results=self._get_init_messaging_result(),
         )
@@ -344,9 +349,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     @users("emp")
     @warmup
     def test_30_discuss_channels(self):
-        """Test performance of `/mail/data` with `channels_as_member=True`."""
+        """Test performance of `/mail/data` with `channels_as_member`."""
         self._run_test(
-            fn=lambda: self.make_jsonrpc_request("/mail/data", {"channels_as_member": True}),
+            fn=lambda: self.make_jsonrpc_request(
+                "/mail/data", {"fetch_params": ["channels_as_member"]}
+            ),
             count=self._query_count_discuss_channels,
             results=self._get_discuss_channels_result(),
         )
@@ -391,6 +398,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             "Store": {
                 "channel_types_with_seen_infos": sorted(["chat", "group", "livechat"]),
                 "action_discuss_id": xmlid_to_res_id("mail.action_discuss"),
+                "hasCannedResponses": False,
                 "hasGifPickerFeature": False,
                 "hasLinkPreviewFeature": True,
                 "has_access_livechat": False,
@@ -425,22 +433,22 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         return {
             "discuss.channel": [
-                self._expected_result_for_channel(self.channel_channel_group_1),
                 self._expected_result_for_channel(self.channel_chat_1),
+                self._expected_result_for_channel(self.channel_channel_group_1),
             ],
             "discuss.channel.member": [
-                self._res_for_member(self.channel_channel_group_1, self.users[0].partner_id),
-                self._res_for_member(self.channel_channel_group_1, self.users[2].partner_id),
                 self._res_for_member(self.channel_chat_1, self.users[0].partner_id),
                 self._res_for_member(self.channel_chat_1, self.users[14].partner_id),
+                self._res_for_member(self.channel_channel_group_1, self.users[0].partner_id),
+                self._res_for_member(self.channel_channel_group_1, self.users[2].partner_id),
             ],
             "discuss.channel.rtc.session": [
                 self._expected_result_for_rtc_session(self.channel_channel_group_1, self.users[2]),
             ],
             "res.partner": self._filter_partners_fields(
                 self._expected_result_for_persona(self.users[0]),
-                self._expected_result_for_persona(self.users[2], only_inviting=True),
                 self._expected_result_for_persona(self.users[14]),
+                self._expected_result_for_persona(self.users[2], only_inviting=True),
             ),
             "Store": {
                 "inbox": {
@@ -460,7 +468,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         }
 
     def _get_discuss_channels_result(self):
-        """Returns the result of a call to `/mail/data` with `channels_as_member=True`.
+        """Returns the result of a call to `/mail/data` with `channels_as_member`.
         The point of having a separate getter is to allow it to be overriden.
         """
         return {
@@ -590,7 +598,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "name": "general",
                 "parent_channel_id": False,
                 "rtcSessions": [["ADD", []]],
-                "state": "closed",
                 "uuid": channel.uuid,
             }
         if channel == self.channel_channel_public_1:
@@ -623,7 +630,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "name": "public channel 1",
                 "parent_channel_id": False,
                 "rtcSessions": [["ADD", []]],
-                "state": "closed",
                 "uuid": channel.uuid,
             }
         if channel == self.channel_channel_public_2:
@@ -656,7 +662,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "name": "public channel 2",
                 "parent_channel_id": False,
                 "rtcSessions": [["ADD", []]],
-                "state": "closed",
                 "uuid": channel.uuid,
             }
         if channel == self.channel_channel_group_1:
@@ -692,7 +697,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtcInvitingSession": member_2.sudo().rtc_session_ids.id,
                 # sudo: discuss.channel.rtc.session - reading a session in a test file
                 "rtcSessions": [["ADD", [member_2.sudo().rtc_session_ids.id]]],
-                "state": "closed",
                 "uuid": channel.uuid,
             }
         if channel == self.channel_channel_group_2:
@@ -725,7 +729,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "name": "group restricted channel 2",
                 "parent_channel_id": False,
                 "rtcSessions": [["ADD", []]],
-                "state": "closed",
                 "uuid": channel.uuid,
             }
         if channel == self.channel_group_1:
@@ -747,7 +750,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "invitedMembers": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
-                "last_interest_dt": False,
+                "last_interest_dt": last_interest_dt,
                 "livechat_active": False,
                 "livechat_operator_id": False,
                 "livechatChannel": False,
@@ -758,7 +761,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "name": "",
                 "parent_channel_id": False,
                 "rtcSessions": [["ADD", []]],
-                "state": "closed",
                 "uuid": channel.uuid,
             }
         if channel == self.channel_chat_1:
@@ -780,7 +782,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "invitedMembers": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
-                "last_interest_dt": False,
+                "last_interest_dt": last_interest_dt,
                 "livechat_active": False,
                 "livechat_operator_id": False,
                 "livechatChannel": False,
@@ -791,7 +793,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "name": "Ernest Employee, test14",
                 "parent_channel_id": False,
                 "rtcSessions": [["ADD", []]],
-                "state": "open",
                 "uuid": channel.uuid,
             }
         if channel == self.channel_chat_2:
@@ -813,7 +814,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "invitedMembers": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
-                "last_interest_dt": False,
+                "last_interest_dt": last_interest_dt,
                 "livechat_active": False,
                 "livechat_operator_id": False,
                 "livechatChannel": False,
@@ -824,7 +825,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "name": "Ernest Employee, test15",
                 "parent_channel_id": False,
                 "rtcSessions": [["ADD", []]],
-                "state": "closed",
                 "uuid": channel.uuid,
             }
         if channel == self.channel_chat_3:
@@ -846,7 +846,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "invitedMembers": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
-                "last_interest_dt": False,
+                "last_interest_dt": last_interest_dt,
                 "livechat_active": False,
                 "livechat_operator_id": False,
                 "livechatChannel": False,
@@ -857,7 +857,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "name": "Ernest Employee, test2",
                 "parent_channel_id": False,
                 "rtcSessions": [["ADD", []]],
-                "state": "closed",
                 "uuid": channel.uuid,
             }
         if channel == self.channel_chat_4:
@@ -879,7 +878,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "invitedMembers": [["ADD", []]],
                 "is_editable": True,
                 "is_pinned": True,
-                "last_interest_dt": False,
+                "last_interest_dt": last_interest_dt,
                 "livechat_active": False,
                 "livechat_operator_id": False,
                 "livechatChannel": False,
@@ -890,7 +889,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "name": "Ernest Employee, test3",
                 "parent_channel_id": False,
                 "rtcSessions": [["ADD", []]],
-                "state": "closed",
                 "uuid": channel.uuid,
             }
         if channel == self.channel_livechat_1:
@@ -923,7 +921,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "name": "test1 Ernest Employee",
                 "parent_channel_id": False,
                 "rtcSessions": [["ADD", []]],
-                "state": "closed",
                 "uuid": channel.uuid,
             }
         if channel == self.channel_livechat_2:
@@ -956,7 +953,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "name": "anon 2 Ernest Employee",
                 "parent_channel_id": False,
                 "rtcSessions": [["ADD", []]],
-                "state": "closed",
                 "uuid": channel.uuid,
             }
         return {}

@@ -4,12 +4,11 @@ from datetime import datetime, timedelta
 
 import hashlib
 import pytz
-import threading
 
-from odoo import fields, models, api, _
+from odoo import api, fields, models, modules
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
-from odoo.tools import split_every, SQL
+from odoo.tools import _, split_every, SQL
 from odoo.tools.misc import _format_time_ago
 from odoo.http import request
 from odoo.osv import expression
@@ -93,28 +92,31 @@ class WebsiteVisitor(models.Model):
     def _compute_partner_id(self):
         # The browse in the loop is fine, there is no SQL Query on partner here
         for visitor in self:
+            if not visitor.id:
+                visitor.partner_id = visitor._origin.partner_id
+                continue
             # If the access_token is not a 32 length hexa string, it means that
             # the visitor is linked to a logged in user, in which case its
             # partner_id is used instead as the token.
             partner_id = len(visitor.access_token) != 32 and int(visitor.access_token)
             visitor.partner_id = self.env['res.partner'].browse(partner_id)
 
-    @api.depends('partner_id.email_normalized', 'partner_id.mobile', 'partner_id.phone')
+    @api.depends('partner_id.email_normalized', 'partner_id.phone')
     def _compute_email_phone(self):
         results = self.env['res.partner'].search_read(
             [('id', 'in', self.partner_id.ids)],
-            ['id', 'email_normalized', 'mobile', 'phone'],
+            ['id', 'email_normalized', 'phone'],
         )
         mapped_data = {
             result['id']: {
                 'email_normalized': result['email_normalized'],
-                'mobile': result['mobile'] if result['mobile'] else result['phone']
+                'phone': result['phone']
             } for result in results
         }
 
         for visitor in self:
             visitor.email = mapped_data.get(visitor.partner_id.id, {}).get('email_normalized')
-            visitor.mobile = mapped_data.get(visitor.partner_id.id, {}).get('mobile')
+            visitor.mobile = mapped_data.get(visitor.partner_id.id, {}).get('phone')
 
     @api.depends('website_track_ids')
     def _compute_page_statistics(self):
@@ -337,7 +339,7 @@ class WebsiteVisitor(models.Model):
         Visitors were previously archived but we came to the conclusion that
         archived visitors have very little value and bloat the database for no
         reason. """
-        auto_commit = not getattr(threading.current_thread(), 'testing', False)
+        auto_commit = not modules.module.current_test
         visitor_model = self.env['website.visitor']
         visitor_ids = visitor_model.sudo().search(self._inactive_visitors_domain(), limit=limit).ids
         visitor_done = 0

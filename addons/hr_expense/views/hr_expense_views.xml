@@ -65,7 +65,7 @@
                     <field name="date" optional="show" readonly="not is_editable"/>
                     <field name="product_id" optional="hide" readonly="not is_editable" required="1"/>
                     <field name="name" readonly="not is_editable"/>
-                    <field name="employee_id" widget="many2one_avatar_user" readonly="not is_editable"/>
+                    <field name="employee_id" widget="many2one_avatar_employee" readonly="not is_editable"/>
                     <field name="sheet_id" optional="show" readonly="True" column_invisible="not context.get('show_report', False)"/>
                     <field name="payment_mode" optional="show" readonly="not is_editable"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
@@ -312,7 +312,7 @@
                                 <field class="fw-bold ms-auto flex-shrink-0" name="total_amount_currency" widget="monetary"/>
                             </div>
                             <div class="d-flex mt8 text-muted">
-                                <field name="employee_id" widget="many2one_avatar_user"
+                                <field name="employee_id" widget="many2one_avatar_employee"
                                        options="{'display_avatar_name': True}"
                                        readonly="True"/>
                                 <field class="ms-auto" name="state" widget="label_selection"
@@ -591,7 +591,7 @@
                                 </div>
                                 <field name="default_code" string="Reference" class="w-50"/>
                                 <field name="categ_id" string="Category" class="w-50"/>
-                                <field name="company_id" class="w-50" groups="base.group_multi_company"/>
+                                <field name="company_id" class="w-50" groups="base.group_multi_company" placeholder="Visible to all"/>
                                 <field name="description" string="Guideline" placeholder="e.g. Restaurants: only week days, for lunch"/>
                             </group>
                             <group>
@@ -699,7 +699,7 @@
                     <field name="currency_id" column_invisible="True"/>
                     <field name="company_currency_id" column_invisible="True"/>
                     <field name="is_editable" column_invisible="True"/>
-                    <field name="employee_id" widget="many2one_avatar_user" readonly="state != 'draft'"/>
+                    <field name="employee_id" widget="many2one_avatar_employee" readonly="state != 'draft'"/>
                     <field name="accounting_date" optional="hide" groups="account.group_account_manager" readonly="not is_editable"/>
                     <field name="create_date" optional="hide"/>
                     <field name="name" string="Expense Report" readonly="not is_editable"/>
@@ -839,7 +839,7 @@
                     <group>
                         <group name="employee_details">
                             <field name="employee_id" context="{'default_company_id': company_id}"
-                                   widget="many2one_avatar_user" readonly="state != 'draft'"/>
+                                   widget="many2one_avatar_employee" readonly="state != 'draft'"/>
                             <field name="payment_mode"/>
                             <field name="employee_journal_id"
                                    groups="account.group_account_invoice,account.group_account_readonly"
@@ -960,7 +960,7 @@
                                 <field class="fw-bold ms-auto" name="total_amount" widget="monetary"/>
                             </div>
                             <div class="d-flex text-muted mt8">
-                                <field name="employee_id" widget="many2one_avatar_user"  options="{'display_avatar_name': True}" readonly="state != 'draft'"/>
+                                <field name="employee_id" widget="many2one_avatar_employee"  options="{'display_avatar_name': True}" readonly="state != 'draft'"/>
                                 <field class="ms-auto" name="state" widget="label_selection"
                                        options="{'classes': {'draft': 'default', 'submit': 'default',
                                                              'cancel': 'danger', 'post': 'warning',
@@ -1156,6 +1156,7 @@
         <record id="action_hr_expense_account" model="ir.actions.act_window">
             <field name="name">Employee Expenses</field>
             <field name="res_model">hr.expense.sheet</field>
+            <field name="path">employee-expenses</field>
             <field name="view_mode">list,kanban,form,pivot,graph</field>
             <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
             <field name="view_id" ref="view_hr_expense_sheet_tree"/>

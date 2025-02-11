@@ -6,9 +6,8 @@
         <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='configuration']" position="inside">
-                <group>
-                        <field name="overtime_deductible"/>
-                </group>
+                <field name="overtime_deductible" nolabel="1"/>
+                <label for="overtime_deductible"/>
             </xpath>
         </field>
     </record>

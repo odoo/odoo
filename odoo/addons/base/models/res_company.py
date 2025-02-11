@@ -6,7 +6,8 @@ import logging
 import threading
 import warnings
 
-from odoo import api, fields, models, tools, _, Command, SUPERUSER_ID
+from odoo import api, fields, models, tools, _, Command
+from odoo.api import SUPERUSER_ID
 from odoo.exceptions import ValidationError, UserError
 from odoo.osv import expression
 from odoo.tools import html2plaintext, file_open, ormcache
@@ -66,7 +67,6 @@ class ResCompany(models.Model):
     country_code = fields.Char(related='country_id.code', depends=['country_id'])
     email = fields.Char(related='partner_id.email', store=True, readonly=False)
     phone = fields.Char(related='partner_id.phone', store=True, readonly=False)
-    mobile = fields.Char(related='partner_id.mobile', store=True, readonly=False)
     website = fields.Char(related='partner_id.website', readonly=False)
     vat = fields.Char(related='partner_id.vat', string="Tax ID", readonly=False)
     company_registry = fields.Char(related='partner_id.company_registry', string="Company ID", readonly=False)

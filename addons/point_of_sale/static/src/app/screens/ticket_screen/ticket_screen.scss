@@ -14,9 +14,16 @@
     grid-area: pagination;
 }
 
+.table > :not(caption) > * > * {
+    background-color: unset;
+}
 .order-row.highlight {
     background-color: $o-component-active-bg;
     color: $o-action;
+}
+
+.ticket-screen .delete-column {
+    width: 30px;
 }
 
 @include media-breakpoint-down(sm) {

@@ -10,6 +10,7 @@ from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.tests import tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
+from odoo.addons.point_of_sale.models.pos_config import PosConfig
 from datetime import date, timedelta
 from odoo.addons.point_of_sale.tests.common import archive_products
 from odoo.exceptions import UserError
@@ -608,13 +609,15 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ChromeTour', login="pos_user")
-        n_invoiced = self.env['pos.order'].search_count([('state', '=', 'invoiced')])
+        n_invoiced = self.env['pos.order'].search_count([('account_move', '!=', False)])
         n_paid = self.env['pos.order'].search_count([('state', '=', 'paid')])
         self.assertEqual(n_invoiced, 1, 'There should be 1 invoiced order.')
-        self.assertEqual(n_paid, 2, 'There should be 2 paid order.')
+        self.assertEqual(n_paid, 2, 'There should be 3 paid order.')
         last_order = self.env['pos.order'].search([], limit=1, order="id desc")
         self.assertEqual(last_order.lines[0].price_subtotal, 30.0)
         self.assertEqual(last_order.lines[0].price_subtotal_incl, 30.0)
+        # Check if session name contains config name as prefix
+        self.assertEqual(self.main_pos_config.name in last_order.session_id.name, True)
 
     def test_04_product_configurator(self):
         # Making one attribute inactive to verify that it doesn't show
@@ -726,7 +729,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.env['product.product'].create({
             'name': 'Product Test',
             'available_in_pos': True,
-            'list_price': 1.98,
+            'list_price': 1.96,
             'taxes_id': False,
         })
 
@@ -759,6 +762,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenRoundingDown', login="pos_user")
+        self.env["pos.order"].search([]).write({'state': 'cancel'})
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenTotalDueWithOverPayment', login="pos_user")
 
     def test_rounding_half_up(self):
@@ -1072,10 +1076,13 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_GS1_pos_barcodes_scan(self):
         barcodes_gs1_nomenclature = self.env.ref("barcodes_gs1_nomenclature.default_gs1_nomenclature")
+        default_nomenclature_id = self.env.ref("barcodes.default_barcode_nomenclature")
         self.main_pos_config.company_id.write({
             'nomenclature_id': barcodes_gs1_nomenclature.id
         })
-
+        self.main_pos_config.write({
+            'fallback_nomenclature_id': default_nomenclature_id
+        })
         self.env['product.product'].create({
             'name': 'Product 1',
             'available_in_pos': True,
@@ -1421,7 +1428,6 @@ class TestUi(TestPointOfSaleHttpCommon):
             "country_id": self.env.ref("base.us").id,
             "zip": "26432685463",
             "phone": "1234567890",
-            "mobile": "0987654321",
             "email": "john@doe.com"
         })
 
@@ -1494,15 +1500,20 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_product_categories_order(self):
         """ Verify that the order of categories doesnt change in the frontend """
         self.env['pos.category'].search([]).write({'sequence': 100})
-        self.env['pos.category'].create({
+        catgA = self.env['pos.category'].create({
             'name': 'AAA',
             'parent_id': False,
             'sequence': 1,
         })
-        self.env['pos.category'].create({
+        catgB = self.env['pos.category'].create({
             'name': 'AAC',
             'parent_id': False,
             'sequence': 3,
+        })
+        self.env['pos.category'].create({
+            'name': 'AAD',
+            'parent_id': False,
+            'sequence': 4,
         })
         parentA = self.env['pos.category'].create({
             'name': 'AAB',
@@ -1513,7 +1524,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'AAX',
             'parent_id': parentA.id,
         })
-        self.env['pos.category'].create({
+        catgC = self.env['pos.category'].create({
             'name': 'AAY',
             'parent_id': parentB.id,
         })
@@ -1521,7 +1532,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         # It's presence is checked during the tour to make sure app doesn't crash.
         self.env['product.product'].create({
             'name': 'Product in AAB and AAX',
-            'pos_categ_ids': [(6, 0, [parentA.id, parentB.id])],
+            'pos_categ_ids': [(6, 0, [parentA.id, parentB.id, catgA.id, catgB.id, catgC.id])],
             'available_in_pos': True,
         })
         self.main_pos_config.with_user(self.pos_admin).open_ui()

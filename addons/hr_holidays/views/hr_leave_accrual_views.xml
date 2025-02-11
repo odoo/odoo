@@ -153,7 +153,7 @@
                         <group>
                             <field name="is_based_on_worked_time" readonly="accrued_gain_time == 'start'"/>
                             <field name="transition_mode" widget="radio" invisible="not show_transition_mode"/>
-                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" placeholder="Visible to all"/>
                         </group>
                     </group>
                     <span class="opacity-50" invisible="1">
@@ -168,9 +168,11 @@
                         <field name="level_ids" mode="kanban" nolabel="1"
                             class="o_hr_holidays_plan_level_container"
                             widget="accrual_levels_one2many"
-                            add-label="New Milestone"
                             >
                             <kanban default_order="sequence">
+                                <control>
+                                    <create class="o-kanban-button-new" string="New Milestone"/>
+                                </control>
                                 <field name="sequence"/>
                                 <field name="action_with_unused_accruals"/>
                                 <field name="accrual_validity_count"/>

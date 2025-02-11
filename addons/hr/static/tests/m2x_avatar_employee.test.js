@@ -356,6 +356,7 @@ test("many2one widget in list view", async () => {
     env["m2x.avatar.employee"].create({
         employee_ids: [employeeId_1, employeeId_2],
     });
+    onRpc("has_group", () => false);
     await start();
     await mountView({
         type: "list",

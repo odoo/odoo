@@ -17,7 +17,7 @@ patch(Thread.prototype, {
      *
      * @param {import("models").Message} message
      */
-    notifyMessageToUser(message) {
+    async notifyMessageToUser(message) {
         const channel_notifications =
             this.custom_notifications || this.store.settings.channel_notifications;
         if (
@@ -30,6 +30,7 @@ patch(Thread.prototype, {
                             message.recipients?.includes(this.store.self)))))
         ) {
             if (this.model === "discuss.channel") {
+                await this.store.chatHub.initPromise;
                 let chatWindow = this.store.ChatWindow.get({ thread: this });
                 if (!chatWindow) {
                     chatWindow = this.store.ChatWindow.insert({ thread: this });
@@ -70,7 +71,7 @@ patch(Thread.prototype, {
             this.model !== "mail.box" &&
             !this.store.shouldDisplayWelcomeViewInitially
         ) {
-            this.open();
+            this.open({ focus: true });
         }
     },
 

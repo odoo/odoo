@@ -105,14 +105,25 @@ class UseSuggestion {
             if (candidatePosition < 0 || candidatePosition >= text.length) {
                 continue;
             }
-            const candidateChar = text[candidatePosition];
-            if (
-                !supportedDelimiters.find(
-                    ([delimiter, allowedPosition]) =>
-                        delimiter === candidateChar &&
-                        (allowedPosition === undefined || allowedPosition === candidatePosition)
-                )
-            ) {
+
+            const findAppropriateDelimiter = () => {
+                let goodCandidate;
+                for (const [delimiter, allowedPosition, minCharCountAfter] of supportedDelimiters) {
+                    if (
+                        text.substring(candidatePosition).startsWith(delimiter) && // delimiter is used
+                        (allowedPosition === undefined || allowedPosition === candidatePosition) && // delimiter is allowed position
+                        (minCharCountAfter === undefined ||
+                            start - candidatePosition - delimiter.length + 1 > minCharCountAfter) && // delimiter is allowed (enough custom char typed after)
+                        (!goodCandidate || delimiter.length > goodCandidate) // delimiter is more specific
+                    ) {
+                        goodCandidate = delimiter;
+                    }
+                }
+                return goodCandidate;
+            };
+
+            const candidateDelimiter = findAppropriateDelimiter();
+            if (!candidateDelimiter) {
                 continue;
             }
             const charBeforeCandidate = text[candidatePosition - 1];
@@ -120,9 +131,9 @@ class UseSuggestion {
                 continue;
             }
             Object.assign(this.search, {
-                delimiter: candidateChar,
+                delimiter: candidateDelimiter,
                 position: candidatePosition,
-                term: text.substring(candidatePosition + 1, start),
+                term: text.substring(candidatePosition + candidateDelimiter.length, start),
             });
             this.state.count++;
             return;
@@ -137,7 +148,7 @@ class UseSuggestion {
         const text = this.composer.text;
         let before = text.substring(0, this.search.position + 1);
         let after = text.substring(position, text.length);
-        if (this.search.delimiter === ":") {
+        if ([":", "::"].includes(this.search.delimiter)) {
             before = text.substring(0, this.search.position);
             after = text.substring(position, text.length);
         }
@@ -192,11 +203,12 @@ class UseSuggestion {
                 abortSignal: this.abortController.signal,
             });
         } catch (e) {
+            this.lastFetchedSearch = null;
             if (e instanceof ConnectionAbortedError) {
                 resetFetchingState = false;
                 return;
             }
-            this.lastFetchedSearch = null;
+            throw e;
         } finally {
             if (resetFetchingState) {
                 this.state.isFetching = false;

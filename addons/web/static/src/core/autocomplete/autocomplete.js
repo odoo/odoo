@@ -1,5 +1,6 @@
 import { Deferred } from "@web/core/utils/concurrency";
 import { useAutofocus, useForwardRefToParent, useService } from "@web/core/utils/hooks";
+import { isScrollableY, scrollTo } from "@web/core/utils/scrolling";
 import { useDebounced } from "@web/core/utils/timing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position/position_hook";
@@ -23,6 +24,7 @@ export class AutoComplete extends Component {
             },
         },
         placeholder: { type: String, optional: true },
+        autocomplete: { type: String, optional: true},
         autoSelect: { type: Boolean, optional: true },
         resetOnSelect: { type: Boolean, optional: true },
         onInput: { type: Function, optional: true },
@@ -40,6 +42,7 @@ export class AutoComplete extends Component {
     static defaultProps = {
         value: "",
         placeholder: "",
+        autocomplete: "new-password",
         autoSelect: false,
         dropdown: true,
         onInput: () => {},
@@ -70,6 +73,7 @@ export class AutoComplete extends Component {
         });
 
         this.inputRef = useForwardRefToParent("input");
+        this.listRef = useRef("sourcesList");
         if (this.props.autofocus) {
             useAutofocus({ refName: "input" });
         }
@@ -152,6 +156,11 @@ export class AutoComplete extends Component {
         return false;
     }
 
+    get activeOption() {
+        const [sourceIndex, optionIndex] = this.state.activeSourceOption;
+        return this.sources[sourceIndex].options[optionIndex];
+    }
+
     open(useInput = false) {
         this.state.open = true;
         return this.loadSources(useInput);
@@ -232,8 +241,8 @@ export class AutoComplete extends Component {
             this.state.activeSourceOption[1] === optionIndex
         );
     }
-    selectOption(indices, params = {}) {
-        const option = this.sources[indices[0]].options[indices[1]];
+
+    selectOption(option, params = {}) {
         this.inEdition = false;
         if (option.unselectable) {
             this.inputRef.el.value = "";
@@ -376,7 +385,7 @@ export class AutoComplete extends Component {
                 if (!this.isOpened || !this.state.activeSourceOption) {
                     return;
                 }
-                this.selectOption(this.state.activeSourceOption);
+                this.selectOption(this.activeOption);
                 break;
             case "escape":
                 if (!this.isOpened) {
@@ -385,6 +394,7 @@ export class AutoComplete extends Component {
                 this.cancel();
                 break;
             case "tab":
+            case "shift+tab":
                 if (!this.isOpened) {
                     return;
                 }
@@ -393,7 +403,7 @@ export class AutoComplete extends Component {
                     this.state.activeSourceOption &&
                     (this.state.navigationRev > 0 || this.inputRef.el.value.length > 0)
                 ) {
-                    this.selectOption(this.state.activeSourceOption);
+                    this.selectOption(this.activeOption);
                 }
                 this.close();
                 return;
@@ -402,12 +412,14 @@ export class AutoComplete extends Component {
                 if (!this.isOpened) {
                     this.open(true);
                 }
+                this.scroll();
                 break;
             case "arrowdown":
                 this.navigate(+1);
                 if (!this.isOpened) {
                     this.open(true);
                 }
+                this.scroll();
                 break;
             default:
                 return;
@@ -423,14 +435,23 @@ export class AutoComplete extends Component {
     onOptionMouseLeave() {
         this.state.activeSourceOption = null;
     }
-    onOptionClick(indices) {
-        this.selectOption(indices);
+    onOptionClick(option) {
+        this.selectOption(option);
         this.inputRef.el.focus();
     }
 
     externalClose(ev) {
         if (this.isOpened && !this.root.el.contains(ev.target)) {
             this.cancel();
+        }
+    }
+
+    scroll() {
+        if (!this.activeSourceOptionId) {
+            return;
+        }
+        if (isScrollableY(this.listRef.el)) {
+            scrollTo(this.listRef.el.querySelector(`#${this.activeSourceOptionId}`));
         }
     }
 }

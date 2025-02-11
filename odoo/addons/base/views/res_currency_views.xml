@@ -166,7 +166,7 @@
                                 <field name="rate_ids" widget="one2many">
                                     <list string="Rates"  editable="top" limit="25">
                                         <field name="name"/>
-                                        <field name="company_id" groups="base.group_multi_company"/>
+                                        <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
                                         <field name="company_rate" digits="[12,12]"/>
                                         <field name="inverse_company_rate" digits="[12,12]"/>
                                         <field name="rate" digits="[12,12]" optional="hide"/>
@@ -183,6 +183,7 @@
         <record id="action_currency_form" model="ir.actions.act_window">
             <field name="name">Currencies</field>
             <field name="res_model">res.currency</field>
+            <field name="path">currencies</field>
             <field name="view_mode">list,kanban,form</field>
             <field name="search_view_id" ref="view_currency_search"/>
             <field name="context">{'active_test': False}</field>

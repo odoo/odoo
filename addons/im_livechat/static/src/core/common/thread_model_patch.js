@@ -27,6 +27,15 @@ patch(Thread.prototype, {
                 return visitor;
             },
         });
+        this.open_chat_window = Record.attr(undefined, {
+            /** @this {import("models").Thread} */
+            onUpdate() {
+                if (this.open_chat_window) {
+                    this.open_chat_window = undefined;
+                    this.openChatWindow({ focus: true });
+                }
+            },
+        });
     },
     get autoOpenChatWindowOnNewMessage() {
         return this.channel_type === "livechat" || super.autoOpenChatWindowOnNewMessage;
@@ -55,12 +64,5 @@ patch(Thread.prototype, {
         return this.channel_type === "livechat" && this.livechat_active === false
             ? _t("This livechat conversation has ended")
             : null;
-    },
-
-    get leaveNotificationMessage() {
-        if (this.channel_type === "livechat") {
-            return _t("You ended the conversation with %(name)s.", { name: this.displayName });
-        }
-        return super.leaveNotificationMessage;
     },
 });

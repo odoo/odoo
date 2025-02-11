@@ -1,3 +1,5 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from datetime import datetime
 from markupsafe import Markup
 from werkzeug.exceptions import NotFound
@@ -5,9 +7,7 @@ from werkzeug.exceptions import NotFound
 from odoo import http
 from odoo.http import request
 from odoo.tools import frozendict
-from odoo.tools import email_normalize
-from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
-from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
 
 
 class ThreadController(http.Controller):
@@ -44,17 +44,6 @@ class ThreadController(http.Controller):
 
     # main routes
     # ------------------------------------------------------------
-
-    @http.route("/mail/thread/data", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
-    def mail_thread_data(self, thread_model, thread_id, request_list, **kwargs):
-        thread = self._get_thread_with_access(thread_model, thread_id, **kwargs)
-        if not thread:
-            return Store(
-                request.env[thread_model].browse(thread_id),
-                {"hasReadAccess": False, "hasWriteAccess": False},
-                as_thread=True,
-            ).get_result()
-        return Store(thread, request_list=request_list, as_thread=True).get_result()
 
     @http.route("/mail/thread/messages", methods=["POST"], type="jsonrpc", auth="user")
     def mail_thread_messages(self, thread_model, thread_id, fetch_params=None):

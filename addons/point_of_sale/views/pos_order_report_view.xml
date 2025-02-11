@@ -50,8 +50,8 @@
                 <search string="Point of Sale Analysis">
                     <field name="date"/>
                     <separator/>
-                    <filter string="Invoiced" name="invoiced" domain="[('state','=',('invoiced'))]"/>
-                    <filter string="Not Invoiced" name="not_invoiced" domain="[('state','in',['paid', 'done'])]"/>
+                    <filter string="Invoiced" name="invoiced" domain="[('invoiced','=',True)]"/>
+                    <filter string="Not Invoiced" name="not_invoiced" domain="[('invoiced','=',False)]"/>
                     <filter string="Not Cancelled" name="not_cancelled" domain="[('state','!=','cancel')]"/>
                     <separator/>
                     <filter name="filter_date" date="date"/>

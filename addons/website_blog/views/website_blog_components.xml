@@ -11,7 +11,7 @@
     <nav t-attf-class="navbar navbar-expand-lg navbar-light pt-4 pb-0 px-0 #{additionnal_classes}">
         <div t-attf-class="container gap-2 w-100 #{wblog_nav_offcanvas and 'flex-nowrap' or 'flex-wrap flex-sm-nowrap'}">
             <!-- Desktop -->
-            <ul t-if="len(blogs) > 1" class="navbar-nav d-none d-lg-flex">
+            <ul t-if="len(blogs) > 1" class="navbar-nav d-none d-lg-flex flex-wrap">
                 <li class="nav-item">
                     <span class="nav-link disabled ps-0">Blogs:</span>
                 </li>
@@ -105,7 +105,7 @@
                 <span t-if="dismissibleBtn and tag.id in active_tag_ids" t-attf-class="align-items-baseline d-inline-flex ps-2 rounded mb-2 o_filter_tag #{'o_color_%s' % tag.color}">
                     <i class="fa fa-tag me-2"/>
                     <t t-esc="tag.name"/>
-                    <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" class="btn border-0 py-1 post_link" t-att-rel="len(active_tag_ids) and 'nofollow'">&#215;</a>
+                    <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" class="btn border-0 py-1 post_link text-reset" t-att-rel="len(active_tag_ids) and 'nofollow'">&#215;</a>
                 </span>
                 <a t-elif="showInactive" t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" t-attf-class="badge mb-2 mw-100 text-truncate text-decoration-none o_tag o_color_#{tag.color} post_link" t-att-rel="len(active_tag_ids) and 'nofollow'" t-esc="tag.name"/>
             </t>
@@ -188,7 +188,9 @@ Options:
 <template id="opt_sidebar_blog_index_follow_us" name="Follow Us" priority="1" inherit_id="website_blog.sidebar_blog_index" active="True">
     <xpath expr="//div[@id='o_wblog_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block pb-5">
-            <h6 class="text-uppercase pb-2 mb-4 border-bottom fw-bold">Follow Us</h6>
+            <div>
+                <h6 class="text-uppercase pb-2 mb-4 border-bottom fw-bold">Follow Us</h6>
+            </div>
             <div class="o_wblog_social_links d-flex flex-wrap mx-n1 o_not_editable">
                 <t t-set="classes" t-translation="off">bg-100 border mx-1 mb-2 rounded-circle d-flex align-items-center justify-content-center text-decoration-none</t>
                 <a t-if="website.social_facebook" t-att-href="website.social_facebook" aria-label="Facebook" title="Facebook" t-att-class="classes"><i class="fa fa-facebook-square text-facebook"/></a>
@@ -214,8 +216,9 @@ Options:
 <template id="opt_sidebar_blog_index_archives" name="Archives" priority="2" inherit_id="website_blog.sidebar_blog_index" active="True">
     <xpath expr="//div[@id='o_wblog_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block pb-5">
-            <h6 class="text-uppercase pb-2 mb-4 border-bottom fw-bold">Archives</h6>
-
+            <div>
+                <h6 class="text-uppercase pb-2 mb-4 border-bottom fw-bold">Archives</h6>
+            </div>
             <t t-call="website_blog.date_selector"/>
         </div>
         <div class="oe_structure" id="oe_structure_blog_sidebar_index_4"/>
@@ -227,7 +230,9 @@ Options:
     <xpath expr="//div[@id='o_wblog_sidebar']" position="inside">
 
         <div t-if="other_tags or tag_category" class="o_wblog_sidebar_block pb-5">
-            <h6 class="text-uppercase pb-2 mb-4 border-bottom fw-bold">Tags</h6>
+            <div>
+                <h6 class="text-uppercase pb-2 mb-4 border-bottom fw-bold">Tags</h6>
+            </div>
             <div class="h5">
                 <t t-foreach="tag_category" t-as="nav_tag_category">
                     <t t-call="website_blog.tags_list">
@@ -280,7 +285,9 @@ Display a sidebar beside the post content.
 <template id="opt_blog_post_share_links_display" name="Share Links" inherit_id="website_blog.blog_post_sidebar" active="True" priority="2">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block pb-5">
-            <h6 class="text-uppercase pb-3 mb-4 border-bottom fw-bold">Share this post</h6>
+            <div>
+                <h6 class="text-uppercase pb-3 mb-4 border-bottom fw-bold">Share this post</h6>
+            </div>
 
             <div class="o_wblog_social_links d-flex flex-wrap mx-n1 o_not_editable">
                 <t t-set="classes" t-translation="off">bg-100 border mx-1 mb-2 rounded-circle d-flex align-items-center justify-content-center text-decoration-none</t>
@@ -298,7 +305,9 @@ Display a sidebar beside the post content.
 <template id="opt_blog_post_tags_display" name="Tags" inherit_id="website_blog.blog_post_sidebar" active="True" priority="3">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block pb-5">
-            <h6 class="text-uppercase pb-3 mb-4 border-bottom fw-bold">Tags</h6>
+            <div>
+                <h6 class="text-uppercase pb-3 mb-4 border-bottom fw-bold">Tags</h6>
+            </div>
             <t t-if="blog_post.tag_ids">
                 <div class="h5">
                     <t t-foreach="blog_post.tag_ids" t-as="one_tag">
@@ -322,7 +331,9 @@ Display a sidebar beside the post content.
 <template id="opt_blog_post_blogs_display" name="Blogs List" inherit_id="website_blog.blog_post_sidebar" active="True" priority="4">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div t-if="len(blogs) > 1" class="o_wblog_sidebar_block pb-5">
-            <h6 class="text-uppercase pb-3 mb-4 border-bottom fw-bold">Our blogs</h6>
+            <div>
+                <h6 class="text-uppercase pb-3 mb-4 border-bottom fw-bold">Our blogs</h6>
+            </div>
             <ul class="list-unstyled">
                 <li t-foreach="blogs" t-as="nav_blog" class="mb-2">
                     <a t-attf-href="#{blog_url(blog=nav_blog, tag=False, date_begin=False, date_end=False)}"><b t-field="nav_blog.name"/></a>
@@ -337,8 +348,9 @@ Display a sidebar beside the post content.
 <template id="opt_blog_post_archive_display" name="Archive" inherit_id="website_blog.blog_post_sidebar" active="True" priority="5">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block pb-5">
-            <h6 class="text-uppercase pb-3 mb-4 border-bottom fw-bold">Archive</h6>
-
+            <div>
+                <h6 class="text-uppercase pb-3 mb-4 border-bottom fw-bold">Archive</h6>
+            </div>
             <t t-call="website_blog.date_selector"/>
         </div>
         <div class="oe_structure" id="oe_structure_blog_post_sidebar_6"/>

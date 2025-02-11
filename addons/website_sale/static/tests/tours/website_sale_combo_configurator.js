@@ -17,11 +17,7 @@ registry
             ...productConfiguratorTourUtils.selectAndSetCustomAttribute(
                 "Product A1", "No variant attribute", "B", "Some custom value"
             ),
-            {
-                content: "Confirm the product configurator",
-                trigger: 'button[name="sale_product_configurator_confirm_button"]',
-                run: 'click',
-            },
+            ...productConfiguratorTourUtils.saveConfigurator(),
             comboConfiguratorTourUtils.selectComboItem("Product B2"),
             comboConfiguratorTourUtils.assertFooterButtonsEnabled(),
             // Assert that the cart's content is correct.

@@ -70,6 +70,7 @@ export class KanbanArchParser {
                             context: childNode.getAttribute("context"),
                             string: childNode.getAttribute("string"),
                             invisible: childNode.getAttribute("invisible"),
+                            class: childNode.getAttribute("class"),
                         });
                     } else if (childNode.tagName === "delete") {
                         controls.push({
@@ -140,7 +141,8 @@ export class KanbanArchParser {
         const cardClassName = cardDoc.getAttribute("class") || "";
 
         if (!defaultOrder.length && handleField) {
-            defaultOrder = stringToOrderBy(handleField);
+            const handleFieldSort = `${handleField}, id`;
+            defaultOrder = stringToOrderBy(handleFieldSort);
         }
 
         return {

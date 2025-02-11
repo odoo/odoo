@@ -210,6 +210,9 @@ class TestSelector(TransactionCase):
         self.assertEqual({(None, 'module', None, None, None), }, tags.include)  # all in module
         self.assertEqual({('standard', None, None, None, None), }, tags.exclude)  # exept standard ones
 
+        tags = TagsSelector('*/some-paths/with-dash/addons/account/test/test_file.py')  # a filepath with dashes
+        self.assertEqual({(None, None, None, None, '/some-paths/with-dash/addons/account/test/test_file.py'), }, tags.include)
+
 
 @tagged('nodatabase')
 class TestSelectorSelection(TransactionCase):
@@ -352,3 +355,16 @@ class TestSelectorSelection(TransactionCase):
         tags = TagsSelector('standard')
         position = TagsSelector('post_install')
         self.assertTrue(tags.check(post_install_obj) and position.check(post_install_obj))
+
+        # module part
+        tags = TagsSelector('/base')
+        self.assertTrue(tags.check(no_tags_obj), 'Test should match is module path')
+        tags = TagsSelector('/base/tests/test_tests_tags.py')
+        self.assertTrue(tags.check(no_tags_obj), 'Test should match is module path with file')
+
+        tags = TagsSelector('/account/tests/test_tests_tags.py')
+        self.assertFalse(tags.check(no_tags_obj), 'Test should not match another module path with file')
+
+        # absolute path case (used by test-file)
+        tags = TagsSelector(__file__)
+        self.assertTrue(tags.check(no_tags_obj), 'Test should match its absolute file path')

@@ -41,7 +41,7 @@ class ResourceCalendarLeaves(models.Model):
             ]
             for date in time_domain_dict
         ])
-        return expression.AND([domain, [('state', '!=', 'refuse')]])
+        return expression.AND([domain, [('state', 'not in', ['refuse', 'cancel'])]])
 
     def _get_time_domain_dict(self):
         return [{
@@ -165,7 +165,7 @@ class ResourceCalendar(models.Model):
 
     def _compute_associated_leaves_count(self):
         leaves_read_group = self.env['resource.calendar.leaves']._read_group(
-            [('resource_id', '=', False), ('calendar_id', 'in', [False, *self.ids])],
+            [('resource_id', '=', False), ('calendar_id', 'in', self.ids)],
             ['calendar_id'],
             ['__count'],
         )

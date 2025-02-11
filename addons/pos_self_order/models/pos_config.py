@@ -257,7 +257,7 @@ class PosConfig(models.Model):
 
     def _load_self_data_models(self):
         return ['pos.session', 'pos.preset', 'resource.calendar.attendance', 'pos.order', 'pos.order.line', 'pos.payment', 'pos.payment.method', 'res.partner',
-            'res.currency', 'pos.category', 'product.template', 'product.product', 'product.combo', 'product.combo.item', 'res.company', 'account.tax',
+            'res.currency', 'product.template', 'product.product', 'pos.category', 'product.combo', 'product.combo.item', 'res.company', 'account.tax',
             'account.tax.group', 'pos.printer', 'res.country', 'product.pricelist', 'product.pricelist.item', 'account.fiscal.position', 'account.fiscal.position.tax',
             'res.lang', 'product.attribute', 'product.attribute.custom.value', 'product.template.attribute.line', 'product.template.attribute.value',
             'decimal.precision', 'uom.uom', 'pos.printer', 'pos_self_order.custom_link', 'restaurant.floor', 'restaurant.table', 'account.cash.rounding',
@@ -322,7 +322,7 @@ class PosConfig(models.Model):
 
     def action_close_kiosk_session(self):
         if self.current_session_id and self.current_session_id.order_ids:
-            self.current_session_id.order_ids.filtered(lambda o: o.state not in ['paid', 'invoiced']).unlink()
+            self.current_session_id.order_ids.filtered(lambda o: o.state != 'paid').unlink()
 
         self._notify('STATUS', {'status': 'closed'})
         return self.current_session_id.action_pos_session_closing_control()
@@ -379,8 +379,8 @@ class PosConfig(models.Model):
         })
 
     @api.model
-    def load_onboarding_restaurant_scenario(self):
-        super().load_onboarding_restaurant_scenario()
+    def load_onboarding_restaurant_scenario(self, with_demo_data=True):
+        res = super().load_onboarding_restaurant_scenario(with_demo_data)
         preset_ids = self.get_record_by_ref([
             'pos_restaurant.pos_takein_preset',
             'pos_restaurant.pos_takeout_preset',
@@ -393,3 +393,4 @@ class PosConfig(models.Model):
                 'available_in_self': True,
                 'service_at': stack.pop(0),
             })
+        return res

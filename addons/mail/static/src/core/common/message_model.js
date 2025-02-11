@@ -188,33 +188,32 @@ export class Message extends Record {
     }
 
     get dateSimple() {
-        return this.datetime.toLocaleString(DateTime.TIME_24_SIMPLE, {
-            locale: user.lang,
-        });
+        return this.datetime
+            .toLocaleString(DateTime.TIME_SIMPLE, {
+                locale: user.lang,
+            })
+            .replace(" ", " "); // so that AM/PM are properly wrapped
     }
 
     get dateSimpleWithDay() {
         const userLocale = { locale: user.lang };
         if (this.datetime.hasSame(DateTime.now(), "day")) {
             return _t("Today at %(time)s", {
-                time: this.datetime.toLocaleString(DateTime.TIME_24_SIMPLE, userLocale),
+                time: this.datetime.toLocaleString(DateTime.TIME_SIMPLE, userLocale),
             });
         }
         if (this.datetime.hasSame(DateTime.now().minus({ day: 1 }), "day")) {
             return _t("Yesterday at %(time)s", {
-                time: this.datetime.toLocaleString(DateTime.TIME_24_SIMPLE, userLocale),
+                time: this.datetime.toLocaleString(DateTime.TIME_SIMPLE, userLocale),
             });
         }
         if (this.datetime?.year === DateTime.now().year) {
             return this.datetime.toLocaleString(
-                { ...DateTime.DATETIME_MED, hourCycle: "h23", year: undefined },
+                { ...DateTime.DATETIME_MED, year: undefined },
                 userLocale
             );
         }
-        return this.datetime.toLocaleString(
-            { ...DateTime.DATETIME_MED, hourCycle: "h23" },
-            userLocale
-        );
+        return this.datetime.toLocaleString({ ...DateTime.DATETIME_MED }, userLocale);
     }
 
     get datetime() {
@@ -300,7 +299,15 @@ export class Message extends Record {
         compute() {
             return (
                 !this.body ||
-                ["", "<p></p>", "<p><br></p>", "<p><br/></p>"].includes(
+                [
+                    "",
+                    "<p></p>",
+                    "<p><br></p>",
+                    "<p><br/></p>",
+                    "<div></div>",
+                    "<div><br></div>",
+                    "<div><br/></div>",
+                ].includes(
                     this.body
                         .replace('<span class="o-mail-Message-edited"></span>', "")
                         .replace(/\s/g, "")
@@ -351,7 +358,7 @@ export class Message extends Record {
     }
 
     get scheduledDateSimple() {
-        return this.scheduledDatetime.toLocaleString(DateTime.TIME_24_SIMPLE, {
+        return this.scheduledDatetime.toLocaleString(DateTime.TIME_SIMPLE, {
             locale: user.lang,
         });
     }
@@ -375,15 +382,6 @@ export class Message extends Record {
         return (
             ["discuss.channel", "mail.box"].includes(thread.model) &&
             this.message_type !== "user_notification"
-        );
-    }
-
-    /** @param {import("models").Thread} thread the thread where the message is shown */
-    canReplyAllandForward(thread) {
-        return (
-            !["discuss.channel", "mail.box"].includes(thread.model) &&
-            ["comment", "email"].includes(this.message_type) &&
-            !this.is_note
         );
     }
 

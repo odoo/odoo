@@ -1722,13 +1722,11 @@ class PropertiesCase(TestPropertiesMixin):
             'model_name': 'test_new_api.emailmessage',
             'state': 'object_write',
         })
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(ValidationError) as ve:
             action.update_path = 'attributes.discussion_color_code'
-            # call _stringify_path directly because it's only called for
-            # server action linked to a base_automation
-            self.assertEqual(action._stringify_path(),
-                'Properties > discussion_color_code'
-            )
+        self.assertEqual(ve.exception.args[0],
+            "The path contained by the field 'Field to Update Path' contains a non-relational field (Properties) that is not the last field in the path. You can't traverse non-relational fields (even in the quantum realm). Make sure only the last field in the path is non-relational."
+        )
 
 
 class PropertiesSearchCase(TestPropertiesMixin):
@@ -2040,7 +2038,7 @@ class PropertiesSearchCase(TestPropertiesMixin):
         self.assertEqual(result[2], self.message_2)
 
     @mute_logger('odoo.fields')
-    def test_properties_field_search_orderby_integer(self):
+    def test_properties_field_search_order_integer(self):
         """Test that we can order record by properties integer values."""
         (self.message_1 | self.message_2 | self.message_3).discussion = self.discussion_1
         self.message_1.attributes = [{
@@ -2069,7 +2067,7 @@ class PropertiesSearchCase(TestPropertiesMixin):
         self.assertEqual(result[2], self.message_1)
 
     @mute_logger('odoo.fields')
-    def test_properties_field_search_orderby_injection(self):
+    def test_properties_field_search_order_injection(self):
         """Check the restriction on the property name."""
         self.message_1.attributes = [{
             'name': 'myinteger',
@@ -2162,9 +2160,9 @@ class PropertiesGroupByCase(TestPropertiesMixin):
 
         # group by the char property
         with self.assertQueryCount(3):
-            result = Model.read_group(
+            result = Model.formatted_read_group(
                 domain=[],
-                fields=[],
+                aggregates=['__count'],
                 groupby=['attributes.mychar'],
             )
 
@@ -2172,7 +2170,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
 
         # check counts
         count_by_values = {
-            value['attributes.mychar']: value['attributes.mychar_count']
+            value['attributes.mychar']: value['__count']
             for value in result
         }
         self.assertEqual(count_by_values['boum'], 1)
@@ -2181,7 +2179,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
 
         # check domains
         domain_by_values = {
-            value['attributes.mychar']: value['__domain']
+            value['attributes.mychar']: value['__extra_domain']
             for value in result
         }
         self.assertEqual(domain_by_values['boum'], [('attributes.mychar', '=', 'boum')])
@@ -2190,15 +2188,15 @@ class PropertiesGroupByCase(TestPropertiesMixin):
 
         # group by the integer property
         with self.assertQueryCount(3):
-            result = Model.read_group(
+            result = Model.formatted_read_group(
                 domain=[],
-                fields=[],
+                aggregates=['__count'],
                 groupby=['attributes.myinteger'],
             )
 
         self.assertEqual(len(result), 3)
         count_by_values = {
-            value['attributes.myinteger']: value['attributes.myinteger_count']
+            value['attributes.myinteger']: value['__count']
             for value in result
         }
 
@@ -2209,14 +2207,14 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         # falsy properties
         self.message_3.attributes = {'mychar': False, 'myinteger': False}
         with self.assertQueryCount(3):
-            result = Model.read_group(
+            result = Model.formatted_read_group(
                 domain=[],
-                fields=[],
+                aggregates=['__count'],
                 groupby=['attributes.myinteger'],
             )
 
-        self.assertEqual(result[-1]['attributes.myinteger_count'], 2)
-        self.assertEqual(result[-1]['__domain'], [('attributes.myinteger', '=', False)])
+        self.assertEqual(result[-1]['__count'], 2)
+        self.assertEqual(result[-1]['__extra_domain'], [('attributes.myinteger', '=', False)])
         self._check_domains_count(result)
 
         # non existing keys in the dict values should be grouped with False value
@@ -2229,48 +2227,47 @@ class PropertiesGroupByCase(TestPropertiesMixin):
             [self.message_2.id],
         )
         with self.assertQueryCount(3):
-            result = Model.read_group(
+            result = Model.formatted_read_group(
                 domain=[],
-                fields=[],
+                aggregates=['__count'],
                 groupby=['attributes.myinteger'],
             )
 
-        self.assertEqual(result[-1]['attributes.myinteger_count'], 3)
-        self.assertEqual(result[-1]['__domain'], [('attributes.myinteger', '=', False)])
-        result = Model.search(result[-1]['__domain'])  # check the domain is correct for the search
+        self.assertEqual(result[-1]['__count'], 3)
+        self.assertEqual(result[-1]['__extra_domain'], [('attributes.myinteger', '=', False)])
+        result = Model.search(result[-1]['__extra_domain'])  # check the domain is correct for the search
         self.assertEqual(result, self.message_2 | self.message_3 | self.message_4)
 
         # test the order by
-        result = Model.read_group(
+        result = Model.formatted_read_group(
             domain=[],
-            fields=[],
+            aggregates=['__count'],
             groupby=['attributes.myinteger'],
-            orderby='attributes.myinteger ASC'
+            order='attributes.myinteger ASC'
         )
         self.assertEqual(len(result), 2)
         self.assertEqual(result[0]['attributes.myinteger'], 1337)
         self.assertEqual(result[1]['attributes.myinteger'], False)
 
-        result = Model.read_group(
+        result = Model.formatted_read_group(
             domain=[],
-            fields=[],
+            aggregates=['__count'],
             groupby=['attributes.myinteger'],
-            orderby='attributes.myinteger DESC'
+            order='attributes.myinteger DESC'
         )
         self.assertEqual(len(result), 2)
         self.assertEqual(result[0]['attributes.myinteger'], False)
         self.assertEqual(result[1]['attributes.myinteger'], 1337)
         self._check_domains_count(result)
 
-        result = Model.read_group(
+        result = Model.formatted_read_group(
             domain=[],
-            fields=[],
+            aggregates=['__count'],
             groupby=['attributes.myinteger', 'name'],
-            orderby='attributes.myinteger DESC',
-            lazy=False,
+            order='attributes.myinteger DESC',
         )
         self.assertEqual(
-            result[0]['__domain'],
+            result[0]['__extra_domain'],
             ['&', ('attributes.myinteger', '=', False), ('name', '=', self.message_1.name)],
         )
         self._check_domains_count(result)
@@ -2324,43 +2321,43 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         self._properties_field_read_group_date_prepare(date_type)
         Model = self.env['test_new_api.message']
 
-        result = Model.read_group(
+        result = Model.formatted_read_group(
             domain=[],
-            fields=[],
+            aggregates=['__count'],
             groupby=['attributes.mydate:day'],
-            orderby='attributes.mydate DESC',
+            order='attributes.mydate:day DESC',
         )
 
         self.assertEqual(len(result), 5)
         # check values and count
-        self.assertEqual(result[0]['attributes.mydate_count'], 2)
+        self.assertEqual(result[0]['__count'], 2)
         self.assertEqual(result[0]['attributes.mydate:day'], False)
-        self.assertEqual(result[1]['attributes.mydate_count'], 1)
-        self.assertEqual(result[1]['attributes.mydate:day'], '02 May 2077')
-        self.assertEqual(result[2]['attributes.mydate_count'], 1)
-        self.assertEqual(result[2]['attributes.mydate:day'], '05 Feb 2023')
-        self.assertEqual(result[3]['attributes.mydate_count'], 1)
-        self.assertEqual(result[3]['attributes.mydate:day'], '03 Feb 2023')
-        self.assertEqual(result[4]['attributes.mydate_count'], 2)
-        self.assertEqual(result[4]['attributes.mydate:day'], '02 Jan 2023')
+        self.assertEqual(result[1]['__count'], 1)
+        self.assertEqual(result[1]['attributes.mydate:day'][1], '02 May 2077')
+        self.assertEqual(result[2]['__count'], 1)
+        self.assertEqual(result[2]['attributes.mydate:day'][1], '05 Feb 2023')
+        self.assertEqual(result[3]['__count'], 1)
+        self.assertEqual(result[3]['attributes.mydate:day'][1], '03 Feb 2023')
+        self.assertEqual(result[4]['__count'], 2)
+        self.assertEqual(result[4]['attributes.mydate:day'][1], '02 Jan 2023')
         # check domain
-        self.assertEqual(Model.search(result[0]['__domain']), self.message_6 | self.message_7)
-        self.assertEqual(Model.search(result[1]['__domain']), self.message_5)
-        self.assertEqual(Model.search(result[2]['__domain']), self.message_4)
-        self.assertEqual(Model.search(result[3]['__domain']), self.message_2)
-        self.assertEqual(Model.search(result[4]['__domain']), self.message_1 | self.message_3)
+        self.assertEqual(Model.search(result[0]['__extra_domain']), self.message_6 | self.message_7)
+        self.assertEqual(Model.search(result[1]['__extra_domain']), self.message_5)
+        self.assertEqual(Model.search(result[2]['__extra_domain']), self.message_4)
+        self.assertEqual(Model.search(result[3]['__extra_domain']), self.message_2)
+        self.assertEqual(Model.search(result[4]['__extra_domain']), self.message_1 | self.message_3)
         self._check_domains_count(result)
 
         # when the order is not specified, the ORM will generate one
         # based on "attributes.mydate ASC", make sure it works
-        result = Model.read_group(
+        result = Model.formatted_read_group(
             domain=[],
-            fields=[],
+            aggregates=['__count'],
             groupby=['attributes.mydate:year'],
         )
         self.assertEqual(len(result), 3)
-        self.assertEqual(result[0]['attributes.mydate:year'], '2023')
-        self.assertEqual(result[1]['attributes.mydate:year'], '2077')
+        self.assertEqual(result[0]['attributes.mydate:year'][1], '2023')
+        self.assertEqual(result[1]['attributes.mydate:year'][1], '2077')
         self.assertEqual(result[2]['attributes.mydate:year'], False)
 
     @mute_logger('odoo.fields')
@@ -2368,26 +2365,26 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         self._properties_field_read_group_date_prepare(date_type)
         Model = self.env['test_new_api.message']
 
-        result = Model.read_group(
+        result = Model.formatted_read_group(
             domain=[],
-            fields=[],
+            aggregates=['__count'],
             groupby=['attributes.mydate:quarter'],
-            orderby='attributes.mydate DESC',
+            order='attributes.mydate:quarter DESC',
         )
 
         self.assertEqual(len(result), 3)
         # check values and count
-        self.assertEqual(result[0]['attributes.mydate_count'], 2)
+        self.assertEqual(result[0]['__count'], 2)
         self.assertEqual(result[0]['attributes.mydate:quarter'], False)
-        self.assertEqual(result[1]['attributes.mydate_count'], 1)
-        self.assertEqual(result[1]['attributes.mydate:quarter'], 'Q2 2077')
-        self.assertEqual(result[2]['attributes.mydate_count'], 4)
-        self.assertEqual(result[2]['attributes.mydate:quarter'], 'Q1 2023')
+        self.assertEqual(result[1]['__count'], 1)
+        self.assertEqual(result[1]['attributes.mydate:quarter'][1], 'Q2 2077')
+        self.assertEqual(result[2]['__count'], 4)
+        self.assertEqual(result[2]['attributes.mydate:quarter'][1], 'Q1 2023')
         # check domain
-        self.assertEqual(Model.search(result[0]['__domain']), self.message_6 | self.message_7)
-        self.assertEqual(Model.search(result[1]['__domain']), self.message_5)
+        self.assertEqual(Model.search(result[0]['__extra_domain']), self.message_6 | self.message_7)
+        self.assertEqual(Model.search(result[1]['__extra_domain']), self.message_5)
         self.assertEqual(
-            Model.search(result[2]['__domain']),
+            Model.search(result[2]['__extra_domain']),
             self.message_1 | self.message_2 | self.message_3 | self.message_4)
         self._check_domains_count(result)
 
@@ -2396,28 +2393,28 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         self._properties_field_read_group_date_prepare()
         Model = self.env['test_new_api.message']
 
-        result = Model.read_group(
+        result = Model.formatted_read_group(
             domain=[],
-            fields=[],
+            aggregates=['__count'],
             groupby=['attributes.mydate:month'],
-            orderby='attributes.mydate DESC',
+            order='attributes.mydate:month DESC',
         )
 
         self.assertEqual(len(result), 4)
         # check values and count
-        self.assertEqual(result[0]['attributes.mydate_count'], 2)
+        self.assertEqual(result[0]['__count'], 2)
         self.assertEqual(result[0]['attributes.mydate:month'], False)
-        self.assertEqual(result[1]['attributes.mydate_count'], 1)
-        self.assertEqual(result[1]['attributes.mydate:month'], 'May 2077')
-        self.assertEqual(result[2]['attributes.mydate_count'], 2)
-        self.assertEqual(result[2]['attributes.mydate:month'], 'February 2023')
-        self.assertEqual(result[3]['attributes.mydate_count'], 2)
-        self.assertEqual(result[3]['attributes.mydate:month'], 'January 2023')
+        self.assertEqual(result[1]['__count'], 1)
+        self.assertEqual(result[1]['attributes.mydate:month'][1], 'May 2077')
+        self.assertEqual(result[2]['__count'], 2)
+        self.assertEqual(result[2]['attributes.mydate:month'][1], 'February 2023')
+        self.assertEqual(result[3]['__count'], 2)
+        self.assertEqual(result[3]['attributes.mydate:month'][1], 'January 2023')
         # check domain
-        self.assertEqual(Model.search(result[0]['__domain']), self.message_6 | self.message_7)
-        self.assertEqual(Model.search(result[1]['__domain']), self.message_5)
-        self.assertEqual(Model.search(result[2]['__domain']), self.message_2 | self.message_4)
-        self.assertEqual(Model.search(result[3]['__domain']), self.message_1 | self.message_3)
+        self.assertEqual(Model.search(result[0]['__extra_domain']), self.message_6 | self.message_7)
+        self.assertEqual(Model.search(result[1]['__extra_domain']), self.message_5)
+        self.assertEqual(Model.search(result[2]['__extra_domain']), self.message_2 | self.message_4)
+        self.assertEqual(Model.search(result[3]['__extra_domain']), self.message_1 | self.message_3)
         self._check_domains_count(result)
 
     @mute_logger('odoo.fields')
@@ -2428,24 +2425,24 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         self._properties_field_read_group_date_prepare()
         Model = self.env['test_new_api.message']
 
-        result = Model.read_group(
+        result = Model.formatted_read_group(
             domain=[],
-            fields=[],
+            aggregates=['__count'],
             groupby=['attributes.mydate:week'],
-            orderby='attributes.mydate DESC',
+            order='attributes.mydate:week DESC',
         )
 
         self.assertEqual(len(result), 5)
         # check values and count
-        self.assertEqual(result[0]['attributes.mydate_count'], 2)
+        self.assertEqual(result[0]['__count'], 2)
         self.assertEqual(result[0]['attributes.mydate:week'], False)
-        self.assertEqual(result[1]['attributes.mydate_count'], 1)
-        self.assertEqual(result[1]['attributes.mydate:week'], 'W19 2077')
-        self.assertEqual(result[2]['attributes.mydate_count'], 1)
-        self.assertEqual(result[2]['attributes.mydate:week'], 'W6 2023')
-        self.assertEqual(result[3]['attributes.mydate_count'], 1)
-        self.assertEqual(result[3]['attributes.mydate:week'], 'W5 2023')
-        self.assertEqual(result[4]['attributes.mydate_count'], 2)
+        self.assertEqual(result[1]['__count'], 1)
+        self.assertEqual(result[1]['attributes.mydate:week'][1], 'W19 2077')
+        self.assertEqual(result[2]['__count'], 1)
+        self.assertEqual(result[2]['attributes.mydate:week'][1], 'W6 2023')
+        self.assertEqual(result[3]['__count'], 1)
+        self.assertEqual(result[3]['attributes.mydate:week'][1], 'W5 2023')
+        self.assertEqual(result[4]['__count'], 2)
         # Babel issue mitigation
         # https://github.com/python-babel/babel/pull/621 -- introduced a new bug
         # https://github.com/python-babel/babel/pull/887 -- proposed a fix but finally closed
@@ -2453,24 +2450,24 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         # so this ugly fix is made to have the test working in patched and non patched versions of Babel
         babel_year = babel.dates.format_date(datetime.datetime(2023, 1, 1), "YYYY", "en_US")  # non patched: '2022' patched: '2023'
         if babel_year == '2022':  # Broken unpatched babel
-            self.assertEqual(result[4]['attributes.mydate:week'], 'W1 2022')
+            self.assertEqual(result[4]['attributes.mydate:week'][1], 'W1 2022')
         else:  # Patched babel
-            self.assertEqual(result[4]['attributes.mydate:week'], 'W1 2023')
+            self.assertEqual(result[4]['attributes.mydate:week'][1], 'W1 2023')
         # check domain
-        self.assertEqual(Model.search(result[0]['__domain']), self.message_6 | self.message_7)
-        self.assertEqual(Model.search(result[1]['__domain']), self.message_5)
-        self.assertEqual(Model.search(result[2]['__domain']), self.message_4)
-        self.assertEqual(Model.search(result[3]['__domain']), self.message_2)
-        self.assertEqual(Model.search(result[4]['__domain']), self.message_1 | self.message_3)
+        self.assertEqual(Model.search(result[0]['__extra_domain']), self.message_6 | self.message_7)
+        self.assertEqual(Model.search(result[1]['__extra_domain']), self.message_5)
+        self.assertEqual(Model.search(result[2]['__extra_domain']), self.message_4)
+        self.assertEqual(Model.search(result[3]['__extra_domain']), self.message_2)
+        self.assertEqual(Model.search(result[4]['__extra_domain']), self.message_1 | self.message_3)
         self._check_domains_count(result)
 
         # test that the first day of the week in the domain care about the local
         # (based on the lang, the first day of the week might change)
         for line in result[1:]:
-            self.assertEqual(line['__domain'][1][1], ">=")
-            self.assertEqual(line['__domain'][2][1], "<")
-            start = datetime.datetime.strptime(line['__domain'][1][2], "%Y-%m-%d")
-            end = datetime.datetime.strptime(line['__domain'][2][2], "%Y-%m-%d")
+            self.assertEqual(line['__extra_domain'][1][1], ">=")
+            self.assertEqual(line['__extra_domain'][2][1], "<")
+            start = datetime.datetime.strptime(line['__extra_domain'][1][2], "%Y-%m-%d")
+            end = datetime.datetime.strptime(line['__extra_domain'][2][2], "%Y-%m-%d")
             self.assertEqual(start.weekday(), first_week_day)
             self.assertEqual(end.weekday(), first_week_day)
 
@@ -2478,17 +2475,17 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         lang = self.env['res.lang'].with_context(active_test=False).search([('code', '=', 'fr_FR')])
         self.assertEqual(len(lang), 1)
         lang.write({'active': True, 'week_start': '3'})
-        result = Model.with_context(lang='fr_FR').read_group(
+        result = Model.with_context(lang='fr_FR').formatted_read_group(
             domain=[],
-            fields=[],
+            aggregates=['__count'],
             groupby=['attributes.mydate:week'],
-            orderby='attributes.mydate DESC',
+            order='attributes.mydate:week DESC',
         )
         for line in result[1:]:
-            self.assertEqual(line['__domain'][1][1], ">=")
-            self.assertEqual(line['__domain'][2][1], "<")
-            start = datetime.datetime.strptime(line['__domain'][1][2], "%Y-%m-%d")
-            end = datetime.datetime.strptime(line['__domain'][2][2], "%Y-%m-%d")
+            self.assertEqual(line['__extra_domain'][1][1], ">=")
+            self.assertEqual(line['__extra_domain'][2][1], "<")
+            start = datetime.datetime.strptime(line['__extra_domain'][1][2], "%Y-%m-%d")
+            end = datetime.datetime.strptime(line['__extra_domain'][2][2], "%Y-%m-%d")
             self.assertEqual(start.weekday(), 2, "First day of the week must be Wednesday")
             self.assertEqual(end.weekday(), 2, "First day of the week must be Wednesday")
 
@@ -2497,26 +2494,26 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         self._properties_field_read_group_date_prepare()
         Model = self.env['test_new_api.message']
 
-        result = Model.read_group(
+        result = Model.formatted_read_group(
             domain=[],
-            fields=[],
+            aggregates=['__count'],
             groupby=['attributes.mydate:year'],
-            orderby='attributes.mydate DESC',
+            order='attributes.mydate:year DESC',
         )
 
         self.assertEqual(len(result), 3)
         # check values and count
-        self.assertEqual(result[0]['attributes.mydate_count'], 2)
+        self.assertEqual(result[0]['__count'], 2)
         self.assertEqual(result[0]['attributes.mydate:year'], False)
-        self.assertEqual(result[1]['attributes.mydate_count'], 1)
-        self.assertEqual(result[1]['attributes.mydate:year'], '2077')
-        self.assertEqual(result[2]['attributes.mydate_count'], 4)
-        self.assertEqual(result[2]['attributes.mydate:year'], '2023')
+        self.assertEqual(result[1]['__count'], 1)
+        self.assertEqual(result[1]['attributes.mydate:year'][1], '2077')
+        self.assertEqual(result[2]['__count'], 4)
+        self.assertEqual(result[2]['attributes.mydate:year'][1], '2023')
         # check domain
-        self.assertEqual(Model.search(result[0]['__domain']), self.message_6 | self.message_7)
-        self.assertEqual(Model.search(result[1]['__domain']), self.message_5)
+        self.assertEqual(Model.search(result[0]['__extra_domain']), self.message_6 | self.message_7)
+        self.assertEqual(Model.search(result[1]['__extra_domain']), self.message_5)
         self.assertEqual(
-            Model.search(result[2]['__domain']),
+            Model.search(result[2]['__extra_domain']),
             self.message_1 | self.message_2 | self.message_3 | self.message_4)
         self._check_domains_count(result)
 
@@ -2547,31 +2544,31 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         self.env.flush_all()
 
         with self.assertRaises(ValueError), self.assertQueryCount(0):
-            Model.read_group(
+            Model.formatted_read_group(
                 domain=[],
-                fields=[],
+                aggregates=['__count'],
                 groupby=['attributes.myinteger'],
-                orderby='attributes.myinteger OR 1=1 DESC'
+                order='attributes.myinteger OR 1=1 DESC'
             )
 
         with self.assertRaises(ValueError), self.assertQueryCount(0):
-            Model.read_group(
+            Model.formatted_read_group(
                 domain=[],
-                fields=[],
+                aggregates=['__count'],
                 groupby=['attributes.myinteger OR 1=1'],
-                orderby='attributes.myinteger DESC'
+                order='attributes.myinteger DESC'
             )
 
         with self.assertRaises(ValueError), self.assertQueryCount(0):
-            Model.read_group(
+            Model.formatted_read_group(
                 domain=[],
-                fields=[],
+                aggregates=['__count'],
                 groupby=['attributes.myinteger:wrongfunction'],
-                orderby='attributes.myinteger DESC'
+                order='attributes.myinteger DESC'
             )
 
         with self.assertRaises(ValueError), self.assertQueryCount(0):
-            Model._read_group(
+            Model.formatted_read_group(
                 domain=[],
                 aggregates=['attributes.myinteger:sum'],  # Aggregate is not supported
             )
@@ -2601,11 +2598,10 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         (partners[4] | partners[7] | partners[9]).unlink()
 
         with self.assertQueryCount(4):
-            result = Model.read_group(
+            result = Model.formatted_read_group(
                 domain=[('discussion', '!=', self.wrong_discussion_id)],
-                fields=[],
+                aggregates=['__count'],
                 groupby=['attributes.mypartners'],
-                lazy=False,
             )
 
         self.assertEqual(len(result), 8)
@@ -2615,43 +2611,37 @@ class PropertiesGroupByCase(TestPropertiesMixin):
             self.assertEqual(partner.id, line['attributes.mypartners'][0])
             self.assertEqual(partner.display_name, line['attributes.mypartners'][1])
             self.assertEqual(
-                line['__domain'],
-                [
-                    '&',
-                    ('discussion', '!=', self.wrong_discussion_id),
-                    ('attributes.mypartners', 'in', partner.id),
-                ],
+                line['__extra_domain'],
+                [('attributes.mypartners', 'in', partner.id)],
             )
             # only the fourth partner is in 2 messages
             self.assertEqual(line['__count'], 2 if partner == partners[3] else 1)
 
         # message 4 is in a different discussion, so it's value is False
-        self.assertEqual(Model.search(result[-1]['__domain']), self.message_4)
+        self.assertEqual(Model.search(result[-1]['__extra_domain']), self.message_4)
         self._check_many_falsy_group('mypartners', result)
         self._check_domains_count(result)
 
         # now message 1 and 2 will also be in the falsy group
         partners[:8].unlink()
         with self.assertQueryCount(4):
-            result = Model.read_group(
+            result = Model.formatted_read_group(
                 domain=[('discussion', '!=', self.wrong_discussion_id)],
-                fields=[],
+                aggregates=['__count'],
                 groupby=['attributes.mypartners'],
-                lazy=False,
             )
 
         self.assertEqual(len(result), 2)
-        self.assertEqual(Model.search(result[-1]['__domain']), self.message_1 | self.message_2 | self.message_4)
+        self.assertEqual(Model.search(result[-1]['__extra_domain']), self.message_1 | self.message_2 | self.message_4)
         self._check_many_falsy_group('mypartners', result)
         self._check_domains_count(result)
 
         # special case, no partner exists
         existing_partners.unlink()
-        result = Model.read_group(
+        result = Model.formatted_read_group(
             domain=[('discussion', '!=', self.wrong_discussion_id)],
-            fields=[],
+            aggregates=['__count'],
             groupby=['attributes.mypartners'],
-            lazy=False,
         )
         self.assertEqual(len(result), 1)
         self.assertFalse(result[0]['attributes.mypartners'])
@@ -2673,11 +2663,10 @@ class PropertiesGroupByCase(TestPropertiesMixin):
             self.assertEqual(definition[0]['comodel'], invalid_model_name)
             error_message = f"You cannot use “Partners” because the linked “{invalid_model_name}” model doesn't exist or is invalid"
             with self.assertRaisesRegex(UserError, error_message):
-                result = Model.read_group(
+                result = Model.formatted_read_group(
                     domain=[('discussion', '!=', self.wrong_discussion_id)],
-                    fields=[],
+                    aggregates=['__count'],
                     groupby=['attributes.mypartners'],
-                    lazy=False,
                 )
 
     @mute_logger('odoo.fields')
@@ -2710,51 +2699,51 @@ class PropertiesGroupByCase(TestPropertiesMixin):
 
         self.env.invalidate_all()
         with self.assertQueryCount(4):
-            result = Model.read_group(
+            result = Model.formatted_read_group(
                 domain=[],
-                fields=['name', 'attributes', 'discussion'],
                 groupby=['attributes.mypartner'],
+                aggregates=['__count'],
             )
 
         self.assertEqual(len(result), 3, 'Should ignore the partner that has been removed')
 
-        self.assertEqual(result[0]['attributes.mypartner_count'], 1)
+        self.assertEqual(result[0]['__count'], 1)
         self.assertEqual(result[0]['attributes.mypartner'][0], self.partner.id)
         self.assertEqual(result[0]['attributes.mypartner'][1], self.partner.display_name)
-        self.assertEqual(result[0]['__domain'], [('attributes.mypartner', '=', self.partner.id)])
+        self.assertEqual(result[0]['__extra_domain'], [('attributes.mypartner', '=', self.partner.id)])
 
-        self.assertEqual(result[1]['attributes.mypartner_count'], 1)
+        self.assertEqual(result[1]['__count'], 1)
         self.assertEqual(result[1]['attributes.mypartner'][0], self.partner_2.id)
         self.assertEqual(result[1]['attributes.mypartner'][1], self.partner_2.display_name)
-        self.assertEqual(result[1]['__domain'], [('attributes.mypartner', '=', self.partner_2.id)])
+        self.assertEqual(result[1]['__extra_domain'], [('attributes.mypartner', '=', self.partner_2.id)])
 
         # falsy domain, automatically generated, contains the false value
         # and the ids of the records that doesn't exist in the database
-        self.assertEqual(result[2]['attributes.mypartner_count'], 2)
+        self.assertEqual(result[2]['__count'], 2)
         self.assertEqual(result[2]['attributes.mypartner'], False)
         self.assertEqual(
-            result[2]['__domain'],
+            result[2]['__extra_domain'],
             [
                 '|',
                 ('attributes.mypartner', '=', False),
-                ('attributes.mypartner', 'not in', [self.partner.id, self.partner_2.id]),
+                ('attributes.mypartner', 'not in', (self.partner.id, self.partner_2.id)),
             ],
         )
 
         # when there's no "('property', '=', False)" domain, it should be created
         self.message_4.attributes = {'mypartner': self.partner.id}
-        result = Model.read_group(
+        result = Model.formatted_read_group(
             domain=[],
-            fields=['name', 'attributes', 'discussion'],
             groupby=['attributes.mypartner'],
+            aggregates=['__count'],
         )
-        self.assertEqual(result[2]['attributes.mypartner_count'], 1)
+        self.assertEqual(result[2]['__count'], 1)
         self.assertEqual(
-            result[2]['__domain'],
+            result[2]['__extra_domain'],
             [
                 '|',
                 ('attributes.mypartner', '=', False),
-                ('attributes.mypartner', 'not in', [self.partner.id, self.partner_2.id]),
+                ('attributes.mypartner', 'not in', (self.partner.id, self.partner_2.id)),
             ],
         )
 
@@ -2774,11 +2763,10 @@ class PropertiesGroupByCase(TestPropertiesMixin):
             self.assertEqual(definition[0]['comodel'], invalid_model_name)
             error_message = f"You cannot use “My Partner” because the linked “{invalid_model_name}” model doesn't exist or is invalid"
             with self.assertRaisesRegex(UserError, error_message):
-                result = Model.read_group(
+                result = Model.formatted_read_group(
                     domain=[('discussion', '!=', self.wrong_discussion_id)],
-                    fields=[],
+                    aggregates=['__count'],
                     groupby=['attributes.mypartner'],
-                    lazy=False,
                 )
 
     @mute_logger('odoo.fields')
@@ -2810,41 +2798,35 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         )
 
         with self.assertQueryCount(3):
-            result = Model.read_group(
+            result = Model.formatted_read_group(
                 domain=[('discussion', '!=', self.wrong_discussion_id)],
-                fields=['name', 'attributes', 'discussion'],
                 groupby=['attributes.myselection'],
+                aggregates=['__count'],
             )
 
         self.assertEqual(len(result), 2)
-        self.assertEqual(result[0]['attributes.myselection_count'], 1)
+        self.assertEqual(result[0]['__count'], 1)
         self.assertEqual(
-            result[0]['__domain'],
-            [
-                '&',
-                ('discussion', '!=', self.wrong_discussion_id),  # original domain should be preserved
-                ('attributes.myselection', '=', 'optionA'),
-            ],
+            result[0]['__extra_domain'],
+            [('attributes.myselection', '=', 'optionA')],
         )
         self.assertEqual(result[0]['attributes.myselection'], 'optionA')
 
         # check that the option that is not valid is included in the "False" domain
         # the count should be updated as well
-        self.assertEqual(result[1]['attributes.myselection_count'], 3)
+        self.assertEqual(result[1]['__count'], 3)
         self.assertEqual(
-            result[1]['__domain'],
+            result[1]['__extra_domain'],
             [
-                '&',
-                ('discussion', '!=', self.wrong_discussion_id),
                 '|',
                 ('attributes.myselection', '=', False),
-                ('attributes.myselection', 'not in', ['optionA', 'optionB']),
+                ('attributes.myselection', 'not in', ('optionA', 'optionB')),
             ],
         )
         self.assertEqual(result[1]['attributes.myselection'], False)
         # double check that the returned domain filter the right record
         self.assertEqual(
-            self.env['test_new_api.message'].search(result[1]['__domain']),
+            self.env['test_new_api.message'].search(result[1]['__extra_domain']),
             self.message_2 | self.message_3 | self.message_4,
         )
 
@@ -2857,13 +2839,13 @@ class PropertiesGroupByCase(TestPropertiesMixin):
             'definition_changed': True,
         }]
         self.env.flush_all()
-        result = Model.read_group(
+        result = Model.formatted_read_group(
             domain=[],
-            fields=['attributes'],
             groupby=['attributes.myselection'],
+            aggregates=['__count'],
         )
         self.assertEqual(len(result), 1)
-        self.assertEqual(result[0]['attributes.myselection_count'], 4)
+        self.assertEqual(result[0]['__count'], 4)
         self._check_domains_count(result)
 
     @mute_logger('odoo.fields')
@@ -2892,11 +2874,10 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         self.env.invalidate_all()
 
         with self.assertQueryCount(3):
-            result = Model.read_group(
+            result = Model.formatted_read_group(
                 domain=[('discussion', '!=', self.wrong_discussion_id)],
-                fields=[],
+                aggregates=['__count'],
                 groupby=['attributes.mytags'],
-                lazy=False,
             )
 
         self.assertNotIn('invalid', str(result))
@@ -2909,21 +2890,17 @@ class PropertiesGroupByCase(TestPropertiesMixin):
             self.assertEqual(group['attributes.mytags'], all_tags[tag])
             self.assertEqual(group['__count'], count)
             self.assertEqual(
-                group['__domain'],
-                [
-                    '&',
-                    ('discussion', '!=', self.wrong_discussion_id),
-                    ('attributes.mytags', 'in', tag),
-                ],
+                group['__extra_domain'],
+                [('attributes.mytags', 'in', tag)],
             )
             # check that the value when we read the record match the value of the group
             property_values = [
                 next(pro['value'] for pro in values['attributes'])
-                for values in Model.search(group['__domain']).read(['attributes'])
+                for values in Model.search(group['__extra_domain']).read(['attributes'])
             ]
             self.assertTrue(all(tag in property_value for property_value in property_values))
 
-        self.assertEqual(Model.search(result[-1]['__domain']), self.message_4)
+        self.assertEqual(Model.search(result[-1]['__extra_domain']), self.message_4)
         self._check_many_falsy_group('mytags', result)
         self._check_domains_count(result)
 
@@ -2939,13 +2916,12 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         self.env.invalidate_all()
 
         with self.assertQueryCount(3):
-            result = Model.read_group(
+            result = Model.formatted_read_group(
                 domain=[('discussion', '!=', self.wrong_discussion_id)],
-                fields=[],
+                aggregates=['__count'],
                 groupby=['attributes.mytags'],
-                lazy=False,
             )
-        self.assertEqual(Model.search(result[-1]['__domain']), self.message_3 | self.message_4)
+        self.assertEqual(Model.search(result[-1]['__extra_domain']), self.message_3 | self.message_4)
         self._check_many_falsy_group('mytags', result)
         self._check_domains_count(result)
 
@@ -2959,11 +2935,10 @@ class PropertiesGroupByCase(TestPropertiesMixin):
                 'definition_changed': True,
             }]
             self.env.flush_all()
-            result = Model.read_group(
+            result = Model.formatted_read_group(
                 domain=[('discussion', '!=', self.wrong_discussion_id)],
-                fields=[],
+                aggregates=['__count'],
                 groupby=['attributes.mytags'],
-                lazy=False,
             )
             self.assertEqual(len(result), 1)
             self.assertFalse(result[0]['attributes.mytags'])
@@ -2973,7 +2948,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
     def _check_domains_count(self, result):
         """Check that the domains in the result match the __count key."""
         for line in result:
-            records = self.env['test_new_api.message'].search(line['__domain'])
+            records = self.env['test_new_api.message'].search(line['__extra_domain'])
             count_key = next(key for key in line if "_count" in key)
             self.assertEqual(len(records), line[count_key])
 
@@ -2988,8 +2963,8 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         Model = self.env['test_new_api.message']
         falsy_group = result[-1]
         self.assertFalse(falsy_group[f'attributes.{property_name}'])
-        falsy_records = Model.search(falsy_group['__domain'])
-        nonfalsy_records = Model.search(Domain.OR(line['__domain'] for line in result[:-1]))
+        falsy_records = Model.search(falsy_group['__extra_domain'])
+        nonfalsy_records = Model.search(Domain.OR(line['__extra_domain'] for line in result[:-1]))
         self.assertEqual(Model.search_count([]), len(falsy_records) + len(nonfalsy_records))
         for falsy_record in falsy_records:
             self.assertNotIn(falsy_record, nonfalsy_records)

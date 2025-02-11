@@ -11,6 +11,7 @@ import { Deferred } from "@odoo/hoot-dom";
  *
  * @typedef {{
  *  timeout?: number;
+ *  ignoreOrder?: boolean;
  * }} WaitForStepsOptions
  */
 
@@ -26,7 +27,12 @@ const checkStepState = (forceVerifySteps) => {
         return;
     }
 
-    const { expectedSteps, steps } = currentStepState;
+    const { expectedSteps, ignoreOrder, steps } = currentStepState;
+    if (ignoreOrder) {
+        expectedSteps.sort(function (a, b) {
+            return steps.indexOf(a) - steps.indexOf(b);
+        });
+    }
     if (
         forceVerifySteps ||
         (expectedSteps.length === steps.length && expectedSteps.every((s, i) => s === steps[i]))
@@ -54,6 +60,7 @@ const ensureStepState = () => {
             steps: [],
             deferred: null,
             expectedSteps: null,
+            ignoreOrder: false,
             timeout: 0,
         };
         after(runLastCheck);
@@ -99,14 +106,15 @@ export function asyncStep(step) {
  * @param {any[]} steps
  * @param {WaitForStepsOptions} [options]
  */
-export async function waitForSteps(steps, options) {
+export async function waitForSteps(steps, options = {}) {
     // Check with previous steps (if any)
     checkStepState(true);
 
     const stepState = ensureStepState();
     stepState.expectedSteps = steps;
     stepState.deferred = new Deferred();
-    stepState.timeout = setTimeout(() => checkStepState(true), options?.timeout ?? 2000);
+    stepState.ignoreOrder = options.ignoreOrder;
+    stepState.timeout = setTimeout(() => checkStepState(true), options.timeout ?? 2000);
 
     // Soft check with current steps
     checkStepState(false);

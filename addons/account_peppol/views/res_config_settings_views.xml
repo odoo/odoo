@@ -87,14 +87,6 @@
                                         name="button_peppol_update_user_data"
                                         type="object"
                                         class="btn-secondary me-1"/>
-                                <button string="Migrate registration to another service"
-                                        name="button_peppol_migrate_away"
-                                        type="object"
-                                        class="btn-secondary me-1"
-                                        groups="base.group_no_one"
-                                        invisible="account_peppol_proxy_state != 'receiver'"
-                                        confirm="This will migrate your Peppol registration away from Odoo.  A migration key will be generated.
-                                        If the other service does not support migration, consider unregistering instead."/>
                                 <button string="Remove from Peppol"
                                         name="button_peppol_unregister"
                                         type="object"

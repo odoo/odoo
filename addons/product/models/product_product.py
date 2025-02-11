@@ -154,6 +154,9 @@ class ProductProduct(models.Model):
         works as intended :-)
         """
         for record in self:
+            if not record.id:
+                record.write_date = record._origin.write_date
+                continue
             record.write_date = max(record.write_date or self.env.cr.now(), record.product_tmpl_id.write_date)
 
     def _compute_image_1920(self):
@@ -311,8 +314,8 @@ class ProductProduct(models.Model):
             domain = [
                 ('pricelist_id.active', '=', True),
                 '|',
-                    '&', ('product_tmpl_id', '=', product.product_tmpl_id.id), ('applied_on', '=', '1_product'),
-                    '&', ('product_id', '=', product.id), ('applied_on', '=', '0_product_variant'),
+                    '&', ('product_tmpl_id', 'in', product.product_tmpl_id.ids), ('applied_on', '=', '1_product'),
+                    '&', ('product_id', 'in', product.ids), ('applied_on', '=', '0_product_variant'),
                 ('compute_price', '=', 'fixed'),
             ]
             product.pricelist_item_count = self.env['product.pricelist.item'].search_count(domain)
@@ -321,7 +324,7 @@ class ProductProduct(models.Model):
         for product in self:
             product.product_document_count = product.env['product.document'].search_count([
                 ('res_model', '=', 'product.product'),
-                ('res_id', '=', product.id),
+                ('res_id', 'in', product.ids),
             ])
 
     @api.depends('product_tag_ids', 'additional_product_tag_ids')
@@ -350,6 +353,24 @@ class ProductProduct(models.Model):
                 'title': _("Note:"),
                 'message': _("The Reference '%s' already exists.", self.default_code),
             }}
+
+    def _trigger_uom_warning(self):
+        return False
+
+    @api.onchange('uom_id')
+    def _onchange_uom_id(self):
+        if self._origin.uom_id == self.uom_id or not self._trigger_uom_warning():
+            return
+        message = _(
+            'Changing the unit of measure for your product will apply a conversion 1 %(old_uom_name)s = 1 %(new_uom_name)s.\n'
+            'All existing records (Sales orders, Purchase orders, etc.) using this product will be updated by replacing the unit name.',
+            old_uom_name=self._origin.uom_id.display_name, new_uom_name=self.uom_id.display_name)
+        return {
+            'warning': {
+                'title': _('What to expect ?'),
+                'message': message,
+            }
+        }
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -837,3 +858,8 @@ class ProductProduct(models.Model):
         if lst_price:
             return (lst_price - self._get_contextual_price()) / lst_price
         return 0.0
+
+    def _update_uom(self, to_uom_id):
+        """ Hook to handle an UoM modification. Avoid recomputation and just replace the
+        many2one field on the impacted models."""
+        return True

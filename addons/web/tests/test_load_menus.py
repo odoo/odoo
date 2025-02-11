@@ -1,5 +1,6 @@
-from odoo import Command
+from odoo import api, Command
 from odoo.tests.common import HttpCase
+
 
 class LoadMenusTests(HttpCase):
 
@@ -26,6 +27,8 @@ class LoadMenusTests(HttpCase):
 
         # Patch search to only return these menus
         origin_search_fetch = self.env.registry["ir.ui.menu"].search_fetch
+
+        @api.model
         def search_fetch(self, domain, *args, **kwargs):
             return origin_search_fetch(self, domain + [('id', 'in', menus.ids)], *args, **kwargs)
 
@@ -46,6 +49,7 @@ class LoadMenusTests(HttpCase):
                 'webIcon': False,
                 'webIconData': '/web/static/img/default_icon_app.png',
                 'webIconDataMimetype': False,
+                'webInvisible': False,
                 'xmlid': '',
             },
             str(self.menu_child.id): {
@@ -59,6 +63,7 @@ class LoadMenusTests(HttpCase):
                 'webIcon': False,
                 'webIconData': False,
                 'webIconDataMimetype': False,
+                'webInvisible': False,
                 'xmlid': '',
             },
             'root': {
@@ -73,6 +78,7 @@ class LoadMenusTests(HttpCase):
                 'webIcon': None,
                 'webIconData': None,
                 'webIconDataMimetype': None,
+                'webInvisible': False,
                 'xmlid': '',
             },
         }

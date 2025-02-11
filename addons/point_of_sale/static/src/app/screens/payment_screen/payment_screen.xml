@@ -29,7 +29,7 @@
         <t t-else="">
             <div class="payment-screen screen d-flex flex-column h-100 ">
                 <div class="main-content d-flex gap-2 h-100 bg-100 overflow-auto">
-                    <div class="left-content d-flex flex-column col-md-4 p-2 border-end bg-white">
+                    <div class="left-content d-flex flex-column col-md-4 p-2 border-end bg-view">
                         <t t-call="point_of_sale.PaymentScreenMethods" />
                         <t t-call="point_of_sale.PaymentScreenButtons" />
                         <Numpad class="'my-2'"  buttons="getNumpadButtons()"/>
@@ -120,7 +120,7 @@
                 </button>
             </div>
             <div t-if="(pos.config.iface_tipproduct and pos.config.tip_product_id) or pos.config.iface_cashdrawer or pos.config.ship_later" class="d-flex flex-column gap-2 w-100">
-                <button t-if="pos.config.iface_tipproduct and pos.config.tip_product_id" class="button btn btn-light btn-lg d-flex justify-content-between align-items-baseline w-100 lh-lg" t-att-class="{ 'highlight active text-action': currentOrder.getTip() }"
+                <button t-if="pos.config.iface_tipproduct and pos.config.tip_product_id" class="button btn btn-secondary btn-lg d-flex justify-content-between align-items-baseline w-100 lh-lg" t-att-class="{ 'highlight active text-action': currentOrder.getTip() }"
                     t-on-click="addTip">
                     <span t-attf-class="{{currentOrder.getTip() ? 'me-auto' : 'mx-auto' }}"><i class="fa fa-heart me-2" />Tip</span>
                     <t t-if="currentOrder.getTip() != 0">
@@ -131,7 +131,7 @@
                     t-on-click="openCashbox">
                     <i class="fa fa-archive me-2" />Open Cashbox 
                 </button>
-                <button t-if="pos.config.ship_later" class="button btn btn-light btn-lg d-flex justify-content-between align-items-baseline w-100 lh-lg" t-att-class="{ 'highlight active text-action': currentOrder.getShippingDate() }"
+                <button t-if="pos.config.ship_later" class="button btn btn-secondary btn-lg d-flex justify-content-between align-items-baseline w-100 lh-lg" t-att-class="{ 'highlight active text-action': currentOrder.getShippingDate() }"
                     t-on-click="toggleShippingDatePicker">
                     <span t-attf-class="{{currentOrder.getShippingDate() ? 'me-auto' : 'mx-auto' }}"><i class="fa fa-clock-o me-2" />Ship Later</span>
                     <span t-if="currentOrder.getShippingDate()">
@@ -146,12 +146,12 @@
         <div class="paymentmethods-container mb-3" t-att-class="ui.isSmall ? 'my-2 rounded-3' : 'flex-grow-1'">
             <div class="paymentmethods gap-1 gap-lg-2" t-att-class="{ 'd-grid p-1 gap-1 overflow-y-auto rounded-3 bg-200': ui.isSmall, 'd-flex flex-column gap-lg-2': !ui.isSmall }">
                 <t t-foreach="payment_methods_from_config" t-as="paymentMethod" t-key="paymentMethod.id">
-                    <div t-if="!(this.pos.cashier._role === 'minimal' and paymentMethod.type === 'pay_later')" class="button paymentmethod btn btn-light btn-lg lh-lg flex-fill"
+                    <div t-if="!(this.pos.cashier._role === 'minimal' and paymentMethod.type === 'pay_later')" class="button paymentmethod btn btn-secondary btn-lg lh-lg flex-fill"
                         t-att-class="{'opacity-50': this.pos.paymentTerminalInProgress and paymentMethod.use_payment_terminal}"
                         t-on-click="() => this.addNewPaymentLine(paymentMethod)">
                         <div class="payment-method-display d-flex align-items-center gap-2 text-wrap text-start lh-sm">
                             <img class="payment-method-icon" t-att-src="paymentMethodImage(paymentMethod.id)" />
-                            <span class="payment-name" t-esc="paymentMethod.name" />
+                            <span class="payment-name" t-esc="pos.getPaymentMethodDisplayText(paymentMethod, currentOrder)" />
                         </div>
                     </div>
                 </t>

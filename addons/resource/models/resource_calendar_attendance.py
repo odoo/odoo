@@ -73,7 +73,7 @@ class ResourceCalendarAttendance(models.Model):
         for attendance in self:
             attendance.duration_hours = (attendance.hour_to - attendance.hour_from) if attendance.day_period != 'lunch' else 0
 
-    @api.depends('day_period', 'duration_hours')
+    @api.depends('day_period', 'duration_hours', 'calendar_id.hours_per_day')
     def _compute_duration_days(self):
         for attendance in self:
             if attendance.day_period == 'lunch':
@@ -105,3 +105,6 @@ class ResourceCalendarAttendance(models.Model):
             'display_type': self.display_type,
             'sequence': self.sequence,
         }
+
+    def _is_work_period(self):
+        return self.day_period != 'lunch'

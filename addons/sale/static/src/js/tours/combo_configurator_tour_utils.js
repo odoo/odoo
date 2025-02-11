@@ -19,7 +19,7 @@ function comboItemSelector(comboItemName, extraClasses=[]) {
 function assertComboCount(count) {
     return {
         content: `Assert that there are ${count} combos`,
-        trigger:'.sale-combo-configurator-dialog',
+        trigger: '.sale-combo-configurator-dialog',
         run: () => queryAll(
             '.sale-combo-configurator-dialog [name="sale_combo_configurator_title"]'
         ).length === count,
@@ -31,7 +31,17 @@ function assertComboItemCount(comboName, count) {
         content: `Assert that there are ${count} combo items in combo ${comboName}`,
         trigger: comboSelector(comboName),
         run: () => queryAll(
-            `${comboSelector(comboName)} .combo-item-grid .product-card`
+            `${comboSelector(comboName)} + .combo-item-grid .product-card`
+        ).length === count,
+    };
+}
+
+function assertSelectedComboItemCount(count) {
+    return {
+        content: `Assert that there are ${count} selected combo items`,
+        trigger: '.sale-combo-configurator-dialog',
+        run: () => queryAll(
+            `.sale-combo-configurator-dialog .combo-item-grid .product-card.selected`
         ).length === count,
     };
 }
@@ -147,7 +157,7 @@ function saveConfigurator() {
             run: 'click',
         }, {
             content: "Wait until the modal is closed",
-            trigger: 'body:not(:has(.modal))',
+            trigger: 'body:not(:has(.sale-combo-configurator-dialog))',
         },
     ];
 }
@@ -157,6 +167,7 @@ export default {
     comboItemSelector,
     assertComboCount,
     assertComboItemCount,
+    assertSelectedComboItemCount,
     selectComboItem,
     assertComboItemSelected,
     increaseQuantity,

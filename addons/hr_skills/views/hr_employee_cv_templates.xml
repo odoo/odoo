@@ -46,9 +46,9 @@
                         <i class="fa fa-solid fa-envelope pe-2"/>
                         <a t-attf-href="mailto: #{o.company_id.email}" t-field="o.company_id.email">demo@email.com</a>
                     </li>
-                    <li class="phone" t-if="o.company_id.mobile">
+                    <li class="phone" t-if="o.company_id.phone">
                         <i class="fa fa-solid fa-phone pe-2"/>
-                        <a t-attf-href="tel:#{o.company_id.mobile}" t-field="o.company_id.mobile">+1234567890</a>
+                        <a t-attf-href="tel:#{o.company_id.phone}" t-field="o.company_id.phone">+1234567890</a>
                     </li>
                     <li class="website" t-if="o.company_id.website">
                         <i class="fa fa-solid fa-globe pe-2"/>

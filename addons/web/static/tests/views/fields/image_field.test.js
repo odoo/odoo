@@ -558,10 +558,10 @@ test("ImageField in subviews is loaded correctly", async () => {
     });
 
     expect(`img[data-src="data:image/png;base64,${MY_IMAGE}"]`).toHaveCount(1);
-    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(1);
+    expect(".o_kanban_record:not(.o_kanban_ghost):not(.o-kanban-button-new)").toHaveCount(1);
 
     // Actual flow: click on an element of the m2m to get its form view
-    await click(".o_kanban_record:not(.o_kanban_ghost)");
+    await click(".o_kanban_record:not(.o_kanban_ghost):not(.o-kanban-button-new)");
     await animationFrame();
     expect(".modal").toHaveCount(1, { message: "The modal should have opened" });
 

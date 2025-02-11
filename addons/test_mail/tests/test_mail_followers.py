@@ -146,7 +146,7 @@ class BaseFollowersTest(MailCommon):
             'name': 'Valid Lelitre',
             'email': 'valid.lelitre@agrolait.com',
             'country_id': self.env.ref('base.be').id,
-            'mobile': '0456001122',
+            'phone': '0456001122',
             'active': False,
         })
         document = self.env['mail.test.simple'].browse(self.test_record.id)

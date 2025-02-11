@@ -445,13 +445,14 @@ export function isShown() {
         },
     ];
 }
-export function selectedOrderlineHas(productName, quantity, price) {
+export function selectedOrderlineHas(productName, quantity, price, attributeLine = "") {
     return inLeftSide(
         Order.hasLine({
             withClass: ".selected",
             productName,
             quantity,
             price,
+            attributeLine,
         })
     );
 }

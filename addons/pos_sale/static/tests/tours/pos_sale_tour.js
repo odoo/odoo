@@ -198,7 +198,7 @@ registry.category("web_tour.tours").add("PosSettleCustomPrice", {
             PosSale.settleNthOrder(1),
             ProductScreen.selectedOrderlineHas("Product A", "1", "100"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Test Partner AAA"),
+            ProductScreen.clickCustomer("A Test Partner AAA"),
             ProductScreen.selectedOrderlineHas("Product A", "1", "100"),
         ].flat(),
 });
@@ -326,16 +326,6 @@ registry.category("web_tour.tours").add("PosSettleOrder4", {
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("PosRepairSettleOrder", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            PosSale.settleNthOrder(1),
-            ProductScreen.selectedOrderlineHas("Test Product", 1),
-        ].flat(),
-});
-
 registry.category("web_tour.tours").add("PosSettleOrderShipLater", {
     steps: () =>
         [
@@ -369,11 +359,11 @@ registry.category("web_tour.tours").add("PosSaleWarning", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Test Customer 2"),
+            ProductScreen.clickCustomer("A Test Customer 2"),
             {
                 content: "Check warning popup are displayed",
                 trigger:
-                    '.modal-dialog:has(.modal-header:contains("Warning for Test Customer 2")):has(.modal-body:contains("Cannot afford our services"))',
+                    '.modal-dialog:has(.modal-header:contains("Warning for A Test Customer 2")):has(.modal-body:contains("Cannot afford our services"))',
             },
             {
                 trigger: ".modal-footer button",
@@ -384,17 +374,17 @@ registry.category("web_tour.tours").add("PosSaleWarning", {
             ProductScreen.clickDisplayedProduct("Letter Tray", true, "1"),
             ProductScreen.selectedOrderlineHas("Letter Tray", "1"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Test Customer"),
+            ProductScreen.clickCustomer("A Test Customer"),
             {
                 content: "Check warning popup are displayed",
                 trigger:
-                    '.modal-dialog:has(.modal-header:contains("Warning for Test Customer")):has(.modal-body:contains("Highly infectious disease"))',
+                    '.modal-dialog:has(.modal-header:contains("Warning for A Test Customer")):has(.modal-body:contains("Highly infectious disease"))',
             },
             {
                 trigger: ".modal-footer button",
                 run: "click",
             },
-            ProductScreen.customerIsSelected("Test Customer"),
+            ProductScreen.customerIsSelected("A Test Customer"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.remainingIs("0.0"),
@@ -403,7 +393,7 @@ registry.category("web_tour.tours").add("PosSaleWarning", {
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("PoSDownPaymentLinesPerFixedTax", {
+registry.category("web_tour.tours").add("PoSDownPaymentFixedTax", {
     steps: () =>
         [
             Chrome.startPoS(),
@@ -412,9 +402,25 @@ registry.category("web_tour.tours").add("PoSDownPaymentLinesPerFixedTax", {
             Order.hasLine({
                 productName: "Down Payment",
                 quantity: "1.0",
-                price: "22",
+                price: "1.00",
             }),
-            Order.hasNoTax(),
-            ProductScreen.totalAmountIs(22.0),
+            Order.hasLine({
+                productName: "Down Payment",
+                quantity: "1.0",
+                price: "22.00",
+            }),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PoSSettleQuotation", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
         ].flat(),
 });

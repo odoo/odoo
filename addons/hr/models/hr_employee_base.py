@@ -154,15 +154,19 @@ class HrEmployeeBase(models.AbstractModel):
         This method is overritten in several other modules which add additional
         presence criterions. e.g. hr_attendance, hr_holidays
         """
-        # Check on login
-        employee_to_check_working = self.filtered(lambda e: 'offline' in str(e.user_id.im_status))
+        # sudo: res.users - can access presence of accessible user
+        employee_to_check_working = self.filtered(
+            lambda e: (e.user_id.sudo().presence_ids.status or "offline") == "offline"
+        )
         working_now_list = employee_to_check_working._get_employee_working_now()
         for employee in self:
             state = 'out_of_working_hour'
             if employee.company_id.sudo().hr_presence_control_login:
-                if employee.user_id._is_user_available():
+                # sudo: res.users - can access presence of accessible user
+                presence_status = employee.user_id.sudo().presence_ids.status or "offline"
+                if presence_status == "online":
                     state = 'present'
-                elif 'offline' in str(employee.user_id.im_status) and employee.id in working_now_list:
+                elif presence_status == "offline" and employee.id in working_now_list:
                     state = 'absent'
             if not employee.active:
                 state = 'archive'
@@ -170,14 +174,10 @@ class HrEmployeeBase(models.AbstractModel):
 
     @api.depends('user_id')
     def _compute_last_activity(self):
-        presences = self.env['bus.presence'].search_read([('user_id', 'in', self.mapped('user_id').ids)], ['user_id', 'last_presence'])
-        # transform the result to a dict with this format {user.id: last_presence}
-        presences = {p['user_id'][0]: p['last_presence'] for p in presences}
-
         for employee in self:
             tz = employee.tz
-            last_presence = presences.get(employee.user_id.id, False)
-            if last_presence:
+            # sudo: res.users - can access presence of accessible user
+            if last_presence := employee.user_id.sudo().presence_ids.last_presence:
                 last_activity_datetime = last_presence.replace(tzinfo=UTC).astimezone(timezone(tz)).replace(tzinfo=None)
                 employee.last_activity = last_activity_datetime.date()
                 if employee.last_activity == fields.Date.today():
@@ -198,7 +198,7 @@ class HrEmployeeBase(models.AbstractModel):
             elif not employee.coach_id:
                 employee.coach_id = False
 
-    @api.depends('job_id')
+    @api.depends('job_id.name')
     def _compute_job_title(self):
         for employee in self.filtered('job_id'):
             employee.job_title = employee.job_id.name
@@ -211,11 +211,11 @@ class HrEmployeeBase(models.AbstractModel):
             else:
                 employee.work_phone = False
 
-    @api.depends('work_contact_id', 'work_contact_id.mobile', 'work_contact_id.email')
+    @api.depends('work_contact_id', 'work_contact_id.phone', 'work_contact_id.email')
     def _compute_work_contact_details(self):
         for employee in self:
             if employee.work_contact_id:
-                employee.mobile_phone = employee.work_contact_id.mobile
+                employee.mobile_phone = employee.work_contact_id.phone
                 employee.work_email = employee.work_contact_id.email
 
     def _create_work_contacts(self):
@@ -223,7 +223,7 @@ class HrEmployeeBase(models.AbstractModel):
             raise UserError(_('Some employee already have a work contact'))
         work_contacts = self.env['res.partner'].create([{
             'email': employee.work_email,
-            'mobile': employee.mobile_phone,
+            'phone': employee.mobile_phone,
             'name': employee.name,
             'image_1920': employee.image_1920,
             'company_id': employee.company_id.id
@@ -239,7 +239,7 @@ class HrEmployeeBase(models.AbstractModel):
             else:
                 employee.work_contact_id.sudo().write({
                     'email': employee.work_email,
-                    'mobile': employee.mobile_phone,
+                    'phone': employee.mobile_phone,
                 })
         if employees_without_work_contact:
             employees_without_work_contact.sudo()._create_work_contacts()

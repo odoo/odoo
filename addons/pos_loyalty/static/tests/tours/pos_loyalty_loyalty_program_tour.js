@@ -192,7 +192,7 @@ registry.category("web_tour.tours").add("PosLoyaltyDontGrantPointsForRewardOrder
             Dialog.confirm("Open Register"),
 
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Test Partner"),
+            ProductScreen.clickCustomer("A Test Partner"),
 
             ProductScreen.addOrderline("Desk Organizer", "1"),
             ProductScreen.addOrderline("Whiteboard Pen", "1"),
@@ -201,6 +201,18 @@ registry.category("web_tour.tours").add("PosLoyaltyDontGrantPointsForRewardOrder
 
             PosLoyalty.orderTotalIs("5.10"),
             PosLoyalty.finalizeOrder("Cash", "5.10"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosLoyaltyNextOrderCouponExpirationDate", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            ProductScreen.addOrderline("Desk Organizer", "3"),
+
+            PosLoyalty.finalizeOrder("Cash", "15.3"),
         ].flat(),
 });
 

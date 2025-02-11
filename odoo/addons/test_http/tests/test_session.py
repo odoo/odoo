@@ -12,8 +12,8 @@ from tempfile import TemporaryDirectory
 import odoo
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.http import SESSION_LIFETIME
-from odoo.tests.common import get_db_name
 from odoo.tools import config, lazy_property, mute_logger
+from odoo.tests import get_db_name, tagged
 from .test_common import TestHttpBase
 
 
@@ -28,6 +28,7 @@ GEOIP_ODOO_FARM_2 = {
 }
 
 
+@tagged('post_install', '-at_install')
 class TestHttpSession(TestHttpBase):
 
     @mute_logger('odoo.http')  # greeting_none called ignoring args {'debug'}

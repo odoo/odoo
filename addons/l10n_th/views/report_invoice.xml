@@ -11,12 +11,9 @@
         <xpath expr="//div[@name='no_shipping']//span[@t-field='o.partner_id.vat']" position="after">
             <span t-esc="o.partner_id.l10n_th_branch_name"/>
         </xpath>
-        <xpath expr="//t[@t-set='layout_document_title']/span[contains(@t-if, 'posted')]" position="replace">
-            <t t-if="o.move_type == 'out_invoice' and o.state == 'posted'">
-                <span t-if="o.company_id.account_fiscal_country_id.code == 'TH' and not commercial_invoice">Tax Invoice</span>
-                <span t-else="">Invoice</span>
-            </t>
-        </xpath>
+        <t name="invoice_title" position="replace">
+            <t name="invoice_title">Tax Invoice</t>
+        </t>
     </template>
 
     <template id="report_commercial_invoice">

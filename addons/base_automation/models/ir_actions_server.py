@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tools.json import scriptsafe as json_scriptsafe
 
-from odoo import api, exceptions, fields, models, _
+from odoo import api, fields, models, _
 
 from .base_automation import get_webhook_request_payload
 
@@ -17,16 +17,26 @@ class IrActionsServer(models.Model):
     ], ondelete={'base_automation': 'cascade'})
     base_automation_id = fields.Many2one('base.automation', string='Automation Rule', ondelete='cascade')
 
-    @api.constrains('model_id', 'base_automation_id')
-    def _check_model_coherency_with_automation(self):
-        for action in self.filtered('base_automation_id'):
-            if action.model_id != action.base_automation_id.model_id:
-                raise exceptions.ValidationError(
-                    _("Model of action %(action_name)s should match the one from automated rule %(rule_name)s.",
-                      action_name=action.name,
-                      rule_name=action.base_automation_id.name
-                     )
-                )
+    @api.model
+    def _warning_depends(self):
+        return super()._warning_depends() + [
+            'model_id',
+            'base_automation_id',
+        ]
+
+    def _get_warning_messages(self):
+        self.ensure_one()
+        warnings = super()._get_warning_messages()
+
+        if self.base_automation_id and self.model_id != self.base_automation_id.model_id:
+            warnings.append(
+                _("Model of action %(action_name)s should match the one from automated rule %(rule_name)s.",
+                    action_name=self.name,
+                    rule_name=self.base_automation_id.name
+                    )
+            )
+
+        return warnings
 
     @api.depends('usage')
     def _compute_available_model_ids(self):
@@ -44,8 +54,11 @@ class IrActionsServer(models.Model):
         for action in to_update:
             match action.state:
                 case 'object_write':
-                    action_type = _("Update") if action.evaluation_type == 'value' else _("Compute")
-                    action.name = f"{action_type} {action._stringify_path()}"
+                    _field_chain, field_chain_str = action._get_relation_chain("update_path")
+                    if action.evaluation_type == 'value':
+                        action.name = _("Update %(field_chain_str)s", field_chain_str=field_chain_str)
+                    else:
+                        action.name = _("Compute %(field_chain_str)s", field_chain_str=field_chain_str)
                 case 'object_create':
                     action.name = _(
                     "Create %(model_name)s with name %(value)s",
@@ -66,9 +79,10 @@ class IrActionsServer(models.Model):
                     )
                 case 'followers':
                     if action.followers_type == 'generic':
+                        _field_chain, field_chain_str = action._get_relation_chain("followers_partner_field_name")
                         action.name = _(
-                            'Add followers based on field: %(field_name)s',
-                            field_name=action.followers_partner_field_name
+                            'Add followers based on field: %(field_chain_str)s',
+                            field_chain_str=field_chain_str
                         )
                     else:
                         action.name = _(
@@ -77,9 +91,10 @@ class IrActionsServer(models.Model):
                         )
                 case 'remove_followers':
                     if action.followers_type == 'generic':
+                        _field_chain, field_chain_str = action._get_relation_chain("followers_partner_field_name")
                         action.name = _(
-                            'Remove followers based on field: %(field_name)s',
-                            field_name=action.followers_partner_field_name
+                            'Remove followers based on field: %(field_chain_str)s',
+                            field_chain_str=field_chain_str
                         )
                     else:
                         action.name = _(

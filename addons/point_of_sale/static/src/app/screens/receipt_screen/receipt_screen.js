@@ -20,10 +20,10 @@ export class ReceiptScreen extends Component {
         this.renderer = useService("renderer");
         this.notification = useService("notification");
         this.dialog = useService("dialog");
-        this.currentOrder = this.pos.getOrder();
         const partner = this.currentOrder.getPartner();
+        const email = partner?.invoice_emails || partner?.email || "";
         this.state = useState({
-            email: partner?.email || "",
+            email: email,
             phone: partner?.mobile || "",
         });
         this.sendReceipt = useTrackedAsync(this._sendReceiptToCustomer.bind(this));
@@ -34,7 +34,7 @@ export class ReceiptScreen extends Component {
             this.currentOrder.uiState.locked = true;
 
             if (!this.pos.config.module_pos_restaurant) {
-                this.pos.sendOrderInPreparation(order, false, true);
+                this.pos.sendOrderInPreparation(order, { orderDone: true });
             }
         });
     }
@@ -44,6 +44,9 @@ export class ReceiptScreen extends Component {
             destination: this.state.email,
             name: "Email",
         });
+    }
+    get currentOrder() {
+        return this.pos.getOrder();
     }
     get orderAmountPlusTip() {
         const order = this.currentOrder;

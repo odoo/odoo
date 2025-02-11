@@ -106,14 +106,13 @@ class ProjectProject(models.Model):
     def _get_stat_buttons(self):
         buttons = super()._get_stat_buttons()
         if self.env.user.has_group('purchase.group_purchase_user'):
-            self_sudo = self.sudo()
             buttons.append({
                 'icon': 'credit-card',
                 'text': self.env._('Purchase Orders'),
-                'number': self_sudo.purchase_orders_count,
+                'number': self.purchase_orders_count,
                 'action_type': 'object',
                 'action': 'action_open_project_purchase_orders',
-                'show': self_sudo.purchase_orders_count > 0,
+                'show': self.purchase_orders_count > 0,
                 'sequence': 36,
             })
         return buttons
@@ -181,7 +180,6 @@ class ProjectProject(models.Model):
             domain = [
                 ('move_id.move_type', 'in', ['in_invoice', 'in_refund']),
                 ('parent_state', 'in', ['draft', 'posted']),
-                ('price_subtotal', '>', 0),
                 ('id', 'not in', purchase_order_line_invoice_line_ids),
             ]
             self._get_costs_items_from_purchase(domain, profitability_items, with_action=with_action)

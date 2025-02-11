@@ -91,18 +91,8 @@ class WebsiteVisitor(models.Model):
                     }
                 )
                 channel.add_members(guest_ids=guest.ids, post_joined_message=False)
-        # Open empty chatter to allow the operator to start chatting with
-        # the visitor. Also open the visitor's chat window in order for it
-        # to be displayed at the next page load.
-        channel_members = self.env['discuss.channel.member'].sudo().search([
-            ('channel_id', 'in', discuss_channels.ids),
-        ])
-        channel_members.write({
-            'fold_state': 'open',
-        })
-        operator._bus_send_store(
-            discuss_channels, notification_type="website_livechat.send_chat_request"
-        )
+        # Open empty channel to allow the operator to start chatting with the visitor
+        operator._bus_send_store(discuss_channels, extra_fields={"open_chat_window": True})
 
     def _merge_visitor(self, target):
         """ Copy sessions of the secondary visitors to the main partner visitor. """

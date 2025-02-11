@@ -4,6 +4,7 @@ import {
     click,
     contains,
     openDiscuss,
+    setupChatHub,
     start,
     startServer,
     triggerHotkey,
@@ -85,10 +86,10 @@ test("from chat window", async () => {
         name: "HR",
         user_ids: [serverState.userId],
     });
-    pyEnv["discuss.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_type: "livechat",
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId, fold_state: "open" }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
         ],
         livechat_active: true,
@@ -96,12 +97,12 @@ test("from chat window", async () => {
         livechat_operator_id: serverState.partnerId,
         create_uid: serverState.publicUserId,
     });
+    setupChatHub({ opened: [channelId] });
     await start();
     await contains(".o-mail-ChatWindow");
     await click("button[title*='Close Chat Window']");
     await click("button:contains('Yes, leave conversation')");
     await contains(".o-mail-ChatWindow", { count: 0 });
-    await contains(".o_notification:contains(You ended the conversation with Visitor)");
 });
 
 test("visitor leaving ends the livechat conversation", async () => {
@@ -119,7 +120,7 @@ test("visitor leaving ends the livechat conversation", async () => {
     const channel_id = pyEnv["discuss.channel"].create({
         channel_type: "livechat",
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId, fold_state: "open" }),
+            Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
         ],
         livechat_active: true,
@@ -127,11 +128,13 @@ test("visitor leaving ends the livechat conversation", async () => {
         livechat_operator_id: serverState.partnerId,
         create_uid: serverState.publicUserId,
     });
+    setupChatHub({ opened: [channel_id] });
     await start();
     await contains(".o-mail-ChatWindow");
     // simulate visitor leaving
     await withGuest(guestId, () => rpc("/im_livechat/visitor_leave_session", { channel_id }));
     await contains("span", { text: "This livechat conversation has ended" });
+    await contains(".o-mail-Composer-input"); // so that can still `/lead` or last resort send message to visitor
     await click("button[title*='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
 });

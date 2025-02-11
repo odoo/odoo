@@ -4,22 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.1\n"
+"Project-Id-Version: Odoo Server 18.2a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
-"PO-Revision-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-02-06 08:21+0000\n"
+"PO-Revision-Date: 2025-02-06 08:21+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/snippets/s_image_gallery/options.js:0
-msgid " Add Images"
-msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_minimal
@@ -238,6 +232,12 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/snippets/s_rating/options.js:0
+msgid "%(amount)s out of %(total)s stars"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/views/page_list.js:0
 msgid "%s record(s) selected, are you sure you want to publish them all?"
 msgstr ""
@@ -322,11 +322,6 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_charts
 msgid "+25.000"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
-msgid ", .s_searchbar_input"
 msgstr ""
 
 #. module: website
@@ -511,6 +506,11 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_rating
+msgid "3 out of 5 stars"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown
 msgid "30"
 msgstr ""
@@ -637,8 +637,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_charts
 msgid ""
-"75% of clients use the service for over a decade consistently.<br/>This "
-"showcases remarkable loyalty and satisfaction with the quality provided."
+"75% of clients have been using the service for over a decade consistently."
 msgstr ""
 
 #. module: website
@@ -1011,6 +1010,21 @@ msgid "<i class=\"fa fa-fw fa-circle\"/> Circles"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_website_form_info
+msgid ""
+"<i class=\"fa fa-fw fa-envelope o_not-animable\" role=\"img\"/>\n"
+"                      yourcompany@example.com\n"
+"                    <br/>\n"
+"                    <br/>\n"
+"                    <i class=\"fa fa-fw fa-phone o_not-animable\" role=\"img\"/>\n"
+"                       +32(0)499 123 456\n"
+"                    <br/>\n"
+"                    <br/>\n"
+"                    <i class=\"fa fa-fw fa-map-marker o_not-animable\" role=\"img\"/>\n"
+"                      Brussels, Belgium"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_contact_info
 msgid ""
 "<i class=\"fa fa-fw fa-envelope-o\" role=\"presentation\"/>\n"
@@ -1039,6 +1053,7 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_accordion_options
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
 msgid "<i class=\"fa fa-fw fa-refresh me-1\"/> Replace Icon"
 msgstr ""
@@ -2188,6 +2203,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_rewrite__active
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
+#: model_terms:ir.ui.view,arch_db:website.s_accordion_options
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
 msgid "Active"
 msgstr ""
@@ -2234,7 +2250,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/snippets/s_website_form/000.js:0
+#: code:addons/website/static/src/snippets/s_website_form/form.js:0
 msgid "Add Files"
 msgstr ""
 
@@ -2370,7 +2386,7 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
-msgid "Add new %s"
+msgid "Add option"
 msgstr ""
 
 #. module: website
@@ -2556,6 +2572,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
 #: model_terms:ir.ui.view,arch_db:website.s_company_team_shapes
+#: model_terms:ir.ui.view,arch_db:website.s_company_team_spotlight
 msgid "Aline Turner"
 msgstr ""
 
@@ -2700,7 +2717,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/snippets/s_website_form/000.js:0
+#: code:addons/website/static/src/snippets/s_website_form/form.js:0
 msgid "An error has occured, the form has not been sent."
 msgstr ""
 
@@ -3522,7 +3539,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/js/content/website_root.js:0
+#: code:addons/website/static/src/core/website_map_service.js:0
 msgid "Cannot load google map."
 msgstr ""
 
@@ -3710,7 +3727,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/js/content/website_root.js:0
+#: code:addons/website/static/src/core/website_map_service.js:0
 msgid "Check your configuration."
 msgstr ""
 
@@ -3726,6 +3743,12 @@ msgid "Checkbox"
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+msgid "Checkbox List"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
 msgid "Chief Commercial Officer"
 msgstr ""
@@ -3733,18 +3756,26 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
 #: model_terms:ir.ui.view,arch_db:website.s_company_team_basic
+#: model_terms:ir.ui.view,arch_db:website.s_company_team_spotlight
 msgid "Chief Executive Officer"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
 #: model_terms:ir.ui.view,arch_db:website.s_company_team_basic
+#: model_terms:ir.ui.view,arch_db:website.s_company_team_spotlight
 msgid "Chief Financial Officer"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team_basic
+#: model_terms:ir.ui.view,arch_db:website.s_company_team_spotlight
 msgid "Chief Operational Officer"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_company_team_spotlight
+msgid "Chief Technical Manager"
 msgstr ""
 
 #. module: website
@@ -4182,6 +4213,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_cta_box
 #: model_terms:ir.ui.view,arch_db:website.s_image_hexagonal
 #: model_terms:ir.ui.view,arch_db:website.s_text_block_h2_contact
+#: model_terms:ir.ui.view,arch_db:website.s_website_form_info
 msgid "Contact Us"
 msgstr ""
 
@@ -4353,7 +4385,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/snippets/s_countdown/000.js:0
+#: code:addons/website/static/src/snippets/s_countdown/countdown.js:0
 msgid "Countdown ends in"
 msgstr ""
 
@@ -4437,6 +4469,11 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.brand_promotion
 msgid "Create a"
+msgstr ""
+
+#. module: website
+#: model:ir.model,website_form_label:website.model_res_partner
+msgid "Create a Customer"
 msgstr ""
 
 #. module: website
@@ -4543,6 +4580,7 @@ msgstr ""
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #: model_terms:ir.ui.view,arch_db:website.column_count_option
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_groups
+#: model_terms:ir.ui.view,arch_db:website.s_accordion_options
 #: model_terms:ir.ui.view,arch_db:website.s_card_options
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -4583,6 +4621,12 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_card_options
 msgid "Custom Ratio"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+msgid "Custom Text"
 msgstr ""
 
 #. module: website
@@ -4724,7 +4768,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/snippets/s_countdown/000.js:0
+#: code:addons/website/static/src/snippets/s_countdown/countdown.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_countdown
 msgid "Days"
 msgstr ""
@@ -4753,6 +4797,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website.s_accordion_options
 #: model_terms:ir.ui.view,arch_db:website.s_google_map_options
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5591,7 +5636,6 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
-#: code:addons/website/static/src/js/widgets/link_popover_widget.js:0
 #: model:ir.ui.menu,name:website.custom_menu_edit_menu
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_base_view_form
 msgid "Edit Menu"
@@ -5913,6 +5957,12 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+msgid "Existing Fields"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/resource_editor/utils.js:0
 msgid "Expected %(char)s"
 msgstr ""
@@ -6109,7 +6159,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/snippets/s_facebook_page/000.js:0
+#: code:addons/website/static/src/snippets/s_facebook_page/facebook_page.js:0
 #: code:addons/website/static/src/snippets/s_social_media/options.js:0
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
 #: model_terms:ir.ui.view,arch_db:website.header_social_links
@@ -6131,6 +6181,7 @@ msgid "Facebook Account"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_accordion_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_carousel
 msgid "Fade"
@@ -6213,6 +6264,12 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options_template
 msgid "Fetched Elements"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+msgid "Field"
 msgstr ""
 
 #. module: website
@@ -6479,6 +6536,16 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Form Cover"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Form Info"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Form Overlay"
 msgstr ""
 
@@ -6722,6 +6789,7 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_title_form
+#: model_terms:ir.ui.view,arch_db:website.s_website_form_cover
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_overlay
 msgid ""
 "Get in touch with your customers to provide them with better service. You "
@@ -7166,6 +7234,7 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
+#: model_terms:ir.ui.view,arch_db:website.s_rating_options
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_carousel
@@ -7195,7 +7264,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/snippets/s_popup/000.js:0
+#: code:addons/website/static/src/interactions/cookies/cookies_toggle.js:0
 msgid "Hide the cookies bar"
 msgstr ""
 
@@ -7317,7 +7386,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/snippets/s_countdown/000.js:0
+#: code:addons/website/static/src/snippets/s_countdown/countdown.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_countdown
 msgid "Hours"
 msgstr ""
@@ -7464,7 +7533,7 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_accordion_options
-msgid "Icon Position"
+msgid "Icons"
 msgstr ""
 
 #. module: website
@@ -7554,8 +7623,6 @@ msgid "Illustrate your services or your product’s main features."
 msgstr ""
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/snippets/s_image_gallery/options.js:0
 #: model:ir.model.fields,field_description:website.field_website_visitor__partner_image
 #: model_terms:ir.ui.view,arch_db:website.grid_layout_options
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
@@ -7740,6 +7807,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_accordion_image
 #: model_terms:ir.ui.view,arch_db:website.s_faq_list
 msgid "In this section, you can address common questions efficiently."
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_accordion_options
+msgid "Inactive"
 msgstr ""
 
 #. module: website
@@ -7947,7 +8019,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/snippets/s_instagram_page/000.js:0
+#: code:addons/website/static/src/snippets/s_instagram_page/instagram_page.js:0
 #: code:addons/website/static/src/snippets/s_social_media/options.js:0
 #: model_terms:ir.ui.view,arch_db:website.header_social_links
 #: model_terms:ir.ui.view,arch_db:website.s_company_team_detail
@@ -8078,6 +8150,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
 #: model_terms:ir.ui.view,arch_db:website.s_company_team_shapes
+#: model_terms:ir.ui.view,arch_db:website.s_company_team_spotlight
 msgid "Iris Joe"
 msgstr ""
 
@@ -9094,7 +9167,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/js/content/snippets.animation.js:0
+#: code:addons/website/static/src/interactions/video/media_video.js:0
 msgid "Media video"
 msgstr ""
 
@@ -9245,6 +9318,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
 #: model_terms:ir.ui.view,arch_db:website.s_company_team_shapes
+#: model_terms:ir.ui.view,arch_db:website.s_company_team_spotlight
 msgid "Mich Stark"
 msgstr ""
 
@@ -9304,7 +9378,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/snippets/s_countdown/000.js:0
+#: code:addons/website/static/src/snippets/s_countdown/countdown.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_countdown
 msgid "Minutes"
 msgstr ""
@@ -9696,7 +9770,22 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
+msgid "Newsletter Centered"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.external_snippets
+msgid "Newsletter Grid"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.external_snippets
 msgid "Newsletter Popup"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.external_snippets
+msgid "Newsletter SMS Notifications"
 msgstr ""
 
 #. module: website
@@ -9801,12 +9890,12 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.column_count_option
+#: model_terms:ir.ui.view,arch_db:website.s_accordion_options
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options_template
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps_options
-#: model_terms:ir.ui.view,arch_db:website.s_rating_options
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_background_options
@@ -10165,6 +10254,12 @@ msgid "Option 3"
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+msgid "Option List"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Optional"
 msgstr ""
@@ -10275,7 +10370,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/snippets/s_popup/000.js:0
+#: code:addons/website/static/src/interactions/cookies/cookies_bar.js:0
 msgid "Our cookies bar was blocked by your browser or an extension."
 msgstr ""
 
@@ -10841,13 +10936,13 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/snippets/s_website_form/000.js:0
+#: code:addons/website/static/src/snippets/s_website_form/form.js:0
 msgid "Please fill in the form correctly."
 msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/snippets/s_website_form/000.js:0
+#: code:addons/website/static/src/snippets/s_website_form/form.js:0
 msgid ""
 "Please fill in the form correctly. The file “%(file name)s” is too large. "
 "(Maximum %(max)s MB)"
@@ -10855,10 +10950,15 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/snippets/s_website_form/000.js:0
+#: code:addons/website/static/src/snippets/s_website_form/form.js:0
 msgid ""
 "Please fill in the form correctly. You uploaded too many files. (Maximum %s "
 "files)"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_accordion_options
+msgid "Plus / minus"
 msgstr ""
 
 #. module: website
@@ -10885,6 +10985,7 @@ msgid "Portfolio"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_accordion_options
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content_options
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -11224,11 +11325,6 @@ msgid "Quadrant"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_rating
-msgid "Quality"
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_cards_grid
 #: model_terms:ir.ui.view,arch_db:website.s_features_wall
 #: model_terms:ir.ui.view,arch_db:website.s_wavy_grid
@@ -11282,6 +11378,12 @@ msgid "Radio"
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+msgid "Radio Button List"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Radio Buttons"
 msgstr ""
@@ -11289,6 +11391,7 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#: model_terms:ir.ui.view,arch_db:website.s_rating
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Rating"
 msgstr ""
@@ -11356,14 +11459,13 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/snippets/s_facebook_page/options.js:0
-msgid "Recent Facebook Issues"
+#: code:addons/website/static/src/js/send_mail_form.js:0
+msgid "Recipient Email"
 msgstr ""
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/js/send_mail_form.js:0
-msgid "Recipient Email"
+#: model:ir.model,name:website.model_ir_rule
+msgid "Record Rule"
 msgstr ""
 
 #. module: website
@@ -11539,7 +11641,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/snippets/s_website_form/000.js:0
+#: code:addons/website/static/src/snippets/s_website_form/form.js:0
 msgid "Replace File"
 msgstr ""
 
@@ -11737,11 +11839,6 @@ msgid "Route"
 msgstr ""
 
 #. module: website
-#: model:ir.model,name:website.model_ir_rule
-msgid "Rule"
-msgstr ""
-
-#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/resource_editor/resource_editor.js:0
 msgid "SCSS file: %s"
@@ -11838,6 +11935,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_features
 #: model_terms:ir.ui.view,arch_db:website.s_features_wave
 msgid "Scalability"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_accordion_options
+msgid "Scale"
 msgstr ""
 
 #. module: website
@@ -11999,7 +12101,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/snippets/s_countdown/000.js:0
+#: code:addons/website/static/src/snippets/s_countdown/countdown.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_countdown
 msgid "Seconds"
 msgstr ""
@@ -12021,7 +12123,7 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_template
-msgid "See all <i class=\"fa fa-long-arrow-right ms-2\"/>"
+msgid "See all<span class=\"fa fa-long-arrow-right ms-2\"/>"
 msgstr ""
 
 #. module: website
@@ -12094,6 +12196,7 @@ msgid "Send an email"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_website_form_cover
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_overlay
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
 msgid "Send us a message"
@@ -12329,7 +12432,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/snippets/s_popup/000.js:0
+#: code:addons/website/static/src/interactions/cookies/cookies_toggle.js:0
 msgid "Show the cookies bar"
 msgstr ""
 
@@ -12381,6 +12484,11 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Showcase"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_accordion_options
+msgid "Side / bottom"
 msgstr ""
 
 #. module: website
@@ -13013,6 +13121,16 @@ msgid "Team Shapes"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Team Spotlight"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_company_team_spotlight
+msgid "Team spotlight"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_pricelist_cafe
 msgid "Teas"
 msgstr ""
@@ -13213,6 +13331,23 @@ msgid "The form's specified model does not exist"
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields,help:website.field_ir_actions_server__website_url
+#: model:ir.model.fields,help:website.field_ir_cron__website_url
+msgid "The full URL to access the server action through the website."
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,help:website.field_res_partner__website_absolute_url
+#: model:ir.model.fields,help:website.field_res_users__website_absolute_url
+#: model:ir.model.fields,help:website.field_website_controller_page__website_absolute_url
+#: model:ir.model.fields,help:website.field_website_page__website_absolute_url
+#: model:ir.model.fields,help:website.field_website_published_mixin__website_absolute_url
+#: model:ir.model.fields,help:website.field_website_published_multi_mixin__website_absolute_url
+#: model:ir.model.fields,help:website.field_website_snippet_filter__website_absolute_url
+msgid "The full absolute URL to access the document through the website."
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,help:website.field_res_partner__website_url
 #: model:ir.model.fields,help:website.field_res_users__website_url
 #: model:ir.model.fields,help:website.field_website_controller_page__website_url
@@ -13220,13 +13355,7 @@ msgstr ""
 #: model:ir.model.fields,help:website.field_website_published_mixin__website_url
 #: model:ir.model.fields,help:website.field_website_published_multi_mixin__website_url
 #: model:ir.model.fields,help:website.field_website_snippet_filter__website_url
-msgid "The full URL to access the document through the website."
-msgstr ""
-
-#. module: website
-#: model:ir.model.fields,help:website.field_ir_actions_server__website_url
-#: model:ir.model.fields,help:website.field_ir_cron__website_url
-msgid "The full URL to access the server action through the website."
+msgid "The full relative URL to access the document through the website."
 msgstr ""
 
 #. module: website
@@ -13278,6 +13407,12 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "The message will be visible once the countdown ends"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_controller_page__name
+msgid ""
+"The name is used to generate the URL and is shown in the browser title bar"
 msgstr ""
 
 #. module: website
@@ -13429,14 +13564,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 msgid "This URL is contained in the “%(field)s” of the following “%(model)s”"
-msgstr ""
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/snippets/s_facebook_page/options.js:0
-msgid ""
-"This block will temporarily not be shown on mobile due to recent Facebook "
-"issues."
 msgstr ""
 
 #. module: website
@@ -13802,6 +13929,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
 #: model_terms:ir.ui.view,arch_db:website.s_company_team_shapes
+#: model_terms:ir.ui.view,arch_db:website.s_company_team_spotlight
 msgid "Tony Fred"
 msgstr ""
 
@@ -13926,6 +14054,7 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_accordion_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_carousel
 msgid "Transition"
 msgstr ""
@@ -13933,6 +14062,7 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/systray_items/edit_website.xml:0
+#: model_terms:ir.ui.view,arch_db:website.s_accordion_options
 msgid "Translate"
 msgstr ""
 
@@ -14176,7 +14306,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/snippets/s_website_form/000.js:0
+#: code:addons/website/static/src/snippets/s_website_form/form.js:0
 msgid "Uploaded file is too large."
 msgstr ""
 
@@ -14428,7 +14558,6 @@ msgid "View Hierarchy"
 msgstr ""
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_controller_page__name
 #: model:ir.model.fields,field_description:website.field_website_page__name
 #: model:ir.model.fields,field_description:website.field_website_page_properties__name
 msgid "View Name"
@@ -14865,6 +14994,15 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_website_form_info
+msgid ""
+"We'd love to hear from you! Whether you have questions, feedback, or need "
+"support, our team is here to help. Simply fill out the form below, and we "
+"aim to respond to all inquiries within 24 hours. Thank you for getting in "
+"touch!"
+msgstr ""
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "We'll set you up and running in"
@@ -14914,6 +15052,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.website_controller_pages_search_view
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
 msgid "Website"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_res_partner__website_absolute_url
+#: model:ir.model.fields,field_description:website.field_res_users__website_absolute_url
+#: model:ir.model.fields,field_description:website.field_website_controller_page__website_absolute_url
+#: model:ir.model.fields,field_description:website.field_website_page__website_absolute_url
+#: model:ir.model.fields,field_description:website.field_website_published_mixin__website_absolute_url
+#: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__website_absolute_url
+#: model:ir.model.fields,field_description:website.field_website_snippet_filter__website_absolute_url
+msgid "Website Absolute URL"
 msgstr ""
 
 #. module: website
@@ -15528,7 +15677,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/snippets/s_embed_code/000.js:0
+#: code:addons/website/static/src/snippets/s_embed_code/embed_code.edit.js:0
 msgid ""
 "Your Embed Code snippet doesn't have anything to display. Click on Edit to "
 "modify it."
@@ -15812,6 +15961,21 @@ msgstr ""
 msgid ""
 "contact, collect, submission, input, fields, questionnaire, survey, "
 "registration, request"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"contact, collect, submission, input, fields, questionnaire, survey, "
+"registration, request, image, picture, photo, illustration, media, visual"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"contact, collect, submission, input, fields, questionnaire, survey, "
+"registration, request, image, picture, photo, illustration, media, visual, "
+"company, organization, address, phone, email, location, get-in-touch"
 msgstr ""
 
 #. module: website
@@ -16330,6 +16494,13 @@ msgstr ""
 msgid ""
 "organization, company, people, column, members, staffs, profiles, bios, "
 "roles, personnel, crew"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid ""
+"organization, company, people, members, staffs, profiles, bios, roles, "
+"personnel, crew, patterned"
 msgstr ""
 
 #. module: website

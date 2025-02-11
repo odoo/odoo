@@ -14,26 +14,30 @@
     }
 
     &.selected {
-        background-color: $o-component-active-bg;
-    }
-
-    &::before {
-        content: "";
-        position: absolute;
-        top: 50%;
-        width: 6px;
-        height: 66%;
-        transform: translateY(-50%);
-        border-top-right-radius: $border-radius-lg;
-        border-bottom-right-radius: $border-radius-lg;
-    }
-
-    &.skip-change::before {
-        background-color: $o-warning;
+        background-color: var(--orderline-selected, #{$o-component-active-bg});
     }
 
     &.has-change::before {
-        background-color: $o-success;
+        content: "";
+        position: absolute;
+        top: -1px;
+        bottom: -1px;
+        width: 6px;
+        background-color: $o-brand-primary;
+    }
+
+    &.has-change:first-child::before, &.has-change:not(.has-change + .has-change)::before {
+        /* First has-change*/
+        top: 0;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+    }
+
+    &.has-change:not(:has(+ .has-change))::before, &.has-change:has(+ .orderline-combo)::before{
+        /* Last has-change*/
+        bottom: 0;
+        border-bottom-left-radius: 3px;
+        border-bottom-right-radius: 3px;
     }
 
     .info-list {
@@ -43,8 +47,10 @@
 
 
 .orderline-combo {
-    &.skip-change::before, &.has-change::before {
+    &.has-change::before {
         left: -3px;
-        border-radius: $border-radius-lg;
+    }
+    &.has-change:not(:has(+ .has-change))::before{
+        border-radius: 3px;
     }
 }

@@ -90,22 +90,22 @@ class TestActivityRights(TestActivityCommon):
                 searched_activity = self.env['mail.activity'].with_user(self.user_employee)._search(
                     [('id', '=', test_activity.id)])
 
-        # can read_group activities if access to the document
-        read_group_result = self.env['mail.activity'].with_user(self.user_employee).read_group(
+        # can formatted_read_group activities if access to the document
+        read_group_result = self.env['mail.activity'].with_user(self.user_employee).formatted_read_group(
             [('id', '=', test_activity.id)],
             ['summary'],
-            ['summary'],
+            ['__count'],
         )
-        self.assertEqual(1, read_group_result[0]['summary_count'])
+        self.assertEqual(1, read_group_result[0]['__count'])
         self.assertEqual('Summary', read_group_result[0]['summary'])
 
         # cannot read_group activities if no access to the document
         with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_crash):
             with self.assertRaises(exceptions.AccessError):
-                self.env['mail.activity'].with_user(self.user_employee).read_group(
+                self.env['mail.activity'].with_user(self.user_employee).formatted_read_group(
                     [('id', '=', test_activity.id)],
                     ['summary'],
-                    ['summary'],
+                    ['__count'],
                 )
 
         # cannot read activities if no access to the document
@@ -150,12 +150,12 @@ class TestActivityRights(TestActivityCommon):
 
         # user can read_group activities assigned to him even if he has no access to the document
         with patch.object(MailTestActivity, '_check_access', autospec=True, side_effect=_employee_crash):
-            read_group_result = self.env['mail.activity'].with_user(self.user_employee).read_group(
+            read_group_result = self.env['mail.activity'].with_user(self.user_employee).formatted_read_group(
                 [('id', '=', test_activity.id)],
                 ['summary'],
-                ['summary'],
+                ['__count'],
             )
-            self.assertEqual(1, read_group_result[0]['summary_count'])
+            self.assertEqual(1, read_group_result[0]['__count'])
             self.assertEqual('Summary', read_group_result[0]['summary'])
 
 
@@ -389,6 +389,57 @@ class TestActivityMixin(TestActivityCommon):
             self.assertEqual(len(self.test_record.message_ids), 2)
             self.assertFalse(self.test_record.activity_state)
             self.assertFalse(act2.exists())
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_activity_mixin_not_only_automated(self):
+
+        # Schedule activity and create manual activity
+        act_type_todo = self.env.ref('test_mail.mail_act_test_todo')
+        auto_act = self.test_record.activity_schedule(
+            'test_mail.mail_act_test_todo',
+            date_deadline=date.today() + relativedelta(days=1)
+        )
+        man_act = self.env['mail.activity'].create({
+            'activity_type_id': act_type_todo.id,
+            'res_id': self.test_record.id,
+            'res_model_id': self.env['ir.model']._get_id(self.test_record._name),
+            'date_deadline': date.today() + relativedelta(days=1)
+        })
+        self.assertEqual(auto_act.automated, True)
+        self.assertEqual(man_act.automated, False)
+
+        # Test activity reschedule on not only automated activities
+        self.test_record.activity_reschedule(
+            ['test_mail.mail_act_test_todo'],
+            date_deadline=date.today() + relativedelta(days=2),
+            only_automated=False
+        )
+        self.assertEqual(auto_act.date_deadline, date.today() + relativedelta(days=2))
+        self.assertEqual(man_act.date_deadline, date.today() + relativedelta(days=2))
+
+        # Test activity feedback on not only automated activities
+        self.test_record.activity_feedback(
+            ['test_mail.mail_act_test_todo'],
+            feedback='Test feedback',
+            only_automated=False
+        )
+        self.assertEqual(self.test_record.activity_ids, self.env['mail.activity'])
+        self.assertFalse(auto_act.exists())
+        self.assertFalse(man_act.exists())
+
+        # Test activity unlink on not only automated activities
+        auto_act = self.test_record.activity_schedule(
+            'test_mail.mail_act_test_todo'
+        )
+        man_act = self.env['mail.activity'].create({
+            'activity_type_id': act_type_todo.id,
+            'res_id': self.test_record.id,
+            'res_model_id': self.env['ir.model']._get_id(self.test_record._name)
+        })
+        self.test_record.activity_unlink(['test_mail.mail_act_test_todo'], only_automated=False)
+        self.assertEqual(self.test_record.activity_ids, self.env['mail.activity'])
+        self.assertFalse(auto_act.exists())
+        self.assertFalse(man_act.exists())
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_mixin_archive(self):
@@ -694,16 +745,19 @@ class TestActivityMixin(TestActivityCommon):
             Model = self.env['mail.test.activity']
             search_params = {
                 'domain': [('id', 'in', (origin_1 | origin_2).ids), ('activity_state', '=', 'overdue')]}
-            read_group_params = {'domain': [('id', 'in', (origin_1 | origin_2).ids)], 'fields': ['id:array_agg'],
-                                 'groupby': ['activity_state']}
+            read_group_params = {
+                'domain': [('id', 'in', (origin_1 | origin_2).ids)],
+                'groupby': ['activity_state'],
+                'aggregates': ['__count'],
+            }
             self.assertEqual(Model.search(**search_params), origin_1)
             self.assertEqual(
-                {(e['activity_state'], e['activity_state_count']) for e in Model.read_group(**read_group_params)},
+                {(e['activity_state'], e['__count']) for e in Model.formatted_read_group(**read_group_params)},
                 {('today', 1), ('overdue', 1)})
             origin_1_activity_2.action_feedback(feedback='Done')
             self.assertFalse(Model.search(**search_params))
             self.assertEqual(
-                {(e['activity_state'], e['activity_state_count']) for e in Model.read_group(**read_group_params)},
+                {(e['activity_state'], e['__count']) for e in Model.formatted_read_group(**read_group_params)},
                 {('today', 2)})
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.tests')
@@ -789,7 +843,7 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
             user_id=self.user_employee.id,
         )
         self.authenticate(self.user_employee.login, self.user_employee.login)
-        data = self.make_jsonrpc_request("/mail/data", {"systray_get_activities": True})
+        data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["systray_get_activities"]})
         total_count = sum(
             record["total_count"]
             for record in data["Store"]["activityGroups"]
@@ -1003,7 +1057,7 @@ class TestORM(TestActivityCommon):
             }
 
             # call read_group to compute group names
-            groups = MailTestActivityCtx.read_group(domain, fields=['date'], groupby=[groupby])
+            groups = MailTestActivityCtx.formatted_read_group(domain, groupby=[groupby])
             progressbars = MailTestActivityCtx.read_progress_bar(domain, group_by=groupby, progress_bar=progress_bar)
             self.assertEqual(len(groups), 3)
             self.assertEqual(len(progressbars), 3)
@@ -1016,9 +1070,9 @@ class TestORM(TestActivityCommon):
             for group_name, data in progressbars.items()
         }
 
-        self.assertEqual(groups[0][groupby], pg_groups["overdue"])
-        self.assertEqual(groups[1][groupby], pg_groups["today"])
-        self.assertEqual(groups[2][groupby], pg_groups["planned"])
+        self.assertEqual(groups[0][groupby][0], pg_groups["overdue"])
+        self.assertEqual(groups[1][groupby][0], pg_groups["today"])
+        self.assertEqual(groups[2][groupby][0], pg_groups["planned"])
 
 
 @tests.tagged('post_install', '-at_install')

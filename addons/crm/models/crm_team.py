@@ -4,12 +4,11 @@
 import datetime
 import logging
 import random
-import threading
 
 from ast import literal_eval
 from markupsafe import Markup
 
-from odoo import api, exceptions, fields, models, _
+from odoo import api, exceptions, fields, models, modules, _
 from odoo.osv import expression
 from odoo.tools import float_compare, float_round, SQL
 from odoo.tools.safe_eval import safe_eval
@@ -200,7 +199,7 @@ class CrmTeam(models.Model):
         The cron is designed to run at least once a day or more.
         A number of leads will be assigned each time depending on the daily leads
         already assigned.
-        This allows the assignation process based on the cron to work on a daily basis
+        This allows the assignment process based on the cron to work on a daily basis
         without allocating too much leads on members if the cron is executed multiple
         times a day.
         The daily quota of leads can be forcefully assigned with force_quota
@@ -420,7 +419,7 @@ class CrmTeam(models.Model):
 
         BUNDLE_HOURS_DELAY = float(self.env['ir.config_parameter'].sudo().get_param('crm.assignment.delay', default=0))
         BUNDLE_COMMIT_SIZE = int(self.env['ir.config_parameter'].sudo().get_param('crm.assignment.commit.bundle', 100))
-        auto_commit = not getattr(threading.current_thread(), 'testing', False)
+        auto_commit = not modules.module.current_test
 
         # leads
         max_create_dt = self.env.cr.now() - datetime.timedelta(hours=BUNDLE_HOURS_DELAY)
@@ -445,8 +444,8 @@ class CrmTeam(models.Model):
                 ])
 
             leads = self.env["crm.lead"].search(lead_domain)
-            # Fill duplicate cache: search for duplicate lead before the assignation
-            # avoid to flush during the search at every assignation
+            # Fill duplicate cache: search for duplicate lead before the assignment
+            # avoid to flush during the search at every assignment
             for lead in leads:
                 if lead not in duplicates_lead_cache:
                     duplicates_lead_cache[lead] = lead._get_lead_duplicates(email=lead.email_from)
@@ -598,7 +597,7 @@ class CrmTeam(models.Model):
           }, ...
 
         """
-        auto_commit = not getattr(threading.current_thread(), 'testing', False)
+        auto_commit = not modules.module.current_test
         result_data = {}
         commit_bundle_size = int(self.env['ir.config_parameter'].sudo().get_param('crm.assignment.commit.bundle', 100))
         teams_with_members = self.filtered(lambda team: team.crm_team_member_ids)
@@ -612,6 +611,30 @@ class CrmTeam(models.Model):
             # and make sure we need them before fetching them
             ['id:array_agg'],
         ))
+
+        def _assign_lead(lead, members, member_leads, members_quota, assign_lst, optional_lst=None):
+            """ Find relevant member whose domain(s) accept the lead. If found convert
+            and update internal structures accordingly. """
+            member_found = next((member for member in members if lead in member_leads[member]), False)
+            if not member_found:
+                return
+            lead.with_context(mail_auto_subscribe_no_notify=True).convert_opportunity(
+                lead.partner_id,
+                user_ids=member_found.user_id.ids
+            )
+            result_data[member_found]['assigned'] += lead
+
+            # if member still has quota, move at end of list; otherwise just remove
+            assign_lst.remove(member_found)
+            if optional_lst is not None:
+                optional_lst.remove(member_found)
+            members_quota[member_found] -= 1
+            if members_quota[member_found] > 0:
+                assign_lst.append(member_found)
+                if optional_lst is not None:
+                    optional_lst.append(member_found)
+            return member_found
+
         for team, leads_to_assign_ids in leads_per_team.items():
             members_to_assign = list(team.crm_team_member_ids.filtered(lambda member:
                 not member.assignment_optout and quota_per_member.get(member, 0) > 0
@@ -622,41 +645,68 @@ class CrmTeam(models.Model):
                 member: {"assigned": self.env["crm.lead"], "quota": quota_per_member[member]}
                 for member in members_to_assign
             })
-            # Need to check that record still exists since the ids have been fetched at the begining of the process
-            # Previous iteration has commited the change, records may have been deleted in the meanwhile
-            leads_to_assign = self.env['crm.lead'].browse(leads_to_assign_ids).exists()
-            leads_per_member = {
-                member: leads_to_assign.filtered_domain(literal_eval(member.assignment_domain or '[]'))
-                for member in members_to_assign
+            # Need to check that record still exists since the ids have been fetched at the beginning of the process
+            # Previous iteration has committed the change, records may have been deleted in the meanwhile
+            to_assign = self.env['crm.lead'].browse(leads_to_assign_ids).exists()
+
+            members_to_assign_wpref = [
+                m for m in members_to_assign
+                if m.assignment_domain_preferred and literal_eval(m.assignment_domain_preferred or '')
+            ]
+            preferred_leads_per_member = {
+                member: to_assign.filtered_domain(
+                    expression.AND([
+                        literal_eval(member.assignment_domain or '[]'),
+                        literal_eval(member.assignment_domain_preferred)
+                    ])
+                ) for member in members_to_assign_wpref
             }
-            for lead in leads_to_assign.sorted(lambda lead: (-lead.probability, id)):
+            preferred_leads = self.env['crm.lead'].concat(*[lead for lead in preferred_leads_per_member.values()])
+            assigned_preferred_leads = self.env['crm.lead']
+
+            # first assign loop: preferred leads, always priority
+            for lead in preferred_leads.sorted(lambda lead: (-lead.probability, id)):
                 counter += 1
-                member_found = next((member for member in members_to_assign if lead in leads_per_member[member]), False)
+                member_found = _assign_lead(lead, members_to_assign_wpref, preferred_leads_per_member, quota_per_member, members_to_assign, members_to_assign_wpref)
                 if not member_found:
                     continue
-                lead.with_context(mail_auto_subscribe_no_notify=True).convert_opportunity(
-                    lead.partner_id,
-                    user_ids=member_found.user_id.ids
-                )
-                result_data[member_found]['assigned'] += lead
-                members_to_assign.remove(member_found)
-                quota_per_member[member_found] -= 1
-                if quota_per_member[member_found] > 0:
-                    # If the member should receive more lead, send him back at the end of the list
-                    members_to_assign.append(member_found)
-
+                assigned_preferred_leads += lead
                 if auto_commit and counter % commit_bundle_size == 0:
                     self.env.cr.commit()
+
+            # second assign loop: fill up with other leads
+            to_assign = to_assign - assigned_preferred_leads
+            leads_per_member = {
+                member: to_assign.filtered_domain(literal_eval(member.assignment_domain or '[]'))
+                for member in members_to_assign
+            }
+            for lead in to_assign.sorted(lambda lead: (-lead.probability, id)):
+                counter += 1
+                member_found = _assign_lead(lead, members_to_assign, leads_per_member, quota_per_member, members_to_assign)
+                if not member_found:
+                    continue
+                if auto_commit and counter % commit_bundle_size == 0:
+                    self.env.cr.commit()
+
             # Make sure we commit at least at the end of the team
             if auto_commit:
                 self.env.cr.commit()
             # Once we are done with a team we don't need to keep the leads in memory
             # Try to avoid to explode memory usage
             self.env.invalidate_all()
-
-        _logger.info('Assigned %s leads to %s salesmen', sum(len(r['assigned']) for r in result_data.values()), len(result_data))
+            _logger.info(
+                'Team %s: Assigned %s leads based on preference, on a potential of %s (limited by quota)',
+                team.name, len(assigned_preferred_leads), len(preferred_leads)
+            )
+        _logger.info(
+            'Assigned %s leads to %s salesmen',
+            sum(len(r['assigned']) for r in result_data.values()), len(result_data)
+        )
         for member, member_info in result_data.items():
-            _logger.info('-> member %s of team %s: assigned %d/%d leads (%s)', member.id, member.crm_team_id.id, len(member_info["assigned"]), member_info["quota"], member_info["assigned"])
+            _logger.info(
+                '-> member %s of team %s: assigned %d/%d leads (%s)',
+                member.id, member.crm_team_id.id, len(member_info["assigned"]), member_info["quota"], member_info["assigned"]
+            )
         return result_data
 
     # ------------------------------------------------------------

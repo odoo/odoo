@@ -68,7 +68,7 @@ class TestMessageController(MailControllerThreadCommon):
         self.assertEqual(res3.status_code, 200)
         self.assertEqual(
             1,
-            self.env["res.partner"].search_count([('email', '=', "john@test.be"), ('mobile', '=', "+32455001122")]),
+            self.env["res.partner"].search_count([('email', '=', "john@test.be"), ('phone', '=', "+32455001122")]),
             "authenticated users can create a partner from an email",
         )
         # should not create another partner with same email
@@ -112,7 +112,7 @@ class TestMessageController(MailControllerThreadCommon):
         self.assertEqual(res5.status_code, 200)
         self.assertEqual(
             1,
-            self.env["res.partner"].search_count([('email', '=', "john2@test.be"), ('mobile', '=', "+32455001122")]),
+            self.env["res.partner"].search_count([('email', '=', "john2@test.be"), ('phone', '=', "+32455001122")]),
             "authenticated users can create a partner from an email from message_post",
         )
         # should not create another partner with same email

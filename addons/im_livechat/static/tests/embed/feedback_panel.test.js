@@ -1,4 +1,3 @@
-import { waitNotifications } from "@bus/../tests/bus_test_helpers";
 import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
@@ -78,6 +77,7 @@ test("Last operator leaving ends the livechat", async () => {
         ])
     );
     await contains("span", { text: "This livechat conversation has ended" });
+    await contains(".o-mail-Composer-input", { count: 0 });
     await click("[title*='Close Chat Window']");
     await contains("p", { text: "Did we correctly answer your question?" }); // shows immediately feedback
 });
@@ -115,14 +115,13 @@ test("Feedback with rating and comment", async () => {
 test("Closing folded chat window should open it with feedback", async () => {
     await startServer();
     await loadDefaultEmbedConfig();
-    const env = await start({ authenticateAs: false });
+    await start({ authenticateAs: false });
     await mountWithCleanup(LivechatButton);
     await click(".o-livechat-LivechatButton");
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
     await contains(".o-mail-Message-content", { text: "Hello World!" });
     await click("[title='Fold']");
-    await waitNotifications([env, "discuss.Thread/fold_state"]);
     await click(".o-mail-ChatBubble");
     await click("[title*='Close Chat Window']");
     await click(".o-livechat-CloseConfirmation-leave");

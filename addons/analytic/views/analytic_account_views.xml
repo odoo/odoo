@@ -33,7 +33,7 @@
                             </group>
                             <group>
                                 <field name="plan_id" options="{'no_quick_create': True}"/>
-                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" placeholder="Visible to all"/>
                                 <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                             </group>
                         </group>
@@ -132,6 +132,7 @@
         <record id="action_account_analytic_account_form" model="ir.actions.act_window">
             <field name="name">Analytic Accounts</field>
             <field name="res_model">account.analytic.account</field>
+            <field name="path">analytic-accounts</field>
             <field name="search_view_id" ref="view_account_analytic_account_search"/>
             <field name="context">{'search_default_active':1}</field>
             <field name="view_mode">list,kanban,form</field>

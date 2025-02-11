@@ -3,11 +3,12 @@ import optparse
 import sys
 import time
 
-from . import Command
-import odoo
+from odoo import api
 from odoo.modules.registry import Registry
+from odoo.tools import config
 from odoo.tools.populate import populate_models
-from odoo.api import Environment
+
+from . import Command
 
 DEFAULT_FACTOR = '10000'
 DEFAULT_SEPARATOR = '_'
@@ -20,7 +21,7 @@ class Populate(Command):
     """Populate database via duplication of existing data for testing/demo purposes"""
 
     def run(self, cmdargs):
-        parser = odoo.tools.config.parser
+        parser = config.parser
         parser.prog = self.prog
         group = optparse.OptionGroup(parser, "Populate Configuration")
         group.add_option("--factors", dest="factors",
@@ -37,7 +38,7 @@ class Populate(Command):
                          help="Single character separator for char/text fields.",
                          default=DEFAULT_SEPARATOR)
         parser.add_option_group(group)
-        opt = odoo.tools.config.parse_config(cmdargs, setup_logging=True)
+        opt = config.parse_config(cmdargs, setup_logging=True)
 
         # deduplicate models if necessary, and keep the last corresponding
         # factor for each model
@@ -51,16 +52,16 @@ class Populate(Command):
         except TypeError:
             raise ValueError("Separator must be a single Unicode character.")
 
-        dbnames = odoo.tools.config['db_name']
+        dbnames = config['db_name']
         if len(dbnames) > 1:
             sys.exit("-d/--database/db_name has multiple database, please provide a single one")
         registry = Registry(dbnames[0])
         with registry.cursor() as cr:
-            env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {'active_test': False})
+            env = api.Environment(cr, api.SUPERUSER_ID, {'active_test': False})
             self.populate(env, model_factors, separator_code)
 
     @classmethod
-    def populate(cls, env: Environment, modelname_factors: dict[str, int], separator_code: int):
+    def populate(cls, env: api.Environment, modelname_factors: dict[str, int], separator_code: int):
         model_factors = {
             model: factor
             for model_name, factor in modelname_factors.items()

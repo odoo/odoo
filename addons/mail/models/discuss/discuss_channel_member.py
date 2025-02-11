@@ -36,7 +36,6 @@ class DiscussChannelMember(models.Model):
     seen_message_id = fields.Many2one('mail.message', string='Last Seen', index="btree_not_null")
     new_message_separator = fields.Integer(help="Message id before which the separator should be displayed", default=0, required=True)
     message_unread_counter = fields.Integer('Unread Messages Counter', compute='_compute_message_unread', compute_sudo=True)
-    fold_state = fields.Selection([('open', 'Open'), ('folded', 'Folded'), ('closed', 'Closed')], string='Conversation Fold State', default='closed')
     custom_notifications = fields.Selection(
         [("all", "All Messages"), ("mentions", "Mentions Only"), ("no_notif", "Nothing")],
         "Customized Notifications",
@@ -45,7 +44,12 @@ class DiscussChannelMember(models.Model):
     mute_until_dt = fields.Datetime("Mute notifications until", help="If set, the member will not receive notifications from the channel until this date.")
     is_pinned = fields.Boolean("Is pinned on the interface", compute="_compute_is_pinned", search="_search_is_pinned")
     unpin_dt = fields.Datetime("Unpin date", index=True, help="Contains the date and time when the channel was unpinned by the user.")
-    last_interest_dt = fields.Datetime("Last Interest", index=True, default=fields.Datetime.now, help="Contains the date and time of the last interesting event that happened in this channel for this user. This includes: creating, joining, pinning")
+    last_interest_dt = fields.Datetime(
+        "Last Interest",
+        default=lambda self: fields.Datetime.now() - timedelta(seconds=1),
+        index=True,
+        help="Contains the date and time of the last interesting event that happened in this channel for this user. This includes: creating, joining, pinning",
+    )
     last_seen_dt = fields.Datetime("Last seen date")
     # RTC
     rtc_session_ids = fields.One2many(string="RTC Sessions", comodel_name='discuss.channel.rtc.session', inverse_name='channel_member_id')
@@ -73,7 +77,9 @@ class DiscussChannelMember(models.Model):
         members = self.env["discuss.channel.member"].search(domain)
         members.unpin_dt = fields.Datetime.now()
         for member in members:
-            member._bus_send("discuss.channel/unpin", {"id": member.channel_id.id})
+            member._bus_send_store(
+                member.channel_id, {"close_chat_window": True, "is_pinned": False}
+            )
 
     @api.constrains('partner_id')
     def _contrains_no_public_member(self):
@@ -287,25 +293,6 @@ class DiscussChannelMember(models.Model):
         self.ensure_one()
         return fields
 
-    def _channel_fold(self, state, state_count):
-        """Update the fold_state of the given member. The change will be
-        broadcasted to the member channel.
-
-        :param state: the new status of the session for the current member.
-        """
-        self.ensure_one()
-        if self.fold_state == state:
-            return
-        self.fold_state = state
-        self._bus_send(
-            "discuss.Thread/fold_state",
-            {
-                "fold_state": self.fold_state,
-                "foldStateCount": state_count,
-                "id": self.channel_id.id,
-                "model": "discuss.channel",
-            },
-        )
     # --------------------------------------------------------------------------
     # RTC (voice/video)
     # --------------------------------------------------------------------------

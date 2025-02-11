@@ -31,6 +31,7 @@ const PRESENT_MESSAGE_THRESHOLD = 10;
  * @typedef {Object} Props
  * @property {boolean} [isInChatWindow=false]
  * @property {number} [jumpPresent=0]
+ * @property {number} [jumpToNewMessage=0]
  * @property {import("@mail/utils/common/hooks").MessageEdition} [messageEdition]
  * @property {import("@mail/utils/common/hooks").MessageToReplyTo} [messageToReplyTo]
  * @property {"asc"|"desc"} [order="asc"]
@@ -45,6 +46,7 @@ export class Thread extends Component {
         "showDates?",
         "isInChatWindow?",
         "jumpPresent?",
+        "jumpToNewMessage?",
         "thread",
         "messageEdition?",
         "messageToReplyTo?",
@@ -198,6 +200,20 @@ export class Thread extends Component {
              * for `isLoaded`, and it should still be reset when patching.
              */
             () => [this.props.thread.isLoaded, this.state.mountedAndLoaded]
+        );
+        useEffect(
+            () => {
+                if (!this.props.jumpToNewMessage) {
+                    return;
+                }
+                const el = this.refByMessageId.get(
+                    this.props.thread.selfMember.localNewMessageSeparator - 1
+                )?.el;
+                if (el) {
+                    el.scrollIntoView({ behavior: "instant", block: "center" });
+                }
+            },
+            () => [this.props.jumpToNewMessage]
         );
         useBus(this.env.bus, "MAIL:RELOAD-THREAD", ({ detail }) => {
             const { model, id } = this.props.thread;

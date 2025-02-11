@@ -1,8 +1,7 @@
 import collections
 import inspect
-import itertools
 
-import odoo
+from odoo.models import BaseModel
 from odoo.modules.registry import Registry
 from odoo.tests.common import get_db_name, tagged
 from .lint_case import LintCase
@@ -28,7 +27,7 @@ Incompatible definition in {child_module}:
 
 methods_to_sanitize = {
     method_name
-    for method_name in dir(odoo.models.BaseModel)
+    for method_name in dir(BaseModel)
     if not method_name.startswith('_')
 } - {
     # Not yet sanitized...
@@ -111,6 +110,13 @@ def assert_valid_override(parent_signature, child_signature):
         assert child_has_varkwargs and parent_has_varkwargs, "wrong keyword parameters"
 
 
+def assert_attribute_override(parent_method, child_method):
+    for attribute in ('_autovacuum', '_api_model'):
+        parent_attr = getattr(parent_method, attribute, None)
+        child_attr = getattr(child_method, attribute, None)
+        assert parent_attr == child_attr, f"attribute {attribute!r} does not match"
+
+
 @tagged('-at_install', 'post_install')
 class TestLintOverrideSignatures(LintCase):
     def test_lint_override_signature(self):
@@ -143,6 +149,7 @@ class TestLintOverrideSignatures(LintCase):
                     with self.subTest(module=child_module, model=model_name, method=method_name):
                         try:
                             assert_valid_override(original_signature, override_signature)
+                            assert_attribute_override(method, override)
                             counter[method_name].hit += 1
                         except AssertionError as exc:
                             counter[method_name].miss += 1

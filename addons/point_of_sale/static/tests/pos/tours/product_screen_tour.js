@@ -287,10 +287,10 @@ registry.category("web_tour.tours").add("limitedProductPricelistLoading", {
             ProductScreen.selectedOrderlineHas("Test Product 1", "1", "80.0"),
 
             scan_barcode("0100201"),
-            ProductScreen.selectedOrderlineHas("Test Product 2 (White)", "1", "100.0"),
+            ProductScreen.selectedOrderlineHas("Test Product 2", "1", "100.0", "White"),
 
             scan_barcode("0100202"),
-            ProductScreen.selectedOrderlineHas("Test Product 2 (Red)", "1", "120.0"),
+            ProductScreen.selectedOrderlineHas("Test Product 2", "1", "120.0", "Red"),
 
             scan_barcode("0100300"),
             ProductScreen.selectedOrderlineHas("Test Product 3", "1", "50.0"),
@@ -372,7 +372,6 @@ registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
                 "John Doe",
                 "1 street of astreet",
                 "1234567890",
-                "0987654321",
                 "john@doe.com"
             ),
             selectButton("Discard"),
@@ -388,7 +387,6 @@ registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
             ProductScreenPartnerList.searchCustomerValueAndClear("Acity"),
             ProductScreenPartnerList.searchCustomerValueAndClear("United States"),
             ProductScreenPartnerList.searchCustomerValueAndClear("1234567890"),
-            ProductScreenPartnerList.searchCustomerValueAndClear("0987654321"),
             ProductScreen.clickPartnerButton(),
             PartnerList.searchCustomerValue("john@doe.com"),
         ].flat(),
@@ -414,6 +412,9 @@ registry.category("web_tour.tours").add("PosCategoriesOrder", {
             },
             {
                 trigger: '.category-button:eq(3) > span:contains("AAY")',
+            },
+            {
+                trigger: '.category-button:not(:contains("AAD"))',
             },
         ].flat(),
 });
@@ -452,9 +453,9 @@ registry.category("web_tour.tours").add("ProductSearchTour", {
             ProductScreen.searchProduct("Apple"),
             ProductScreen.productIsDisplayed("Test Product 1").map(negateStep),
             ProductScreen.productIsDisplayed("Test Product 2").map(negateStep),
-            ProductScreen.searchProduct("Test Produt"), // typo to test the fuzzy search
-            ProductScreen.productIsDisplayed("Test Product 1"),
-            ProductScreen.productIsDisplayed("Test Product 2"),
+            ProductScreen.searchProduct("Test Produt"),
+            ProductScreen.productIsDisplayed("Test Product 1").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 2").map(negateStep),
             ProductScreen.searchProduct("1234567890123"),
             ProductScreen.productIsDisplayed("Test Product 2").map(negateStep),
             ProductScreen.productIsDisplayed("Test Product 1"),

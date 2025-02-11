@@ -19,7 +19,7 @@ from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.modules.registry import Registry
 
 _logger = logging.getLogger(__name__)
-_UNFOLLOW_REGEX = re.compile(r'<span\s.*(t-if="\w.*")?\s.*id="mail_unfollow".*?<\/span>', re.DOTALL)
+_UNFOLLOW_REGEX = re.compile(r'<span\s*(t-if="show_unfollow")?\s*id="mail_unfollow".*?<\/span>', re.DOTALL)
 
 
 class MailMail(models.Model):
@@ -164,20 +164,6 @@ class MailMail(models.Model):
         if mail_msg_cascade_ids:
             self.env['mail.message'].browse(mail_msg_cascade_ids).unlink()
         return res
-
-    @api.model
-    def _add_inherited_fields(self):
-        """Allow to bypass ACLs for some mail message fields.
-
-        This trick add a related_sudo on the inherits fields, it can't be done with
-        >>> subject = fields.Char(related='mail_message_id.subject', related_sudo=True)
-        because the field of <mail.message> will be fetched two times (one time before of
-        the inherits, and a second time because of the related), and so it will add extra
-        SQL queries.
-        """
-        super()._add_inherited_fields()
-        for field in ('email_from', 'reply_to', 'subject'):
-            self._fields[field].related_sudo = True
 
     def action_retry(self):
         self.filtered(lambda mail: mail.state == 'exception').mark_outgoing()

@@ -15,7 +15,9 @@ import time
 from collections import defaultdict, deque
 from contextlib import closing, suppress
 from enum import IntEnum
+from itertools import count
 from psycopg2.pool import PoolError
+from queue import PriorityQueue
 from urllib.parse import urlparse
 from weakref import WeakSet
 
@@ -121,6 +123,27 @@ class RateLimitExceededException(Exception):
     """
 
 
+# Idea taken from the python cookbook:
+# https://github.com/dabeaz/python-cookbook/blob/6e46b7/src/12/polling_multiple_thread_queues/pqueue.py
+class PollablePriorityQueue(PriorityQueue):
+    """A custom PriorityQueue than can be polled"""
+
+    def __init__(self, maxsize=0):
+        super().__init__(maxsize)
+        self._putsocket, self._getsocket = socket.socketpair()
+
+    def fileno(self):
+        return self._getsocket.fileno()
+
+    def put(self, item, *args, **kwargs):
+        super().put(item, *args, **kwargs)
+        self._putsocket.send(b'.')
+
+    def get(self, *args, **kwargs):
+        self._getsocket.recv(1)
+        return super().get(*args, **kwargs)
+
+
 # ------------------------------------------------------
 # WEBSOCKET LIFECYCLE
 # ------------------------------------------------------
@@ -161,12 +184,23 @@ class CloseCode(IntEnum):
     BAD_GATEWAY = 1014
     SESSION_EXPIRED = 4001
     KEEP_ALIVE_TIMEOUT = 4002
+    KILL_NOW = 4003
 
 
 class ConnectionState(IntEnum):
     OPEN = 0
     CLOSING = 1
     CLOSED = 2
+
+
+# Used to maintain order of commands in the queue according to their priority
+# (IntEnum) and then the order of reception.
+_command_uid = count(0)
+
+
+class ControlCommand(IntEnum):
+    CLOSE = 0
+    DISPATCH = 1
 
 
 DATA_OP = {Opcode.TEXT, Opcode.BINARY}
@@ -268,9 +302,10 @@ class Websocket:
         self._timeout_manager = TimeoutManager()
         # Used for rate limiting.
         self._incoming_frame_timestamps = deque(maxlen=self.RL_BURST)
-        # Used to notify the websocket that bus notifications are
-        # available.
-        self.__notif_sock_w, self.__notif_sock_r = socket.socketpair()
+        # Command queue used to manage the websocket instance externally, such
+        # as triggering notification dispatching or terminating the connection.
+        self.__cmd_queue = PollablePriorityQueue()
+        self._waiting_for_dispatch = False
         self._channels = set()
         # For ``_last_notif_sent_id and ``_notif_history``, see
         # ``MAX_NOTIFICATION_HISTORY_SEC`` for more details.
@@ -286,7 +321,7 @@ class Websocket:
             else selectors.DefaultSelector()
         )
         self.__selector.register(self.__socket, selectors.EVENT_READ)
-        self.__selector.register(self.__notif_sock_r, selectors.EVENT_READ)
+        self.__selector.register(self.__cmd_queue, selectors.EVENT_READ)
         self.state = ConnectionState.OPEN
         _websocket_instances.add(self)
         self._trigger_lifecycle_event(LifecycleEvent.OPEN)
@@ -303,7 +338,7 @@ class Websocket:
                     self.__selector.select(self.INACTIVITY_TIMEOUT)
                 }
                 if self._timeout_manager.has_timed_out() and self.state is ConnectionState.OPEN:
-                    self.disconnect(
+                    self._disconnect(
                         CloseCode.ABNORMAL_CLOSURE
                         if self._timeout_manager.timeout_reason is TimeoutReason.NO_RESPONSE
                         else CloseCode.KEEP_ALIVE_TIMEOUT
@@ -312,8 +347,11 @@ class Websocket:
                 if not readables:
                     self._send_ping_frame()
                     continue
-                if self.__notif_sock_r in readables:
-                    self._dispatch_bus_notifications()
+                if self.__cmd_queue in readables:
+                    cmd, _, data = self.__cmd_queue.get_nowait()
+                    self._process_control_command(cmd, data)
+                    if self.state is ConnectionState.CLOSED:
+                        continue
                 if self.__socket in readables:
                     message = self._process_next_message()
                     if message is not None:
@@ -321,19 +359,11 @@ class Websocket:
             except Exception as exc:
                 self._handle_transport_error(exc)
 
-    def disconnect(self, code, reason=None):
+    def close(self, code, reason=None):
+        """Notify the socket to initiate closure. The closing handshake
+        will start in the subsequent iteration of the event loop.
         """
-        Initiate the closing handshake that is, send a close frame
-        to the other end which will then send us back an
-        acknowledgment. Upon the reception of this acknowledgment,
-        the `_terminate` method will be called to perform an
-        orderly shutdown. Note that we don't need to wait for the
-        acknowledgment if the connection was failed beforewards.
-        """
-        if code is not CloseCode.ABNORMAL_CLOSURE:
-            self._send_close_frame(code, reason)
-        else:
-            self._terminate()
+        self._send_control_command(ControlCommand.CLOSE, {'code': code, 'reason': reason})
 
     @classmethod
     def onopen(cls, func):
@@ -361,15 +391,10 @@ class Websocket:
         dispatch is already planned or if the socket is already in the
         closing state.
         """
-        if self.state is not ConnectionState.OPEN:
+        if self.state is not ConnectionState.OPEN or self._waiting_for_dispatch:
             return
-        readables = {
-            selector_key[0].fileobj for selector_key in
-            self.__selector.select(0)
-        }
-        if self.__notif_sock_r not in readables:
-            # Send a random bit to mark the socket as readable.
-            self.__notif_sock_w.send(b'x')
+        self._waiting_for_dispatch = True
+        self._send_control_command(ControlCommand.DISPATCH)
 
     # ------------------------------------------------------
     # PRIVATE METHODS
@@ -549,7 +574,7 @@ class Websocket:
             return self._terminate()
         # After sending a control frame indicating the connection
         # should be closed, a peer does not send any further data.
-        self.__selector.unregister(self.__notif_sock_r)
+        self.__selector.unregister(self.__cmd_queue)
 
     def _send_close_frame(self, code, reason=None):
         """ Send a close frame. """
@@ -563,6 +588,19 @@ class Websocket:
         """ Send a pong frame """
         self._send_frame(Frame(Opcode.PONG, payload))
 
+    def _disconnect(self, code, reason=None):
+        """Initiate the closing handshake. Once the acknowledgment is received,
+        `self._terminate` will be invoked to execute a graceful shutdown of the
+        TCP connection. If the connection is already dead, skip the handshake
+        and terminate immediately. This is a low level method, meant to be
+        called from the WebSocket event loop. To close the connection, use
+        `self.close`.
+        """
+        if code in (CloseCode.ABNORMAL_CLOSURE, CloseCode.KILL_NOW):
+            self._terminate()
+        else:
+            self._send_close_frame(code, reason)
+
     def _terminate(self):
         """ Close the underlying TCP socket. """
         with suppress(OSError, TimeoutError):
@@ -574,14 +612,15 @@ class Websocket:
             self.__socket.settimeout(1)
             while self.__socket.recv(4096):
                 pass
-        self.__selector.unregister(self.__socket)
+        with suppress(KeyError):
+            self.__selector.unregister(self.__socket)
         self.__selector.close()
         self.__socket.close()
         self.state = ConnectionState.CLOSED
         dispatch.unsubscribe(self)
         self._trigger_lifecycle_event(LifecycleEvent.CLOSE)
         with acquire_cursor(self._db) as cr:
-            env = api.Environment(cr, self._session.uid, self._session.context)
+            env = self.new_env(cr, self._session)
             env["ir.websocket"]._on_websocket_closed(self._cookies)
 
     def _handle_control_frame(self, frame):
@@ -604,7 +643,7 @@ class Websocket:
     def _handle_transport_error(self, exc):
         """
         Find out which close code should be sent according to given
-        exception and call `self.disconnect` in order to close the
+        exception and call `self._disconnect` in order to close the
         connection cleanly.
         """
         code, reason = CloseCode.SERVER_ERROR, str(exc)
@@ -629,7 +668,7 @@ class Websocket:
                 _logger.warning("Bus operation aborted; registry has been reloaded")
             else:
                 _logger.error(exc, exc_info=True)
-        self.disconnect(code, reason)
+        self._disconnect(code, reason)
 
     def _limit_rate(self):
         """
@@ -655,8 +694,7 @@ class Websocket:
         if not self.__event_callbacks[event_type]:
             return
         with closing(acquire_cursor(self._db)) as cr:
-            lang = api.Environment(cr, self._session.uid, {})['res.lang']._get_code(self._session.context.get('lang'))
-            env = api.Environment(cr, self._session.uid, dict(self._session.context, lang=lang))
+            env = self.new_env(cr, self._session, set_lang=True)
             for callback in self.__event_callbacks[event_type]:
                 try:
                     service_model.retrying(functools.partial(callback, env, self), env)
@@ -666,6 +704,26 @@ class Websocket:
                         LifecycleEvent(event_type).name,
                         exc_info=True
                     )
+
+    def _send_control_command(self, command, data=None):
+        """Send a command to the websocket event loop.
+
+        :param ControlCommand command: The command to be executed.
+        :param dict | None data: An optional dictionary of parameters.
+        """
+        self.__cmd_queue.put((command, next(_command_uid), data))
+
+    def _process_control_command(self, command, data):
+        """Process a command received in `self.__cmd_queue`.
+
+        :param ControlCommand command: The command to be executed. This key is required.
+        :param dict | None data: An optional dictionary of parameters.
+        """
+        match command:
+            case ControlCommand.DISPATCH:
+                self._dispatch_bus_notifications()
+            case ControlCommand.CLOSE:
+                self._disconnect(data['code'], data.get('reason'))
 
     def _dispatch_bus_notifications(self):
         """
@@ -677,12 +735,12 @@ class Websocket:
         session = root.session_store.get(self._session.sid)
         if not session:
             raise SessionExpiredException()
+         # Mark the notification request as processed.
+        self._waiting_for_dispatch = False
         with acquire_cursor(session.db) as cr:
-            env = api.Environment(cr, session.uid, dict(session.context, lang=None))
+            env = self.new_env(cr, session)
             if session.uid is not None and not check_session(session, env):
                 raise SessionExpiredException()
-            # Mark the notification request as processed.
-            self.__notif_sock_r.recv(1)
             notifications = env["bus.bus"]._poll(
                 self._channels, self._last_notif_sent_id, [n[0] for n in self._notif_history]
             )
@@ -711,6 +769,23 @@ class Websocket:
             self._last_notif_sent_id = self._notif_history[last_index][0]
             self._notif_history = self._notif_history[last_index + 1 :]
         self._send(notifications)
+
+    def new_env(self, cr, session, *, set_lang=False):
+        """
+        Create a new environment.
+        Make sure the transaction has a `default_env` and if requested, set the
+        language of the user in the context.
+        """
+        uid = session.uid
+        # lang is not guaranteed to be correct, set None
+        ctx = dict(session.context, lang=None)
+        env = api.Environment(cr, uid, ctx)
+        if set_lang:
+            lang = env['res.lang']._get_code(ctx['lang'])
+            env = env(context=dict(ctx, lang=lang))
+        if not env.transaction.default_env:
+            env.transaction.default_env = env
+        return env
 
 
 class TimeoutReason(IntEnum):
@@ -829,26 +904,19 @@ class WebsocketRequest:
             raise InvalidDatabaseException() from exc
 
         with closing(acquire_cursor(self.db)) as cr:
-            self.env = api.Environment(cr, self.session.uid, {})
-            lang = self.env['res.lang']._get_code(self.session.context.get('lang'))
-            self.update_env(context=dict(self.session.context, lang=lang))
+            self.env = self.ws.new_env(cr, self.session, set_lang=True)
             service_model.retrying(
                 functools.partial(self._serve_ir_websocket, event_name, data),
                 self.env,
             )
 
     def _serve_ir_websocket(self, event_name, data):
-        """
-        Delegate most of the processing to the ir.websocket model
-        which is extensible by applications. Directly call the
-        appropriate ir.websocket method since only two events are
-        tolerated: `subscribe` and `update_presence`.
-        """
-        self.env['ir.websocket']._authenticate()
-        if event_name == 'subscribe':
-            self.env['ir.websocket']._subscribe(data)
-        if event_name == 'update_presence':
-            self.env['ir.websocket']._update_bus_presence(**data)
+        """Process websocket events, in particular authenticate and subscribe, and delegate extra
+        processing to the ir.websocket model which is extensible by applications."""
+        self.env["ir.websocket"]._authenticate()
+        if event_name == "subscribe":
+            self.env["ir.websocket"]._subscribe(data)
+        self.env["ir.websocket"]._serve_ir_websocket(event_name, data)
 
     def _get_session(self):
         session = root.session_store.get(self.ws._session.sid)
@@ -894,6 +962,11 @@ class WebsocketConnectionHandler:
 
     @classmethod
     def websocket_allowed(cls, request):
+        # WebSockets are disabled during tests because the test environment and
+        # the WebSocket thread use the same cursor, leading to race conditions.
+        # However, they are enabled during tours as RPC requests and WebSocket
+        # instances both use the `TestCursor` class wich is locked.
+        # See `HttpCase@browser_js`.
         return not modules.module.current_test
 
     @classmethod
@@ -1026,24 +1099,24 @@ class WebsocketConnectionHandler:
             # reconnect, preventing old workers from lingering after updates.
             # Non browsers are ignored since IOT devices do not provide the
             # worker version.
-            websocket.disconnect(CloseCode.CLEAN, "OUTDATED_VERSION")
+            websocket.close(CloseCode.CLEAN, "OUTDATED_VERSION")
         for message in websocket.get_messages():
             with WebsocketRequest(db, httprequest, websocket) as req:
                 try:
                     req.serve_websocket_message(message)
                 except SessionExpiredException:
-                    websocket.disconnect(CloseCode.SESSION_EXPIRED)
+                    websocket.close(CloseCode.SESSION_EXPIRED)
                 except PoolError:
-                    websocket.disconnect(CloseCode.TRY_LATER)
+                    websocket.close(CloseCode.TRY_LATER)
                 except Exception:
                     _logger.exception("Exception occurred during websocket request handling")
 
 
-def _kick_all():
+def _kick_all(code=CloseCode.GOING_AWAY):
     """ Disconnect all the websocket instances. """
     for websocket in _websocket_instances:
         if websocket.state is ConnectionState.OPEN:
-            websocket.disconnect(CloseCode.GOING_AWAY)
+            websocket.close(code)
 
 
 CommonServer.on_stop(_kick_all)

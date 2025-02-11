@@ -55,7 +55,7 @@ class PosOrder(models.Model):
     @api.depends('l10n_fr_secure_sequence_number')
     def _compute_previous_order(self):
         for order in self:
-            prev_order = self.search([('state', 'in', ['paid', 'done', 'invoiced']),
+            prev_order = self.search([('state', 'in', ['paid', 'done']),
                                                 ('company_id', '=', order.company_id.id),
                                                 ('l10n_fr_secure_sequence_number', '!=', 0),
                                                 ('l10n_fr_secure_sequence_number', '=', order.l10n_fr_secure_sequence_number - 1)])
@@ -125,7 +125,7 @@ class PosOrder(models.Model):
         for order in self:
             if order.company_id._is_accounting_unalterable():
                 # write the hash and the secure_sequence_number when posting or invoicing an pos.order
-                if vals.get('state') in ['paid', 'done', 'invoiced']:
+                if vals.get('state') in ['paid', 'done']:
                     has_been_posted = True
 
                 # restrict the operation in case we are trying to write a forbidden field
@@ -133,7 +133,7 @@ class PosOrder(models.Model):
                     ORDER_FIELDS = ORDER_FIELDS_FROM_17_4
                 else:
                     ORDER_FIELDS = ORDER_FIELDS_BEFORE_17_4
-                if (order.state in ['paid', 'done', 'invoiced'] and set(vals).intersection(ORDER_FIELDS)):
+                if (order.state in ['paid', 'done'] and set(vals).intersection(ORDER_FIELDS)):
                     raise UserError(_('According to the French law, you cannot modify a point of sale order. Forbidden fields: %s.') % ', '.join(ORDER_FIELDS))
                 # restrict the operation in case we are trying to overwrite existing hash
                 if (order.l10n_fr_hash and 'l10n_fr_hash' in vals) or (order.l10n_fr_secure_sequence_number and 'l10n_fr_secure_sequence_number' in vals):
@@ -161,6 +161,6 @@ class PosOrderLine(models.Model):
     def write(self, vals):
         # restrict the operation in case we are trying to write a forbidden field
         if set(vals).intersection(LINE_FIELDS):
-            if any(l.company_id._is_accounting_unalterable() and l.order_id.state in ['done', 'invoiced'] for l in self):
+            if any(l.company_id._is_accounting_unalterable() and (l.order_id.account_move or l.order_id.state == 'done') for l in self):
                 raise UserError(_('According to the French law, you cannot modify a point of sale order line. Forbidden fields: %s.') % ', '.join(LINE_FIELDS))
         return super(PosOrderLine, self).write(vals)

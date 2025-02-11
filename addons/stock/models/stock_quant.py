@@ -5,6 +5,7 @@ from collections import namedtuple
 
 from ast import literal_eval
 from collections import defaultdict
+from markupsafe import escape
 from psycopg2 import Error
 
 from odoo import _, api, fields, models, SUPERUSER_ID
@@ -422,25 +423,16 @@ class StockQuant(models.Model):
             'help': """
                 <p class="o_view_nocontent_smiling_face">
                     {}
-                </p><p>
-                    {} <span class="fa fa-long-arrow-right"/> {}</p>
-                """.format(_('Your stock is currently empty'),
-                           _('Press the CREATE button to define quantity for each product in your stock or import them from a spreadsheet throughout Favorites'),
-                           _('Import')),
+                </p>
+                <p>
+                    {} <span class="fa fa-cog"/>
+                </p>
+                """.format(escape(_('Your stock is currently empty')),
+                           escape(_('Press the "New" button to define the quantity for a product in your stock or import quantities from a spreadsheet via the Actions menu'))),
         }
         return action
 
     def action_apply_inventory(self):
-        products_tracked_without_lot = []
-        for quant in self:
-            rounding = quant.product_uom_id.rounding
-            if fields.Float.is_zero(quant.inventory_diff_quantity, precision_rounding=rounding)\
-                    and fields.Float.is_zero(quant.inventory_quantity, precision_rounding=rounding)\
-                    and fields.Float.is_zero(quant.quantity, precision_rounding=rounding):
-                continue
-            if quant.product_id.tracking in ['lot', 'serial'] and\
-                    not quant.lot_id and quant.inventory_quantity != quant.quantity and not quant.quantity:
-                products_tracked_without_lot.append(quant.product_id.id)
         # for some reason if multi-record, env.context doesn't pass to wizards...
         ctx = dict(self.env.context or {})
         ctx['default_quant_ids'] = self.ids
@@ -453,17 +445,6 @@ class StockQuant(models.Model):
                 'view_mode': 'form',
                 'views': [(False, 'form')],
                 'res_model': 'stock.inventory.conflict',
-                'target': 'new',
-                'context': ctx,
-            }
-        if products_tracked_without_lot:
-            ctx['default_product_ids'] = products_tracked_without_lot
-            return {
-                'name': _('Tracked Products in Inventory Adjustment'),
-                'type': 'ir.actions.act_window',
-                'view_mode': 'form',
-                'views': [(False, 'form')],
-                'res_model': 'stock.track.confirmation',
                 'target': 'new',
                 'context': ctx,
             }

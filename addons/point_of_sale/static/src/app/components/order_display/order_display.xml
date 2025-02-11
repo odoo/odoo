@@ -10,7 +10,7 @@
                         <Orderline t-else="" line="line" mode="this.props.mode" />
                     </t>
                     <div t-if="order.general_customer_note"
-                        t-attf-class="{{this.props.mode === 'receipt' ? 'mt-1 bg-opacity-75 p-0 ' : 'customer-note w-100 p-2 mt-2 rounded text-break text-bg-warning bg-opacity-25 mt-0'}}">
+                        t-attf-class="{{this.props.mode === 'receipt' ? 'mt-1 bg-opacity-75 p-0 ' : 'customer-note w-100 p-2 mt-2 text-break bg-warning bg-opacity-25 mt-0 text-warning'}}">
                         <div class="row flex-wrap w-100 m-0">
                             <div class="col-auto px-1">
                                 <i class="fa fa-sticky-note me-1 fa-lg" role="img"
@@ -26,11 +26,11 @@
                         </div>
                     </div>
                     <div t-if="order.internal_note"
-                        class="internal-note-container d-flex gap-2">
+                        class="internal-note-container d-flex gap-2 flex-wrap">
                         <t t-foreach="order.internal_note.split('\n') or []" t-as="note"
                             t-key="note_index">
                             <li t-if="note.trim() !== ''" t-esc="note"
-                                class="internal-note badge mt-1 p-2 rounded-pill bg-info text-info bg-opacity-25"
+                                class="internal-note badge rounded text-bg-info"
                                 style="font-size: 0.85rem;"/>
                         </t>
                     </div>
@@ -43,18 +43,9 @@
                             <span t-esc="formatCurrency(taxTotals.order_sign * taxTotals.tax_amount_currency)" class="tax"/>
                         </div>
                     </div>
-                    <div t-if="'cash_rounding_base_amount_currency' in taxTotals"
-                         class="subentry d-flex justify-content-between w-100 fs-6 text-muted"
-                    >
-                        Rounding
-                        <div id="order-widget-rounding">
-                            <span t-esc="formatCurrency(taxTotals.order_sign * taxTotals.cash_rounding_base_amount_currency)"
-                                  class="rounding"/>
-                        </div>
-                    </div>
                     <div class="d-flex justify-content-between w-100 fs-3">
                         Total
-                        <span t-esc="formatCurrency(taxTotals.order_sign * taxTotals.total_amount_currency)"
+                        <span t-esc="formatCurrency(taxTotals.order_sign * taxTotals.order_total)"
                               class="total"/>
                     </div>
                 </div>

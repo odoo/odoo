@@ -7,6 +7,9 @@ import { createFileViewer } from "@web/core/file_viewer/file_viewer_hook";
 import { boundariesOut } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import { ImageTransformButton } from "./image_transform_button";
+import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
+import { closestBlock } from "@html_editor/utils/blocks";
+import { fillEmpty } from "@html_editor/utils/dom";
 
 function hasShape(imagePlugin, shapeName) {
     return () => imagePlugin.isSelectionShaped(shapeName);
@@ -255,7 +258,12 @@ export class ImagePlugin extends Plugin {
     deleteImage() {
         const selectedImg = this.getSelectedImage();
         if (selectedImg) {
+            const cursors = this.dependencies.selection.preserveSelection();
+            cursors.update(callbacksForCursorUpdate.remove(selectedImg));
+            const parentEl = closestBlock(selectedImg);
             selectedImg.remove();
+            cursors.restore();
+            fillEmpty(parentEl);
             this.dependencies.history.addStep();
         }
     }

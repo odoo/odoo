@@ -6,25 +6,87 @@
         <field name="model">payment.provider</field>
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
+            <group name="provider_credentials" position="before">
+                <div class="text-muted mb-2" invisible="not razorpay_account_id">
+                    This provider is linked with your Razorpay account.
+                </div>
+            </group>
             <group name="provider_credentials" position='inside'>
-                <group name="razorpay_credentials"
-                       invisible="code != 'razorpay'">
-                    <field name="razorpay_key_id"
-                           string="Key Id"
-                           required="code == 'razorpay' and state != 'disabled'"/>
-                    <field name="razorpay_key_secret"
-                           string="Key Secret"
-                           required="code == 'razorpay' and state != 'disabled'"
-                           password="True"/>
-                    <field name="razorpay_webhook_secret"
-                           string="Webhook Secret"
-                           required="code == 'razorpay' and state != 'disabled'"
-                           password="True"/>
+                <group
+                    name="razorpay_credentials"
+                    invisible="code != 'razorpay'"
+                    groups="base.group_no_one"
+                >
+                    <label for="razorpay_account_id"/>
+                    <div class="o_row">
+                        <field name="razorpay_account_id" string="Account ID" readonly="True"/>
+                        <button
+                            string="Reset Your Razorpay Account"
+                            type="object"
+                            name="action_razorpay_reset_oauth_account"
+                            class="btn-secondary ms-2"
+                            confirm="Are you sure you want to disconnect?"
+                            invisible="not razorpay_account_id"
+                            readonly="True"
+                        />
+                    </div>
+                    <field
+                        name="razorpay_key_id"
+                        string="Key Id"
+                        decoration-muted="razorpay_account_id"
+                    />
+                    <field
+                        name="razorpay_key_secret"
+                        string="Key Secret"
+                        password="True"
+                        decoration-muted="razorpay_account_id"
+                    />
+                    <label for="razorpay_webhook_secret"/>
+                    <div class="o_row">
+                        <field
+                            name="razorpay_webhook_secret"
+                            string="Webhook Secret"
+                            password="True"
+                        />
+                        <button
+                            string="Generate your webhook"
+                            type="object"
+                            name="action_razorpay_create_webhook"
+                            class="btn-primary ms-2"
+                            invisible="not razorpay_account_id or razorpay_webhook_secret"
+                        />
+                    </div>
                 </group>
+            </group>
+            <group name="provider_credentials" position="after">
+                <div
+                    class="alert alert-warning"
+                    role="alert"
+                    invisible="code != 'razorpay' or not razorpay_key_id or razorpay_account_id"
+                >
+                    You are currently connected to Razorpay through the credentials method, which is
+                    deprecated. Click the "Connect" button below to use the recommended OAuth
+                    method.
+                </div>
+                <div invisible="code != 'razorpay' or razorpay_account_id">
+                    <button
+                        string="Connect"
+                        type="object"
+                        name="action_razorpay_redirect_to_oauth_url"
+                        class="btn-primary"
+                    />
+                </div>
             </group>
             <field name="allow_tokenization" position="after">
                 <div invisible="code != 'razorpay' or not allow_tokenization" colspan="2">
-                    <widget class="mx-2" colspan="2" name="documentation_link" path="/applications/finance/payment_providers/razorpay.html#payment-providers-razorpay-recurring-payments" label="Enable recurring payments on Razorpay" icon="oi oi-fw o_button_icon oi-arrow-right"/>
+                    <widget
+                        label="Enable recurring payments on Razorpay"
+                        name="documentation_link"
+                        path="/applications/finance/payment_providers/razorpay.html#payment-providers-razorpay-recurring-payments"
+                        icon="oi oi-fw o_button_icon oi-arrow-right"
+                        colspan="2"
+                        class="mx-2"
+                    />
                 </div>
             </field>
         </field>

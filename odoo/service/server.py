@@ -1,6 +1,7 @@
 #-----------------------------------------------------------
 # Threaded, Gevent and Prefork Servers
 #-----------------------------------------------------------
+import contextlib
 import datetime
 import errno
 import logging
@@ -15,6 +16,7 @@ import subprocess
 import sys
 import threading
 import time
+from collections import deque
 from io import BytesIO
 
 import psutil
@@ -50,13 +52,13 @@ try:
 except ImportError:
     setproctitle = lambda x: None
 
-import odoo
-from odoo.modules import get_modules
+from odoo import api, sql_db
 from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
-from odoo.tools import config, osutil
+from odoo.tools import config, osutil, OrderedSet
 from odoo.tools.cache import log_ormcache_stats
 from odoo.tools.misc import stripped_sys_argv, dumpstacks
+from .db import list_dbs
 
 _logger = logging.getLogger(__name__)
 
@@ -78,6 +80,7 @@ def set_limit_memory_hard():
     if platform.system() != 'Linux':
         return
     limit_memory_hard = config['limit_memory_hard']
+    import odoo  # for eventd
     if odoo.evented and config['limit_memory_hard_gevent']:
         limit_memory_hard = config['limit_memory_hard_gevent']
     if limit_memory_hard:
@@ -92,6 +95,11 @@ def empty_pipe(fd):
     except OSError as e:
         if e.errno not in [errno.EAGAIN]:
             raise
+
+
+def cron_database_list():
+    return config['db_name'] or list_dbs(True)
+
 
 #----------------------------------------------------------
 # Werkzeug WSGI servers patched
@@ -122,7 +130,7 @@ class BaseWSGIServerNoBind(LoggingBaseWSGIServerMixIn, werkzeug.serving.BaseWSGI
 class RequestHandler(werkzeug.serving.WSGIRequestHandler):
     def setup(self):
         # timeout to avoid chrome headless preconnect during tests
-        if config['test_enable'] or config['test_file']:
+        if config['test_enable']:
             self.timeout = 5
         # flag the current thread as handling a http request
         super(RequestHandler, self).setup()
@@ -255,6 +263,7 @@ class FSWatcherBase(object):
 class FSWatcherWatchdog(FSWatcherBase):
     def __init__(self):
         self.observer = Observer()
+        import odoo.addons  # noqa: PLC0415
         for path in odoo.addons.__path__:
             _logger.info('Watching addons folder %s', path)
             self.observer.schedule(self, path, recursive=True)
@@ -281,6 +290,7 @@ class FSWatcherInotify(FSWatcherBase):
         inotify.adapters._LOGGER.setLevel(logging.ERROR)
         # recreate a list as InotifyTrees' __init__ deletes the list's items
         paths_to_watch = []
+        import odoo.addons  # noqa: PLC0415
         for path in odoo.addons.__path__:
             paths_to_watch.append(path)
             _logger.info('Watching addons folder %s', path)
@@ -450,8 +460,8 @@ class ThreadedServer(CommonServer):
         # same time. This is known as the thundering herd effect.
 
         from odoo.addons.base.models.ir_cron import IrCron  # noqa: PLC0415
-        conn = odoo.sql_db.db_connect('postgres')
-        with conn.cursor() as cr:
+
+        def _run_cron(cr):
             pg_conn = cr._cnx
             # LISTEN / NOTIFY doesn't work in recovery mode
             cr.execute("SELECT pg_is_in_recovery()")
@@ -461,23 +471,57 @@ class ThreadedServer(CommonServer):
             else:
                 _logger.warning("PG cluster in recovery mode, cron trigger not activated")
             cr.commit()
-
-            while True:
+            check_all_time = 0.0  # last time that we listed databases, initialized far in the past
+            all_db_names = []
+            alive_time = time.monotonic()
+            while config['limit_time_worker_cron'] <= 0 or (time.monotonic() - alive_time) <= config['limit_time_worker_cron']:
                 select.select([pg_conn], [], [], SLEEP_INTERVAL + number)
                 time.sleep(number / 100)
-                pg_conn.poll()
+                try:
+                    pg_conn.poll()
+                except Exception:
+                    if pg_conn.closed:
+                        # connection closed, just exit the loop
+                        return
+                    raise
+                notified = OrderedSet(
+                    notif.payload
+                    for notif in pg_conn.notifies
+                    if notif.channel == 'cron_trigger'
+                )
+                pg_conn.notifies.clear()  # free resources
 
-                registries = odoo.modules.registry.Registry.registries
-                _logger.debug('cron%d polling for jobs', number)
-                for db_name, registry in registries.d.items():
-                    if registry.ready:
-                        thread = threading.current_thread()
-                        thread.start_time = time.time()
-                        try:
-                            IrCron._process_jobs(db_name)
-                        except Exception:
-                            _logger.warning('cron%d encountered an Exception:', number, exc_info=True)
-                        thread.start_time = None
+                if time.time() - SLEEP_INTERVAL > check_all_time:
+                    # check all databases
+                    # last time we checked them was `now - SLEEP_INTERVAL`
+                    check_all_time = time.time()
+                    # process notified databases first, then the other ones
+                    all_db_names = OrderedSet(cron_database_list())
+                    db_names = [
+                        *(db for db in notified if db in all_db_names),
+                        *(db for db in all_db_names if db not in notified),
+                    ]
+                else:
+                    # restrict to notified databases only
+                    db_names = notified.intersection(all_db_names)
+                    if not db_names:
+                        continue
+
+                _logger.debug('cron%d polling for jobs (notified: %s)', number, notified)
+                for db_name in db_names:
+                    thread = threading.current_thread()
+                    thread.start_time = time.time()
+                    try:
+                        IrCron._process_jobs(db_name)
+                    except Exception:
+                        _logger.warning('cron%d encountered an Exception:', number, exc_info=True)
+                    thread.start_time = None
+
+        while True:
+            conn = sql_db.db_connect('postgres')
+            with contextlib.closing(conn.cursor()) as cr:
+                _run_cron(cr)
+            _logger.info('cron%d max age (%ss) reached, releasing connection.', number, config['limit_time_worker_cron'])
 
     def cron_spawn(self):
         """ Start the above runner function in a daemon thread.
@@ -491,14 +535,12 @@ class ThreadedServer(CommonServer):
         # to prevent time.strptime AttributeError within the thread.
         # See: http://bugs.python.org/issue7980
         datetime.datetime.strptime('2012-01-01', '%Y-%m-%d')
-        for i in range(odoo.tools.config['max_cron_threads']):
-            def target():
-                self.cron_thread(i)
-            t = threading.Thread(target=target, name="odoo.service.cron.cron%d" % i)
+        for i in range(config['max_cron_threads']):
+            t = threading.Thread(target=self.cron_thread, args=(i,), name=f"odoo.service.cron.cron{i}")
             t.daemon = True
             t.type = 'cron'
             t.start()
-            _logger.debug("cron%d started!" % i)
+            _logger.debug("cron%d started!", i)
 
     def http_spawn(self):
         self.httpd = ThreadedWSGIServerReloadable(self.interface, self.port, self.app)
@@ -523,8 +565,7 @@ class ThreadedServer(CommonServer):
             import win32api
             win32api.SetConsoleCtrlHandler(lambda sig: self.signal_handler(sig, None), 1)
 
-        test_mode = config['test_enable'] or config['test_file']
-        if test_mode or (config['http_enable'] and not stop):
+        if config['test_enable'] or (config['http_enable'] and not stop):
             # some tests need the http daemon to be available...
             self.http_spawn()
 
@@ -561,7 +602,7 @@ class ThreadedServer(CommonServer):
                     thread.join(0.05)
                     time.sleep(0.05)
 
-        odoo.sql_db.close_all()
+        sql_db.close_all()
 
         _logger.debug('--')
         logging.shutdown()
@@ -966,7 +1007,7 @@ class PreforkServer(CommonServer):
             return rc
 
         # Empty the cursor pool, we dont want them to be shared among forked workers.
-        odoo.sql_db.close_all()
+        sql_db.close_all()
 
         _logger.debug("Multiprocess starting")
         while 1:
@@ -1093,7 +1134,7 @@ class Worker(object):
             t.join()
             _logger.info("Worker (%s) exiting. request_count: %s, registry count: %s.",
                          self.pid, self.request_count,
-                         len(odoo.modules.registry.Registry.registries))
+                         len(Registry.registries))
             self.stop()
         except Exception:
             _logger.exception("Worker (%s) Exception occurred, exiting...", self.pid)
@@ -1165,15 +1206,16 @@ class WorkerCron(Worker):
 
     def __init__(self, multi):
         super(WorkerCron, self).__init__(multi)
-        # process_work() below process a single database per call.
-        # The variable db_index is keeping track of the next database to
-        # process.
-        self.db_index = 0
+        self.alive_time = time.monotonic()
         self.watchdog_timeout = multi.cron_timeout  # Use a distinct value for CRON Worker
+        # process_work() below process a single database per call.
+        # self.db_queue keeps track of the databases to process (in order, from left to right).
+        self.db_queue: deque[str] = deque()
+        self.db_count: int = 0
 
     def sleep(self):
         # Really sleep once all the databases have been processed.
-        if self.db_index == 0:
+        if not self.db_queue:
             interval = SLEEP_INTERVAL + self.pid % 10   # chorus effect
 
             # simulate interruptible sleep with select(wakeup_fd, timeout)
@@ -1187,35 +1229,52 @@ class WorkerCron(Worker):
                 if e.args[0] != errno.EINTR:
                     raise
 
-    def _db_list(self):
-        if config['db_name']:
-            db_names = list(config['db_name'])
-        else:
-            db_names = odoo.service.db.list_dbs(True)
-        return db_names
+    def check_limits(self):
+        super().check_limits()
+
+        if config['limit_time_worker_cron'] > 0 and (time.monotonic() - self.alive_time) > config['limit_time_worker_cron']:
+            _logger.info('WorkerCron (%s) max age (%ss) reached.', self.pid, config['limit_time_worker_cron'])
+            self.alive = False
 
     def process_work(self):
+        """Process a single database."""
         _logger.debug("WorkerCron (%s) polling for jobs", self.pid)
-        db_names = self._db_list()
-        if len(db_names):
-            self.db_index = (self.db_index + 1) % len(db_names)
-            db_name = db_names[self.db_index]
-            self.setproctitle(db_name)
 
-            from odoo.addons.base.models import ir_cron  # noqa: PLC0415
-            ir_cron.IrCron._process_jobs(db_name)
+        if not self.db_queue:
+            # list databases
+            db_names = OrderedSet(cron_database_list())
+            pg_conn = self.dbcursor._cnx
+            notified = OrderedSet(
+                notif.payload
+                for notif in pg_conn.notifies
+                if notif.channel == 'cron_trigger'
+            )
+            pg_conn.notifies.clear()  # free resources
+            # add notified databases (in order) first in the queue
+            self.db_queue.extend(db for db in notified if db in db_names)
+            self.db_queue.extend(db for db in db_names if db not in notified)
+            self.db_count = len(self.db_queue)
+            if not self.db_count:
+                return
 
-            # dont keep cursors in multi database mode
-            if len(db_names) > 1:
-                odoo.sql_db.close_db(db_name)
+        # pop the leftmost element (because notified databases appear first)
+        db_name = self.db_queue.popleft()
+        self.setproctitle(db_name)
 
-            self.request_count += 1
-            if self.request_count >= self.request_max and self.request_max < len(db_names):
-                _logger.error("There are more dabatases to process than allowed "
-                              "by the `limit_request` configuration variable: %s more.",
-                              len(db_names) - self.request_max)
-        else:
-            self.db_index = 0
+        from odoo.addons.base.models.ir_cron import IrCron  # noqa: PLC0415
+        IrCron._process_jobs(db_name)
+
+        # dont keep cursors in multi database mode
+        if self.db_count > 1:
+            sql_db.close_db(db_name)
+
+        self.request_count += 1
+        if self.request_count >= self.request_max and self.request_max < self.db_count:
+            _logger.error(
+                "There are more dabatases to process than allowed "
+                "by the `limit_request` configuration variable: %s more.",
+                self.db_count - self.request_max,
+            )
 
     def start(self):
         os.nice(10)     # mommy always told me to be nice with others...
@@ -1223,7 +1282,7 @@ class WorkerCron(Worker):
         if self.multi.socket:
             self.multi.socket.close()
 
-        dbconn = odoo.sql_db.db_connect('postgres')
+        dbconn = sql_db.db_connect('postgres')
         self.dbcursor = dbconn.cursor()
         # LISTEN / NOTIFY doesn't work in recovery mode
         self.dbcursor.execute("SELECT pg_is_in_recovery()")
@@ -1246,9 +1305,10 @@ server = None
 server_phoenix = False
 
 def load_server_wide_modules():
+    from odoo.modules.module import load_openerp_module  # noqa: PLC0415
     for m in config['server_wide_modules']:
         try:
-            odoo.modules.module.load_openerp_module(m)
+            load_openerp_module(m)
         except Exception:
             msg = ''
             if m == 'web':
@@ -1286,7 +1346,7 @@ def preload_registries(dbnames):
             if config['test_enable']:
                 from odoo.tests import loader  # noqa: PLC0415
                 t0 = time.time()
-                t0_sql = odoo.sql_db.sql_counter
+                t0_sql = sql_db.sql_counter
                 module_names = (registry.updated_modules if update_module else
                                 sorted(registry._init_modules))
                 _logger.info("Starting post tests")
@@ -1294,14 +1354,14 @@ def preload_registries(dbnames):
                 post_install_suite = loader.make_suite(module_names, 'post_install')
                 if post_install_suite.has_http_case():
                     with registry.cursor() as cr:
-                        env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
+                        env = api.Environment(cr, api.SUPERUSER_ID, {})
                         env['ir.qweb']._pregenerate_assets_bundles()
                 result = loader.run_suite(post_install_suite)
                 registry._assertion_report.update(result)
                 _logger.info("%d post-tests in %.2fs, %s queries",
                              registry._assertion_report.testsRun - tests_before,
                              time.time() - t0,
-                             odoo.sql_db.sql_counter - t0_sql)
+                             sql_db.sql_counter - t0_sql)
 
                 registry._assertion_report.log_stats()
             if registry._assertion_report and not registry._assertion_report.wasSuccessful():
@@ -1317,11 +1377,12 @@ def start(preload=None, stop=False):
     global server
 
     load_server_wide_modules()
+    import odoo.http  # noqa: PLC0415
 
     if odoo.evented:
         server = GeventServer(odoo.http.root)
     elif config['workers']:
-        if config['test_enable'] or config['test_file']:
+        if config['test_enable']:
             _logger.warning("Unit testing in workers mode could fail; use --workers 0.")
 
         server = PreforkServer(odoo.http.root)

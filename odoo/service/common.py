@@ -25,6 +25,7 @@ def exp_authenticate(db, login, password, user_agent_env):
         user_agent_env = {}
     with Registry(db).cursor() as cr:
         env = odoo.api.Environment(cr, None, {})
+        env.transaction.default_env = env  # force default_env
         try:
             credential = {'login': login, 'password': password, 'type': 'password'}
             return env['res.users'].authenticate(credential, {**user_agent_env, 'interactive': False})['uid']

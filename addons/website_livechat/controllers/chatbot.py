@@ -14,7 +14,7 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
         """ Custom route allowing to test a chatbot script.
         As we don't have a im_livechat.channel linked to it, we pre-emptively create a discuss.channel
         that will hold the conversation between the bot and the user testing the script. """
-
+        store = Store()
         channels = request.env["discuss.channel"].search([
             ["is_member", "=", True],
             ["livechat_active", "=", True],
@@ -22,6 +22,7 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
         ])
         for channel in channels:
             channel._close_livechat_session()
+        store.add(channels, {"close_chat_window": True})
 
         discuss_channel_values = {
             "channel_member_ids": [
@@ -34,12 +35,7 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
                         "last_interest_dt": fields.Datetime.now() - timedelta(seconds=30),
                     }
                 ),
-                Command.create(
-                    {
-                        "partner_id": request.env.user.partner_id.id,
-                        "fold_state": "open",
-                    }
-                ),
+                Command.create({"partner_id": request.env.user.partner_id.id}),
             ],
             'livechat_active': True,
             'livechat_operator_id': chatbot_script.operator_partner_id.id,
@@ -55,7 +51,7 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
 
         discuss_channel = request.env['discuss.channel'].create(discuss_channel_values)
         chatbot_script._post_welcome_steps(discuss_channel)
-        store = Store()
+        store.add(discuss_channel, {"open_chat_window": True})
         request.env["res.users"]._init_store_data(store)
         store.add(chatbot_script)
         return request.render("im_livechat.chatbot_test_script_page", {

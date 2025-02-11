@@ -2,6 +2,7 @@
 <odoo>
     <record id="account_tax_report_tg" model="account.report">
         <field name="name">VAT Report</field>
+        <field name="name@fr">Déclaration TVA</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.tg"/>
         <field name="filter_fiscal_position" eval="True"/>
@@ -9,16 +10,19 @@
         <field name="column_ids">
             <record id="account_tax_report_tg_balance" model="account.report.column">
                 <field name="name">Base</field>
+                <field name="name@fr">Base</field>
                 <field name="expression_label">base</field>
             </record>
             <record id="account_tax_report_tg_tax" model="account.report.column">
                 <field name="name">Tax</field>
+                <field name="name@fr">Taxe</field>
                 <field name="expression_label">tax</field>
             </record>
         </field>
         <field name="line_ids">
             <record id="account_tax_report_line_tg_sales" model="account.report.line">
                 <field name="name">1/11. Outgoing</field>
+                <field name="name@fr">1/11. Sortant</field>
                 <field name="code">TG_SALES</field>
                 <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
@@ -36,6 +40,7 @@
                 <field name="children_ids">
                     <record id="account_tax_report_line_tg_sales_non_taxable" model="account.report.line">
                         <field name="name">2. Non Taxable operations</field>
+                        <field name="name@fr">2. Opérations non taxables</field>
                         <field name="code">TG_NON_TAXABLE</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_tg_sales_non_taxable_base_tag" model="account.report.expression">
@@ -47,6 +52,7 @@
                         <field name="children_ids">
                             <record id="account_tax_report_line_tg_sales_non_taxable_exempt" model="account.report.line">
                                 <field name="name">3. Exempt</field>
+                                <field name="name@fr">3. Exonérées</field>
                                 <field name="code">TG_SALE_EXEMPT</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_tg_sales_non_taxable_exempt_base_tag" model="account.report.expression">
@@ -58,6 +64,7 @@
                             </record>
                             <record id="account_tax_report_line_tg_sales_non_taxable_not_imposable" model="account.report.line">
                                 <field name="name">4. Not imposable</field>
+                                <field name="name@fr">4. Non imposées</field>
                                 <field name="code">TG_SALE_NOT_IMPOSABLE</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_tg_sales_non_taxable_not_imposable_base_tag" model="account.report.expression">
@@ -69,6 +76,7 @@
                             </record>
                             <record id="account_tax_report_line_tg_sales_non_taxable_sales_export" model="account.report.line">
                                 <field name="name">5. Export Non imposable</field>
+                                <field name="name@fr">5. Exportations de produits non taxables</field>
                                 <field name="code">TG_EXPORT</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_tg_sales_non_taxable_export_base_tag" model="account.report.expression">
@@ -82,6 +90,7 @@
                     </record>
                     <record id="account_tax_report_line_tg_sales_taxable" model="account.report.line">
                         <field name="name">6/12. Taxable operations</field>
+                        <field name="name@fr">6/12. Opérations taxables</field>
                         <field name="code">TG_TAXABLE</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_tg_sales_taxable_base_tag" model="account.report.expression">
@@ -98,6 +107,7 @@
                         <field name="children_ids">
                             <record id="account_tax_report_line_tg_sales_taxable_18" model="account.report.line">
                                 <field name="name">7/13. At 18%</field>
+                                <field name="name@fr">7/13. A 18%</field>
                                 <field name="code">TG_TAXABLE_18</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_tg_sales_taxable_18_base_tag" model="account.report.expression">
@@ -114,6 +124,7 @@
                             </record>
                             <record id="account_tax_report_line_tg_sales_taxable_public_market" model="account.report.line">
                                 <field name="name">8/14. Public Markets</field>
+                                <field name="name@fr">8/14. Marchés publics avec Chèque Trésor</field>
                                 <field name="code">TG_TAXABLE_PM</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_tg_sales_taxable_public_market_base_tag" model="account.report.expression">
@@ -130,6 +141,7 @@
                             </record>
                             <record id="account_tax_report_line_tg_sales_taxable_self_delivery" model="account.report.line">
                                 <field name="name">9/15. Self Delivery</field>
+                                <field name="name@fr">9/15. Livraison à soi-meme (L.A.S.M.)</field>
                                 <field name="code">TG_TAXABLE_SD</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_tg_sales_taxable_self_delivery_base_tag" model="account.report.expression">
@@ -146,6 +158,7 @@
                             </record>
                             <record id="account_tax_report_line_tg_sales_taxable_export" model="account.report.line">
                                 <field name="name">10. Exports</field>
+                                <field name="name@fr">10. Exportations</field>
                                 <field name="code">TG_TAXABLE_EXPORT</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_tg_sales_taxable_taxable_export_base_tag" model="account.report.expression">
@@ -161,6 +174,7 @@
             </record>
             <record id="account_tax_report_line_tg_deductible" model="account.report.line">
                 <field name="name">16. Deductible VAT</field>
+                <field name="name@fr">16. TVA Déductible</field>
                 <field name="code">TG_VAT_DEDUCT</field>
                 <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
@@ -178,6 +192,7 @@
                 <field name="children_ids">
                     <record id="account_tax_report_line_tg_deductible_reported" model="account.report.line">
                         <field name="name">17. VAT Reported</field>
+                        <field name="name@fr">17. TVA reportée</field>
                         <field name="code">TG_VAT_REPORTED</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_tg_deductible_reported_tax_tag" model="account.report.expression">
@@ -195,6 +210,7 @@
                     </record>
                     <record id="account_tax_report_line_tg_deductible_goods_services" model="account.report.line">
                         <field name="name">18. On goods and services except assets</field>
+                        <field name="name@fr">18. Sur les biens et services exceptés les immobilisations</field>
                         <field name="code">TG_GOODS_SERVICE</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_tg_goods_services_base_tag" model="account.report.expression">
@@ -211,6 +227,7 @@
                     </record>
                     <record id="account_tax_report_line_tg_deductible_assets" model="account.report.line">
                         <field name="name">19. On assets</field>
+                        <field name="name@fr">19. Sur les immobilisations</field>
                         <field name="code">TG_Assets</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_tg_assets_base_tag" model="account.report.expression">
@@ -227,6 +244,7 @@
                     </record>
                     <record id="account_tax_report_line_tg_deductible_complement" model="account.report.line">
                         <field name="name">20. Additional reduction asked</field>
+                        <field name="name@fr">20. Complément de déduction demandé</field>
                         <field name="code">TG_ADD_RED</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_tg_complement_tax_tag" model="account.report.expression">
@@ -239,6 +257,7 @@
                     </record>
                     <record id="account_tax_report_line_tg_deductible_reimbursement" model="account.report.line">
                         <field name="name">21. Reimbursement</field>
+                        <field name="name@fr">21. Reversement à effectuer</field>
                         <field name="code">TG_REIMBURSEMENT</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_tg_reimbursement_tax_tag" model="account.report.expression">
@@ -253,6 +272,7 @@
             </record>
             <record id="account_tax_report_line_tg_net_vat" model="account.report.line">
                 <field name="name">23. Net VAT</field>
+                <field name="name@fr">23. TVA Nette</field>
                 <field name="code">TG_NET_VAT</field>
                 <field name="hierarchy_level">0</field>
                 <field name="expression_ids">
@@ -265,6 +285,7 @@
                 <field name="children_ids">
                     <record id="account_tax_report_line_tg_to_pay" model="account.report.line">
                         <field name="name">26. Net vat to pay</field>
+                        <field name="name@fr">26. TVA nette à payer</field>
                         <field name="code">TG_TO_PAY</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_tg_to_pay_tax_tag" model="account.report.expression">
@@ -277,6 +298,7 @@
                     </record>
                     <record id="account_tax_report_line_tg_to_report" model="account.report.line">
                         <field name="name">27. Credit to report</field>
+                        <field name="name@fr">27. Crédit à reporter</field>
                         <field name="code">TG_REPORT</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_tg_to_report_tax_tag" model="account.report.expression">

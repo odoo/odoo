@@ -40,7 +40,7 @@
                             <field name="active" invisible="1"/>
                             <field name="email" required="send_by == 'mail'"/>
                             <field name="phone" class="o_force_ltr" required="send_by == 'phone'"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
                             <field name="responsible_id" required="send_by == 'mail'" groups="base.group_no_one" domain="[('share', '=', False)]"/>
                         </group>
                     </group>

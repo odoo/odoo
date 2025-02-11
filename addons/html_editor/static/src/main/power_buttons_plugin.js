@@ -1,4 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
+import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { isEmptyBlock } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
@@ -12,6 +13,7 @@ import { omit, pick } from "@web/core/utils/objects";
  * @property {Object} [commandParams]
  * @property {string} [title] Can be inferred from the user command
  * @property {string} [icon] Can be inferred from the user command
+ * @property {string} [isAvailable] Can be inferred from the user command
  */
 /**
  * A power button is added by referencing an existing user command.
@@ -40,7 +42,14 @@ import { omit, pick } from "@web/core/utils/objects";
 
 export class PowerButtonsPlugin extends Plugin {
     static id = "powerButtons";
-    static dependencies = ["selection", "position", "localOverlay", "powerbox", "userCommand"];
+    static dependencies = [
+        "baseContainer",
+        "selection",
+        "position",
+        "localOverlay",
+        "powerbox",
+        "userCommand",
+    ];
     resources = {
         layout_geometry_change_handlers: this.updatePowerButtons.bind(this),
         selectionchange_handlers: this.updatePowerButtons.bind(this),
@@ -54,27 +63,32 @@ export class PowerButtonsPlugin extends Plugin {
     }
 
     createPowerButtons() {
-        /** @returns {HTMLButtonElement} */
-        const itemToButton = (/**@type {PowerButton} */ item) => {
+        const composePowerButton = (/**@type {PowerButton} */ item) => {
             const command = this.dependencies.userCommand.getCommand(item.commandId);
-            const composedPowerButton = {
-                ...pick(command, "title", "icon"),
+            return {
+                ...pick(command, "title", "icon", "isAvailable"),
                 ...omit(item, "commandId", "commandParams"),
                 run: () => command.run(item.commandParams),
             };
+        };
+        const renderButton = ({ title, icon, run }) => {
             const btn = this.document.createElement("button");
-            btn.className = `power_button btn px-2 py-1 cursor-pointer fa ${composedPowerButton.icon}`;
-            btn.title = composedPowerButton.title;
-            this.addDomListener(btn, "click", () => this.applyCommand(composedPowerButton.run));
+            btn.className = `power_button btn px-2 py-1 cursor-pointer fa ${icon}`;
+            btn.title = title;
+            this.addDomListener(btn, "click", () => this.applyCommand(run));
             return btn;
         };
 
+        /** @type {PowerButton[]} */
+        const powerButtonsDefinitions = this.getResource("power_buttons");
+        // Merge properties from power_button and user_command.
+        const powerButtons = powerButtonsDefinitions.map(composePowerButton);
+        // Render HTML buttons.
+        this.descriptionToElementMap = new Map(powerButtons.map((pb) => [pb, renderButton(pb)]));
+
         this.powerButtonsContainer = this.document.createElement("div");
         this.powerButtonsContainer.className = `o_we_power_buttons d-flex justify-content-center d-none`;
-
-        /** @type {PowerButton[]} */
-        const powerButtons = this.getResource("power_buttons");
-        this.powerButtonsContainer.append(...powerButtons.map(itemToButton));
+        this.powerButtonsContainer.append(...this.descriptionToElementMap.values());
         this.powerButtonsOverlay.append(this.powerButtonsContainer);
     }
 
@@ -89,7 +103,7 @@ export class PowerButtonsPlugin extends Plugin {
         const element = closestElement(editableSelection.anchorNode);
         if (
             editableSelection.isCollapsed &&
-            element?.tagName === "P" &&
+            element?.matches(baseContainerGlobalSelector) &&
             isEmptyBlock(block) &&
             !this.services.ui.isSmall &&
             !closestElement(editableSelection.anchorNode, "td") &&
@@ -101,6 +115,11 @@ export class PowerButtonsPlugin extends Plugin {
             this.powerButtonsContainer.classList.remove("d-none");
             const direction = closestElement(element, "[dir]")?.getAttribute("dir");
             this.powerButtonsContainer.setAttribute("dir", direction);
+            // Hide/show buttons based on their availability.
+            for (const [{ isAvailable }, buttonElement] of this.descriptionToElementMap.entries()) {
+                const shouldHide = Boolean(isAvailable && !isAvailable(editableSelection));
+                buttonElement.classList.toggle("d-none", shouldHide); // 2nd arg must be a boolean
+            }
             this.setPowerButtonsPosition(block, direction);
         }
     }

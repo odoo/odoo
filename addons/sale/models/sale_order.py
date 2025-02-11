@@ -997,6 +997,7 @@ class SaleOrder(models.Model):
             'default_res_ids': self.ids,
             'default_composition_mode': 'comment',
             'default_email_layout_xmlid': 'mail.mail_notification_layout_with_responsible_signature',
+            'email_notification_allow_footer': True,
             'hide_mail_template_management_options': True,
             'proforma': self.env.context.get('proforma', False),
         }
@@ -1221,57 +1222,15 @@ class SaleOrder(models.Model):
         self.locked = False
 
     def action_cancel(self):
-        """ Cancel SO after showing the cancel wizard when needed. (cfr :meth:`_show_cancel_wizard`)
-
-        For post-cancel operations, please only override :meth:`_action_cancel`.
-
-        note: self.ensure_one() if the wizard is shown.
-        """
+        """ Cancel sales order and related draft invoices. """
         if any(order.locked for order in self):
             raise UserError(_("You cannot cancel a locked order. Please unlock it first."))
-        cancel_warning = self._show_cancel_wizard()
-        if cancel_warning:
-            self.ensure_one()
-            template_id = self.env['ir.model.data']._xmlid_to_res_id(
-                'sale.mail_template_sale_cancellation', raise_if_not_found=False
-            )
-            lang = self.env.context.get('lang')
-            template = self.env['mail.template'].browse(template_id)
-            if template.lang:
-                lang = template._render_lang(self.ids)[self.id]
-            ctx = {
-                'default_template_id': template_id,
-                'default_order_id': self.id,
-                'mark_so_as_canceled': True,
-                'default_email_layout_xmlid': "mail.mail_notification_layout_with_responsible_signature",
-                'model_description': self.with_context(lang=lang).type_name,
-            }
-            return {
-                'name': _('Cancel %s', self.type_name),
-                'view_mode': 'form',
-                'res_model': 'sale.order.cancel',
-                'view_id': self.env.ref('sale.sale_order_cancel_view_form').id,
-                'type': 'ir.actions.act_window',
-                'context': ctx,
-                'target': 'new'
-            }
-        else:
-            return self._action_cancel()
+        return self._action_cancel()
 
     def _action_cancel(self):
         inv = self.invoice_ids.filtered(lambda inv: inv.state == 'draft')
         inv.button_cancel()
         return self.write({'state': 'cancel'})
-
-    def _show_cancel_wizard(self):
-        """ Decide whether the sale.order.cancel wizard should be shown to cancel specified orders.
-
-        :return: True if there is any non-draft order in the given orders
-        :rtype: bool
-        """
-        if self.env.context.get('disable_cancel_warning'):
-            return False
-        return any(so.state != 'draft' for so in self)
 
     @api.readonly
     def action_preview_sale_order(self):
@@ -1744,10 +1703,6 @@ class SaleOrder(models.Model):
             subtitles.append(
                 format_amount(self.env, self.amount_total, self.currency_id, lang_code=lang_code),
             )
-
-        if self.validity_date and self.state in ['draft', 'sent']:
-            formatted_date = format_date(self.env, self.validity_date, lang_code=lang_code)
-            subtitles.append(_("Expires on %(date)s", date=formatted_date))
 
         render_context['subtitles'] = subtitles
         return render_context

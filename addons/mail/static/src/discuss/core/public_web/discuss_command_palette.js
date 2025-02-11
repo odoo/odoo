@@ -119,7 +119,7 @@ async function makeNewChannel(name, store) {
     });
     const { Thread } = store.insert(data);
     const [channel] = Thread;
-    channel.open();
+    channel.open({ focus: true });
 }
 
 export class DiscussCommandPalette {
@@ -150,16 +150,22 @@ export class DiscussCommandPalette {
     buildResults(filtered) {
         const TOTAL_LIMIT = this.ui.isSmall ? 7 : 8;
         const remaining = TOTAL_LIMIT - (filtered ? filtered.size : 0);
-        let personas = Object.values(this.store.Persona.records).filter(
-            (persona) =>
-                persona.isInternalUser && cleanTerm(persona.name).includes(this.cleanedTerm)
-        );
-        personas = this.suggestion
-            .sortPartnerSuggestions(personas, this.cleanedTerm)
-            .slice(0, TOTAL_LIMIT)
-            .filter((persona) => !filtered || !filtered.has(persona));
-        const selfPersona = this.store.self.in(personas) ? this.store.self : undefined;
+        let personas = [];
+        const self = this.store.self;
+        if (self.type !== "guest") {
+            personas = Object.values(this.store.Persona.records).filter(
+                (persona) =>
+                    persona.isInternalUser &&
+                    cleanTerm(persona.name).includes(this.cleanedTerm) &&
+                    (!filtered || !filtered.has(persona))
+            );
+            personas = this.suggestion
+                .sortPartnerSuggestions(personas, this.cleanedTerm)
+                .slice(0, TOTAL_LIMIT);
+        }
+        const selfPersona = self.in(personas) ? self : undefined;
         if (selfPersona) {
+            // selfPersona filtered here to put at the bottom as lowest priority
             personas = personas.filter((p) => p.notEq(selfPersona));
         }
         const channels = Object.values(this.store.Thread.records)
@@ -167,7 +173,8 @@ export class DiscussCommandPalette {
                 (thread) =>
                     thread.channel_type &&
                     thread.channel_type !== "chat" &&
-                    cleanTerm(thread.displayName).includes(this.cleanedTerm)
+                    cleanTerm(thread.displayName).includes(this.cleanedTerm) &&
+                    (!filtered || !filtered.has(thread))
             )
             .sort((c1, c2) => {
                 if (c1.selfMember && !c2.selfMember) {
@@ -177,8 +184,7 @@ export class DiscussCommandPalette {
                 }
                 return c1.id - c2.id;
             })
-            .slice(0, TOTAL_LIMIT)
-            .filter((persona) => !filtered || !filtered.has(persona));
+            .slice(0, TOTAL_LIMIT);
         // balance remaining: half personas, half channels
         const elligiblePersonas = [];
         const elligibleChannels = [];
@@ -218,7 +224,7 @@ export class DiscussCommandPalette {
                 Component: DiscussCommand,
                 action: async () => {
                     const channel = await this.store.Thread.getOrFetch(thread);
-                    channel.open();
+                    channel.open({ focus: true });
                 },
                 name: thread.displayName,
                 category,

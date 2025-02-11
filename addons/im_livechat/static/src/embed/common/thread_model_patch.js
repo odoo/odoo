@@ -3,8 +3,21 @@ import { Thread } from "@mail/core/common/thread_model";
 import "@mail/discuss/core/common/thread_model_patch";
 
 import { patch } from "@web/core/utils/patch";
-import { SESSION_STATE } from "./livechat_service";
 import { _t } from "@web/core/l10n/translation";
+
+/** @type {typeof Thread} */
+const threadStaticPatch = {
+    async getOrFetch(data, fieldNames = []) {
+        const thread = await super.getOrFetch(...arguments);
+        if (thread) {
+            return thread;
+        }
+        // wait for restore of livechatService.savedState as channel might be inserted from there
+        await this.store.isReady;
+        return super.getOrFetch(...arguments);
+    },
+};
+patch(Thread, threadStaticPatch);
 
 patch(Thread.prototype, {
     setup() {
@@ -74,10 +87,7 @@ patch(Thread.prototype, {
     },
     /** @returns {Promise<import("models").Message} */
     async post() {
-        if (
-            this.channel_type === "livechat" &&
-            this.store.env.services["im_livechat.livechat"].state !== SESSION_STATE.PERSISTED
-        ) {
+        if (this.channel_type === "livechat" && this.isTransient) {
             const thread = await this.store.env.services["im_livechat.livechat"].persist();
             if (!thread) {
                 return;

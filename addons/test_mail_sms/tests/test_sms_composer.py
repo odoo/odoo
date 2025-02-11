@@ -3,8 +3,10 @@
 
 from odoo.addons.sms.tests.common import SMSCommon
 from odoo.addons.test_mail_sms.tests.common import TestSMSRecipients
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install', 'sms_composer')
 class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
     """ TODO LIST
 
@@ -169,16 +171,21 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
 
     def test_composer_nofield_w_customer(self):
         """ Test SMS composer without number field, the number on partner must be used instead"""
+        test_record = self.env['mail.test.sms.partner'].create({
+            'name': 'Test',
+            'customer_id': self.partner_1.id,
+        })
+
         with self.with_user('employee'):
             composer = self.env['sms.composer'].with_context(
-                    default_res_model='mail.test.sms', default_res_id=self.test_record.id,
+                    default_res_model=test_record._name, default_res_id=test_record.id,
                 ).create({
                     'body': self._test_body,
                 })
-
+        self.assertFalse(composer.number_field_name)
         self.assertTrue(composer.recipient_single_valid)
-        self.assertEqual(composer.recipient_single_number, self.test_numbers[1])
-        self.assertEqual(composer.recipient_single_number_itf, self.test_numbers[1])
+        self.assertEqual(composer.recipient_single_number, self.partner_1.phone)
+        self.assertEqual(composer.recipient_single_number_itf, self.partner_1.phone)
 
     def test_composer_internals(self):
         with self.with_user('employee'):
@@ -428,7 +435,7 @@ class TestSMSComposerMass(SMSCommon):
             'active': True,
         } for p in self.partners[:5]])
         for p in self.partners[5:8]:
-            p.mobile = self.partners[5].mobile
+            p.phone = self.partners[5].phone
             self.assertEqual(p.phone_sanitized, self.partners[5].phone_sanitized)
 
         with self.with_user('employee'):

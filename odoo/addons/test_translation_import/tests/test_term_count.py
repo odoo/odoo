@@ -4,7 +4,7 @@ from markupsafe import Markup
 
 from odoo.tests import common, tagged
 from odoo.tools.misc import file_open, mute_logger, file_path
-from odoo.tools.translate import TranslationModuleReader, TranslationRecordReader, code_translations, CodeTranslations, PYTHON_TRANSLATION_COMMENT, JAVASCRIPT_TRANSLATION_COMMENT, TranslationFileReader
+from odoo.tools.translate import TranslationModuleReader, TranslationRecordReader, code_translations, CodeTranslations, PYTHON_TRANSLATION_COMMENT, JAVASCRIPT_TRANSLATION_COMMENT, translation_file_reader
 from odoo import Command
 from odoo.addons.base.models.ir_fields import BOOLEAN_TRANSLATIONS
 
@@ -29,6 +29,21 @@ class TestImport(common.TransactionCase):
         self.assertEqual(
             record.with_context(lang='fr_FR').name,
             'Vaisselle'
+        )
+        record = self.env.ref('test_translation_import.test_translation_import_model1_record2')
+        self.assertEqual(
+            record.with_context(lang='fr_FR').name,
+            'Meuble'
+        )
+        record = self.env.ref('test_translation_import.test_translation_import_model1_record3')
+        self.assertEqual(
+            record.with_context(lang='fr_FR').name,
+            'Test de traduction CSV depuis PO'
+        )
+        record = self.env.ref('test_translation_import.test_translation_import_model1_record4')
+        self.assertEqual(
+            record.with_context(lang='fr_FR').name,
+            'Test de traduction CSV depuis les données'
         )
 
     def test_import_model_term_translation(self):
@@ -242,7 +257,7 @@ class TestTranslationFlow(common.TransactionCase):
 
         with io.BytesIO(base64.b64decode(pot_file_data)) as pot_file:
             pot_file.name = f'{module_name}.pot'
-            for line1, line2 in zip(TranslationFileReader(pot_file, 'po'), TranslationFileReader(file_path(f'{module_name}/i18n/{module_name}.pot'), 'po')):
+            for line1, line2 in zip(translation_file_reader(pot_file, 'po'), translation_file_reader(file_path(f'{module_name}/i18n/{module_name}.pot'), 'po')):
                 self.assertEqual(line1, line2)
 
     def test_export_import(self):
@@ -426,13 +441,17 @@ class TestTranslationFlow(common.TransactionCase):
             'lang_ids': [(6, 0, [self.env.ref('base.lang_fr').id])],
         }).lang_install()
 
-        model1_ids = self.env.ref('test_translation_import.test_translation_import_model1_record1').ids
+        model1_ids = [
+            self.env.ref('test_translation_import.test_translation_import_model1_record1').id,
+            self.env.ref('test_translation_import.test_translation_import_model1_record2').id,
+        ]
         po_reader = TranslationRecordReader(self.env.cr, 'test.translation.import.model1', model1_ids, lang='fr_FR')
         translations = {line[4]: line[5] for line in po_reader}
         self.assertDictEqual(
             translations,
             {
                 'Fork': 'Fourchette',
+                'Furniture': 'Meuble',
                 'Knife': 'Couteau',
                 'Spoon': 'Cuillère',
                 'Tableware': 'Vaisselle',

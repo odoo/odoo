@@ -100,9 +100,11 @@ class AccountMoveSend(models.AbstractModel):
         - action the action to run when the link is clicked
         """
         alerts = {}
-        if partners_without_mail := moves.filtered(lambda m: 'email' in moves_data[m]['sending_methods'] and not m.partner_id.email).partner_id:
+        if len(moves) > 1 and (partners_without_mail := moves.filtered(
+                lambda m: 'email' in moves_data[m]['sending_methods'] and not m.partner_id.email).partner_id
+        ):
             alerts['account_missing_email'] = {
-                'level': 'danger' if len(moves) == 1 else 'warning',
+                'level': 'warning',
                 'message': _("Partner(s) should have an email address."),
                 'action_text': _("View Partner(s)"),
                 'action': partners_without_mail._get_records_action(name=_("Check Partner(s) Email(s)")),
@@ -177,7 +179,7 @@ class AccountMoveSend(models.AbstractModel):
             partner_to = self._get_mail_default_field_value_from_template(mail_template, mail_lang, move, 'partner_to')
             partner_ids = mail_template._parse_partner_to(partner_to)
             partners |= self.env['res.partner'].sudo().browse(partner_ids).exists()
-        return partners
+        return partners.filtered('email')
 
     # -------------------------------------------------------------------------
     # ATTACHMENTS
@@ -272,9 +274,19 @@ class AccountMoveSend(models.AbstractModel):
     @api.model
     def _check_move_constrains(self, moves):
         if any(move.state != 'posted' for move in moves):
-            raise UserError(_("You can't Print & Send invoices that are not posted."))
+            raise UserError(_("You can't generate invoices that are not posted."))
         if any(not move.is_sale_document(include_receipts=True) for move in moves):
-            raise UserError(_("You can only Print & Send sales documents."))
+            raise UserError(_("You can only generate sales documents."))
+
+    @api.model
+    def _check_invoice_report(self, moves, **custom_settings):
+        if ((
+                custom_settings.get('pdf_report')
+                and any(not move._is_action_report_available(custom_settings['pdf_report']) for move in moves)
+            )
+            or any(not self._get_default_pdf_report_id(move).is_invoice_report for move in moves)
+        ):
+            raise UserError(_("The sending of invoices is not set up properly, make sure the report used is set for invoices."))
 
     @api.model
     def _format_error_text(self, error):
@@ -316,9 +328,6 @@ class AccountMoveSend(models.AbstractModel):
     @api.model
     def _is_applicable_to_move(self, method, move):
         """ TO OVERRIDE - """
-        if method == 'email':
-            return bool(move.partner_id.email)
-
         return True
 
     @api.model
@@ -434,7 +443,10 @@ class AccountMoveSend(models.AbstractModel):
     @api.model
     def _send_mail(self, move, mail_template, **kwargs):
         """ Send the journal entry passed as parameter by mail. """
-        new_message = move.with_context(no_new_invoice=True).message_post(
+        new_message = move.with_context(
+            email_notification_allow_footer=True,
+            no_new_invoice=True,
+        ).message_post(
             message_type='comment',
             **kwargs,
             **{  # noqa: PIE804
@@ -567,7 +579,7 @@ class AccountMoveSend(models.AbstractModel):
         """ Helper to know if we can commit the current transaction or not.
         :return: True if commit is accepted, False otherwise.
         """
-        return not modules.module.current_test
+        return not (tools.config['test_enable'] or modules.module.current_test)
 
     @api.model
     def _call_web_service_before_invoice_pdf_render(self, invoices_data):
@@ -675,8 +687,7 @@ class AccountMoveSend(models.AbstractModel):
         This is a security in case the method is called directly without going through the wizards.
         """
         self._check_move_constrains(moves)
-        assert all(self._get_default_pdf_report_id(move).is_invoice_report for move in moves)
-        assert all(move._is_action_report_available(custom_settings['pdf_report']) for move in moves) if custom_settings.get('pdf_report') else True
+        self._check_invoice_report(moves, **custom_settings)
         assert all(
             sending_method in dict(self.env['res.partner']._fields['invoice_sending_method'].selection)
             for sending_method in custom_settings.get('sending_methods', [])

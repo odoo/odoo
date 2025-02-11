@@ -6,7 +6,7 @@ import logging
 
 from psycopg2 import OperationalError
 
-from odoo import _, api, fields, models, tools
+from odoo import _, api, fields, models, modules, tools
 from odoo.addons.iap.tools import iap_tools
 
 _logger = logging.getLogger(__name__)
@@ -111,7 +111,7 @@ class CrmLead(models.Model):
                     _logger.error('A batch of leads could not be enriched :%s', repr(leads))
                     continue
             # Commit processed batch to avoid complete rollbacks and therefore losing credits.
-            if not self.env.registry.in_test_mode():
+            if not modules.module.current_test:
                 self.env.cr.commit()
 
     @api.model
@@ -139,8 +139,6 @@ class CrmLead(models.Model):
 
             if not lead.phone and iap_data.get('phone_numbers'):
                 values['phone'] = iap_data['phone_numbers'][0]
-            if not lead.mobile and iap_data.get('phone_numbers') and len(iap_data['phone_numbers']) > 1:
-                values['mobile'] = iap_data['phone_numbers'][1]
             if not lead.country_id and iap_data.get('country_code'):
                 country = self.env['res.country'].search([('code', '=', iap_data['country_code'].upper())])
                 values['country_id'] = country.id

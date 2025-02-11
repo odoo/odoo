@@ -67,6 +67,14 @@
                     <t t-if="!model.hasData() or model.useSampleModel and props.info.noContentHelp" t-call="web.ActionHelper">
                         <t t-set="noContentHelp" t-value="props.info.noContentHelp"/>
                     </t>
+                    <t t-if="model.data.exceeds">
+                        <div class="alert alert-info text-center o_graph_alert" role="status">
+                            There are too many data. The graph only shows a sample. Use the filters to refine the scope.
+                            <a class="o_graph_load_all_btn" href="#" t-on-click="() => this.loadAll()">
+                                Load everything anyway.
+                            </a>
+                        </div>
+                    </t>
                     <t t-component="props.Renderer" model="model" buttonTemplate="props.buttonTemplate" />
                 </t>
                 <t t-else="" t-call="web.NoContentHelper">

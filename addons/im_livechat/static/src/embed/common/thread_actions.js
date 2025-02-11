@@ -1,5 +1,3 @@
-import { SESSION_STATE } from "@im_livechat/embed/common/livechat_service";
-
 import { threadActionsRegistry } from "@mail/core/common/thread_actions";
 import "@mail/discuss/call/common/thread_actions";
 import { useComponent } from "@odoo/owl";
@@ -16,7 +14,7 @@ threadActionsRegistry.add("restart", {
     name: _t("Restart Conversation"),
     open(component) {
         component.chatbotService.restart();
-        component.props.chatWindow.open();
+        component.props.chatWindow.open({ focus: true });
     },
     sequence: 99,
     sequenceQuick: 15,
@@ -28,10 +26,7 @@ patch(callSettingsAction, {
         if (component.thread?.channel_type !== "livechat") {
             return super.condition(...arguments);
         }
-        return (
-            component.livechatService.state === SESSION_STATE.PERSISTED &&
-            component.rtcService.state.channel?.eq(component.thread)
-        );
+        return component.rtcService.state.channel?.eq(component.thread);
     },
     setup() {
         super.setup(...arguments);

@@ -112,10 +112,10 @@ class ProductTemplate(models.Model):
     sale_ok = fields.Boolean('Sales', default=True)
     purchase_ok = fields.Boolean('Purchase', default=True, compute='_compute_purchase_ok', store=True, readonly=False)
     uom_id = fields.Many2one(
-        'uom.uom', 'Unit',
+        'uom.uom', 'Unit', tracking=True,
         default=_get_default_uom_id, required=True,
         help="Default unit of measure used for all stock operations.")
-    uom_ids = fields.Many2many('uom.uom', string='Packagings', help="Packagings which can be used for sales")
+    uom_ids = fields.Many2many('uom.uom', string='Packagings', help="Additional packagings for this product which can be used for sales")
     uom_name = fields.Char(string='Unit Name', related='uom_id.name', readonly=True)
     company_id = fields.Many2one(
         'res.company', 'Company', index=True)
@@ -182,20 +182,16 @@ class ProductTemplate(models.Model):
             # Pricelist item count counts the rules applicable on current template or on its variants.
             template.pricelist_item_count = template.env['product.pricelist.item'].search_count([
                 '&',
-                '|', ('product_tmpl_id', '=', template.id), ('product_id', 'in', template.product_variant_ids.ids),
+                '|', ('product_tmpl_id', 'in', template.ids), ('product_id', 'in', template.product_variant_ids.ids),
                 ('pricelist_id.active', '=', True),
                 ('compute_price', '=', 'fixed'),
             ])
 
     def _compute_product_document_count(self):
         for template in self:
-            template.product_document_count = template.env['product.document'].search_count([
-                '|',
-                    '&', ('res_model', '=', 'product.template'), ('res_id', '=', template.id),
-                    '&',
-                        ('res_model', '=', 'product.product'),
-                        ('res_id', 'in', template.product_variant_ids.ids),
-            ])
+            template.product_document_count = template.env['product.document'].search_count(
+                template._get_product_document_domain()
+            )
 
     @api.depends('image_1920', 'image_1024')
     def _compute_can_image_1024_be_zoomed(self):
@@ -455,6 +451,21 @@ class ProductTemplate(models.Model):
             self.purchase_ok = False
         return {}
 
+    @api.onchange('uom_id')
+    def _onchange_uom_id(self):
+        if self._origin.uom_id == self.uom_id or not self.with_context(active_test=False).product_variant_ids._trigger_uom_warning():
+            return
+        message = _(
+            'Changing the unit of measure for your product will apply a conversion 1 %(old_uom_name)s = 1 %(new_uom_name)s.\n'
+            'All existing records (Sales orders, Purchase orders, etc.) using this product will be updated by replacing the unit name.',
+            old_uom_name=self._origin.uom_id.display_name, new_uom_name=self.uom_id.display_name)
+        return {
+            'warning': {
+                'title': _('What to expect ?'),
+                'message': message,
+            }
+        }
+
     @api.constrains('type', 'combo_ids')
     def _check_combo_ids_not_empty(self):
         for template in self:
@@ -498,6 +509,9 @@ class ProductTemplate(models.Model):
         return templates
 
     def write(self, vals):
+        if 'uom_id' in vals:
+            products = self.filtered(lambda template: template.uom_id.id != vals['uom_id']).product_variant_ids
+            products.with_context(skip_uom_conversion=True)._update_uom(vals['uom_id'])
         res = super(ProductTemplate, self).write(vals)
         if self._context.get("create_product_product", True) and 'attribute_line_ids' in vals or (vals.get('active') and len(self.product_variant_ids) == 0):
             self._create_variant_ids()
@@ -602,13 +616,7 @@ class ProductTemplate(models.Model):
                 'default_res_id': self.id,
                 'default_company_id': self.company_id.id,
             },
-            'domain': [
-                '|',
-                    '&', ('res_model', '=', 'product.template'), ('res_id', '=', self.id),
-                    '&',
-                        ('res_model', '=', 'product.product'),
-                        ('res_id', 'in', self.product_variant_ids.ids),
-            ],
+            'domain': self._get_product_document_domain(),
             'target': 'current',
             'help': """
                 <p class="o_view_nocontent_smiling_face">
@@ -1434,6 +1442,16 @@ class ProductTemplate(models.Model):
         This method is meant to be overriden in other standard modules.
         """
         return self.env['product.pricelist'].browse(self.env.context.get('pricelist'))
+
+    def _get_product_document_domain(self):
+        self.ensure_one()
+        return expression.OR([
+            expression.AND([[('res_model', '=', 'product.template')], [('res_id', 'in', self.ids)]]),
+            expression.AND([
+                [('res_model', '=', 'product.product')],
+                [('res_id', 'in', self.product_variant_ids.ids)],
+            ])
+        ])
 
     ###################
     # DEMO DATA SETUP #

@@ -4,13 +4,15 @@ import datetime
 import logging
 import re
 import traceback
+import warnings
 from collections import defaultdict
 from uuid import uuid4
 
 from dateutil.relativedelta import relativedelta
 from odoo import _, api, exceptions, fields, models
+from odoo.fields import Domain
 from odoo.http import request
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, safe_eval
+from odoo.tools import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -24,12 +26,12 @@ DOMAIN_FIELDS_RE = re.compile(r"""
     [^,]*?[()[\]]           # anything except a comma followed by a closing bracket or another opening bracket
 """, re.VERBOSE)
 
-DATE_RANGE_FUNCTION = {
-    'minutes': lambda interval: relativedelta(minutes=interval),
-    'hour': lambda interval: relativedelta(hours=interval),
-    'day': lambda interval: relativedelta(days=interval),
-    'month': lambda interval: relativedelta(months=interval),
-    False: lambda interval: relativedelta(0),
+DATE_RANGE = {
+    'minutes': relativedelta(minutes=1),
+    'hour': relativedelta(hours=1),
+    'day': relativedelta(days=1),
+    'month': relativedelta(months=1),
+    False: relativedelta(0),
 }
 
 DATE_RANGE_FACTOR = {
@@ -245,6 +247,11 @@ class BaseAutomation(models.Model):
     @api.constrains('trigger', 'action_server_ids')
     def _check_trigger_state(self):
         for record in self:
+            warning_actions = record.action_server_ids.filtered('warning')
+            if warning_actions:
+                raise exceptions.ValidationError(
+                    _("Following child actions have warnings: %(children)s", children=', '.join(warning_actions.mapped('name')))
+                )
             no_code_actions = record.action_server_ids.filtered(lambda a: a.state != 'code')
             if record.trigger == 'on_change' and no_code_actions:
                 raise exceptions.ValidationError(
@@ -327,7 +334,7 @@ class BaseAutomation(models.Model):
         for automation in self:
             field = (
                 automation._get_trigger_specific_field()
-                if automation.trigger not in TIME_TRIGGERS
+                if automation.trigger not in ["on_create_or_write", *TIME_TRIGGERS]
                 else False
             )
             if not field:
@@ -365,7 +372,7 @@ class BaseAutomation(models.Model):
             if automation.trigger == "on_create_or_write":
                 automation.trigger_field_ids |= automation._get_filter_domain_fields()
                 continue
-            self._onchange_trigger()
+            automation._onchange_trigger()
 
     @api.depends('model_id')
     def _compute_trigger(self):
@@ -487,6 +494,8 @@ class BaseAutomation(models.Model):
     def _get_trigger_specific_field(self):
         self.ensure_one()
         match self.trigger:
+            case 'on_create_or_write':
+                return self._get_filter_domain_fields()
             case 'on_stage_set':
                 domain = [('ttype', '=', 'many2one'), ('name', 'in', ['stage_id', 'x_studio_stage_id'])]
             case 'on_tag_set':
@@ -706,7 +715,7 @@ class BaseAutomation(models.Model):
         automation_done[self] = records_done + records
 
         if records and 'date_automation_last' in records._fields:
-            records.date_automation_last = fields.Datetime.now()
+            records.date_automation_last = self.env.cr.now()
 
         # prepare the contexts for server actions
         contexts = [
@@ -961,67 +970,122 @@ class BaseAutomation(models.Model):
 
     @api.model
     def _check(self, automatic=False, use_new_cursor=False):
-        """ This Function is called by scheduler. """
+        warnings.warn("Since 19.0, use _cron_process_time_based_automations", DeprecationWarning)
+        self._cron_process_time_based_actions(auto_commit=automatic)
+
+    def _search_time_based_automation_records(self, *, until):
+        automation = self.ensure_one()
+
+        # retrieve the domain and field
+        domain = Domain.TRUE
+        if automation.filter_domain:
+            eval_context = automation._get_eval_context()
+            domain = Domain(safe_eval.safe_eval(automation.filter_domain, eval_context))
+        Model = self.env[automation.model_name]
+        date_field = Model._fields.get(automation.trg_date_id.name)
+        if not date_field:
+            _logger.warning("Missing date trigger field in automation rule `%s`", automation.name)
+            return Model
+
+        # get the time information and find the records
+        last_run = automation.last_run or datetime.datetime.fromtimestamp(0, tz=None)
+        is_date_automation_last = date_field.name == "date_automation_last" and "create_date" in Model._fields
+
+        def get_record_dt(record):
+            # the field can be a date or datetime, cast always to a datetime
+            dt = record[date_field.name]
+            if not dt and is_date_automation_last:
+                dt = record.create_date
+            return fields.Datetime.to_datetime(dt)
+
+        if automation.trg_date_calendar_id and automation.trg_date_range_type == 'day':
+            # use the calendar information from the record
+            # _get_calendar can be overwritten and cannot be optimized
+            time_domain = Domain.TRUE if is_date_automation_last else Domain(date_field.name, '!=', False)
+            if (date_field.store or date_field.search):
+                records = Model.search(time_domain & domain)
+            else:
+                records = Model.search(domain).filtered_domain(time_domain)
+
+            past_until = {}
+            past_last_run = {}
+
+            def calendar_filter(record):
+                record_dt = get_record_dt(record)
+                if not record_dt:
+                    return False
+                calendar = self._get_calendar(automation, record)
+                if calendar.id not in past_until:
+                    past_until[calendar.id] = calendar.plan_days(
+                        - automation.trg_date_range,
+                        until,
+                        compute_leaves=True,
+                    )
+                    past_last_run[calendar.id] = calendar.plan_days(
+                        - automation.trg_date_range,
+                        last_run,
+                        compute_leaves=True,
+                    )
+                return past_last_run[calendar.id] <= record_dt < past_until[calendar.id]
+
+            return records.filtered(calendar_filter)
+
+        # we can search for the records to trigger
+        # find the relative dates
+        relative_offset = DATE_RANGE[automation.trg_date_range_type] * automation.trg_date_range
+        relative_until = until + relative_offset
+        relative_last_run = last_run + relative_offset
+        if date_field.type == 'date':
+            # find records that have a date in past, but were not yet executed that day
+            time_domain = Domain(date_field.name, '>', relative_last_run.date()) & Domain(date_field.name, '<=', relative_until.date())
+            if is_date_automation_last:
+                time_domain |= Domain(date_field.name, '=', False) & Domain('create_date', '>', relative_last_run.date()) & Domain('create_date', '<=', relative_until.today())
+        else:  # datetime
+            time_domain = Domain(date_field.name, '>=', relative_last_run) & Domain(date_field.name, '<', relative_until)
+            if is_date_automation_last:
+                time_domain |= Domain(date_field.name, '=', False) & Domain('create_date', '>=', relative_last_run) & Domain('create_date', '<', relative_until)
+
+        if (date_field.store or date_field.search):
+            return Model.search(time_domain & domain)
+        else:
+            return Model.search(domain).filtered_domain(time_domain)
+
+    @api.model
+    def _cron_process_time_based_actions(self, *, auto_commit=True):
+        """ Execute the time-based automations.
+
+        :param auto_commit: Set to True when called from a CRON to commit after
+            each automation.
+        """
         if '__action_done' not in self._context:
             self = self.with_context(__action_done={})
 
         # retrieve all the automation rules to run based on a timed condition
-        for automation in self.with_context(active_test=True).search([('trigger', 'in', TIME_TRIGGERS)]):
+        automations = self.with_context(active_test=True).search([('trigger', 'in', TIME_TRIGGERS)])
+        for automation_number, automation in enumerate(automations, 1):
+            if auto_commit and not automation.active:
+                # automation deactivated between commits
+                continue
             _logger.info("Starting time-based automation rule `%s`.", automation.name)
-            last_run = fields.Datetime.from_string(automation.last_run) or datetime.datetime.fromtimestamp(0, tz=None)
-            eval_context = automation._get_eval_context()
-
-            # retrieve all the records that satisfy the automation's condition
-            domain = []
-            context = dict(self._context)
-            if automation.filter_domain:
-                domain = safe_eval.safe_eval(automation.filter_domain, eval_context)
-            records = self.env[automation.model_name].with_context(context).search(domain)
-
-            def get_record_dt(record):
-                # determine when automation should occur for the records
-                if automation.trg_date_id.name == "date_automation_last" and "create_date" in records._fields:
-                    return record[automation.trg_date_id.name] or record.create_date
-                else:
-                    return record[automation.trg_date_id.name]
-
-            # process action on the records that should be executed
-            now = datetime.datetime.now()
-            past_now = {}
-            past_last_run = {}
+            now = self.env.cr.now()
+            records = automation._search_time_based_automation_records(until=now)
+            # run the automation on the records
             for record in records:
-                record_dt = get_record_dt(record)
-                if not record_dt:
-                    continue
-                if automation.trg_date_calendar_id and automation.trg_date_range_type == 'day':
-                    calendar = self._get_calendar(automation, record)
-                    if calendar.id not in past_now:
-                        past_now[calendar.id] = calendar.plan_days(
-                            - automation.trg_date_range,
-                            now,
-                            compute_leaves=True,
-                        )
-                        past_last_run[calendar.id] = calendar.plan_days(
-                            - automation.trg_date_range,
-                            last_run,
-                            compute_leaves=True,
-                        )
-                    is_process_to_run = past_last_run[calendar.id] <= fields.Datetime.to_datetime(record_dt) < past_now[calendar.id]
-                else:
-                    is_process_to_run = (
-                        last_run <=
-                        fields.Datetime.from_string(record_dt) + DATE_RANGE_FUNCTION[automation.trg_date_range_type](automation.trg_date_range)
-                        < now
-                    )
-                if is_process_to_run:
-                    try:
+                try:
+                    with self.env.cr.savepoint():
                         automation._process(record)
-                    except Exception:
-                        _logger.error(traceback.format_exc())
+                except Exception:
+                    _logger.error(traceback.format_exc())
 
-            automation.write({'last_run': now.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
-            _logger.info("Time-based automation rule `%s` done.", automation.name)
-
-            if automatic:
+            automation.write({'last_run': now})
+            if auto_commit:
                 # auto-commit for batch processing
-                self._cr.commit()
+                # because we process all between `last_run` and `now`
+                self.env['ir.cron']._notify_progress(
+                    done=automation_number,
+                    remaining=(len(automations) - automation_number),
+                )
+                self.env.cr.commit()
+            else:
+                self.env.flush_all()
+            _logger.info("Time-based automation rule `%s` done.", automation.name)

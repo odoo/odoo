@@ -602,6 +602,7 @@ test("activity with a user mention", async () => {
     const pyEnv = await startServer();
     const partnerId1 = pyEnv["res.partner"].create({ name: "Partner 1" });
     const partnerId2 = pyEnv["res.partner"].create({ name: "Partner 2" });
+    pyEnv["res.users"].create({ partner_id: partnerId2 });
     pyEnv["mail.activity"].create({
         note: `<p>How are you, <a class="o_mail_redirect" href="#" data-oe-model="res.partner" data-oe-id="${partnerId2}">@Partner 2</a>?</p>`,
         res_id: partnerId1,

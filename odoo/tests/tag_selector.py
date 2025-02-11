@@ -6,7 +6,7 @@ _logger = logging.getLogger(__name__)
 
 class TagsSelector(object):
     """ Test selector based on tags. """
-    filter_spec_re = re.compile(r'^([+-]?)(\*|\w*)(?:\/([\w\/]*(?:.py)?))?(?::(\w*))?(?:\.(\w*))?$')  # [-][tag][/module][:class][.method]
+    filter_spec_re = re.compile(r'^([+-]?)(\*|\w*)(?:\/([\w\-\/]*(?:.py)?))?(?::(\w*))?(?:\.(\w*))?$')  # [-][tag][/module][:class][.method]
 
     def __init__(self, spec):
         """ Parse the spec to determine tags to include and exclude. """
@@ -61,7 +61,7 @@ class TagsSelector(object):
             (tag, module, klass, method, file_path) = test_filter
             if tag and tag not in test_tags:
                 return False
-            elif file_path and not test_module_path.endswith(file_path):
+            elif file_path and not file_path.endswith(test_module_path):
                 return False
             elif not file_path and module and module != test_module:
                 return False

@@ -244,7 +244,7 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         self.assertEqual(self.project_global.tasks.sale_line_id.id, sale_order_line.id, "The project tasks should be linked to the SOL from the SO")
         #use of sudo() since the env.user does not have the access right to edit projects.
         self.project_global.sudo().sale_line_id = sale_order_line
-        sale_order.with_context({'disable_cancel_warning': True}).action_cancel()
+        sale_order.action_cancel()
 
     def test_links_with_sale_order_line(self):
         """

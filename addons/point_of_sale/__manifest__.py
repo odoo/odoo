@@ -16,6 +16,7 @@
         'data/digest_data.xml',
         'data/pos_note_data.xml',
         'data/point_of_sale_tour.xml',
+        'data/mail_template_data.xml',
         'wizard/pos_details.xml',
         'wizard/pos_payment.xml',
         'wizard/pos_close_session_wizard.xml',
@@ -80,6 +81,9 @@
             'point_of_sale/static/src/backend/many2one_with_placeholder_field/*',
             'point_of_sale/static/src/backend/many2many_placeholder_list_view/*',
         ],
+        "web.assets_web_dark": [
+            'point_of_sale/static/src/scss/pos_dashboard.dark.scss',
+        ],
         'web.assets_tests': [
             'barcodes/static/tests/legacy/helpers.js',
             'point_of_sale/static/tests/pos/tours/**/*',
@@ -113,13 +117,10 @@
         'point_of_sale.base_app': [
             ("include", "web._assets_helpers"),
             ("include", "web._assets_backend_helpers"),
-            ("include", "web._assets_primary_variables"),
             "web/static/src/scss/pre_variables.scss",
-            "web/static/lib/bootstrap/scss/_functions.scss",
             "web/static/lib/bootstrap/scss/_variables.scss",
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
-            ("include", "web._assets_bootstrap"),
             ("include", "web._assets_bootstrap_backend"),
             ('include', 'web._assets_core'),
             ("remove", "web/static/src/core/browser/router.js"),
@@ -179,8 +180,6 @@
             ('remove', 'point_of_sale/static/src/customer_display/**/*'),
             # main.js boots the pos app, it is only included in the prod bundle as tests mount the app themselves
             ('remove', 'point_of_sale/static/src/app/main.js'),
-            # tour system FIXME: can this be added only in test mode? Are there any onboarding tours in PoS?
-            "web_tour/static/src/tour_pointer/**/*",
             ("include", "point_of_sale.base_tests"),
             # account
             'account/static/src/helpers/*.js',
@@ -211,6 +210,9 @@
             ('include', 'point_of_sale._assets_pos'),
             'point_of_sale/static/src/app/main.js',
         ],
+        'point_of_sale.assets_prod_dark': [
+            ('include', 'point_of_sale.assets_prod'),
+        ],
         'point_of_sale.customer_display_assets': [
             ('include', 'point_of_sale.base_app'),
             "point_of_sale/static/src/app/components/odoo_logo/*",
@@ -226,6 +228,16 @@
             "point_of_sale/static/tests/generic_helpers/order_widget_util.js",
             "point_of_sale/static/tests/generic_helpers/utils.js",
             "point_of_sale/static/tests/customer_display/customer_display_tour.js",
+        ],
+        'point_of_sale.assets_debug': [
+            "web_tour/static/src/tour_pointer/**/*.xml",
+            "web_tour/static/src/tour_pointer/**/*.js",
+            "web_tour/static/src/tour_service/**/*",
+            'web/static/tests/legacy/helpers/utils.js',
+            'web/static/tests/legacy/helpers/cleanup.js',
+            'barcodes/static/tests/legacy/helpers.js',
+            'point_of_sale/static/tests/generic_helpers/**',
+            'point_of_sale/static/tests/pos/tours/**/*',
         ],
     },
     'license': 'LGPL-3',

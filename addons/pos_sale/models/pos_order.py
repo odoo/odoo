@@ -52,7 +52,19 @@ class PosOrder(models.Model):
 
         order_ids = self.browse([o['id'] for o in data["pos.order"]])
         for order in order_ids:
-            for line in order.lines.filtered(lambda l: l.product_id == order.config_id.down_payment_product_id and l.qty != 0 and (l.sale_order_origin_id or l.refunded_orderline_id.sale_order_origin_id)):
+            used_pos_lines = order.lines.sale_order_origin_id.order_line.pos_order_line_ids.ids
+            lines = order.lines.filtered(
+                lambda l: (
+                    l.id not in used_pos_lines
+                    and l.product_id == order.config_id.down_payment_product_id
+                    and l.qty != 0
+                    and (
+                        l.sale_order_origin_id
+                        or l.refunded_orderline_id.sale_order_origin_id
+                    )
+                )
+            )
+            for line in lines:
                 sale_lines = line.sale_order_origin_id.order_line or line.refunded_orderline_id.sale_order_origin_id.order_line
                 sale_order_origin = line.sale_order_origin_id or line.refunded_orderline_id.sale_order_origin_id
                 if not any(line.display_type and line.is_downpayment for line in sale_lines):
@@ -183,7 +195,7 @@ class PosOrderLine(models.Model):
     @api.depends('order_id.state', 'order_id.picking_ids', 'order_id.picking_ids.state', 'order_id.picking_ids.move_ids.quantity')
     def _compute_qty_delivered(self):
         for order_line in self:
-            if order_line.order_id.state in ['paid', 'done', 'invoiced']:
+            if order_line.order_id.state in ['paid', 'done']:
                 outgoing_pickings = order_line.order_id.picking_ids.filtered(
                     lambda pick: pick.state == 'done' and pick.picking_type_code == 'outgoing'
                 )

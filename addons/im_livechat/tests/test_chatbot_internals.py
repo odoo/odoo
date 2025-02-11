@@ -395,10 +395,11 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                         "payload": {"data": left_message_data, "id": discuss_channel.id},
                     },
                     {
-                        "type": "discuss.channel/leave",
+                        "type": "mail.record/insert",
                         "payload": {
                             "discuss.channel": [
                                 {
+                                    "close_chat_window": True,
                                     "id": discuss_channel.id,
                                     "isLocallyPinned": False,
                                     "is_pinned": False,
@@ -514,9 +515,7 @@ class ChatbotCase(chatbot_common.ChatbotCase):
             .chatbot_script_id,
             chatbot_no_operator,
         )
-        self.env["bus.presence"]._update_presence(
-            inactivity_period=0, identity_field="user_id", identity_value=bob_user.id
-        )
+        self.env["mail.presence"]._update_presence(bob_user)
         # Force the recomputation of `available_operator_ids` after bob becomes online
         self.livechat_channel.invalidate_recordset(["available_operator_ids"])
         self.assertTrue(self.livechat_channel.available_operator_ids)

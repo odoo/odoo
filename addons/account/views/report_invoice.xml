@@ -51,16 +51,58 @@
                 <div class="clearfix invoice_main">
                     <div class="page mb-4">
                         <t t-set="layout_document_title">
-                            <span t-if="not proforma"></span>
-                            <span t-else="">PROFORMA</span>
-                            <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">Invoice</span>
-                            <span t-elif="o.move_type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
-                            <span t-elif="o.move_type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
-                            <span t-elif="o.move_type == 'out_refund' and o.state == 'posted'">Credit Note</span>
-                            <span t-elif="o.move_type == 'out_refund' and o.state == 'draft'">Draft Credit Note</span>
-                            <span t-elif="o.move_type == 'out_refund' and o.state == 'cancel'">Cancelled Credit Note</span>
-                            <span t-elif="o.move_type == 'in_refund'">Vendor Credit Note</span>
-                            <span t-elif="o.move_type == 'in_invoice'">Vendor Bill</span>
+                            <t t-if="not proforma">
+                                <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">
+                                    <t name="invoice_title">Invoice</t>
+                                </span>
+                                <span t-elif="o.move_type == 'out_invoice' and o.state == 'draft'">
+                                    <t name="draft_invoice_title">Draft Invoice</t>
+                                </span>
+                                <span t-elif="o.move_type == 'out_invoice' and o.state == 'cancel'">
+                                    <t name="cancelled_invoice_title">Cancelled Invoice</t>
+                                </span>
+                                <span t-elif="o.move_type == 'out_refund' and o.state == 'posted'">
+                                    <t name="credit_note_title">Credit Note</t>
+                                </span>
+                                <span t-elif="o.move_type == 'out_refund' and o.state == 'draft'">
+                                    <t name="draft_credit_note_title">Draft Credit Note</t>
+                                </span>
+                                <span t-elif="o.move_type == 'out_refund' and o.state == 'cancel'">
+                                    <t name="cancelled_credit_note_title">Cancelled Credit Note</t>
+                                </span>
+                                <span t-elif="o.move_type == 'in_refund'">
+                                    <t name="vendor_credit_note_title">Vendor Credit Note</t>
+                                </span>
+                                <span t-elif="o.move_type == 'in_invoice'">
+                                    <t name="vendor_bill_title">Vendor Bill</t>
+                                </span>
+                            </t>
+                            <t t-else="">
+                                <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">
+                                    <t name="proforma_invoice_title">Proforma Invoice</t>
+                                </span>
+                                <span t-elif="o.move_type == 'out_invoice' and o.state == 'draft'">
+                                    <t name="draft_proforma_invoice_title">Draft Proforma Invoice</t>
+                                </span>
+                                <span t-elif="o.move_type == 'out_invoice' and o.state == 'cancel'">
+                                    <t name="cancelled_proforma_invoice_title">Cancelled Proforma Invoice</t>
+                                </span>
+                                <span t-elif="o.move_type == 'out_refund' and o.state == 'posted'">
+                                    <t name="proforma_credit_note_title">Proforma Credit Note</t>
+                                </span>
+                                <span t-elif="o.move_type == 'out_refund' and o.state == 'draft'">
+                                    <t name="draft_proforma_credit_note_title">Draft Proforma Credit Note</t>
+                                </span>
+                                <span t-elif="o.move_type == 'out_refund' and o.state == 'cancel'">
+                                    <t name="cancelled_proforma_credit_note_title">Cancelled Proforma Credit Note</t>
+                                </span>
+                                <span t-elif="o.move_type == 'in_refund'">
+                                    <t name="proforma_vendor_credit_note_title">Proforma Vendor Credit Note</t>
+                                </span>
+                                <span t-elif="o.move_type == 'in_invoice'">
+                                    <t name="proforma_vendor_bill_title">Proforma Vendor Bill</t>
+                                </span>
+                            </t>
                             <span t-if="o.name != '/'" t-field="o.name">INV/2023/0001</span>
                         </t>
                         <div class="oe_structure"></div>
@@ -378,7 +420,7 @@
                     >0</span>
                 </td>
             </tr>
-            
+
             <!--Total amount with all taxes-->
             <tr class="o_total">
                 <td><strong>Total</strong></td>

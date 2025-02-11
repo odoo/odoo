@@ -24,17 +24,26 @@
                 'pos_config_id': pos_config_id,
                 'access_token': access_token,
                 'urls_to_cache': urls_to_cache,
+                'use_pos_fake_tours': use_pos_fake_tours,
                 'debug': debug,
             })"/>;
             // Prevent the menu_service to load anything. In an ideal world, POS assets would only contain
             // what is genuinely necessary, and not the whole backend.
-            odoo.loadMenusPromise = Promise.resolve();
+            odoo.loadMenusPromise = Promise.resolve({});
         </script>
 
         <t t-call="web.conditional_assets_tests">
             <t t-set="ignore_missing_deps" t-value="True"/>
         </t>
-        <t t-call-assets="point_of_sale.assets_prod" />
+        <t t-if="use_pos_fake_tours">
+            <t t-call-assets="point_of_sale.assets_debug" />
+        </t>
+        <t t-if="request.cookies.get('pos_color_scheme') == 'dark'">
+            <t t-call-assets="point_of_sale.assets_prod_dark" media="screen"/>
+        </t>
+        <t t-else="">
+            <t t-call-assets="point_of_sale.assets_prod" media="screen"/>
+        </t>
     </head>
     <body class="pos">
     </body>

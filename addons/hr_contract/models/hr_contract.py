@@ -1,12 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import threading
 
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, modules, _
 from odoo.exceptions import ValidationError
 
 from odoo.osv import expression
@@ -55,6 +52,10 @@ class HrContract(models.Model):
     country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True)
     contract_type_id = fields.Many2one('hr.contract.type', "Contract Type", tracking=True)
     contracts_count = fields.Integer(related='employee_id.contracts_count', groups="hr_contract.group_hr_contract_employee_manager")
+    default_contract_id = fields.Many2one(
+        'hr.contract', string="Contract Template",
+        domain="[('company_id', '=', company_id), ('employee_id', '=', False)]",
+        help="Select a contract template to auto-fill the contract form with predefined values. You can still edit the fields as needed after applying the template.")
 
     """
         kanban_state:
@@ -83,6 +84,18 @@ class HrContract(models.Model):
     def _compute_calendar_mismatch(self):
         for contract in self:
             contract.calendar_mismatch = contract.resource_calendar_id != contract.employee_id.resource_calendar_id
+
+    @api.model
+    def _get_ignored_fields_to_copy(self):
+        return {'id', 'default_contract_id', 'employee_id', 'name', 'date_start', 'date_end', 'state'}
+
+    @api.onchange('default_contract_id')
+    def _onchange_default_contract_id(self):
+        if self.default_contract_id:
+            ignored_fields = self._get_ignored_fields_to_copy()
+            for field in self.default_contract_id._fields:
+                if field not in ignored_fields and not self.env['hr.contract']._fields[field].related:
+                    self[field] = self.default_contract_id[field]
 
     def _get_salary_costs_factor(self):
         self.ensure_one()
@@ -252,7 +265,7 @@ class HrContract(models.Model):
 
     def _safe_write_for_cron(self, vals, from_cron=False):
         if from_cron:
-            auto_commit = not getattr(threading.current_thread(), 'testing', False)
+            auto_commit = not modules.module.current_test
             for contract in self:
                 try:
                     with self.env.cr.savepoint():
@@ -333,6 +346,10 @@ class HrContract(models.Model):
 
         if 'state' in vals and 'kanban_state' not in vals:
             self.write({'kanban_state': 'normal'})
+
+        if 'default_contract_id' in vals and vals['default_contract_id']:
+            self.message_post(body=_('All fields have been pasted from template [%(template_name)s].',
+                                     template_name=self.default_contract_id.name))
 
         return res
 

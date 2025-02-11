@@ -24,7 +24,7 @@
                         </div>
                         <t t-elif="message.isPending" t-call="mail.Message.pendingStatus"/>
                         <t t-elif="!message.is_transient">
-                            <small t-if="isActive and props.showDates" class="o-mail-Message-date o-xsmaller mt-2" t-att-title="message.datetimeShort">
+                            <small t-if="isActive and props.showDates" class="o-mail-Message-date o-xsmaller mt-2 text-center lh-1" t-att-title="message.datetimeShort">
                                 <t t-esc="message.dateSimple"/>
                             </small>
                         </t>
@@ -107,12 +107,14 @@
                                     </t>
                                     <t t-if="!message.is_note and !message.isPending and message.hasTextContent and !env.inChatWindow" t-call="mail.Message.actions"/>
                                 </div>
-                                <AttachmentList
-                                    t-if="message.attachment_ids.length > 0"
-                                    attachments="message.attachment_ids.map((a) => a)"
-                                    unlinkAttachment.bind="onClickAttachmentUnlink"
-                                    imagesHeight="message.attachment_ids.length === 1 ? 300 : 75"
-                                    messageSearch="props.messageSearch"/>
+                                <div class="position-relative">
+                                    <AttachmentList
+                                        t-if="message.attachment_ids.length > 0"
+                                        attachments="message.attachment_ids.map((a) => a)"
+                                        unlinkAttachment.bind="onClickAttachmentUnlink"
+                                        imagesHeight="message.attachment_ids.length === 1 ? 300 : 75"
+                                        messageSearch="props.messageSearch"/>
+                                </div>
                                 <LinkPreviewList t-if="message.link_preview_ids.length > 0 and store.hasLinkPreviewFeature and !message.linkPreviewSquash" linkPreviews="message.link_preview_ids" deletable="props.message.editable"/>
                             </div>
                             <t t-if="!message.is_note and !message.isPending and (!message.hasTextContent or env.inChatWindow)" t-call="mail.Message.actions"/>
@@ -155,13 +157,16 @@
                     </button>
                 </t>
                 <div t-if="messageActions.actions.length gt quickActionCount" class="d-flex rounded-0">
-                    <Dropdown state="optionsDropdown" position="props.message.threadAsNewest  ? 'top-start' : 'bottom-start'" menuClass="'d-flex flex-column py-0 o-mail-Message-moreMenu'" >
+                    <Dropdown state="optionsDropdown" position="props.message.threadAsNewest  ? 'top-start' : 'bottom-start'" menuClass="'d-flex flex-column py-0 o-mail-Message-moreMenu bg-100 border-secondary'" >
                         <t t-call="mail.Message.expandAction"/>
                         <t t-set-slot="content">
                             <t t-foreach="messageActions.actions.slice(quickActionCount - 1)" t-as="action" t-key="action.id">
-                                <DropdownItem class="'px-2 py-1 d-flex align-items-center rounded-0'" onSelected="action.onClick" attrs="{ title: action.title}">
-                                    <i class="fa-fw" t-att-class="action.icon"/>
-                                    <span class="mx-2" t-esc="action.title"/>
+                                <DropdownItem class="'px-2 py-1 d-flex align-items-baseline rounded-0 ' + action.btnClass" onSelected="action.onClick" attrs="{ title: action.title}">
+                                    <t t-if="action.component" t-component="action.component" t-props="action.props"/>
+                                    <t t-else="">
+                                        <i class="fa-fw" t-att-class="action.icon"/>
+                                        <span class="mx-2" t-esc="action.title"/>
+                                    </t>
                                 </DropdownItem>
                             </t>
                         </t>
@@ -169,25 +174,6 @@
                 </div>
             </div>
         </t>
-    </div>
-</t>
-
-<t t-name="mail.Message.bodyInForward">
-    <div>
-        <span>---------- Forwarded message ----------</span><br/>
-        <span>Date: <t t-esc="date"/></span><br/>
-        <span>From: <t t-esc="name"/> <a t-att-href="'mailto:' + email" target="_blank">&lt;<t t-esc="email"/>&gt;</a></span><br/>
-        <span>Subject: <t t-esc="message.subject || message.default_subject"/></span><br/>
-        <t t-out="body"/>
-    </div>
-</t>
-
-<t t-name="mail.Message.bodyInReply">
-    <div class="o_mail_reply_content">
-        <div class="d-none">
-            <span>On <t t-esc="date"/> <t t-esc="name"/> <a t-att-href="'mailto:' + email" target="_blank">&lt;<t t-esc="email"/>&gt;</a>wrote</span>
-            <blockquote t-out="body"/>
-        </div>
     </div>
 </t>
 

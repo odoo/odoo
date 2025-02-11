@@ -132,7 +132,7 @@ class TestConfigManager(TransactionCase):
             'db_maxconn': 64,
             'db_maxconn_gevent': None,
             'db_template': 'template0',
-            'db_replica_host': '',
+            'db_replica_host': None,
             'db_replica_port': None,
 
             # i18n
@@ -152,6 +152,7 @@ class TestConfigManager(TransactionCase):
             'osv_memory_count_limit': 0,
             'transient_age_limit': 1.0,
             'max_cron_threads': 2,
+            'limit_time_worker_cron': 0,
             'unaccent': False,
             'geoip_city_db': '/usr/share/GeoIP/GeoLite2-City.mmdb',
             'geoip_country_db': '/usr/share/GeoIP/GeoLite2-Country.mmdb',
@@ -267,6 +268,7 @@ class TestConfigManager(TransactionCase):
             'osv_memory_count_limit': 71,
             'transient_age_limit': 4.0,
             'max_cron_threads': 4,
+            'limit_time_worker_cron': 600,
             'unaccent': True,
             'geoip_city_db': '/tmp/city.db',
             'geoip_country_db': '/tmp/country.db',
@@ -340,6 +342,7 @@ class TestConfigManager(TransactionCase):
             'log_level': 'info',
             'logfile': '',
             'max_cron_threads': 2,
+            'limit_time_worker_cron': 0,
             'osv_memory_count_limit': 0,
             'overwrite_existing_translations': False,
             'pg_path': '',
@@ -397,7 +400,7 @@ class TestConfigManager(TransactionCase):
 
             # new options since 14.0
             'db_maxconn_gevent': None,
-            'db_replica_host': '',
+            'db_replica_host': None,
             'db_replica_port': None,
             'geoip_country_db': '/usr/share/GeoIP/GeoLite2-Country.mmdb',
             'from_filter': '',
@@ -545,6 +548,7 @@ class TestConfigManager(TransactionCase):
             'osv_memory_count_limit': 71,
             'transient_age_limit': 4.0,
             'max_cron_threads': 4,
+            'limit_time_worker_cron': 0,
             'unaccent': True,
             'geoip_city_db': '/tmp/city.db',
             'geoip_country_db': '/tmp/country.db',
@@ -617,3 +621,16 @@ class TestConfigManager(TransactionCase):
         self.assertEqual(options['demo'], {})
         _, options = self.parse_reset(['-i', 'mail', '--without-demo=1'])
         self.assertEqual(options['demo'], {})
+
+    def test_13_empty_db_replica_host(self):
+        with self.assertLogs('py.warnings', 'WARNING') as capture:
+            _, options = self.parse_reset(['--db_replica_host', ''])
+        self.assertIsNone(options['db_replica_host'])
+        self.assertEqual(options['dev_mode'], ['replica'])
+        self.assertEqual(len(capture.output), 1)
+        self.assertIn('Since 19.0, an empty --db_replica_host', capture.output[0])
+
+        with self.assertNoLogs('py.warnings', 'WARNING'):
+            _, options = self.parse_reset(['--db_replica_host', '', '--dev', 'replica'])
+        self.assertIsNone(options['db_replica_host'])
+        self.assertEqual(options['dev_mode'], ['replica'])

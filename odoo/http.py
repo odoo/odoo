@@ -128,6 +128,8 @@ endpoint
   The @route(...) decorated controller method.
 """
 
+import odoo.init  # import first for core setup
+
 import base64
 import collections
 import collections.abc
@@ -136,6 +138,8 @@ import functools
 import glob
 import hashlib
 import hmac
+import importlib
+import importlib.metadata
 import inspect
 import json
 import logging
@@ -193,7 +197,7 @@ except ImportError:
 
 import odoo
 from .exceptions import UserError, AccessError, AccessDenied
-from .modules.module import get_manifest
+from .modules import module as module_manager
 from .modules.registry import Registry
 from .service import security, model as service_model
 from .tools import (config, consteq, file_path, get_lang, json_default,
@@ -278,7 +282,7 @@ ROUTING_KEYS = {
     'alias', 'host', 'methods',
 }
 
-if parse_version(werkzeug.__version__) >= parse_version('2.0.2'):
+if parse_version(importlib.metadata.version('werkzeug')) >= parse_version('2.0.2'):
     # Werkzeug 2.0.2 adds the websocket option. If a websocket request
     # (ws/wss) is trying to access an HTTP route, a WebsocketMismatch
     # exception is raised. On the other hand, Werkzeug 0.16 does not
@@ -715,9 +719,17 @@ def route(route=None, **routing):
         fname = f"<function {endpoint.__module__}.{endpoint.__name__}>"
 
         # Sanitize the routing
-        assert routing.get('type', 'http') in _dispatchers.keys()
+        if routing.get('type') == 'json':
+            warnings.warn(
+                "Since 19.0, @route(type='json') is a deprecated alias to @route(type='jsonrpc')",
+                DeprecationWarning,
+                stacklevel=3,
+            )
+            routing['type'] = 'jsonrpc'
+        assert routing.get('type', 'http') in _dispatchers.keys(), \
+            f"@route(type={routing['type']!r}) is not one of {_dispatchers.keys()}"
         if route:
-            routing['routes'] = route if isinstance(route, list) else [route]
+            routing['routes'] = [route] if isinstance(route, str) else route
         wrong = routing.pop('method', None)
         if wrong is not None:
             _logger.warning("%s defined with invalid routing parameter 'method', assuming 'methods'", fname)
@@ -1871,8 +1883,12 @@ class Request:
         try:
             directory = root.statics[module]
             filepath = werkzeug.security.safe_join(directory, path)
+            debug = (
+                'assets' in self.session.debug and
+                ' wkhtmltopdf ' not in self.httprequest.user_agent.string
+            )
             res = Stream.from_path(filepath, public=True).get_response(
-                max_age=0 if 'assets' in self.session.debug else STATIC_CACHE,
+                max_age=0 if debug else STATIC_CACHE,
                 content_security_policy=None,
             )
             root.set_csp(res)
@@ -1944,6 +1960,7 @@ class Request:
         provided a response, a generic 404 - Not Found page is returned.
         """
         self.params = self.get_http_params()
+        self.registry['ir.http']._auth_method_public()
         response = self.registry['ir.http']._serve_fallback()
         if response:
             self.registry['ir.http']._post_dispatch(response)
@@ -2259,6 +2276,17 @@ class Application:
     """ Odoo WSGI application """
     # See also: https://www.python.org/dev/peps/pep-3333
 
+    def initialize(self):
+        """
+        Initialize the application.
+
+        This is to be called when setting up a WSGI application after
+        initializing the configuration values.
+        """
+        module_manager.initialize_sys_path()
+        from odoo.service.server import load_server_wide_modules  # noqa: PLC0415
+        load_server_wide_modules()
+
     @lazy_property
     def statics(self):
         """
@@ -2268,7 +2296,7 @@ class Application:
         mod2path = {}
         for addons_path in odoo.addons.__path__:
             for module in os.listdir(addons_path):
-                manifest = get_manifest(module)
+                manifest = module_manager.get_manifest(module)
                 static_path = opj(addons_path, module, 'static')
                 if (manifest
                         and (manifest['installable'] or manifest['assets'])
@@ -2312,7 +2340,7 @@ class Application:
         for url, endpoint in _generate_routing_rules([''] + config['server_wide_modules'], nodb_only=True):
             routing = submap(endpoint.routing, ROUTING_KEYS)
             if routing['methods'] is not None and 'OPTIONS' not in routing['methods']:
-                routing['methods'] = routing['methods'] + ['OPTIONS']
+                routing['methods'] = [*routing['methods'], 'OPTIONS']
             rule = werkzeug.routing.Rule(url, endpoint=endpoint, **routing)
             rule.merge_slashes = False
             nodb_routing_map.add(rule)

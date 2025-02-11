@@ -12,14 +12,14 @@ patch(FormController.prototype, {
         }
         useSubEnv({
             chatter: {
-                fetchData: true,
+                fetchThreadData: true,
                 fetchMessages: true,
             },
         });
     },
     onWillLoadRoot(nextConfiguration) {
         super.onWillLoadRoot(...arguments);
-        this.env.chatter.fetchData = true;
+        this.env.chatter.fetchThreadData = true;
         this.env.chatter.fetchMessages = true;
         const isSameThread =
             this.model.root?.resId === nextConfiguration.resId &&

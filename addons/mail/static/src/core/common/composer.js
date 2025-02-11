@@ -23,12 +23,13 @@ import {
     useState,
     useExternalListener,
     toRaw,
+    EventBus,
 } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { FileUploader } from "@web/views/fields/file_handler";
-import { escape, sprintf } from "@web/core/utils/strings";
+import { escape } from "@web/core/utils/strings";
 import { isDisplayStandalone, isIOS, isMobileOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -110,7 +111,11 @@ export class Composer extends Component {
         this.fakeTextarea = useRef("fakeTextarea");
         this.inputContainerRef = useRef("input-container");
         this.pickerContainerRef = useRef("picker-container");
-        this.state = useState({ active: true });
+        this.state = useState({
+            active: true,
+            isFullComposerOpen: false,
+        });
+        this.fullComposerBus = new EventBus();
         this.selection = useSelection({
             refName: "textarea",
             model: this.props.composer.selection,
@@ -123,7 +128,8 @@ export class Composer extends Component {
                     isEventHandled(ev, "emoji.selectEmoji") ||
                     isEventHandled(ev, "Composer.onClickAddEmoji") ||
                     isEventHandled(ev, "composer.clickOnAddAttachment") ||
-                    isEventHandled(ev, "composer.selectSuggestion")
+                    isEventHandled(ev, "composer.selectSuggestion") ||
+                    isEventHandled(ev, "composer.clickInsertCannedResponse")
                 );
             },
         });
@@ -248,49 +254,48 @@ export class Composer extends Component {
 
     get CANCEL_OR_SAVE_EDIT_TEXT() {
         if (this.ui.isSmall) {
-            return markup(
-                sprintf(
-                    escape(
-                        _t(
-                            "%(open_button)s%(icon)s%(open_em)sDiscard editing%(close_em)s%(close_button)s"
-                        )
+            return _t(
+                "%(open_button)s%(icon)s%(open_em)sDiscard editing%(close_em)s%(close_button)s",
+                {
+                    open_button: markup(
+                        `<button class='btn px-1 py-0' data-type="${escape(
+                            EDIT_CLICK_TYPE.CANCEL
+                        )}">`
                     ),
-                    {
-                        open_button: `<button class='btn px-1 py-0' data-type="${escape(
+                    close_button: markup("</button>"),
+                    icon: markup(
+                        `<i class='fa fa-times-circle pe-1' data-type="${escape(
                             EDIT_CLICK_TYPE.CANCEL
-                        )}">`,
-                        close_button: "</button>",
-                        icon: `<i class='fa fa-times-circle pe-1' data-type="${escape(
-                            EDIT_CLICK_TYPE.CANCEL
-                        )}"></i>`,
-                        open_em: `<em data-type="${escape(EDIT_CLICK_TYPE.CANCEL)}">`,
-                        close_em: "</em>",
-                    }
-                )
+                        )}"></i>`
+                    ),
+                    open_em: markup(`<em data-type="${escape(EDIT_CLICK_TYPE.CANCEL)}">`),
+                    close_em: markup("</em>"),
+                }
             );
         } else {
-            const translation1 = _t(
-                "%(open_samp)sEscape%(close_samp)s %(open_em)sto %(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
-            );
-            const translation2 = _t(
-                "%(open_samp)sEscape%(close_samp)s %(open_em)sto %(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
-            );
-            return markup(
-                sprintf(escape(this.props.mode === "extended" ? translation1 : translation2), {
-                    open_samp: "<samp>",
-                    close_samp: "</samp>",
-                    open_em: "<em>",
-                    close_em: "</em>",
-                    open_cancel: `<a role="button" href="#" data-type="${escape(
-                        EDIT_CLICK_TYPE.CANCEL
-                    )}">`,
-                    close_cancel: "</a>",
-                    open_save: `<a role="button" href="#" data-type="${escape(
-                        EDIT_CLICK_TYPE.SAVE
-                    )}">`,
-                    close_save: "</a>",
-                })
-            );
+            const tags = {
+                open_samp: markup("<samp>"),
+                close_samp: markup("</samp>"),
+                open_em: markup("<em>"),
+                close_em: markup("</em>"),
+                open_cancel: markup(
+                    `<a role="button" href="#" data-type="${escape(EDIT_CLICK_TYPE.CANCEL)}">`
+                ),
+                close_cancel: markup("</a>"),
+                open_save: markup(
+                    `<a role="button" href="#" data-type="${escape(EDIT_CLICK_TYPE.SAVE)}">`
+                ),
+                close_save: markup("</a>"),
+            };
+            return this.props.mode === "extended"
+                ? _t(
+                      "%(open_samp)sEscape%(close_samp)s %(open_em)sto %(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s",
+                      tags
+                  )
+                : _t(
+                      "%(open_samp)sEscape%(close_samp)s %(open_em)sto %(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s",
+                      tags
+                  );
         }
     }
 
@@ -400,14 +405,21 @@ export class Composer extends Component {
             case "mail.canned.response":
                 return {
                     ...props,
-                    autoSelectFirst: false,
-                    hint: _t("Tab to select"),
                     optionTemplate: "mail.Composer.suggestionCannedResponse",
                     options: suggestions.map((suggestion) => ({
                         cannedResponse: suggestion,
                         source: suggestion.source,
                         label: suggestion.substitution,
                         classList: "o-mail-Composer-suggestion",
+                    })),
+                };
+            case "emoji":
+                return {
+                    ...props,
+                    optionTemplate: "mail.Composer.suggestionEmoji",
+                    options: suggestions.map((suggestion) => ({
+                        emoji: suggestion,
+                        label: suggestion.codepoints,
                     })),
                 };
             default:
@@ -523,10 +535,16 @@ export class Composer extends Component {
             mentionedChannels: this.props.composer.mentionedChannels,
             mentionedPartners: this.props.composer.mentionedPartners,
         });
-        const signature = this.store.self.signature;
-        const default_body =
-            (await prettifyMessageContent(body, validMentions)) +
-            (this.props.composer.emailAddSignature && signature ? "<br>" + signature : "");
+        let default_body = await prettifyMessageContent(body, validMentions);
+        if (!default_body) {
+            const composer = toRaw(this.props.composer);
+            // Reset signature when recovering an empty body.
+            composer.emailAddSignature = true;
+        }
+        default_body = this.formatDefaultBodyForFullComposer(
+            default_body,
+            this.props.composer.emailAddSignature ? markup(this.store.self.signature) : ""
+        );
         const context = {
             default_attachment_ids: attachmentIds,
             default_body,
@@ -562,22 +580,37 @@ export class Composer extends Component {
                     this.notifySendFromMailbox();
                 }
                 if (accidentalDiscard) {
-                    const editor = document.querySelector(
-                        ".o_mail_composer_form_view .note-editable"
-                    );
-                    const editorIsEmpty = !editor || !editor.innerText.replace(/^\s*$/gm, "");
-                    if (!editorIsEmpty) {
-                        this.saveContent({ editor });
-                        this.restoreContent();
-                    }
+                    this.fullComposerBus.trigger("ACCIDENTAL_DISCARD", {
+                        onAccidentalDiscard: (isEmpty) => {
+                            if (!isEmpty) {
+                                this.saveContent();
+                                this.restoreContent();
+                            }
+                        },
+                    });
                 } else {
                     this.clear();
                 }
                 this.props.messageToReplyTo?.cancel();
                 this.onCloseFullComposerCallback();
+                this.state.isFullComposerOpen = false;
+                // Use another event bus so that no message is sent to the
+                // closed composer.
+                this.fullComposerBus = new EventBus();
+            },
+            props: {
+                fullComposerBus: this.fullComposerBus,
             },
         };
         await this.env.services.action.doAction(action, options);
+        this.state.isFullComposerOpen = true;
+    }
+
+    formatDefaultBodyForFullComposer(defaultBody, signature = "") {
+        if (signature) {
+            defaultBody = `${defaultBody}<br>${signature}`;
+        }
+        return `<div>${defaultBody}</div>`; // as to not wrap in <p> by html_sanitize
     }
 
     clear() {
@@ -699,6 +732,20 @@ export class Composer extends Component {
         this.suggestion?.clearRawMentions();
     }
 
+    onClickInsertCannedResponse(ev) {
+        markEventHandled(ev, "composer.clickInsertCannedResponse");
+        const composer = toRaw(this.props.composer);
+        const text = composer.text;
+        const firstPart = text.slice(0, composer.selection.start);
+        const secondPart = text.slice(composer.selection.end, text.length);
+        const toInsertPart = firstPart.length === 0 || firstPart.at(-1) === " " ? "::" : " ::";
+        composer.text = firstPart + toInsertPart + secondPart;
+        this.selection.moveCursor((firstPart + toInsertPart).length);
+        if (!this.ui.isSmall || !this.env.inChatter) {
+            composer.autofocus++;
+        }
+    }
+
     addEmoji(str) {
         const composer = toRaw(this.props.composer);
         const text = composer.text;
@@ -729,22 +776,22 @@ export class Composer extends Component {
         this.props.composer.isFocused = false;
     }
 
-    /** @param {HTMLElement} [editor] if set, this is a save from full composer editor. */
-    saveContent({ editor = false } = {}) {
+    saveContent() {
         const composer = toRaw(this.props.composer);
-        const config = {};
-        if (editor) {
-            Object.assign(config, {
-                emailAddSignature: false,
-                text: editor.innerText.replace(/(\t|\n)+/g, "\n"),
+        const saveContentToLocalStorage = (text, emailAddSignature) => {
+            const config = {
+                emailAddSignature,
+                text,
+            };
+            browser.localStorage.setItem(composer.localId, JSON.stringify(config));
+        };
+        if (this.state.isFullComposerOpen) {
+            this.fullComposerBus.trigger("SAVE_CONTENT", {
+                onSaveContent: saveContentToLocalStorage,
             });
         } else {
-            Object.assign(config, {
-                emailAddSignature: true,
-                text: composer.text,
-            });
+            saveContentToLocalStorage(composer.text, true);
         }
-        browser.localStorage.setItem(composer.localId, JSON.stringify(config));
     }
 
     restoreContent() {

@@ -54,4 +54,4 @@ class TestPortalInvoice(AccountTestInvoicingHttpCommon):
         self.authenticate(self.user_portal.login, self.user_portal.login)
         res = self.url_open(url)
         self.assertEqual(res.status_code, 200)
-        self.assertIn("<span>PROFORMA</span>", res.content.decode('utf-8'))
+        self.assertIn("Proforma", res.content.decode('utf-8'))

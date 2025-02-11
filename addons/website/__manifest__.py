@@ -1,3 +1,4 @@
+
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -77,6 +78,7 @@
         'views/snippets/s_company_team_basic.xml',
         'views/snippets/s_company_team_shapes.xml',
         'views/snippets/s_company_team_detail.xml',
+        'views/snippets/s_company_team_spotlight.xml',
         'views/snippets/s_call_to_action.xml',
         'views/snippets/s_references.xml',
         'views/snippets/s_references_social.xml',
@@ -107,6 +109,7 @@
         'views/snippets/s_timeline_list.xml',
         'views/snippets/s_process_steps.xml',
         'views/snippets/s_accordion.xml',
+        'views/snippets/s_website_form_info.xml',
         'views/snippets/s_numbers_showcase.xml',
         'views/snippets/s_numbers_charts.xml',
         'views/snippets/s_accordion_image.xml',
@@ -164,6 +167,7 @@
         'views/snippets/s_cta_card.xml',
         'views/snippets/s_image_frame.xml',
         'views/snippets/s_cta_mobile.xml',
+        'views/snippets/s_website_form_cover.xml',
         'views/new_page_template_templates.xml',
         'views/website_views.xml',
         'views/website_pages_views.xml',
@@ -192,7 +196,19 @@
     'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_frontend': [
+            'website/static/src/interactions/**/*',
+            'website/static/src/core/**/*',
+            'website/static/src/utils/**/*',
+            ('remove', 'website/static/src/interactions/**/*.edit.js'),
+            # Multi-range is an opt-in feature.
+            ('remove', 'website/static/src/interactions/multirange_input.js'),
+            # Activated on-demand by website.ripple_effect_js.
+            ('remove', 'website/static/src/interactions/ripple_effect.js'),
+            ('remove', 'website/static/src/core/website_edit_service.js'),
             ('replace', 'web/static/src/legacy/js/public/public_root_instance.js', 'website/static/src/js/content/website_root_instance.js'),
+            'website/static/src/snippets/**/*.js',
+            ('remove', 'website/static/src/snippets/**/*.edit.js'),
+            ('remove', 'website/static/src/snippets/**/options.js'),
             'website/static/src/libs/zoomodoo/zoomodoo.scss',
             'website/static/src/scss/website.scss',
             'website/static/src/scss/website_controller_page.scss',
@@ -205,21 +221,16 @@
             'website/static/src/js/tours/tour_utils.js',
             'website/static/src/js/content/website_root.js',
             'website/static/src/js/content/compatibility.js',
-            'website/static/src/js/content/menu.js',
             'website/static/src/js/content/snippets.animation.js',
-            'website/static/src/js/show_password.js',
-            'website/static/src/js/post_link.js',
-            'website/static/src/js/plausible.js',
-            'website/static/src/js/website_controller_page_listing_layout.js',
             'website/static/src/js/user_custom_javascript.js',
             'website/static/src/js/http_cookie.js',
             'website/static/src/xml/website.xml',
             'website/static/src/xml/website.background.video.xml',
             'website/static/src/xml/website.cookies_warning.xml',
             'website/static/src/js/text_processing.js',
-            'website/static/src/snippets/observing_cookie_mixin.js',
         ],
         'web.assets_frontend_minimal': [
+            'website/static/src/utils/misc.js',
             'website/static/src/js/content/inject_dom.js',
             'website/static/src/js/content/auto_hide_menu.js',
             'website/static/src/js/content/redirect.js',
@@ -227,10 +238,15 @@
         ],
         'web.assets_frontend_lazy': [
             # Remove assets_frontend_minimal
+            ('remove', 'website/static/src/utils/misc.js'),
             ('remove', 'website/static/src/js/content/inject_dom.js'),
             ('remove', 'website/static/src/js/content/auto_hide_menu.js'),
             ('remove', 'website/static/src/js/content/redirect.js'),
             ('remove', 'website/static/src/js/content/adapt_content.js'),
+        ],
+        'website.assets_edit_frontend': [
+            'website/static/src/**/*.edit.js',
+            'website/static/src/core/website_edit_service.js',
         ],
         'web._assets_primary_variables': [
             'website/static/src/scss/primary_variables.scss',
@@ -245,7 +261,7 @@
         'web.assets_tests': [
             'website/static/tests/tour_utils/focus_blur_snippets_options.js',
             'website/static/tests/tour_utils/website_preview_test.js',
-            'website/static/tests/tour_utils/widget_lifecycle_dep_widget.js',
+            'website/static/tests/tour_utils/lifecycle_dep_interaction.js',
             'website/static/tests/tours/**/*',
         ],
         'web.assets_backend': [
@@ -284,6 +300,31 @@
         'web.qunit_suite_tests': [
             'website/static/tests/redirect_field_tests.js',
         ],
+        'web.assets_unit_tests': [
+            'web/static/src/legacy/js/public/minimal_dom.js',
+            'website/static/tests/core/**/*',
+            'website/static/tests/helpers.js',
+            'website/static/tests/interactions/**/*',
+        ],
+        'web.assets_unit_tests_setup': [
+            'web/static/src/legacy/js/core/class.js',
+            'web/static/src/legacy/js/public/lazyloader.js',
+            'web/static/src/legacy/js/public/minimal_dom.js',
+            'web/static/src/legacy/js/public/public_widget.js',
+            'web/static/src/legacy/js/public/public_root.js',
+            'website/static/lib/multirange/*.js',
+            'website/static/src/core/**/*',
+            'website/static/src/utils/**/*',
+            'website/static/src/interactions/**/*',
+            'website/static/src/snippets/**/*.js',
+            ('remove', 'website/static/src/snippets/**/options.js'),
+            'website/static/src/snippets/**/*.xml',
+            'website/static/src/xml/**/*.xml',
+            ('remove', 'website/static/src/xml/website.editor.xml'),
+            ('remove', 'website/static/src/xml/web_editor.xml'),
+            'website/static/src/snippets/s_table_of_content/000.scss',
+            'google_recaptcha/static/src/js/recaptcha.js',
+        ],
         'web.tests_assets': [
             'website/static/tests/website_service_mock.js',
         ],
@@ -309,6 +350,7 @@
             'website/static/src/js/editor/snippets.options.js',
             'website/static/src/js/editor/shared_options/pricelist.js',
             'website/static/src/snippets/s_alert/options.js',
+            'website/static/src/snippets/s_accordion/options.js',
             'website/static/src/snippets/s_facebook_page/options.js',
             'website/static/src/snippets/s_image/options.js',
             'website/static/src/snippets/s_image_gallery/options.js',

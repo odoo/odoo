@@ -36,7 +36,6 @@ This module contains all the common features of Sales Management and eCommerce.
         'wizard/payment_link_wizard_views.xml',
         'wizard/res_config_settings_views.xml',
         'wizard/sale_make_invoice_advance_views.xml',
-        'wizard/sale_order_cancel_views.xml',
         'wizard/sale_order_discount_views.xml',
 
         # Define sale order views before their references
@@ -85,9 +84,8 @@ This module contains all the common features of Sales Management and eCommerce.
             'sale/static/src/views/**/*',
         ],
         'web.assets_frontend': [
+            'sale/static/src/interactions/**/*',
             'sale/static/src/scss/sale_portal.scss',
-            'sale/static/src/js/sale_portal_sidebar.js',
-            'sale/static/src/js/sale_portal_prepayment.js',
             'sale/static/src/js/sale_portal.js',
         ],
         'web.assets_tests': [

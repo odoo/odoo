@@ -26,6 +26,7 @@ const DEFAULT_ARCH_RESULTS = {
     scale: "week",
     scales: ["day", "week", "month", "year"],
     showUnusualDays: false,
+    showDatePicker: true,
 };
 
 function parseArch(arch) {

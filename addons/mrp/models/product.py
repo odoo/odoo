@@ -34,7 +34,9 @@ class ProductTemplate(models.Model):
 
     def _compute_bom_count(self):
         for product in self:
-            product.bom_count = self.env['mrp.bom'].search_count(['|', ('product_tmpl_id', '=', product.id), ('byproduct_ids.product_id.product_tmpl_id', '=', product.id)])
+            product.bom_count = self.env['mrp.bom'].search_count(
+                ['|', ('product_tmpl_id', 'in', product.ids), ('byproduct_ids.product_id.product_tmpl_id', 'in', product.ids)]
+            )
 
     @api.depends_context('company')
     def _compute_is_kits(self):
@@ -64,7 +66,7 @@ class ProductTemplate(models.Model):
     def _compute_used_in_bom_count(self):
         for template in self:
             template.used_in_bom_count = self.env['mrp.bom'].search_count(
-                [('bom_line_ids.product_tmpl_id', '=', template.id)])
+                [('bom_line_ids.product_tmpl_id', 'in', template.ids)])
 
     def write(self, values):
         if 'active' in values:
@@ -138,7 +140,10 @@ class ProductProduct(models.Model):
 
     def _compute_bom_count(self):
         for product in self:
-            product.bom_count = self.env['mrp.bom'].search_count(['|', '|', ('byproduct_ids.product_id', '=', product.id), ('product_id', '=', product.id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product.product_tmpl_id.id)])
+            product.bom_count = self.env['mrp.bom'].search_count([
+                '|', '|', ('byproduct_ids.product_id', 'in', product.ids), ('product_id', 'in', product.ids),
+                '&', ('product_id', '=', False), ('product_tmpl_id', 'in', product.product_tmpl_id.ids),
+            ])
 
     @api.depends_context('company')
     def _compute_is_kits(self):
@@ -185,7 +190,8 @@ class ProductProduct(models.Model):
 
     def _compute_used_in_bom_count(self):
         for product in self:
-            product.used_in_bom_count = self.env['mrp.bom'].search_count([('bom_line_ids.product_id', '=', product.id)])
+            product.used_in_bom_count = self.env['mrp.bom'].search_count(
+                [('bom_line_ids.product_id', 'in', product.ids)])
 
     @api.depends_context('order_id')
     def _compute_product_is_in_bom_and_mo(self):
@@ -429,3 +435,42 @@ class ProductProduct(models.Model):
 
     def _get_backend_root_menu_ids(self):
         return super()._get_backend_root_menu_ids() + [self.env.ref('mrp.menu_mrp_root').id]
+
+    def _update_uom(self, to_uom_id):
+        for uom, product_template, boms in self.env['mrp.bom']._read_group(
+            [('product_tmpl_id', 'in', self.product_tmpl_id.ids)],
+            ['product_uom_id', 'product_tmpl_id'],
+            ['id:recordset'],
+        ):
+            if product_template.uom_id != uom:
+                raise UserError(_('As other units of measure (ex : %(problem_uom)s) '
+                'than %(uom)s have already been used for this product, the change of unit of measure can not be done.'
+                'If you want to change it, please archive the product and create a new one.',
+                problem_uom=uom.name, uom=product_template.uom_id.name))
+            boms.product_uom_id = to_uom_id
+
+        for uom, product, bom_lines in self.env['mrp.bom.line']._read_group(
+            [('product_id', 'in', self.ids)],
+            ['product_uom_id', 'product_id'],
+            ['id:recordset'],
+        ):
+            if product.product_tmpl_id.uom_id != uom:
+                raise UserError(_('As other units of measure (ex : %(problem_uom)s) '
+                'than %(uom)s have already been used for this product, the change of unit of measure can not be done.'
+                'If you want to change it, please archive the product and create a new one.',
+                problem_uom=uom.name, uom=product.product_tmpl_id.uom_id.name))
+            bom_lines.product_uom_id = to_uom_id
+
+        for uom, product, productions in self.env['mrp.production']._read_group(
+            [('product_id', 'in', self.ids)],
+            ['product_uom_id', 'product_id'],
+            ['id:recordset'],
+        ):
+            if product.product_tmpl_id.uom_id != uom:
+                raise UserError(_('As other units of measure (ex : %(problem_uom)s) '
+                'than %(uom)s have already been used for this product, the change of unit of measure can not be done.'
+                'If you want to change it, please archive the product and create a new one.',
+                problem_uom=uom.name, uom=product.product_tmpl_id.uom_id.name))
+            productions.product_uom_id = to_uom_id
+
+        return super()._update_uom(to_uom_id)

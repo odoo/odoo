@@ -35,7 +35,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         return date_start, date_stop
 
     def _get_domain(self, date_start=False, date_stop=False, config_ids=False, session_ids=False):
-        domain = [('state', 'in', ['paid', 'invoiced', 'done'])]
+        domain = [('state', 'in', ['paid', 'done'])]
 
         if (session_ids):
             domain = AND([domain, [('session_id', 'in', session_ids)]])
@@ -176,8 +176,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                             payment['count'] = True
                     else:
                         is_cash_method = True
-                        previous_session = self.env['pos.session'].search([('id', '<', session.id), ('state', '=', 'closed'), ('config_id', '=', session.config_id.id)], limit=1)
-                        payment['final_count'] = payment['total'] + previous_session.cash_register_balance_end_real + session.cash_real_transaction
+                        payment['final_count'] = payment['total'] + session.cash_register_balance_start + session.cash_real_transaction
                         payment['money_counted'] = cash_counted
                         payment['money_difference'] = payment['money_counted'] - payment['final_count']
                         cash_moves = self.env['account.bank.statement.line'].search([('pos_session_id', '=', session.id)])

@@ -33,6 +33,9 @@ class L10nBRWebsiteSale(WebsiteSale):
             }
             mandatory_fields -= {'street', 'city'}  # Brazil uses the base_extended_address fields added above
 
+        if 'vat' in mandatory_fields:
+            mandatory_fields -= {'vat', 'l10n_latam_identification_type_id'}
+
         return mandatory_fields
 
     def _prepare_address_form_values(self, order_sudo, partner_sudo, *args, address_type, **kwargs):

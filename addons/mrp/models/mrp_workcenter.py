@@ -80,6 +80,7 @@ class MrpWorkcenter(models.Model):
     capacity_ids = fields.One2many('mrp.workcenter.capacity', 'workcenter_id', string='Product Capacities',
         help="Specific number of pieces that can be produced in parallel per product.", copy=True)
     kanban_dashboard_graph = fields.Text(compute='_compute_kanban_dashboard_graph')
+    resource_calendar_id = fields.Many2one(check_company=True)
 
     @api.constrains('alternative_workcenter_ids')
     def _check_alternative_workcenter(self):
@@ -251,7 +252,7 @@ class MrpWorkcenter(models.Model):
     @api.depends('routing_line_ids')
     def _compute_has_routing_lines(self):
         for workcenter in self:
-            workcenter.has_routing_lines = self.env['mrp.routing.workcenter'].search_count([('workcenter_id', '=', workcenter.id)], limit=1)
+            workcenter.has_routing_lines = self.env['mrp.routing.workcenter'].search_count([('workcenter_id', 'in', workcenter.ids)], limit=1)
 
     @api.constrains('default_capacity')
     def _check_capacity(self):

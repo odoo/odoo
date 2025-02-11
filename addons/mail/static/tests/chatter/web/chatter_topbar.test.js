@@ -2,7 +2,6 @@ import {
     click,
     contains,
     defineMailModels,
-    onRpcBefore,
     openFormView,
     start,
     startServer,
@@ -141,7 +140,12 @@ test("attachment counter with attachments", async () => {
 test("attachment counter while loading attachments", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
-    onRpc("/mail/thread/data", async () => await new Deferred()); // simulate long loading
+    onRpc("/mail/data", async (request) => {
+        const { params } = await request.json();
+        if (params.fetch_params.some((fetchParam) => fetchParam[0] === "mail.thread")) {
+            await new Deferred(); // simulate long loading
+        }
+    });
     await start();
     await openFormView("res.partner", partnerId);
     await contains("button[aria-label='Attach files']");
@@ -154,7 +158,12 @@ test("attachment counter transition when attachments become loaded", async () =>
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const deferred = new Deferred();
-    onRpcBefore("/mail/thread/data", async () => await deferred);
+    onRpc("/mail/data", async (request) => {
+        const { params } = await request.json();
+        if (params.fetch_params.some((fetchParam) => fetchParam[0] === "mail.thread")) {
+            await deferred;
+        }
+    });
     await start();
     await openFormView("res.partner", partnerId);
     await contains("button[aria-label='Attach files']");

@@ -20,6 +20,7 @@ This module provides the core of the Odoo Web Client.
         'views/base_document_layout_views.xml',
         'views/partner_view.xml',
         'views/speedscope_template.xml',
+        'views/speedscope_config_wizard.xml',
         'views/neutralize_views.xml',
         'data/ir_attachment.xml',
         'data/report_layout.xml',
@@ -228,15 +229,12 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
             'web/static/src/core/commands/default_providers.js',
             'web/static/src/core/commands/command_palette.js',
-            'web/static/src/public/error_notifications.js',
-            'web/static/src/public/public_component_service.js',
-            'web/static/src/public/datetime_picker_widget.js',
+            'web/static/src/public/**/*.js',
+            ('remove', 'web/static/src/public/database_manager.js'),
 
             'web/static/src/legacy/js/public/public_root.js',
             'web/static/src/legacy/js/public/public_root_instance.js',
             'web/static/src/legacy/js/public/public_widget.js',
-            'web/static/src/legacy/js/public/signin.js',
-
         ],
         'web.assets_frontend_lazy': [
             ('include', 'web.assets_frontend'),
@@ -449,6 +447,10 @@ This module provides the core of the Odoo Web Client.
             ('include', 'web.assets_backend'),
             ('include', 'web.assets_backend_lazy'),
 
+            'web/static/src/public/**/*.js',
+            'web/static/tests/public/**/*.xml',
+            ('remove', 'web/static/src/public/database_manager.js'),
+            ('remove', 'web/static/src/public/error_notifications.js'),
             'web/static/src/public/public_component_service.js',
             'web/static/src/webclient/clickbot/clickbot.js',
         ],
@@ -471,7 +473,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/tests/legacy/legacy_tests/helpers/**/*',
             ('remove', 'web/static/tests/legacy/legacy_tests/helpers/test_utils_tests.js'),
 
-            'web/static/lib/jquery/jquery.js',
+            ('include', 'web._assets_jquery'),
 
             'web/static/lib/fullcalendar/core/index.global.js',
             'web/static/lib/fullcalendar/interaction/index.global.js',

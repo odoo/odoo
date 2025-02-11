@@ -422,7 +422,7 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         self.env.user.write({'groups_id': [Command.link(group0.id)]})
 
         bindings = Actions.get_bindings('res.country')
-        self.assertItemsEqual(bindings.get('action'), self.action.read(['name', 'sequence', 'binding_view_types']))
+        self.assertItemsEqual(bindings.get('action'), self.action.read(['name', 'sequence', 'binding_view_types', 'binding_invisible']))
 
         self.action.with_context(self.context).run()
         self.assertEqual(self.test_country.vat_label, 'VatFromTest', 'vat label should be changed to VatFromTest')
@@ -864,9 +864,9 @@ class TestCustomFieldsPostInstall(TestCommonCustomFields):
         # as a user could do through a SQL shell or a `cr.execute` in a server action
         self.env.cr.execute("ALTER TABLE ir_model_fields DROP CONSTRAINT ir_model_fields_name_manual_field")
         self.env.cr.execute("UPDATE ir_model_fields SET name = 'foo' WHERE id = %s", [field.id])
-        with self.assertLogs('odoo.addons.base.models.ir_model') as log_catcher:
+        with self.assertLogs('odoo.registry') as log_catcher:
             # Trick to reload the registry. The above rename done through SQL didn't reload the registry. This will.
-            self.env.registry.setup_models(self.cr)
+            self.env.registry._setup_models__(self.cr)
             self.assertIn(
                 f'The field `{field.name}` is not defined in the `{field.model}` Python class', log_catcher.output[0]
             )

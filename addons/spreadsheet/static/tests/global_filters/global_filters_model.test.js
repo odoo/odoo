@@ -400,7 +400,7 @@ test("Can import/export filters", async function () {
         },
         globalFilters: [LAST_YEAR_LEGACY_FILTER, LAST_YEAR_GLOBAL_FILTER],
     };
-    const model = await createModelWithDataSource({ spreadsheetData });
+    const { model } = await createModelWithDataSource({ spreadsheetData });
 
     expect(model.getters.getGlobalFilters().length).toBe(2);
     let [filter1, filter2] = model.getters.getGlobalFilters();
@@ -525,7 +525,7 @@ test("Relational filter default to current user", async function () {
 });
 
 test("Get active filters with multiple filters", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     await addGlobalFilter(model, {
         id: "42",
         type: "text",
@@ -552,7 +552,7 @@ test("Get active filters with multiple filters", async function () {
 });
 
 test("Get active filters with text filter enabled", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     await addGlobalFilter(model, {
         id: "42",
         type: "text",
@@ -568,7 +568,7 @@ test("Get active filters with text filter enabled", async function () {
 });
 
 test("restrict text filter to a range of values", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     const sheetId = model.getters.getActiveSheetId();
     setCellContent(model, "A1", "Hello");
     setCellContent(model, "A2", "World");
@@ -586,7 +586,7 @@ test("restrict text filter to a range of values", async function () {
 });
 
 test("duplicated values appear once in text filter with range", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     const sheetId = model.getters.getActiveSheetId();
     setCellContent(model, "A1", "3");
     setCellContent(model, "A2", "=3");
@@ -601,7 +601,7 @@ test("duplicated values appear once in text filter with range", async function (
 });
 
 test("numbers and dates are formatted in text filter with range", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     const sheetId = model.getters.getActiveSheetId();
     setCellContent(model, "A1", "2");
     setCellContent(model, "A2", "2");
@@ -621,7 +621,7 @@ test("numbers and dates are formatted in text filter with range", async function
 });
 
 test("falsy values appears (but not empty string) in text filter with range", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     const sheetId = model.getters.getActiveSheetId();
     setCellContent(model, "A1", "0");
     setCellContent(model, "A2", "FALSE");
@@ -640,7 +640,7 @@ test("falsy values appears (but not empty string) in text filter with range", as
 });
 
 test("default value appears in text filter with range", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     const sheetId = model.getters.getActiveSheetId();
     setCellContent(model, "A1", "Hello");
     await addGlobalFilter(model, {
@@ -658,7 +658,7 @@ test("default value appears in text filter with range", async function () {
 });
 
 test("current value appears in text filter with range", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     const sheetId = model.getters.getActiveSheetId();
     setCellContent(model, "A1", "Hello");
     setCellContent(model, "A2", "World");
@@ -682,7 +682,7 @@ test("current value appears in text filter with range", async function () {
 });
 
 test("default value appears once if the same value is in the text filter range", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     const sheetId = model.getters.getActiveSheetId();
     setCellContent(model, "A1", "Hello");
     await addGlobalFilter(model, {
@@ -698,7 +698,7 @@ test("default value appears once if the same value is in the text filter range",
 });
 
 test("formatted default value appears once if the same value is in the text filter range", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     const sheetId = model.getters.getActiveSheetId();
     setCellContent(model, "A1", "0.3");
     setCellFormat(model, "A1", "0.00%");
@@ -719,7 +719,7 @@ test("formatted default value appears once if the same value is in the text filt
 });
 
 test("errors and empty cells if the same value is in the text filter range", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     const sheetId = model.getters.getActiveSheetId();
     setCellContent(model, "A1", "Hello");
     setCellContent(model, "A2", "=1/0");
@@ -737,7 +737,7 @@ test("errors and empty cells if the same value is in the text filter range", asy
 });
 
 test("add column before a text filter range", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     const sheetId = model.getters.getActiveSheetId();
     await addGlobalFilter(model, {
         id: "42",
@@ -751,7 +751,7 @@ test("add column before a text filter range", async function () {
 });
 
 test("delete a text filter range", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     const sheetId = model.getters.getActiveSheetId();
     await addGlobalFilter(model, {
         id: "42",
@@ -765,7 +765,7 @@ test("delete a text filter range", async function () {
 });
 
 test("import/export a text filter range", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     const sheetId = model.getters.getActiveSheetId();
     await addGlobalFilter(model, {
         id: "42",
@@ -784,7 +784,7 @@ test("import/export a text filter range", async function () {
 });
 
 test("Get active filters with relation filter enabled", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     await addGlobalFilter(model, {
         id: "42",
         type: "relation",
@@ -800,7 +800,7 @@ test("Get active filters with relation filter enabled", async function () {
 });
 
 test("Get active filters with date filter enabled", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     await addGlobalFilter(model, {
         id: "42",
         type: "date",
@@ -835,7 +835,7 @@ test("Get active filters with date filter enabled", async function () {
 });
 
 test("ODOO.FILTER.VALUE text filter", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     setCellContent(model, "A10", `=ODOO.FILTER.VALUE("Text Filter")`);
     await animationFrame();
     expect(getCellValue(model, "A10")).toBe("#ERROR");
@@ -856,7 +856,7 @@ test("ODOO.FILTER.VALUE text filter", async function () {
 });
 
 test("ODOO.FILTER.VALUE date filter", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     setCellContent(model, "A10", `=ODOO.FILTER.VALUE("Date Filter")`);
     await animationFrame();
     await addGlobalFilter(model, {
@@ -905,7 +905,7 @@ test("ODOO.FILTER.VALUE date filter", async function () {
 });
 
 test("ODOO.FILTER.VALUE date from/to without values", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     await addGlobalFilter(model, {
         id: "42",
         type: "date",
@@ -918,7 +918,7 @@ test("ODOO.FILTER.VALUE date from/to without values", async function () {
 });
 
 test("ODOO.FILTER.VALUE date from/to with only from defined", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     setCellContent(model, "A1", `=ODOO.FILTER.VALUE("Date Filter")`);
     await addGlobalFilter(model, {
         id: "42",
@@ -939,7 +939,7 @@ test("ODOO.FILTER.VALUE date from/to with only from defined", async function () 
 });
 
 test("ODOO.FILTER.VALUE date from/to with only to defined", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     setCellContent(model, "A1", `=ODOO.FILTER.VALUE("Date Filter")`);
     await addGlobalFilter(model, {
         id: "42",
@@ -960,7 +960,7 @@ test("ODOO.FILTER.VALUE date from/to with only to defined", async function () {
 });
 
 test("ODOO.FILTER.VALUE date from/to with from and to defined", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     setCellContent(model, "A1", `=ODOO.FILTER.VALUE("Date Filter")`);
     await addGlobalFilter(model, {
         id: "42",
@@ -984,7 +984,7 @@ test("ODOO.FILTER.VALUE date from/to with from and to defined", async function (
 });
 
 test("ODOO.FILTER.VALUE relation filter", async function () {
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         mockRPC: function (route, { method, args }) {
             if (method === "read") {
                 const resId = args[0][0];
@@ -1037,7 +1037,7 @@ test("ODOO.FILTER.VALUE relation filter", async function () {
 });
 
 test("ODOO.FILTER.VALUE with escaped quotes in the filter label", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     await addGlobalFilter(model, {
         id: "42",
         type: "text",
@@ -1049,7 +1049,7 @@ test("ODOO.FILTER.VALUE with escaped quotes in the filter label", async function
 });
 
 test("ODOO.FILTER.VALUE formulas are updated when filter label is changed", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     await addGlobalFilter(model, {
         id: "42",
         type: "date",
@@ -1073,7 +1073,7 @@ test("ODOO.FILTER.VALUE formulas are updated when filter label is changed", asyn
 });
 
 test("Exporting data does not remove value from model", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     await addGlobalFilter(model, {
         id: "42",
         type: "text",
@@ -1090,7 +1090,7 @@ test("Exporting data does not remove value from model", async function () {
 });
 
 test("Can undo-redo a ADD_GLOBAL_FILTER", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     await addGlobalFilter(model, {
         id: "42",
         type: "text",
@@ -1104,7 +1104,7 @@ test("Can undo-redo a ADD_GLOBAL_FILTER", async function () {
 });
 
 test("Can undo-redo a REMOVE_GLOBAL_FILTER", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     await addGlobalFilter(model, {
         id: "42",
         type: "text",
@@ -1119,7 +1119,7 @@ test("Can undo-redo a REMOVE_GLOBAL_FILTER", async function () {
 });
 
 test("Can undo-redo a EDIT_GLOBAL_FILTER", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     await addGlobalFilter(model, {
         id: "42",
         type: "text",
@@ -1138,7 +1138,7 @@ test("Can undo-redo a EDIT_GLOBAL_FILTER", async function () {
 });
 
 test("Can undo-redo a MOVE_GLOBAL_FILTER", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     addGlobalFilter(model, LAST_YEAR_GLOBAL_FILTER, {});
     addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER, {});
     addGlobalFilter(model, NEXT_YEAR_GLOBAL_FILTER, {});
@@ -1213,20 +1213,20 @@ test("load data only once if filter is not active (without default value)", asyn
             },
         ],
     };
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, { model, method, kwargs }) {
-            if (model === "partner" && method === "read_group") {
+            if (model === "partner" && method === "formatted_read_group") {
                 expect.step(`${model}/${method}`);
             }
         },
     });
     await waitForDataLoaded(model);
     expect.verifySteps([
-        "partner/read_group",
-        "partner/read_group",
-        "partner/read_group",
-        "partner/read_group",
+        "partner/formatted_read_group",
+        "partner/formatted_read_group",
+        "partner/formatted_read_group",
+        "partner/formatted_read_group",
     ]);
     expect(getCellValue(model, "A1")).toBe(131);
 });
@@ -1263,16 +1263,16 @@ test("load data only once if filter is active (with a default value)", async fun
             },
         ],
     };
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, { model, method, kwargs }) {
-            if (model === "partner" && method === "read_group") {
+            if (model === "partner" && method === "formatted_read_group") {
                 expect.step(`${model}/${method}`);
             }
         },
     });
     await waitForDataLoaded(model);
-    expect.verifySteps(["partner/read_group"]);
+    expect.verifySteps(["partner/formatted_read_group"]);
     expect(getCellValue(model, "A1")).toBe("");
 });
 
@@ -1298,20 +1298,20 @@ test("don't reload data if an empty filter is added", async function () {
             },
         },
     };
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, { model, method, kwargs }) {
-            if (model === "partner" && method === "read_group") {
+            if (model === "partner" && method === "formatted_read_group") {
                 expect.step(`${model}/${method}`);
             }
         },
     });
     await waitForDataLoaded(model);
     expect.verifySteps([
-        "partner/read_group",
-        "partner/read_group",
-        "partner/read_group",
-        "partner/read_group",
+        "partner/formatted_read_group",
+        "partner/formatted_read_group",
+        "partner/formatted_read_group",
+        "partner/formatted_read_group",
     ]);
     expect(getCellValue(model, "A1")).toBe(131);
     addGlobalFilter(model, {
@@ -1340,10 +1340,10 @@ test("don't load data if a filter is added but the data is not needed", async fu
             },
         },
     };
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, { model, method, kwargs }) {
-            if (model === "partner" && method === "read_group") {
+            if (model === "partner" && method === "formatted_read_group") {
                 expect.step(`${model}/${method}`);
             }
         },
@@ -1366,7 +1366,7 @@ test("don't load data if a filter is added but the data is not needed", async fu
     expect(getCellValue(model, "A1")).toBe("Loading...");
     await animationFrame();
     expect(getCellValue(model, "A1")).toBe("");
-    expect.verifySteps(["partner/read_group"]);
+    expect.verifySteps(["partner/formatted_read_group"]);
 });
 
 test("don't load data if a filter is activated but the data is not needed", async function () {
@@ -1393,10 +1393,10 @@ test("don't load data if a filter is activated but the data is not needed", asyn
             },
         ],
     };
-    const model = await createModelWithDataSource({
+    const { model } = await createModelWithDataSource({
         spreadsheetData,
         mockRPC: function (route, { model, method, kwargs }) {
-            if (model === "partner" && method === "read_group") {
+            if (model === "partner" && method === "formatted_read_group") {
                 expect.step(`${model}/${method}`);
             }
         },
@@ -1412,7 +1412,7 @@ test("don't load data if a filter is activated but the data is not needed", asyn
     expect(getCellValue(model, "A1")).toBe("Loading...");
     await animationFrame();
     expect(getCellValue(model, "A1")).toBe("");
-    expect.verifySteps(["partner/read_group"]);
+    expect.verifySteps(["partner/formatted_read_group"]);
 });
 
 test("Default value defines value", async function () {
@@ -1471,7 +1471,7 @@ test("Export global filters for excel", async function () {
 });
 
 test("Export from/to global filters for excel", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     await addGlobalFilter(model, {
         id: "42",
         type: "date",
@@ -1500,7 +1500,9 @@ test("Export from/to global filters for excel", async function () {
     expect(filterSheet.formats["B2"]).toBe(1);
     expect(filterSheet.formats["C2"]).toBe(1);
     expect(exportData.formats[1]).toBe("m/d/yyyy");
-    const exportedModel = await createModelWithDataSource({ spreadsheetData: exportData });
+    const { model: exportedModel } = await createModelWithDataSource({
+        spreadsheetData: exportData,
+    });
     const sheetId = exportData.sheets.at(-1).id;
     expect(getCell(exportedModel, "B2", sheetId).format).toBe("m/d/yyyy");
     expect(getCell(exportedModel, "C2", sheetId).format).toBe("m/d/yyyy");
@@ -2018,7 +2020,7 @@ test("getFiltersMatchingPivot return correctly matching filter according to cell
 });
 
 test("getFiltersMatchingPivot return an empty array if there is no pivot formula", async function () {
-    const model = await createModelWithDataSource();
+    const { model } = await createModelWithDataSource();
     const result = getFiltersMatchingPivot(model, "=1");
     expect(result).toEqual([]);
 });
@@ -2497,10 +2499,15 @@ test("Updating the pivot should keep the global filter domain", async () => {
 
 test("Updating a non-odoo pivot should not crash on global filter", async () => {
     const grid = {
-        A1: "Customer",   B1: "Price", C1: `=PIVOT(1)`,
-        A2: "Alice",      B2: "10",
-        A3: "",           B3: "20",
-        A4: "Olaf",       B4: "30",
+        A1: "Customer",
+        B1: "Price",
+        C1: `=PIVOT(1)`,
+        A2: "Alice",
+        B2: "10",
+        A3: "",
+        B3: "20",
+        A4: "Olaf",
+        B4: "30",
     };
     const model = createModelFromGrid(grid);
     const pivot = {

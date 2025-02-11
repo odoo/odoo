@@ -524,7 +524,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.product_a.taxes_id = None
         self.product_a.available_in_pos = True
         self.product_a.name = 'Product A'
-        self.env['res.partner'].create({'name': 'Test Partner AAA'})
+        self.env['res.partner'].create({'name': 'A Test Partner AAA'})
         sale_order = self.env['sale.order'].create({
             'partner_id': self.env['res.partner'].create({'name': 'Test Partner BBB'}).id,
             'order_line': [(0, 0, {
@@ -847,42 +847,10 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(sale_order.pos_order_line_ids.order_id.picking_ids.state, 'assigned')
         self.assertEqual(self.env['purchase.order.line'].search_count([('product_id', '=', product_a.id)]), 1)
 
-    def test_pos_repair(self):
-        if self.env['ir.module.module']._get('repair').state != 'installed':
-            self.skipTest("Repair module is required for this test")
-
-        self.product_1 = self.env['product.product'].create({
-            'name': 'Test product 1'
-        })
-        self.stock_warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        self.repair1 = self.env['repair.order'].create({
-            'product_id': self.product_1.id,
-            'product_uom': self.env.ref('uom.product_uom_unit').id,
-            'picking_type_id': self.stock_warehouse.repair_type_id.id,
-            'move_ids': [
-                (0, 0, {
-                    'product_id': self.product_1.id,
-                    'product_uom_qty': 1.0,
-                    'state': 'draft',
-                    'repair_line_type': 'add',
-                    'company_id': self.env.company.id,
-                })
-            ],
-            'partner_id': self.env['res.partner'].create({'name': 'Partner 1'}).id
-        })
-        self.repair1._action_repair_confirm()
-        self.repair1.action_repair_start()
-        self.repair1.action_repair_end()
-        self.repair1.action_create_sale_order()
-        self.assertEqual(len(self.product_1.stock_move_ids.ids), 2, "There should be 2 stock moves for the product created by the repair order")
-        self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosRepairSettleOrder', login="pos_user")
-        self.assertEqual(len(self.product_1.stock_move_ids.ids), 2, "Paying for the order in PoS should not create new stock moves")
-
     def test_pos_sale_warnings(self):
         self.env['res.partner'].create([
-            {'name': 'Test Customer', 'sale_warn': 'warning', 'sale_warn_msg': 'Highly infectious disease'},
-            {'name': 'Test Customer 2', 'sale_warn': 'block', 'sale_warn_msg': 'Cannot afford our services'}
+            {'name': 'A Test Customer', 'sale_warn': 'warning', 'sale_warn_msg': 'Highly infectious disease'},
+            {'name': 'A Test Customer 2', 'sale_warn': 'block', 'sale_warn_msg': 'Cannot afford our services'}
         ])
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSaleWarning', login="accountman")
@@ -998,10 +966,17 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(sale_order.order_line.qty_delivered, 0)
 
     def test_downpayment_with_fixed_taxed_product(self):
+        """This test will make sure that a unique downpayment line will be created for the fixed tax"""
         tax_1 = self.env['account.tax'].create({
             'name': '10',
-            'amount_type': 'fixed',
             'amount': 10,
+            'amount_type': 'fixed',
+        })
+
+        tax_2 = self.env['account.tax'].create({
+            'name': '5 incl',
+            'amount': 5,
+            'price_include_override': 'tax_included',
         })
 
         product_a = self.env['product.product'].create({
@@ -1011,15 +986,27 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'taxes_id': [tax_1.id],
         })
 
+        product_b = self.env['product.product'].create({
+            'name': 'Product B',
+            'available_in_pos': True,
+            'lst_price': 5.0,
+            'taxes_id': [tax_2.id],
+        })
+
         partner_test = self.env['res.partner'].create({'name': 'Test Partner'})
 
         sale_order = self.env['sale.order'].create({
             'partner_id': partner_test.id,
-            'order_line': [Command.create({
+            'order_line': [(0, 0, {
                 'product_id': product_a.id,
                 'name': product_a.name,
                 'product_uom_qty': 1,
                 'price_unit': product_a.lst_price,
+            }), (0, 0, {
+                'product_id': product_b.id,
+                'name': product_b.name,
+                'product_uom_qty': 1,
+                'price_unit': product_b.lst_price,
             })],
         })
         sale_order.action_confirm()
@@ -1034,4 +1021,23 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'down_payment_product_id': self.downpayment_product.id,
         })
         self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PoSDownPaymentLinesPerFixedTax', login="accountman")
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PoSDownPaymentFixedTax', login="accountman")
+
+    def test_settle_quotation_delivered_qty(self):
+        """ Test if a quotation (unconfirmed sale order) is settled in the PoS, the delivered quantity is updated correctly """
+
+        product1 = self.env['product.product'].create({
+            'name': 'product1',
+            'available_in_pos': True,
+            'is_storable': True,
+            'lst_price': 10,
+            'taxes_id': [odoo.Command.clear()],
+        })
+        partner_1 = self.env['res.partner'].create({'name': 'Test Partner 1'})
+        order = self.env['sale.order'].create({
+            'partner_id': partner_1.id,
+            'order_line': [odoo.Command.create({'product_id': product1.id})],
+        })
+        self.main_pos_config.open_ui()
+        self.start_pos_tour('PoSSettleQuotation', login="accountman")
+        self.assertEqual(order.order_line.qty_delivered, 1)

@@ -2043,6 +2043,9 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
         // Handle the sliding manually.
         this.__onControlClick = throttleForAnimation(this._onControlClick.bind(this));
         this.$controls.on("click.carousel_option", this.__onControlClick);
+        for (const controlEl of this.$controls) {
+            controlEl.addEventListener("keydown", this._onControlKeyDown);
+        }
 
         return this._super.apply(this, arguments);
     },
@@ -2053,6 +2056,9 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
         this._super.apply(this, arguments);
         this.$bsTarget.off('.carousel_option');
         this.$controls.off(".carousel_option");
+        for (const controlEl of this.$controls) {
+            controlEl.removeEventListener("keydown", this._onControlKeyDown);
+        }
     },
     /**
      * @override
@@ -2216,6 +2222,20 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
             this.options.wysiwyg.odooEditor.historyUnpauseSteps();
             this.options.wysiwyg.odooEditor.historyStep();
         }});
+    },
+    /**
+     * Since carousel controls are disabled in edit mode because slides are
+     * handled manually, we disable the left and right keydown events to prevent
+     * sliding this way.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onControlKeyDown(ev) {
+        if (["ArrowLeft", "ArrowRight"].includes(ev.code)) {
+            ev.preventDefault();
+            ev.stopPropagation();
+        }
     },
     /**
      * @override
@@ -2414,16 +2434,29 @@ options.registry.Parallax = options.Class.extend({
      *
      * @see this.selectClass for parameters
      */
-    async selectDataAttribute(previewMode, widgetValue, params) {
-        await this._super(...arguments);
-        if (params.attributeName !== 'scrollBackgroundRatio') {
-            return;
+    async setParallaxType(previewMode, widgetValue, params) {
+        const isParallax = widgetValue !== "none";
+        this.$target[0].classList.toggle("parallax", isParallax);
+        this.$target[0].classList.toggle("s_parallax_is_fixed", widgetValue === "fixed");
+        this.$target[0].classList.toggle("s_parallax_no_overflow_hidden", widgetValue === "none" || widgetValue === "fixed");
+        const typeValues = {
+            "none": 0,
+            "fixed": 1,
+            "top": 1.5,
+            "bottom": -1.5,
+            "zoom_in": 1.2,
+            "zoom_out": 0.2,
+        };
+        this.$target[0].dataset.scrollBackgroundRatio = typeValues[widgetValue];
+        // Set a parallax type only if there is a zoom option selected.
+        // This is to avoid useless element in the DOM since in the animation
+        // we need the type only for zoom options.
+        if (widgetValue === "zoom_in" || widgetValue === "zoom_out") {
+            this.$target[0].dataset.parallaxType = widgetValue;
+        } else {
+            delete this.$target[0].dataset.parallaxType;
         }
 
-        const isParallax = (widgetValue !== '0');
-        this.$target.toggleClass('parallax', isParallax);
-        this.$target.toggleClass('s_parallax_is_fixed', widgetValue === '1');
-        this.$target.toggleClass('s_parallax_no_overflow_hidden', (widgetValue === '0' || widgetValue === '1'));
         if (isParallax) {
             if (!this.parallaxEl) {
                 this.parallaxEl = document.createElement('span');
@@ -2454,16 +2487,15 @@ options.registry.Parallax = options.Class.extend({
      * @override
      */
     async _computeWidgetState(methodName, params) {
-        if (methodName === 'selectDataAttribute' && params.parallaxTypeOpt) {
-            const attrName = params.attributeName;
-            const attrValue = (this.$target[0].dataset[attrName] || params.attributeDefaultValue).trim();
-            switch (attrValue) {
-                case '0':
-                case '1': {
-                    return attrValue;
-                }
+        if (methodName === "setParallaxType" && params.parallaxTypeOpt) {
+            const attributeValue = parseFloat(this.$target[0].dataset.scrollBackgroundRatio?.trim() || 0)
+            switch (attributeValue) {
+                case 0:
+                    return "none";
+                case 1:
+                    return "fixed";
                 default: {
-                    return (attrValue.startsWith('-') ? '-1.5' : '1.5');
+                    return this.$target[0].dataset.parallaxType || (attributeValue > 0 ? "top" : "bottom");
                 }
             }
         }
@@ -4248,38 +4280,6 @@ options.registry.MegaMenuNoDelete = options.Class.extend({
 });
 
 options.registry.sizing.include({
-    /**
-     * @override
-     */
-    start() {
-        const defs = this._super(...arguments);
-        const self = this;
-        this.$handles.on('mousedown', function (ev) {
-            // Since website is edited in an iframe, a div that goes over the
-            // iframe is necessary to catch mousemove and mouseup events,
-            // otherwise the iframe absorbs them.
-            const $body = $(this.ownerDocument.body);
-            if (!self.divEl) {
-                self.divEl = document.createElement('div');
-                self.divEl.style.position = 'absolute';
-                self.divEl.style.height = '100%';
-                self.divEl.style.width = '100%';
-                self.divEl.setAttribute('id', 'iframeEventOverlay');
-                $body.append(self.divEl);
-            }
-            const documentMouseUp = () => {
-                // Multiple mouseup can occur if mouse goes out of the window
-                // while moving.
-                if (self.divEl) {
-                    self.divEl.remove();
-                    self.divEl = undefined;
-                }
-                $body.off('mouseup', documentMouseUp);
-            };
-            $body.on('mouseup', documentMouseUp);
-        });
-        return defs;
-    },
 
     //--------------------------------------------------------------------------
     // Public

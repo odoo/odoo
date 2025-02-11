@@ -99,7 +99,7 @@ class PosSession(models.Model):
         relations = {}
 
         for name, params in model_fields.items():
-            if name not in fields and len(fields) != 0:
+            if (name not in fields and len(fields)) or (params.manual and not len(fields)):
                 continue
 
             if params.comodel_name:
@@ -128,10 +128,10 @@ class PosSession(models.Model):
     @api.model
     def _load_pos_data_models(self, config_id):
         return ['pos.config', 'pos.preset', 'resource.calendar.attendance', 'pos.order', 'pos.order.line', 'pos.pack.operation.lot', 'pos.payment', 'pos.payment.method', 'pos.printer',
-            'pos.category', 'pos.bill', 'res.company', 'account.tax', 'account.tax.group', 'product.template', 'product.product', 'product.attribute', 'product.attribute.custom.value',
+            'pos.bill', 'res.company', 'account.tax', 'account.tax.group', 'product.template', 'product.product', 'pos.category', 'product.attribute', 'product.attribute.custom.value',
             'product.template.attribute.line', 'product.template.attribute.value', 'product.combo', 'product.combo.item', 'res.users', 'res.partner', 'product.uom',
             'decimal.precision', 'uom.uom', 'res.country', 'res.country.state', 'res.lang', 'product.pricelist', 'product.pricelist.item', 'product.category',
-            'account.cash.rounding', 'account.fiscal.position', 'account.fiscal.position.tax', 'stock.picking.type', 'res.currency', 'pos.note', 'ir.ui.view', 'product.tag', 'ir.module.module']
+            'account.cash.rounding', 'account.fiscal.position', 'account.fiscal.position.tax', 'stock.picking.type', 'res.currency', 'pos.note', 'product.tag', 'ir.module.module']
 
     @api.model
     def _load_pos_data_domain(self, data):
@@ -261,8 +261,8 @@ class PosSession(models.Model):
     @api.depends('picking_ids', 'picking_ids.state')
     def _compute_picking_count(self):
         for session in self:
-            session.picking_count = self.env['stock.picking'].search_count([('pos_session_id', '=', session.id)])
-            session.failed_pickings = bool(self.env['stock.picking'].search([('pos_session_id', '=', session.id), ('state', '!=', 'done')], limit=1))
+            session.picking_count = self.env['stock.picking'].search_count([('pos_session_id', 'in', session.ids)])
+            session.failed_pickings = bool(self.env['stock.picking'].search([('pos_session_id', 'in', session.ids), ('state', '!=', 'done')], limit=1))
 
     def action_stock_picking(self):
         self.ensure_one()
@@ -397,8 +397,6 @@ class PosSession(models.Model):
         # we only open sessions that haven't already been opened
         for session in self.filtered(lambda session: session.state == 'opening_control'):
             values = {}
-            if not session.start_at:
-                values['start_at'] = fields.Datetime.now()
             if session.config_id.cash_control and not session.rescue:
                 last_session = self.search([('config_id', '=', session.config_id.id), ('id', '!=', session.id)], limit=1)
                 session.cash_register_balance_start = last_session.cash_register_balance_end_real  # defaults to 0 if lastsession is empty
@@ -412,7 +410,7 @@ class PosSession(models.Model):
         bank_payment_method_diffs = bank_payment_method_diffs or {}
         for session in self:
             if any(order.state == 'draft' for order in self.get_session_orders()):
-                raise UserError(_("You cannot close the POS when orders are still in draft"))
+                raise UserError(_("You cannot close the POS while there are still draft orders for the day."))
             if session.state == 'closed':
                 raise UserError(_('This session is already closed.'))
             stop_at = self.stop_at or fields.Datetime.now()
@@ -599,7 +597,7 @@ class PosSession(models.Model):
             }
 
         self.post_close_register_message()
-
+        self.config_id._notify(('CLOSING_SESSION', {'login_number': self.env.context.get('login_number', False)}))
         return {'successful': True}
 
     def post_close_register_message(self):
@@ -684,7 +682,7 @@ class PosSession(models.Model):
         """
         bank_payment_method_diffs = bank_payment_method_diffs or {}
         if any(order.state == 'draft' for order in self.get_session_orders()):
-            return {'successful': False, 'message': _("You cannot close the POS when orders are still in draft"), 'redirect': False}
+            return {'successful': False, 'message': _("You cannot close the POS while there are still draft orders for the day."), 'redirect': False}
         if self.state == 'closed':
             return {
                 'successful': False,
@@ -1189,7 +1187,7 @@ class PosSession(models.Model):
         split_cash_statement_line_vals = []
         split_cash_receivable_vals = []
         for payment, amounts in split_receivables_cash.items():
-            journal_id = payment.payment_method_id.journal_id.id
+            journal_id = payment.payment_method_id.journal_id
             split_cash_statement_line_vals.append(
                 self._get_split_statement_line_vals(
                     journal_id,
@@ -1211,7 +1209,7 @@ class PosSession(models.Model):
             if not float_is_zero(amounts['amount'] , precision_rounding=self.currency_id.rounding):
                 combine_cash_statement_line_vals.append(
                     self._get_combine_statement_line_vals(
-                        payment_method.journal_id.id,
+                        payment_method.journal_id,
                         amounts['amount'],
                         payment_method
                     )
@@ -1455,26 +1453,38 @@ class PosSession(models.Model):
         partial_args = {'account_id': out_account.id, 'move_id': self.move_id.id}
         return self._credit_amounts(partial_args, amount, amount_converted, force_company_currency=True)
 
-    def _get_combine_statement_line_vals(self, journal_id, amount, payment_method):
+    def _get_combine_statement_line_vals(self, journal, amount, payment_method):
+        amount_values = self._prepare_statement_line_amount_values(journal, amount)
         return {
             'date': fields.Date.context_today(self),
-            'amount': amount,
             'payment_ref': self.name,
             'pos_session_id': self.id,
-            'journal_id': journal_id,
+            'journal_id': journal.id,
             'counterpart_account_id': self._get_receivable_account(payment_method).id,
+            **amount_values
         }
 
-    def _get_split_statement_line_vals(self, journal_id, amount, payment):
+    def _get_split_statement_line_vals(self, journal, amount, payment):
         accounting_partner = self.env["res.partner"]._find_accounting_partner(payment.partner_id)
+        amount_values = self._prepare_statement_line_amount_values(journal, amount)
         return {
             'date': fields.Date.context_today(self, timestamp=payment.payment_date),
-            'amount': amount,
             'payment_ref': payment.name,
             'pos_session_id': self.id,
-            'journal_id': journal_id,
+            'journal_id': journal.id,
             'counterpart_account_id': accounting_partner.property_account_receivable_id.id,
             'partner_id': accounting_partner.id,
+            **amount_values
+        }
+
+    def _prepare_statement_line_amount_values(self, journal, amount):
+        journal_currency = journal.currency_id or self.company_id.currency_id
+        if journal_currency == self.currency_id:
+            return {'amount': amount}
+        return {
+            'amount': self.currency_id._convert(amount, journal_currency, self.company_id, self.stop_at),
+            'amount_currency': amount,
+            'foreign_currency_id': self.currency_id.id,
         }
 
     def _update_quantities(self, vals, qty_to_add):
@@ -1683,17 +1693,17 @@ class PosSession(models.Model):
 
     def set_opening_control(self, cashbox_value: int, notes: str):
         self.state = 'opened'
-
-        self.name = self.env['ir.sequence'].with_context(
+        self.start_at = fields.Datetime.now()
+        self.name = self.config_id.name + self.env['ir.sequence'].with_context(
             company_id=self.config_id.company_id.id
         ).next_by_code('pos.session') + (self.name if self.name != '/' else '')
-            
+
         cash_payment_method_ids = self.config_id.payment_method_ids.filtered(lambda pm: pm.is_cash_count)
         if cash_payment_method_ids:
             self.opening_notes = notes
             difference = cashbox_value - self.cash_register_balance_start
-            self.cash_register_balance_start = cashbox_value
             self._post_cash_details_message('Opening cash', self.cash_register_balance_start, difference, notes)
+            self.cash_register_balance_start = cashbox_value
         elif notes:
             message = _('Opening control message: ')
             message += notes
@@ -1803,36 +1813,6 @@ class PosSession(models.Model):
 
         return res
 
-    def _get_pos_fallback_nomenclature_id(self):
-        """
-        Retrieve the fallback barcode nomenclature.
-        If a fallback_nomenclature_id is specified in the config parameters,
-        it retrieves the nomenclature with that ID. Otherwise, it retrieves
-        the first non-GS1 nomenclature if the main nomenclature is GS1.
-        """
-        def convert_to_int(string_value):
-            try:
-                return int(string_value)
-            except (TypeError, ValueError, OverflowError):
-                return None
-
-        fallback_nomenclature_id = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.fallback_nomenclature_id')
-
-        if not self.company_id.nomenclature_id.is_gs1_nomenclature and not fallback_nomenclature_id:
-            return None
-
-        if fallback_nomenclature_id:
-            fallback_nomenclature_id = convert_to_int(fallback_nomenclature_id)
-            if not fallback_nomenclature_id or self.company_id.nomenclature_id.id == fallback_nomenclature_id:
-                return None
-            domain = [('id', '=', fallback_nomenclature_id)]
-        else:
-            domain = [('is_gs1_nomenclature', '=', False)]
-
-        record = self.env['barcode.nomenclature'].search(domain=domain, limit=1)
-
-        return record.id if record else None
-
     def _get_partners_domain(self):
         return []
 
@@ -1926,5 +1906,15 @@ class ProcurementGroup(models.Model):
     def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):
         super(ProcurementGroup, self)._run_scheduler_tasks(use_new_cursor=use_new_cursor, company_id=company_id)
         self.env['pos.session']._alert_old_session()
+        if 'scheduler_task_done' in self._context:
+            task_done = self._context.get('scheduler_task_done', {'task_done': 0})['task_done'] + 1
+            self._context['scheduler_task_done']['task_done'] = task_done
+        else:
+            task_done = self._get_scheduler_tasks_to_do()
         if use_new_cursor:
+            self.env['ir.cron']._notify_progress(done=task_done, remaining=self._get_scheduler_tasks_to_do() - task_done)
             self.env.cr.commit()
+
+    @api.model
+    def _get_scheduler_tasks_to_do(self):
+        return super()._get_scheduler_tasks_to_do() + 1

@@ -6,7 +6,6 @@ shortener = reprlib.Repr()
 shortener.maxstring = 150
 shorten = shortener.repr
 
-
 class Speedscope:
     def __init__(self, name='Speedscope', init_stack_trace=None):
         self.init_stack_trace = init_stack_trace or []
@@ -44,13 +43,25 @@ class Speedscope:
             stack[index] = (method, line, number,)
             self.caller_frame = frame
 
-    def add_output(self, names, complete=True, display_name=None, use_context=True, **params):
+    def add_output(self, names, complete=True, display_name=None, use_context=True, constant_time=False, context_per_name = None, **params):
+        """
+        Add a profile output to the list of profiles
+        :param names: list of keys to combine in this output. Keys corresponds to the one used in add
+        :param display_name: name of the tab for this output
+        :param complete: display the complete stack. If False, don't display the stack bellow the profiler.
+        :param use_context: use execution context (added by ExecutionContext context manager) to display the profile.
+        :param constant_time: hide temporality. Useful to compare query counts
+        :param context_per_name: a dictionary of additionnal context per name
+        """
         entries = []
         display_name = display_name or ','.join(names)
         for name in names:
-            entries += self.profiles_raw[name]
+            raw = self.profiles_raw.get(name)
+            if not raw:
+                continue
+            entries += raw
         entries.sort(key=lambda e: e['start'])
-        result = self.process(entries, use_context=use_context, **params)
+        result = self.process(entries, use_context=use_context, constant_time=constant_time, **params)
         if not result:
             return self
         start = result[0]['at']
@@ -77,30 +88,32 @@ class Speedscope:
         self.profiles.append({
             "name": display_name,
             "type": "evented",
-            "unit": "seconds",
+            "unit": "entries" if constant_time else "seconds",
             "startValue": 0,
             "endValue": end - start,
             "events": result
         })
         return self
 
-    def add_default(self):
+    def add_default(self,**params):
         if len(self.profiles_raw) > 1:
-            self.add_output(self.profiles_raw, display_name='Combined')
-            self.add_output(self.profiles_raw, display_name='Combined no context', use_context=False)
+            if params['combined_profile']:
+                self.add_output(self.profiles_raw, display_name='Combined', **params)
         for key, profile in self.profiles_raw.items():
             sql = profile and profile[0].get('query')
             if sql:
-                self.add_output([key], hide_gaps=True, display_name=f'{key} (no gap)')
-                self.add_output([key], continuous=False, complete=False, display_name=f'{key} (density)')
+                if params['sql_no_gap_profile']:
+                    self.add_output([key], hide_gaps=True, display_name=f'{key} (no gap)', **params)
+                if params['sql_density_profile']:
+                    self.add_output([key], continuous=False, complete=False, display_name=f'{key} (density)',**params)
 
-            else:
-                self.add_output([key], display_name=key)
+            elif params['frames_profile']:
+                    self.add_output([key], display_name=key,**params)
         return self
 
-    def make(self):
+    def make(self, **params):
         if not self.profiles:
-            self.add_default()
+            self.add_default(**params)
         return {
             "name": self.name,
             "activeProfileIndex": 0,
@@ -121,7 +134,7 @@ class Speedscope:
             self.frame_count += 1
         return self.frames_indexes[frame]
 
-    def stack_to_ids(self, stack, context, stack_offset=0):
+    def stack_to_ids(self, stack, context, aggregate_sql=False, stack_offset=0):
         """
             :param stack: A list of hashable frame
             :param context: an iterable of (level, value) ordered by level
@@ -138,6 +151,8 @@ class Speedscope:
         while context_level is not None and context_level < stack_offset:
             context_level, context_value = next(context_iterator, (None, None))
         for level, frame in enumerate(stack, start=stack_offset + 1):
+            if aggregate_sql:
+                frame = (frame[0], '', frame[2])
             while context_level == level:
                 context_frame = (", ".join(f"{k}={v}" for k, v in context_value.items()), '', '')
                 stack_ids.append(self.get_frame_id(context_frame))
@@ -145,7 +160,7 @@ class Speedscope:
             stack_ids.append(self.get_frame_id(frame))
         return stack_ids
 
-    def process(self, entries, continuous=True, hide_gaps=False, use_context=True, constant_time=False):
+    def process(self, entries, continuous=True, hide_gaps=False, use_context=True, constant_time=False, aggregate_sql=False, **params):
         # constant_time parameters is mainly useful to hide temporality when focussing on sql determinism
         entry_end = previous_end = None
         if not entries:
@@ -164,7 +179,6 @@ class Speedscope:
                 entry_start = close_time = index
             else:
                 previous_end = entry_end
-
                 if hide_gaps and previous_end:
                     entry_start = previous_end
                 else:
@@ -185,6 +199,7 @@ class Speedscope:
             entry_stack_ids = self.stack_to_ids(
                 entry['stack'] or [],
                 use_context and entry.get('exec_context'),
+                aggregate_sql,
                 self.init_stack_trace_level
             )
             level = 0

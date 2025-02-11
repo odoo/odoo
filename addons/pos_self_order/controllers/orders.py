@@ -48,7 +48,6 @@ class PosSelfOrderController(http.Controller):
             'amount_total': amount_total,
         })
 
-        order_ids.send_table_count_notification(order_ids.mapped('table_id'))
         return self._generate_return_values(order_ids, pos_config)
 
     def _get_prefixes(self, device_type):

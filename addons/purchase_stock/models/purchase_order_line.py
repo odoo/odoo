@@ -97,11 +97,6 @@ class PurchaseOrderLine(models.Model):
         lines = self.filtered(lambda l: l.order_id.state == 'purchase'
                                         and not l.display_type)
 
-        if 'product_uom_id' in values and values['product_uom_id'] != self.product_id.uom_id.id:
-            self.move_ids.filtered(
-                lambda m: m.state not in ['cancel', 'done']
-            ).product_uom = values['product_uom_id']
-
         previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
         previous_product_qty = {line.id: line.product_qty for line in lines}
         result = super(PurchaseOrderLine, self).write(values)
@@ -197,9 +192,9 @@ class PurchaseOrderLine(models.Model):
         order = self.order_id
         price_unit = self.price_unit
         price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
-        if self.taxes_id:
+        if self.tax_ids:
             qty = self.product_qty or 1
-            price_unit = self.taxes_id.compute_all(
+            price_unit = self.tax_ids.compute_all(
                 price_unit,
                 currency=self.order_id.currency_id,
                 quantity=qty,

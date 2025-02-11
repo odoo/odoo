@@ -44,11 +44,21 @@
             'website_blog/static/src/js/wysiwyg_adapter.js',
         ],
         'web.assets_tests': [
-            'website_blog/static/tests/**/*',
+            'website_blog/static/tests/tours/**/*',
+        ],
+        'web.assets_unit_tests': [
+            'website_blog/static/tests/interactions/**/*',
+        ],
+        'web.assets_unit_tests_setup': [
+            'website_blog/static/src/interactions/**/*.js',
+            'website_blog/static/src/snippets/**/*.js',
+            ('remove', 'website_blog/static/src/snippets/**/options.js'),
         ],
         'web.assets_frontend': [
+            'website_blog/static/src/interactions/**/*',
             'website_blog/static/src/scss/website_blog.scss',
-            'website_blog/static/src/js/website_blog.js',
+            'website_blog/static/src/snippets/**/*.js',
+            ('remove', 'website_blog/static/src/snippets/**/options.js'),
         ],
     },
     'license': 'LGPL-3',

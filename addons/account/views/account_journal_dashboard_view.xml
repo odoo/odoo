@@ -101,7 +101,7 @@
                                         <a t-if="journal_type == 'purchase'" type="object" name="open_action" context="{'action_name': 'action_move_in_invoice_type'}">Bills</a>
                                     </div>
                                     <div id="sale_purchase_refund">
-                                        <a t-if="journal_type == 'sale'" type="object" name="open_action" context="{'action_name': 'action_move_out_refund_type'}">Credit Notes</a>
+                                        <a t-if="journal_type == 'sale'" type="object" name="open_action" context="{'action_name': 'action_move_out_refund_type_non_legacy'}">Credit Notes</a>
                                         <a t-if="journal_type == 'purchase'" type="object" name="open_action" context="{'action_name': 'action_move_in_refund_type'}">Refund</a>
                                     </div>
                                     <div>

@@ -1,0 +1,25 @@
+<odoo>
+  <data>
+    <record id="stock_location_form_maintenance_equipments" model="ir.ui.view">
+        <field name="name">stock.location.form.inherit.maintenance.equipments</field>
+        <field name="model">stock.location</field>
+        <field name="inherit_id" ref="stock.view_location_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button class="oe_stat_button" name="action_view_equipments_records"
+                    type="object" icon="fa-wrench"
+                    invisible="equipment_count == 0">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="equipment_count" />
+                        </span>
+                        <span class="o_stat_text">
+                            Equipments
+                        </span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+  </data>
+</odoo>

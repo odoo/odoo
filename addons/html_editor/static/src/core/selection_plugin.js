@@ -37,6 +37,8 @@ import {
  * @property { Node } commonAncestorContainer
  * @property { boolean } isCollapsed
  * @property { boolean } direction
+ * @property { () => string } textContent
+ * @property { (node: Node) => boolean } intersectsNode
  */
 
 /**
@@ -246,7 +248,15 @@ export class SelectionPlugin extends Plugin {
             if (anchorNode === focusNode && focusOffset < anchorOffset) {
                 direction = !direction;
             }
-
+            if (
+                this.activeSelection &&
+                (isProtecting(anchorNode) ||
+                    (isProtected(anchorNode) && !isUnprotecting(anchorNode)))
+            ) {
+                // Keep the previous activeSelection in case of user interactions
+                // inside a protected zone.
+                return this.activeSelection;
+            }
             [anchorNode, anchorOffset] = normalizeCursorPosition(
                 anchorNode,
                 anchorOffset,
@@ -402,14 +412,14 @@ export class SelectionPlugin extends Plugin {
         Object.defineProperty(selectionData, "documentSelectionIsProtecting", {
             get: function () {
                 return documentSelection?.anchorNode
-                    ? isProtected(documentSelection.anchorNode)
+                    ? isProtecting(documentSelection.anchorNode)
                     : false;
             }.bind(this),
         });
         Object.defineProperty(selectionData, "documentSelectionIsProtected", {
             get: function () {
                 return documentSelection?.anchorNode
-                    ? isProtecting(documentSelection.anchorNode)
+                    ? isProtected(documentSelection.anchorNode)
                     : false;
             }.bind(this),
         });

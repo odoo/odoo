@@ -4710,7 +4710,7 @@ registry.sizing = SnippetOptionWidget.extend({
                 resize[0].forEach((val, key) => {
                     if (self.$target.hasClass(val)) {
                         current = key;
-                    } else if (resize[1][key] === cssPropertyValue) {
+                    } else if (parseInt(resize[1][key]) === cssPropertyValue) {
                         current = key;
                     }
                 });
@@ -7894,9 +7894,9 @@ registry.ImageTools = ImageHandlerOption.extend({
             // the "setImgShapeHoverEffect" option, where we trigger it when
             // preview mode is "true".
             if (previewMode === hasSetImgShapeHoverEffectMethod) {
-                this.$target[0].dispatchEvent(new Event("mouseover"));
+                this.$target[0].dispatchEvent(new Event("mouseenter"));
                 this.hoverTimeoutId = setTimeout(() => {
-                    this.$target[0].dispatchEvent(new Event("mouseout"));
+                    this.$target[0].dispatchEvent(new Event("mouseleave"));
                 }, 700);
             } else if (previewMode === "reset") {
                 clearTimeout(this.hoverTimeoutId);

@@ -1,12 +1,6 @@
-import { loadJS } from "@web/core/assets";
-import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
-import { rpc } from "@web/core/network/rpc";
 import publicRootData from '@web/legacy/js/public/public_root';
 import "@website/libs/zoomodoo/zoomodoo";
 import { pick } from "@web/core/utils/objects";
-
-import { markup } from "@odoo/owl";
 
 export const WebsiteRoot = publicRootData.PublicRoot.extend({
     events: Object.assign({}, publicRootData.PublicRoot.prototype.events || {}, {
@@ -29,6 +23,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
         this.isFullscreen = false;
         this.notification = this.bindService("notification");
         this.orm = this.bindService("orm");
+        this.website_map = this.bindService("website_map");
         return this._super(...arguments);
     },
     /**
@@ -66,19 +61,6 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
         }, this._super.apply(this, arguments));
     },
     /**
-     * @private
-     * @param {boolean} [refetch=false]
-     */
-    async _getGMapAPIKey(refetch) {
-        if (refetch || !this._gmapAPIKeyProm) {
-            this._gmapAPIKeyProm = new Promise(async resolve => {
-                const data = await rpc('/website/google_maps_api_key');
-                resolve(JSON.parse(data).google_maps_api_key || '');
-            });
-        }
-        return this._gmapAPIKeyProm;
-    },
-    /**
      * @override
      */
     _getPublicWidgetsRegistry: function (options) {
@@ -91,46 +73,6 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
             return pick(registry, ...toPick);
         }
         return registry;
-    },
-    /**
-     * @private
-     * @param {boolean} [editableMode=false]
-     * @param {boolean} [refetch=false]
-     */
-    async _loadGMapAPI(editableMode, refetch) {
-        // Note: only need refetch to reload a configured key and load the
-        // library. If the library was loaded with a correct key and that the
-        // key changes meanwhile... it will not work but we can agree the user
-        // can bother to reload the page at that moment.
-        if (refetch || !this._gmapAPILoading) {
-            this._gmapAPILoading = new Promise(async resolve => {
-                const key = await this._getGMapAPIKey(refetch);
-
-                window.odoo_gmap_api_post_load = (async function odoo_gmap_api_post_load() {
-                    await this._startWidgets($("section.s_google_map"), {editableMode: editableMode});
-                    resolve(key);
-                }).bind(this);
-
-                if (!key) {
-                    if (!editableMode && user.isAdmin) {
-                        const message = _t("Cannot load google map.");
-                        const urlTitle = _t("Check your configuration.");
-                        this.notification.add(
-                            markup(`<div>
-                                <span>${message}</span><br/>
-                                <a href="/odoo/action-website.action_website_configuration">${urlTitle}</a>
-                            </div>`),
-                            { type: 'warning', sticky: true }
-                        );
-                    }
-                    resolve(false);
-                    this._gmapAPILoading = false;
-                    return;
-                }
-                await loadJS(`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&callback=odoo_gmap_api_post_load&key=${encodeURIComponent(key)}`);
-            });
-        }
-        return this._gmapAPILoading;
     },
 
     //--------------------------------------------------------------------------
@@ -171,7 +113,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
      */
     async _onGMapAPIRequest(ev) {
         ev.stopPropagation();
-        const apiKey = await this._loadGMapAPI(ev.data.editableMode, ev.data.refetch);
+        const apiKey = await this.website_map.loadGMapAPI(ev.data.editableMode, ev.data.refetch);
         ev.data.onSuccess(apiKey);
     },
     /**
@@ -180,7 +122,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
      */
     async _onGMapAPIKeyRequest(ev) {
         ev.stopPropagation();
-        const apiKey = await this._getGMapAPIKey(ev.data.refetch);
+        const apiKey = await this.website_map.getGMapAPIKey(ev.data.refetch);
         ev.data.onSuccess(apiKey);
     },
     /**

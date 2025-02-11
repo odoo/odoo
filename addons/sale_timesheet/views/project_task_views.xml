@@ -19,7 +19,7 @@
                             <field name="company_id" column_invisible="True"/>
                             <field name="partner_id" column_invisible="True"/>
                             <field name="sale_order_id" column_invisible="True"/>
-                            <field name="employee_id" widget="many2one_avatar_user" context="{'create_project_employee_mapping': company_id}"/>
+                            <field name="employee_id" widget="many2one_avatar_employee" context="{'create_project_employee_mapping': company_id}"/>
                             <field name="existing_employee_ids" column_invisible="True"/>
                             <field name="sale_line_id" column_invisible="parent.id" required="True" options="{'no_create': True}" context="{'search_default_order_id': sale_order_id}"/>
                             <field name="sale_line_id" column_invisible="not parent.id" required="True" groups="!sales_team.group_sale_salesman" options="{'no_create': True}"
@@ -81,7 +81,7 @@
                                             'default_company_id': parent.company_id,
                                             'default_order_id': sale_order_id,
                                         }"/>
-                                    <field name="price_unit" widget="monetary" readonly="True" force_save="1" options="{'currency_field': 'currency_id'}"/> 
+                                    <field name="price_unit" widget="monetary" readonly="True" force_save="1" options="{'currency_field': 'currency_id'}"/>
                                     <field name="display_cost" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 </group>
                             </sheet>
@@ -197,7 +197,7 @@
                         domain="[('is_service', '=', True), ('order_partner_id', 'child_of', parent.partner_id), ('is_expense', '=', False), ('state', '=', 'sale')]"
                         placeholder="Non-billable"
                         optional="hide"/>
-                    <field 
+                    <field
                         name="so_line" widget="so_line_field" groups="sales_team.group_sale_salesman"
                         options="{'no_create': True, 'no_open': True}"
                         context="{'create': False, 'edit': False, 'delete': False, 'with_price_unit': True}"

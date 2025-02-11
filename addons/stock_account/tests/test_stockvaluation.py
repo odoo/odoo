@@ -4055,8 +4055,8 @@ class TestStockValuation(TestStockValuationBase):
             "Field 'value' must be aggregatable.",
         )
 
-        res = self.env['stock.quant'].read_group([('product_id', '=', self.product1.id)], ['value:sum'], ['product_id'])
-        self.assertEqual(res[0]['value'], 5 * 5 + 2 * 6)
+        res = self.env['stock.quant']._read_group([('product_id', '=', self.product1.id)], aggregates=['value:sum'])
+        self.assertEqual(res[0][0], 5 * 5 + 2 * 6)
 
         self.product1.write({'standard_price': 7})
         self.assertEqual(self.product1.value_svl, 49)

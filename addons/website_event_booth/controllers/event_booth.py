@@ -20,7 +20,7 @@ class WebsiteEventBoothController(WebsiteEventController):
         booth_category_id = int(booth_category_id) if booth_category_id else False
         return request.render(
             'website_event_booth.event_booth_registration',
-            self._prepare_booth_main_values(event, booth_category_id=booth_category_id, booth_ids=booth_ids)
+            self._prepare_booth_main_values(event, booth_category_id=booth_category_id, booth_ids=booth_ids) | {'seo_object': event.booth_menu_ids}
         )
 
     @http.route('/event/<model("event.event"):event>/booth/register',
@@ -55,8 +55,7 @@ class WebsiteEventBoothController(WebsiteEventController):
             default_contact = {
                 'name': request.env.user.partner_id.name,
                 'email': request.env.user.partner_id.email,
-                'phone': request.env.user.partner_id.phone or request.env.user.partner_id.mobile,
-                'mobile': request.env.user.partner_id.mobile,
+                'phone': request.env.user.partner_id.phone,
             }
         else:
             visitor = request.env['website.visitor']._get_visitor_from_request()
@@ -132,7 +131,7 @@ class WebsiteEventBoothController(WebsiteEventController):
             'partner_id': partner.id,
             'contact_name': kwargs.get('contact_name') or partner.name,
             'contact_email': kwargs.get('contact_email') or partner.email,
-            'contact_phone': kwargs.get('contact_phone') or partner.phone or partner.mobile,
+            'contact_phone': kwargs.get('contact_phone') or partner.phone,
         }
 
     def _prepare_booth_registration_success_values(self, event_name, booth_values):

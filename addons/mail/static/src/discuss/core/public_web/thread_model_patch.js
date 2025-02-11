@@ -1,45 +1,8 @@
 import { Thread } from "@mail/core/common/thread_model";
-import { Deferred } from "@web/core/utils/concurrency";
 import { Record } from "@mail/model/record";
 import { rpc } from "@web/core/network/rpc";
 
 import { patch } from "@web/core/utils/patch";
-
-patch(Thread, {
-    async getOrFetch(data) {
-        let thread = super.get(data);
-        if (data.model !== "discuss.channel" || !data.id) {
-            return thread;
-        }
-        thread = this.insert({ id: data.id, model: data.model });
-        if (thread.fetchChannelInfoState === "fetched") {
-            return Promise.resolve(thread);
-        }
-        if (thread.fetchChannelInfoState === "fetching") {
-            return thread.fetchChannelInfoDeferred;
-        }
-        thread.fetchChannelInfoState = "fetching";
-        const def = new Deferred();
-        thread.fetchChannelInfoDeferred = def;
-        thread.fetchChannelInfo().then(
-            (result) => {
-                if (thread.exists()) {
-                    thread.fetchChannelInfoState = "fetched";
-                    thread.fetchChannelInfoDeferred = undefined;
-                }
-                def.resolve(result);
-            },
-            (error) => {
-                if (thread.exists()) {
-                    thread.fetchChannelInfoState = "not_fetched";
-                    thread.fetchChannelInfoDeferred = undefined;
-                }
-                def.reject(error);
-            }
-        );
-        return def;
-    },
-});
 
 /** @type {import("models").Thread} */
 const threadPatch = {
@@ -104,9 +67,6 @@ const threadPatch = {
     get isEmpty() {
         return !this.from_message_id && super.isEmpty;
     },
-    get notifyOnLeave() {
-        return super.notifyOnLeave && !this.parent_channel_id;
-    },
     /**
      * @param {Object} [param0={}]
      * @param {import("models").Message} [param0.initialMessage]
@@ -119,7 +79,7 @@ const threadPatch = {
             name,
         });
         this.store.insert(data, { html: true });
-        this.store.Thread.get({ model: "discuss.channel", id: sub_channel }).open();
+        this.store.Thread.get({ model: "discuss.channel", id: sub_channel }).open({ focus: true });
     },
     /**
      * @param {*} param0

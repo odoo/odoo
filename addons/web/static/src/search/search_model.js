@@ -397,7 +397,7 @@ export class SearchModel extends EventBus {
     }
 
     get domainEvalContext() {
-        return Object.assign({}, this.globalContext, user.context);
+        return Object.assign({}, this.globalContext, user.evalContext);
     }
 
     get facets() {
@@ -1607,8 +1607,13 @@ export class SearchModel extends EventBus {
             facets.push(facet);
         }
         const hasAGroupByFacet = facets.some((f) => f.type === "groupBy");
-        if (!hasAGroupByFacet && !this.globalGroupBy.length && this.defaultGroupBy) {
-            facets.push({
+        if (
+            !hasAGroupByFacet &&
+            !this.globalGroupBy.length &&
+            this.defaultGroupBy &&
+            this.env.config.viewType !== "kanban"
+        ) {
+            facets.unshift({
                 groupId: SPECIAL,
                 type: "groupBy",
                 values: this.defaultGroupBy.map((gb) => {

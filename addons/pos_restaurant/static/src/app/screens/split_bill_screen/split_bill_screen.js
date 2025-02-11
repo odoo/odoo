@@ -134,12 +134,27 @@ export class SplitBillScreen extends Component {
         const newOrder = this.pos.createNewOrder();
         newOrder.floating_order_name = newOrderName;
         newOrder.uiState.splittedOrderUuid = curOrderUuid;
-        newOrder.originalSplittedOrder = originalOrder;
+        originalOrder.uiState.splittedOrderUuid = newOrder.uuid;
 
         // Create lines for the new order
         const lineToDel = [];
+        const newCourses = new Map();
         for (const line of originalOrder.lines) {
             if (this.qtyTracker[line.uuid]) {
+                let newCourse;
+                if (line.course_id) {
+                    // Create courses in the new order
+                    const { course_id: oldCourse } = line;
+                    const courseIndex = oldCourse.index;
+                    newCourse = newCourses.get(courseIndex);
+                    if (!newCourse) {
+                        newCourse = this.pos.models["restaurant.order.course"].create({
+                            order_id: newOrder,
+                            index: courseIndex,
+                        });
+                        newCourses.set(courseIndex, newCourse);
+                    }
+                }
                 const data = line.serialize();
                 delete data.uuid;
                 const newLine = this.pos.models["pos.order.line"].create(
@@ -147,6 +162,7 @@ export class SplitBillScreen extends Component {
                         ...data,
                         qty: this.qtyTracker[line.uuid],
                         order_id: newOrder.id,
+                        course_id: newCourse?.id,
                     },
                     false,
                     true

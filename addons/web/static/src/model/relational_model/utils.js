@@ -14,9 +14,17 @@ import { omit } from "@web/core/utils/objects";
 import { effect } from "@web/core/utils/reactive";
 import { batched } from "@web/core/utils/timing";
 import { orderByToString } from "@web/search/utils/order_by";
-import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
+
+const granularityToInterval = {
+    hour: { hours: 1 },
+    day: { days: 1 },
+    week: { days: 7 },
+    month: { month: 1 },
+    quarter: { month: 4 },
+    year: { year: 1 },
+};
 
 /**
  * @param {boolean || string} value boolean or string encoding a python expression
@@ -510,6 +518,12 @@ export function parseServerValue(field, value) {
     return value;
 }
 
+export function getAggregateSpecifications(fields) {
+    return Object.values(fields)
+        .filter((field) => field.aggregator && AGGREGATABLE_FIELD_TYPES.includes(field.type))
+        .map((field) => `${field.name}:${field.aggregator}`);
+}
+
 /**
  * Extract useful information from a group data returned by a call to webReadGroup.
  *
@@ -521,14 +535,18 @@ export function parseServerValue(field, value) {
 export function extractInfoFromGroupData(groupData, groupBy, fields) {
     const info = {};
     const groupByField = fields[groupBy[0].split(":")[0]];
-    // sometimes the key FIELD_ID_count doesn't exist and we have to get the count from `__count` instead
-    // see read_group in models.py
-    info.count = groupData.__count || groupData[`${groupByField.name}_count`];
-    info.length = info.count; // TODO: remove
-    info.range = groupData.__range ? groupData.__range[groupBy[0]] : null;
+    info.count = groupData.__count;
+    info.length = info.count; // TODO: remove but still used in DynamicRecordList._updateCount
     info.domain = groupData.__domain;
     info.rawValue = groupData[groupBy[0]];
-    info.value = getValueFromGroupData(groupByField, info.rawValue, info.range);
+    info.value = getValueFromGroupData(groupByField, info.rawValue);
+    if (["date", "datetime"].includes(groupByField.type) && info.value) {
+        const granularity = groupBy[0].split(":")[1];
+        info.range = {
+            from: info.value,
+            to: info.value.plus(granularityToInterval[granularity]),
+        };
+    }
     info.displayName = getDisplayNameFromGroupData(groupByField, info.rawValue);
     info.serverValue = getGroupServerValue(groupByField, info.value);
     info.aggregates = getAggregatesFromGroupData(groupData, fields);
@@ -541,9 +559,10 @@ export function extractInfoFromGroupData(groupData, groupBy, fields) {
  */
 function getAggregatesFromGroupData(groupData, fields) {
     const aggregates = {};
-    for (const [key, value] of Object.entries(groupData)) {
-        if (key in fields && AGGREGATABLE_FIELD_TYPES.includes(fields[key].type)) {
-            aggregates[key] = value;
+    for (const keyAggregate of getAggregateSpecifications(fields)) {
+        if (keyAggregate in groupData) {
+            const fieldName = keyAggregate.split(":")[0];
+            aggregates[fieldName] = groupData[keyAggregate];
         }
     }
     return aggregates;
@@ -567,6 +586,8 @@ function getDisplayNameFromGroupData(field, rawValue) {
         }
         case "many2one":
         case "many2many":
+        case "date":
+        case "datetime":
         case "tags": {
             return (rawValue && rawValue[1]) || field.falsy_value_label || _t("None");
         }
@@ -602,15 +623,12 @@ export function getGroupServerValue(field, value) {
  * @param {object} [range]
  * @returns {any}
  */
-function getValueFromGroupData(field, rawValue, range) {
+function getValueFromGroupData(field, rawValue) {
     if (["date", "datetime"].includes(field.type)) {
-        if (!range) {
+        if (!rawValue) {
             return false;
         }
-        const dateValue = parseServerValue(field, range.to);
-        return dateValue.minus({
-            [field.type === "date" ? "day" : "second"]: 1,
-        });
+        return parseServerValue(field, rawValue[0]);
     }
     const value = parseServerValue(field, rawValue);
     if (["many2one", "many2many"].includes(field.type)) {
@@ -823,30 +841,19 @@ export async function resequence({
 
     const resIds = toReorder.map((d) => getResId(d)).filter((id) => id && !isNaN(id));
     const sequences = toReorder.map(getSequence);
-    const offset = sequences.length && Math.min(...sequences);
+    const offset = Math.min(...sequences) || 0;
 
     // Try to write new sequences on the affected records/groups
-    const params = {
-        model: resModel,
-        ids: resIds,
-        context: context,
-        field: fieldName,
-    };
-    if (offset) {
-        params.offset = offset;
-    }
     try {
-        const wasResequenced = await rpc("/web/dataset/resequence", params);
-        if (!wasResequenced) {
-            return;
-        }
+        return await orm.webResequence(resModel, resIds, {
+            field_name: fieldName,
+            offset,
+            context,
+            specification: { [fieldName]: {} },
+        });
     } catch (error) {
         // If the server fails to resequence, rollback the original list
         records.splice(0, records.length, ...originalOrder);
         throw error;
     }
-
-    // Read the actual values set by the server and update the records/groups
-    const kwargs = { context };
-    return orm.read(resModel, resIds, [fieldName], kwargs);
 }

@@ -75,7 +75,7 @@ describe("search", () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>");
         await insertText(editor, "/");
         await animationFrame();
-        expect(commandNames(el).length).toBe(27);
+        expect(commandNames(el).length).toBe(28);
         await insertText(editor, "head");
         await animationFrame();
         expect(commandNames(el)).toEqual(["Heading 1", "Heading 2", "Heading 3"]);
@@ -85,7 +85,7 @@ describe("search", () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>");
         await insertText(editor, "/");
         await animationFrame();
-        expect(commandNames(el).length).toBe(27);
+        expect(commandNames(el).length).toBe(28);
         expect(".o-we-category").toHaveCount(8);
         expect(queryAllTexts(".o-we-category")).toEqual([
             "STRUCTURE",
@@ -109,7 +109,7 @@ describe("search", () => {
         const { el, editor } = await setupEditor("<p>ab[]</p>", { props: { iframe: true } });
         await insertText(editor, "/");
         await animationFrame();
-        expect(commandNames(el).length).toBe(27);
+        expect(commandNames(el).length).toBe(28);
         await insertText(editor, "head");
         await animationFrame();
         expect(commandNames(el)).toEqual(["Heading 1", "Heading 2", "Heading 3"]);
@@ -161,7 +161,7 @@ describe("search", () => {
         await insertText(editor, "/");
         await animationFrame();
         expect(".o-we-powerbox").toHaveCount(1);
-        expect(commandNames(el).length).toBe(27);
+        expect(commandNames(el).length).toBe(28);
 
         await insertText(editor, "headx");
         await animationFrame();
@@ -567,7 +567,7 @@ test("should restore state before /command insertion when command is executed (2
     expect(".o-we-powerbox").toHaveCount(1);
     expect(commandNames(el)).toEqual(["No-op"]);
     await press("Enter");
-    expect(getContent(el)).toBe(
+    expect(getContent(el, { sortAttrs: true })).toBe(
         `<p class="o-we-hint" placeholder='Type "/" for commands'>[]<br></p>`
     );
 });
@@ -602,7 +602,7 @@ test("should discard /command insertion from history when command is executed", 
     execCommand(editor, "historyUndo");
     expect(getContent(el)).toBe("<p>a[]</p>");
     execCommand(editor, "historyUndo");
-    expect(getContent(el)).toBe(
+    expect(getContent(el, { sortAttrs: true })).toBe(
         `<p class="o-we-hint" placeholder='Type "/" for commands'>[]<br></p>`
     );
 });

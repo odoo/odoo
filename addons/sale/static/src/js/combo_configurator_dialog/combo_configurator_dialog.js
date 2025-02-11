@@ -27,6 +27,13 @@ export class ComboConfiguratorDialog extends Component {
         date: String,
         price_info: { type: String, optional: true },
         edit: { type: Boolean, optional: true },
+        options: {
+            type: Object,
+            optional: true,
+            shape: {
+                showQuantity : { type: Boolean, optional: true },
+            },
+        },
         save: Function,
         discard: Function,
         close: Function,
@@ -60,7 +67,7 @@ export class ComboConfiguratorDialog extends Component {
         // Use up-to-date selected PTAVs and custom values to populate the product configurator.
         comboItem = this.getSelectedOrProvidedComboItem(comboId, comboItem);
         let product = comboItem.product;
-        if (product.hasNoVariantPtals) {
+        if (comboItem.is_configurable) {
             this.dialog.add(ProductConfiguratorDialog, {
                 productTemplateId: product.product_tmpl_id,
                 ptavIds: product.selectedPtavIds,
@@ -71,7 +78,7 @@ export class ComboConfiguratorDialog extends Component {
                 currencyId: this.props.currency_id,
                 soDate: this.props.date,
                 edit: true, // Hide the optional products, if any.
-                options: { canChangeVariant: false, showQuantityAndPrice: false },
+                options: { canChangeVariant: false, showQuantity: false, showPrice: false },
                 save: async configuredProduct => {
                     const selectedComboItem = comboItem.deepCopy();
                     selectedComboItem.product.ptals = configuredProduct.attribute_lines.map(
@@ -165,7 +172,7 @@ export class ComboConfiguratorDialog extends Component {
      */
     _initSelectedComboItems() {
         for (const combo of this.props.combos) {
-            const comboItem = combo.selectedComboItem ?? combo.preselectedComboItem;
+            const comboItem = combo.selectedComboItem;
             if (comboItem) {
                 this.state.selectedComboItems.set(combo.id, comboItem.deepCopy());
             }

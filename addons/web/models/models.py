@@ -4,19 +4,21 @@ from __future__ import annotations
 import base64
 import itertools
 import json
-import typing
+from collections import defaultdict
+
+import babel
+import babel.dates
+import datetime
+import pytz
 
 from odoo import api, models
+from odoo.fields import Command, Date
 from odoo.api import NewId
-from odoo.fields import Command
-from odoo.osv.expression import AND, TRUE_DOMAIN, normalize_domain
-from odoo.tools import unique, OrderedSet
+from odoo.osv.expression import AND, OR, TRUE_DOMAIN, normalize_domain
+from odoo.models import READ_GROUP_DISPLAY_FORMAT, READ_GROUP_NUMBER_GRANULARITY, READ_GROUP_TIME_GRANULARITY, BaseModel
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, date_utils, get_lang, unique, OrderedSet
 from odoo.exceptions import AccessError, UserError
-from collections import defaultdict
 from odoo.tools.translate import LazyTranslate
-
-if typing.TYPE_CHECKING:
-    from odoo.models import BaseModel
 
 _lt = LazyTranslate(__name__)
 SEARCH_PANEL_ERROR_MESSAGE = _lt("Too many items to display.")
@@ -139,7 +141,9 @@ class Base(models.AbstractModel):
                 co_records = self[field_name]
 
                 if 'order' in field_spec and field_spec['order']:
-                    co_records = co_records.search([('id', 'in', co_records.ids)], order=field_spec['order'])
+                    co_records = co_records.with_context(active_test=False).search(
+                        [('id', 'in', co_records.ids)], order=field_spec['order'],
+                    ).with_context(co_records.env.context)  # Reapply previous context
                     order_key = {
                         co_record.id: index
                         for index, co_record in enumerate(co_records)
@@ -224,53 +228,573 @@ class Base(models.AbstractModel):
 
         return values_list
 
+    def web_resequence(self, specification: dict[str, dict], field_name: str = 'sequence', offset: int = 0) -> list[dict]:
+        """ Re-sequences a number of records in the model, by their ids.
+
+        The re-sequencing starts at the first record of ``ids``, the sequence
+        number starts at ``offset`` and is incremented by one after each record.
+
+        The returning value is a read of the resequenced records with the specification given
+        in the parameter.
+
+        :param ids: identifiers of the records to resequence, in the new sequence order
+        :type ids: list(id)
+        :param str field: field used for sequence specification, defaults to
+                          "sequence"
+        :param int offset: sequence number for first record in ``ids``, allows
+                           starting the resequencing from an arbitrary number,
+                           defaults to ``0``
+        :param dict[str, dict] specification: specification for the read of the resequenced records
+        """
+        if field_name not in self._fields:
+            return []
+
+        for i, record in enumerate(self, start=offset):
+            record.write({field_name: i})
+        return self.web_read(specification)
+
     @api.model
     @api.readonly
-    def web_read_group(self, domain, fields, groupby, limit=None, offset=0, orderby=False, lazy=True):
+    def web_read_group(self, domain, groupby=(), aggregates=(), offset=0, limit=None, order=None):
         """
-        Returns the result of a read_group and the total number of groups matching the search domain.
+        Returns the result of a formatted_read_group and the total number of groups matching the search domain.
 
         :param domain: search domain
-        :param fields: list of fields to read (see ``fields``` param of ``read_group``)
-        :param groupby: list of fields to group on (see ``groupby``` param of ``read_group``)
-        :param limit: see ``limit`` param of ``read_group``
-        :param offset: see ``offset`` param of ``read_group``
-        :param orderby: see ``orderby`` param of ``read_group``
-        :param lazy: see ``lazy`` param of ``read_group``
+        :param groupby: list of groupby specification (see ``groupby``` param of ``formatted_read_group``)
+        :param aggregates: list of aggregate specification (see ``aggregates``` param of ``formatted_read_group``)
+        :param limit: see ``limit`` param of ``formatted_read_group``
+        :param offset: see ``offset`` param of ``formatted_read_group``
+        :param order: see ``order`` param of ``formatted_read_group``
         :return: {
             'groups': array of read groups
             'length': total number of groups
         }
         """
-        groups = self._web_read_group(domain, fields, groupby, limit, offset, orderby, lazy)
+        groups = self.formatted_read_group(domain, groupby, aggregates, offset=offset, limit=limit, order=order)
 
         if not groups:
             length = 0
         elif limit and len(groups) == limit:
-            annotated_groupby = self._read_group_get_annotated_groupby(groupby, lazy=lazy)
             length = limit + len(self._read_group(
                 domain,
-                groupby=annotated_groupby.values(),
+                groupby=groupby,
                 offset=limit,
             ))
-
         else:
             length = len(groups) + offset
+
         return {
             'groups': groups,
-            'length': length
+            'length': length,
         }
 
     @api.model
-    def _web_read_group(self, domain, fields, groupby, limit=None, offset=0, orderby=False, lazy=True):
-        """
-        See ``web_read_group`` for params description.
+    @api.readonly
+    def formatted_read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None) -> list[dict]:
+        """ :meth:`~._read_group` with all formatting needed for the webclient.
 
-        :returns: array of groups
+        :param list domain: :ref:`A search domain <reference/orm/domains>`. Use an empty
+                list to match all records.
+        :param list groupby: list of groupby descriptions by which the records will be grouped.
+                A groupby description is either a field (then it will be grouped by that field)
+                or a string `'field:granularity'`. Right now, the only supported granularities
+                are `'day'`, `'week'`, `'month'`, `'quarter'` or `'year'`, and they only make sense for
+                date/datetime fields.
+        :param list aggregates: list of aggregates specification.
+                Each element is `'field:agg'` (aggregate field with aggregation function `'agg'`).
+                The possible aggregation functions are the ones provided by
+                `PostgreSQL <https://www.postgresql.org/docs/current/static/functions-aggregate.html>`_,
+                `'count_distinct'` with the expected meaning.
+        :param list having: A domain where the valid "fields" are the aggregates.
+        :param int offset: optional number of groups to skip
+        :param int limit: optional max number of groups to return
+        :param str order: optional ``order by`` specification, for
+                overriding the natural sort ordering of the groups,
+                see also :meth:`~.search`.
+        :return: list of dictionaries (one dictionary for each group) containing:
+
+                    * the groupby values: {groupby[i]: <value>}
+                    * the aggregate values: {aggregates[i]: <value>}
+                    * __extra_domain: list of tuples specifying the group search criteria
+                    * __fold: boolean if a fold_name is set on the comodel and read_group_expand is activated
+
+        :rtype: [{'groupy_spec': value, ...}, ...]
+        :raise AccessError: if user is not allowed to access requested information
         """
-        groups = self.read_group(domain, fields, groupby, offset=offset, limit=limit,
-                                 orderby=orderby, lazy=lazy)
-        return groups
+        groupby = tuple(groupby)
+        aggregates = tuple(aggregates)
+
+        if not order:
+            order = ', '.join(groupby)
+
+        groups = self._read_group(
+            domain, groupby,
+            # Avoid recordset in _web_read_group_format as aggregate
+            tuple(agg.replace(':recordset', ':array_agg') for agg in aggregates),
+            having=having, offset=offset, limit=limit, order=order,
+        )
+
+        # Note: group_expand is only done if the limit isn't reached and when the offset == 0
+        # to avoid inconsistency in the web client pager. Anyway, in practice, this feature should
+        # be used only when there are few groups (or without limit for the kanban view).
+        if (
+            not offset and (not limit or len(groups) < limit)
+            and self._web_read_group_field_expand(groupby)
+        ):
+            # It doesn't respect the order with aggregates inside
+            expand_groups = self._web_read_group_expand(domain, groups, groupby[0], aggregates, order)
+            if not limit or len(expand_groups) < limit:
+                # Ditch the result of expand_groups because the limit is reached and to avoid
+                # returning inconsistent result inside length of web_read_group
+                groups = expand_groups
+
+        fill_temporal = self.env.context.get('fill_temporal')
+        if groupby and (fill_temporal or isinstance(fill_temporal, dict)):
+            if limit or offset:
+                raise ValueError('You cannot used fill_temporal with a limit or an offset')
+            if not isinstance(fill_temporal, dict):
+                fill_temporal = {}
+            # This assumes that existing data is sorted by field 'groupby_name'
+            groups = self._web_read_group_fill_temporal(groups, groupby, aggregates, **fill_temporal)
+
+        return self._web_read_group_format(groupby, aggregates, groups)
+
+    def _web_read_group_field_expand(self, groupby):
+        """ Return the field that should be expand """
+        if (
+            len(groupby) == 1
+            and self.env.context.get('read_group_expand')
+            and (field := self._fields[groupby[0].split('.')[0].split(':')[0]])
+            and field.group_expand
+        ):
+            return field
+        return None
+
+    def _web_read_group_expand(self, domain, groups, groupby_spec, aggregates, order):
+        """ Expand the result of _read_group for the webclient to show empty groups
+        for some view types (e.g. empty column for kanban view). See `Field.group_expand` attribute.
+        """
+        field_name = groupby_spec.split('.')[0].split(':')[0]
+        field = self._fields[field_name]
+
+        # determine all groups that should be returned
+        values = [group_value for group_value, *__ in groups if group_value]
+
+        # field.group_expand is a callable or the name of a method, that returns
+        # the groups that we want to display for this field, in the form of a
+        # recordset or a list of values (depending on the type of the field).
+        # This is useful to implement kanban views for instance, where some
+        # columns should be displayed even if they don't contain any record.
+        if field.relational:
+            # groups is a recordset; determine order on groups's model
+            values = self.env[field.comodel_name].browse(value.id for value in values)
+            expand_values = field.determine_group_expand(self, values, domain)
+            all_record_ids = tuple(unique(expand_values._ids + values._ids))
+        else:
+            # groups is a list of values
+            expand_values = field.determine_group_expand(self, values, domain)
+
+        if (groupby_spec + ' desc') in order.lower():
+            expand_values = reversed(expand_values)
+
+        empty_aggregates = tuple(self._read_group_empty_value(spec) for spec in aggregates)
+        result = dict.fromkeys(expand_values, empty_aggregates)
+        result.update({
+            group_value: aggregate_values
+            for group_value, *aggregate_values in groups
+        })
+
+        if field.relational:
+            return [
+                (value.with_prefetch(all_record_ids), *aggregate_values)
+                for value, aggregate_values in result.items()
+            ]
+        return [(value, *aggregate_values) for value, aggregate_values in result.items()]
+
+    @api.model
+    def _web_read_group_fill_temporal(self, groups, groupby, aggregates, fill_from=False, fill_to=False, min_groups=False):
+        """Helper method for filling date/datetime 'holes' in a result for the first groupby.
+
+        We are in a use case where data are grouped by a date field (typically
+        months but it could be any other interval) and displayed in a chart.
+
+        Assume we group records by month, and we only have data for June,
+        September and December. By default, plotting the result gives something
+        like::
+
+                                                ___
+                                      ___      |   |
+                                     |   | ___ |   |
+                                     |___||___||___|
+                                      Jun  Sep  Dec
+
+        The problem is that December data immediately follow September data,
+        which is misleading for the user. Adding explicit zeroes for missing
+        data gives something like::
+
+                                                           ___
+                             ___                          |   |
+                            |   |           ___           |   |
+                            |___| ___  ___ |___| ___  ___ |___|
+                             Jun  Jul  Aug  Sep  Oct  Nov  Dec
+
+        To customize this output, the context key "fill_temporal" can be used
+        under its dictionary format, which has 3 attributes : fill_from,
+        fill_to, min_groups (see params of this function)
+
+        Fill between bounds:
+        Using either `fill_from` and/or `fill_to` attributes, we can further
+        specify that at least a certain date range should be returned as
+        contiguous groups. Any group outside those bounds will not be removed,
+        but the filling will only occur between the specified bounds. When not
+        specified, existing groups will be used as bounds, if applicable.
+        By specifying such bounds, we can get empty groups before/after any
+        group with data.
+
+        If we want to fill groups only between August (fill_from)
+        and October (fill_to)::
+
+                                                     ___
+                                 ___                |   |
+                                |   |      ___      |   |
+                                |___| ___ |___| ___ |___|
+                                 Jun  Aug  Sep  Oct  Dec
+
+        We still get June and December. To filter them out, we should match
+        `fill_from` and `fill_to` with the domain e.g. ``['&',
+        ('date_field', '>=', 'YYYY-08-01'), ('date_field', '<', 'YYYY-11-01')]``::
+
+                                         ___
+                                    ___ |___| ___
+                                    Aug  Sep  Oct
+
+        Minimal filling amount:
+        Using `min_groups`, we can specify that we want at least that amount of
+        contiguous groups. This amount is guaranteed to be provided from
+        `fill_from` if specified, or from the lowest existing group otherwise.
+        This amount is not restricted by `fill_to`. If there is an existing
+        group before `fill_from`, `fill_from` is still used as the starting
+        group for min_groups, because the filling does not apply on that
+        existing group. If neither `fill_from` nor `fill_to` is specified, and
+        there is no existing group, no group will be returned.
+
+        If we set min_groups = 4::
+
+                                         ___
+                                    ___ |___| ___ ___
+                                    Aug  Sep  Oct Nov
+
+        :param list groups: groups returned by _read_group
+        :param list groupby: list of fields being grouped on
+        :param list aggregates: list of "<key_name>:<aggregate specification>"
+        :param str fill_from: (inclusive) string representation of a
+            date/datetime, start bound of the fill_temporal range
+            formats: date -> %Y-%m-%d, datetime -> %Y-%m-%d %H:%M:%S
+        :param str fill_to: (inclusive) string representation of a
+            date/datetime, end bound of the fill_temporal range
+            formats: date -> %Y-%m-%d, datetime -> %Y-%m-%d %H:%M:%S
+        :param int min_groups: minimal amount of required groups for the
+            fill_temporal range (should be >= 1)
+        :rtype: list
+        :return: list
+        """
+        groupby_name = groupby[0]
+        field_name = groupby_name.split(':')[0].split(".")[0]
+        field = self._fields[field_name]
+        if field.type not in ('date', 'datetime') and not (field.type == 'properties' and ':' in groupby_name):
+            return groups
+
+        granularity = groupby_name.split(':')[1]
+        days_offset = 0
+        if granularity == 'week':
+            # _read_group week groups are dependent on the
+            # locale, so filled groups should be too to avoid overlaps.
+            first_week_day = int(get_lang(self.env).week_start) - 1
+            days_offset = first_week_day and 7 - first_week_day
+        tz = False
+        if field.type == 'datetime' and self._context.get('tz') in pytz.all_timezones_set:
+            tz = pytz.timezone(self._context['tz'])
+
+        # existing non null date(time)
+        existing = sorted(group_value for group in groups if (group_value := group[0])) or [None]
+        # assumption: existing data is sorted by field 'groupby_name'
+        existing_from, existing_to = existing[0], existing[-1]
+        if fill_from:
+            fill_from = Date.to_date(fill_from)
+            fill_from = date_utils.start_of(fill_from, granularity) - datetime.timedelta(days=days_offset)
+            if tz:
+                fill_from = tz.localize(fill_from)
+        elif existing_from:
+            fill_from = existing_from
+        if fill_to:
+            fill_to = Date.to_date(fill_to)
+            fill_to = date_utils.start_of(fill_to, granularity) - datetime.timedelta(days=days_offset)
+            if tz:
+                fill_to = tz.localize(fill_to)
+        elif existing_to:
+            fill_to = existing_to
+
+        if not fill_to and fill_from:
+            fill_to = fill_from
+        elif not fill_from and fill_to:
+            fill_from = fill_to
+        if not fill_from and not fill_to:
+            return groups
+
+        interval = READ_GROUP_TIME_GRANULARITY[granularity]
+        if min_groups > 0:
+            fill_to = max(fill_to, fill_from + (min_groups - 1) * interval)
+
+        if fill_from > fill_to:
+            return groups
+
+        empty_item = tuple(self._read_group_empty_value(spec) for spec in groupby[1:] + aggregates)
+        required_dates = list(date_utils.date_range(fill_from, fill_to, interval))
+
+        if existing[0] is None:
+            existing = list(required_dates)
+        else:
+            existing = sorted(set().union(existing, required_dates))
+
+        groups_mapped = defaultdict(list)
+        for group in groups:
+            groups_mapped[group[0]].append(group)
+
+        result = []
+        for dt in existing:
+            if dt in groups_mapped:
+                result.extend(groups_mapped[dt])
+            else:
+                result.append((dt, *empty_item))
+
+        if False in groups_mapped:
+            result.extend(groups_mapped[False])
+
+        return result
+
+    def _web_read_group_format(
+        self,
+        groupby: tuple[str, ...],
+        aggregates: tuple[str, ...],
+        groups: list[tuple],
+    ) -> list[dict]:
+        """ Format raw value of _read_group for the webclient.
+        See formatted_read_group return value. """
+        result = [{'__extra_domains': []} for __ in groups]
+        if not groups:
+            return result
+        column_iterator = zip(*groups)
+
+        for groupby_spec, values in zip(groupby, column_iterator):
+            formatter = self._web_read_group_groupby_formatter(groupby_spec, values)
+            for value, dict_group in zip(values, result, strict=True):
+                dict_group[groupby_spec], additional_domain = formatter(value)
+                dict_group['__extra_domains'].append(additional_domain)
+
+            # Add fold information only if read_group_expand is activated (for kanban/list)
+            if ((field := self._web_read_group_field_expand(groupby)) and field.relational):
+                model = self.env[field.comodel_name]
+                fold_name = model._fold_name
+                if fold_name not in model._fields:
+                    continue
+                for value, dict_group in zip(values, result):
+                    dict_group['__fold'] = value.sudo()[fold_name]
+
+        # Reconstruct groups domain part
+        for dict_group in result:
+            dict_group['__extra_domain'] = AND(dict_group.pop('__extra_domains'))
+
+        for aggregate_spec, values in zip(aggregates, column_iterator, strict=True):
+            for value, dict_group in zip(values, result, strict=True):
+                dict_group[aggregate_spec] = value
+
+        return result
+
+    def _web_read_group_groupby_formatter(self, groupby_spec, values):
+        """ Return a formatter method that returns value/label and the domain that the group
+        value represent """
+        field_name = groupby_spec.split(':')[0].split('.')[0]
+        field = self._fields[field_name]
+
+        if field.type == 'many2many':
+
+            # Special case for many2many because (<many2many>, '=', False) domain bypass ir.rule.
+            def formatter_many2many(value):
+                if not value:
+                    other_values = [other_value.id for other_value in values if other_value]
+                    return False, [(field_name, 'not in', other_values)]
+                id_ = value.id
+                return (id_, value.sudo().display_name), [(field_name, '=', id_)]
+
+            return formatter_many2many
+
+        if field.type == 'many2one' or field_name == 'id':
+
+            def formatter_many2one(value):
+                if not value:
+                    return False, [(field_name, '=', False)]
+                id_ = value.id
+                return (id_, value.sudo().display_name), [(field_name, '=', id_)]
+
+            return formatter_many2one
+
+        if field.type in ('date', 'datetime'):
+            granularity = groupby_spec.split(':')[1] if ':' in groupby_spec else 'month'
+            if granularity in READ_GROUP_TIME_GRANULARITY:
+                locale = get_lang(self.env).code
+                fmt = DEFAULT_SERVER_DATETIME_FORMAT if field.type == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
+                interval = READ_GROUP_TIME_GRANULARITY[granularity]
+
+                def formatter_time_granularity(value):
+                    if not value:
+                        return value, [(field_name, '=', value)]
+                    range_start = value
+                    range_end = value + interval
+                    if field.type == 'datetime':
+                        tzinfo = None
+                        if self.env.context.get('tz') in pytz.all_timezones_set:
+                            tzinfo = pytz.timezone(self._context['tz'])
+                            range_start = tzinfo.localize(range_start).astimezone(pytz.utc)
+                            # take into account possible hour change between start and end
+                            range_end = tzinfo.localize(range_end).astimezone(pytz.utc)
+
+                        label = babel.dates.format_datetime(
+                            range_start, format=READ_GROUP_DISPLAY_FORMAT[granularity],
+                            tzinfo=tzinfo, locale=locale,
+                        )
+                    else:
+                        label = babel.dates.format_date(
+                            value, format=READ_GROUP_DISPLAY_FORMAT[granularity],
+                            locale=locale,
+                        )
+
+                    # special case weeks because babel is broken *and*
+                    # ubuntu reverted a change so it's also inconsistent
+                    if granularity == 'week':
+                        year, week = date_utils.weeknumber(
+                            babel.Locale.parse(locale),
+                            value,  # provide date or datetime without UTC conversion
+                        )
+                        label = f"W{week} {year:04}"
+
+                    additional_domain = ['&',
+                        (field_name, '>=', range_start.strftime(fmt)),
+                        (field_name, '<', range_end.strftime(fmt)),
+                    ]
+                    # TODO: date label should be created by the webclient.
+                    return (range_start.strftime(fmt), label), additional_domain
+
+                return formatter_time_granularity
+
+            if granularity in READ_GROUP_NUMBER_GRANULARITY:
+
+                def formatter_date_number_granularity(value):
+                    if value is None:
+                        return [(field_name, '=', value)]
+                    return value, [(f"{field_name}.{granularity}", '=', value)]
+
+                return formatter_date_number_granularity
+
+            raise ValueError(f"{granularity!r} isn't a valid granularity")
+
+        if field.type == "properties":
+            return self._web_read_group_groupby_properties_formatter(groupby_spec, values)
+
+        return lambda value: (value, [(field_name, '=', value)])
+
+    def _web_read_group_groupby_properties_formatter(self, groupby_spec, values):
+        if '.' not in groupby_spec:
+            raise ValueError('You must choose the property you want to group by.')
+
+        fullname, __, func = groupby_spec.partition(':')
+        definition = self.get_property_definition(fullname)
+        property_type = definition.get('type')
+        if property_type == 'selection':
+            options = definition.get('selection') or []
+            options = tuple(option[0] for option in options)
+
+            def formatter_property_selection(value):
+                if not value:
+                    # can not do ('selection', '=', False) because we might have
+                    # option in database that does not exist anymore
+                    return value, ['|', (fullname, '=', False), (fullname, 'not in', options)]
+                return value, [(fullname, '=', value)]
+
+            return formatter_property_selection
+
+        if property_type == 'many2one':
+            comodel = definition['comodel']
+            all_groups = tuple(value for value in values if value)
+
+            def formatter_property_many2one(value):
+                if not value:
+                    # can not only do ('many2one', '=', False) because we might have
+                    # record in database that does not exist anymore
+                    return value, ['|', (fullname, '=', False), (fullname, 'not in', all_groups)]
+                record = self.env[comodel].browse(value).with_prefetch(all_groups)
+                return (value, record.display_name), [(fullname, '=', value)]
+
+            return formatter_property_many2one
+
+        if property_type == 'many2many':
+            comodel = definition['comodel']
+            all_groups = tuple(value for value in values if value)
+
+            def formatter_property_many2many(value):
+                if not value:
+                    return value, OR([
+                        [(fullname, '=', False)],
+                        AND([[(fullname, 'not in', group)] for group in all_groups]),
+                    ]) if all_groups else []
+                record = self.env[comodel].browse(value).with_prefetch(all_groups)
+                return (value, record.display_name), [(fullname, 'in', value)]
+
+            return formatter_property_many2many
+
+        if property_type == 'tags':
+            tags = definition.get('tags') or []
+            tags = {tag[0]: tag for tag in tags}
+
+            def formatter_property_tags(value):
+                if not value:
+                    return value, OR([
+                        [(fullname, '=', False)],
+                        AND([[(fullname, 'not in', tag)] for tag in tags]),
+                    ]) if tags else []
+
+                # replace tag raw value with list of raw value, label and color
+                return tags.get(value), [(fullname, 'in', value)]
+
+            return formatter_property_tags
+
+        if property_type in ('date', 'datetime'):
+
+            def formatter_property_datetime(value):
+                if not value:
+                    return False, [(fullname, '=', False)]
+
+                # Date / Datetime are not JSONifiable, so they are stored as raw text
+                db_format = '%Y-%m-%d' if property_type == 'date' else '%Y-%m-%d %H:%M:%S'
+
+                if func == 'week':
+                    # the value is the first day of the week (based on local)
+                    start = value.strftime(db_format)
+                    end = (value + datetime.timedelta(days=7)).strftime(db_format)
+                else:
+                    start = (date_utils.start_of(value, func)).strftime(db_format)
+                    end = (date_utils.end_of(value, func) + datetime.timedelta(minutes=1)).strftime(db_format)
+
+                label = babel.dates.format_date(
+                    value,
+                    format=READ_GROUP_DISPLAY_FORMAT[func],
+                    locale=get_lang(self.env).code,
+                )
+                return (value, label), [(fullname, '>=', start), (fullname, '<', end)]
+
+            return formatter_property_datetime
+
+        return lambda value: (value, [(fullname, '=', value)])
+
 
     @api.model
     @api.readonly
@@ -288,18 +812,19 @@ class Base(models.AbstractModel):
                 progress bar field values to the related number of records
         """
         def adapt(value):
-            if isinstance(value, tuple):
-                value = value[0]
+            if isinstance(value, BaseModel):
+                return value.id
             return value
 
-        result = {}
-        for group in self.read_group(domain, ['__count'], [group_by, progress_bar['field']], lazy=False):
-            group_by_value = str(adapt(group[group_by]))
-            field_value = group[progress_bar['field']]
-            if group_by_value not in result:
-                result[group_by_value] = dict.fromkeys(progress_bar['colors'], 0)
-            if field_value in result[group_by_value]:
-                result[group_by_value][field_value] += group['__count']
+        result = defaultdict(lambda: dict.fromkeys(progress_bar['colors'], 0))
+        domain = AND([domain, [(progress_bar['field'], 'in', list(progress_bar['colors']))]])
+
+        for main_group, field_value, count in self._read_group(
+            domain, [group_by, progress_bar['field']], ['__count'],
+        ):
+            group_by_value = str(adapt(main_group))
+            result[group_by_value][field_value] += count
+
         return result
 
     @api.model
@@ -370,7 +895,7 @@ class Base(models.AbstractModel):
 
         else:
             # field type is selection: see doc above
-            desc = self.fields_get([field_name])[field_name]
+            desc = self.fields_get([field_name], ['selection'])[field_name]
             field_name_selection = dict(desc['selection'])
 
             def group_id_name(value):
@@ -380,18 +905,19 @@ class Base(models.AbstractModel):
             domain,
             [(field_name, '!=', False)],
         ])
-        groups = self.read_group(domain, [field_name], [field_name], limit=limit)
+        groups = self.with_context(read_group_expand=True).formatted_read_group(
+            domain, [field_name], ['__count'], limit=limit)
 
         domain_image = {}
         for group in groups:
-            id, display_name = group_id_name(group[field_name])
+            id_, display_name = group_id_name(group[field_name])
             values = {
-                'id': id,
+                'id': id_,
                 'display_name': display_name,
             }
             if set_count:
-                values['__count'] = group[field_name + '_count']
-            domain_image[id] = values
+                values['__count'] = group['__count']
+            domain_image[id_] = values
 
         return domain_image
 
@@ -877,9 +1403,15 @@ class Base(models.AbstractModel):
             missing_names = [fname for fname in fields_spec if fname not in values]
             defaults = self.default_get(missing_names)
             for field_name in missing_names:
-                values[field_name] = defaults.get(field_name, False)
                 if field_name in defaults:
+                    values[field_name] = defaults[field_name]
                     field_names.append(field_name)
+                else:
+                    field = self._fields[field_name]
+                    if not field.compute or self.pool.field_depends[field]:
+                        # don't assign computed fields without dependencies,
+                        # otherwise they don't get computed
+                        values[field_name] = False
 
         # prefetch x2many lines: this speeds up the initial snapshot by avoiding
         # computing fields on new records as much as possible, as that can be

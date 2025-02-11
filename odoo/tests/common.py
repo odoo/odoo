@@ -91,7 +91,7 @@ except ImportError:
     freezegun = None
 
 _logger = logging.getLogger(__name__)
-if config['test_enable'] or config['test_file']:
+if config['test_enable']:
     _logger.info("Importing test framework", stack_info=_logger.isEnabledFor(logging.DEBUG))
 else:
     _logger.error(
@@ -120,7 +120,7 @@ def __getattr__(name):
 # The odoo library is supposed already configured.
 HOST = '127.0.0.1'
 # Useless constant, tests are aware of the content of demo data
-ADMIN_USER_ID = odoo.SUPERUSER_ID
+ADMIN_USER_ID = api.SUPERUSER_ID
 
 CHECK_BROWSER_SLEEP = 0.1 # seconds
 CHECK_BROWSER_ITERATIONS = 100
@@ -846,7 +846,7 @@ class TransactionCase(BaseCase):
         # since cron are not running during tests, we need to gc manually
         # We need to check the status of the file system outside of the test cursor
         with Registry(get_db_name()).cursor() as cr:
-            gc_env = api.Environment(cr, odoo.SUPERUSER_ID, {})
+            gc_env = api.Environment(cr, api.SUPERUSER_ID, {})
             gc_env['ir.attachment']._gc_file_store_unsafe()
 
     @classmethod
@@ -861,7 +861,7 @@ class TransactionCase(BaseCase):
         def reset_changes():
             if (cls.registry_start_sequence != cls.registry.registry_sequence) or cls.registry.registry_invalidated:
                 with cls.registry.cursor() as cr:
-                    cls.registry.setup_models(cr)
+                    cls.registry._setup_models__(cr)
             cls.registry.registry_invalidated = cls.registry_start_invalidated
             cls.registry.registry_sequence = cls.registry_start_sequence
             with cls.muted_registry_logger:
@@ -902,8 +902,7 @@ class TransactionCase(BaseCase):
         cls.close_patcher = patch.object(cls.cr, 'close', forbidden)
         cls.startClassPatcher(cls.close_patcher)
 
-
-        cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, {})
+        cls.env = api.Environment(cls.cr, api.SUPERUSER_ID, {})
 
         # speedup CryptContext. Many user an password are done during tests, avoid spending time hasing password with many rounds
         def _crypt_context(self):  # noqa: ARG001
@@ -951,13 +950,17 @@ class TransactionCase(BaseCase):
         Make so that all new cursors opened on this database registry reuse the
         one currenly used by the tests. See ``Registry.enter_test_mode``.
         """
+        # entering the test mode should flush/invalidate all changes in the
+        # current environment because changes happen inside other cursors
         env = self.env
+        env.flush_all()
         registry = env.registry
         registry.enter_test_mode(env.cr)
         try:
             yield
         finally:
             registry.leave_test_mode()
+            env.invalidate_all()
 
 
 class SingleTransactionCase(BaseCase):
@@ -981,7 +984,7 @@ class SingleTransactionCase(BaseCase):
         cls.cr = cls.registry.cursor()
         cls.addClassCleanup(cls.cr.close)
 
-        cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, {})
+        cls.env = api.Environment(cls.cr, api.SUPERUSER_ID, {})
 
     def setUp(self):
         super(SingleTransactionCase, self).setUp()
@@ -1086,6 +1089,10 @@ class ChromeBrowser:
         self._websocket_send('Runtime.enable')
         self._logger.info('Chrome headless enable page notifications')
         self._websocket_send('Page.enable')
+        self._websocket_send('Page.setDownloadBehavior', params={
+            'behavior': 'deny',
+            'eventsEnabled': False,
+        })
         self._websocket_send('Emulation.setFocusEmulationEnabled', params={'enabled': True})
         emulated_device = {
             'mobile': False,
@@ -2031,7 +2038,29 @@ class HttpCase(TransactionCase):
             self._logger.warning('watch mode is only suitable for local testing')
 
         browser = ChromeBrowser(self, headless=not watch, success_signal=success_signal, debug=debug)
+        sendone_patch = None
+        websocket_allowed_patch = None
+        kick_all_websockets = None
         try:
+            if "bus.bus" in self.env.registry:
+                from odoo.addons.bus.websocket import CloseCode, _kick_all, WebsocketConnectionHandler
+                from odoo.addons.bus.models.bus import BusBus
+
+                kick_all_websockets = partial(_kick_all, CloseCode.KILL_NOW)
+                original_send_one = BusBus._sendone
+
+                def sendone_wrapper(self, target, notification_type, message):
+                    original_send_one(self, target, notification_type, message)
+                    self.env.cr.precommit.run()  # Trigger the creation of bus.bus records
+                    self.env.cr.postcommit.run()  # Trigger notification dispatching
+
+                sendone_patch = patch.object(BusBus, "_sendone", sendone_wrapper)
+                websocket_allowed_patch = patch.object(
+                    WebsocketConnectionHandler, "websocket_allowed", return_value=True
+                )
+                sendone_patch.start()
+                websocket_allowed_patch.start()
+
             self.authenticate(login, login, browser=browser)
             # Flush and clear the current transaction.  This is useful in case
             # we make requests to the server, as these requests are made with
@@ -2075,6 +2104,12 @@ class HttpCase(TransactionCase):
 
         finally:
             browser.stop()
+            if sendone_patch:
+                sendone_patch.stop()
+            if websocket_allowed_patch:
+                websocket_allowed_patch.stop()
+            if kick_all_websockets:
+                kick_all_websockets()
             self._wait_remaining_requests()
 
     def start_tour(self, url_path, tour_name, step_delay=None, **kwargs):

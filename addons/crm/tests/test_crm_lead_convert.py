@@ -58,7 +58,7 @@ class TestLeadConvertForm(crm_common.TestLeadConvertCommon):
 @tagged('lead_manage')
 class TestLeadConvert(crm_common.TestLeadConvertCommon):
     """
-    TODO: created partner (handle assignation) has team of lead
+    TODO: created partner (handle assignment) has team of lead
     TODO: create partner has user_id  coming from wizard
     """
 
@@ -123,7 +123,6 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         self.assertFalse(self.lead_1.date_conversion)
         self.assertEqual(self.lead_1.date_open, Datetime.from_string('2020-01-15 11:30:00'))
         self.assertEqual(self.lead_1.lang_id, self.lang_fr)
-        self.assertFalse(self.lead_1.mobile)
         self.assertEqual(self.lead_1.phone, '+1 202 555 9999')
         self.assertEqual(self.lead_1.user_id, self.user_sales_leads)
         self.assertEqual(self.lead_1.team_id, self.sales_team_1)
@@ -148,7 +147,6 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         self.assertEqual(lead.partner_id, self.contact_2)
         self.assertEqual(lead.email_from, self.contact_2.email)
         self.assertEqual(lead.lang_id, self.lang_en)
-        self.assertEqual(lead.mobile, self.contact_2.mobile)
         self.assertEqual(lead.phone, '123456789')
         self.assertEqual(lead.team_id, self.sales_team_1)
         self.assertEqual(lead.stage_id, self.stage_team1_1)

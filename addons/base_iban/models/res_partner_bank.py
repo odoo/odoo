@@ -28,6 +28,43 @@ def get_bban_from_iban(iban):
     """
     return normalize_iban(iban)[4:]
 
+def get_iban_part(iban, number_kind):
+    """ Get part of the iban depending on the mask
+        .. code-block:: python
+            # template = 'ITkk KBBB BBSS SSSC CCCC CCCC CCC'
+            partner.acc_number = 'IT60X0542811101000000123456'
+            get_iban_part(partner.acc_number, 'bank') == '05428'
+            get_iban_part(partner.acc_number, 'account') == '000000123456'
+        Returns ``False`` in case of failure
+    """
+    iban_part_map = {
+        # General
+        'bank': 'B',             # Bank national code
+        'branch': 'S',           # Branch code
+        'account': 'C',          # Account number
+
+        # Checksums
+        'check': 'k',            # Check digits
+        'check_national': 'K',   # National check digits
+
+        # Custom special
+        'account_type': 'T',     # Account type for Bulgaria, Guatemala
+        'balance_account': 'A',  # Balance Account Number for Belarus
+        'fiscal_code': 'F',      # Tax Identification Number for Iceland (Kennitala)
+        'reserved': 'R',         # Zero, reserved for Turkey
+    }
+    if not (mask_char := iban_part_map.get(number_kind.lower())):
+        return False
+
+    iban = normalize_iban(iban)
+    country_code = iban[:2].lower()
+
+    # Removing the country code from both the IBAN and the mask, since it can have some mask chars
+    iban_nocc = iban[2:]
+    template_nocc = _map_iban_template.get(country_code, '').replace(' ', '')[2:]
+    return template_nocc and "".join(c for c, t in zip(iban_nocc, template_nocc) if t == mask_char)
+
+
 def validate_iban(iban):
     iban = normalize_iban(iban)
     if not iban:
@@ -103,6 +140,7 @@ class ResPartnerBank(models.Model):
         except ValidationError:
             return False
 
+
 # Map ISO 3166-1 -> IBAN template, as described here :
 # http://en.wikipedia.org/wiki/International_Bank_Account_Number#IBAN_formats_by_country
 _map_iban_template = {
@@ -112,8 +150,8 @@ _map_iban_template = {
     'at': 'ATkk BBBB BCCC CCCC CCCC',  # Austria
     'az': 'AZkk BBBB CCCC CCCC CCCC CCCC CCCC',  # Azerbaijan
     'ba': 'BAkk BBBS SSCC CCCC CCKK',  # Bosnia and Herzegovina
-    'be': 'BEkk BBBC CCCC CCXX',  # Belgium
-    'bg': 'BGkk BBBB SSSS DDCC CCCC CC',  # Bulgaria
+    'be': 'BEkk BBBC CCCC CCKK',  # Belgium
+    'bg': 'BGkk BBBB SSSS TTCC CCCC CC',  # Bulgaria
     'bh': 'BHkk BBBB CCCC CCCC CCCC CC',  # Bahrain
     'br': 'BRkk BBBB BBBB SSSS SCCC CCCC CCCT N',  # Brazil
     'by': 'BYkk BBBB AAAA CCCC CCCC CCCC CCCC',  # Belarus
@@ -128,7 +166,7 @@ _map_iban_template = {
     'es': 'ESkk BBBB SSSS KKCC CCCC CCCC',  # Spain
     'fi': 'FIkk BBBB BBCC CCCC CK',  # Finland
     'fo': 'FOkk CCCC CCCC CCCC CC',  # Faroe Islands
-    'fr': 'FRkk BBBB BGGG GGCC CCCC CCCC CKK',  # France
+    'fr': 'FRkk BBBB BSSS SSCC CCCC CCCC CKK',  # France
     'gb': 'GBkk BBBB SSSS SSCC CCCC CC',  # United Kingdom
     'ge': 'GEkk BBCC CCCC CCCC CCCC CC',  # Georgia
     'gi': 'GIkk BBBB CCCC CCCC CCCC CCC',  # Gibraltar
@@ -139,9 +177,9 @@ _map_iban_template = {
     'hu': 'HUkk BBBS SSSC CCCC CCCC CCCC CCCC',  # Hungary
     'ie': 'IEkk BBBB SSSS SSCC CCCC CC',  # Ireland
     'il': 'ILkk BBBS SSCC CCCC CCCC CCC',  # Israel
-    'is': 'ISkk BBBB SSCC CCCC XXXX XXXX XX',  # Iceland
+    'is': 'FSkk BBBB SSCC CCCC FFFF FFFF FF',  # Iceland
     'it': 'ITkk KBBB BBSS SSSC CCCC CCCC CCC',  # Italy
-    'jo': 'JOkk BBBB NNNN CCCC CCCC CCCC CCCC CC',  # Jordan
+    'jo': 'JOkk BBBB SSSS CCCC CCCC CCCC CCCC CC',  # Jordan
     'kw': 'KWkk BBBB CCCC CCCC CCCC CCCC CCCC CC',  # Kuwait
     'kz': 'KZkk BBBC CCCC CCCC CCCC',  # Kazakhstan
     'lb': 'LBkk BBBB CCCC CCCC CCCC CCCC CCCC',  # Lebanon
@@ -149,7 +187,7 @@ _map_iban_template = {
     'lt': 'LTkk BBBB BCCC CCCC CCCC',  # Lithuania
     'lu': 'LUkk BBBC CCCC CCCC CCCC',  # Luxembourg
     'lv': 'LVkk BBBB CCCC CCCC CCCC C',  # Latvia
-    'mc': 'MCkk BBBB BGGG GGCC CCCC CCCC CKK',  # Monaco
+    'mc': 'MCkk BBBB BSSS SSCC CCCC CCCC CKK',  # Monaco
     'md': 'MDkk BBCC CCCC CCCC CCCC CCCC',  # Moldova
     'me': 'MEkk BBBC CCCC CCCC CCCC KK',  # Montenegro
     'mk': 'MKkk BBBC CCCC CCCC CKK',  # Macedonia
@@ -161,7 +199,8 @@ _map_iban_template = {
     'om': 'OMkk BBBC CCCC CCCC CCCC CCC', # Oman
     'pk': 'PKkk BBBB CCCC CCCC CCCC CCCC',  # Pakistan
     'pl': 'PLkk BBBS SSSK CCCC CCCC CCCC CCCC',  # Poland
-    'ps': 'PSkk BBBB XXXX XXXX XCCC CCCC CCCC C',  # Palestinian
+    # Palestinian territories: Wikipedia has no 'X's, just uses 'C', Harvard reference does the same.
+    'ps': 'PSkk BBBB CCCC CCCC CCCC CCCC CCCC C',  # Palestinian
     'pt': 'PTkk BBBB SSSS CCCC CCCC CCCK K',  # Portugal
     'qa': 'QAkk BBBB CCCC CCCC CCCC CCCC CCCC C',  # Qatar
     'ro': 'ROkk BBBB CCCC CCCC CCCC CCCC',  # Romania

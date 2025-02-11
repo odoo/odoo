@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import itertools
 import logging
 import math
 from datetime import datetime, timedelta
@@ -400,16 +401,24 @@ class CalendarEvent(models.Model):
                 # because fullcalendar just drops times for full day events.
                 # i.e. Christmas is on 25/12 for everyone
                 # even if people don't celebrate it simultaneously
-                enddate = fields.Datetime.from_string(meeting.stop_date)
+                enddate = fields.Datetime.from_string(meeting.stop_date or meeting.stop)
                 enddate = enddate.replace(hour=18)
 
-                startdate = fields.Datetime.from_string(meeting.start_date)
+                startdate = fields.Datetime.from_string(meeting.start_date or meeting.start)
                 startdate = startdate.replace(hour=8)  # Set 8 AM
 
-                meeting.write({
-                    'start': startdate.replace(tzinfo=None),
-                    'stop': enddate.replace(tzinfo=None)
-                })
+                if meeting.start_date and meeting.stop_date:
+                    # If start_date or stop_date is set, use start_date and stop_date;
+                    # otherwise, use start and stop.
+                    meeting.write({
+                        'start': startdate.replace(tzinfo=None),
+                        'stop': enddate.replace(tzinfo=None)
+                    })
+                else:
+                    meeting.write({
+                        'start_date': startdate.replace(tzinfo=None),
+                        'stop_date': enddate.replace(tzinfo=None)
+                    })
 
     @api.constrains('start', 'stop', 'start_date', 'stop_date')
     def _check_closing_date(self):
@@ -764,18 +773,18 @@ class CalendarEvent(models.Model):
         super(CalendarEvent, self - hidden)._compute_display_name()
 
     @api.model
-    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        groupby = [groupby] if isinstance(groupby, str) else groupby
-        fields_aggregates = [
-            field_name for field_name in (fields or list(self._fields))
-            if ':' in field_name or (field_name in self and self._fields[field_name].aggregator)
-        ]
-        grouped_fields = {group_field.split(':')[0] for group_field in groupby + fields_aggregates}
-        private_fields = grouped_fields - self._get_public_fields()
+    def _read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None) -> list[tuple]:
+        fnames = {
+            spec.split(':')[0] for spec in itertools.chain(
+                groupby,
+                aggregates,
+                [cond[0] for cond in having if isinstance(cond, (list, tuple))]
+            )
+        }
+        private_fields = fnames - self._get_public_fields()
         if not self.env.su and private_fields:
             domain = AND([domain, self._get_default_privacy_domain()])
-            return super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
-        return super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+        return super()._read_group(domain, groupby, aggregates, having=having, offset=offset, limit=limit, order=order)
 
     def unlink(self):
         if not self:
@@ -1080,6 +1089,16 @@ class CalendarEvent(models.Model):
 
     def _get_trigger_alarm_types(self):
         return ['email']
+
+    def _setup_event_recurrent_alarms(self, events_by_alarm):
+        """ Setup alarms for recurrent events """
+        for event in self:
+            if event.recurrence_id:
+                next_date = event.get_next_alarm_date(events_by_alarm)
+                # In cron, setup alarm only when there is a next date on the target. Otherwise the 'now()'
+                # check in the call below can generate undeterministic behavior and setup random alarms.
+                if next_date:
+                    event.recurrence_id.with_context(date=next_date)._setup_alarms()
 
     def _setup_alarms(self):
         """ Schedule cron triggers for future events """

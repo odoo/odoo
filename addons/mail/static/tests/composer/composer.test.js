@@ -13,6 +13,7 @@ import {
     pasteFiles,
     patchUiSize,
     scroll,
+    setupChatHub,
     start,
     startServer,
     triggerHotkey,
@@ -257,16 +258,11 @@ test("reset emoji picker scroll value after an emoji is picked", async () => {
 
 test("keep emoji picker scroll value independent if two or more different emoji pickers are used", async () => {
     const pyEnv = await startServer();
-    const channel_member_ids = [
-        Command.create({
-            fold_state: "open",
-            partner_id: serverState.partnerId,
-        }),
-    ];
-    pyEnv["discuss.channel"].create([
-        { name: "roblox-jaywalking", channel_member_ids },
-        { name: "Sales", channel_member_ids },
+    const channelIds = pyEnv["discuss.channel"].create([
+        { name: "roblox-jaywalking" },
+        { name: "Sales" },
     ]);
+    setupChatHub({ opened: channelIds });
     await start();
     await click("button[title='Add Emojis']", {
         parent: [".o-mail-ChatWindow", { text: "Sales" }],
@@ -486,7 +482,6 @@ test("leave command on channel", async () => {
     triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "general" });
     await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
-    await contains(".o_notification", { text: "You left general." });
 });
 
 test("Can handle leave notification from unknown member", async () => {
@@ -842,7 +837,7 @@ test("Message is sent only once when pressing enter twice in a row", async () =>
     await contains(".o-mail-Message-content", { text: "Hello World!" });
 });
 
-test('display canned response suggestions on typing ":"', async () => {
+test('display canned response suggestions on typing "::"', async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Mario" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -860,7 +855,7 @@ test('display canned response suggestions on typing ":"', async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input");
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
-    await insertText(".o-mail-Composer-input", ":");
+    await insertText(".o-mail-Composer-input", "::");
     await contains(".o-mail-Composer-suggestionList .o-open");
     await contains(".o-mail-NavigableList-item", { text: "helloHello! How are you?" });
 });
@@ -884,7 +879,7 @@ test("select a canned response suggestion", async () => {
     await contains(".o-mail-Composer-suggestionList");
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
     await contains(".o-mail-Composer-input", { value: "" });
-    await insertText(".o-mail-Composer-input", ":");
+    await insertText(".o-mail-Composer-input", "::");
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "Hello! How are you? " });
 });
@@ -909,7 +904,7 @@ test("select a canned response suggestion with some text", async () => {
     await contains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", "bluhbluh ");
     await contains(".o-mail-Composer-input", { value: "bluhbluh " });
-    await insertText(".o-mail-Composer-input", ":");
+    await insertText(".o-mail-Composer-input", "::");
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "bluhbluh Hello! How are you? " });
 });
@@ -932,7 +927,7 @@ test("add an emoji after a canned response", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-suggestionList");
     await contains(".o-mail-Composer-input", { value: "" });
-    await insertText(".o-mail-Composer-input", ":");
+    await insertText(".o-mail-Composer-input", "::");
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "Hello! How are you? " });
     await click("button[title='Add Emojis']");
@@ -953,7 +948,7 @@ test("Canned response can be inserted from the bus", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input");
-    await insertText(".o-mail-Composer-input", ":");
+    await insertText(".o-mail-Composer-input", "::");
     await contains(".o-mail-NavigableList-item", { count: 0 });
     await insertText(".o-mail-Composer-input", "", { replace: true });
     pyEnv["mail.canned.response"].create({
@@ -961,7 +956,7 @@ test("Canned response can be inserted from the bus", async () => {
         substitution: "Hello! How are you?",
     });
     await contains(".o-mail-NavigableList-item", { count: 0 });
-    await insertText(".o-mail-Composer-input", ":");
+    await insertText(".o-mail-Composer-input", "::");
     await contains(".o-mail-NavigableList-item", { text: "helloHello! How are you?" });
 });
 
@@ -982,14 +977,14 @@ test("Canned response can be updated from the bus", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input");
-    await insertText(".o-mail-Composer-input", ":");
+    await insertText(".o-mail-Composer-input", "::");
     await contains(".o-mail-NavigableList-item", { count: 1 });
     await insertText(".o-mail-Composer-input", "", { replace: true });
     pyEnv["mail.canned.response"].write([cannedResponseId], {
         substitution: "Howdy! How are you?",
     });
     await contains(".o-mail-NavigableList-item", { count: 0 });
-    await insertText(".o-mail-Composer-input", ":");
+    await insertText(".o-mail-Composer-input", "::");
     await contains(".o-mail-NavigableList-item", { text: "helloHowdy! How are you?" });
 });
 
@@ -1015,14 +1010,14 @@ test("Canned response can be deleted from the bus", async () => {
     ]);
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", ":");
+    await insertText(".o-mail-Composer-input", "::");
     await contains(".o-mail-NavigableList-item", { count: 2 });
     await contains(".o-mail-NavigableList-item", { text: "hello" });
     await contains(".o-mail-NavigableList-item", { text: "test" });
     await insertText(".o-mail-Composer-input", "", { replace: true });
     await contains(".o-mail-NavigableList-item", { count: 0 });
     pyEnv["mail.canned.response"].unlink([cannedResponseId]);
-    await insertText(".o-mail-Composer-input", ":");
+    await insertText(".o-mail-Composer-input", "::");
     await contains(".o-mail-NavigableList-item", { count: 1 });
     await contains(".o-mail-NavigableList-item", { text: "test" });
 });
@@ -1039,7 +1034,7 @@ test("Canned response last used changes on posting", async () => {
     ])[0];
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", ":");
+    await insertText(".o-mail-Composer-input", "::");
     await click(".o-mail-NavigableList-item", { text: "testTest a canned response?" });
     await contains(".o-mail-Composer-input", { value: "Test a canned response? " });
     expect(cannedResponse.last_used).toBeEmpty();
@@ -1057,41 +1052,9 @@ test("Does not auto-select 1st canned response suggestion", async () => {
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-NavigableList-active", { text: "Mitchell Admin" });
-    await insertText(".o-mail-Composer-input", ":", { replace: true });
+    await insertText(".o-mail-Composer-input", "::", { replace: true });
     await contains(".o-mail-NavigableList-item", { text: "HelloHello! How are you?" });
     await contains(".o-mail-NavigableList-active", { count: 0 });
-});
-
-test("TAB/ARROW focuses 1st canned response suggestion", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    pyEnv["mail.canned.response"].create([
-        { source: "Hello", substitution: "Hello! How are you?" },
-        { source: "Goodbye", substitution: "Goodbye! See you soon!" },
-    ]);
-    await start();
-    await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", ":");
-    // Assuming the suggestions are displayed in alphabetical order
-    await contains(".o-mail-NavigableList-item", {
-        text: "GoodbyeGoodbye! See you soon!",
-        before: [".o-mail-NavigableList-item", { text: "HelloHello! How are you?" }],
-    });
-    await contains(".o-mail-NavigableList-active", { count: 0 });
-    await triggerHotkey("Tab");
-    await contains(".o-mail-NavigableList-active", { text: "GoodbyeGoodbye! See you soon!" });
-    await triggerHotkey("Escape");
-    await contains(".o-mail-NavigableList-item", { count: 0 });
-    await insertText(".o-mail-Composer-input", ":", { replace: true });
-    await contains(".o-mail-NavigableList-item", { count: 2 });
-    await triggerHotkey("ArrowDown");
-    await contains(".o-mail-NavigableList-active", { text: "GoodbyeGoodbye! See you soon!" });
-    await triggerHotkey("Escape");
-    await contains(".o-mail-NavigableList-active", { count: 0 });
-    await insertText(".o-mail-Composer-input", ":", { replace: true });
-    await contains(".o-mail-NavigableList-item", { count: 2 });
-    await triggerHotkey("ArrowUp");
-    await contains(".o-mail-NavigableList-active", { text: "GoodbyeGoodbye! See you soon!" });
 });
 
 test("ENTER closes canned response suggestions", async () => {
@@ -1100,7 +1063,7 @@ test("ENTER closes canned response suggestions", async () => {
     pyEnv["mail.canned.response"].create({ source: "Hello", substitution: "Hello! How are you?" });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", ":");
+    await insertText(".o-mail-Composer-input", "::");
     await contains(".o-mail-NavigableList-item", { text: "HelloHello! How are you?" });
     await contains(".o-mail-NavigableList-active", { count: 0 });
     await triggerHotkey("Enter");
@@ -1110,37 +1073,53 @@ test("ENTER closes canned response suggestions", async () => {
 test("Tab to select of canned response suggestion works in chat window", async () => {
     // This might conflict with focusing next chat window
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create([
-        {
-            name: "General",
-            channel_member_ids: [
-                Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
-            ],
-        },
-        {
-            name: "Extra",
-            channel_member_ids: [
-                Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
-            ],
-        },
-    ]);
+    const channelIds = pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Extra" }]);
     pyEnv["mail.canned.response"].create([
         { source: "Hello", substitution: "Hello! How are you?" },
         { source: "Goodbye", substitution: "Goodbye! See you soon!" },
     ]);
+    setupChatHub({ opened: channelIds });
     await start();
     await contains(".o-mail-ChatWindow", { count: 2 });
-    await insertText(".o-mail-ChatWindow:eq(0) .o-mail-Composer-input", ":");
+    await insertText(".o-mail-ChatWindow:eq(0) .o-mail-Composer-input", "::");
     // Assuming the suggestions are displayed in alphabetical order
     await contains(".o-mail-NavigableList-item", {
         text: "GoodbyeGoodbye! See you soon!",
         before: [".o-mail-NavigableList-item", { text: "HelloHello! How are you?" }],
     });
-    await triggerHotkey("Tab");
     await contains(".o-mail-NavigableList-active", { text: "GoodbyeGoodbye! See you soon!" });
+    await triggerHotkey("Tab");
+    await contains(".o-mail-NavigableList-active", { text: "HelloHello! How are you?" });
     await animationFrame();
     await triggerHotkey("Enter");
     await contains(".o-mail-ChatWindow:eq(0) .o-mail-Composer-input", {
-        value: "Goodbye! See you soon! ",
+        value: "Hello! How are you? ",
     });
+});
+
+test('can quickly add emoji with ":" keyword', async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Mario" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "test",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ guest_id: guestId }),
+        ],
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer-input");
+    await insertText(".o-mail-Composer-input", ":sweat");
+    await contains(".o-mail-Composer-suggestionList .o-open");
+    await contains(".o-mail-NavigableList-item", { text: "😅:sweat_smile:" });
+    await click(".o-mail-NavigableList-item", { text: "😅:sweat_smile:" });
+    await contains(".o-mail-Composer-input", { value: "😅 " });
+    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    // check at least 2 chars to trigger it, so that emoji substitution like :p are still easy to use
+    await insertText(".o-mail-Composer-input", ":sw");
+    await contains(".o-mail-Composer-suggestionList .o-open");
+    await contains(".o-mail-NavigableList-item", { text: "😅:sweat_smile:" });
+    await insertText(".o-mail-Composer-input", ":s", { replace: true });
+    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
 });

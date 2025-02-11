@@ -69,50 +69,43 @@ class PosConfig(models.Model):
             })
 
     @api.model
-    def _load_bar_data(self):
-        convert.convert_file(self.env, 'pos_restaurant', 'data/scenarios/bar_data.xml', None, noupdate=True, mode='init', kind='data')
-
-    @api.model
-    def _load_restaurant_data(self):
-        convert.convert_file(self.env, 'pos_restaurant', 'data/scenarios/restaurant_data.xml', None, noupdate=True, mode='init', kind='data')
-
-    @api.model
-    def load_onboarding_bar_scenario(self):
-        ref_name = 'pos_restaurant.pos_config_main_bar'
-        if not self.env.ref(ref_name, raise_if_not_found=False):
-            self._load_bar_data()
+    def load_onboarding_bar_scenario(self, with_demo_data=True):
         journal, payment_methods_ids = self._create_journal_and_payment_methods(cash_journal_vals={'name': 'Cash Bar', 'show_on_dashboard': False})
-        bar_categories = self.get_record_by_ref([
-            'pos_restaurant.pos_category_cocktails',
-            'pos_restaurant.pos_category_soft_drinks',
-        ])
         config = self.env['pos.config'].create({
             'name': 'Bar',
             'company_id': self.env.company.id,
             'journal_id': journal.id,
             'payment_method_ids': payment_methods_ids,
-            'limit_categories': True,
-            'iface_available_categ_ids': bar_categories,
             'iface_splitbill': True,
             'module_pos_restaurant': True,
+            'default_screen': 'register'
         })
         self.env['ir.model.data']._update_xmlids([{
-            'xml_id': self._get_suffixed_ref_name(ref_name),
+            'xml_id': self._get_suffixed_ref_name('pos_restaurant.pos_config_main_bar'),
             'record': config,
             'noupdate': True,
         }])
+        if with_demo_data:
+            config._load_bar_demo_data()
+        return {'config_id': config.id}
+
+    def _load_bar_demo_data(self):
+        self.ensure_one()
+        if not self.env.ref('pos_restaurant.product_category_drinks', raise_if_not_found=False):
+            convert.convert_file(self._env_with_clean_context(), 'pos_restaurant', 'data/scenarios/bar_demo_data.xml', idref=None, mode='init', noupdate=True)
+        bar_categories = self.get_record_by_ref([
+            'pos_restaurant.pos_category_cocktails',
+            'pos_restaurant.pos_category_soft_drinks',
+        ])
+        if bar_categories:
+            self.limit_categories = True
+            self.iface_available_categ_ids = bar_categories
 
     @api.model
-    def load_onboarding_restaurant_scenario(self):
-        ref_name = 'pos_restaurant.pos_config_main_restaurant'
-        if not self.env.ref(ref_name, raise_if_not_found=False):
-            self._load_restaurant_data()
-
-        journal, payment_methods_ids = self._create_journal_and_payment_methods(cash_journal_vals={'name': 'Cash Restaurant', 'show_on_dashboard': False})
-        restaurant_categories = self.get_record_by_ref([
-            'pos_restaurant.food',
-            'pos_restaurant.drinks',
-        ])
+    def load_onboarding_restaurant_scenario(self, with_demo_data=True):
+        if not self.env.ref('pos_restaurant.pos_resource_preset', raise_if_not_found=False):
+            convert.convert_file(self._env_with_clean_context(), 'pos_restaurant', 'data/scenarios/restaurant_preset.xml', idref=None, mode='init', noupdate=True)
+        journal, payment_methods_ids = self._create_journal_and_payment_methods(cash_journal_vals={'name': _('Cash Restaurant'), 'show_on_dashboard': False})
         presets = self.get_record_by_ref([
             'pos_restaurant.pos_takein_preset',
             'pos_restaurant.pos_takeout_preset',
@@ -123,8 +116,6 @@ class PosConfig(models.Model):
             'company_id': self.env.company.id,
             'journal_id': journal.id,
             'payment_method_ids': payment_methods_ids,
-            'limit_categories': True,
-            'iface_available_categ_ids': restaurant_categories,
             'iface_splitbill': True,
             'module_pos_restaurant': True,
             'use_presets': True,
@@ -132,15 +123,45 @@ class PosConfig(models.Model):
             'available_preset_ids': [(6, 0, presets[1:])],
         })
         self.env['ir.model.data']._update_xmlids([{
-            'xml_id': self._get_suffixed_ref_name(ref_name),
+            'xml_id': self._get_suffixed_ref_name('pos_restaurant.pos_config_main_restaurant'),
             'record': config,
             'noupdate': True,
         }])
-        if self.env.company.id == self.env.ref('base.main_company').id:
-            existing_session = self.env.ref('pos_restaurant.pos_closed_session_3', raise_if_not_found=False)
-            if not existing_session:
-                convert.convert_file(self.env, 'pos_restaurant', 'data/restaurant_session_floor.xml', None, noupdate=True, mode='init', kind='data')
+        if not self.env.ref('pos_restaurant.floor_main', raise_if_not_found=False) and self.env.ref('pos_restaurant.pos_config_main_restaurant', raise_if_not_found=False):
+            convert.convert_file(self._env_with_clean_context(), 'pos_restaurant', 'data/scenarios/restaurant_floor.xml', idref=None, mode='init', noupdate=True)
+        if with_demo_data:
+            config._load_restaurant_demo_data()
+            if self.env.company.id == self.env.ref('base.main_company').id:
+                existing_session = self.env.ref('pos_restaurant.pos_closed_session_3', raise_if_not_found=False)
+                if not existing_session:
+                    convert.convert_file(self._env_with_clean_context(), 'pos_restaurant', 'data/scenarios/restaurant_demo_session.xml', idref=None, mode='init', noupdate=True)
+        return {'config_id': config.id}
 
     @api.depends('set_tip_after_payment', 'module_pos_restaurant_appointment')
     def _compute_local_data_integrity(self):
        super()._compute_local_data_integrity()
+
+    def _load_restaurant_demo_data(self):
+        self.ensure_one()
+        if not self.env.ref('pos_restaurant.food', raise_if_not_found=False):
+            convert.convert_file(self._env_with_clean_context(), 'pos_restaurant', 'data/scenarios/restaurant_demo_data.xml', idref=None, mode='init', noupdate=True)
+        restaurant_categories = self.get_record_by_ref([
+            'pos_restaurant.food',
+            'pos_restaurant.drinks',
+        ])
+        if restaurant_categories:
+            self.limit_categories = True
+            self.iface_available_categ_ids = restaurant_categories
+
+    def _get_demo_data_loader_methods(self):
+        mapping = super()._get_demo_data_loader_methods()
+        mapping.update({
+            'pos_restaurant.pos_config_main_restaurant': self._load_restaurant_demo_data,
+            'pos_restaurant.pos_config_main_bar': self._load_bar_demo_data,
+        })
+        return mapping
+
+    def _get_default_demo_data_xml_id(self):
+        if self.module_pos_restaurant:
+            return 'pos_restaurant.pos_config_main_restaurant'
+        return super()._get_default_demo_data_xml_id()

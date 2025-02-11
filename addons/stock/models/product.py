@@ -12,6 +12,7 @@ from odoo.osv import expression
 from odoo.tools import float_is_zero, check_barcode_encoding
 from odoo.tools.float_utils import float_round
 from odoo.tools.mail import html2plaintext, is_html_empty
+from odoo.tools.misc import groupby
 
 OPERATORS = {
     '<': py_operator.lt,
@@ -276,10 +277,10 @@ class ProductProduct(models.Model):
         # We may receive a location or warehouse from the context, either by explicit
         # python code or by the use of dummy fields in the search view.
         # Normalize them into a list.
-        location = self.env.context.get('location')
+        location = self.env.context.get('location') or self.env.context.get('search_location')
         if location and not isinstance(location, list):
             location = [location]
-        warehouse = self.env.context.get('warehouse_id')
+        warehouse = self.env.context.get('warehouse_id') or self.env.context.get('search_warehouse')
         if warehouse and not isinstance(warehouse, list):
             warehouse = [warehouse]
         # filter by location and/or warehouse
@@ -453,8 +454,9 @@ class ProductProduct(models.Model):
     @api.model
     def fields_get(self, allfields=None, attributes=None):
         res = super().fields_get(allfields, attributes)
-        if self._context.get('location') and isinstance(self._context['location'], int):
-            location = self.env['stock.location'].browse(self._context['location'])
+        context_location = self._context.get('location') or self._context.get('search_location')
+        if context_location and isinstance(context_location, int):
+            location = self.env['stock.location'].browse(context_location)
             if location.usage == 'supplier':
                 if res.get('virtual_available'):
                     res['virtual_available']['string'] = _('Future Receipts')
@@ -658,6 +660,32 @@ class ProductProduct(models.Model):
         or_domains = expression.OR(or_domains)
         return expression.AND([base_domain, or_domains])
 
+    def _update_uom(self, to_uom_id):
+        for uom, product, moves in self.env['stock.move']._read_group(
+            [('product_id', 'in', self.ids)],
+            ['product_uom', 'product_id'],
+            ['id:recordset'],
+        ):
+            if uom != product.product_tmpl_id.uom_id:
+                raise UserError(_('As other units of measure (ex : %(problem_uom)s) '
+                'than %(uom)s have already been used for this product, the change of unit of measure can not be done.'
+                'If you want to change it, please archive the product and create a new one.',
+                problem_uom=uom.name, uom=product.product_tmpl_id.uom_id.name))
+            moves.product_uom = to_uom_id
+
+        for uom, product, move_lines in self.env['stock.move.line']._read_group(
+            [('product_id', 'in', self.ids)],
+            ['product_uom_id', 'product_id'],
+            ['id:recordset'],
+        ):
+            if uom != product.product_tmpl_id.uom_id:
+                raise UserError(_('As other units of measure (ex : %(problem_uom)s) '
+                'than %(uom)s have already been used for this product, the change of unit of measure can not be done.'
+                'If you want to change it, please archive the product and create a new one.',
+                problem_uom=uom.name, uom=product.product_tmpl_id.uom_id.name))
+            move_lines.product_uom_id = to_uom_id
+        return super()._update_uom(to_uom_id)
+
     def filter_has_routes(self):
         """ Return products with route_ids
             or whose categ_id has total_route_ids.
@@ -668,6 +696,15 @@ class ProductProduct(models.Model):
         # retrive products with categ_ids having routes
         products_with_routes += self.search([('id', 'in', (self - products_with_routes).ids), ('categ_id.total_route_ids', '!=', False)])
         return products_with_routes
+
+    def _trigger_uom_warning(self):
+        res = super()._trigger_uom_warning()
+        if res:
+            return res
+        moves = self.env['stock.move'].sudo().search_count(
+            [('product_id', 'in', self.ids)], limit=1
+        )
+        return bool(moves)
 
 
 class ProductTemplate(models.Model):
@@ -758,6 +795,7 @@ class ProductTemplate(models.Model):
         'product_variant_ids.incoming_qty',
         'product_variant_ids.outgoing_qty',
     )
+    @api.depends_context('warehouse_id')
     def _compute_quantities(self):
         res = self._compute_quantities_dict()
         for template in self:
@@ -885,23 +923,6 @@ class ProductTemplate(models.Model):
                 )
             }
         return res
-
-    @api.onchange('uom_id')
-    def _onchange_uom_id(self):
-        moves = self.env['stock.move'].sudo().search_count(
-            [('product_id', 'in', self.with_context(active_test=False).product_variant_ids.ids)], limit=1
-        )
-        if moves:
-            return {
-                'warning': {
-                    'title': _('Warning!'),
-                    'message': _(
-                        'This product has been used in at least one inventory movement. '
-                        'It is not advised to change the Unit of Measure since it can lead to inconsistencies. '
-                        'The existing moves will not be recalculated with the new unit of measure.'
-                    )
-                }
-            }
 
     def write(self, vals):
         if 'company_id' in vals and vals['company_id']:

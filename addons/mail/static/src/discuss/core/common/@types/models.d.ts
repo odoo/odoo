@@ -21,6 +21,7 @@ declare module "models" {
     export interface Store {
         channel_types_with_seen_infos: string[],
         "discuss.channel.member": typeof ChannelMemberClass,
+        fetchChannel(channelId: number): Promise<void>,
         getRecentChatPartnerIds(): number[],
         readonly onlineMemberStatuses: String[],
         sortMembers(m1: ChannelMember, m2: ChannelMember)
@@ -57,7 +58,6 @@ declare module "models" {
         showUnreadBanner(): boolean,
         typingMembers: ChannelMember[],
         readonly hasMemberList: boolean,
-        readonly notifyOnleave: boolean,
         readonly unknownMembersCount: number,
         private _computeOfflineMembers(): ChannelMember[],
     }

@@ -20,8 +20,12 @@ patch(registry.category("web_tour.tours").get("project_create_sol_tour"), {
             run: "fill Thorfin",
         }, {
            content: "Create the customer in the autocomplete dropdown.",
-           trigger: ".o_field_widget[name=employee_id] .o-autocomplete--dropdown-menu .o_m2o_dropdown_option_create a",
+           trigger: ".o_field_widget[name=employee_id] .o-autocomplete--dropdown-menu .o_m2o_dropdown_option_create_edit a",
            run: "click",
+        }, {
+            trigger: ".modal:not(.o_inactive_modal) button:contains(save & close)",
+            content: "Save employee",
+            run: "click",
         }, {
             trigger: "div[name='sale_line_id'] input",
             content: "Add the Sales Order Item to link to the timesheets of this employee.",

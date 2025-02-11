@@ -1056,7 +1056,9 @@ test("support properties", async () => {
                 "is lower",
                 "is lower or equal",
                 "is between",
+                "is not between",
                 "is within",
+                "is not within",
                 "is set",
                 "is not set",
             ],
@@ -2381,4 +2383,82 @@ test("many2many: domain in autocompletion", async () => {
     expect(getCurrentValue()).toBe("xpad");
     expect.verifySteps([`[("product_ids", "=", [41])]`]);
     expect(".dropdown-menu").toHaveCount(0);
+});
+
+test("Hierarchical operators", async () => {
+    Partner._fields.team_id = fields.Many2one({ relation: "team" });
+    onRpc("fields_get", ({ parent }) => {
+        const result = parent();
+        result.id.allow_hierachy_operators = true;
+        result.product_id.allow_hierachy_operators = true;
+        result.team_id.allow_hierachy_operators = false;
+        return result;
+    });
+    await makeDomainSelector({
+        isDebugMode: true,
+        update(domain) {
+            expect.step(domain);
+        },
+    });
+    await addNewRule();
+    expect.verifySteps(['[("id", "=", 1)]']);
+    await openModelFieldSelectorPopover();
+    await contains(
+        ".o_model_field_selector_popover .o_model_field_selector_popover_item_name:contains(Product)"
+    ).click();
+    expect.verifySteps(['[("product_id", "in", [])]']);
+    expect(getOperatorOptions()).toEqual([
+        "is in",
+        "is not in",
+        "is equal",
+        "is not equal",
+        "contains",
+        "does not contain",
+        "child of",
+        "parent of",
+        "is set",
+        "is not set",
+        "starts with",
+        "ends with",
+        "matches",
+        "matches none of",
+    ]);
+    await selectOperator("parent_of");
+    expect.verifySteps(['[("product_id", "parent_of", [])]']);
+    await editValue("x", { confirm: false });
+    await runAllTimers();
+
+    expect(".dropdown-menu").toHaveCount(1);
+    expect(queryAllTexts(".dropdown-menu li")).toEqual(["xphone", "xpad"]);
+    await contains(".dropdown-menu li").click();
+    expect.verifySteps(['[("product_id", "parent_of", [37])]']);
+    await editValue("x", { confirm: false });
+    await runAllTimers();
+
+    expect(".dropdown-menu").toHaveCount(1);
+    expect(queryAllTexts(".dropdown-menu li")).toEqual(["xpad"]);
+    await contains(".dropdown-menu li").click();
+    expect.verifySteps(['[("product_id", "parent_of", [37, 41])]']);
+    await openModelFieldSelectorPopover();
+    await contains(
+        ".o_model_field_selector_popover .o_model_field_selector_popover_item_name:contains(Team)"
+    ).click();
+    expect.verifySteps(['[("team_id", "in", [])]']);
+    expect(getOperatorOptions()).toEqual(
+        [
+            "is in",
+            "is not in",
+            "is equal",
+            "is not equal",
+            "contains",
+            "does not contain",
+            "is set",
+            "is not set",
+            "starts with",
+            "ends with",
+            "matches",
+            "matches none of",
+        ],
+        { message: "no hierarchical operator if allow_hierachy_operators is set to false" }
+    );
 });

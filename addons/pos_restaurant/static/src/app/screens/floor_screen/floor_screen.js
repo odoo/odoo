@@ -2,6 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 import { debounce } from "@web/core/utils/timing";
 import { registry } from "@web/core/registry";
+import { cookie } from "@web/core/browser/cookie";
 
 import { TextInputPopup } from "@point_of_sale/app/components/popups/text_input_popup/text_input_popup";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
@@ -727,6 +728,8 @@ export class FloorScreen extends Component {
             title: _t("New Floor"),
             placeholder: _t("Floor name"),
             getPayload: async (newName) => {
+                const lightMode = cookie.get("pos_color_scheme") !== "dark";
+                const backgroundColor = lightMode ? "#E4E4E4" : "#1B1D26";
                 const prefixes = this.pos.models["restaurant.floor"]
                     .map((floor) => floor.floor_prefix)
                     .sort((a, b) => b - a);
@@ -736,7 +739,7 @@ export class FloorScreen extends Component {
                     [
                         {
                             name: newName,
-                            background_color: "#FFFFFF",
+                            background_color: backgroundColor,
                             pos_config_ids: [this.pos.config.id],
                             floor_prefix: highestPrefix + 1,
                         },
@@ -908,10 +911,10 @@ export class FloorScreen extends Component {
         }
     }
 
-    setFloorColor(color) {
+    setFloorColor(color, key) {
         this.activeFloor.background_color = color;
         this.pos.data.write("restaurant.floor", [this.activeFloor.id], {
-            background_color: color,
+            background_color: key,
             floor_background_image: false,
         });
     }
@@ -924,19 +927,35 @@ export class FloorScreen extends Component {
         }
     }
     _getColors() {
-        return {
-            white: [255, 255, 255],
-            red: [235, 109, 109],
-            green: [53, 211, 116],
-            blue: [108, 109, 236],
-            orange: [235, 191, 109],
-            yellow: [235, 236, 109],
-            purple: [172, 109, 173],
-            grey: [108, 109, 109],
-            lightGrey: [172, 173, 173],
-            turquoise: [78, 210, 190],
+        const lightModeColors = {
+            white: [242, 245, 250],
+            red: [220, 80, 90],
+            green: [60, 160, 90],
+            blue: [30, 130, 210],
+            orange: [250, 170, 60],
+            yellow: [245, 205, 80],
+            purple: [150, 100, 220],
+            grey: [120, 130, 140],
+            lightGrey: [200, 205, 210],
+            turquoise: [40, 180, 200],
         };
+
+        const darkModeColors = {
+            white: [220, 220, 225],
+            red: [200, 60, 75],
+            green: [50, 130, 80],
+            blue: [40, 90, 180],
+            orange: [190, 120, 50],
+            yellow: [190, 160, 40],
+            purple: [130, 80, 160],
+            grey: [40, 45, 50],
+            lightGrey: [140, 145, 150],
+            turquoise: [30, 140, 150],
+        };
+
+        return cookie.get("pos_color_scheme") === "dark" ? darkModeColors : lightModeColors;
     }
+
     formatColor(color) {
         return `rgb(${color})`;
     }
@@ -1086,24 +1105,22 @@ export class FloorScreen extends Component {
         // This information in uiState came by websocket
         // If the table is not synced, we need to count the unsynced orders
         let changeCount = 0;
-        let skipCount = 0;
         const tableOrders = this.pos.models["pos.order"].filter(
             (o) => o.table_id?.id === table.id && !o.finalized
         );
 
         for (const order of tableOrders) {
-            const changes = getOrderChanges(order, false, this.pos.config.preparationCategories);
+            const changes = getOrderChanges(order, this.pos.config.preparationCategories);
             changeCount += changes.nbrOfChanges;
-            skipCount += changes.nbrOfSkipped;
         }
 
-        return { changes: changeCount, skip: skipCount };
+        return { changes: changeCount };
     }
-    setColor(hasSelectedTable, color) {
+    setColor(hasSelectedTable, color, key) {
         if (hasSelectedTable) {
             return this.setTableColor(color);
         } else {
-            return this.setFloorColor(color);
+            return this.setFloorColor(color, key);
         }
     }
     rename(hasSelectedTable) {

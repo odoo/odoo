@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.1alpha1+e\n"
+"Project-Id-Version: Odoo Server 18.2alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-02 11:46+0000\n"
-"PO-Revision-Date: 2025-01-02 11:46+0000\n"
+"POT-Creation-Date: 2025-01-08 04:51+0000\n"
+"PO-Revision-Date: 2025-01-08 04:51+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -25,6 +25,13 @@ msgid ""
 "        Select 'Cash', 'Bank' or 'Credit Card' for journals that are used in customer or vendor payments.\n"
 "        Select 'General' for miscellaneous operations journals.\n"
 "        "
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/res_partner.py:0
+msgid ""
+" Warning: You are currently in a test environment. The result is a dummy."
 msgstr ""
 
 #. module: l10n_in
@@ -61,8 +68,41 @@ msgid "8 digits"
 msgstr ""
 
 #. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.view_account_payment_form_inherit_l10n_in_withholding
+msgid "<span class=\"o_stat_text\">TDS</span>"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
+msgid ""
+"<span invisible=\"l10n_in_gstin_verified_date\">Not Checked</span>\n"
+"                            <span invisible=\"not l10n_in_gstin_verified_date\" class=\"ps-3\">Checked: </span>"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_view_partner_base_vat_form
+msgid ""
+"<span invisible=\"not l10n_in_gstin_verified_date or not l10n_in_gstin_verified_status\" class=\"oe_inline text-success\">Active</span>\n"
+"                    <span invisible=\"not l10n_in_gstin_verified_date or l10n_in_gstin_verified_status\" class=\"oe_inline text-danger\">Inactive</span>"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
+msgid ""
+"<span invisible=\"not l10n_in_partner_gstin_status\" class=\"oe_inline text-success\">Active</span>\n"
+"                        <span invisible=\"not l10n_in_gstin_verified_date or l10n_in_partner_gstin_status\" class=\"oe_inline text-danger\">Inactive</span>"
+msgstr ""
+
+#. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
 msgid "<strong>PAYMENT QR CODE</strong>"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model,name:l10n_in.model_account_account
+#: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
+msgid "Account"
 msgstr ""
 
 #. module: l10n_in
@@ -74,6 +114,36 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
 msgid ""
 "Activate this to start using Indian services in the production environment."
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__is_aggregate_limit
+msgid "Aggregate"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__aggregate_period
+msgid "Aggregate Period"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__aggregate_limit
+msgid "Aggregate limit"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.constraint,message:l10n_in.constraint_l10n_in_section_alert_aggregate_limit
+msgid "Aggregate limit must be positive"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
+msgid "Apply Higher TCS"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.tds_entry_view_form
+msgid "Apply TDS"
 msgstr ""
 
 #. module: l10n_in
@@ -90,48 +160,29 @@ msgid "As per GSTN the state should be %s, so it's recommended to"
 msgstr ""
 
 #. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_base_cess
-msgid "BASE CESS"
+#. odoo-python
+#: code:addons/l10n_in/models/account_invoice.py:0
+msgid "As the Partner's PAN missing/invalid apply TCS at the higher rate."
 msgstr ""
 
 #. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_base_cess_rc
-msgid "BASE CESS (RC)"
+#. odoo-python
+#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
+msgid ""
+"As the Partner's PAN missing/invalid, it's advisable to apply TDS at the "
+"higher rate."
 msgstr ""
 
 #. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_base_cgst
-msgid "BASE CGST"
+#: model:account.report.column,name:l10n_in.tcs_report_balance
+#: model:account.report.column,name:l10n_in.tds_report_balance
+msgid "Balance"
 msgstr ""
 
 #. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_base_cgst_rc
-msgid "BASE CGST (RC)"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_base_igst
-msgid "BASE IGST"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_base_igst_rc
-msgid "BASE IGST (RC)"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_base_sgst
-msgid "BASE SGST"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_base_sgst_rc
-msgid "BASE SGST (RC)"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_base_state_cess
-msgid "BASE STATE CESS"
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__base
+#: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
+msgid "Base Amount"
 msgstr ""
 
 #. module: l10n_in
@@ -145,42 +196,36 @@ msgid "Bill of Entry Number"
 msgstr ""
 
 #. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/account_invoice.py:0
+msgid "Buy Credits"
+msgstr ""
+
+#. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
 msgid "Buy credits"
 msgstr ""
 
 #. module: l10n_in
-#: model:account.account.tag,name:l10n_in.cess_tag_account
-#: model:account.account.tag,name:l10n_in.tax_tag_cess
 #: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
 msgid "CESS"
 msgstr ""
 
 #. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_cess_rc
-msgid "CESS (RC)"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.cgst_tag_account
-#: model:account.account.tag,name:l10n_in.tax_tag_cgst
 #: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
 msgid "CGST"
 msgstr ""
 
 #. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_cgst_rc
-msgid "CGST (RC)"
+#. odoo-python
+#: code:addons/l10n_in/models/account_invoice.py:0
+msgid "Cancelled %(journal_name)s"
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
-msgid "Cancelled"
-msgstr ""
-
-#. module: l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
-msgid "Cancelled Credit Note"
+#. odoo-python
+#: code:addons/l10n_in/models/account_invoice.py:0
+msgid "Cancelled Proforma %(journal_name)s"
 msgstr ""
 
 #. module: l10n_in
@@ -190,14 +235,20 @@ msgid "Check %s"
 msgstr ""
 
 #. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__module_l10n_in_gstin_status
+#: model:ir.model.fields,field_description:l10n_in.field_res_company__l10n_in_gstin_status_feature
+#: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__l10n_in_gstin_status_feature
 #: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
 msgid "Check GST Number Status"
 msgstr ""
 
 #. module: l10n_in
-#: model:account.account.tag,name:l10n_in.account_tag_closing_stock
-msgid "Closing Stock"
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_view_partner_base_vat_form
+msgid "Check GSTIN status"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_view_partner_base_vat_form
+msgid "Check Status"
 msgstr ""
 
 #. module: l10n_in
@@ -206,8 +257,18 @@ msgid "Companies"
 msgstr ""
 
 #. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__company_id
+msgid "Company"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model,name:l10n_in.model_res_config_settings
 msgid "Config Settings"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
+msgid "Connect to GST portal to submit GSTR-1 and get GSTR-2B"
 msgstr ""
 
 #. module: l10n_in
@@ -220,6 +281,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
 msgid ""
 "Connect to NIC (National Informatics Center) to submit invoices on posting."
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__consider_amount
+msgid "Consider"
 msgstr ""
 
 #. module: l10n_in
@@ -252,23 +318,43 @@ msgid "Country state"
 msgstr ""
 
 #. module: l10n_in
+#: model:ir.actions.act_window,name:l10n_in.l10n_in_withholding_entry_form_action
+msgid "Create TDS Entry"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_port_code__create_uid
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__create_uid
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__create_uid
 msgid "Created by"
 msgstr ""
 
 #. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_port_code__create_date
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__create_date
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__create_date
 msgid "Created on"
-msgstr ""
-
-#. module: l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
-msgid "Credit Note"
 msgstr ""
 
 #. module: l10n_in
 #: model:iap.service,unit_name:l10n_in.iap_service_l10n_in_edi
 msgid "Credits"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__currency_id
+msgid "Currency"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
+msgid "Customer Payment"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__date
+msgid "Date"
 msgstr ""
 
 #. module: l10n_in
@@ -278,12 +364,21 @@ msgid "Deemed Export"
 msgstr ""
 
 #. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.tds_entry_view_form
+msgid "Discard"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_account_account__display_name
 #: model:ir.model.fields,field_description:l10n_in.field_account_chart_template__display_name
 #: model:ir.model.fields,field_description:l10n_in.field_account_move__display_name
 #: model:ir.model.fields,field_description:l10n_in.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:l10n_in.field_account_payment__display_name
 #: model:ir.model.fields,field_description:l10n_in.field_account_tax__display_name
 #: model:ir.model.fields,field_description:l10n_in.field_iap_account__display_name
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_port_code__display_name
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__display_name
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__display_name
 #: model:ir.model.fields,field_description:l10n_in.field_product_template__display_name
 #: model:ir.model.fields,field_description:l10n_in.field_res_company__display_name
 #: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__display_name
@@ -294,19 +389,27 @@ msgid "Display Name"
 msgstr ""
 
 #. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_display_higher_tcs_button
+#: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_display_higher_tcs_button
+msgid "Display higher TCS button"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_res_partner__display_pan_warning
 #: model:ir.model.fields,field_description:l10n_in.field_res_users__display_pan_warning
 msgid "Display pan warning"
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
-msgid "Draft"
+#. odoo-python
+#: code:addons/l10n_in/models/account_invoice.py:0
+msgid "Draft %(journal_name)s"
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
-msgid "Draft Credit Note"
+#. odoo-python
+#: code:addons/l10n_in/models/account_invoice.py:0
+msgid "Draft Proforma %(journal_name)s"
 msgstr ""
 
 #. module: l10n_in
@@ -320,6 +423,16 @@ msgid "E-Commerce operator liable to pay tax under section 9(5)"
 msgstr ""
 
 #. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
+msgid "E-Invoicing"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
+msgid "E-Way bill"
+msgstr ""
+
+#. module: l10n_in
 #: model:res.partner.industry,name:l10n_in.eco_under_section_52
 msgid "ECO liable to deduct TCS u/s 52"
 msgstr ""
@@ -330,8 +443,8 @@ msgid "ECO liable to pay GST u/s 9(5)"
 msgstr ""
 
 #. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_exempt
-msgid "EXEMPT"
+#: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__l10n_in_enet_vendor_batch_payment_feature
+msgid "ENet Vendor Batch Payment"
 msgstr ""
 
 #. module: l10n_in
@@ -342,8 +455,21 @@ msgstr ""
 
 #. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
+msgid "Enable this if you have GST number except composition scheme."
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
 msgid ""
-"Enable this to activate Tax Deduction Source and Tax Collection Source."
+"Enable this to activate the Tax Collected at Source (TCS) feature and the "
+"account-based TCS section suggestion."
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
+msgid ""
+"Enable this to activate the Tax Deducted at Source (TDS) feature and the "
+"account-based TDS section suggestion."
 msgstr ""
 
 #. module: l10n_in
@@ -358,6 +484,11 @@ msgid "Ensure that the HSN/SAC Code consists either %s in invoice lines"
 msgstr ""
 
 #. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.tds_entry_view_form
+msgid "Entry Date"
+msgstr ""
+
+#. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
 msgid "Export India"
 msgstr ""
@@ -366,6 +497,40 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_in/models/template_in.py:0
 msgid "Export/SEZ"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__l10n_in_fetch_vendor_edi_feature
+msgid "Fetch Vendor E-Invoiced Document"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields.selection,name:l10n_in.selection__l10n_in_section_alert__aggregate_period__fiscal_yearly
+msgid "Financial Yearly"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__module_l10n_in_reports
+msgid "GST E-Filing & Matching"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__l10n_in_gst_efiling_feature
+msgid "GST E-Filing & Matching Feature"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__l10n_in_gstin
+#: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
+msgid "GST Number"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_partner_gstin_status
+#: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_partner_gstin_status
+#: model:ir.model.fields,field_description:l10n_in.field_res_partner__l10n_in_gstin_verified_status
+#: model:ir.model.fields,field_description:l10n_in.field_res_users__l10n_in_gstin_verified_status
+msgid "GST Status"
 msgstr ""
 
 #. module: l10n_in
@@ -380,6 +545,30 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_gstin
 #: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_gstin
 msgid "GSTIN"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/res_partner.py:0
+msgid "GSTIN %(vat)s is %(status)s and Effective from %(date_from)s."
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/res_partner.py:0
+msgid "GSTIN %(vat)s is %(status)s, effective date is not available."
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/res_partner.py:0
+msgid "GSTIN Status Updated Successfully"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_res_partner__l10n_in_gstin_verified_date
+#: model:ir.model.fields,field_description:l10n_in.field_res_users__l10n_in_gstin_verified_date
+msgid "GSTIN Verified Date"
 msgstr ""
 
 #. module: l10n_in
@@ -465,11 +654,6 @@ msgid "HSN/SAC Validation"
 msgstr ""
 
 #. module: l10n_in
-#: model:account.cash.rounding,name:l10n_in.cash_rounding_in_half_up
-msgid "Half Up"
-msgstr ""
-
-#. module: l10n_in
 #: model:ir.model.fields,help:l10n_in.field_product_product__l10n_in_hsn_code
 #: model:ir.model.fields,help:l10n_in.field_product_template__l10n_in_hsn_code
 msgid "Harmonized System Nomenclature/Services Accounting Code"
@@ -481,12 +665,16 @@ msgid "IAP Account"
 msgstr ""
 
 #. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_account_account__id
 #: model:ir.model.fields,field_description:l10n_in.field_account_chart_template__id
 #: model:ir.model.fields,field_description:l10n_in.field_account_move__id
 #: model:ir.model.fields,field_description:l10n_in.field_account_move_line__id
+#: model:ir.model.fields,field_description:l10n_in.field_account_payment__id
 #: model:ir.model.fields,field_description:l10n_in.field_account_tax__id
 #: model:ir.model.fields,field_description:l10n_in.field_iap_account__id
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_port_code__id
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__id
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__id
 #: model:ir.model.fields,field_description:l10n_in.field_product_template__id
 #: model:ir.model.fields,field_description:l10n_in.field_res_company__id
 #: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__id
@@ -497,15 +685,8 @@ msgid "ID"
 msgstr ""
 
 #. module: l10n_in
-#: model:account.account.tag,name:l10n_in.igst_tag_account
-#: model:account.account.tag,name:l10n_in.tax_tag_igst
 #: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
 msgid "IGST"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_igst_rc
-msgid "IGST (RC)"
 msgstr ""
 
 #. module: l10n_in
@@ -523,6 +704,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_port_code_search_view
 #: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_port_code_tree_view
 msgid "India Port Code"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
+msgid "India TDS Control:"
+msgstr ""
+
+#. module: l10n_in
+#: model:res.country.group,name:l10n_in.inter_state_group
+msgid "India inter-state group"
 msgstr ""
 
 #. module: l10n_in
@@ -546,14 +737,43 @@ msgid "Indian Integration"
 msgstr ""
 
 #. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_account_payment__l10n_in_withhold_move_ids
+msgid "Indian Payment TDS Entries"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_res_company__l10n_in_edi_production_env
 #: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__l10n_in_edi_production_env
 msgid "Indian Production Environment"
 msgstr ""
 
 #. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__module_l10n_in_withholding
-msgid "Indian TDS and TCS"
+#: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_withhold_move_ids
+#: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_withhold_move_ids
+msgid "Indian TDS Entries"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_withholding_line_ids
+#: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_withholding_line_ids
+msgid "Indian TDS Lines"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_withholding_ref_move_id
+#: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_withholding_ref_move_id
+msgid "Indian TDS Ref Move"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_withholding_ref_payment_id
+#: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_withholding_ref_payment_id
+msgid "Indian TDS Ref Payment"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__l10n_in_tds_tax_type
+msgid "Indian Tax Type"
 msgstr ""
 
 #. module: l10n_in
@@ -582,7 +802,38 @@ msgstr ""
 #. module: l10n_in
 #. odoo-python
 #: code:addons/l10n_in/models/account_invoice.py:0
+msgid "Invalid HSN/SAC Code digit"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/account_invoice.py:0
 msgid "Invalid sequence as per GST rule 46(b)"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__related_move_id
+msgid "Invoice/Bill"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_is_withholding
+#: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_is_withholding
+msgid "Is Indian TDS Entry"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/l10n_in_section_alert.py:0
+msgid ""
+"It's advisable to %(action)s %(section_type)s u/s %(warning)s on this "
+"transaction."
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__journal_id
+#: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
+msgid "Journal"
 msgstr ""
 
 #. module: l10n_in
@@ -608,6 +859,11 @@ msgid "Journal Type"
 msgstr ""
 
 #. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.view_move_line_list_l10n_in_withholding
+msgid "Journal items"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_res_company__l10n_in_gst_state_warning
 #: model:ir.model.fields,field_description:l10n_in.field_res_partner__l10n_in_gst_state_warning
 #: model:ir.model.fields,field_description:l10n_in.field_res_users__l10n_in_gst_state_warning
@@ -615,8 +871,49 @@ msgid "L10N In Gst State Warning"
 msgstr ""
 
 #. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_res_partner__l10n_in_gstin_status_feature_enabled
+#: model:ir.model.fields,field_description:l10n_in.field_res_users__l10n_in_gstin_status_feature_enabled
+msgid "L10N In Gstin Status Feature Enabled"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_gstin_verified_date
+#: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_gstin_verified_date
+msgid "L10N In Gstin Verified Date"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_product_product__l10n_in_is_gst_registered_enabled
+#: model:ir.model.fields,field_description:l10n_in.field_product_template__l10n_in_is_gst_registered_enabled
+#: model:ir.model.fields,field_description:l10n_in.field_res_partner__l10n_in_is_gst_registered_enabled
+#: model:ir.model.fields,field_description:l10n_in.field_res_users__l10n_in_is_gst_registered_enabled
+msgid "L10N In Is Gst Registered Enabled"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_show_gstin_status
+#: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_show_gstin_status
+msgid "L10N In Show Gstin Status"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_account_tax__l10n_in_tax_type
 msgid "L10N In Tax Type"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_account_account__l10n_in_tcs_feature_enabled
+msgid "L10N In Tcs Feature Enabled"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_account_account__l10n_in_tds_feature_enabled
+msgid "L10N In Tds Feature Enabled"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_account_payment__l10n_in_total_withholding_amount
+msgid "L10N In Total Withholding Amount"
 msgstr ""
 
 #. module: l10n_in
@@ -633,11 +930,15 @@ msgstr ""
 
 #. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_port_code__write_uid
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__write_uid
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_port_code__write_date
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__write_date
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__write_date
 msgid "Last Updated on"
 msgstr ""
 
@@ -649,139 +950,32 @@ msgid "Manage Reseller(E-Commerce)"
 msgstr ""
 
 #. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_nil_rated
-msgid "NIL-RATED"
+#: model:ir.model.fields.selection,name:l10n_in.selection__l10n_in_section_alert__aggregate_period__monthly
+msgid "Monthly"
 msgstr ""
 
 #. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_non_gst_supplies
-msgid "NON GST SUPPLIES"
+#. odoo-python
+#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
+msgid "Negative or zero values are not allowed in Base Amount for withhold"
 msgstr ""
 
 #. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_non_itc_base_cess
-msgid "NON ITC BASE CESS"
+#. odoo-python
+#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
+msgid "Negative or zero values are not allowed in TDS Amount for withhold"
 msgstr ""
 
 #. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_non_itc_base_cgst
-msgid "NON ITC BASE CGST"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_non_itc_base_igst
-msgid "NON ITC BASE IGST"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_non_itc_base_sgst
-msgid "NON ITC BASE SGST"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_non_itc_cess
-msgid "NON ITC CESS"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_non_itc_cess_rc
-msgid "NON ITC CESS (RC)"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_non_itc_cgst
-msgid "NON ITC CGST"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_non_itc_cgst_rc
-msgid "NON ITC CGST (RC)"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_non_itc_igst
-msgid "NON ITC IGST"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_non_itc_igst_rc
-msgid "NON ITC IGST (RC)"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_non_itc_sgst
-msgid "NON ITC SGST"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_non_itc_sgst_rc
-msgid "NON ITC SGST (RC)"
+#. odoo-python
+#: code:addons/l10n_in/models/res_partner.py:0
+msgid "Not enough credits to check GSTIN status"
 msgstr ""
 
 #. module: l10n_in
 #: model:ir.model.fields,help:l10n_in.field_account_bank_statement_line__l10n_in_reseller_partner_id
 #: model:ir.model.fields,help:l10n_in.field_account_move__l10n_in_reseller_partner_id
 msgid "Only Registered Reseller"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_other_non_itc_base_cess
-msgid "Other NON ITC BASE CESS"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_other_non_itc_base_cgst
-msgid "Other NON ITC BASE CGST"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_other_non_itc_base_igst
-msgid "Other NON ITC BASE IGST"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_other_non_itc_base_sgst
-msgid "Other NON ITC BASE SGST"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_other_non_itc_cess
-msgid "Other NON ITC CESS"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_other_non_itc_cess_rc
-msgid "Other NON ITC CESS (RC)"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_other_non_itc_cgst
-msgid "Other NON ITC CGST"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_other_non_itc_cgst_rc
-msgid "Other NON ITC CGST (RC)"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_other_non_itc_igst
-msgid "Other NON ITC IGST"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_other_non_itc_igst_rc
-msgid "Other NON ITC IGST (RC)"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_other_non_itc_sgst
-msgid "Other NON ITC SGST"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_other_non_itc_sgst_rc
-msgid "Other NON ITC SGST (RC)"
 msgstr ""
 
 #. module: l10n_in
@@ -834,6 +1028,31 @@ msgid ""
 msgstr ""
 
 #. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__related_payment_id
+msgid "Payment"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model,name:l10n_in.model_account_payment
+msgid "Payments"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__is_per_transaction_limit
+msgid "Per Transaction"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__per_transaction_limit
+msgid "Per Transaction limit"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.constraint,message:l10n_in.constraint_l10n_in_section_alert_per_transaction_limit
+msgid "Per transaction limit must be positive"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_state_id
 #: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_state_id
 msgid "Place of supply"
@@ -842,6 +1061,18 @@ msgstr ""
 #. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.place_of_supply
 msgid "Place of supply:"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/account_invoice.py:0
+msgid "Please buy more credits and retry: "
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
+msgid "Please configure the withholding account from the settings"
 msgstr ""
 
 #. module: l10n_in
@@ -856,6 +1087,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_in/models/res_config_settings.py:0
 msgid "Please enter a GST number in company."
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/res_partner.py:0
+msgid "Please enter the GSTIN"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
+msgid "Please set a partner on the %s before creating a withhold."
 msgstr ""
 
 #. module: l10n_in
@@ -883,7 +1126,6 @@ msgstr ""
 
 #. module: l10n_in
 #: model:ir.model,name:l10n_in.model_product_template
-#: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
 msgid "Product"
 msgstr ""
 
@@ -903,6 +1145,17 @@ msgid "Products"
 msgstr ""
 
 #. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/account_invoice.py:0
+msgid "Proforma %(journal_name)s"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields.selection,name:l10n_in.selection__account_tax__l10n_in_tds_tax_type__purchase
+msgid "Purchase"
+msgstr ""
+
+#. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
 msgid "Quantity"
 msgstr ""
@@ -910,6 +1163,23 @@ msgstr ""
 #. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
 msgid "Rate %"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__reference
+msgid "Reference"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,help:l10n_in.field_account_bank_statement_line__l10n_in_withholding_ref_payment_id
+#: model:ir.model.fields,help:l10n_in.field_account_move__l10n_in_withholding_ref_payment_id
+msgid "Reference Payment for withholding entry"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,help:l10n_in.field_account_bank_statement_line__l10n_in_withholding_ref_move_id
+#: model:ir.model.fields,help:l10n_in.field_account_move__l10n_in_withholding_ref_move_id
+msgid "Reference move for withholding entry"
 msgstr ""
 
 #. module: l10n_in
@@ -925,9 +1195,23 @@ msgid "Registered Business - Regular"
 msgstr ""
 
 #. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_is_gst_registered_enabled
+#: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_is_gst_registered_enabled
+#: model:ir.model.fields,field_description:l10n_in.field_res_company__l10n_in_is_gst_registered
+#: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__l10n_in_is_gst_registered
+#: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
+msgid "Registered Under GST"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_reseller_partner_id
 #: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_reseller_partner_id
 msgid "Reseller"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_view_partner_base_vat_form
+msgid "Reverify GSTIN status"
 msgstr ""
 
 #. module: l10n_in
@@ -936,24 +1220,8 @@ msgid "Reverse charge"
 msgstr ""
 
 #. module: l10n_in
-#: model:account.account.tag,name:l10n_in.sgst_tag_account
-#: model:account.account.tag,name:l10n_in.tax_tag_sgst
-msgid "SGST"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_sgst_rc
-msgid "SGST (RC)"
-msgstr ""
-
-#. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
 msgid "SGST/UTGST"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_state_cess
-msgid "STATE CESS"
 msgstr ""
 
 #. module: l10n_in
@@ -974,9 +1242,294 @@ msgid ""
 msgstr ""
 
 #. module: l10n_in
+#: model:ir.model.fields.selection,name:l10n_in.selection__account_tax__l10n_in_tds_tax_type__sale
+msgid "Sale"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
+msgid "Save this page and come back here to set up the feature."
+msgstr ""
+
+#. module: l10n_in
 #. odoo-javascript
 #: code:addons/l10n_in/static/src/components/hsn_autocomplete/hsn_autocomplete.js:0
 msgid "Searching..."
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.actions.act_window,name:l10n_in.l10n_in_section_alert_action
+#: model:ir.model.fields,field_description:l10n_in.field_account_tax__l10n_in_section_id
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_section_alert_view_form
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_section_alert_view_tree
+msgid "Section"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_192
+msgid "Section 192: Payment of salary"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_192a
+msgid ""
+"Section 192A: Payment of accumulated balance of provident fund which is "
+"taxable in the hands of an employee"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_193
+msgid "Section 193: Interest on securities"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_194i
+msgid "Section 194-I: Rent"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_194ia
+msgid ""
+"Section 194-IA: Payment on transfer of certain immovable property other than"
+" agricultural land"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_194ib
+msgid ""
+"Section 194-IB: Payment of rent by individual or HUF not liable to tax audit"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_194ic
+msgid ""
+"Section 194-IC: Payment of monetary consideration under Joint Development "
+"Agreements"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_194o
+msgid ""
+"Section 194-O: Payment or credit of amount by the e-commerce operator to "
+"e-commerce participant"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_194
+msgid "Section 194: Income by way of dividend"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_194a
+msgid ""
+"Section 194A: Income by way of interest other than \"Interest on "
+"securities\""
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_194b
+msgid ""
+"Section 194B: Income by way of winnings from lotteries, crossword puzzles, "
+"card games and other games of any sort"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_194bb
+msgid "Section 194BB: Income by way of winnings from horse races"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_194c
+msgid "Section 194C: Payment to contractor/sub-contractor"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_194d
+msgid "Section 194D: Insurance commission"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_194da
+msgid "Section 194DA: Payment in respect of life insurance policy"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_194e
+msgid "Section 194E: Payment to non-resident sportsmen/sports association"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_194ee
+msgid ""
+"Section 194EE: Payment in respect of deposit under National Savings scheme"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_194f
+msgid ""
+"Section 194F: Payment on account of repurchase of unit by Mutual Fund or "
+"Unit Trust of India"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_194g
+msgid "Section 194G: Commission, etc., on sale of lottery tickets"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_194h
+msgid "Section 194H: Commission or brokerage"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_194j
+msgid "Section 194J: Fees for professional or technical services"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_194k
+msgid "Section 194K: Income in respect of units payable to resident person"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_194la
+msgid ""
+"Section 194LA: Payment of compensation on acquisition of certain immovable "
+"property"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_194lb
+msgid "Section 194LB: Payment of interest on infrastructure debt fund"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_194lba
+msgid ""
+"Section 194LBA(1): Business trust shall deduct tax while distributing, any "
+"interest received or receivable by it from a SPV or any income received from"
+" renting or leasing or letting out any real estate asset owned directly by "
+"it, to its unit holders."
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_194lbb
+msgid ""
+"Section 194LBB: Investment fund paying an income to a unit holder [other "
+"than income which is exempt under Section 10(23FBB)]"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_194lbc
+msgid ""
+"Section 194LBC: Income in respect of investment made in a securitisation "
+"trust (specified in Explanation of section115TCA)"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_194m
+msgid ""
+"Section 194M: Payment of commission (not being insurance commission), "
+"brokerage, contractual fee, professional fee to a resident person by an "
+"Individual or a HUF who are not liable to deduct TDS under section 194C, "
+"194H, or 194J."
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_194n
+msgid ""
+"Section 194N: Cash withdrawal during the previous year from one or more "
+"account maintained by a person with a banking company, co-operative society "
+"engaged in business of banking or a post office"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_194q
+msgid "Section 194Q: Purchase of goods"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tds_report_line_section_195
+msgid "Section 195: Payment of any other sum to a Non -resident"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tcs_report_line_section_206c_1_alfhc
+msgid "Section 206C(1): Alcoholic Liquor for human consumption"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tcs_report_line_section_206c_1_aofpnbtotl
+msgid ""
+"Section 206C(1): Any other forest produce not being timber or tendu leaves"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tcs_report_line_section_206c_1_mbcoloio
+msgid "Section 206C(1): Minrals, being coal or lignite or iron ore"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tcs_report_line_section_206c_1_s
+msgid "Section 206C(1): Scrap"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tcs_report_line_section_206c_1_tl
+msgid "Section 206C(1): Tendu leaves"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tcs_report_line_section_206c_1_tobaotuafl
+msgid ""
+"Section 206C(1): Timber obtained by any mode other than under a forest lease"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tcs_report_line_section_206c_1_touafl
+msgid "Section 206C(1): Timber obtained under a forest lease"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tcs_report_line_section_206c_1c_maq
+msgid "Section 206C(1C): Mining and quarrying"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tcs_report_line_section_206c_1c_pl
+msgid "Section 206C(1C): Parking lot"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tcs_report_line_section_206c_1c_tp
+msgid "Section 206C(1C): Toll plaza"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tcs_report_line_section_206c_1f_mv
+msgid "Section 206C(1F): Motor Vehicle"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tcs_report_line_section_206c_1g_soaotpp
+msgid "Section 206C(1G): Seller of an overseas tour program package"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tcs_report_line_section_206c_1g_som
+msgid ""
+"Section 206C(1G): Sum of money (above 7 lakhs) for remittance out of India"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report.line,name:l10n_in.tcs_report_line_section_206c_1h_sog
+msgid "Section 206C(1H): Sale of Goods"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__name
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_section_alert_view_form
+msgid "Section Name"
 msgstr ""
 
 #. module: l10n_in
@@ -997,6 +1550,14 @@ msgid "Shipping bill number"
 msgstr ""
 
 #. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/res_partner.py:0
+msgid ""
+"Something went wrong while fetching the GST status.Please Contact Support if"
+" the error persists withResponse: %(response)s"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields.selection,name:l10n_in.selection__account_move__l10n_in_gst_treatment__special_economic_zone
 #: model:ir.model.fields.selection,name:l10n_in.selection__res_partner__l10n_in_gst_treatment__special_economic_zone
 msgid "Special Economic Zone"
@@ -1009,8 +1570,117 @@ msgid "State"
 msgstr ""
 
 #. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.view_move_line_list_l10n_in_withholding
+msgid "Suggested Section"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_tcs_feature_enabled
+#: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_tcs_feature_enabled
+#: model:ir.model.fields,field_description:l10n_in.field_account_tax__l10n_in_tcs_feature_enabled
+#: model:ir.model.fields,field_description:l10n_in.field_res_company__l10n_in_tcs_feature
+#: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__l10n_in_tcs_feature
+#: model:ir.model.fields.selection,name:l10n_in.selection__l10n_in_section_alert__tax_source_type__tcs
 #: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
-msgid "TDS and TCS"
+msgid "TCS"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report,name:l10n_in.tcs_report
+msgid "TCS Report"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_account_account__l10n_in_tds_tcs_section_id
+#: model:ir.model.fields,field_description:l10n_in.field_account_move_line__l10n_in_tds_tcs_section_id
+msgid "TCS/TDS Section"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_tds_feature_enabled
+#: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_tds_feature_enabled
+#: model:ir.model.fields,field_description:l10n_in.field_account_payment__l10n_in_tds_feature_enabled
+#: model:ir.model.fields,field_description:l10n_in.field_account_tax__l10n_in_tds_feature_enabled
+#: model:ir.model.fields,field_description:l10n_in.field_res_company__l10n_in_tds_feature
+#: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__l10n_in_tds_feature
+#: model:ir.model.fields.selection,name:l10n_in.selection__l10n_in_section_alert__tax_source_type__tds
+#: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
+msgid "TDS"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_res_company__l10n_in_withholding_account_id
+#: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__l10n_in_withholding_account_id
+msgid "TDS Account"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__amount
+#: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
+msgid "TDS Amount"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.view_account_payment_form_inherit_l10n_in_withholding
+msgid "TDS Entry"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
+msgid "TDS Information"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_res_company__l10n_in_withholding_journal_id
+#: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__l10n_in_withholding_journal_id
+msgid "TDS Journal"
+msgstr ""
+
+#. module: l10n_in
+#: model:account.report,name:l10n_in.tds_report
+msgid "TDS Report"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__tax_id
+msgid "TDS Section"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_account_move_line__l10n_in_withhold_tax_amount
+msgid "TDS Tax Amount"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_account_tax__l10n_in_tds_tax_type
+msgid "TDS Tax Type"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
+msgid "TDS created from"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
+msgid ""
+"TDS must be created from Posted Customer Invoices, Customer Credit Notes, "
+"Vendor Bills or Vendor Refunds."
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
+msgid "TDS must be created from an Invoice or a Payment."
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
+msgid "TDS of %s"
 msgstr ""
 
 #. module: l10n_in
@@ -1025,7 +1695,13 @@ msgstr ""
 
 #. module: l10n_in
 #: model:ir.model,name:l10n_in.model_account_tax
+#: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
 msgid "Tax"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__tax_source_type
+msgid "Tax Source Type"
 msgstr ""
 
 #. module: l10n_in
@@ -1034,8 +1710,39 @@ msgid "Taxable Value"
 msgstr ""
 
 #. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_section_alert__l10n_in_section_tax_ids
+msgid "Taxes"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,help:l10n_in.field_account_bank_statement_line__l10n_in_is_withholding
+#: model:ir.model.fields,help:l10n_in.field_account_move__l10n_in_is_withholding
+msgid "Technical field to identify Indian withholding entry"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.constraint,message:l10n_in.constraint_l10n_in_port_code_code_uniq
 msgid "The Port Code must be unique!"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,help:l10n_in.field_res_config_settings__l10n_in_gstin
+msgid ""
+"The Tax Identification Number. Values here will be validated based on the "
+"country format. You can use '/' to indicate that the partner is not subject "
+"to tax."
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
+msgid "The base amount of TDS is greater than the amount of the %s"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
+msgid "The base amount of TDS is greater than the untaxed amount of the %s"
 msgstr ""
 
 #. module: l10n_in
@@ -1053,8 +1760,60 @@ msgid ""
 msgstr ""
 
 #. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/res_partner.py:0
+msgid "The provided GSTIN is invalid. Please check the GSTIN and try again."
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
+msgid ""
+"This feature helps you to quickly create draft vendor bills using the data "
+"your vendor submitted during E-invoicing on the GST portal."
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/res_partner.py:0
+msgid ""
+"This feature is not activated. Go to Settings to activate this feature."
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_section_alert_view_form
+msgid "Threshold limits"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields,help:l10n_in.field_account_tax__l10n_in_reverse_charge
 msgid "Tick this if this tax is reverse charge. Only for Indian accounting"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
+msgid "Total"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields.selection,name:l10n_in.selection__l10n_in_section_alert__consider_amount__total_amount
+msgid "Total Amount"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_total_withholding_amount
+#: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_total_withholding_amount
+msgid "Total Indian TDS Amount"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,help:l10n_in.field_account_bank_statement_line__l10n_in_total_withholding_amount
+#: model:ir.model.fields,help:l10n_in.field_account_move__l10n_in_total_withholding_amount
+msgid "Total withholding amount for the move"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__type_name
+msgid "Type"
 msgstr ""
 
 #. module: l10n_in
@@ -1074,6 +1833,12 @@ msgid "UPI Id"
 msgstr ""
 
 #. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/res_partner.py:0
+msgid "Unable to connect with GST network"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields,help:l10n_in.field_uom_uom__l10n_in_code
 msgid "Unique Quantity Code (UQC) under GST"
 msgstr ""
@@ -1085,23 +1850,24 @@ msgid "Unregistered Business"
 msgstr ""
 
 #. module: l10n_in
+#: model:ir.model.fields.selection,name:l10n_in.selection__l10n_in_section_alert__consider_amount__untaxed_amount
+msgid "Untaxed Amount"
+msgstr ""
+
+#. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
 msgid "Use this if setup with Reseller(E-Commerce)."
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
-msgid "Vendor Bill"
-msgstr ""
-
-#. module: l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
-msgid "Vendor Credit Note"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__module_l10n_in_enet_batch_payment
+#. odoo-python
+#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
 msgid "Vendor Payment"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
+msgid "Verify GSTIN status"
 msgstr ""
 
 #. module: l10n_in
@@ -1112,8 +1878,36 @@ msgstr ""
 
 #. module: l10n_in
 #. odoo-python
+#: code:addons/l10n_in/models/account_invoice.py:0
+msgid "View Journal Items(s)"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model,name:l10n_in.model_l10n_in_withhold_wizard
+msgid "Withhold Wizard"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__l10n_in_withholding_warning
+msgid "Withholding warning"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
 #: code:addons/l10n_in/models/template_in.py:0
 msgid "Within %s"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
+msgid "You can only create a withhold for only one record at a time."
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/account_invoice.py:0
+msgid "You have insufficient credits to send this document!"
 msgstr ""
 
 #. module: l10n_in
@@ -1122,11 +1916,6 @@ msgstr ""
 msgid ""
 "Your company %s needs to have a correct address in order to validate this invoice.\n"
 "Set the address of your company (Don't forget the State field)"
-msgstr ""
-
-#. module: l10n_in
-#: model:account.account.tag,name:l10n_in.tax_tag_zero_rated
-msgid "ZERO-RATED"
 msgstr ""
 
 #. module: l10n_in
@@ -1163,8 +1952,19 @@ msgid "hsn description field"
 msgstr ""
 
 #. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/account_invoice.py:0
+msgid "id"
+msgstr ""
+
+#. module: l10n_in
 #: model:ir.model.fields.selection,name:l10n_in.selection__account_tax__l10n_in_tax_type__igst
 msgid "igst"
+msgstr ""
+
+#. module: l10n_in
+#: model:ir.model,name:l10n_in.model_l10n_in_section_alert
+msgid "indian section alert"
 msgstr ""
 
 #. module: l10n_in

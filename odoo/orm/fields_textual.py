@@ -266,6 +266,8 @@ class BaseString(Field[str | typing.Literal[False]]):
                         if old_is_text or not closest_is_text:
                             if not closest_is_text and records.env.context.get("install_mode") and lang == 'en_US' and term_adapter:
                                 adapter = term_adapter(closest_term)
+                                if adapter(old_term) is None:  # old term and closest_term have different structures
+                                     continue
                                 translation_dictionary[closest_term] = {k: adapter(v) for k, v in translation_dictionary.pop(old_term).items()}
                             else:
                                 translation_dictionary[closest_term] = translation_dictionary.pop(old_term)
@@ -370,8 +372,8 @@ class Char(BaseString):
     type = 'char'
     trim = True                         # whether value is trimmed (only by web client)
 
-    def _setup_attrs(self, model_class, name):
-        super()._setup_attrs(model_class, name)
+    def _setup_attrs__(self, model_class, name):
+        super()._setup_attrs__(model_class, name)
         assert self.size is None or isinstance(self.size, int), \
             "Char field %s with non-integer size %r" % (self, self.size)
 
@@ -458,7 +460,7 @@ class Html(BaseString):
     strip_classes = False               # whether to strip classes attributes
 
     def _get_attrs(self, model_class, name):
-        # called by _setup_attrs(), working together with BaseString._setup_attrs()
+        # called by _setup_attrs__(), working together with BaseString._setup_attrs__()
         attrs = super()._get_attrs(model_class, name)
         # Shortcut for common sanitize options
         # Outgoing and incoming emails should not be sanitized with the same options.

@@ -3,7 +3,7 @@
     <t t-name="point_of_sale.ProductScreen">
         <div class="product-screen d-flex h-100">
             <div t-att-class="{'flex-grow-1 w-100 mw-100': ui.isSmall, 'd-none': ui.isSmall and pos.mobile_pane !== 'left'}"
-                class="leftpane d-flex flex-column pb-2 border-end bg-white">
+                class="leftpane d-flex flex-column pb-2 border-end bg-view">
                 <OrderSummary />
                 <div class="pads px-2">
                     <div class="control-buttons d-flex justify-content-between gap-2 w-100 py-2">
@@ -24,8 +24,8 @@
             <div class="rightpane d-flex flex-grow-1 flex-column bg-secondary" t-if="!ui.isSmall || pos.mobile_pane === 'right'">
                 <div class="position-relative d-flex flex-column flex-grow-1 overflow-hidden">
                     <CategorySelector t-if="!ui.isSmall || !pos.scanning" />
-                    <CameraBarcodeScanner t-if="pos.scanning"/>
-                    <div t-elif="pos.productsToDisplay.length != 0 and pos.session._has_available_products" class="product-list d-grid gap-1 gap-lg-2 overflow-y-auto px-2 pt-0 pb-2">
+                    <BarcodeVideoScanner t-if="pos.scanning" t-props="barcodeVideoScannerProps" />
+                    <div t-elif="pos.productsToDisplay.length > 0" class="product-list d-grid gap-1 gap-lg-2 overflow-y-auto px-2 pt-0 pb-2">
                         <ProductCard
                             t-foreach="pos.productsToDisplay" t-as="product" t-key="product.id"
                             productId="product.id"
@@ -42,7 +42,20 @@
                     </div>
                     <div t-else="" class="flex-grow-1 text-center mt-5">
                         <p t-if="searchWord">No products found for <b>"<t t-esc="searchWord"/>"</b> in this category.</p>
-                        <p t-elif="pos.session._has_available_products">There are no products in this category.</p>
+                         <div t-elif="!pos.selectedCategory" class="o_view_nocontent">
+                            <div class="o_nocontent_help">
+                                <p class="o_view_nocontent_smiling_face">No Product Yet?</p>
+                                <p>Scan a barcode to create automatically, or load our sample data.</p>
+                                <p >
+                                    <button class="btn btn-lg btn-primary me-2" t-on-click="()=> doLoadSampleData.call()" t-att-disabled="doLoadSampleData.status === 'loading' ? 'disabled' : null">
+                                        <t t-if="doLoadSampleData.status === 'loading'">Loading...</t>
+                                        <t t-else="">Load Sample</t>
+                                     </button>
+                                    <button role="button" class="btn btn-lg btn-secondary" t-on-click="()=>pos.editProduct()">Create Manually</button>
+                                </p>
+                            </div>
+                        </div>
+                        <p t-else="">There are no products in this category.</p>
                     </div>
                     <div t-if="searchWord" class="search-more-button d-flex justify-content-center m-2">
                         <button class="btn btn-primary btn-lg lh-lg" t-on-click="onPressEnterKey">Search more</button>

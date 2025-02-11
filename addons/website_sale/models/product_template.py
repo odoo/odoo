@@ -9,6 +9,7 @@ from odoo.tools import float_is_zero, is_html_empty
 from odoo.tools.translate import html_translate
 
 from odoo.addons.website.models import ir_http
+from odoo.addons.website.tools import text_from_html
 
 
 _logger = logging.getLogger(__name__)
@@ -277,9 +278,9 @@ class ProductTemplate(models.Model):
         if not self:
             return {}
 
-        pricelist = website.pricelist_id
+        pricelist = request.pricelist
         currency = website.currency_id
-        fiscal_position = website.fiscal_position_id.sudo()
+        fiscal_position_sudo = request.fiscal_position
         date = fields.Date.context_today(self)
 
         pricelist_prices = pricelist._compute_price_rule(self, 1.0)
@@ -290,7 +291,7 @@ class ProductTemplate(models.Model):
             pricelist_price, pricelist_rule_id = pricelist_prices[template.id]
 
             product_taxes = template.sudo().taxes_id._filter_taxes_by_company(self.env.company)
-            taxes = fiscal_position.map_tax(product_taxes)
+            taxes = fiscal_position_sudo.map_tax(product_taxes)
 
             base_price = None
             template_price_vals = {
@@ -463,8 +464,8 @@ class ProductTemplate(models.Model):
         :returns: additional product/template information
         :rtype: dict
         """
-        pricelist = website.pricelist_id
-        currency = website.currency_id
+        pricelist = request.pricelist.with_context(self.env.context)
+        currency = website.currency_id.with_context(self.env.context)
 
         # Pricelist price doesn't have to be converted
         pricelist_price, pricelist_rule_id = pricelist._get_product_price_rule(
@@ -507,12 +508,10 @@ class ProductTemplate(models.Model):
             )
 
         # Apply taxes
-        fiscal_position = website.fiscal_position_id.sudo()
-
         product_taxes = product_or_template.sudo().taxes_id._filter_taxes_by_company(self.env.company)
         taxes = self.env['account.tax']
         if product_taxes:
-            taxes = fiscal_position.map_tax(product_taxes)
+            taxes = request.fiscal_position.map_tax(product_taxes)
             # We do not apply taxes on the compare_list_price value because it's meant to be
             # a strict value displayed as is.
             for price_key in ('price', 'list_price'):
@@ -631,12 +630,12 @@ class ProductTemplate(models.Model):
             self.env.cr.execute("SELECT id FROM %s WHERE website_sequence IS NULL" % self._table)
             prod_tmpl_ids = self.env.cr.dictfetchall()
             max_seq = self._default_website_sequence()
-            query = """
-                UPDATE {table}
+            query = f"""
+                UPDATE {self._table}
                 SET website_sequence = p.web_seq
                 FROM (VALUES %s) AS p(p_id, web_seq)
                 WHERE id = p.p_id
-            """.format(table=self._table)
+            """
             values_args = [(prod_tmpl['id'], max_seq + i * 5) for i, prod_tmpl in enumerate(prod_tmpl_ids)]
             self.env.cr.execute_values(query, values_args)
         else:
@@ -844,10 +843,8 @@ class ProductTemplate(models.Model):
     def _get_contextual_pricelist(self):
         """ Override to fallback on website current pricelist """
         pricelist = super()._get_contextual_pricelist()
-        if not pricelist:
-            website = ir_http.get_request_website()
-            if website:
-                return website.pricelist_id
+        if request and request.is_frontend and not pricelist:
+            return request.pricelist
         return pricelist
 
     def _website_show_quick_add(self):
@@ -881,9 +878,37 @@ class ProductTemplate(models.Model):
                 self.env.company
             )
             if product_taxes:
-                fiscal_position = website.fiscal_position_id.sudo()
-                taxes = fiscal_position.map_tax(product_taxes)
+                taxes = request.fiscal_position.map_tax(product_taxes)
                 return self._apply_taxes_to_price(
                     price, currency, product_taxes, taxes, product_or_template, website=website
                 ), pricelist_rule_id
         return price, pricelist_rule_id
+
+    def _to_markup_data(self, website):
+        """ Generate JSON-LD markup data for the current product template.
+
+        If the template has multiple variants, the https://schema.org/ProductGroup schema is used.
+        Otherwise, the markup data generation is delegated to the variant to use the
+        https://schema.org/Product schema.
+
+        :param website website: The current website.
+        :return: The JSON-LD markup data.
+        :rtype: dict
+        """
+        self.ensure_one()
+
+        if self.product_variant_count == 1:
+            return self.product_variant_id._to_markup_data(website)
+
+        base_url = website.get_base_url()
+        markup_data = {
+            '@context': 'https://schema.org/',
+            '@type': 'ProductGroup',
+            'name': self.name,
+            'image': f'{base_url}{website.image_url(self, "image_1920")}',
+            'url': f'{base_url}{self.website_url}',
+            'hasVariant': [product._to_markup_data(website) for product in self.product_variant_ids]
+        }
+        if self.description_ecommerce:
+            markup_data['description'] = text_from_html(self.description_ecommerce)
+        return markup_data

@@ -93,7 +93,7 @@
 
 <template id="s_website_form_options" inherit_id="website.snippet_options">
     <!-- Extend drop locations to columns -->
-    <xpath expr="//t[@t-set='so_content_addition_selector']" position="inside">, .s_website_form</xpath>
+    <xpath expr="//t[@t-set='so_content_addition_selector']" position="inside" t-translation="off">, .s_website_form</xpath>
 
     <xpath expr="//div" position="after">
         <!-- Form -->
@@ -338,12 +338,6 @@
     <field name="name">Website form 001 SCSS</field>
     <field name="bundle">web.assets_frontend</field>
     <field name="path">website/static/src/snippets/s_website_form/001.scss</field>
-</record>
-
-<record id="website.s_website_form_000_js" model="ir.asset">
-    <field name="name">Website form 000 JS</field>
-    <field name="bundle">web.assets_frontend</field>
-    <field name="path">website/static/src/snippets/s_website_form/000.js</field>
 </record>
 
 <record id="website.s_website_form_xml" model="ir.asset">

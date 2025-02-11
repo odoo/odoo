@@ -63,14 +63,14 @@ class TestSMSPost(SMSCommon, TestSMSRecipients, CronMixinCase):
             In that case sms shall NOT be sent twice."""
         with self.with_user('employee'), self.mockSMSGateway():
             test_record = self.env['mail.test.sms'].browse(self.test_record.id)
-            additional_number_same_as_partner_number = self.partner_1.mobile
+            additional_number_same_as_partner_number = self.partner_1.phone
             subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
             test_record._message_sms(
                 body=self._test_body,
                 partner_ids=self.partner_1.ids,
                 subtype_id=subtype_id,
                 sms_numbers=[additional_number_same_as_partner_number],
-                number_field='mobile'
+                number_field='phone'
             )
         self.assertEqual(len(self._new_sms.filtered(lambda s: s.number == self.partner_numbers[0])), 1,
             "There should be one message sent if additional number is the same as partner number")
@@ -105,7 +105,7 @@ class TestSMSPost(SMSCommon, TestSMSRecipients, CronMixinCase):
         self.assertSMSNotification([{'partner': self.partner_1}, {'partner': self.partner_2}], self._test_body, messages)
 
     def test_message_sms_model_partner_fallback(self):
-        self.partner_1.write({'mobile': False, 'phone': self.random_numbers[0]})
+        self.partner_1.write({'phone': self.random_numbers[0]})
 
         with self.mockSMSGateway():
             messages = self.partner_1._message_sms(self._test_body)
@@ -335,7 +335,7 @@ class TestSMSPostException(SMSCommon, TestSMSRecipients):
             'name': 'Ernestine Loubine',
             'email': 'ernestine.loubine@agrolait.com',
             'country_id': cls.env.ref('base.be').id,
-            'mobile': '0475556644',
+            'phone': '0475556644',
         })
 
     def test_message_sms_w_numbers_invalid(self):
@@ -349,7 +349,6 @@ class TestSMSPostException(SMSCommon, TestSMSRecipients):
 
     def test_message_sms_w_partners_nocountry(self):
         self.test_record.customer_id.write({
-            'mobile': self.random_numbers[0],
             'phone': self.random_numbers[1],
             'country_id': False,
         })
@@ -362,7 +361,6 @@ class TestSMSPostException(SMSCommon, TestSMSRecipients):
     def test_message_sms_w_partners_falsy(self):
         # TDE FIXME: currently sent to IAP
         self.test_record.customer_id.write({
-            'mobile': 'youpie',
             'phone': 'youpla',
         })
         with self.with_user('employee'), self.mockSMSGateway():

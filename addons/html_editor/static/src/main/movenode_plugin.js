@@ -1,7 +1,10 @@
 import { useNativeDraggable } from "@html_editor/utils/drag_and_drop";
 import { endPos } from "@html_editor/utils/position";
+import { xml } from "@odoo/owl";
 import { Plugin } from "../plugin";
 import { ancestors, closestElement } from "../utils/dom_traversal";
+import { _t } from "@web/core/l10n/translation";
+import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 
 const WIDGET_CONTAINER_WIDTH = 25;
 const WIDGET_MOVE_SIZE = 20;
@@ -11,7 +14,7 @@ const ALLOWED_ELEMENTS =
 
 export class MoveNodePlugin extends Plugin {
     static id = "movenode";
-    static dependencies = ["selection", "history", "position", "localOverlay"];
+    static dependencies = ["baseContainer", "selection", "history", "position", "localOverlay"];
     resources = {
         layout_geometry_change_handlers: () => {
             if (this.currentMovableElement) {
@@ -185,9 +188,12 @@ export class MoveNodePlugin extends Plugin {
     _updateAnchorWidgets(newAnchorWidget) {
         let movableElement =
             newAnchorWidget &&
-            closestElement(newAnchorWidget, (node) => {
-                return isNodeMovable(node) && node.matches(ALLOWED_ELEMENTS);
-            });
+            closestElement(
+                newAnchorWidget,
+                (node) =>
+                    isNodeMovable(node) &&
+                    node.matches([ALLOWED_ELEMENTS, baseContainerGlobalSelector].join(", "))
+            );
         // Retrive the first list container from the ancestors.
         const listContainer =
             movableElement &&
@@ -201,7 +207,9 @@ export class MoveNodePlugin extends Plugin {
     }
     getMovableElements() {
         const elems = [];
-        for (const el of this.editable.querySelectorAll(ALLOWED_ELEMENTS)) {
+        for (const el of this.editable.querySelectorAll(
+            [ALLOWED_ELEMENTS, baseContainerGlobalSelector].join(", ")
+        )) {
             if (isNodeMovable(el)) {
                 elems.push(el);
             }
@@ -241,6 +249,14 @@ export class MoveNodePlugin extends Plugin {
         this.moveWidget.style.height = `${WIDGET_MOVE_SIZE}px`;
         this.moveWidget.style.top = `${anchorY - containerRect.y - moveWidgetOffsetTop}px`;
         this.moveWidget.style.left = `${anchorX - containerRect.x - WIDGET_CONTAINER_WIDTH}px`;
+
+        this.services.tooltip.add(this.moveWidget, {
+            template: xml`
+                <div class="o-tooltip tooltip-inner text-start px-3">
+                    ${_t("Drag to move")}
+                </div>`,
+            arrow: true,
+        });
 
         if (this.scrollableElement) {
             this.smoothScrollOnDrag && this.smoothScrollOnDrag.destroy();
@@ -386,10 +402,10 @@ export class MoveNodePlugin extends Plugin {
                 focusElelement.after(movableElement);
             }
             if (previousParent.innerHTML.trim() === "") {
-                const p = document.createElement("p");
+                const baseContainer = this.dependencies.baseContainer.createBaseContainer();
                 const br = document.createElement("br");
-                p.append(br);
-                previousParent.append(p);
+                baseContainer.append(br);
+                previousParent.append(baseContainer);
             }
             const selectionPosition = endPos(movableElement);
             this.dependencies.selection.setSelection({
@@ -424,7 +440,9 @@ export class MoveNodePlugin extends Plugin {
 function isNodeMovable(node) {
     return (
         node.parentElement?.getAttribute("contentEditable") === "true" &&
-        !node.parentElement.closest(".o_editor_banner")
+        !node.parentElement.closest(".o_editor_banner") &&
+        // TODO: create resource and put this in `content_expandable_plugin`
+        !closestElement(node, ".o_mail_reply_container")
     );
 }
 
@@ -449,6 +467,7 @@ const simpleDraggableHook = {
         ctx.current.element.style.position = "fixed";
         // makeDraggableHook disables pointer events, we want them in this case
         document.body.classList.remove("pe-none");
+        document.body.style.cursor = "grabbing";
         return ctx.current;
     },
     onDrag({ ctx }) {
@@ -457,6 +476,9 @@ const simpleDraggableHook = {
     },
     onDragEnd({ ctx }) {
         ctx.current.element.remove();
+        if (document.body.style.cursor === "grabbing") {
+            document.body.style.cursor = "";
+        }
         return ctx.current;
     },
 };

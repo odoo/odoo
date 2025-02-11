@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, _
-from odoo.http import request
 
 
 class ProductProduct(models.Model):
@@ -14,14 +13,9 @@ class ProductProduct(models.Model):
         self.ensure_one()
         return partner in self.stock_notification_partner_ids
 
-    def _get_cart_qty(self, website=None):
-        if not self.allow_out_of_stock_order:
-            website = website or self.env['website'].get_current_website()
-            # When the cron is run manually, request has no attribute website, and that would cause a crash
-            # so we check for it
-            cart = website and request and hasattr(request, 'website') and website.sale_get_order() or None
-            if cart:
-                return sum(cart._get_common_product_lines(product=self).mapped('product_uom_qty'))
+    def _get_cart_qty(self, order_sudo):
+        if order_sudo and not self.allow_out_of_stock_order:
+            return sum(order_sudo._get_common_product_lines(product=self).mapped('product_uom_qty'))
         return 0
 
     def _is_sold_out(self):
@@ -61,3 +55,14 @@ class ProductProduct(models.Model):
                 mail = self_ctxt.env['mail.mail'].sudo().create(mail_values)
                 mail.send(raise_exception=False)
                 product.stock_notification_partner_ids -= partner
+
+    def _to_markup_data(self, website):
+        """ Override of `website_sale` to include the product availability in the offer. """
+        markup_data = super()._to_markup_data(website)
+        if self.is_product_variant and self.is_storable:
+            if self.allow_out_of_stock_order or not self._is_sold_out():
+                availability = 'https://schema.org/InStock'
+            else:
+                availability = 'https://schema.org/OutOfStock'
+            markup_data['offers']['availability'] = availability
+        return markup_data

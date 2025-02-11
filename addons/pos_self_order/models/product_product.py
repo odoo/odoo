@@ -48,6 +48,7 @@ class ProductTemplate(models.Model):
             product['_archived_combinations'] = []
             for product_product in self.env['product.product'].with_context(active_test=False).search([('product_tmpl_id', '=', product['id']), ('active', '=', False)]):
                 product['_archived_combinations'].append(product_product.product_template_attribute_value_ids.ids)
+            product['image_128'] = bool(product['image_128'])
 
     @api.model
     def _load_pos_data_fields(self, config_id):
@@ -86,6 +87,11 @@ class ProductTemplate(models.Model):
                     product._send_availability_status()
         return res
 
+    def _can_return_content(self, field_name=None, access_token=None):
+        if field_name == "image_512" and self.sudo().self_order_available:
+            return True
+        return super()._can_return_content(field_name, access_token)
+
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
@@ -119,6 +125,6 @@ class ProductProduct(models.Model):
                 })
 
     def _can_return_content(self, field_name=None, access_token=None):
-        if self.self_order_available and field_name in ["image_128", "image_512"]:
+        if field_name == "image_512" and self.sudo().self_order_available:
             return True
         return super()._can_return_content(field_name, access_token)

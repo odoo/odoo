@@ -254,7 +254,11 @@ class HrWorkEntryType(models.Model):
     active = fields.Boolean(
         'Active', default=True,
         help="If the active field is set to false, it will allow you to hide the work entry type without removing it.")
-    country_id = fields.Many2one('res.country', string="Country")
+    country_id = fields.Many2one(
+        'res.country',
+        string="Country",
+        domain=lambda self: [('id', 'in', self.env.companies.country_id.ids)]
+    )
     country_code = fields.Char(related='country_id.code')
 
     @api.constrains('country_id')
@@ -272,11 +276,12 @@ class HrWorkEntryType(models.Model):
             ('id', 'not in', self.ids)
         ])
         for work_entry_type in self:
-            if similar_work_entry_types.filtered_domain([
+            invalid_work_entry_types = similar_work_entry_types.filtered_domain([
                 ('code', '=', work_entry_type.code),
                 ('country_id', 'in', self.country_id.ids + [False]),
-            ]):
-                raise UserError(_("The same code cannot be associated to multiple work entry types."))
+            ])
+            if invalid_work_entry_types:
+                raise UserError(_("The same code cannot be associated to multiple work entry types (%s)", ', '.join(list(set(invalid_work_entry_types.mapped('code'))))))
 
 
 class HrUserWorkEntryEmployee(models.Model):

@@ -124,7 +124,7 @@ You could use this simplified accounting in case you work with an (external) acc
             ('remove', 'account/static/tests/tours/**/*'),
         ],
         'web.assets_frontend': [
-            'account/static/src/js/account_portal_sidebar.js',
+            'account/static/src/interactions/**/*',
             'account/static/src/js/account_portal.js',
             'account/static/src/components/tests_shared_js_python/*',
             'account/static/src/helpers/*.js',

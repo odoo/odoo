@@ -34,8 +34,9 @@ export class AutopopupService {
         livechatInitializedService.ready.then(() => {
             if (this.allowAutoPopup && livechatService.state === SESSION_STATE.NONE) {
                 browser.setTimeout(async () => {
+                    await this.storeService.chatHub.initPromise;
                     if (!this.storeService.ChatWindow.get({ thread: livechatService.thread })) {
-                        expirableStorage.setItem(AutopopupService.STORAGE_KEY, false);
+                        expirableStorage.setItem(AutopopupService.STORAGE_KEY, true);
                         livechatService.open();
                     }
                 }, livechatService.rule.auto_popup_timer * 1000);

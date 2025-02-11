@@ -23,8 +23,9 @@ from lxml import etree
 from lxml.builder import E
 from passlib.context import CryptContext as _CryptContext
 
-from odoo import api, fields, models, tools, SUPERUSER_ID, _, Command
+from odoo import api, fields, models, tools, _, Command
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
+from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.http import request, DEFAULT_LANG
@@ -161,9 +162,10 @@ def check_identity(fn):
             'type': 'ir.actions.act_window',
             'res_model': 'res.users.identitycheck',
             'res_id': w.id,
-            'name': _("Security Control"),
+            'name': _("Access Control"),
             'target': 'new',
             'views': [(False, 'form')],
+            'context': {'dialog_size': 'medium'},
         }
     wrapped.__has_check_identity = True
     return wrapped
@@ -304,7 +306,7 @@ class ResUsersLog(models.Model):
     _order = 'id desc'
     _description = 'Users Log'
     # Uses the magical fields `create_uid` and `create_date` for recording logins.
-    # See `bus.presence` for more recent activity tracking purposes.
+    # See `mail.presence` for more recent activity tracking purposes.
 
     @api.autovacuum
     def _gc_user_logs(self):
@@ -1441,13 +1443,6 @@ class ResUsers(models.Model):
     def _mfa_url(self):
         """ If an MFA method is enabled, returns the URL for its second step. """
         return
-
-    def _should_alert_new_device(self):
-        """ Determine if an alert should be sent to the user regarding a new device
-
-        To be overriden in 2FA modules implementing known devices
-        """
-        return False
 
 
 ResUsersPatchedInTest = ResUsers

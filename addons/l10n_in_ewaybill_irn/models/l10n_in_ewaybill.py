@@ -27,6 +27,21 @@ class L10nInEwaybill(models.Model):
                 )
             )
 
+    def _prepare_ewaybill_transportation_json_payload(self):
+        if self.is_process_through_irn:
+            return dict(
+                filter(lambda kv: kv[1], {
+                    "TransId": self.transporter_id.vat,
+                    "TransName": self.transporter_id.name,
+                    "TransMode": self.mode,
+                    "TransDocNo": self.transportation_doc_no,
+                    "TransDocDt": self.transportation_doc_date and self.transportation_doc_date.strftime("%d/%m/%Y"),
+                    "VehNo": self.vehicle_no,
+                    "VehType": self.vehicle_type,
+                }.items())
+            )
+        return super()._prepare_ewaybill_transportation_json_payload()
+
     def _ewaybill_generate_irn_json(self):
         return {
             'Irn': self.account_move_id._get_l10n_in_edi_response_json().get('Irn'),
@@ -108,7 +123,7 @@ class L10nInEwaybill(models.Model):
             error_codes = [error.get('code') for error in response.get('error')]
             if 'no-credit' in error_codes:
                 response['odoo_warning'].append({
-                    'message': self.env['account.edi.format']._l10n_in_edi_get_iap_buy_credits_message()
+                    'message': self.env['account.move']._l10n_in_get_iap_buy_credits_message()
                 })
             if '1005' in error_codes:
                 # Invalid token eror then create new token and send generate request again.
@@ -122,10 +137,10 @@ class L10nInEwaybill(models.Model):
             if '4002' in error_codes or '4026' in error_codes:
                 # Get E-waybill by details in case of IRN is already generated
                 # this happens when timeout from the Government portal but E-waybill is generated
-                self._ewaybill_get_by_irn(json_payload.get("Irn"))
+                response = self._ewaybill_get_by_irn(json_payload.get("Irn"))
                 response.update({
                     'odoo_warning': [{
-                        'message': EWayBillApi.DEFAULT_HELP_MESSAGE % 'generated',
+                        'message': self._get_default_help_message(self.env._('generated')),
                         'message_post': True
                     }]
                 })

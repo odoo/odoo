@@ -48,10 +48,13 @@
     <record id="product_normal_action_puchased" model="ir.actions.act_window">
         <field name="name">Products</field>
         <field name="res_model">product.template</field>
-        <field name="view_mode">kanban,list,form,activity</field>
+        <field name="view_ids" eval="[Command.clear(),
+            Command.create({'view_mode': 'kanban'}),
+            Command.create({'view_mode': 'list', 'view_id': ref('account.product_template_list_view_purchasable_inherit')}),
+            Command.create({'view_mode': 'form'}),
+            Command.create({'view_mode': 'activity'})]"/>
         <field name="context">{"search_default_filter_to_purchase":1, "purchase_product_template": 1}</field>
         <field name="search_view_id" ref="product.product_template_search_view"/>
-        <field name="view_id" eval="False"/> <!-- Force empty -->
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             No product found. Let's create one!
@@ -255,7 +258,7 @@
                                         force_save="1" optional="show"/>
                                     <field name="price_unit" readonly="qty_invoiced != 0"/>
                                     <button name="action_purchase_history" type="object" icon="fa-history" title="Purchase History" invisible="not id"/>
-                                    <field name="taxes_id" widget="many2many_tax_tags" domain="[('type_tax_use', '=', 'purchase'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id), ('active', '=', True)]" context="{'default_type_tax_use': 'purchase', 'search_view_ref': 'account.account_tax_view_search'}" options="{'no_create': True}" optional="show" readonly="is_downpayment"/>
+                                    <field name="tax_ids" widget="many2many_tax_tags" domain="[('type_tax_use', '=', 'purchase'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id), ('active', '=', True)]" context="{'default_type_tax_use': 'purchase', 'search_view_ref': 'account.account_tax_view_search'}" options="{'no_create': True}" optional="show" readonly="is_downpayment"/>
                                     <field name="discount" string="Disc.%" width="50px" readonly="qty_invoiced != 0" optional="hide"/>
                                     <field name="price_subtotal" string="Amount"/>
                                 </list>
@@ -282,7 +285,7 @@
                                                 <field name="qty_invoiced" string="Billed Quantity" invisible="parent.state not in ('purchase', 'done')"/>
                                                 <field name="price_unit"/>
                                                 <field name="discount"/>
-                                                <field name="taxes_id" widget="many2many_tax_tags" domain="[('type_tax_use', '=', 'purchase'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]" options="{'no_create': True}"/>
+                                                <field name="tax_ids" widget="many2many_tax_tags" domain="[('type_tax_use', '=', 'purchase'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]" options="{'no_create': True}"/>
                                             </group>
                                             <group>
                                                 <field name="date_planned" required="not display_type and not is_downpayment"/>
@@ -724,7 +727,7 @@
                                 <field name="price_unit"/>
                             </group>
                             <group>
-                                <field name="taxes_id" widget="many2many_tax_tags"
+                                <field name="tax_ids" widget="many2many_tax_tags"
                                     domain="[('type_tax_use', '=', 'purchase')]"/>
                                 <field name="date_planned" readonly="1"/>
                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
@@ -892,4 +895,14 @@ if isinstance(res, dict):
     action = res
         </field>
     </record>
- </odoo>
+
+    <record id="mail_followers_edit_action_from_purchase" model="ir.actions.act_window">
+        <field name="name">Add/Remove Followers</field>
+        <field name="res_model">mail.followers.edit</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_res_model': 'purchase.order', 'default_res_ids': active_ids}</field>
+        <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+        <field name="binding_view_types">list</field>
+    </record>
+</odoo>

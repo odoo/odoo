@@ -1,10 +1,12 @@
-import { contains, onRpcBefore, start, startServer } from "@mail/../tests/mail_test_helpers";
+import { contains, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
 import { describe, test } from "@odoo/hoot";
 import {
     asyncStep,
     Command,
     mockService,
+    onRpc,
+    patchWithCleanup,
     serverState,
     waitForSteps,
 } from "@web/../tests/web_test_helpers";
@@ -15,7 +17,20 @@ import { defineLivechatModels } from "./livechat_test_helpers";
 describe.current.tags("desktop");
 defineLivechatModels();
 
-test("Notify message received out of focus", async () => {
+test("push notifications are Odoo toaster on Android", async () => {
+    // Notifications without ServiceWorker in Chrome Android no longer work.
+    // This simulates Android Notification behavior by throwing a
+    // ServiceWorkerRegistration error as a fallback.
+    patchWithCleanup(window, {
+        Notification: class Notification {
+            static get permission() {
+                return "granted";
+            }
+            constructor() {
+                throw new Error("ServiceWorkerRegistration error");
+            }
+        },
+    });
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -26,18 +41,17 @@ test("Notify message received out of focus", async () => {
             Command.create({ guest_id: guestId }),
         ],
     });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.init_messaging) {
-            asyncStep(`/mail/data - ${JSON.stringify(args)}`);
+    onRpc("/mail/data", async (request) => {
+        const { params } = await request.json();
+        if (params.fetch_params.includes("init_messaging")) {
+            asyncStep(`/mail/data - ${JSON.stringify(params)}`);
         }
     });
     mockService("presence", { isOdooFocused: () => false });
     await start();
     await waitForSteps([
         `/mail/data - ${JSON.stringify({
-            init_messaging: {},
-            failures: true,
-            systray_get_activities: true,
+            fetch_params: ["failures", "systray_get_activities", "init_messaging"],
             context: {
                 lang: "en",
                 tz: "taht",
@@ -50,7 +64,7 @@ test("Notify message received out of focus", async () => {
     await withGuest(guestId, () =>
         rpc("/mail/message/post", {
             post_data: {
-                body: "Hello",
+                body: "Hello world!",
                 message_type: "comment",
                 subtype_xmlid: "mail.mt_comment",
             },
@@ -58,5 +72,5 @@ test("Notify message received out of focus", async () => {
             thread_id: channelId,
         })
     );
-    await contains(".o_notification:has(.o_notification_bar.bg-info)", { text: "Hello" });
+    await contains(".o_notification:has(.o_notification_bar.bg-info)", { text: "Hello world!" });
 });

@@ -38,7 +38,8 @@
                                     </div>
                                     <span
                                           class="o_resize position-absolute top-0 end-0 bottom-0 ps-1 bg-black-25 opacity-0 opacity-50-hover z-1"
-                                          t-on-pointerdown.stop.prevent="this.columnWidths.onStartResize"/>
+                                          t-on-pointerdown.stop.prevent="this.columnWidths.onStartResize"
+                                          t-on-dblclick="this.columnWidths.resetWidths"/>
                                 </t>
                             </th>
                             <th t-else="" t-on-keydown="(ev) => this.onCellKeydown(ev)" t-att-class="{'o_list_button w-print-0 p-print-0': column.type === 'button_group'}"/>

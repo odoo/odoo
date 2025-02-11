@@ -8,10 +8,10 @@ from odoo import _, api, fields, models
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    available_product_document_ids = fields.Many2many(
-        string="Available Product Documents",
+    available_quotation_document_ids = fields.Many2many(
+        string="Available Quotation Documents",
         comodel_name='quotation.document',
-        compute='_compute_available_product_document_ids',
+        compute='_compute_available_quotation_document_ids',
     )
     is_pdf_quote_builder_available = fields.Boolean(
         compute='_compute_is_pdf_quote_builder_available',
@@ -30,21 +30,25 @@ class SaleOrder(models.Model):
     # === COMPUTE METHODS === #
 
     @api.depends('sale_order_template_id')
-    def _compute_available_product_document_ids(self):
+    def _compute_available_quotation_document_ids(self):
         for order in self:
-            order.available_product_document_ids = self.env['quotation.document'].search(
-                self.env['quotation.document']._check_company_domain(self.company_id),
+            order.available_quotation_document_ids = self.env['quotation.document'].search(
+                self.env['quotation.document']._check_company_domain(order.company_id),
                 order='sequence',
             ).filtered(lambda doc:
-                self.sale_order_template_id in doc.quotation_template_ids
+                order.sale_order_template_id in doc.quotation_template_ids
                 or not doc.quotation_template_ids
             )
 
-    @api.depends('available_product_document_ids', 'order_line', 'order_line.available_product_document_ids')
+    @api.depends(
+        'available_quotation_document_ids',
+        'order_line',
+        'order_line.available_product_document_ids',
+    )
     def _compute_is_pdf_quote_builder_available(self):
         for order in self:
             order.is_pdf_quote_builder_available = bool(
-                order.available_product_document_ids
+                order.available_quotation_document_ids
                 or order.order_line.available_product_document_ids
             )
 
@@ -63,10 +67,10 @@ class SaleOrder(models.Model):
             and json.loads(self.customizable_pdf_form_fields)
         ) or {}
 
-        headers_available = self.available_product_document_ids.filtered(
+        headers_available = self.available_quotation_document_ids.filtered(
             lambda doc: doc.document_type == 'header'
         )
-        footers_available = self.available_product_document_ids.filtered(
+        footers_available = self.available_quotation_document_ids.filtered(
             lambda doc: doc.document_type == 'footer'
         )
         selected_documents = self.quotation_document_ids
@@ -81,7 +85,8 @@ class SaleOrder(models.Model):
                     'files': [{
                         'name': doc.name.rstrip('.pdf'),
                         'id': doc.id,
-                        'is_selected': doc in line.product_document_ids,
+                        'is_selected': doc in line.sudo().product_document_ids, # User should be
+                        # able to access all product documents even without sales access
                         'custom_form_fields': [{
                             'name': custom_form_field.name,
                             'value': existing_mapping.get('line', {}).get(str(line.id), {}).get(
@@ -118,46 +123,3 @@ class SaleOrder(models.Model):
             } for footer in footers_available]},
         }
         return dialog_params
-
-    # === BUSINESS METHODS === #
-
-    # FIXME EDM dead code below ?
-    def save_included_pdf(self, selected_pdf):
-        """ Configure the PDF that should be included in the PDF quote builder for a given quote
-
-        Note: self.ensure_one()
-
-        :param dic selected_pdf: Dictionary of all the sections linked to their header_footer or
-                                 product_document ids, in the format: {
-                                    'header': [doc_id],
-                                    'lines': [{line_id: [doc_id]}],
-                                    'footer': [doc_id]
-                                }
-        :return: None
-        """
-        self.ensure_one()
-        quotation_doc = self.env['quotation.document']
-        selected_headers = quotation_doc.browse(selected_pdf['header'])
-        selected_footers = quotation_doc.browse(selected_pdf['footer'])
-        self.quotation_document_ids = selected_headers.ids + selected_footers.ids
-        for line in self.order_line:
-            selected_lines = self.env['product.document'].browse(
-                selected_pdf['lines'].get(str(line.id))
-            )
-            line.product_document_ids = selected_lines.ids
-
-    def save_new_custom_content(self, document_type, form_field, content):
-        """ Modify the content link to a form field in the custom content mapping of an order.
-
-        Note: self.ensure_one()
-
-        :param str document_type: The document type where the for field is. Either 'header_footer'
-                                  or 'product_document'.
-        :param str form_field: The form field in the custom content mapping.
-        :param str content: The content of the form field in the custom content mapping.
-        :return: None
-        """
-        self.ensure_one()
-        mapping = json.loads(self.customizable_pdf_form_fields)
-        mapping[document_type][form_field] = content
-        self.customizable_pdf_form_fields = json.dumps(mapping)

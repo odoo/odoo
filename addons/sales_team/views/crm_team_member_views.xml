@@ -112,16 +112,20 @@
                             <field name="user_id" class="flex-grow-1"
                                 options="{'no_quick_create': True}"/>
                         </h1>
+                        <!-- <div class="o_row" name="crm_team_id">
+                            <label for="crm_team_id"/> -->
+                            <group name="crm_team_id">
+                                <field id="crm_team_id" name="crm_team_id" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
+                            </group>
+                        <!-- </div> -->
                     </div>
                     <group name="member_partner_info">
-                        <group name="group_owner">
-                            <field name="crm_team_id" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
-                        </group>
-                        <group class="ps-0" name="group_user">
+                        <group>
+                            <field name="email" invisible="not user_id"/>
                             <field name="company_id" invisible="not user_id"
                                 groups="base.group_multi_company"/>
-                            <field name="email" invisible="not user_id"/>
-                            <field name="mobile" invisible="not user_id"/>
+                        </group>
+                        <group>
                             <field name="phone" invisible="not user_id"/>
                         </group>
                     </group>
@@ -138,7 +142,8 @@
         <field name="mode">primary</field>
         <field name="priority">32</field>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='group_owner']" position="replace"/>
+            <!-- <xpath expr="//div[@name='crm_team_id']" position="replace"/> -->
+            <xpath expr="//group[@name='crm_team_id']" position="replace"/>
         </field>
     </record>
 

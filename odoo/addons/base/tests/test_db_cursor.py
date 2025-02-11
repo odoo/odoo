@@ -8,7 +8,7 @@ from unittest.mock import patch
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_REPEATABLE_READ
 
-import odoo
+from odoo import api
 from odoo.modules.registry import Registry
 from odoo.sql_db import db_connect, TestCursor
 from odoo.tests import common
@@ -132,7 +132,7 @@ class TestTestCursor(common.TransactionCase):
         # now we make a test cursor for self.cr
         self.cr = self.registry.cursor()
         self.addCleanup(self.cr.close)
-        self.env = odoo.api.Environment(self.cr, odoo.SUPERUSER_ID, {})
+        self.env = api.Environment(self.cr, api.SUPERUSER_ID, {})
         self.record = self.env['res.partner'].create({'name': 'Foo'})
 
     def write(self, record, value):

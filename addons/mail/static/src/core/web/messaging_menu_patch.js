@@ -93,10 +93,7 @@ patch(MessagingMenu.prototype, {
             displayName: _t("Turn on notifications"),
             iconSrc: this.store.odoobot.avatarUrl,
             partner: this.store.odoobot,
-            isShown:
-                this.store.discuss.activeTab === "main" &&
-                this.shouldAskPushPermission &&
-                !this.store.isNotificationPermissionDismissed,
+            isShown: this.store.discuss.activeTab === "main" && this.shouldAskPushPermission,
         };
     },
     get tabs() {
@@ -122,7 +119,7 @@ patch(MessagingMenu.prototype, {
             this.dropdown.close();
         }
     },
-    openThread(thread) {
+    async openThread(thread) {
         if (this.store.discuss.isActive) {
             this.action.doAction({
                 type: "ir.actions.act_window",
@@ -130,11 +127,12 @@ patch(MessagingMenu.prototype, {
                 views: [[false, "form"]],
                 res_id: thread.id,
             });
+            await this.store.chatHub.initPromise;
             // Close the related chat window as having both the form view
             // and the chat window does not look good.
             this.store.ChatWindow.get({ thread })?.close();
         } else {
-            thread.open({ fromMessagingMenu: true });
+            thread.open({ focus: true, fromMessagingMenu: true });
         }
         this.dropdown.close();
     },
@@ -179,7 +177,10 @@ patch(MessagingMenu.prototype, {
         return value;
     },
     get shouldAskPushPermission() {
-        return this.notification.permission === "prompt";
+        return (
+            this.notification.permission === "prompt" &&
+            !this.store.isNotificationPermissionDismissed
+        );
     },
     getFailureNotificationName(failure) {
         if (failure.type === "email") {

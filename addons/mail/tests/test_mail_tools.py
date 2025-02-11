@@ -16,7 +16,6 @@ class TestMailTools(MailCommon):
         cls.test_partner = cls.env['res.partner'].create({
             'country_id': cls.env.ref('base.be').id,
             'email': cls._test_email,
-            'mobile': '0456001122',
             'name': 'Alfred Astaire',
             'phone': '0456334455',
         })

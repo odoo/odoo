@@ -28,7 +28,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
                     'product_uom_id': uom_dozen.id,
                     'price_unit': 100.0,
                     'date_planned': datetime.today(),
-                    'taxes_id': False,
+                    'tax_ids': False,
                 }),
                 (0, 0, {
                     'name': self.product_b.name,
@@ -37,7 +37,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
                     'product_uom_id': uom_dozen.id,
                     'price_unit': 200.0,
                     'date_planned': datetime.today(),
-                    'taxes_id': False,
+                    'tax_ids': False,
                 }),
             ],
         })
@@ -118,13 +118,13 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
         po.button_confirm()
 
         po.flush_model()
-        report = self.env['purchase.report'].read_group(
+        report = self.env['purchase.report'].formatted_read_group(
             [('order_id', '=', po.id)],
-            ['order_id', 'delay', 'delay_pass'],
             ['order_id'],
+            ['delay:avg', 'delay_pass:avg'],
         )
-        self.assertEqual(round(report[0]['delay']), -10, msg="The PO has been confirmed 10 days in advance")
-        self.assertEqual(round(report[0]['delay_pass']), 5, msg="There are 5 days between the order date and the planned date")
+        self.assertEqual(round(report[0]['delay:avg']), -10, msg="The PO has been confirmed 10 days in advance")
+        self.assertEqual(round(report[0]['delay_pass:avg']), 5, msg="There are 5 days between the order date and the planned date")
 
     def test_02_po_report_note_section_filter(self):
         po = self.env['purchase.order'].create({
@@ -138,7 +138,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
                     'product_qty': 0.0,
                     'product_uom_id': False,
                     'price_unit': 0.0,
-                    'taxes_id': False,
+                    'tax_ids': False,
                 }),
                 (0, 0, {
                     'name': 'This is a section',
@@ -147,7 +147,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
                     'product_qty': 0.0,
                     'product_uom_id': False,
                     'price_unit': 0.0,
-                    'taxes_id': False,
+                    'tax_ids': False,
                 }),
             ],
         })
@@ -216,10 +216,10 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
         })
         po.button_confirm()
         po.flush_model()
-        report = self.env['purchase.report'].read_group(
+        report = self.env['purchase.report'].formatted_read_group(
             [('product_id', '=', self.product_a.id)],
-            ['qty_ordered', 'price_average:avg'],
             ['product_id'],
+            ['qty_ordered:sum', 'price_average:avg'],
         )
-        self.assertEqual(report[0]['qty_ordered'], 11)
-        self.assertEqual(round(report[0]['price_average'], 2), 46.36)
+        self.assertEqual(report[0]['qty_ordered:sum'], 11)
+        self.assertEqual(round(report[0]['price_average:avg'], 2), 46.36)

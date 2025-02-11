@@ -2,6 +2,7 @@
 <odoo>
     <record id="account_tax_report_ci" model="account.report">
         <field name="name">VAT Report</field>
+        <field name="name@fr">Déclaration TVA</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.ci"/>
         <field name="filter_fiscal_position" eval="True"/>
@@ -9,20 +10,24 @@
         <field name="column_ids">
             <record id="account_tax_report_ci_base" model="account.report.column">
                 <field name="name">Base</field>
+                <field name="name@fr">Base</field>
                 <field name="expression_label">base</field>
             </record>
             <record id="account_tax_report_ci_tax" model="account.report.column">
                 <field name="name">Tax</field>
+                <field name="name@fr">Taxe</field>
                 <field name="expression_label">tax</field>
             </record>
         </field>
         <field name="line_ids">
             <record id="account_tax_report_line_ci_operations" model="account.report.line">
                 <field name="name">02. Operations realised</field>
+                <field name="name@fr">02. Opérations réalisées</field>
                 <field name="code">CI_OPE</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_ci_operations_total" model="account.report.line">
                         <field name="name">Total amount of operations</field>
+                        <field name="name@fr">Montant total des opérations</field>
                         <field name="code">CI_OPE_TOTAL</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_ci_operations_total_base" model="account.report.expression">
@@ -39,6 +44,7 @@
                         <field name="children_ids">
                             <record id="account_tax_report_line_ci_exportation" model="account.report.line">
                                 <field name="name">Exportations</field>
+                                <field name="name@fr">Exportations</field>
                                 <field name="code">CI_Export</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_ci_exportation_base" model="account.report.expression">
@@ -50,6 +56,7 @@
                             </record>
                             <record id="account_tax_report_line_ci_exempt_legal" model="account.report.line">
                                 <field name="name">Legal exempt operations</field>
+                                <field name="name@fr">Opérations exonérées légales</field>
                                 <field name="code">CI_EXEMPT_LEGAL</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_ci_exempt_legal_base" model="account.report.expression">
@@ -61,6 +68,7 @@
                             </record>
                             <record id="account_tax_report_line_ci_exempt_conventional" model="account.report.line">
                                 <field name="name">Conventional exempt operations</field>
+                                <field name="name@fr">Opérations exonérées conventionnelles</field>
                                 <field name="code">CI_EXEMPT_CONV</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_ci_exempt_conventional_base" model="account.report.expression">
@@ -72,6 +80,7 @@
                             </record>
                             <record id="account_tax_report_line_ci_non_taxed" model="account.report.line">
                                 <field name="name">Other non taxed operations</field>
+                                <field name="name@fr">Autres opérations non taxables</field>
                                 <field name="code">CI_NON_TAXED</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_ci_non_taxed_base" model="account.report.expression">
@@ -83,6 +92,7 @@
                             </record>
                             <record id="account_tax_report_line_ci_taxable" model="account.report.line">
                                 <field name="name">Taxable operations</field>
+                                <field name="name@fr">Opérations taxable</field>
                                 <field name="code">CI_TAXABLE</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_ci_taxable_base" model="account.report.expression">
@@ -99,6 +109,7 @@
                                 <field name="children_ids">
                                     <record id="account_tax_report_line_ci_taxable_18" model="account.report.line">
                                         <field name="name">Taxable - normal rate</field>
+                                        <field name="name@fr">Taxable - taux normal</field>
                                         <field name="code">CI_TAXABLE_18</field>
                                         <field name="expression_ids">
                                             <record id="account_tax_report_line_ci_taxable_18_base" model="account.report.expression">
@@ -115,6 +126,7 @@
                                     </record>
                                     <record id="account_tax_report_line_ci_taxable_9" model="account.report.line">
                                         <field name="name">Taxable - reduced rate</field>
+                                        <field name="name@fr">Taxable - taux réduit</field>
                                         <field name="code">CI_TAXABLE_9</field>
                                         <field name="expression_ids">
                                             <record id="account_tax_report_line_ci_taxable_9_base" model="account.report.expression">
@@ -135,6 +147,7 @@
                     </record>
                     <record id="account_tax_report_line_ci_self_delivery" model="account.report.line">
                         <field name="name">Self delivery or service</field>
+                        <field name="name@fr">Livraisons à soi-même de biens ou services</field>
                         <field name="code">CI_SELF</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_ci_self_delivery_base" model="account.report.expression">
@@ -151,6 +164,7 @@
                         <field name="children_ids">
                             <record id="account_tax_report_line_ci_self_delivery_18" model="account.report.line">
                                 <field name="name">Normal rate</field>
+                                <field name="name@fr">Taux normal</field>
                                 <field name="code">CI_SELF_18</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_ci_self_delivery_18_base" model="account.report.expression">
@@ -167,6 +181,7 @@
                             </record>
                             <record id="account_tax_report_line_ci_self_delivery_9" model="account.report.line">
                                 <field name="name">Reduced rate</field>
+                                <field name="name@fr">Taux réduit</field>
                                 <field name="code">CI_SELF_9</field>
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_ci_self_delivery_9_base" model="account.report.expression">
@@ -187,6 +202,7 @@
             </record>
             <record id="account_tax_report_line_ci_taxable_turnover" model="account.report.line">
                 <field name="name">03. Taxable turnover</field>
+                <field name="name@fr">°3. Chiffre d'affaires taxable</field>
                 <field name="code">CI_TAXABLE_TURNOVER</field>
                 <field name="expression_ids">
                     <record id="account_tax_report_line_ci_taxable_turnover_base" model="account.report.expression">
@@ -203,6 +219,7 @@
                 <field name="children_ids">
                     <record id="account_tax_report_line_ci_taxable_turnover_18" model="account.report.line">
                         <field name="name">Normal rate</field>
+                        <field name="name@fr">Taux normal</field>
                         <field name="code">CI_TAXABLE_TURNOVER_18</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_ci_taxable_turnover_18_base" model="account.report.expression">
@@ -219,6 +236,7 @@
                     </record>
                     <record id="account_tax_report_line_ci_taxable_turnover_9" model="account.report.line">
                         <field name="name">Reduced rate</field>
+                        <field name="name@fr">Taux réduit</field>
                         <field name="code">CI_TAXABLE_TURNOVER_9</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_ci_taxable_turnover_9_base" model="account.report.expression">
@@ -237,6 +255,7 @@
             </record>
             <record id="account_tax_report_line_ci_adjustment" model="account.report.line">
                 <field name="name">04. Adjustment of previously deducted vat to be repaid</field>
+                <field name="name@fr">04. Régularisation TVA antérieurement déduite à reverser</field>
                 <field name="code">CI_ADJUSTMENT</field>
                 <field name="expression_ids">
                     <record id="account_tax_report_line_ci_adjustment_tax" model="account.report.expression">
@@ -249,6 +268,7 @@
             </record>
             <record id="account_tax_report_line_ci_gross" model="account.report.line">
                 <field name="name">05. Total gross VAT</field>
+                <field name="name@fr">05. Total TVA brute</field>
                 <field name="code">CI_GROSS</field>
                 <field name="expression_ids">
                     <record id="account_tax_report_line_ci_gross_tax" model="account.report.expression">
@@ -260,6 +280,7 @@
             </record>
             <record id="account_tax_report_line_ci_deduction" model="account.report.line">
                 <field name="name">06. Deductions</field>
+                <field name="name@fr">06. Déductions</field>
                 <field name="code">CI_VAT_DEDUCT</field>
                 <field name="expression_ids">
                     <record id="account_tax_report_line_ci_deduction_base" model="account.report.expression">
@@ -276,6 +297,7 @@
                 <field name="children_ids">
                     <record id="account_tax_report_line_ci_deductible" model="account.report.line">
                         <field name="name">Deductible VAT</field>
+                        <field name="name@fr">TVA déductible</field>
                         <field name="code">CI_DEDUCTIBLE</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_ci_deductible_base" model="account.report.expression">
@@ -292,6 +314,7 @@
                     </record>
                     <record id="account_tax_report_line_ci_tva_credit" model="account.report.line">
                         <field name="name">Last month's credit reported</field>
+                        <field name="name@fr">Crédit reporté du mois précédent</field>
                         <field name="code">CI_CREDIT_REPORTED</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_ci_tva_credit_tax" model="account.report.expression">
@@ -311,6 +334,7 @@
             </record>
             <record id="account_tax_report_line_ci_net_to_pay" model="account.report.line">
                 <field name="name">Net VAT to pay (05 - 06)</field>
+                <field name="name@fr">TVA nette à payer (05 - 06)</field>
                 <field name="code">CI_NET_TO_PAY</field>
                 <field name="expression_ids">
                     <record id="account_tax_report_line_ci_net_to_pay_tax" model="account.report.expression">
@@ -323,6 +347,7 @@
             </record>
             <record id="account_tax_report_line_ci_asked_reimbursement" model="account.report.line">
                 <field name="name">Credit asked to be reimbursed</field>
+                <field name="name@fr">Crédit demandé en remboursement</field>
                 <field name="code">CI_REIMBURSEMENT</field>
                 <field name="expression_ids">
                     <record id="account_tax_report_line_ci_asked_reimbursement_tax" model="account.report.expression">
@@ -335,6 +360,7 @@
             </record>
             <record id="account_tax_report_line_ci_to_report" model="account.report.line">
                 <field name="name">Credit to report</field>
+                <field name="name@fr">Crédit à reporter</field>
                 <field name="code">CI_REPORT</field>
                 <field name="expression_ids">
                     <record id="account_tax_report_line_ci_to_report_tax" model="account.report.expression">
