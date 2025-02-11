@@ -236,7 +236,12 @@ export class LinkPlugin extends Plugin {
             "Create link",
             () => {
                 this.dependencies.selection.focusEditable();
-                this.openLinkTools();
+                // To avoid a race condition between the events spawn by :
+                // 1. the `focus editable` and
+                // 2. the odoo `Shortcut bar` closure
+                // Which can affect the link overlay opening sequence if we keep it in sync.
+                // Therefore we need to wait for the next tick before triggering openLinkTools.
+                setTimeout(() => this.openLinkTools());
             },
             {
                 hotkey: "control+k",
