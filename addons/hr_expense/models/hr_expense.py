@@ -1209,14 +1209,7 @@ class HrExpense(models.Model):
 
             expense._message_set_main_attachment_id(attachment, force=True)
             expenses += expense
-        return {
-            'name': _("Generated Expense(s)"),
-            'res_model': 'hr.expense',
-            'type': 'ir.actions.act_window',
-            'views': [[False, view_type], [False, "form"]],
-            'domain': [('id', 'in', expenses.ids)],
-            'context': self.env.context,
-        }
+        return expenses.ids
 
     def action_show_same_receipt_expense_ids(self):
         self.ensure_one()
