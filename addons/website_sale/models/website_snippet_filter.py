@@ -18,7 +18,7 @@ class WebsiteSnippetFilter(models.Model):
 
     def _prepare_values(self, **kwargs):
         website = self.env['website'].get_current_website()
-        if self.model_name == 'product.product' and not website.has_ecommerce_access():
+        if (self.model_name or kwargs.get('res_model')) == 'product.product' and not website.has_ecommerce_access():
             return []
         hide_variants = False
         search_domain = kwargs.get('search_domain')
@@ -71,15 +71,15 @@ class WebsiteSnippetFilter(models.Model):
             samples = merged
         return samples
 
-    def _filter_records_to_values(self, records, is_sample=False):
+    def _filter_records_to_values(self, records, **options):
         hide_variants = self.env.context.get('hide_variants') and not isinstance(records, list)
         if hide_variants:
             records = records.product_tmpl_id
-        res_products = super()._filter_records_to_values(records, is_sample)
-        if self.model_name == 'product.product':
+        res_products = super()._filter_records_to_values(records, **options)
+        if (self.model_name or options.get('res_model')) == 'product.product':
             for res_product in res_products:
                 product = res_product.get('_record')
-                if not is_sample:
+                if not options.get('is_sample', False):
                     if hide_variants and not product.has_configurable_attributes:
                         # Still display a product.product if the template is not configurable
                         res_product['_record'] = product = product.product_variant_id
@@ -254,3 +254,10 @@ class WebsiteSnippetFilter(models.Model):
                     display_default_code=False,
                 ).search(domain, limit=limit)
         return products
+
+    @api.model
+    def default_get(self, fields):
+        defaults = super().default_get(fields)
+        if 'field_names' in defaults and self._context.get('model') == 'product.product':
+            defaults['field_names'] = 'display_name,description_sale,image_512'
+        return defaults
