@@ -1,7 +1,7 @@
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useActiveElement } from "../ui/ui_service";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
-import { Component, onWillDestroy, useChildSubEnv, useExternalListener, useState } from "@odoo/owl";
+import { Component, onWillDestroy, useChildSubEnv, useExternalListener, useState, onMounted } from "@odoo/owl";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { makeDraggableHook } from "../utils/draggable_hook_builder_owl";
 
@@ -37,6 +37,11 @@ export class Dialog extends Component {
         fullscreen: { type: Boolean, optional: true },
         footer: { type: Boolean, optional: true },
         header: { type: Boolean, optional: true },
+        design: {
+            type: String,
+            optional: true,
+            validate: (s) => ["minimal", "default"].includes(s),
+        },
         size: {
             type: String,
             optional: true,
@@ -62,6 +67,7 @@ export class Dialog extends Component {
         fullscreen: false,
         footer: true,
         header: true,
+        design: "",
         size: "lg",
         technical: true,
         title: "Odoo",
@@ -89,6 +95,7 @@ export class Dialog extends Component {
             },
             { bypassEditableProtection: true }
         );
+        this.state = useState({ buttonCount: 0 });
         this.id = `dialog_${this.data.id}`;
         useChildSubEnv({ inDialog: true, dialogId: this.id });
         this.isMovable = this.props.header;
@@ -114,10 +121,23 @@ export class Dialog extends Component {
                 this.data.scrollToOrigin();
             }
         });
+        onMounted(() => {
+            requestAnimationFrame(() => {
+                this.updateButtonCount();
+            });
+        });
     }
 
     get isFullscreen() {
-        return this.props.fullscreen || this.env.isSmall;
+        return this.props.fullscreen || this.env.isSmall && this.computeDesign() != "minimal";
+    }
+
+    get getDesign() {
+        return this.computeDesign();
+    }
+
+    get buttonsCount() {
+        return this.state.buttonCount;
     }
 
     get contentStyle() {
@@ -127,9 +147,24 @@ export class Dialog extends Component {
         return "";
     }
 
+    computeDesign() {
+        return this.props.design ? this.props.design : (['sm', 'md'].includes(this.props.size)) ? "minimal" : "default";
+    }
+
+    updateButtonCount() {
+        if (!this.modalRef.el) {
+            this.state.buttonCount = 0;
+            return;
+        }
+        this.state.buttonCount = [...this.modalRef.el.querySelectorAll('.modal-footer > .btn')]
+            .filter(btn => btn.offsetWidth > 0 && btn.offsetHeight > 0)
+            .length;
+    }
+
     onResize() {
         this.position.left = 0;
         this.position.top = 0;
+        this.updateButtonCount();
     }
 
     onEscape() {
@@ -137,6 +172,24 @@ export class Dialog extends Component {
     }
 
     async dismiss() {
+        if (this.isFullscreen) {
+            const modalEl = this.modalRef.el;
+            const modalCard = modalEl.querySelector('.modal-content');
+
+            // Add the CSS class that triggers the dismissal animation and
+            // force a browser redraw
+            [modalEl, modalCard].forEach(el => {
+                el.style.animation = 'none';
+                void el.offsetWidth; // Force reflow
+                el.style.animation = '';
+            });
+            modalEl.classList.add('o_modal_is_dismissing');
+
+            await new Promise(resolve => {
+                // Wait for the animation to finish.
+                modalCard.addEventListener('animationend', resolve, { once: true });
+            });
+        }
         if (this.data.dismiss) {
             await this.data.dismiss();
         }
