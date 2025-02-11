@@ -12,18 +12,12 @@ class IrMail_Server(models.Model):
 
     _name = 'ir.mail_server'
     _inherit = ['ir.mail_server', 'microsoft.outlook.mixin']
-
-    _OUTLOOK_SCOPE = 'https://outlook.office.com/SMTP.Send'
+    _email_field = 'smtp_user'
+    _server_type_field = 'smtp_authentication'
 
     smtp_authentication = fields.Selection(
         selection_add=[('outlook', 'Outlook OAuth Authentication')],
         ondelete={'outlook': 'set default'})
-
-    @api.depends('smtp_authentication')
-    def _compute_is_microsoft_outlook_configured(self):
-        outlook_servers = self.filtered(lambda server: server.smtp_authentication == 'outlook')
-        (self - outlook_servers).is_microsoft_outlook_configured = False
-        super(IrMail_Server, outlook_servers)._compute_is_microsoft_outlook_configured()
 
     def _compute_smtp_authentication_info(self):
         outlook_servers = self.filtered(lambda server: server.smtp_authentication == 'outlook')
@@ -67,9 +61,7 @@ class IrMail_Server(models.Model):
             self.smtp_encryption = 'starttls'
             self.smtp_port = 587
         else:
-            self.microsoft_outlook_refresh_token = False
-            self.microsoft_outlook_access_token = False
-            self.microsoft_outlook_access_token_expiration = False
+            self.microsoft_outlook_token_id = False
 
     @api.onchange('smtp_user', 'smtp_authentication')
     def _on_change_smtp_user_outlook(self):
@@ -79,7 +71,9 @@ class IrMail_Server(models.Model):
 
     def _smtp_login(self, connection, smtp_user, smtp_password):
         if len(self) == 1 and self.smtp_authentication == 'outlook':
-            auth_string = self._generate_outlook_oauth2_string(smtp_user)
+            if not self.microsoft_outlook_token_id:
+                raise UserError(_('Please login to your Outlook account.'))
+            auth_string = self.microsoft_outlook_token_id._generate_outlook_oauth2_string()
             oauth_param = base64.b64encode(auth_string.encode()).decode()
             connection.ehlo()
             connection.docmd('AUTH', f'XOAUTH2 {oauth_param}')

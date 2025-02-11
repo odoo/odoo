@@ -19,12 +19,17 @@ class TestFetchmailOutlook(TransactionCase):
         mock_connection = Mock()
         mock_imap.return_value = mock_connection
 
+        self.env['microsoft.outlook.token'].create({
+            'email': 'test@example.com',
+            'microsoft_outlook_refresh_token': 'test_refresh_token',
+            'microsoft_outlook_access_token': 'test_access_token',
+            'microsoft_outlook_access_token_expiration': time.time() + 1000000,
+        })
+
         mail_server = self.env['fetchmail.server'].create({
             'name': 'Test server',
             'server_type': 'outlook',
             'user': 'test@example.com',
-            'microsoft_outlook_access_token': 'test_access_token',
-            'microsoft_outlook_access_token_expiration': time.time() + 1000000,
             'password': '',
             'is_ssl': True,
         })

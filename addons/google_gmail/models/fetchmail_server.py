@@ -2,21 +2,26 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 
 class FetchmailServer(models.Model):
     _name = 'fetchmail.server'
     _inherit = ['fetchmail.server', 'google.gmail.mixin']
+    _email_field = 'user'
+    _server_type_field = 'server_type'
 
-    server_type = fields.Selection(selection_add=[('gmail', 'Gmail OAuth Authentication')], ondelete={'gmail': 'set default'})
+    server_type = fields.Selection(
+        selection_add=[('gmail', 'Gmail OAuth Authentication')],
+        ondelete={'gmail': 'set default'})
 
     def _compute_server_type_info(self):
-        gmail_servers = self.filtered(lambda server: server.server_type == 'gmail')
+        gmail_servers, normal_servers = self._split_gmail_servers()
         gmail_servers.server_type_info = _(
             'Connect your Gmail account with the OAuth Authentication process. \n'
             'You will be redirected to the Gmail login page where you will '
             'need to accept the permission.')
-        super(FetchmailServer, self - gmail_servers)._compute_server_type_info()
+        super(FetchmailServer, normal_servers)._compute_server_type_info()
 
     @api.onchange('server_type', 'is_ssl', 'object_id')
     def onchange_server_type(self):
@@ -26,10 +31,7 @@ class FetchmailServer(models.Model):
             self.is_ssl = True
             self.port = 993
         else:
-            self.google_gmail_authorization_code = False
-            self.google_gmail_refresh_token = False
-            self.google_gmail_access_token = False
-            self.google_gmail_access_token_expiration = False
+            self.google_gmail_token_id = False
             super(FetchmailServer, self).onchange_server_type()
 
     def _imap_login(self, connection):
@@ -39,7 +41,9 @@ class FetchmailServer(models.Model):
         """
         self.ensure_one()
         if self.server_type == 'gmail':
-            auth_string = self._generate_oauth2_string(self.user, self.google_gmail_refresh_token)
+            if not self.google_gmail_token_id:
+                raise UserError(_('Please login to your Gmail account.'))
+            auth_string = self.google_gmail_token_id._generate_oauth2_string()
             connection.authenticate('XOAUTH2', lambda x: auth_string)
             connection.select('INBOX')
         else:

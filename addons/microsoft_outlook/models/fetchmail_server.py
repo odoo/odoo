@@ -10,8 +10,8 @@ class FetchmailServer(models.Model):
 
     _name = 'fetchmail.server'
     _inherit = ['fetchmail.server', 'microsoft.outlook.mixin']
-
-    _OUTLOOK_SCOPE = 'https://outlook.office.com/IMAP.AccessAsUser.All'
+    _email_field = 'user'
+    _server_type_field = 'server_type'
 
     server_type = fields.Selection(selection_add=[('outlook', 'Outlook OAuth Authentication')], ondelete={'outlook': 'set default'})
 
@@ -22,12 +22,6 @@ class FetchmailServer(models.Model):
             'You will be redirected to the Outlook login page to accept '
             'the permissions.')
         super(FetchmailServer, self - outlook_servers)._compute_server_type_info()
-
-    @api.depends('server_type')
-    def _compute_is_microsoft_outlook_configured(self):
-        outlook_servers = self.filtered(lambda server: server.server_type == 'outlook')
-        (self - outlook_servers).is_microsoft_outlook_configured = False
-        super(FetchmailServer, outlook_servers)._compute_is_microsoft_outlook_configured()
 
     @api.constrains('server_type', 'is_ssl')
     def _check_use_microsoft_outlook_service(self):
@@ -43,9 +37,7 @@ class FetchmailServer(models.Model):
             self.is_ssl = True
             self.port = 993
         else:
-            self.microsoft_outlook_refresh_token = False
-            self.microsoft_outlook_access_token = False
-            self.microsoft_outlook_access_token_expiration = False
+            self.microsoft_outlook_token_id = False
             super(FetchmailServer, self).onchange_server_type()
 
     def _imap_login(self, connection):
@@ -55,7 +47,9 @@ class FetchmailServer(models.Model):
         """
         self.ensure_one()
         if self.server_type == 'outlook':
-            auth_string = self._generate_outlook_oauth2_string(self.user)
+            if not self.microsoft_outlook_token_id:
+                raise UserError(_('Please login to your Outlook account.'))
+            auth_string = self.microsoft_outlook_token_id._generate_outlook_oauth2_string()
             connection.authenticate('XOAUTH2', lambda x: auth_string)
             connection.select('INBOX')
         else:
