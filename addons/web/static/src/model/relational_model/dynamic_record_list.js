@@ -165,7 +165,7 @@ export class DynamicRecordList extends DynamicList {
     }
 
     _updateCount(data) {
-        const length = data.length;
+        const length = 'length' in data ? data.length : data.count;
         if (length >= this.config.countLimit + 1) {
             this.hasLimitedCount = true;
             this.count = this.config.countLimit;
