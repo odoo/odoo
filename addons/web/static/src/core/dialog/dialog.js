@@ -171,17 +171,18 @@ export class Dialog extends Component {
     async dismiss() {
         if (this.isFullscreen) {
             const modalEl = this.modalRef.el;
+            const modalCard = modalEl.querySelector('.modal-content');
 
             // Add the CSS class that triggers the dismissal animation and
             // force a browser redraw
-            modalEl.style.animation = 'none';
-            void modalEl.offsetWidth;
-            modalEl.style.animation = '';
             modalEl.classList.add('o_modal_is_dismissing');
+            modalCard.style.animation = 'none';
+            void modalCard.offsetWidth;
+            modalCard.style.animation = '';
 
             await new Promise(resolve => {
                 // Wait for the animation to finish.
-                modalEl.addEventListener('animationend', resolve, { once: true });
+                modalCard.addEventListener('animationend', resolve, { once: true });
             });
         }
         if (this.data.dismiss) {
