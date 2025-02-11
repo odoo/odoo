@@ -1,466 +1,141 @@
-import {
-    convertCSSColorToRgba,
-    convertHslToRgb,
-    convertRgbaToCSSColor,
-    convertRgbToHsl,
-} from "@web/core/utils/colors";
-import { uniqueId } from "@web/core/utils/functions";
-import { clamp } from "@web/core/utils/numbers";
-import { debounce, useThrottleForAnimation } from "@web/core/utils/timing";
+import { Component, useEffect, useRef, useState } from "@odoo/owl";
+import { CustomColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
+import { usePopover } from "@web/core/popover/popover_hook";
+import { isCSSColor, isColorGradient } from "@web/core/utils/colors";
+import { GradientPicker } from "./gradient_picker/gradient_picker";
 
-import { Component, onMounted, onWillUpdateProps, useExternalListener, useRef } from "@odoo/owl";
+// These colors are already normalized as per normalizeCSSColor in @web/legacy/js/widgets/colorpicker
+const DEFAULT_COLORS = [
+    ["#000000", "#424242", "#636363", "#9C9C94", "#CEC6CE", "#EFEFEF", "#F7F7F7", "#FFFFFF"],
+    ["#FF0000", "#FF9C00", "#FFFF00", "#00FF00", "#00FFFF", "#0000FF", "#9C00FF", "#FF00FF"],
+    ["#F7C6CE", "#FFE7CE", "#FFEFC6", "#D6EFD6", "#CEDEE7", "#CEE7F7", "#D6D6E7", "#E7D6DE"],
+    ["#E79C9C", "#FFC69C", "#FFE79C", "#B5D6A5", "#A5C6CE", "#9CC6EF", "#B5A5D6", "#D6A5BD"],
+    ["#E76363", "#F7AD6B", "#FFD663", "#94BD7B", "#73A5AD", "#6BADDE", "#8C7BC6", "#C67BA5"],
+    ["#CE0000", "#E79439", "#EFC631", "#6BA54A", "#4A7B8C", "#3984C6", "#634AA5", "#A54A7B"],
+    ["#9C0000", "#B56308", "#BD9400", "#397B21", "#104A5A", "#085294", "#311873", "#731842"],
+    ["#630000", "#7B3900", "#846300", "#295218", "#083139", "#003163", "#21104A", "#4A1031"],
+];
+
+const DEFAULT_GRADIENT_COLORS = [
+    "linear-gradient(135deg, rgb(255, 204, 51) 0%, rgb(226, 51, 255) 100%)",
+    "linear-gradient(135deg, rgb(102, 153, 255) 0%, rgb(255, 51, 102) 100%)",
+    "linear-gradient(135deg, rgb(47, 128, 237) 0%, rgb(178, 255, 218) 100%)",
+    "linear-gradient(135deg, rgb(203, 94, 238) 0%, rgb(75, 225, 236) 100%)",
+    "linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%)",
+    "linear-gradient(135deg, rgb(255, 222, 69) 0%, rgb(69, 33, 0) 100%)",
+    "linear-gradient(135deg, rgb(222, 222, 222) 0%, rgb(69, 69, 69) 100%)",
+    "linear-gradient(135deg, rgb(255, 222, 202) 0%, rgb(202, 115, 69) 100%)",
+];
 
 export class ColorPicker extends Component {
     static template = "web.ColorPicker";
+    static components = { CustomColorPicker, GradientPicker };
     static props = {
-        document: { type: true, optional: true },
-        defaultColor: { type: String, optional: true },
-        selectedColor: { type: String, optional: true },
-        noTransparency: { type: Boolean, optional: true },
-        stopClickPropagation: { type: Boolean, optional: true },
-        onColorSelect: { type: Function, optional: true },
-        onColorPreview: { type: Function, optional: true },
-        onInputEnter: { type: Function, optional: true },
+        state: {
+            type: Object,
+            shape: {
+                selectedColor: String,
+            },
+        },
+        getUsedCustomColors: Function,
+        applyColor: Function,
+        applyColorPreview: Function,
+        applyColorResetPreview: Function,
+        colorPrefix: { type: String },
+        close: { type: Function, optional: true },
     };
     static defaultProps = {
-        document: window.document,
-        defaultColor: "#FF0000",
-        noTransparency: false,
-        stopClickPropagation: false,
-        onColorSelect: () => {},
-        onColorPreview: () => {},
-        onInputEnter: () => {},
+        close: () => {},
     };
 
     setup() {
-        this.pickerFlag = false;
-        this.sliderFlag = false;
-        this.opacitySliderFlag = false;
-        this.colorComponents = {};
-        this.uniqueId = uniqueId("colorpicker");
-        this.selectedHexValue = "";
+        this.DEFAULT_COLORS = DEFAULT_COLORS;
+        this.DEFAULT_GRADIENT_COLORS = DEFAULT_GRADIENT_COLORS;
 
-        this.debouncedOnChangeInputs = debounce(this.onChangeInputs.bind(this), 10, true);
-
-        this.elRef = useRef("el");
-        this.colorPickerAreaRef = useRef("colorPickerArea");
-        this.colorPickerPointerRef = useRef("colorPickerPointer");
-        this.colorSliderRef = useRef("colorSlider");
-        this.colorSliderPointerRef = useRef("colorSliderPointer");
-        this.opacitySliderRef = useRef("opacitySlider");
-        this.opacitySliderPointerRef = useRef("opacitySliderPointer");
-
-        // Need to be bound on all documents to work in all possible cases (we
-        // have to be able to start dragging/moving from the colorpicker to
-        // anywhere on the screen, crossing iframes).
-        const documents = [
-            window.top,
-            ...Array.from(window.top.frames).filter((frame) => {
-                try {
-                    const document = frame.document;
-                    return !!document;
-                } catch {
-                    // We cannot access the document (cross origin).
-                    return false;
-                }
-            }),
-        ].map((w) => w.document);
-        this.throttleOnMouseMove = useThrottleForAnimation((ev) => {
-            this.onMouseMovePicker(ev);
-            this.onMouseMoveSlider(ev);
-            this.onMouseMoveOpacitySlider(ev);
+        this.defaultColor = this.props.state.selectedColor;
+        this.state = useState({
+            activeTab: "solid",
+            currentCustomColor: this.props.state.selectedColor,
         });
-
-        for (const doc of documents) {
-            useExternalListener(doc, "mousemove", this.throttleOnMouseMove);
-            useExternalListener(doc, "mouseup", this.onMouseUp.bind(this));
-        }
-        onMounted(async () => {
-            const defaultCssColor = this.props.selectedColor
-                ? this.props.selectedColor
-                : this.props.defaultColor;
-            const rgba = convertCSSColorToRgba(defaultCssColor);
-            if (rgba) {
-                this._updateRgba(rgba.red, rgba.green, rgba.blue, rgba.opacity);
-            }
-
-            this.previewActive = true;
-            this._updateUI();
-        });
-        onWillUpdateProps((newProps) => {
-            const newSelectedColor = newProps.selectedColor
-                ? newProps.selectedColor
-                : newProps.defaultColor;
-            this.setSelectedColor(newSelectedColor);
-        });
+        this.usedCustomColors = this.props.getUsedCustomColors();
     }
 
-    /**
-     * Sets the currently selected color
-     *
-     * @param {string} color rgb[a]
-     */
-    setSelectedColor(color) {
-        const rgba = convertCSSColorToRgba(color);
-        if (rgba) {
-            const oldPreviewActive = this.previewActive;
-            this.previewActive = false;
-            this._updateRgba(rgba.red, rgba.green, rgba.blue, rgba.opacity);
-            this.previewActive = oldPreviewActive;
-            this._updateUI();
-        }
+    get selectedColor() {
+        return this.props.state.selectedColor;
     }
 
-    get el() {
-        return this.elRef.el;
+    setTab(tab) {
+        this.state.activeTab = tab;
     }
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Updates input values, color preview, picker and slider pointer positions.
-     *
-     * @private
-     */
-    _updateUI() {
-        // Update inputs
-        for (const [color, value] of Object.entries(this.colorComponents)) {
-            const input = this.el.querySelector(`.o_${color}_input`);
-            if (input) {
-                input.value = value;
-            }
+    processColorFromEvent(ev) {
+        let color = ev.target.dataset.color;
+        if (color && !isCSSColor(color) && !isColorGradient(color)) {
+            color = this.props.colorPrefix + color;
         }
-
-        // Update picker area and picker pointer position
-        const colorPickerArea = this.colorPickerAreaRef.el;
-        colorPickerArea.style.backgroundColor = `hsl(${this.colorComponents.hue}, 100%, 50%)`;
-        const top = ((100 - this.colorComponents.lightness) * colorPickerArea.clientHeight) / 100;
-        const left = (this.colorComponents.saturation * colorPickerArea.clientWidth) / 100;
-
-        const colorpickerPointer = this.colorPickerPointerRef.el;
-        colorpickerPointer.style.top = top - 5 + "px";
-        colorpickerPointer.style.left = left - 5 + "px";
-
-        // Update color slider position
-        const colorSlider = this.colorSliderRef.el;
-        const height = colorSlider.clientHeight;
-        const y = (this.colorComponents.hue * height) / 360;
-        this.colorSliderPointerRef.el.style.top = `${Math.round(y - 2)}px`;
-
-        if (!this.props.noTransparency) {
-            // Update opacity slider position
-            const opacitySlider = this.opacitySliderRef.el;
-            const heightOpacity = opacitySlider.clientHeight;
-            const z = heightOpacity * (1 - this.colorComponents.opacity / 100.0);
-            this.opacitySliderPointerRef.el.style.top = `${Math.round(z - 2)}px`;
-
-            // Add gradient color on opacity slider
-            opacitySlider.style.background = `linear-gradient(${this.colorComponents.hex} 0%, transparent 100%)`;
-        }
+        return color;
     }
-    /**
-     * Updates colors according to given hex value. Opacity is left unchanged.
-     *
-     * @private
-     * @param {string} hex - hexadecimal code
-     */
-    _updateHex(hex) {
-        const rgb = convertCSSColorToRgba(hex);
-        if (!rgb) {
+
+    applyColor(color) {
+        this.state.currentCustomColor = color;
+        this.props.applyColor(color || "");
+    }
+
+    onColorApply(ev) {
+        if (ev.target.tagName !== "BUTTON") {
             return;
         }
-        Object.assign(
-            this.colorComponents,
-            { hex: hex },
-            rgb,
-            convertRgbToHsl(rgb.red, rgb.green, rgb.blue)
-        );
-        this._updateCssColor();
+        const color = this.processColorFromEvent(ev);
+        this.applyColor(color);
+        this.props.close();
     }
-    /**
-     * Updates colors according to given RGB values.
-     *
-     * @private
-     * @param {integer} r
-     * @param {integer} g
-     * @param {integer} b
-     * @param {integer} [a]
-     */
-    _updateRgba(r, g, b, a) {
-        // Remove full transparency in case some lightness is added
-        const opacity = a || this.colorComponents.opacity;
-        if (opacity < 0.1 && (r > 0.1 || g > 0.1 || b > 0.1)) {
-            a = 100;
-        }
 
-        // We update the hexadecimal code by transforming into a css color and
-        // ignoring the opacity (we don't display opacity component in hexa as
-        // not supported on all browsers)
-        const hex = convertRgbaToCSSColor(r, g, b);
-        if (!hex) {
+    onColorPreview(ev) {
+        const color = ev.hex ? ev.hex : this.processColorFromEvent(ev);
+        this.props.applyColorPreview(color || "");
+    }
+
+    onColorHover(ev) {
+        if (ev.target.tagName !== "BUTTON") {
             return;
         }
-        Object.assign(
-            this.colorComponents,
-            { red: r, green: g, blue: b },
-            a === undefined ? {} : { opacity: a },
-            { hex: hex },
-            convertRgbToHsl(r, g, b)
-        );
-        this._updateCssColor();
+        this.onColorPreview(ev);
     }
-    /**
-     * Updates colors according to given HSL values.
-     *
-     * @private
-     * @param {integer} h
-     * @param {integer} s
-     * @param {integer} l
-     */
-    _updateHsl(h, s, l) {
-        // Remove full transparency in case some lightness is added
-        let a = this.colorComponents.opacity;
-        if (a < 0.1 && l > 0.1) {
-            a = 100;
-        }
 
-        const rgb = convertHslToRgb(h, s, l);
-        if (!rgb) {
+    onColorHoverOut(ev) {
+        if (ev.target.tagName !== "BUTTON") {
             return;
         }
-        // We receive an hexa as we ignore the opacity
-        const hex = convertRgbaToCSSColor(rgb.red, rgb.green, rgb.blue);
-        Object.assign(
-            this.colorComponents,
-            { hue: h, saturation: s, lightness: l },
-            rgb,
-            { hex: hex },
-            { opacity: a }
-        );
-        this._updateCssColor();
-    }
-    /**
-     * Updates color opacity.
-     *
-     * @private
-     * @param {integer} a
-     */
-    _updateOpacity(a) {
-        if (a < 0 || a > 100) {
-            return;
-        }
-        Object.assign(this.colorComponents, { opacity: a });
-        this._updateCssColor();
-    }
-    /**
-     * Trigger an event to annonce that the widget value has changed
-     *
-     * @private
-     */
-    _colorSelected() {
-        this.props.onColorSelect(this.colorComponents);
-    }
-    /**
-     * Updates css color representation.
-     *
-     * @private
-     */
-    _updateCssColor() {
-        const r = this.colorComponents.red;
-        const g = this.colorComponents.green;
-        const b = this.colorComponents.blue;
-        const a = this.colorComponents.opacity;
-        Object.assign(this.colorComponents, { cssColor: convertRgbaToCSSColor(r, g, b, a) });
-        if (this.previewActive) {
-            this.props.onColorPreview(this.colorComponents);
-        }
+        this.props.applyColorResetPreview();
     }
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    onKeydown(ev) {
-        if (ev.key === "Enter") {
-            if (ev.target.tagName === "INPUT") {
-                this.onChangeInputs(ev);
-            }
-            ev.preventDefault();
-            this.props.onInputEnter(ev);
+    getCurrentGradientColor() {
+        if (isColorGradient(this.props.state.selectedColor)) {
+            return this.props.state.selectedColor;
         }
     }
-    /**
-     * @param {Event} ev
-     */
-    onClick(ev) {
-        if (this.props.stopClickPropagation) {
-            ev.stopPropagation();
-        }
-        //TODO: we should remove it with legacy web_editor
-        ev.__isColorpickerClick = true;
+}
 
-        if (ev.target.dataset.colorMethod === "hex" && !this.selectedHexValue) {
-            ev.target.select();
-            this.selectedHexValue = ev.target.value;
-            return;
-        }
-        this.selectedHexValue = "";
-    }
-    onMouseUp() {
-        if (this.pickerFlag || this.sliderFlag || this.opacitySliderFlag) {
-            this._colorSelected();
-        }
-        this.pickerFlag = false;
-        this.sliderFlag = false;
-        this.opacitySliderFlag = false;
-    }
-    /**
-     * Updates color when the user starts clicking on the picker.
-     *
-     * @private
-     * @param {Event} ev
-     */
-    onMouseDownPicker(ev) {
-        this.pickerFlag = true;
-        ev.preventDefault();
-        this.onMouseMovePicker(ev);
-    }
-    /**
-     * Updates saturation and lightness values on mouse drag over picker.
-     *
-     * @private
-     * @param {Event} ev
-     */
-    onMouseMovePicker(ev) {
-        if (!this.pickerFlag) {
-            return;
-        }
+export function useColorPicker(refName, props, options = {}) {
+    const colorPicker = usePopover(ColorPicker, options);
+    const root = useRef(refName);
 
-        const colorPickerArea = this.colorPickerAreaRef.el;
-        const rect = colorPickerArea.getClientRects()[0];
-        const top = ev.pageY - rect.top;
-        const left = ev.pageX - rect.left;
-        let saturation = Math.round((100 * left) / colorPickerArea.clientWidth);
-        let lightness = Math.round(
-            (100 * (colorPickerArea.clientHeight - top)) / colorPickerArea.clientHeight
-        );
-        saturation = clamp(saturation, 0, 100);
-        lightness = clamp(lightness, 0, 100);
-
-        this._updateHsl(this.colorComponents.hue, saturation, lightness);
-        this._updateUI();
+    function onClick() {
+        colorPicker.open(root.el, props);
     }
-    /**
-     * Updates color when user starts clicking on slider.
-     *
-     * @private
-     * @param {Event} ev
-     */
-    onMouseDownSlider(ev) {
-        this.sliderFlag = true;
-        ev.preventDefault();
-        this.onMouseMoveSlider(ev);
-    }
-    /**
-     * Updates hue value on mouse drag over slider.
-     *
-     * @private
-     * @param {Event} ev
-     */
-    onMouseMoveSlider(ev) {
-        if (!this.sliderFlag) {
-            return;
-        }
 
-        const colorSlider = this.colorSliderRef.el;
-        const y = ev.pageY - colorSlider.getClientRects()[0].top;
-        let hue = Math.round((360 * y) / colorSlider.clientHeight);
-        hue = clamp(hue, 0, 360);
-
-        this._updateHsl(hue, this.colorComponents.saturation, this.colorComponents.lightness);
-        this._updateUI();
-    }
-    /**
-     * Updates opacity when user starts clicking on opacity slider.
-     *
-     * @private
-     * @param {Event} ev
-     */
-    onMouseDownOpacitySlider(ev) {
-        this.opacitySliderFlag = true;
-        ev.preventDefault();
-        this.onMouseMoveOpacitySlider(ev);
-    }
-    /**
-     * Updates opacity value on mouse drag over opacity slider.
-     *
-     * @private
-     * @param {Event} ev
-     */
-    onMouseMoveOpacitySlider(ev) {
-        if (!this.opacitySliderFlag || this.props.noTransparency) {
-            return;
-        }
-
-        const opacitySlider = this.opacitySliderRef.el;
-        const y = ev.pageY - opacitySlider.getClientRects()[0].top;
-        let opacity = Math.round(100 * (1 - y / opacitySlider.clientHeight));
-        opacity = clamp(opacity, 0, 100);
-
-        this._updateOpacity(opacity);
-        this._updateUI();
-    }
-    /**
-     * Called when input value is changed -> Updates UI: Set picker and slider
-     * position and set colors.
-     *
-     * @private
-     * @param {Event} ev
-     */
-    onChangeInputs(ev) {
-        switch (ev.target.dataset.colorMethod) {
-            case "hex":
-                // Handled by the "input" event (see "onHexColorInput").
+    useEffect(
+        (el) => {
+            if (!el) {
                 return;
-            case "rgb":
-                this._updateRgba(
-                    parseInt(this.el.querySelector(".o_red_input").value),
-                    parseInt(this.el.querySelector(".o_green_input").value),
-                    parseInt(this.el.querySelector(".o_blue_input").value)
-                );
-                break;
-            case "hsl":
-                this._updateHsl(
-                    parseInt(this.el.querySelector(".o_hue_input").value),
-                    parseInt(this.el.querySelector(".o_saturation_input").value),
-                    parseInt(this.el.querySelector(".o_lightness_input").value)
-                );
-                break;
-            case "opacity":
-                this._updateOpacity(parseInt(this.el.querySelector(".o_opacity_input").value));
-                break;
-        }
-        this._updateUI();
-        this._colorSelected();
-    }
-    /**
-     * Called when the hex color input's input event is triggered.
-     *
-     * @private
-     * @param {Event} ev
-     */
-    onHexColorInput(ev) {
-        const hexColorValue = ev.target.value.replaceAll("#", "");
-        if (hexColorValue.length === 6) {
-            this._updateHex(`#${hexColorValue}`);
-            this._updateUI();
-            this._colorSelected();
-        }
-    }
+            }
+            el.addEventListener("click", onClick);
+            return () => {
+                el.removeEventListener("click", onClick);
+            };
+        },
+        () => [root.el]
+    );
+
+    return colorPicker;
 }
