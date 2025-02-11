@@ -1065,3 +1065,50 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_pos_tour('PoSSettleQuotation', login="accountman")
         self.assertEqual(order.order_line.qty_delivered, 1)
+
+    def test_edit_invoice_with_pos_order(self):
+        self.main_pos_config.open_ui()
+        current_session = self.main_pos_config.current_session_id
+        partner_1 = self.env['res.partner'].create({'name': 'Test Partner'})
+
+        pos_order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'partner_id': partner_1.id,
+            'pricelist_id': partner_1.property_product_pricelist.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': self.desk_pad.product_variant_id.id,
+                'price_unit': self.desk_pad.product_variant_id.lst_price,
+                'discount': 0.0,
+                'qty': 1.0,
+                'tax_ids': [],
+                'price_subtotal': self.desk_pad.product_variant_id.lst_price,
+                'price_subtotal_incl': self.desk_pad.product_variant_id.lst_price,
+            })],
+            'amount_total': self.desk_pad.product_variant_id.lst_price,
+            'amount_tax': 0.0,
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
+            'last_order_preparation_change': '{}'
+        })
+
+        # generate an invoice for pos order
+        res = pos_order.action_pos_order_invoice()
+        self.assertIn('res_id', res, "Invoice should be created")
+        self.assertEqual(res['res_id'], pos_order.account_move.id)
+
+        invoice = pos_order.account_move
+        self.assertEqual(invoice.state, 'posted')
+
+        # when clicking on cancel button
+        invoice.button_draft()
+        self.assertEqual(invoice.state, 'draft')
+        invoice.button_cancel()
+        self.assertEqual(invoice.state, 'cancel')
+
+        # when clicking on confirm button
+        invoice.button_draft()
+        self.assertEqual(invoice.state, 'draft')
+        invoice.action_post()
+        self.assertEqual(invoice.state, 'posted')
