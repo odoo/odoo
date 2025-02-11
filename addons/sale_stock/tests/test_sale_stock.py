@@ -2084,3 +2084,27 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
 
         self.assertEqual(pickings[0].state, 'done')
         self.assertEqual(len(sale_order.order_line), 1)
+
+    def test_multi_step_product_forecast_availability(self):
+        """
+        Test that forecast availability(icon) widget info on the Sales Order correctly appears green
+        when enough stock is available in a 2-step/3-step delivery.
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.delivery_steps = 'pick_ship'
+
+        # Make quantity available for the product.
+        self.env['stock.quant']._update_available_quantity(self.new_product, warehouse.lot_stock_id, 1)
+
+        so = self._get_new_sale_order(product=self.new_product, amount=1)
+        so.action_confirm()
+
+        self.assertEqual(
+            so.picking_ids.move_ids.forecast_availability, 1.0,
+            "Forecast availability should be 1.0 because 1.0 quantity is available."
+            "So forecast availability icon should appear green."
+        )
+        self.assertEqual(
+            so.order_line.free_qty_today, 1.0,
+            "Free quantity today should be 1.0, indicating the quantity is usable for this SO."
+        )
