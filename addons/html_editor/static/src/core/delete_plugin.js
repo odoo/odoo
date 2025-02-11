@@ -61,7 +61,7 @@ import { compareListTypes } from "@html_editor/main/list/utils";
 export class DeletePlugin extends Plugin {
     static dependencies = ["baseContainer", "selection", "history", "input"];
     static id = "delete";
-    static shared = ["deleteRange", "deleteSelection", "delete"];
+    static shared = ["deleteBackward", "deleteForward", "deleteRange", "deleteSelection", "delete"];
     resources = {
         user_commands: [
             { id: "deleteBackward", run: () => this.delete("backward", "character") },
