@@ -778,6 +778,29 @@ class TestDomainOptimize(TransactionCase):
             OrderedSet, "Check we can optimize something else than OrderedSet"
         )
 
+    def test_nary_optimize_in_relational(self):
+        model = self.env['test_new_api.discussion']
+
+        # check when the optimizations are applied, the results are checked
+        # by the previous test function
+        # many2one, many2many, one2many
+        for field_name in ('moderator', 'categories', 'messages'):
+            field_type = model._fields[field_name].type
+            m2o = field_type == 'many2one'
+
+            small = Domain(field_name, 'in', [1])._optimize(model)
+            big = Domain(field_name, 'in', [1, 2])._optimize(model)
+
+            with self.subTest(field_type=field_type):
+                d_and = small & big
+                d_or = small | big
+                d_nand = ~small & ~big
+                d_nor = ~small | ~big
+                self.assertEqual(d_and._optimize(model), small if m2o else d_and)
+                self.assertEqual(d_or._optimize(model), big)
+                self.assertEqual(d_nand._optimize(model), ~big)
+                self.assertEqual(d_nor._optimize(model), ~small if m2o else d_nor)
+
     def test_nary_optimize_any(self):
         model = self.env['test_new_api.discussion']
 
