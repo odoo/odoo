@@ -151,7 +151,8 @@ class CustomerPortal(portal.CustomerPortal):
 
         report_type = kw.get('report_type')
         if report_type in ('html', 'pdf', 'text'):
-            return self._show_report(model=order_sudo, report_type=report_type, report_ref='purchase.action_report_purchase_order', download=kw.get('download'))
+            report_ref = 'purchase.report_purchase_quotation' if order_sudo.state in ['rfq','sent'] else 'purchase.action_report_purchase_order'
+            return self._show_report(model=order_sudo, report_type=report_type, report_ref=report_ref, download=kw.get('download'))
 
         confirm_type = kw.get('confirm')
         if confirm_type == 'reminder':
