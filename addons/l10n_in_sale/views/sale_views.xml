@@ -14,6 +14,15 @@
                     readonly="state not in ['draft', 'sent']"
                     required="country_code == 'IN'"/>
             </xpath>
+            <xpath expr="//field[@name='partner_shipping_id']" position="after">
+                <field
+                    name="l10n_in_sale_state_id"
+                    domain="[('country_id.code', '=', 'IN')]"
+                    options="{'no_create': True, 'no_open': True}"
+                    invisible="country_code != 'IN' or not l10n_in_sale_is_gst_registered_enabled"
+                    readonly="state != 'draft'"
+                    required="country_code == 'IN' and l10n_in_sale_is_gst_registered_enabled and state == 'draft'"/>
+            </xpath>
         </field>
     </record>
 </odoo>
