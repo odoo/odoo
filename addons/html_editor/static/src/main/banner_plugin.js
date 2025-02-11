@@ -75,6 +75,8 @@ export class BannerPlugin extends Plugin {
         ],
         power_buttons_visibility_predicates: ({ anchorNode }) =>
             !closestElement(anchorNode, ".o_editor_banner"),
+        move_node_blacklist_selectors: ".o_editor_banner *",
+        move_node_whitelist_selectors: ".o_editor_banner",
     };
 
     setup() {
