@@ -1,153 +1,66 @@
-import { _t } from "@web/core/l10n/translation";
+import { useProductAndLabelAutoresize } from "@account/core/utils/product_and_label_autoresize";
+import { Component, onMounted, onPatched, onWillUnmount, useRef, useState } from "@odoo/owl";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
-import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
-import { Many2OneField, many2OneField } from "@web/views/fields/many2one/many2one_field";
-import { onMounted, onPatched, onWillUnmount, useEffect, useRef, useState } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import {
-    SectionAndNoteListRenderer,
-    sectionAndNoteFieldOne2Many,
-} from "@account/components/section_and_note_fields_backend/section_and_note_fields_backend";
-import { useProductAndLabelAutoresize } from "@account/core/utils/product_and_label_autoresize";
-import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
+import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
+import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
+import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 
-export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRenderer {
-
-    setup() {
-        super.setup();
-        this.productColumns = ["product_id", "product_template_id"];
-    }
-
-    getCellTitle(column, record) {
-        // When using this list renderer, we don't want the product_id cell to have a tooltip with its label.
-        if (this.productColumns.includes(column.name)) {
-            return;
-        }
-        super.getCellTitle(column, record);
-    }
-
-    getActiveColumns(list) {
-        let activeColumns = super.getActiveColumns(list);
-        const productCol = activeColumns.find((col) => this.productColumns.includes(col.name));
-        const labelCol = activeColumns.find((col) => col.name === "name");
-
-        if (productCol) {
-            if (labelCol) {
-                list.records.forEach((record) => (record.columnIsProductAndLabel = true));
-            } else {
-                list.records.forEach((record) => (record.columnIsProductAndLabel = false));
-            }
-            activeColumns = activeColumns.filter((col) => col.name !== "name");
-            this.titleField = productCol.name;
-        } else {
-            this.titleField = "name";
-        }
-
-        return activeColumns;
-    }
-}
-
-export class ProductLabelSectionAndNoteOne2Many extends X2ManyField {
-    static components = {
-        ...X2ManyField.components,
-        ListRenderer: ProductLabelSectionAndNoteListRender,
-    };
-}
-
-export const productLabelSectionAndNoteOne2Many = {
-    ...x2ManyField,
-    component: ProductLabelSectionAndNoteOne2Many,
-    additionalClasses: sectionAndNoteFieldOne2Many.additionalClasses,
-};
-
-registry
-    .category("fields")
-    .add("product_label_section_and_note_field_o2m", productLabelSectionAndNoteOne2Many);
-
-export class ProductLabelSectionAndNoteAutocomplete extends AutoComplete {
-    setup() {
-        super.setup();
-        this.labelTextarea = useRef("labelNodeRef");
-    }
-    onInputKeydown(event) {
+class ProductLabelSectionAndNoteFieldAutocomplete extends AutoComplete {
+    async onInputKeydown(event) {
         super.onInputKeydown(event);
         const hotkey = getActiveHotkey(event);
-        const labelVisibilityButton = document.getElementById('labelVisibilityButtonId');
-        if (hotkey === "enter") {
-            if (labelVisibilityButton && !this.labelTextarea.el) {
-                labelVisibilityButton.click();
-                event.stopPropagation();
-                event.preventDefault();
-            }
+        const labelVisibilityButton = document.getElementById("labelVisibilityButtonId");
+        if (hotkey === "enter" && labelVisibilityButton) {
+            labelVisibilityButton.click();
+            event.stopPropagation();
+            event.preventDefault();
         }
     }
 }
 
-export class ProductLabelSectionAndNoteFieldAutocomplete extends Many2XAutocomplete {
+class ProductLabelSectionAndNoteFieldMany2XAutocomplete extends Many2XAutocomplete {
     static components = {
-        ...Many2XAutocomplete.components,
-        AutoComplete: ProductLabelSectionAndNoteAutocomplete,
+        ...super.components,
+        AutoComplete: ProductLabelSectionAndNoteFieldAutocomplete,
     };
-    static props = {
-        ...Many2XAutocomplete.props,
-        isNote: { type: Boolean },
-        isSection: { type: Boolean },
-        onFocusout: { type: Function, optional: true },
-        updateLabel: { type: Function, optional: true },
+}
+class ProductLabelSectionAndNoteFieldMany2One extends Many2One {
+    static components = {
+        ...super.components,
+        AutoComplete: ProductLabelSectionAndNoteFieldMany2XAutocomplete,
     };
-    static template = "account.ProductLabelSectionAndNoteFieldAutocomplete";
-    setup() {
-        super.setup();
-        this.input = useRef("section_and_note_input");
-    }
-
-    get isSectionOrNote() {
-        return this.props.isSection || this.props.isNote;
-    }
-
-    get isSection() {
-        return this.props.isSection;
-    }
 }
 
-export class ProductLabelSectionAndNoteField extends Many2OneField {
-    static components = {
-        ...Many2OneField.components,
-        Many2XAutocomplete: ProductLabelSectionAndNoteFieldAutocomplete,
-    };
+export class ProductLabelSectionAndNoteField extends Component {
     static template = "account.ProductLabelSectionAndNoteField";
+    static components = { Many2One: ProductLabelSectionAndNoteFieldMany2One };
+    static props = { ...Many2OneField.props };
 
     setup() {
-        super.setup();
+        const labelNode = useRef("labelNodeRef");
+        const productNode = useRef("productNodeRef");
+
+        this.switchToLabel = false;
         this.isPrintMode = useState({ value: false });
         this.labelVisibility = useState({ value: false });
-        this.switchToLabel = false;
-        this.columnIsProductAndLabel = useState({ value: this.props.record.columnIsProductAndLabel });
-        this.labelNode = useRef("labelNodeRef");
-        useProductAndLabelAutoresize(this.labelNode, { targetParentName: this.props.name });
-        this.productNode = useRef("productNodeRef");
-        useProductAndLabelAutoresize(this.productNode, { targetParentName: this.props.name });
 
-        useEffect(
-            () => {
-                this.columnIsProductAndLabel.value = this.props.record.columnIsProductAndLabel;
-            },
-            () => [this.props.record.columnIsProductAndLabel]
-        );
+        useProductAndLabelAutoresize(labelNode, { targetParentName: this.props.name });
+        useProductAndLabelAutoresize(productNode, { targetParentName: this.props.name });
 
         onPatched(() => {
-            if (this.labelNode.el && this.switchToLabel) {
+            if (labelNode.el && this.switchToLabel) {
                 this.switchToLabel = false;
-                this.labelNode.el.focus();
+                labelNode.el.focus();
             }
         });
 
-        this.onBeforePrint = () => {
+        const onBeforePrint = () => {
             this.isPrintMode.value = true;
         };
-
-        this.onAfterPrint = () => {
+        const onAfterPrint = () => {
             this.isPrintMode.value = false;
         };
 
@@ -156,18 +69,29 @@ export class ProductLabelSectionAndNoteField extends Many2OneField {
         // an empty line. This is done by switching an attribute to true only during the print view life cycle and
         // including the said div in a t-if depending on that attribute.
         onMounted(() => {
-            window.addEventListener("beforeprint", this.onBeforePrint);
-            window.addEventListener("afterprint", this.onAfterPrint);
+            window.addEventListener("beforeprint", onBeforePrint);
+            window.addEventListener("afterprint", onAfterPrint);
         });
-
         onWillUnmount(() => {
-            window.removeEventListener("beforeprint", this.onBeforePrint);
-            window.removeEventListener("afterprint", this.onAfterPrint);
+            window.removeEventListener("beforeprint", onBeforePrint);
+            window.removeEventListener("afterprint", onAfterPrint);
         });
     }
 
-    get productName() {
-        return this.props.record.data[this.props.name][1];
+    get columnIsProductAndLabel() {
+        return this.props.record.columnIsProductAndLabel;
+    }
+
+    get isNote() {
+        return this.props.record.data.display_type === "line_note";
+    }
+
+    get isProductClickable() {
+        return this.props.record.evalContext.parent.state !== "draft";
+    }
+
+    get isSection() {
+        return this.props.record.data.display_type === "line_section";
     }
 
     get label() {
@@ -181,40 +105,24 @@ export class ProductLabelSectionAndNoteField extends Many2OneField {
         return label;
     }
 
-    get Many2XAutocompleteProps() {
-        const props = super.Many2XAutocompleteProps;
-        props.isSection = this.isSection(this.props.record);
-        props.isNote = this.isNote(this.props.record);
-        props.placeholder = _t("Search a product");
-        props.updateLabel = this.updateLabel.bind(this);
-        return props;
+    get m2oProps() {
+        return {
+            ...computeM2OProps(this.props),
+            canOpen: !this.props.readonly || this.isProductClickable,
+            placeholder: _t("Search a product"),
+        };
     }
 
-    get isProductClickable() {
-        return this.props.record.evalContext.parent.state !== "draft";
-    }
-
-    get isSectionOrNote() {
-        return this.isSection(this.props.record) || this.isNote(this.props.record);
+    get productName() {
+        const value = this.props.record.data[this.props.name];
+        return value && value[1];
     }
 
     get sectionAndNoteClasses() {
-        if (this.isSection()) {
-            return "fw-bold";
-        } else if (this.isNote()) {
-            return "fst-italic";
-        }
-        return "";
-    }
-
-    isSection(record = null) {
-        record = record || this.props.record;
-        return record.data.display_type === "line_section";
-    }
-
-    isNote(record = null) {
-        record = record || this.props.record;
-        return record.data.display_type === "line_note";
+        return {
+            "fw-bold": this.isSection,
+            "fst-italic": this.isNote,
+        };
     }
 
     switchLabelVisibility() {
@@ -223,20 +131,24 @@ export class ProductLabelSectionAndNoteField extends Many2OneField {
     }
 
     updateLabel(value) {
-        this.props.record.update({
-          name:
-            this.productName && this.productName !== value
-              ? `${this.productName}\n${value}`
-              : value,
+        return this.props.record.update({
+            name:
+                this.productName && this.productName !== value
+                    ? `${this.productName}\n${value}`
+                    : value,
         });
     }
 }
 
 export const productLabelSectionAndNoteField = {
-    ...many2OneField,
+    ...buildM2OFieldDescription(ProductLabelSectionAndNoteField),
     listViewWidth: [240, 400],
-    component: ProductLabelSectionAndNoteField,
+    fieldDependencies: [
+        { name: "name", type: "char" },
+        { name: "display_type", type: "selection" },
+    ],
 };
+
 registry
     .category("fields")
     .add("product_label_section_and_note_field", productLabelSectionAndNoteField);

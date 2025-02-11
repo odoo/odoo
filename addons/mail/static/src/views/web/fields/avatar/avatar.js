@@ -5,15 +5,16 @@ import { Component } from "@odoo/owl";
 
 export class Avatar extends Component {
     static template = "mail.Avatar";
+    static components = { Popover: AvatarCardPopover };
     static props = {
         resModel: { type: String },
         resId: { type: Number },
-        displayName: { type: String },
+        displayName: { type: String, optional: true },
         noSpacing: { type: Boolean, optional: true },
     };
 
     setup() {
-        this.avatarCard = usePopover(AvatarCardPopover);
+        this.avatarCard = usePopover(this.constructor.components.Popover);
     }
 
     onClickAvatar(ev) {

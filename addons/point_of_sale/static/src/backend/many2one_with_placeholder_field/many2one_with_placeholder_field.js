@@ -1,41 +1,42 @@
-import { registry } from "@web/core/registry";
-import { Many2OneField, many2OneField } from "@web/views/fields/many2one/many2one_field";
+import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
+import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
+import {
+    buildM2OFieldDescription,
+    extractM2OFieldProps,
+    m2oSupportedOptions,
+    Many2OneField,
+} from "@web/views/fields/many2one/many2one_field";
 
-export class Many2OneFieldWithPlaceholderField extends Many2OneField {
-    static props = {
-        ...Many2OneField.props,
-        placeholderField: { type: String, optional: true },
-    };
+export class Many2OneFieldWithPlaceholderField extends Component {
+    static template = "point_of_sale.Many2OneFieldWithPlaceholderField";
+    static components = { Many2One };
+    static props = { ...Many2OneField.props };
 
-    get Many2XAutocompleteProps() {
+    get m2oProps() {
+        const props = computeM2OProps(this.props);
         return {
-            ...super.Many2XAutocompleteProps,
-            placeholder:
-                this.props.record.data[this.props.placeholderField] || this.props.placeholder,
+            ...props,
+            placeholder: this.props.record.data[this.props.placeholderField] || props.placeholder,
         };
     }
 }
 
-export const many2OneFieldWithPlaceholderField = {
-    ...many2OneField,
-    component: Many2OneFieldWithPlaceholderField,
+registry.category("fields").add("many2one_with_placeholder_field", {
+    ...buildM2OFieldDescription(Many2OneFieldWithPlaceholderField),
+    extractProps(staticInfo, dynamicInfo) {
+        return {
+            ...extractM2OFieldProps(staticInfo, dynamicInfo),
+            placeholderField: staticInfo.options.placeholder_field,
+        };
+    },
     supportedOptions: [
-        ...many2OneField.supportedOptions,
+        ...m2oSupportedOptions,
         {
             label: _t("Placeholder field"),
             name: "placeholder_field",
             type: "field",
         },
     ],
-    extractProps(params, dynamicInfo) {
-        return {
-            ...many2OneField.extractProps(params, dynamicInfo),
-            placeholderField: params.options.placeholder_field,
-        };
-    },
-};
-
-registry
-    .category("fields")
-    .add("many2one_with_placeholder_field", many2OneFieldWithPlaceholderField);
+});

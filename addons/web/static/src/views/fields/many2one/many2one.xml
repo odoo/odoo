@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.KanbanMany2One">
+        <div class="o-kanban-many2one">
+            <t t-if="props.value">
+                <t t-slot="avatar"/>
+            </t>
+            <t t-elif="!props.readonly">
+                <a class="o_quick_assign btn-link d-flex align-items-center text-dark" href="#" role="button" tabIndex="-1" aria-label="Assign" data-tooltip="Assign" t-on-click.stop.prevent="(e) => this.openAssignPopover(e.currentTarget)">
+                    <i class="fa fa-user-plus"/>
+                </a>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="web.Many2One.linkContent">
+        <t t-esc="displayName"/>
+        <t t-foreach="extraLines" t-as="extraLine" t-key="extraLine_index">
+            <br/>
+            <t t-esc="extraLine"/>
+        </t>
+    </t>
+
+    <t t-name="web.Many2One">
+        <div class="o-many2one d-flex align-items-center gap-1" t-att-class="props.cssClass">
+            <t t-if="props.readonly">
+                <t t-slot="start" record="value"/>
+                <t t-if="value">
+                    <t t-if="props.canOpen">
+                        <a class="o_form_uri" t-att-class="props.linkCssClass" t-on-click.prevent.stop="() => this.openRecord('action')">
+                            <t t-call="web.Many2One.linkContent"/>
+                        </a>
+                    </t>
+                    <t t-else="">
+                        <t t-call="web.Many2One.linkContent"/>
+                    </t>
+                </t>
+                <t t-slot="end" record="value"/>
+            </t>
+            <t t-else="">
+                <div class="o-many2one-selection o_field_many2one_selection" t-ref="root">
+                    <t t-slot="start" record="value"/>
+                    <AutoComplete t-props="autoCompleteProps">
+                        <t t-set-slot="recordItem" t-slot-scope="recordItemScope">
+                            <t t-if="props.slots?.items">
+                                <t t-slot="items" t-props="recordItemScope.recordItem"/>
+                            </t>
+                            <t t-else="">
+                                <t t-esc="recordItemScope.recordItem.label"/>
+                            </t>
+                        </t>
+                    </AutoComplete>
+                    <t t-if="hasLinkButton">
+                        <button class="o_external_button btn btn-link text-action px-1" draggable="false" tabindex="-1" type="button" aria-label="Internal link" data-tooltip="Internal link" t-custom-click="(_, isMiddleClick) => this.openRecord(isMiddleClick ? 'tab' : env.inDialog ? 'dialog' : 'action')">
+                            <i class="oi" t-att-class="env.inDialog ? 'oi-launch' : 'oi-arrow-right'"/>
+                        </button>
+                    </t>
+                    <t t-slot="end" record="value"/>
+                    <t t-if="hasBarcodeButton">
+                        <button class="btn ms-3 o_barcode" draggable="false" tabindex="-1" type="button" aria-label="Scan barcode" data-tooltip="Scan barcode" t-on-click="() => this.openBarcodeScanner()"/>
+                    </t>
+                </div>
+                <t t-set="lines" t-value="extraLines"/>
+                <t t-if="lines.length">
+                    <div class="o-many2one-extra o_field_many2one_extra">
+                        <t t-foreach="lines" t-as="line" t-key="line_index">
+                            <br t-if="!line_first"/>
+                            <span t-esc="line"/>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </div>
+    </t>
+
+</templates>

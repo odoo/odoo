@@ -2,7 +2,7 @@
 
     <t t-name="project.TaskStageWithStateSelection">
         <div class="d-flex gap-1">
-            <Many2OneField t-props="stageProps"/>
+            <Many2One t-props="stageProps"/>
             <ProjectTaskStateSelection t-props="stateProps"/>
         </div>
     </t>

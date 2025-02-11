@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="uom.Many2OneUomField">
+        <Many2One t-props="m2oProps">
+            <t t-set-slot="items" t-slot-scope="itemsSlot">
+                <t t-if="itemsSlot.relative_info">
+                    <div class="uom_autocomplete_grid">
+                        <div t-esc="itemsSlot.label"/>
+                        <div t-esc="itemsSlot.relative_info" class="text-muted"/>
+                    </div>
+                </t>
+                <t t-else="">
+                    <span t-esc="itemsSlot.label"/>
+                </t>
+            </t>
+        </Many2One>
+    </t>
+
+</templates>

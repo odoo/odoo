@@ -5,17 +5,29 @@ import {
     Many2ManyTagsField,
     many2ManyTagsField,
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
-import {
-    Many2OneField,
-    many2OneField,
-} from "@web/views/fields/many2one/many2one_field";
 import { TaxAutoComplete } from "@account/components/tax_autocomplete/tax_autocomplete";
+import { onWillStart } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 export class Many2XTaxTagsAutocomplete extends Many2XAutocomplete {
     static components = {
         ...Many2XAutocomplete.components,
         AutoComplete: TaxAutoComplete,
     };
+
+    setup() {
+        super.setup();
+        this.fieldService = useService("field");
+
+        this.taxLabels = {};
+        onWillStart(async () => {
+            const taxModelFields = await this.fieldService.loadFields("account.tax");
+            for (const [taxKey, taxLabel] of taxModelFields.tax_scope.selection) {
+                this.taxLabels[taxKey] = taxLabel;
+            }
+        });
+    }
+
     get SearchMoreButtonLabel() {
         return _t("Not sure... Help me!");
     }
@@ -27,21 +39,11 @@ export class Many2XTaxTagsAutocomplete extends Many2XAutocomplete {
                 fields: ["id", "name", "tax_scope"],
             })
             .then((records) => {
-                return this.orm
-                    .call("account.tax", "fields_get", [], { attributes: ["selection"] })
-                    .then((fields) => {
-                        const selectionOptions = fields.tax_scope.selection;
+                const recordsWithLabels = records.map((record) => {
+                    return { ...record, tax_scope: this.taxLabels[record.tax_scope] };
+                });
 
-                        const recordsWithLabels = records.map((record) => {
-                            const selectedOption = selectionOptions.find(
-                                (option) => option[0] === record.tax_scope
-                            );
-                            const label = selectedOption ? selectedOption[1] : undefined;
-                            return { ...record, tax_scope: label };
-                        });
-
-                        return recordsWithLabels;
-                    });
+                return recordsWithLabels;
             });
     }
 
@@ -62,24 +64,10 @@ export class Many2ManyTaxTagsField extends Many2ManyTagsField {
     };
 }
 
-export class Many2OneTaxTagsField extends Many2OneField {
-    static components = {
-        ...Many2OneField.components,
-        Many2XAutocomplete: Many2XTaxTagsAutocomplete,
-    };
-}
-
 export const many2ManyTaxTagsField = {
     ...many2ManyTagsField,
     component: Many2ManyTaxTagsField,
     additionalClasses: ['o_field_many2many_tags']
 };
 
-export const many2OneTaxTagsField = {
-    ...many2OneField,
-    component: Many2OneTaxTagsField,
-    additionalClasses: ['o_field_many2one'],
-};
-
 registry.category("fields").add("many2many_tax_tags", many2ManyTaxTagsField);
-registry.category("fields").add("many2one_tax_tags", many2OneTaxTagsField);

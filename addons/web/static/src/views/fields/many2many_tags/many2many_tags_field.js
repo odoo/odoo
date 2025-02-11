@@ -89,12 +89,10 @@ export class Many2ManyTagsField extends Component {
                 onDelete: removeRecord,
                 edit: this.props.record.isInEdition,
             },
-            getEvalParams: (props) => {
-                return {
-                    evalContext: this.evalContext,
-                    readonly: props.readonly,
-                };
-            },
+            getEvalParams: (props) => ({
+                evalContext: this.evalContext,
+                readonly: props.readonly,
+            }),
         });
 
         this.openMany2xRecord = useOpenMany2XRecord({
@@ -111,9 +109,9 @@ export class Many2ManyTagsField extends Component {
 
         this.update = (recordlist) => {
             recordlist = recordlist
-                ? recordlist.filter((element) => {
-                      return !this.tags.some((record) => record.resId === element.id);
-                  })
+                ? recordlist.filter(
+                      (element) => !this.tags.some((record) => record.resId === element.id)
+                  )
                 : [];
             if (!recordlist.length) {
                 return;
@@ -187,10 +185,14 @@ export class Many2ManyTagsField extends Component {
         ]).toList(this.props.context);
     }
 
-    getOptionClassnames(record) {
+    mapLoadedRecordToOption({ value, label, record }) {
         const records = this.props.record.data[this.props.name].records;
         const isSelected = records.some((r) => r.resId === record.id);
-        return isSelected ? "dropdown-item-selected" : "";
+        return {
+            value,
+            label,
+            classList: isSelected ? "dropdown-item-selected" : "",
+        };
     }
 }
 

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="resource_mail.KanbanMany2OneAvatarResourceField">
+        <KanbanMany2One t-props="m2oProps">
+            <t t-set-slot="avatar">
+                <t t-if="resourceType === 'material'">
+                    <span class="o_avatar o_m2o_avatar">
+                        <span class="d-inline-flex align-items-center justify-content-center rounded o_material_resource cursor-default me-1" t-att-title="value[1]">
+                            <i class="fa fa-wrench"/>
+                        </span>
+                    </span>
+                </t>
+                <t t-elif="resourceType === 'user'">
+                    <AvatarResource resModel="relation" resId="value[0]"/>
+                </t>
+            </t>
+            <t t-set-slot="items" t-slot-scope="itemsScope">
+                <span class="o_avatar o_m2o_avatar">
+                    <t t-if="itemsScope.record.resource_type === 'material'">
+                        <span class="d-inline-flex align-items-center justify-content-center rounded o_material_resource cursor-default me-1" t-att-title="itemsScope.record.id">
+                            <i class="fa fa-wrench"/>
+                        </span>
+                    </t>
+                    <t t-elif="itemsScope.record.resource_type === 'user'">
+                        <img class="rounded me-1" t-attf-src="/web/image/{{relation}}/{{itemsScope.record.id}}/avatar_128"/>
+                    </t>
+                    <t t-esc="itemsScope.record.display_name"/>
+                </span>
+            </t>
+        </KanbanMany2One>
+    </t>
+
+</templates>
