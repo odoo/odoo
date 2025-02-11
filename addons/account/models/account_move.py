@@ -109,6 +109,9 @@ class AccountMove(models.Model):
     def _sequence_year_range_monthly_regex(self):
         return self.journal_id.sequence_override_regex or super()._sequence_year_range_monthly_regex
 
+    def _get_invoice_line_ids_domain(self):
+        return [('display_type', 'in', ('product', 'line_section', 'line_note'))]
+
     # ==============================================================================================
     #                                          JOURNAL ENTRY
     # ==============================================================================================
@@ -358,7 +361,7 @@ class AccountMove(models.Model):
         'move_id',
         string='Invoice lines',
         copy=False,
-        domain=[('display_type', 'in', ('product', 'line_section', 'line_note'))],
+        domain=lambda self: self._get_invoice_line_ids_domain(),
     )
 
     # === Date fields === #
