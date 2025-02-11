@@ -1,42 +1,85 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<templates id="template" xml:space="preserve">
-
+<templates xml:space="preserve">
 <t t-name="web.ColorPicker">
-    <div class="o_colorpicker_widget" t-ref="el" t-on-click="onClick" t-on-keydown="onKeydown" >
-        <div class="d-flex justify-content-between align-items-stretch mb-2">
-            <div t-ref="colorPickerArea" class="o_color_pick_area position-relative w-75" t-att-style="props.noTransparency ? 'width: 89%;' : None" t-on-mousedown="onMouseDownPicker">
-                <div t-ref="colorPickerPointer" class="o_picker_pointer rounded-circle p-1 position-absolute" tabindex="-1"/>
-            </div>
-            <div t-ref="colorSlider" class="o_color_slider position-relative" t-on-mousedown="onMouseDownSlider">
-                <div t-ref="colorSliderPointer" class="o_slider_pointer" tabindex="-1"/>
-            </div>
-            <div t-ref="opacitySlider" class="o_opacity_slider position-relative" t-if="!props.noTransparency" t-on-mousedown="onMouseDownOpacitySlider">
-                <div t-ref="opacitySliderPointer" class="o_opacity_pointer" tabindex="-1"/>
-            </div>
+    <div class="o_font_color_selector user-select-none" t-on-pointerdown.stop="() => {}" data-prevent-closing-overlay="true">
+        <div class="mb-1 d-flex">
+            <button class="btn btn-sm btn-light ms-1"
+                t-att-class="{active: state.activeTab === 'solid'}"
+                t-on-click="() => this.setTab('solid')">
+                Solid
+            </button>
+            <button class="btn btn-sm btn-light"
+                t-att-class="{active: state.activeTab === 'custom'}"
+                t-on-click="() => this.setTab('custom')">
+                Custom
+            </button>
+            <button class="btn btn-sm btn-light"
+                t-att-class="{active: state.activeTab === 'gradient'}"
+                t-on-click="() => this.setTab('gradient')">
+                Gradient
+            </button>
+            <button class="btn btn-sm btn-light fa fa-trash me-1"
+                    title="Reset"
+                    t-on-click="onColorApply"
+                    t-on-mouseover="onColorHover"
+                    t-on-mouseout="onColorHoverOut"/>
         </div>
-        <div class="o_color_picker_inputs d-flex justify-content-between mb-2" t-on-change="debouncedOnChangeInputs">
-            <t t-set="input_classes" t-value="'p-0 border-0 text-center font-monospace bg-transparent'" />
+        <t t-if="state.activeTab==='solid'">
+            <div class="p-1"
+                t-on-click="onColorApply"
+                t-on-mouseover="onColorHover"
+                t-on-mouseout="onColorHoverOut">
+                <div class="o_colorpicker_section">
+                    <button data-color="o-color-1" t-attf-style="background-color: var(--o-color-1)" class="btn o_color_button"/>
+                    <button data-color="o-color-3" t-attf-style="background-color: var(--o-color-3)" class="btn o_color_button"/>
+                    <button data-color="o-color-2" t-attf-style="background-color: var(--o-color-2)" class="btn o_color_button"/>
+                    <button data-color="o-color-4" t-attf-style="background-color: var(--o-color-4)" class="ms-2 btn o_color_button"/>
+                    <button data-color="o-color-5" t-attf-style="background-color: var(--o-color-5)" class="btn o_color_button"/>
+                </div>
 
-            <div class="o_hex_div px-1 d-flex align-items-baseline">
-                <input type="text" t-attf-class="o_hex_input {{input_classes}}" data-color-method="hex" size="1"
-                    t-on-input="onHexColorInput"/>
-                <label class="flex-grow-0 ms-1 mb-0">hex</label>
-            </div>
-            <div class="o_rgba_div px-1 d-flex align-items-baseline">
-                <input type="text" t-attf-class="o_red_input {{input_classes}}" data-color-method="rgb" size="1"/>
-                <input type="text" t-attf-class="o_green_input {{input_classes}}" data-color-method="rgb" size="1"/>
-                <input type="text" t-attf-class="o_blue_input {{input_classes}}" data-color-method="rgb" size="1"/>
-                <t t-if="!props.noTransparency">
-                    <input type="text" t-attf-class="o_opacity_input {{input_classes}}" data-color-method="opacity" size="1"/>
-                    <label class="flex-grow-0 ms-1 mb-0">
-                        RGBA
-                    </label>
+                <t t-foreach="DEFAULT_COLORS" t-as="line" t-key="line_index">
+                    <div class="o_color_section d-flex">
+                        <t t-foreach="line" t-as="color" t-key="color_index">
+                            <button class="o_color_button btn" t-att-class="{'selected': color === this.state.currentCustomColor.toUpperCase()}" t-att-data-color="color" t-attf-style="background-color: {{color}}"/>
+                        </t>
+                    </div>
                 </t>
-                <label t-else="" class="flex-grow-0 ms-1 mb-0">
-                    RGB
-                </label>
             </div>
-        </div>
+        </t>
+        <t t-if="state.activeTab==='custom'">
+            <div class="p-1">
+                <div class="o_colorpicker_section" t-on-click="onColorApply" t-on-mouseover="onColorHover" t-on-mouseout="onColorHoverOut">
+                    <t t-foreach="this.usedCustomColors" t-as="color" t-key="color_index">
+                        <button t-if="color !== this.state.currentCustomColor.toLowerCase()" class="o_color_button btn" t-att-data-color="color" t-attf-style="background-color: {{color}}"/>
+                    </t>
+                    <button class="o_color_button btn selected" t-att-data-color="this.state.currentCustomColor" t-attf-style="background-color: {{this.state.currentCustomColor}}"/>
+                </div>
+                <div class="o_colorpicker_section" t-on-click="onColorApply" t-on-mouseover="onColorHover" t-on-mouseout="onColorHoverOut">
+                    <button data-color="black" class="btn o_color_button bg-black"></button>
+                    <button data-color="900" class="o_color_button btn" style="background-color: var(--900)"></button>
+                    <button data-color="800" class="o_color_button btn" style="background-color: var(--800)"></button>
+                    <button data-color="600" class="o_color_button btn" style="background-color: var(--600)"></button>
+                    <button data-color="400" class="o_color_button btn" style="background-color: var(--400)"></button>
+                    <button data-color="200" class="o_color_button btn" style="background-color: var(--200)"></button>
+                    <button data-color="100" class="o_color_button btn" style="background-color: var(--100)"></button>
+                    <button data-color="white" class="o_color_button btn bg-white"></button>
+                </div>
+                <CustomColorPicker
+                    defaultColor="this.defaultColor"
+                    onColorSelect.bind="(color) => this.applyColor(color.hex)"
+                    onColorPreview.bind="onColorPreview" />
+            </div>
+        </t>
+        <t t-if="state.activeTab==='gradient'">
+            <div class="o_colorpicker_sections p-2" t-on-click="onColorApply" t-on-mouseover="onColorHover" t-on-mouseout="onColorHoverOut">
+                <t t-foreach="this.DEFAULT_GRADIENT_COLORS" t-as="gradient" t-key="gradient">
+                    <button class="w-50 m-0 o_color_button btn" t-attf-style="background-image: #{gradient};" t-att-data-color="gradient"/>
+                </t>
+            </div>
+            <div class="px-2">
+                <button t-attf-style="background-image: {{ getCurrentGradientColor() }};" class="w-50 border btn" title="Define a custom gradient">Custom</button>
+                <GradientPicker onGradientChange.bind="applyColor" selectedGradient="getCurrentGradientColor()"/>
+            </div>
+        </t>
     </div>
 </t>
 

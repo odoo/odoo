@@ -1,4 +1,4 @@
-import { rgbToHex } from "@html_editor/utils/color";
+import { rgbToHex } from "@web/core/utils/colors";
 import { expect, getFixture, test } from "@odoo/hoot";
 
 test("should convert an rgb color to hexadecimal", async () => {

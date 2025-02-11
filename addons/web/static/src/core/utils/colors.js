@@ -11,9 +11,20 @@
  *          - lightness [0, 100] (float)
  */
 export function convertRgbToHsl(r, g, b) {
-    if (typeof (r) !== 'number' || isNaN(r) || r < 0 || r > 255
-            || typeof (g) !== 'number' || isNaN(g) || g < 0 || g > 255
-            || typeof (b) !== 'number' || isNaN(b) || b < 0 || b > 255) {
+    if (
+        typeof r !== "number" ||
+        isNaN(r) ||
+        r < 0 ||
+        r > 255 ||
+        typeof g !== "number" ||
+        isNaN(g) ||
+        g < 0 ||
+        g > 255 ||
+        typeof b !== "number" ||
+        isNaN(b) ||
+        b < 0 ||
+        b > 255
+    ) {
         return false;
     }
 
@@ -46,7 +57,7 @@ export function convertRgbToHsl(r, g, b) {
         saturation: saturation * 100,
         lightness: lightness * 100,
     };
-};
+}
 /**
  * Converts HSL color components to RGB components.
  *
@@ -60,9 +71,20 @@ export function convertRgbToHsl(r, g, b) {
  *          - blue [0, 255] (integer)
  */
 export function convertHslToRgb(h, s, l) {
-    if (typeof (h) !== 'number' || isNaN(h) || h < 0 || h > 360
-            || typeof (s) !== 'number' || isNaN(s) || s < 0 || s > 100
-            || typeof (l) !== 'number' || isNaN(l) || l < 0 || l > 100) {
+    if (
+        typeof h !== "number" ||
+        isNaN(h) ||
+        h < 0 ||
+        h > 360 ||
+        typeof s !== "number" ||
+        isNaN(s) ||
+        s < 0 ||
+        s > 100 ||
+        typeof l !== "number" ||
+        isNaN(l) ||
+        l < 0 ||
+        l > 100
+    ) {
         return false;
     }
 
@@ -70,12 +92,12 @@ export function convertHslToRgb(h, s, l) {
     var saturation = s / 100;
     var lightness = l / 100;
     var chroma = saturation * (1 - Math.abs(2 * lightness - 1));
-    var secondComponent = chroma * (1 - Math.abs(huePrime % 2 - 1));
+    var secondComponent = chroma * (1 - Math.abs((huePrime % 2) - 1));
     var lightnessAdjustment = lightness - chroma / 2;
     var precision = 255;
     chroma = Math.round((chroma + lightnessAdjustment) * precision);
     secondComponent = Math.round((secondComponent + lightnessAdjustment) * precision);
-    lightnessAdjustment = Math.round((lightnessAdjustment) * precision);
+    lightnessAdjustment = Math.round(lightnessAdjustment * precision);
     if (huePrime >= 0 && huePrime < 1) {
         return {
             red: chroma,
@@ -119,7 +141,7 @@ export function convertHslToRgb(h, s, l) {
         };
     }
     return false;
-};
+}
 /**
  * Converts RGBA color components to a normalized CSS color: if the opacity
  * is invalid or equal to 100, a hex is returned; otherwise a rgba() css color
@@ -139,19 +161,30 @@ export function convertHslToRgb(h, s, l) {
  * @returns {string}
  */
 export function convertRgbaToCSSColor(r, g, b, a) {
-    if (typeof (r) !== 'number' || isNaN(r) || r < 0 || r > 255
-            || typeof (g) !== 'number' || isNaN(g) || g < 0 || g > 255
-            || typeof (b) !== 'number' || isNaN(b) || b < 0 || b > 255) {
+    if (
+        typeof r !== "number" ||
+        isNaN(r) ||
+        r < 0 ||
+        r > 255 ||
+        typeof g !== "number" ||
+        isNaN(g) ||
+        g < 0 ||
+        g > 255 ||
+        typeof b !== "number" ||
+        isNaN(b) ||
+        b < 0 ||
+        b > 255
+    ) {
         return false;
     }
-    if (typeof (a) !== 'number' || isNaN(a) || a < 0 || Math.abs(a - 100) < Number.EPSILON) {
-        const rr = r < 16 ? '0' + r.toString(16) : r.toString(16);
-        const gg = g < 16 ? '0' + g.toString(16) : g.toString(16);
-        const bb = b < 16 ? '0' + b.toString(16) : b.toString(16);
-        return (`#${rr}${gg}${bb}`).toUpperCase();
+    if (typeof a !== "number" || isNaN(a) || a < 0 || Math.abs(a - 100) < Number.EPSILON) {
+        const rr = r < 16 ? "0" + r.toString(16) : r.toString(16);
+        const gg = g < 16 ? "0" + g.toString(16) : g.toString(16);
+        const bb = b < 16 ? "0" + b.toString(16) : b.toString(16);
+        return `#${rr}${gg}${bb}`.toUpperCase();
     }
     return `rgba(${r}, ${g}, ${b}, ${parseFloat((a / 100.0).toFixed(3))})`;
-};
+}
 /**
  * Converts a CSS color (rgb(), rgba(), hexadecimal) to RGBA color components.
  *
@@ -187,7 +220,7 @@ export function convertCSSColorToRgba(cssColor) {
             red: parseInt(cssColor.substr(1, 2), 16),
             green: parseInt(cssColor.substr(3, 2), 16),
             blue: parseInt(cssColor.substr(5, 2), 16),
-            opacity: (cssColor.length === 9 ? (parseInt(cssColor.substr(7, 2), 16) / 255) : 1) * 100,
+            opacity: (cssColor.length === 9 ? parseInt(cssColor.substr(7, 2), 16) / 255 : 1) * 100,
         };
     }
 
@@ -217,7 +250,7 @@ export function convertCSSColorToRgba(cssColor) {
         };
     }
     return false;
-};
+}
 /**
  * Converts a CSS color (rgb(), rgba(), hexadecimal) to a normalized version
  * of the same color (@see convertRgbaToCSSColor).
@@ -235,7 +268,7 @@ export function normalizeCSSColor(cssColor) {
         return cssColor;
     }
     return convertRgbaToCSSColor(rgba.red, rgba.green, rgba.blue, rgba.opacity);
-};
+}
 /**
  * Checks if a given string is a css color.
  *
@@ -245,7 +278,7 @@ export function normalizeCSSColor(cssColor) {
  */
 export function isCSSColor(cssColor) {
     return convertCSSColorToRgba(cssColor) !== false;
-};
+}
 /**
  * Mixes two colors by applying a weighted average of their red, green and blue
  * components.
@@ -261,6 +294,76 @@ export function mixCssColors(cssColor1, cssColor2, weight) {
     const rgba2 = convertCSSColorToRgba(cssColor2);
     const rgb1 = [rgba1.red, rgba1.green, rgba1.blue];
     const rgb2 = [rgba2.red, rgba2.green, rgba2.blue];
-    const [r, g, b] = rgb1.map((_, idx) => Math.round(rgb2[idx] + (rgb1[idx] - rgb2[idx]) * weight));
+    const [r, g, b] = rgb1.map((_, idx) =>
+        Math.round(rgb2[idx] + (rgb1[idx] - rgb2[idx]) * weight)
+    );
     return convertRgbaToCSSColor(r, g, b);
-};
+}
+
+/**
+ * @param {string} [value]
+ * @returns {boolean}
+ */
+export function isColorGradient(value) {
+    return value && value.includes("-gradient(");
+}
+
+/**
+ * Takes a color (rgb, rgba or hex) and returns its hex representation. If the
+ * color is given in rgba, the background color of the node whose color we're
+ * converting is used in conjunction with the alpha to compute the resulting
+ * color (using the formula: `alpha*color + (1 - alpha)*background` for each
+ * channel).
+ *
+ * @param {string} rgb
+ * @param {HTMLElement} [node]
+ * @returns {string} hexadecimal color (#RRGGBB)
+ */
+export function rgbToHex(rgb = "", node = null) {
+    if (rgb.startsWith("#")) {
+        return rgb;
+    } else if (rgb.startsWith("rgba")) {
+        const values = rgb.match(/[\d.]{1,5}/g) || [];
+        const alpha = parseFloat(values.pop());
+        // Retrieve the background color.
+        let bgRgbValues = [];
+        if (node) {
+            let bgColor = getComputedStyle(node).backgroundColor;
+            if (bgColor.startsWith("rgba")) {
+                // The background color is itself rgba so we need to compute
+                // the resulting color using the background color of its
+                // parent.
+                bgColor = rgbToHex(bgColor, node.parentElement);
+            }
+            if (bgColor && bgColor.startsWith("#")) {
+                bgRgbValues = (bgColor.match(/[\da-f]{2}/gi) || []).map((val) => parseInt(val, 16));
+            } else if (bgColor && bgColor.startsWith("rgb")) {
+                bgRgbValues = (bgColor.match(/[\d.]{1,5}/g) || []).map((val) => parseInt(val));
+            }
+        }
+        bgRgbValues = bgRgbValues.length ? bgRgbValues : [255, 255, 255]; // Default to white.
+
+        return (
+            "#" +
+            values
+                .map((value, index) => {
+                    const converted = Math.floor(
+                        alpha * parseInt(value) + (1 - alpha) * bgRgbValues[index]
+                    );
+                    const hex = parseInt(converted).toString(16);
+                    return hex.length === 1 ? "0" + hex : hex;
+                })
+                .join("")
+        );
+    } else {
+        return (
+            "#" +
+            (rgb.match(/\d{1,3}/g) || [])
+                .map((x) => {
+                    x = parseInt(x).toString(16);
+                    return x.length === 1 ? "0" + x : x;
+                })
+                .join("")
+        );
+    }
+}
