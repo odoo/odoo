@@ -10,6 +10,9 @@ import time
 import threading
 import re
 import functools
+import uuid
+import pathlib
+from shutil import rmtree
 
 from psycopg2 import sql
 
@@ -75,6 +78,22 @@ def force_hook():
         func()
 
 
+class FileLogger(logging.Logger):
+    """
+    This class is made to init a new logger because if the filehandler
+    was passed to a logger that got created from getLogger this would
+    print the logs to the terminal and other files as its related to root
+    logger.
+    """
+    def __init__(self, name, filename, mode='a', level=logging.INFO):
+        super().__init__(name, level)
+
+        # Create a custom file handler
+        self.file_handler = logging.FileHandler(filename=filename, mode=mode)
+
+        # Add the file handler to the logger
+        self.addHandler(self.file_handler)
+
 class Collector:
     """
     Base class for objects that collect profiling data.
@@ -88,6 +107,7 @@ class Collector:
     """
     name = None                 # symbolic name of the collector
     _registry = {}              # map collector names to their class
+    checkpoint = None
 
     @classmethod
     def __init_subclass__(cls):
@@ -111,15 +131,21 @@ class Collector:
     def stop(self):
         """ Stop the collector. """
 
-    def add(self, entry=None, frame=None):
+    def add(self, entry=None, frame=None, final=False):
         """ Add an entry (dict) to this collector. """
         # todo add entry count limit
-        self._entries.append({
-            'stack': self._get_stack_trace(frame),
-            'exec_context': getattr(self.profiler.init_thread, 'exec_context', ()),
-            'start': real_time(),
-            **(entry or {}),
-        })
+        if final:
+            entry = {'stack':[], 'start': real_time()}
+        else:
+            entry = {
+                'stack': self._get_stack_trace(frame),
+                'exec_context': getattr(self.profiler.init_thread, 'exec_context', ()),
+                'start': real_time(),
+                **(entry or {}),
+            }
+
+        self._entries.append(entry)
+        self.checkpoint.info(f"{entry},")
 
     def _get_stack_trace(self, frame=None):
         """ Return the stack trace to be included in a given entry. """
@@ -196,7 +222,7 @@ class PeriodicCollector(Collector):
             last_time = real_time()
             time.sleep(self.frame_interval)
 
-        self._entries.append({'stack': [], 'start': real_time()})  # add final end frame
+        self.add(final=True) # add final end frame
 
     def start(self):
         interval = self.profiler.params.get('traces_async_interval')
@@ -215,8 +241,10 @@ class PeriodicCollector(Collector):
         self.__thread.join()
         self.profiler.init_thread.profile_hooks.remove(self.add)
 
-    def add(self, entry=None, frame=None):
+    def add(self, entry=None, frame=None, final=False):
         """ Add an entry (dict) to this collector. """
+        if final:
+            super().add(final=final)
         frame = frame or get_current_frame(self.profiler.init_thread)
         if frame == self.last_frame:
             # don't save if the frame is exactly the same as the previous one.
@@ -530,6 +558,7 @@ class Profiler:
         self.filecache = {}
         self.params = params or {}  # custom parameters usable by collectors
         self.profile_id = None
+        self.UUID=str(uuid.uuid4())
 
         if db is ...:
             # determine database from current thread
@@ -538,7 +567,12 @@ class Profiler:
                 # only raise if path is not given and db is not explicitely disabled
                 raise Exception('Database name cannot be defined automaticaly. \n Please provide a valid/falsy dbname or path parameter')
         self.db = db
+        self.checkpoint_prefix = f"/tmp/odoo_profiler/{self.db}/{self.profile_session}/{self.UUID}"
 
+        request_path_str = f"{self.checkpoint_prefix}/profile.json" 
+        request_path = pathlib.Path(request_path_str)
+        request_path.parent.mkdir(parents=True, exist_ok=True)
+        self.checkpoint = FileLogger("profiler_start", filename=request_path_str, mode='a')
         # collectors
         if collectors is None:
             collectors = ['sql', 'traces_async']
@@ -551,6 +585,8 @@ class Profiler:
                     _logger.error("Could not create collector with name %r", collector)
                     continue
             collector.profiler = self
+            collector_request_path_str = f"{self.checkpoint_prefix}/{collector.name}.json" 
+            collector.checkpoint = FileLogger("profiler_checkpoint", filename=collector_request_path_str, mode='a')
             self.collectors.append(collector)
 
     def __enter__(self):
@@ -558,6 +594,7 @@ class Profiler:
         try:
             self.init_frame = get_current_frame(self.init_thread)
             self.init_stack_trace = _get_stack_trace(self.init_frame)
+            self.checkpoint.info(f"{self.init_stack_trace},")
         except KeyError:
             # when using thread pools (gevent) the thread won't exist in the current_frames
             # this case is managed by http.py but will still fail when adding a profiler
@@ -578,7 +615,9 @@ class Profiler:
             self.init_thread.profiler_params = self.params
         if self.disable_gc and gc.isenabled():
             gc.disable()
+        self.checkpoint.info(f"'{self.description}',")
         self.start_time = real_time()
+        self.checkpoint.info(f"{self.start_time},")
         for collector in self.collectors:
             collector.start()
         return self
@@ -589,6 +628,7 @@ class Profiler:
                 collector.stop()
             self.duration = real_time() - self.start_time
             self._add_file_lines(self.init_stack_trace)
+            rmtree(self.checkpoint_prefix)
 
             if self.db:
                 # pylint: disable=import-outside-toplevel
