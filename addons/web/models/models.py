@@ -334,15 +334,13 @@ class Base(models.AbstractModel):
         :raise AccessError: if user is not allowed to access requested information
         """
         groupby = tuple(groupby)
-        aggregates = tuple(aggregates)
+        aggregates = self._web_pre_process_aggregates(aggregates)
 
         if not order:
             order = ', '.join(groupby)
 
         groups = self._read_group(
-            domain, groupby,
-            # Avoid recordset in _web_read_group_format as aggregate
-            tuple(agg.replace(':recordset', ':array_agg') for agg in aggregates),
+            domain, groupby, aggregates,
             having=having, offset=offset, limit=limit, order=order,
         )
 
@@ -369,7 +367,45 @@ class Base(models.AbstractModel):
             # This assumes that existing data is sorted by field 'groupby_name'
             groups = self._web_read_group_fill_temporal(groups, groupby, aggregates, **fill_temporal)
 
-        return self._web_read_group_format(groupby, aggregates, groups)
+
+        groups = self._web_read_group_format(groupby, aggregates, groups)
+
+        return self._web_post_process_monetary_fields(groups, aggregates)
+
+    def _web_pre_process_aggregates(self, aggregates):
+        new_aggregates = []
+
+        for agg in aggregates:
+            # Avoid recordset in _web_read_group_format as aggregate
+            new_aggregates.append(agg.replace(':recordset', ':array_agg'))
+
+            field_name = agg.split(':')[0].split('.')[0]
+            field = self._fields.get(field_name)
+            if field and field.type == 'monetary':
+                currency_field = field.get_currency_field(self)
+                if self._fields[currency_field].store or self._fields[currency_field].search:
+                    new_aggregates.append(f'{currency_field}:count_distinct')
+
+        return tuple(new_aggregates)
+
+    def _web_post_process_monetary_fields(self, groups, aggregates):
+        currency_field_agg_mapping = {}
+        for agg in aggregates:
+            field_name = agg.split(':')[0].split('.')[0]
+            field = self._fields.get(field_name)
+            if field and field.type == 'monetary':
+                currency_field = field.get_currency_field(self)
+                if self._fields[currency_field].store or self._fields[currency_field].search:
+                    currency_field_agg_mapping[agg] = f'{currency_field}:count_distinct'
+
+        if not currency_field_agg_mapping:
+            return groups
+
+        for group in groups:
+            for monetary_agg, currency_field_agg in currency_field_agg_mapping.items():
+                group[monetary_agg] = group[monetary_agg] if group[currency_field_agg] == 1 else False
+
+        return groups
 
     def _web_read_group_field_expand(self, groupby):
         """ Return the field that should be expand """
