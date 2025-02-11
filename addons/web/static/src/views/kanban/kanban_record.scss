@@ -129,3 +129,19 @@
         }
     }
 }
+
+@include media-breakpoint-down(sm) {
+    .o_field_x2many_kanban.o_kanban_mobile .o_kanban_record:not(.o_kanban_ghost) {
+        border: none;
+
+        &:not(:last-of-type):after {
+            content: '';
+            display: block;
+            height: 1px;
+            width: calc(100% + 2 * var(--formView-sheet-padding-x));
+            background-color: $gray-300;
+            margin-inline: calc(var(--formView-sheet-padding-y) * -1);
+            margin-block-start: map-get($spacers, 1);
+        }
+    }
+}
