@@ -1,22 +1,31 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 from base64 import b64encode
 from functools import partial
+from unittest.mock import patch
+
+from werkzeug.datastructures import FileStorage
 
 from odoo.fields import Command
 from odoo.tests import Form, tagged
 from odoo.tools.misc import file_open
 
-from odoo.addons.sale.tests.common import SaleCommon
+from odoo.addons.sale_management.tests.common import SaleManagementCommon
+from odoo.addons.sale_pdf_quote_builder.controllers.quotation_document import (
+    QuotationDocumentController
+)
 from .files import forms_pdf, plain_pdf
 
 
 @tagged('-at_install', 'post_install')
-class TestPDFQuoteBuilder(SaleCommon):
+class TestPDFQuoteBuilder(SaleManagementCommon):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
+        cls.QuotationDocumentController = QuotationDocumentController()
 
         cls.sale_order.validity_date = '2020-11-04'
         cls.sale_order.partner_id.tz = 'Europe/Brussels'
@@ -56,6 +65,7 @@ class TestPDFQuoteBuilder(SaleCommon):
             'res_id': cls.product.id,
         })
         cls.internal_user = cls._create_new_internal_user(login='internal.user@test.odoo.com')
+        cls.alt_company = cls.env['res.company'].create({'name': "Backup Company"})
 
     def _create_so_form(self, **values):
         """Default values limited to preexisting ones. No Command"""
@@ -162,6 +172,65 @@ class TestPDFQuoteBuilder(SaleCommon):
         # should return all document data regardless of access
         self.assertEqual('Header', dialog_param['headers']['files'][0]['name'])
         self.assertEqual('Product > Test Product', dialog_param['lines'][0]['name'])
+
+    def test_quotation_document_upload_no_template(self):
+        """Check that uploading quotation documents get assigned the active company."""
+        if 'website' not in self.env:
+            self.skipTest("Module `website` not found")
+        else:
+            from odoo.addons.website.tools import MockRequest  # noqa: PLC0415
+
+        # Upload document without Sale Order Template
+        with (
+            MockRequest(self.env) as request,
+            file_open(plain_pdf, 'rb') as file,
+            patch.object(request.httprequest.files, 'getlist', lambda _key: [FileStorage(file)]),
+        ):
+            res = self.QuotationDocumentController.upload_document(
+                ufile=FileStorage(file),
+                allowed_company_ids=json.dumps([self.alt_company.id, self.env.company.id]),
+            )
+            self.assertEqual(res.status_code, 200, "Upload should be successful")
+
+        quotation_document = self.env['quotation.document'].search([
+            ('name', '=', plain_pdf),
+        ], limit=1)
+        self.assertTrue(quotation_document, "A new quotation document should be created")
+        self.assertEqual(
+            quotation_document.company_id,
+            self.alt_company,
+            "Quotation document company should be the currently active company",
+        )
+
+    def test_quotation_document_upload_for_template(self):
+        """Check that uploading quotation documents get assigned the the quotation company."""
+        if 'website' not in self.env:
+            self.skipTest("Module `website` not found")
+        else:
+            from odoo.addons.website.tools import MockRequest  # noqa: PLC0415
+
+        # Upload a document for a Sale Order Template without company id
+        self.empty_order_template.company_id = False
+        with (
+            MockRequest(self.env) as request,
+            file_open(forms_pdf, 'rb') as file,
+            patch.object(request.httprequest.files, 'getlist', lambda _key: [FileStorage(file)]),
+        ):
+            res = self.QuotationDocumentController.upload_document(
+                ufile=FileStorage(file),
+                sale_order_template_id=str(self.empty_order_template.id),
+                allowed_company_ids=json.dumps([self.alt_company.id, self.env.company.id]),
+            )
+            self.assertEqual(res.status_code, 200, "Upload should be successful")
+
+        quotation_document = self.env['quotation.document'].search([
+            ('name', '=', forms_pdf),
+        ], limit=1)
+        self.assertTrue(quotation_document, "A new quotation document should be created")
+        self.assertFalse(
+            quotation_document.company_id,
+            "Quotation document shouldn't have a company id",
+        )
 
     def _test_custom_content_kanban_like(self):
         # TODO VCR finish tour and uncomment
