@@ -1157,6 +1157,8 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
             'product_uom': uom_km_id,
             'quantity': 1,
         })
+        for move in so.picking_ids.move_ids:
+            move.quantity = move.product_uom_qty
         picking.button_validate()
 
         self.assertEqual(so.order_line[1].product_id, self.product_b)
