@@ -1,10 +1,10 @@
 import { Component, onWillUpdateProps, useState } from "@odoo/owl";
-import { ColorPicker } from "@web/core/color_picker/color_picker";
-import { isColorGradient, rgbToHex } from "@html_editor/utils/color";
+import { CustomColorPicker as ColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
+import { isColorGradient, rgbToHex } from "@web/core/utils/colors";
 
 export class GradientPicker extends Component {
     static components = { ColorPicker };
-    static template = "html_editor.GradientPicker";
+    static template = "web.GradientPicker";
     static props = {
         onGradientChange: { type: Function, optional: true },
         selectedGradient: { type: String, optional: true },

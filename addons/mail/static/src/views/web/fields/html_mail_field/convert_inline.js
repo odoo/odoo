@@ -1,6 +1,6 @@
 import { isBlock } from "@html_editor/utils/blocks";
-import { rgbToHex } from "@html_editor/utils/color";
 import { getAdjacentPreviousSiblings } from "@html_editor/utils/dom_traversal";
+import { rgbToHex } from "@web/core/utils/colors";
 
 function parentsGet(node, root = undefined) {
     const parents = [];
@@ -931,15 +931,15 @@ function fontToImg(element) {
 
     for (const font of element.querySelectorAll(".fa")) {
         let icon, content;
-        fonts.fontIcons.find((fontIcon) => {
-            return fonts.getCssSelectors(fontIcon.parser).find((data) => {
+        fonts.fontIcons.find((fontIcon) =>
+            fonts.getCssSelectors(fontIcon.parser).find((data) => {
                 if (font.matches(data.selector.replace(/::?before/g, ""))) {
                     icon = data.names[0].split("-").shift();
                     content = data.css.match(/content:\s*['"]?(.)['"]?/)[1];
                     return true;
                 }
-            });
-        });
+            })
+        );
         if (content) {
             const color = _getStylePropertyValue(font, "color").replace(/\s/g, "");
             let backgroundColoredElement = font;
