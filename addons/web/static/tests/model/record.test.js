@@ -157,7 +157,40 @@ test(`predefined fields and values`, async () => {
     expect(`.o_field_widget input`).toHaveValue("abc");
 });
 
-test(`provides a way to handle changes in the record`, async () => {
+test(`Record with onRootLoaded props`, async () => {
+    let record;
+    class Parent extends Component {
+        static props = ["*"];
+        static components = { Record, Field };
+        static template = xml`
+            <Record resModel="'foo'" fieldNames="['foo']" fields="fields" t-slot-scope="data" onRootLoaded.bind="onRootLoaded">
+                <Field name="'foo'" record="data.record"/>
+            </Record>
+        `;
+
+        setup() {
+            this.fields = {
+                foo: {
+                    name: "foo",
+                    type: "char",
+                },
+            };
+        }
+
+        onRootLoaded(root) {
+            expect.step("onRootLoaded");
+            record = root;
+        }
+    }
+
+    await mountWithCleanup(Parent);
+    expect.verifySteps(["onRootLoaded"]);
+    expect(record.data.foo).toBe("");
+    await contains(`[name='foo'] input`).edit("coucou");
+    expect(record.data.foo).toBe("coucou");
+});
+
+test(`Record with onRecordChanged props`, async () => {
     class Parent extends Component {
         static props = ["*"];
         static components = { Record, Field };
@@ -200,7 +233,7 @@ test(`provides a way to handle changes in the record`, async () => {
     expect(`[name='foo'] input`).toHaveValue("753");
 });
 
-test(`provides a way to handle before/after saved the record`, async () => {
+test(`Record with onWillSaveRecord and onRecordSavedProps`, async () => {
     class Parent extends Component {
         static props = ["*"];
         static components = { Record, Field };
@@ -226,6 +259,34 @@ test(`provides a way to handle before/after saved the record`, async () => {
     await contains(`[name='foo'] input`).edit("abc");
     await contains(`button.save`).click();
     expect.verifySteps(["fields_get", "web_read", "onWillSaveRecord", "web_save", "onRecordSaved"]);
+});
+
+test(`can access record changes`, async () => {
+    class Parent extends Component {
+        static props = ["*"];
+        static components = { Record, Field };
+        static template = xml`
+            <Record resModel="'foo'" fieldNames="['foo']" t-slot-scope="data">
+                <button class="do_something" t-on-click="() => doSomething(data.record)">
+                    Do something
+                </button>
+                <Field name="'foo'" record="data.record"/>
+            </Record>
+        `;
+
+        doSomething(record) {
+            expect.step(`do something with ${JSON.stringify(record.getChanges())}`);
+        }
+    }
+
+    await mountWithCleanup(Parent);
+
+    await contains(".do_something").click();
+    expect.verifySteps([`do something with {"foo":false}`]);
+
+    await contains(".o_field_widget[name=foo] input").edit("some value");
+    await contains(".do_something").click();
+    expect.verifySteps([`do something with {"foo":"some value"}`]);
 });
 
 test.tags("desktop");

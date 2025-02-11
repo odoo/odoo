@@ -345,8 +345,8 @@ export function useProgressBar(progressAttributes, model, aggregateFields, activ
         });
     };
     const onRootLoaded = model.hooks.onRootLoaded;
-    model.hooks.onRootLoaded = async () => {
-        await onRootLoaded();
+    model.hooks.onRootLoaded = async (root) => {
+        await onRootLoaded(root);
         return prom;
     };
 
