@@ -1,4 +1,3 @@
-import { contains } from "@web/../tests/utils";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 
 /*
@@ -33,14 +32,17 @@ var addSection = function (sectionName, backend = false) {
 }];
 };
 
+const addContentToSection = (prefix, sectionName) => ({
+    content: `eLearning: click on add content for section ${sectionName}`,
+    trigger: `${prefix} div.o_wslides_slide_list_category_header:contains(${sectionName}) a:contains(Add Content)`,
+    run: "click",
+});
+
 var addVideoToSection = function (sectionName, saveAsDraft, backend = false) {
     const prefix = backend ? ':iframe ' : '';
 	var base_steps = [
-{
-	content: 'eLearning: add content to section',
-	trigger: prefix + 'div.o_wslides_slide_list_category_header:contains("' + sectionName + '") a:contains("Add Content")',
-    run: "click",
-}, {
+        addContentToSection(prefix, sectionName),
+, {
 	content: 'eLearning: click on video',
 	trigger: prefix + 'a[data-slide-category=video]',
     run: "click",
@@ -86,11 +88,8 @@ var addVideoToSection = function (sectionName, saveAsDraft, backend = false) {
 var addArticleToSection = function (sectionName, pageName, backend) {
     const prefix = backend ? ':iframe ' : '';
 	return [
-{
-	content: 'eLearning: add content to section',
-	trigger: prefix + 'div.o_wslides_slide_list_category_header:contains("' + sectionName + '") a:contains("Add Content")',
-    run: "click",
-}, {
+        addContentToSection(prefix, sectionName),
+        {
 	content: 'eLearning: click on article',
 	trigger: prefix + 'a[data-slide-category=article]',
     run: "click",
@@ -139,11 +138,8 @@ const compareBase64Content = async (url, name, type, expectedContent) => {
 const addImageToSection = (sectionName, pageName, backend) => {
     const prefix = backend ? ':iframe ' : '';
     return [
-{
-    content: 'eLearning: add content to section',
-    trigger: `${prefix}div.o_wslides_slide_list_category_header:contains("${sectionName}") a:contains("Add Content")`,
-    run: "click",
-}, {
+        addContentToSection(prefix, sectionName),
+        {
     content: 'eLearning: click on image',
     trigger: `${prefix}a[data-slide-category=infographic]`,
     run: "click",
@@ -169,12 +165,7 @@ const addImageToSection = (sectionName, pageName, backend) => {
     run: "click",
 }, {
     content: 'eLearning: launch content',
-    trigger: `${prefix}a.o_wslides_js_slides_list_slide_link:contains("Overview")`,
-    run: "click",
-},
-{
-    isActive: [":iframe:has(a[aria-label=Fullscreen])"],
-    trigger: ":iframe a[aria-label=Fullscreen]",
+    trigger: `${prefix} a.o_wslides_js_slides_list_slide_link:contains("Overview")[href$="?fullscreen=1"]`,
     run: "click",
 },
 {
@@ -209,11 +200,8 @@ const addImageToSection = (sectionName, pageName, backend) => {
 const addPdfToSection = function (sectionName, pageName, backend) {
     const prefix = backend ? ':iframe ' : '';
     return [
-{
-    content: 'eLearning: add content to section',
-    trigger: `${prefix}div.o_wslides_slide_list_category_header:contains("${sectionName}") a:contains("Add Content")`,
-    run: "click",
-}, {
+        addContentToSection(prefix, sectionName),
+        {
     content: 'eLearning: click on document',
     trigger: `${prefix}a[data-slide-category=document]`,
     run: "click",
@@ -240,30 +228,20 @@ const addPdfToSection = function (sectionName, pageName, backend) {
     run: "click",
 }, {
     content: 'eLearning: launch content',
-    trigger: `${prefix}a.o_wslides_js_slides_list_slide_link:contains("Exercise")`,
-    run: "click",
-},
-{
-    isActive: [":iframe:has(a[aria-label=Fullscreen])"],
-    trigger: ":iframe a[aria-label=Fullscreen]",
+    trigger: `${prefix} a.o_wslides_js_slides_list_slide_link:contains(Exercise)[href$="?fullscreen=1"]`,
     run: "click",
 },
 {
     content: 'eLearning: check uploaded pdf presence and perform comparison',
-    trigger: (backend ? '.o_iframe:iframe ' : '') + '.o_wslides_fs_content',
-    run: async () => {
-        const baseElement = backend ? document.querySelector('iframe.o_iframe').contentDocument : document;
-        await contains('iframe.o_wslides_iframe_viewer', { target: baseElement });
-        const iframeViewerDoc = baseElement.querySelector('iframe.o_wslides_iframe_viewer').contentDocument;
-        await contains('#PDFSlideViewer', { target: iframeViewerDoc });
-        const pdfViewer = iframeViewerDoc.querySelector('#PDFSlideViewer');
-        if (await compareBase64Content(pdfViewer.getAttribute('data-slideurl'), 'Exercise.pdf', 'application/pdf', testPdf)) {
-            baseElement.querySelector('.o_wslides_fs_content').classList.add('o_wslides_tour_pdf_upload_success');
+    trigger: (backend ? '.o_iframe:iframe ' : '') + '.o_wslides_fs_content :iframe #PDFSlideViewer',
+    run: async (helpers) => {
+        if (await compareBase64Content(helpers.anchor.getAttribute('data-slideurl'), 'Exercise.pdf', 'application/pdf', testPdf)) {
+            helpers.anchor.classList.add('o_wslides_tour_pdf_upload_success');
         }
     },
 }, {
     content: 'eLearning: check uploaded pdf content',
-    trigger: `${prefix}.o_wslides_fs_content.o_wslides_tour_pdf_upload_success`,
+    trigger: `${prefix}.o_wslides_fs_content :iframe #PDFSlideViewer.o_wslides_tour_pdf_upload_success`,
     run: "click",
 }, {
     content: 'eLearning: back to course',
@@ -278,6 +256,10 @@ const addPdfToSection = function (sectionName, pageName, backend) {
 var addExistingCourseTag = function (backend = false) {
     const prefix = backend ? ':iframe ' : '';
 	return [
+{
+    content: "Wait content is loaded before continue to avoid miss click",
+    trigger: prefix + "img[src*='boulonnate']",
+},
 {
     content: 'eLearning: click on Add Tag',
     trigger: prefix + 'a.o_wslides_js_channel_tag_add',
@@ -297,7 +279,6 @@ var addExistingCourseTag = function (backend = false) {
 }, {
 	content: 'eLearning: check that modal is closed',
 	trigger: prefix + 'body:not(.modal-open)',
-    run: "click",
 }];
 };
 
@@ -335,7 +316,6 @@ var addNewCourseTag = function (courseTagName, backend) {
 }, {
 	content: 'eLearning: check that modal is closed',
 	trigger: prefix + 'body:not(.modal-open)',
-    run: "click",
 }];
 };
 
