@@ -157,7 +157,8 @@ class HrAttendance(http.Controller):
                 'id': employee.id,
                 'display_name': employee.display_name,
                 'job_id': employee.job_id.name,
-                'avatar': image_data_uri(employee.avatar_128)
+                'avatar': image_data_uri(employee.avatar_128),
+                'status': employee.hr_icon_display
             } for employee in employees]
             return {'records': employees_data, 'length': request.env['hr.employee'].sudo().search_count(domain)}
         return []
