@@ -13,7 +13,7 @@
         </ControlPanel>
         <div class="o-content pt-3 container-fluid overflow-auto o_stock_forecasted_page">
             <ForecastedHeader docs="docs" openView.bind="openView"/>
-            <t t-if="context.warehouse_id">
+            <t t-if="context.warehouse_id !== undefined">
                 <View type="'graph'"
                 viewId="stock_report_view_graph"
                 resModel="'report.stock.quantity'"
